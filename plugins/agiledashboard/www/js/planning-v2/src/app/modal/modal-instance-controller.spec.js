@@ -66,7 +66,7 @@ describe("ModalInstanceCtrl", function() {
             deferred.resolve({ id: 3042 });
             $scope.$apply();
 
-            expect(ModalValidateFactory.validateArtifactFieldsValues).toHaveBeenCalledWith(values);
+            expect(ModalValidateFactory.validateArtifactFieldsValues).toHaveBeenCalledWith(values, true);
             expect(ModalTuleapFactory.createArtifact).toHaveBeenCalledWith(39, values);
             expect(ModalTuleapFactory.editArtifact).not.toHaveBeenCalled();
             expect($modalInstance.close).toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe("ModalInstanceCtrl", function() {
             deferred.resolve({ id: 8155 });
             $scope.$apply();
 
-            expect(ModalValidateFactory.validateArtifactFieldsValues).toHaveBeenCalledWith(values);
+            expect(ModalValidateFactory.validateArtifactFieldsValues).toHaveBeenCalledWith(values, false);
             expect(ModalTuleapFactory.editArtifact).toHaveBeenCalledWith(8155, values);
             expect(ModalTuleapFactory.createArtifact).not.toHaveBeenCalled();
             expect($modalInstance.close).toHaveBeenCalled();

@@ -7,40 +7,47 @@ function ModalValidateFactory() {
         validateArtifactFieldsValues : validateArtifactFieldsValues
     };
 
-    function validateArtifactFieldsValues(field_values) {
-        var filtered_values  = filterAtLeastOneAttribute(field_values);
-        var validated_values = _.map(filtered_values, function(field) {
-            if (field.value !== undefined) {
-                field = validateValue(field);
-            } else if (_.isArray(field.bind_value_ids)) {
-                field.bind_value_ids = _.compact(field.bind_value_ids);
-            } else if (field.links !== undefined) {
-                field = buildLinks(field);
-            }
-            return removeUnusedAttributes(field);
-        });
+    function validateArtifactFieldsValues(field_values, creation_mode) {
+        var validated_values = _(field_values)
+            .filter(function(field) {
+                return filterFieldPermissions(field, creation_mode);
+            })
+            .filter(filterAtLeastOneAttribute)
+            .map(function(field) {
+                if (field.value !== undefined) {
+                    field = validateValue(field);
+                } else if (_.isArray(field.bind_value_ids)) {
+                    field.bind_value_ids = _.compact(field.bind_value_ids);
+                } else if (field.links !== undefined) {
+                    field = buildLinks(field);
+                }
+                return removeUnusedAttributes(field);
+            }).value();
         return validated_values;
     }
 
-    function filterAtLeastOneAttribute(field_values) {
-        var filtered_values = _.filter(field_values, function(field) {
-            if (field !== undefined) {
-                var value_defined          = (field.value !== undefined);
-                var bind_value_ids_present = Boolean(field.bind_value_ids);
-                var links_present          = Boolean(field.links);
-                // This is a logical XOR: only one of those 3 attributes may be present
-                // at the same time on a given field
-                return (
-                    ( value_defined && !bind_value_ids_present && !links_present) ||
-                    (!value_defined &&  bind_value_ids_present && !links_present) ||
-                    (!value_defined && !bind_value_ids_present &&  links_present)
+    function filterFieldPermissions(field, creation_mode) {
+        if (field === undefined) {
+            return false;
+        }
+        var necessary_permission = (creation_mode) ? "create" : "update";
+        return _(field.permissions).contains(necessary_permission);
+    }
 
-                );
-            } else {
-                return false;
-            }
-        });
-        return filtered_values;
+    function filterAtLeastOneAttribute(field) {
+        if (field === undefined) {
+            return false;
+        }
+        var value_defined          = (field.value !== undefined);
+        var bind_value_ids_present = Boolean(field.bind_value_ids);
+        var links_present          = Boolean(field.links);
+        // This is a logical XOR: only one of those 3 attributes may be present
+        // at the same time on a given field
+        return (
+            ( value_defined && !bind_value_ids_present && !links_present) ||
+            (!value_defined &&  bind_value_ids_present && !links_present) ||
+            (!value_defined && !bind_value_ids_present &&  links_present)
+        );
     }
 
     function validateValue(field) {
@@ -77,13 +84,17 @@ function ModalValidateFactory() {
     }
 
     function removeUnusedAttributes(field) {
-        var field_obj = {};
-        _.extend(field_obj, {
-            bind_value_ids: field.bind_value_ids,
-            field_id      : field.field_id,
-            links         : field.links,
-            value         : field.value
+        var attributes_to_keep = _.pick(field, function(prop, key) {
+            switch (key) {
+                case "bind_value_ids":
+                case "field_id":
+                case "links":
+                case "value":
+                    return !_.isUndefined(prop);
+                default:
+                    return false;
+            }
         });
-        return field_obj;
+        return attributes_to_keep;
     }
 }

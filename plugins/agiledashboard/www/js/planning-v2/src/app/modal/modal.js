@@ -1,4 +1,6 @@
 angular.module('modal', [
+    'angular.filter',
+    'angularMoment',
     'ckeditor',
     'restangular',
     'templates-app',

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-06-05 09:09+0100\n"
+"PO-Revision-Date: 2015-06-11 15:08+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -37,6 +37,10 @@ msgid "Burndown"
 msgstr "Burndown"
 
 #: src/app/modal/modal.tpl.html
+msgid "By: {{ file.submitted_by }}"
+msgstr "Par: {{ file.submitted_by }}"
+
+#: src/app/modal/modal.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -51,6 +55,14 @@ msgstr "Cardwall"
 #: src/app/planning.tpl.html
 msgid "Content"
 msgstr "Contenu"
+
+#: src/app/modal/modal.tpl.html
+msgid "Create a new {{ modal.title }}"
+msgstr "Créer un nouveau {{ modal.title }}"
+
+#: src/app/modal/modal.tpl.html
+msgid "Empty"
+msgstr "Aucun(e)"
 
 #: src/app/modal/modal.tpl.html
 msgid "Enter artifact ids separated by a comma"
@@ -89,8 +101,16 @@ msgid "Planning"
 msgstr "Planification"
 
 #: src/app/modal/modal.tpl.html
+msgid "References list is empty."
+msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
+
+#: src/app/modal/modal.tpl.html
 msgid "Select parent:"
 msgstr "Sélectionner un parent :"
+
+#: src/app/modal/modal.tpl.html
+msgid "Size: {{ file.size | byteFmt: 2 }}"
+msgstr "Taille: {{ file.size | byteFmt: 2 }}"
 
 #: src/app/modal/modal.tpl.html
 msgid "Submit"
@@ -109,6 +129,10 @@ msgid "{{ backlog_item.initial_effort }} pt"
 msgid_plural "{{ backlog_item.initial_effort }} pts"
 msgstr[0] "{{ backlog_item.initial_effort }} pt"
 msgstr[1] "{{ backlog_item.initial_effort }} pts"
+
+#~ msgid "References list is empty"
+#~ msgstr ""
+#~ "Cet artefact n'est pas référencé, et n'est pas source de références."
 
 #~ msgid "Create a new one"
 #~ msgstr "Créer un nouvel artefact"

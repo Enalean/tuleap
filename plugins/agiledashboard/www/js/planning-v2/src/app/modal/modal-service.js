@@ -24,8 +24,10 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
      * given tracker's structure.
      * displayItemCallback will be called after the last HTTP response is received
      *
-     * @param  {int} tracker_id               The tracker to which the item we want to add/edit belongs
-     * @param  {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id or the edited artifact's id.
+     * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
+     * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id or the edited artifact's id.
+     * @param {int} artifact_id              The id of the artifact we want to edit
+     * @param {string} color                 The color name of the artifact we want to edit
      */
     function show(tracker_id, displayItemCallback, artifact_id, color) {
         ModalLoading.loading.is_loading = true;
@@ -55,8 +57,7 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
         modal_model.color       = color;
 
         var promise = ModalTuleapFactory.getTrackerStructure(tracker_id).then(function(structure) {
-            modal_model.structure      = structure;
-            modal_model.ordered_fields = ModalModelFactory.reorderFieldsInGoodOrder(structure);
+            modal_model.structure = structure;
 
             var second_promise = self.getParentArtifactsTitle(structure.parent, modal_model);
             var third_promise  = self.getArtifactValues(artifact_id, structure, modal_model);
@@ -73,6 +74,8 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
                 modal_model.creation_mode = true;
                 modal_model.title         = modal_model.structure.label;
             }
+            modal_model.ordered_fields = ModalModelFactory.reorderFieldsInGoodOrder(modal_model.structure, modal_model.creation_mode);
+
             return modal_model;
         });
         return promise;

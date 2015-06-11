@@ -15,83 +15,177 @@ describe("ModalModelFactory createFromStructure() - ", function() {
     });
 
     describe("createFromStructure() -", function() {
-        it("Given an array of artifact field objects containing a field_id and a value and given a tracker structure object containing those fields, when I create the model from the structure, then a map containing all the fields provided and also containing default values for all the other fields of the structure will be returned", function() {
-            var artifact_values = [
-                { field_id: 655, type: 'string', value: "alumna Aurora Arpin" },
-                { field_id: 378, type: 'sb', bind_value_ids: [667, 967] },
-                { field_id: 320, type: 'art_link', links: [
-                    { id: 158},
-                    { id: 434}
-                ]}
-            ];
-            var structure = {
-                fields: [
-                    {
+        describe("Given an array of artifact field values", function() {
+            it("and given a tracker structure object containing those fields, when I create the model from the structure, then a map containing all the fields provided and also containing default values for all the other fields of the structure will be returned", function() {
+                var artifact_values = [
+                    { field_id: 655, value: "alumna Aurora Arpin" },
+                    { field_id: 378, bind_value_ids: [667, 967] },
+                    { field_id: 320, links: [
+                        { id: 158},
+                        { id: 434}
+                    ]}
+                ];
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 655,
+                            label: "antithetically",
+                            name: "arbusterol",
+                            type: "string",
+                            permissions: ["read", "update", "create"],
+                            default_value: "yogasana"
+                        }, {
+                            field_id: 728,
+                            label: "turus",
+                            name: "hemicycle",
+                            type: "rb",
+                            permissions: ["read", "update", "create"],
+                            default_value: [422]
+                        }, {
+                            field_id: 378,
+                            label: "overplay",
+                            name: "awaredom",
+                            type: "sb",
+                            permissions: ["read", "update", "create"],
+                            default_value: [967]
+                        }, {
+                            field_id: 320,
+                            label: "rani",
+                            name: "troot",
+                            type: "art_link",
+                            permissions: ["read", "update", "create"]
+                        }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                expect(output).toEqual({
+                    655: {
                         field_id: 655,
-                        label: "antithetically",
-                        name: "arbusterol",
                         type: "string",
-                        default_value: "yogasana"
-                    }, {
+                        permissions: ["read", "update", "create"],
+                        value: "alumna Aurora Arpin"
+                    },
+                    728: {
                         field_id: 728,
-                        label: "turus",
-                        name: "hemicycle",
+                        bind_value_ids: [422],
                         type: "rb",
-                        default_value: [422]
-                    }, {
+                        permissions: ["read", "update", "create"]
+                    },
+                    378: {
                         field_id: 378,
-                        label: "overplay",
-                        name: "awaredom",
+                        bind_value_ids: [667, 967],
                         type: "sb",
-                        default_value: [967]
-                    }, {
+                        permissions: ["read", "update", "create"]
+                    },
+                    320: {
                         field_id: 320,
-                        label: "rani",
-                        name: "troot",
-                        type: "art_link"
+                        links: [
+                            { id: 158 },
+                            { id: 434 }
+                        ],
+                        type: "art_link",
+                        permissions: ["read", "update", "create"]
                     }
-                ]
-            };
-            var output = ModalModelFactory.createFromStructure(artifact_values, structure);
-            expect(output).toEqual({
-                655: { field_id: 655, type: 'string', value: "alumna Aurora Arpin" },
-                728: { field_id: 728, type: 'rb', bind_value_ids: [422] },
-                378: { field_id: 378, type: 'sb', bind_value_ids: [667, 967] },
-                320: { field_id: 320, type: 'art_link', links: [
-                    { id: 158 },
-                    { id: 434 }
-                ]}
+                });
             });
-        });
 
-        it("Given an array of artifact field values containing a string field, a cross field, a burndown field, a priority field and a computed field and given a tracker structure object containing those fields, when I create the model from the structure, then the cross, burndown, priority and computed fields won't have a value in the returned map", function() {
-            var artifact_values = [
-                { field_id: 33, type: "string", value: "Nadia Ledon" },
-                { field_id: 79, type: "cross", value: [] },
-                { field_id: 81, type: "priority", value: 98 },
-                { field_id: 10, type: "burndown", value: {
-                    "duration": 85,
-                    "capacity": 79,
-                    "points": [11.52, 87.50, 70.65]
-                } },
-                { field_id: 28, type: "computed", value: 86 }
-            ];
-            var structure = {
-                fields: [
-                    { field_id: 33, type: "string" },
-                    { field_id: 79, type: "cross" },
-                    { field_id: 81, type: "priority" },
-                    { field_id: 10, type: "burndown" },
-                    { field_id: 28, type: "computed" }
-                ]
-            };
-            var output = ModalModelFactory.createFromStructure(artifact_values, structure);
-            expect(output).toEqual({
-                33: { field_id: 33, type: 'string', value: "Nadia Ledon" },
-                79: { field_id: 79, type: 'cross' },
-                81: { field_id: 81, type: 'priority' },
-                10: { field_id: 10, type: 'burndown' },
-                28: { field_id: 28, type: 'computed' }
+            it("containing read-only fields such as aid, atid, lud, burndown, priority, subby, subon, computed, cross, tbl or perm and given a tracker structure object, when I create the model from the structure, then those fields won't have a value in the returned map", function() {
+                var artifact_values = [
+                    { field_id: 280, value: 271 },
+                    { field_id: 973, value: 436 },
+                    { field_id: 9, value: "2015-06-10T13:38:57+02:00" },
+                    { field_id: 316, value: {
+                        "duration": 85,
+                        "capacity": 79,
+                        "points": [11.52, 87.50, 70.65]
+                    } },
+                    { field_id: 188, value: 691 },
+                    { field_id: 183, value: "Juli Devens" },
+                    { field_id: 89, value: "2015-06-10T13:26:51+02:00" },
+                    { field_id: 365, value: 123 },
+                    { field_id: 906, value: [
+                        {
+                            ref: "story #973",
+                            url: "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid"
+                        }
+                    ]},
+                    { field_id: 754, value: "" },
+                    { field_id: 3, value: "" }
+                ];
+                var structure = {
+                    fields: [
+                        { field_id: 280, type: "aid" },
+                        { field_id: 973, type: "atid" },
+                        { field_id: 9, type: "lud" },
+                        { field_id: 316, type: "burndown" },
+                        { field_id: 188, type: "priority" },
+                        { field_id: 183, type: "subby" },
+                        { field_id: 89, type: "subon" },
+                        { field_id: 365, type: "computed" },
+                        { field_id: 906, type: "cross" },
+                        { field_id: 754, type: "tbl" },
+                        { field_id: 3, type: "perm" }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                expect(output).toEqual({
+                    280: { field_id: 280, type: "aid" },
+                    973: { field_id: 973, type: "atid" },
+                    9: { field_id: 9, type: "lud" },
+                    316: { field_id: 316, type: "burndown" },
+                    188: { field_id: 188, type: "priority" },
+                    183: { field_id: 183, type: "subby" },
+                    89: { field_id: 89, type: "subon" },
+                    365: { field_id: 365, type: "computed" },
+                    906: { field_id: 906, type: "cross" },
+                    754: { field_id: 754, type: "tbl" },
+                    3: { field_id: 3, type: "perm" }
+                });
+            });
+
+            it("containing a file field, and given said artifact had two attached files including an image, and given a tracker structure object, when I create the model from the structure, then the file field will have a file_descriptions attribute containing two objects and the attached image object's display_as_image attribute will be true", function() {
+                var artifact_values = [
+                    {
+                        field_id: 719,
+                        file_descriptions: [
+                            {
+                                type: "image/png",
+                                somekey: "somevalue"
+                            }, {
+                                type: "text/xml",
+                                someotherkey: "differentvalue"
+                            }
+                        ]
+                    }
+                ];
+                var structure = {
+                    fields: [
+                        { field_id: 719, type: "file" }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                expect(output).toEqual({
+                    719: { field_id: 719, type: "file" }
+                });
+                expect(structure).toEqual({
+                    fields: [
+                        {
+                            field_id: 719,
+                            type: "file",
+                            file_descriptions: [
+                                {
+                                    type: "image/png",
+                                    display_as_image: true,
+                                    somekey: "somevalue"
+                                }, {
+                                    type: "text/xml",
+                                    display_as_image: false,
+                                    someotherkey: "differentvalue"
+                                }
+                            ]
+                        }
+                    ]
+                });
             });
         });
 
@@ -103,13 +197,19 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 870,
                             label: "Mammilloid",
                             name: "coquelicot",
+                            permissions: ["read update create"],
                             type: "string"
                         }
                     ]
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    870: { field_id: 870, type: 'string', value: null }
+                    870: {
+                        field_id: 870,
+                        permissions: ["read update create"],
+                        type: 'string',
+                        value: null
+                    }
                 });
             });
 
@@ -120,6 +220,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 175,
                             label: "cardiopneumograph",
                             name: "idolatrize",
+                            permissions: ["read update create"],
                             type: "string",
                             default_value: "Despina Pistorius chronoisothermal"
                         }
@@ -127,7 +228,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    175: { field_id: 175, type: 'string', value: "Despina Pistorius chronoisothermal" }
+                    175: {
+                        field_id: 175,
+                        permissions: ["read update create"],
+                        type: 'string',
+                        value: "Despina Pistorius chronoisothermal"
+                    }
                 });
             });
         });
@@ -137,9 +243,9 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 var artifact_values = [
                     {
                         field_id: 901,
-                        value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
                         format: "HTML",
-                        type: "text"
+                        type: "text",
+                        value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>"
                     }
                 ];
                 var structure = {
@@ -148,6 +254,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 901,
                             label: "holard",
                             name: "flueless",
+                            permissions: ["read update create"],
                             type: "text"
                         }
                     ]
@@ -156,9 +263,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 expect(output).toEqual({
                     901: {
                         field_id: 901,
-                        format: "HTML",
                         type: "text",
-                        value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>"
+                        permissions: ["read update create"],
+                        value: {
+                            content: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
+                            format: "HTML"
+                        }
                     }
                 });
             });
@@ -170,6 +280,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 336,
                             label: "heritage",
                             name: "forbidder",
+                            permissions: ["read update create"],
                             type: "text"
                         }
                     ]
@@ -178,9 +289,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 expect(output).toEqual({
                     336: {
                         field_id: 336,
-                        format: "text",
-                        value: null,
-                        type: "text"
+                        permissions: ["read update create"],
+                        type: "text",
+                        value: {
+                            content: null,
+                            format: "text"
+                        }
                     }
                 });
             });
@@ -192,6 +306,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 349,
                             label: "excoriator",
                             name: "phratrial",
+                            permissions: ["read update create"],
                             type: "text",
                             default_value: {
                                 format: "HTML",
@@ -204,9 +319,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 expect(output).toEqual({
                     349: {
                         field_id: 349,
-                        format: "HTML",
                         type: "text",
-                        value: "<p>quartane <b>Christel</b> Kalchik roentgentherapy</p>"
+                        permissions: ["read update create"],
+                        value: {
+                            content: "<p>quartane <b>Christel</b> Kalchik roentgentherapy</p>",
+                            format: "HTML"
+                        }
                     }
                 });
             });
@@ -220,19 +338,31 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 685,
                             label: "raiiform",
                             name: "loft",
+                            permissions: ["read update create"],
                             type: "int"
                         }, {
                             field_id: 775,
                             label: "phalacrocoracine",
                             name: "unvariant",
+                            permissions: ["read update create"],
                             type: "float"
                         }
                     ]
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    685: { field_id: 685, type: 'int', value: null },
-                    775: { field_id: 775, type: 'float', value: null }
+                    685: {
+                        field_id: 685,
+                        type: 'int',
+                        permissions: ["read update create"],
+                        value: null
+                    },
+                    775: {
+                        field_id: 775,
+                        type: 'float',
+                        permissions: ["read update create"],
+                        value: null
+                    }
                 });
             });
 
@@ -243,12 +373,14 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 163,
                             label: "urinocryoscopy",
                             name: "priestless",
+                            permissions: ["read update create"],
                             type: "float",
                             default_value: "68.8596"
                         }, {
                             field_id: 220,
                             label: "formel",
                             name: "hodograph",
+                            permissions: ["read update create"],
                             type: "int",
                             default_value: "236"
                         }
@@ -256,8 +388,18 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    163: { field_id: 163, type: 'float', value: 68.8596 },
-                    220: { field_id: 220, type: 'int', value: 236 }
+                    163: {
+                        field_id: 163,
+                        type: 'float',
+                        permissions: ["read update create"],
+                        value: 68.8596
+                    },
+                    220: {
+                        field_id: 220,
+                        type: 'int',
+                        permissions: ["read update create"],
+                        value: 236
+                    }
                 });
                 expect(_.isNumber(output[163].value)).toBeTruthy();
                 expect(_.isNumber(output[220].value)).toBeTruthy();
@@ -275,6 +417,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 824,
                             label: "nondrying",
                             name: "indisciplined",
+                            permissions: ["read update create"],
                             type: "date"
                         }
                     ]
@@ -283,6 +426,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 expect($window.moment).toHaveBeenCalledWith("2015-05-29T00:00:00+02:00", $window.moment.ISO_8601);
                 expect($window.moment().format).toHaveBeenCalledWith("YYYY-MM-DD");
                 expect(output[824].field_id).toEqual(824);
+                expect(output[824].permissions).toEqual(["read update create"]);
             });
 
             it("with the time displayed and given an array of artifact field values containing that field, when I create the model from the structure, then a map of objects containing the formatted artifact value will be returned", function() {
@@ -295,6 +439,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 609,
                             label: "",
                             name: "",
+                            permissions: ["read update create"],
                             type: "date",
                             is_time_displayed: "true"
                         }
@@ -304,6 +449,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 expect($window.moment).toHaveBeenCalledWith("2015-06-02T18:09:43+03:00", $window.moment.ISO_8601);
                 expect($window.moment().format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm:ss");
                 expect(output[609].field_id).toEqual(609);
+                expect(output[609].permissions).toEqual(["read update create"]);
             });
         });
 
@@ -315,19 +461,31 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 87,
                             label: "monarchist",
                             name: "artophorion",
+                            permissions: ["read update create"],
                             type: "sb"
                         }, {
                             field_id: 860,
                             label: "gorilline",
                             name: "beefer",
+                            permissions: ["read update create"],
                             type: "msb"
                         }
                     ]
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    87:  { field_id: 87, type: "sb", bind_value_ids: [] },
-                    860: { field_id: 860, type: "msb", bind_value_ids: [] }
+                    87:  {
+                        field_id: 87,
+                        bind_value_ids: [],
+                        type: "sb",
+                        permissions: ["read update create"]
+                    },
+                    860: {
+                        field_id: 860,
+                        bind_value_ids: [],
+                        type: "msb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
 
@@ -338,12 +496,14 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 622,
                             label: "perfectionize",
                             name: "boatmaster",
+                            permissions: ["read update create"],
                             type: "sb",
                             default_value: 941
                         }, {
                             field_id: 698,
-                            label: "perfectionize",
-                            name: "boatmaster",
+                            label: "totaquin",
+                            name: "sputumous",
+                            permissions: ["read update create"],
                             type: "msb",
                             default_value: [196, 800]
                         }
@@ -351,8 +511,18 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    622: { field_id: 622, type: "sb", bind_value_ids: [941] },
-                    698: { field_id: 698, type: "msb", bind_value_ids: [196, 800] }
+                    622: {
+                        field_id: 622,
+                        bind_value_ids: [941],
+                        type: "sb",
+                        permissions: ["read update create"]
+                    },
+                    698: {
+                        field_id: 698,
+                        bind_value_ids: [196, 800],
+                        type: "msb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
         });
@@ -368,6 +538,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 137,
                             label: "orthoveratric",
                             name: "daintith",
+                            permissions: ["read update create"],
                             type: "cb",
                             values: [
                                 { id: 498, label: "uncommendable" },
@@ -379,7 +550,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
-                    137: { field_id: 137, type: "cb", bind_value_ids: [498, null, 443] }
+                    137: {
+                        field_id: 137,
+                        bind_value_ids: [498, null, 443],
+                        type: "cb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
 
@@ -390,6 +566,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 607,
                             label: "visit",
                             name: "Narcobatidae",
+                            permissions: ["read update create"],
                             type: "cb",
                             values: [
                                 { id: 842, label: "mussal"},
@@ -401,7 +578,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    607: { field_id: 607, type: "cb", bind_value_ids: [null, null, null]}
+                    607: {
+                        field_id: 607,
+                        bind_value_ids: [null, null, null],
+                        type: "cb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
 
@@ -412,6 +594,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 910,
                             label: "transpirable",
                             name: "levolimonene",
+                            permissions: ["read update create"],
                             type: "cb",
                             values: [
                                 { id: 477, label: "Reuel"},
@@ -424,7 +607,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    910: { field_id: 910, type: "cb", bind_value_ids: [477, null, 848]}
+                    910: {
+                        field_id: 910,
+                        bind_value_ids: [477, null, 848],
+                        type: "cb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
         });
@@ -440,13 +628,19 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 430,
                             label: "parascene",
                             name: "gap",
+                            permissions: ["read update create"],
                             type: "rb"
                         }
                     ]
                 };
                 var output = ModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
-                    430: { field_id: 430, type: "rb", bind_value_ids: [100] }
+                    430: {
+                        field_id: 430,
+                        bind_value_ids: [100],
+                        type: "rb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
 
@@ -457,13 +651,19 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 242,
                             label: "haruspicy",
                             name: "Taraktogenos",
+                            permissions: ["read update create"],
                             type: "rb"
                         }
                     ]
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    242: { field_id: 242, type: "rb", bind_value_ids: [100] }
+                    242: {
+                        field_id: 242,
+                        bind_value_ids: [100],
+                        type: "rb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
 
@@ -474,6 +674,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             field_id: 897,
                             label: "healless",
                             name: "veiling",
+                            permissions: ["read update create"],
                             type: "rb",
                             default_value: [931,410]
                         }
@@ -481,7 +682,12 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    897: { field_id: 897, type: "rb", bind_value_ids: [931, 410] }
+                    897: {
+                        field_id: 897,
+                        bind_value_ids: [931, 410],
+                        type: "rb",
+                        permissions: ["read update create"]
+                    }
                 });
             });
         });
@@ -493,6 +699,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         field_id: 803,
                         label: "inspectrix",
                         name: "isonomic",
+                        permissions: ["read update create"],
                         type: "art_link"
                     }
                 ]
@@ -502,6 +709,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 803: {
                     field_id: 803,
                     type: "art_link",
+                    permissions: ["read update create"],
                     unformatted_links: "",
                     links: [ {id: ""} ]
                 }
@@ -509,29 +717,37 @@ describe("ModalModelFactory createFromStructure() - ", function() {
         });
     });
 
-    it('reorderFieldsInGoodOrder() -', function() {
-        var response = {
-            fields: [
-                { field_id: 1, type: 'int' },
-                { field_id: 2, type: 'int' },
-                { field_id: 3, type: 'fieldset' },
-                { field_id: 4, type: 'int' },
-                { field_id: 5, type: 'column' },
-                { field_id: 6, type: 'int' },
-                { field_id: 7, type: 'aid' },
-                { field_id: 8, type: 'atid' },
-                { field_id: 9, type: 'lud' },
-                { field_id: 10, type: 'burndown' },
-                { field_id: 11, type: 'priority' },
-                { field_id: 12, type: 'subby' },
-                { field_id: 13, type: 'subon' },
-                { field_id: 14, type: 'computed' },
-                { field_id: 15, type: 'cross' },
-                { field_id: 16, type: 'file' },
-                { field_id: 17, type: 'tbl' },
-                { field_id: 18, type: 'perm' }
-            ],
-            structure: [
+    describe("reorderFieldsInGoodOrder() -", function() {
+        var response, creation_mode;
+
+        beforeEach(function() {
+            response = {
+                fields: [
+                    { field_id: 1, type: 'int' },
+                    { field_id: 2, type: 'int' },
+                    { field_id: 3, type: 'fieldset' },
+                    { field_id: 4, type: 'int' },
+                    { field_id: 5, type: 'column' },
+                    { field_id: 6, type: 'int' },
+                    { field_id: 7, type: 'aid' },
+                    { field_id: 8, type: 'atid' },
+                    { field_id: 9, type: 'lud' },
+                    { field_id: 10, type: 'burndown' },
+                    { field_id: 11, type: 'priority' },
+                    { field_id: 12, type: 'subby' },
+                    { field_id: 13, type: 'subon' },
+                    { field_id: 14, type: 'computed' },
+                    { field_id: 15, type: 'cross' },
+                    { field_id: 16, type: 'file' },
+                    { field_id: 17, type: 'tbl' },
+                    { field_id: 18, type: 'perm' }
+                ],
+                structure: []
+            };
+        });
+
+        it("Given the modal was opened in creation mode, when I reorder the fields, then the form tree given by the tracker structure will be filled with the complete fields, augmented with the correct template_url and will be returned", function() {
+            response.structure = [
                 { id: 1, content: null },
                 { id: 2, content: null },
                 { id: 3, content: [
@@ -539,7 +755,51 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     { id: 5, content: [
                         { id: 6, content: null }
                     ]}
-                ]},
+                ]}
+            ];
+            creation_mode = true;
+            var output = ModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
+            expect(output).toEqual([
+                {
+                    field_id: 1,
+                    type: 'int',
+                    template_url: 'field-int.tpl.html'
+                },
+                {
+                    field_id: 2,
+                    type: 'int',
+                    template_url: 'field-int.tpl.html'
+                },
+                {
+                    field_id: 3,
+                    type: 'fieldset',
+                    template_url: 'field-fieldset.tpl.html',
+                    content: [
+                        {
+                            field_id: 4,
+                            type: 'int',
+                            template_url: 'field-int.tpl.html'
+                        },
+                        {
+                            field_id: 5,
+                            type: 'column',
+                            template_url: 'field-column.tpl.html',
+                            content: [
+                                {
+                                    field_id: 6,
+                                    type: 'int',
+                                    template_url: 'field-int.tpl.html'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]);
+        });
+
+        it("Given the modal was opened in creation mode, when I reorder the fields, then the awkward fields for creation mode (e.g. burndown, subby, subon) will be omitted from the returned form object", function() {
+            response.structure = [
+                { id: 1, content: null },
                 { id: 7, content: null },
                 { id: 8, content: null },
                 { id: 9, content: null },
@@ -552,44 +812,83 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 { id: 16, content: null },
                 { id: 17, content: null },
                 { id: 18, content: null }
-            ]
-        };
+            ];
+            creation_mode = true;
+            var output = ModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
+            expect(output).toEqual([
+                {
+                    field_id: 1,
+                    type: "int",
+                    template_url: 'field-int.tpl.html'
+                }
+            ]);
+        });
 
-        expect(ModalModelFactory.reorderFieldsInGoodOrder(response)).toEqual([
-            {
-                field_id: 1,
-                type: 'int',
-                template_url: 'field-int.tpl.html'
-            },
-            {
-                field_id: 2,
-                type: 'int',
-                template_url: 'field-int.tpl.html'
-            },
-            {
-                field_id: 3,
-                type: 'fieldset',
-                template_url: 'field-fieldset.tpl.html',
-                content: [
-                    {
-                        field_id: 4,
-                        type: 'int',
-                        template_url: 'field-int.tpl.html'
-                    },
-                    {
-                        field_id: 5,
-                        type: 'column',
-                        template_url: 'field-column.tpl.html',
-                        content: [
-                            {
-                                field_id: 6,
-                                type: 'int',
-                                template_url: 'field-int.tpl.html'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]);
+        it("Given the modal was opened in edition mode, when I reorder the fields, then the awkward fields for creation mode WILL NOT be omitted from the returned form object", function() {
+            response.structure = [
+                { id: 1, content: null },
+                { id: 7, content: null },
+                { id: 8, content: null },
+                { id: 9, content: null },
+                { id: 10, content: null },
+                { id: 11, content: null },
+                { id: 12, content: null },
+                { id: 13, content: null },
+                { id: 14, content: null },
+                { id: 15, content: null },
+                { id: 16, content: null },
+                { id: 17, content: null },
+                { id: 18, content: null }
+            ];
+            creation_mode = false;
+            var output = ModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
+            expect(output).toEqual([
+                {
+                    field_id: 1,
+                    type: "int",
+                    template_url: 'field-int.tpl.html'
+                }, {
+                    field_id: 7,
+                    type: "aid",
+                    template_url: 'field-aid.tpl.html'
+                }, {
+                    field_id: 8,
+                    type: "atid",
+                    template_url: 'field-atid.tpl.html'
+                }, {
+                    field_id: 9,
+                    type: "lud",
+                    template_url: 'field-lud.tpl.html'
+                }, {
+                    field_id: 10,
+                    type: "burndown",
+                    template_url: 'field-burndown.tpl.html'
+                }, {
+                    field_id: 11,
+                    type: "priority",
+                    template_url: 'field-priority.tpl.html'
+                }, {
+                    field_id: 12,
+                    type: "subby",
+                    template_url: 'field-subby.tpl.html'
+                }, {
+                    field_id: 13,
+                    type: "subon",
+                    template_url: 'field-subon.tpl.html'
+                }, {
+                    field_id: 14,
+                    type: "computed",
+                    template_url: 'field-computed.tpl.html'
+                }, {
+                    field_id: 15,
+                    type: "cross",
+                    template_url: 'field-cross.tpl.html'
+                }, {
+                    field_id: 16,
+                    type: "file",
+                    template_url: 'field-file.tpl.html'
+                }
+            ]);
+        });
     });
 });

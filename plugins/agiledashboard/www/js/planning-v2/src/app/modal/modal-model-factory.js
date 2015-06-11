@@ -4,19 +4,19 @@ angular
 
 function ModalModelFactory() {
     var awkward_fields_for_creation = ['aid', 'atid', 'lud', 'burndown', 'priority', 'subby', 'subon', 'computed', 'cross', 'file', 'tbl', 'perm'];
+    var awkward_fields_for_edition  = ['tbl', 'perm'];
 
     return {
         createFromStructure: createFromStructure,
         reorderFieldsInGoodOrder: reorderFieldsInGoodOrder
     };
 
-
     /**
-     * Completes artifact_values with the default values from the provided tracker structure. For every
-     * field that is in structure but not in the artifact_values array, this will add its default value to the array or null;
-     * @param  {array} artifact_values           An array of objects from the edited artifact { field_id, value|bind_value_ids } OR an empty array
-     * @param  {TrackerRepresentation} structure The tracker structure as returned from the REST route
-     * @return {Object}                          A map of objects indexed by field_id => { field_id, value|bind_value_ids }
+     * For every field in the tracker structure, creates a field object with the value from the given artifact
+     * or the field's default value if there is no artifact and there is a default value.
+     * @param  {Array} artifact_values            An array of objects from the edited artifact { field_id, value|bind_value_ids } OR an empty array
+     * @param  {TrackerRepresentation} structure  The tracker structure as returned from the REST route
+     * @return {Object}                           A map of objects indexed by field_id => { field_id, value|bind_value_ids }
      */
     function createFromStructure(artifact_values, structure) {
         var values = {};
@@ -25,7 +25,7 @@ function ModalModelFactory() {
         });
 
         var artifact_value;
-        for (var i = 0, field; field = structure.fields[i]; i++) {
+        _.forEach(structure.fields, function(field) {
             artifact_value = indexed_values[field.field_id];
 
             if (_(awkward_fields_for_creation).contains(field.type)) {
@@ -33,23 +33,38 @@ function ModalModelFactory() {
                     field_id: field.field_id,
                     type    : field.type
                 };
-                if (artifact_value) {
-                    // We attach the value to the structure to avoid submitting it
-                    field.value = artifact_value.value;
-                }
-            // If the field already had a value in the artifact_values, we keep that value
+                // We attach the value to the structure to avoid submitting it
+                field = augmentStructureField(field, artifact_value);
             } else if (artifact_value) {
                 values[field.field_id] = formatExistingValue(field, artifact_value);
             } else {
                 values[field.field_id] = getDefaultValue(field);
             }
-        }
+        });
 
         return values;
     }
 
+    function augmentStructureField(field, artifact_value) {
+        if (!artifact_value) {
+            return field;
+        }
+        if (artifact_value.value) {
+            field.value = artifact_value.value;
+        } else if (artifact_value.file_descriptions) {
+            field.file_descriptions = artifact_value.file_descriptions;
+            _.map(field.file_descriptions, function(file) {
+                file.display_as_image = /^image/.test(file.type);
+                return file;
+            });
+        }
+        return field;
+    }
+
     function formatExistingValue(field, artifact_value) {
-        var value_obj = artifact_value;
+        var value_obj         = artifact_value;
+        value_obj.type        = field.type;
+        value_obj.permissions = field.permissions;
         switch (field.type) {
             case "date":
                 if (field.is_time_displayed) {
@@ -68,6 +83,13 @@ function ModalModelFactory() {
             case "rb":
                 value_obj.bind_value_ids = !_.isEmpty(artifact_value.bind_value_ids) ? artifact_value.bind_value_ids : [100];
                 break;
+            case "text":
+                value_obj.value = {
+                    content: artifact_value.value,
+                    format: artifact_value.format
+                };
+                value_obj.format = undefined;
+                break;
             default:
                 break;
         }
@@ -76,8 +98,9 @@ function ModalModelFactory() {
 
     function getDefaultValue(field) {
         var value_obj = {
-            field_id: field.field_id,
-            type    : field.type
+            field_id   : field.field_id,
+            type       : field.type,
+            permissions: field.permissions
         };
         switch (field.type) {
             case "sb":
@@ -97,11 +120,13 @@ function ModalModelFactory() {
                 value_obj.value = (field.default_value) ? parseFloat(field.default_value, 10) : null;
                 break;
             case "text":
-                value_obj.format = "text";
-                value_obj.value  = null;
+                value_obj.value  = {
+                    content: null,
+                    format: "text"
+                };
                 if (field.default_value) {
-                    value_obj.format = field.default_value.format;
-                    value_obj.value  = field.default_value.content;
+                    value_obj.value.format  = field.default_value.format;
+                    value_obj.value.content = field.default_value.content;
                 }
                 break;
             case "string":
@@ -125,26 +150,39 @@ function ModalModelFactory() {
         });
     }
 
-    function reorderFieldsInGoodOrder(complete_tracker_structure) {
+    /**
+     * Recreates the form's tree structure. Returns an object that contains container fields (e.g. fieldsets),
+     * that themselves contain fields. Each field may have a "content" attribute that contains an array of
+     * fields.
+     * @param  {Object} complete_tracker_structure The tracker structure object as returned from the REST route.
+     * @param  {boolean} creation_mode             True if the modal was opened to create a new artifact, false to edit an existing artifact
+     * @return {Object}                            A tree-like Object representing the artifact's form.
+     */
+    function reorderFieldsInGoodOrder(complete_tracker_structure, creation_mode) {
         var structure      = complete_tracker_structure.structure,
             ordered_fields = [];
 
         for (var i = 0; i < structure.length; i++) {
-            ordered_fields.push(getCompleteField(structure[i], complete_tracker_structure.fields));
+            ordered_fields.push(getCompleteField(structure[i], complete_tracker_structure.fields, creation_mode));
         }
 
         return _.compact(ordered_fields);
     }
 
     /**
-     * Return a field with two additional attributes:
+     * Returns a field with two additional attributes:
      *     - content     : {array} of fields
      *     - template_url: {string} angular tamplated used to render the field
+     * @param  {Object} structure_field The field from the structure
+     * @param  {Array} all_fields       The array containing all fields from the tracker structure
+     * @param  {boolean} creation_mode  True if the modal was opened to create a new artifact, false to edit an existing artifact
+     * @return {Object}                 The field with two added attributes: content and template_url
      */
-    function getCompleteField(structure_field, all_fields) {
+    function getCompleteField(structure_field, all_fields, creation_mode) {
         var complete_field = _(all_fields).find({ field_id: structure_field.id });
 
-        if (_.contains(awkward_fields_for_creation, complete_field.type)) {
+        var excluded_fields = (creation_mode) ? awkward_fields_for_creation : awkward_fields_for_edition;
+        if (_.contains(excluded_fields, complete_field.type)) {
             return false;
         }
 
@@ -154,7 +192,7 @@ function ModalModelFactory() {
             complete_field.content = [];
 
             for (var i = 0; i < structure_field.content.length; i++) {
-                complete_field.content.push(getCompleteField(structure_field.content[i], all_fields));
+                complete_field.content.push(getCompleteField(structure_field.content[i], all_fields, creation_mode));
             }
 
             complete_field.content = _.compact(complete_field.content);

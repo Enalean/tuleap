@@ -228,7 +228,7 @@ describe("ModalTuleapFactory", function() {
             mockBackend.flush();
 
             expect(ModalTuleapFactory.error.is_error).toBeTruthy();
-            expect(ModalTuleapFactory.error.error_message).toEqual("400 Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
+            expect(ModalTuleapFactory.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
             expect(failure).toHaveBeenCalled();
         });
 

@@ -44,7 +44,7 @@ function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, Mod
     function submit() {
         ModalLoading.loading.is_loading = true;
 
-        var validated_values = ModalValidateFactory.validateArtifactFieldsValues(self.values);
+        var validated_values = ModalValidateFactory.validateArtifactFieldsValues(self.values, modal_model.creation_mode);
 
         var promise;
         if (modal_model.creation_mode) {
