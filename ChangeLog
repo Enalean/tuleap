@@ -27,6 +27,7 @@ Version 8.3 (not released yet)
 	* request #8120: Add SOAP automated tests
 	* story #8118: Tuleap Guidelines: first step
 	* Introduce usage of docker-compose
+	* story #8118: Color switcher & Preview UI
 
 	== Themes ==
 	* FlamingParrot: 1.88
