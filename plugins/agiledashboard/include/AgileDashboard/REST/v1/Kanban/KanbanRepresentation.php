@@ -24,6 +24,8 @@ use Tuleap\Tracker\REST\TrackerReference;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use TrackerFactory;
+use PFUser;
+use AgileDashboard_KanbanUserPreferences;
 
 class KanbanRepresentation {
 
@@ -71,7 +73,13 @@ class KanbanRepresentation {
      */
     public $archive;
 
-    public function build(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory, $user_can_add_in_place) {
+    public function build(
+        AgileDashboard_Kanban $kanban,
+        AgileDashboard_KanbanColumnFactory $column_factory,
+        AgileDashboard_KanbanUserPreferences $user_preferences,
+        $user_can_add_in_place,
+        PFUser $user
+    ) {
         $this->id         = JsonCast::toInt($kanban->getId());
         $this->tracker_id = JsonCast::toInt($kanban->getTrackerId());
         $this->uri        = self::ROUTE.'/'.$this->id;
@@ -79,15 +87,15 @@ class KanbanRepresentation {
         $this->columns    = array();
 
         $this->backlog = new KanbanBacklogInfoRepresentation();
-        $this->backlog->build('Backlog', false, $user_can_add_in_place);
+        $this->backlog->build('Backlog', $user_preferences->isBacklogOpen($kanban, $user), $user_can_add_in_place);
 
         $this->archive = new KanbanArchiveInfoRepresentation();
-        $this->archive->build('Archive', false);
+        $this->archive->build('Archive', $user_preferences->isArchiveOpen($kanban, $user));
 
         $this->tracker = new TrackerReference();
         $this->tracker->build($this->getTracker($kanban));
 
-        $this->setColumns($kanban, $column_factory, $user_can_add_in_place);
+        $this->setColumns($kanban, $column_factory, $user_can_add_in_place, $user);
 
         $this->resources = array(
             'backlog' => array(
@@ -99,8 +107,13 @@ class KanbanRepresentation {
         );
     }
 
-    private function setColumns(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory, $user_can_add_in_place) {
-        $columns = $column_factory->getAllKanbanColumnsForAKanban($kanban);
+    private function setColumns(
+        AgileDashboard_Kanban $kanban,
+        AgileDashboard_KanbanColumnFactory $column_factory,
+        $user_can_add_in_place,
+        PFUser $user
+    ) {
+        $columns = $column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
 
         foreach ($columns as $column) {
             $column_representation = new KanbanColumnRepresentation();

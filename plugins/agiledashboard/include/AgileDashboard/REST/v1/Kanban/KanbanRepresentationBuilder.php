@@ -26,8 +26,14 @@ use Tracker;
 use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_Title;
+use AgileDashboard_KanbanUserPreferences;
 
 class KanbanRepresentationBuilder {
+
+    /**
+     * @var AgileDashboard_KanbanUserPreferences
+     */
+    private $user_preferences;
 
     /**
      * @var Tracker_FormElementFactory
@@ -45,6 +51,7 @@ class KanbanRepresentationBuilder {
     private $kanban_column_factory;
 
     public function __construct(
+        AgileDashboard_KanbanUserPreferences $user_preferences,
         AgileDashboard_KanbanColumnFactory $kanban_column_factory,
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $form_element_factory
@@ -52,6 +59,7 @@ class KanbanRepresentationBuilder {
         $this->kanban_column_factory = $kanban_column_factory;
         $this->form_element_factory  = $form_element_factory;
         $this->tracker_factory       = $tracker_factory;
+        $this->user_preferences      = $user_preferences;
     }
 
     /**
@@ -61,7 +69,13 @@ class KanbanRepresentationBuilder {
         $user_can_add_in_place = $this->canUserAddInPlace($user, $kanban);
 
         $kanban_representation = new KanbanRepresentation();
-        $kanban_representation->build($kanban, $this->kanban_column_factory, $user_can_add_in_place);
+        $kanban_representation->build(
+            $kanban,
+            $this->kanban_column_factory,
+            $this->user_preferences,
+            $user_can_add_in_place,
+            $user
+        );
 
         return $kanban_representation;
     }

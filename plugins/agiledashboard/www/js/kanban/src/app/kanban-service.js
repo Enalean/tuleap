@@ -16,9 +16,15 @@
             getBacklog          : getBacklog,
             getArchive          : getArchive,
             getItems            : getItems,
+            collapseColumn      : collapseColumn,
+            expandColumn        : expandColumn,
             reorderColumn       : reorderColumn,
             reorderBacklog      : reorderBacklog,
             reorderArchive      : reorderArchive,
+            expandBacklog       : expandBacklog,
+            collapseBacklog     : collapseBacklog,
+            expandArchive       : expandArchive,
+            collapseArchive     : collapseArchive,
             moveInBacklog       : moveInBacklog,
             moveInArchive       : moveInArchive,
             moveInColumn        : moveInColumn,
@@ -212,6 +218,48 @@
 
         function deleteKanban(kanban_id) {
             return rest.one('kanban', kanban_id).remove();
+        }
+
+        function expandColumn(kanban_id, column_id) {
+            return rest.one('kanban', kanban_id).patch({
+                collapse_column: {
+                    column_id: column_id,
+                    value: false
+                }
+            });
+        }
+
+        function collapseColumn(kanban_id, column_id) {
+            return rest.one('kanban', kanban_id).patch({
+                collapse_column: {
+                    column_id: column_id,
+                    value: true
+                }
+            });
+        }
+
+        function expandBacklog(kanban_id) {
+            return rest.one('kanban', kanban_id).patch({
+                collapse_backlog: false
+            });
+        }
+
+        function collapseBacklog(kanban_id) {
+            return rest.one('kanban', kanban_id).patch({
+                collapse_backlog: true
+            });
+        }
+
+        function expandArchive(kanban_id) {
+            return rest.one('kanban', kanban_id).patch({
+                collapse_archive: false
+            });
+        }
+
+        function collapseArchive(kanban_id) {
+            return rest.one('kanban', kanban_id).patch({
+                collapse_archive: true
+            });
         }
     }
 })();

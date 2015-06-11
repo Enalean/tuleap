@@ -43,6 +43,7 @@ use Tracker_REST_Artifact_ArtifactCreator                 as ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator               as ArtifactValidator;
 use Tuleap\Tracker\REST\TrackerReference                  as TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepresentation;
+use AgileDashboard_KanbanUserPreferences;
 
 class KanbanItemsResource {
 
@@ -79,7 +80,10 @@ class KanbanItemsResource {
 
         $kanban_column_dao           = new AgileDashboard_KanbanColumnDao();
         $permissions_manager         = new AgileDashboard_PermissionsManager();
-        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory($kanban_column_dao);
+        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
+            $kanban_column_dao,
+            new AgileDashboard_KanbanUserPreferences()
+        );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
             $permissions_manager,
