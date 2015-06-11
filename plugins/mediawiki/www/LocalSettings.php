@@ -337,6 +337,35 @@ if (isset($_SERVER['SERVER_SOFTWARE'])) {
 
 $GLOBALS['wgHooks']['UserLoadFromSession'][] = 'TuleapMediawikiAuthentication';
 
+if (! $is_tuleap_mediawiki_123) {
+    //@see http://stackoverflow.com/questions/16893589/prevent-users-from-changing-their-passwords-in-mediawiki
+    // Disallow password reset on password reset page
+    $GLOBALS['wgHooks']['UserLoginMailPassword'][] = 'MailPasswordIsAllowed';
+    function MailPasswordIsAllowed ( $username, $error ) {
+        $error = wfMsg( 'resetpass_forbidden' );
+        return false;
+    }
+
+    //Disallow password change on password change page (referred by link in user preferences):
+    $GLOBALS['wgHooks']['PrefsPasswordAudit'][] = 'ChangePasswordIsAllowed';
+    function ChangePasswordIsAllowed ( $user ) {
+        throw new PasswordError( wfMsg( 'resetpass_forbidden' ));
+        return false;
+    }
+
+    //Hide password change link in user preferences:
+    $GLOBALS['wgHooks']['GetPreferences'][] = 'HidePreferenceOptions';
+    function HidePreferenceOptions ( $mw_user, &$preferences ) {
+        global $user;
+
+        $preferences['emailaddress']['default'] = $user->getEmail();
+        unset($preferences['emailauthentication']);
+        unset($preferences['password']);
+
+        return true;
+    }
+}
+
 $wgGroupPermissions = customizeMediawikiGroupsRights($wgGroupPermissions);
 
 $wgFavicon     = '/images/icon.png' ;
