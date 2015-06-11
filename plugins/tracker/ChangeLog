@@ -1,3 +1,6 @@
+Version 5.635 - Tuleap 8.3
+    * request #8139: tracker exports invalid rng when deleted fields are in report coulumns
+
 Version 5.634 - Tuleap 8.3
     * story #7857: add thumbnail file url
 
