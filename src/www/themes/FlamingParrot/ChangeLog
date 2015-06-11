@@ -1,3 +1,6 @@
+Version 1.88 - Tuleap 8.3
+    * request #8137: TV3 field dependencies administration is missing proper highlighting in FlamingParrot
+
 Version 1.87 - Tuleap 8.3
     * story #8089: forbid svn tags modifications (part 2)
 
