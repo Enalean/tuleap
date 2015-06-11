@@ -1,3 +1,6 @@
+Version 1.19 - Tuleap 8.3
+    * story #8090: Export and import project ugroups with members
+
 Version 1.18 - Tuleap 7.9
     * request #7707 Job last artifacts names are not displayed in hudson widget
 

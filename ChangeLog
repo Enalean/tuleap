@@ -16,11 +16,13 @@ Version 8.3 (not released yet)
 	== Plugins ==
 	* git: 4.68
 	* ldap: 3.81
-	* agiledashboard: 1.217
-	* tracker: 5.636
+	* agiledashboard: 1.218
+	* tracker: 5.637
 	* proftpd: 0.21
 	* mediawiki: 0.70
 	* statistics: 0.50
+	* cardwall: 1.49
+	* hudson: 1.19
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
