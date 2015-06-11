@@ -25,27 +25,12 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class TrackerV3Test extends SOAPBase {
 
-    private $server_url;
-    private $login;
-    private $password;
-
     public function setUp() {
         parent::setUp();
 
-        $this->server_url = 'http://localhost/soap/?wsdl';
-        $this->login      = SOAP_TestDataBuilder::TEST_USER_1_NAME;
-        $this->password   = SOAP_TestDataBuilder::TEST_USER_1_PASS;
-
-        $_SERVER['SERVER_NAME'] = 'localhost';
-        $_SERVER['SERVER_PORT'] = '80';
-        $_SERVER['SCRIPT_NAME'] = '/soap/codendi.wsdl.php';
-
-        // Connecting to the soap's tracker client
-        $this->soapTrackerv3 = new SoapClient(
-            $this->server_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE)
-        );
-
+        $_SERVER['SERVER_NAME'] = $this->server_name;
+        $_SERVER['SERVER_PORT'] = $this->server_port;
+        $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
     }
 
     public function tearDown() {
@@ -56,23 +41,10 @@ class TrackerV3Test extends SOAPBase {
         parent::tearDown();
     }
 
-    /**
-     * @return string
-     */
-    private function getSessionHash() {
-        $soapLogin = new SoapClient(
-            $this->server_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE)
-        );
-
-        // Establish connection to the server
-        return $soapLogin->login($this->login, $this->password)->session_hash;
-    }
-
     public function testGetTrackersV3() {
         $session_hash = $this->getSessionHash();
 
-        $response = $this->soapTrackerv3->getTrackerList(
+        $response = $this->soap_base->getTrackerList(
             $session_hash,
             SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID
         );
@@ -101,7 +73,7 @@ class TrackerV3Test extends SOAPBase {
         $severity     = 0;
         $extra_fields = array();
 
-        $response = $this->soapTrackerv3->addArtifact(
+        $response = $this->soap_base->addArtifact(
             $session_hash,
             $project_id,
             $tracker_v3_id,
@@ -124,7 +96,7 @@ class TrackerV3Test extends SOAPBase {
     public function testGetArtifacts($tracker_v3_id) {
         $session_hash = $this->getSessionHash();
 
-        $response = $this->soapTrackerv3->getArtifacts(
+        $response = $this->soap_base->getArtifacts(
             $session_hash,
             SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
             $tracker_v3_id
