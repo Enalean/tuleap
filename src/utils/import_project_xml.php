@@ -48,7 +48,7 @@ try {
         throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($user_name)));
     }
 
-    $xml_importer->importProjectData($project_id, $argv[3]);
+    $xml_importer->import($project_id, $argv[3]);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
         fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);

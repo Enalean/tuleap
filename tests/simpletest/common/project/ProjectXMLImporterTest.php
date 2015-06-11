@@ -34,7 +34,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
 
         $this->event_manager   = mock('EventManager');
         $this->project_manager = mock('ProjectManager');
-        $this->project         = mock('Project');
+        $this->project         = stub('Project')->getID()->returns(122);
         $this->ugroup_manager  = mock('UGroupManager');
         $this->user_manager    = mock('UserManager');
 
@@ -62,33 +62,33 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             array('project' => $this->project, 'xml_content' => $this->xml_content)
         )->once();
 
-        $this->xml_importer->importWithoutUgroups(369, $this->xml_file_path);
+        $this->xml_importer->import(369, $this->xml_file_path);
     }
 
     public function itAsksProjectManagerForTheProject() {
         expect($this->project_manager)->getProject(122)->once();
         $this->expectException();
-        $this->xml_importer->importWithoutUgroups(122, $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itStopsIfNoProjectIsFound() {
         $this->expectException();
 
-        $this->xml_importer->importWithoutUgroups(122, $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itStopsIfProjectIsError() {
         stub($this->project_manager)->getProject()->returns(stub('Project')->isError()->returns(true));
         $this->expectException();
 
-        $this->xml_importer->importWithoutUgroups(122, $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itStopsIfProjectIsDeleted() {
         stub($this->project_manager)->getProject()->returns(stub('Project')->isDeleted()->returns(true));
         $this->expectException();
 
-        $this->xml_importer->importWithoutUgroups(122, $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itImportsProjectDataWithUgroups() {
@@ -116,7 +116,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         expect($this->ugroup_manager)->addUserToUgroup(122, '*', 104)->at(2);
         expect($this->ugroup_manager)->addUserToUgroup(122, '*', 103)->at(3);
 
-        $this->xml_importer->importProjectData(122, $this->xml_file_path_with_ugroups);
+        $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
     }
 
     public function itDoesNotImportsExistingUgroups() {
@@ -142,6 +142,6 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         expect($this->ugroup_manager)->addUserToUgroup(122, '*', 102)->at(1);
         expect($this->ugroup_manager)->addUserToUgroup(122, '*', 104)->at(2);
 
-        $this->xml_importer->importProjectData(122, $this->xml_file_path_with_ugroups);
+        $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
     }
 }

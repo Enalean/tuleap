@@ -62,58 +62,76 @@ class ProjectXMLImporter {
         $this->logger          = $logger;
     }
 
-    public function importProjectData($project_id, $xml_file_path) {
+    public function import($project_id, $xml_file_path) {
         $this->logger->info("Start importing project in project $project_id");
 
         $file_contents = file_get_contents($xml_file_path, 'r');
         $this->checkFileIsValidXML($file_contents);
 
         $xml_element = simplexml_load_string($file_contents);
+        $project     = $this->getProject($project_id);
 
-        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project.rng');
-        $this->xml_validator->validate($xml_element, $rng_path);
+        $this->importUgroups($project, $xml_element);
 
-        $this->logger->debug("XML is valid");
-
-        $project       = $this->getProject($project_id);
-        $ugroup_in_xml = $this->getUgroupsFromXMLToAdd($project, $xml_element);
-
-        foreach ($ugroup_in_xml as $ugroup) {
-            $this->logger->debug("Creating empty ugroup " . $ugroup['name']);
-            $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
-                $project_id,
-                $ugroup['name'],
-                $ugroup['description']
-            );
-
-            if (empty($ugroup['users'])) {
-                $this->logger->debug("No user to add in ugroup " . $ugroup['name']);
-            } else {
-                $this->logger->debug("Adding users to ugroup " . $ugroup['name']);
-            }
-
-            foreach ($ugroup['users'] as $user) {
-                $this->logger->debug("Adding user " . $user->getUserName());
-                $this->ugroup_manager->addUserToUgroup(
-                    $project_id,
-                    $new_ugroup_id,
-                    $user->getId()
-                );
-            }
-        }
+        $this->logger->info("Ask to plugin to import data from XML");
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_PROJECT,
+            array(
+                'project'     => $project,
+                'xml_content' => $xml_element
+            )
+        );
 
         $this->logger->info("Finish importing project in project $project_id");
     }
 
+    private function importUgroups(Project $project, SimpleXMLElement $xml_element) {
+        $this->logger->info("Check if there are ugroups to add");
+
+        if ($xml_element->ugroups) {
+            $this->logger->info("Some ugroups are defined in the XML");
+
+            $ugroup_in_xml = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
+
+            foreach ($ugroup_in_xml as $ugroup) {
+                $this->logger->debug("Creating empty ugroup " . $ugroup['name']);
+                $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
+                    $project->getID(),
+                    $ugroup['name'],
+                    $ugroup['description']
+                );
+
+                if (empty($ugroup['users'])) {
+                    $this->logger->debug("No user to add in ugroup " . $ugroup['name']);
+                } else {
+                    $this->logger->debug("Adding users to ugroup " . $ugroup['name']);
+                }
+
+                foreach ($ugroup['users'] as $user) {
+                    $this->logger->debug("Adding user " . $user->getUserName());
+                    $this->ugroup_manager->addUserToUgroup(
+                        $project->getID(),
+                        $new_ugroup_id,
+                        $user->getId()
+                    );
+                }
+            }
+        }
+    }
+
     /**
-     * @param SimpleXMLElement $xml_element
+     * @param SimpleXMLElement $xml_element_ugroups
      *
      * @return array
      */
-    private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element) {
+    private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element_ugroups) {
         $ugroups = array();
 
-        foreach ($xml_element->ugroups->ugroup as $ugroup) {
+        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
+        $this->xml_validator->validate($xml_element_ugroups, $rng_path);
+        $this->logger->debug("XML Ugroups is valid");
+
+        foreach ($xml_element_ugroups->ugroup as $ugroup) {
             $ugroup_name        = (string) $ugroup['name'];
             $ugroup_description = (string) $ugroup['description'];
 
@@ -151,28 +169,6 @@ class ProjectXMLImporter {
         }
 
         return $ugroup_members;
-    }
-
-    /**
-     * Import a project xml in a project on the behalf of a user
-     *
-     * @throws Exception
-     *
-     * @return SimpleXMLElement
-     */
-    public function importWithoutUgroups($project_id, $xml_file_path) {
-        $file_contents = file_get_contents($xml_file_path, 'r');
-        $this->checkFileIsValidXML($file_contents);
-
-        $xml_content = new SimpleXMLElement($file_contents);
-        $project     = $this->getProject($project_id);
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_PROJECT,
-            array(
-                'project'     => $project,
-                'xml_content' => $xml_content
-            )
-        );
     }
 
     private function checkFileIsValidXML($file_contents) {
