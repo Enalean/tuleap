@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012. All rights reserved
+  * Copyright (c) Enalean, 2012 - 2015. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -31,12 +31,24 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
      * @var Tracker_Rule_List_Factory 
      */
     protected $list_rule_factory;
+
+    /** @var XML_Security */
+    protected $xml_security;
     
     public function setUp() {
         parent::setUp();
         
         $this->list_rule_dao = mock('Tracker_Rule_List_Dao');
         $this->list_rule_factory = new Tracker_Rule_List_Factory($this->list_rule_dao);
+
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
+    }
+
+    public function tearDown() {
+        $this->xml_security->disableExternalLoadOfEntities();
+
+        parent::tearDown();
     }
 
     public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed() {

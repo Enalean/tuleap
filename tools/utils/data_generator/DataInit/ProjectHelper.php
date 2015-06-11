@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,12 @@ class ProjectHelper {
 
         $this->xml_importer = new \ProjectXMLImporter(
             \EventManager::instance(),
-            \ProjectManager::instance()
+            \ProjectManager::instance(),
+            new \XML_RNGValidator(),
+            new \UGroupManager(),
+            \UserManager::instance(),
+            new \XMLImportHelper(),
+            new \ProjectXMLImporterLogger()
         );
     }
 
@@ -108,7 +113,7 @@ class ProjectHelper {
     public function importTemplateInProject(Project $project, PFUser $user, $template_path) {
         \UserManager::instance()->forceLogin($user->getUserName());
         var_dump('Import Template');
-        $this->xml_importer->import($project->getID(), $template_path);
+        $this->xml_importer->importWithoutUgroups($project->getID(), $template_path);
         var_dump('Template imported');
     }
 

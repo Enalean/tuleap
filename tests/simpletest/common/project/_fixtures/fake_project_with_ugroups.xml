@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <ugroups>
+        <ugroup name="ug01" description="descr01">
+            <members>
+                <member format="ldap">ldap_01</member>
+                <member format="ldap">ldap_02</member>
+                <member format="username">user_04</member>
+            </members>
+        </ugroup>
+        <ugroup name="ug02" description="descr02">
+            <members>
+                <member format="ldap">ldap_03</member>
+            </members>
+        </ugroup>
+        <ugroup name="ug03" description="descr03">
+            <members/>
+        </ugroup>
+    </ugroups>
+</project>

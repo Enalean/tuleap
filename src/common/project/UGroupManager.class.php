@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Project.class.php';
-require_once 'common/dao/UGroupDao.class.php';
-require_once 'common/dao/UGroupUserDao.class.php';
-require_once 'common/event/EventManager.class.php';
+require_once('www/project/admin/ugroup_utils.php');
 
 class UGroupManager {
     
@@ -326,6 +323,12 @@ class UGroupManager {
         }
         return array();
     }
-}
 
-?>
+    public function createEmptyUgroup($project_id, $ugroup_name, $ugroup_description) {
+        return ugroup_create($project_id, $ugroup_name, $ugroup_description, "cx_empty");
+    }
+
+    public function addUserToUgroup($project_id, $ugroup_id, $user_id) {
+        return ugroup_add_user_to_ugroup($project_id, $ugroup_id, $user_id);
+    }
+}

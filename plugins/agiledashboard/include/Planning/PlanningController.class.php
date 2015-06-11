@@ -363,10 +363,18 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     private function importConfiguration() {
-        $xml_importer = new ProjectXMLImporter(EventManager::instance(), ProjectManager::instance());
+        $xml_importer = new ProjectXMLImporter(
+            EventManager::instance(),
+            ProjectManager::instance(),
+            new XML_RNGValidator(),
+            new UGroupManager(),
+            UserManager::instance(),
+            new XMLImportHelper(),
+            new ProjectXMLImporterLogger()
+        );
 
         try {
-            $xml_importer->import($this->group_id, $_FILES["template_file"]["tmp_name"]);
+            $xml_importer->importWithoutUgroups($this->group_id, $_FILES["template_file"]["tmp_name"]);
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success') );
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_import') );
@@ -397,7 +405,7 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     private function getFullConfigurationAsXML(Project $project) {
-        return $this->xml_exporter->exportAsStandaloneXMLDocument($project);
+        return $this->xml_exporter->exportWithoutUgroups($project);
     }
 
     public function create() {

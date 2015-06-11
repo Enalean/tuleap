@@ -13,6 +13,8 @@
 // Define various functions for user group management
 //
 require_once 'utils.php';
+require_once 'project_admin_utils.php';
+
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
 /** @deprecated **/
 $GLOBALS['UGROUP_NONE']               = ProjectUGroup::NONE;
