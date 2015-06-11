@@ -1,3 +1,16 @@
+<?php
+    $sections = array(
+        'colors',
+        'icons',
+        'avatars',
+        'typography',
+        'buttons',
+        'tables',
+        'tooltips',
+        'forms',
+    );
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +21,13 @@
     <script src="_js/highlight-8.5.min.js"></script>
     <script src="_js/jsbeautifier.js"></script>
     <script src="_js/guidelines.js"></script>
+    <?php
+        foreach($sections as $section) {
+            if (is_file($section .'/'. $section .'.js')) {
+                echo '<script src="'. $section .'/'. $section .'.js"></script>';
+            }
+        }
+    ?>
 
     <link rel="stylesheet" type="text/css" href="_css/bootstrap-3.3.4.min.css">
     <link rel="stylesheet" type="text/css" href="_css/font-awesome-4.3.0.min.css">
@@ -56,18 +76,6 @@
 
     <div id="content">
         <div id="guidelines" class="row">
-            <?php
-                $sections = array(
-                    'colors',
-                    'icons',
-                    'avatars',
-                    'typography',
-                    'buttons',
-                    'tables',
-                    'tooltips',
-                    'forms',
-                );
-            ?>
             <div class="col-md-2">
                 <nav id="menu" class="hidden-print hidden-xs hidden-sm affix">
                     <ul id="color-switcher">

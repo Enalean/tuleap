@@ -2,6 +2,64 @@
     <h1>Forms</h1>
 
     <div class="row guideline">
+        <h2 id="forms-fieldsets">Fieldsets</h2>
+
+        <h3>Basic fieldset</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <fieldset>
+        <legend>Basic info</legend>
+
+        <div class="fieldset-content">
+            <div class="form-group">
+                <label for="fieldset-field-email-id">Email</label>
+                <input type="email" class="form-control" id="fieldset-field-email-id" name="field-email-name" placeholder="john.mcclane@tuleap.net">
+            </div>
+            <div class="form-group">
+                <label for="fieldset-field-password-id">Password</label>
+                <input type="password" class="form-control" id="fieldset-field-password-id" name="field-password-name" placeholder="Password">
+            </div>
+        </div>
+    </fieldset>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Collapsable fieldset</h3>
+        <p class="rule">You can add the class "fieldset-closed" to start with a closed fieldset.</p>
+
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <fieldset class="fieldset-collapsable" data-toggle="fieldset">
+        <legend><i class="fieldset-collapsable-trigger"></i> I'm collapsable</legend>
+
+        <div class="fieldset-content">
+            <div class="form-group">
+                <label for="fieldset-collapsable-field-email-id">Email</label>
+                <input type="email" class="form-control" id="fieldset-collapsable-field-email-id" name="field-email-name" placeholder="john.mcclane@tuleap.net">
+            </div>
+            <div class="form-group">
+                <label for="fieldset-collapsable-field-password-id">Password</label>
+                <input type="password" class="form-control" id="fieldset-collapsable-field-password-id" name="field-password-name" placeholder="Password">
+            </div>
+        </div>
+    </fieldset>
+</form>
+            </div>
+            <div class="col-md-3 code"></div>
+            <div class="col-md-3 javascript">
+<pre><code class="javascript">$('[data-toggle="fieldset"]').fieldset();</code></pre>
+            </div>
+            <script type="text/javascript">
+                $('[data-toggle="fieldset"]').fieldset();
+            </script>
+        </div>
+    </div>
+
+    <div class="row guideline">
         <h2 id="forms-input-types">Input types</h2>
         <p class="rule">Always use a placeholder.</p>
 
@@ -25,12 +83,89 @@
         <input type="number" class="form-control" id="field-number-id" name="field-number-name" placeholder="9">
     </div>
     <div class="form-group">
+        <label for="field-search-id">Search</label>
+        <div class="input-search">
+            <input type="search" class="form-control" id="field-search-id" name="field-search-name" placeholder="Search...">
+        </div>
+    </div>
+    <div class="form-group">
         <label for="field-url-id">URL</label>
         <input type="url" class="form-control" id="field-url-id" name="field-url-name" placeholder="http://www.tuleap.net">
     </div>
     <div class="form-group">
         <label for="field-text-disabled-id">Disabled</label>
-        <input type="text" class="form-control" id="field-text-disabled-id" name="field-text-disabled-name" placeholder="Oh no, I'm disabled :(" disabled   >
+        <input type="text" class="form-control" id="field-text-disabled-id" name="field-text-disabled-name" placeholder="Oh no, I'm disabled :(" disabled>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+
+    <div class="row guideline">
+        <h2 id="forms-input-sizes">Input sizes</h2>
+
+        <h3>Field width</h3>
+        <p class="rule">Wrap your field into a bootstrap column or put a width directly on it.</p>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="row">
+        <div class="form-group col-md-5">
+            <label for="field-small-width-text-id">Small text</label>
+            <input type="text" class="form-control" id="field-small-width-text-id" name="field-small-width-text-name" placeholder="Placeholder">
+        </div>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+
+        <h3>Field height for all fields except search field</h3>
+        <p class="rule">Add "input-sm" or "input-lg" class to your input or select element.</p>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-small-text-id">Small text</label>
+        <input type="text" class="form-control input-sm" id="field-small-text-id" name="field-small-text-name" placeholder="Placeholder">
+    </div>
+    <div class="form-group">
+        <label for="field-normal-text-id">Normal text</label>
+        <input type="text" class="form-control" id="field-normal-text-id" name="field-normal-text-name" placeholder="Placeholder">
+    </div>
+    <div class="form-group">
+        <label for="field-big-text-id">Big text</label>
+        <input type="text" class="form-control input-lg" id="field-big-text-id" name="field-big-text-name" placeholder="Placeholder">
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Search field height sizes</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-small-search-id">Small search</label>
+        <div class="input-search input-search-sm">
+            <input type="search" class="form-control input-sm" id="field-small-search-id" name="field-small-search-name" placeholder="Search...">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="field-normal-search-id">Normal search</label>
+        <div class="input-search">
+            <input type="search" class="form-control" id="field-normal-search-id" name="field-normal-search-name" placeholder="Search...">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="field-big-search-id">Big search</label>
+        <div class="input-search input-search-lg">
+            <input type="search" class="form-control input-lg" id="field-big-search-id" name="field-big-search-name" placeholder="Search...">
+        </div>
     </div>
 </form>
             </div>
@@ -243,6 +378,83 @@
             <option value="two" disabled>Two disabled</option>
             <option value="three">Three</option>
         </select>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+    <div class="row guideline">
+        <h2 id="forms-help">Help</h2>
+
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="help-field-email-id">Email</label>
+        <input type="email" class="form-control" id="help-field-email-id" name="field-email-name" placeholder="john.mcclane@tuleap.net">
+        <span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+    <div class="row guideline">
+        <h2 id="forms-validation">Validation</h2>
+
+        <h3>Error</h3>
+        <p class="rule">Add "has-error" class on .form-group, .checkbox or .radio</p>
+
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group has-error">
+        <label for="error-field-email-id">Email in error</label>
+        <input type="email" class="form-control" id="error-field-email-id" name="field-email-name" placeholder="john.mcclane@tuleap.net">
+        <span class="error-block">This is an error message.</span>
+    </div>
+    <div class="form-group has-error">
+        <label for="error-field-select-id">Select in error</label>
+        <select class="form-control" id="error-field-select-id" name="error-field-select-name">
+            <option value="one">One</option>
+            <option value="two">Two</option>
+            <option value="three">Three</option>
+        </select>
+        <span class="error-block">This is an error message.</span>
+    </div>
+    <div class="form-group has-error">
+        <label for="error-field-textarea-id">Textarea in error</label>
+        <textarea class="form-control" id="error-field-textarea-id" rows="5" placeholder="Comment"></textarea>
+        <span class="error-block">This is an error message.</span>
+    </div>
+    <div class="form-group has-error">
+        <label for="error-field-url-prepend-id">Input prepend in error</label>
+        <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-globe"></i></div>
+            <input type="url" class="form-control" id="error-field-url-prepend-id" name="error-field-url-prepend-name" placeholder="http://www.tuleap.net">
+        </div>
+        <span class="error-block">This is an error message.</span>
+    </div>
+    <div class="checkbox has-error">
+        <label>
+            <input type="checkbox" name="error-field-checkbox-name" id="error-field-checkbox-id" value="value">Checkbox one in error
+        </label>
+        <span class="error-block">This is an error message.</span>
+    </div>
+
+    <div class="radio has-error">
+        <label>
+            <input type="radio" name="error-field-radio-name" id="error-field-radio-id1" value="radio1" checked="">Radio one in error
+        </label>
+    </div>
+    <div class="radio has-error">
+        <label>
+            <input type="radio" name="error-field-radio-name" id="error-field-radio-id2" value="radio2">Radio two
+        </label>
+        <span class="error-block">This is an error message.</span>
     </div>
 </form>
             </div>
