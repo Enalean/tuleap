@@ -25,6 +25,10 @@ msgid "Burndown"
 msgstr ""
 
 #: src/app/modal/modal.tpl.html
+msgid "By: {{ file.submitted_by }}"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
 msgid "Cancel"
 msgstr ""
 
@@ -42,6 +46,10 @@ msgstr ""
 
 #: src/app/modal/modal.tpl.html
 msgid "Create a new {{ modal.title }}"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Empty"
 msgstr ""
 
 #: src/app/modal/modal.tpl.html
@@ -81,7 +89,15 @@ msgid "Planning"
 msgstr ""
 
 #: src/app/modal/modal.tpl.html
+msgid "References list is empty."
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
 msgid "Select parent:"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Size: {{ file.size | byteFmt: 2 }}"
 msgstr ""
 
 #: src/app/modal/modal.tpl.html

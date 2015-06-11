@@ -84,7 +84,8 @@ module.exports = {
       'vendor/angular-ui-bootstrap/ui-bootstrap-0.8.0.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js',
       'vendor/angular-ckeditor/angular-ckeditor.js',
-      'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'
+      'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
+      'vendor/angular-filter/dist/angular-filter.min.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',

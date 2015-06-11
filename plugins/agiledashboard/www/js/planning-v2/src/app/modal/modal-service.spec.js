@@ -53,7 +53,7 @@ describe("ModalService", function() {
             $rootScope.$apply();
 
             expect(ModalTuleapFactory.getTrackerStructure).toHaveBeenCalledWith(28);
-            expect(ModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure);
+            expect(ModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure, true);
             expect(ModalService.getParentArtifactsTitle).toHaveBeenCalledWith(null, jasmine.any(Object));
             expect(success).toHaveBeenCalled();
             var model = success.calls[0].args[0];
@@ -93,7 +93,7 @@ describe("ModalService", function() {
             $rootScope.$apply();
 
             expect(ModalTuleapFactory.getTrackerStructure).toHaveBeenCalledWith(93);
-            expect(ModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure);
+            expect(ModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure, false);
             expect(ModalService.getArtifactValues).toHaveBeenCalledWith(250, tracker_structure, jasmine.any(Object));
             expect(success).toHaveBeenCalled();
             var model = success.calls[0].args[0];

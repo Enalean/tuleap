@@ -102,7 +102,7 @@ function ModalTuleapFactory(Restangular) {
     function errorInterceptor(response) {
         var error_message;
         if (response.data && response.data.error) {
-            error_message = response.data.error.code +' '+response.data.error.message;
+            error_message = response.data.error.message;
         } else {
             error_message = response.status +' '+ response.statusText;
         }

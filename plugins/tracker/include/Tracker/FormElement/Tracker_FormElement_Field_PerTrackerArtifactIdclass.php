@@ -50,6 +50,18 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'" $from_aid_content>'. $value .'</a>';
     }
 
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->getId(),
+            Tracker_FormElementFactory::instance()->getType($this),
+            $this->getLabel(),
+            (int)$changeset->getArtifact()->getPerTrackerArtifactId()
+        );
+        return $artifact_field_value_full_representation;
+    }
+
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
