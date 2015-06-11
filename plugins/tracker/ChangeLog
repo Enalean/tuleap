@@ -1,3 +1,6 @@
+Version 5.636 - Tuleap 8.3
+    * story #7857: Display read-only fields
+
 Version 5.635 - Tuleap 8.3
     * request #8139: tracker exports invalid rng when deleted fields are in report coulumns
 
