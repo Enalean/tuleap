@@ -32,19 +32,13 @@ class KanbanBacklogRepresentation {
     /** @var int */
     public $total_size;
 
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_add_in_place;
-
-    public function build(PFUser $user, AgileDashboard_Kanban $kanban, $user_can_add_in_place, $limit, $offset) {
+    public function build(PFUser $user, AgileDashboard_Kanban $kanban, $limit, $offset) {
         $dao     = new AgileDashboard_KanbanItemDao();
         $factory = Tracker_ArtifactFactory::instance();
         $data    = $dao->searchPaginatedBacklogItemsByTrackerId($kanban->getTrackerId(), $limit, $offset);
 
-        $this->total_size            = (int) $dao->foundRows();
-        $this->user_can_add_in_place = $user_can_add_in_place;
-        $this->collection            = array();
+        $this->total_size = (int) $dao->foundRows();
+        $this->collection = array();
         foreach ($data as $row) {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {

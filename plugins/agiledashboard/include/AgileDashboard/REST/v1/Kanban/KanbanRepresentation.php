@@ -61,12 +61,28 @@ class KanbanRepresentation {
      */
     public $resources;
 
+    /**
+     * @var Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogInfoRepresentation
+     */
+    public $backlog;
+
+    /**
+     * @var Tuleap\AgileDashboard\REST\v1\Kanban\KanbanArchiveInfoRepresentation
+     */
+    public $archive;
+
     public function build(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory, $user_can_add_in_place) {
         $this->id         = JsonCast::toInt($kanban->getId());
         $this->tracker_id = JsonCast::toInt($kanban->getTrackerId());
         $this->uri        = self::ROUTE.'/'.$this->id;
         $this->label      = $kanban->getName();
         $this->columns    = array();
+
+        $this->backlog = new KanbanBacklogInfoRepresentation();
+        $this->backlog->build('Backlog', false, $user_can_add_in_place);
+
+        $this->archive = new KanbanArchiveInfoRepresentation();
+        $this->archive->build('Archive', false);
 
         $this->tracker = new TrackerReference();
         $this->tracker->build($this->getTracker($kanban));

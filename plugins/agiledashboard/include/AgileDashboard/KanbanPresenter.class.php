@@ -23,17 +23,8 @@ class KanbanPresenter {
     /** @var string */
     public $language;
 
-    /** @var string */
-    public $kanban_name;
-
-    /** @var int */
-    public $kanban_open;
-
-    /** @var int */
-    public $kanban_closed;
-
-    /** @var int */
-    public $tracker_id;
+    /** @var string json of Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder */
+    public $kanban_representation;
 
     /** @var boolean */
     public $user_is_kanban_admin;
@@ -41,13 +32,21 @@ class KanbanPresenter {
     /** @var int */
     public $project_id;
 
-    public function __construct(AgileDashboard_Kanban $kanban, $user_is_kanban_admin, $language, $project_id) {
-        $this->language             = $language;
-        $this->kanban_name          = $kanban->getName();
-        $this->kanban_open          = 0;
-        $this->kanban_closed        = 0;
-        $this->kanban_id            = $kanban->getId();
-        $this->user_is_kanban_admin = (int) $user_is_kanban_admin;
-        $this->project_id           = $project_id;
+    public function __construct(
+        AgileDashboard_Kanban $kanban,
+        PFUser $user,
+        $user_is_kanban_admin,
+        $language,
+        $project_id
+    ) {
+        $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
+            new AgileDashboard_KanbanColumnFactory(new AgileDashboard_KanbanColumnDao()),
+            TrackerFactory::instance(),
+            Tracker_FormElementFactory::instance()
+        );
+        $this->kanban_representation = json_encode($kanban_representation_builder->build($kanban, $user));
+        $this->user_is_kanban_admin  = (int) $user_is_kanban_admin;
+        $this->language              = $language;
+        $this->project_id            = $project_id;
     }
 }
