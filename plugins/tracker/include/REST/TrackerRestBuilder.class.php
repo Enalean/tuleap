@@ -43,7 +43,7 @@ class Tracker_REST_TrackerRestBuilder {
             $this->getRESTFieldsUserCanRead($user, $tracker),
             $this->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
-            $this->getWorkflowRepresentation($tracker->getWorkflow(), $user)
+            $this->getWorkflowRepresentation($tracker->getWorkflow(), $user, $tracker->getGroupId())
         );
 
         return $tracker_representation;
@@ -82,14 +82,18 @@ class Tracker_REST_TrackerRestBuilder {
      * @param PFUser $user
      * @return Tuleap\Tracker\REST\WorkflowRepresentation | null
      */
-    private function getWorkflowRepresentation(Workflow $workflow, PFUser $user) {
+    private function getWorkflowRepresentation(Workflow $workflow, PFUser $user, $project_id) {
         if (! $workflow->isUsed() || ! $workflow->getField()->userCanRead($user)) {
             return;
         }
 
         $transitions = array();
         foreach ($workflow->getTransitions() as $transition) {
-            $transitions[] = $this->getWorkflowTransitionRepresentation($transition);
+            $condition_permission = new Workflow_Transition_Condition_Permissions($transition);
+
+            if ($condition_permission->isUserAllowedToSeeTransition($user, $project_id)) {
+                $transitions[] = $this->getWorkflowTransitionRepresentation($transition);
+            }
         }
 
         $workflow_representation = new WorkflowRepresentation();

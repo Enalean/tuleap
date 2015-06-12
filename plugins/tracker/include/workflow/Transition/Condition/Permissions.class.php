@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'common/permission/PermissionsManager.class.php';
 
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {
 
@@ -109,11 +107,22 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
-        $current_user       = UserManager::instance()->getCurrentUser();
-        $transition_ugroups = $this->permission_manager->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        return $this->isUserAllowedToSeeTransition(
+            $current_user,
+            $artifact->getTracker()->getGroupId()
+        );
+    }
+
+    public function isUserAllowedToSeeTransition(PFUser $user, $project_id) {
+        $transition_ugroups = $this->permission_manager->getAuthorizedUgroups(
+            $this->transition->getId(),
+            self::PERMISSION_TRANSITION
+        );
 
         foreach($transition_ugroups as $ugroup) {
-            if ($current_user->isMemberOfUGroup($ugroup['ugroup_id'], $artifact->getTracker()->getGroupId())) {
+            if ($user->isMemberOfUGroup($ugroup['ugroup_id'], $project_id)) {
                 return true;
             }
         }
@@ -121,4 +130,3 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         return false;
     }
 }
-?>
