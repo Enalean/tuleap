@@ -21,4 +21,41 @@
 require_once dirname(__FILE__).'/../autoload.php';
 require_once 'common/autoload.php';
 
-class SOAPBase extends PHPUnit_Framework_TestCase {}
+class SOAPBase extends PHPUnit_Framework_TestCase {
+
+    protected $server_base_url;
+    protected $base_wsdl;
+    protected $server_name;
+    protected $server_port;
+    protected $login;
+    protected $password;
+
+    /** @var SoapClient */
+    protected $soap_base;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->login           = SOAP_TestDataBuilder::TEST_USER_1_NAME;
+        $this->password        = SOAP_TestDataBuilder::TEST_USER_1_PASS;
+        $this->server_base_url = 'http://localhost/soap/?wsdl';
+        $this->base_wsdl       = '/soap/codendi.wsdl.php';
+        $this->server_name     = 'localhost';
+        $this->server_port     = '80';
+
+        // Connecting to the soap's tracker client
+        $this->soap_base = new SoapClient(
+            $this->server_base_url,
+            array('cache_wsdl' => WSDL_CACHE_NONE)
+        );
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSessionHash() {
+        // Establish connection to the server
+        return $this->soap_base->login($this->login, $this->password)->session_hash;
+    }
+
+}
