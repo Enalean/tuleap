@@ -3274,28 +3274,9 @@ EOS;
         Tracker_XML_ChildrenCollector $children_collector,
         PFUser $current_user
     ) {
-        $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
-                new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter()
-            ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
-                $children_collector,
-                $current_user
-            ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
-        );
-        $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor);
-        $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter($values_exporter);
+        $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
 
-        return new Tracker_XML_Exporter_ArtifactXMLExporter($changeset_exporter);
+        return $builder->build($children_collector, $current_user);
     }
 
     private function getChangesetXMLUpdater() {

@@ -1871,4 +1871,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $soap_artifact;
     }
+
+    /**
+     * Adds to $artifacts_node the xml export of the artifact.
+     */
+    public function exportToXML(SimpleXMLElement $artifacts_node, PFUser $user) {
+        $children_collector = new Tracker_XML_Exporter_NullChildrenCollector();
+
+        $artifact_xml_exporter = $this->getArtifactXMLExporter(
+            $children_collector,
+            $user
+        );
+
+        $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
+    }
+
+    private function getArtifactXMLExporter(
+        Tracker_XML_ChildrenCollector $children_collector,
+        PFUser $current_user
+    ) {
+        $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+
+        return $builder->build($children_collector, $current_user);
+    }
 }

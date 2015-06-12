@@ -29,6 +29,9 @@ class Tracker_XML_Exporter_ArtifactXMLExporter {
         $this->changeset_exporter = $changeset_exporter;
     }
 
+    /**
+     * Same as exportFullHistory() but only the current state of the artifact
+     */
     public function exportSnapshotWithoutComments(
         SimpleXMLElement $artifacts_xml,
         Tracker_Artifact_Changeset $changeset
@@ -38,5 +41,20 @@ class Tracker_XML_Exporter_ArtifactXMLExporter {
         $artifact_xml->addAttribute('tracker_id', $changeset->getArtifact()->getTrackerId());
 
         $this->changeset_exporter->exportWithoutComments($artifact_xml, $changeset);
+    }
+
+    /**
+     * Add to $artifacts_xml the xml structure of an artifact
+     */
+    public function exportFullHistory(
+        SimpleXMLElement $artifacts_xml,
+        Tracker_Artifact $artifact
+    ) {
+        $artifact_xml = $artifacts_xml->addChild('artifact');
+        $artifact_xml->addAttribute('id', $artifact->getId());
+
+        foreach ($artifact->getChangesets() as $changeset) {
+            $this->changeset_exporter->exportFullHistory($artifact_xml, $changeset);
+        }
     }
 }

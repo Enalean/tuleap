@@ -1,3 +1,5 @@
+include "artifact-definition.rnc"
+
 tracker =
         # old ids
         attribute id { xsd:string }?,
@@ -68,6 +70,12 @@ tracker =
                 attribute scope { "tracker" | "field" },
                 attribute ugroup { xsd:string },
                 attribute type { xsd:string }
+            }*
+        }?,
+
+        element artifacts {
+            element artifact {
+                artifact
             }*
         }?
 

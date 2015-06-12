@@ -90,7 +90,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
         $this->expectException();
 
-        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException(array(), array()));
+        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
         $xml_exporter  = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
         $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }

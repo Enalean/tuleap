@@ -72,7 +72,8 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             'tracker_id' => 10
         );
 
-        $xml       = $this->xml_exporter->export($this->project, $options);
+        $user      = mock('PFUser');
+        $xml       = $this->xml_exporter->export($this->project, $options, $user);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertNotNull($xml_objet->ugroups);

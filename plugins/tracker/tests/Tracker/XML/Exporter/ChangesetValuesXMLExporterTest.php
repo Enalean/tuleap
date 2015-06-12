@@ -64,7 +64,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends TuleapTestCase
         expect($this->visitor)->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->int_changeset_value)->at(0);
         expect($this->visitor)->export($this->artifact_xml, $this->changeset_xml, $this->artifact, $this->float_changeset_value)->at(1);
 
-        $this->values_exporter->export(
+        $this->values_exporter->exportSnapshot(
             $this->artifact_xml,
             $this->changeset_xml,
             $this->artifact,

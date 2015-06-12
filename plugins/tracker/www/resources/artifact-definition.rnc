@@ -1,0 +1,139 @@
+artifact =
+    attribute id { xsd:int },
+    attribute tracker_id { xsd:int }?,
+    element changeset {
+        element submitted_by { user_content },
+        element submitted_on { date_content },
+        element comments     { comments },
+        element field_change { field_content }*
+    }*,
+    element file {
+        attribute id { xsd:ID },
+        element filename { xsd:string },
+        element path { xsd:string },
+        element filesize { xsd:int },
+        element filetype { xsd:string },
+        element description { xsd:string }
+    }*
+
+    comments =
+        element comment { comment_content }*
+
+    comment_content =
+        element submitted_by { user_content },
+        element submitted_on { date_content },
+        element body { text_content }
+
+    text_content =
+        attribute format { "text" | "html" },
+        xsd:string
+
+    date_content =
+        attribute format { "ISO8601" },
+        xsd:string
+
+    user_content =
+        (
+            (
+                attribute format { "username" | "ldap" | "id" }
+            ) | (
+                attribute format { "email" },
+                attribute is_anonymous { xsd:boolean }
+            )
+        ),
+        xsd:string
+
+    open_list_content =
+        attribute format { "label" | "id" }?,
+        xsd:string
+
+    field_content =
+        attribute field_name { xsd:string },
+        ( field_string
+            | field_text
+            | field_int
+            | field_float
+            | field_date
+            | field_file
+            | field_art_link
+            | field_static_list
+            | field_user_list
+            | field_ugroup_list
+            | field_open_list_user
+            | field_open_list_ugroup
+            | field_open_list_static
+            | field_perms_on_artifact
+        )
+
+    field_string =
+        attribute type { "string" },
+        element value { xsd:string? }
+
+    field_text =
+        attribute type { "text" },
+        element value { (xsd:string | text_content)? }
+
+    field_int =
+        attribute type { "int" },
+        element value { xsd:int? }
+
+    field_float =
+        attribute type { "float" },
+        element value { xsd:float? }
+
+    field_date =
+        attribute type { "date" },
+        element value { date_content }
+
+    field_file =
+        attribute type { "file" },
+        element value {
+            attribute ref { xsd:IDREF }
+        }+
+
+    field_art_link =
+        attribute type { "art_link" },
+        element value { xsd:int }*
+
+    field_static_list =
+        attribute type { "list" },
+        attribute bind { "static" },
+        element value  {
+            attribute format { "id" }?,
+            xsd:string
+        }*
+
+    field_user_list =
+        attribute type { "list" },
+        attribute bind { "users" },
+        element value  { user_content }*
+
+    field_ugroup_list =
+        attribute type { "list" },
+        attribute bind { "ugroups" },
+        element value  {
+            attribute format { "id" },
+            xsd:string
+        }*
+
+    field_open_list_user =
+        attribute type { "open_list" },
+        attribute bind { "users" },
+        element value { open_list_content }*
+
+    field_open_list_ugroup =
+        attribute type { "open_list" },
+        attribute bind { "ugroups" },
+        element value { open_list_content }*
+
+    field_open_list_static =
+        attribute type { "open_list" },
+        attribute bind { "static" },
+        element value { open_list_content }*
+
+    field_perms_on_artifact =
+        attribute type { "permissions_on_artifact" },
+        attribute use_perm { xsd:boolean },
+        element ugroup {
+            attribute ugroup_id { xsd:int }
+        }+

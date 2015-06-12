@@ -124,7 +124,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfXmlDoesNotMatchRNG() {
-         $xml_validator  = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException(array(), array()));
+         $xml_validator  = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
          $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->mapping, $this->cardwall_ontop_dao, $this->column_dao, $this->event_manager, $xml_validator);
 
          $this->expectException('XML_ParseException');

@@ -77,8 +77,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
     ) {
         $node = $artifact_xml->addChild('file');
         $node->addAttribute('id',      $this->getFileInfoIdForXML($file_info));
-        $node->addChild('path',        $this->path_exporter->getPath($file_info));
         $node->addChild('filename',    $file_info->getFilename());
+        $node->addChild('path',        $this->path_exporter->getPath($file_info));
         $node->addChild('filesize',    $file_info->getFilesize());
         $node->addChild('filetype',    $file_info->getFiletype());
         $node->addChild('description', $file_info->getDescription());
