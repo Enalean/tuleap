@@ -16,12 +16,12 @@ Version 8.3 (not released yet)
 	== Plugins ==
 	* git: 4.68
 	* ldap: 3.81
-	* agiledashboard: 1.218
-	* tracker: 5.637
+	* agiledashboard: 1.219
+	* tracker: 5.638
 	* proftpd: 0.21
 	* mediawiki: 0.70
 	* statistics: 0.50
-	* cardwall: 1.49
+	* cardwall: 1.50
 	* hudson: 1.19
 
 	== Development ==
