@@ -255,7 +255,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             new ProjectXMLImporterLogger()
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->importWithoutUgroups($project_id, $this->template_path.$template);
+        $xml_importer->import($project_id, $this->template_path.$template);
     }
 
     public function deleteTracker() {

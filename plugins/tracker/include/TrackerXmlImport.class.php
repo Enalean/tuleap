@@ -138,6 +138,10 @@ class TrackerXmlImport {
      * @return Tracker[]
      */
     public function import($group_id, SimpleXMLElement $xml_input) {
+        if (! $xml_input->trackers) {
+            return;
+        }
+
         $this->xmlFieldsMapping = array();
         $created_trackers_list  = array();
 

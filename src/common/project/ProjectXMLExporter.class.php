@@ -77,6 +77,9 @@ class ProjectXMLExporter {
                 }
             }
         }
+
+        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
+        $this->xml_validator->validate($ugroups_node, $rng_path);
     }
 
     public function exportProjectData(Project $project) {
@@ -85,9 +88,6 @@ class ProjectXMLExporter {
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
         $this->exportProjectUgroups($project, $xml_element);
-
-        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project.rng');
-        $this->xml_validator->validate($xml_element, $rng_path);
 
         $this->logger->info("Finish exporting project " . $project->getPublicName());
 
