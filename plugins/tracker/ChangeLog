@@ -1,3 +1,6 @@
+Version 5.640 - Tuleap 8.3
+    * story #8090: Refactoring Project XML Import
+
 Version 5.639 - Tuleap 8.3
     * story #7857: REST API only send workflow transition user can see
 
