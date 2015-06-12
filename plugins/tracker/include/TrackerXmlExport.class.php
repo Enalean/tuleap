@@ -65,4 +65,19 @@ class TrackerXmlExport {
             }
         }
     }
+
+    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id) {
+        $xml_field_mapping = array();
+        $xml_trackers      = $xml_content->addChild('trackers');
+        $tracker           = $this->tracker_factory->getTrackerById($tracker_id);
+
+        if ($tracker->isActive()) {
+            $tracker_xml = $xml_trackers->addChild('tracker');
+
+            $tracker->exportToXML($tracker_xml, $xml_field_mapping);
+        }
+
+        $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
+        return $xml_trackers;
+    }
 }

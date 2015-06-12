@@ -494,6 +494,7 @@ class Event {
      *
      * Parameters:
      *   'project'  => The given project
+     *   'options'  => The given options
      *   'into_xml' => The SimpleXMLElement to fill in
      *
      * Expected Results:

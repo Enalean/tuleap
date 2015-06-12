@@ -77,6 +77,8 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
         $this->addHook(Event::SITE_ADMIN_CONFIGURATION_TRACKER);
+        $this->addHook(Event::EXPORT_XML_PROJECT);
+
     }
 
     public function getHooksAndCallbacks() {
@@ -667,13 +669,18 @@ class trackerPlugin extends Plugin {
      * @param array $params
      */
     public function agiledashboard_export_xml($params) {
-        $tracker_factory = TrackerFactory::instance();
-        $xml_export = new TrackerXmlExport(
-            $tracker_factory,
-            $tracker_factory->getTriggerRulesManager(),
+        $this->getTrackerXmlExport()->exportToXml($params['project']->getID(), $params['into_xml']);
+    }
+
+    /**
+     * @return TrackerXmlExport
+     */
+    private function getTrackerXmlExport() {
+        return new TrackerXmlExport(
+            $this->getTrackerFactory(),
+            $this->getTrackerFactory()->getTriggerRulesManager(),
             new XML_RNGValidator()
         );
-        $xml_export->exportToXml($params['project']->getID(), $params['into_xml']);
     }
 
     /**
@@ -899,5 +906,17 @@ class trackerPlugin extends Plugin {
         }
 
         $params['is_used'] = $dao->isThereADefaultPermissionThatUsesUgroup($ugroup_id);
+    }
+
+    public function export_xml_project($params) {
+        $tracker_id = $params['options']['tracker_id'];
+        $project    = $params['project'];
+        $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
+
+        if ($tracker->getGroupId() != $project->getID()) {
+            throw new Exception ('Tracker ID does not belong to project ID');
+        }
+
+        $this->getTrackerXmlExport()->exportSingleTrackerToXml($params['into_xml'], $tracker_id);
     }
 }

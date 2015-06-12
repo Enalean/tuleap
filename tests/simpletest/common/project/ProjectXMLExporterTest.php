@@ -63,7 +63,16 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             $project_ugroup_members3,
         ));
 
-        $xml       = $this->xml_exporter->exportProjectData($this->project, 10);
+        expect($this->event_manager)->processEvent(
+            Event::EXPORT_XML_PROJECT,
+            '*'
+        )->once();
+
+        $options = array(
+            'tracker_id' => 10
+        );
+
+        $xml       = $this->xml_exporter->export($this->project, $options);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertNotNull($xml_objet->ugroups);
