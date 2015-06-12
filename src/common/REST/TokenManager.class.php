@@ -81,8 +81,8 @@ class Rest_TokenManager {
      * @return Rest_Token
      */
     public function generateTokenForUser(PFUser $user) {
-        $token_generator = new UserTokenGenerator();
-        $token = $token_generator->getToken();
+        $number_generator = new RandomNumberGenerator();
+        $token            = $number_generator->getNumber();
         $this->token_dao->addTokenForUserId($user->getId(), $token, $_SERVER['REQUEST_TIME']);
 
         return new Rest_Token(

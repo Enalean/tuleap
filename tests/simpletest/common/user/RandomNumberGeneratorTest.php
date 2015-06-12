@@ -19,13 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TokenGeneratorTest extends TuleapTestCase {
+class RandomNumberGeneratorTest extends TuleapTestCase {
     public function itGeneratesTokenOfTheAskedSize() {
-        $token_generator_8_bits = new UserTokenGenerator(1);
-        $this->assertEqual(2, strlen($token_generator_8_bits->getToken()));
-        $token_generator_64_bits = new UserTokenGenerator(8);
-        $this->assertEqual(16, strlen($token_generator_64_bits->getToken()));
-        $token_generator_128_bits = new UserTokenGenerator();
-        $this->assertEqual(32, strlen($token_generator_128_bits->getToken()));
+        $number_generator_8_bits = new RandomNumberGenerator(1);
+        $this->assertEqual(2, strlen($number_generator_8_bits->getNumber()));
+        $number_generator_64_bits = new RandomNumberGenerator(8);
+        $this->assertEqual(16, strlen($number_generator_64_bits->getNumber()));
+        $number_generator_128_bits = new RandomNumberGenerator();
+        $this->assertEqual(32, strlen($number_generator_128_bits->getNumber()));
     }
 }

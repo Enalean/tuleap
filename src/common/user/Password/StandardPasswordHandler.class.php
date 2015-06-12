@@ -35,8 +35,8 @@ class StandardPasswordHandler extends PasswordHandler {
     }
 
     public function computeUnixPassword($plain_password) {
-        $token_generator = new UserTokenGenerator(self::SALT_SIZE);
-        $salt            = $token_generator->getToken();
+        $number_generator = new RandomNumberGenerator(self::SALT_SIZE);
+        $salt             = $number_generator->getNumber();
         // We use SHA-512 with 5000 rounds to create the Unix Password
         // SHA-512 is more widely available than BCrypt in GLibc OS library
         // Only 5000 rounds are used (which is the default value) to keep reasonable performance
