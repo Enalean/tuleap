@@ -38,10 +38,15 @@
     >{{ field.label }}</label>
     <select
         ng-model="modal.values[field.field_id].bind_value_ids[0]"
-        ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values"
+        ng-options="field_value.id as field_value.label for field_value in field.values"
         ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}"
     >
-        <option value="" label="None" translate>None</option>
+        <option
+            ng-if="! field.required"
+            value=""
+            label="None"
+            translate
+        >None</option>
     </select>
 </div>
 </script>
@@ -56,7 +61,7 @@
     <select
         multiple
         ng-model="modal.values[field.field_id].bind_value_ids"
-        ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values"
+        ng-options="field_value.id as field_value.label for field_value in field.values"
         ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}"
     >
         <option value="" label="None" translate>None</option>
@@ -83,19 +88,19 @@
             >
         </label>
     </div>
-    <div ng-repeat="fieldValue in field.values">
+    <div ng-repeat="field_value in field.values">
         <label
-            for="{{ 'rb_' + field.field_id + '_' + fieldValue.id }}"
+            for="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
             class="radio"
         >
-            {{ fieldValue.label }}
+            {{ field_value.label }}
             <input
                 type="radio"
                 ng-model="modal.values[field.field_id].bind_value_ids[0]"
                 name="{{ field.name }}"
-                value="{{ fieldValue.id }}"
+                value="{{ field_value.id }}"
                 ng-required="{{ field.required }}"
-                id="{{ 'rb_' + field.field_id + '_' + fieldValue.id }}"
+                id="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
             >
         </label>
     </div>
@@ -106,17 +111,17 @@
 <div class="field">
     <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
     <label
-        ng-repeat="fieldValue in field.values"
-        for="{{ 'cb_' + field.field_id + '_' + fieldValue.id }}"
+        ng-repeat="field_value in field.values"
+        for="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
         class="checkbox"
     >
-        {{ fieldValue.label }}
+        {{ field_value.label }}
         <input
             type="checkbox"
             ng-model="modal.values[field.field_id].bind_value_ids[$index]"
-            ng-true-value="{{ fieldValue.id }}"
+            ng-true-value="{{ field_value.id }}"
             ng-false-value="null"
-            id="{{ 'cb_' + field.field_id + '_' + fieldValue.id }}"
+            id="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
         >
     </label>
 </div>

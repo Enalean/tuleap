@@ -190,7 +190,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
         });
 
         describe("Given a tracker structure object containing a string field,", function() {
-            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing only the field's id and a null value will be returned", function() {
+            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing the field's id and a null value will be returned", function() {
                 var structure = {
                     fields: [
                         {
@@ -213,7 +213,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 });
             });
 
-            it("and that it had a default value, when I create the model from the structure, then a map of objects containing only the field's id and its default value will be returned", function() {
+            it("and that it had a default value, when I create the model from the structure, then a map of objects containing the field's id and its default value will be returned", function() {
                 var structure = {
                     fields: [
                         {
@@ -273,7 +273,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 });
             });
 
-            it("and that id didn't have a default value, when I create the model from the structure, then a map of objects containing the field's id, the 'text' format and a null value", function() {
+            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing the field's id, the 'text' format and a null value", function() {
                 var structure = {
                     fields: [
                         {
@@ -453,8 +453,37 @@ describe("ModalModelFactory createFromStructure() - ", function() {
             });
         });
 
-        describe("Given a tracker structure object containing a selectbox and a multiselectbox field", function() {
-            it("and that those fields didn't have a default value, when I create the model from the structure, then a map of objects containing the fields' id and an empty bind_value_ids array will be returned", function() {
+        describe("Given a tracker structure object containing a selectbox field", function() {
+            it("and given an array of artifact field values containing that field, when I create the model from the structure, then a map of objects containing the artifact values will be returned", function() {
+                var artifact_values = [
+                    {
+                        field_id: 613,
+                        bind_value_ids: [557]
+                    }
+                ];
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 613,
+                            label: "heritor",
+                            name: "theow",
+                            permissions: ["read update create"],
+                            type: "sb"
+                        }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                expect(output).toEqual({
+                    613: {
+                        field_id: 613,
+                        bind_value_ids: [557],
+                        type: "sb",
+                        permissions: ["read update create"]
+                    }
+                });
+            });
+
+            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing the field's id and an empty bind_value_ids array will be returned", function() {
                 var structure = {
                     fields: [
                         {
@@ -463,12 +492,6 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             name: "artophorion",
                             permissions: ["read update create"],
                             type: "sb"
-                        }, {
-                            field_id: 860,
-                            label: "gorilline",
-                            name: "beefer",
-                            permissions: ["read update create"],
-                            type: "msb"
                         }
                     ]
                 };
@@ -479,17 +502,11 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         bind_value_ids: [],
                         type: "sb",
                         permissions: ["read update create"]
-                    },
-                    860: {
-                        field_id: 860,
-                        bind_value_ids: [],
-                        type: "msb",
-                        permissions: ["read update create"]
                     }
                 });
             });
 
-            it("and that those fields had a default value, when I create the model from the structure, then a map of objects containing the fields' id and an array containing their default value(s) will be returned", function() {
+            it("and that it had a default value, when I create the model from the structure, then a map of objects containing the field's id and a bind_value_ids array containing its default value will be returned", function() {
                 var structure = {
                     fields: [
                         {
@@ -499,7 +516,164 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                             permissions: ["read update create"],
                             type: "sb",
                             default_value: 941
-                        }, {
+                        }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure([], structure);
+                expect(output).toEqual({
+                    622: {
+                        field_id: 622,
+                        bind_value_ids: [941],
+                        type: "sb",
+                        permissions: ["read update create"]
+                    }
+                });
+            });
+
+            it("and there were transitions defined in the structure for this field and given an array of artifact field values containing, when I create the model from the structure, then the field's selectable values in the structure will be only the available transitions value", function() {
+                var artifact_values = [
+                    {
+                        field_id: 764,
+                        bind_value_ids: [448]
+                    }
+                ];
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 764,
+                            label: "receptacular",
+                            name: "skelp",
+                            permissions: ["read update create"],
+                            type: "sb",
+                            values: [{id: 448}, {id: 6}, {id: 23}, {id: 908}, {id: 71}]
+                        }
+                    ],
+                    workflow: {
+                        field_id: 764,
+                        is_used: "1",
+                        transitions: [
+                            {
+                                "from_id": 448,
+                                "to_id": 6
+                            },
+                            {
+                                "from_id": 448,
+                                "to_id": 23
+                            },
+                            {
+                                "from_id": 908,
+                                "to_id": 71
+                            }
+                        ]
+                    }
+                };
+                ModalModelFactory.createFromStructure(artifact_values, structure);
+                expect(structure.fields[0].values).toEqual([{id: 448}, {id: 6}, {id: 23}]);
+            });
+
+            it("and there were transitions defined in the structure for this field, when I create the model from the structure, then I will have the proper transitions values in the selectbox (means dealing with null)", function() {
+
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 764,
+                            label: "receptacular",
+                            name: "skelp",
+                            permissions: ["read update create"],
+                            type: "sb",
+                            values: [{id: 448}, {id: 6}, {id: 23}, {id: 908}, {id: 71}]
+                        }
+                    ],
+                    workflow: {
+                        field_id: 764,
+                        is_used: "1",
+                        transitions: [
+                            {
+                                "from_id": null,
+                                "to_id": 448
+                            },
+                            {
+                                "from_id": null,
+                                "to_id": 908
+
+                            },
+                            {
+                                "from_id": 448,
+                                "to_id": 6
+                            },
+                            {
+                                "from_id": 448,
+                                "to_id": 23
+                            },
+                            {
+                                "from_id": 908,
+                                "to_id": 71
+                            }
+                        ]
+                    }
+                };
+                ModalModelFactory.createFromStructure([], structure);
+                expect(structure.fields[0].values).toEqual([{id: 448}, {id: 908}]);
+            });
+        });
+
+        describe("Given a tracker structure object containing a multiselectbox field", function() {
+            it("and given an array of artifact field values containing that field, when I create the model from the structure, then a map of objects containing the artifact value will be returned", function() {
+                var artifact_values = [
+                    {
+                        field_id: 383,
+                        bind_value_ids: [971, 679]
+                    }
+                ];
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 383,
+                            label: "hospodar",
+                            name: "babyship",
+                            permissions: ["read update create"],
+                            type: "msb"
+                        }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                expect(output).toEqual({
+                    383: {
+                        field_id: 383,
+                        bind_value_ids: [971, 679],
+                        type: "msb",
+                        permissions: ["read update create"]
+                    }
+                });
+            });
+
+            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing the field's id and an empty bind_value_ids array will be returned", function() {
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 860,
+                            label: "gorilline",
+                            name: "beefer",
+                            permissions: ["read update create"],
+                            type: "msb"
+                        }
+                    ]
+                };
+                var output = ModalModelFactory.createFromStructure([], structure);
+                expect(output).toEqual({
+                    860: {
+                        field_id: 860,
+                        bind_value_ids: [],
+                        type: "msb",
+                        permissions: ["read update create"]
+                    }
+                });
+            });
+
+            it("and that it had a default value, when I create the model from the structure, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values will be returned", function() {
+                var structure = {
+                    fields: [
+                        {
                             field_id: 698,
                             label: "totaquin",
                             name: "sputumous",
@@ -511,12 +685,6 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    622: {
-                        field_id: 622,
-                        bind_value_ids: [941],
-                        type: "sb",
-                        permissions: ["read update create"]
-                    },
                     698: {
                         field_id: 698,
                         bind_value_ids: [196, 800],
@@ -587,7 +755,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 });
             });
 
-            it("and that it had 2 default values, when I create the model from the structure, then a map of objects containing only the field's id and a bind_value_ids array filled with the 2 default values and a null will be returned", function() {
+            it("and that it had 2 default values, when I create the model from the structure, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values and a null will be returned", function() {
                 var structure = {
                     fields: [
                         {
@@ -618,7 +786,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
         });
 
         describe("Given a tracker structure object containing a radiobutton field,", function() {
-            it("and given an array of artifact field values containing that field and that field's bind_value_ids array was empty, when I create the model from the structure, then a map of objects containing only the field's id and a bind_value_ids array [100] will be returned", function() {
+            it("and given an array of artifact field values containing that field and that field's bind_value_ids array was empty, when I create the model from the structure, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function() {
                 var artifact_values = [
                     { field_id: 430, type: "rb", bind_value_ids: [] }
                 ];
@@ -644,7 +812,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 });
             });
 
-            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing only the field's id and a bind_value_ids array [100] will be returned", function() {
+            it("and that it didn't have a default value, when I create the model from the structure, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function() {
                 var structure = {
                     fields: [
                         {
