@@ -154,3 +154,8 @@ define('AGILEDASHBOARD_EVENT_GET_CARD_FIELDS', 'agiledashboard_event_get_card_fi
  * Get Cardwall REST resources only if agiledashboard is activated
  */
 define('AGILEDASHBOARD_EVENT_REST_RESOURCES', 'agiledashboard_event_rest_resources');
+
+/**
+ * Export AD structure in XML
+ */
+define('AGILEDASHBOARD_EXPORT_XML', 'agiledashboard_export_xml');

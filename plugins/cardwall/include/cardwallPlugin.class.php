@@ -54,7 +54,6 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
             $this->_addHook(Event::JAVASCRIPT);
-            $this->addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
@@ -72,6 +71,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
                 $this->addHook(AGILEDASHBOARD_EVENT_GET_CARD_FIELDS);
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_RESOURCES);
+                $this->addHook(AGILEDASHBOARD_EXPORT_XML);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -402,7 +402,7 @@ class cardwallPlugin extends Plugin {
      *  'project'  => The given project
      *  'into_xml' => The SimpleXMLElement to fill in
      */
-    public function export_xml_project ($params) {
+    public function agiledashboard_export_xml ($params) {
         $tracker_factory = TrackerFactory::instance();
 
         $cardwall_xml_export = new CardwallConfigXmlExport(

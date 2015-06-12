@@ -27,6 +27,8 @@ require_once 'constants.php';
  */
 class AgileDashboardPlugin extends Plugin {
 
+    const PLUGIN_NAME = 'agiledashboard';
+
     private $service;
 
     /** @var AgileDashboard_SequenceIdManager */
@@ -70,7 +72,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook('register_project_creation');
 
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
-            $this->_addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_RESOURCES_V2);
             $this->addHook(Event::REST_PROJECT_AGILE_ENDPOINTS);
@@ -401,85 +402,10 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
-        $planning_factory             = $this->getPlanningFactory();
-        $milestone_factory            = $this->getMilestoneFactory();
-        $hierarchy_factory            = $this->getHierarchyFactory();
-        $submilestone_finder          = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory);
-
-        $pane_info_factory = new AgileDashboard_PaneInfoFactory(
-            $request->getCurrentUser(),
-            $submilestone_finder,
-            $this->getThemePath()
-        );
-
-        $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory, $pane_info_factory);
-
-        $pane_factory = $this->getPaneFactory(
-            $request,
-            $milestone_factory,
-            $pane_presenter_builder_factory,
-            $submilestone_finder,
-            $pane_info_factory
-        );
-        $top_milestone_pane_factory = $this->getTopMilestonePaneFactory($request, $pane_presenter_builder_factory);
-
-        $milestone_controller_factory = new Planning_MilestoneControllerFactory(
-            $this,
-            ProjectManager::instance(),
-            $milestone_factory,
-            $this->getPlanningFactory(),
-            $hierarchy_factory,
-            $pane_presenter_builder_factory,
-            $pane_factory,
-            $top_milestone_pane_factory
-        );
-
-        $router = new AgileDashboardRouter(
-            $this,
-            $milestone_factory,
-            $planning_factory,
-            new Planning_ShortAccessFactory($planning_factory, $pane_info_factory),
-            $milestone_controller_factory,
-            ProjectManager::instance(),
-            new ProjectXMLExporter(
-                EventManager::instance(),
-                new UGroupManager(),
-                new XML_RNGValidator(),
-                new ProjectXMLExporterLogger()
-            ),
-            $this->getKanbanManager(),
-            $this->getConfigurationManager(),
-            $this->getKanbanFactory(),
-            new PlanningPermissionsManager()
-        );
+        $builder = new AgileDashboardRouterBuilder();
+        $router  = $builder->build($request);
 
         $router->route($request);
-    }
-
-    /** @return Planning_MilestonePaneFactory */
-    private function getPaneFactory(
-        Codendi_Request $request,
-        Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
-        AgileDashboard_PaneInfoFactory $pane_info_factory
-    ) {
-        return new Planning_MilestonePaneFactory(
-            $request,
-            $milestone_factory,
-            $pane_presenter_builder_factory,
-            $submilestone_finder,
-            $pane_info_factory,
-            $this->getThemePath()
-        );
-    }
-
-    private function getTopMilestonePaneFactory($request, $pane_presenter_builder_factory) {
-        return new Planning_VirtualTopMilestonePaneFactory(
-            $request,
-            $pane_presenter_builder_factory,
-            $this->getThemePath()
-        );
     }
 
     /**
@@ -519,28 +445,6 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build()
-        );
-    }
-
-    private function getBacklogItemPresenterCollectionFactory($milestone_factory) {
-        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
-            $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
-            $milestone_factory,
-            $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
-        );
-    }
-
-    private function getPanePresenterBuilderFactory($milestone_factory, $pane_info_factory) {
-        $icon_factory = new AgileDashboard_PaneIconLinkPresenterCollectionFactory($pane_info_factory);
-
-        return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
-            $this->getBacklogStrategyFactory(),
-            $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
-            $milestone_factory,
-            new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory($milestone_factory, $icon_factory)
         );
     }
 
@@ -607,17 +511,6 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function tracker_event_soap_semantics(&$params) {
         $params['semantics'][] = AgileDashBoard_Semantic_InitialEffort::NAME;
-    }
-
-    /**
-     * @see Event::EXPORT_XML_PROJECT
-     * @param $array $params
-     */
-    public function export_xml_project($params) {
-        $params['action']     = 'export';
-        $params['project_id'] = $params['project']->getId();
-        $request              = new Codendi_Request($params);
-        $this->process($request);
     }
 
     /**
@@ -921,16 +814,6 @@ class AgileDashboardPlugin extends Plugin {
         $params['result'] = array_merge(
             $params['result'],
             $this->getKanbanManager()->getTrackersUsedAsKanban($params['project'])
-        );
-    }
-
-    /**
-     * @return AgileDashboard_KanbanFactory
-     */
-    private function getKanbanFactory() {
-        return new AgileDashboard_KanbanFactory(
-            TrackerFactory::instance(),
-            new AgileDashboard_KanbanDao()
         );
     }
 

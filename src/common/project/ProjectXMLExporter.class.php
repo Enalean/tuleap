@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,19 +47,6 @@ class ProjectXMLExporter {
         $this->logger         = $logger;
     }
 
-    /**
-     * @return SimpleXMLElement
-     */
-    private function exportAllPlugins(Project $project, SimpleXMLElement $into_xml) {
-        $this->event_manager->processEvent(
-            Event::EXPORT_XML_PROJECT,
-            array(
-                'project'  => $project,
-                'into_xml' => $into_xml
-            )
-        );
-    }
-
     private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml) {
         $this->logger->debug("Exporting project's static ugroups");
 
@@ -103,19 +90,6 @@ class ProjectXMLExporter {
         $this->xml_validator->validate($xml_element, $rng_path);
 
         $this->logger->info("Finish exporting project " . $project->getPublicName());
-
-        return $this->convertToXml($xml_element);
-    }
-
-    /**
-     * @param Project $project
-     *
-     * @return string A full XML document string
-     */
-    public function exportWithoutUgroups(Project $project) {
-        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                             <project />');
-        $this->exportAllPlugins($project, $xml_element);
 
         return $this->convertToXml($xml_element);
     }

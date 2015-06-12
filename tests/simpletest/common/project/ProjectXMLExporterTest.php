@@ -39,20 +39,6 @@ class ProjectXMLExporterTest extends TuleapTestCase {
         );
     }
 
-    public function itAsksToPluginToExportStuffForTheGivenProject() {
-        stub($this->ugroup_manager)->getStaticUGroups()->returns(array());
-
-        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                               <project />');
-
-        expect($this->event_manager)->processEvent(
-            Event::EXPORT_XML_PROJECT,
-            array('project' => $this->project, 'into_xml' => $xml_element)
-        )->once();
-
-        $this->xml_exporter->exportWithoutUgroups($this->project);
-    }
-
     public function itExportsStaticUgroupsForTheGivenProject() {
         $user_01 = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         $user_02 = aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
@@ -76,11 +62,6 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             $project_ugroup_members2,
             $project_ugroup_members3,
         ));
-
-        expect($this->event_manager)->processEvent(
-            Event::EXPORT_XML_PROJECT,
-            '*'
-        )->never();
 
         $xml       = $this->xml_exporter->exportProjectData($this->project, 10);
         $xml_objet = simplexml_load_string($xml);
