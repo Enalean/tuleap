@@ -16,7 +16,7 @@ Version 8.3 (not released yet)
 	== Plugins ==
 	* git: 4.68
 	* ldap: 3.81
-	* agiledashboard: 1.219
+	* agiledashboard: 1.220
 	* tracker: 5.638
 	* proftpd: 0.21
 	* mediawiki: 0.70
