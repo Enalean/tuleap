@@ -20,7 +20,8 @@
 
 class SOAP_TestDataBuilder extends TestDataBuilder {
 
-    const TV3_SERVICE_ID = 15;
+    const TV3_SERVICE_ID      = 15;
+    const TV3_TASK_REPORT_ID  = 102;
 
     public function __construct() {
         parent::__construct();
