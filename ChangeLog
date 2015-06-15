@@ -1,3 +1,12 @@
+Version 8.2-5 (Monday, June 15th 2015)
+	== Bug Fix ==
+	* request #8142: Trash icon very small on Projects widget
+	* request #8137: TV3 field dependencies administration is missing proper highlighting in FlamingParrot
+	* request #8136: on kanban create modal dropdown some trackers appear twice
+	* request #8135: cannot log-in with non-ldap account if ldap plugin activated
+	* request #8133: statistics purge is too silent- need to know what's going on
+	* request #8132: default values notset when creating a kanban item
+
 Version 8.2-4 (Monday, June 8th 2015)
 	== Bug Fix ==
 	* request #8128: Fix angular dependencies
