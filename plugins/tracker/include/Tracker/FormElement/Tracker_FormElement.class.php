@@ -1206,5 +1206,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getRESTContent() {
         return null;
     }
+
+    public abstract function getSOAPAvailableValues();
+
+    public function getRESTAvailableValues() {
+        return $this->getSOAPAvailableValues();
+    }
 }
 ?>

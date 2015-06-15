@@ -58,13 +58,30 @@ function ModalModelFactory() {
                     } else {
                         selected_id = null;
                     }
+
                     field.values = filterWorkflowTransitions(workflow, field, selected_id);
+                    field.values = displayUGroupI18NLabelIfAvailable(field);
+                    break;
+                case "msb":
+                case "cb":
+                case "rb":
+                    field.values = displayUGroupI18NLabelIfAvailable(field);
                     break;
                 default:
                     break;
             }
         }
         return field;
+    }
+
+    function displayUGroupI18NLabelIfAvailable(field) {
+        _.map(field.values, function(value) {
+            if (value.ugroup_reference !== undefined) {
+                value.label = value.ugroup_reference.label;
+            }
+        });
+
+        return field.values;
     }
 
     function augmentStructureField(field, artifact_value) {
@@ -108,7 +125,6 @@ function ModalModelFactory() {
         value_obj.type        = field.type;
         value_obj.permissions = field.permissions;
         switch (field.type) {
-            case "sb":
             case "date":
                 if (field.is_time_displayed) {
                     if (artifact_value.value) {

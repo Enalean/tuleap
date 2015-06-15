@@ -615,6 +615,30 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 ModalModelFactory.createFromStructure([], structure);
                 expect(structure.fields[0].values).toEqual([{id: 448}, {id: 908}]);
             });
+
+            it("bound to user group, when I create the model from the structure, then the values labels are internationalized", function() {
+                var structure = {
+                    fields: [
+                        {
+                            field_id: 764,
+                            label: "receptacular",
+                            name: "skelp",
+                            permissions: ["read update create"],
+                            type: "sb",
+                            values: [{
+                                id: 448,
+                                label: 'group_name',
+                                ugroup_reference: {
+                                    label: 'Group Name'
+                                }
+                            }]
+                        }
+                    ]
+                };
+
+                ModalModelFactory.createFromStructure([], structure);
+                expect(structure.fields[0].values[0].label).toEqual('Group Name');
+            });
         });
 
         describe("Given a tracker structure object containing a multiselectbox field", function() {

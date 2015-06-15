@@ -97,12 +97,8 @@ class Tracker_REST_FieldRepresentation {
         $this->type   = $type;
 
         $this->values = null;
-        if ($field->getSoapAvailableValues()) {
-            foreach ($field->getSoapAvailableValues() as $value) {
-                $field_value_representation = new Tuleap\Tracker\REST\FieldValueRepresentation();
-                $field_value_representation->build($value);
-                $this->values[] = $field_value_representation;
-            }
+        if ($field->getRESTAvailableValues()) {
+            $this->values = $field->getRESTAvailableValues();
         }
 
         $bindings = $field->getSoapBindingProperties();

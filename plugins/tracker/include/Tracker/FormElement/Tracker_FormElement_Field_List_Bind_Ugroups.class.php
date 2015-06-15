@@ -628,4 +628,16 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getType() {
         return self::TYPE;
     }
+
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        $project                     = $value->getProject();
+        $class_ugroup_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        $ugroup_representation       = new $class_ugroup_representation;
+        $ugroup_representation->build($project->getID(), $this->ugroup_manager->getUGroup($project, $value->getUgroupId()));
+
+        $class_ugroupvalue_representation = '\\Tuleap\\Tracker\\REST\\FieldListBindUGroupValueRepresentation';
+        $representation                   = new $class_ugroupvalue_representation;
+        $representation->build($value, $ugroup_representation);
+        return $representation;
+    }
 }

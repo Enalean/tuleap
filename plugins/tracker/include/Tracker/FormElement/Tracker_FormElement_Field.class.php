@@ -1125,14 +1125,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public abstract function getChangesetValue($changeset, $value_id, $has_changed);
 
     /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public abstract function getSoapAvailableValues();
-
-    /**
      * Returns the SOAP value of a field for the given changeset.
      *
      * @param PFUser $user

@@ -1329,5 +1329,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $json['values'] = $this->getBind()->fetchFormattedForJson();
         return $json;
     }
+
+    public function getRESTAvailableValues() {
+        $values = null;
+        $bind = $this->getBind();
+        if ($bind != null) {
+            $values = $bind->getRESTAvailableValues();
+        }
+        return $values;
+    }
 }
 ?>
