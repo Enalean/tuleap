@@ -1,8 +1,8 @@
 angular
-    .module('modal')
-    .factory('ModalValidateFactory', ModalValidateFactory);
+    .module('tuleap.artifact-modal')
+    .service('TuleapArtifactModalValidateService', TuleapArtifactModalValidateService);
 
-function ModalValidateFactory() {
+function TuleapArtifactModalValidateService() {
     return {
         validateArtifactFieldsValues : validateArtifactFieldsValues
     };

@@ -1,22 +1,22 @@
-describe("ModalInstanceCtrl", function() {
-    var $scope, $q, $controller, controller_params, ModalInstanceCtrl, $modalInstance,
-        ModalTuleapFactory, ModalModelFactory, ModalValidateFactory, mockCallback;
+describe("TuleapArtifactModalCtrl", function() {
+    var $scope, $q, $controller, controller_params, TuleapArtifactModalCtrl, $modalInstance,
+        TuleapArtifactModalRestService, TuleapArtifactModalModelFactory, TuleapArtifactModalValidateService, mockCallback;
     beforeEach(function() {
-        module('modal');
+        module('tuleap.artifact-modal');
 
         inject(function(_$controller_, $rootScope, _$q_) {
             $q = _$q_;
-            ModalTuleapFactory = jasmine.createSpyObj("ModalTuleapFactory", [
+            TuleapArtifactModalRestService = jasmine.createSpyObj("TuleapArtifactModalRestService", [
                 "createArtifact",
                 "editArtifact",
                 "getArtifactsTitles",
                 "getTrackerStructure",
                 "reorderFieldsInGoodOrder"
             ]);
-            ModalModelFactory = jasmine.createSpyObj("ModalModelFactory", [
+            TuleapArtifactModalModelFactory = jasmine.createSpyObj("TuleapArtifactModalModelFactory", [
                 "createFromStructure"
             ]);
-            ModalValidateFactory = jasmine.createSpyObj("ModalValidateFactory", [
+            TuleapArtifactModalValidateService = jasmine.createSpyObj("TuleapArtifactModalValidateService", [
                 "validateArtifactFieldsValues"
             ]);
             $modalInstance = jasmine.createSpyObj("$modalInstance", [
@@ -32,9 +32,9 @@ describe("ModalInstanceCtrl", function() {
             controller_params = {
                 $modalInstance: $modalInstance,
                 modal_model: {},
-                ModalTuleapFactory: ModalTuleapFactory,
-                ModalModelFactory: ModalModelFactory,
-                ModalValidateFactory: ModalValidateFactory,
+                TuleapArtifactModalRestService: TuleapArtifactModalRestService,
+                TuleapArtifactModalModelFactory: TuleapArtifactModalModelFactory,
+                TuleapArtifactModalValidateService: TuleapArtifactModalValidateService,
                 displayItemCallback: mockCallback
             };
         });
@@ -43,32 +43,32 @@ describe("ModalInstanceCtrl", function() {
     describe("submit() - Given a tracker id, field values, a callback function", function() {
         var deferred;
         beforeEach(function() {
-            ModalValidateFactory.validateArtifactFieldsValues.andCallFake(function(values) {
+            TuleapArtifactModalValidateService.validateArtifactFieldsValues.andCallFake(function(values) {
                 return values;
             });
             deferred = $q.defer();
-            ModalTuleapFactory.createArtifact.andReturn(deferred.promise);
-            ModalTuleapFactory.editArtifact.andReturn(deferred.promise);
+            TuleapArtifactModalRestService.createArtifact.andReturn(deferred.promise);
+            TuleapArtifactModalRestService.editArtifact.andReturn(deferred.promise);
         });
 
         it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", function() {
             controller_params.modal_model.creation_mode = true;
             controller_params.modal_model.tracker_id = 39;
-            ModalInstanceCtrl = $controller('ModalInstanceCtrl', controller_params);
+            TuleapArtifactModalCtrl = $controller('TuleapArtifactModalCtrl', controller_params);
             var values = [
                 { field_id: 359, value: 907},
                 { field_id: 613, bind_value_ids: [919]}
             ];
-            ModalInstanceCtrl.values = values;
+            TuleapArtifactModalCtrl.values = values;
 
-            ModalInstanceCtrl.submit();
+            TuleapArtifactModalCtrl.submit();
             // The request worked
             deferred.resolve({ id: 3042 });
             $scope.$apply();
 
-            expect(ModalValidateFactory.validateArtifactFieldsValues).toHaveBeenCalledWith(values, true);
-            expect(ModalTuleapFactory.createArtifact).toHaveBeenCalledWith(39, values);
-            expect(ModalTuleapFactory.editArtifact).not.toHaveBeenCalled();
+            expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, true);
+            expect(TuleapArtifactModalRestService.createArtifact).toHaveBeenCalledWith(39, values);
+            expect(TuleapArtifactModalRestService.editArtifact).not.toHaveBeenCalled();
             expect($modalInstance.close).toHaveBeenCalled();
             expect(mockCallback).toHaveBeenCalled();
         });
@@ -77,27 +77,27 @@ describe("ModalInstanceCtrl", function() {
             controller_params.modal_model.creation_mode = false;
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.tracker_id = 186;
-            ModalInstanceCtrl = $controller('ModalInstanceCtrl', controller_params);
+            TuleapArtifactModalCtrl = $controller('TuleapArtifactModalCtrl', controller_params);
             var values = [
                 { field_id: 983, value: 741},
                 { field_id: 860, bind_value_ids: [754]}
             ];
-            ModalInstanceCtrl.values = values;
+            TuleapArtifactModalCtrl.values = values;
 
-            ModalInstanceCtrl.submit();
+            TuleapArtifactModalCtrl.submit();
             // The request worked
             deferred.resolve({ id: 8155 });
             $scope.$apply();
 
-            expect(ModalValidateFactory.validateArtifactFieldsValues).toHaveBeenCalledWith(values, false);
-            expect(ModalTuleapFactory.editArtifact).toHaveBeenCalledWith(8155, values);
-            expect(ModalTuleapFactory.createArtifact).not.toHaveBeenCalled();
+            expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, false);
+            expect(TuleapArtifactModalRestService.editArtifact).toHaveBeenCalledWith(8155, values);
+            expect(TuleapArtifactModalRestService.createArtifact).not.toHaveBeenCalled();
             expect($modalInstance.close).toHaveBeenCalled();
             expect(mockCallback).toHaveBeenCalledWith(8155);
         });
 
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", function() {
-            ModalInstanceCtrl.submit();
+            TuleapArtifactModalCtrl.submit();
             deferred.reject();
             $scope.$apply();
 

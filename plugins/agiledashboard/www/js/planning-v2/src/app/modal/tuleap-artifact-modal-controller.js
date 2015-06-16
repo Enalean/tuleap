@@ -1,10 +1,10 @@
 angular
-    .module('modal')
-    .controller('ModalInstanceCtrl', ModalInstanceCtrl);
+    .module('tuleap.artifact-modal')
+    .controller('TuleapArtifactModalCtrl', TuleapArtifactModalCtrl);
 
-ModalInstanceCtrl.$inject = ['$modalInstance', 'modal_model', 'displayItemCallback', 'ModalTuleapFactory', 'ModalValidateFactory', 'ModalLoading'];
+TuleapArtifactModalCtrl.$inject = ['$modalInstance', 'modal_model', 'displayItemCallback', 'TuleapArtifactModalRestService', 'TuleapArtifactModalValidateService', 'TuleapArtifactModalLoading'];
 
-function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, ModalTuleapFactory, ModalValidateFactory, ModalLoading) {
+function TuleapArtifactModalCtrl($modalInstance, modal_model, displayItemCallback, TuleapArtifactModalRestService, TuleapArtifactModalValidateService, TuleapArtifactModalLoading) {
     var self = this;
 
     _.extend(self, {
@@ -18,8 +18,8 @@ function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, Mod
         title           : modal_model.title,
         values          : modal_model.values,
         cancel          : $modalInstance.dismiss,
-        getError        : function() { return ModalTuleapFactory.error; },
-        isLoading       : function() { return ModalTuleapFactory.is_loading; },
+        getError        : function() { return TuleapArtifactModalRestService.error; },
+        isLoading       : function() { return TuleapArtifactModalRestService.is_loading; },
         submit          : submit,
         toggleFieldset  : toggleFieldset,
 
@@ -38,26 +38,26 @@ function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, Mod
     });
 
     $modalInstance.opened.then(function() {
-        ModalLoading.loading.is_loading = false;
+        TuleapArtifactModalLoading.loading.is_loading = false;
     });
 
     function submit() {
-        ModalLoading.loading.is_loading = true;
+        TuleapArtifactModalLoading.loading.is_loading = true;
 
-        var validated_values = ModalValidateFactory.validateArtifactFieldsValues(self.values, modal_model.creation_mode);
+        var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(self.values, modal_model.creation_mode);
 
         var promise;
         if (modal_model.creation_mode) {
-            promise = ModalTuleapFactory.createArtifact(modal_model.tracker_id, validated_values);
+            promise = TuleapArtifactModalRestService.createArtifact(modal_model.tracker_id, validated_values);
         } else {
-            promise = ModalTuleapFactory.editArtifact(modal_model.artifact_id, validated_values);
+            promise = TuleapArtifactModalRestService.editArtifact(modal_model.artifact_id, validated_values);
         }
 
         promise.then(function(new_artifact) {
             $modalInstance.close();
             return displayItemCallback(new_artifact.id);
         })["finally"](function() {
-            ModalLoading.loading.is_loading = false;
+            TuleapArtifactModalLoading.loading.is_loading = false;
         });
     }
 

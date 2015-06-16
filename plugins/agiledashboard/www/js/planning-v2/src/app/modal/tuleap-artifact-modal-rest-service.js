@@ -1,10 +1,10 @@
 angular
-    .module('modal')
-    .factory('ModalTuleapFactory', ModalTuleapFactory);
+    .module('tuleap.artifact-modal')
+    .service('TuleapArtifactModalRestService', TuleapArtifactModalRestService);
 
-ModalTuleapFactory.$inject = ['Restangular'];
+TuleapArtifactModalRestService.$inject = ['Restangular'];
 
-function ModalTuleapFactory(Restangular) {
+function TuleapArtifactModalRestService(Restangular) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl('/api/v1');

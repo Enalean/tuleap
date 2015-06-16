@@ -1,13 +1,13 @@
 angular
     .module('tuleap.artifact-modal')
-    .factory('ModalModelFactory', ModalModelFactory);
+    .factory('TuleapArtifactModalModelFactory', TuleapArtifactModalModelFactory);
 
-function ModalModelFactory() {
+function TuleapArtifactModalModelFactory() {
     var awkward_fields_for_creation = ['aid', 'atid', 'lud', 'burndown', 'priority', 'subby', 'subon', 'computed', 'cross', 'file', 'tbl', 'perm'];
     var awkward_fields_for_edition  = ['tbl', 'perm'];
 
     return {
-        createFromStructure: createFromStructure,
+        createFromStructure     : createFromStructure,
         reorderFieldsInGoodOrder: reorderFieldsInGoodOrder
     };
 

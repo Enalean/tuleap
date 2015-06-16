@@ -12,11 +12,11 @@
         'DroppedService',
         'CardFieldsService',
         'TuleapArtifactModalService',
-        'ModalService',
-        'ModalLoading'
+        'NewTuleapArtifactModalService',
+        'TuleapArtifactModalLoading'
     ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService, ModalService, ModalLoading) {
+    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService, NewTuleapArtifactModalService, TuleapArtifactModalLoading) {
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
             use_angular_new_modal       = SharedPropertiesService.getUseAngularNewModal(),
@@ -35,7 +35,7 @@
             },
             loading_backlog_items                 : true,
             loading_milestones                    : true,
-            loading_modal                         : ModalLoading.loading,
+            loading_modal                         : TuleapArtifactModalLoading.loading,
             use_angular_new_modal                 : use_angular_new_modal,
             toggle                                : toggle,
             showChildren                          : showChildren,
@@ -211,7 +211,7 @@
             };
 
             if (SharedPropertiesService.getUseAngularNewModal()) {
-                ModalService.show(item_type.id, callback);
+                NewTuleapArtifactModalService.show(item_type.id, callback);
             } else {
                 TuleapArtifactModalService.showCreateItemForm(item_type.id, backlog.rest_route_id, callback);
             }
@@ -231,7 +231,7 @@
             if($event.which === when_left_mouse_click) {
                 $event.preventDefault();
 
-                ModalService.show(backlog_item.artifact.tracker.id, refreshBacklogItem, backlog_item.artifact.id, backlog_item.color);
+                NewTuleapArtifactModalService.show(backlog_item.artifact.tracker.id, refreshBacklogItem, backlog_item.artifact.id, backlog_item.color);
             }
         }
 

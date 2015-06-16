@@ -1,10 +1,10 @@
-describe("ModalTuleapFactory", function() {
-    var mockBackend, $q, $rootScope, ModalTuleapFactory, request, response;
+describe("TuleapArtifactModalRestService", function() {
+    var mockBackend, $q, $rootScope, TuleapArtifactModalRestService, request, response;
     beforeEach(function() {
-        module('modal');
+        module('tuleap.artifact-modal');
 
-        inject(function(_ModalTuleapFactory_, $httpBackend, _$q_, _$rootScope_) {
-            ModalTuleapFactory = _ModalTuleapFactory_;
+        inject(function(_TuleapArtifactModalRestService_, $httpBackend, _$q_, _$rootScope_) {
+            TuleapArtifactModalRestService = _TuleapArtifactModalRestService_;
             mockBackend = $httpBackend;
             $q = _$q_;
             $rootScope = _$rootScope_;
@@ -47,7 +47,7 @@ describe("ModalTuleapFactory", function() {
 
         mockBackend.expectGET('/api/v1/trackers/84').respond(JSON.stringify(response));
 
-        var promise = ModalTuleapFactory.getTrackerStructure(84);
+        var promise = TuleapArtifactModalRestService.getTrackerStructure(84);
         var success = jasmine.createSpy('success');
         promise.then(success);
         mockBackend.flush();
@@ -92,7 +92,7 @@ describe("ModalTuleapFactory", function() {
 
         mockBackend.expectGET('/api/v1/trackers/91/artifacts?values=all').respond(JSON.stringify(response));
 
-        var promise = ModalTuleapFactory.getTrackerArtifacts(91);
+        var promise = TuleapArtifactModalRestService.getTrackerArtifacts(91);
         var success = jasmine.createSpy("success");
         promise.then(success);
         mockBackend.flush();
@@ -118,7 +118,7 @@ describe("ModalTuleapFactory", function() {
         };
         mockBackend.expectGET('/api/v1/artifacts/792').respond(JSON.stringify(response));
 
-        var promise = ModalTuleapFactory.getArtifact(792);
+        var promise = TuleapArtifactModalRestService.getArtifact(792);
         var success = jasmine.createSpy("success");
         promise.then(success);
         mockBackend.flush();
@@ -130,8 +130,8 @@ describe("ModalTuleapFactory", function() {
     it("getArtifactsTitles() - Given a tracker containing two artifacts and given its id, when I get the tracker's artifacts titles, then a promise will be resolved with an array of objects containing the artifact's id, label and the value of the artifact's title field", function() {
         var first_deferred = $q.defer();
         var second_deferred = $q.defer();
-        spyOn(ModalTuleapFactory, "getTrackerStructure").andReturn(first_deferred.promise);
-        spyOn(ModalTuleapFactory, "getTrackerArtifacts").andReturn(second_deferred.promise);
+        spyOn(TuleapArtifactModalRestService, "getTrackerStructure").andReturn(first_deferred.promise);
+        spyOn(TuleapArtifactModalRestService, "getTrackerArtifacts").andReturn(second_deferred.promise);
         first_deferred.resolve({
             label: "overlace",
             semantics: {
@@ -170,7 +170,7 @@ describe("ModalTuleapFactory", function() {
             }
         ]);
 
-        var promise = ModalTuleapFactory.getArtifactsTitles(58);
+        var promise = TuleapArtifactModalRestService.getArtifactsTitles(58);
         var success = jasmine.createSpy("success");
         promise.then(success);
         $rootScope.$apply();
@@ -202,7 +202,7 @@ describe("ModalTuleapFactory", function() {
                 values: field_values
             }).respond(JSON.stringify(response));
 
-            var promise = ModalTuleapFactory.createArtifact(3, field_values);
+            var promise = TuleapArtifactModalRestService.createArtifact(3, field_values);
             var success = jasmine.createSpy('success');
             promise.then(success);
             mockBackend.flush();
@@ -222,26 +222,26 @@ describe("ModalTuleapFactory", function() {
             };
             mockBackend.expectPOST('/api/v1/artifacts').respond(400, JSON.stringify(errorResponse));
 
-            var promise = ModalTuleapFactory.createArtifact();
+            var promise = TuleapArtifactModalRestService.createArtifact();
             var failure = jasmine.createSpy("failure");
             promise.then(null, failure);
             mockBackend.flush();
 
-            expect(ModalTuleapFactory.error.is_error).toBeTruthy();
-            expect(ModalTuleapFactory.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
+            expect(TuleapArtifactModalRestService.error.is_error).toBeTruthy();
+            expect(TuleapArtifactModalRestService.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
             expect(failure).toHaveBeenCalled();
         });
 
         it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
             mockBackend.expectPOST('/api/v1/artifacts').respond(404, undefined, undefined, 'Not Found');
 
-            var promise = ModalTuleapFactory.createArtifact();
+            var promise = TuleapArtifactModalRestService.createArtifact();
             var failure = jasmine.createSpy("failure");
             promise.then(null, failure);
             mockBackend.flush();
 
-            expect(ModalTuleapFactory.error.is_error).toBeTruthy();
-            expect(ModalTuleapFactory.error.error_message).toEqual("404 Not Found");
+            expect(TuleapArtifactModalRestService.error.is_error).toBeTruthy();
+            expect(TuleapArtifactModalRestService.error.error_message).toEqual("404 Not Found");
             expect(failure).toHaveBeenCalled();
         });
     });
@@ -256,7 +256,7 @@ describe("ModalTuleapFactory", function() {
                 values: field_values
             }).respond(200);
 
-            var promise = ModalTuleapFactory.editArtifact(8354, field_values);
+            var promise = TuleapArtifactModalRestService.editArtifact(8354, field_values);
             var success = jasmine.createSpy("success");
             promise.then(success);
             mockBackend.flush();
@@ -270,13 +270,13 @@ describe("ModalTuleapFactory", function() {
         it("Given the server didn't respond, when I edit an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
             mockBackend.expectPUT('/api/v1/artifacts/6144').respond(404, undefined, undefined, 'Not Found');
 
-            var promise = ModalTuleapFactory.editArtifact(6144);
+            var promise = TuleapArtifactModalRestService.editArtifact(6144);
             var failure = jasmine.createSpy("failure");
             promise.then(null, failure);
             mockBackend.flush();
 
-            expect(ModalTuleapFactory.error.is_error).toBeTruthy();
-            expect(ModalTuleapFactory.error.error_message).toEqual("404 Not Found");
+            expect(TuleapArtifactModalRestService.error.is_error).toBeTruthy();
+            expect(TuleapArtifactModalRestService.error.error_message).toEqual("404 Not Found");
             expect(failure).toHaveBeenCalled();
         });
     });

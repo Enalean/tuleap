@@ -1,4 +1,4 @@
-angular.module('modal', [
+angular.module('tuleap.artifact-modal', [
     'angular.filter',
     'angularMoment',
     'ckeditor',

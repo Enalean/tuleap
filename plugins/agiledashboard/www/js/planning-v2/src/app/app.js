@@ -10,7 +10,7 @@
         'backlog-item',
         'milestone',
         'project',
-        'modal',
-        'tuleap-artifact-modal'
+        'tuleap-artifact-modal',
+        'tuleap.artifact-modal'
     ]);
 })();
