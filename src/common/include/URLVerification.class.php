@@ -33,7 +33,6 @@ class URLVerification {
      * @return void
      */
     function __construct() {
-        
     }
 
     /**
@@ -300,6 +299,12 @@ class URLVerification {
      * @return Boolean False if user not allowed to see the content
      */
     protected function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
+        // This assume that we already checked that project is accessible to restricted prior to function call.
+        // Hence, summary page is ALWAYS accessible
+        if ($script_name === '/projects') {
+            return true;
+        }
+
         $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
 
         // Make sure the URI starts with a single slash
@@ -339,7 +344,6 @@ class URLVerification {
         $allow_access_to_project_news        = array(1); // Support project news
         $allow_access_to_project_trackers_v5 = array(1); //Support project trackers v5 are used for support requests
         // List of fully public projects (same access for restricted and unrestricted users)
-        $public_projects = array(); 
 
         // Customizable security settings for restricted users:
         include($GLOBALS['Language']->getContent('include/restricted_user_permissions','en_US'));
@@ -353,7 +357,6 @@ class URLVerification {
         $allow_access_to_project_docs        = array_flip($allow_access_to_project_docs);
         $allow_access_to_project_mail        = array_flip($allow_access_to_project_mail);
         $allow_access_to_project_frs         = array_flip($allow_access_to_project_frs);
-        $public_projects                     = array_flip($public_projects);
         $allow_access_to_project_refs        = array_flip($allow_access_to_project_refs);
         $allow_access_to_project_news        = array_flip($allow_access_to_project_news);
         $allow_access_to_project_trackers_v5 = array_flip($allow_access_to_project_trackers_v5);
@@ -446,8 +449,19 @@ class URLVerification {
             $user_is_allowed=true;
         }
 
-        if ($group_id && !$user_is_allowed) {
-            if (isset($public_projects[$group_id])) {
+        if (! $user_is_allowed) {
+            $this->getEventManager()->processEvent(
+                Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
+                array(
+                    'allow_restricted' => &$user_is_allowed,
+                    'user'             => $user,
+                    'uri'              => $script_name
+                )
+            );
+        }
+
+        if ($group_id && ! $user_is_allowed) {
+            if (in_array($group_id, ForgeConfig::getSuperPublicProjectsFromRestrictedFile())) {
                 return true;
             }
             return false;
@@ -524,13 +538,9 @@ class URLVerification {
                 return true;
 
             } catch (Project_AccessRestrictedException $exception) {
-                if (! $this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
-                    $this->displayRestrictedUserError($url);
-                }
-
+                $this->displayRestrictedUserError($url);
             } catch (Project_AccessPrivateException $exception) {
                 $this->displayPrivateProjectError($url);
-
             } catch (Project_AccessProjectNotFoundException $exception) {
                 $this->exitError(
                     $GLOBALS['Language']->getText('include_html','g_not_exist'),
@@ -580,37 +590,17 @@ class URLVerification {
             return true;
         } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessProject($user, $project)) {
             return true;
-        } elseif ($user->isRestricted() && ! $this->canRestrictedUserAccess($user, $project)) {
-            throw new Project_AccessRestrictedException();
+        } elseif ($user->isRestricted()) {
+            if ( ! $project->allowsRestricted() || ! $this->restrictedUserCanAccessUrl($user, $this->getUrl(), $_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
+                throw new Project_AccessRestrictedException();
+            }
+            return true;
         } elseif ($project->isPublic()) {
             return true;
         } elseif ($this->userHasBeenDelegatedAccess($user)) {
             return true;
         }
         throw new Project_AccessPrivateException();
-    }
-
-    private function canRestrictedUserAccess(PFUser $user, Project $project) {
-        return $project->allowsRestricted() && $this->isScriptAllowedForRestricted($user);
-    }
-
-    private function isScriptAllowedForRestricted(PFUser $user) {
-        if ($_SERVER['SCRIPT_NAME'] === '/projects') {
-            return true;
-        }
-        $allow_restricted = false;
-        $event_manager    = EventManager::instance();
-
-        $event_manager->processEvent(
-            Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
-            array(
-                'allow_restricted' => &$allow_restricted,
-                'user'             => $user,
-                'uri'              => $_SERVER['SCRIPT_NAME']
-            )
-        );
-
-        return $allow_restricted;
     }
 
     private function userHasBeenDelegatedAccess(PFUser $user) {

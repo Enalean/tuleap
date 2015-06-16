@@ -68,6 +68,18 @@ class ForgeConfig {
         return $default;
     }
 
+    public static function getSuperPublicProjectsFromRestrictedFile() {
+        $filename = $GLOBALS['Language']->getContent('include/restricted_user_permissions', 'en_US');
+        if (! $filename) {
+            return array();
+        }
+
+        $public_projects = array();
+        include($filename);
+
+        return $public_projects;
+    }
+
     /**
      * Dump the content of the config for debugging purpose
      *

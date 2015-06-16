@@ -236,7 +236,7 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
         );
 
         // Non-restricted user or restricted member in service that doesn't yet handle restricted users independently
-        return ! $user->isRestricted() || ! $called_script_handles_restricted;
+        return ! $user->isAnonymous() && (! $user->isRestricted() || ! $called_script_handles_restricted);
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         if ($user->isMember($group_id)) { return true; }

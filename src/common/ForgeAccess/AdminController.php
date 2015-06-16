@@ -20,6 +20,11 @@
 
 class ForgeAccess_AdminController {
 
+    const TEMPLATE                  = 'access_choice';
+    const ACCESS_KEY                = ForgeAccess::CONFIG;
+    const PROJECT_ADMIN_KEY         = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
+    const SUPER_PUBLIC_PROJECTS_KEY = ForgeAccess::SUPER_PUBLIC_PROJECTS;
+
     /**
      * @var UserDao
      */
@@ -49,10 +54,6 @@ class ForgeAccess_AdminController {
      * @var CSRFSynchronizerToken
      */
     private $csrf;
-
-    const TEMPLATE          = 'access_choice';
-    const ACCESS_KEY        = ForgeAccess::CONFIG;
-    const PROJECT_ADMIN_KEY = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -138,10 +139,19 @@ class ForgeAccess_AdminController {
         }
 
         $new_access_value = $this->request->get(self::ACCESS_KEY);
+        $this->updateAccess($new_access_value);
+        $this->updateLabels($new_access_value);
+
+        return true;
+    }
+
+    private function updateAccess($new_access_value) {
         $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
         $this->manager->updateAccess($new_access_value, $old_access_value);
+    }
 
-        if ($new_access_value == ForgeAccess::RESTRICTED) {
+    private function updateLabels($new_access_value) {
+        if ($new_access_value === ForgeAccess::RESTRICTED) {
             $this->manager->updateLabels(
                 trim($this->request->getValidated('ugroup_authenticated_users', 'string', '')),
                 trim($this->request->getValidated('ugroup_registered_users', 'string', ''))
