@@ -1,3 +1,9 @@
+Version 5.642 - Tuleap 8.3
+    * story #7584: filter the cards on kanban
+
+
++ whitelist animatable elements for performance reasons
+
 Version 5.641 - Tuleap 8.3
     * story #8090: Export & import selected tracker
 

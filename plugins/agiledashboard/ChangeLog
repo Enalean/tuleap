@@ -1,3 +1,9 @@
+Version 1.222 - Tuleap 8.3
+    * story #7584: filter the cards on kanban
+
+
++ whitelist animatable elements for performance reasons
+
 Version 1.221 - Tuleap 8.3
     * story #8090: Refactoring Project XML Import
 
