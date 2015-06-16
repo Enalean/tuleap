@@ -1,10 +1,10 @@
-describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
-    var ModalValidateFactory ,creation_mode;
+describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", function() {
+    var TuleapArtifactModalValidateService ,creation_mode;
     beforeEach(function() {
-        module('modal');
+        module('tuleap.artifact-modal');
 
-        inject(function(_ModalValidateFactory_) {
-            ModalValidateFactory = _ModalValidateFactory_;
+        inject(function(_TuleapArtifactModalValidateService_) {
+            TuleapArtifactModalValidateService = _TuleapArtifactModalValidateService_;
         });
     });
 
@@ -29,7 +29,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                     value: "Kasie Steppello"
                 }
             ];
-            var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+            var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([
                 { field_id: 503, value: "Kasie Steppello" }
             ]);
@@ -62,7 +62,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                     permissions: ["update"]
                 }
             ];
-            var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+            var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([
                 { field_id: 422, value: null },
                 { field_id: 967, value: "petrogenic" },
@@ -93,7 +93,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                     value: "Malorie Labossiere"
                 }
             ];
-            var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+            var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([
                 { field_id: 939, value: "Tyesha Schatzman" }
             ]);
@@ -118,7 +118,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                     value: null
                 }
             ];
-            var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+            var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([
                 { field_id: 54, value: "" },
                 { field_id: 257, value: "" },
@@ -145,7 +145,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                     permissions: ["create"]
                 }
             ];
-            var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+            var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([
                 { field_id: 597, bind_value_ids: [] },
                 { field_id: 785, bind_value_ids: [787, 857] }
@@ -160,7 +160,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                     permissions: ["create"]
                 }
             ];
-            var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+            var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([
                 { field_id: 643, bind_value_ids: [840, 959] }
             ]);
@@ -181,7 +181,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                         permissions: ["create"]
                     }
                 ];
-                var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+                var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
                 expect(output).toEqual([
                     {
                         field_id: 986,
@@ -204,7 +204,7 @@ describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
                         unformatted_links: "text,650, 673"
                     }
                 ];
-                var output = ModalValidateFactory.validateArtifactFieldsValues(input, creation_mode);
+                var output = TuleapArtifactModalValidateService.validateArtifactFieldsValues(input, creation_mode);
                 expect(output).toEqual([
                     {
                         field_id: 162,

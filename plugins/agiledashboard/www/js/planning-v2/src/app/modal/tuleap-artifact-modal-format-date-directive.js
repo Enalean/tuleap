@@ -1,11 +1,11 @@
 angular
-    .module('modal')
-    .directive('fieldDate', FieldDate)
-    .directive('fieldDatetime', FieldDatetime);
+    .module('tuleap.artifact-modal')
+    .directive('tuleapArtifactModalFormatDate', tuleapArtifactModalFormatDate)
+    .directive('tuleapArtifactModalFormatDatetime', tuleapArtifactModalFormatDatetime);
 
-FieldDate.$inject = ['amDateFormatFilter'];
+tuleapArtifactModalFormatDate.$inject = ['amDateFormatFilter'];
 
-function FieldDate(amDateFormatFilter) {
+function tuleapArtifactModalFormatDate(amDateFormatFilter) {
     return {
         require: 'ngModel',
         link: function(scope, element, attr, ngModelCtrl) {
@@ -16,9 +16,9 @@ function FieldDate(amDateFormatFilter) {
     };
 }
 
-FieldDatetime.$inject = ['amDateFormatFilter'];
+tuleapArtifactModalFormatDatetime.$inject = ['amDateFormatFilter'];
 
-function FieldDatetime(amDateFormatFilter) {
+function tuleapArtifactModalFormatDatetime(amDateFormatFilter) {
     return {
         require: 'ngModel',
         link: function(scope, element, attr, ngModelCtrl) {

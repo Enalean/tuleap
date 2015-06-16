@@ -1,5 +1,5 @@
 describe("PlanningCtrl", function() {
-    var $scope, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService, SharedPropertiesService, TuleapArtifactModalService, ModalService,
+    var $scope, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService, SharedPropertiesService, TuleapArtifactModalService, NewTuleapArtifactModalService,
         deferred;
     beforeEach(function() {
         module('planning');
@@ -39,10 +39,10 @@ describe("PlanningCtrl", function() {
                 "showCreateItemForm"
             ]);
 
-            ModalService = jasmine.createSpyObj("ModalService", [
+            NewTuleapArtifactModalService = jasmine.createSpyObj("NewTuleapArtifactModalService", [
                 "show"
             ]);
-            ModalService.show.andReturn({
+            NewTuleapArtifactModalService.show.andReturn({
                 opened: $q.defer().promise
             });
 
@@ -50,7 +50,7 @@ describe("PlanningCtrl", function() {
                 $scope: $scope,
                 BacklogItemService: BacklogItemService,
                 MilestoneService: MilestoneService,
-                ModalService: ModalService,
+                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
                 ProjectService: ProjectService,
                 SharedPropertiesService: SharedPropertiesService,
                 TuleapArtifactModalService: TuleapArtifactModalService
@@ -83,7 +83,7 @@ describe("PlanningCtrl", function() {
             $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
 
             expect(fakeEvent.preventDefault).toHaveBeenCalled();
-            expect(ModalService.show).toHaveBeenCalledWith(50, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.show).toHaveBeenCalledWith(50, jasmine.any(Function));
         });
 
         describe("callback -", function() {

@@ -1,15 +1,15 @@
-describe("ModalService", function() {
-    var ModalService, $modal, $rootScope, $q, ModalTuleapFactory, ModalModelFactory;
+describe("NewTuleapArtifactModalService", function() {
+    var NewTuleapArtifactModalService, $modal, $rootScope, $q, TuleapArtifactModalRestService, TuleapArtifactModalModelFactory;
 
     beforeEach(function() {
-        module('modal', function($provide) {
-            ModalTuleapFactory = jasmine.createSpyObj("ModalTuleapFactory", [
+        module('tuleap.artifact-modal', function($provide) {
+            TuleapArtifactModalRestService = jasmine.createSpyObj("TuleapArtifactModalRestService", [
                 "getArtifact",
                 "getArtifactsTitles",
                 "getTrackerStructure"
             ]);
 
-            ModalModelFactory = {
+            TuleapArtifactModalModelFactory = {
                 createFromStructure: jasmine.createSpy("createFromStructure").andCallFake(function(artifact_values, structure) {
                     return structure;
                 }),
@@ -18,14 +18,14 @@ describe("ModalService", function() {
                 })
             };
 
-            $provide.value('ModalTuleapFactory', ModalTuleapFactory);
-            $provide.value('ModalModelFactory', ModalModelFactory);
+            $provide.value('TuleapArtifactModalRestService', TuleapArtifactModalRestService);
+            $provide.value('TuleapArtifactModalModelFactory', TuleapArtifactModalModelFactory);
         });
 
-        inject(function(_$modal_, _$q_, _ModalService_, _$rootScope_) {
+        inject(function(_$modal_, _$q_, _NewTuleapArtifactModalService_, _$rootScope_) {
             $modal = _$modal_;
             $q = _$q_;
-            ModalService = _ModalService_;
+            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             $rootScope = _$rootScope_;
         });
     });
@@ -34,9 +34,9 @@ describe("ModalService", function() {
         var deferred, tracker_structure;
         beforeEach(function() {
             deferred = $q.defer();
-            ModalTuleapFactory.getTrackerStructure.andReturn(deferred.promise);
-            spyOn(ModalService, "getParentArtifactsTitle");
-            spyOn(ModalService, "getArtifactValues");
+            TuleapArtifactModalRestService.getTrackerStructure.andReturn(deferred.promise);
+            spyOn(NewTuleapArtifactModalService, "getParentArtifactsTitle");
+            spyOn(NewTuleapArtifactModalService, "getArtifactValues");
         });
 
         it("Given a tracker id, no artifact id and a color name, when I create the modal's model, then the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", function() {
@@ -46,15 +46,15 @@ describe("ModalService", function() {
                 parent: null
             };
 
-            var promise = ModalService.initModalModel(28, undefined, "slackerism");
+            var promise = NewTuleapArtifactModalService.initModalModel(28, undefined, "slackerism");
             deferred.resolve(tracker_structure);
             var success = jasmine.createSpy("success");
             promise.then(success);
             $rootScope.$apply();
 
-            expect(ModalTuleapFactory.getTrackerStructure).toHaveBeenCalledWith(28);
-            expect(ModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure, true);
-            expect(ModalService.getParentArtifactsTitle).toHaveBeenCalledWith(null, jasmine.any(Object));
+            expect(TuleapArtifactModalRestService.getTrackerStructure).toHaveBeenCalledWith(28);
+            expect(TuleapArtifactModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure, true);
+            expect(NewTuleapArtifactModalService.getParentArtifactsTitle).toHaveBeenCalledWith(null, jasmine.any(Object));
             expect(success).toHaveBeenCalled();
             var model = success.calls[0].args[0];
             expect(model.tracker_id).toEqual(28);
@@ -80,21 +80,21 @@ describe("ModalService", function() {
                     { field_id: 113, value: "onomatomania" }
                 ]
             };
-            ModalService.getArtifactValues.andCallFake(function(a, b, model) {
+            NewTuleapArtifactModalService.getArtifactValues.andCallFake(function(a, b, model) {
                 model.values = {
                     113: { field_id: 113, value: "onomatomania" }
                 };
             });
 
-            var promise = ModalService.initModalModel(93, 250);
+            var promise = NewTuleapArtifactModalService.initModalModel(93, 250);
             deferred.resolve(tracker_structure);
             var success = jasmine.createSpy("success");
             promise.then(success);
             $rootScope.$apply();
 
-            expect(ModalTuleapFactory.getTrackerStructure).toHaveBeenCalledWith(93);
-            expect(ModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure, false);
-            expect(ModalService.getArtifactValues).toHaveBeenCalledWith(250, tracker_structure, jasmine.any(Object));
+            expect(TuleapArtifactModalRestService.getTrackerStructure).toHaveBeenCalledWith(93);
+            expect(TuleapArtifactModalModelFactory.reorderFieldsInGoodOrder).toHaveBeenCalledWith(tracker_structure, false);
+            expect(NewTuleapArtifactModalService.getArtifactValues).toHaveBeenCalledWith(250, tracker_structure, jasmine.any(Object));
             expect(success).toHaveBeenCalled();
             var model = success.calls[0].args[0];
             expect(model.tracker_id).toEqual(93);
@@ -113,11 +113,11 @@ describe("ModalService", function() {
                     id: 79
                 }
             };
-            ModalService.initModalModel(94);
+            NewTuleapArtifactModalService.initModalModel(94);
             deferred.resolve(tracker_structure);
             $rootScope.$apply();
 
-            expect(ModalService.getParentArtifactsTitle).toHaveBeenCalledWith({ id: 79 }, jasmine.any(Object));
+            expect(NewTuleapArtifactModalService.getParentArtifactsTitle).toHaveBeenCalledWith({ id: 79 }, jasmine.any(Object));
         });
     });
 
@@ -134,9 +134,9 @@ describe("ModalService", function() {
                 { id: 129, title: "acatharsia" }
             ];
             var deferred = $q.defer();
-            ModalTuleapFactory.getArtifactsTitles.andReturn(deferred.promise);
+            TuleapArtifactModalRestService.getArtifactsTitles.andReturn(deferred.promise);
 
-            ModalService.getParentArtifactsTitle(parent, model);
+            NewTuleapArtifactModalService.getParentArtifactsTitle(parent, model);
             deferred.resolve(artifacts_list);
             $rootScope.$apply();
 
@@ -145,7 +145,7 @@ describe("ModalService", function() {
         });
 
         it("Given no parent object (null) and the model to be completed, when I get the parent artifacts' titles, then the model's parent attribute will be null", function() {
-            ModalService.getParentArtifactsTitle(null, model);
+            NewTuleapArtifactModalService.getParentArtifactsTitle(null, model);
 
             expect(model.parent).toEqual(null);
             expect(model.parent_artifacts).toBeUndefined();
@@ -163,13 +163,13 @@ describe("ModalService", function() {
             var values = {
                 221 : { field_id: 221, value: "motherlike" }
             };
-            ModalModelFactory.createFromStructure.andReturn(values);
+            TuleapArtifactModalModelFactory.createFromStructure.andReturn(values);
 
-            ModalService.getArtifactValues(undefined, structure, model);
+            NewTuleapArtifactModalService.getArtifactValues(undefined, structure, model);
             $rootScope.$apply();
 
-            expect(ModalTuleapFactory.getArtifact).not.toHaveBeenCalled();
-            expect(ModalModelFactory.createFromStructure).toHaveBeenCalledWith([], structure);
+            expect(TuleapArtifactModalRestService.getArtifact).not.toHaveBeenCalled();
+            expect(TuleapArtifactModalModelFactory.createFromStructure).toHaveBeenCalledWith([], structure);
             expect(model.values).toEqual(values);
         });
 
@@ -178,12 +178,12 @@ describe("ModalService", function() {
             var values = {
                 124 : { field_id: 124, value: "lobing" }
             };
-            ModalModelFactory.createFromStructure.andReturn(values);
+            TuleapArtifactModalModelFactory.createFromStructure.andReturn(values);
 
             var deferred = $q.defer();
-            ModalTuleapFactory.getArtifact.andReturn(deferred.promise);
+            TuleapArtifactModalRestService.getArtifact.andReturn(deferred.promise);
 
-            ModalService.getArtifactValues(281, structure, model);
+            NewTuleapArtifactModalService.getArtifactValues(281, structure, model);
             deferred.resolve({
                 values: [
                     { field_id: 124, value: "lobing" }
@@ -191,8 +191,8 @@ describe("ModalService", function() {
             });
             $rootScope.$apply();
 
-            expect(ModalTuleapFactory.getArtifact).toHaveBeenCalledWith(281);
-            expect(ModalModelFactory.createFromStructure).toHaveBeenCalledWith([
+            expect(TuleapArtifactModalRestService.getArtifact).toHaveBeenCalledWith(281);
+            expect(TuleapArtifactModalModelFactory.createFromStructure).toHaveBeenCalledWith([
                 { field_id: 124, value: "lobing" }
             ], structure);
             expect(model.values).toEqual(values);

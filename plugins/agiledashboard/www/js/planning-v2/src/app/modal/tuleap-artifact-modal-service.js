@@ -1,15 +1,15 @@
 angular
-    .module('modal')
-    .service('ModalService', ModalService)
-    .value('ModalLoading', {
+    .module('tuleap.artifact-modal')
+    .service('NewTuleapArtifactModalService', NewTuleapArtifactModalService)
+    .value('TuleapArtifactModalLoading', {
         loading: {
             is_loading: false
         }
     });
 
-ModalService.$inject = ['$q', '$modal', 'ModalTuleapFactory', 'ModalModelFactory', 'ModalLoading'];
+NewTuleapArtifactModalService.$inject = ['$q', '$modal', 'TuleapArtifactModalRestService', 'TuleapArtifactModalModelFactory', 'TuleapArtifactModalLoading'];
 
-function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLoading) {
+function NewTuleapArtifactModalService($q, $modal, TuleapArtifactModalRestService, TuleapArtifactModalModelFactory, TuleapArtifactModalLoading) {
     var self = this;
 
     _.extend(self, {
@@ -30,13 +30,13 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
      * @param {string} color                 The color name of the artifact we want to edit
      */
     function show(tracker_id, displayItemCallback, artifact_id, color) {
-        ModalLoading.loading.is_loading = true;
+        TuleapArtifactModalLoading.loading.is_loading = true;
 
         return $modal.open({
             backdrop   : 'static',
             keyboard   : false,
-            templateUrl: 'modal/modal.tpl.html',
-            controller : 'ModalInstanceCtrl as modal',
+            templateUrl: 'modal/tuleap-artifact-modal.tpl.html',
+            controller : 'TuleapArtifactModalCtrl as modal',
             resolve    : {
                 modal_model: function() {
                     return self.initModalModel(tracker_id, artifact_id, color);
@@ -56,7 +56,7 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
         modal_model.artifact_id = artifact_id;
         modal_model.color       = color;
 
-        var promise = ModalTuleapFactory.getTrackerStructure(tracker_id).then(function(structure) {
+        var promise = TuleapArtifactModalRestService.getTrackerStructure(tracker_id).then(function(structure) {
             modal_model.structure = structure;
 
             var second_promise = self.getParentArtifactsTitle(structure.parent, modal_model);
@@ -74,7 +74,7 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
                 modal_model.creation_mode = true;
                 modal_model.title         = modal_model.structure.label;
             }
-            modal_model.ordered_fields = ModalModelFactory.reorderFieldsInGoodOrder(modal_model.structure, modal_model.creation_mode);
+            modal_model.ordered_fields = TuleapArtifactModalModelFactory.reorderFieldsInGoodOrder(modal_model.structure, modal_model.creation_mode);
 
             return modal_model;
         });
@@ -86,7 +86,7 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
 
         var promise;
         if (parent != null) {
-            promise = ModalTuleapFactory.getArtifactsTitles(parent.id)
+            promise = TuleapArtifactModalRestService.getArtifactsTitles(parent.id)
             .then(function(artifacts_data) {
                 modal_model.parent_artifacts = artifacts_data;
             });
@@ -97,11 +97,11 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
     function getArtifactValues(artifact_id, structure, modal_model) {
         var promise;
         if (artifact_id) {
-            promise = ModalTuleapFactory.getArtifact(artifact_id);
+            promise = TuleapArtifactModalRestService.getArtifact(artifact_id);
         }
         var result = $q.when(promise).then(function(artifact_data) {
             var artifact_values = (artifact_data && artifact_data.values) ? artifact_data.values : [];
-            modal_model.values = ModalModelFactory.createFromStructure(artifact_values, structure);
+            modal_model.values = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
         });
 
         return result;

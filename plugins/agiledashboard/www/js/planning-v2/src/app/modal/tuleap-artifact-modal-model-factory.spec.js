@@ -1,10 +1,10 @@
-describe("ModalModelFactory createFromStructure() - ", function() {
-    var ModalModelFactory, $window;
+describe("TuleapArtifactModalModelFactory createFromStructure() - ", function() {
+    var TuleapArtifactModalModelFactory, $window;
     beforeEach(function() {
         module('tuleap.artifact-modal');
 
-        inject(function(_ModalModelFactory_, _$window_) {
-            ModalModelFactory = _ModalModelFactory_;
+        inject(function(_TuleapArtifactModalModelFactory_, _$window_) {
+            TuleapArtifactModalModelFactory = _TuleapArtifactModalModelFactory_;
             $window = _$window_;
 
             $window.moment = jasmine.createSpy("moment").andReturn({
@@ -57,7 +57,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     655: {
                         field_id: 655,
@@ -127,7 +127,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         { field_id: 3, type: "perm" }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     280: { field_id: 280, type: "aid" },
                     973: { field_id: 973, type: "atid" },
@@ -163,7 +163,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         { field_id: 719, type: "file" }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     719: { field_id: 719, type: "file" }
                 });
@@ -202,7 +202,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     870: {
                         field_id: 870,
@@ -226,7 +226,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     175: {
                         field_id: 175,
@@ -259,7 +259,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     901: {
                         field_id: 901,
@@ -285,7 +285,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     336: {
                         field_id: 336,
@@ -315,7 +315,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     349: {
                         field_id: 349,
@@ -349,7 +349,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     685: {
                         field_id: 685,
@@ -386,7 +386,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     163: {
                         field_id: 163,
@@ -422,7 +422,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect($window.moment).toHaveBeenCalledWith("2015-05-29T00:00:00+02:00", $window.moment.ISO_8601);
                 expect($window.moment().format).toHaveBeenCalledWith("YYYY-MM-DD");
                 expect(output[824].field_id).toEqual(824);
@@ -445,7 +445,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect($window.moment).toHaveBeenCalledWith("2015-06-02T18:09:43+03:00", $window.moment.ISO_8601);
                 expect($window.moment().format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm:ss");
                 expect(output[609].field_id).toEqual(609);
@@ -472,7 +472,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     613: {
                         field_id: 613,
@@ -495,7 +495,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     87:  {
                         field_id: 87,
@@ -519,7 +519,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     622: {
                         field_id: 622,
@@ -567,7 +567,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         ]
                     }
                 };
-                ModalModelFactory.createFromStructure(artifact_values, structure);
+                TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(structure.fields[0].values).toEqual([{id: 448}, {id: 6}, {id: 23}]);
             });
 
@@ -612,7 +612,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         ]
                     }
                 };
-                ModalModelFactory.createFromStructure([], structure);
+                TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(structure.fields[0].values).toEqual([{id: 448}, {id: 908}]);
             });
 
@@ -636,7 +636,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     ]
                 };
 
-                ModalModelFactory.createFromStructure([], structure);
+                TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(structure.fields[0].values[0].label).toEqual('Group Name');
             });
         });
@@ -660,7 +660,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     383: {
                         field_id: 383,
@@ -683,7 +683,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     860: {
                         field_id: 860,
@@ -707,7 +707,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     698: {
                         field_id: 698,
@@ -740,7 +740,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     137: {
                         field_id: 137,
@@ -768,7 +768,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     607: {
                         field_id: 607,
@@ -797,7 +797,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     910: {
                         field_id: 910,
@@ -825,7 +825,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure(artifact_values, structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
                     430: {
                         field_id: 430,
@@ -848,7 +848,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     242: {
                         field_id: 242,
@@ -872,7 +872,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         }
                     ]
                 };
-                var output = ModalModelFactory.createFromStructure([], structure);
+                var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
                     897: {
                         field_id: 897,
@@ -896,7 +896,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     }
                 ]
             };
-            var output = ModalModelFactory.createFromStructure([], structure);
+            var output = TuleapArtifactModalModelFactory.createFromStructure([], structure);
             expect(output).toEqual({
                 803: {
                     field_id: 803,
@@ -950,7 +950,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 ]}
             ];
             creation_mode = true;
-            var output = ModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
+            var output = TuleapArtifactModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
             expect(output).toEqual([
                 {
                     field_id: 1,
@@ -1006,7 +1006,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 { id: 18, content: null }
             ];
             creation_mode = true;
-            var output = ModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
+            var output = TuleapArtifactModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
             expect(output).toEqual([
                 {
                     field_id: 1,
@@ -1033,7 +1033,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 { id: 18, content: null }
             ];
             creation_mode = false;
-            var output = ModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
+            var output = TuleapArtifactModalModelFactory.reorderFieldsInGoodOrder(response, creation_mode);
             expect(output).toEqual([
                 {
                     field_id: 1,
