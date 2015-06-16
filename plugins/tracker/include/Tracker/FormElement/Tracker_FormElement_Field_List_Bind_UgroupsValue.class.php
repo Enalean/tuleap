@@ -27,7 +27,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function __construct($id, ProjectUGroup $ugroup, $is_hidden) {
         parent::__construct($id, $is_hidden);
-        $this->ugroup    = $ugroup;
+        $this->ugroup = $ugroup;
     }
 
     public function getLabel() {
@@ -68,6 +68,10 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function getXMLExportLabel() {
         return $this->getUGroupName();
+    }
+
+    public function getProject() {
+        return $this->ugroup->getProject();
     }
 
 }

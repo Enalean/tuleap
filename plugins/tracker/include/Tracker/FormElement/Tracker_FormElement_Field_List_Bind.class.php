@@ -532,5 +532,24 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return array of numeric bind values
      */
     public abstract function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
+
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\FieldValueRepresentation';
+        $representation = new $class_with_right_namespace;
+        $values = array(
+            self::SOAP_ID_KEY    => $value->getId(),
+            self::SOAP_LABEL_KEY => $value->getSoapValue()
+        );
+        $representation->build($values);
+        return $representation;
+    }
+
+    public function getRESTAvailableValues() {
+        $rest_values = array();
+        foreach($this->getAllValues() as $value) {
+            $rest_values[] = $this->getRESTBindValue($value);
+        }
+        return $rest_values;
+    }
 }
 ?>
