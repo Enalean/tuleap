@@ -23,6 +23,7 @@ Version 8.3 (not released yet)
 	* statistics: 0.50
 	* cardwall: 1.51
 	* hudson: 1.19
+	* IM: 1.5.28
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3

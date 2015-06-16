@@ -1,3 +1,6 @@
+Version 1.5.28 - Tuleap 8.3
+    * story #8059: Openfire can authenticate users on platform that does not store password with MD5
+
 Version 1.5.27 - Tuleap 8.2
     * request #7929: XSS when displaying IM user status
 
