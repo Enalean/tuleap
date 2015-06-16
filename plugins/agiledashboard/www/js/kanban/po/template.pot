@@ -48,6 +48,10 @@ msgstr ""
 msgid "Error details"
 msgstr ""
 
+#: src/app/kanban.tpl.html
+msgid "Filter..."
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr ""

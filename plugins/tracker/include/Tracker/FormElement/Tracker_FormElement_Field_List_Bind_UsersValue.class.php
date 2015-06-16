@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2013. All Rights Reserved.
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $this->display_name = $display_name;
         $this->hp           = Codendi_HTMLPurifier::instance();
     }
-    
+
     public function getUsername() {
         if ($this->user_name == null) {
             $user = $this->getUser();
@@ -40,45 +40,42 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         }
         return $this->user_name;
     }
-    
+
     public function getLabel() {
         if ($this->display_name) {
             return $this->display_name;
         }
         return $this->getUserHelper()->getDisplayNameFromUserId($this->getId());
     }
-    
+
     protected function getUserHelper() {
         return UserHelper::instance();
     }
-    
+
     public function getUser() {
         return $this->getUserManager()->getUserById($this->getId());
     }
-    
+
     protected function getLink() {
         $display_name = $this->getLabel();
-        $user_name    = $this->user_name;
-        if (!$user_name) {
-            $user_name = $this->getUser()->getUserName();
-        }
-        return '<a class="direct-link-to-user" href="/users/'. urlencode($user_name) .'">'.
+
+        return '<a class="direct-link-to-user" href="'. $this->getUserUrl() .'">'.
                $this->hp->purify($display_name, CODENDI_PURIFIER_CONVERT_HTML) .
                '</a>';
     }
-    
+
     protected function getUserManager() {
         return UserManager::instance();
     }
-    
+
     public function __toString() {
         return 'Tracker_FormElement_Field_List_Bind_UsersValue #'. $this->getId();
     }
-    
+
     public function fetchFormatted() {
         return $this->getLink();
     }
-    
+
     public function fetchCard(Tracker_CardDisplayPreferences $display_preferences) {
         if ($this->getId() == 100) {
             return '';
@@ -104,7 +101,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $html .= '</div>';
         return $html;
     }
-    
+
     public function fetchFormattedForCSV() {
         return $this->getUsername();
     }
@@ -144,7 +141,17 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return array(
             'display_name' => $this->getLabel(),
             'link'         => $this->getLink(),
+            'user_url'     => $this->getUserUrl(),
             'avatar_url'   => $this->getUser()->getAvatarUrl()
         );
+    }
+
+    private function getUserUrl() {
+        $user_name    = $this->user_name;
+        if (!$user_name) {
+            $user_name = $this->getUser()->getUserName();
+        }
+
+        return '/users/'. urlencode($user_name);
     }
 }

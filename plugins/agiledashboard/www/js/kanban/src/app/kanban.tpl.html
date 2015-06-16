@@ -5,6 +5,9 @@
             <i class="icon-edit"></i>
             <span translate>Edit this Kanban</span>
         </button>
+        <div class="input-search">
+            <input type="search" class="search" placeholder="{{ 'Filter...' | translate }}"  ng-model="kanban.filter_terms" ng-keyup="kanban.treeFilter()">
+        </div>
     </div>
 </div>
 
@@ -29,17 +32,19 @@
         </div>
         <div class="column-content" ui-tree="kanban.treeOptions">
             <div class="kustom-scroll"
-                ng-class="{'has-content': kanban.backlog.content.length > 0 }"
+                ng-class="{'has-content': kanban.backlog.filtered_content.length > 0 }"
                 ng-scrollbar
                 rebuild-on="rebuild:kustom-scroll"
                 is-bar-shown="kanban.backlog.is_scrollbar_shown"
             >
                 <ul ui-tree-nodes
-                    ng-model="kanban.backlog.content"
+                    ng-model="kanban.backlog.filtered_content"
                     ng-class="{'has-scrollbar': kanban.backlog.is_scrollbar_shown }"
                     class="kanban-items backlog"
                 >
-                    <li ui-tree-node ng-repeat="item in kanban.backlog.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
+                    <li ui-tree-node
+                        ng-repeat="item in kanban.backlog.filtered_content"
+                        ng-include="'kanban-item/kanban-item.tpl.html'"></li>
                 </ul>
             </div>
         </div>
@@ -82,7 +87,7 @@
             >
                 <i ng-class="column.is_open ? 'icon-minus-sign-alt' : 'icon-plus-sign-alt'"></i>
             </span>
-            <span class="warning-wip"
+            <span class="warning-wip do-animate"
                 ng-if="kanban.isColumnWipReached(column)"
                 tooltip="{{ 'You have reached the work in progress limit for this column!' | translate }}"
                 tooltip-trigger
@@ -96,18 +101,20 @@
         </div>
         <div class="column-content" ui-tree="kanban.treeOptions">
             <div class="kustom-scroll"
-                ng-class="{'has-content': column.content.length > 0 }"
+                ng-class="{'has-content': column.filtered_content.length > 0 }"
                 ng-scrollbar
                 rebuild-on="rebuild:kustom-scroll"
                 is-bar-shown="column.is_scrollbar_shown"
             >
                 <ul ui-tree-nodes
-                    ng-model="column.content"
+                    ng-model="column.filtered_content"
                     ng-class="{'has-scrollbar': column.is_scrollbar_shown }"
                     class="kanban-items column"
                     data-column-id="{{ column.id }}"
                 >
-                    <li ui-tree-node ng-repeat="item in column.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
+                    <li ui-tree-node
+                        ng-repeat="item in column.filtered_content track by $index"
+                        ng-include="'kanban-item/kanban-item.tpl.html'"></li>
                 </ul>
             </div>
         </div>
@@ -140,17 +147,19 @@
         </div>
         <div class="column-content" ui-tree="kanban.treeOptions">
             <div class="kustom-scroll"
-                ng-class="{'has-content': kanban.archive.content.length > 0 }"
+                ng-class="{'has-content': kanban.archive.filtered_content.length > 0 }"
                 ng-scrollbar
                 rebuild-on="rebuild:kustom-scroll"
                 is-bar-shown="kanban.archive.is_scrollbar_shown"
             >
                 <ul ui-tree-nodes
-                    ng-model="kanban.archive.content"
+                    ng-model="kanban.archive.filtered_content"
                     ng-class="{'has-scrollbar': kanban.archive.is_scrollbar_shown }"
                     class="kanban-items archive"
                 >
-                    <li ui-tree-node ng-repeat="item in kanban.archive.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
+                    <li ui-tree-node
+                        ng-repeat="item in kanban.archive.filtered_content"
+                        ng-include="'kanban-item/kanban-item.tpl.html'"></li>
                 </ul>
             </div>
         </div>

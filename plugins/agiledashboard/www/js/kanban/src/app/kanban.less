@@ -47,6 +47,31 @@
             position: relative;
             top: 3px;
         }
+
+        > .input-search {
+            position: relative;
+            top: 2px;
+            margin: 0 0 10px 10px;
+            display: inline-block;
+
+            &:before {
+                position: absolute;
+                top: 3px;
+                left: 11px;
+                font-family: FontAwesome;
+                content: '\f002';
+                opacity: 0.5;
+                font-size: 12px;
+            }
+
+            > input {
+                padding-left: 27px;
+                -webkit-appearance: none;
+                box-sizing: border-box;
+                width: 220px;
+                height: 26px;
+            }
+        }
     }
 }
 
@@ -303,13 +328,6 @@
                                 padding: 4px 0;
                             }
                         }
-
-                        &.ng-enter {
-                            -webkit-animation: fadeIn 0.15s;
-                               -moz-animation: fadeIn 0.15s;
-                                -ms-animation: fadeIn 0.15s;
-                                    animation: fadeIn 0.15s;
-                        }
                     }
                 }
             }
@@ -544,6 +562,10 @@ ul.kanban-items.angular-ui-tree-drag {
 
     > li {
         box-shadow: 0 7px 30px rgba(0,0,0,0.2);
+
+        &:first-child {
+            margin-top: 0;
+        }
 
         > .kanban-item {
             border: none;

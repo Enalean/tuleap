@@ -60,6 +60,10 @@ msgstr "Éditer ce Kanban"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+#: src/app/kanban.tpl.html
+msgid "Filter..."
+msgstr "Filtrer..."
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
