@@ -32,6 +32,7 @@ class TrackerXmlExportTest extends TuleapTestCase {
         $this->tracker1  = stub('Tracker')->exportToXML()->returns('<tracker>');
         $this->tracker2  = stub('Tracker')->exportToXML()->returns('<tracker>');
         $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId()->returns(array($this->tracker1, $this->tracker2));
+        stub($tracker_factory)->getTrackerById(456)->returns($this->tracker1);
 
         $this->xml_export = new TrackerXmlExport(
             $tracker_factory,
@@ -64,5 +65,16 @@ class TrackerXmlExportTest extends TuleapTestCase {
         expect($this->tracker2)->exportToXML()->never();
 
         $this->xml_export->exportToXMl($group_id, $xml_content);
+    }
+
+    public function testExportSingleTracker() {
+        $xml_content = new SimpleXMLElement('<project/>');
+        $tracker_id  = 456;
+
+        stub($this->tracker1)->isActive()->returns(true);
+
+        expect($this->tracker1)->exportToXML()->once();
+
+        $this->xml_export->exportSingleTrackerToXml($xml_content, $tracker_id);
     }
 }

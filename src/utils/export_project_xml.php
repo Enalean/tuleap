@@ -21,9 +21,9 @@
 
 require_once 'pre.php';
 
-if ($argc !== 2) {
+if ($argc < 4) {
     echo <<< EOT
-Usage: $argv[0] project_id
+Usage: $argv[0] project_id --tracker_id tracker_id
 Dump a project structure to XML format
 
 EOT;
@@ -40,7 +40,11 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
             new ProjectXMLExporterLogger()
         );
 
-        echo $xml_exporter->exportProjectData($project);
+        $options = array(
+            'tracker_id' => $argv[3]
+        );
+
+        echo $xml_exporter->export($project, $options);
 
         exit(0);
     } catch (XML_ParseException $exception) {
