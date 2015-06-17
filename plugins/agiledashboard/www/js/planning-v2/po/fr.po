@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-06-11 15:08+0100\n"
+"PO-Revision-Date: 2015-06-17 12:00+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,11 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.7.6\n"
-
-#: src/app/modal/modal.tpl.html
-msgid "-- Please choose"
-msgstr "-- Sélectionner"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
@@ -28,21 +24,9 @@ msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 msgid "Add a new item"
 msgstr "Ajouter un nouvel élément"
 
-#: src/app/modal/modal.tpl.html
-msgid "Artifact links"
-msgstr "Artefacts référencés par cet artefact"
-
 #: src/app/planning.tpl.html
 msgid "Burndown"
 msgstr "Burndown"
-
-#: src/app/modal/modal.tpl.html
-msgid "By: {{ file.submitted_by }}"
-msgstr "Par: {{ file.submitted_by }}"
-
-#: src/app/modal/modal.tpl.html
-msgid "Cancel"
-msgstr "Annuler"
 
 #: src/app/planning.tpl.html
 msgid "Capacity:"
@@ -55,26 +39,6 @@ msgstr "Cardwall"
 #: src/app/planning.tpl.html
 msgid "Content"
 msgstr "Contenu"
-
-#: src/app/modal/modal.tpl.html
-msgid "Create a new {{ modal.title }}"
-msgstr "Créer un nouveau {{ modal.title }}"
-
-#: src/app/modal/modal.tpl.html
-msgid "Empty"
-msgstr "Aucun(e)"
-
-#: src/app/modal/modal.tpl.html
-msgid "Enter artifact ids separated by a comma"
-msgstr "Entrer des ids d'artefacts séparés par une virgule"
-
-#: src/app/modal/modal.tpl.html
-msgid "Error:"
-msgstr "Erreur :"
-
-#: src/app/modal/modal.tpl.html
-msgid "Format:"
-msgstr "Format :"
 
 #: src/app/planning.tpl.html
 msgid "Hide \"Closed\" Items"
@@ -92,29 +56,9 @@ msgstr "Jalons"
 msgid "N/A"
 msgstr "N/A"
 
-#: src/app/modal/modal.tpl.html
-msgid "None"
-msgstr "Aucun"
-
 #: src/app/planning.tpl.html
 msgid "Planning"
 msgstr "Planification"
-
-#: src/app/modal/modal.tpl.html
-msgid "References list is empty."
-msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
-
-#: src/app/modal/modal.tpl.html
-msgid "Select parent:"
-msgstr "Sélectionner un parent :"
-
-#: src/app/modal/modal.tpl.html
-msgid "Size: {{ file.size | byteFmt: 2 }}"
-msgstr "Taille: {{ file.size | byteFmt: 2 }}"
-
-#: src/app/modal/modal.tpl.html
-msgid "Submit"
-msgstr "Enregistrer"
 
 #: src/app/planning.tpl.html
 msgid "To be planned"
@@ -129,13 +73,3 @@ msgid "{{ backlog_item.initial_effort }} pt"
 msgid_plural "{{ backlog_item.initial_effort }} pts"
 msgstr[0] "{{ backlog_item.initial_effort }} pt"
 msgstr[1] "{{ backlog_item.initial_effort }} pts"
-
-#~ msgid "References list is empty"
-#~ msgstr ""
-#~ "Cet artefact n'est pas référencé, et n'est pas source de références."
-
-#~ msgid "Create a new one"
-#~ msgstr "Créer un nouvel artefact"
-
-#~ msgid "Artifact ids separated by a comma"
-#~ msgstr "ids d'artefacts séparés par une virgule"
