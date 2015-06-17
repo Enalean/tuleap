@@ -83,7 +83,7 @@ artifact =
 
     field_date =
         attribute type { "date" },
-        element value { date_content }
+        element value { date_content? }
 
     field_file =
         attribute type { "file" },

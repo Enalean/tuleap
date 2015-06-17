@@ -183,7 +183,9 @@
       <value>date</value>
     </attribute>
     <element name="value">
-      <ref name="date_content"/>
+      <optional>
+        <ref name="date_content"/>
+      </optional>
     </element>
   </define>
   <define name="field_file">
