@@ -33,11 +33,13 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
     /** @var string */
     public $lang;
 
+    /** @var string */
+    public $use_angular_new_modal = 'true';
+
     public function __construct(PFUser $current_user, Project $project, $milestone_id) {
         $this->lang                  = $this->getLanguageAbbreviation($current_user);
         $this->project_id            = $project->getId();
         $this->milestone_id          = $milestone_id;
-        $this->use_angular_new_modal = (ForgeConfig::get('use_angular_new_modal')) ? 'true' : 'false';
     }
 
     private function getLanguageAbbreviation($current_user) {
