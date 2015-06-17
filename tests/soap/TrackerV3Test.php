@@ -104,6 +104,27 @@ class TrackerV3Test extends SOAPBase {
 
         $this->assertEquals(1, $response->total_artifacts_number);
         $this->assertEquals("SOAP Summary", $response->artifacts[0]->summary);
+        $this->assertNotNull($response->artifacts[0]->extra_fields);
+
+        return $tracker_v3_id;
+    }
+
+    /**
+     * @depends testGetArtifacts
+     */
+    public function testGetArtifactFromReport($tracker_v3_id) {
+        $session_hash = $this->getSessionHash();
+
+        $response = $this->soap_base->getArtifactsFromReport(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $tracker_v3_id,
+            SOAP_TestDataBuilder::TV3_TASK_REPORT_ID
+        );
+
+        $this->assertEquals(1, $response->total_artifacts_number);
+        $this->assertEquals(1, $response->artifacts[0]->artifact_id);
+        $this->assertNotNull($response->artifacts[0]->fields);
     }
 
 }
