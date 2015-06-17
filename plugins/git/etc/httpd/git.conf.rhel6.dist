@@ -11,7 +11,8 @@ ScriptAlias /git/ /usr/lib/tuleap/bin/gitolite-suexec-wrapper.sh/
 
         AuthMYSQLEnable on
         AuthMySQLUser dbauthuser
-        AuthMySQLPassword %dbauthuser_password%
+        AuthMySQLPassword $DBAUTH_PASS
+        AuthMySQLHost $DB_HOST
         AuthMySQLDB tuleap
         AuthMySQLUserTable "user"
         AuthMySQLNameField user.user_name
