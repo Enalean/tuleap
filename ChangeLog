@@ -5,6 +5,7 @@ Version 8.3 (not released yet)
 	* request #8108: Project name are not correctly displayed in the tracker V3 creation
 	* request #5726: Remove the Twitter widget
 	* Fix request #8119: PHPWiki SyntaxHighlighter plugin does not work on Centos 6
+	* request #8151: Request-URI Too Large in GET /users_memberships
 
 	== Enhancements ==
 	* story #8089: forbid svn tags modifications (part 2)
