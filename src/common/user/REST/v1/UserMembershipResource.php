@@ -38,6 +38,8 @@ use Tuleap\REST\AuthenticatedResource;
 class UserMembershipResource extends AuthenticatedResource {
     const MAX_LIMIT = 1000;
 
+    const CRITERION_WITH_SSH_KEY = 'with_ssh_key';
+
     /** @var UserManager */
     private $user_manager;
 
@@ -65,73 +67,69 @@ class UserMembershipResource extends AuthenticatedResource {
     }
 
     /**
-     * Get membership info for a list of users
+     * Retrieve membership information for a set of users
+     *
+     * This resource will return user group membership information,
+     * i.e. all the groups to which each one belongs,
+     * for all users meeting the "query" criterion
      *
      * @url GET
      * @access protected
      * @throws 406
      *
-     * @param string $users List of username {@from query} {@type string}
+     * @param string $query Criterion to filter the results {@choice with_ssh_key}
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
      * @return array {@type Tuleap\User\REST\v1\UserMembershipRepresentation}
      */
-    public function get($users, $limit, $offset) {
+    public function get($query, $offset = 0, $limit = 10) {
         if ($limit > self::MAX_LIMIT) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $usernames    = explode(",",$users);
+        if ($query !== self::CRITERION_WITH_SSH_KEY) {
+            throw new RestException(406, 'Invalid query criteria');
+        }
+
         $current_user = $this->user_manager->getCurrentUser();
+        $this->checkUserCanSeeOtherUsers($current_user);
 
-        $users_memberships = $this->getUsersMembershipsFromUsernames(
-            $current_user,
-            array_slice($usernames, $offset, $limit)
-        );
+        $users_memberships = array();
+        $paginated_users = $this->user_manager->getPaginatedUsersWithSshKey($offset, $limit);
+        foreach ($paginated_users->getUsers() as $user) {
+            $representation = new UserMembershipRepresentation();
+            $representation->build($user->getUsername(), $this->ugroup_literalizer->getUserGroupsForUser($user));
 
-        Header::sendPaginationHeaders($limit, $offset, count($usernames), self::MAX_LIMIT);
+            $users_memberships[] = $representation;
+        }
+
+        Header::sendPaginationHeaders($limit, $offset, $paginated_users->getTotalCount(), self::MAX_LIMIT);
         $this->sendAllowHeaders();
 
         return $users_memberships;
     }
 
-    private function getUsersMembershipsFromUsernames(PFUser $current_user, $usernames) {
-        $result = array();
-
-        foreach ($usernames as $username) {
-            $user = $this->user_manager->getUserByUsername($username);
-
-            if (! $user) {
-                continue;
-            }
-
-            if (! $this->checkUserCanSeeOtherUser($current_user, $user)) {
-                continue;
-            }
-
-            $representation = new UserMembershipRepresentation();
-            $representation->build($username, $this->ugroup_literalizer->getUserGroupsForUser($user));
-
-            $result[] = $representation;
+    private function checkUserCanSeeOtherUsers(PFUser $user) {
+        if ($user->isSuperUser()) {
+            return;
         }
 
-        return $result;
-    }
-
-    private function checkUserCanSeeOtherUser(PFUser $watcher, PFuser $watchee) {
-        if ($watcher->isSuperUser()) {
-            return true;
-        }
-        if ($watcher->getId() === $watchee->getId()) {
-            return true;
+        if ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $user,
+            new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
+        )) {
+            return;
         }
 
-        return ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
-                $watcher, new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
-            ) || $this->forge_ugroup_permissions_manager->doesUserHavePermission(
-                $watcher, new User_ForgeUserGroupPermission_UserManagement()
-            ));
+        if ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $user,
+            new User_ForgeUserGroupPermission_UserManagement()
+        )) {
+            return;
+        }
+
+        throw new RestException(403);
     }
 
     /**
