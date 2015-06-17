@@ -1,3 +1,6 @@
+Version 4.69 - Tuleap 8.3
+    * request #8153: git config files not generic enough
+
 Version 4.68 - Tuleap 8.3
     * story #8059: Use secure hash function for the storage of password used for web login
 

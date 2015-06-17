@@ -15,7 +15,7 @@ Version 8.3 (not released yet)
 	* story #8118: do not compile whole www/guidelines during make less
 
 	== Plugins ==
-	* git: 4.68
+	* git: 4.69
 	* ldap: 3.81
 	* agiledashboard: 1.224
 	* tracker: 5.643
