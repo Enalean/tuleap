@@ -32,6 +32,7 @@ Version 8.3 (not released yet)
 	* Introduce usage of docker-compose
 	* story #8118: Color switcher & Preview UI
 	* request #8120: Add new SOAP automated tests
+	* request #8120: Add new SOAP automated tests on trackers v3
 
 	== Themes ==
 	* FlamingParrot: 1.89
