@@ -26,6 +26,10 @@ class PaginatedUserCollection implements Countable {
     /** @var int */
     private $total_count;
 
+    /**
+     * @param PFUser[] $users
+     * @param int $total_count
+     */
     public function __construct(array $users, $total_count) {
         $this->users       = $users;
         $this->total_count = $total_count;

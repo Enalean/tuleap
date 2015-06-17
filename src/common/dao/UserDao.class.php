@@ -20,7 +20,7 @@
  */
 
 /**
- *  Data Access Object for User 
+ *  Data Access Object for User
  */
 class UserDao extends DataAccessObject {
     /** @var PasswordHandler */
@@ -39,7 +39,7 @@ class UserDao extends DataAccessObject {
         $sql = "SELECT * FROM user";
         return $this->retrieve($sql);
     }
-    
+
     /**
     * Searches User by Status (either one value or array)
     * @return DataAccessResult
@@ -51,9 +51,9 @@ class UserDao extends DataAccessObject {
         $sql = "SELECT * FROM user WHERE status = $where_status";
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * Searches User by UserId 
+    * Searches User by UserId
     * @return DataAccessResult
     */
     function searchByUserId($userId) {
@@ -63,7 +63,7 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-    * Searches User by UserName 
+    * Searches User by UserName
     * @return DataAccessResult
     */
     function searchByUserName($userName) {
@@ -73,7 +73,7 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-    * Searches User by Email 
+    * Searches User by Email
     * @return DataAccessResult
     */
     function searchByEmail($email) {
@@ -91,21 +91,35 @@ class UserDao extends DataAccessObject {
             $this->da->quoteSmart($ldap_id));
         return $this->retrieve($sql);
     }
-    
+
     public function searchSSHKeys() {
         $sql = "SELECT *
-                FROM user 
+                FROM user
                 WHERE (status= 'A' OR status='R')
-                  AND authorized_keys != '' 
+                  AND authorized_keys != ''
                   AND authorized_keys IS NOT NULL";
+        return $this->retrieve($sql);
+    }
+
+    public function searchPaginatedSSHKeys($offset, $limit) {
+        $offset = $this->da->escapeInt($offset);
+        $limit  = $this->da->escapeInt($limit);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM user
+                WHERE (status= 'A' OR status='R')
+                  AND authorized_keys != ''
+                  AND authorized_keys IS NOT NULL
+                LIMIT $limit OFFSET $offset";
+
         return $this->retrieve($sql);
     }
 
     /**
      * Search user by confirm hash
-     * 
+     *
      * @param String $hash
-     * 
+     *
      * @return DataAccessResult
      */
     public function searchByConfirmHash($hash) {
@@ -114,7 +128,7 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-    * create a row in the table user 
+    * create a row in the table user
     * @return true or id(auto_increment) if there is no error
     */
     function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $theme, $language_id, $expiry_date, $last_pwd_update) {
@@ -244,7 +258,7 @@ class UserDao extends DataAccessObject {
             } else {
                 $inserted = $dar->isError();
             }
-        } 
+        }
         return $inserted;
     }
 
@@ -279,9 +293,9 @@ class UserDao extends DataAccessObject {
 
     /**
      * Assign to given user the next available unix_uid
-     * 
+     *
      * @param Integer $userId User ID
-     * 
+     *
      * @return Boolean
      */
     function assignNextUnixUid($userId) {
@@ -298,7 +312,7 @@ class UserDao extends DataAccessObject {
         }
         return false;
     }
-    
+
     /**
     * Searches User status by Email
     * @return DataAccessResult
@@ -310,11 +324,11 @@ class UserDao extends DataAccessObject {
                 $this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
-    
+
     function searchBySessionHashAndIp($session_hash, $ip) {
         $sql = "SELECT user.*, session_hash, session.ip_addr AS session_ip_addr, session.time AS session_time
                 FROM user INNER JOIN session USING (user_id)
-                WHERE session_hash = ". $this->da->quoteSmart($session_hash) . " AND 
+                WHERE session_hash = ". $this->da->quoteSmart($session_hash) . " AND
                       session.ip_addr LIKE ". $this->da->quoteSmart($ip);
         return $this->retrieve($sql);
     }
@@ -323,7 +337,7 @@ class UserDao extends DataAccessObject {
      * @return string the new session_hash
      */
     function createSession($user_id, $time) {
-        
+
         // generate a token from a PRNG
         // continue until unique token is generated (SHOULD only be once)
         $number_generator = new RandomNumberGenerator();
@@ -360,20 +374,20 @@ class UserDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    /** 
+    /**
      * Store login success.
-     * 
+     *
      * Store last log-on success timestamp in 'last_auth_success' field and backup
      * the previous value in 'prev_auth_success'. In order to keep the failure
      * counter coherent, if the 'last_auth_success' is newer than the
      * 'last_auth_failure' it means that there was no bad attempts since the last
      * log-on and 'nb_auth_failure' can be reset to zero.
-     * 
+     *
      * @todo: define a global time object that would give the same time to all
      * actions on an execution.
      */
     function storeLoginSuccess($user_id, $time) {
-       $sql = 'UPDATE user_access 
+       $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
                     last_auth_success = '. $this->da->escapeInt($time).',
@@ -381,7 +395,7 @@ class UserDao extends DataAccessObject {
                 WHERE user_id = '. $this->da->escapeInt($user_id);
         $this->update($sql);
     }
-    
+
      /**
      * Don't log access if already accessed in the past 6 hours (scalability+privacy)
      * @param  $user_id Integer
@@ -394,7 +408,7 @@ class UserDao extends DataAccessObject {
                 WHERE user_id = '. $this->da->escapeInt($user_id);
         return $this->update($sql);
     }
-    
+
     /**
      * Store login failure.
      *
@@ -403,13 +417,13 @@ class UserDao extends DataAccessObject {
      * newer than 'last_auth_failure') the counter is reset to 1.
      */
     function storeLoginFailure($login, $time) {
-        $sql = "UPDATE user_access 
-                SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1), 
+        $sql = "UPDATE user_access
+                SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1),
                 last_auth_failure = ". $this->da->escapeInt($time) ."
                 WHERE user_id = (SELECT user_id from user WHERE user_name = ". $this->da->quoteSmart($login).")";
         $this->update($sql);
     }
-    
+
     function deleteSession($session_hash) {
         $sql = "DELETE FROM session
                 WHERE session_hash = ". $this->da->quoteSmart($session_hash);
@@ -438,9 +452,9 @@ class UserDao extends DataAccessObject {
 
     /**
      * Suspend user account according to a condition
-     * 
+     *
      * @param String $condition SQL condition
-     * 
+     *
      * @return Boolean
      */
     function suspendAccount($condition) {
@@ -464,9 +478,9 @@ class UserDao extends DataAccessObject {
 
     /**
      * Suspend account of users who didn't access the platform after given date
-     * 
+     *
      * @param Integer $time Unix timestamp of a date
-     * 
+     *
      * @return Boolean
      */
     function suspendInactiveAccounts($time) {
@@ -479,7 +493,7 @@ class UserDao extends DataAccessObject {
 
     /**
      * Return list of user_id that are not member of any project
-     * 
+     *
      */
     function returnNotProjectMembers(){
         $sql = 'SELECT user_id FROM user LEFT JOIN user_group USING(user_id) WHERE group_id IS NULL and status in ("A","R")';
@@ -494,7 +508,7 @@ class UserDao extends DataAccessObject {
 
      /**
      * Return the last date of being removed from the last project
-     * 
+     *
      */
     function delayForBeingNotProjectMembers($user_id){
         $req = 'SELECT date from group_history where field_name = "removed_user" and old_value REGEXP "[(]'.$this->da->escapeInt($user_id).'[)]$" order by date desc LIMIT 1';
@@ -502,7 +516,7 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-     * Return 1 row if delay allowed to  be subscribed without belonging to any project has expired 
+     * Return 1 row if delay allowed to  be subscribed without belonging to any project has expired
      * else 0 row
      */
     function delayForBeingSubscribed($user_id, $time){
@@ -513,16 +527,16 @@ class UserDao extends DataAccessObject {
 
      /**
      * Suspend account of user who is no more member of any project
-     * 
+     *
      */
     function suspendUserNotProjectMembers($time){
         $dar = $this->returnNotProjectMembers();
         if ($dar){
             //we should verify the delay for it user has been no more belonging to any project
             foreach ($dar as $row){
-                //we split the treatment in two methods to distinguish between 0 row returned  
-                //by the fact that there is no "removed user" entry for this user_id and the case  
-                //where it is the result of comparing the date 
+                //we split the treatment in two methods to distinguish between 0 row returned
+                //by the fact that there is no "removed user" entry for this user_id and the case
+                //where it is the result of comparing the date
                 $res = $this->delayForBeingNotProjectMembers($row['user_id']);
                 if($res && !$res->isError()){
                     //user is not member of any project yet
@@ -545,7 +559,7 @@ class UserDao extends DataAccessObject {
                             return $this->suspendAccount($condition);
                         }
                     }
-                    
+
                 }
             }
         }
@@ -591,7 +605,7 @@ class UserDao extends DataAccessObject {
     }
 
     /* Update user name in fields may be involved when renaming user
-     * 
+     *
      * @param User   $user
      * @param String $newName
      * @return Boolean
@@ -604,30 +618,30 @@ class UserDao extends DataAccessObject {
         $sqlArtcc = ' UPDATE artifact_cc SET email ='.$this->da->quoteSmart($newName).
                      ' WHERE email = '.$this->da->quoteSmart($user->getUserName());
         if ($this->update($sqlArtcc)) {
-            $sqlSel = 'SELECT addresses, id FROM artifact_global_notification 
+            $sqlSel = 'SELECT addresses, id FROM artifact_global_notification
                        WHERE addresses LIKE "%"'.$this->da->quoteSmart($user->getUserName()).'"%"';
-            
+
             $dar = $this->retrieve($sqlSel);
             if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
-                $res = true; 
+                $res = true;
                 foreach ($dar as $row) {
-                    $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName); 
+                    $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
                     $sqlArtgn = 'UPDATE artifact_global_notification SET addresses = '.$this->da->quoteSmart($row['addresses']).'
                                  WHERE id = '.$this->da->escapeInt($row['id']);
                     $res = $res & $this->update($sqlArtgn);
                 }
                 return $res;
-                
+
             } else return true;
-                
+
         } else return false;
-        
+
     }
 
     /**
      * return array of all users or users matching the pattern if $pattern is not empty and order
      * the result according to the clicked header and the order of sort
-     * 
+     *
      * @param String $pattern
      * @param Integer $offset
      * @param Integer $limit
@@ -690,11 +704,11 @@ class UserDao extends DataAccessObject {
 
    /**
     * return all users of a given group id
-    * 
+    *
     * @param Integer $groupId
     * @param Integer $offset
     * @param Integer $limit
-    * 
+    *
     * @return Array
     */
     function listAllUsersForGroup($groupId, $offset=0, $limit=0) {
@@ -702,11 +716,11 @@ class UserDao extends DataAccessObject {
         if ($limit!=0) {
             $stm = ' ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
         }
-        $sql ='SELECT SQL_CALC_FOUND_ROWS user.user_id AS user_id,user.user_name 
-                  AS user_name, user.realname AS realname,user.status AS status 
-               FROM user, user_group 
-               WHERE user.user_id=user_group.user_id 
-               AND user_group.group_id='.$this->da->escapeInt($groupId).' 
+        $sql ='SELECT SQL_CALC_FOUND_ROWS user.user_id AS user_id,user.user_name
+                  AS user_name, user.realname AS realname,user.status AS status
+               FROM user, user_group
+               WHERE user.user_id=user_group.user_id
+               AND user_group.group_id='.$this->da->escapeInt($groupId).'
                ORDER BY user.user_name'.$stm;
 
         $res = $this->retrieve($sql);
@@ -715,9 +729,9 @@ class UserDao extends DataAccessObject {
 
     /**
      * Return the access information for a given user
-     * 
+     *
      * @param Integer $userId
-     * 
+     *
      * @return Array
      */
     function getUserAccessInfo($userId) {

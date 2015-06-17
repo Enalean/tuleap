@@ -112,6 +112,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $user_2->setPassword(self::TEST_USER_2_PASS);
         $user_2->setStatus(self::TEST_USER_2_STATUS);
         $user_2->setLanguage($GLOBALS['Language']);
+        $user_2->setAuthorizedKeys('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHk9 toto@marche');
         $this->user_manager->createAccount($user_2);
 
         $user_3 = new PFUser();

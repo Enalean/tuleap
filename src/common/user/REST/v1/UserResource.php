@@ -148,7 +148,6 @@ class UserResource extends AuthenticatedResource {
         $offset = self::DEFAULT_OFFSET
     ) {
         $this->checkAccess();
-
         if ($this->json_decoder->looksLikeJson($query)) {
             $user_collection = $this->getUserFromExactSearch($query);
         } else {
