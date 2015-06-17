@@ -11,7 +11,8 @@ ScriptAlias /git/ /usr/lib/codendi/bin/gitolite-suexec-wrapper.sh/
 
         AuthMYSQLEnable on
         AuthMySQLUser dbauthuser
-        AuthMySQLPassword %dbauthuser_password%
+        AuthMySQLPassword $DBAUTH_PASS
+        AuthMySQLHost $DB_HOST
         AuthMySQLDB codendi
         AuthMySQLUserTable "user"
         AuthMySQLNameField user.user_name
