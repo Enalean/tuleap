@@ -34,28 +34,7 @@ class UserMembershipsTest extends RestBase {
     }
 
     public function testGET() {
-        $comma_separated_users = implode(',',array(
-            TestDataBuilder::TEST_USER_1_NAME,
-            TestDataBuilder::TEST_USER_2_NAME,
-            TestDataBuilder::TEST_USER_3_NAME
-        ));
-
-        $response = $this->getResponse($this->client->get('users_memberships/?users='.$comma_separated_users.'&limit=3&offset=0'));
-
-        $user1_groups = array(
-            "site_active",
-            "private-member_project_members",
-            "private-member_project_admin",
-            "public-member_project_members",
-            "pbi-6348_project_members",
-            "dragndrop_project_members",
-            "dragndrop_project_admin",
-            "test-git_project_members",
-            "test-git_project_admin",
-            "rest-xml-api_project_members",
-            "ug_101",
-            "ug_102"
-        );
+        $response = $this->getResponse($this->client->get('users_memberships/?query=with_ssh_key&limit=3&offset=0'));
 
         $user2_groups = array(
             "site_active",
@@ -63,18 +42,9 @@ class UserMembershipsTest extends RestBase {
             "ug_102"
         );
 
-        $user3_groups = array(
-            "site_active",
-            "private-member_project_members",
-            "ug_103",
-            "ug_104"
-        );
-
         $response_json = $response->json();
-        $this->assertCount(3,$response_json);
-        $this->assertEquals($response_json[0]["user_groups"], $user1_groups);
-        $this->assertEquals($response_json[1]["user_groups"], $user2_groups);
-        $this->assertEquals($response_json[2]["user_groups"], $user3_groups);
+        $this->assertCount(1, $response_json);
+        $this->assertEquals($response_json[0]["user_groups"], $user2_groups);
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

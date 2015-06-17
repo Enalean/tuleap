@@ -30,7 +30,7 @@ class UserManager {
     var $_users           = array();
     var $_userid_bynames  = array();
     var $_userid_byldapid = array();
-    
+
     var $_userdao         = null;
     var $_currentuser     = null;
 
@@ -57,15 +57,15 @@ class UserManager {
 
         return self::$_instance;
     }
-    
+
     public static function setInstance($instance) {
         self::$_instance = $instance;
     }
-    
+
     public static function clearInstance() {
         self::$_instance = null;
     }
-    
+
     /**
      * @return UserDao
      */
@@ -140,7 +140,7 @@ class UserManager {
         }
         return $user;
     }
-    
+
     public function _getUserInstanceFromRow($row) {
         return $this->getUserInstanceFromRow($row);
     }
@@ -155,7 +155,7 @@ class UserManager {
         }
         return new PFUser($row);
     }
-    
+
     /**
      * @param  string Ldap identifier
      * @return PFUser or null if the user is not found
@@ -180,12 +180,12 @@ class UserManager {
         }
         return $user;
     }
-    
+
     /**
      * Try to find a user that match the given identifier
-     * 
+     *
      * @param String $ident A user identifier
-     * 
+     *
      * @return PFUser
      */
     function findUser($ident) {
@@ -210,15 +210,15 @@ class UserManager {
             //@todo: lookup based on email address ?
             //@todo: lookup based on common name ?
         }
-        
+
         return $user;
     }
 
 /**
  * Returns an array of user ids that match the given string
- * 
+ *
  * @param String $search comma-separated users' names.
- * 
+ *
  * @return Array
  */
     function getUserIdsList($search) {
@@ -262,7 +262,7 @@ class UserManager {
             return null; // No account found
         }
     }
-    
+
     public function getAllUsersByEmail($email) {
         $users = array();
         foreach ($this->getDao()->searchByEmail($email) as $user) {
@@ -278,21 +278,21 @@ class UserManager {
      *     email:manu@st.com
      *     id:1234
      *     manu (no type specified means that the identifier is a username)
-     * 
+     *
      * @param string $identifier User identifier
-     * 
+     *
      * @return PFUser
      */
     public function getUserByIdentifier($identifier) {
         $user = null;
-        
+
         $em = $this->_getEventManager();
         $tokenFoundInPlugins = false;
         $params = array('identifier' => $identifier,
                         'user'       => &$user,
                         'tokenFound' => &$tokenFoundInPlugins);
         $em->processEvent('user_manager_get_user_by_identifier', $params);
-        
+
         if (!$tokenFoundInPlugins) {
             // Guess identifier type
             $separatorPosition = strpos($identifier, ':');
@@ -322,9 +322,9 @@ class UserManager {
 
     /**
      * Get a user with the string genereated at user creation
-     * 
+     *
      * @param String $hash
-     * 
+     *
      * @return PFUser
      */
     public function getUserByConfirmHash($hash) {
@@ -342,8 +342,8 @@ class UserManager {
     }
 
     /**
-     * @param $session_hash string Optional parameter. If given, this will force 
-     *                             the load of the user with the given session_hash. 
+     * @param $session_hash string Optional parameter. If given, this will force
+     *                             the load of the user with the given session_hash.
      *                             else it will check from the user cookies & ip
      * @return PFUser the user currently logged in (who made the request)
      */
@@ -391,6 +391,18 @@ class UserManager {
     }
 
     /**
+     * @return PaginatedUserCollection
+     */
+    public function getPaginatedUsersWithSshKey($offset, $limit) {
+        $users = array();
+        foreach ($this->getDao()->searchPaginatedSSHKeys($offset, $limit) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+
+        return new PaginatedUserCollection($users, $this->getDao()->foundRows());
+    }
+
+    /**
      * Logout the current user
      * - remove the cookie
      * - clear the session hash
@@ -406,17 +418,17 @@ class UserManager {
             $this->destroySession();
         }
     }
-    
+
     protected function destroySession() {
         $session = new Codendi_Session();
         $session->destroy();
     }
 
     /**
-     * Return the user acess information for a given user 
-     * 
+     * Return the user acess information for a given user
+     *
      * @param PFUser $user
-     * 
+     *
      * @return Array
      */
     function getUserAccessInfo($user) {
@@ -571,14 +583,14 @@ class UserManager {
     * loginAs allows the siteadmin to log as someone else
     *
     * @param string $username
-    * 
+    *
     * @return string a session hash
     */
     function loginAs($name) {
         if (! $this->getCurrentUser()->isSuperUser()) {
             throw new UserNotAuthorizedException();
         }
-        
+
         $user_login_as = $this->findUser($name);
         if (!$user_login_as) {
             throw new UserNotExistException();
@@ -647,20 +659,20 @@ class UserManager {
         if (!IS_SCRIPT) {
             throw new Exception("Can't log in the user when not is script");
         }
-        
+
         //If nobody answer success, look for the user into the db
         if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
             $this->_currentuser = $this->getUserInstanceFromRow($row);
         } else {
             $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
         }
-        
+
         //cache the user
         $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
         $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
         return $this->_currentuser;
     }
-    
+
     /**
      * isUserLoadedById
      *
@@ -670,7 +682,7 @@ class UserManager {
     function isUserLoadedById($user_id) {
         return isset($this->_users[$user_id]);
     }
-    
+
     /**
      * isUserLoadedByUserName
      *
@@ -680,34 +692,34 @@ class UserManager {
     function isUserLoadedByUserName($user_name) {
         return isset($this->_userid_bynames[$user_name]);
     }
-    
+
     /**
      * @return CookieManager
      */
     function getCookieManager() {
         return new CookieManager();
     }
-    
+
     /**
      * @return EventManager
      */
     function _getEventManager() {
         return EventManager::instance();
     }
-    
+
     function _getServerIp() {
         if (isset($_SERVER['REMOTE_ADDR'])) return $_SERVER['REMOTE_ADDR'];
         else return null;
     }
-    
+
     function _getSessionLifetime() {
         return $GLOBALS['sys_session_lifetime'];
     }
-    
+
     function _getPasswordLifetime() {
         return $GLOBALS['sys_password_lifetime'];
     }
-    
+
     /**
      * Update db entry of 'user' table with values in object
      * @param PFUser $user
@@ -788,15 +800,15 @@ class UserManager {
 
     /**
      * Assign to given user the next available unix_uid
-     * 
+     *
      * We need to pass the whole user object and to modify it in this
      * method to avoid conflicts if updateDb is used after this call. As
      * updateDb will perform a select on user table to check what changed
      * between the user table and the user object, the user object must contains
      * what was updated by this method.
-     * 
+     *
      * @param PFUser $user A user object to update
-     * 
+     *
      * @return Boolean
      */
     function assignNextUnixUid($user) {
@@ -810,9 +822,9 @@ class UserManager {
 
     /**
      * Create new account
-     * 
+     *
      * @param PFUser $user
-     * 
+     *
      * @return PFUser
      */
     function createAccount($user){
@@ -875,14 +887,14 @@ class UserManager {
 
     /**
      * Wrapper for WidgetLayoutManager
-     * 
+     *
      * This wrapper is needed to include "WidgetLayoutManager" and so on in the
      * context of LDAP plugin. In LDAP plugin, when a user is added into a ugroup
      * WidgetLayoutManager is not loaded so there is a fatal error. But if we add
      * WidgetLayoutManager.class.php in the include list, it makes the process_system_event.php
      * cry because at some include degree there are the Artifact stuff that raises Warnings
      * (call-tim pass-by-reference).
-     * 
+     *
      * @return WidgetLayoutManager
      */
     protected function _getWidgetLayoutManager() {
@@ -911,7 +923,7 @@ class UserManager {
      * Change account status to suspended when the account expiry date is passed
      *
      * @param Integer $time Timestamp of the date when this apply
-     * 
+     *
      * @return Boolean
      */
     function suspendExpiredAccounts($time) {
@@ -931,11 +943,11 @@ class UserManager {
             return $this->getDao()->suspendInactiveAccounts($lastValidAccess);
         }
     }
-    
+
     /**
      * Change account status to suspended when user is no more member of any project
      * @return Boolean
-     * 
+     *
      */
     function suspendUserNotProjectMembers($time) {
         if (isset($GLOBALS['sys_suspend_non_project_member_delay']) && $GLOBALS['sys_suspend_non_project_member_delay'] > 0) {
@@ -945,7 +957,7 @@ class UserManager {
     }
 
     /**
-     * Update user name in different tables containing the old user name  
+     * Update user name in different tables containing the old user name
      * @param PFUser $user
      * @param String $newName
      * @return Boolean
