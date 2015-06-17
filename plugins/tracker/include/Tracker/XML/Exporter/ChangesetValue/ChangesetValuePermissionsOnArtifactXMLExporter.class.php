@@ -34,22 +34,33 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
             $changeset_value,
             $changeset_xml
         );
-        $field_change->addAttribute('use_perm', (int)$changeset_value->getUsed());
+        $field_change->addAttribute('use_perm', (int)$this->isUsed($changeset_value));
 
-        $ugroup_ids = $changeset_value->getPerms();
+        $ugroup_names = $changeset_value->getUgroupNamesFromPerms();
+
         array_walk(
-            $ugroup_ids,
+            $ugroup_names,
             array($this, 'appendUgroupToFieldChangeNode'),
             $field_change
         );
     }
 
+    private function isUsed(Tracker_Artifact_ChangesetValue $changeset_value) {
+        $ugroup_ids = $changeset_value->getPerms();
+
+        if (count($ugroup_ids) === 1 && (int) $ugroup_ids[0] === ProjectUGroup::ANONYMOUS ) {
+            return false;
+        }
+
+        return count($ugroup_ids) > 0;
+    }
+
     private function appendUgroupToFieldChangeNode(
-        $ugroup_id,
+        $ugroup_name,
         $index,
         SimpleXMLElement $field_xml
     ) {
         $node = $field_xml->addChild('ugroup');
-        $node->addAttribute('ugroup_id', $ugroup_id);
+        $node->addAttribute('ugroup_name', $ugroup_name);
     }
 }

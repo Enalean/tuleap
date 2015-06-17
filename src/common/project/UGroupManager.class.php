@@ -101,6 +101,9 @@ class UGroupManager {
         return $ugroups;
     }
 
+    /**
+     * @return ProjectUGroup
+     */
     public function getUGroupByName(Project $project, $name) {
         $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
         if (!$row && preg_match('/^ugroup_.*_key$/', $name)) {

@@ -144,5 +144,8 @@ artifact =
         attribute type { "permissions_on_artifact" },
         attribute use_perm { xsd:boolean },
         element ugroup {
-            attribute ugroup_id { xsd:int }
-        }+
+            (
+               (attribute ugroup_id { xsd:int })
+             | (attribute ugroup_name { xsd:string })
+            )
+        }*
