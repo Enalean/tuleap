@@ -137,15 +137,26 @@ ul.backlog-items, ul.backlog-item-children {
                 > span.initial-effort { background-color: @flamingo_pink; }
             }
 
-            > a.id {
-                margin: 0 5px 0 0;
-                color: #999;
-                font-size: 0.8em;
-                letter-spacing: -0.03em;
+            .id {
+                display: inline-block;
 
-                &:hover {
-                    text-decoration: none;
-                    opacity: 0.8;
+                > a {
+                    margin: 0 5px 0 0;
+                    color: #999;
+                    font-size: 0.8em;
+                    letter-spacing: -0.03em;
+
+                    &:hover {
+                        text-decoration: none;
+                        opacity: 0.8;
+                    }
+
+                    > .caret {
+                        border-top: 3px solid #999;
+                        border-right: 3px solid transparent;
+                        border-left: 3px solid transparent;
+                        margin: 9px 0 0px 1px;
+                    }
                 }
             }
 
