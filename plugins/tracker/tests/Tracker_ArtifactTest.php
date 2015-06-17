@@ -1610,9 +1610,25 @@ class Tracker_Artifact_getCardAccentColorTest extends TuleapTestCase {
 
 class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
 
-    public function itExportTheArtifactToXML() {
-        $changeset_01 = mock('Tracker_Artifact_Changeset');
-        $changeset_02 = mock('Tracker_Artifact_Changeset');
+    private $user_manager;
+
+    public function setUp() {
+        $this->user_manager = mock('UserManager');
+        UserManager::setInstance($this->user_manager);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+
+        parent::tearDown();
+    }
+
+    public function itExportsTheArtifactToXML() {
+        $user = aUser()->withId(101)->withLdapId('ldap_O1')->withUserName('user_01')->build();
+        stub($this->user_manager)->getUserById(101)->returns($user);
+
+        $changeset_01 = stub('Tracker_Artifact_Changeset')->getsubmittedBy()->returns(101);
+        $changeset_02 = stub('Tracker_Artifact_Changeset')->getsubmittedBy()->returns(101);
 
         $artifact       = anArtifact()->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
         $artifacts_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -1633,7 +1649,6 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         stub($changeset_02)->getArtifact()->returns($artifact);
         stub($changeset_02)->getValues()->returns(array($value_02));
 
-        $user = aUser()->withId(101)->build();
         $artifact->exportToXML($artifacts_node, $user);
 
         $this->assertEqual($artifacts_node->artifact['id'], 101);

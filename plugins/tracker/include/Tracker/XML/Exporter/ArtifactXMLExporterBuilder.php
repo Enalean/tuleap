@@ -44,7 +44,11 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
         $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor);
-        $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter($values_exporter);
+        $user_xml_exporter  = new UserXMLExporter(UserManager::instance());
+        $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter(
+            $values_exporter,
+            $user_xml_exporter
+        );
 
         return new Tracker_XML_Exporter_ArtifactXMLExporter($changeset_exporter);
     }

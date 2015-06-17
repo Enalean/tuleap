@@ -29,12 +29,14 @@ class ProjectXMLExporterTest extends TuleapTestCase {
         $this->event_manager  = mock('EventManager');
         $this->ugroup_manager = mock('UGroupManager');
         $xml_validator        = new XML_RNGValidator();
+        $user_xml_exporter    = new UserXMLExporter(mock('UserManager'));
         $this->project        = stub('Project')->getPublicName()->returns('Project01');
 
         $this->xml_exporter   = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
+            $user_xml_exporter,
             mock('ProjectXMLExporterLogger')
         );
     }

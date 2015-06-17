@@ -25,8 +25,15 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
      */
     private $values_exporter;
 
-    public function __construct(Tracker_XML_Exporter_ChangesetValuesXMLExporter $values_exporter) {
-        $this->values_exporter = $values_exporter;
+    /** @var UserXMLExporter */
+    private $user_xml_exporter;
+
+    public function __construct(
+        Tracker_XML_Exporter_ChangesetValuesXMLExporter $values_exporter,
+        UserXMLExporter $user_xml_exporter
+    ) {
+        $this->values_exporter   = $values_exporter;
+        $this->user_xml_exporter = $user_xml_exporter;
     }
 
     public function exportWithoutComments(
@@ -50,8 +57,11 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
     ) {
         $changeset_xml = $artifact_xml->addChild('changeset');
 
-        $submitted_by = $changeset_xml->addChild('submitted_by', $changeset->getSubmittedBy());
-        $submitted_by->addAttribute('format', 'id');
+        $this->user_xml_exporter->exportUserByUserId(
+            $changeset->getSubmittedBy(),
+            $changeset_xml,
+            'submitted_by'
+        );
 
         $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
         $submitted_on->addAttribute('format', 'ISO8601');

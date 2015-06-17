@@ -22,7 +22,23 @@ require_once('bootstrap.php');
 
 class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
 
+    private $user_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user_manager = mock('UserManager');
+        UserManager::setInstance($this->user_manager);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+
+        parent::tearDown();
+    }
+
     public function itExportsToXML() {
+        $user      = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         $changeset = aChangeset()->build();
         $timestamp = '1433863107';
         $body      = '<b> My comment 01</b>';
@@ -36,6 +52,8 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
 
         $changeset_node = new SimpleXMLElement($xml);
 
+        stub($this->user_manager)->getUserById(101)->returns($user);
+
         $comment->exportToXML($changeset_node);
 
         $this->assertNotNull($changeset_node->comment);
@@ -43,8 +61,8 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $this->assertNotNull($changeset_node->comment->submitted_on);
         $this->assertNotNull($changeset_node->comment->body);
 
-        $this->assertEqual((string) $changeset_node->comment->submitted_by, '101');
-        $this->assertEqual($changeset_node->comment->submitted_by['format'], 'id');
+        $this->assertEqual((string) $changeset_node->comment->submitted_by, 'ldap_01');
+        $this->assertEqual($changeset_node->comment->submitted_by['format'], 'ldap');
 
         $this->assertEqual((string) $changeset_node->comment->submitted_on, '2015-06-09T17:18:27+02:00');
         $this->assertEqual($changeset_node->comment->submitted_on['format'], 'ISO8601');

@@ -1,0 +1,47 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+class UserXMLExporter {
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    public function __construct(UserManager $user_manager) {
+        $this->user_manager = $user_manager;
+    }
+
+    public function exportUser(PFUser $user, SimpleXMLElement $members_node, $child_name) {
+        if ($user->getLdapId()) {
+            $member_node = $members_node->addChild($child_name, $user->getLdapId());
+            $member_node->addAttribute('format', 'ldap');
+        } else {
+            $member_node = $members_node->addChild($child_name, $user->getUserName());
+            $member_node->addAttribute('format', 'username');
+        }
+    }
+
+    public function exportUserByUserId($user_id, SimpleXMLElement $members_node, $child_name) {
+        $user = $this->user_manager->getUserById($user_id);
+
+        $this->exportUser($user, $members_node, $child_name);
+    }
+}
