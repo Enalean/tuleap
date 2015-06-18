@@ -1,3 +1,6 @@
+Version 5.646 - Tuleap 8.3
+    * story #8090: Export and import user use LDAP information
+
 Version 5.645 - Tuleap 8.3
     * story #8090: Handle date/datetime value
 
