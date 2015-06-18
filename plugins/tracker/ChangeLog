@@ -1,3 +1,7 @@
+Version 5.645 - Tuleap 8.3
+    * story #8090: Handle date/datetime value
+
+
 Version 5.644 - Tuleap 8.3
     * story #8090: Export and import artifacts
 
