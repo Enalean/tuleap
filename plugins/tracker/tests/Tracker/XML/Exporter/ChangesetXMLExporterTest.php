@@ -35,12 +35,18 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
 
     /** @var Tracker_Artifact */
     private $artifact;
+    private $user_manager;
 
     public function setUp() {
         parent::setUp();
+        $this->user_manager    = mock('UserManager');
+        $user_xml_exporter     = new UserXMLExporter($this->user_manager);
         $this->artifact_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->values_exporter = mock('Tracker_XML_Exporter_ChangesetValuesXMLExporter');
-        $this->exporter        = new Tracker_XML_Exporter_ChangesetXMLExporter($this->values_exporter);
+        $this->exporter        = new Tracker_XML_Exporter_ChangesetXMLExporter(
+            $this->values_exporter,
+            $user_xml_exporter
+        );
 
         $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', '*', '*', '*');
         $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', '*', '*', '*');
@@ -56,6 +62,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
         stub($this->changeset)->getValues()->returns($this->values);
         stub($this->changeset)->getArtifact()->returns($this->artifact);
         stub($this->changeset)->getComment()->returns($this->comment);
+        stub($this->changeset)->getSubmittedBy()->returns(101);
     }
 
     public function itAppendsChangesetNodeToArtifactNode() {
@@ -74,6 +81,9 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
     }
 
     public function itExportsTheComments() {
+        $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
+        stub($this->user_manager)->getUserById(101)->returns($user);
+
         expect($this->values_exporter)->exportChangedFields($this->artifact_xml, '*', $this->artifact, $this->values)->once();
         expect($this->comment)->exportToXML()->once();
 

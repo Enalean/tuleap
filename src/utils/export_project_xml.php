@@ -37,6 +37,7 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
             EventManager::instance(),
             new UGroupManager(),
             new XML_RNGValidator(),
+            new UserXMLExporter(UserManager::instance()),
             new ProjectXMLExporterLogger()
         );
 

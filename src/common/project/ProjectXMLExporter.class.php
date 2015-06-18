@@ -32,6 +32,9 @@ class ProjectXMLExporter {
     /** @var XML_RNGValidator */
     private $xml_validator;
 
+    /** @var UserXMLExporter */
+    private $user_xml_exporter;
+
     /** @var Logger */
     private $logger;
 
@@ -39,12 +42,14 @@ class ProjectXMLExporter {
         EventManager $event_manager,
         UGroupManager $ugroup_manager,
         XML_RNGValidator $xml_validator,
+        UserXMLExporter $user_xml_exporter,
         Logger $logger
     ) {
-        $this->event_manager  = $event_manager;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->xml_validator  = $xml_validator;
-        $this->logger         = $logger;
+        $this->event_manager     = $event_manager;
+        $this->ugroup_manager    = $ugroup_manager;
+        $this->xml_validator     = $xml_validator;
+        $this->user_xml_exporter = $user_xml_exporter;
+        $this->logger            = $logger;
     }
 
     private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml) {
@@ -68,13 +73,7 @@ class ProjectXMLExporter {
             $members_node = $ugroup_node->addChild('members');
 
             foreach ($ugroup->getMembers() as $member) {
-                if ($member->getLdapId()) {
-                    $member_node = $members_node->addChild('member', $member->getLdapId());
-                    $member_node->addAttribute('format', 'ldap');
-                } else {
-                    $member_node = $members_node->addChild('member', $member->getUserName());
-                    $member_node->addAttribute('format', 'username');
-                }
+                $this->user_xml_exporter->exportUser($member, $members_node, 'member');
             }
         }
 
