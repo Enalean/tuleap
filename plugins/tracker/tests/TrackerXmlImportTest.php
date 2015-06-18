@@ -112,10 +112,9 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->tracker3 = aTracker()->withId(666)->build();
 
         $this->tracker_factory = mock('TrackerFactory');
-
-        $this->event_manager = mock('EventManager');
-
-        $this->hierarchy_dao = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
+        $this->event_manager   = mock('EventManager');
+        $this->hierarchy_dao   = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
+        $this->xml_import      = mock('Tracker_Artifact_XMLImport');
 
         $this->tracker_xml_importer = partial_mock(
             'TrackerXmlImportTestInstance',
@@ -134,6 +133,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('WorkflowFactory'),
                 mock('XML_RNGValidator'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
+                $this->xml_import
             )
         );
 
@@ -223,6 +223,62 @@ class TrackerXmlImportTest extends TuleapTestCase {
     }
 }
 
+class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <empty_section />
+              <trackers>
+                  <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                    <name>name10</name>
+                    <item_name>item11</item_name>
+                    <description>desc12</description>
+                    <artifacts/>
+                  </tracker>
+              </trackers>
+            </project>');
+
+        $this->group_id = 145;
+
+        $this->tracker         = mock('Tracker');
+        $this->tracker_factory = mock('TrackerFactory');
+        $this->event_manager   = mock('EventManager');
+        $this->hierarchy_dao   = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
+        $this->xml_import      = mock('Tracker_Artifact_XMLImport');
+
+        $this->tracker_xml_importer = partial_mock(
+            'TrackerXmlImportTestInstance',
+            array(
+                'createFromXML'
+            ),
+            array(
+                $this->tracker_factory,
+                $this->event_manager,
+                $this->hierarchy_dao,
+                mock('Tracker_CannedResponseFactory'),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_SemanticFactory'),
+                mock('Tracker_RuleFactory'),
+                mock('Tracker_ReportFactory'),
+                mock('WorkflowFactory'),
+                mock('XML_RNGValidator'),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
+                $this->xml_import
+            )
+        );
+    }
+
+    public function itImportsArtifacts() {
+        stub($this->tracker_xml_importer)->createFromXML()->returns($this->tracker);
+        $this->xml_import->expectCallCount('importFromXML', 1);
+
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
+    }
+}
+
 class TrackerXmlImport_InstanceTest extends TuleapTestCase {
 
     private $tracker_xml_importer;
@@ -244,7 +300,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             mock('Tracker_ReportFactory'),
             mock('WorkflowFactory'),
             mock('XML_RNGValidator'),
-            mock('Tracker_Workflow_Trigger_RulesManager')
+            mock('Tracker_Workflow_Trigger_RulesManager'),
+            mock('Tracker_Artifact_XMLImport')
         );
 
         $this->xml_security = new XML_Security();
@@ -306,7 +363,8 @@ XML;
             mock('Tracker_ReportFactory'),
             mock('WorkflowFactory'),
             mock('XML_RNGValidator'),
-            mock('Tracker_Workflow_Trigger_RulesManager')
+            mock('Tracker_Workflow_Trigger_RulesManager'),
+            mock('Tracker_Artifact_XMLImport')
         );
 
         //create data passed
@@ -515,7 +573,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             mock('Tracker_ReportFactory'),
             mock('WorkflowFactory'),
             mock('XML_RNGValidator'),
-            $this->trigger_rulesmanager
+            $this->trigger_rulesmanager,
+            mock('Tracker_Artifact_XMLImport')
         );
      }
 

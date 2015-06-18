@@ -59,4 +59,22 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends TuleapTestCase {
 
         $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->changeset);
     }
+
+    public function itExportsTheFullHistory() {
+        $changeset_01 = mock('Tracker_Artifact_Changeset');
+        $changeset_02 = mock('Tracker_Artifact_Changeset');
+        $changeset_03 = mock('Tracker_Artifact_Changeset');
+
+        $artifacts_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <tracker>
+                                             <artifacts/>
+                                             </tracker>');
+
+        $changesets = array($changeset_01, $changeset_02, $changeset_03);
+        $artifact   = anArtifact()->withId(101)->withChangesets($changesets)->build();
+
+        $this->changeset_exporter->expectCallCount('exportFullHistory', 3);
+
+        $this->exporter->exportFullHistory($artifacts_xml, $artifact);
+    }
 }

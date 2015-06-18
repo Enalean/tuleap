@@ -21,11 +21,17 @@
 class XML_ParseException extends Exception {
     private $errors;
     private $indented_xml;
+    private $rng_path;
 
-    public function __construct(array $errors, array $indented_xml) {
-        $this->errors = $errors;
+    public function __construct($rng_path, array $errors, array $indented_xml) {
+        $this->rng_path     = $rng_path;
+        $this->errors       = $errors;
         $this->indented_xml = $indented_xml;
         parent::__construct('XML parse errors');
+    }
+
+    public function getRngPath() {
+        return $this->rng_path;
     }
 
     public function getErrors() {

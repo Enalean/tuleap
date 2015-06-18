@@ -82,13 +82,14 @@ class ProjectXMLExporter {
         $this->xml_validator->validate($ugroups_node, $rng_path);
     }
 
-    private function exportPlugins(Project $project, SimpleXMLElement $into_xml, array $options) {
+    private function exportPlugins(Project $project, SimpleXMLElement $into_xml, array $options, PFUser $user) {
         $this->logger->info("Export plugins");
 
         $params = array(
             'project'  => $project,
             'options'  => $options,
             'into_xml' => $into_xml,
+            'user'     => $user
         );
 
         $this->event_manager->processEvent(
@@ -97,13 +98,13 @@ class ProjectXMLExporter {
         );
     }
 
-    public function export(Project $project, array $options) {
+    public function export(Project $project, array $options, PFUser $user) {
         $this->logger->info("Start exporting project " . $project->getPublicName());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
         $this->exportProjectUgroups($project, $xml_element);
-        $this->exportPlugins($project, $xml_element, $options);
+        $this->exportPlugins($project, $xml_element, $options, $user);
 
         $this->logger->info("Finish exporting project " . $project->getPublicName());
 

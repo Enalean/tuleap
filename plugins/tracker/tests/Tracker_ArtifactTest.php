@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('bootstrap.php');
@@ -1607,4 +1608,34 @@ class Tracker_Artifact_getCardAccentColorTest extends TuleapTestCase {
     }
 }
 
-?>
+class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
+
+    public function itExportTheArtifactToXML() {
+        $changeset_01 = mock('Tracker_Artifact_Changeset');
+        $changeset_02 = mock('Tracker_Artifact_Changeset');
+
+        $artifact       = anArtifact()->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
+        $artifacts_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <artifacts/>');
+
+        $project = stub('Project')->getID()->returns(101);
+        $tracker = aTracker()->withId(101)->withProject($project)->build();
+
+        $text_field_01 = stub('Tracker_FormElement_Field_Text')->getName()->returns('text_01');
+        stub($text_field_01)->getTracker()->returns($tracker);
+
+        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, $text_field_01, true, 'value_01', 'text');
+        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, $text_field_01, true, 'value_02', 'text');
+
+        stub($changeset_01)->getArtifact()->returns($artifact);
+        stub($changeset_01)->getValues()->returns(array($value_01));
+
+        stub($changeset_02)->getArtifact()->returns($artifact);
+        stub($changeset_02)->getValues()->returns(array($value_02));
+
+        $user = aUser()->withId(101)->build();
+        $artifact->exportToXML($artifacts_node, $user);
+
+        $this->assertEqual($artifacts_node->artifact['id'], 101);
+    }
+}

@@ -68,6 +68,6 @@ class XML_RNGValidator {
             //4 message
             $errors[] = new XML_ParseError($matches[1], $matches[2], $matches[3], $matches[4]);
         }
-        throw new XML_ParseException($errors, file($temp, FILE_IGNORE_NEW_LINES));
+        throw new XML_ParseException($rng_path, $errors, file($temp, FILE_IGNORE_NEW_LINES));
     }
 }

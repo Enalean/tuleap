@@ -20,7 +20,6 @@
 
 class TrackerXmlExport {
 
-
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -30,10 +29,19 @@ class TrackerXmlExport {
     /** @var XML_RNGValidator */
     private $rng_validator;
 
-    public function __construct(TrackerFactory $tracker_factory, Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager, XML_RNGValidator $rng_validator) {
+    /** @var Tracker_Artifact_XMLExport */
+    private $artifact_xml_xport;
+
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
+        XML_RNGValidator $rng_validator,
+        Tracker_Artifact_XMLExport $artifact_xml_export
+    ) {
         $this->tracker_factory       = $tracker_factory;
         $this->trigger_rules_manager = $trigger_rules_manager;
         $this->rng_validator         = $rng_validator;
+        $this->artifact_xml_xport    = $artifact_xml_export;
     }
 
     public function exportToXml($group_id, SimpleXMLElement $xml_content) {
@@ -66,7 +74,7 @@ class TrackerXmlExport {
         }
     }
 
-    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id) {
+    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id, PFUser $user) {
         $xml_field_mapping = array();
         $xml_trackers      = $xml_content->addChild('trackers');
         $tracker           = $this->tracker_factory->getTrackerById($tracker_id);
@@ -75,6 +83,7 @@ class TrackerXmlExport {
             $tracker_xml = $xml_trackers->addChild('tracker');
 
             $tracker->exportToXML($tracker_xml, $xml_field_mapping);
+            $this->artifact_xml_xport->export($tracker, $tracker_xml, $user);
         }
 
         $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');

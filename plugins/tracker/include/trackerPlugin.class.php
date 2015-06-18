@@ -676,10 +676,16 @@ class trackerPlugin extends Plugin {
      * @return TrackerXmlExport
      */
     private function getTrackerXmlExport() {
+        $rng_validator = new XML_RNGValidator();
+
         return new TrackerXmlExport(
             $this->getTrackerFactory(),
             $this->getTrackerFactory()->getTriggerRulesManager(),
-            new XML_RNGValidator()
+            $rng_validator,
+            new Tracker_Artifact_XMLExport(
+                $rng_validator,
+                $this->getArtifactFactory()
+            )
         );
     }
 
@@ -911,12 +917,13 @@ class trackerPlugin extends Plugin {
     public function export_xml_project($params) {
         $tracker_id = $params['options']['tracker_id'];
         $project    = $params['project'];
+        $user       = $params['user'];
         $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
 
         if ($tracker->getGroupId() != $project->getID()) {
             throw new Exception ('Tracker ID does not belong to project ID');
         }
 
-        $this->getTrackerXmlExport()->exportSingleTrackerToXml($params['into_xml'], $tracker_id);
+        $this->getTrackerXmlExport()->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user);
     }
 }

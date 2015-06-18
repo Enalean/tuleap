@@ -236,7 +236,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
-        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException(array(), array()));
+        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
         $exporter = new AgileDashboard_XMLExporter($xml_validator, $this->planning_permissions_manager);
         $this->expectException('XML_ParseException');
         $exporter->export($this->xml_tree, $this->plannings);

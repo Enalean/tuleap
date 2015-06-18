@@ -21,9 +21,9 @@
 
 require_once 'pre.php';
 
-if ($argc < 4) {
+if ($argc < 5) {
     echo <<< EOT
-Usage: $argv[0] project_id --tracker_id tracker_id
+Usage: $argv[0] project_id admin_user_name --tracker_id tracker_id
 Dump a project structure to XML format
 
 EOT;
@@ -41,10 +41,12 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
         );
 
         $options = array(
-            'tracker_id' => $argv[3]
+            'tracker_id' => $argv[4]
         );
 
-        echo $xml_exporter->export($project, $options);
+        $user = UserManager::instance()->forceLogin($argv[2]);
+
+        echo $xml_exporter->export($project, $options, $user);
 
         exit(0);
     } catch (XML_ParseException $exception) {
@@ -52,6 +54,7 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
         foreach ($exception->getErrors() as $parse_error) {
             fwrite(STDERR, "*** PARSE ERROR: ".$parse_error.PHP_EOL);
         }
+        fwrite(STDERR, "RNG path: ". $exception->getRngPath() . PHP_EOL);
         exit(1);
     } catch (Exception $exception) {
         fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);

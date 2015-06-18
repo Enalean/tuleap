@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,6 +57,9 @@ class TrackerXmlImport {
 
     private $xmlFieldsMapping = array();
 
+    /** @var Tracker_Artifact_XMLImport */
+    private $xml_import;
+
     public function __construct(
             TrackerFactory $tracker_factory,
             EventManager $event_manager,
@@ -68,7 +71,9 @@ class TrackerXmlImport {
             Tracker_ReportFactory $report_factory,
             WorkflowFactory $workflow_factory,
             XML_RNGValidator $rng_validator,
-            Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager) {
+            Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager,
+            Tracker_Artifact_XMLImport $xml_import
+    ) {
         $this->tracker_factory         = $tracker_factory;
         $this->event_manager           = $event_manager;
         $this->hierarchy_dao           = $hierarchy_dao;
@@ -80,13 +85,17 @@ class TrackerXmlImport {
         $this->workflow_factory        = $workflow_factory;
         $this->rng_validator           = $rng_validator;
         $this->trigger_rulesmanager    = $trigger_rulesmanager;
+        $this->xml_import              = $xml_import;
+
     }
 
     /**
      * @return TrackerXmlImport
      */
     public static function build() {
+        $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();
+
         return new TrackerXmlImport(
             $tracker_factory,
             EventManager::instance(),
@@ -100,7 +109,8 @@ class TrackerXmlImport {
             Tracker_ReportFactory::instance(),
             WorkflowFactory::instance(),
             new XML_RNGValidator(),
-            $tracker_factory->getTriggerRulesManager()
+            $tracker_factory->getTriggerRulesManager(),
+            $builder->build()
         );
     }
 
@@ -196,7 +206,21 @@ class TrackerXmlImport {
             throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
         }
 
+        $this->importArtifactsInNewlyCreatedTracker($tracker_created, $xml_tracker);
+
         return array($xml_tracker_id => $tracker_created->getId());
+    }
+
+    private function importArtifactsInNewlyCreatedTracker(Tracker $tracker, SimpleXMLElement $xml_tracker) {
+        if (isset($xml_tracker->artifacts)) {
+            $extraction_path = '';
+
+            $this->xml_import->importFromXML(
+                $tracker,
+                $xml_tracker->artifacts,
+                $extraction_path
+            );
+        }
     }
 
     /**

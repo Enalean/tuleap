@@ -26,46 +26,8 @@ try {
 
     $tracker = TrackerFactory::instance()->getTrackerById($argv[2]);
     if ($tracker) {
-        $artifact_factory      = Tracker_ArtifactFactory::instance();
-        $formelement_factory   = Tracker_FormElementFactory::instance();
-        $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($formelement_factory);
-        $changeset_dao         = new Tracker_Artifact_ChangesetDao();
-        $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
-        $logger                = new Log_ConsoleLogger();
-        $send_notifications    = false;
-
-        $artifact_creator = new Tracker_ArtifactCreator(
-            $artifact_factory,
-            $fields_validator,
-            new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
-                $fields_validator,
-                $formelement_factory,
-                $changeset_dao,
-                $artifact_factory,
-                EventManager::instance()
-            )
-        );
-
-        $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
-            $fields_validator,
-            $formelement_factory,
-            $changeset_dao,
-            $changeset_comment_dao,
-            $artifact_factory,
-            EventManager::instance(),
-            ReferenceManager::instance()
-        );
-
-        $xml_import = new Tracker_Artifact_XMLImport(
-            new XML_RNGValidator(),
-            $artifact_creator,
-            $new_changeset_creator,
-            Tracker_FormElementFactory::instance(),
-            new Tracker_Artifact_XMLImport_XMLImportHelper($user_manager),
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
-            $logger,
-            $send_notifications
-        );
+        $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
+        $xml_import = $xml_import_builder->build();
 
         $zip = new ZipArchive();
         if ($zip->open($argv[3]) !== true) {

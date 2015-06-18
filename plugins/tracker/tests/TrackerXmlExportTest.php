@@ -37,7 +37,8 @@ class TrackerXmlExportTest extends TuleapTestCase {
         $this->xml_export = new TrackerXmlExport(
             $tracker_factory,
             mock('Tracker_Workflow_Trigger_RulesManager'),
-            mock('XML_RNGValidator')
+            mock('XML_RNGValidator'),
+            mock('Tracker_Artifact_XMLExport')
         );
     }
 
@@ -70,11 +71,12 @@ class TrackerXmlExportTest extends TuleapTestCase {
     public function testExportSingleTracker() {
         $xml_content = new SimpleXMLElement('<project/>');
         $tracker_id  = 456;
+        $user        = mock('PFUser');
 
         stub($this->tracker1)->isActive()->returns(true);
 
         expect($this->tracker1)->exportToXML()->once();
 
-        $this->xml_export->exportSingleTrackerToXml($xml_content, $tracker_id);
+        $this->xml_export->exportSingleTrackerToXml($xml_content, $tracker_id, $user);
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <include href="artifact-definition.rng"/>
   <define name="tracker">
     <optional>
       <!-- old ids -->
@@ -203,6 +204,15 @@
             <attribute name="type">
               <data type="string"/>
             </attribute>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
+    <optional>
+      <element name="artifacts">
+        <zeroOrMore>
+          <element name="artifact">
+            <ref name="artifact"/>
           </element>
         </zeroOrMore>
       </element>

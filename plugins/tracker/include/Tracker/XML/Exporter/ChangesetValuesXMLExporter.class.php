@@ -23,6 +23,9 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
     const ARTIFACT_XML_KEY  = 'artifact_xml';
     const CHANGESET_XML_KEY = 'changeset_xml';
     const ARTIFACT_KEY      = 'artifact';
+    const EXPORT_MODE_KEY   = 'export_mode';
+    const EXPORT_SNAPSHOT   = true;
+    const EXPORT_CHANGES    = false;
 
     /**
      * @var Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor
@@ -40,7 +43,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
      * @param SimpleXMLElement $changeset_xml
      * @param Tracker_Artifact_ChangesetValue[] $changeset_values
      */
-    public function export(
+    public function exportSnapshot(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
         Tracker_Artifact $artifact,
@@ -49,7 +52,24 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         $params = array(
             self::ARTIFACT_KEY      => $artifact,
             self::ARTIFACT_XML_KEY  => $artifact_xml,
-            self::CHANGESET_XML_KEY => $changeset_xml
+            self::CHANGESET_XML_KEY => $changeset_xml,
+            self::EXPORT_MODE_KEY   => self::EXPORT_SNAPSHOT
+        );
+
+        array_walk($changeset_values, array($this, 'exportValue'), $params);
+    }
+
+    public function exportChangedFields(
+        SimpleXMLElement $artifact_xml,
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
+        array $changeset_values
+    ) {
+        $params = array(
+            self::ARTIFACT_KEY      => $artifact,
+            self::ARTIFACT_XML_KEY  => $artifact_xml,
+            self::CHANGESET_XML_KEY => $changeset_xml,
+            self::EXPORT_MODE_KEY   => self::EXPORT_CHANGES
         );
 
         array_walk($changeset_values, array($this, 'exportValue'), $params);
@@ -60,11 +80,25 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         $index,
         array $params
     ) {
-        $this->visitor->export(
-            $params[self::ARTIFACT_XML_KEY],
-            $params[self::CHANGESET_XML_KEY],
-            $params[self::ARTIFACT_KEY],
-            $changeset_value
-        );
+        if ($this->isFieldChangeExportable($params[self::EXPORT_MODE_KEY], $changeset_value)) {
+            $this->visitor->export(
+                $params[self::ARTIFACT_XML_KEY],
+                $params[self::CHANGESET_XML_KEY],
+                $params[self::ARTIFACT_KEY],
+                $changeset_value
+            );
+        }
+    }
+
+    private function isFieldChangeExportable($export_mode, Tracker_Artifact_ChangesetValue $changeset_value) {
+        if ($export_mode === self::EXPORT_SNAPSHOT) {
+            return true;
+        }
+
+        if ($changeset_value->hasChanged()) {
+            return true;
+        }
+
+        return false;
     }
 }

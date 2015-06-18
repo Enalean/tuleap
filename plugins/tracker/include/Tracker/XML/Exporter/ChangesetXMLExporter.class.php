@@ -41,6 +41,26 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
         $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
         $submitted_on->addAttribute('format', 'ISO8601');
 
-        $this->values_exporter->export($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
+        $this->values_exporter->exportSnapshot($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
+    }
+
+    public function exportFullHistory(
+        SimpleXMLElement $artifact_xml,
+        Tracker_Artifact_Changeset $changeset
+    ) {
+        $changeset_xml = $artifact_xml->addChild('changeset');
+
+        $submitted_by = $changeset_xml->addChild('submitted_by', $changeset->getSubmittedBy());
+        $submitted_by->addAttribute('format', 'id');
+
+        $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
+        $submitted_on->addAttribute('format', 'ISO8601');
+
+        $comments_node = $changeset_xml->addChild('comments');
+        if ($changeset->getComment()) {
+            $changeset->getComment()->exportToXML($comments_node);
+        }
+
+        $this->values_exporter->exportChangedFields($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
     }
 }
