@@ -21,6 +21,7 @@
 class Tracker_Artifact_XMLExport {
 
     const ARTIFACTS_RNG_PATH = '/www/resources/artifacts.rng';
+    const THRESHOLD          = 9000;
 
     /**
      * @var Tracker_ArtifactFactory
@@ -32,15 +33,27 @@ class Tracker_Artifact_XMLExport {
      */
     private $rng_validator;
 
-    public function __construct(XML_RNGValidator $rng_validator, Tracker_ArtifactFactory $artifact_factory) {
-        $this->rng_validator    = $rng_validator;
-        $this->artifact_factory = $artifact_factory;
+    /**
+     * @var bool
+     */
+    private $can_bypass_threshold;
+
+    public function __construct(
+        XML_RNGValidator $rng_validator,
+        Tracker_ArtifactFactory $artifact_factory,
+        $can_bypass_threshold
+    ) {
+        $this->rng_validator        = $rng_validator;
+        $this->artifact_factory     = $artifact_factory;
+        $this->can_bypass_threshold = $can_bypass_threshold;
     }
 
     public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user) {
         $artifacts_node = $xml_content->addChild('artifacts');
 
-        foreach ($this->artifact_factory->getArtifactsByTrackerId($tracker->getId()) as $artifact) {
+        $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
+        $this->checkThreshold(count($all_artifacts));
+        foreach ($all_artifacts as $artifact) {
             $artifact->exportToXML($artifacts_node, $user);
         }
 
@@ -50,4 +63,15 @@ class Tracker_Artifact_XMLExport {
         );
     }
 
+    private function checkThreshold($nb_artifacts) {
+        if ($this->can_bypass_threshold) {
+            return;
+        }
+
+        if ($nb_artifacts > self::THRESHOLD) {
+            throw new Tracker_Artifact_XMLExportTooManyArtifactsException(
+                "Too many artifacts: $nb_artifacts (IT'S OVER ".self::THRESHOLD."!)"
+            );
+        }
+    }
 }
