@@ -75,14 +75,30 @@
                 You are not allowed to rank on this planning
             </div>
             <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed }">
-                <legend ng-click="toggle(milestone)">
+                <legend ng-click="toggle($event, milestone)">
                     {{ milestone.label }}
+                    <div
+                        ng-if="use_angular_new_modal && ! milestone.collapsed"
+                        class="btn-group dropdown do-animate"
+                    >
+                        <span class="dropdown-toggle btn btn-mini" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
+                            <i class="icon-plus"></i> <span translate>Add a new item</span>
+                            <b class="caret"></b>
+                        </span>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li ng-repeat="accepted_type in milestone.accepted_types.content">
+                                <a href="#" class="create-item-link" ng-click="showAddItemToSubMilestoneModal(accepted_type, milestone)">{{ accepted_type.label }}</a>
+                            </li>
+                        </ul>
+                    </div>
                     <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
                     <span class="date" ng-if="milestone.start_date || milestone.end_date">
                         {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
                         {{ milestone.end_date | amDateFormat:'ll' }}
                     </span>
                     <div style="clear: both"></div>
+
+
                 </legend>
 
                 <div class="content" ng-if="! milestone.collapsed" ng-class="{ loading_content: milestone.loadingContent }">

@@ -81,6 +81,7 @@ module.exports = {
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.js',
       'vendor/tuleap-artifact-modal/dist/tuleap-artifact-modal.min.js',
       'vendor/angular-sanitize/angular-sanitize.min.js',
+      'vendor/angular-animate/angular-animate.min.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-0.8.0.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js',
       'vendor/angular-ckeditor/angular-ckeditor.js',

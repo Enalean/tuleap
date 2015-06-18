@@ -3,10 +3,12 @@
         .module('planning')
         .config(PlanningConfig);
 
-    PlanningConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+    PlanningConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$animateProvider'];
 
-    function PlanningConfig($stateProvider, $urlRouterProvider) {
+    function PlanningConfig($stateProvider, $urlRouterProvider, $animateProvider) {
         $urlRouterProvider.otherwise('/planning');
+
+        $animateProvider.classNameFilter(/do-animate/);
 
         $stateProvider.state('planning', {
             url: "/planning",

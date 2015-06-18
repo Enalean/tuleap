@@ -1,6 +1,6 @@
 describe("PlanningCtrl", function() {
     var $scope, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService, SharedPropertiesService, TuleapArtifactModalService, NewTuleapArtifactModalService,
-        deferred;
+        deferred, second_deferred;
     beforeEach(function() {
         module('planning');
 
@@ -23,6 +23,8 @@ describe("PlanningCtrl", function() {
             _.invoke(ProjectService, "andReturn", $q.defer().promise);
 
             MilestoneService = jasmine.createSpyObj("MilestoneService", [
+                "addReorderToContent",
+                "addToContent",
                 "getMilestones",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
@@ -57,6 +59,7 @@ describe("PlanningCtrl", function() {
             });
         });
         deferred = $q.defer();
+        second_deferred = $q.defer();
     });
 
     describe("showCreateNewModal() -", function() {
@@ -76,7 +79,7 @@ describe("PlanningCtrl", function() {
             expect(TuleapArtifactModalService.showCreateItemForm).toHaveBeenCalledWith(97, 504, jasmine.any(Function));
         });
 
-        it("Given that we use the 'new' modal and given an event, an item_type object and a project backlog object, when I show the new artifact modal, then the event's default action will be prevented and the TuleapArtifactModal Service will be called with a callback", function() {
+        it("Given that we use the 'new' modal and given an event, an item_type object and a project backlog object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
             SharedPropertiesService.getUseAngularNewModal.andReturn(true);
             fakeItemType = { id: 50 };
 
@@ -87,7 +90,7 @@ describe("PlanningCtrl", function() {
         });
 
         describe("callback -", function() {
-            var fakeBacklog, fakeArtifact, second_deferred;
+            var fakeBacklog, fakeArtifact;
             beforeEach(function() {
                 BacklogItemService.getBacklogItem.andReturn(deferred.promise);
                 TuleapArtifactModalService.showCreateItemForm.andCallFake(function (a, b, callback) {
@@ -98,7 +101,6 @@ describe("PlanningCtrl", function() {
                         id: 5202
                     }
                 };
-                second_deferred = $q.defer();
             });
 
             describe("Given a project backlog object and an item id", function() {
@@ -142,6 +144,7 @@ describe("PlanningCtrl", function() {
                     $scope.$apply();
 
                     expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, 5202);
+                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect($scope.backlog_items).toEqual([
                         { id: 5202 }
                     ]);
@@ -189,6 +192,7 @@ describe("PlanningCtrl", function() {
                     $scope.$apply();
 
                     expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 26, 5202);
+                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect($scope.backlog_items).toEqual([
                         { id: 5202 }
                     ]);
@@ -263,6 +267,117 @@ describe("PlanningCtrl", function() {
 
             expect(PlanningCtrl.canBeAddedToBacklogItemChildren(created_item.id, parent)).toBeFalsy();
         });
+    });
+
+    describe("showEditModal() -", function() {
+        var fakeEvent, fakeItem;
+        beforeEach(function() {
+            fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            NewTuleapArtifactModalService.show.andCallFake(function(a, callback) {
+                callback(8541);
+            });
+        });
+
+        it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
+            fakeEvent.which = 1;
+            fakeItem = {
+                artifact: {
+                    id: 651,
+                    tracker: {
+                        id: 30
+                    }
+                },
+                color: "stranding-pseudosophy"
+            };
+            spyOn($scope, "refreshBacklogItem");
+
+            $scope.showEditModal(fakeEvent, fakeItem);
+
+            expect(fakeEvent.preventDefault).toHaveBeenCalled();
+            expect(NewTuleapArtifactModalService.show).toHaveBeenCalledWith(30, jasmine.any(Function), 651, "stranding-pseudosophy");
+            expect($scope.refreshBacklogItem).toHaveBeenCalledWith(8541);
+        });
+
+        it("Given a middle click event and an item to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function() {
+            fakeEvent.which = 2;
+
+            $scope.showEditModal(fakeEvent, fakeItem);
+
+            expect(fakeEvent.preventDefault).not.toHaveBeenCalled();
+            expect(NewTuleapArtifactModalService.show).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("showAddItemToSubMilestoneModal() -", function() {
+        var fakeItemType, fakeArtifact, fakeSubmilestone;
+        beforeEach(function() {
+            BacklogItemService.getBacklogItem.andReturn(deferred.promise);
+            NewTuleapArtifactModalService.show.andCallFake(function(a, callback) {
+                callback(7488);
+            });
+            fakeArtifact = {
+                backlog_item: {
+                    id: 7488
+                }
+            };
+        });
+
+        it("Given an item_type object and a milestone object, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", function() {
+            fakeItemType = { id: 94 };
+            fakeSubmilestone = { id: 196 };
+
+            $scope.showAddItemToSubMilestoneModal(fakeItemType, fakeSubmilestone);
+
+            expect(NewTuleapArtifactModalService.show).toHaveBeenCalledWith(94, jasmine.any(Function));
+        });
+
+        describe("callback - Given a submilestone object and an item id,", function() {
+            beforeEach(function() {
+                fakeItemType = { id: 413 };
+                fakeSubmilestone = {
+                    id: 92,
+                    content: []
+                };
+            });
+
+            it("when the new artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", function() {
+                fakeSubmilestone.content = [
+                    { id: 9402 }
+                ];
+                MilestoneService.addReorderToContent.andReturn(second_deferred.promise);
+
+                $scope.showAddItemToSubMilestoneModal(fakeItemType, fakeSubmilestone);
+                deferred.resolve(fakeArtifact);
+                second_deferred.resolve();
+                $scope.$apply();
+
+                expect(MilestoneService.addReorderToContent).toHaveBeenCalledWith(92, 7488, {
+                    direction: "before",
+                    item_id: 9402
+                });
+                expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
+                expect(fakeSubmilestone.content).toEqual([
+                    { id: 7488 },
+                    { id: 9402 }
+                ]);
+            });
+
+            it("and given that the submilestone's content was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", function() {
+                MilestoneService.addToContent.andReturn(second_deferred.promise);
+
+                $scope.showAddItemToSubMilestoneModal(fakeItemType, fakeSubmilestone);
+                deferred.resolve(fakeArtifact);
+                second_deferred.resolve();
+                $scope.$apply();
+
+                expect(MilestoneService.addToContent).toHaveBeenCalledWith(92, 7488);
+                expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
+                expect(fakeSubmilestone.content).toEqual([
+                    { id: 7488 }
+                ]);
+            });
+        });
+
     });
 
     describe("refreshBacklogItem() -", function() {
