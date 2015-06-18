@@ -623,6 +623,16 @@ class Event {
      */
     const REST_RESOURCES_V2 = 'rest_resources_v2';
 
+
+    /**
+     * Register REST Additional informations for project
+     *
+     * Parameters:
+     *  'project'     => Project
+     *  'informations => array
+     */
+    const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
+
     /**
      * Allow plugin to deal with authentication
      *

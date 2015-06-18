@@ -63,6 +63,8 @@ class MilestonesTest extends RestBase {
             ),
             $milestone['resources']['milestones']
         );
+
+        $this->arrayHasKey($milestone['sub_milestones_types']);
     }
 
     public function testGETResourcesBacklog() {

@@ -74,6 +74,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_RESOURCES_V2);
+            $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
             $this->addHook(Event::REST_PROJECT_AGILE_ENDPOINTS);
             $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
@@ -536,6 +537,23 @@ class AgileDashboardPlugin extends Plugin {
         $dao = new AgileDashboard_Dao();
 
         $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
+    }
+
+    /**
+     * @see REST_PROJECT_ADDITIONAL_INFORMATIONS
+     */
+    public function rest_project_additional_informations($params) {
+        $planning_representation_class = '\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningRepresentation';
+
+        $root_planning = $this->getPlanningFactory()->getRootPlanning($this->getCurrentUser(), $params['project']->getGroupId());
+        if (! $root_planning) {
+            return;
+        }
+
+        $planning_representation = new $planning_representation_class();
+        $planning_representation->build($root_planning);
+
+        $params['informations'][$this->getName()]['root_planning'] = $planning_representation;
     }
 
     /**

@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 namespace Tuleap\REST\v1;
+use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
  * Representation of a milestone
@@ -114,6 +116,11 @@ class MilestoneRepresentationBase {
      * @var string
      */
     public $sub_milestones_uri;
+
+    /**
+    * @var array {@type \Tuleap\Tracker\REST\TrackerRepresentation}
+    */
+    public $sub_milestones_types;
 
     /**
      * @var string

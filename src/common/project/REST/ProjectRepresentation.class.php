@@ -54,11 +54,17 @@ class ProjectRepresentation {
      */
     public $resources;
 
-    public function build(Project $project, array $resources) {
-        $this->id        = JsonCast::toInt($project->getId());
-        $this->uri       = self::ROUTE . '/' . $this->id;
-        $this->label     = $project->getPublicName();
-        $this->shortname = $project->getUnixName();
-        $this->resources = $resources;
+    /**
+     * @var Array {@type Tuleap\Project\REST\ProjectAdditionalInformationsRepresentation}
+     */
+    public $additional_informations;
+
+    public function build(Project $project, array $resources, array $informations) {
+        $this->id                      = JsonCast::toInt($project->getId());
+        $this->uri                     = self::ROUTE . '/' . $this->id;
+        $this->label                   = $project->getPublicName();
+        $this->shortname               = $project->getUnixName();
+        $this->resources               = $resources;
+        $this->additional_informations = $informations;
     }
 }

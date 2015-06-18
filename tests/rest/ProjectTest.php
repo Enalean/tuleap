@@ -106,6 +106,12 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('label', $json_projects[0]);
         $this->assertEquals('Private member', $json_projects[0]['label']);
 
+        $this->assertArrayHasKey('additional_informations', $json_projects[0]);
+        $this->assertEquals(
+            REST_TestDataBuilder::RELEASES_TRACKER_ID,
+            $json_projects[0]['additional_informations']['agiledashboard']['root_planning']['milestone_tracker']['id']
+        );
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
