@@ -17,7 +17,7 @@ Version 8.3 (not released yet)
 	== Plugins ==
 	* git: 4.69
 	* ldap: 3.81
-	* agiledashboard: 1.230
+	* agiledashboard: 1.231
 	* tracker: 5.647
 	* proftpd: 0.21
 	* mediawiki: 0.70
@@ -34,6 +34,7 @@ Version 8.3 (not released yet)
 	* story #8118: Color switcher & Preview UI
 	* request #8120: Add new SOAP automated tests
 	* request #8120: Add new SOAP automated tests on trackers v3
+	* Adding new event for Project REST Route (additional informations)
 
 	== Themes ==
 	* FlamingParrot: 1.89

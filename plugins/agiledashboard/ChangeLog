@@ -1,3 +1,6 @@
+Version 1.231 - Tuleap 8.3
+    * story #7859 - Add submilestone information and root planning in REST API
+
 Version 1.230 - Tuleap 8.3
     * story #7859: Add a child to a backlog item
 
