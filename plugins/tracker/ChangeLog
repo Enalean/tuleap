@@ -1,3 +1,6 @@
+Version 5.647 - Tuleap 8.3
+    * story #8090: limit number of artifacts during export
+
 Version 5.646 - Tuleap 8.3
     * story #8090: Export and import user use LDAP information
 
