@@ -214,8 +214,17 @@ class ProjectResource extends AuthenticatedResource {
         $resources_injector->declareProjectUserGroupResource($resources, $project);
         $resources_injector->declarePhpWikiResource($resources, $project);
 
+        $informations = array();
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_ADDITIONAL_INFORMATIONS,
+            array(
+                'project' => $project,
+                'informations' => &$informations
+            )
+        );
+
         $project_representation = new ProjectRepresentation();
-        $project_representation->build($project, $resources);
+        $project_representation->build($project, $resources, $informations);
 
         return $project_representation;
     }

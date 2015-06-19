@@ -27,6 +27,7 @@ use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 use Tuleap\REST\JsonCast;
 
 use AgileDashboard_MilestonesCardwallRepresentation;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
  * Representation of a milestone
@@ -34,15 +35,16 @@ use AgileDashboard_MilestonesCardwallRepresentation;
 class MilestoneRepresentation extends MilestoneRepresentationBase {
 
     public function build(Planning_Milestone $milestone, array $status_count, array $backlog_trackers, $has_user_priority_change_permission) {
-        $this->id               = JsonCast::toInt($milestone->getArtifactId());
-        $this->uri              = self::ROUTE . '/' . $this->id;
-        $this->label            = $milestone->getArtifactTitle();
-        $this->status_value     = $milestone->getArtifact()->getStatus();
-        $this->semantic_status  = $milestone->getArtifact()->getSemanticStatusValue();
-        $this->submitted_by     = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());
-        $this->submitted_on     = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
-        $this->capacity         = JsonCast::toFloat($milestone->getCapacity());
-        $this->remaining_effort = JsonCast::toFloat($milestone->getRemainingEffort());
+        $this->id                   = JsonCast::toInt($milestone->getArtifactId());
+        $this->uri                  = self::ROUTE . '/' . $this->id;
+        $this->label                = $milestone->getArtifactTitle();
+        $this->status_value         = $milestone->getArtifact()->getStatus();
+        $this->semantic_status      = $milestone->getArtifact()->getSemanticStatusValue();
+        $this->submitted_by         = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());
+        $this->submitted_on         = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
+        $this->capacity             = JsonCast::toFloat($milestone->getCapacity());
+        $this->remaining_effort     = JsonCast::toFloat($milestone->getRemainingEffort());
+        $this->sub_milestones_types = $this->getSubmilestonesTypes($milestone);
 
         $this->planning = new PlanningReference();
         $this->planning->build($milestone->getPlanning());
@@ -143,5 +145,18 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->resources['burndown'] = array(
             'uri' => $this->burndown_uri
         );
+    }
+
+    private function getSubmilestonesTypes(Planning_Milestone $milestone) {
+        $submilestones_types = array();
+
+        foreach ($milestone->getArtifact()->getTracker()->getChildren() as $submilestone) {
+            $tracker_reference = new TrackerReference();
+            $tracker_reference->build($submilestone);
+
+            $submilestones_types[] = $tracker_reference;
+        }
+
+        return $submilestones_types;
     }
 }
