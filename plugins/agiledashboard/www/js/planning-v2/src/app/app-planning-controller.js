@@ -24,6 +24,10 @@
             pagination_offset           = 0,
             show_closed_milestone_items = true;
 
+        var self = this;
+
+        self.canBeAddedToBacklogItemChildren = canBeAddedToBacklogItemChildren;
+
         _.extend($scope, {
             items                       : {},
             rest_error_occured          : false,
@@ -43,6 +47,7 @@
             canShowBacklogItem                    : canShowBacklogItem,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
             showCreateNewModal                    : showCreateNewModal,
+            showAddChildModal                     : showAddChildModal,
             showEditModal                         : showEditModal,
             cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList                       : CardFieldsService.cardFieldIsList,
@@ -190,6 +195,7 @@
                     item_id   : $scope.backlog_items[0].id
                 };
             }
+
             var callback = function(item_id) {
                 var promise;
                 if (backlog.rest_base_route == 'projects') {
@@ -217,13 +223,52 @@
             }
         }
 
-        function prependItemToBacklog(backlog_item_id) {
-            BacklogItemService.getBacklogItem(backlog_item_id).then(
-                function(data) {
-                    $scope.items[backlog_item_id] = data.backlog_item;
-                    $scope.backlog_items.unshift($scope.items[backlog_item_id]);
+        function showAddChildModal($event, item_type, parent_item) {
+            $event.preventDefault();
+
+            var callback = function(item_id) {
+                var promise = BacklogItemService.removeAddBacklogItemChildren(undefined, parent_item.id, item_id);
+
+                promise.then(function() {
+                    appendItemToBacklogItem(item_id, parent_item);
+                });
+            };
+
+            NewTuleapArtifactModalService.show(item_type.id, callback);
+        }
+
+        function appendItemToBacklogItem(child_item_id, parent_item) {
+            BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
+                $scope.items[child_item_id] = data.backlog_item;
+                refreshBacklogItem(parent_item.id);
+
+                if (canBeAddedToBacklogItemChildren(child_item_id, parent_item)) {
+                    parent_item.children.data.push($scope.items[child_item_id]);
                 }
-            );
+            });
+        }
+
+        function canBeAddedToBacklogItemChildren(child_item_id, parent_item) {
+            if (! parent_item.has_children) {
+                return true;
+            }
+
+            if (parent_item.has_children && parent_item.children.loaded) {
+                var child_already_in_children = _.find(parent_item.children.data, { id: child_item_id });
+
+                if (child_already_in_children === undefined) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function prependItemToBacklog(backlog_item_id) {
+            BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
+                $scope.items[backlog_item_id] = data.backlog_item;
+                $scope.backlog_items.unshift($scope.items[backlog_item_id]);
+            });
         }
 
         function showEditModal($event, backlog_item) {
@@ -236,12 +281,13 @@
         }
 
         function refreshBacklogItem(backlog_item_id) {
+            $scope.items[backlog_item_id].updating = true;
+
             BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-                $scope.items[backlog_item_id] = data.backlog_item;
-                var bl_index = _.findIndex($scope.backlog_items, function(item) {
-                    return item.id === backlog_item_id;
-                });
-                $scope.backlog_items[bl_index] = data.backlog_item;
+                $scope.items[backlog_item_id].label          = data.backlog_item.label;
+                $scope.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
+                $scope.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
+                $scope.items[backlog_item_id].updating       = false;
             });
         }
 
@@ -382,8 +428,8 @@
                                 backlog_item_id_dest
                             )
                             .then(function() {
-                                updateBacklogItem(backlog_item_id_source);
-                                updateBacklogItem(backlog_item_id_dest);
+                                refreshBacklogItem(backlog_item_id_source);
+                                refreshBacklogItem(backlog_item_id_dest);
 
                             }, catchError);
                         break;
@@ -434,16 +480,6 @@
 
                 function movedFromOneSubmilestoneToAnother() {
                     return source_list_element.hasClass('submilestone') && dest_list_element.hasClass('submilestone');
-                }
-
-                function updateBacklogItem(backlog_item_id) {
-                    BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-                        $scope.items[backlog_item_id].label          = data.backlog_item.label;
-                        $scope.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
-                        $scope.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
-
-                        $scope.items[backlog_item_id].updating       = false;
-                    });
                 }
             }
 

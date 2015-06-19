@@ -198,6 +198,73 @@ describe("PlanningCtrl", function() {
         });
     });
 
+    describe("canBeAddedToBacklogItemChildren() - ", function() {
+        it("Given a parent with no child, it appends the newly created child", function() {
+            var parent = {
+                has_children: false,
+                children    : {}
+            };
+            var created_item = {
+                id: 8
+            };
+
+            expect(PlanningCtrl.canBeAddedToBacklogItemChildren(created_item.id, parent)).toBeTruthy();
+        });
+
+        it("Given a parent with already loaded children, it appends the newly created child if not already present", function() {
+            var parent = {
+                has_children: true,
+                children    : {
+                    loaded: true,
+                    data: [
+                        { id: 1 },
+                        { id: 2 },
+                        { id: 3 }
+                    ]
+                }
+            };
+            var created_item = {
+                id: 8
+            };
+
+            expect(PlanningCtrl.canBeAddedToBacklogItemChildren(created_item.id, parent)).toBeTruthy();
+        });
+
+        it("Given a parent with already loaded children, it doesn't append the newly created child if already present", function() {
+            var parent = {
+                has_children: true,
+                children    : {
+                    loaded: true,
+                    data: [
+                        { id: 1 },
+                        { id: 2 },
+                        { id: 8 }
+                    ]
+                }
+            };
+            var created_item = {
+                id: 8
+            };
+
+            expect(PlanningCtrl.canBeAddedToBacklogItemChildren(created_item.id, parent)).toBeFalsy();
+        });
+
+        it("Given a parent with not already loaded children, it doesn't append the newly created child", function() {
+            var parent = {
+                has_children: true,
+                children    : {
+                    loaded: false,
+                    children: []
+                }
+            };
+            var created_item = {
+                id: 8
+            };
+
+            expect(PlanningCtrl.canBeAddedToBacklogItemChildren(created_item.id, parent)).toBeFalsy();
+        });
+    });
+
     describe("refreshBacklogItem() -", function() {
         it("Given an existing backlog item, when I refresh it, it gets the item from the server and publishes it to the scope", function() {
             $scope.backlog_items = [
@@ -214,7 +281,7 @@ describe("PlanningCtrl", function() {
             });
 
             expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
-            expect($scope.items[7088]).toEqual({ id: 7088 });
+            expect($scope.items[7088]).toEqual({ id: 7088, updating: true });
             expect($scope.backlog_items).toEqual([
                 { id: 7088 }
             ]);

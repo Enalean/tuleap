@@ -22,18 +22,21 @@
         display: table;
         width: 100%;
 
-
         > #backlog, > #planned {
             display: table-cell;
             vertical-align: top;
             width: 48%;
 
             h2 {
+                display: inline;
                 margin: 0 0 20px;
             }
 
             .controls {
-                margin: 0 0 20px;
+                display: inline-block;
+                position: relative;
+                top: -5px;
+                margin: 0 0 20px 10px;
             }
 
             div.alert.alert-warning {

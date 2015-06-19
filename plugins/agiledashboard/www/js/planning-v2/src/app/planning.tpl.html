@@ -2,17 +2,13 @@
 <div class="alert alert-error" ng-if="rest_error_occured" ng-bind-html="rest_error"></div>
 
 <div class="tuleap-modal-loading" ng-if="loading_modal.is_loading"></div>
-
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
         <h2 translate>To be planned</h2>
-        <div class="alert alert-warning" ng-if="displayUserCantPrioritizeForBacklog()" translate>
-            You are not allowed to rank on this planning
-        </div>
         <div class="controls" ng-if="backlog.user_can_move_cards">
             <div ng-if="!use_angular_new_modal" class="btn-group dropdown">
-                 <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                     <span translate>Add a new item</span>
+                 <span class="dropdown-toggle btn btn-primary btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                     <i class="icon-plus"></i> <span translate>Add a new item</span>
                      <b class="caret"></b>
                  </span>
                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -22,14 +18,14 @@
                            data-tracker-id="{{ accepted_type.id }}"
                            data-link-id="milestone_id"
                            href="submit_ur"
-                           ng-click="showCreateNewModal($event, accepted_type, backlog); "
+                           ng-click="showCreateNewModal($event, accepted_type, backlog)"
                         >{{ accepted_type.label }}</a>
                     </li>
                 </ul>
             </div>
             <div ng-if="use_angular_new_modal" class="btn-group dropdown">
-                <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    <span translate>Add a new item</span>
+                <span class="dropdown-toggle btn btn-primary btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <i class="icon-plus"></i> <span translate>Add a new item</span>
                     <b class="caret"></b>
                 </span>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -38,6 +34,9 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <div class="alert alert-warning" ng-if="displayUserCantPrioritizeForBacklog()" translate>
+            You are not allowed to rank on this planning
         </div>
         <div ui-tree="treeOptions">
             <ul ui-tree-nodes
@@ -66,10 +65,10 @@
 
     <div id="planned">
         <div class="milestones">
-            <div class="milestones-list-header">
-                <h2 translate>Milestones</h2>
+            <h2 translate>Milestones</h2>
+            <div class="controls">
                 <button class="btn items-toggle-button btn-small" data-toggle="button" ng-click="toggleClosedMilestoneItems()">
-                    <i class=" icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
+                    <i class="icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
                 </button>
             </div>
             <div translate class="alert alert-warning" ng-if="displayUserCantPrioritizeForMilestones()">

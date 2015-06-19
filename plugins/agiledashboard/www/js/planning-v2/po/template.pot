@@ -12,6 +12,10 @@ msgstr ""
 msgid "Add a new item"
 msgstr ""
 
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Add a {{ accepted_type.label }}"
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "Burndown"
 msgstr ""

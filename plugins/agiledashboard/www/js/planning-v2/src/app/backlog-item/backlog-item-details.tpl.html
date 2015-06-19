@@ -7,12 +7,30 @@
     translate-plural="{{ backlog_item.initial_effort }} pts"
 >{{ backlog_item.initial_effort }} pt</span>
 
-<a
-    data-nodrag="true"
-    href="/plugins/tracker/?aid={{ backlog_item.id }}"
-    ng-click="showEditModal($event, backlog_item)"
-    class="id"
->{{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }}</a>
+<div ng-if="backlog_item.accept.trackers.length > 0" class="dropdown id" data-nodrag="true">
+    <a href="/plugins/tracker/?aid={{ backlog_item.id }}" data-toggle="dropdown" data-target="#">
+        {{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }} <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item)">
+                <i class="icon-edit"></i> Edit this item
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li ng-repeat="accepted_type in backlog_item.accept.trackers">
+            <a href="#" ng-click="showAddChildModal($event, accepted_type, backlog_item)">
+                <i class="icon-plus"></i> <span translate>Add a {{ accepted_type.label }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div ng-if="backlog_item.accept.trackers.length === 0" class="id" data-nodrag="true">
+    <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item)">
+        {{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }}
+    </a>
+</div>
+
 <span class="summary">{{ backlog_item.label }}</span>
 <span class="parent">{{ backlog_item.parent.label }}</span>
 
