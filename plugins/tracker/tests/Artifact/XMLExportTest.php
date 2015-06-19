@@ -165,10 +165,12 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
                 $artifact_01,
                 $artifact_02
             ));
+        $can_bypass_threshold = true;
 
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,
-            $artifact_factory
+            $artifact_factory,
+            $can_bypass_threshold
         );
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -187,5 +189,29 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         $this->assertCount($xml_element->artifacts->artifact[0]->changeset, 2);
         $this->assertNotNull($xml_element->artifacts->artifact[1]->changeset);
         $this->assertCount($xml_element->artifacts->artifact[1]->changeset, 2);
+    }
+}
+
+class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase {
+
+    public function itRaisesAnExceptionWhenThresholdIsReached() {
+        $rng_validator    = new XML_RNGValidator();
+        $artifact_factory = stub('Tracker_ArtifactFactory')
+            ->getArtifactsByTrackerId()
+            ->returns(array_fill(0, Tracker_Artifact_XMLExport::THRESHOLD + 1, null));
+        $can_bypass_threshold = false;
+
+        $exporter = new Tracker_Artifact_XMLExport(
+            $rng_validator,
+            $artifact_factory,
+            $can_bypass_threshold
+        );
+
+        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <project />');
+
+        $this->expectException('Tracker_Artifact_XMLExportTooManyArtifactsException');
+
+        $exporter->export(mock('Tracker'), $xml_element, mock('PFUser'));
     }
 }
