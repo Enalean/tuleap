@@ -25,6 +25,7 @@ use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 use Tuleap\REST\JsonCast;
+use PlanningFactory;
 
 use AgileDashboard_MilestonesCardwallRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
@@ -44,7 +45,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->submitted_on         = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity             = JsonCast::toFloat($milestone->getCapacity());
         $this->remaining_effort     = JsonCast::toFloat($milestone->getRemainingEffort());
-        $this->sub_milestones_types = $this->getSubmilestonesTypes($milestone);
+        $this->sub_milestone_type   = $this->getSubmilestoneType($milestone);
 
         $this->planning = new PlanningReference();
         $this->planning->build($milestone->getPlanning());
@@ -86,7 +87,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
 
         $finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             \Tracker_HierarchyFactory::instance(),
-            \PlanningFactory::build()
+            PlanningFactory::build()
         );
         $submilestone_tracker = $finder->findFirstSubmilestoneTracker($milestone);
 
@@ -147,16 +148,17 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         );
     }
 
-    private function getSubmilestonesTypes(Planning_Milestone $milestone) {
-        $submilestones_types = array();
+    private function getSubmilestoneType(Planning_Milestone $milestone) {
+        $submilestone_type = null;
+        $child_planning    = PlanningFactory::build()->getChildrenPlanning($milestone->getPlanning());
 
-        foreach ($milestone->getArtifact()->getTracker()->getChildren() as $submilestone) {
+        if ($child_planning) {
             $tracker_reference = new TrackerReference();
-            $tracker_reference->build($submilestone);
+            $tracker_reference->build($child_planning->getPlanningTracker());
 
-            $submilestones_types[] = $tracker_reference;
+            $submilestone_type = $tracker_reference;
         }
 
-        return $submilestones_types;
+        return $submilestone_type;
     }
 }

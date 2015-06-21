@@ -37,6 +37,7 @@
             backlog                     : {
                 user_can_move_cards: false
             },
+            submilestone_type                     : null,
             loading_backlog_items                 : true,
             loading_milestones                    : true,
             loading_modal                         : TuleapArtifactModalLoading.loading,
@@ -50,6 +51,7 @@
             showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
             showCreateNewModal                    : showCreateNewModal,
             showEditModal                         : showEditModal,
+            showAddSubmilestoneModal              : showAddSubmilestoneModal,
             cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList                       : CardFieldsService.cardFieldIsList,
             cardFieldIsText                       : CardFieldsService.cardFieldIsText,
@@ -92,17 +94,26 @@
                 };
 
                 fetchProjectBacklogAcceptedTypes(project_id);
+                fetchProjectSubmilestoneType(project_id);
 
             } else {
-                MilestoneService.getMilestone(milestone_id).then(function(milestone) {
+                MilestoneService.getMilestone(milestone_id, pagination_limit, pagination_offset, $scope.items).then(function(milestone) {
                     $scope.backlog = {
                         rest_base_route     : 'milestones',
                         rest_route_id       : milestone_id,
-                        accepted_types      : milestone.results.accepted_types,
+                        accepted_types      : milestone.results.backlog_accepted_types,
                         user_can_move_cards : milestone.results.has_user_priority_change_permission
                     };
+
+                    $scope.submilestone_type = milestone.results.sub_milestone_type;
                 });
             }
+        }
+
+        function fetchProjectSubmilestoneType(project_id) {
+            return ProjectService.getProject(project_id).then(function(response) {
+                $scope.submilestone_type = response.data.additional_informations.agiledashboard.root_planning.milestone_tracker;
+            });
         }
 
         function fetchProjectBacklogAcceptedTypes(project_id) {
@@ -212,6 +223,7 @@
                         promise = MilestoneService.removeAddToBacklog(undefined, backlog.rest_route_id, item_id);
                     }
                 }
+
                 promise.then(function() {
                     return prependItemToBacklog(item_id);
                 });
@@ -233,8 +245,10 @@
                 var promise = BacklogItemService.removeAddBacklogItemChildren(undefined, parent_item.id, item_id);
 
                 promise.then(function() {
-                    appendItemToBacklogItem(item_id, parent_item);
+                    return appendItemToBacklogItem(item_id, parent_item);
                 });
+
+                return promise;
             };
 
             NewTuleapArtifactModalService.show(item_type.id, callback);
@@ -269,6 +283,7 @@
 
         function showEditModal($event, backlog_item) {
             var when_left_mouse_click = 1;
+
             if($event.which === when_left_mouse_click) {
                 $event.preventDefault();
 
@@ -276,8 +291,41 @@
             }
         }
 
+        function showAddSubmilestoneModal($event, submilestone_type) {
+            $event.preventDefault();
+
+            var callback = function(submilestone_id) {
+                if ($scope.backlog.rest_base_route == 'projects') {
+                    return prependSubmilestoneToSubmilestoneList(submilestone_id);
+
+                } else {
+                    var submilestone_ids = [];
+                    _.forEach($scope.milestones, function(milestone) {
+                        submilestone_ids.push(milestone.id);
+                    });
+
+                    submilestone_ids.push(submilestone_id);
+
+                    var promise = MilestoneService.putSubMilestones($scope.backlog.rest_route_id, submilestone_ids);
+                    promise.then(function() {
+                        return prependSubmilestoneToSubmilestoneList(submilestone_id);
+                    });
+
+                    return promise;
+                }
+            };
+
+            NewTuleapArtifactModalService.show(submilestone_type.id, callback);
+        }
+
+        function prependSubmilestoneToSubmilestoneList(submilestone_id) {
+            return MilestoneService.getMilestone(submilestone_id, pagination_limit, pagination_offset, $scope.items).then(function(data) {
+                $scope.milestones.unshift(data.results);
+            });
+        }
+
         function appendItemToBacklogItem(child_item_id, parent_item) {
-            BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
+            return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
                 $scope.items[child_item_id] = data.backlog_item;
                 refreshBacklogItem(parent_item.id);
 

@@ -13,6 +13,7 @@
 
         return {
             getSubMilestones         : getSubMilestones,
+            putSubMilestones         : putSubMilestones,
             getMilestones            : getMilestones,
             getMilestone             : getMilestone,
             getContent               : getContent,
@@ -27,13 +28,14 @@
             updateInitialEffort      : updateInitialEffort
         };
 
-        function getMilestone(milestone_id) {
+        function getMilestone(milestone_id, limit, offset, scope_items) {
             var data = $q.defer();
 
             rest.one('milestones', milestone_id)
                 .get()
                 .then(function(response) {
                     defineAllowedBacklogItemTypes(response.data);
+                    augmentMilestone(response.data, limit, offset, scope_items);
 
                     result = {
                         results: response.data
@@ -95,6 +97,17 @@
                 });
 
             return data.promise;
+        }
+
+        function putSubMilestones(milestone_id, submilestone_ids) {
+            return rest.one('milestones', milestone_id)
+               .customPUT(
+                   {
+                       id : milestone_id,
+                       ids: submilestone_ids
+                   },
+                   'milestones'
+                );
         }
 
         function getContent(milestone_id, limit, offset) {
@@ -174,17 +187,7 @@
         function defineAllowedBacklogItemTypes(milestone) {
             var allowed_trackers = milestone.resources.backlog.accept.trackers;
 
-            addAcceptedTypes(milestone, allowed_trackers);
-        }
-
-        function defineAllowedContentItemTypes(milestone) {
-            var allowed_trackers = milestone.resources.content.accept.trackers;
-
-            addAcceptedTypes(milestone, allowed_trackers);
-        }
-
-        function addAcceptedTypes(milestone, allowed_trackers) {
-            milestone.accepted_types = {
+            milestone.backlog_accepted_types = {
                 content : allowed_trackers,
 
                 toString : function() {
@@ -197,6 +200,24 @@
                 }
             };
         }
+
+        function defineAllowedContentItemTypes(milestone) {
+            var allowed_trackers = milestone.resources.content.accept.trackers;
+
+            milestone.content_accepted_types = {
+                content : allowed_trackers,
+
+                toString : function() {
+                    var accept = [];
+                    _.forEach(this.content, function(allowed_tracker) {
+                        accept.push('trackerId' + allowed_tracker.id);
+                    });
+
+                    return accept.join('|');
+                }
+            };
+        }
+
 
         function reorderBacklog(milestone_id, dropped_item_id, compared_to) {
             return rest.one('milestones', milestone_id)

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-06-18 09:03+0100\n"
+"PO-Revision-Date: 2015-06-22 11:30+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -25,8 +25,21 @@ msgid "Add a new item"
 msgstr "Ajouter un nouvel élément"
 
 #: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/planning.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr "Ajouter un(e) {{ accepted_type.label }}"
+
+#: src/app/planning.tpl.html
+msgid "Add a {{ backlog.accepted_types.content[0].label }}"
+msgstr "Ajouter un(e) {{ backlog.accepted_types.content[0].label }}"
+
+#: src/app/planning.tpl.html
+msgid "Add a {{ submilestone_type.label }}"
+msgstr "Ajouter un(e) {{ submilestone_type.label }}"
+
+#: src/app/planning.tpl.html
+msgid "Add an item"
+msgstr "Ajouter un élément"
 
 #: src/app/planning.tpl.html
 msgid "Burndown"

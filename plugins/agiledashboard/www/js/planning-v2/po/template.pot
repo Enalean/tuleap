@@ -13,7 +13,20 @@ msgid "Add a new item"
 msgstr ""
 
 #: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/planning.tpl.html
 msgid "Add a {{ accepted_type.label }}"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Add a {{ backlog.accepted_types.content[0].label }}"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Add a {{ submilestone_type.label }}"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Add an item"
 msgstr ""
 
 #: src/app/planning.tpl.html
