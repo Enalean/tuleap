@@ -43,11 +43,9 @@ describe("PlanningCtrl", function() {
             ]);
 
             NewTuleapArtifactModalService = jasmine.createSpyObj("NewTuleapArtifactModalService", [
-                "show"
+                "showCreation",
+                "showEdition"
             ]);
-            NewTuleapArtifactModalService.show.andReturn({
-                opened: $q.defer().promise
-            });
 
             PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
@@ -87,7 +85,7 @@ describe("PlanningCtrl", function() {
             $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
 
             expect(fakeEvent.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.show).toHaveBeenCalledWith(50, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(50, undefined, jasmine.any(Function));
         });
 
         describe("callback -", function() {
@@ -274,7 +272,7 @@ describe("PlanningCtrl", function() {
         var fakeEvent, fakeItem;
         beforeEach(function() {
             fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            NewTuleapArtifactModalService.show.andCallFake(function(a, callback) {
+            NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, c, d, callback) {
                 callback(8541);
             });
         });
@@ -295,7 +293,7 @@ describe("PlanningCtrl", function() {
             $scope.showEditModal(fakeEvent, fakeItem);
 
             expect(fakeEvent.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.show).toHaveBeenCalledWith(30, jasmine.any(Function), 651, "stranding-pseudosophy");
+            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(30, 651, "stranding-pseudosophy", undefined, jasmine.any(Function));
             expect($scope.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
 
@@ -305,7 +303,7 @@ describe("PlanningCtrl", function() {
             $scope.showEditModal(fakeEvent, fakeItem);
 
             expect(fakeEvent.preventDefault).not.toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.show).not.toHaveBeenCalled();
+            expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
         });
     });
 
@@ -313,7 +311,7 @@ describe("PlanningCtrl", function() {
         var fakeItemType, fakeArtifact, fakeSubmilestone;
         beforeEach(function() {
             BacklogItemService.getBacklogItem.andReturn(deferred.promise);
-            NewTuleapArtifactModalService.show.andCallFake(function(a, callback) {
+            NewTuleapArtifactModalService.showCreation.andCallFake(function(a, b, callback) {
                 callback(7488);
             });
             fakeArtifact = {
@@ -329,7 +327,7 @@ describe("PlanningCtrl", function() {
 
             $scope.showAddItemToSubMilestoneModal(fakeItemType, fakeSubmilestone);
 
-            expect(NewTuleapArtifactModalService.show).toHaveBeenCalledWith(94, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(94, fakeSubmilestone, jasmine.any(Function));
         });
 
         describe("callback - Given a submilestone object and an item id,", function() {

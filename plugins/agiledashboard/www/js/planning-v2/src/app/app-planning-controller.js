@@ -33,6 +33,7 @@
             rest_error_occured          : false,
             rest_error                  : "",
             backlog_items               : [],
+            current_milestone           : {},
             milestones                  : [],
             backlog                     : {
                 user_can_move_cards: false
@@ -104,7 +105,7 @@
                         accepted_types      : milestone.results.backlog_accepted_types,
                         user_can_move_cards : milestone.results.has_user_priority_change_permission
                     };
-
+                    $scope.current_milestone = milestone.results;
                     $scope.submilestone_type = milestone.results.sub_milestone_type;
                 });
             }
@@ -231,8 +232,9 @@
                 return promise;
             };
 
+            var parent_item = (! _.isEmpty($scope.current_milestone)) ? $scope.current_milestone : undefined;
             if (SharedPropertiesService.getUseAngularNewModal()) {
-                NewTuleapArtifactModalService.show(item_type.id, callback);
+                NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
             } else {
                 TuleapArtifactModalService.showCreateItemForm(item_type.id, backlog.rest_route_id, callback);
             }
@@ -251,44 +253,7 @@
                 return promise;
             };
 
-            NewTuleapArtifactModalService.show(item_type.id, callback);
-        }
-
-        function showAddItemToSubMilestoneModal(item_type, parent_item) {
-            var compared_to;
-            if (!_.isEmpty(parent_item.content)) {
-                compared_to = {
-                    direction: "before",
-                    item_id  : parent_item.content[0].id
-                };
-            }
-
-            var callback = function(item_id) {
-                var promise;
-                if (compared_to) {
-                    promise = MilestoneService.addReorderToContent(parent_item.id, item_id, compared_to);
-                } else {
-                    promise = MilestoneService.addToContent(parent_item.id, item_id);
-                }
-
-                promise.then(function() {
-                    return prependItemToSubmilestone(item_id, parent_item);
-                });
-
-                return promise;
-            };
-
-            NewTuleapArtifactModalService.show(item_type.id, callback);
-        }
-
-        function showEditModal($event, backlog_item) {
-            var when_left_mouse_click = 1;
-
-            if($event.which === when_left_mouse_click) {
-                $event.preventDefault();
-
-                NewTuleapArtifactModalService.show(backlog_item.artifact.tracker.id, $scope.refreshBacklogItem, backlog_item.artifact.id, backlog_item.color);
-            }
+            NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
         }
 
         function showAddSubmilestoneModal($event, submilestone_type) {
@@ -315,13 +280,51 @@
                 }
             };
 
-            NewTuleapArtifactModalService.show(submilestone_type.id, callback);
+            var parent_item = (! _.isEmpty($scope.current_milestone)) ? $scope.current_milestone : undefined;
+            NewTuleapArtifactModalService.showCreation(submilestone_type.id, parent_item, callback);
         }
 
         function prependSubmilestoneToSubmilestoneList(submilestone_id) {
             return MilestoneService.getMilestone(submilestone_id, pagination_limit, pagination_offset, $scope.items).then(function(data) {
                 $scope.milestones.unshift(data.results);
             });
+        }
+
+        function showAddItemToSubMilestoneModal(item_type, parent_item) {
+            var compared_to;
+            if (!_.isEmpty(parent_item.content)) {
+                compared_to = {
+                    direction: "before",
+                    item_id  : parent_item.content[0].id
+                };
+            }
+
+            var callback = function(item_id) {
+                var promise;
+                if (compared_to) {
+                    promise = MilestoneService.addReorderToContent(parent_item.id, item_id, compared_to);
+                } else {
+                    promise = MilestoneService.addToContent(parent_item.id, item_id);
+                }
+
+                promise.then(function() {
+                    return prependItemToSubmilestone(item_id, parent_item);
+                });
+
+                return promise;
+            };
+
+            NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
+        }
+
+        function showEditModal($event, backlog_item) {
+            var when_left_mouse_click = 1;
+
+            if($event.which === when_left_mouse_click) {
+                $event.preventDefault();
+
+                NewTuleapArtifactModalService.showEdition(backlog_item.artifact.tracker.id, backlog_item.artifact.id, backlog_item.color, undefined, $scope.refreshBacklogItem);
+            }
         }
 
         function appendItemToBacklogItem(child_item_id, parent_item) {
@@ -353,6 +356,7 @@
 
         function prependItemToSubmilestone(child_item_id, parent_item) {
             return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
+                $scope.items[child_item_id] = data.backlog_item;
                 parent_item.content.unshift(data.backlog_item);
             });
         }
@@ -367,7 +371,7 @@
         function refreshBacklogItem(backlog_item_id) {
             $scope.items[backlog_item_id].updating = true;
 
-            BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
+            return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
                 $scope.items[backlog_item_id].label          = data.backlog_item.label;
                 $scope.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
                 $scope.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
