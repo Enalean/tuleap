@@ -23,7 +23,7 @@
  * Manage values in changeset for 'artifact link' fields
  */
 class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_ChangesetValue {
-    
+
     /**
      * @var array of artifact_id => Tracker_ArtifactLinkInfo
      */
@@ -31,7 +31,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 
     /** @var UserManager */
     private $user_manager;
-    
+
     /**
      * Constructor
      *
@@ -51,7 +51,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitArtifactLink($this);
     }
-    
+
     /**
      * Check if there are changes between current and new value
      *
@@ -71,7 +71,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             return $array_new_values !== $array_cur_values;
         }
     }
-    
+
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
@@ -146,7 +146,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             return $result;
         }
     }
-    
+
     /**
      * Returns the SOAP value of this changeset value
      *
@@ -179,6 +179,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
+            $this->field->getName(),
             $values
         );
         return $artifact_links_representation;
@@ -192,7 +193,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function getValue() {
         return $this->artifact_links;
     }
-    
+
     public function getArtifactIds() {
         return array_keys($this->artifact_links);
     }

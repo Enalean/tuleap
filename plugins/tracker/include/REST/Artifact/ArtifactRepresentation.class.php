@@ -55,7 +55,7 @@ class ArtifactRepresentation {
      * @var int ID of the user who created the first version of the artifact {@type int} {@required true}
      */
     public $submitted_by;
-    
+
     /**
      * @var string Date, when the first version of the artifact was created {@type string} {@required true}
      */
@@ -77,11 +77,16 @@ class ArtifactRepresentation {
     public $values = array();
 
     /**
+     * @var array Field values indexed by field name {@type array} {@required true}
+     */
+    public $values_by_field = array();
+
+    /**
      * @var string Date, when the last modification occurs {@type string} {@required true}
      */
     public $last_modified_date;
 
-    public function build(Tracker_Artifact $artifact, array $values) {
+    public function build(Tracker_Artifact $artifact, array $values, array $values_by_field) {
         $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
 
@@ -96,7 +101,7 @@ class ArtifactRepresentation {
         $this->html_url           = $artifact->getUri();
         $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
         $this->values             = $values;
+        $this->values_by_field    = $values_by_field;
         $this->last_modified_date = JsonCast::toDate($artifact->getLastUpdateDate());
     }
 }
-

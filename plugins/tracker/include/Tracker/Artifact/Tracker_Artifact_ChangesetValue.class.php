@@ -17,29 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Manage values in changeset for fields
  * @abstract
  */
 abstract class Tracker_Artifact_ChangesetValue {
-    
-    
+
+
     /**
      * @var int
      */
     protected $id;
-    
+
     /**
      * @var Tracker_FormElement_Field
      */
     protected $field;
-    
+
     /**
      * @var boolean
      */
     protected $has_changed;
-    
+
     /**
      * Constructor
      *
@@ -70,7 +70,7 @@ abstract class Tracker_Artifact_ChangesetValue {
     public function getField() {
         return $this->field;
     }
-    
+
     /**
      * Returns true if the changeset value has changed, false otherwise
      *
@@ -79,7 +79,7 @@ abstract class Tracker_Artifact_ChangesetValue {
     public function hasChanged() {
         return $this->has_changed;
     }
-    
+
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
@@ -116,7 +116,7 @@ abstract class Tracker_Artifact_ChangesetValue {
     public function modalDiff($changeset_value, $format = 'html', PFUser $user = null) {
         return $this->diff($changeset_value, $format, $user);
     }
-    
+
     /**
      * Returns the SOAP value of this changeset value
      *
@@ -193,6 +193,7 @@ abstract class Tracker_Artifact_ChangesetValue {
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
+            $this->field->getName(),
             $value
         );
 

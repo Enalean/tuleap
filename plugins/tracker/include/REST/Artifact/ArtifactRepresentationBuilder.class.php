@@ -35,9 +35,14 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      */
     public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact) {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
+
+        $values          = $this->getFieldsValues($user, $artifact);
+        $values_by_field = $this->getValuesByFields($values);
+
         $artifact_representation->build(
             $artifact,
-            $this->getFieldsValues($user, $artifact)
+            $values,
+            $values_by_field
         );
 
         return $artifact_representation;
@@ -54,6 +59,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
         $artifact_representation->build(
             $artifact,
+            array(),
             array()
         );
 
@@ -66,6 +72,21 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
             $this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()),
             $this->getFieldsValuesFilter($user, $changeset)
         );
+    }
+
+    private function getValuesByFields(array $values) {
+        $values_by_field = array();
+        foreach ($values as $value) {
+            if (isset($value->value)) {
+                $values_by_field[$value->name] = $value->value;
+            } else if (isset($value->values)) {
+                $values_by_field[$value->name] = $value->values;
+            } else {
+              $values_by_field[$value->name] = null;
+            }
+        }
+
+        return $values_by_field;
     }
 
     /**

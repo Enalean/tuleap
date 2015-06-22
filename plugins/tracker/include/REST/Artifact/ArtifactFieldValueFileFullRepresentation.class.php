@@ -39,14 +39,20 @@ class ArtifactFieldValueFileFullRepresentation {
     public $label;
 
     /**
+     * @var string Name of the field
+     */
+    public $name;
+
+    /**
      * @var Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]
      */
     public $file_descriptions = array();
 
-    public function build($id, $type, $label, array $values) {
+    public function build($id, $type, $label, $name, array $values) {
         $this->field_id          = JsonCast::toInt($id);
         $this->type              = $type;
         $this->label             = $label;
+        $this->name              = $name;
         $this->file_descriptions = $values;
     }
 }

@@ -39,7 +39,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     /** @var string */
     private $format;
-    
+
     /**
      * Constructor
      *
@@ -60,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitText($this);
     }
-    
+
     /**
      * Get the text value of this changeset value
      *
@@ -76,10 +76,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         }
         return $this->format;
     }
-    
+
     /**
      * Return a string that will be use in SOAP API
-     * as the value of this ChangesetValue_Text 
+     * as the value of this ChangesetValue_Text
      *
      * @param PFUser $user
      *
@@ -88,7 +88,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function getSoapValue(PFUser $user) {
         return $this->encapsulateRawSoapValue($this->getText());
     }
- 
+
     /**
      * By default, changeset values are returned as string in 'value' field
      */
@@ -115,6 +115,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
+            $this->field->getName(),
             $value,
             $this->getFormat()
         );
@@ -195,7 +196,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         return 'http';
     }
-    
+
     /**
      * Returns the "set to" for field added later
      *
@@ -209,7 +210,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             return $this->fetchDiff($previous, $next, $format);
         }
     }
-    
+
     /**
     * Display the diff in changeset
     *

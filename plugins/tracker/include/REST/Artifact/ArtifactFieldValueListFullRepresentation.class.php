@@ -39,6 +39,11 @@ class ArtifactFieldValueListFullRepresentation {
     public $label;
 
     /**
+     * @var string Name of the field
+     */
+    public $name;
+
+    /**
      * @var array
      */
     public $values;
@@ -48,10 +53,11 @@ class ArtifactFieldValueListFullRepresentation {
      */
     public $bind_value_ids;
 
-    public function build($id, $type, $label, array $values, array $bind_value_ids) {
+    public function build($id, $type, $label, $name, array $values, array $bind_value_ids) {
         $this->field_id       = JsonCast::toInt($id);
         $this->type           = $type;
         $this->label          = $label;
+        $this->name           = $name;
         $this->values         = $values;
         $this->bind_value_ids = $bind_value_ids;
     }

@@ -47,14 +47,28 @@ class Tracker_REST_Artifact_ArtifactValidator {
      * @param ArtifactValuesRepresentation[] $values
      * @param Tracker_Artifact               $artifact
      */
-    public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact) {
+    public function getFieldsDataOnUpdate(array $values, array $values_by_field, Tracker_Artifact $artifact) {
         $new_values     = array();
-        $indexed_fields = $this->getIndexedFields($artifact->getTracker());
-        foreach ($values as $value) {
-            $array_representation = $value->toArray();
+        if ($values_by_field) {
+            $indexed_fields = $this->getIndexedFieldsByName($artifact->getTracker());
+            foreach ($values_by_field as $field_name => $value) {
+                $field = $indexed_fields[$field_name];
+                $value_representation = new Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation();
+                $value_representation->field_id = $field->getID();
+                $value_representation->value = $value;
 
-            $field = $this->getField($indexed_fields, $array_representation);
-            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation, $artifact);
+                $array_representation = $value_representation->toArray();
+
+                $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation, $artifact);
+            }
+        } else {
+            $indexed_fields = $this->getIndexedFields($artifact->getTracker());
+            foreach ($values as $value) {
+                $array_representation = $value->toArray();
+
+                $field = $this->getField($indexed_fields, $array_representation);
+                $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation, $artifact);
+            }
         }
         return $new_values;
     }
@@ -78,6 +92,14 @@ class Tracker_REST_Artifact_ArtifactValidator {
         $indexed_fields = array();
         foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {
             $indexed_fields[$field->getId()] = $field;
+        }
+        return $indexed_fields;
+    }
+
+    private function getIndexedFieldsByName(Tracker $tracker) {
+        $indexed_fields = array();
+        foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {
+            $indexed_fields[$field->getName()] = $field;
         }
         return $indexed_fields;
     }
