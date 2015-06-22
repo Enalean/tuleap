@@ -41,6 +41,31 @@ div.milestones {
                     background-color: #6AB537;
                 }
             }
+
+            > .btn-group.dropdown {
+                display: inline-block;
+                position: relative;
+                top: -2px;
+                left: 5px;
+
+                > ul.dropdown-menu {
+                    top: 32px;
+                }
+
+                &.ng-enter {
+                    -webkit-animation: fadeIn 0.2s;
+                    -moz-animation: fadeIn 0.2s;
+                    -ms-animation: fadeIn 0.2s;
+                    animation: fadeIn 0.2s;
+                }
+
+                &.ng-leave {
+                    -webkit-animation: fadeOut 0.2s;
+                    -moz-animation: fadeOut 0.2s;
+                    -ms-animation: fadeOut 0.2s;
+                    animation: fadeOut 0.2s;
+                }
+            }
         }
 
         > div.content {

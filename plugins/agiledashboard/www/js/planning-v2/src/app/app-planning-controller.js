@@ -46,8 +46,9 @@
             toggleClosedMilestoneItems            : toggleClosedMilestoneItems,
             canShowBacklogItem                    : canShowBacklogItem,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
-            showCreateNewModal                    : showCreateNewModal,
             showAddChildModal                     : showAddChildModal,
+            showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
+            showCreateNewModal                    : showCreateNewModal,
             showEditModal                         : showEditModal,
             cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList                       : CardFieldsService.cardFieldIsList,
@@ -212,8 +213,10 @@
                     }
                 }
                 promise.then(function() {
-                    prependItemToBacklog(item_id);
+                    return prependItemToBacklog(item_id);
                 });
+
+                return promise;
             };
 
             if (SharedPropertiesService.getUseAngularNewModal()) {
@@ -235,6 +238,42 @@
             };
 
             NewTuleapArtifactModalService.show(item_type.id, callback);
+        }
+
+        function showAddItemToSubMilestoneModal(item_type, parent_item) {
+            var compared_to;
+            if (!_.isEmpty(parent_item.content)) {
+                compared_to = {
+                    direction: "before",
+                    item_id  : parent_item.content[0].id
+                };
+            }
+
+            var callback = function(item_id) {
+                var promise;
+                if (compared_to) {
+                    promise = MilestoneService.addReorderToContent(parent_item.id, item_id, compared_to);
+                } else {
+                    promise = MilestoneService.addToContent(parent_item.id, item_id);
+                }
+
+                promise.then(function() {
+                    return prependItemToSubmilestone(item_id, parent_item);
+                });
+
+                return promise;
+            };
+
+            NewTuleapArtifactModalService.show(item_type.id, callback);
+        }
+
+        function showEditModal($event, backlog_item) {
+            var when_left_mouse_click = 1;
+            if($event.which === when_left_mouse_click) {
+                $event.preventDefault();
+
+                NewTuleapArtifactModalService.show(backlog_item.artifact.tracker.id, $scope.refreshBacklogItem, backlog_item.artifact.id, backlog_item.color);
+            }
         }
 
         function appendItemToBacklogItem(child_item_id, parent_item) {
@@ -264,20 +303,17 @@
             return false;
         }
 
-        function prependItemToBacklog(backlog_item_id) {
-            BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-                $scope.items[backlog_item_id] = data.backlog_item;
-                $scope.backlog_items.unshift($scope.items[backlog_item_id]);
+        function prependItemToSubmilestone(child_item_id, parent_item) {
+            return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
+                parent_item.content.unshift(data.backlog_item);
             });
         }
 
-        function showEditModal($event, backlog_item) {
-            var when_left_mouse_click = 1;
-            if($event.which === when_left_mouse_click) {
-                $event.preventDefault();
-
-                NewTuleapArtifactModalService.show(backlog_item.artifact.tracker.id, refreshBacklogItem, backlog_item.artifact.id, backlog_item.color);
-            }
+        function prependItemToBacklog(backlog_item_id) {
+            return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
+                $scope.items[backlog_item_id] = data.backlog_item;
+                $scope.backlog_items.unshift($scope.items[backlog_item_id]);
+            });
         }
 
         function refreshBacklogItem(backlog_item_id) {
@@ -291,16 +327,23 @@
             });
         }
 
-        function toggle(milestone) {
+        function toggle($event, milestone) {
             if (! milestone.alreadyLoaded && milestone.content.length === 0) {
                 milestone.getContent();
             }
 
-            if (milestone.collapsed) {
-                return milestone.collapsed = false;
+            var target                = $event.target;
+            var is_a_create_item_link = false;
+
+            if (target.classList) {
+                is_a_create_item_link = target.classList.contains('create-item-link');
+            } else {
+                is_a_create_item_link = target.parentNode.getElementsByClassName("create-item-link")[0] !== undefined;
             }
 
-            return milestone.collapsed = true;
+            if (! is_a_create_item_link) {
+                return milestone.collapsed = ! milestone.collapsed;
+            }
         }
 
         function showChildren(scope, backlog_item) {
