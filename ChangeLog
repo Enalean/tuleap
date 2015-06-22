@@ -1,3 +1,8 @@
+Version 8.2-6 (Monday, June 22nd 2015)
+	== Bug Fix ==
+	* request #8153: git config files not generic enough
+	* request #8151: Request-URI Too Large in GET /users_memberships
+
 Version 8.2-5 (Monday, June 15th 2015)
 	== Bug Fix ==
 	* request #8142: Trash icon very small on Projects widget
