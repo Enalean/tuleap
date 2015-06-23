@@ -19,7 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('/usr/share/php-password-compat/lib/password.php');
+// Check if the package from EPEL repository is available
+if(file_exists('/usr/share/php/password_compat/password.php')) {
+    require_once('/usr/share/php/password_compat/password.php');
+} else {
+    require_once('/usr/share/php-password-compat/lib/password.php');
+}
 
 class StandardPasswordHandler extends PasswordHandler {
     public function verifyHashPassword($plain_password, $hash_password) {
