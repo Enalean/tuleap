@@ -230,7 +230,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            $this->getName(),
             $this->getComputedValue($user, $changeset->getArtifact())
         );
         return $artifact_field_value_full_representation;

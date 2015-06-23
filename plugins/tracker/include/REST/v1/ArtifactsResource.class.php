@@ -158,13 +158,12 @@ class ArtifactsResource extends AuthenticatedResource {
      * </ol>
      *
      * @url PUT {id}
-     * @param string                          $id              Id of the artifact
-     * @param array                           $values          Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
-     * @param array                           $values_by_field Artifact fields values {@from body}
-     * @param ChangesetCommentRepresentation  $comment         Comment about update {body, format} {@from body}
+     * @param string                          $id        Id of the artifact
+     * @param array                           $values    Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
+     * @param ChangesetCommentRepresentation  $comment   Comment about update {body, format} {@from body}
      *
      */
-    protected function putId($id, array $values = array(), array $values_by_field = array(), ChangesetCommentRepresentation $comment = null) {
+    protected function putId($id, array $values, ChangesetCommentRepresentation $comment = null) {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
@@ -175,7 +174,7 @@ class ArtifactsResource extends AuthenticatedResource {
                     $this->formelement_factory
                 )
             );
-            $updater->update($user, $artifact, $values, $values_by_field, $comment);
+            $updater->update($user, $artifact, $values, $comment);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -211,7 +210,7 @@ class ArtifactsResource extends AuthenticatedResource {
      *      together with those that are required (depends on a given tracker's configuration).
      *  </li>
      *  <li>Note on files:
-     *  To attach a file on a file field, the value must contain the ids of the attachements you want to add
+     *  To attach a file on a file field, the value must contain the ids of the attachements you want to add 
      *         (eg. :
      *               {
      *                  "field_id": 101,

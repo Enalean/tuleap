@@ -128,12 +128,12 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         // user can not change the value of this field
         return null;
     }
-
+    
     /**
-     * Keep the value
-     *
+     * Keep the value 
+     * 
      * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
+     * @param int                             $changeset_value_id      The id of the changeset_value 
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return int or array of int
@@ -181,7 +181,6 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            $this->getName(),
             $submitted_by_value
         );
         return $artifact_field_value_full_representation;
@@ -199,7 +198,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
-
+    
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -237,9 +236,9 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $output = '';
-
+        
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
-
+        
         switch($format) {
             case 'html':
                 $output .= $this->fetchArtifactValueReadOnly($artifact);
@@ -263,7 +262,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         // this field is always valid as it is not filled by users.
         return true;
     }
-
+    
      /**
      * Validate a field
      *
@@ -282,10 +281,10 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
-        }
+        } 
         return $is_valid;
     }
-
+    
     /**
      * Display the html field in the admin ui
      *
@@ -344,7 +343,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         return $this->getBind()->formatChangesetValueForCSV(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
     }
-
+    
     /**
      * Say if this fields suport notifications
      *
@@ -353,7 +352,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function isNotificationsSupported() {
         return true;
     }
-
+    
     /**
      * Say if we export the bind in the XML
      *
@@ -362,7 +361,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function shouldBeBindXML() {
         return false;
     }
-
+    
     public function getUserManager() {
         return UserManager::instance();
     }

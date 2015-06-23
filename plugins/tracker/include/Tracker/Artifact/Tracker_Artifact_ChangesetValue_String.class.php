@@ -52,7 +52,6 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
-            $this->field->getName(),
             $value
         );
 
