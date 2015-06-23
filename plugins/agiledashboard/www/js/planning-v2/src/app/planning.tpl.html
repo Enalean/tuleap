@@ -23,17 +23,23 @@
                     </li>
                 </ul>
             </div>
-            <div ng-if="use_angular_new_modal" class="btn-group dropdown">
-                <span class="dropdown-toggle btn btn-primary btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    <i class="icon-plus"></i> <span translate>Add a new item</span>
+            <div ng-if="use_angular_new_modal && backlog.accepted_types.content.length > 1" class="btn-group dropdown">
+                <span class="dropdown-toggle btn btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <i class="icon-plus"></i> <span translate>Add an item</span>
                     <b class="caret"></b>
                 </span>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li ng-repeat="accepted_type in backlog.accepted_types.content">
-                        <a href="#" class="create-item-link" ng-click="showCreateNewModal($event, accepted_type, backlog)">{{ accepted_type.label }}</a>
+                        <a href="#" class="create-item-link" ng-click="showCreateNewModal($event, accepted_type, backlog)" translate>Add a {{ accepted_type.label }}</a>
                     </li>
                 </ul>
             </div>
+            <button ng-if="use_angular_new_modal && backlog.accepted_types.content.length === 1"
+                class="btn btn-small"
+                ng-click="showCreateNewModal($event, backlog.accepted_types.content[0], backlog)"
+            >
+                <i class="icon-plus"></i> <span translate>Add a {{ backlog.accepted_types.content[0].label }}</span>
+            </button>
         </div>
         <div class="alert alert-warning" ng-if="displayUserCantPrioritizeForBacklog()" translate>
             You are not allowed to rank on this planning
@@ -67,7 +73,16 @@
         <div class="milestones">
             <h2 translate>Milestones</h2>
             <div class="controls">
-                <button class="btn items-toggle-button btn-small" data-toggle="button" ng-click="toggleClosedMilestoneItems()">
+                <button ng-if="use_angular_new_modal && submilestone_type"
+                    class="btn btn-small"
+                    ng-click="showAddSubmilestoneModal($event, submilestone_type)"
+                >
+                    <i class="icon-plus"></i> <span translate>Add a {{ submilestone_type.label }}</span>
+                </button>
+                <button class="btn items-toggle-button btn-small"
+                    data-toggle="button"
+                    ng-click="toggleClosedMilestoneItems()"
+                >
                     <i class="icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
                 </button>
             </div>
@@ -124,7 +139,7 @@
                         <ul ui-tree-nodes
                             ng-model="milestone.content"
                             class="backlog-items submilestone"
-                            data-accept="{{ milestone.accepted_types.toString() }}"
+                            data-accept="{{ milestone.content_accepted_types.toString() }}"
                             data-submilestone-id="{{ milestone.id }}"
                             data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
                         >

@@ -23,6 +23,7 @@ use Tuleap\REST\JsonCast;
 use Tuleap\REST\ResourceReference;
 use Tuleap\REST\v1\PlanningRepresentationBase;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
@@ -36,8 +37,8 @@ class PlanningRepresentation extends PlanningRepresentationBase {
         $this->label             = $planning->getName();
         $this->milestones_uri    = self::ROUTE .'/'. $this->id .'/'. MilestoneRepresentation::ROUTE;
 
-        $this->milestone_tracker = new ResourceReference();
-        $this->milestone_tracker->build($planning->getPlanningTrackerId(), TrackerRepresentation::ROUTE);
+        $this->milestone_tracker = new TrackerReference();
+        $this->milestone_tracker->build($planning->getPlanningTracker());
 
         $this->project = new ProjectReference();
         $this->project->build($planning->getGroupId());

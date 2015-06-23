@@ -8,6 +8,7 @@
     function ProjectService(Restangular, $q) {
         return {
             reorderBacklog           : reorderBacklog,
+            getProject               : getProject,
             getProjectBacklog        : getProjectBacklog,
             removeAddReorderToBacklog: removeAddReorderToBacklog,
             removeAddToBacklog       : removeAddToBacklog
@@ -50,6 +51,10 @@
                         remove_from: milestone_id
                     }]
                 });
+        }
+
+        function getProject(project_id) {
+            return getRest('v1').one('projects', project_id).get();
         }
 
         function getProjectBacklog(project_id) {

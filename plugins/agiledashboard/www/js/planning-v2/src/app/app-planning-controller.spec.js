@@ -17,6 +17,7 @@ describe("PlanningCtrl", function() {
 
             ProjectService = jasmine.createSpyObj("ProjectService", [
                 "getProjectBacklog",
+                "getProject",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
             ]);

@@ -118,9 +118,9 @@ class MilestoneRepresentationBase {
     public $sub_milestones_uri;
 
     /**
-    * @var array {@type \Tuleap\Tracker\REST\TrackerRepresentation}
+    * @var @type \Tuleap\Tracker\REST\TrackerRepresentation
     */
-    public $sub_milestones_types;
+    public $sub_milestone_type;
 
     /**
      * @var string
