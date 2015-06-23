@@ -101,7 +101,7 @@
                             <b class="caret"></b>
                         </span>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li ng-repeat="accepted_type in milestone.accepted_types.content">
+                            <li ng-repeat="accepted_type in milestone.content_accepted_types.content">
                                 <a href="#" class="create-item-link" ng-click="showAddItemToSubMilestoneModal(accepted_type, milestone)">{{ accepted_type.label }}</a>
                             </li>
                         </ul>
