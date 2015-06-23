@@ -35,6 +35,7 @@ Version 8.3 (not released yet)
 	* request #8120: Add new SOAP automated tests
 	* request #8120: Add new SOAP automated tests on trackers v3
 	* Adding new event for Project REST Route (additional informations)
+	* request #8166: Fix ProFTPD package for CentOS5
 
 	== Themes ==
 	* FlamingParrot: 1.89
