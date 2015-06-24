@@ -162,14 +162,14 @@ class ArtifactTemporaryFilesResource {
      *
      * @url POST
      * @param string $name          Name of the file {@from body}
-     * @param string $description   Description of the file {@from body}
      * @param string $mimetype      Mime-Type of the file {@from body}
      * @param string $content       First chunk of the file (base64-encoded) {@from body}
+     * @param string $description   Description of the file {@from body}
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
      * @throws 500 406 403
      */
-    protected function post($name, $description, $mimetype, $content) {
+    protected function post($name, $mimetype, $content, $description = null) {
         $this->sendAllowHeadersForArtifactFiles();
 
         try {
