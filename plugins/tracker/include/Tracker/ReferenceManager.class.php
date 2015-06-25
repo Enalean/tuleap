@@ -28,10 +28,19 @@ require_once 'common/reference/ReferenceManager.class.php';
  * I'm responsible of managing Tracker related cross references
  */
 class Tracker_ReferenceManager {
+
+    /** @var ReferenceManager */
     private $reference_manager;
 
-    public function __construct(ReferenceManager $reference_manager) {
-        $this->reference_manager = $reference_manager;
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    public function __construct(
+        ReferenceManager $reference_manager,
+        Tracker_ArtifactFactory $artifact_factory
+    ) {
+        $this->reference_manager      = $reference_manager;
+        $this->artifact_factory       = $artifact_factory;
     }
 
     /**
@@ -85,5 +94,32 @@ class Tracker_ReferenceManager {
         return $this->reference_manager->removeCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
         );
+    }
+
+    /**
+     * @return mixed Tracker_Reference || null
+     */
+    public function getReference($keyword, $artifact_id) {
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+
+        if (! $artifact) {
+            return null;
+        }
+
+        return $this->getTrackerReference($artifact, $keyword);
+    }
+
+    /**
+     * @return Tracker_Reference
+     */
+    private function getTrackerReference(Tracker_Artifact $artifact, $keyword) {
+        $reference = new Tracker_Reference(
+            $artifact->getTracker(),
+            $keyword
+        );
+
+        $reference->replaceLink(array($artifact->getId()));
+
+        return $reference;
     }
 }
