@@ -20,10 +20,10 @@
  */
 
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
-    
+
     const DEFAULT_VALUE_TYPE_TODAY    = 0;
     const DEFAULT_VALUE_TYPE_REALDATE = 1;
-    
+
     public $default_properties = array(
         'default_value_type' => array(
             'type'    => 'radio',
@@ -177,7 +177,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             $this->default_properties['default_value_type']['choices']['default_value']['value'] = '';
         }
     }
-    
+
     /**
      * Export form element properties into a SimpleXMLElement
      *
@@ -218,7 +218,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     private function exportDisplayTimeToXML(SimpleXMLElement &$xml_element) {
         $xml_element->addAttribute('display_time', $this->isTimeDisplayed() ? '1' : '0');
     }
-    
+
     /**
      * Returns the default value for this field, or nullif no default value defined
      *
@@ -232,7 +232,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $value;
     }
-    
+
     /**
      * Return the Field_Date_Dao
      *
@@ -241,10 +241,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     protected function getDao() {
         return new Tracker_FormElement_Field_DateDao();
     }
-    
+
     /**
      * The field is permanently deleted from the db
-     * This hooks is here to delete specific properties, 
+     * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
      *
@@ -253,7 +253,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function delete() {
         return $this->getDao()->delete($this->id);
     }
-    
+
     public function getCriteriaFrom($criteria) {
         //Only filter query if field is used
         if($this->isUsed()) {
@@ -262,9 +262,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 $compare_date_stmt = $this->getSQLCompareDate(
-                    $criteria->is_advanced, 
-                    $criteria_value['op'], 
-                    $criteria_value['from_date'], 
+                    $criteria->is_advanced,
+                    $criteria_value['op'],
+                    $criteria_value['from_date'],
                     $criteria_value['to_date'],
                     $b. '.value'
                 );
@@ -298,7 +298,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $this->criteria_value[$criteria->report->id];
     }
-    
+
     /**
      * Format the criteria value submitted by the user for storage purpose (dao or session)
      *
@@ -316,14 +316,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             } else {
                  $value['from_date'] = strtotime($value['from_date']);
             }
-            
+
             //to date
             if ( empty($value['to_date']) ) {
                 $value['to_date'] = 0;
             } else {
                  $value['to_date'] = strtotime($value['to_date']);
             }
-            
+
             //Operator
             if ( empty($value['op']) || ($value['op'] !== '<' && $value['op'] !== '=' && $value['op'] !== '>')) {
                 $value['op'] = '=';
@@ -332,7 +332,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             return $value;
         }
     }
-    
+
     /**
      * Build the sql statement for date comparison
      *
@@ -367,7 +367,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                     $and_compare_date = "$column < $to";
                     break;
                 case '=':
-                    $and_compare_date = "$column BETWEEN $to 
+                    $and_compare_date = "$column BETWEEN $to
                                                  AND $to + $seconds_in_a_day - 1";
                     break;
                 default:
@@ -409,18 +409,18 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function getCriteriaWhere($criteria) {
         return '';
     }
-    
+
     public function getQuerySelect() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
         return "$R2.value AS `". $this->name ."`";
     }
-    
+
     public function getQueryFrom() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
-        
-        return "LEFT JOIN ( tracker_changeset_value AS $R1 
+
+        return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_date AS $R2 ON ($R2.changeset_value_id = $R1.id)
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
@@ -432,19 +432,19 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $R2 = 'R2_'. $this->id;
         return "$R2.value";
     }
-    
+
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_Date_ValueDao();
     }
-    
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         return $this->formatDate($value);
     }
-    
+
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         return $this->formatDateForCSV($value);
     }
-    
+
     public function fetchAdvancedCriteriaValue($criteria) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -543,14 +543,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function fetchMasschange() {
 
     }
-    
+
     /**
      * Format a timestamp into Y-m-d H:i format
      */
     protected function formatDateTime($date) {
         return format_date(Tracker_FormElement_DateTimeFormatter::DATE_TIME_FORMAT, (float)$date, '');
     }
-    
+
     /**
      * Returns the CSV date format of the user regarding its preferences
      * Returns either 'month_day_year' or 'day_month_year'
@@ -562,30 +562,35 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $date_csv_export_pref = $user->getPreference('user_csv_dateformat');
         return $date_csv_export_pref;
     }
-    
+
     protected function formatDateForCSV($date) {
         $date_csv_export_pref = $this->_getUserCSVDateFormat();
         switch ($date_csv_export_pref) {
             case "month_day_year";
-                $fmt = 'm/d/Y H:i';
+                $fmt = 'm/d/Y';
                 break;
             case "day_month_year";
-                $fmt = 'd/m/Y H:i';
+                $fmt = 'd/m/Y';
                 break;
             default:
-                $fmt = 'm/d/Y H:i';
+                $fmt = 'm/d/Y';
                 break;
         }
+
+        if ($this->isTimeDisplayed()) {
+            $fmt .= ' H:i';
+        }
+
         return format_date($fmt, (float)$date, '');
     }
-    
+
     /**
      * @return bool
      */
     protected function criteriaCanBeAdvanced() {
         return true;
     }
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
@@ -594,7 +599,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function fetchRawValue($value) {
         return $this->formatDate($value);
     }
-    
+
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
@@ -609,11 +614,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $this->formatDate($value);
     }
-    
+
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_DateDao();
     }
-    
+
     /**
      * Fetch the html code to display the field value in new artifact submission form
      * @param array $submitted_values the values already submitted
@@ -638,7 +643,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     protected function fetchSubmitValueMasschange() {
         return $this->getFormatter()->fetchSubmitValueMasschange();
-    }   
+    }
 
     /**
      * Fetch the html code to display the field value in artifact
@@ -699,7 +704,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
-    
+
     /**
      * Fetch the changes that has been made to this field in a followup
      * @param Tracker_ $artifact
@@ -717,7 +722,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $html .= $this->formatDate($to_value['value']);
         return $html;
     }
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -739,31 +744,31 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','date');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','date_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('calendar/cal.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('calendar/cal--plus.png');
     }
-    
+
     /**
      * Fetch the html code to display the field value in tooltip
-     * 
+     *
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Date $value The changeset value for this field
      * @return string
@@ -775,24 +780,24 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $html;
     }
-    
+
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param mixed            $value    data coming from the request. May be string or array. 
+     * @param Tracker_Artifact $artifact The artifact
+     * @param mixed            $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
         return $this->getFormatter()->validate($value);
     }
-    
+
     /**
      * Save the value and return the id
-     * 
+     *
      * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
+     * @param int                             $changeset_value_id      The id of the changeset_value
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
@@ -801,7 +806,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, strtotime($value));
     }
-    
+
     /**
      * Check if there are changes between old and new value for this field
      *
@@ -813,7 +818,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function hasChanges(Tracker_Artifact_ChangesetValue $old_value, $new_value) {
         return strtotime($this->formatDate($old_value->getTimestamp())) != strtotime($new_value);
     }
-    
+
     /**
      * Get the value of this field
      *
@@ -830,7 +835,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $changeset_value;
     }
-    
+
     /**
      * Get available values of this field for SOAP usage
      * Fields like int, float, date, string don't have available values
@@ -840,7 +845,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function getSoapAvailableValues() {
         return null;
     }
-    
+
     /**
      * Compute the number of digits of an int (could be private but I want to unit test it)
      * 1 => 1
@@ -853,9 +858,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function _nbDigits($int_value) {
         return 1 + (int) (log($int_value) / log(10));
     }
-    
+
     /**
-     * Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) regarding the csv peference 
+     * Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) regarding the csv peference
      * into its a list of 5 parts (YYYY,MM,DD,H,i)
      * if DD and MM are not defined then default them to 1
      *
@@ -872,7 +877,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $user_preference = $this->_getUserCSVDateFormat();
         $match           = array();
 
-        if (preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+)/", $date, $match)) {
+        if (preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)(?::(\d+))?/", $date, $match)) {
             return $this->getCSVDateComponantsWithHours($match, $user_preference);
         } elseif (preg_match("/\s*(\d+)\/(\d+)\/(\d+)/", $date, $match)) {
             return $this->getCSVDateComponantsWithoutHours($match, $user_preference);
@@ -908,12 +913,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
     private function getCSVDateComponantsWithHours(array $match, $user_preference) {
         if ($user_preference == "day_month_year") {
-            list(, $day, $month, $year, $hour, $minute, $second) = $match;
+            list(, $day, $month, $year, $hour, $minute) = $match;
         } else {
-            list(, $month, $day, $year, $hour, $minute, $second) = $match;
+            list(, $month, $day, $year, $hour, $minute) = $match;
         }
 
-        return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second);
+        return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, '00');
     }
 
     private function getCSVDefaultDateComponants() {
@@ -950,7 +955,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             return null;
         }
     }
-    
+
     /**
      * Get the field data for artifact submission
      *
