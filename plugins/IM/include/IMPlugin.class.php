@@ -340,12 +340,12 @@ class IMPlugin extends Plugin {
 					$this->last_im_datas["grp"]=$project_name;
 				}else{
 					if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to create the shared group, '.$project_name);
+					$GLOBALS['Response']->addFeedback('error', 'IM object no available to create the shared group, '.$project_name);
 					}
 				}
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
+					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
 				}	
 			}
 		}
@@ -381,12 +381,12 @@ class IMPlugin extends Plugin {
 						$this->last_im_datas["muc"]=$group_name;
 					}else{
 						if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-						$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to create the shared group, '.$group_name);
+						$GLOBALS['Response']->addFeedback('error', 'IM object no available to create the shared group, '.$group_name);
 						}
 					}
 				} catch(Exception $e){
 					if(!$this->debug){
-						$GLOBALS['Response']->addFeedback('error', ' #### muc creation :'.$e->getMessage().' ### ');
+						$GLOBALS['Response']->addFeedback('error', 'MUC creation: '.$e->getMessage());
 					}	
 				}
 			}
@@ -411,12 +411,12 @@ class IMPlugin extends Plugin {
 					$this->last_im_datas["name_last_muc_locked"]=$unix_project_name;
 				}else{
 						if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-						$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to create the shared group, '.$project_name);
+						$GLOBALS['Response']->addFeedback('error', 'IM object no available to create the shared group, '.$project_name);
 						}
 					}
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
+					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
 				}	
 			}
 		}else{
@@ -443,12 +443,12 @@ class IMPlugin extends Plugin {
 					$this->last_im_datas["name_last_muc_unlocked"]=$unix_project_name;
 				}else{
 						if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-						$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to unlock muc, '.$project_name);
+						$GLOBALS['Response']->addFeedback('error', 'IM object no available to unlock muc, '.$project_name);
 						}
 					}
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-						$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
+						$GLOBALS['Response']->addFeedback('error', $e->getMessage());
 					}	
 			}
 			}
@@ -471,7 +471,7 @@ class IMPlugin extends Plugin {
 	        $this->last_im_datas_remove['muc']=$unix_project_name;
 	        }catch(Exception $e){
 	        	if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
+					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
 				}	
 	        }
         }
@@ -494,7 +494,7 @@ class IMPlugin extends Plugin {
 				$this->last_im_datas["names_last_member_in_muc"]=$user_unix_name." is added in the muc :".$group_name;
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
+					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
 				}	
 			}
         }
@@ -521,7 +521,7 @@ class IMPlugin extends Plugin {
 				$this->last_im_datas["names_remove_member_from_muc"]=$user_unix_name." is remove from the muc :".$unix_group_name;
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
+					$GLOBALS['Response']->addFeedback('error', $e->getMessage());
 				}	
 			}
         }

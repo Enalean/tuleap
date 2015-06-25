@@ -121,7 +121,6 @@ class EventHandler {
 		$xml = "<presence";
 		$xml .= " from='$from'";
 		$xml .= " to='$to'";
-		$xml .= " type='MUC'";
 		$xml .= ">\n";
 		$xml .= "$payload \n";
 		$xml .= "</presence>\n";
@@ -185,7 +184,9 @@ class EventHandler {
 			// First of all, we check if the status code's a 'cool' status (check XEP 0045 to
 			// know more about these numbers). Then we check other stuff just because we wanna be
 			// as robust as a mountain!
-			if( (!strcmp($status,"201") || !strcmp($status,"")) && !strcmp($rec_from_room[0], $this->muc_room_info["muc_room_short_name"]) && !strcmp($role,"moderator") && !strcmp($affiliation,"owner") ){
+			if ((!strcmp($status, "201") || !strcmp($status, "110") || !strcmp($status, "")) &&
+                !strcmp($rec_from_room[0], $this->muc_room_info["muc_room_short_name"]) &&
+                !strcmp($role,"moderator") && !strcmp($affiliation,"owner") ) {
 
 				//echo date("Ymd::G:i:s - ")." End handle_muc_room_creation\n";
 

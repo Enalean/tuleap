@@ -177,7 +177,6 @@ class Jabbex implements JabbexInterface
 		$xml = "<presence";
 		$xml .= " from='$from'";
 		$xml .= " to='$to'";
-		$xml .= " type='MUC'";
 		$xml .= ">\n";
 		$xml .= "$payload \n";
 		$xml .= "</presence>\n";
@@ -304,7 +303,6 @@ class Jabbex implements JabbexInterface
 		$xml = "<presence";
 		$xml .= " from='$from'";
 		$xml .= " to='$to'";
-		$xml .= " type='MUC'";
 		$xml .= ">\n";
 		$xml .= "$payload \n";
 		$xml .= "</presence>\n";
@@ -397,7 +395,6 @@ class Jabbex implements JabbexInterface
 		$xml = "<presence";
 		$xml .= " from='$from'";
 		$xml .= " to='$to'";
-		$xml .= " type='MUC'";
 		$xml .= ">\n";
 		$xml .= "$payload \n";
 		$xml .= "</presence>\n";
