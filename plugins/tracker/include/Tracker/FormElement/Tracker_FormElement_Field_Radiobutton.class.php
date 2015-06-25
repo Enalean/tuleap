@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
     }
 
     protected function fetchFieldContainerEnd() {
-        return '</div>';
+        return '';
     }
 
 
