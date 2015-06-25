@@ -7,3 +7,4 @@ vendor/
 src/**/*.css
 !src/assets/*.css
 test-results.xml
+coverage/

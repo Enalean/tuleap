@@ -6,7 +6,7 @@ describe("PlanningCtrl", function() {
     beforeEach(function() {
         module('planning');
 
-        inject(function ($controller, $rootScope, _$q_) {
+        inject(function($controller, $rootScope, _$q_) {
             $scope = $rootScope.$new();
             $q = _$q_;
             $filter = jasmine.createSpy("$filter");
@@ -19,7 +19,7 @@ describe("PlanningCtrl", function() {
                 "getBacklogItem",
                 "removeAddBacklogItemChildren"
             ]);
-            _.invoke(BacklogItemService, "andReturn", $q.defer().promise);
+            _(BacklogItemService).map('and').invoke('returnValue', $q.defer().promise);
 
             ProjectService = jasmine.createSpyObj("ProjectService", [
                 "getProjectBacklog",
@@ -27,7 +27,7 @@ describe("PlanningCtrl", function() {
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
             ]);
-            _.invoke(ProjectService, "andReturn", $q.defer().promise);
+            _(ProjectService).map('and').invoke('returnValue', $q.defer().promise);
 
             MilestoneService = jasmine.createSpyObj("MilestoneService", [
                 "addReorderToContent",
@@ -37,7 +37,7 @@ describe("PlanningCtrl", function() {
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
             ]);
-            _.invoke(MilestoneService, "andReturn", $q.defer().promise);
+            _(MilestoneService).map('and').invoke('returnValue', $q.defer().promise);
 
             SharedPropertiesService = jasmine.createSpyObj("SharedPropertiesService", [
                 "getUserId",
@@ -59,9 +59,9 @@ describe("PlanningCtrl", function() {
             UserPreferencesService = jasmine.createSpyObj("UserPreferencesService", [
                 "setPreference"
             ]);
-            _.invoke(UserPreferencesService, "andReturn", $q.defer().promise);
+            _(UserPreferencesService).map('and').invoke('returnValue', $q.defer().promise);
 
-            $filter.andCallFake(function() {
+            $filter.and.callFake(function() {
                 return function() {};
             });
 
@@ -86,7 +86,7 @@ describe("PlanningCtrl", function() {
 
     describe("displayBacklogItems() -", function() {
         beforeEach(function() {
-            spyOn($scope, "fetchBacklogItems").andReturn(deferred.promise);
+            spyOn($scope, "fetchBacklogItems").and.returnValue(deferred.promise);
             $scope.backlog_items = {
                 loading: false,
                 fully_loaded: false
@@ -122,7 +122,7 @@ describe("PlanningCtrl", function() {
 
     describe("fetchAllBacklogItems() -", function() {
         beforeEach(function() {
-            spyOn($scope, "fetchBacklogItems").andReturn(deferred.promise);
+            spyOn($scope, "fetchBacklogItems").and.returnValue(deferred.promise);
             $scope.backlog_items = {
                 loading: false,
                 fully_loaded: false
@@ -144,7 +144,7 @@ describe("PlanningCtrl", function() {
 
             expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
             expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect($scope.fetchBacklogItems.calls.length).toEqual(2);
+            expect($scope.fetchBacklogItems.calls.count()).toEqual(2);
             expect(promise).toBeResolved();
         });
 
@@ -173,8 +173,8 @@ describe("PlanningCtrl", function() {
         });
 
         it("Given that we are in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
-            SharedPropertiesService.getProjectId.andReturn(736);
-            BacklogItemService.getProjectBacklogItems.andReturn(deferred.promise);
+            SharedPropertiesService.getProjectId.and.returnValue(736);
+            BacklogItemService.getProjectBacklogItems.and.returnValue(deferred.promise);
 
             var promise = $scope.fetchBacklogItems(60, 25);
             expect($scope.backlog_items.loading).toBeTruthy();
@@ -192,8 +192,8 @@ describe("PlanningCtrl", function() {
         });
 
         it("Given that we are in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
-            SharedPropertiesService.getMilestoneId.andReturn(592);
-            BacklogItemService.getMilestoneBacklogItems.andReturn(deferred.promise);
+            SharedPropertiesService.getMilestoneId.and.returnValue(592);
+            BacklogItemService.getMilestoneBacklogItems.and.returnValue(deferred.promise);
 
             var promise = $scope.fetchBacklogItems(60, 25);
             expect($scope.backlog_items.loading).toBeTruthy();
@@ -233,11 +233,11 @@ describe("PlanningCtrl", function() {
 
     describe("filterBacklog() -", function() {
         beforeEach(function() {
-            spyOn($scope, "fetchAllBacklogItems").andReturn(deferred.promise);
+            spyOn($scope, "fetchAllBacklogItems").and.returnValue(deferred.promise);
         });
 
         it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
-            var promise = $scope.filterBacklog();
+            $scope.filterBacklog();
             deferred.resolve(50);
             $scope.$apply();
 
@@ -246,7 +246,7 @@ describe("PlanningCtrl", function() {
         });
 
         it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
-            var promise = $scope.filterBacklog();
+            $scope.filterBacklog();
             deferred.reject(99);
             $scope.$apply();
 
@@ -257,7 +257,7 @@ describe("PlanningCtrl", function() {
 
     describe("fetchBacklogItemChildren() -", function() {
         beforeEach(function() {
-            BacklogItemService.getBacklogItemChildren.andReturn(deferred.promise);
+            BacklogItemService.getBacklogItemChildren.and.returnValue(deferred.promise);
         });
 
         it("Given a backlog item and given there are 2 children, when I fetch the backlog item's children then the BacklogItemService will be queried, the children will be added to the item and the loader will be set to false", function() {
@@ -313,7 +313,7 @@ describe("PlanningCtrl", function() {
         var fakeEvent, fakeItemType, fakeBacklog;
         beforeEach(function() {
             fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            BacklogItemService.getBacklogItem.andReturn(deferred.promise);
+            BacklogItemService.getBacklogItem.and.returnValue(deferred.promise);
         });
 
         it("Given that we use the 'old' modal and given an event, an item_type object and a project backlog object, when I show the new artifact modal, then the event's default action will be prevented and the TuleapArtifactModal Service will be called with a callback", function() {
@@ -327,7 +327,7 @@ describe("PlanningCtrl", function() {
         });
 
         it("Given that we use the 'new' modal and given an event, an item_type object and a project backlog object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
-            SharedPropertiesService.getUseAngularNewModal.andReturn(true);
+            SharedPropertiesService.getUseAngularNewModal.and.returnValue(true);
             fakeItemType = { id: 50 };
 
             $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
@@ -339,8 +339,8 @@ describe("PlanningCtrl", function() {
         describe("callback -", function() {
             var fakeBacklog, fakeArtifact;
             beforeEach(function() {
-                BacklogItemService.getBacklogItem.andReturn(deferred.promise);
-                TuleapArtifactModalService.showCreateItemForm.andCallFake(function(a, b, callback) {
+                BacklogItemService.getBacklogItem.and.returnValue(deferred.promise);
+                TuleapArtifactModalService.showCreateItemForm.and.callFake(function(a, b, callback) {
                     callback(5202);
                 });
                 fakeArtifact = {
@@ -356,7 +356,7 @@ describe("PlanningCtrl", function() {
                         rest_route_id: 80,
                         rest_base_route: "projects"
                     };
-                    ProjectService.removeAddReorderToBacklog.andReturn(second_deferred.promise);
+                    ProjectService.removeAddReorderToBacklog.and.returnValue(second_deferred.promise);
                 });
 
                 it("when the new artifact modal calls its callback, then the artifact will be prepended to the backlog using REST, it will be retrieved from the server, published on the scope's items object and prepended to the backlog_items array", function() {
@@ -409,7 +409,7 @@ describe("PlanningCtrl", function() {
 
                 it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the scope's backlog_items array", function() {
                     $scope.backlog_items.content = [];
-                    ProjectService.removeAddToBacklog.andReturn(second_deferred.promise);
+                    ProjectService.removeAddToBacklog.and.returnValue(second_deferred.promise);
 
                     $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
                     deferred.resolve(fakeArtifact);
@@ -436,7 +436,7 @@ describe("PlanningCtrl", function() {
                     $scope.backlog_items.content = [
                         { id: 6240 }
                     ];
-                    MilestoneService.removeAddReorderToBacklog.andReturn(second_deferred.promise);
+                    MilestoneService.removeAddReorderToBacklog.and.returnValue(second_deferred.promise);
 
                     $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
                     deferred.resolve(fakeArtifact);
@@ -457,7 +457,7 @@ describe("PlanningCtrl", function() {
 
                 it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the scope's backlog_items array", function() {
                     $scope.backlog_items.content = [];
-                    MilestoneService.removeAddToBacklog.andReturn(second_deferred.promise);
+                    MilestoneService.removeAddToBacklog.and.returnValue(second_deferred.promise);
 
                     $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
                     deferred.resolve(fakeArtifact);
@@ -503,16 +503,16 @@ describe("PlanningCtrl", function() {
         describe("callback -", function() {
             var fake_artifact;
             beforeEach(function() {
-                NewTuleapArtifactModalService.showCreation.andCallFake(function(a, b, callback) {
+                NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
                     callback(9268);
                 });
-                BacklogItemService.getBacklogItem.andReturn(deferred.promise);
+                BacklogItemService.getBacklogItem.and.returnValue(deferred.promise);
                 fake_artifact = {
                     backlog_item: {
                         id: 9268
                     }
                 };
-                BacklogItemService.removeAddBacklogItemChildren.andReturn(second_deferred.promise);
+                BacklogItemService.removeAddBacklogItemChildren.and.returnValue(second_deferred.promise);
             });
 
             it("When the new artifact modal calls its callback, then the artifact will be appended to the parent item's children using REST, it will be retrieved from the server, added to the scope's items and appended to the parent's children array", function() {
@@ -603,8 +603,8 @@ describe("PlanningCtrl", function() {
         var fakeEvent, fakeItem;
         beforeEach(function() {
             fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            SharedPropertiesService.getUserId.andReturn(102);
-            NewTuleapArtifactModalService.showEdition.andCallFake(function(c, a, b, callback) {
+            SharedPropertiesService.getUserId.and.returnValue(102);
+            NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
                 callback(8541);
             });
         });
@@ -642,8 +642,8 @@ describe("PlanningCtrl", function() {
         var fakeEvent, fakeItem;
         beforeEach(function() {
             fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            SharedPropertiesService.getUserId.andReturn(102);
-            NewTuleapArtifactModalService.showEdition.andCallFake(function(c, a, b, callback) {
+            SharedPropertiesService.getUserId.and.returnValue(102);
+            NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
                 callback(9040);
             });
         });
@@ -680,8 +680,8 @@ describe("PlanningCtrl", function() {
     describe("showAddItemToSubMilestoneModal() -", function() {
         var fakeItemType, fakeArtifact, fakeSubmilestone;
         beforeEach(function() {
-            BacklogItemService.getBacklogItem.andReturn(deferred.promise);
-            NewTuleapArtifactModalService.showCreation.andCallFake(function(a, b, callback) {
+            BacklogItemService.getBacklogItem.and.returnValue(deferred.promise);
+            NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
                 callback(7488);
             });
             fakeArtifact = {
@@ -713,7 +713,7 @@ describe("PlanningCtrl", function() {
                 fakeSubmilestone.content = [
                     { id: 9402 }
                 ];
-                MilestoneService.addReorderToContent.andReturn(second_deferred.promise);
+                MilestoneService.addReorderToContent.and.returnValue(second_deferred.promise);
 
                 $scope.showAddItemToSubMilestoneModal(fakeItemType, fakeSubmilestone);
                 deferred.resolve(fakeArtifact);
@@ -732,7 +732,7 @@ describe("PlanningCtrl", function() {
             });
 
             it("and given that the submilestone's content was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", function() {
-                MilestoneService.addToContent.andReturn(second_deferred.promise);
+                MilestoneService.addToContent.and.returnValue(second_deferred.promise);
 
                 $scope.showAddItemToSubMilestoneModal(fakeItemType, fakeSubmilestone);
                 deferred.resolve(fakeArtifact);
@@ -757,19 +757,20 @@ describe("PlanningCtrl", function() {
             $scope.items = {
                 7088: { id: 7088 }
             };
-            BacklogItemService.getBacklogItem.andReturn(deferred.promise);
+            BacklogItemService.getBacklogItem.and.returnValue(deferred.promise);
 
             $scope.refreshBacklogItem(7088);
+
+            expect($scope.items[7088].updating).toBeTruthy();
             deferred.resolve({
                 backlog_item: { id: 7088 }
             });
-
-            expect($scope.items[7088]).toEqual({ id: 7088, updating: true });
-
             $scope.$apply();
 
             expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
-            expect($scope.items[7088]).toEqual({ id: 7088, updating: false });
+            expect($scope.items[7088]).toEqual(
+                jasmine.objectContaining({ id: 7088, updating: false })
+            );
             expect($scope.backlog_items).toEqual([
                 { id: 7088 }
             ]);
@@ -781,22 +782,21 @@ describe("PlanningCtrl", function() {
             $scope.milestones = [
                 { id: 9040 }
             ];
-            MilestoneService.getMilestone.andReturn(deferred.promise);
+            MilestoneService.getMilestone.and.returnValue(deferred.promise);
 
             $scope.refreshSubmilestone(9040);
+
             deferred.resolve({
                 results: { id: 9040 }
             });
-
             expect($scope.milestones).toEqual([
-                { id: 9040, updating: true }
+                jasmine.objectContaining({ id: 9040, updating: true })
             ]);
-
             $scope.$apply();
 
             expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
             expect($scope.milestones).toEqual([
-                { id: 9040, updating: false }
+                jasmine.objectContaining({ id: 9040, updating: false })
             ]);
         });
     });
