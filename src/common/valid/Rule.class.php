@@ -73,7 +73,7 @@ class Rule_Date extends Rule {
 }
 
 class Rule_Date_Time extends Rule {
-    const DAYTIME_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?) (\d{2}):(\d{2})$/';
+    const DAYTIME_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?) (\d{2}):(\d{2})(?::\d{2})?$/';
 
     function isValid($val) {
         if (! preg_match(self::DAYTIME_REGEX, $val, $m)) {
