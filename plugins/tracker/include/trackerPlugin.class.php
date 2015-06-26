@@ -939,7 +939,7 @@ class trackerPlugin extends Plugin {
     }
 
     public function get_reference($params) {
-        if ($params['keyword'] === 'art' || $params['keyword'] === 'artifact') {
+        if ($this->isArtifactReferenceInMultipleTrackerServicesContext($params['keyword'])) {
             $artifact_id       = $params['value'];
             $keyword           = $params['keyword'];
             $reference_manager = $params['reference_manager'];
@@ -953,6 +953,10 @@ class trackerPlugin extends Plugin {
 
             $params['reference'] = $reference;
         }
+    }
+
+    private function isArtifactReferenceInMultipleTrackerServicesContext($keyword) {
+        return (TrackerV3::instance()->available() && ($keyword === 'art' || $keyword === 'artifact'));
     }
 
     /**
