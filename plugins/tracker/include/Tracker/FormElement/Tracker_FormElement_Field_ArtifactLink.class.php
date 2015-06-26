@@ -1529,7 +1529,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     protected function getTrackerReferenceManager() {
-        return new Tracker_ReferenceManager(ReferenceManager::instance());
+        return new Tracker_ReferenceManager(
+            ReferenceManager::instance(),
+            Tracker_ArtifactFactory::instance()
+        );
     }
 
     /**

@@ -430,29 +430,14 @@ class TrackerFactory {
      * @return void
      */
     protected function postCreateActions(Tracker $tracker) {
-        // Create corresponding reference
-        $ref = new Reference(
-                // no ID yet
-                0,
-                // keyword
-                strtolower($tracker->getItemName()),
-                // description
-                $GLOBALS['Language']->getText('project_reference','reference_art_desc_key') .' - '. $tracker->getName(),
-                // link
-                TRACKER_BASE_URL.'/?aid=$1&group_id=$group_id',
-                // scope is 'project'
-                'P',
-                // service short name
-                'plugin_tracker',
-                // nature
-                Tracker_Artifact::REFERENCE_NATURE,
-                // is_used
-                '1',
-                // project id
-                $tracker->getGroupId()
+        $keyword   = strtolower($tracker->getItemName());
+        $reference = new Tracker_Reference(
+            $tracker,
+            $keyword
         );
+
         // Force reference creation because default trackers use reserved keywords
-        $this->getReferenceManager()->createReference($ref, true);
+        $this->getReferenceManager()->createReference($reference, true);
     }
 
     /**

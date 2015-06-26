@@ -27,6 +27,7 @@ require_once 'autoload.php';
 class trackerPlugin extends Plugin {
 
     const EMAILGATEWAY_USERNAME = 'forge__artifacts';
+    const SERVICE_SHORTNAME     = 'plugin_tracker';
 
     public function __construct($id) {
         parent::__construct($id);
@@ -78,7 +79,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
         $this->addHook(Event::SITE_ADMIN_CONFIGURATION_TRACKER);
         $this->addHook(Event::EXPORT_XML_PROJECT);
-
+        $this->addHook(Event::GET_REFERENCE);
     }
 
     public function getHooksAndCallbacks() {
@@ -169,7 +170,7 @@ class trackerPlugin extends Plugin {
     }
 
     public function getServiceShortname() {
-        return 'plugin_tracker';
+        return self::SERVICE_SHORTNAME;
     }
 
     public function combined_scripts($params) {
@@ -935,5 +936,32 @@ class trackerPlugin extends Plugin {
 
         $this->getTrackerXmlExport($can_bypass_threshold)
             ->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user);
+    }
+
+    public function get_reference($params) {
+        if ($params['keyword'] === 'art' || $params['keyword'] === 'artifact') {
+            $artifact_id       = $params['value'];
+            $keyword           = $params['keyword'];
+            $reference_manager = $params['reference_manager'];
+
+            $tracker_reference_manager = $this->getTrackerReferenceManager($reference_manager);
+
+            $reference = $tracker_reference_manager->getReference(
+                $keyword,
+                $artifact_id
+            );
+
+            $params['reference'] = $reference;
+        }
+    }
+
+    /**
+     * @return Tracker_ReferenceManager
+     */
+    private function getTrackerReferenceManager(ReferenceManager $reference_manager) {
+        return new Tracker_ReferenceManager(
+            $reference_manager,
+            $this->getArtifactFactory()
+        );
     }
 }
