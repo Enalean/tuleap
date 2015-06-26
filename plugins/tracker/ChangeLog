@@ -1,3 +1,6 @@
+Version 5.651 - Tuleap 8.4
+    * story #8158: if there is no TV3 installed, fallback on usual behaviour
+
 Version 5.650 - Tuleap 8.4
     * story #8158: art and artifact can return a TV5 reference
 
