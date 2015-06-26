@@ -114,7 +114,7 @@ class Tuleap123Template extends BaseTemplate {
                     echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
                 }
             }
- 
+
             echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
             echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
@@ -276,6 +276,8 @@ echo $footerEnd;
 			    urlencode(getStringFromServer('REQUEST_URI'));
 		}
 
+                echo '<div class="tuleap-panel">';
+
 		foreach ( $sidebar as $boxName => $content ) {
 			if ( $content === false ) {
 				continue;
@@ -293,6 +295,8 @@ echo $footerEnd;
 				$this->customBox( $boxName, $content );
 			}
 		}
+
+                echo '</div>';
 	}
 
         function searchBox() {

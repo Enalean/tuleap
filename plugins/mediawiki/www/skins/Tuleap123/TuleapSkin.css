@@ -21,3 +21,66 @@ div#content {
 div.toc {
     display: inline-block;
 }
+
+.tuleap-panel .pBody{
+    border: none;
+    background: none;
+}
+
+.tuleap-panel div:not(:last-child) {
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAAABCAAAAAAphRnkAAAAJ0lEQVQIW7XFsQEAIAyAMPD/b7uLWz8wS5youFW1UREfiIpH1Q2VBz7fGPS1dOGeAAAAAElFTkSuQmCC");
+    padding-bottom: 9px;
+}
+
+.tuleap-panel div:not(:first-child) {
+    padding-top: 3px;
+}
+
+.tuleap-panel .pBody ul{
+    list-style: none;
+}
+
+.portlet h5 {
+    font-size: 100%;
+    text-transform: none;
+}
+
+body {
+    background: #F6F6F6;
+}
+
+#p-cactions li a {
+    background-color: #F6F6F6;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#p-cactions li a:hover {
+    background-color: #F6F6F6;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#p-cactions li {
+    padding: 5px 0px 0.3em;
+    background-color: #F6F6F6;
+}
+
+#p-cactions li.selected a {
+    background-color: #FFF;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#p-cactions li.selected a:hover {
+    background-color: #FFF;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#p-cactions li.selected {
+    padding: 5px 0px 0.3em;
+    background-color: #FFF;
+}
