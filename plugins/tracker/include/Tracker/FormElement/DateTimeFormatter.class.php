@@ -36,7 +36,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
                     'error',
                     $GLOBALS['Language']->getText(
                         'plugin_tracker_common_artifact',
-                        'error_date_value', array($this->field->getLabel())
+                        'error_datetime_value', array($this->field->getLabel(), $this->getUserDateFormatPreference())
                     )
                 );
             }
@@ -45,9 +45,28 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return $is_valid;
     }
 
+    private function getUserDateFormatPreference() {
+        $user_preference = UserManager::instance()->getCurrentUser()->getPreference('user_csv_dateformat');
+        $format          = '';
+
+        switch ($user_preference) {
+            case 'month_day_year':
+                $format = 'mm/dd/yyyy';
+                break;
+            case 'day_month_year':
+                $format = 'dd/mm/yyyy';
+                break;
+            default:
+                $format = 'dd/mm/yyyy';
+                break;
+        }
+
+        return $format;
+    }
+
     public function getFieldDataForCSVPreview(array $date_explode) {
         return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2]
-            . ' ' . $date_explode[3].':'.$date_explode[4].':'.$date_explode[5];
+            . ' ' . $date_explode[3].':'.$date_explode[4];
     }
 
     public function formatDate($timestamp) {
