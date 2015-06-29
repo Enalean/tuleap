@@ -1180,6 +1180,9 @@ plugin_tracker_formelement_admin	radiobtn	Radio button
 plugin_tracker_formelement_admin	radiobtn_desc	Radio button
 plugin_tracker_formelement_admin	alpha_ranking_updated	Alpha Ranking updated
 plugin_tracker_formelement_admin	description_placeholder	Enter description…
+plugin_tracker_formelement_admin	lastmodifiedby_label	Last Updated By
+plugin_tracker_formelement_admin	lastmodifiedby_description	The last person to update the artifact
+plugin_tracker_formelement_admin	lastmodifiedby_help	The field is automatically set to the last person who modified the artifact
 
 
 plugin_tracker_formelement_property	hint	Hint

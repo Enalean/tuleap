@@ -279,6 +279,24 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                 ORDER BY $order_by_sql
                         )";
                         break;
+                    case 'artifact_modifiers':
+                        $display_name_sql = $user_helper->getDisplayNameSQLQuery();
+                        $order_by_sql = $user_helper->getDisplayNameSQLOrder();
+                        if ($keyword) {
+                            $keyword = $da->quoteSmart('%'. $keyword .'%');
+                        }
+                        $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
+
+                        $sql[] = "(
+                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
+                                FROM tracker_artifact AS a
+                                INNER JOIN tracker_changeset c ON a.id = c.artifact_id
+                                INNER JOIN user
+                                    ON ( user.user_id = c.submitted_by AND a.tracker_id = $tracker_id )
+                                $keyword_sql
+                                ORDER BY $order_by_sql
+                        )";
+                        break;
                     default:
                         if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
                             if (strlen($matches[1]) > 2) {

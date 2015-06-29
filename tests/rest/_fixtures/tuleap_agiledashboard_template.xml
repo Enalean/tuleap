@@ -33,6 +33,14 @@
               <name>submitted_on</name>
               <label>Submitted On</label>
             </formElement>
+            <formElement type="luby" ID="F6414" rank="1">
+              <name>last_updated_by</name>
+              <label>Last Updated By</label>
+            </formElement>
+            <formElement type="lud" ID="F6415" rank="2">
+              <name>last_update_date</name>
+              <label>Last Update Date</label>
+            </formElement>
           </formElements>
         </formElement>
         <formElement type="fieldset" ID="F7" rank="70">
@@ -304,6 +312,8 @@
         <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F5" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F6" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F6414" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F6415" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

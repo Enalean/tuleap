@@ -76,7 +76,7 @@
         }
 
         function cardFieldIsUser(type) {
-            return type == 'subby';
+            return type == 'subby' || type == 'luby';
         }
 
         function getCardFieldListValues(values, filter_terms) {
@@ -131,9 +131,19 @@
         }
 
         function getCardFieldUserValue(value, filter_terms) {
-            var avatar       = '<div class="avatar"><img src="' + value.avatar_url + '" /></div> ',
-                display_name = highlight(value.display_name, filter_terms),
+            var avatar,
+                display_name,
+                link;
+
+            if (value.user_url === null) {
+                avatar       = '<div class="avatar"> </div> ';
+                display_name = highlight(value.display_name, filter_terms);
+                link         = avatar + display_name;
+            } else {
+                avatar       = '<div class="avatar"><img src="' + value.avatar_url + '" /></div> ';
+                display_name = highlight(value.display_name, filter_terms);
                 link         = '<a data-nodrag="true" href="' + value.user_url +'">'+ avatar + display_name +'</a>';
+            }
 
             return $sce.trustAsHtml('<div class="user">' + link +'</div>');
         }

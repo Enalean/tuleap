@@ -89,9 +89,9 @@ class ArtifactTest extends RestBase {
     }
 
     public function testPOSTArtifact() {
-        $xml = "<request><tracker><id>".REST_TestDataBuilder::RELEASES_TRACKER_ID."</id></tracker><values><item><field_id>132</field_id><value>Test Release</value></item><item><field_id>134</field_id><bind_value_ids><item>126</item></bind_value_ids></item></values></request>";
+        $xml = "<request><tracker><id>".REST_TestDataBuilder::RELEASES_TRACKER_ID."</id></tracker><values><item><field_id>134</field_id><value>Test Release</value></item><item><field_id>136</field_id><bind_value_ids><item>126</item></bind_value_ids></item></values></request>";
 
-        $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
+            $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
         $this->assertEquals($response->getStatusCode(), 200);
         $artifact_xml = $response->xml();
@@ -107,7 +107,7 @@ class ArtifactTest extends RestBase {
      */
     public function testPUTArtifact($artifact_id) {
         $new_value = 'Test Release Updated';
-        $xml       = "<request><tracker><id>".REST_TestDataBuilder::RELEASES_TRACKER_ID."</id></tracker><values><item><field_id>132</field_id><value>".$new_value."</value></item></values></request>";
+        $xml       = "<request><tracker><id>".REST_TestDataBuilder::RELEASES_TRACKER_ID."</id></tracker><values><item><field_id>134</field_id><value>".$new_value."</value></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->put('artifacts/'. $artifact_id, null, $xml));
 

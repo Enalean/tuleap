@@ -39,6 +39,7 @@ interface Tracker_FormElement_FieldVisitor {
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field);
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field);
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field);
+    public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field);
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field);
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field);
     public function visitBurndown(Tracker_FormElement_Field_Burndown $field);

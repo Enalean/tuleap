@@ -117,6 +117,9 @@ describe('InPropertiesItemFilter', function() {
         expect(in_properties_filter([{id: null, label: null, card_fields: [
             { type: 'subby', value: { display_name: 'Mr Toto'}}
         ]}], 'toto').length).toBe(1);
+        expect(in_properties_filter([{id: null, label: null, card_fields: [
+            { type: 'luby', value: { display_name: 'Mr Pototo'}}
+        ]}], 'toto').length).toBe(1);
         ['sb', 'rb', 'cb', 'msb', 'tbl', 'shared'].forEach(function (list_type) {
           expect(in_properties_filter([{id: null, label: null, card_fields: [
               { type: list_type, values: [{ label: 'Reopen'}]}

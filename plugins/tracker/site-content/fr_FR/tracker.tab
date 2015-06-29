@@ -1180,6 +1180,9 @@ plugin_tracker_formelement_admin	radiobtn	Bouton radio
 plugin_tracker_formelement_admin	radiobtn_desc	Bouton radio
 plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
 plugin_tracker_formelement_admin	description_placeholder	Entrez la description…
+plugin_tracker_formelement_admin	lastmodifiedby_label	Dernière Modification Par
+plugin_tracker_formelement_admin	lastmodifiedby_description	La dernière personne à avoir modifié l'artifact
+plugin_tracker_formelement_admin	lastmodifiedby_help	Le champ est automatiquement renseigné avec l'utilisateur qui a mis à jour l'artéfact en dernier
 
 plugin_tracker_formelement_property	hint	Indication
 plugin_tracker_formelement_property	default_value_type	Valeur par défaut
