@@ -2,6 +2,7 @@ Version 8.4 (Not Released Yet)
 
 	== Plugins ==
 	* tracker: 5.652
+	* mediawiki: 0.71
 
 	== Security ==
 	* request #7999: Disallow SSLv3 and weak ciphers in the default Apache configuration
