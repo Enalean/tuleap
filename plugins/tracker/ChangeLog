@@ -1,3 +1,6 @@
+Version 5.652 - Tuleap 8.4
+    * request #8178: Can't import datetime fields in trackers
+
 Version 5.651 - Tuleap 8.4
     * story #8158: if there is no TV3 installed, fallback on usual behaviour
 

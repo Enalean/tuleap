@@ -1,7 +1,7 @@
 Version 8.4 (Not Released Yet)
 
 	== Plugins ==
-	* tracker: 5.651
+	* tracker: 5.652
 
 	== Security ==
 	* request #7999: Disallow SSLv3 and weak ciphers in the default Apache configuration
