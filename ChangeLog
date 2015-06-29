@@ -1,3 +1,8 @@
+Version 8.3-2 (Monday, June 29th 2015)
+	== Bug Fix ==
+	* request #8179: Comments display issue
+	* request #8174: Description of artifact temporary files in REST shouldn't be mandatory
+
 Version 8.3 (Thursday, June 25th 2015)
 	== Bug Fix ==
 	* request #8137: TV3 field dependencies administration is missing proper highlighting in FlamingParrot
