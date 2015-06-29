@@ -139,7 +139,7 @@ class LDAP {
                 // OpenLdap 2.2.x, we have to check that this ressource is
                 // valid with a bind, If bind success: that's great, if
                 // not, this is a connexion failure.
-                if (ldap_bind($ds, $binddn, $bindpwd)) {
+                if (@ldap_bind($ds, $binddn, $bindpwd)) {
                     return $ds;
                 } else {
                     throw new LDAP_Exception_BindException(ldap_error($ds));
