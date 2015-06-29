@@ -11,6 +11,39 @@
         </div>
     {{/ can_show_options }}
 
+    <h2>{{ access_control_title }}</h2>
+    <p>{{ access_control_intro }}</p>
+    <div>
+        <div class="forge_mw_access_read_control">
+            <label>{{ read }}</label>
+            <select
+                title="{{ read }}"
+                multiple="multiple"
+                name="read_ugroups[]"
+                size="8"
+            >
+                {{# read_ugroups }}
+                <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
+                {{/ read_ugroups }}
+            </select>
+        </div>
+
+        <div class="forge_mw_access_write_control">
+            <label>{{ write }}</label>
+            <select
+                title="{{ write }}"
+                multiple="multiple"
+                name="write_ugroups[]"
+                size="8"
+            >
+                {{# write_ugroups }}
+                <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
+                {{/ write_ugroups }}
+            </select>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
     <h2>{{ title }}</h2>
     <div class="forge_mw_help_block">
         <p>{{ help_intro }}</p>

@@ -6,6 +6,11 @@ plugin_mediawiki	compatibility_view_text	Activer cette option si vous souhaitez 
 plugin_mediawiki	title	Mediawiki Plugin
 plugin_mediawiki	descriptor_description	Plugin qui implémente le support de Mediawiki
 plugin_mediawiki	descriptor_name	Plugin Mediawiki
+plugin_mediawiki	access_control_title	Permissions
+plugin_mediawiki	access_control_intro	Cette section permet de définir les groupes d'utilisateurs qui peuvent lire et/ou écrire du contenu dans ce Mediawiki.
+
+plugin_mediawiki	read	Lecture
+plugin_mediawiki	write	Ecriture
 
 plugin_mediawiki	group_mapping_title	Gestion des groupes Mediawiki
 plugin_mediawiki	group_mapping_help_intro	Cette section permet de définir les associations entre les groupes $1 et MediaWiki

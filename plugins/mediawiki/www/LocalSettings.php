@@ -45,6 +45,31 @@ require_once 'common/project/Group.class.php';
 require_once __DIR__.'/../include/MediawikiDao.class.php';
 require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
 require_once __DIR__.'/../include/MediawikiSiteAdminResourceRestrictor.php';
+require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
+
+$manager = new MediawikiManager(new MediawikiDao());
+
+$forbidden_permissions = array(
+    'editmyusercss',
+    'editmyuserjs',
+    'viewmywatchlist',
+    'editmywatchlist',
+    'viewmyprivateinfo',
+    'editmyprivateinfo',
+    'editmyoptions'
+);
+
+$read_permissions = array(
+    'read',
+);
+
+$write_permissions = array(
+    'edit',
+    'createpage',
+    'move',
+    'createtalk',
+    'writeapi'
+);
 
 //Trust Mediawiki security
 $xml_security = new XML_Security();
@@ -251,23 +276,89 @@ function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user,
     return $mediawiki_user;
 }
 
-function customizeMediawikiGroupsRights(array $wgGroupPermissions) {
+function customizeMediawikiGroupsRights(
+    array $wgGroupPermissions,
+    MediawikiManager $manager,
+    $fusionforgeproject,
+    array $forbidden_permissions,
+    array $read_permissions,
+    array $write_permissions
+) {
+    $tuleap_user = session_get_user();
+
+    $wgGroupPermissions = removeUnwantedRights($wgGroupPermissions, $forbidden_permissions);
+    $wgGroupPermissions = removeAllGroupsReadWriteRights($wgGroupPermissions, $read_permissions, $write_permissions);
+    $wgGroupPermissions = addReadPermissionForUser(
+        $tuleap_user,
+        $manager,
+        $fusionforgeproject,
+        $wgGroupPermissions,
+        $read_permissions
+    );
+    $wgGroupPermissions = addWritePermissionForUser(
+        $tuleap_user,
+        $manager,
+        $fusionforgeproject,
+        $wgGroupPermissions,
+        $write_permissions
+    );
+
+    return $wgGroupPermissions;
+}
+
+function addReadPermissionForUser(PFUser $tuleap_user, MediawikiManager $manager, $fusionforgeproject, array $wgGroupPermissions, array $read_permissions) {
+    $group = group_get_object_by_name($fusionforgeproject);
+
+    if (! $manager->userCanRead($tuleap_user, $group)) {
+        return $wgGroupPermissions;
+    }
+
+    foreach ($read_permissions as $read_permission) {
+        $wgGroupPermissions['*'][$read_permission] = true;
+    }
+
+    return $wgGroupPermissions;
+}
+
+function addWritePermissionForUser(PFUser $tuleap_user, MediawikiManager $manager, $fusionforgeproject, array $wgGroupPermissions, array $write_permissions) {
+    $group = group_get_object_by_name($fusionforgeproject);
+
+    if (! $manager->userCanWrite($tuleap_user, $group)) {
+        return $wgGroupPermissions;
+    }
+
+    foreach ($write_permissions as $write_permission) {
+        $wgGroupPermissions['*'][$write_permission] = true;
+    }
+
+    return $wgGroupPermissions;
+}
+
+function removeAllGroupsReadWriteRights(array $wgGroupPermissions, array $read_permissions, array $write_permissions) {
+    $permissions = array_merge($read_permissions, $write_permissions);
+
+    foreach ($permissions as $permission) {
+        $wgGroupPermissions['*'][$permission]          = false;
+        $wgGroupPermissions['user'][$permission]       = false;
+        $wgGroupPermissions['bot'][$permission]        = false;
+        $wgGroupPermissions['bureaucrat'][$permission] = false;
+        $wgGroupPermissions['sysop'][$permission]      = false;
+    }
+
+    return $wgGroupPermissions;
+}
+
+function removeUnwantedRights(array $wgGroupPermissions, array $forbidden_permissions) {
     $wgGroupPermissions['bureaucrat']['userrights'] = false;
     $wgGroupPermissions['*']['createaccount']       = false;
 
-    // In Tuleap it makes no sense to allow anonymous to do anything but READ
-    // http://www.mediawiki.org/wiki/Manual:User_rights
-    $wgGroupPermissions['*']['edit'] = false;
-    $wgGroupPermissions['*']['createpage'] = false;
-    $wgGroupPermissions['*']['createtalk'] = false;
-    $wgGroupPermissions['*']['writeapi'] = false;
-    $wgGroupPermissions['*']['editmyusercss'] = false;
-    $wgGroupPermissions['*']['editmyuserjs'] = false;
-    $wgGroupPermissions['*']['viewmywatchlist'] = false;
-    $wgGroupPermissions['*']['editmywatchlist'] = false;
-    $wgGroupPermissions['*']['viewmyprivateinfo'] = false;
-    $wgGroupPermissions['*']['editmyprivateinfo'] = false;
-    $wgGroupPermissions['*']['editmyoptions'] = false;
+    foreach ($forbidden_permissions as $forbidden_permission) {
+        $wgGroupPermissions['*'][$forbidden_permission]          = false;
+        $wgGroupPermissions['user'][$forbidden_permission]       = false;
+        $wgGroupPermissions['bot'][$forbidden_permission]        = false;
+        $wgGroupPermissions['bureaucrat'][$forbidden_permission] = false;
+        $wgGroupPermissions['sysop'][$forbidden_permission]      = false;
+    }
 
     return $wgGroupPermissions;
 }
@@ -366,7 +457,14 @@ if (! $is_tuleap_mediawiki_123) {
     }
 }
 
-$wgGroupPermissions = customizeMediawikiGroupsRights($wgGroupPermissions);
+$wgGroupPermissions = customizeMediawikiGroupsRights(
+    $wgGroupPermissions,
+    $manager,
+    $fusionforgeproject,
+    $forbidden_permissions,
+    $read_permissions,
+    $write_permissions
+);
 
 $wgFavicon     = '/images/icon.png' ;
 $wgBreakFrames = false ;
@@ -472,9 +570,6 @@ $wgUrlProtocols = array(
     'geo:', // urls define geo locations, they're useful in Microdata/RDFa and for coordinates
     '//', // for protocol-relative URLs
 );
-
-require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
-$manager = new MediawikiManager(new MediawikiDao());
 
 if ($manager->isCompatibilityViewEnabled($group)) {
     // WikiEditor Extension inclusion

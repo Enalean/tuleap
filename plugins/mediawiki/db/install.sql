@@ -152,3 +152,11 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_site_restricted_features (
     project_id int(11) NOT NULL,
     PRIMARY KEY (feature, project_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_mediawiki_access_control (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    project_id INT(11) NOT NULL,
+    access VARCHAR(30),
+    ugroup_id INT(11) NOT NULL,
+    INDEX plugin_mediawiki_access_control_idx(project_id, access)
+) ENGINE=InnoDB;

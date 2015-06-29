@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,31 @@ require_once 'MediawikiGroupPresenter.class.php';
 
 class MediawikiAdminPresenter {
 
+    public  $groups_permissions;
+    public  $read_ugroups;
+    public  $write_ugroups;
+
     private $project;
-    private $groups_permissions;
 
     /** @var Boolean */
     private $is_default_mapping;
 
     private $is_compatibility_view_enabled = true;
 
-    public function __construct(Project $project, array $groups_permissions, $is_default_mapping, array $options) {
+    public function __construct(
+        Project $project,
+        array $groups_permissions,
+        $is_default_mapping,
+        array $options,
+        array $read_ugroups,
+        array $write_ugroups
+    ) {
         $this->project                       = $project;
         $this->groups_permissions            = $groups_permissions;
         $this->is_default_mapping            = $is_default_mapping;
         $this->is_compatibility_view_enabled = $enable_compatibility_view = (bool) isset($options['enable_compatibility_view']) ? $options['enable_compatibility_view'] : 0;
+        $this->read_ugroups                  = $read_ugroups;
+        $this->write_ugroups                 = $write_ugroups;
     }
 
     public function admin_title() {
@@ -81,10 +93,6 @@ class MediawikiAdminPresenter {
         ));
     }
 
-    public function groups_permissions() {
-        return $this->groups_permissions;
-    }
-
     public function submit_label() {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'save_changes');
     }
@@ -99,5 +107,21 @@ class MediawikiAdminPresenter {
 
     public function options_title() {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'options_title');
+    }
+
+    public function access_control_title() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'access_control_title');
+    }
+
+    public function access_control_intro() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'access_control_intro');
+    }
+
+    public function read() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'read');
+    }
+
+    public function write() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'write');
     }
 }
