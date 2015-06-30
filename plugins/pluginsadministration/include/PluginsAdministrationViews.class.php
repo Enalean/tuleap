@@ -49,7 +49,7 @@ class PluginsAdministrationViews extends Views {
             PLUGINSADMINISTRATION_TEMPLATE_DIR
         );
     }
-    
+
     public function header() {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
         $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
@@ -58,7 +58,7 @@ class PluginsAdministrationViews extends Views {
     function footer() {
         $GLOBALS['HTML']->footer(array());
     }
-    
+
     function display($view='') {
         switch ($view) {
         case 'ajax_projects':
@@ -80,7 +80,7 @@ class PluginsAdministrationViews extends Views {
         $output .= $this->_managePriorities();
         echo $output;
     }
-    
+
     function postInstall() {
         $request =& HTTPRequest::instance();
         $name = $request->get('name');
@@ -99,7 +99,7 @@ class PluginsAdministrationViews extends Views {
             }
         }
     }
-    
+
     function confirmInstall() {
         $name = HTTPRequest::instance()->get('name');
         if ($this->isPluginAlreadyInstalled($name)) {
@@ -217,13 +217,13 @@ class PluginsAdministrationViews extends Views {
             } else {
                 $plug_info  =& $plugin->getPluginInfo();
                 $descriptor =& $plug_info->getPluginDescriptor();
-        
+
                 $available = $plugin_manager->isPluginAvailable($plugin);
                 $name = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
-                
+
                 $col_hooks =& $plugin->getHooks();
                 $hooks =& $col_hooks->iterator();
                 $the_hooks = array();
@@ -238,7 +238,7 @@ class PluginsAdministrationViews extends Views {
                     $link_to_hooks[] = '<a href="'.$link_to_plugins.'?selected_hook='.$hook.'" title="'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','display_priorities', array($hook)).'">'.$hook.'</a>';
                 }
                 $link_to_hooks = implode(', ', $link_to_hooks);
-                
+
                 //PropertyDescriptor
                 $descs = $plug_info->getPropertyDescriptors();
                 $keys  = $descs->getKeys();
@@ -258,7 +258,7 @@ class PluginsAdministrationViews extends Views {
                     $props .= '</td></tr>';
                     $iter->next();
                 }
-                
+
                 $output  = '<h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_plugin', array($name)).'</h3>';
                 $output .= '<form action="'. $_SERVER['REQUEST_URI'] .'" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
                 $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties table table-striped table-bordered table-condensed">';
@@ -302,14 +302,14 @@ class PluginsAdministrationViews extends Views {
                 $output .= '</tbody>';
                 $output .= '</table>';
                 $output .= '</form>';
-                
+
                 $readme_file    = $plugin->getReadme();
                 $readme_content = $plugin_manager->fetchFormattedReadme($readme_file);
                 if ($readme_content) {
                     $output .= '<h3>Readme</h3>';
                     $output .= $readme_content;
                 }
-                
+
                 $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';
                 echo $output;
             }
@@ -322,6 +322,12 @@ class PluginsAdministrationViews extends Views {
         $plugin_factory             = PluginFactory::instance();
         $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
         $plugin                     = $plugin_factory->getPluginById($request->get('plugin_id'));
+
+        if ($plugin->getScope() !== Plugin::SCOPE_PROJECT) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'This project cannot be restricted.');
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
+            die();
+        }
 
         $presenter = new PluginsAdministration_ManageAllowedProjectsPresenter(
             $plugin,
@@ -338,29 +344,29 @@ class PluginsAdministrationViews extends Views {
             new RestrictedPluginDao()
         );
     }
-    
+
     var $_plugins;
     var $_priorities;
-    
+
     function _emphasis($name, $enable) {
         if (!$enable) {
             $name = '<span class="pluginsadministration_unavailable">'.$name.'</span>';
         }
         return $name;
     }
-        
+
     function _getHelp($section = '') {
         if (trim($section) !== '' && $section{0} !== '#') {
             $section = '#'.$section;
         }
         return '<a href="javascript:help_window(\''.get_server_url().'/plugins/pluginsadministration/documentation/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$section.'\');">[?]</a>';
     }
-    
+
     function _searchPlugins() {
         if (!$this->_plugins) {
             $this->_plugins    = array();
             $this->_priorities =  array();
-            
+
             $plugin_hook_priority_manager = new PluginHookPriorityManager();
             $plugin_manager               = $this->plugin_manager;
             try {
@@ -381,7 +387,7 @@ class PluginsAdministrationViews extends Views {
                     $name = get_class($plugin);
                 }
                 $dont_touch    = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
-                $dont_restrict = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
+                $dont_restrict = $plugin->getScope() !== Plugin::SCOPE_PROJECT;
 
                 $this->_plugins[] = array(
                     'plugin_id'     => $plugin->getId(),
@@ -423,7 +429,7 @@ class PluginsAdministrationViews extends Views {
             }
         }
     }
-    
+
     function _installedPlugins() {
         usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
 
@@ -493,7 +499,7 @@ class PluginsAdministrationViews extends Views {
         /**/
         return '';
     }
-    
+
     function _managePriorities() {
         $request        =& HTTPRequest::instance();
         $plugin_manager = $this->plugin_manager;
@@ -514,7 +520,7 @@ class PluginsAdministrationViews extends Views {
                     $show_priorities = true;
                 }
             }
-            
+
             if($show_priorities) {
                 $form_name = '_'.mt_rand();
                 $output .= '<form  name="'.$form_name.'" action="?" method="POST" onsubmit="return submitForm(this);">';
@@ -531,12 +537,12 @@ class PluginsAdministrationViews extends Views {
                 $discard_changes = $GLOBALS['Language']->getText('plugin_pluginsadministration','discard_changes');
                 $javascript = '<script type="text/javascript">';
                 $javascript .= <<<END
-                
+
                 function submitForm(form) {
                     form.submit_button.disabled = true;
                     return true;
                 }
-                
+
                 var currentIdLayer = null;
                 function switchBlock(id) {
                     if (currentIdLayer && currentIdLayer != null) {
@@ -556,8 +562,8 @@ class PluginsAdministrationViews extends Views {
                     }
                     return the_element;
                 }
-                
-                function showOrHideBlock(idName, show){ 
+
+                function showOrHideBlock(idName, show){
                     if(document.getElementById) {//NN6,Mozilla,IE5?
                         document.getElementById(idName).style.display = (show?"block":"none");
                     }
@@ -571,18 +577,18 @@ class PluginsAdministrationViews extends Views {
                 function showBlock(idName){
                     showOrHideBlock(idName, true);
                 }
-                function hideBlock(idName){ 
+                function hideBlock(idName){
                     showOrHideBlock(idName, false);
                 }
                 function changeHook(select) {
-                    
+
                     nb = inputs_for_hook[currentIdLayer].length;
                     changes_have_been_made = false;
                     //Search for changes
                     for(i = 0 ; i < nb && !changes_have_been_made ; i++) {
                         element         = getElement(inputs_for_hook[currentIdLayer][i]);
                         default_element = getElement('default_'+inputs_for_hook[currentIdLayer][i]);
-                        
+
                         if (element.value != default_element.value) {
                             changes_have_been_made = true;
                         }
@@ -610,7 +616,7 @@ class PluginsAdministrationViews extends Views {
 END;
                 $javascript .= "document.write('".$GLOBALS['Language']->getText('plugin_pluginsadministration', 'select_hook')." ');";
                 $javascript .= "document.write('<select onchange=\"changeHook(this)\">');";
-                
+
                 $first_hook = $request->get('selected_hook');
                 if ($first_hook !== false && !array_key_exists($first_hook, $hooks)) {
                     $first_hook = false;
@@ -678,12 +684,12 @@ END;
                 $output .= '<div class="pluginsadministration_buttons"><input type="submit" name="submit_button" value="'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'update_priorities').'" /></div>';
                 $output .= '</form>';
                 $output .= '</fieldset>';
-        
+
             }
         }
         return $output;
     }
-    
+
     function _notYetInstalledPlugins() {
         $plugin_manager = $this->plugin_manager;
         $Language       =& $GLOBALS['Language'];
