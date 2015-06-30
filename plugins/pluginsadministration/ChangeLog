@@ -1,3 +1,6 @@
+Version 1.10 - Tuleap 8.4
+    * request #8184: Should not be able to restrict a system plugin
+
 Version 1.9 - Tuleap 8.1
     * request #8023: Infinite loop when Tracker plugin is restricted
 
