@@ -5,6 +5,7 @@ Version 8.4 (Not Released Yet)
 	* mediawiki: 0.71
 	* IM: 1.5.29
 	* pluginsadministration: 1.10
+	* ldap: 3.82
 
 	== Security ==
 	* request #7999: Disallow SSLv3 and weak ciphers in the default Apache configuration

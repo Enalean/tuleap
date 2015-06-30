@@ -1,3 +1,6 @@
+Version 3.82 - Tuleap 8.4
+    * request #8185: Write ldap not working with codendi auth type
+
 Version 3.81 - Tuleap 8.3
     * request #8135: cannot log-in with non-ldap account if ldap plugin activated
 
