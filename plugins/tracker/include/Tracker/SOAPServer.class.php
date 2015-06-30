@@ -254,8 +254,8 @@ class Tracker_SOAPServer {
                 $return[] = array(
                     'tracker_id' => $tracker->getId(),
                     'group_id' => $tracker->getGroupID(),
-                    'name' => SimpleSanitizer::unsanitize($tracker->getName()),
-                    'description' => SimpleSanitizer::unsanitize($tracker->getDescription()),
+                    'name' =>$tracker->getName(),
+                    'description' => $tracker->getDescription(),
                     'item_name' => $tracker->getItemName()
                         /* 'reports_desc' => $reports_desc */
                 );

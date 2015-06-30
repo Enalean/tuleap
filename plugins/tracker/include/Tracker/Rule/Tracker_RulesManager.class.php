@@ -384,7 +384,7 @@ class Tracker_RulesManager {
             $sources = $this->getAllSourceFields(null);
             foreach($sources as $id => $field) {
                 echo '<option value="'. $id .'">';
-                echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML);
+                echo $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
                 echo '</option>';
             }
             echo '</select>';
@@ -406,7 +406,7 @@ class Tracker_RulesManager {
             $sources = $this->getAllTargetFields($source_field_id);
             foreach($sources as $id => $field) {
                 echo '<option value="'. $id .'">';
-                echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML);
+                echo $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
                 echo '</option>';
             }
         }
