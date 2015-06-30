@@ -30,12 +30,17 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
     /** @var Tracker_Artifact_XMLImport_XMLImportHelper */
     private $xml_import_helper;
 
+    /** @var TrackerXmlFieldsMapping */
+    private $xml_fields_mapping;
+
     public function __construct(
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper
+        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
+        TrackerXmlFieldsMapping $xml_fields_mapping
     ) {
-        $this->static_value_dao  = $static_value_dao;
-        $this->xml_import_helper = $xml_import_helper;
+        $this->static_value_dao   = $static_value_dao;
+        $this->xml_import_helper  = $xml_import_helper;
+        $this->xml_fields_mapping = $xml_fields_mapping;
     }
 
     /**
@@ -56,7 +61,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
             }
         } elseif ($bind === self::BIND_UGROUPS) {
             foreach ($field_change as $value) {
-                $data[] = $value;
+                $data[] = $this->getUgroupListDataValue($value);
             }
         } else {
             foreach ($field_change as $value) {
@@ -70,12 +75,18 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
 
     private function getStaticListDataValue(Tracker_FormElement_Field $field, $value) {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
-            return (int) $value;
+            return $this->xml_fields_mapping->getNewValueId((int) $value);
         }
 
         $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
         $row    = $result->getRow();
         return (int) $row['id'];
 
+    }
+
+    private function getUgroupListDataValue($value) {
+        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
+            return $this->xml_fields_mapping->getNewValueId((int) $value);
+        }
     }
 }

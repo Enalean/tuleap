@@ -108,11 +108,17 @@ class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImpo
         $this->archive  = mock('Tracker_Artifact_XMLImport_XMLImportZipArchive');
         stub($this->archive)->getXML()->returns('<?xml version="1.0"?><artifacts />');
         stub($this->archive)->getExtractionPath()->returns($this->extraction_path);
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCallsImportFromXMLWithContentFromArchive() {
         $expected_content = simplexml_load_string('<?xml version="1.0"?><artifacts />');
-        expect($this->importer)->importFromXML($this->tracker, $expected_content, $this->extraction_path)->once();
+        expect($this->importer)->importFromXML(
+            $this->tracker,
+            $expected_content,
+            $this->extraction_path,
+            $this->xml_mapping
+        )->once();
 
         $this->importer->importFromArchive($this->tracker, $this->archive);
     }
@@ -152,12 +158,19 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactOnTracker() {
         expect($this->artifact_creator)->create($this->tracker, '*', '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatesArtifactWithSummaryFieldData() {
@@ -166,26 +179,46 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatedArtifactWithSubmitter() {
         expect($this->artifact_creator)->create('*', '*', $this->john_doe, '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatesArtifactAtDate() {
         $expected_time = strtotime('2014-01-15T10:38:06+01:00');
         expect($this->artifact_creator)->create('*', '*', '*', $expected_time, '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itDoesntNotify() {
         expect($this->artifact_creator)->create('*', '*', '*', '*', false)->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -234,6 +267,8 @@ class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImport
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
         stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesTheComments() {
@@ -241,7 +276,12 @@ class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImport
         expect($this->new_changeset_creator)->create('*', '*', 'Some text', '*', '*', '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->at(0);
         expect($this->new_changeset_creator)->create('*', '*', '<p>Some text</p>', '*', '*', '*', Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->at(1);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -287,6 +327,8 @@ class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XML
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
         stub($this->new_changeset_creator)->create()->returns($this->changeset);
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesTheCommentsWithUpdates() {
@@ -299,7 +341,12 @@ class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XML
             strtotime('2014-01-15T11:23:50+01:00')
         )->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -322,6 +369,8 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itThrowAnExceptionWhenFieldDoesntExist() {
@@ -329,7 +378,12 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
 
         expect($this->logger)->error()->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -356,6 +410,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             mock('Logger'),
             false
         );
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesChangesetAsAnonymousWhenUserDoesntExists() {
@@ -374,7 +430,12 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
 
         expect($this->artifact_creator)->create('*', '*', new isAnonymousUserWithEmailExpectation('jmalko'), '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path);
+       $this->importer->importFromXML(
+            $this->tracker,
+            $xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itLooksForUserIdWhenFormatIsId() {
@@ -396,7 +457,12 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
 
         expect($this->artifact_creator)->create('*', '*', $this->john_doe, '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itLooksForLdapIdWhenFormatIsLdap() {
@@ -418,7 +484,12 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
 
         expect($this->artifact_creator)->create('*', '*', $this->john_doe, '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itLooksForEmailWhenFormatIsEmail() {
@@ -440,7 +511,12 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
 
         expect($this->artifact_creator)->create('*', '*', $this->john_doe, '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -473,13 +549,20 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
         stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesTwoChangesets() {
         expect($this->artifact_creator)->create()->once();
         expect($this->new_changeset_creator)->create()->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatesTheNewChangesetWithSummaryValue() {
@@ -488,19 +571,34 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
         );
         expect($this->new_changeset_creator)->create($this->artifact, $data, '*', '*', '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatesTheNewChangesetWithSubmitter() {
         expect($this->new_changeset_creator)->create($this->artifact, '*', '*', $this->john_doe, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatesTheNewChangesetWithoutNotification() {
         expect($this->new_changeset_creator)->create($this->artifact, '*', '*', '*', '*', false, '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
 
@@ -509,7 +607,12 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
         
         expect($this->new_changeset_creator)->create($this->artifact, '*', '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 
     public function itCreatesTheChangesetsInAscendingDatesEvenWhenChangesetsAreMixedInXML() {
@@ -537,7 +640,12 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
 
         expect($this->new_changeset_creator)->create($this->artifact, '*', '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -572,6 +680,8 @@ class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_X
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesTwoArtifactsOnTracker() {
@@ -579,7 +689,12 @@ class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_X
         expect($this->artifact_creator)->create('*', '*', '*', strtotime('2014-01-15T10:38:06+01:00'), '*')->at(0);
         expect($this->artifact_creator)->create('*', '*', '*', strtotime('2014-01-16T11:38:06+01:00'), '*')->at(1);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
     }
 }
 
@@ -631,6 +746,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
             </artifacts>
         ');
         touch($this->extraction_path.'/34_File33.png');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function tearDown() {
@@ -645,7 +762,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 
     public function itCreatesAChangesetWithOneFileElement() {
@@ -670,7 +787,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -709,6 +826,8 @@ class Tracker_Artifact_XMLImport_AttachmentNoLongerExistsTest extends Tracker_Ar
         stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'attachment')->returns(
             aFileField()->withId($this->file_field_id)->build()
         );
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itSkipsFieldWithoutValidFile() {
@@ -719,7 +838,7 @@ class Tracker_Artifact_XMLImport_AttachmentNoLongerExistsTest extends Tracker_Ar
 
         expect($this->logger)->warn()->count(2);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -763,6 +882,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
         ');
         touch($this->extraction_path.'/34_File33.png');
         touch($this->extraction_path.'/34_File34.pdf');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function tearDown() {
@@ -802,7 +923,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -853,6 +974,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         ');
         touch($this->extraction_path.'/34_File33.png');
         touch($this->extraction_path.'/34_File34.pdf');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function tearDown() {
@@ -901,7 +1024,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         expect($this->artifact_creator)->create('*', $initial_changeset_data, '*', '*', '*')->once();
         expect($this->new_changeset_creator)->create($artifact, $second_changeset_data, '*', '*', '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -938,6 +1061,8 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itDelegatesOpenListComputationToField() {
@@ -945,7 +1070,7 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
         expect($this->open_list_field)->getFieldData('homer')->at(0);
         expect($this->open_list_field)->getFieldData('jeanjean')->at(1);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 
     public function itCreatesArtifactWithCCFieldData() {
@@ -957,7 +1082,7 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -994,6 +1119,8 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactWithPermsFieldData() {
@@ -1005,7 +1132,7 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1041,6 +1168,8 @@ class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBase
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactWithTextData() {
@@ -1052,7 +1181,7 @@ class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBase
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1131,6 +1260,8 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactWithAlphanumFieldData() {
@@ -1145,7 +1276,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
 
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 
      public function itCreatesArtifactWithAlphanumFieldDataAndTimeDisplayedDate() {
@@ -1160,7 +1291,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
 
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 
     public function itDoesntConvertEmptyDateInto70sdate() {
@@ -1182,7 +1313,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1234,6 +1365,8 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactWithSelectboxValue() {
@@ -1243,7 +1376,7 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1293,6 +1426,8 @@ class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifa
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactWithAllMultiSelectboxValue() {
@@ -1301,7 +1436,7 @@ class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifa
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1345,6 +1480,8 @@ class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact
 
         stub($this->user_manager)->getUserByIdentifier('jeanne')->returns($this->jeanne);
         stub($this->user_manager)->getUserByIdentifier('serge')->returns($this->serge);
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesArtifactWithAllMultiSelectboxValue() {
@@ -1356,7 +1493,7 @@ class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1395,6 +1532,8 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
             </artifacts>');
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itCreatesTheLastChangesetEvenWhenTheIntermediateFails() {
@@ -1404,7 +1543,7 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
         expect($this->artifact_creator)->create()->once();
         expect($this->new_changeset_creator)->create()->count(2);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 
     public function itLogsAWarningWhenTheIntermediateFails() {
@@ -1415,7 +1554,7 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
 
         expect($this->logger)->warn(new PatternExpectation("/.*Impossible to create changeset 1: field error$/"), '*')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 
     public function itCreatesTheLastChangesetEvenWhenTheIntermediateThrowsException() {
@@ -1425,7 +1564,7 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
         expect($this->artifact_creator)->create()->once();
         expect($this->new_changeset_creator)->create()->count(2);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1456,6 +1595,8 @@ class Tracker_Artifact_XMLImport_InitialChangesetCreationFailureTest extends Tra
               </artifact>
             </artifacts>');
 
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+
     }
 
     public function itCreatesAFakeFirstChangeSetUponFailure() {
@@ -1466,7 +1607,7 @@ class Tracker_Artifact_XMLImport_InitialChangesetCreationFailureTest extends Tra
         expect($this->artifact_creator)->create()->count(2);
         expect($this->new_changeset_creator)->create()->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
 
@@ -1503,10 +1644,12 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
                 </changeset>
               </artifact>
             </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itIgnoresArtifactLinkChanges() {
         // expect no errors
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }

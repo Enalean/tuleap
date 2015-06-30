@@ -23,4 +23,36 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
     protected function getFieldChangeType() {
         return 'open_list';
     }
+
+    public function export(
+        SimpleXMLElement $artifact_xml,
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $changeset_value
+    ) {
+        $field_change = $this->createFieldChangeNodeInChangesetNode(
+            $changeset_value,
+            $changeset_xml
+        );
+
+        $bind_type = $changeset_value->getField()->getBind()->getType();
+        $field_change->addAttribute('bind', $bind_type);
+
+        $values = $changeset_value->getValue();
+
+        array_walk(
+            $values,
+            array($this, 'appendValueToFieldChangeNode'),
+            $field_change
+        );
+    }
+
+    private function appendValueToFieldChangeNode(
+        $value,
+        $index,
+        SimpleXMLElement $field_xml
+    ) {
+        $value_xml = $field_xml->addChild('value', $value);
+        $value_xml->addAttribute('format', 'id');
+    }
 }

@@ -58,7 +58,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Logger $logger
+        Logger $logger,
+        TrackerXmlFieldsMapping $xml_fields_mapping
     ) {
         $this->formelement_factory  = $formelement_factory;
         $this->tracker              = $tracker;
@@ -80,7 +81,11 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             self::FIELDTYPE_INT      => $alphanum_strategy,
             self::FIELDTYPE_FLOAT    => $alphanum_strategy,
             self::FIELDTYPE_DATE     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate(),
-            self::FIELDTYPE_LIST     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyList($static_value_dao, $xml_import_helper)
+            self::FIELDTYPE_LIST     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyList(
+                $static_value_dao,
+                $xml_import_helper,
+                $xml_fields_mapping
+            )
         );
     }
 

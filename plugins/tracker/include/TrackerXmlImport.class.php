@@ -214,11 +214,13 @@ class TrackerXmlImport {
     private function importArtifactsInNewlyCreatedTracker(Tracker $tracker, SimpleXMLElement $xml_tracker) {
         if (isset($xml_tracker->artifacts)) {
             $extraction_path = '';
+            $xml_mapping     = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xmlFieldsMapping);
 
             $this->xml_import->importFromXML(
                 $tracker,
                 $xml_tracker->artifacts,
-                $extraction_path
+                $extraction_path,
+                $xml_mapping
             );
         }
     }

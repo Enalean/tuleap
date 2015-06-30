@@ -151,7 +151,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     public function itImportTheXMLArtifactWithEmptyExtractionPath() {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
-        expect($this->xml_importer)->importOneArtifactFromXML($this->tracker, '*', '')->once();
+        expect($this->xml_importer)->importOneArtifactFromXML($this->tracker, '*', '', '*')->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
