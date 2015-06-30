@@ -1,3 +1,6 @@
+Version 1.5.29 - Tuleap 8.4
+    * request #7930: No more errors when adding or removing an user from a project with a recent version of Openfire
+
 Version 1.5.28 - Tuleap 8.3
     * story #8059: Openfire can authenticate users on platform that does not store password with MD5
 
