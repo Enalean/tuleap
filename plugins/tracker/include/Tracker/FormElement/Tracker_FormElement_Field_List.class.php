@@ -120,7 +120,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getQuerySelect() {
         return $this->getBind()->getQuerySelect();
     }
-    
+
     /**
      * Get the "select" statement to retrieve field values with the RGB values of their decorator
      * Has no sense for fields other than lists
@@ -140,7 +140,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getQueryFrom() {
         return $this->getBind()->getQueryFrom();
     }
-    
+
 	/**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c
@@ -390,16 +390,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                           $multiple .'>';
         //Any value
         $selected = count($criteria_value) && !in_array('', $criteria_value) ? '' : 'selected="selected"';
-        $html .= '<option value="" '. $selected .'>'. $GLOBALS['Language']->getText('global','any') .'</option>';
+        $html .= '<option value="" '. $selected .' title="'. $GLOBALS['Language']->getText('global','any') .'">'. $GLOBALS['Language']->getText('global','any') .'</option>';
         //None value
         $selected = in_array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
-        $html .= '<option value="'.Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID.'" '. $selected .'>'. $GLOBALS['Language']->getText('global','none') .'</option>';
+        $html .= '<option value="'.Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID.'" '. $selected .' title="'. $GLOBALS['Language']->getText('global','none') .'">'. $GLOBALS['Language']->getText('global','none') .'</option>';
         //Field values
         foreach($this->getBind()->getAllValues() as $id => $value) {
             if (!$value->isHidden()) {
                 $selected = in_array($id, $criteria_value) ? 'selected="selected"' : '';
                 $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                $html .= '<option value="'. $id .'" '. $selected .' style="'. $style .'">';
+                $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $style .'">';
                 $html .= $this->getBind()->formatCriteriaValue($id);
                 $html .= '</option>';
             }
@@ -517,8 +517,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $values = $submitted_values[0][$this->id];
         }
         $selected_values  = $value ? $value->getListValues() : array();
-        return $this->_fetchField('tracker_field_'. $this->id, 
-                'artifact['. $this->id .']', 
+        return $this->_fetchField('tracker_field_'. $this->id,
+                'artifact['. $this->id .']',
                 $selected_values, $values);
     }
 
@@ -561,9 +561,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {        
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $selected_values = $value ? $value->getListValues() : array();        
+        $selected_values = $value ? $value->getListValues() : array();
         $tablo = array();
 
         if (empty($selected_values)) {
@@ -844,7 +844,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         $style    = $this->getBind()->getSelectOptionInlineStyle($id);
         $selected = $is_selected ? 'selected="selected"' : '';
-        return '<option value="'. $id .'" '. $selected .' style="'. $style .'">'. $label .'</option>';
+        return '<option value="'. $id .'" '. $selected .' title="'. $label .'" style="'. $style .'">'. $label .'</option>';
     }
 
     protected function fetchFieldContainerEnd() {
@@ -880,7 +880,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         foreach($this->getBind()->getAllValues() as $id => $value) {
                     if (!$value->isHidden()) {
                         $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                        $html .= '<option value="'. $id .'" style="'. $style .'">';
+                        $html .= '<option value="'. $id .'" title="'. $this->getBind()->formatArtifactValue($id) .'" style="'. $style .'">';
                         $html .= $this->getBind()->formatArtifactValue($id);
                         $html .= '</option>';
                     }
