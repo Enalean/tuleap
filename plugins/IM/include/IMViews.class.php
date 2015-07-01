@@ -337,9 +337,6 @@ class IMViews extends Views {
                         'nickname' => $GLOBALS['Language']->getText('plugin_im', 'muc_logs_user'),
                         'message' => $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message')
                     );
-        
-        $purifier = Codendi_HTMLPurifier::instance();
-        $uh = new UserHelper();
             
         $file_name = 'muc_logs_'.$project->getUnixName();
         header ('Content-Type: text/csv');
@@ -350,9 +347,6 @@ class IMViews extends Views {
         } else {
             
             // Build CSV header
-            foreach($lbl_list as $k => $v) {
-                $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
-            }
             echo build_csv_header($col_list, $lbl_list).$eol;
   
             // Build CSV content
