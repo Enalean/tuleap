@@ -25,7 +25,7 @@ plugin_mediawiki	group_tuleap	$1 groups
 
 plugin_mediawiki	save_changes	Save all changes
 plugin_mediawiki	or_string	or
-plugin_mediawiki	restore_defaults	Restore defaults
+plugin_mediawiki	restore_defaults	Apply defaults
 plugin_mediawiki	options_saved	Changes have been saved.
 plugin_mediawiki	options_restored	Options and groups mapping have been restored.
 
