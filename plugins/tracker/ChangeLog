@@ -1,3 +1,6 @@
+Version 5.653 - Tuleap 8.4
+    * request #7953: Start the removing of the SimpleSanitizer class
+
 Version 5.652 - Tuleap 8.4
     * request #8178: Can't import datetime fields in trackers
 
