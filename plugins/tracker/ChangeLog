@@ -1,3 +1,6 @@
+Version 5.654 - Tuleap 8.4
+    * request #8188: Display complete label on select option hover
+
 Version 5.653 - Tuleap 8.4
     * request #7953: Start the removing of the SimpleSanitizer class
 
