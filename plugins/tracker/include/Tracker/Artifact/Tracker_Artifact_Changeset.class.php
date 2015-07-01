@@ -783,7 +783,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $tracker_name      = $tracker->getItemName();
 
         $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
