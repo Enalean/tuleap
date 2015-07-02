@@ -32,10 +32,9 @@ project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà
 project_admin_editgroupinfo	visibility_section	Accès
 project_admin_editgroupinfo	private_label	privé
 project_admin_editgroupinfo	public_label	publique
-project_admin_editgroupinfo	choose_visbility	Choissez la visibilité du projet
+project_admin_editgroupinfo	choose_visbility	Choissez le groupe d'utilsateurs qui a accès au projet. Les droits d'accès se propagent aux sous groupes de telle façon que si le droit d'accès est donné à un groupe d'utilisateurs tel que les anonymes, tous les sous-groupes tels que les utilisateurs enregistrés auront eux aussi le droit d'accès.
 project_admin_editgroupinfo	unrestricted_label	publique incluant les utilsateurs restreints
-project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b>. <br>Un projet <b>publique</b> est accessible à tous, <b>sauf les utilsateurs restreints</b>. <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet publique à des <b>utilsateurs restreints</b> sans bonne raison.<br />Notez que <b>Publique incluant les utilisateurs restreints</b> ne s'applique qu'à <em>la page sommaire</em> et aux <em>dépôts git</em>.
-project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b> <br>Un projet <b>publique</b> est accessible à tous.
+project_admin_editgroupinfo	restricted_warning	<b>Il est déconseillé d'autoriser l'accès à un projet à des utilsateurs restreints sans raison.</b><br />Notez que <b>$1</b> ne s'applique qu'à <em>la page sommaire</em>, aux <em>dépôts git</em> et à <em>mediawiki</em>.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -1001,9 +1000,10 @@ project_desc_desc	int_prop	Brevets ou propositions d'invention relatifs à ce pr
 #
 project_privacy	private	Privé
 project_privacy	public	Public
-project_privacy	tooltip_private	<p class='project-privacy'>Le niveau de confidentialité du projet est : <big><strong>privé</strong></big><br />Seuls les membres du projets peuvent accèder à son contenu.</p>
-project_privacy	tooltip_public_w_anon	<p class='project-privacy'>Le niveau de confidentialité du projet est : <big><strong>public</strong></big><br />Par défault, son contenu est accessible à tout utilisateur (authentifié ou non).<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
-project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>Le niveau de confidentialité du projet est : <big><strong>public</strong></big><br />Par défault, son contenu est accessible à tout utilisateur authentifié non restreint.<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
+project_privacy	tooltip_private	<p class='project-privacy'>L'accès au projet est permis aux : <big><strong>$1</strong></big><br />Seuls les <em>$1</em> peuvent accèder à son contenu.</p>
+project_privacy	tooltip_public_w_anon	<p class='project-privacy'>L'accès au projet est permis aux : <big><strong>$1</strong></big><br />Par défault, son contenu est accessible à tout utilisateur (authentifié ou non).<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
+project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>L'accès au projet est permis aux : <big><strong>$1</strong></big><br />Par défault, son contenu est accessible à tout utilisateur authentifié non restreint.<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
+project_privacy	tooltip_public_w_restricted	<p class='project-privacy'>L'accès au projet est permis aux : <big><strong>$1</strong></big><br />Par défaut, son contenu est accessible à tout utilisateur authentifié ; les utilisateurs restreints peuvent accéder à certains services.<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
 
 project_service	service_not_used	Le service $1 n'est pas activé
 project	does_not_exist	Le projet n'existe pas

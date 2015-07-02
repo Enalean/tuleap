@@ -26,7 +26,8 @@
             html: true,
             container: 'body',
             trigger: 'hover',
-            delay: {show: 1000, hide: 300}
+            delay: {show: 1000, hide: 300},
+            placement : 'bottom'
         });
     }
 })(jQuery);

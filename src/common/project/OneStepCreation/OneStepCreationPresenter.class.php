@@ -75,16 +75,23 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     private $creation_request;
 
+    /**
+     * @var User_ForgeUserGroupFactory
+     */
+    private $user_group_factory;
+
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
         array $available_licenses,
         array $required_custom_descriptions,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
+        User_ForgeUserGroupFactory $user_group_factory
     ) {
         $this->creation_request                       = $creation_request;
         $this->available_licenses                     = $available_licenses;
         $this->project_manager                        = $project_manager;
         $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
+        $this->user_group_factory                     = $user_group_factory;
     }
 
     /**
@@ -254,11 +261,15 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     }
 
     public function getDescriptionContainerPublicLabel() {
-        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_public_label');
+        if (ForgeConfig::areAnonymousAllowed()) {
+            return $this->user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON)->getName();
+        } else {
+            return $this->user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED)->getName();
+        }
     }
 
     public function getDescriptionContainerPrivateLabel() {
-        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_private_label');
+        return $this->user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS)->getName();
     }
 
     public function getDescriptionContainerProjectLicense() {
