@@ -1484,22 +1484,8 @@ class Tracker_FormElementFactory {
      * @return the id of the newly created FormElement
      */
     public function saveObject($tracker, $form_element, $parent_id) {
-
-        $properties = $form_element->getFlattenPropertiesValues();
-        $form_element_data = array( 'name'          => $form_element->name,
-                                    'label'         => $form_element->label,
-                                    'parent_id'     => $parent_id,
-                                    'description'   => $form_element->description,
-                                    'label'         => $form_element->label,
-                                    'use_it'        => $form_element->use_it,
-                                    'scope'         => $form_element->scope,
-                                    'required'      => $form_element->required,
-                                    'notifications' => $form_element->notifications,
-                                    'rank'          => $form_element->rank,
-                                    'permissions'   => $form_element->getPermissionsByUgroupId(),
-                                    'specific_properties' => $properties
-        );
-        $type = $this->getType($form_element);
+        $form_element_data = $form_element->getFormElementDataForCreation($parent_id);
+        $type              = $this->getType($form_element);
 
         if ($id = $this->createFormElement($tracker, $type, $form_element_data)) {
             $form_element->setId($id);

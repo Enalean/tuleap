@@ -25,6 +25,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
         Tracker_XML_ChildrenCollector $children_collector,
         PFUser $current_user
     ) {
+        $user_xml_exporter  = new UserXMLExporter(UserManager::instance());
+
         $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
@@ -36,7 +38,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter($user_xml_exporter),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
                 $children_collector,
                 $current_user
@@ -44,7 +46,6 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
         $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor);
-        $user_xml_exporter  = new UserXMLExporter(UserManager::instance());
         $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter(
             $values_exporter,
             $user_xml_exporter

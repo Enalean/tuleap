@@ -128,7 +128,7 @@ artifact =
     field_open_list_user =
         attribute type { "open_list" },
         attribute bind { "users" },
-        element value { open_list_content }*
+        element value { open_list_content | user_content }*
 
     field_open_list_ugroup =
         attribute type { "open_list" },

@@ -20,6 +20,15 @@
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter {
 
+    /**
+     * @var UserXMLExporter
+     */
+    private $user_xml_exporter;
+
+    public function __construct(UserXMLExporter $user_xml_exporter) {
+        $this->user_xml_exporter = $user_xml_exporter;
+    }
+
     protected function getFieldChangeType() {
         return 'open_list';
     }
@@ -41,6 +50,11 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
 
         $values = $changeset_value->getValue();
 
+        if (empty($values)) {
+            $field_change->addChild('value');
+            return;
+        }
+
         foreach ($values as $value) {
             if ($this->isValueAnOpenValue($value)) {
                 $open_value_id = substr($value, 1);
@@ -49,23 +63,36 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
 
                 $this->appendOpenValueLabelToFieldChangeNode($label, $field_change);
             } else {
-                $this->appendValueToFieldChangeNode($value, $field_change);
+                $this->appendValue($value, $field_change, $bind_type);
             }
         }
     }
 
-    private function appendValueToFieldChangeNode(
-        $value,
-        SimpleXMLElement $field_xml
-    ) {
+    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type) {
+        if ($bind_type === 'users') {
+            $this->appendUserValueToFieldChangeNode($value, $field_xml);
+        } else {
+            $this->appendValueToFieldChangeNode($value, $field_xml);
+        }
+
+    }
+
+    private function appendUserValueToFieldChangeNode($value, SimpleXMLElement $field_xml) {
+        $user_id = $this->getUserIdFromValue($value);
+
+        $this->user_xml_exporter->exportUserByUserId($user_id, $field_xml, 'value');
+    }
+
+    private function getUserIdFromValue($value) {
+        return (int) substr($value, 1);
+    }
+
+    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml) {
         $value_xml = $field_xml->addChild('value', $value);
         $value_xml->addAttribute('format', 'id');
     }
 
-    private function appendOpenValueLabelToFieldChangeNode(
-        $value,
-        SimpleXMLElement $field_xml
-    ) {
+    private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml) {
         $value_xml = $field_xml->addChild('value', $value);
         $value_xml->addAttribute('format', 'label');
     }

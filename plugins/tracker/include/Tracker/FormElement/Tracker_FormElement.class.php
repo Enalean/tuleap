@@ -156,6 +156,28 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
+     * @return array
+     */
+    public function getFormElementDataForCreation($parent_id) {
+        $form_element_data = array(
+            'name'          => $this->name,
+            'label'         => $this->label,
+            'parent_id'     => $parent_id,
+            'description'   => $this->description,
+            'label'         => $this->label,
+            'use_it'        => $this->use_it,
+            'scope'         => $this->scope,
+            'required'      => $this->required,
+            'notifications' => $this->notifications,
+            'rank'          => $this->rank,
+            'permissions'   => $this->getPermissionsByUgroupId(),
+            'specific_properties' => $this->getFlattenPropertiesValues()
+        );
+
+        return $form_element_data;
+    }
+
+    /**
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
