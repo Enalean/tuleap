@@ -44,4 +44,24 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
     private function getOldValueReferenceFromOldValueId($old_value_id) {
         return Tracker_FormElement_Field_List_Value::XML_ID_PREFIX . $old_value_id;
     }
+
+    public function getNewOpenValueId($old_value_id) {
+        $old_reference = $this->getOldValueReferenceFromOldOpenValueId($old_value_id);
+
+        if (isset($this->xml_mapping[$old_reference])) {
+            $value = $this->xml_mapping[$old_reference];
+
+            return $this->getFormattedOpenValueId($value->getId());
+        }
+
+        throw new TrackerXmlFieldsMapping_ValueNotFoundException();
+    }
+
+    private function getOldValueReferenceFromOldOpenValueId($old_value_id) {
+        return str_replace(Tracker_FormElement_Field_List_BindValue::BIND_PREFIX, Tracker_FormElement_Field_List_Value::XML_ID_PREFIX, $old_value_id);
+    }
+
+    private function getFormattedOpenValueId($value_id) {
+        return Tracker_FormElement_Field_List_BindValue::BIND_PREFIX.$value_id;
+    }
 }

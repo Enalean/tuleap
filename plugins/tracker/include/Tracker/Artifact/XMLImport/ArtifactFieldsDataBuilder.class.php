@@ -75,7 +75,9 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
                 $this->files_importer,
                 $this->logger
             ),
-            self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(),
+            self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(
+                $xml_fields_mapping
+            ),
             self::FIELDTYPE_STRING   => $alphanum_strategy,
             self::FIELDTYPE_TEXT     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyText(),
             self::FIELDTYPE_INT      => $alphanum_strategy,

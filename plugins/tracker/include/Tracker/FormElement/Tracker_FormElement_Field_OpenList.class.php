@@ -343,7 +343,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     
     protected $cache_openvalues = array();
     
-    protected function getOpenValueById($oid) {
+    public function getOpenValueById($oid) {
         if ( ! isset($this->cache_openvalues[$oid]) ) {
             $this->cache_openvalues[$oid] = null;
             if ($row = $this->getOpenValueDao()->searchById($this->getId(), $oid)->getRow()) {

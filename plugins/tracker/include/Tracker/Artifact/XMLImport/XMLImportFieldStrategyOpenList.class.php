@@ -21,6 +21,15 @@
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
     const FORMAT_ID = 'id';
 
+    /** @var TrackerXmlFieldsMapping */
+    private $xml_fields_mapping;
+
+    public function __construct(
+        TrackerXmlFieldsMapping $xml_fields_mapping
+    ) {
+        $this->xml_fields_mapping = $xml_fields_mapping;
+    }
+
     /**
      * Extract Field data from XML input
      *
@@ -40,7 +49,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
 
     private function getFieldChangeId(Tracker_FormElement_Field $field, $value) {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
-            return (string) $value;
+            return $this->xml_fields_mapping->getNewOpenValueId((string) $value);
         }
 
         return $field->getFieldData((string) $value);

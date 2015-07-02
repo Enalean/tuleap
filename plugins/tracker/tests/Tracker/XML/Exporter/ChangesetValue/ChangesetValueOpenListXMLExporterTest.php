@@ -42,8 +42,12 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest 
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $bind = stub('Tracker_FormElement_Field_List_Bind_Users')->getType()->returns('users');
-        $this->field = anOpenListField()->withBind($bind)->withName('CC')->build();
+        $bind       = stub('Tracker_FormElement_Field_List_Bind_Users')->getType()->returns('users');
+        $open_value = stub('Tracker_FormElement_Field_List_OpenValue')->getLabel()->returns('email@tuleap.org');
+
+        $this->field = stub('Tracker_FormElement_Field_OpenList')->getBind()->returns($bind);
+        stub($this->field)->getName()->returns('CC');
+        stub($this->field)->getOpenValueById()->returns($open_value);
 
         $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_OpenList');
         stub($this->changeset_value)->getField()->returns($this->field);
@@ -66,8 +70,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporterTest 
         $field_change = $this->changeset_xml->field_change;
         $this->assertEqual((string)$field_change['type'], 'open_list');
         $this->assertEqual((string)$field_change['bind'], 'users');
-        $this->assertEqual((string)$field_change->value[0], 'o14');
-        $this->assertEqual((string)$field_change->value[0]['format'], 'id');
+        $this->assertEqual((string)$field_change->value[0], 'email@tuleap.org');
+        $this->assertEqual((string)$field_change->value[0]['format'], 'label');
         $this->assertEqual((string)$field_change->value[1], 'b112');
         $this->assertEqual((string)$field_change->value[1]['format'], 'id');
     }

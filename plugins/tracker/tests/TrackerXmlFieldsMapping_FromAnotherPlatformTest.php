@@ -111,3 +111,44 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform_UgroupsTest extends TuleapTest
         $this->xml_fields_mapping->getNewValueId(12345);
     }
 }
+
+class TrackerXmlFieldsMapping_FromAnotherPlatform_OpenList_StaticTest extends TuleapTestCase {
+
+    /** @var array */
+    private $xml_mapping;
+
+    /** @var Tracker_FormElement_Field_Selectbox */
+    private $list_field;
+
+    /** @var TrackerXmlMappingDataExtractor */
+    private $xml_fields_mapping;
+
+    public function setUp() {
+        parent::setUp();
+
+        $static_value_01 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(24076);
+        $static_value_02 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(24077);
+
+        $this->list_field = mock('Tracker_FormElement_Field_OpenList');
+
+        $this->xml_mapping = array(
+            "F21840" => $this->list_field,
+            "V24058" => $static_value_01,
+            "V24059" => $static_value_02
+        );
+
+        $this->xml_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xml_mapping);
+    }
+
+    public function itGetsNewValueIdForAStaticList() {
+        $new_value_id = $this->xml_fields_mapping->getNewOpenValueId('b24058');
+
+        $this->assertEqual('b24076', $new_value_id);
+    }
+
+    public function itThrowsAnExceptionIfTheNewValueIsNotFound() {
+        $this->expectException('TrackerXmlFieldsMapping_ValueNotFoundException');
+
+        $this->xml_fields_mapping->getNewValueId('b12345');
+    }
+}
