@@ -147,11 +147,14 @@ class Tracker_Action_CopyArtifact {
 
         $this->children_xml_exporter->exportChildren($xml_artifacts);
 
-        $extraction_path = '';
+        $extraction_path   = '';
+        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+
         $artifact = $this->xml_importer->importOneArtifactFromXML(
             $this->tracker,
             $xml_artifacts->artifact[0],
-            $extraction_path
+            $extraction_path,
+            $xml_field_mapping
         );
 
         if ($artifact) {

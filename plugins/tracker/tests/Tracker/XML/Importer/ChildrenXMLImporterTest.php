@@ -96,6 +96,8 @@ class Tracker_XML_Importer_ChildrenXMLImporterTest extends TuleapTestCase {
 
         $this->another_child_artifact = anArtifact()->withId(1024)->build();
         stub($this->artifact_factory)->getArtifactById(1024)->returns($this->another_child_artifact);
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
     public function itImportsAllArtifactsExceptTheFirstOne() {
@@ -105,7 +107,12 @@ class Tracker_XML_Importer_ChildrenXMLImporterTest extends TuleapTestCase {
                 <artifact id="456" tracker_id="23"></artifact>
             </artifacts>');
 
-        expect($this->xml_importer)->importOneArtifactFromXML($this->tracker, $xml->artifact[1], '/extraction/path')->once();
+        expect($this->xml_importer)->importOneArtifactFromXML(
+            $this->tracker,
+            $xml->artifact[1],
+            '/extraction/path',
+            $this->xml_mapping
+        )->once();
 
         $this->importer->importChildren($this->artifacts_imported_mapping, $xml, '/extraction/path', $this->root_artifact, $this->user);
     }
@@ -224,8 +231,8 @@ class Tracker_XML_Importer_ChildrenXMLImporterTest extends TuleapTestCase {
             </artifacts>'
         );
 
-        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[1], '*')->returns($this->created_artifact);
-        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[2], '*')->returns($this->another_child_artifact);
+        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[1], '*', '*')->returns($this->created_artifact);
+        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[2], '*', '*')->returns($this->another_child_artifact);
 
         stub($this->artifacts_imported_mapping)->get(100)->returns($this->root_artifact->getId());
         stub($this->artifacts_imported_mapping)->get(123)->returns($this->created_artifact->getId());
@@ -279,8 +286,8 @@ class Tracker_XML_Importer_ChildrenXMLImporterTest extends TuleapTestCase {
             </artifacts>'
         );
 
-        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[1], '*')->returns($this->created_artifact);
-        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[2], '*')->returns($this->another_child_artifact);
+        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[1], '*', '*')->returns($this->created_artifact);
+        stub($this->xml_importer)->importOneArtifactFromXML('*', $xml->artifact[2], '*', '*')->returns($this->another_child_artifact);
 
         stub($this->artifacts_imported_mapping)->get(100)->returns($this->root_artifact->getId());
         stub($this->artifacts_imported_mapping)->get(123)->returns($this->created_artifact->getId());

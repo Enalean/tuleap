@@ -70,11 +70,16 @@ class Tracker_XML_Importer_ChildrenXMLImporter {
             if (! $tracker) {
                 throw new Tracker_XML_Importer_TrackerIdNotDefinedException();
             }
+
+            $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+
             $artifact = $this->xml_importer->importOneArtifactFromXML(
                 $tracker,
                 $xml_artifact,
-                $extraction_path
+                $extraction_path,
+                $xml_field_mapping
             );
+
             if ($artifact) {
                 $this->addChildrenFromXML($xml_artifact);
                 $artifacts_imported_mapping->add((int) $xml_artifact['id'], $artifact->getId());

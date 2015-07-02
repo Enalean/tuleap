@@ -217,16 +217,19 @@
     <attribute name="bind">
       <value>static</value>
     </attribute>
-    <zeroOrMore>
-      <element name="value">
-        <optional>
-          <attribute name="format">
-            <value>id</value>
-          </attribute>
-        </optional>
-        <data type="string"/>
-      </element>
-    </zeroOrMore>
+    <choice>
+      <ref name="empty_value"/>
+      <zeroOrMore>
+        <element name="value">
+          <optional>
+            <attribute name="format">
+              <value>id</value>
+            </attribute>
+          </optional>
+          <data type="string"/>
+        </element>
+      </zeroOrMore>
+    </choice>
   </define>
   <define name="field_user_list">
     <attribute name="type">
@@ -248,14 +251,22 @@
     <attribute name="bind">
       <value>ugroups</value>
     </attribute>
-    <zeroOrMore>
-      <element name="value">
-        <attribute name="format">
-          <value>id</value>
-        </attribute>
-        <data type="string"/>
-      </element>
-    </zeroOrMore>
+    <choice>
+      <ref name="empty_value"/>
+      <zeroOrMore>
+        <element name="value">
+          <attribute name="format">
+            <value>id</value>
+          </attribute>
+          <data type="string"/>
+        </element>
+      </zeroOrMore>
+    </choice>
+  </define>
+  <define name="empty_value">
+    <element name="value">
+      <empty/>
+    </element>
   </define>
   <define name="field_open_list_user">
     <attribute name="type">

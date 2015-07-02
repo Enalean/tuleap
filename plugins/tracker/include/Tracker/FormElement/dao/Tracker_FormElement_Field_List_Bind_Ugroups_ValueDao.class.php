@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
@@ -96,7 +97,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
         $field_id     = $this->da->escapeInt($field_id);
         $sql = "SELECT f.id, f.ugroup_id, f.is_hidden
                 FROM tracker_field_list_bind_ugroups_value AS f
-                     INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id)
+                     INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id AND f.field_id = $field_id)
                      INNER JOIN tracker_changeset_value AS c
                      ON ( l.changeset_value_id = c.id
                       AND c.changeset_id = $changeset_id
@@ -106,4 +107,3 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
         return $this->retrieve($sql);
     }
 }
-?>

@@ -78,37 +78,50 @@ class Tracker_Artifact_XMLImport {
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
         $archive->extractFiles();
         $xml = simplexml_load_string($archive->getXML());
-        $extraction_path = $archive->getExtractionPath();
-        $this->importFromXML($tracker, $xml, $extraction_path);
+
+        $extraction_path   = $archive->getExtractionPath();
+        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+
+        $this->importFromXML($tracker, $xml, $extraction_path, $xml_field_mapping);
+
         $archive->cleanUp();
     }
 
     public function importFromFile(Tracker $tracker, $xml_file_path) {
-        $xml_security = new XML_Security();
-        $xml = $xml_security->loadFile($xml_file_path);
-        $xml_file_path = "";
+        $xml_security      = new XML_Security();
+        $xml               = $xml_security->loadFile($xml_file_path);
+        $xml_file_path     = "";
+        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+
         $this->importFromXML(
             $tracker,
             $xml,
-            $xml_file_path
+            $xml_file_path,
+            $xml_field_mapping
         );
     }
 
-    public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element, $extraction_path) {
+    public function importFromXML(
+        Tracker $tracker,
+        SimpleXMLElement $xml_element,
+        $extraction_path,
+        TrackerXmlFieldsMapping $xml_fields_mapping
+    ) {
         $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng'));
         foreach ($xml_element->artifact as $artifact) {
-            $this->importOneArtifactFromXML($tracker, $artifact, $extraction_path);
+            $this->importOneArtifactFromXML($tracker, $artifact, $extraction_path, $xml_fields_mapping);
         }
     }
 
     /**
-     * @param Tracker          $tracker
-     * @param SimpleXMLElement $xml_artifact
-     * @param string           $extraction_path
-     *
      * @return Tracker_Artifact|null The created artifact
      */
-    public function importOneArtifactFromXML(Tracker $tracker, SimpleXMLElement $xml_artifact, $extraction_path) {
+    public function importOneArtifactFromXML(
+        Tracker $tracker,
+        SimpleXMLElement $xml_artifact,
+        $extraction_path,
+        TrackerXmlFieldsMapping $xml_fields_mapping
+    ) {
         try {
             $this->logger->info("Import {$xml_artifact['id']}");
 
@@ -120,7 +133,8 @@ class Tracker_Artifact_XMLImport {
                 $files_importer,
                 $extraction_path,
                 $this->static_value_dao,
-                $this->logger
+                $this->logger,
+                $xml_fields_mapping
             );
 
             $tracker->getWorkflow()->disable();
