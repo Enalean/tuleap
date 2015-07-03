@@ -89,17 +89,17 @@
             }
 
             function getValueRenderedWithColor(value) {
-                var rgb   = 'rgb(' + value.color.r + ', ' + value.color.g + ', ' + value.color.b + ')',
+                var rgb   = 'rgb(' + _.escape(value.color.r) + ', ' + _.escape(value.color.g) + ', ' + _.escape(value.color.b) + ')',
                     color = '<span class="color" style="background: ' + rgb + '"></span>';
 
-                return color + value.label;
+                return color + _.escape(value.label);
             }
 
             return $sce.trustAsHtml(_.map(values, getValueRendered).join(', '));
         }
 
         function getCardFieldTextValue(value) {
-            return $sce.trustAsHtml(value);
+            return $sce.trustAsHtml(_.escape(value));
         }
 
         function getCardFieldFileValue(artifact_id, field_id, file_descriptions) {
@@ -108,7 +108,7 @@
             }
 
             function getFileLink(file) {
-                return '<a data-nodrag="true" href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + file.name + '</a>';
+                return '<a data-nodrag="true" href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + _.escape(file.name) + '</a>';
             }
 
             return $sce.trustAsHtml(_.map(file_descriptions, getFileLink).join(', '));
@@ -116,7 +116,7 @@
 
         function getCardFieldCrossValue(links) {
             function getCrossLink(link) {
-                return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + link.ref + '</a>');
+                return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + _.escape(link.ref) + '</a>');
             }
 
             return $sce.trustAsHtml(_.map(links, getCrossLink).join(', '));
