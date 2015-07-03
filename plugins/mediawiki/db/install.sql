@@ -121,6 +121,11 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_ugroup_mapping (
     mw_group_name ENUM( 'anonymous', 'user', 'bot', 'sysop', 'bureaucrat' ) NOT NULL DEFAULT 'anonymous'
 );
 
+INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name)
+VALUES
+    (100, 4, 'sysop'),
+    (100, 4, 'bureaucrat');
+
 DROP TABLE IF EXISTS plugin_mediawiki_tuleap_mwgroups;
 CREATE TABLE plugin_mediawiki_tuleap_mwgroups (
     mw_group_name ENUM( 'anonymous', 'user', 'bot', 'sysop', 'bureaucrat' ) NOT NULL DEFAULT 'anonymous',
