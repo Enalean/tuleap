@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,24 +35,42 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
             $changeset_xml
         );
 
-        $bind_type = $changeset_value->getField()->getBind()->getType();
+        $field     = $changeset_value->getField();
+        $bind_type = $field->getBind()->getType();
         $field_change->addAttribute('bind', $bind_type);
 
         $values = $changeset_value->getValue();
 
-        array_walk(
-            $values,
-            array($this, 'appendValueToFieldChangeNode'),
-            $field_change
-        );
+        foreach ($values as $value) {
+            if ($this->isValueAnOpenValue($value)) {
+                $open_value_id = substr($value, 1);
+                $open_value    = $field->getOpenValueById($open_value_id);
+                $label         = $open_value->getLabel();
+
+                $this->appendOpenValueLabelToFieldChangeNode($label, $field_change);
+            } else {
+                $this->appendValueToFieldChangeNode($value, $field_change);
+            }
+        }
     }
 
     private function appendValueToFieldChangeNode(
         $value,
-        $index,
         SimpleXMLElement $field_xml
     ) {
         $value_xml = $field_xml->addChild('value', $value);
         $value_xml->addAttribute('format', 'id');
+    }
+
+    private function appendOpenValueLabelToFieldChangeNode(
+        $value,
+        SimpleXMLElement $field_xml
+    ) {
+        $value_xml = $field_xml->addChild('value', $value);
+        $value_xml->addAttribute('format', 'label');
+    }
+
+    private function isValueAnOpenValue($value) {
+        return substr($value, 0, 1) === Tracker_FormElement_Field_List_OpenValue::OPEN_PREFIX;
     }
 }

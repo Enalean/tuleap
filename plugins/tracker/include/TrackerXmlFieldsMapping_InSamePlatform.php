@@ -23,4 +23,8 @@ class TrackerXmlFieldsMapping_InSamePlatform implements TrackerXmlFieldsMapping 
     public function getNewValueId($old_value_id) {
         return $old_value_id;
     }
+
+    public function getNewOpenValueId($old_value_id) {
+        return $old_value_id;
+    }
 }

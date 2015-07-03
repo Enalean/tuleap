@@ -21,4 +21,6 @@
 interface TrackerXmlFieldsMapping {
 
     public function getNewValueId($old_value_id);
+
+    public function getNewOpenValueId($old_value_id);
 }
