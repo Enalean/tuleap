@@ -26,6 +26,7 @@ require_once 'MediawikiInstantiaterException.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 require_once 'MediawikiUserGroupsMapper.class.php';
 require_once 'MediawikiSiteAdminResourceRestrictor.php';
+require_once 'MediawikiManager.class.php';
 
 class MediaWikiInstantiater {
 
@@ -52,15 +53,19 @@ class MediaWikiInstantiater {
     /** @var MediawikiSiteAdminResourceRestrictor */
     private $resource_restrictor;
 
+    /** @var MediawikiManager */
+    private $mediawiki_manager;
+
     /**
      * @param string $project
      */
-    public function __construct(Project $project) {
-        $this->logger           = new BackendLogger();
-        $this->project          = $project;
-        $this->project_name     = $project->getUnixName();
-        $this->project_id       = $project->getID();
-        $this->dao              = new MediawikiDao();
+    public function __construct(Project $project, MediawikiManager $mediawiki_manager) {
+        $this->logger              = new BackendLogger();
+        $this->project             = $project;
+        $this->project_name        = $project->getUnixName();
+        $this->project_id          = $project->getID();
+        $this->dao                 = new MediawikiDao();
+        $this->mediawiki_manager   = $mediawiki_manager;
         $this->resource_restrictor = new MediawikiSiteAdminResourceRestrictor(
             new MediawikiSiteAdminResourceRestrictorDao(),
             ProjectManager::instance()
@@ -79,6 +84,7 @@ class MediaWikiInstantiater {
     public function instantiateFromTemplate(array $ugroup_mapping) {
         if ($this->initMediawiki()) {
             $this->seedUGroupMappingFromTemplate($ugroup_mapping);
+            $this->setReadWritePermissionsFromTemplate($ugroup_mapping);
         }
     }
 
@@ -264,6 +270,30 @@ class MediaWikiInstantiater {
         }
 
         return $values;
+    }
+
+    private function setReadWritePermissionsFromTemplate(array $ugroup_mapping) {
+        $template                = ProjectManager::instance()->getProject($this->project->getTemplate());
+        $template_read_accesses  = $this->mediawiki_manager->getReadAccessControl($template);
+        $template_write_accesses = $this->mediawiki_manager->getWriteAccessControl($template);
+
+        $this->mediawiki_manager->saveReadAccessControl($this->project, $this->getUgroupsForProjectFromMapping($template_read_accesses, $ugroup_mapping));
+        $this->mediawiki_manager->saveWriteAccessControl($this->project, $this->getUgroupsForProjectFromMapping($template_write_accesses, $ugroup_mapping));
+    }
+
+    private function getUgroupsForProjectFromMapping(array $original_ugroups, array $ugroup_mapping) {
+        $ugroups = array();
+
+        foreach ($original_ugroups as $upgroup) {
+            if (isset($ugroup_mapping[$upgroup])) {
+                $ugroups[] = $ugroup_mapping[$upgroup];
+                continue;
+            }
+
+            $ugroups[] = $upgroup;
+        }
+
+        return $ugroups;
     }
 }
 ?>

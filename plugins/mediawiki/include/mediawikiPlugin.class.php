@@ -661,7 +661,7 @@ class MediaWikiPlugin extends Plugin {
 
         include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
-        return new MediaWikiInstantiater($project);
+        return new MediaWikiInstantiater($project, $this->getMediawikiManager());
     }
 
     public function plugin_statistics_service_usage($params) {
