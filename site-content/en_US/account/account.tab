@@ -271,6 +271,7 @@ account_register	realname	Full name
 account_register	realname_directions	&nbsp;
 account_register	email	Email
 account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>
+account_register	email_tooltip	We will send an email at this address to confirm your account.
 account_register	expiry_date	Expiration date
 account_register	expiry_date_directions	<em><strong>Remark:</strong> The account will be suspended when the date is reached. Leave blank if you don't want an expiration date.</em>
 account_register	data_not_parsed	       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.
@@ -279,8 +280,8 @@ account_register	mandatory	All fields are mandatory.
 account_register	siteupdate	Receive Email about Site Updates <span class="label-help">Very low traffic, includes security notices. Highly Recommended.</span>
 account_register	communitymail	Receive additional community mailings. <span style="color:#666">(Low traffic.)</span>
 account_register	purpose	Purpose
-account_register	purpose_directions	<em>Please explain why you are applying for registration on this site</em><br>
-account_register	purpose_directions_admin	<em>You can add a comment on this user registration</em><br>
+account_register	purpose_directions	Please explain why you are applying for registration on this site<br>
+account_register	purpose_directions_admin	You can add a comment on this user registration<br>
 account_register	btn_register	Register
 account_register	btn_activate	Activate
 account_register	btn_next	Next Step

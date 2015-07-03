@@ -24,15 +24,15 @@ if($page == "admin_creation"){
    session_require(array('group'=>'1','admin_flags'=>'A'));
 }
 
-function register_valid($confirm_hash)	{
+function register_valid($confirm_hash, array &$errors)	{
     global $Language;
 
     $request =& HTTPRequest::instance();
 
-
     $vLoginName = new Valid_UserNameFormat('form_loginname');
     $vLoginName->required();
     if (!$request->valid($vLoginName)) {
+        $errors['form_loginname'] = $Language->getText('account_register', 'err_exist');
         return 0;
     }
 
@@ -40,40 +40,48 @@ function register_valid($confirm_hash)	{
     $vRealName->required();
     if (!$request->valid($vRealName)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_realname'));
+        $errors['form_realname'] = $Language->getText('account_register', 'err_realname');
         return 0;
     }
 
     if (!$request->existAndNonEmpty('form_pw')) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
-	return 0;
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
+        $errors['form_pw'] = $Language->getText('account_register', 'err_nopasswd');
+        return 0;
     }
     $tz = $request->get('timezone');
     if (!is_valid_timezone($tz)) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
-	return 0;
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
+        $errors['timezone'] = $Language->getText('account_register', 'err_notz');
+        return 0;
     }
     if (!$request->existAndNonEmpty('form_register_purpose') && ($GLOBALS['sys_user_approval'] && $request->get('page')!="admin_creation")) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
-	return 0;
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
+        $errors['form_register_purpose'] = $Language->getText('account_register', 'err_nopurpose');
+        return 0;
     }
     if (!validate_email($request->get('form_email'))) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
-	return 0;
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
+        $errors['form_email'] = $Language->getText('account_register', 'err_email');
+        return 0;
     }
 
     if ($request->get('page')!="admin_creation" && $request->get('form_pw') != $request->get('form_pw2')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
+        $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
         return 0;
     }
     if (!account_pwvalid($request->get('form_pw'), $errors)) {
         foreach($errors as $e) {
             $GLOBALS['Response']->addFeedback('error', $e);
         }
+        $errors['form_pw'] = 'Error';
         return 0;
     }
     $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
+        $errors['form_expiry'] = $Language->getText('account_register', 'data_not_parsed');
         return 0;
     }
     $vDate = new Valid_String();
@@ -109,59 +117,89 @@ function register_valid($confirm_hash)	{
                           ,UserManager::instance()->getCurrentUser()->getLocale()
                           ,'A',$expiry_date);
 
-
     return $res;
 }
 
+/**
+ * Function to get errors with its key
+ * to display errors for each element
+**/
+function getFieldError($field_key, array $errors) {
+    if(isset($errors[$field_key])) {
+        return $errors[$field_key];
+    }
+    return null;
+}
 
-function display_account_form($register_error)	{
+
+function display_account_form($register_error, array $errors)	{
     global $Language;
 
     $request =& HTTPRequest::instance();
     $purifier =& Codendi_HTMLPurifier::instance();
 
     $page = $request->get('page');
-
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
     $star = '<span class="highlight"><big>*</big></span>';
-    $form_loginname  = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
-    $form_realname   = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
-    $form_email      = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
-    $form_expiry     = $request->exist('form_expiry')?$purifier->purify($request->get('form_expiry')):'';
-    $form_mail_site  = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
-    $form_restricted = ForgeConfig::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
-    $form_send_email = $request->get('form_send_email') == 1;
+    $form_loginname         = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
+    $form_loginname_error   = getFieldError('form_loginname', $errors);
+
+    $form_realname          = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
+    $form_realname_error    = getFieldError('form_realname', $errors);
+
+    $form_email             = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
+    $form_email_error       = getFieldError('form_email', $errors);
+
+    $form_pw                = '';
+    $form_pw_error          = getFieldError('form_pw', $errors);
+
+    $form_expiry            = $request->exist('form_expiry')?$purifier->purify($request->get('form_expiry')):'';
+    $form_expiry_error      = getFieldError('form_expiry', $errors);
+
+    $form_mail_site         = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
+    $form_mail_site_error   = getFieldError('form_mail_site', $errors);
+
+    $form_restricted        = ForgeConfig::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
+    $form_restricted_error  = getFieldError('form_restricted', $errors);
+
+    $form_send_email        = $request->get('form_send_email') == 1;
+    $form_send_email_error  = getFieldError('form_send_email', $errors);
+
     if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
     } else {
         $timezone = false;
     }
+    $timezone_error = getFieldError('timezone', $errors);
 
-    $form_register_purpose = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
+    $form_register_purpose          = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
+    $form_register_purpose_error    = getFieldError('form_register_purpose', $errors);
 
     if ($page == "admin_creation") {
         $prefill = new Account_RegisterAdminPrefillValuesPresenter(
-            $form_loginname,
-            $form_email,
-            $form_realname,
-            $form_register_purpose,
-            $form_mail_site,
-            $timezone,
-            $form_restricted,
-            $form_send_email
+            new Account_RegisterField($form_loginname, $form_loginname_error),
+            new Account_RegisterField($form_email, $form_email_error),
+            new Account_RegisterField($form_pw, $form_pw_error),
+            new Account_RegisterField($form_realname, $form_realname_error),
+            new Account_RegisterField($form_register_purpose, $form_register_purpose_error),
+            new Account_RegisterField($form_mail_site, $form_mail_site_error),
+            new Account_RegisterField($timezone, $timezone_error),
+            new Account_RegisterField($form_restricted, $form_restricted_error),
+            new Account_RegisterField($form_send_email, $form_send_email_error)
         );
         $presenter = new Account_RegisterByAdminPresenter($prefill);
         $template = 'register-admin';
     } else {
         $prefill = new Account_RegisterPrefillValuesPresenter(
-            $form_loginname,
-            $form_email,
-            $form_realname,
-            $form_register_purpose,
-            $form_mail_site,
-            $timezone
+            new Account_RegisterField($form_loginname, $form_loginname_error),
+            new Account_RegisterField($form_email, $form_email_error),
+            new Account_RegisterField($form_pw, $form_pw_error),
+            new Account_RegisterField($form_realname, $form_realname_error),
+            new Account_RegisterField($form_register_purpose, $form_register_purpose_error),
+            new Account_RegisterField($form_mail_site, $form_mail_site_error),
+            new Account_RegisterField($timezone, $timezone_error)
         );
         $presenter = new Account_RegisterByUserPresenter($prefill);
         $template = 'register-user';
@@ -174,14 +212,14 @@ function display_account_form($register_error)	{
 
 $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
+$errors = array();
 if ($request->isPost() && $request->exist('Register')) {
-
 
     $page = $request->get('page');
 
     $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
 
-    if ($new_userid = register_valid($confirm_hash)) {
+    if ($new_userid = register_valid($confirm_hash, $errors)) {
 
         $user_name = user_getname($new_userid);
         $content = '';
@@ -267,7 +305,7 @@ $HTML->header(array('title'=>$Language->getText('account_register', 'title'), 'b
 
 <?php
 $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
-display_account_form($reg_err);
+display_account_form($reg_err, $errors);
 ?>
 
 </div>

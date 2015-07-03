@@ -22,6 +22,7 @@ class Account_RegisterPresenter {
     public $prefill_values;
     public $login;
     public $email;
+    public $email_tooltip;
     public $realname;
     public $siteupdate;
     public $purpose;
@@ -38,6 +39,7 @@ class Account_RegisterPresenter {
         $this->prefill_values         = $prefill_values;
         $this->login                  = $GLOBALS['Language']->getText('account_register', 'login');
         $this->email                  = $GLOBALS['Language']->getText('account_register', 'email');
+        $this->email_tooltip          = $GLOBALS['Language']->getText('account_register', 'email_tooltip');
         $this->realname               = $GLOBALS['Language']->getText('account_register', 'realname');
         $this->siteupdate             = $GLOBALS['Language']->getText('account_register', 'siteupdate');
         $this->purpose                = $GLOBALS['Language']->getText('account_register', 'purpose');

@@ -1,6 +1,9 @@
 {{# should_display_purpose }}
 <div class="fields">
-    <textarea wrap="virtual" placeholder="{{ purpose }}" rows="5" id="form_register_purpose" name="form_register_purpose">{{ form_register_purpose }}</textarea>
+    {{# form_register_purpose }}
+        <textarea wrap="virtual" placeholder="{{ purpose }}" rows="5" id="form_register_purpose" name="form_register_purpose">{{ value }}</textarea>
+    {{/ form_register_purpose }}
+
     <div id="form_register_purpose-tooltip" style="display: none;">{{{ purpose_directions }}}</div>
 </div>
 {{/ should_display_purpose }}

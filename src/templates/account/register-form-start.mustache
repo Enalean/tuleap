@@ -4,8 +4,33 @@
     <form action="{{ form_url }}" name="new_user" method="post">
         <div class="fields">
             {{# prefill_values }}
-            <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ form_loginname }}" required="required" />
-            <input type="email" name="form_email" placeholder="{{ email }} *" value="{{ form_email }}" required="required" data-email-suggestion="register-email-suggestion" />
+                {{# form_loginname }}
+                    {{# has_error }}
+                    <div class="control-group error">
+                        <div class="controls">
+                    {{/has_error }}
+                            <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ value }}" required="required" />
+                    {{# has_error }}
+                            <span class="help-inline">{{ error }}</span>
+                        </div>
+                    </div>
+                    {{/has_error }}
+                {{/ form_loginname }}
+
+                {{# form_email }}
+                    {{# has_error }}
+                        <div class="control-group error">
+                            <div class="controls">
+                    {{/has_error }}
+                                <input type="email" id="form_email" name="form_email" placeholder="{{ email }} *" value="{{ value }}" required="required" data-email-suggestion="register-email-suggestion" />
+                    {{# has_error }}
+                                <span class="help-inline">{{ error }}</span>
+                            </div>
+                        </div>
+                    {{/has_error }}
+                {{/ form_email }}
+
+                {{> register-choose-email }}
             {{/ prefill_values }}
             <div class="email-suggestion" id="register-email-suggestion"></div>
         </div>

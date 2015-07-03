@@ -1,14 +1,36 @@
 {{> register-form-start }}
 
+    {{# prefill_values }}
     <div class="fields">
-        <input type="text" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
-        <script type="text/javascript" src="/scripts/user.js"></script>
+        {{# form_pw }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <input type="text" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
+                        <script type="text/javascript" src="/scripts/user.js"></script>
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_pw }}
         {{> register-choose-password }}
     </div>
 
-    {{# prefill_values }}
     <div class="fields">
-        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ form_realname }}" required="required" />
+        {{# form_realname }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/ has_error }}
+                        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ value }}" required="required" />
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_realname }}
 
         <div class="datetimepicker input-prepend">
             <span class="add-on">
@@ -20,26 +42,66 @@
             {{{ expiry_date_directions }}}
         </div>
 
-        {{# timezone_selector }}
-            {{> timezone }}
-        {{/ timezone_selector }}
+        {{# form_timezone }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        {{# timezone_selector }}
+                            {{> timezone }}
+                        {{/ timezone_selector }}
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_timezone }}
     </div>
 
     <div class="fields">
-        <label class="checkbox">
-            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }}checked="checked"{{/ form_mail_site }} />
-            {{{ siteupdate }}}
-        </label>
+        {{# form_mail_site }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <label class="checkbox">
+                            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }}checked="checked"{{/ form_mail_site }} />
+                            {{{ siteupdate }}}
+                        </label>
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_mail_site }}
 
-        <label class="checkbox">
-            <input type="checkbox" name="form_restricted" value="1" {{# form_restricted }}checked{{/ form_restricted }} />
-            {{ restricted_user }}
-        </label>
+        {{# form_restricted }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <label class="checkbox">
+                            <input type="checkbox" name="form_restricted" value="1" {{# form_restricted }}checked{{/ form_restricted }} />
+                            {{ restricted_user }}
+                        </label>
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_restricted }}
 
-        <label class="checkbox">
-            <input type="checkbox" name="form_send_email" value="1" {{# form_send_email }}checked{{/ form_send_email }}>
-            {{ send_email }}
-        </label>
+        {{# form_restricted }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <label class="checkbox">
+                            <input type="checkbox" name="form_send_email" value="1" {{# form_send_email }}checked{{/ form_send_email }}>
+                            {{ send_email }}
+                        </label>
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_restricted }}
     </div>
 
     {{> register-purpose-directions }}

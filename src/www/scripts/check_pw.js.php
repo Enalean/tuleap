@@ -21,30 +21,50 @@ function password_validator_check(element) {
         onComplete:function(transport) {
             var res = eval('('+transport.responseText+')');
             password_validators.each(function (i) {
-                if (res.include(i)) {
-                    $$('.password_validator_msg_'+i).each(function(element) { $(element).addClassName('password_validator_ko') });
-                    $$('.password_validator_msg_'+i).each(function(element) { $(element).removeClassName('password_validator_ok') });
+                $$('.password_validator_msg_'+i).each(function(element) {
+
+                    var child = element.firstChild;
+
+                    if(res.include(i)) {
+                        $(child).addClassName('icon-remove');
+                        $(child).removeClassName('icon-ok');
+
+                        $(child).addClassName('password_strategy_bad');
+                        $(child).removeClassName('password_strategy_good');
+                    }
+                    else {
+                        $(child).addClassName('icon-ok');
+                        $(child).removeClassName('icon-remove');
+
+                        $(child).addClassName('password_strategy_good');
+                        $(child).removeClassName('password_strategy_bad');
+                    }
+                });
+            });
+            $$('.password_strategy_good_or_bad').each(function(element) {
+                if (res.length) {
+                    $(element).update(password_strategy_messages.bad);
+                    $(element).removeClassName('password_strategy_good');
+                    $(element).addClassName('password_strategy_bad');
                 } else {
-                    $$('.password_validator_msg_'+i).each(function(element) { $(element).addClassName('password_validator_ok') });
-                    $$('.password_validator_msg_'+i).each(function(element) { $(element).removeClassName('password_validator_ko') });
+                    $(element).update(password_strategy_messages.good);
+                    $(element).addClassName('password_strategy_good');
+                    $(element).removeClassName('password_strategy_bad');
                 }
             });
-            if (res.length) {
-                $$('.password_strategy_good_or_bad').each(function(element) { $(element).update(password_strategy_messages.bad) });
-                $$('.password_strategy_good_or_bad').each(function(element) { $(element).removeClassName('password_strategy_good') });
-                $$('.password_strategy_good_or_bad').each(function(element) { $(element).addClassName('password_strategy_bad') });
-            } else {
-                $$('.password_strategy_good_or_bad').each(function(element) { $(element).update(password_strategy_messages.good) });
-                $$('.password_strategy_good_or_bad').each(function(element) { $(element).addClassName('password_strategy_good') });
-                $$('.password_strategy_good_or_bad').each(function(element) { $(element).removeClassName('password_strategy_bad') });
-            }
         }
     });
 }
 
 Event.observe(window, 'load', function() {
     $('form_pw').setAttribute('autocomplete', 'off');
-    password_validator_check($('form_pw'));
-    new Form.Element.Observer('form_pw', 0.2, password_validator_check);
+
+    $('form_pw').on('keyup', function(e){
+       password_validator_check($('form_pw'));
+    });
+
+    $('form_pw').on('focus', function(e){
+       password_validator_check($('form_pw'));
+    });
 });
 

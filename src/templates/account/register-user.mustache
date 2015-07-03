@@ -1,23 +1,67 @@
 {{> register-form-start }}
 
+    {{# prefill_values }}
     <div class="fields">
-        <input type="password" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
-        <input type="password" value="" placeholder="{{ new_password2 }} *" name="form_pw2" required />
+        {{# form_pw }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <input type="password" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
+                        <input type="password" value="" placeholder="{{ new_password2 }} *" name="form_pw2" required />
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_pw }}
         {{> register-choose-password }}
     </div>
 
-    {{# prefill_values }}
     <div class="fields">
-        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ form_realname }}" required="required" />
+        {{# form_realname }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ value }}" required="required" />
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_realname }}
 
-        {{# timezone_selector }}
-            {{> timezone }}
-        {{/ timezone_selector }}
+        {{# form_timezone }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        {{# timezone_selector }}
+                            {{> timezone }}
+                        {{/ timezone_selector }}
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_timezone }}
     </div>
 
     <div class="fields">
         <label class="checkbox">
-            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }}checked="checked"{{/ form_mail_site }} />
+            {{# form_mail_site }}
+                {{# has_error }}
+                    <div class="control-group error">
+                        <div class="controls">
+                {{/has_error }}
+                            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }} checked="checked"{{/ form_mail_site }} />
+                {{# has_error }}
+                            <span class="help-inline">{{ error }}</span>
+                        </div>
+                    </div>
+                {{/has_error }}
+            {{/ form_mail_site }}
+
             {{{ siteupdate }}}
         </label>
     </div>
