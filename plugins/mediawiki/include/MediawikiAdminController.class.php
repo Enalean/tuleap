@@ -30,6 +30,12 @@ class MediawikiAdminController {
     /** @var MediawikiManager */
     private $manager;
 
+    /** @var User_ForgeUserGroupFactory */
+    private $user_group_factory;
+
+    /** @var PermissionsNormalizer */
+    private $permissions_normalizer;
+
     public function __construct() {
         $dao = new MediawikiDao();
         $this->mapper = new MediawikiUserGroupsMapper(
@@ -38,7 +44,11 @@ class MediawikiAdminController {
         );
 
         $this->manager = new MediawikiManager($dao);
-    }
+
+        $user_dao = new UserGroupDao();
+        $this->user_group_factory = new User_ForgeUserGroupFactory($user_dao);
+        $this->permissions_normalizer = new PermissionsNormalizer();
+   }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {
         $this->assertUserIsProjectAdmin($service, $request);
@@ -46,6 +56,9 @@ class MediawikiAdminController {
 
         $project = $request->getProject();
         $options = $this->manager->getOptions($project);
+
+        $read_ugroups  = $this->getReadUGroups($project);
+        $write_ugroups = $this->getWriteUGroups($project);
 
         $service->renderInPage(
             $request,
@@ -55,9 +68,45 @@ class MediawikiAdminController {
                 $project,
                 $this->getMappedGroupPresenter($project),
                 $this->mapper->isDefaultMapping($project),
-                $options
+                $options,
+                $read_ugroups,
+                $write_ugroups
             )
         );
+    }
+
+    private function getReadUGroups(Project $project) {
+        $user_groups  = $this->user_group_factory->getAllForProject($project);
+        $read_ugroups = array();
+
+        $selected_ugroups = $this->manager->getReadAccessControl($project);
+
+        foreach ($user_groups as $ugroup) {
+            $read_ugroups[] = array(
+                'label'    => $ugroup->getName(),
+                'value'    => $ugroup->getId(),
+                'selected' => in_array($ugroup->getId(), $selected_ugroups)
+            );
+        }
+
+        return $read_ugroups;
+    }
+
+    private function getWriteUGroups(Project $project) {
+        $user_groups  = $this->user_group_factory->getAllForProject($project);
+        $write_ugroups = array();
+
+        $selected_ugroups = $this->manager->getWriteAccessControl($project);
+
+        foreach ($user_groups as $ugroup) {
+            $write_ugroups[] = array(
+                'label'    => $ugroup->getName(),
+                'value'    => $ugroup->getId(),
+                'selected' => in_array($ugroup->getId(), $selected_ugroups)
+            );
+        }
+
+        return $write_ugroups;
     }
 
     private function getMappedGroupPresenter(Project $project) {
@@ -118,6 +167,29 @@ class MediawikiAdminController {
             }
 
             $this->manager->saveOptions($project, $options);
+
+            if (! $this->requestIsRestore($request)) {
+
+                $selected_read_ugroup = $request->get('read_ugroups');
+                if ($selected_read_ugroup) {
+                    $override_collection = new PermissionsNormalizerOverrideCollection();
+                    $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds($project, $selected_read_ugroup, $override_collection);
+
+                    if ($this->manager->saveReadAccessControl($project, $normalized_ids)) {
+                        $override_collection->emitFeedback(MediawikiManager::READ_ACCESS);
+                    }
+                }
+
+                $selected_write_ugroup = $request->get('write_ugroups');
+                if ($selected_write_ugroup) {
+                    $override_collection = new PermissionsNormalizerOverrideCollection();
+                    $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds($project, $selected_write_ugroup, $override_collection);
+
+                    if ($this->manager->saveWriteAccessControl($project, $normalized_ids)) {
+                        $override_collection->emitFeedback(MediawikiManager::WRITE_ACCESS);
+                    }
+                }
+            }
 
             if ($this->requestIsRestore($request)) {
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_mediawiki', 'options_restored'));

@@ -26,7 +26,7 @@ class ProjectUGroup implements User_UGroup {
     const NONE               = 100;
     const ANONYMOUS          = 1;
     const REGISTERED         = 2;
-    const AUTHENTICATED       = 5;
+    const AUTHENTICATED      = 5;
     const PROJECT_MEMBERS    = 3;
     const PROJECT_ADMIN      = 4;
     const FILE_MANAGER_ADMIN = 11;

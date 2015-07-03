@@ -6,6 +6,10 @@ plugin_mediawiki	compatibility_view_text	Tick this box if you want to activate M
 plugin_mediawiki	title	Mediawiki Plugin
 plugin_mediawiki	descriptor_description	Mediawiki integration in the forge
 plugin_mediawiki	descriptor_name	Plugin Mediawiki
+plugin_mediawiki	access_control_title	Access control
+plugin_mediawiki	access_control_intro	This section allows you to define the user groups that can read and/or write content in this Mediawiki.
+plugin_mediawiki	read	Read
+plugin_mediawiki	write	Write
 
 plugin_mediawiki	group_mapping_title	Mediawiki groups mapping
 plugin_mediawiki	group_mapping_help_intro	Here you can map groups between $1 and MediaWiki

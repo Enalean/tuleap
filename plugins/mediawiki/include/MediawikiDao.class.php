@@ -443,5 +443,107 @@ class MediawikiDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function getAccessControl($project_id, $access) {
+        $project_id = $this->da->escapeInt($project_id);
+        $access     = $this->da->quoteSmart($access);
+
+        $sql = "SELECT ugroup_id
+                FROM plugin_mediawiki_access_control
+                WHERE project_id = $project_id
+                  AND access = $access";
+
+        return $this->retrieve($sql);
+    }
+
+    public function saveAccessControl($project_id, $access, array $ugroup_ids) {
+        $this->da->startTransaction();
+
+        if (! $this->deleteAllAccessControlForProject($project_id, $access)) {
+            $this->da->rollback();
+        }
+
+        if (! $this->insertNewAccessControlForProject($project_id, $access, $ugroup_ids)) {
+            $this->da->rollback();
+        }
+
+        return $this->da->commit();
+    }
+
+    private function deleteAllAccessControlForProject($project_id, $access) {
+        $project_id = $this->da->escapeInt($project_id);
+        $access     = $this->da->quoteSmart($access);
+
+        $sql = "DELETE FROM plugin_mediawiki_access_control
+                WHERE project_id = $project_id
+                  AND access = $access";
+
+        return $this->update($sql);
+    }
+
+    private function insertNewAccessControlForProject($project_id, $access, array $ugroup_ids) {
+        $project_id = $this->da->escapeInt($project_id);
+        $access     = $this->da->quoteSmart($access);
+        $result     = true;
+
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+            $sql = "INSERT INTO plugin_mediawiki_access_control (project_id, access, ugroup_id)
+                    VALUES ($project_id, $access, $ugroup_id)";
+
+            $result = $result && (bool) $this->update($sql);
+        }
+
+        return $result;
+    }
+
+    public function disableAnonymousRegisteredAuthenticated($project_id) {
+        return $this->updateAccessControl(
+            $project_id,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+    }
+
+    public function disableAuthenticated($project_id) {
+        return $this->updateAccessControl(
+            $project_id,
+            array(ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    public function updateAllAnonymousToRegistered() {
+        return $this->updateGlobalAccessControl(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+    }
+
+    public function updateAllAuthenticatedToRegistered() {
+        return $this->updateGlobalAccessControl(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+    }
+
+    private function updateAccessControl($project_id, array $old_ugroup_ids, $new_ugroup_id) {
+        $project_id     = $this->da->escapeInt($project_id);
+        $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
+        $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
+
+        $sql = "UPDATE plugin_mediawiki_access_control
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id IN ($old_ugroup_ids)
+                  AND project_id = $project_id";
+
+        return $this->update($sql);
+    }
+
+    private function updateGlobalAccessControl($old_ugroup_id, $new_ugroup_id) {
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+
+        $sql = "UPDATE plugin_mediawiki_access_control
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id";
+
+        return $this->update($sql);
+    }
 }
 

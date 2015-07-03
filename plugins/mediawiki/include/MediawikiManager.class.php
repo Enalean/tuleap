@@ -20,6 +20,9 @@
 
 class MediawikiManager {
 
+    const READ_ACCESS  = 'PLUGIN_MEDIAWIKI_READ';
+    const WRITE_ACCESS = 'PLUGIN_MEDIAWIKI_WRITE';
+
     /** @var MediawikiDao */
     private $dao;
 
@@ -53,6 +56,99 @@ class MediawikiManager {
     }
 
     /**
+     * @return int[]
+     */
+    public function getReadAccessControl(Project $project) {
+        $ugroup_ids = $this->getAccessControl($project, self::READ_ACCESS);
+
+        if (! $ugroup_ids) {
+            return $this->getDefaultReadAccessControl($project);
+        }
+
+        return $ugroup_ids;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getDefaultReadAccessControl(Project $project) {
+        if ($project->isPublic()) {
+            return array(ProjectUGroup::REGISTERED);
+        }
+
+        return array(ProjectUGroup::PROJECT_MEMBERS);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getWriteAccessControl(Project $project) {
+        $ugroup_ids =  $this->getAccessControl($project, self::WRITE_ACCESS);
+
+        if (! $ugroup_ids) {
+            return $this->getDefaultWriteAccessControl();
+        }
+
+        return $ugroup_ids;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getDefaultWriteAccessControl() {
+        return array(ProjectUGroup::PROJECT_MEMBERS);
+    }
+
+    /**
+     * @return array
+     */
+    private function getAccessControl(Project $project, $access) {
+        $result     = $this->dao->getAccessControl($project->getID(), $access);
+        $ugroup_ids = array();
+
+        foreach ($result as $row) {
+            $ugroup_ids[] = $row['ugroup_id'];
+        }
+
+        return $ugroup_ids;
+    }
+
+
+    public function saveReadAccessControl(Project $project, array $ugroup_ids) {
+        return $this->saveAccessControl($project, self::READ_ACCESS, $ugroup_ids);
+    }
+
+    public function saveWriteAccessControl(Project $project, array $ugroup_ids) {
+        return $this->saveAccessControl($project, self::WRITE_ACCESS, $ugroup_ids);
+    }
+
+    private function saveAccessControl(Project $project, $access, array $ugroup_ids) {
+        return $this->dao->saveAccessControl($project->getID(), $access, $ugroup_ids);
+    }
+
+    public function updateAccessControlInProjectChangeContext(
+        Project $project,
+        $old_access,
+        $new_access
+    ) {
+        if ($new_access == Project::ACCESS_PRIVATE) {
+            return $this->dao->disableAnonymousRegisteredAuthenticated($project->getID());
+        }
+        if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
+            return $this->dao->disableAuthenticated($project->getID());
+        }
+    }
+
+    public function updateSiteAccess($old_value) {
+        if ($old_value == ForgeAccess::ANONYMOUS) {
+            $this->dao->updateAllAnonymousToRegistered();
+        }
+        if ($old_value == ForgeAccess::RESTRICTED) {
+            $this->dao->updateAllAuthenticatedToRegistered();
+        }
+    }
+
+    /**
      * @return bool
      */
     public function isCompatibilityViewEnabled(Project $project) {
@@ -64,5 +160,73 @@ class MediawikiManager {
 
     public function instanceUsesProjectID(Project $project) {
         return is_dir(forge_get_config('projects_path', 'mediawiki') . "/". $project->getID());
+    }
+
+    private function restrictedUserCanRead(PFUser $user, Project $project) {
+        return in_array(ProjectUGroup::AUTHENTICATED, $this->getReadAccessControl($project));
+    }
+
+    private function restrictedUserCanWrite(PFUser $user, Project $project) {
+        return in_array(ProjectUGroup::AUTHENTICATED, $this->getWriteAccessControl($project));
+    }
+
+    private function getUpgroupsPermissionsManager() {
+        return new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
+    }
+
+    private function hasDelegatedAccess(PFUser $user) {
+        return $this->getUpgroupsPermissionsManager()->doesUserHavePermission(
+            $user,
+            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+        );
+    }
+    /**
+     * @param PFUser $user
+     * @param Project $project
+     * @return bool true if user can read
+     */
+    public function userCanRead(PFUser $user, Project $project) {
+        if ($this->hasDelegatedAccess($user)) {
+            return true;
+        }
+
+        if ($this->userIsRestrictedAndNotProjectMember($user, $project)) {
+            return $this->restrictedUserCanRead($user, $project);
+        }
+
+        $common_ugroups_ids = array_intersect(
+            $this->getReadAccessControl($project),
+            $user->getUgroups($project->getID(), array())
+        );
+
+        return !empty($common_ugroups_ids);
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Project $project
+     * @return bool true if user can write
+     */
+    public function userCanWrite(PFUser $user, Project $project) {
+        if ($this->hasDelegatedAccess($user)) {
+            return true;
+        }
+
+        if ($this->userIsRestrictedAndNotProjectMember($user, $project)) {
+            return $this->restrictedUserCanWrite($user, $project);
+        }
+
+        $common_ugroups_ids = array_intersect(
+            $this->getWriteAccessControl($project),
+            $user->getUgroups($project->getID(), array())
+        );
+
+        return !empty($common_ugroups_ids);
+    }
+
+    private function userIsRestrictedAndNotProjectMember(PFUser $user, Project $project) {
+        return $project->allowsRestricted() && $user->isRestricted() && ! $user->isMember($project->getID());
     }
 }

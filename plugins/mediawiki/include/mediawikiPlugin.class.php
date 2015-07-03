@@ -50,6 +50,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('cssfile');
             $this->addHook(Event::SERVICE_ICON);
 
+            $this->addHook('permission_get_name');
             $this->_addHook('service_is_used');
             $this->_addHook('register_project_creation');
 
@@ -66,6 +67,8 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('project_admin_remove_user_from_project_ugroups');
             $this->_addHook('project_admin_ugroup_deletion');
             $this->_addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
+            $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
+            $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
 
             // Search
             $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -84,6 +87,9 @@ class MediaWikiPlugin extends Plugin {
 
             // Site admin link
             $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+
+            $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+            $this->addHook(Event::SITE_ACCESS_CHANGE);
     }
 
     public function getServiceShortname() {
@@ -612,6 +618,23 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
+    /**
+     * @see Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED
+     */
+    public function is_script_handled_for_restricted($params) {
+        $uri = $params['uri'];
+        if (strpos($uri, $this->getPluginPath()) === 0) {
+            $params['allow_restricted'] = true;
+        }
+    }
+
+    /**
+     * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
+     */
+    public function get_services_allowed_for_restricted($params) {
+        $params['allowed_services'][] = $this->getServiceShortname();
+    }
+
     private function serviceIsUsedInTemplate($project_id) {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($project_id);
@@ -727,6 +750,9 @@ class MediaWikiPlugin extends Plugin {
         return new MediawikiDao();
     }
 
+    /**
+     * @return MediawikiManager
+     */
     private function getMediawikiManager() {
         include_once 'MediawikiManager.class.php';
 
@@ -866,4 +892,40 @@ class MediaWikiPlugin extends Plugin {
     private function getProjectManager() {
         return ProjectManager::instance();
     }
+
+    public function permission_get_name($params) {
+        if (!$params['name']) {
+            switch($params['permission_type']) {
+                case MediawikiManager::READ_ACCESS:
+                    $params['name'] = 'Read';
+                    break;
+                case MediawikiManager::WRITE_ACCESS:
+                    $params['name'] = 'Write';
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @see Event::PROJECT_ACCESS_CHANGE
+     */
+    public function project_access_change($params) {
+        $project = ProjectManager::instance()->getProject($params['project_id']);
+
+        $this->getMediawikiManager()->updateAccessControlInProjectChangeContext(
+            $project,
+            $params['old_access'],
+            $params['access']
+        );
+    }
+
+    /**
+     * @see Event::SITE_ACCESS_CHANGE
+     */
+    public function site_access_change($params) {
+        $this->getMediawikiManager()->updateSiteAccess($params['old_value']);
+    }
+
 }
