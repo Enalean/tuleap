@@ -1,3 +1,6 @@
+Version 0.72 - Tuleap 8.4
+    * story #8141 - be able to set and take READ/WRITE permissions into account
+
 Version 0.71 - Tuleap 8.4
     * story #8154 have a menu in a Vector style way
 
