@@ -264,6 +264,7 @@ account_register	realname	Nom Complet
 account_register	realname_directions	&nbsp;
 account_register	email	Email
 account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>
+account_register	email_tooltip	Nous allons envoyer un email à cette adresse afin de confirmer votre compte.
 account_register	expiry_date	Date d'expiration
 account_register	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.</em>
 account_register	data_not_parsed		Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
@@ -272,8 +273,8 @@ account_register	mandatory	Tous les champs marqués sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <span class="label-help">Faible trafic, informations relatives à la sécurité. Fortement recommandé.</span>
 account_register	communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <span style="color:#666">(Faible trafic)</span>
 account_register	purpose	Motif
-account_register	purpose_directions	<em>Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site</em><br>
-account_register	purpose_directions_admin	<em>Vous pouvez ajouter un commentaire sur la création de ce compte utilisateur</em><br>
+account_register	purpose_directions	Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site<br>
+account_register	purpose_directions_admin	Vous pouvez ajouter un commentaire sur la création de ce compte utilisateur<br>
 account_register	btn_register	Créer le compte
 account_register	btn_activate	Activer le compte
 account_register	btn_next	Etape suivante

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_RegisterAdminPrefillValuesPresenter extends Account_RegisterPrefillValuesPresenter {
+class Account_RegisterField {
 
-    public $form_restricted;
-    public $form_send_email;
+    public $value;
+    public $has_error;
+    public $error;
 
-    public function __construct($login_name, $email, $password, $realname, $register_purpose, $mail_site, $timezone, $restricted, $send_email) {
-        parent::__construct($login_name, $email, $password, $realname, $register_purpose, $mail_site, $timezone);
-        $this->form_restricted = $restricted;
-        $this->form_send_email = $send_email;
+    public function __construct($value, $error) {
+        $this->has_error  = $error != null;
+        $this->value      = $value;
+        $this->error      = $error;
     }
+
 }
