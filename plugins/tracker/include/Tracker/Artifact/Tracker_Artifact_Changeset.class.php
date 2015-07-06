@@ -383,8 +383,19 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function updateComment($body, $user, $comment_format, $timestamp) {
         if ($this->userCanEdit($user)) {
             $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $timestamp, $this->getComment()->id, $comment_format);
+
             unset($this->latest_comment);
             if ($commentUpdated) {
+                $reference_manager = $this->getReferenceManager();
+                $reference_manager->extractCrossRef(
+                    $body,
+                    $this->artifact->getId(),
+                    Tracker_Artifact::REFERENCE_NATURE,
+                    $this->artifact->getTracker()->getGroupID(),
+                    $user->getId(),
+                    $this->artifact->getTracker()->getItemName()
+                );
+
                 $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
                                 'artifact'     => $this->getArtifact(),
                                 'changeset_id' => $this->getId(),
@@ -394,6 +405,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             }
 
         }
+    }
+
+    /**
+     * @return ReferenceManager
+     */
+    protected function getReferenceManager() {
+        return ReferenceManager::instance();
     }
 
     /**
