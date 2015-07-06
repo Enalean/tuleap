@@ -1,3 +1,6 @@
+Version 5.658 - Tuleap 8.4
+    * request #8204 Cross-references not computed when a follow-up is edited
+
 Version 5.657 - Tuleap 8.4
     * request #8200: AD content pane does not show all the backlog items
 
