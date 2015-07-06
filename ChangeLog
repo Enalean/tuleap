@@ -1,3 +1,8 @@
+Version 8.3-3 (Monday, July 6th 2015)
+	== Bug Fix ==
+	* request #8178: Can't import datetime fields in trackers
+	* request #8188: Display complete label on select option hover
+
 Version 8.3-2 (Monday, June 29th 2015)
 	== Bug Fix ==
 	* request #8179: Comments display issue
