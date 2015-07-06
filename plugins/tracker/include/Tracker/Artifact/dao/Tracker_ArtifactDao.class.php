@@ -757,12 +757,13 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * Retrieve all artifacts linked to any of the given ones that are of a specific tracker type
      *
-     * @param string $artifact_ids comma separated list of artifact IDs
+     * @param string $artifact_ids string of comma separated list of artifact IDs e.g '12,568,12,4589'
      * @param int $artifact_ids comma separated list of artifact IDs
      * @return DataAccessResult
      */
     public function getLinkedArtifactsOfArtifactsOfTrackerTypeAsString($artifact_ids, $tracker_id) {
-        $artifact_ids = $this->da->quoteSmart($artifact_ids);
+        $artifact_ids = explode(',', $artifact_ids);
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
         $tracker_id   = $this->da->escapeInt($tracker_id);
 
         $sql = "SELECT GROUP_CONCAT(DISTINCT linked_art.id) AS artifact_ids
