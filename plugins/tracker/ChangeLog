@@ -1,3 +1,6 @@
+Version 5.657 - Tuleap 8.4
+    * request #8200: AD content pane does not show all the backlog items
+
 Version 5.656 - Tuleap 8.4
     * story #8168: Export and import static openlist fields
 
