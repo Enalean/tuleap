@@ -138,7 +138,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getValueFromRow($row) {
         $ugroup = $this->ugroup_manager->getUGroup($this->field->getTracker()->getProject(), $row['ugroup_id']);
         if ($ugroup) {
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup, $row['is_hidden']);
+            $is_hidden = isset($row['is_hidden']) ? $row['is_hidden'] : false;
+
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup, $is_hidden);
         }
         return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(array('ugroup_id' => 0, 'name' => "")), true);
     }
