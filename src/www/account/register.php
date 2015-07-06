@@ -18,6 +18,7 @@ require_once('common/include/HTTPRequest.class.php');
 $GLOBALS['HTML']->includeCalendarScripts();
 $request =& HTTPRequest:: instance();
 $page = $request->get('page');
+$confirmation_register = false;
 // ###### function register_valid()
 // ###### checks for valid register from form post
 if($page == "admin_creation"){
@@ -209,7 +210,6 @@ function display_account_form($register_error, array $errors)	{
 }
 
 // ###### first check for valid login, if so, congratulate
-
 $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
 $errors = array();
@@ -220,16 +220,13 @@ if ($request->isPost() && $request->exist('Register')) {
     $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
 
     if ($new_userid = register_valid($confirm_hash, $errors)) {
-
+        $confirmation_register = true;
         $user_name = user_getname($new_userid);
         $content = '';
         $admin_creation = false;
-        $password='';
         if($page == 'admin_creation'){
             $admin_creation = true;
-            $password = $request->get('form_pw');
-            $login = $request->get('form_loginname');
-            if($request->get('form_send_email')){
+            if ($request->get('form_send_email')){
                 //send an email to the user with th login and password
                 $from = $GLOBALS['sys_noreply'];
                 $to = $request->get('form_email');
@@ -247,37 +244,54 @@ if ($request->isPost() && $request->exist('Register')) {
                 }
             }
         }
+        $thanks = $Language->getText('account_register', 'msg_thanks');
+        $isThanks = true;
+
         if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
             if(!$admin_creation) {
                 if (!send_new_user_email($request->get('form_email'), $confirm_hash, $user_name)) {
                     $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
                 }
-            } else {
-
             }
-            $content .= '<p><b>'.$Language->getText('account_register', 'title_confirm').'</b>';
-            if($admin_creation){
-                    if($request->get('form_send_email')){
-                        $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_admin', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
-                    }else {
-                        $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_no_email', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
-                    }
-            }else{
-                $content .= '<p>'.$Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'],$user_name));
+
+            $title  = $Language->getText('account_register', 'title_confirm');
+
+            if ($admin_creation){
+                if ($request->get('form_send_email')){
+                    $content_title = 'msg_confirm_admin';
+                } else {
+                    $content_title = 'msg_confirm_no_email';
+                }
+                $content           = $Language->getText('account_register', $content_title,
+                                                            array(
+                                                                    $hp->purify($request->get('form_realname')),
+                                                                    $GLOBALS['sys_name'],
+                                                                    $hp->purify($request->get('form_loginname')),
+                                                                    $hp->purify($request->get('form_pw'))
+                                                            )
+                                      );
+                $thanks             = '';
+                $isThanks           = false;
+                $redirect_url       = '/admin';
+                $redirect_content   = $Language->getText('account_register', 'msg_redirect_admin');
+            } else {
+                $content            = $Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'], $user_name));
+                $redirect_url       = '/';
+                $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             }
 
         } else {
             // Registration requires approval
             // inform the user that approval is required
-            $href_approval = get_server_url().'/admin/approve_pending_users.php?page=pending';
-
-            $content .= '<p><b>'.$Language->getText('account_register', 'title_approval').'</b>';
-            $content .= '<p>'.$Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));
+            $href_approval      = get_server_url().'/admin/approve_pending_users.php?page=pending';
+            $title              = $Language->getText('account_register', 'title_approval');
+            $content            = $Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'], $user_name, $href_approval));
+            $redirect_url       = '/';
+            $redirect_content   = $Language->getText('account_register', 'msg_redirect');
         }
-        site_header(array('title'=>$Language->getText('account_register', 'title_confirm')));
-        echo $content;
-        site_footer(array());
-        exit;
+
+        $presenter = new Account_ConfirmationPresenter($title, $content, $thanks, $isThanks, $redirect_url, $redirect_content);
+        $template = 'confirmation';
     }
 }
 
@@ -299,16 +313,16 @@ $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 $HTML->includeFooterJavascriptFile('/scripts/mailcheck/mailcheck.min.js');
 $HTML->includeFooterJavascriptFile('/scripts/tuleap/mailchecker.js');
 $HTML->header(array('title'=>$Language->getText('account_register', 'title'), 'body_class' => $body_class));
+
+
+if (!$confirmation_register) {
+    $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
+    display_account_form($reg_err, $errors);
+} else {
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
+    $renderer->renderToPage($template, $presenter);
+}
 ?>
-
-<div id="register-background">
-
-<?php
-$reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
-display_account_form($reg_err, $errors);
-?>
-
-</div>
 
 <?php
 $HTML->footer(array());

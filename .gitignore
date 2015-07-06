@@ -46,3 +46,4 @@ src/www/api/explorer
 /.config/
 npm-debug.log
 .env
+.DS_Store

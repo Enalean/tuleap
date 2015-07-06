@@ -1,0 +1,50 @@
+.element_style (
+    @font-size: 1.2em,
+    @font-family: SourceSansPro,
+    @font-weight: 300
+) {
+    font-size: @font-size;
+    font-family: @font-family;
+    font-weight: @font-weight;
+}
+
+#account-confirmation-header h2 {
+    text-align: center;
+    padding: 0 0 50px;
+    .element_style(38px);
+}
+
+#account-confirmation-content {
+    text-align: center;
+    padding: 50px 0 0 0;
+    .element_style();
+    line-height: 1.5em;
+
+    p > i {
+      position: relative;
+      top: -3px;
+      display: inline-block;
+      transform: rotate(20deg);
+      -webkit-transform: rotate(20deg);
+      -moz-transform: rotate(20deg);
+      -o-transform: rotate(20deg);
+      -ms-transform: rotate(20deg);
+      -sand-transform: rotate(20deg);
+    }
+}
+
+#account-confirmation-thanks {
+    text-align: center;
+    padding: 70px 0 30px;
+    .element_style(@font-size: 23px, @font-family: kalamregular);
+}
+
+#account-confirmation-redirect {
+    text-align: center;
+    padding: 50px 0 100px;
+    .element_style();
+}
+
+.confirmation-user {
+    font-weight: 400;
+}
