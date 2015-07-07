@@ -1172,6 +1172,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return null;
     }
 
+    public function getSimpleRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $value = $changeset->getValue($this);
+        if ($value) {
+            return $value->getSimpleRESTValue($user, $this);
+        }
+
+        return null;
+    }
+
     public function getJsonValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         if ($this->userCanRead($user)) {
             $value = $changeset->getValue($this);
