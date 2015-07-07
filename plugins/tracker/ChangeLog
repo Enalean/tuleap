@@ -1,3 +1,6 @@
+Version 5.659 - Tuleap 8.4
+    * story #8168: Export and import users openlist fields
+
 Version 5.658 - Tuleap 8.4
     * request #8204 Cross-references not computed when a follow-up is edited
 
