@@ -277,7 +277,10 @@
     </attribute>
     <zeroOrMore>
       <element name="value">
-        <ref name="open_list_content"/>
+        <choice>
+          <ref name="open_list_content"/>
+          <ref name="user_content"/>
+        </choice>
       </element>
     </zeroOrMore>
   </define>

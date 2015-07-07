@@ -27,6 +27,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     protected $bind;
 
     /**
+     * @return array
+     */
+    public function getFormElementDataForCreation($parent_id) {
+        $form_element_data = parent::getFormElementDataForCreation($parent_id);
+
+        if ($this->getBind()) {
+            $form_element_data['bind-type'] = $this->getBind()->getType();
+        }
+
+        return $form_element_data;
+    }
+
+    /**
      * Return true if submitted value is None
      */
     abstract public function isNone($value);
