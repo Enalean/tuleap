@@ -161,6 +161,15 @@ class Codendi_HTMLPurifier {
     function makeLinks($data = '', $group_id = 0) {
         if(empty($data)) { return $data; }
 
+        // john.doe@yahoo.com => <a href="mailto:...">...</a>
+        $mailto_pattern = '
+          (?<=\W|^)  # email must be at the beginning of the string or be preceded by a non word
+          (?<!\/)    # … and not by a / to avoid ssh://gitolite@tuleap.net matching
+          (
+            ([a-z0-9_]|\-|\.)+@([^[:space:]<&>]*)([[:alnum:]-])   # really basic email pattern
+          )';
+        $data = preg_replace("`$mailto_pattern`ix", "<a href=\"mailto:\\1\" target=\"_blank\">\\1</a>", $data);
+
         // www.yahoo.com => http://www.yahoo.com
         $data = preg_replace("/([ \t\n])www\./i","\\1http://www.",$data);
 
@@ -169,14 +178,13 @@ class Codendi_HTMLPurifier {
         // Special case for urls between brackets or double quotes
         // e.g. <http://www.google.com> or "http://www.google.com"
         // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
-        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&quot;/i", "\\1://\\2\\3\"", $data);
-        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&#039;/i", "\\1://\\2\\3'", $data);
-        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&gt;/i", "\\1://\\2\\3>", $data);
+        $url_pattern = '([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])';
+        $matching    = '\1://\2\3';
+        $data = preg_replace("`$url_pattern&quot;`i", "$matching\"", $data);
+        $data = preg_replace("`$url_pattern&#039;`i", "$matching'",  $data);
+        $data = preg_replace("`$url_pattern&gt;`i",   "$matching>",  $data);
         // Now, replace
-        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])/i", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
-
-	    // john.doe@yahoo.com => <a href="mailto:...">...</a>
-        $data = preg_replace("/(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))/i", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
+        $data = preg_replace("`$url_pattern`i", "<a href=\"$matching\" target=\"_blank\">$matching</a>", $data);
 
         $this->insertReferences($data, $group_id);
 
