@@ -12,9 +12,13 @@ Version 8.4 (Not Released Yet)
 
 	== Enhancements ==
 	* story #8197: enhance register form UX
+	* story #8141: change the labelling of projects from public/ project to user-group-based
 
 	== Bug fix ==
 	* request #8205: ssh://gitolite is wrongly interpreted
+
+	== Themes ==
+	* FlamingParrot: 1.91
 
 Version 8.3 (Thursday, June 25th 2015)
 	== Bug Fix ==
