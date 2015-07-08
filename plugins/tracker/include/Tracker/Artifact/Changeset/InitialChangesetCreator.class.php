@@ -56,10 +56,14 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         if ($this->isFieldSubmitted($field, $fields_data)) {
             if ($field->userCanSubmit()) {
                 $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                return;
             } else if ($workflow && $workflow->bypassPermissions($field)) {
                 $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+                return;
             }
-        } else if (!$field->userCanSubmit() && $field->isSubmitable()) {
+        }
+
+        if (!$field->userCanSubmit() && $field->isSubmitable()) {
             $this->pushDefaultValueInSubmittedValues($field, $fields_data);
             $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
         }
