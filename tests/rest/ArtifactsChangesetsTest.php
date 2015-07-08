@@ -60,6 +60,61 @@ class ArtifactsChangesetsTest extends RestBase {
         $this->assertCount(1, $changesets);
         $this->assertEquals("Awesome changes", $changesets[0]['last_comment']['body']);
 
+        $fields = $changesets[0]['values'];
+        foreach($fields as $field) {
+            switch($field['type']) {
+                case 'string':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_string($field['value']));
+                    break;
+                case 'cross':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['value']));
+                    break;
+                case 'text':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_string($field['value']));
+                    $this->assertTrue(is_string($field['format']));
+                    $this->assertTrue($field['format'] == 'text'|| $field['format'] == 'html' );
+                    break;
+                case 'msb':
+                case 'sb':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['values']));
+                    $this->assertTrue(is_array($field['bind_value_ids']));
+                    break;
+                case 'computed':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_int($field['value']) || is_null($field['value']));
+                    break;
+                case 'aid':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_int($field['value']));
+                    break;
+                case 'luby':
+                case 'subby':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['value']));
+                    $this->assertTrue(array_key_exists('display_name', $field['value']));
+                    $this->assertTrue(array_key_exists('link', $field['value']));
+                    $this->assertTrue(array_key_exists('user_url', $field['value']));
+                    $this->assertTrue(array_key_exists('avatar_url', $field['value']));
+                    break;
+                case 'lud':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    break;
+                case 'subon':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    break;
+                default:
+                    throw new Exception('You need to update this test for the field: '.print_r($field, true));
+            }
+        }
+
+
+
         $pagination_offset = $response->getHeader('X-PAGINATION-OFFSET')->normalize()->toArray();
         $this->assertEquals($pagination_offset[0], 2);
 

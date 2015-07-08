@@ -66,6 +66,7 @@ function InPropertiesFilter($filter) {
                                 return match(group);
                             });
                         case 'subby':
+                        case 'luby':
                             return match(card_field.value.display_name);
                         case 'date':
                         case 'lud':

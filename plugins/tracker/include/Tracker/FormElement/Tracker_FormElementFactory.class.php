@@ -62,6 +62,7 @@ class Tracker_FormElementFactory {
         'atid'      => 'Tracker_FormElement_Field_PerTrackerArtifactId',
         'lud'       => 'Tracker_FormElement_Field_LastUpdateDate',
         'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
+        'luby'      => 'Tracker_FormElement_Field_LastModifiedBy',
         'subon'     => 'Tracker_FormElement_Field_SubmittedOn',
         'cross'     => 'Tracker_FormElement_Field_CrossReferences',
         'burndown'  => 'Tracker_FormElement_Field_Burndown',

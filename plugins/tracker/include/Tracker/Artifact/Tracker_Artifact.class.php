@@ -1068,6 +1068,28 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return -1;
     }
 
+    public function wasLastModifiedByAnonymous() {
+        $last_changeset = $this->getLastChangeset();
+        if ($last_changeset) {
+            if ($last_changeset->getSubmittedBy()) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function getLastModifiedBy() {
+        $last_changeset = $this->getLastChangeset();
+        if ($last_changeset) {
+            if ($last_changeset->getSubmittedBy()) {
+                return $last_changeset->getSubmittedBy();
+            }
+            return $last_changeset->getEmail();
+        }
+        return $this->getSubmittedBy();
+    }
+
     /**
      * @return Integer
      */

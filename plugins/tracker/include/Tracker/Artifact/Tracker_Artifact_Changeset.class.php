@@ -1189,8 +1189,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     private function getRESTFieldValues(PFUser $user) {
         $values = array();
         $factory = $this->getFormElementFactory();
-        foreach ($this->getValueDao()->searchById($this->id) as $row) {
-            $field = $factory->getFieldById($row['field_id']);
+
+        foreach ($factory->getUsedFieldsForREST($this->getTracker()) as $field) {
             if ($field && $field->userCanRead($user)) {
                 $values[] = $field->getRESTValue($user, $this);
             }

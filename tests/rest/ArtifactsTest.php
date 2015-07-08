@@ -109,6 +109,7 @@ class ArtifactsTest extends RestBase {
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_int($field['value']));
                     break;
+                case 'luby':
                 case 'subby':
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_array($field['value']));

@@ -134,7 +134,10 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function getFullRESTValue(Tracker_FormElement_Field $field) {
         if ($this->getId() == 100) {
             return array(
-                'label'    => '-'
+                'display_name' => null,
+                'label'        => '-',
+                'user_url'     => null,
+                'avatar_url'   => null
             );
         }
 
@@ -143,6 +146,15 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
             'link'         => $this->getLink(),
             'user_url'     => $this->getUserUrl(),
             'avatar_url'   => $this->getUser()->getAvatarUrl()
+        );
+    }
+
+    public function getFullRESTValueForAnonymous(Tracker_Artifact_Changeset $changeset) {
+        return array(
+            'label'        => $changeset->getEmail(),
+            'display_name' => $changeset->getEmail(),
+            'user_url'     => null,
+            'avatar_url'   => null
         );
     }
 

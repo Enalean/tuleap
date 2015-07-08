@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -166,6 +166,10 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field) {
+        return $this->unknown_updater;
+    }
+
+    public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field) {
         return $this->unknown_updater;
     }
 

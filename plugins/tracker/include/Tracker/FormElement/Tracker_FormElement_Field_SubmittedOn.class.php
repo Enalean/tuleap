@@ -374,4 +374,8 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function isCompatibleWithSoap() {
         return true;
     }
+
+    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+         return null;
+    }
 }

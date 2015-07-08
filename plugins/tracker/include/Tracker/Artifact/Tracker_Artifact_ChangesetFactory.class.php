@@ -35,7 +35,7 @@ class Tracker_Artifact_ChangesetFactory {
      *
      * @param Tracker_Artifact $artifact
      * @param Integer $changeset_id
-     * @return Tracker_Artifact_Changeset|null
+     * @return Tracker_Artifact_Changeset | null
      */
     public function getChangeset(Tracker_Artifact $artifact, $changeset_id) {
         $row = $this->dao->searchByArtifactIdAndChangesetId($artifact->getId(), $changeset_id)->getRow();
