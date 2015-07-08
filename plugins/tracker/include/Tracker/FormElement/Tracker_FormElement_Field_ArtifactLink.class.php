@@ -164,6 +164,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         throw new Tracker_FormElement_InvalidFieldValueException('Value should be \'links\' and an array of {"id": integer}');
     }
+
+    public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
+        throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
+    }
+
     /**
      * Get the field data (SOAP or CSV) for artifact submission
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,6 +41,26 @@ class Tracker_REST_Artifact_ArtifactValidator {
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation);
         }
         return $new_values;
+    }
+
+    public function getFieldsDataOnCreateFromValuesByField(array $values, Tracker $tracker) {
+        $new_values = array();
+        foreach ($values as $field_name => $value) {
+            $field = $this->getFieldByName($tracker, $field_name);
+
+            $new_values[$field->getId()] = $field->getFieldDataFromRESTValueByfield($value);
+        }
+
+        return $new_values;
+    }
+
+    private function getFieldByName(Tracker $tracker, $field_name) {
+        $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_name);
+        if (! $field) {
+            throw new Tracker_FormElement_InvalidFieldException("Field $field_name does not exist in the tracker");
+        }
+
+        return $field;
     }
 
     /**

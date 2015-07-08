@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,7 @@ use \Tracker_REST_Artifact_ArtifactUpdater;
 use \Tracker_REST_Artifact_ArtifactValidator;
 use \Tracker_FormElement_InvalidFieldException;
 use \Tracker_FormElement_InvalidFieldValueException;
+use \Tracker_FormElement_RESTValueByField_NotImplementedException;
 use \Tracker_Artifact_Attachment_FileNotFoundException;
 use \Tracker_Exception;
 use \Tuleap\Tracker\REST\ChangesetCommentRepresentation;
@@ -263,43 +264,76 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * Things to take into account:
      * <ol>
-     *  <li>You don't need to set all 'values' of the artifact, you can pass only the ones you want to add,
+     *  <li>You don't need to set all "values" of the artifact, you can pass only the ones you want to add,
      *      together with those that are required (depends on a given tracker's configuration).
      *  </li>
+     *  <li>
+     *    <pre>
+     *    /!\ Only alphanumeric fields are taken into account when providing the "values_by_field" format! /!\
+     *    </pre>
+     *    <br/><br/>
+     *    You can create an artifact with the "values_by_field" format.
+     *    Example:
+     *    <pre>
+     *    {<br/>
+     *      "tracker": {"id": 29},<br/>
+     *      "values_by_field": {<br/>
+     *        "title": {<br/>
+     *          "value": "Lorem ipsum dolor sit amet"<br/>
+     *        },<br/>
+     *        "remaining_effort": {<br/>
+     *          "value": 75<br/>
+     *        }<br/>
+     *      }<br/>
+     *    }<br/>
+     *    </pre>
+     *    <br/><br/>
+     *  </li>
+     *  <li>Submitting with both "values" and "values_by_field" will result in an error.</li>
+     *
      *  <li>Note on files:
-     *  To attach a file on a file field, the value must contain the ids of the attachements you want to add 
-     *         (eg. :
-     *               {
-     *                  "field_id": 101,
-     *                  "value": [41, 42]
-     *               }
-     *          )
+     *  To attach a file on a file field, the value must contain the ids of the attachements you want to add.
+     *    Example:
+     *    <pre>
+     *    {<br/>
+     *      "field_id": 101,<br/>
+     *      "value": [41, 42]<br/>
+     *    }<br/>
+     *    </pre>
+     *    <br/><br/>
      *  Note that 41 and 42 ids are provided by /artifact_temporary_files routes.
      *  A user can only add their own temporary files.
      *  To create a temporary file, use POST on /artifact_temporary_files.
      *  </li>
      *  <li>Full Example:
-     * {
-     *      "tracker": {"id" : 54},
-     *      "values": [
-     *          {"field_id": 1806, "value" : "my new artifact"},
-     *          {"field_id": 1841, "bind_value_ids" : [254,598,148]}
-     *      ]
-     * }
+     *  <pre>
+     *  {<br/>
+     *    "tracker": {"id" : 54},<br/>
+     *    "values": [<br/>
+     *      {"field_id": 1806, "value" : "my new artifact"},<br/>
+     *      {"field_id": 1841, "bind_value_ids" : [254,598,148]}<br/>
+     *    ]<br/>
+     *  }<br/>
+     *  </pre>
      *  </li>
      * </ol>
      *
      * @url POST
      * @param TrackerReference $tracker   Id of the artifact {@from body}
-     * @param array  $values    Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
+     * @param array  $values              Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
+     * @param array  $values_by_field     Artifact fields values indexed by field {@from body}
      * @return ArtifactReference
      */
-    protected function post(TrackerReference $tracker, array $values) {
+    protected function post(TrackerReference $tracker, array $values = array(), array $values_by_field = array()) {
         $this->options();
+
+        if (! empty($values) && ! empty($values_by_field)) {
+            throw new RestException(400, 'Not able to deal with both formats at the same time');
+        }
 
         try {
             $user    = UserManager::instance()->getCurrentUser();
-            $updater = new Tracker_REST_Artifact_ArtifactCreator(
+            $creator = new Tracker_REST_Artifact_ArtifactCreator(
                 new Tracker_REST_Artifact_ArtifactValidator(
                     $this->formelement_factory
                 ),
@@ -307,7 +341,16 @@ class ArtifactsResource extends AuthenticatedResource {
                 $this->tracker_factory
             );
 
-            $artifact_reference = $updater->create($user, $tracker, $values);
+            $artifact_reference = null;
+
+            if (! empty($values)) {
+                $artifact_reference = $creator->create($user, $tracker, $values);
+            } elseif (! empty($values_by_field)) {
+                $artifact_reference = $creator->createWithValuesIndexedByFieldName($user, $tracker, $values_by_field);
+            } else {
+                throw new RestException(400, "No valid data are provided");
+            }
+
             $this->sendLastModifiedHeader($artifact_reference->getArtifact());
             $this->sendETagHeader($artifact_reference->getArtifact());
             return $artifact_reference;
@@ -315,7 +358,7 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
+        } catch (Tracker_FormElement_RESTValueByField_NotImplementedException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
             throw new RestException(500, $exception->getMessage());
