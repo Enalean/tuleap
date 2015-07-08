@@ -1,11 +1,12 @@
 Version 8.4 (Not Released Yet)
 
 	== Plugins ==
-	* tracker: 5.660
+	* tracker: 5.661
 	* mediawiki: 0.74
 	* IM: 1.5.29
 	* pluginsadministration: 1.10
 	* ldap: 3.82
+	* agiledashboard: 1.236
 
 	== Security ==
 	* request #7999: Disallow SSLv3 and weak ciphers in the default Apache configuration
