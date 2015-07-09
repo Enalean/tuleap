@@ -297,7 +297,7 @@ account_register	msg_approval	<p>Congratulations. Your registration request on $
 account_register	mail_approval_subject	New User Registered: $1
 account_register	mail_approval_body	A new user has just registered on $1.\n\nUser Name: $2\n\nPlease click on the following URL to approve the registration:\n\n$3\n
 account_register	restricted_user	Restricted user
-account_register	welcome_email_title	   Welcome to $1!
+account_register	welcome_email_title	Welcome to $1!
 #
 #-----------------------------------------------
 # Script: SF/www/account/suspended.php

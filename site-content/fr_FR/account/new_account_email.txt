@@ -1,20 +1,37 @@
 <?php
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 // 
 //
+$title = "Bienvenue sur ".$GLOBALS['sys_name']."!";
 
-$body = "Vous êtes maintenant un utilisateur enregistré sur ".$GLOBALS['sys_name'] ." avec le login $login et le mot de passe : $password\n"
-."Pensez à changer votre mot de passe après votre première connexion sur le site."
-." En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".$GLOBALS['sys_name']
-.". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés,ou même démarrer votre "
-."propre projet ."
-."\n\n\n ** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".$GLOBALS['sys_name']
-." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires CVS et SVN en dépendent. "
-." Votre compte shell sera activé dans moins de deux heures."
-."\n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site"
-." et de peaufiner la configuration de votre compte utilisateur "
-."(définir votre profil de compétences, vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
-." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
-.$GLOBALS['sys_name']." autour de vous. \n\n\n-- L'équipe ".$GLOBALS['sys_name'];
+$section_one = "Vous êtes maintenant un utilisateur enregistré avec le nom d'utilisateur : ";
+
+$section_two = "En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".$GLOBALS['sys_name']
+              .". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés,ou même démarrer votre "
+              ."propre projet.";
+
+
+$section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".$GLOBALS['sys_name']
+                  ." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires CVS et SVN en dépendent. "
+                  ." Votre compte shell sera activé dans moins de deux heures."
+                  ."\n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site"
+                  ." et de peaufiner la configuration de votre compte utilisateur "
+                  ."(définir votre profil de compétences, vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
+                  ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
+                  .$GLOBALS['sys_name']." autour de vous.";
+
+$section_after_login = " et le mot de passe : ";
+
+$section_after_password = ". \nPensez à changer votre mot de passe après votre première connexion sur le site.";
+
+$thanks = "Merci!";
+
+$signature = "- L'équipe ".$GLOBALS['sys_name'];
+
+$help = "Pour toute demande d'aide contactez : ".$GLOBALS['sys_email_admin'];
+
+$message = $title . "\n\n" .  $section_one . $login . $section_after_login . $password . $section_after_password."\n\n" . $section_two . "\n\n"
+            .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

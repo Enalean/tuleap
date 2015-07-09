@@ -77,6 +77,25 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         );
     }
 
+    public static function getColorOfCurrentTheme($theme) {
+        $array = array(
+            "FlamingParrot_Orange"          => "#F79514",
+            "FlamingParrot_Blue"            => "#1593C4",
+            "FlamingParrot_Green"           => "#67AF45",
+            "FlamingParrot_BlueGrey"        => "#5B6C79",
+            "FlamingParrot_Purple"          => "#79558A",
+            "FlamingParrot_Red"             => "#BD2626",
+            "FlamingParrot_DarkOrange"      => "#D68416",
+            "FlamingParrot_DarkBlue"        => "#137FA8",
+            "FlamingParrot_DarkGreen"       => "#59993B",
+            "FlamingParrot_DarkBlueGrey"    => "#4A5964",
+            "FlamingParrot_DarkPurple"      => "#684D75",
+            "FlamingParrot_DarkRed"         => "#AA1616"
+        );
+
+        return $array[$theme];
+    }
+
     public function isLabFeature() {
         return false;
     }

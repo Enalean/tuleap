@@ -36,7 +36,7 @@ class MustacheRenderer extends TemplateRenderer {
     /**
      * @var array
      */
-    protected $options = array('throws_exceptions' => array(
+    protected $options = array('throws_exceptions'  => array(
         MustacheException::UNKNOWN_VARIABLE         => true,
         MustacheException::UNCLOSED_SECTION         => true,
         MustacheException::UNEXPECTED_CLOSE_SECTION => true,
