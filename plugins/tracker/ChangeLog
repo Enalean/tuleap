@@ -1,3 +1,6 @@
+Version 5.662 - Tuleap 8.4
+    * request #8210 Default value not set when unsubmittable field is submitted
+
 Version 5.661 - Tuleap 8.4
     * story #8140: have a field 'last modified by'
 
