@@ -72,16 +72,21 @@ class ArtifactRepresentation {
     public $changesets_uri;
 
     /**
-     * @var array Field values {@type array} {@required true}
+     * @var array Field values {@type array}
      */
-    public $values = array();
+    public $values = null;
+
+    /**
+     * @var array values by field {@type array}
+     */
+    public $values_by_field = null;
 
     /**
      * @var string Date, when the last modification occurs {@type string} {@required true}
      */
     public $last_modified_date;
 
-    public function build(Tracker_Artifact $artifact, array $values) {
+    public function build(Tracker_Artifact $artifact, $values, $values_by_field) {
         $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
 
@@ -96,6 +101,7 @@ class ArtifactRepresentation {
         $this->html_url           = $artifact->getUri();
         $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
         $this->values             = $values;
+        $this->values_by_field    = $values_by_field;
         $this->last_modified_date = JsonCast::toDate($artifact->getLastUpdateDate());
     }
 }

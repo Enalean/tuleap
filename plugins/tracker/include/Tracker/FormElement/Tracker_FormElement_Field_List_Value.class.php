@@ -119,4 +119,13 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
             'label' => $this->getLabel()
         );
     }
+
+    public function getSimpleRESTValue(Tracker_FormElement_Field $field) {
+        $id = is_a($field, 'Tracker_FormElement_Field_OpenList') ? $this->getJsonId() : $this->getId();
+
+        return array(
+            'id'    => $id,
+            'label' => $this->getLabel()
+        );
+    }
 }

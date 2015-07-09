@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -124,6 +124,54 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
         $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
 
         $this->assertEqual($representation->values, array('whatever'));
+        $this->assertEqual($representation->values_by_field, null);
+    }
+
+    public function itReturnsSimpleValuesOnlyForFieldsWithValues() {
+        $field1 = aMockField()->withId(1)->build();
+        $field2 = aMockField()->withId(2)->build();
+        $field3 = aMockField()->withId(3)->build();
+        stub($field1)->userCanRead($this->user)->returns(true);
+        stub($field2)->userCanRead($this->user)->returns(true);
+        stub($field1)->getSimpleRESTValue()->returns(array('field01' => '01'));
+        stub($field2)->getSimpleRESTValue()->returns(array('field02' => 'whatever'));
+
+        stub($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array($field1, $field2, $field3));
+
+        $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues(
+            $this->user,
+            $this->artifact
+        );
+
+        $this->assertEqual($representation->values, null);
+        $this->assertEqual($representation->values_by_field, array(
+            'field01' => '01',
+            'field02' => 'whatever',
+        ));
+    }
+
+    public function itReturnsBothFormatForFieldsWithValues() {
+        $field1 = aMockField()->withId(1)->build();
+        $field2 = aMockField()->withId(2)->build();
+        $field3 = aMockField()->withId(3)->build();
+        stub($field1)->userCanRead($this->user)->returns(true);
+        stub($field2)->userCanRead($this->user)->returns(true);
+        stub($field1)->getSimpleRESTValue()->returns(array('field01' => '01'));
+        stub($field2)->getSimpleRESTValue()->returns(array('field02' => 'whatever'));
+        stub($field2)->getRESTValue()->returns('whatever');
+
+        stub($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array($field1, $field2, $field3));
+
+        $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
+            $this->user,
+            $this->artifact
+        );
+
+        $this->assertEqual($representation->values, array('whatever'));
+        $this->assertEqual($representation->values_by_field, array(
+            'field01' => '01',
+            'field02' => 'whatever',
+        ));
     }
 }
 

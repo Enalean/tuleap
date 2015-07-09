@@ -1,48 +1,60 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This list is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('bootstrap.php');
-require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
-Mock::generate('Tracker_FormElement_Field_OpenList');
-Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
+class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
 
-require_once 'Tracker_Artifact_ChangesetValue_ListTest.php';
+    private $field;
+    private $user;
 
-class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_ChangesetValue_ListTest {
-    
-    public function __construct($name = 'Changeset Value Open List Test') {
-        parent::__construct($name);
-        $this->field_class          = 'MockTracker_FormElement_Field_OpenList';
-        $this->changesetvalue_class = 'Tracker_Artifact_ChangesetValue_OpenList';
-        $this->user                 = mock('PFUser');
+    public function setUp() {
+        parent::setUp();
+
+        $base_language = mock('BaseLanguage');
+        stub($base_language)->getText('plugin_tracker_artifact','changed_from')->returns('changed from');
+        stub($base_language)->getText('plugin_tracker_artifact','to')->returns('to');
+        stub($base_language)->getText('plugin_tracker_artifact','cleared')->returns('cleared');
+        stub($base_language)->getText('plugin_tracker_artifact','set_to')->returns('set to');
+        stub($base_language)->getText('plugin_tracker_artifact','added')->returns('added');
+        stub($base_language)->getText('plugin_tracker_artifact','removed')->returns('removed');
+
+        $GLOBALS['Language'] = $base_language;
+
+        $this->field = stub('Tracker_FormElement_Field_OpenList')->getName()->returns('field_openlist');
+        $this->user  = mock('PFUser');
+    }
+
+    public function tearDown() {
+        unset($GLOBALS['Language']);
+
+        parent::tearDown();
     }
 
     public function testLists() {
-        $bind_value = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value->setReturnValue('getSoapValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
         $bind_value->setReturnValue('getJsonId', 'b106');
-        $field      = new $this->field_class();
-        $value_list = new $this->changesetvalue_class(111, $field, false, array($bind_value));
+        $value_list = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value));
         $this->assertEqual(count($value_list), 1);
         $this->assertEqual($value_list[0], $bind_value);
         $this->assertEqual($value_list->getSoapValue($this->user), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
@@ -50,87 +62,109 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
     }
     
     public function testDiff_setto() {
-        $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
-        $open_value_2 = new MockTracker_FormElement_Field_List_OpenValue();
+        $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $field  = new $this->field_class();
-        $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $open_value_2));
-        $list_2 = new $this->changesetvalue_class(111, $field, false, array());
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'set to', array('plugin_tracker_artifact','set_to'));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $open_value_2));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array());
         $this->assertEqual($list_1->diff($list_2), ' set to Sandra, Manon');
     }
     
     public function testDiff_changedfrom() {
-        $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
-        $open_value_2 = new MockTracker_FormElement_Field_List_OpenValue();
+        $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $field  = new $this->field_class();
-        $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
-        $list_2 = new $this->changesetvalue_class(111, $field, false, array($open_value_2));
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
-        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($open_value_2));
         $this->assertEqual($list_1->diff($list_2), ' changed from Manon to Sandra');
         $this->assertEqual($list_2->diff($list_1), ' changed from Sandra to Manon');
     }
     
     public function testDiff_added() {
-        $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
-        $open_value_2 = new MockTracker_FormElement_Field_List_OpenValue();
+        $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $field  = new $this->field_class();
-        $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $open_value_2));
-        $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $open_value_2));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1));
         $this->assertEqual($list_1->diff($list_2), 'Manon added');
     }
     
     public function testDiff_removed() {
-        $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
-        $open_value_2 = new MockTracker_FormElement_Field_List_OpenValue();
+        $open_value_2 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_2->setReturnValue('__toString', 'Manon');
         $open_value_2->setReturnValue('getLabel', 'Manon');
-        $field  = new $this->field_class();
-        $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
-        $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $open_value_2));
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $open_value_2));
         $this->assertEqual($list_1->diff($list_2), 'Manon removed');
     }
     
     public function testDiff_added_and_removed() {
-        $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
-        $bind_value_2 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_2 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_2->setReturnValue('__toString', 'Manon');
         $bind_value_2->setReturnValue('getLabel', 'Manon');
-        $open_value_3 = new MockTracker_FormElement_Field_List_OpenValue();
+        $open_value_3 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_3->setReturnValue('__toString', 'Marc');
         $open_value_3->setReturnValue('getLabel', 'Marc');
-        $open_value_4 = new MockTracker_FormElement_Field_List_OpenValue();
+        $open_value_4 = mock('Tracker_FormElement_Field_List_OpenValue');
         $open_value_4->setReturnValue('__toString', 'Nicolas');
         $open_value_4->setReturnValue('getLabel', 'Nicolas');
-        $field  = new $this->field_class();
-        $list_1 = new $this->changesetvalue_class(111, $field, false, array($open_value_3, $open_value_4));
-        $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $bind_value_2));
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
-        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
+        $list_1 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($open_value_3, $open_value_4));
+        $list_2 = new Tracker_Artifact_ChangesetValue_OpenList(111, $this->field, false, array($bind_value_1, $bind_value_2));
         $this->assertPattern('/Sandra, Manon removed/', $list_1->diff($list_2));
         $this->assertPattern('/Marc, Nicolas added/', $list_1->diff($list_2));
+    }
+
+    public function itReturnsTheSimpleRESTValue() {
+        $bind_value = partial_mock(
+            'Tracker_FormElement_Field_List_Bind_StaticValue',
+            array('getLabel', 'getId')
+        );
+
+        $open_value = partial_mock(
+            'Tracker_FormElement_Field_List_OpenValue',
+            array('getLabel', 'getId')
+        );
+
+        stub($bind_value)->getId()->returns(101);
+        stub($bind_value)->getLabel()->returns('static_01');
+        stub($open_value)->getId()->returns(4);
+        stub($open_value)->getLabel()->returns('open_value_01');
+
+        $changeset = new Tracker_Artifact_ChangesetValue_List(
+            111,
+            $this->field,
+            true,
+            array($bind_value, $open_value)
+        );
+
+        $expected = array(
+            'field_openlist' => array(
+                array(
+                    'id'    => 'b101',
+                    'label' => 'static_01'
+                ),
+                array(
+                    'id'    => 'o4',
+                    'label' => 'open_value_01'
+                )
+            )
+        );
+
+        $this->assertEqual($changeset->getSimpleRESTValue($this->user), $expected);
     }
 }

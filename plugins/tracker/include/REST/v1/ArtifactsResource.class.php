@@ -50,6 +50,11 @@ class ArtifactsResource extends AuthenticatedResource {
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
 
+    const VALUES_FORMAT_FLAT_ARRAY = 'flat_array';
+    const VALUES_FORMAT_BY_FIELD   = 'by_field';
+    const VALUES_FORMAT_ALL        = 'all';
+    const VALUES_DEFAULT           = '';
+
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
@@ -80,19 +85,27 @@ class ArtifactsResource extends AuthenticatedResource {
      * @url GET {id}
      * @access hybrid
      *
-     * @param int $id Id of the artifact
+     * @param int    $id            Id of the artifact
+     * @param string $values_format The format of the value {@from query} {@choice ,flat_array,by_field,all}
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
-    public function getId($id) {
+    public function getId($id, $values_format = self::VALUES_DEFAULT) {
         $this->checkAccess();
+
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
         $this->sendAllowHeadersForArtifact();
         $this->sendLastModifiedHeader($artifact);
         $this->sendETagHeader($artifact);
 
-        return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+        if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_FLAT_ARRAY) {
+            return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+        } elseif ($values_format === self::VALUES_FORMAT_BY_FIELD) {
+            return $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact);
+        } elseif ($values_format === self::VALUES_FORMAT_ALL) {
+            return $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+        }
     }
 
     /**

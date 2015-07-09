@@ -142,6 +142,60 @@ class ArtifactTest extends RestBase {
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+
+        $this->assertEmpty((string) $artifact_xml->values_by_field);
+        $this->assertNotEmpty((string) $artifact_xml->values);
+
+        $this->assertEquals((string) $artifact_xml->values->item[0]->label, 'Slogan');
+        $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
+        $this->assertEquals((string) $artifact_xml->values->item[5]->label, 'Status');
+        $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
+        $this->assertEquals((string) $artifact_xml->values->item[5]->bind_value_ids, '810');
     }
 
+    /**
+     * @depends testPOSTArtifactInXMLTracker
+     */
+    public function testGetArtifactInXMLTrackerWithValuesByField($artifact_id) {
+        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $artifact_xml = $response->xml();
+
+        $this->assertEquals((int) $artifact_xml->id, $artifact_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+
+        $this->assertEmpty((string) $artifact_xml->values);
+        $this->assertNotEmpty((string) $artifact_xml->values_by_field);
+
+        $this->assertEquals((string) $artifact_xml->values_by_field->slogan, 'slogan');
+        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->id, '810');
+        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->label, 'SM New');
+   }
+
+    /**
+     * @depends testPOSTArtifactInXMLTracker
+     */
+    public function testGetArtifactInXMLTrackerInBothFormat($artifact_id) {
+        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=all'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $artifact_xml = $response->xml();
+
+        $this->assertEquals((int) $artifact_xml->id, $artifact_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+
+        $this->assertNotEmpty((string) $artifact_xml->values);
+        $this->assertNotEmpty((string) $artifact_xml->values_by_field);
+
+        $this->assertEquals((string) $artifact_xml->values->item[0]->label, 'Slogan');
+        $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
+        $this->assertEquals((string) $artifact_xml->values->item[5]->label, 'Status');
+        $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
+        $this->assertEquals((string) $artifact_xml->values->item[5]->bind_value_ids, '810');
+
+        $this->assertEquals((string) $artifact_xml->values_by_field->slogan, 'slogan');
+        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->id, '810');
+        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->label, 'SM New');
+   }
 }

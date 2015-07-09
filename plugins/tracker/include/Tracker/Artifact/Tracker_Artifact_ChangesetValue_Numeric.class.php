@@ -1,8 +1,9 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /**
  * Manage values in changeset for numeric fields
@@ -91,6 +91,8 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
             return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$this->getValue();
         }
     }
-}
 
-?>
+    public function getSimpleRESTValue(PFUser $user) {
+        return null;
+    }
+}
