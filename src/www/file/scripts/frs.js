@@ -368,11 +368,13 @@ document.observe('dom:loaded', function () {
         if (! window.FileReader) {
             // Unsupported browser, continue validation
             onsuccess_callback();
+            return;
         }
 
         if (! input_files.size()) {
             // No files to check, continue validation
             onsuccess_callback();
+            return;
         }
 
         var total_bytes = input_files.inject(0, function (total_bytes, input_file) {
