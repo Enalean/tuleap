@@ -20,11 +20,14 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends TuleapTestCase {
-    private $changeset_dao;
+class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends TuleapTestCase {
+    protected $changeset_dao;
 
     /** @var Tracker_Artifact_Changeset_InitialChangesetCreator */
-    private $creator;
+    protected $creator;
+
+    /** @var Tracker_FormElementFactory */
+    protected $factory;
 
     public function setUp() {
         parent::setUp();
@@ -32,9 +35,11 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends TuleapTestC
         $this->submitter   = aUser()->withId(74)->build();
 
         $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
-        $factory     = mock('Tracker_FormElementFactory');
-        stub($factory)->getAllFormElementsForTracker()->returns(array());
-        stub($factory)->getUsedFields()->returns(array());
+        $this->factory     = mock('Tracker_FormElementFactory');
+
+        $fields = $this->getFields();
+        stub($this->factory)->getAllFormElementsForTracker()->returns($fields);
+        stub($this->factory)->getUsedFields()->returns($fields);
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         $this->workflow = mock('Workflow');
@@ -51,7 +56,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends TuleapTestC
 
         $this->creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
-            $factory,
+            $this->factory,
             $this->changeset_dao,
             $this->artifact_factory,
             mock('EventManager')
@@ -59,6 +64,13 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends TuleapTestC
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];
     }
+
+    protected function getFields() {
+        return array();
+    }
+}
+
+class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest {
 
     public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
         stub($this->changeset_dao)->create()->returns(5667);
@@ -79,6 +91,59 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends TuleapTestC
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
+
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+    }
+}
+
+class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest {
+
+    private $field;
+
+    public function setUp() {
+        $this->field = mock('Tracker_FormElement_Field_Selectbox');
+        stub($this->field)->getId()->returns(123);
+        stub($this->field)->isSubmitable()->returns(true);
+
+        parent::setUp();
+
+        stub($this->changeset_dao)->create()->returns(true);
+    }
+
+    protected function getFields() {
+        return array($this->field);
+    }
+
+    public function itSavesTheDefaultValueWhenFieldIsSubmittedButCannotSubmit() {
+        stub($this->field)->userCanSubmit()->returns(false);
+        stub($this->field)->getDefaultValue()->returns('default value');
+
+        $this->fields_data[123] = 'value';
+
+        expect($this->field)->saveNewChangeset('*', '*', '*', 'default value', '*', '*', '*')->once();
+
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+    }
+
+    public function itIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit() {
+        stub($this->field)->userCanSubmit()->returns(true);
+        stub($this->field)->getDefaultValue()->returns('default value');
+
+        $this->fields_data[123] = 'value';
+
+        expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*')->once();
+
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+    }
+
+    public function itBypassPermsWhenWorkflowBypassPerms() {
+        stub($this->field)->userCanSubmit()->returns(false);
+        stub($this->field)->getDefaultValue()->returns('default value');
+        stub($this->workflow)->bypassPermissions($this->field)->returns(true);
+
+        $this->fields_data[123] = 'value';
+
+        expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*')->once();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
