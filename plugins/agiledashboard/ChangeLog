@@ -1,3 +1,6 @@
+Version 1.237 - Tuleap 8.4
+    * request #8220 Fix karma-junit-reporter version number
+
 Version 1.236 - Tuleap 8.4
     * story #8140: have a field 'last modified by'
 
