@@ -55,8 +55,7 @@ $forbidden_permissions = array(
     'viewmywatchlist',
     'editmywatchlist',
     'viewmyprivateinfo',
-    'editmyprivateinfo',
-    'editmyoptions'
+    'editmyprivateinfo'
 );
 
 $read_permissions = array(
