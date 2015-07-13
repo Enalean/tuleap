@@ -1,3 +1,6 @@
+Version 0.76 - Tuleap 8.4
+    * request #8196: enable transcluding visual sections
+
 Version 0.75 - Tuleap 8.4
     * request #8213: Cannot update preferences in MediaWiki 1.23
 
