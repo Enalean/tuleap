@@ -128,13 +128,15 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itReturnsSimpleValuesOnlyForFieldsWithValues() {
-        $field1 = aMockField()->withId(1)->build();
-        $field2 = aMockField()->withId(2)->build();
-        $field3 = aMockField()->withId(3)->build();
+        $field1 = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1);
+        $field2 = stub('Tracker_FormElement_Field_String')->getId()->returns(2);
+        $field3 = stub('Tracker_FormElement_Field_Float')->getId()->returns(3);
         stub($field1)->userCanRead($this->user)->returns(true);
         stub($field2)->userCanRead($this->user)->returns(true);
-        stub($field1)->getSimpleRESTValue()->returns(array('field01' => '01'));
-        stub($field2)->getSimpleRESTValue()->returns(array('field02' => 'whatever'));
+        stub($field1)->getName()->returns('field01');
+        stub($field2)->getName()->returns('field02');
+        stub($field1)->getRESTValue()->returns('01');
+        stub($field2)->getRESTValue()->returns('whatever');
 
         stub($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array($field1, $field2, $field3));
 
@@ -151,13 +153,14 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itReturnsBothFormatForFieldsWithValues() {
-        $field1 = aMockField()->withId(1)->build();
-        $field2 = aMockField()->withId(2)->build();
-        $field3 = aMockField()->withId(3)->build();
+        $field1 = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1);
+        $field2 = stub('Tracker_FormElement_Field_String')->getId()->returns(2);
+        $field3 = stub('Tracker_FormElement_Field_Float')->getId()->returns(3);
         stub($field1)->userCanRead($this->user)->returns(true);
         stub($field2)->userCanRead($this->user)->returns(true);
-        stub($field1)->getSimpleRESTValue()->returns(array('field01' => '01'));
-        stub($field2)->getSimpleRESTValue()->returns(array('field02' => 'whatever'));
+        stub($field1)->getName()->returns('field01');
+        stub($field2)->getName()->returns('field02');
+        stub($field1)->getRESTValue()->returns('01');
         stub($field2)->getRESTValue()->returns('whatever');
 
         stub($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array($field1, $field2, $field3));
@@ -167,7 +170,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
             $this->artifact
         );
 
-        $this->assertEqual($representation->values, array('whatever'));
+        $this->assertEqual($representation->values, array('01', 'whatever'));
         $this->assertEqual($representation->values_by_field, array(
             'field01' => '01',
             'field02' => 'whatever',

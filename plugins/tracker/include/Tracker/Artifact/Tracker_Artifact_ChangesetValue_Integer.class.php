@@ -79,8 +79,4 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     public function getFullRESTValue(PFUser $user) {
         return $this->getFullRESTRepresentation($this->getInteger());
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return $this->getSimpleRESTArrayRepresentation($this->getInteger());
-    }
 }

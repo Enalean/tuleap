@@ -128,43 +128,4 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->assertPattern('/Sandra, Manon removed/', $list_1->diff($list_2));
         $this->assertPattern('/Marc, Nicolas added/', $list_1->diff($list_2));
     }
-
-    public function itReturnsTheSimpleRESTValue() {
-        $bind_value = partial_mock(
-            'Tracker_FormElement_Field_List_Bind_StaticValue',
-            array('getLabel', 'getId')
-        );
-
-        $open_value = partial_mock(
-            'Tracker_FormElement_Field_List_OpenValue',
-            array('getLabel', 'getId')
-        );
-
-        stub($bind_value)->getId()->returns(101);
-        stub($bind_value)->getLabel()->returns('static_01');
-        stub($open_value)->getId()->returns(4);
-        stub($open_value)->getLabel()->returns('open_value_01');
-
-        $changeset = new Tracker_Artifact_ChangesetValue_List(
-            111,
-            $this->field,
-            true,
-            array($bind_value, $open_value)
-        );
-
-        $expected = array(
-            'field_openlist' => array(
-                array(
-                    'id'    => 'b101',
-                    'label' => 'static_01'
-                ),
-                array(
-                    'id'    => 'o4',
-                    'label' => 'open_value_01'
-                )
-            )
-        );
-
-        $this->assertEqual($changeset->getSimpleRESTValue($this->user), $expected);
-    }
 }

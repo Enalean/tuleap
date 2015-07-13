@@ -91,8 +91,4 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
             return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$this->getValue();
         }
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return null;
-    }
 }

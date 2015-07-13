@@ -57,7 +57,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         $artifact_representation->build(
             $artifact,
             null,
-            $this->getSimpleFieldsValues($user, $artifact)
+            $this->getFieldValuesIndexedByName($user, $artifact)
         );
 
         return $artifact_representation;
@@ -75,7 +75,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         $artifact_representation->build(
             $artifact,
             $this->getFieldsValues($user, $artifact),
-            $this->getSimpleFieldsValues($user, $artifact)
+            $this->getFieldValuesIndexedByName($user, $artifact)
         );
 
         return $artifact_representation;
@@ -107,29 +107,19 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         );
     }
 
-    private function getSimpleFieldsValues(PFUser $user, Tracker_Artifact $artifact) {
-        $changeset     = $artifact->getLastChangeset();
-        $simple_values = array();
+    private function getFieldValuesIndexedByName(PFUser $user, Tracker_Artifact $artifact) {
+        $changeset = $artifact->getLastChangeset();
+        $values    = array();
 
         foreach ($this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()) as $field) {
-            $simple_field_value = $field->getSimpleRESTValue($user, $changeset);
-
-            if (! $simple_field_value) {
+            if (! $field->userCanRead($user) || ! $field instanceof Tracker_FormElement_Field_Alphanum) {
                 continue;
             }
-
-            $this->indexFieldValueByFieldName($simple_field_value, $simple_values);
+            $field_value = $field->getRESTValue($user, $changeset);
+            $values[$field->getName()] = $field_value;
         }
 
-        return $simple_values;
-    }
-
-    private function indexFieldValueByFieldName(array $simple_field_value, array &$simple_values) {
-        $keys        = array_keys($simple_field_value);
-        $field_key   = $keys[0];
-        $field_value = $simple_field_value[$field_key];
-
-        $simple_values[$field_key] = $field_value;
+        return $values;
     }
 
     /**

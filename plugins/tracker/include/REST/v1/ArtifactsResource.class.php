@@ -50,7 +50,7 @@ class ArtifactsResource extends AuthenticatedResource {
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
 
-    const VALUES_FORMAT_FLAT_ARRAY = 'flat_array';
+    const VALUES_FORMAT_COLLECTION = 'collection';
     const VALUES_FORMAT_BY_FIELD   = 'by_field';
     const VALUES_FORMAT_ALL        = 'all';
     const VALUES_DEFAULT           = '';
@@ -79,14 +79,58 @@ class ArtifactsResource extends AuthenticatedResource {
     /**
      * Get artifact
      *
-     * Get the content of a given artifact. In addition of the artifact representation,
-     * it sets Last-Modified header with the last update date of the element
+     * Get the content of a given artifact. In addition to the artifact representation,
+     * it sets Last-Modified header with the last update date of the element.
+     * <br/><br/>
+     * The "values_format" parameter allows you to choose how the artifact's values will be
+     * formatted. When no "values_format" is provided, "collection" is chosen by default. Using "all"
+     * will return both formats at the same time.
+     * <br/><br/>
+     * <pre>
+     * /!\ Only alphanumeric fields are returned when choosing the "by_field" format! /!\
+     * </pre>
+     * <br/><br/>
+     * Example with "collection":
+     * <pre>
+     * "values": [<br/>
+     *   {<br/>
+     *     "field_id": 1369,<br/>
+     *     "type": "string",<br/>
+     *     "label": "Title",<br/>
+     *     "value": "Lorem ipsum dolor sit amet"<br/>
+     *   },<br/>
+     *   {<br/>
+     *     "field_id": 1368,<br/>
+     *     "type": "int",<br/>
+     *     "label": "Remaining Effort",<br/>
+     *     "value": 1447<br/>
+     *   }<br/>
+     * ]<br/>
+     * </pre>
+     * <br/><br/>
+     * Example with "by_field":
+     * <pre>
+     * "values_by_field": {<br/>
+     *   "title": {<br/>
+     *     "field_id": 1369,<br/>
+     *     "type": "string",<br/>
+     *     "label": "Title",<br/>
+     *     "value": "Lorem ipsum dolor sit amet"<br/>
+     *   },<br/>
+     *   "remaining_effort": {<br/>
+     *     "field_id": 1368,<br/>
+     *     "type": "int",<br/>
+     *     "label": "Remaining Effort",<br/>
+     *     "value": 1447<br/>
+     *   }<br/>
+     * }<br/>
+     * </pre>
      *
      * @url GET {id}
      * @access hybrid
      *
      * @param int    $id            Id of the artifact
-     * @param string $values_format The format of the value {@from query} {@choice ,flat_array,by_field,all}
+     * @param string $values_format The format of the value {@from query} {@choice ,collection,by_field,all}
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
@@ -99,7 +143,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendLastModifiedHeader($artifact);
         $this->sendETagHeader($artifact);
 
-        if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_FLAT_ARRAY) {
+        if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_COLLECTION) {
             return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
         } elseif ($values_format === self::VALUES_FORMAT_BY_FIELD) {
             return $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact);
