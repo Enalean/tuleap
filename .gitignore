@@ -41,6 +41,7 @@ plugins/maillog
 !tools/plugins/plugincreationwizard/*.css
 vendor/*
 composer.*
+src/www/api/explorer
 /.idea/
 /.config/
 npm-debug.log

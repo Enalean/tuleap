@@ -25,7 +25,7 @@ require_once '/usr/share/restler/vendor/restler.php';
 
 use Tuleap\REST\GateKeeper;
 use Luracast\Restler\Restler;
-use Luracast\Restler\Resources;
+use Luracast\Restler\Explorer;
 use Luracast\Restler\Defaults;
 
 try {
@@ -46,10 +46,10 @@ if ($matches && isset($matches[1]) && $matches[1] == 2) {
 }
 
 // Do not put .json at the end of the resource
-Resources::$useFormatAsExtension = false;
+Explorer::$useFormatAsExtension = false;
 
 //Do not hide the API
-Resources::$hideProtected = false;
+Explorer::$hideProtected = false;
 // Use /api/v1/projects uri
 Defaults::$useUrlBasedVersioning = true;
 
@@ -75,7 +75,7 @@ switch ($version) {
 }
 
 EventManager::instance()->processEvent($event, array('restler' => $restler));
-$restler->addAPIClass('Resources');
+$restler->addAPIClass('Explorer');
 
 $restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
 $restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');

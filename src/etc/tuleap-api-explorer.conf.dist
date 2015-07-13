@@ -1,7 +1,0 @@
-Alias /api/explorer/ "/usr/share/restler-api-explorer/dist/"
-<Directory "/usr/share/restler-api-explorer/dist/">
-    Options FollowSymLinks
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>

@@ -74,7 +74,7 @@ Requires: shared-mime-info
 # Documentation
 Requires: tuleap-documentation
 # Rest API
-Requires: %{php_base}-restler >= 3.0-0.7, restler-api-explorer
+Requires: %{php_base}-restler >= 3.0-0.7
 # SELinux policy tools
 Requires(post): policycoreutils-python
 
@@ -377,6 +377,16 @@ Requires: %{php_base}-pear-HTTP-Download >= 1.1.4-3
 %description plugin-proftpd
 Control and interfact with Proftpd as FTP server
 
+%package api-explorer
+Summary: Web API Explorer
+Group: Development/Tools
+Version: 1.0
+Release: @@RELEASE@@%{?dist}
+Requires: %{php_base}-restler
+Obsoletes: restler-api-explorer
+%description api-explorer
+Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beautiful documentation.
+
 #
 ## Themes
 #
@@ -475,6 +485,9 @@ done
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
+# We do not need to package the VERSION file and ChangeLog file of the API
+%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
+%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -599,6 +612,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__ln_s} %{APP_LOG_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LOG_DIR}
 %{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
 %{__ln_s} /etc/%{APP_NAME} $RPM_BUILD_ROOT/etc/%{OLD_APP_NAME}
+
+# Symlink for the API Explorer
+%{__ln_s} /usr/share/restler/vendor/Luracast/Restler/explorer/ $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/explorer
 
 ##
 ## On package install
@@ -875,7 +891,11 @@ fi
 %{APP_DIR}/src/www/*.php
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
-%{APP_DIR}/src/www/api
+# API Explorer is not packaged with the core
+%dir %{APP_DIR}/src/www/api
+%{APP_DIR}/src/www/api/index.php
+%{APP_DIR}/src/www/api/.htaccess
+%{APP_DIR}/src/www/api/reference
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/docman
@@ -1128,6 +1148,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/proftpd
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
+
+%files api-explorer
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/api/explorer
 
 #
 # Themes
