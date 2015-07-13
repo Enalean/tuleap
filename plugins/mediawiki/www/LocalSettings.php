@@ -525,7 +525,7 @@ $wgPdfBookTab = true;
 
 // Labeled Section Transclusion
 require_once("$IP/extensions/LabeledSectionTransclusion/lst.php");
-
+require_once("$IP/extensions/LabeledSectionTransclusion/lsth.php");
 // CategoryTree
 $wgUseAjax = true;
 require_once("$IP/extensions/CategoryTree/CategoryTree.php");
