@@ -6,7 +6,7 @@ Version 8.4 (Not Released Yet)
 	* IM: 1.5.29
 	* pluginsadministration: 1.10
 	* ldap: 3.82
-	* agiledashboard: 1.237
+	* agiledashboard: 1.238
 
 	== Security ==
 	* request #7999: Disallow SSLv3 and weak ciphers in the default Apache configuration
