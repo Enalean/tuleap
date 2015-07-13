@@ -10,6 +10,7 @@ Version 8.4 (Not Released Yet)
 
 	== Security ==
 	* request #7999: Disallow SSLv3 and weak ciphers in the default Apache configuration
+	* request #8186: Fix XSS in the API Explorer
 
 	== Enhancements ==
 	* story #8197: enhance register form UX
@@ -20,6 +21,9 @@ Version 8.4 (Not Released Yet)
 
 	== Themes ==
 	* FlamingParrot: 1.91
+
+	== Api ==
+	* REST API: 1.10
 
 Version 8.3 (Thursday, June 25th 2015)
 	== Bug Fix ==

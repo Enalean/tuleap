@@ -1,3 +1,9 @@
+Version 1.10 - Tuleap 8.4
+    * request #8186: Fix XSS in the API Explorer
+
+Version 1.9 - Tuleap 8.4
+    * request #8186: Fix XSS in the API Explorer
+
 Version 1.8 - Tuleap 8.1
     * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
 
