@@ -1,3 +1,9 @@
+Version 1.93 - Tuleap 8.4
+    * Revert "story #8141: change the labelling of projects from public/ project to user-group-based"
+
+Version 1.92 - Tuleap 8.4
+    * Revert "story #8141: change the labelling of projects from public/ project to user-group-based"
+
 Version 1.91 - Tuleap 8.4
     * story #8141: change the labelling of projects from public/ project to user-group-based
 

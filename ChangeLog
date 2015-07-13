@@ -20,7 +20,7 @@ Version 8.4 (Not Released Yet)
 	* request #8205: ssh://gitolite is wrongly interpreted
 
 	== Themes ==
-	* FlamingParrot: 1.91
+	* FlamingParrot: 1.93
 
 	== Api ==
 	* REST API: 1.10
