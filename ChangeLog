@@ -1,3 +1,11 @@
+Version 8.3-4 (Monday, July 13th 2015)
+	== Bux Fix ==
+	* request #8216: fatal error when deleting a file in a release
+	* request #8210: Default value not set when unsubmittable field is submitted
+	* request #8205: ssh://gitolite is wrongly interpreted
+	* request #8204: Cross-references not computed when a follow-up is edited
+	* request #8200: AD content pane does not show all the backlog items
+
 Version 8.3-3 (Monday, July 6th 2015)
 	== Bug Fix ==
 	* request #8178: Can't import datetime fields in trackers
