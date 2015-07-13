@@ -105,7 +105,7 @@ class User_ForgeUserGroupFactory {
     /**
      * @return User_ForgeUGroup
      */
-    public function getDynamicForgeUserGroupByName($name) {
+    private function getDynamicForgeUserGroupByName($name) {
         $row = $this->dao->getDynamicForgeUserGroupByName($name);
         return $this->instantiateFromRow($row);
     }

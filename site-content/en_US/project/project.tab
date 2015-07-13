@@ -32,9 +32,10 @@ project_admin_editgroupinfo	ancestor_exception	These projects are already relate
 project_admin_editgroupinfo	visibility_section	Access
 project_admin_editgroupinfo	private_label	private
 project_admin_editgroupinfo	public_label	public
-project_admin_editgroupinfo	choose_visbility	Choose which user group can access your project. Note that access is top-down in that if anonymous users have access then so do subsets such as registered users.
+project_admin_editgroupinfo	choose_visbility	Choose the visibility of your project
 project_admin_editgroupinfo	unrestricted_label	public incl. restricted users
-project_admin_editgroupinfo	restricted_warning	<b>It is not advisable to allow restricted users to access your project without good reason</b>.<br />Please not that <b>$1</b> only applies to the <em>project summary page</em>, <em>git repositories</em> and <em>mediawiki</em>.
+project_admin_editgroupinfo	restricted_warning	Only project members can access a <b>private</b> project. <br>A <b>public</b> project is accessible to all <b>except restricted users</b>.<br>It is not advisable to allow <b>restricted users</b> to access you project without good reason.<br />Please not that <b>Public incl. Restricted</b> only applies to <em>project summary page</em> and <em>git repositories</em>.
+project_admin_editgroupinfo	general_warning	Only project members can access a <b>private</b> project <br>A <b>public</b> project is accessible to everyone.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -1003,10 +1004,9 @@ project_desc_desc	int_prop	If your project is covered by Patents or IPs list the
 #
 project_privacy	private	Private
 project_privacy	public	Public
-project_privacy	tooltip_private	<p class='project-privacy'>Access to this project is allowed for <big><strong>$1</strong></big><br />Only $1 can access its content.</p>
-project_privacy	tooltip_public_w_anon	<p class='project-privacy'>Access to this project is allowed for <big><strong>$1</strong></big><br />By default, its content is available to everyone (authenticated or not).<br />Please note that more restrictive permissions might exist on some items.</p>
-project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>Access to this project is allowed for <big><strong>$1</strong></big><br />By default, its content is available to all registered users.<br />Please note that more restrictive permissions might exist on some items.</p>
-project_privacy	tooltip_public_w_restricted	<p class='project-privacy'>Access to this project is allowed for : <big><strong>$1</strong></big><br />By default, its content is available to all registered users ; restricted users have access to a limited amount of services.<br />Please note that more restrictive permissions might exist on some items.</p>
+project_privacy	tooltip_private	<p class='project-privacy'>Project privacy set to <big><strong>private</strong></big><br />Only project members can access its content.</p>
+project_privacy	tooltip_public_w_anon	<p class='project-privacy'>Project privacy set to <big><strong>public</strong></big><br />By default, its content is available to everyone (authenticated or not).<br />Please note that more restrictive permissions might exist on some items.</p>
+project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>Project privacy set to <big><strong>public</strong></big><br />By default, its content is available to all authenticated, but not restricted, users.<br />Please note that more restrictive permissions might exist on some items.</p>
 
 
 project_service	service_not_used	$1 service is not enabled

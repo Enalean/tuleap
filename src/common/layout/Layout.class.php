@@ -2127,7 +2127,7 @@ class Layout extends Response {
                     } else {
                         $privacy = 'private';
                     }
-                    $privacy_text = $this->getProjectPrivacy($project);
+                    $privacy_text = $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $this->getProjectPrivacy($project));
                     $label .= '<span class="project-title-container project_privacy_'.$privacy.'" data-content="'. $privacy_text .'" data-placement="bottom">[';
                     $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
                     $label .= ']</span>';
@@ -2163,23 +2163,20 @@ class Layout extends Response {
     }
 
     protected function getProjectPrivacy(Project $project) {
-        $user_group_factory    = new User_ForgeUserGroupFactory(new UserGroupDao());
-
         if ($project->isPublic()) {
+            $privacy = 'public';
+
             if (ForgeConfig::areAnonymousAllowed()) {
-                $public_users_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON)->getName();
-                return $GLOBALS['Language']->getText('project_privacy', 'tooltip_public_w_anon', array($public_users_label));
-            } elseif ($project->allowsRestricted()) {
-                $public_users_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::AUTHENTICATED)->getName();
-                return $GLOBALS['Language']->getText('project_privacy', 'tooltip_public_w_restricted', array($public_users_label));
+                $privacy .= '_w_anon';
             } else {
-                $public_users_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED)->getName();
-                return $GLOBALS['Language']->getText('project_privacy', 'tooltip_public_wo_anon', array($public_users_label));
+                $privacy .= '_wo_anon';
             }
+
+        } else {
+            $privacy = 'private';
         }
 
-        $project_members_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS)->getName();
-        return $GLOBALS['Language']->getText('project_privacy', 'tooltip_private', array($project_members_label));
+        return $privacy;
     }
 
     private function getServiceIcon($service_name) {
