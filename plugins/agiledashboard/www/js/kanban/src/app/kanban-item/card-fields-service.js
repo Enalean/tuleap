@@ -87,21 +87,21 @@
                     return getCardFieldUserValue(value, filter_terms);
                 }
 
-                return highlight(value.label, filter_terms);
+                return highlight(_.escape(value.label), filter_terms);
             }
 
             function getValueRenderedWithColor(value, filter_terms) {
-                var rgb   = 'rgb(' + value.color.r + ', ' + value.color.g + ', ' + value.color.b + ')',
+                var rgb   = 'rgb(' + _.escape(value.color.r) + ', ' + _.escape(value.color.g) + ', ' + _.escape(value.color.b) + ')',
                     color = '<span class="color" style="background: ' + rgb + '"></span>';
 
-                return color + highlight(value.label, filter_terms);
+                return color + highlight(_.escape(value.label), filter_terms);
             }
 
             return $sce.trustAsHtml(_.map(values, getValueRendered).join(', '));
         }
 
         function getCardFieldTextValue(value) {
-            return $sce.trustAsHtml(value);
+            return $sce.trustAsHtml(_.escape(value));
         }
 
         function getCardFieldFileValue(artifact_id, field_id, file_descriptions, filter_terms) {
@@ -110,9 +110,9 @@
             }
 
             function getFileLink(file) {
-                var file_name = highlight(file.name, filter_terms);
+                var file_name = highlight(_.escape(file.name), filter_terms);
 
-                return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="'+ $sce.getTrustedHtml(file.description) +'"><i class="icon-file-text-alt"></i> ' + file_name + '</a>';
+                return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="'+ _.escape(file.description) +'"><i class="icon-file-text-alt"></i> ' + file_name + '</a>';
             }
 
             return $sce.trustAsHtml(_.map(file_descriptions, getFileLink).join(', '));
@@ -120,7 +120,7 @@
 
         function getCardFieldCrossValue(links, filter_terms) {
             function getCrossLink(link) {
-                return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + highlight(link.ref, filter_terms) + '</a>');
+                return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + highlight(_.escape(link.ref), filter_terms) + '</a>');
             }
 
             return $sce.trustAsHtml(_.map(links, getCrossLink).join(', '));
@@ -137,11 +137,11 @@
 
             if (value.user_url === null) {
                 avatar       = '<div class="avatar"> </div> ';
-                display_name = highlight(value.display_name, filter_terms);
+                display_name = highlight(_.escape(value.display_name), filter_terms);
                 link         = avatar + display_name;
             } else {
                 avatar       = '<div class="avatar"><img src="' + value.avatar_url + '" /></div> ';
-                display_name = highlight(value.display_name, filter_terms);
+                display_name = highlight(_.escape(value.display_name), filter_terms);
                 link         = '<a data-nodrag="true" href="' + value.user_url +'">'+ avatar + display_name +'</a>';
             }
 

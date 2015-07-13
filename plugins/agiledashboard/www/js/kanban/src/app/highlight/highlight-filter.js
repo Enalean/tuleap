@@ -35,7 +35,7 @@ function HighlightFilter() {
     }
 
     text   = text.toString();
-    search = search.toString().replace(' ', '|');
+    search = _.escape(search.toString().replace(' ', '|'));
 
     return text.replace(new RegExp(search, flags), '<span class="highlight">$&</span>');
   };
