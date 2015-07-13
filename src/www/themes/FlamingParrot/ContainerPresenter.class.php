@@ -39,7 +39,7 @@ class FlamingParrot_ContainerPresenter {
     private $project_is_public;
 
     /** @var string */
-    public $project_privacy;
+    private $project_privacy;
 
     /** @var string */
     private $project_tabs;
@@ -129,6 +129,10 @@ class FlamingParrot_ContainerPresenter {
 
     public function projectIsPublic() {
         return $this->project_is_public;
+    }
+
+    public function project_privacy() {
+        return $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $this->project_privacy);
     }
 
     public function feedback() {

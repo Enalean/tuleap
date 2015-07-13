@@ -60,50 +60,33 @@ class ProjectVisibilityPresenter {
         $this->project_visibility         = $project_visibility;
         $this->section_title              = $this->language->getText('project_admin_editgroupinfo', 'visibility_section');
         $this->choose_visbility           = $this->language->getText('project_admin_editgroupinfo', 'choose_visbility');
-        $this->restricted_warning_message = '';
+        $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning');
+        $this->general_warning_message    = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
 
         $this->generateVisibilityOptions();
     }
 
     private function generateVisibilityOptions() {
-        $user_group_factory    = new User_ForgeUserGroupFactory(new UserGroupDao());
-        $project_members_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS)->getName();
-
-        $options = array();
-        if (ForgeConfig::areAnonymousAllowed()) {
-            $public_users_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON)->getName();
-            $options[] = array(
+        $options = array(
+            array(
+                'value'      => Project::ACCESS_PRIVATE,
+                'label'      => $this->language->getText('project_admin_editgroupinfo', 'private_label'),
+                'selected'   => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
+            ),
+            array(
                 'value'      => Project::ACCESS_PUBLIC,
-                'label'      => $public_users_label,
+                'label'      => $this->language->getText('project_admin_editgroupinfo', 'public_label'),
                 'selected'   => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
-            );
-        }
+            )
+        );
 
         if ($this->platform_allows_restricted) {
-            $unrestricted_users_label =  $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::AUTHENTICATED)->getName();
             $options[] = array(
                 'value'      => Project::ACCESS_PUBLIC_UNRESTRICTED,
-                'label'      => $unrestricted_users_label,
+                'label'      => $this->language->getText('project_admin_editgroupinfo', 'unrestricted_label'),
                 'selected'   => ($this->project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED) ? 'selected = "selected"' : '',
             );
-
-            $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning', array($unrestricted_users_label));
         }
-
-        if (! ForgeConfig::areAnonymousAllowed()) {
-            $public_users_label = $user_group_factory->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED)->getName();
-            $options[] = array(
-                'value'      => Project::ACCESS_PUBLIC,
-                'label'      => $public_users_label,
-                'selected'   => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
-            );
-        }
-
-        $options[] = array(
-            'value'      => Project::ACCESS_PRIVATE,
-            'label'      => $project_members_label,
-            'selected'   => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
-        );
 
         $this->options = $options;
     }

@@ -58,8 +58,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $this->creation_request,
             $GLOBALS['LICENSE'],
             $this->required_custom_descriptions,
-            $project_manager,
-            new User_ForgeUserGroupFactory(new UserGroupDao())
+            $project_manager
         );
     }
 
