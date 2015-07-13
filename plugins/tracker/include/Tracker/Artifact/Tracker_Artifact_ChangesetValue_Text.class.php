@@ -275,13 +275,4 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     private function isInHTMLFormat() {
         return $this->getFormat() == self::HTML_CONTENT;
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        $text_value = array(
-            "format"  => $this->getFormat(),
-            "content" => $this->getText()
-        );
-
-        return $this->getSimpleRESTArrayRepresentation($text_value);
-    }
 }

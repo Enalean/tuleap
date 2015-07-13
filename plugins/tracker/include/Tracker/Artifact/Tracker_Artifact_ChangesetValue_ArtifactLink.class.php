@@ -220,8 +220,4 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             $user = $this->user_manager->getCurrentUser();
         }
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return null;
-    }
 }

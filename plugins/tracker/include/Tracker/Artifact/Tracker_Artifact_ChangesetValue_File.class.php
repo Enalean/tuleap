@@ -268,8 +268,4 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
             return $result;
         }
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return null;
-    }
 }

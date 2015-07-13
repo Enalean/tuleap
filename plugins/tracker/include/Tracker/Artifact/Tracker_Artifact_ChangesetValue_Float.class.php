@@ -92,9 +92,4 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     public function getJsonValue() {
         return $this->getFloat();
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return $this->getSimpleRESTArrayRepresentation($this->getFloat());
-    }
-
 }

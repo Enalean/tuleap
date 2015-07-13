@@ -82,14 +82,21 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         $int_2 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->field, false, 666);
         $this->assertEqual($int_1->diff($int_2), 'changed from 666 to 66');
     }
+}
 
-    public function itReturnsTheSimpleRESTValue() {
-        $changeset = new Tracker_Artifact_ChangesetValue_Integer(111, $this->field, true, 42);
+class Tracker_Artifact_ChangesetValue_Integer_RESTTest extends TuleapTestCase {
 
-        $expected = array(
-            'field_int' => 42
-        );
+    public function skip() {
+        $this->skipIfNotPhp53();
+    }
 
-        $this->assertEqual($changeset->getSimpleRESTValue($this->user), $expected);
+    public function itReturnsTheRESTValue() {
+        $field = stub('Tracker_FormElement_Field_Integer')->getName()->returns('field_int');
+        $user  = aUser()->withId(101)->build();
+
+        $changeset = new Tracker_Artifact_ChangesetValue_Integer(111, $field, true, 556);
+        $representation = $changeset->getRESTValue($user, $changeset);
+
+        $this->assertEqual($representation->value, 556);
     }
 }

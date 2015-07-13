@@ -335,13 +335,4 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         $added = implode(', ', $added_arr);
         return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        $values = array();
-        foreach ($this->getListValues() as $value) {
-            $values[] = $value->getSimpleRESTValue($this->field);
-        }
-
-        return $this->getSimpleRESTArrayRepresentation($values);
-    }
 }

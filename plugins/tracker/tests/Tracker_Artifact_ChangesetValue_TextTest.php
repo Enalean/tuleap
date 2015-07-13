@@ -99,19 +99,6 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
                                                     '</div>'.
                                                     '</div>');
     }
-
-    public function itReturnsTheSimpleRESTValue() {
-        $changeset = new Tracker_Artifact_ChangesetValue_Text(111, $this->field, true, 'enurny', 'text');
-
-        $expected = array(
-            'field_text' => array(
-                'format'  => 'text',
-                'content' => 'enurny'
-            )
-        );
-
-        $this->assertEqual($changeset->getSimpleRESTValue($this->user), $expected);
-    }
 }
 
 class Tracker_Artifact_ChangesetValue_Text_getContentAsTextTest extends TuleapTestCase {
@@ -139,4 +126,22 @@ class Tracker_Artifact_ChangesetValue_Text_getContentAsTextTest extends TuleapTe
         );
         $this->assertEqual($text->getContentAsText(), 'Problems with my code: example');
      }
+}
+
+class Tracker_Artifact_ChangesetValue_Text_RESTTest extends TuleapTestCase {
+
+    public function skip() {
+        $this->skipIfNotPhp53();
+    }
+
+    public function itReturnsTheRESTValue() {
+        $field = stub('Tracker_FormElement_Field_Text')->getName()->returns('field_text');
+        $user  = aUser()->withId(101)->build();
+
+        $changeset = new Tracker_Artifact_ChangesetValue_Text(111, $field, true, 'myxedemic enthymematic', 'html');
+        $representation = $changeset->getRESTValue($user, $changeset);
+
+        $this->assertEqual($representation->value, 'myxedemic enthymematic');
+        $this->assertEqual($representation->format, 'html');
+    }
 }

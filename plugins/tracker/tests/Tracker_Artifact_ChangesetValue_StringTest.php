@@ -18,17 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_ChangesetValue_StringTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_String_RESTTest extends TuleapTestCase {
 
-    public function itReturnsTheSimpleRESTValue() {
-        $field     = stub('Tracker_FormElement_Field_String')->getName()->returns('field_string');
-        $user      = aUser()->withId(101)->build();
-        $changeset = new Tracker_Artifact_ChangesetValue_String(111, $field, true, "My summary", 'text');
+    public function skip() {
+        $this->skipIfNotPhp53();
+    }
 
-        $expected = array(
-            'field_string' => "My summary"
-        );
+    public function itReturnsTheRESTValue() {
+        $field = stub('Tracker_FormElement_Field_String')->getName()->returns('field_string');
+        $user  = aUser()->withId(101)->build();
 
-        $this->assertEqual($changeset->getSimpleRESTValue($user), $expected);
+        $changeset = new Tracker_Artifact_ChangesetValue_String(111, $field, true, 'myxedemic enthymematic', 'text');
+        $representation = $changeset->getRESTValue($user, $changeset);
+
+        $this->assertEqual($representation->value, 'myxedemic enthymematic');
     }
 }

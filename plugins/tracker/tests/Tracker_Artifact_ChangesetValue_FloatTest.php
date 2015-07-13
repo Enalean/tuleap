@@ -104,14 +104,21 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $this->assertEqual($float_5->diff($float_6), 'changed from 987.4329 to 987.4321');
         $this->assertEqual($float_6->diff($float_5), 'changed from 987.4321 to 987.4329');
     }
+}
 
-    public function itReturnsTheSimpleRESTValue() {
-        $changeset = new Tracker_Artifact_ChangesetValue_Float(111, $this->field, true, 987.4321);
+class Tracker_Artifact_ChangesetValue_Float_RESTTest extends TuleapTestCase {
 
-        $expected = array(
-            'field_float' => 987.4321
-        );
+    public function skip() {
+        $this->skipIfNotPhp53();
+    }
 
-        $this->assertEqual($changeset->getSimpleRESTValue($this->user), $expected);
+    public function itReturnsTheRESTValue() {
+        $field = stub('Tracker_FormElement_Field_Float')->getName()->returns('field_float');
+        $user  = aUser()->withId(101)->build();
+
+        $changeset = new Tracker_Artifact_ChangesetValue_Float(111, $field, true, 45.1046);
+        $representation = $changeset->getRESTValue($user, $changeset);
+
+        $this->assertEqual($representation->value, 45.1046);
     }
 }

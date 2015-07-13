@@ -87,14 +87,4 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         
         date_default_timezone_set($tz);
     }
-
-    public function itReturnsTheSimpleRESTValue() {
-        $changeset = new Tracker_Artifact_ChangesetValue_Date(111, $this->field, true, 1221221466);
-
-        $expected = array(
-            'field_date' => '2008-09-12T14:11:06+02:00'
-        );
-
-        $this->assertEqual($changeset->getSimpleRESTValue($this->user), $expected);
-    }
 }

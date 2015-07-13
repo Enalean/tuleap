@@ -197,8 +197,4 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
 
         return $representation;
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return null;
-    }
 }

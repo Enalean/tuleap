@@ -168,9 +168,7 @@ class ArtifactTest extends RestBase {
         $this->assertEmpty((string) $artifact_xml->values);
         $this->assertNotEmpty((string) $artifact_xml->values_by_field);
 
-        $this->assertEquals((string) $artifact_xml->values_by_field->slogan, 'slogan');
-        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->id, '810');
-        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->label, 'SM New');
+        $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
    }
 
     /**
@@ -194,8 +192,6 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
         $this->assertEquals((string) $artifact_xml->values->item[5]->bind_value_ids, '810');
 
-        $this->assertEquals((string) $artifact_xml->values_by_field->slogan, 'slogan');
-        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->id, '810');
-        $this->assertEquals((string) $artifact_xml->values_by_field->status->item->label, 'SM New');
+        $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
    }
 }

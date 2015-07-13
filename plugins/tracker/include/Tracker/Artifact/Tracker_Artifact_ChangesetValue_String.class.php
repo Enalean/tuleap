@@ -58,8 +58,4 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
 
         return $artifact_field_value_full_representation;
     }
-
-    public function getSimpleRESTValue(PFUser $user) {
-        return $this->getSimpleRESTArrayRepresentation($this->getText());
-    }
 }

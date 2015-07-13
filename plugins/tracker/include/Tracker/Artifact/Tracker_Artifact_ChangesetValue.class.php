@@ -146,17 +146,6 @@ abstract class Tracker_Artifact_ChangesetValue {
     public abstract function getFullRESTValue(PFUser $user);
 
     /**
-     * Return the simple REST value of this changeset value
-     * Format: array(field_name => value)
-     * Example: array('summary' => 'this is my summary')
-     *
-     * @param PFUser $user
-     *
-     * @return array
-     */
-    public abstract function getSimpleRESTValue(PFUser $user);
-
-    /**
      * @return mixed
      */
     public abstract function accept(Tracker_Artifact_ChangesetValueVisitor $visitor);
@@ -209,11 +198,5 @@ abstract class Tracker_Artifact_ChangesetValue {
         );
 
         return $artifact_field_value_full_representation;
-    }
-
-    protected function getSimpleRESTArrayRepresentation($value) {
-        return array(
-            $this->field->getName() => $value
-        );
     }
 }
