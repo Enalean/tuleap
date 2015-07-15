@@ -325,11 +325,10 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchBySessionHashAndIp($session_hash, $ip) {
+    function searchBySessionHash($session_hash) {
         $sql = "SELECT user.*, session_hash, session.ip_addr AS session_ip_addr, session.time AS session_time
                 FROM user INNER JOIN session USING (user_id)
-                WHERE session_hash = ". $this->da->quoteSmart($session_hash) . " AND
-                      session.ip_addr LIKE ". $this->da->quoteSmart($ip);
+                WHERE session_hash = ". $this->da->quoteSmart($session_hash);
         return $this->retrieve($sql);
     }
 

@@ -344,7 +344,7 @@ class UserManager {
     /**
      * @param $session_hash string Optional parameter. If given, this will force
      *                             the load of the user with the given session_hash.
-     *                             else it will check from the user cookies & ip
+     *                             else it will check from the user cookies
      * @return PFUser the user currently logged in (who made the request)
      */
     function getCurrentUser($session_hash = false) {
@@ -353,7 +353,7 @@ class UserManager {
             if ($session_hash === false) {
                 $session_hash = $this->getCookieManager()->getCookie('session_hash');
             }
-            if ($dar = $this->getDao()->searchBySessionHashAndIp($session_hash, $this->_getServerIp())) {
+            if ($dar = $this->getDao()->searchBySessionHash($session_hash)) {
                 if ($row = $dar->getRow()) {
                     $this->_currentuser = $this->_getUserInstanceFromRow($row);
                     if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
@@ -707,11 +707,6 @@ class UserManager {
      */
     function _getEventManager() {
         return EventManager::instance();
-    }
-
-    function _getServerIp() {
-        if (isset($_SERVER['REMOTE_ADDR'])) return $_SERVER['REMOTE_ADDR'];
-        else return null;
     }
 
     function _getSessionLifetime() {
