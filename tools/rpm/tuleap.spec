@@ -459,7 +459,7 @@ Summary: Web API Explorer
 Group: Development/Tools
 Version: 1.0
 Release: @@RELEASE@@%{?dist}
-Requires: core-rest, php53-restler
+Requires: %{PKG_NAME}-core-rest, php53-restler
 Obsoletes: restler-api-explorer
 %description api-explorer
 Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beautiful documentation.
