@@ -564,9 +564,8 @@ done
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
-# We do not need to package the VERSION file and ChangeLog file of the API
+# We do not need to package the ChangeLog file of the API
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1034,6 +1033,7 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/index.php
+%{APP_DIR}/src/www/api/VERSION
 %endif
 
 #

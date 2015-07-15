@@ -41,7 +41,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 
-AutoReqProv: no 
+AutoReqProv: no
 
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
@@ -60,7 +60,7 @@ Requires: %{php_base}-zendframework
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv
 # Automatic perl dependencies
-#perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings) 
+#perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings)
 # Apache
 Requires: httpd, mod_ssl, openssl
 # Mysql Client
@@ -456,7 +456,7 @@ Obsoletes: tuleap-theme-experimental
 %description theme-flamingparrot
 FlamingParrot, default theme starting Tuleap 7
 
-# 
+#
 # Package setup
 %prep
 %setup -q
@@ -485,9 +485,8 @@ done
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
-# We do not need to package the VERSION file and ChangeLog file of the API
+# We do not need to package the ChangeLog file of the API
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -894,6 +893,7 @@ fi
 # API Explorer is not packaged with the core
 %dir %{APP_DIR}/src/www/api
 %{APP_DIR}/src/www/api/index.php
+%{APP_DIR}/src/www/api/VERSION
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/reference
 %{APP_DIR}/src/www/codendi.css
@@ -981,10 +981,10 @@ fi
 
 # Compatibility with older version
 %attr(-,root,root) %{OLD_APP_DIR}
-%attr(-,root,root) %{OLD_APP_DATA_DIR} 
+%attr(-,root,root) %{OLD_APP_DATA_DIR}
 %attr(-,root,root) %{OLD_APP_CACHE_DIR}
-%attr(-,root,root) %{OLD_APP_LIB_DIR} 
-%attr(-,root,root) %{OLD_APP_LOG_DIR} 
+%attr(-,root,root) %{OLD_APP_LIB_DIR}
+%attr(-,root,root) %{OLD_APP_LOG_DIR}
 %attr(-,root,root) /etc/rc.d/init.d/codendi
 %attr(-,root,root) /etc/%{OLD_APP_NAME}
 
@@ -1194,4 +1194,3 @@ fi
 
 * Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> -
 - Initial build.
-
