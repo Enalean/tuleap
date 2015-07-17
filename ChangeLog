@@ -2,6 +2,9 @@ Version 8.5 (Not Released Yet)
 	== Bug fix ==
 	* request #8189: An user with an IPv6 must be able to log in
 
+    == Themes ==
+	* FlamingParrot: 1.95
+
 Version 8.4 (Friday, July 17th 2015)
 
 	== Plugins ==
