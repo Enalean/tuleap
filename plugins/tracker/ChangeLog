@@ -1,3 +1,6 @@
+Version 5.665 - Tuleap 8.4
+    * Fix tests errors introduced by commit 32e50a1a5711e2e48661c098a610bb3943f16e80
+
 Version 5.664 - Tuleap 8.4
     * story #8206: values
 
