@@ -738,7 +738,7 @@ CREATE TABLE project_weekly_metric (
 CREATE TABLE session (
   user_id int(11) NOT NULL default '0',
   session_hash char(32) NOT NULL default '',
-  ip_addr char(15) NOT NULL default '',
+  ip_addr varchar(45) NOT NULL default '',
   time int(11) NOT NULL default '0',
   PRIMARY KEY  (session_hash),
   KEY idx_session_user_id (user_id),
