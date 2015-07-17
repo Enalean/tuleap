@@ -286,11 +286,14 @@ account_register	btn_register	Register
 account_register	btn_activate	Activate
 account_register	btn_next	Next Step
 account_register	send_email	Send a welcome email to the user
-account_register	msg_confirm	Congratulations. You have registered on $1. Your new user name is: $2</b><p>You are now being sent a confirmation email to verify your email  address. Visiting the link sent to you in this email will activate your account.</p>
-account_register	msg_confirm_admin	Congratulations. You have registered $1 on $2.<p>An email to confirm the registration is now being sent to the user with the login: $3 and password : $4 The user account is activated.</p>
-account_register	msg_confirm_no_email	Congratulation.You have registerd $1 on $2.<p>Please note the login $3 and password $4 The user account is activated.
+account_register	msg_redirect	Go to the home page
+account_register	msg_redirect_admin	Go to the admin page
+account_register	msg_thanks	Thank you for using Tuleap
+account_register	msg_confirm	<p>Congratulations. You have registered on $1. Your new user name is: <span class="confirmation-user">$2</span></p><p>You are now being sent a confirmation email to verify your email address. <i class="icon-envelope-alt"></i><br/> Visiting the link sent to you in this email will activate your account.</p>
+account_register	msg_confirm_admin	<p>Congratulations. You have registered $1 on $2.</p><p>An email to confirm the registration is now being sent to the user with the login: <span class="confirmation-user">$3</span> and password : <span class="confirmation-user">$4</span> The user account is activated.</p>
+account_register	msg_confirm_no_email	<p>Congratulation.You have registered $1 on $2.</p><p>Please note the login <span class="confirmation-user">$3</span> and password <span class="confirmation-user">$4</span>. The user account is activated.
 account_register	title_approval	New Account Registration - Ready For Approval
-account_register	msg_approval	Congratulations. Your registration request on $1 for user <b>$2</b> has been taken into account. <p>The site administrators are now going to review your request for approval. Once approved you will receive a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.
+account_register	msg_approval	<p>Congratulations. Your registration request on $1 for user <span class="confirmation-user">$2</span> has been taken into account.</p><p>The site administrators are now going to review your request for approval. Once approved you will receive a confirmation email to verify your email address.<i class="icon-envelope-alt"></i><br/> Visiting the link sent to you in this email will activate your account.
 account_register	mail_approval_subject	New User Registered: $1
 account_register	mail_approval_body	A new user has just registered on $1.\n\nUser Name: $2\n\nPlease click on the following URL to approve the registration:\n\n$3\n
 account_register	restricted_user	Restricted user
