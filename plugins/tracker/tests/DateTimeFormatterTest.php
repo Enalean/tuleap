@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,17 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
 
         $this->field          = aMockDateWithoutTimeField()->withId(07)->build();
         $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
+
+        $user                 = stub('PFUser')->getPreference('user_csv_dateformat')->returns('');
+        $user_manager         = stub('UserManager')->getCurrentUser()->returns($user);
+
+        UserManager::setInstance($user_manager);
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        UserManager::clearInstance();
     }
 
     public function itFormatsTimestampInRightFormat() {
