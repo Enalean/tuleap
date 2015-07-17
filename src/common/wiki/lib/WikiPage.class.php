@@ -1,7 +1,7 @@
 <?php
 /* 
  * Copyright 2005, STMicroelectronics
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet
  *
@@ -90,7 +90,7 @@ class WikiPage {
         $res = db_query(
             'SELECT version
             FROM wiki_version
-            WHERE id='.$this->id .' ORDER BY version DESC LIMIT 1'
+            WHERE id='. db_ei($this->id) .' ORDER BY version DESC LIMIT 1'
         );
 
         if (db_numrows($res) !== 1) {
@@ -166,7 +166,7 @@ class WikiPage {
         $res = db_query(
             'SELECT content
             FROM wiki_version
-            WHERE id='.$this->id .' ORDER BY version DESC LIMIT 1'
+            WHERE id='. db_ei($this->id) .' ORDER BY version DESC LIMIT 1'
         );
 
         if (db_numrows($res) !== 1) {
@@ -180,8 +180,8 @@ class WikiPage {
 
     private function findPageId() {
         $res = db_query(' SELECT id FROM wiki_page'.
-                        ' WHERE group_id="'.$this->gid.'"'.
-                        ' AND pagename="'.addslashes($this->pagename).'"');
+                        ' WHERE group_id="'.db_ei($this->gid).'"'.
+                        ' AND pagename="'.db_es($this->pagename).'"');
         if(db_numrows($res) > 1) {
             exit_error($GLOBALS['Language']->getText('global','error'),
                        $GLOBALS['Language']->getText('wiki_lib_wikipage',
@@ -194,7 +194,7 @@ class WikiPage {
 
     private function initFromDb() {
         $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
-                        ' WHERE id="'.$this->id.'"');
+                        ' WHERE id="'.db_ei($this->id).'"');
         if(db_numrows($res) > 1) {
             exit_error($GLOBALS['Language']->getText('global','error'),
                        $GLOBALS['Language']->getText('wiki_lib_wikipage',
@@ -221,8 +221,8 @@ class WikiPage {
         if($this->exist()) {
           $res = db_query(' SELECT wiki_page.id'
                           .' FROM wiki_page, wiki_nonempty'
-                          .' WHERE wiki_page.group_id="'.$this->gid.'"'
-                          .' AND wiki_page.id="'.$this->id.'"'
+                          .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+                          .' AND wiki_page.id="'.db_ei($this->id).'"'
                           .' AND wiki_nonempty.id=wiki_page.id');
           if(db_numrows($res) == 1) {
             $this->empty = false;
@@ -308,7 +308,7 @@ class WikiPage {
 
     public function log($user_id) {
       $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
-            ."VALUES ('".$user_id."','".$this->gid."','".$this->pagename."','".time()."')";
+            ."VALUES ('".db_ei($user_id)."','".db_ei($this->gid)."','".db_es($this->pagename)."','".db_ei(time())."')";
       db_query($sql);
     }
 
@@ -348,7 +348,7 @@ class WikiPage {
 
         $res = db_query(' SELECT pagename'
                         .' FROM wiki_page, wiki_nonempty'
-                        .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageAdminPages).'")');
         while($row = db_fetch_array($res)) {
@@ -369,7 +369,7 @@ class WikiPage {
 
         $res = db_query(' SELECT pagename'
                         .' FROM wiki_page, wiki_nonempty'
-                        .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageDefaultPages).'")');
         while($row = db_fetch_array($res)) {
@@ -391,7 +391,7 @@ class WikiPage {
 
         $res = db_query(' SELECT pagename'
                         .' FROM wiki_page, wiki_nonempty'
-                        .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename NOT IN ("'.implode('","', $WikiPageDefaultPages).'",
                                                           "'.implode('","', $WikiPageAdminPages).'")');

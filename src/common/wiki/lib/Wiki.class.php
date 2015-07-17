@@ -1,23 +1,24 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('www/project/admin/permissions.php');
 require_once('WikiPage.class.php');
@@ -105,7 +106,7 @@ class Wiki {
   function exist() {
       if($this->exist === null) {
           $res = db_query('SELECT count(*) AS nb FROM wiki_page'
-                          .' WHERE group_id='.$this->gid);
+                          .' WHERE group_id='.db_ei($this->gid));
 
           $this->exist = (db_result($res, 0, 'nb') > 0);
       }
@@ -119,7 +120,7 @@ class Wiki {
   function getPageCount() {
     $res = db_query(' SELECT count(*) as count'
 		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
+		    .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
 		    .' AND wiki_nonempty.id=wiki_page.id');
     
     if(db_numrows($res) > 0) 
@@ -136,7 +137,7 @@ class Wiki {
   function getProjectPageCount() {
     $res = db_query(' SELECT count(*) as count'
 		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
+		    .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
 		    .' AND wiki_nonempty.id=wiki_page.id'
             .' AND wiki_page.pagename NOT IN ("'.implode('","', WikiPage::getDefaultPages()).'",
                                               "'.implode('","', WikiPage::getAdminPages()).'")');
@@ -172,8 +173,8 @@ class Wiki {
 
   function dropLink($id) {
     $res = db_query('  DELETE FROM wiki_link'
-		    .' WHERE linkfrom='.$id
-		    .' OR linkto='.$id);
+		    .' WHERE linkfrom='.db_ei($id)
+		    .' OR linkto='.db_ei($id));
 
     if(db_affected_rows($res) === 1)
       return true;
@@ -183,21 +184,21 @@ class Wiki {
 
   function dropNonEmpty($id) {
     $res = db_query('  DELETE FROM wiki_nonempty'
-		    .' WHERE id='.$id);
+		    .' WHERE id='.db_ei($id));
 
    
   }
 
   function dropRecent($id) {
     $res = db_query('  DELETE FROM wiki_recent'
-		    .' WHERE id='.$id);
+		    .' WHERE id='.db_ei($id));
 
     
   }
 
   function dropVersion($id) {
     $res = db_query('  DELETE FROM wiki_version'
-		    .' WHERE id='.$id);
+		    .' WHERE id='.db_ei($id));
 
    
     
@@ -205,7 +206,7 @@ class Wiki {
 
   function dropPage($id) {
     $res = db_query('  DELETE FROM wiki_page'
-		    .' WHERE id='.$id);
+		    .' WHERE id='.db_ei($id));
   }
 
   function drop() {
@@ -216,7 +217,7 @@ class Wiki {
     // PhpWiki
     //
     $res = db_query('  SELECT id FROM wiki_page'
-		    .' WHERE group_id='.$this->gid);
+		    .' WHERE group_id='.db_ei($this->gid));
     
     while($row = db_fetch_array($res)) {
       $pid = $row['id'];
