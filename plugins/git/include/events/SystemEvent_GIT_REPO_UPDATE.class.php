@@ -77,9 +77,13 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
             return;
         }
 
+        if (! $repository->getBackend()->updateRepoConf($repository)) {
+            $this->error('Unable to update gitolite configuration for repoistory with ID '.$this->getRepositoryIdFromParameters());
+            return;
+        }
+
         $this->system_event_manager->queueGrokMirrorManifest($repository);
 
-        $repository->getBackend()->updateRepoConf($repository);
         $this->done();
     }
 
