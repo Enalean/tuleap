@@ -1,9 +1,8 @@
 {
   "name": "planning-v2",
   "version": "0.0.1",
-  "devDependencies": {
+  "dependencies": {
     "angular": "~1.3.17",
-    "angular-mocks": "~1.3.17",
     "angular-sanitize": "~1.3.17",
     "angular-animate": "~1.3.17",
     "angular-gettext": "~1.1.0",
@@ -12,14 +11,12 @@
     "angular-moment": "~0.8.0",
     "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
     "tuleap-artifact-modal": "http://gerrit.tuleap.net/angular-artifact-modal.git",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#15403d60019c5bf9fd4d4f0a6c496df2dfb0f86f",
-    "angular-ui-bootstrap": "gh-pages",
-    "angular-ckeditor": "~0.4.2",
-    "lodash": "~2.4.0",
-    "angular-bootstrap-datetimepicker": "~0.3.12",
-    "angular-filter": "~0.5.4"
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#053703463e1e44d5cf639e1f9f6bfa0e425e7f7d",
+    "lodash": "~2.4.0"
   },
-  "dependencies": {},
+  "devDependencies": {
+    "angular-mocks": "~1.3.17"
+  },
   "resolutions": {
     "moment": "^2.9.0"
   }
