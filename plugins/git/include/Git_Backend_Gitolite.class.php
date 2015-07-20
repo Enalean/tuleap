@@ -66,6 +66,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function createReference($repository) {
     }
 
+    /**
+     * @return bool
+     */
     public function updateRepoConf($repository) {
         return $this->driver->dumpProjectRepoConf($repository->getProject());
     }

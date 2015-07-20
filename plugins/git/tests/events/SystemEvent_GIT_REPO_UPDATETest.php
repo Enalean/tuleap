@@ -63,6 +63,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
 
     public function itMarksTheEventAsDone() {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
+        expect($this->backend)->updateRepoConf()->once()->returns(true);
         expect($this->event)->done()->once();
         $this->event->process();
     }
@@ -85,6 +86,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
     public function itAskToUpdateGrokmirrorManifestFiles() {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
 
+        expect($this->backend)->updateRepoConf()->once()->returns(true);
         expect($this->system_event_manager)->queueGrokMirrorManifest($this->repository)->once();
 
         $this->event->process();
