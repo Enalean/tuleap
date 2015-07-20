@@ -1,3 +1,6 @@
+Version 1.240 - Tuleap 8.5
+    * story #7992 - Remove unused bower dependencies from planning-v2
+
 Version 1.239 - Tuleap 8.4
     * request #8194: Fix persistent XSS in kanban
 
