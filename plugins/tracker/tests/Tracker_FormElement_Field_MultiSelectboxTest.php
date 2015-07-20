@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -60,4 +60,28 @@ class Tracker_FormElement_Field_MultiSelectbox_getFieldDataFromSoapValue extends
         $this->assertIdentical(array(1586,2894), $this->field->getFieldDataFromSoapValue($soap_value));
     }
 }
-?>
+
+class Tracker_FormElement_Field_MultiSelectbox_RESTTests extends TuleapTestCase {
+
+    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {
+        $field = new Tracker_FormElement_Field_MultiSelectbox(
+            1,
+            101,
+            null,
+            'field_msb',
+            'Field MSB',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
+
+        $value = 'some_value';
+
+        $field->getFieldDataFromRESTValueByField($value);
+    }
+}

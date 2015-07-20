@@ -193,5 +193,42 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((string) $artifact_xml->values->item[5]->bind_value_ids, '810');
 
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
+    }
+
+    /**
+     * @depends testGetArtifactInXMLTrackerInBothFormat
+     */
+    public function testPOSTArtifactInXMLTrackerWithValuesByField() {
+        $xml = "<request><tracker><id>".$this->tracker_id."</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>";
+
+        $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifact_xml = $response->xml();
+
+        $artifact_id = (int) $artifact_xml->id;
+        $this->assertGreaterThan(0, $artifact_id);
+
+        return $artifact_id;
+    }
+
+    /**
+     * @depends testPOSTArtifactInXMLTrackerWithValuesByField
+     */
+    public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id) {
+        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $artifact_xml = $response->xml();
+
+        $this->assertEquals((int) $artifact_xml->id, $artifact_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+
+        $this->assertEmpty((string) $artifact_xml->values);
+        $this->assertNotEmpty((string) $artifact_xml->values_by_field);
+
+        $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'Sloganv2');
+        $this->assertEquals((string) $artifact_xml->values_by_field->epic_desc->format, 'html');
+        $this->assertEquals((string) $artifact_xml->values_by_field->epic_desc->value, 'Descv2');
    }
 }

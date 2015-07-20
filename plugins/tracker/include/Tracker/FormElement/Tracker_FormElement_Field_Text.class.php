@@ -477,13 +477,41 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return $previous_changesetvalue->getText() != $new_value['content'];
     }
 
+    /**
+     * Transform REST representation of field into something that artifact createArtifact or updateArtifact can proceed
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
+        if ($this->doesValueUseTheByFieldOutput($value)) {
+           $text_value = $this->formatValueWithTheByFieldOutput($value);
+
+           return $this->getRestFieldData($text_value);
+        }
+
+        return parent::getFieldDataFromRESTValueByField($value, $artifact);
+    }
+
+    private function formatValueWithTheByFieldOutput(array $value) {
+        return array(
+            'content' => (string) $value['value'],
+            'format'  => $value['format']
+        );
+    }
+
+    private function doesValueUseTheByFieldOutput(array $value) {
+        return array_key_exists('value', $value) &&
+               array_key_exists('format', $value) &&
+               ! is_array($value['value']);
+    }
+
     public function getRestFieldData($value) {
         if ($this->isValueAlreadyWellFormatted($value)) {
             return $value;
         }
 
         $data            = $this->getDefaultValue();
-        $data['content'] = $value;
+        $data['content'] = (string) $value;
 
         return $data;
     }

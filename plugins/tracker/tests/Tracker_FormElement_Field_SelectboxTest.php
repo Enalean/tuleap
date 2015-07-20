@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -204,4 +204,28 @@ class Tracker_FormElement_Field_Selectbox__getSoapValueTest extends TuleapTestCa
         );
     }
 }
-?>
+
+class Tracker_FormElement_Field_Selectbox_RESTTests extends TuleapTestCase {
+
+    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {
+        $field = new Tracker_FormElement_Field_Selectbox(
+            1,
+            101,
+            null,
+            'field_sb',
+            'Field SB',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
+
+        $value = 'some_value';
+
+        $field->getFieldDataFromRESTValueByField($value);
+    }
+}

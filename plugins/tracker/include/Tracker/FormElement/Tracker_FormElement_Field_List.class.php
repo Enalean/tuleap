@@ -1,22 +1,22 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -1155,6 +1155,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
             . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
      }
+
+    public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
+        throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
+    }
 
      public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
          if (isset($soap_value->field_value->bind_value)) {

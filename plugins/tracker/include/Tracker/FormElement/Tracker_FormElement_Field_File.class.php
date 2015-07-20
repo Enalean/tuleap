@@ -1045,6 +1045,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $file_manager->buildFieldDataForREST($value, $artifact);
     }
 
+    public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
+        throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
+    }
+
     private function validateDataFromREST($data) {
         if (! property_exists($data, 'value') || ! is_array($data->value)){
             throw new Tracker_FormElement_InvalidFieldException('Invalid format for file field "'.$data->field_id.'". '
