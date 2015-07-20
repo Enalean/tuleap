@@ -38,7 +38,10 @@ class LDAP {
     const ERR_SIZELIMIT = 0x04 ;
     
     const ERR_SUCCESS   = 0x00;
-    
+
+    const SERVER_TYPE_ACTIVE_DIRECTORY = "ActiveDirectory";
+    const SERVER_TYPE_OPEN_LDAP        = "OpenLDAP";
+
     private $ds;
     private $bound;
     private $errorsTrapped;
@@ -406,6 +409,12 @@ class LDAP {
      */
     function searchGroup($name) {
         $name = $this->query_escaper->escapeFilter($name);
+
+        if ($this->ldapParams['server_type'] && $this->ldapParams['server_type'] === self::SERVER_TYPE_ACTIVE_DIRECTORY) {
+            $filter = $this->ldapParams['grp_uid'] . '=' . $name;
+            return $this->search($this->ldapParams['grp_dn'], $filter, self::SCOPE_SUBTREE);
+        }
+
         $filter = $this->ldapParams['grp_cn'].'='.$name;
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
     }
@@ -468,7 +477,7 @@ class LDAP {
                 $this->logger->debug('LDAP in-depth search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($this->ds));
             } else {
                 $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
-                $this->logger->debug('LDAP high-level search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($this->ds));
+                $this->logger->debug('LDAP high-level search as you type '.$filter. ' ***PEOPLEDN: '.print_r($peopleDn, true) . ' ***errors:'.  ldap_error($this->ds));
             }
             if ($asr !== false) {
                 foreach ($asr as $sr) {

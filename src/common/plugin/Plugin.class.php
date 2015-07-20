@@ -254,6 +254,10 @@ class Plugin implements PFO_Plugin {
     public function postInstall() {
     }
 
+    public function getAdministrationOptions() {
+        return '';
+    }
+
     /**
      * Returns the content of the README file associated to the plugin
      *

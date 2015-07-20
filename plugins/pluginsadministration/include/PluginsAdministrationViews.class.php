@@ -303,6 +303,8 @@ class PluginsAdministrationViews extends Views {
                 $output .= '</table>';
                 $output .= '</form>';
 
+                $output .= $plugin->getAdministrationOptions();
+
                 $readme_file    = $plugin->getReadme();
                 $readme_content = $plugin_manager->fetchFormattedReadme($readme_file);
                 if ($readme_content) {
