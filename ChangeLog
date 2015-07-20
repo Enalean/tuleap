@@ -1,11 +1,15 @@
 Version 8.5 (Not Released Yet)
+	
+	== Security ==
+	* request #7953: Continue the removing of the SimpleSanitizer class
+
 	== Bug fix ==
 	* request #8189: An user with an IPv6 must be able to log in
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.95
 
-    == Plugins ==
+	== Plugins ==
 	* git: 4.70
 	* tracker: 5.666
 
