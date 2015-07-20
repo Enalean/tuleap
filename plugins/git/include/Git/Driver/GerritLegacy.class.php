@@ -473,4 +473,20 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         $query = self::COMMAND . ' set-project --ps READ_ONLY ' . $gerrit_project_full_name;
         $this->ssh->execute($server, $query);
     }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @param PFUser $gerrit_users_to_suspend
+     *
+     * @throws Git_Driver_Gerrit_Exception
+     */
+    public function setUserAccountInactive(Git_RemoteServer_GerritServer $server, PFUser $user) {
+        $query = self::COMMAND . ' set-account --inactive ' . $user->getUserName();
+        try {
+            $this->ssh->execute($server, $query);
+            $this->logger->info($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_successful', array($user->getId(), $user->getUserName(), $server)));
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
+            $this->logger->error($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_error', array($user->getId(), $user->getUserName(), $server, $exception->getStdErr())));
+        }
+    }
 }

@@ -403,3 +403,6 @@ plugin_git	restore_no_repo_found	Aucun dépôt Git restorable n'a été trouvé
 plugin_git	restore_confirmation	Confirmez la restoration de ce dépôt Git
 
 plugin_git	archived_repositories	Dépôts git supprimés
+
+plugin_git	gerrit_user_suspension_error	Erreur lors de la suspension de ($1) $2 du serveur gerrit $3, plus de détails : $4
+plugin_git	gerrit_user_suspension_successful	Gerrit: ($1) $2 a été suspendu avec succès du serveur gerrit $3

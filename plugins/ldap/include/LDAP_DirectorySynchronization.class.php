@@ -115,6 +115,8 @@ class LDAP_DirectorySynchronization {
             }
 
             if ($modified) {
+                $em  = $this->getEventManager();
+                $em->processEvent(LDAP_DAILY_SYNCHRO_UPDATE_USER, $user);
                 if ($user->getStatus() == 'S' && $users_are_suspendable) {
                     $this->getUserManager()->updateDb($user);
                     if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
@@ -181,5 +183,9 @@ class LDAP_DirectorySynchronization {
 
     protected function getCleanUpManager(){
         return new LDAP_CleanUpManager($this->ldap->getLDAPParam('daily_sync_retention_period'));
+    }
+
+    private function getEventManager() {
+        return EventManager::instance();
     }
 }

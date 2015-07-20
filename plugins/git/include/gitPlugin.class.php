@@ -133,6 +133,11 @@ class GitPlugin extends Plugin {
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_GET_GIT);
         $this->addHook(EVENT::REST_PROJECT_OPTIONS_GIT);
+
+        // Gerrit user suspension
+        if (defined('LDAP_DAILY_SYNCHRO_UPDATE_USER')) {
+            $this->addHook(LDAP_DAILY_SYNCHRO_UPDATE_USER);
+        }
     }
 
     public function getServiceShortname() {
@@ -1536,4 +1541,19 @@ class GitPlugin extends Plugin {
     public function site_access_change(array $params) {
         $this->getGitPermissionsManager()->updateSiteAccess($params['old_value'], $params['new_value']);
     }
+
+    /**
+     * @param PFUser user
+     */
+    public function ldap_daily_synchro_update_user(PFUser $user) {
+        //get gerrit servers
+        $factory = $this->getGerritServerFactory();
+        $gerrit_servers = $factory->getServers();
+        $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory ($this->getLogger());
+        foreach($gerrit_servers as $server) {
+            $gerritDriver = $gerritDriverFactory->getDriver($server);
+            $gerritDriver->setUserAccountInactive($server, $user);
+        }
+    }
 }
+
