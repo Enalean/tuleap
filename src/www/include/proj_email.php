@@ -33,81 +33,24 @@ function send_new_project_email(Project $project) {
     return true;
 }
 
-function send_new_user_email($to, $login, $password, $confirm_hash, $template, $isAdminPresenter) {
+function send_new_user_email($to, $login, $confirm_hash, $template) {
     //needed by new_user_email.txt
-    $base_url = get_server_url();
-
-    $defaultTheme = $GLOBALS['sys_themedefault'];
-    $color_logo   = "#0000";
-    $color_button = "#347DBA";
-
-    if (themeIsFlamingParrot($defaultTheme)) {
-        $defaultThemeVariant = $GLOBALS['sys_default_theme_variant'];
-        $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
-        $color_button        = $color_logo;
-    }
-
-    $logo_url  = $base_url."/themes/".$defaultTheme."/images/organization_logo.png";
-    $has_logo  = file_exists(dirname(__FILE__) . '/../themes/'.$defaultTheme.'/images/organization_logo.png');
-
-    if($isAdminPresenter) {
-        $subject = $GLOBALS['Language']->getText('account_register', 'welcome_email_title', $GLOBALS['sys_name']);
-        include($GLOBALS['Language']->getContent('account/new_account_email'));
-        $presenter = new MailRegisterByAdminPresenter(
-            $has_logo,
-            $logo_url,
-            $title,
-            $section_one,
-            $section_two,
-            $section_after_login,
-            $thanks,
-            $signature,
-            $help,
-            $color_logo,
-            $login,
-            $section_three,
-            $section_after_password,
-            $password
-        );
-    } else {
-        $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', $GLOBALS['sys_name']);
-        include($GLOBALS['Language']->getContent('include/new_user_email'));
-        $redirect_url = $base_url ."/account/verify.php?confirm_hash=$confirm_hash";
-
-        $presenter = new MailRegisterByUserPresenter(
-            $has_logo,
-            $logo_url,
-            $title,
-            $section_one,
-            $section_two,
-            $section_after_login,
-            $thanks,
-            $signature,
-            $help,
-            $color_logo,
-            $login,
-            $redirect_url,
-            $redirect_button,
-            $color_button
-        );
-    }
+    $base_url  = get_server_url();
+    $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
-    $mail = initializeMail($subject, $GLOBALS['sys_noreply'], $to, $renderer->renderToString($template, $presenter), $message);
+    $mail = new TuleapRegisterMail($presenter, $renderer, $template);
+    $mail = $mail->getMail($login, '', $confirm_hash, $base_url, $GLOBALS['sys_noreply'], $to, "user");
     return $mail->send();
 }
 
-function initializeMail($subject, $from, $to, $html, $text) {
-    $mail = new Codendi_Mail();
-    $mail->setSubject($subject);
-    $mail->setTo($to);
-    $mail->setBodyHtml($html);
-    $mail->setBodyText($text);
-    $mail->setFrom($from);
+function send_admin_new_user_email($to, $login, $password, $template) {
+    //needed by new_user_email.txt
+    $base_url  = get_server_url();
+    $presenter = new MailPresenterFactory();
 
-    return $mail;
-}
-
-function themeIsFlamingParrot($theme) {
-    return $theme === 'FlamingParrot';
+    $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
+    $mail = new TuleapRegisterMail($presenter, $renderer, $template);
+    $mail = $mail->getMail($login, $password, '', $base_url, $GLOBALS['sys_noreply'], $to, "admin");
+    return $mail->send();
 }

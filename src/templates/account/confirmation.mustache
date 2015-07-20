@@ -1,16 +1,39 @@
 <div id="account-confirmation-header">
-    <h2>{{ title }}</h2>
+    <h2>{{{ title }}}</h2>
 </div>
-
+{{^ email_is_sent }}
+    <div id="account-confirmation-email" class="alert alert-error">
+        {{{ email_no_send }}}
+    </div>
+{{/ email_is_sent}}
 <div id="account-confirmation-content">
-    {{{ content }}}
+    <p>{{{ content }}}</p>
+
+    {{# displayedImage }}
+        <object id="account-confirmation-envelope" type="image/svg+xml" data="/themes/common/images/email.svg"></object>
+        <div id="account-confirmation-fake-email" class="envelope-animation">
+            <div class="thumbnail thumbnail-fake-email">
+                <div class="caption-fake-email">
+                    {{# email_presenter }}
+                        <div id="account-confirmation-fake-email-title">
+                            <img src="{{ logo_url }}"/>
+                        </div>
+                        <h3>{{ title }}</h3>
+                        <p>{{ section_one }}<b>{{ login }}</b>{{ section_after_login }}</p>
+                        <p>{{ section_two }}</p>
+                        <p id="account-confirmation-fake-email-button"><span>{{ redirect_button }}</span></p>
+                    {{/ email_presenter }}
+                </div>
+            </div>
+        </div>
+    {{/ displayedImage}}
 </div>
 
 {{# is_thanks }}
     <div id="account-confirmation-thanks">
         {{ thanks }}
     </div>
-{{/is_thanks}}
+{{/ is_thanks}}
 
 <div id="account-confirmation-redirect">
     <a href="{{ redirect_url }}" name="personal_page" class="btn btn-large btn-primary" role="button"> {{ redirect_content }} </a>

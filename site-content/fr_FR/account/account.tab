@@ -247,7 +247,7 @@ account_register	err_email	Adresse e-mail invalide
 account_register	err_name	Le nom de login est invalide
 account_register	err_invpasswd	Le mot de passe est invalide
 account_register	err_no_ldap	Le login LDAP est manquant
-account_register	title_confirm	Confirmation de création de compte
+account_register	title_confirm	Votre compte est créé, </br> il ne reste plus qu'à l'activer.
 account_register	title	Nouveau compte
 account_register	title_admin	Créer un nouvel utilisateur
 account_register	login	Nom de login
@@ -282,11 +282,11 @@ account_register	send_email	Envoyer un mail de bienvenue à l'utilisateur
 account_register	msg_redirect	Aller sur la page d'accueil
 account_register	msg_redirect_admin	Aller sur la page d'administration
 account_register	msg_thanks	Nous vous remercions d'utiliser Tuleap
-account_register	msg_confirm	<p>Félicitations ! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est&nbsp;: <span class="confirmation-user">$2</span></p><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. <i class="icon-envelope-alt"></i><br/> En visitant le lien inclus dans ce message vous activerez votre compte.</p>
-account_register	msg_confirm_admin	<p>Félicitation ! Vous venez de créer un compte utilisateur pour $1 sur $2.</p><p>Un mail l'informant de son inscription, contenant son login : <span class="confirmation-user">$3</span> et son mot de passe : <span class="confirmation-user">$4</span>  est en cours d'expédition. Son compte est désormais activé.</p>
-account_register	msg_confirm_no_email	<p>Félicitation ! Vous venez de créer un compte utilisateur pour $1 sur $2.</p><p>Veuillez noter son login <span class="confirmation-user">$3</span> et son mot de passe <span class="confirmation-user">$4</span>. Son compte est désormais activé.</p>
-account_register	title_approval	Création de compte - Prêt pour approbation
-account_register	msg_approval	<p>Félicitations ! Votre demande de création de compte sur $1 pour l'utilisateur <span class="confirmation-user">$2</span> a été pris en compte.</p><p>L'administrateur du site va maintenant examiner votre demande. Une fois approuvée vous recevrez un message de confirmation afin de vérifier votre adresse e-mail.<i class="icon-envelope-alt"></i><br/>  En visitant le lien inclus dans ce message vous activerez votre compte.
+account_register	msg_confirm	Pour cela cliquez sur le bouton de confirmation présent dans le mail.<i class="icon-envelope-alt"></i>
+account_register	msg_confirm_admin	Le compte utilisateur a été créé.</br>Veuillez noter son login <span class="confirmation-user">$3</span> et son mot de passe <span class="confirmation-user">$4</span>.
+account_register	msg_confirm_no_email	Le compte utilisateur a été créé.</br>Veuillez noter son login <span class="confirmation-user">$3</span> et son mot de passe <span class="confirmation-user">$4</span>.
+account_register	title_approval	Votre compte a été crée, </br>il doit être approuvé par un administrateur.
+account_register	msg_approval	Une fois approuvé cliquez sur le bouton de confirmation présent dans l'email.<i class="icon-envelope-alt"></i>
 account_register	mail_approval_subject	Création du nouveau compte : $1
 account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur : $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte :\n\n$3\n
 account_register	restricted_user	Utilisateur restreint

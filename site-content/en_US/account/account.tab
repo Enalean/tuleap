@@ -254,7 +254,7 @@ account_register	err_email	Invalid Email Address
 account_register	err_name	The login name is invalid
 account_register	err_invpasswd	The password is invalid
 account_register	err_no_ldap	The LDAP login is missing
-account_register	title_confirm	Registration Confirmation
+account_register	title_confirm	Your account is created , </br>it now needs to be activated.
 account_register	title	Register
 account_register	title_admin	Create a new user
 account_register	login	Login Name
@@ -289,11 +289,11 @@ account_register	send_email	Send a welcome email to the user
 account_register	msg_redirect	Go to the home page
 account_register	msg_redirect_admin	Go to the admin page
 account_register	msg_thanks	Thank you for using Tuleap
-account_register	msg_confirm	<p>Congratulations. You have registered on $1. Your new user name is: <span class="confirmation-user">$2</span></p><p>You are now being sent a confirmation email to verify your email address. <i class="icon-envelope-alt"></i><br/> Visiting the link sent to you in this email will activate your account.</p>
-account_register	msg_confirm_admin	<p>Congratulations. You have registered $1 on $2.</p><p>An email to confirm the registration is now being sent to the user with the login: <span class="confirmation-user">$3</span> and password : <span class="confirmation-user">$4</span> The user account is activated.</p>
-account_register	msg_confirm_no_email	<p>Congratulation.You have registered $1 on $2.</p><p>Please note the login <span class="confirmation-user">$3</span> and password <span class="confirmation-user">$4</span>. The user account is activated.
-account_register	title_approval	New Account Registration - Ready For Approval
-account_register	msg_approval	<p>Congratulations. Your registration request on $1 for user <span class="confirmation-user">$2</span> has been taken into account.</p><p>The site administrators are now going to review your request for approval. Once approved you will receive a confirmation email to verify your email address.<i class="icon-envelope-alt"></i><br/> Visiting the link sent to you in this email will activate your account.
+account_register	msg_confirm	To do this click the confirm button in the email. <i class="icon-envelope-alt"></i>
+account_register	msg_confirm_admin	The user account was created.
+account_register	msg_confirm_no_email	The user account was created.</br>Please note the login <span class="confirmation-user">$3</span> and password <span class="confirmation-user">$4</span>.
+account_register	title_approval	Your account has been created,</br> it must be approved by an administrator.
+account_register	msg_approval	Once approved click the confirm button in this email.<i class="icon-envelope-alt"></i>
 account_register	mail_approval_subject	New User Registered: $1
 account_register	mail_approval_body	A new user has just registered on $1.\n\nUser Name: $2\n\nPlease click on the following URL to approve the registration:\n\n$3\n
 account_register	restricted_user	Restricted user
