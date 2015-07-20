@@ -1,3 +1,6 @@
+Version 4.70 - Tuleap 8.5
+    * request #8247: Mirroring mass update: manifest file updated before gitolite configuration
+
 Version 4.69 - Tuleap 8.3
     * request #8153: git config files not generic enough
 
