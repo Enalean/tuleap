@@ -20,13 +20,6 @@
 
 class ForgeAccess_AdminController {
 
-    const TEMPLATE          = 'access_choice';
-    const ACCESS_KEY        = ForgeAccess::CONFIG;
-    const PROJECT_ADMIN_KEY = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
-    const REVERSE_PROXY_KEY = ForgeAccess::REVERSE_PROXY_REGEXP;
-
-    const ANONYMOUS_EXCEPT_REVERSE_PROXY = 'anonymous_except_reverse_proxy';
-
     /**
      * @var UserDao
      */
@@ -56,6 +49,10 @@ class ForgeAccess_AdminController {
      * @var CSRFSynchronizerToken
      */
     private $csrf;
+
+    const TEMPLATE          = 'access_choice';
+    const ACCESS_KEY        = ForgeAccess::CONFIG;
+    const PROJECT_ADMIN_KEY = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -92,8 +89,7 @@ class ForgeAccess_AdminController {
                 count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
                 ForgeConfig::get(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL),
                 ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL),
-                ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY),
-                ForgeConfig::get(ForgeAccess::REVERSE_PROXY_REGEXP)
+                ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
             )
         );
         $this->response->footer($params);
@@ -135,7 +131,6 @@ class ForgeAccess_AdminController {
                 ForgeAccess::ANONYMOUS,
                 ForgeAccess::REGULAR,
                 ForgeAccess::RESTRICTED,
-                self::ANONYMOUS_EXCEPT_REVERSE_PROXY,
             )
         );
         if (! $this->request->valid($validator)) {
@@ -143,24 +138,10 @@ class ForgeAccess_AdminController {
         }
 
         $new_access_value = $this->request->get(self::ACCESS_KEY);
-        $this->updateAccess($new_access_value);
-        $this->updateLabels($new_access_value);
-        $this->updateReverseProxy($new_access_value, $this->request->getValidated(self::REVERSE_PROXY_KEY));
-
-        return true;
-    }
-
-    private function updateAccess($new_access_value) {
-        if ($new_access_value === self::ANONYMOUS_EXCEPT_REVERSE_PROXY) {
-            $new_access_value = ForgeAccess::ANONYMOUS;
-        }
-
         $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
         $this->manager->updateAccess($new_access_value, $old_access_value);
-    }
 
-    private function updateLabels($new_access_value) {
-        if ($new_access_value === ForgeAccess::RESTRICTED) {
+        if ($new_access_value == ForgeAccess::RESTRICTED) {
             $this->manager->updateLabels(
                 trim($this->request->getValidated('ugroup_authenticated_users', 'string', '')),
                 trim($this->request->getValidated('ugroup_registered_users', 'string', ''))
@@ -168,12 +149,8 @@ class ForgeAccess_AdminController {
         } else {
             $this->manager->updateLabels('', '');
         }
-    }
 
-    private function updateReverseProxy($new_access_value, $new_reverse_proxy_regexp) {
-        if ($new_access_value === self::ANONYMOUS_EXCEPT_REVERSE_PROXY) {
-            $this->manager->updateReverseProxyRegexp($new_reverse_proxy_regexp);
-        }
+        return true;
     }
 
     /** @return bool true if updated */
