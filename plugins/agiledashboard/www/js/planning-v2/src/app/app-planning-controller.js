@@ -70,7 +70,10 @@
             displayBacklogItems                   : displayBacklogItems,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
-            refreshBacklogItem                    : refreshBacklogItem
+            refreshBacklogItem                    : refreshBacklogItem,
+            switchToSmallCardView                 : switchToSmallCardView,
+            switchToCompleteCardView              : switchToCompleteCardView,
+            current_view_class                    : 'complete-card'
         });
 
         $scope.treeOptions = {
@@ -81,6 +84,14 @@
         loadBacklog();
         displayBacklogItems();
         displayMilestones();
+
+        function switchToSmallCardView() {
+            $scope.current_view_class = 'small-card';
+        }
+
+        function switchToCompleteCardView() {
+            $scope.current_view_class = 'complete-card';
+        }
 
         function loadBacklog() {
             if (! angular.isDefined(milestone_id)) {
