@@ -1,4 +1,7 @@
 Version 8.5 (Not Released Yet)
+
+	== Enhancements ==
+	* request #8254: Have a way to override tuleap's permissions
 	
 	== Security ==
 	* request #7953: Continue the removing of the SimpleSanitizer class
