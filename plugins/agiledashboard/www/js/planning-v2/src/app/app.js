@@ -11,6 +11,7 @@
         'backlog-item',
         'milestone',
         'project',
+        'user-preferences',
         'tuleap-artifact-modal',
         'tuleap.artifact-modal'
     ]);

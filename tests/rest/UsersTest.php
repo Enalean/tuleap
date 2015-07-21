@@ -182,4 +182,23 @@ class UsersTest extends RestBase {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
         $this->assertEquals($response->getStatusCode(), 400);
     }
+
+    public function testOptionsPreferences() {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/preferences'));
+
+        $this->assertEquals(array('OPTIONS', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPatchPreference() {
+        $preference = json_encode(
+            array(
+                'key'   => 'my_preference',
+                'value' => 'my_preference_value'
+            )
+        );
+
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/preferences', null, $preference));
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
 }

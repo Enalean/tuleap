@@ -43,8 +43,8 @@
             </button>
 
             <div ng-if="backlog_items.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
-                <button type="button" class="btn btn-small" ng-click="switchToSmallCardView()" title="{{ 'Compact view' | translate }}"><i class="icon-list"></i> <span translate>Compact view</span></button>
-                <button type="button" class="btn btn-small active" ng-click="switchToCompleteCardView()" title="{{ 'Detailed view' | translate }}"><i class="icon-th-list"></i> <span translate>Detailed view</span></button>
+                <button type="button" class="btn btn-small" ng-class="{active: current_view_class === compact_view_key}" ng-click="switchViewMode(compact_view_key)" title="{{ 'Compact view' | translate }}"><i class="icon-list"></i> <span translate>Compact view</span></button>
+                <button type="button" class="btn btn-small" ng-class="{active: current_view_class === detailed_view_key}" ng-click="switchViewMode(detailed_view_key)" title="{{ 'Detailed view' | translate }}"><i class="icon-th-list"></i> <span translate>Detailed view</span></button>
             </div>
 
             <div class="clearfix"></div>

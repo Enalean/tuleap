@@ -1,6 +1,8 @@
 describe("PlanningCtrl", function() {
-    var $scope, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService, SharedPropertiesService, TuleapArtifactModalService, NewTuleapArtifactModalService,
+    var $scope, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService, SharedPropertiesService,
+        TuleapArtifactModalService, NewTuleapArtifactModalService, UserPreferencesService,
         deferred, second_deferred;
+
     beforeEach(function() {
         module('planning');
 
@@ -33,8 +35,10 @@ describe("PlanningCtrl", function() {
             _.invoke(MilestoneService, "andReturn", $q.defer().promise);
 
             SharedPropertiesService = jasmine.createSpyObj("SharedPropertiesService", [
+                "getUserId",
                 "getMilestoneId",
                 "getProjectId",
+                "getViewMode",
                 "getUseAngularNewModal"
             ]);
 
@@ -47,6 +51,11 @@ describe("PlanningCtrl", function() {
                 "showEdition"
             ]);
 
+            UserPreferencesService = jasmine.createSpyObj("UserPreferencesService", [
+                "setPreference"
+            ]);
+            _.invoke(UserPreferencesService, "andReturn", $q.defer().promise);
+
             PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
                 BacklogItemService: BacklogItemService,
@@ -54,7 +63,8 @@ describe("PlanningCtrl", function() {
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
                 ProjectService: ProjectService,
                 SharedPropertiesService: SharedPropertiesService,
-                TuleapArtifactModalService: TuleapArtifactModalService
+                TuleapArtifactModalService: TuleapArtifactModalService,
+                UserPreferencesService: UserPreferencesService
             });
         });
         deferred = $q.defer();

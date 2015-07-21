@@ -237,6 +237,44 @@ class UserResource extends AuthenticatedResource {
         throw new RestException(403, "Cannot see other's membreship");
     }
 
+    /**
+     * @url OPTIONS {id}/preferences
+     *
+     * @param int $id Id of the user
+     *
+     * @access public
+     */
+    public function optionPreferences($id) {
+        Header::allowOptionsPatch();
+    }
+
+    /**
+     * Set a user preference
+     *
+     * @url PATCH {id}/preferences
+     *
+     * @access hybrid
+     *
+     * @param int $id Id of the desired user
+     * @param UserPreferenceRepresentation $preference Preference representation {@from body}
+     *
+     * @throws 401
+     * @throws 500
+     *
+     * @return UserPreferenceRepresentation
+     */
+    public function patchPreferences($id, $preference) {
+        $this->checkAccess();
+
+        if (! $this->setUserPreference($preference->key, $preference->value)) {
+            throw new RestException(500, 'Unable to set the user preference');
+        }
+    }
+
+    private function setUserPreference($key, $value) {
+        return $this->rest_user_manager->getCurrentUser()->setPreference($key, $value);
+    }
+
     private function checkUserCanSeeOtherUser(PFUser $watcher, PFuser $watchee) {
         if ($watcher->isSuperUser()) {
             return true;

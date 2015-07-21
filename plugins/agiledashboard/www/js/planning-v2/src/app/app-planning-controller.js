@@ -13,11 +13,25 @@
         'CardFieldsService',
         'TuleapArtifactModalService',
         'NewTuleapArtifactModalService',
-        'TuleapArtifactModalLoading'
+        'TuleapArtifactModalLoading',
+        'UserPreferencesService'
     ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService, NewTuleapArtifactModalService, TuleapArtifactModalLoading) {
-        var project_id                  = SharedPropertiesService.getProjectId(),
+    function PlanningCtrl(
+        $scope,
+        SharedPropertiesService,
+        BacklogItemService,
+        MilestoneService,
+        ProjectService,
+        DroppedService,
+        CardFieldsService,
+        TuleapArtifactModalService,
+        NewTuleapArtifactModalService,
+        TuleapArtifactModalLoading,
+        UserPreferencesService
+    ) {
+        var user_id                     = SharedPropertiesService.getUserId(),
+            project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
             use_angular_new_modal       = SharedPropertiesService.getUseAngularNewModal(),
             pagination_limit            = 50,
@@ -29,6 +43,8 @@
         self.canBeAddedToBacklogItemChildren = canBeAddedToBacklogItemChildren;
 
         _.extend($scope, {
+            detailed_view_key           : 'detailed-view',
+            compact_view_key            : 'compact-view',
             items                       : {},
             rest_error_occured          : false,
             rest_error                  : "",
@@ -71,9 +87,7 @@
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
             refreshBacklogItem                    : refreshBacklogItem,
-            switchToSmallCardView                 : switchToSmallCardView,
-            switchToCompleteCardView              : switchToCompleteCardView,
-            current_view_class                    : 'complete-card'
+            switchViewMode                        : switchViewMode
         });
 
         $scope.treeOptions = {
@@ -81,16 +95,22 @@
             dropped: dropped
         };
 
+        initViewMode();
         loadBacklog();
         displayBacklogItems();
         displayMilestones();
 
-        function switchToSmallCardView() {
-            $scope.current_view_class = 'small-card';
+        function initViewMode() {
+            $scope.current_view_class = $scope.compact_view_key;
+
+            if (SharedPropertiesService.getViewMode()) {
+                $scope.current_view_class = SharedPropertiesService.getViewMode();
+            }
         }
 
-        function switchToCompleteCardView() {
-            $scope.current_view_class = 'complete-card';
+        function switchViewMode(view_mode) {
+            $scope.current_view_class = view_mode;
+            UserPreferencesService.setPreference(user_id, 'agiledashboard_planning_item_view_mode_' + project_id, view_mode);
         }
 
         function loadBacklog() {
