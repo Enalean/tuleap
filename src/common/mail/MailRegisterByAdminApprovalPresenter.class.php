@@ -23,7 +23,6 @@ class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter {
     public $section_three;
 
     public function __construct(
-        $has_logo,
         $logo_url,
         $title,
         $section_one,
@@ -36,7 +35,7 @@ class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter {
         $login,
         $section_three
     ) {
-        parent::__construct($has_logo, $logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
+        parent::__construct($logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
         $this->section_three         = $section_three;
     }
 }

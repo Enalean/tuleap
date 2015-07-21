@@ -25,7 +25,6 @@ class MailRegisterByUserPresenter extends MailRegisterPresenter {
     public $color_button;
 
     public function __construct(
-        $has_logo,
         $logo_url,
         $title,
         $section_one,
@@ -40,7 +39,7 @@ class MailRegisterByUserPresenter extends MailRegisterPresenter {
         $redirect_button,
         $color_button
     ) {
-        parent::__construct($has_logo, $logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
+        parent::__construct($logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
         $this->redirect_url         = $redirect_url;
         $this->redirect_button      = $redirect_button;
         $this->color_button         = $color_button;

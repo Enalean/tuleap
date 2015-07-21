@@ -56,13 +56,21 @@ class TuleapRegisterMail {
             include($GLOBALS['Language']->getContent('admin/new_account_email'));
         }
 
-        $mail = new Codendi_Mail();
+        $mail     = new Codendi_Mail();
+        $cid_logo = $this->addLogoInAttachment($mail);
         $mail->setSubject($subject);
         $mail->setTo($to);
         $mail->setBodyHtml(
             $this->renderer->renderToString(
                 $this->template,
-                $this->mail_presenter_factory->createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role)),
+                $this->mail_presenter_factory->createMailAccountPresenter(
+                    $login,
+                    $password,
+                    $confirm_hash,
+                    $presenter_role,
+                    $cid_logo
+                )
+            ),
             Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL
         );
         $mail->setBodyText($message);
@@ -77,11 +85,12 @@ class TuleapRegisterMail {
      * @return Codendi_Mail
      */
     public function getMailProject($subject, $from, $to, $project) {
-        $mail = new Codendi_Mail();
+        $mail     = new Codendi_Mail();
+        $cid_logo = $this->addLogoInAttachment($mail);
         $mail->setSubject($subject);
         $mail->setTo($to);
 
-        $presenter = $this->mail_presenter_factory->createMailProjectPresenter($project);
+        $presenter = $this->mail_presenter_factory->createMailProjectPresenter($project, $cid_logo);
 
         $mail->setBodyHtml($this->renderer->renderToString($this->template, $presenter));
         $mail->setBodyText($presenter->getMessageText());
@@ -96,11 +105,12 @@ class TuleapRegisterMail {
      * @return Codendi_Mail
      */
     public function getMailNotificationProject($subject, $from, $to, $project) {
-        $mail = new Codendi_Mail();
+        $mail     = new Codendi_Mail();
+        $cid_logo = $this->addLogoInAttachment($mail);
         $mail->setSubject($subject);
         $mail->setTo($to);
 
-        $presenter = $this->mail_presenter_factory->createMailProjectNotificationPresenter($project);
+        $presenter = $this->mail_presenter_factory->createMailProjectNotificationPresenter($project, $cid_logo);
 
         $mail->setBodyHtml($this->renderer->renderToString($this->template, $presenter));
         $mail->setBodyText($presenter->getMessageText());
@@ -124,6 +134,19 @@ class TuleapRegisterMail {
            . $GLOBALS['Language']->getText('account_register', 'mail_signature', array($GLOBALS['sys_name'])) . "\n\n";
 
         return $message;
+    }
+
+    private function addLogoInAttachment(Codendi_Mail $mail) {
+        $logo_retriever = new LogoRetriever();
+        $cid_logo       = '';
+        $path_logo      = $logo_retriever->getPath();
+        if ($path_logo) {
+            $id_attachment  = 'logo';
+            $mail->addInlineAttachment(file_get_contents($path_logo), $logo_retriever->getMimetype(), $id_attachment);
+            $cid_logo = 'cid:'.$id_attachment;
+        }
+
+        return $cid_logo;
     }
 
 }

@@ -25,7 +25,6 @@ class MailRegisterByAdminPresenter extends MailRegisterPresenter {
     public $password;
 
     public function __construct(
-        $has_logo,
         $logo_url,
         $title,
         $section_one,
@@ -40,7 +39,7 @@ class MailRegisterByAdminPresenter extends MailRegisterPresenter {
         $section_after_password,
         $password
     ) {
-        parent::__construct($has_logo, $logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
+        parent::__construct($logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
         $this->section_three          = $section_three;
         $this->section_after_password = $section_after_password;
         $this->password               = $password;
