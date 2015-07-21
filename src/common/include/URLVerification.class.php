@@ -72,6 +72,9 @@ class URLVerification {
         return new Url();
     }
 
+    private function getPermissionsOverriderManager() {
+        return new PermissionsOverrider_PermissionsOverriderManager();
+    }
     /**
      * Tests if the requested script name is allowed for anonymous or not
      *
@@ -257,7 +260,13 @@ class URLVerification {
      */
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
-        if (! ForgeConfig::areAnonymousAllowed() && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
+
+        if (
+            ! ForgeConfig::areAnonymousAllowed() &&
+            $user->isAnonymous() &&
+            !$this->isScriptAllowedForAnonymous($server) &&
+            !$this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessPlatform($user)
+        ) {
             $redirect = new URLRedirect();
             $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }
@@ -568,6 +577,8 @@ class URLVerification {
         } elseif (! $project->isActive()) {
             throw new Project_AccessDeletedException($project);
         } elseif ($user->isMember($project->getID())) {
+            return true;
+        } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessProject($user, $project)) {
             return true;
         } elseif ($user->isRestricted() && ! $this->canRestrictedUserAccess($user, $project)) {
             throw new Project_AccessRestrictedException();
