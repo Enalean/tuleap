@@ -1,0 +1,26 @@
+angular
+    .module('user-preferences')
+    .service('UserPreferencesService', UserPreferencesService);
+
+UserPreferencesService.$inject = ['Restangular', '$q'];
+
+function UserPreferencesService(Restangular, $q) {
+    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setFullResponse(true);
+        RestangularConfigurer.setBaseUrl('/api/v1');
+    });
+
+    return {
+        setPreference: setPreference
+    };
+
+    function setPreference(user_id, key, value) {
+        return rest
+            .one('users', user_id)
+            .all('preferences')
+            .patch({
+                key  : key,
+                value: value
+            });
+    }
+}

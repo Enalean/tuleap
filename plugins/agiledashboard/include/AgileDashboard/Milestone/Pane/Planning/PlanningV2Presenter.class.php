@@ -25,6 +25,9 @@
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
 
     /** @var int */
+    public $user_id;
+
+    /** @var int */
     public $project_id;
 
     /** @var int */
@@ -34,12 +37,17 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
     public $lang;
 
     /** @var string */
+    public $view_mode;
+
+    /** @var string */
     public $use_angular_new_modal = 'true';
 
     public function __construct(PFUser $current_user, Project $project, $milestone_id) {
-        $this->lang                  = $this->getLanguageAbbreviation($current_user);
-        $this->project_id            = $project->getId();
-        $this->milestone_id          = $milestone_id;
+        $this->user_id      = $current_user->getId();
+        $this->lang         = $this->getLanguageAbbreviation($current_user);
+        $this->project_id   = $project->getId();
+        $this->milestone_id = $milestone_id;
+        $this->view_mode    = $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
     }
 
     private function getLanguageAbbreviation($current_user) {

@@ -10,10 +10,12 @@
             init: init
         });
 
-        function init(project_id, milestone_id, lang, use_angular_new_modal) {
+        function init(user_id, project_id, milestone_id, lang, use_angular_new_modal, view_mode) {
+            SharedPropertiesService.setUserId(user_id);
             SharedPropertiesService.setProjectId(project_id);
             SharedPropertiesService.setMilestoneId(milestone_id);
             SharedPropertiesService.setUseAngularNewModal(use_angular_new_modal);
+            SharedPropertiesService.setViewMode(view_mode);
             gettextCatalog.setCurrentLanguage(lang);
             $window.moment.locale(lang);
         }

@@ -5,12 +5,18 @@
 
     function SharedPropertiesService() {
         var property = {
-            project_id:   undefined,
-            milestone_id: undefined,
+            user_id              : undefined,
+            view_mode            : undefined,
+            project_id           : undefined,
+            milestone_id         : undefined,
             use_angular_new_modal: undefined
         };
 
         return {
+            getUserId            : getUserId,
+            setUserId            : setUserId,
+            getViewMode          : getViewMode,
+            setViewMode          : setViewMode,
             getProjectId         : getProjectId,
             setProjectId         : setProjectId,
             getMilestoneId       : getMilestoneId,
@@ -18,6 +24,22 @@
             getUseAngularNewModal: getUseAngularNewModal,
             setUseAngularNewModal: setUseAngularNewModal
         };
+
+        function getUserId() {
+            return property.user_id;
+        }
+
+        function setUserId(user_id) {
+            property.user_id = user_id;
+        }
+
+        function getViewMode() {
+            return property.view_mode;
+        }
+
+        function setViewMode(view_mode) {
+            property.view_mode = view_mode;
+        }
 
         function getProjectId() {
             return property.project_id;
