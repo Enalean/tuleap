@@ -16,9 +16,10 @@ Version 8.5 (Not Released Yet)
 	* FlamingParrot: 1.95
 
 	== Plugins ==
-	* git: 4.70
+	* git: 4.71
 	* tracker: 5.666
 	* agiledashboard: 1.241
+	* ldap: 3.83
 
 Version 8.4 (Friday, July 17th 2015)
 

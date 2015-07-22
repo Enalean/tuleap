@@ -1,3 +1,6 @@
+Version 3.83 - Tuleap 8.5
+    * request #7915 Flag gerrit user account as inactive when they are suspended from ldap
+
 Version 3.82 - Tuleap 8.4
     * request #8185: Write ldap not working with codendi auth type
 

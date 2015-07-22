@@ -1,3 +1,6 @@
+Version 4.71 - Tuleap 8.5
+    * request #7915 Flag gerrit user account as inactive when they are suspended from ldap
+
 Version 4.70 - Tuleap 8.5
     * request #8247: Mirroring mass update: manifest file updated before gitolite configuration
 
