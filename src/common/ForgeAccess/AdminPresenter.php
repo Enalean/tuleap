@@ -21,12 +21,6 @@
 class ForgeAccess_AdminPresenter {
 
     /** @var bool */
-    public $access_anonymous_except_reverse_proxy;
-
-    /** @var string */
-    public $reverse_proxy_regexp;
-
-    /** @var bool */
     public $project_admin_can_choose;
 
     /** @var int */
@@ -97,15 +91,13 @@ class ForgeAccess_AdminPresenter {
         $nb_restricted_users,
         $ugroup_authenticated_users,
         $ugroup_registered_users,
-        $project_admin_can_choose,
-        $reverse_proxy_regexp
+        $project_admin_can_choose
     ) {
         $this->title                    = $title;
         $this->csrf_token               = $csrf->fetchHTMLInput();
         $this->localinc_path            = $localinc_path;
         $this->current_access_mode      = $current_access_mode;
         $this->nb_restricted_users      = $nb_restricted_users;
-        $this->reverse_proxy_regexp     = $reverse_proxy_regexp;
         $this->project_admin_can_choose = $project_admin_can_choose;
 
         $this->is_localinc_obsolete = $this->isLocalIncObsolete();
@@ -113,8 +105,6 @@ class ForgeAccess_AdminPresenter {
         $this->access_anonymous  = $current_access_mode === ForgeAccess::ANONYMOUS;
         $this->access_regular    = $current_access_mode === ForgeAccess::REGULAR;
         $this->access_restricted = $current_access_mode === ForgeAccess::RESTRICTED;
-
-        $this->access_anonymous_except_reverse_proxy = $current_access_mode === ForgeAccess::ANONYMOUS && ! empty($reverse_proxy_regexp);
 
         $this->btn_submit                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
         $this->localinc_obsolete_message = $GLOBALS['Language']->getText(
@@ -134,10 +124,6 @@ class ForgeAccess_AdminPresenter {
             'current_restricted_users_message',
             $this->nb_restricted_users
         );
-
-        $this->access_anonymous_except_proxy_label = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_except_proxy_label');
-        $this->access_anonymous_except_proxy_desc  = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_except_proxy_desc');
-        $this->reverse_proxy_regexp_title          = $GLOBALS['Language']->getText('admin_main', 'reverse_proxy_regexp_title');
 
         if ($ugroup_authenticated_users != false) {
             $this->ugroup_authenticated_users = $ugroup_authenticated_users;
