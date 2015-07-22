@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/date/DateHelper.class.php');
 require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
 
 class Tracker_Artifact_Changeset_Comment {
@@ -316,9 +315,26 @@ class Tracker_Artifact_Changeset_Comment {
         $submitted_on_node = $comment_node->addChild('submitted_on', date('c', $this->submitted_on));
         $submitted_on_node->addAttribute('format', 'ISO8601');
 
-        $cdata_factory = new XML_SimpleXMLCDATAFactory();
-        $cdata_factory->insert($comment_node, 'body', $this->body);
+        $cdata_factory   = new XML_SimpleXMLCDATAFactory();
+        $comment_escaped = $this->getCommentBodyWithEscapedCrossReferences();
+        $cdata_factory->insert($comment_node, 'body', $comment_escaped);
 
         $comment_node->body['format'] = $this->bodyFormat;
+    }
+
+    private function getCommentBodyWithEscapedCrossReferences() {
+        $reference_manager = new ReferenceManager();
+        $pattern           = $reference_manager->_getExpForRef();
+        $matches           = array();
+        $escaped_body      = $this->body;
+
+        if (preg_match_all($pattern, $this->body, $matches)) {
+            foreach ($matches[0] as $reference) {
+                $escaped_reference = str_replace('#', '# ', $reference);
+                $escaped_body      = str_replace($reference, $escaped_reference, $escaped_body);
+            }
+        }
+
+        return $escaped_body;
     }
 }

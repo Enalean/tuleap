@@ -27,7 +27,11 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->user_manager = mock('UserManager');
+        $user            = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
+        $this->changeset = aChangeset()->build();
+        $this->timestamp = '1433863107';
+
+        $this->user_manager = stub('UserManager')->getUserById(101)->returns($user);
         UserManager::setInstance($this->user_manager);
     }
 
@@ -38,21 +42,16 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
     }
 
     public function itExportsToXML() {
-        $user      = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
-        $changeset = aChangeset()->build();
-        $timestamp = '1433863107';
-        $body      = '<b> My comment 01</b>';
+        $body = '<b> My comment 01</b>';
 
         $comment = new Tracker_Artifact_Changeset_Comment(
-            1, $changeset, 0, 0, 101, $timestamp, $body, 'html', 0
+            1, $this->changeset, 0, 0, 101, $this->timestamp, $body, 'html', 0
         );
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                 <comments/>';
 
         $changeset_node = new SimpleXMLElement($xml);
-
-        stub($this->user_manager)->getUserById(101)->returns($user);
 
         $comment->exportToXML($changeset_node);
 
@@ -68,6 +67,36 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $this->assertEqual($changeset_node->comment->submitted_on['format'], 'ISO8601');
 
         $this->assertEqual((string) $changeset_node->comment->body, $body);
+        $this->assertEqual($changeset_node->comment->body['format'], 'html');
+    }
+
+    public function itExportsToXMLWithCrossReferencesEscaped() {
+        $body         = 'See art #290';
+        $escaped_body = 'See art # 290';
+
+        $comment = new Tracker_Artifact_Changeset_Comment(
+            1, $this->changeset, 0, 0, 101, $this->timestamp, $body, 'html', 0
+        );
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <comments/>';
+
+        $changeset_node = new SimpleXMLElement($xml);
+
+        $comment->exportToXML($changeset_node);
+
+        $this->assertNotNull($changeset_node->comment);
+        $this->assertNotNull($changeset_node->comment->submitted_by);
+        $this->assertNotNull($changeset_node->comment->submitted_on);
+        $this->assertNotNull($changeset_node->comment->body);
+
+        $this->assertEqual((string) $changeset_node->comment->submitted_by, 'ldap_01');
+        $this->assertEqual($changeset_node->comment->submitted_by['format'], 'ldap');
+
+        $this->assertEqual((string) $changeset_node->comment->submitted_on, '2015-06-09T17:18:27+02:00');
+        $this->assertEqual($changeset_node->comment->submitted_on['format'], 'ISO8601');
+
+        $this->assertEqual((string) $changeset_node->comment->body, $escaped_body);
         $this->assertEqual($changeset_node->comment->body['format'], 'html');
     }
 }
