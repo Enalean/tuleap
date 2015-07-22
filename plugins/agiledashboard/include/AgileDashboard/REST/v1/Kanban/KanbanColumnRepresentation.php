@@ -56,6 +56,10 @@ class KanbanColumnRepresentation {
      */
     public $user_can_add_in_place;
 
+    const ARCHIVE_COLUMN = 'archive';
+
+    const BACKLOG_COLUMN = 'backlog';
+
     public function build(AgileDashboard_KanbanColumn $column, $user_can_add_in_place) {
         $this->id                    = JsonCast::toInt($column->getId());
         $this->label                 = $column->getLabel();

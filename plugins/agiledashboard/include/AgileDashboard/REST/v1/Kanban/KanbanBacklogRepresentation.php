@@ -35,6 +35,7 @@ class KanbanBacklogRepresentation {
     public function build(PFUser $user, AgileDashboard_Kanban $kanban, $limit, $offset) {
         $dao     = new AgileDashboard_KanbanItemDao();
         $factory = Tracker_ArtifactFactory::instance();
+
         $data    = $dao->searchPaginatedBacklogItemsByTrackerId($kanban->getTrackerId(), $limit, $offset);
 
         $this->total_size = (int) $dao->foundRows();
@@ -43,7 +44,11 @@ class KanbanBacklogRepresentation {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $item_representation = new KanbanItemRepresentation();
-                $item_representation->build($artifact, array());
+                $item_representation->build(
+                    $artifact,
+                    array(),
+                    KanbanColumnRepresentation::BACKLOG_COLUMN
+                );
 
                 $this->collection[] = $item_representation;
             }

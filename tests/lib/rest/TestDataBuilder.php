@@ -46,6 +46,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const EPIC_6_ARTIFACT_ID      = 14;
     const EPIC_7_ARTIFACT_ID      = 15;
 
+    const KANBAN_ITEM_1_ARTIFACT_ID = 16;
+
     const KANBAN_ONGOING_COLUMN_ID = 231;
     const KANBAN_DONE_VALUE_ID     = 233;
 

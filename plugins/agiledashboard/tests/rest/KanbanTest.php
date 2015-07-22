@@ -368,7 +368,7 @@ class KanbanTest extends RestBase {
      */
     public function testOPTIONSKanbanItems() {
         $response = $this->getResponse($this->client->options('kanban_items'));
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -392,6 +392,7 @@ class KanbanTest extends RestBase {
 
         $item = $response->json();
         $this->assertEquals($item['label'], "New item in backlog");
+        $this->assertEquals($item['in_column'], 'backlog');
     }
 
     /**
@@ -416,6 +417,18 @@ class KanbanTest extends RestBase {
 
         $item = $response->json();
         $this->assertEquals($item['label'], "New item in column");
+        $this->assertEquals($item['in_column'], REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID);
+    }
+
+    public function testGETKanbanItem() {
+        $url = 'kanban_items/' . REST_TestDataBuilder::KANBAN_ITEM_1_ARTIFACT_ID;
+
+        $response = $this->getResponse($this->client->get('kanban_items/' . REST_TestDataBuilder::KANBAN_ITEM_1_ARTIFACT_ID));
+        $item = $response->json();
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($item['label'], 'Do something');
+        $this->assertEquals($item['in_column'], 'backlog');
     }
 
     /**

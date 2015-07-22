@@ -45,7 +45,11 @@ class KanbanArchiveRepresentation {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $item_representation = new KanbanItemRepresentation();
-                $item_representation->build($artifact, $timeinfofactory->getTimeInfo($artifact));
+                $item_representation->build(
+                    $artifact,
+                    $timeinfofactory->getTimeInfo($artifact),
+                    KanbanColumnRepresentation::ARCHIVE_COLUMN
+                );
 
                 $this->collection[] = $item_representation;
             }
