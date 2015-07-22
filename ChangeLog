@@ -1,5 +1,8 @@
 Version 8.5 (Not Released Yet)
 
+	== Development ==
+	* Revert "request #8084: Force user to log in if outside of network"
+
 	== Enhancements ==
 	* request #8254: Have a way to override tuleap's permissions
 	
