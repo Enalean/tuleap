@@ -683,4 +683,30 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             'verify' => false,
         );
     }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @param PFUser $user
+     *
+     * @return Guzzle\Http\Message\Response
+     */
+    public function setUserAccountInactive(
+            Git_RemoteServer_GerritServer $server,
+            PFUser $user
+    ) {
+        try {
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->delete(
+                    $this->getGerritURL($server, '/accounts/'. urlencode($user->getUserName()) .'/active'),
+                    $this->getRequestOptions()
+                )
+            );
+            $this->logger->info($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_successful', array($user->getId(), $user->getUserName(), $server)));
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_error', array($user->getId(), $user->getUserName(), $server, $exception->getMessage())));
+        }
+    }
 }
