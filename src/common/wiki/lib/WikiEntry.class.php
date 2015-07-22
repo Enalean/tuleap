@@ -5,20 +5,20 @@
  *
  * Originally written by Manuel Vacelet
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('WikiPage.class.php');
@@ -108,7 +108,7 @@ class WikiEntry {
 
   function _setFromDb() {
     $res = db_query(' SELECT * FROM wiki_group_list'.
-	     ' WHERE id='.$this->id);
+	     ' WHERE id='.db_ei($this->id));
     $row = db_fetch_array($res);
     $this->setFromRow($row);
   }
@@ -159,7 +159,7 @@ class WikiEntry {
 
         //@todo: transfer to a DAO
         $qry = ' SELECT * FROM wiki_group_list'
-            .' WHERE group_id='.$gid
+            .' WHERE group_id='.db_ei($gid)
             .' ORDER BY rank';
         
         $res = db_query($qry);
@@ -180,12 +180,12 @@ class WikiEntry {
    */
   function add() {
     $res = db_query(' INSERT INTO wiki_group_list SET'.
-		    ' group_id='.$this->gid.','.
-		    ' rank='.$this->rank.','.
+		    ' group_id='.db_ei($this->gid).','.
+		    ' rank='.db_ei($this->rank).','.
 		    " language_id='".db_es($this->language_id)."',".
-		    ' wiki_name="'.mysql_real_escape_string($this->name).'",'.
-		    ' wiki_link="'.mysql_real_escape_string($this->page).'",'.
-		    ' description="'.mysql_real_escape_string($this->desc).'"');
+		    ' wiki_name="'.db_es($this->name).'",'.
+		    ' wiki_link="'.db_es($this->page).'",'.
+		    ' description="'.db_es($this->desc).'"');
     
     if($res === false) {
       trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
@@ -201,8 +201,8 @@ class WikiEntry {
 
   function del() {
     $res = db_query(' DELETE FROM wiki_group_list'.
-		    ' WHERE id='.$this->id.
-		    ' AND group_id='.$this->gid);
+		    ' WHERE id='.db_ei($this->id).
+		    ' AND group_id='.db_ei($this->gid));
 
     if($res === false) {
       trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
@@ -219,13 +219,13 @@ class WikiEntry {
   function update() {
       global $feedback;
       $sql = ' UPDATE wiki_group_list SET'
-          . ' group_id='.$this->gid.','
-          . ' rank='.$this->rank.','
+          . ' group_id='.db_ei($this->gid).','
+          . ' rank='.db_ei($this->rank).','
           . " language_id='".db_es($this->language_id)."',"
-          . ' wiki_name="'.mysql_real_escape_string($this->name).'",'
-          . ' wiki_link="'.mysql_real_escape_string($this->page).'",'
-          . ' description="'.mysql_real_escape_string($this->desc).'"'
-          . ' WHERE id='.$this->id;
+          . ' wiki_name="'.db_es($this->name).'",'
+          . ' wiki_link="'.db_es($this->page).'",'
+          . ' description="'.db_es($this->desc).'"'
+          . ' WHERE id='.db_ei($this->id);
       
       $res = db_query($sql);
       $err = db_error();

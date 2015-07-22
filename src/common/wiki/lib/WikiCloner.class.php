@@ -1,23 +1,24 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright 2007, STMicroelectronics
  *
  * Originally written by Sabri LABBENE <sabri.labbene@st.com>
- *<
- * This file is a part of Codendi.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -79,7 +80,7 @@ class WikiCloner {
   function templateWikiExists(){
       if($this->new_wiki_is_used === null) {
          $res = db_query('SELECT count(*) AS nb FROM wiki_page'
-                         .' WHERE group_id='.$this->template_id);
+                         .' WHERE group_id='.db_ei($this->template_id));
          $this->tmpl_wiki_exist = (db_result($res, 0, 'nb') > 0);
       }
       return $this->tmpl_wiki_exist;
@@ -87,7 +88,7 @@ class WikiCloner {
   
   function templateWikiHaveAttachments() { 
     $res = db_query('SELECT count(*) AS nb FROM wiki_attachment' 
-                    .' WHERE group_id='.$this->template_id); 
+                    .' WHERE group_id='.db_ei($this->template_id));
     $tmpl_wiki_attach_exist = (db_result($res, 0, 'nb') > 0); 
     return $tmpl_wiki_attach_exist; 
   } 
@@ -472,7 +473,7 @@ class WikiCloner {
    *  @return deserialized page data hash.
    */
   function getTemplatePageData($pagename){
-      $result = db_query(sprintf("SELECT pagedata FROM wiki_page WHERE pagename='%s' AND group_id=%d", $pagename, $this->template_id));
+      $result = db_query(sprintf("SELECT pagedata FROM wiki_page WHERE pagename='%s' AND group_id=%d", db_es($pagename), $this->template_id));
       while($page_data = db_fetch_array($result)){
           return $this->_deserialize($page_data['pagedata']);
       }
@@ -613,9 +614,9 @@ class WikiCloner {
   function insertNewWikiPage($data, $pagename){
       $result = db_query(sprintf("INSERT INTO wiki_page (pagename, hits, pagedata, group_id)"
 				 ."VALUES('%s', %d,  '%s', %d)"
-				 , $pagename, 0, $this->_serialize($data), $this->group_id));
+				 , db_es($pagename), 0, db_es($this->_serialize($data)), $this->group_id));
       if(!empty ($result)){
-          $res = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->group_id)); 
+          $res = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", db_es($pagename), $this->group_id));
 	      while ($row = db_fetch_array($res)){ 
 	          $id = $row[0];
 	      }
