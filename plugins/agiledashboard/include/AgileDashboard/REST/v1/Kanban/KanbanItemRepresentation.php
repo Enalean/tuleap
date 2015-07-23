@@ -56,13 +56,23 @@ class KanbanItemRepresentation {
      */
     public $timeinfo;
 
-    public function build(Tracker_Artifact $artifact, $timeinfo) {
+    /**
+     * @var mixed string || int
+     */
+    public $in_column;
+
+    public function build(
+        Tracker_Artifact $artifact,
+        $timeinfo,
+        $in_column
+    ) {
         $this->id          = JsonCast::toInt($artifact->getId());
         $this->item_name   = $artifact->getTracker()->getItemName();
         $this->label       = $artifact->getTitle();
         $this->color       = $artifact->getTracker()->getColor();
         $this->card_fields = $this->getArtifactCardFields($artifact);
         $this->timeinfo    = $timeinfo;
+        $this->in_column   = $in_column;
     }
 
     private function getArtifactCardFields(Tracker_Artifact $artifact) {

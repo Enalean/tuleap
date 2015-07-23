@@ -267,4 +267,70 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
 
         return is_array($row) ? (int)$row['submitted_on'] : null;
     }
+
+    public function isKanbanItemInBacklog($tracker_id, $artifact_id) {
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT 1
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    INNER JOIN (
+                        tracker_changeset_value AS CV2
+                        INNER JOIN (
+                            SELECT distinct(field_id) FROM tracker_semantic_status WHERE tracker_id = $tracker_id
+                        ) AS SS ON (CV2.field_id = SS.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV2.changeset_id)
+                WHERE CVL.bindvalue_id IS NULL
+                   OR CVL.bindvalue_id = 100
+                   AND A.id = $artifact_id
+                LIMIT 1";
+
+        return $this->retrieve($sql);
+    }
+
+    public function isKanbanItemInArchive($tracker_id, $artifact_id) {
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT 1
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    INNER JOIN (
+                        tracker_changeset_value AS CV2
+                        INNER JOIN (
+                            SELECT distinct(field_id) FROM tracker_semantic_status WHERE tracker_id = $tracker_id
+                        ) AS SS ON (CV2.field_id = SS.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV2.changeset_id)
+                    LEFT JOIN tracker_semantic_status SS2 ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)
+                WHERE SS2.open_value_id IS NULL
+                  AND CVL.bindvalue_id IS NOT NULL
+                  AND CVL.bindvalue_id <> 100
+                  AND A.id = $artifact_id
+                LIMIT 1";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getColumnIdOfKanbanItem($tracker_id, $artifact_id) {
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT CVL.bindvalue_id
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    INNER JOIN (
+                        tracker_changeset_value AS CV2
+                        INNER JOIN (
+                            SELECT distinct(field_id) FROM tracker_semantic_status WHERE tracker_id = $tracker_id
+                        ) AS SS ON (CV2.field_id = SS.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV2.changeset_id)
+                WHERE A.id = $artifact_id
+                LIMIT 1";
+
+        return $this->retrieve($sql);
+    }
 }

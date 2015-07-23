@@ -21,6 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
+use Tuleap\REST\AuthenticatedResource;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
@@ -32,6 +33,7 @@ use AgileDashboard_KanbanColumnDao;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanItemDao;
 use TrackerFactory;
+use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use UserManager;
@@ -44,8 +46,9 @@ use Tracker_REST_Artifact_ArtifactValidator               as ArtifactValidator;
 use Tuleap\Tracker\REST\TrackerReference                  as TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepresentation;
 use AgileDashboard_KanbanUserPreferences;
+use AgileDashboard_KanbanItemManager;
 
-class KanbanItemsResource {
+class KanbanItemsResource extends AuthenticatedResource {
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
@@ -67,6 +70,9 @@ class KanbanItemsResource {
 
     /** @var TimeInfoFactory */
     private $time_info_factory;
+
+    /** @var AgileDashboard_KanbanItemManager */
+    private $kanban_item_manager;
 
     public function __construct() {
         $this->tracker_factory      = TrackerFactory::instance();
@@ -90,7 +96,9 @@ class KanbanItemsResource {
             $this->tracker_factory
         );
 
-        $this->time_info_factory = new TimeInfoFactory(new AgileDashboard_KanbanItemDao());
+        $kanban_item_dao           = new AgileDashboard_KanbanItemDao();
+        $this->time_info_factory   = new TimeInfoFactory($kanban_item_dao);
+        $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($kanban_item_dao);
     }
 
     /**
@@ -101,7 +109,7 @@ class KanbanItemsResource {
      * </pre>
      */
     public function options() {
-        Header::allowOptionsPost();
+        Header::allowOptionsGetPost();
     }
 
     /**
@@ -149,8 +157,81 @@ class KanbanItemsResource {
             throw new RestException(500, implode('. ', $GLOBALS['Response']->getFeedbackErrors()));
         }
 
+        return $this->buildItemRepresentation($artifact);
+    }
+
+    /**
+     * Get a Kanban item
+     *
+     *
+     * Get the Kanban representation of the given artifact.
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     * <br/>
+     * Example:
+     * <pre><code>
+     * {<br/>
+     *     "id": 195,<br/>
+     *     "item_name": "task",<br/>
+     *     "label": "My Kanban task",<br/>
+     *     "color": "inca_silver",<br/>
+     *     "card_fields": [<br/>
+     *         {<br/>
+     *             "field_id": 7132,<br/>
+     *             "type": "string",<br/>
+     *             "label": "Title",<br/>
+     *             "value": "My Kanban Task"<br/>
+     *         }<br/>
+     *     ],<br/>
+     *     "in_column": "backlog"<br/>
+     * }<br/>
+     * </code></pre>
+     *
+     * @url GET {id}
+     * @access hybrid
+     *
+     * @param  int  $id     Id of the artifact
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
+     */
+    protected function get($id) {
+        $this->checkAccess();
+
+        $current_user = $this->getCurrentUser();
+        $artifact     = $this->artifact_factory->getArtifactById($id);
+
+        if (! $artifact) {
+            throw new RestException(404, 'Kanban item not found.');
+        }
+
+        if (! $artifact->userCanView($current_user)) {
+            throw new RestException(403, 'You cannot access this kanban item.');
+        }
+
+        return $this->buildItemRepresentation($artifact);
+    }
+
+    private function buildItemRepresentation(Tracker_Artifact $artifact) {
         $item_representation = new KanbanItemRepresentation();
-        $item_representation->build($artifact, $this->time_info_factory->getTimeInfo($artifact));
+
+        $item_in_backlog = $this->kanban_item_manager->isKanbanItemInBacklog($artifact);
+        $in_column = ($item_in_backlog) ? 'backlog' : null;
+
+        if (! $in_column) {
+            $item_in_archive = $this->kanban_item_manager->isKanbanItemInArchive($artifact);
+            $in_column = ($item_in_archive) ? 'archive' : null;
+        }
+
+        if (! $in_column) {
+            $in_column = $this->kanban_item_manager->getColumnIdOfKanbanItem($artifact);
+        }
+
+        $item_representation->build(
+            $artifact,
+            $this->time_info_factory->getTimeInfo($artifact),
+            $in_column
+        );
 
         return $item_representation;
     }
