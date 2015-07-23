@@ -11,7 +11,7 @@
     "angular-moment": "~0.8.0",
     "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
     "tuleap-artifact-modal": "http://gerrit.tuleap.net/angular-artifact-modal.git",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#053703463e1e44d5cf639e1f9f6bfa0e425e7f7d",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#1fde811174423dbf94c2efd1cb2b826edeadc385",
     "lodash": "~2.4.0"
   },
   "devDependencies": {
