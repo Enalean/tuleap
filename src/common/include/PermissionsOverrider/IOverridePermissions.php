@@ -30,11 +30,11 @@ interface PermissionsOverrider_IOverridePermissions {
      * @param Project $project  the incriminated project
      * @return Boolean          true if user can finally access project
      */
-    public function userCanAccessProject(PFUser $user, Project $project);
+    public function decideToLetUserAccessProjectEvenIfTuleapWouldNot(PFUser $user, Project $project);
 
     /**
      * @param PFUser $user  the user trying to gain access
      * @return Boolean      true if user can finally access the platform
      */
-    public function userCanAccessPlatform(PFUser $user);
+    public function decideToLetUserAccessPlatformEvenIfTuleapWouldNot(PFUser $user);
 }
