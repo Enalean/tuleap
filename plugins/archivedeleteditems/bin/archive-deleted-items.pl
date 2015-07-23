@@ -28,7 +28,7 @@ if ($ARGV[1] =~ /^(.*)(\/(.*))$/) {
 }
 
 if (!copy($source_path, $destination_path)) {
-    die("FAILURE: cannot copy file ($!)\n");
+    die("FAILURE: cannot copy file (from $source_path to $destination_path: $!)\n");
 }
 
 print "OK\n";

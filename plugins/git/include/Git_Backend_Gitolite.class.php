@@ -47,6 +47,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     protected $gitPlugin;
 
+    const PREFIX = "gitolite_";
     /**
      * Constructor
      * 
@@ -360,6 +361,44 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             $repository,
             $this->getGitPlugin()->getConfigurationParameter('git_backup_dir')
         );
+    }
+
+    /**
+     * Invoque 'archive deleted item' hook in order to make a backup of the git repository archive
+     *
+     * @param GitRepository $repository
+     *
+     * @return Boolean
+     */
+    public function archiveBeforePurge(GitRepository $repository) {
+        $backup= $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
+
+        if (dirname($backup)) {
+            $sourcePath = $backup.'/'.$repository->getBackupPath().'.tar.gz';
+            $status = true;
+            $error  = null;
+            $params  = array('source_path'    => $sourcePath,
+                             'archive_prefix' => self::PREFIX,
+                             'status'         => &$status,
+                             'error'          => &$error
+                            );
+            $this->getEventManager()->processEvent('archive_deleted_item', $params);
+
+            if ($params['status']) {
+                $this->logger->info('The repository'.$repository->getName().' has been moved to the archiving area before purge ');
+                return true;
+            } else {
+                $this->logger->warn('Can not move the repository'.$repository->getName().' to the archiving area before purge :['.$params['error'].']');
+                return false;
+            }
+        } else {
+           $this->logger->error('An error occured: The backup '.$backup.' is not a directory or does not exist');
+            return false;
+        }
+    }
+
+    private function getEventManager() {
+        return EventManager::instance();
     }
 
     /**
