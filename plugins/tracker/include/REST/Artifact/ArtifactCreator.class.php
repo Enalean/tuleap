@@ -50,7 +50,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '')
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, ''),
+            ''
         );
     }
 
@@ -69,7 +70,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '')
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, ''),
+            'by_field'
         );
     }
 
@@ -81,10 +83,10 @@ class Tracker_REST_Artifact_ArtifactCreator {
         return $tracker;
     }
 
-    private function returnReferenceOrError($artifact) {
+    private function returnReferenceOrError($artifact, $format) {
         if ($artifact) {
             $reference = new Tuleap\Tracker\REST\Artifact\ArtifactReference();
-            $reference->build($artifact);
+            $reference->build($artifact, $format);
             return $reference;
         } else {
             if ($GLOBALS['Response']->feedbackHasErrors()) {

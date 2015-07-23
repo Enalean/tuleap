@@ -46,9 +46,13 @@ class ArtifactReference {
      */
     private $artifact;
 
-    public function build(Tracker_Artifact $artifact) {
+    public function build(Tracker_Artifact $artifact, $format = '') {
         $this->id  = JsonCast::toInt($artifact->getId());
         $this->uri = ArtifactRepresentation::ROUTE . '/' . $this->id;
+
+        if ($format) {
+            $this->uri = $this->uri . "?values_format=$format";
+        }
 
         $this->tracker = new TrackerReference();
         $this->tracker->build($artifact->getTracker());
