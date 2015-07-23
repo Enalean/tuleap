@@ -102,9 +102,9 @@ class ForgeAccess_AdminPresenter {
 
         $this->is_localinc_obsolete = $this->isLocalIncObsolete();
 
-        $this->access_anonymous  = $current_access_mode === ForgeAccess::ANONYMOUS;
-        $this->access_regular    = $current_access_mode === ForgeAccess::REGULAR;
-        $this->access_restricted = $current_access_mode === ForgeAccess::RESTRICTED;
+        $this->access_anonymous  = ($current_access_mode === ForgeAccess::ANONYMOUS);
+        $this->access_regular    = ($current_access_mode === ForgeAccess::REGULAR);
+        $this->access_restricted = ($current_access_mode === ForgeAccess::RESTRICTED);
 
         $this->btn_submit                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
         $this->localinc_obsolete_message = $GLOBALS['Language']->getText(

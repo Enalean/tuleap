@@ -735,6 +735,75 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
+
+    public function testRestrictedUserCanAccessPluginManagedScripts() {
+        $user = new MockPFUser();
+
+        $url_verification = TestHelper::getPartialMock('TestURL_VERIFACTION', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $url_verification->setReturnValue('getUrl', '/plugins/lamas');
+
+        EventManager::instance()->addListener(
+            Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
+            new URL_VERIFACTION_FakeLamaPlugin(),
+            'hook',
+            false,
+            0
+        );
+
+        $url = mock('URL');
+        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+
+        $this->assertTrue($url_verification->restrictedUserCanAccessUrl($user, $url, '/blah', 'blah'));
+    }
+
+    public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowResticted() {
+        $user            = new MockPFUser();
+        $project         = mock('Project');
+        $url_verification = new URLVerification();
+
+        stub($project)->isError()->returns(false);
+        stub($project)->isActive()->returns(true);
+        stub($project)->allowsRestricted()->returns(false);
+        stub($user)->isSuperUser()->returns(false);
+        stub($user)->isMember()->returns(false);
+        stub($user)->isRestricted()->returns(true);
+
+        $this->expectException('Project_AccessRestrictedException');
+
+        $url_verification->userCanAccessProject($user, $project);
+    }
+
+    public function testRestrictedUserCanNotAccessForbiddenServiceInProjectWhichAllowsResticted() {
+        $user            = new MockPFUser();
+        $project         = mock('Project');
+        $url_verification = partial_mock('URLVerification', array('getUrl', 'restrictedUserCanAccessUrl'));
+
+        stub($url_verification)->restrictedUserCanAccessUrl()->returns(false);
+
+        stub($project)->isError()->returns(false);
+        stub($project)->isActive()->returns(true);
+        stub($project)->allowsRestricted()->returns(true);
+        stub($user)->isSuperUser()->returns(false);
+        stub($user)->isMember()->returns(false);
+        stub($user)->isRestricted()->returns(true);
+
+        $this->expectException('Project_AccessRestrictedException');
+
+        $url_verification->userCanAccessProject($user, $project);
+    }
+}
+
+class TestURL_VERIFACTION extends URLVerification {
+    public function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
+        return parent::restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name);
+    }
+}
+
+class URL_VERIFACTION_FakeLamaPlugin {
+
+    public function hook($params) {
+        $params['allow_restricted'] = true;
+    }
 }
 
 class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
@@ -748,6 +817,16 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
         $this->url_verification = new URLVerification();
         $this->user             = mock('PFUser');
         $this->project          = mock('Project');
+
+        $GLOBALS['sys_default_domain'] = 'default';
+        $GLOBALS['sys_https_host']     = 'default';
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        unset($GLOBALS['sys_default_domain']);
+        unset($GLOBALS['sys_https_host']);
     }
 
     public function itGrantsAccessToProjectMembers() {

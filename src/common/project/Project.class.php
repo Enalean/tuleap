@@ -380,7 +380,14 @@ class Project extends Group implements PFO_Project {
      * @return boolean
      */
     public function allowsRestricted() {
-        return $this->getAccess() === self::ACCESS_PUBLIC_UNRESTRICTED;
+        return $this->getAccess() === self::ACCESS_PUBLIC_UNRESTRICTED
+            || $this->isSuperPublic();
+    }
+
+    private function isSuperPublic() {
+        $super_public_projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
+
+        return in_array($this->getID(), $super_public_projects);
     }
 
     /**

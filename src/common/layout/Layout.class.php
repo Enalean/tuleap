@@ -2086,7 +2086,12 @@ class Layout extends Response {
                 }
             }
 
-            if ($this->restrictedMemberIsNotProjectMember($user, $group_id)) {
+             $permissions_overrider = new PermissionsOverrider_PermissionsOverriderManager();
+
+            if (! $this->isProjectSuperPublic($group_id)
+                    && $this->restrictedMemberIsNotProjectMember($user, $group_id)
+                    && ! $permissions_overrider->doesOverriderAllowUserToAccessProject($user, $project)
+            ) {
                 if (! in_array($short_name, $allowed_services)) {
                     continue;
                 }
@@ -2160,6 +2165,12 @@ class Layout extends Response {
 
     private function restrictedMemberIsNotProjectMember(PFUser $user, $project_id) {
         return $user->isRestricted() && ! $user->isMember($project_id);
+    }
+
+    private function isProjectSuperPublic($project_id) {
+        $projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
+
+        return in_array($project_id, $projects);
     }
 
     protected function getProjectPrivacy(Project $project) {

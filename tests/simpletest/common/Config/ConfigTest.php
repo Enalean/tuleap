@@ -28,11 +28,13 @@ class ConfigTestWhiteBoxVersion extends ForgeConfig {
 class ConfigTest extends TuleapTestCase {
 
     public function setUp() {
+        parent::setUp();
         ForgeConfig::store();
     }
 
     public function tearDown() {
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     public function testUsage() {
@@ -88,5 +90,83 @@ class ConfigTest extends TuleapTestCase {
         ConfigTestWhiteBoxVersion::load(new ConfigValueDatabaseProvider($dao));
 
         $this->assertEqual('its_value', ForgeConfig::get('a_var'));
+    }
+}
+
+class ForgeConfig_areAnonymousAllowedTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        ForgeConfig::store();
+    }
+
+    public function tearDown() {
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+    public function itReturnsTrueIfAccessModeIsAnonymous() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+
+        $this->assertTrue(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfAccessModeIsRegular() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfAccessModeIsRestricted() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+}
+
+class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase {
+
+    private $fixtures;
+    private $default;
+
+    public function setUp() {
+        parent::setUp();
+        ForgeConfig::store();
+
+        $GLOBALS['Language'] = new MockBaseLanguage();
+
+        $this->customised_file  = dirname(__FILE__) .'/../ForgeConfig/_fixtures/restricted_user_permissions.txt';
+        $this->default_file = dirname(__FILE__) .'/../../../../site-content/en_US/include/restricted_user_permissions.txt';
+    }
+
+    public function tearDown() {
+        unset($GLOBALS['Language']);
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+
+    public function itReturnsEmptyArrayIfRestrictedUserFileIsTheDefaultOne() {
+        stub($GLOBALS['Language'])
+            ->getContent('include/restricted_user_permissions', 'en_US')
+            ->returns($this->default_file);
+
+        $this->assertEqual(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), array());
+    }
+
+    public function itReturnsArrayOfProjectIdsDefinedInRestrictedUserFile() {
+        stub($GLOBALS['Language'])
+            ->getContent('include/restricted_user_permissions', 'en_US')
+            ->returns($this->customised_file);
+
+        $this->assertEqual(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), array(123, 456));
+    }
+
+    public function itDoesNotStorePublicProjectsInTheStorage() {
+        stub($GLOBALS['Language'])
+            ->getContent('include/restricted_user_permissions', 'en_US')
+            ->returns($this->customised_file);
+
+        ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
+
+        $this->assertIdentical(ForgeConfig::get('public_projects'), false);
     }
 }
