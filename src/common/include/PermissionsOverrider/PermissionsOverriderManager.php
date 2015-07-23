@@ -34,7 +34,7 @@ class PermissionsOverrider_PermissionsOverriderManager {
             return false;
         }
 
-        return $permissions_overrider->userCanAccessPlatform($user);
+        return $permissions_overrider->decideToLetUserAccessPlatformEvenIfTuleapWouldNot($user);
     }
 
     public function doesOverriderAllowUserToAccessProject(PFUser $user, Project $project) {
@@ -44,7 +44,7 @@ class PermissionsOverrider_PermissionsOverriderManager {
             return false;
         }
 
-        return $permissions_overrider->userCanAccessProject($user, $project);
+        return $permissions_overrider->decideToLetUserAccessProjectEvenIfTuleapWouldNot($user, $project);
     }
 
     private function getPermissionsOverriderDirectory() {
