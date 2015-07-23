@@ -5,13 +5,14 @@ Version 8.5 (Not Released Yet)
 
 	== Enhancements ==
 	* request #8254: Have a way to override tuleap's permissions
-	
+
 	== Security ==
 	* request #7953: Continue the removing of the SimpleSanitizer class
 	* request #8244: Fix possibles SQL injections in wiki service
 
 	== Bug fix ==
 	* request #8189: An user with an IPv6 must be able to log in
+	* request #8144: restricted users can no-longer access all services of super public projects
 
 	== Themes ==
 	* FlamingParrot: 1.95
