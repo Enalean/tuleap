@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 8.5
+    * request #8076: Save deleted git repositories before purging them
+
 Version 0.4 - Tuleap 7.6
     * Update to latest autoload/phpab version
 
