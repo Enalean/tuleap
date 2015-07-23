@@ -1,3 +1,6 @@
+Version 1.244 - Tuleap 8.5
+    * story #8225: Submit a followup comment on edit artifact
+
 Version 1.243 - Tuleap 8.5
     * story #7992: Implement GET kanban_item/:id
 
