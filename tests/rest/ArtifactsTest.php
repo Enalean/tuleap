@@ -60,6 +60,8 @@ class ArtifactsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
+        $this->assertNotNull($response->getHeader('Location'));
+
         $artifact_reference = $response->json();
         $this->assertGreaterThan(0, $artifact_reference['id']);
 
@@ -77,6 +79,10 @@ class ArtifactsTest extends RestBase {
 
         $response   = $this->getResponse($this->client->get("artifacts/$artifact_id"));
         $artifact = $response->json();
+
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+        $this->assertNotNull($response->getHeader('Location'));
 
         $fields = $artifact['values'];
 

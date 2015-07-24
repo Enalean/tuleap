@@ -45,6 +45,7 @@ use \Tracker_REST_Artifact_ArtifactCreator;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tracker_URLVerification;
 use \Tracker_Artifact_Changeset as Changeset;
+use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 class ArtifactsResource extends AuthenticatedResource {
     const MAX_LIMIT      = 50;
@@ -145,12 +146,16 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendETagHeader($artifact);
 
         if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_COLLECTION) {
-            return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
         } elseif ($values_format === self::VALUES_FORMAT_BY_FIELD) {
-            return $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact);
         } elseif ($values_format === self::VALUES_FORMAT_ALL) {
-            return $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
         }
+
+        $this->sendLocationHeader($representation->uri);
+
+        return $representation;
     }
 
     /**
@@ -353,6 +358,7 @@ class ArtifactsResource extends AuthenticatedResource {
 
             $this->sendLastModifiedHeader($artifact_reference->getArtifact());
             $this->sendETagHeader($artifact_reference->getArtifact());
+            $this->sendLocationHeader($artifact_reference->uri);
             return $artifact_reference;
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -402,5 +408,11 @@ class ArtifactsResource extends AuthenticatedResource {
 
     private function sendETagHeader(Tracker_Artifact $artifact) {
         Header::eTag($artifact->getVersionIdentifier());
+    }
+
+    private function sendLocationHeader($uri) {
+        $uri_with_api_version = '/api/v1/' . $uri;
+
+        Header::Location($uri_with_api_version);
     }
 }
