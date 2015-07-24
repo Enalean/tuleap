@@ -25,10 +25,10 @@ class Account_ConfirmationPresenter {
     public $is_thanks;
     public $redirect_url;
     public $redirect_content;
-    public $email_is_sent;
-    public $email_no_send;
-    public $displayedImage;
+    public $displayed_image;
     public $image_url;
+
+
     public $email_presenter;
 
     public function __construct(
@@ -38,9 +38,7 @@ class Account_ConfirmationPresenter {
             $is_thanks,
             $redirect_url,
             $redirect_content,
-            $email_is_sent,
-            $email_no_send,
-            $displayedImage,
+            $displayed_image,
             $image_url,
             $email_presenter
     ) {
@@ -50,9 +48,7 @@ class Account_ConfirmationPresenter {
         $this->is_thanks        = $is_thanks;
         $this->redirect_url     = $redirect_url;
         $this->redirect_content = $redirect_content;
-        $this->email_is_sent    = $email_is_sent;
-        $this->email_no_send    = $email_no_send;
-        $this->displayedImage   = $displayedImage;
+        $this->displayed_image  = $displayed_image;
         $this->image_url        = $image_url;
         $this->email_presenter  = $email_presenter;
     }

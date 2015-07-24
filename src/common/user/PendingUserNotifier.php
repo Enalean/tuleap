@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,30 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'www/include/proj_email.php';
 
 class User_PendingUserNotifier {
 
     public function notifyAdministrator(PFuser $user) {
-        $user_name     = $user->getUserName();
-        $href_approval = get_server_url().'/admin/approve_pending_users.php?page=pending';
-
-        $from    = ForgeConfig::get('sys_noreply');
-        $to      = ForgeConfig::get('sys_email_admin');
-        $subject = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $user_name);
-        $body    = stripcslashes(
-            $GLOBALS['Language']->getText(
-                'account_register',
-                'mail_approval_body',
-                array(ForgeConfig::get('sys_name'), $user_name, $href_approval)
-            )
-        );
-
-        $mail = new Mail();
-        $mail->setSubject($subject);
-        $mail->setFrom($from);
-        $mail->setTo($to, true);
-        $mail->setBody($body);
-        if (! $mail->send()) {
+        $user_name  = $user->getUserName();
+        $to         = ForgeConfig::get('sys_email_admin');
+        if (!send_new_user_email_notification($to, $user_name)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'mail_failed', $to)

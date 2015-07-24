@@ -33,9 +33,9 @@ if ($GLOBALS['sys_user_approval'] != 0 && $user->getStatus() != PFUser::STATUS_V
                $Language->getText('account_pending-resend', 'needapproval'));
  }
 if ($user->getStatus() === PFUser::STATUS_PENDING || $user->getStatus() === PFUser::STATUS_VALIDATED) {
-    if (!send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash(), 'mail')) {
-	exit_error($Language->getText('include_exit', 'error'),
-                   $user->getEmail()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+    if (!send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash())) {
+	    exit_error($Language->getText('include_exit', 'error'),
+        $user->getEmail()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
     }
     $HTML->header(array('title'=>$Language->getText('account_pending-resend', 'title')));
 ?>

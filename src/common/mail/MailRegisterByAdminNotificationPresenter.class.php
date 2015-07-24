@@ -18,13 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailRegisterPresenter extends MailOutlinePresenter {
+class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter {
 
-    public $section_one;
     public $section_two;
-    public $section_after_login;
-    public $help;
     public $login;
+    public $section_after_login;
 
     public function __construct(
         $has_logo,
@@ -32,19 +30,19 @@ class MailRegisterPresenter extends MailOutlinePresenter {
         $title,
         $section_one,
         $section_two,
-        $section_after_login,
         $thanks,
         $signature,
-        $help,
         $color_logo,
-        $login
+        $redirect_url,
+        $redirect_button,
+        $color_button,
+        $login,
+        $section_after_login
     ) {
-        parent::__construct($has_logo, $logo_url, $title, $thanks, $signature, $color_logo);
-        $this->section_one          = $section_one;
+        parent::__construct($has_logo, $logo_url, $title, $section_one, $thanks, $signature, $color_logo, $redirect_url, $redirect_button, $color_button);
         $this->section_two          = $section_two;
-        $this->section_after_login  = $section_after_login;
-        $this->help                 = $help;
         $this->login                = $login;
+        $this->section_after_login  = $section_after_login;
     }
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -67,27 +68,18 @@ $expiry_date = 0;
             }
         
             // Now send the user verification emails
-            $res_user = db_query("SELECT email, confirm_hash FROM user "
+            $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
                      . " WHERE user_id IN ($users_ids)");
             
              // Send a notification message to the user when account is activated by the Site Administrator
              $base_url = get_server_url();
-             
              while ($row_user = db_fetch_array($res_user)) {
-                $from = $GLOBALS['sys_noreply'];
-                    $to = $row_user['email'];
-                    $subject = $Language->getText('admin_approve_pending_users', 'email_title', array($GLOBALS['sys_name']));
-                    
-                    include($Language->getContent('admin/new_account_email'));
-        
-                    $mail = new Mail();
-                    $mail->setSubject($subject);
-                    $mail->setFrom($from);
-                    $mail->setTo($to,true);
-                    $mail->setBody($body);
-                    if (!$mail->send()) {
-                        $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
-                    }
+                if (!send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                    );
+                }
                 usleep(250000);
             }
         
@@ -110,8 +102,11 @@ $expiry_date = 0;
                      . " WHERE user_id IN (".implode(',', $users_array).")");
             
             while ($row_user = db_fetch_array($res_user)) {
-                if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'], 'mail')) {
-                        $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                        );
                 }
                 usleep(250000);
             }

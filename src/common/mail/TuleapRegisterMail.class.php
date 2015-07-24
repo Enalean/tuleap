@@ -41,12 +41,19 @@ class TuleapRegisterMail {
      * @return Codendi_Mail
      */
     public function getMail($login, $password, $confirm_hash, $base_url, $from, $to, $presenter_role) {
-        if ($presenter_role == "user") {
+        if ($presenter_role === "user") {
             $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', $GLOBALS['sys_name']);
             include($GLOBALS['Language']->getContent('include/new_user_email'));
-        } else {
+        } else if ($presenter_role === "admin") {
             $subject = $GLOBALS['Language']->getText('account_register', 'welcome_email_title', $GLOBALS['sys_name']);
             include($GLOBALS['Language']->getContent('account/new_account_email'));
+        } else if ($presenter_role === "admin-notification") {
+            $redirect_url = $base_url ."/admin/approve_pending_users.php?page=pending";
+            $subject = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $login);
+            $message = $this->createNotificationMessageText($login, $redirect_url);
+        } else {
+            $subject = $GLOBALS['Language']->getText('admin_approve_pending_users', 'title', $GLOBALS['sys_name']);
+            include($GLOBALS['Language']->getContent('admin/new_account_email'));
         }
 
         $mail = new Codendi_Mail();
@@ -59,5 +66,21 @@ class TuleapRegisterMail {
         return $mail;
     }
 
+    /**
+     * Create a message without html.
+     *
+     * @return string
+     */
+    private function createNotificationMessageText($login, $redirect_url) {
+        $message = $GLOBALS['Language']->getText('account_register', 'mail_approval_title') . "\n\n"
+           . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array($GLOBALS['sys_name'])) . " "
+           . $login . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_after_login', array($GLOBALS['sys_name'])). "\n\n"
+           . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two') . "\n\n"
+           . "<". $redirect_url. ">\n\n"
+           . $GLOBALS['Language']->getText('account_register', 'mail_thanks') . "\n\n"
+           . $GLOBALS['Language']->getText('account_register', 'mail_signature', array($GLOBALS['sys_name'])) . "\n\n";
+
+        return $message;
+    }
+
 }
-?>
