@@ -19,6 +19,8 @@
 
 namespace Tuleap\REST;
 
+use ForgeConfig;
+
 class Header {
     const GET     = 'GET';
     const OPTIONS = 'OPTIONS';
@@ -31,6 +33,7 @@ class Header {
     const ALLOW              = 'Allow';
     const LAST_MODIFIED      = 'Last-Modified';
     const ETAG               = 'Etag';
+    const LOCATION           = 'Location';
 
     const X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
     const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
@@ -45,6 +48,12 @@ class Header {
 
     public static function ETag($hash) {
         self::sendHeader(self::ETAG, $hash);
+    }
+
+    public static function Location($uri) {
+        $route = 'https://' . ForgeConfig::get('sys_default_domain') . $uri;
+
+        self::sendHeader(self::LOCATION, $route);
     }
 
     public static function allowOptions() {
