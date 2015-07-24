@@ -8,12 +8,15 @@
         '$filter',
         '$modal',
         '$sce',
+        '$q',
         'gettextCatalog',
         'amCalendarFilter',
         'SharedPropertiesService',
         'KanbanService',
         'KanbanItemService',
-        'CardFieldsService'
+        'CardFieldsService',
+        'NewTuleapArtifactModalService',
+        'TuleapArtifactModalLoading'
     ];
 
     function KanbanCtrl(
@@ -21,12 +24,15 @@
         $filter,
         $modal,
         $sce,
+        $q,
         gettextCatalog,
         amCalendarFilter,
         SharedPropertiesService,
         KanbanService,
         KanbanItemService,
-        CardFieldsService
+        CardFieldsService,
+        NewTuleapArtifactModalService,
+        TuleapArtifactModalLoading
     ) {
         var self   = this,
             limit  = 50,
@@ -87,6 +93,9 @@
         self.toggleArchive                = toggleArchive;
         self.filter_terms                 = '';
         self.treeFilter                   = filterCards;
+        self.loading_modal                = TuleapArtifactModalLoading.loading;
+        self.showEditModal                = showEditModal;
+        self.moveItemAtTheEnd             = moveItemAtTheEnd;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -494,6 +503,133 @@
                 },
                 reload
             );
+        }
+
+        function showEditModal($event, item) {
+            var when_left_mouse_click = 1;
+
+            if ($event.which === when_left_mouse_click) {
+                $event.preventDefault();
+
+                var callback = function(artifact_id) {
+                    item.updating = true;
+
+                    return KanbanItemService.getItem(artifact_id).then(function(data) {
+                        var updated_item = _.pick(data, function(value, key) {
+                            return _.contains([
+                                'card_fields',
+                                'color',
+                                'id',
+                                'in_column',
+                                'item_name',
+                                'label',
+                                'timeinfo'
+                            ], key);
+                        });
+
+                        if (checkColumnChanged(item, updated_item)) {
+                            self.moveItemAtTheEnd(item, updated_item.in_column);
+                        }
+
+                        _.extend(item, updated_item);
+                    });
+                };
+
+                NewTuleapArtifactModalService.showEdition(
+                    kanban.tracker_id,
+                    item.id,
+                    item.color,
+                    undefined,
+                    callback
+                );
+            }
+        }
+
+        function checkColumnChanged(item, updated_item) {
+            var previous_column = getColumn(item.in_column),
+                new_column      = getColumn(updated_item.in_column);
+            return previous_column !== new_column;
+        }
+
+        /**
+         * Move item in column at index. Removes the item from
+         * its previous column.
+         * @param  {Object} item      The kanban item to move
+         * @param  {int}    column_id The destination column's id
+         * @return {Promise}          A promise that will be resolved when the item has been moved.
+         */
+        function moveItemAtTheEnd(item, column_id) {
+            var previous_column          = getColumn(item.in_column),
+                new_column               = getColumn(column_id),
+                previous_index_in_column = getItemIndex(item);
+            item.updating                = true;
+
+            var promise = moveItemInBackend(item, column_id).then(function() {
+                item.updating  = false;
+                // Update in the view
+                item.in_column = column_id;
+                previous_column.content.splice(previous_index_in_column, 1);
+                new_column.content.push(item);
+            }, reload);
+
+            return promise;
+        }
+
+        function moveItemInBackend(item, column_id) {
+            var promise,
+                new_column  = getColumn(column_id),
+                compared_to = getComparedToForLastItemOfColumn(new_column);
+            if (column_id === 'archive') {
+                promise = KanbanService
+                    .moveInArchive(kanban.id, item.id, compared_to);
+            } else if (column_id === 'backlog') {
+                promise = KanbanService
+                    .moveInBacklog(kanban.id, item.id, compared_to);
+            } else if (column_id) {
+                promise = KanbanService
+                    .moveInColumn(kanban.id, column_id, item.id, compared_to);
+            }
+
+            return promise;
+        }
+
+        function getComparedToForLastItemOfColumn(column) {
+            if (column.content.length === 0) {
+                return null;
+            }
+
+            var last_item = column.content[column.content.length - 1];
+            var compared_to = {
+                direction: 'after',
+                item_id: last_item.id
+            };
+
+            return compared_to;
+        }
+
+        function getColumn(id) {
+            if (id === 'archive') {
+                return self.archive;
+            } else if (id === 'backlog') {
+                return self.backlog;
+            } else if (id) {
+                return getBoardColumn(id);
+            }
+
+            return undefined;
+        }
+
+        function getBoardColumn(id) {
+            return _.find(self.board.columns, function(column) {
+                return column.id === id;
+            });
+        }
+
+        function getItemIndex(item) {
+            var column = getColumn(item.in_column),
+                index  = _.indexOf(column.content, item);
+
+            return index;
         }
     }
 })();

@@ -10,6 +10,7 @@
         'ngSanitize',
         'gettext',
         'ngAnimate',
-        'ngScrollbar'
+        'ngScrollbar',
+        'tuleap.artifact-modal'
     ]);
 })();

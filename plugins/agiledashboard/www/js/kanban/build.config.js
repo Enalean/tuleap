@@ -83,11 +83,16 @@ module.exports = {
       'vendor/angular-ui-bootstrap/ui-bootstrap-0.8.0.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js',
       'vendor/angular-animate/angular-animate.min.js',
-      'vendor/ng-scrollbar/dist/ng-scrollbar.min.js'
+      'vendor/ng-scrollbar/dist/ng-scrollbar.min.js',
+      'vendor/angular-ckeditor/angular-ckeditor.js',
+      'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
+      'vendor/angular-filter/dist/angular-filter.min.js',
+      'vendor/artifact-modal/dist/tuleap-artifact-modal.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
-      'vendor/ng-scrollbar/dist/ng-scrollbar.min.css'
+      'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
+      'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
     ]
   }
 };

@@ -20,7 +20,13 @@
         tooltip-class="timeinfo"
         tooltip-placement="left"></i>
 
-    <a data-nodrag="true" href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">{{ item.item_name }} #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span></a>
+    <a
+        data-nodrag="true"
+        href="/plugins/tracker/?aid={{ item.id }}"
+        ng-click="kanban.showEditModal($event, item)"
+        class="kanban-item-link"
+    >{{ item.item_name }} #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
+    </a>
 
     <div class="kanban-item-label" ng-bind-html="kanban.getCardFieldTextValue(item.label) | highlight:kanban.filter_terms"></div>
 
