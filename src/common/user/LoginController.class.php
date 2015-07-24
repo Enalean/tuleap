@@ -31,6 +31,37 @@ class User_LoginController extends MVC2_Controller {
         $renderer = TemplateRendererFactory::build()->getRenderer($presenter->getTemplateDir());
         $renderer->renderToPage($presenter->getTemplate(), $presenter);
     }
+
+    public function confirmHash() {
+        $user_manager   = UserManager::instance();
+        $confirm_hash   = $this->request->get('confirm_hash');
+        $success        = $user_manager->getUserByConfirmHash($confirm_hash) !== null;
+        if ($success) {
+            // Get user status: if already set to 'R' (restricted) don't change it!
+            $user = $user_manager->getUserByConfirmHash($confirm_hash);
+            if ($user->getStatus() == PFUser::STATUS_RESTRICTED || $user->getStatus() == PFUser::STATUS_VALIDATED_RESTRICTED) {
+                $user->setStatus(PFUser::STATUS_RESTRICTED);
+            } else {
+                $user->setStatus(PFUser::STATUS_ACTIVE);
+            }
+            if ($user->getUnixUid() == 0) {
+                $user_manager->assignNextUnixUid($user);
+                if ($user->getStatus() == PFUser::STATUS_RESTRICTED) {
+                    // Set restricted shell for restricted users.
+                    $user->setShell($GLOBALS['codendi_bin_prefix'] .'/cvssh-restricted');
+                }
+
+            }
+            $user->setUnixStatus(PFUser::STATUS_ACTIVE);
+            $user_manager->updateDb($user);
+
+            $user_manager->removeConfirmHash($confirm_hash);
+
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_verify', 'account_confirm'));
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_verify', 'err_hash'));
+        }
+    }
 }
 
 ?>

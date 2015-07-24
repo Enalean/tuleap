@@ -45,7 +45,7 @@ class User_UserStatusManager {
     /**
      * Specific status checking when user verifies it's account
      *
-     * See src/www/account/verify.php
+     * See src/www/account/login.php
      *
      * @param PFUser $user
      *

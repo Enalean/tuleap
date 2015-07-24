@@ -116,7 +116,7 @@ class MailPresenterFactory {
         $confirm_hash   = $attributes_presenter["confirm_hash"];
 
         include($GLOBALS['Language']->getContent('include/new_user_email'));
-        $redirect_url = $base_url ."/account/verify.php?confirm_hash=$confirm_hash";
+        $redirect_url = $base_url ."/account/login.php?confirm_hash=$confirm_hash";
 
         $presenter = new MailRegisterByUserPresenter(
              $attributes_presenter["has_logo"],

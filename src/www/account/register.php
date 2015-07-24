@@ -209,6 +209,20 @@ function display_account_form($register_error, array $errors)	{
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
 }
+
+
+function getConfirmHash() {
+    $random       = new RandomNumberGenerator();
+    $confirm_hash = $random->getNumber();
+    $user_manager = UserManager::instance();
+    $check_valid   = false;
+    while (!$check_valid) {
+        $confirm_hash = $random->getNumber();
+        $check_valid   = $user_manager->getUserByConfirmHash($confirm_hash) === null;
+    }
+    return $confirm_hash;
+}
+
 // ###### first check for valid login, if so, congratulate
 $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
@@ -218,9 +232,7 @@ if ($request->isPost() && $request->exist('Register')) {
     $displayed_image    = true;
     $image_url          = '';
     $email_presenter    = '';
-
-    $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
-
+    $confirm_hash       = getConfirmHash();
     if ($new_userid = register_valid($confirm_hash, $errors)) {
         $confirmation_register   = true;
         $user_name               = user_getname($new_userid);

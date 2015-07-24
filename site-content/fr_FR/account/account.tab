@@ -157,12 +157,6 @@ account_editsshkeys	btn_save_keys	Sauvegarder les clés
 
 #
 #-----------------------------------------------
-# Script: SF/www/account/first.php
-#
-account_first	title	Bienvenue sur $1 !
-account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web $1. Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés, ou même démarrer votre propre projet.<P>Nous vous recommandons vivement de parcourir le site, lire la <A href="/plugins/docman/?group_id=1">documentation du site</a> et de peaufiner la configuration de votre <a href="/account/">compte utilisateur</a> (définir votre profil de compétences, vos préférences, etc&hellip;)<P>Profitez pleinement du site, envoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de $1 autour de vous. <P>-- L'équipe $1
-#
-#-----------------------------------------------
 # Script: SF/www/account/login.php
 #
 account_login	page_title	Connexion à $1
@@ -305,10 +299,11 @@ account_suspended	title	Compte utilisateur suspendu
 account_suspended	message	Votre compte utilisateur a été suspendu. Si vous avez des questions à ce sujet, veuillez envoyez un e-mail aux <a href="mailto:$1">administrateurs du site</A>.
 #
 #-----------------------------------------------
-# Script: SF/www/account/verify.php
+# Script: SF/www/account/login.php
 #
 account_verify	title	Vérification d'un compte utilisateur
 account_verify	message	Pour confirmer votre création de compte, connectez-vous dès maintenant. Votre compte sera alors définitivement activé.
 account_verify	err_user	Nom d'utilisateur invalide
 account_verify	err_hash	Clé de confirmation invalide.
 account_verify	err_status	Statut invalide. L'administrateur n'a pas encore validé le compte.
+account_verify	account_confirm	Votre compte a été confirmé avec succès.

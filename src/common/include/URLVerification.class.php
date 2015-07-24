@@ -92,7 +92,6 @@ class URLVerification {
         $allowedAnonymous['/account/lostlogin.php']      = true;
         $allowedAnonymous['/account/lostpw-confirm.php'] = true;
         $allowedAnonymous['/account/pending-resend.php'] = true;
-        $allowedAnonymous['/account/verify.php']         = true;
         $allowedAnonymous['/scripts/check_pw.js.php']    = true;
         if (isset($allowedAnonymous[$server['SCRIPT_NAME']]) && $allowedAnonymous[$server['SCRIPT_NAME']] == true) {
             return true;

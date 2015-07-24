@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -14,6 +15,11 @@ require_once('account.php');
 require_once('common/include/CookieManager.class.php');
 require_once('common/user/LoginController.class.php');
 
+$login_controller = new User_LoginController($request);
+
+if ($request->get('confirm_hash')) {
+    $login_controller->confirmHash();
+}
 
 $em =& EventManager::instance();
 
@@ -110,7 +116,6 @@ if($pvMode) {
     $GLOBALS['HTML']->header(array('title'=>$presenter->account_login_page_title()));
 }
 
-$login_controller = new User_LoginController($request);
 $login_controller->index($presenter);
 
 if ($pvMode) {
