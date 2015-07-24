@@ -34,8 +34,18 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
             'u_groups' => array()
         );
 
-        foreach ($field_change->ugroup as $ugroup) {
-            $data['u_groups'][] = (int)$ugroup['ugroup_id'];
+        foreach ($field_change->ugroup as $ugroup_xml) {
+            if (isset($ugroup_xml['ugroup_id'])) {
+                $data['u_groups'][] = (int)$ugroup_xml['ugroup_id'];
+            } elseif (isset($ugroup_xml['ugroup_name'])) {
+                $ugroup_manager = new UGroupManager();
+                $ugroup = $ugroup_manager->getUGroupByName(
+                    $field->getTracker()->getProject(),
+                    (string) $ugroup_xml['ugroup_name']
+                );
+
+                $data['u_groups'][] = $ugroup->getId();
+            }
         }
 
         return $data;

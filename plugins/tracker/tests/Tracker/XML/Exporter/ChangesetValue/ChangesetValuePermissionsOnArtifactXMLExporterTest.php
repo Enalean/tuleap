@@ -44,7 +44,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
         $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_PermissionsOnArtifact');
-        stub($this->changeset_value)->getPerms()->returns(array(1001, 1002));
+        stub($this->changeset_value)->getUgroupNamesFromPerms()->returns(array('ug01', 'ug02'));
+        stub($this->changeset_value)->getPerms()->returns(array(101, 102));
         stub($this->changeset_value)->getUsed()->returns(true);
         stub($this->changeset_value)->getField()->returns($this->field);
     }
@@ -61,7 +62,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
         $this->assertEqual((string)$field_change['type'], 'permissions_on_artifact');
         $this->assertEqual((string)$field_change['field_name'], $this->field->getName());
         $this->assertEqual((string)$field_change['use_perm'], '1');
-        $this->assertEqual((string)$field_change->ugroup[0]['ugroup_id'], 1001);
-        $this->assertEqual((string)$field_change->ugroup[1]['ugroup_id'], 1002);
+        $this->assertEqual((string)$field_change->ugroup[0]['ugroup_name'], 'ug01');
+        $this->assertEqual((string)$field_change->ugroup[1]['ugroup_name'], 'ug02');
     }
 }

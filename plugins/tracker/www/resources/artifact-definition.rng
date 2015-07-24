@@ -317,12 +317,17 @@
     <attribute name="use_perm">
       <data type="boolean"/>
     </attribute>
-    <oneOrMore>
+    <zeroOrMore>
       <element name="ugroup">
-        <attribute name="ugroup_id">
-          <data type="int"/>
-        </attribute>
+        <choice>
+          <attribute name="ugroup_id">
+            <data type="int"/>
+          </attribute>
+          <attribute name="ugroup_name">
+            <data type="string"/>
+          </attribute>
+        </choice>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
 </grammar>

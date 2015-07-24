@@ -59,6 +59,19 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     public function getPerms() {
         return $this->perms;
     }
+
+    /**
+     * @return array
+     */
+    public function getUgroupNamesFromPerms() {
+        $ugroup_names = array();
+
+        foreach ($this->perms as $ugroup_id) {
+            $ugroup_names[] = $this->getUgroupName($ugroup_id);
+        }
+
+        return $ugroup_names;
+    }
     
     /**
      * Return the value of used 
@@ -180,10 +193,14 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     protected function getDao() {
         return new UGroupDao(CodendiDataAccess::instance());
     }
-    
-    protected function getUgroupLabel($u_group) {
-        $row = $this->getDao()->searchByUGroupId($u_group)->getRow();
-        return util_translate_name_ugroup($row['name']);
+
+    private function getUgroupName($ugroup_id) {
+        $row = $this->getDao()->searchByUGroupId($ugroup_id)->getRow();
+        return $row['name'];
+    }
+
+    protected function getUgroupLabel($ugroup_id) {
+        return util_translate_name_ugroup($this->getUgroupName($ugroup_id));
     }
 
     protected function getUgroupRESTRepresentation($u_group_id) {
