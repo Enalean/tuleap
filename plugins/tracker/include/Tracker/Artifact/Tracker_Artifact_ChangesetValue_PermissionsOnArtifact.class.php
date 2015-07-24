@@ -100,13 +100,23 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         $representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
-            $this->getPerms(),
+            array_map(
+                array($this, 'getUserGroupRESTId'),
+                $this->getPerms()
+            ),
             array_map(
                 array($this, 'getUgroupRESTRepresentation'),
                 $this->getPerms()
             )
         );
         return $representation;
+    }
+
+    protected function getUserGroupRESTId($user_group_id) {
+        $project_id = $this->getField()->getTracker()->getProject()->getID();
+
+        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        return call_user_func_array($representation_class.'::getRESTIdForProject', array($project_id, $user_group_id));
     }
 
     public function getFullRESTValue(PFUser $user) {

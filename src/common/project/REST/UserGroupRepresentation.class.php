@@ -19,10 +19,16 @@
 
 namespace Tuleap\Project\REST;
 use \ProjectUGroup;
+use \User_ForgeUGroup;
+use \Exception;
 
 class UserGroupRepresentation {
 
     const ROUTE = 'user_groups';
+
+    const SIMPLE_REST_ID_PATTERN  = '/^\d+$/';
+    const COMPLEX_REST_ID_PATTERN = '/^(\d+)_(\d+)$/';
+
     /**
      * @var int
      */
@@ -44,10 +50,53 @@ class UserGroupRepresentation {
     public $users_uri;
 
     public function build($project_id, ProjectUGroup $ugroup) {
-        $this->id        = $project_id . '_' . $ugroup->getId();
+        $this->id        = self::getRESTIdForProject($project_id, $ugroup->getId());
         $this->uri       = UserGroupRepresentation::ROUTE . '/' . $this->id ;
-        $this->label     = \User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        $this->label     = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
         $this->key       = $ugroup->getName();
         $this->users_uri = self::ROUTE . '/'. $this->id .'/users';
+    }
+
+    static function getRESTIdForProject($project_id, $user_group_id) {
+        if ($user_group_id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
+            || in_array($user_group_id, ProjectUGroup::$forge_user_groups)
+        ) {
+            return $user_group_id;
+        }
+
+        return $project_id.'_'.$user_group_id;
+    }
+
+    static function getProjectAndUserGroupFromRESTId($identifier) {
+        if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier)) {
+            return array(
+                'project_id'    => null,
+                'user_group_id' => $identifier
+            );
+        }
+
+        if (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
+            return array(
+                'project_id'    => $complex_id[1],
+                'user_group_id' => $complex_id[2]
+            );
+        }
+    }
+
+    static public function checkRESTIdIsAppropriate($identifier) {
+        if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier, $simple_id)) {
+            $id = $simple_id[0];
+            if ($id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
+                || in_array($id, ProjectUGroup::$forge_user_groups)
+            ) {
+                return;
+            }
+
+            throw new Exception("Invalid ID for user group ('".$simple_id[0]."'), format must be: projectId_ugroupId");
+        } elseif (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
+            return;
+        }
+
+        throw new Exception('Invalid ID format('.$identifier.')');
     }
 }

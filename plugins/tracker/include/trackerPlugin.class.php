@@ -80,6 +80,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::SITE_ADMIN_CONFIGURATION_TRACKER);
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
     }
 
     public function getHooksAndCallbacks() {
@@ -967,5 +968,18 @@ class trackerPlugin extends Plugin {
             $reference_manager,
             $this->getArtifactFactory()
         );
+    }
+
+    public function can_user_access_ugroup_info($params) {
+        $project = $params['project'];
+        $user    = $params['user'];
+
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupIdUserCanView($project->getID(), $user);
+        foreach ($trackers as $tracker) {
+            if ($tracker->hasFieldBindedToUserGroupsViewableByUser($user)) {
+                $params['can_access'] = true;
+                break;
+            }
+        }
     }
 }
