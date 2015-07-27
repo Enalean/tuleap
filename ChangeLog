@@ -10,6 +10,7 @@ Version 8.5 (Not Released Yet)
 	* request #7953: Continue the removing of the SimpleSanitizer class
 	* request #8244: Fix possibles SQL injections in wiki service
 	* request #8257: Properly select charset at the creation of a MySQL connection
+	* request #8265: Fix SQL injection in the resend mail of a pending account page
 
 	== Bug fix ==
 	* request #8189: An user with an IPv6 must be able to log in
