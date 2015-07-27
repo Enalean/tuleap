@@ -1,18 +1,25 @@
 {
   "name": "kanban",
   "version": "0.0.1",
-  "devDependencies": {
+  "dependencies": {
     "angular": "~1.3.16",
     "angular-animate": "~1.3.16",
     "angular-sanitize": "~1.3.16",
-    "angular-mocks": "~1.3.16",
     "angular-gettext": "~1.1.0",
     "angular-ui-router": "~0.2.10",
     "restangular": "~1.4.0",
     "angular-moment": "~0.8.3",
     "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
     "angular-ui-bootstrap": "gh-pages",
-    "ng-scrollbar": "~0.0.7"
+    "ng-scrollbar": "~0.0.7",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#1fde811174423dbf94c2efd1cb2b826edeadc385",
+    "lodash": "~2.4.0"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "angular-mocks": "~1.3.16",
+    "jasmine-promise-matchers": "~1.1.2"
+  },
+  "resolutions": {
+    "moment": "^2.9.0"
+  }
 }
