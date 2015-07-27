@@ -1,3 +1,6 @@
+Version 1.9.12 - Tuleap 8.5
+    * request #8261 - Restricted users can access artifacts in public projects
+
 Version 1.9.11 - Tuleap 8.1
     * story #7813: allow the project administrator to give restricted users access to their project
 
