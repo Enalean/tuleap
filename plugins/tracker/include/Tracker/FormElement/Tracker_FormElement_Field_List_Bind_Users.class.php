@@ -882,4 +882,16 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getType() {
         return self::TYPE;
     }
+
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        $class_user_representation   = '\\Tuleap\\Project\\REST\\UserRepresentation';
+        $user_representation         = new $class_user_representation;
+        $user_representation->build($value);
+
+        $class_user_value_representation = '\\Tuleap\\Tracker\\REST\\FieldListBindUserValueRepresentation';
+        $representation                  = new $class_user_value_representation;
+        $representation->build($value, $user_representation);
+
+        return $representation;
+    }
 }
