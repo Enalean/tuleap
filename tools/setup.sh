@@ -789,7 +789,7 @@ setup_tuleap() {
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_keep_md5_hashed_password = true' 'sys_keep_md5_hashed_password = false'
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_keep_md5_hashed_password = 1' 'sys_keep_md5_hashed_password = 0'
     if [ "$disable_subdomains" = "y" ]; then
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
