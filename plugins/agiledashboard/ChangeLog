@@ -1,3 +1,6 @@
+Version 1.245 - Tuleap 8.5
+    * story #8160: Fix parent field issues (update hash)
+
 Version 1.244 - Tuleap 8.5
     * story #8225: Submit a followup comment on edit artifact
 
