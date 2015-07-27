@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +21,22 @@
 /**
  * I am responsible of reading the content of a zip archive to import artifacts history
  */
-class Tracker_Artifact_XMLImport_XMLImportZipArchive extends XMLImportZipArchive {
+class ProjectXMLImporter_XMLImportZipArchive extends XMLImportZipArchive {
 
-    const RESOURCE_NAME          = 'tv5';
-    const ARTIFACTS_XML_FILENAME = "artifacts.xml";
+    const RESOURCE_NAME        = 'project';
+    const PROJECT_XML_FILENAME = "project.xml";
 
-    public function __construct(Tracker $tracker, ZipArchive $zip, $extraction_path){
+    public function __construct(Project $project, ZipArchive $zip, $extraction_path){
         parent::__construct($zip);
 
-        $this->extraction_path = $this->tempdir($extraction_path, $tracker->getId());
+        $this->extraction_path = $this->tempdir($extraction_path, $project->getID());
     }
 
     /**
      * @return string The xml content of artifacts.xml in the zip archive
      */
     public function getXML() {
-        return $this->zip->getFromName(self::ARTIFACTS_XML_FILENAME);
+        return $this->zip->getFromName(self::PROJECT_XML_FILENAME);
     }
 
     /**
@@ -46,7 +46,7 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchive extends XMLImportZipArchive
      *
      * @return string Path to the new directory
      */
-    protected function tempdir($tmp_dir, $tracker_id) {
-        return parent::tempdir($tmp_dir, self::RESOURCE_NAME, $tracker_id);
+    protected function tempdir($tmp_dir, $project_id) {
+        return parent::tempdir($tmp_dir, self::RESOURCE_NAME, $project_id);
     }
 }

@@ -74,7 +74,7 @@ class TrackerXmlExport {
         }
     }
 
-    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id, PFUser $user) {
+    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id, PFUser $user, ZipArchive $archive) {
         $xml_field_mapping = array();
         $xml_trackers      = $xml_content->addChild('trackers');
         $tracker           = $this->tracker_factory->getTrackerById($tracker_id);
@@ -83,7 +83,7 @@ class TrackerXmlExport {
             $tracker_xml = $xml_trackers->addChild('tracker');
 
             $tracker->exportToXML($tracker_xml, $xml_field_mapping);
-            $this->artifact_xml_xport->export($tracker, $tracker_xml, $user);
+            $this->artifact_xml_xport->export($tracker, $tracker_xml, $user, $archive);
         }
 
         $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');

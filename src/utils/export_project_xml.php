@@ -110,7 +110,7 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
 
         $user = UserManager::instance()->forceLogin($username);
 
-        $xml_content = $xml_exporter->export($project, $options, $user);
+        $xml_content = $xml_exporter->export($project, $options, $user, $archive);
 
         if ($display_xml) {
             echo $xml_content;

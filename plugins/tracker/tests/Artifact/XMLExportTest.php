@@ -23,16 +23,21 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
 
     private $user_manager;
+    private $formelement_factory;
 
     public function setUp() {
         parent::setUp();
 
         $this->user_manager = mock('UserManager');
         UserManager::setInstance($this->user_manager);
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        Tracker_FormElementFactory::setInstance($this->formelement_factory);
     }
 
     public function tearDown() {
         UserManager::clearInstance();
+        Tracker_FormElementFactory::clearInstance();
 
         parent::tearDown();
     }
@@ -43,6 +48,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
 
         stub($this->user_manager)->getUserById(101)->returns($user_01);
         stub($this->user_manager)->getUserById(102)->returns($user_02);
+
+        stub($this->formelement_factory)->getUsedFileFields()->returns(array());
 
         $project = stub('Project')->getID()->returns(101);
         $tracker = aTracker()->withId(101)->withProject($project)->build();
@@ -129,8 +136,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         stub($changeset_04)->getSubmittedOn()->returns($timestamp_04);
         stub($changeset_04)->getValues()->returns(array($value_07));
 
-        $artifact_01 = anArtifact()->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
-        $artifact_02 = anArtifact()->withId(102)->withChangesets(array($changeset_03, $changeset_04))->build();
+        $artifact_01 = anArtifact()->withTracker($tracker)->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
+        $artifact_02 = anArtifact()->withTracker($tracker)->withId(102)->withChangesets(array($changeset_03, $changeset_04))->build();
 
         stub($changeset_01)->getArtifact()->returns($artifact_01);
         stub($changeset_02)->getArtifact()->returns($artifact_01);
@@ -178,7 +185,9 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
 
         $admin_user = stub('PFUser')->isSuperUser()->returns(true);
 
-        $exporter->export($tracker, $xml_element, $admin_user);
+        $archive = new ZipArchive();
+
+        $exporter->export($tracker, $xml_element, $admin_user, $archive);
 
         $this->assertNotNull($xml_element->artifacts);
 
@@ -212,6 +221,8 @@ class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase {
 
         $this->expectException('Tracker_Artifact_XMLExportTooManyArtifactsException');
 
-        $exporter->export(mock('Tracker'), $xml_element, mock('PFUser'));
+        $archive = new ZipArchive();
+
+        $exporter->export(mock('Tracker'), $xml_element, mock('PFUser'), $archive);
     }
 }

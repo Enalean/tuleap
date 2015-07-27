@@ -88,7 +88,7 @@ artifact =
     field_file =
         attribute type { "file" },
         element value {
-            attribute ref { xsd:IDREF }
+            attribute ref { xsd:IDREF }?
         }+
 
     field_art_link =

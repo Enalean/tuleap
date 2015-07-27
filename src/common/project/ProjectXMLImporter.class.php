@@ -23,8 +23,6 @@
  */
 class ProjectXMLImporter {
 
-    const PROJECT_XML_FILENAME = "project.xml";
-
     /** @var EventManager */
     private $event_manager;
 
@@ -67,31 +65,47 @@ class ProjectXMLImporter {
     public function importFromArchive($project_id, ZipArchive $archive) {
         $this->logger->info('Start importing from archive ' . $archive->filename);
 
-        $xml_content = $archive->getFromName(self::PROJECT_XML_FILENAME);
+        $project         = $this->getProject($project_id);
+        $project_archive = $this->getProjectZipArchive($project, $archive);
+
+        $xml_content = $project_archive->getXML();
 
         if (! $xml_content) {
             $this->logger->error('No content available in archive for file ' . self::PROJECT_XML_FILENAME);
             return;
         }
 
-        return $this->importContent($project_id, $xml_content);
+        $project_archive->extractFiles();
+
+        $this->importContent($project, $xml_content, $project_archive->getExtractionPath());
+
+        return $project_archive->cleanUp();
+    }
+
+    /**
+     * @return ProjectXMLImporter_XMLImportZipArchive
+     */
+    private function getProjectZipArchive(Project $project, ZipArchive $archive) {
+        return new ProjectXMLImporter_XMLImportZipArchive($project, $archive, ForgeConfig::get('tmp_dir'));
     }
 
     public function import($project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
-        $file_contents = file_get_contents($xml_file_path, 'r');
+        $xml_contents = file_get_contents($xml_file_path, 'r');
+        $project      = $this->getProject($project_id);
 
-        return $this->importContent($project_id, $file_contents);
+        return $this->importContent($project, $xml_contents, '');
     }
 
-    private function importContent($project_id, $file_contents) {
+    private function importContent(Project $project, $xml_contents, $extraction_path) {
+        $project_id = $project->getID();
+
         $this->logger->info("Importing project in project $project_id");
 
-        $this->checkFileIsValidXML($file_contents);
+        $this->checkFileIsValidXML($xml_contents);
 
-        $xml_element = simplexml_load_string($file_contents);
-        $project     = $this->getProject($project_id);
+        $xml_element = simplexml_load_string($xml_contents);
 
         $this->importUgroups($project, $xml_element);
 
@@ -99,8 +113,9 @@ class ProjectXMLImporter {
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(
-                'project'     => $project,
-                'xml_content' => $xml_element
+                'project'         => $project,
+                'xml_content'     => $xml_element,
+                'extraction_path' => $extraction_path
             )
         );
 

@@ -29,6 +29,9 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     private $xml_content;
     private $user_manager;
 
+    /** @var ProjectXMLImporter */
+    private $xml_importer;
+
     public function setUp() {
         parent::setUp();
 
@@ -59,7 +62,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
 
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT,
-            array('project' => $this->project, 'xml_content' => $this->xml_content)
+            array('project' => $this->project, 'xml_content' => $this->xml_content, 'extraction_path' => '')
         )->once();
 
         $this->xml_importer->import(369, $this->xml_file_path);

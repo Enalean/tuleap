@@ -42,6 +42,12 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
     /** @var Tracker_FormElement_Field */
     private $field;
 
+    /** @var Tracker_Artifact_Changeset **/
+    private $changeset;
+
+    /** @var Tracker_Artifact **/
+    private $artifact;
+
     public function setUp() {
         parent::setUp();
         $this->field         = aFileField()->withName('attachment')->build();
@@ -50,19 +56,24 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->id_prefix     = Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter::ID_PREFIX;
+        $this->artifact      = mock('Tracker_Artifact');
+        $this->changeset     = mock('Tracker_Artifact_Changeset');
 
         $file1 = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
         $file2 = new Tracker_FileInfo(456, '*', '*', 'Description 456', 'file456.txt', 456, 'text/html');
         $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_File');
         stub($this->changeset_value)->getFiles()->returns(array($file1, $file2));
         stub($this->changeset_value)->getField()->returns($this->field);
+        stub($this->changeset_value)->getId()->returns(575);
+        stub($this->changeset)->getValue()->returns($this->changeset_value);
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
     }
 
     public function itCreatesFileNodeInArtifactNode() {
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            $this->artifact,
             $this->changeset_value
         );
 
@@ -82,7 +93,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            $this->artifact,
             $this->changeset_value
         );
 
@@ -93,7 +104,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            $this->artifact,
             $this->changeset_value
         );
 
@@ -103,5 +114,36 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->assertEqual((string)$field_change['field_name'], $this->field->getName());
         $this->assertEqual((string)$field_change->value[0]['ref'], $this->id_prefix . 123);
         $this->assertEqual((string)$field_change->value[1]['ref'], $this->id_prefix . 456);
+    }
+
+    public function itOnlyExportsTheLastChangeset() {
+        $older_changeset_value = mock('Tracker_Artifact_ChangesetValue_File');
+        stub($older_changeset_value)->getId()->returns(9722);
+        stub($older_changeset_value)->getField()->returns(aFileField()->build());
+        stub($this->artifact)->getLastChangeset()->returns($older_changeset_value);
+
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            $older_changeset_value
+        );
+
+        $this->assertEqual(count($this->artifact_xml->file), 0);
+    }
+
+    public function itExportsFilePathInArchiveContext() {
+        $export_in_archive = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
+            new Tracker_XML_Exporter_InArchiveFilePathXMLExporter()
+        );
+
+        $export_in_archive->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            $this->changeset_value
+        );
+
+        $this->assertEqual($this->artifact_xml->file[0]->path, 'data/Artifact123');
     }
 }

@@ -683,8 +683,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $artifact_factory          = $this->getTrackerArtifactFactory();
                 $file_xml_updater          = $this->getFileXMLUpdater();
                 $export_children_collector = $this->getChildrenCollector($request);
-                $artifact_xml_exporter     = $this->getArtifactXMLExporter($export_children_collector, $current_user);
-                $action                    = new Tracker_Action_CopyArtifact(
+                $file_path_xml_exporter    = new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter();
+                $artifact_xml_exporter     = $this->getArtifactXMLExporter(
+                    $export_children_collector,
+                    $file_path_xml_exporter,
+                    $current_user
+                );
+
+                $action = new Tracker_Action_CopyArtifact(
                     $this,
                     $artifact_factory,
                     $artifact_xml_exporter,
@@ -3272,11 +3278,12 @@ EOS;
 
     private function getArtifactXMLExporter(
         Tracker_XML_ChildrenCollector $children_collector,
+        Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user
     ) {
         $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
 
-        return $builder->build($children_collector, $current_user);
+        return $builder->build($children_collector, $file_path_xml_exporter, $current_user);
     }
 
     private function getChangesetXMLUpdater() {
