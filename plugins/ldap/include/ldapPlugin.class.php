@@ -170,7 +170,9 @@ class LdapPlugin extends Plugin {
     public function getLDAPWrite() {
         if (! isset($this->ldap_write_instance)) {
             $ldap_params = $this->getLDAPParams();
-            if (isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '') {
+            if (isset($ldap_params['server_type']) && $ldap_params['server_type'] == LDAP::SERVER_TYPE_ACTIVE_DIRECTORY ) {
+                throw new LDAP_Exception_NoWriteException();
+            } elseif (isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '') {
                 $this->ldap_write_instance = $this->instanciateLDAP();
             } else {
                 throw new LDAP_Exception_NoWriteException();
@@ -982,5 +984,43 @@ class LdapPlugin extends Plugin {
         if ($platform_uses_ldap_for_authentication || $ldap_write_server_is_configured) {
             $params['platform_can_use_gerrit'] = true;
         }
+    }
+
+    public function getAdministrationOptions() {
+        $this->updateAdministrationOptions();
+
+        if (! file_exists($this->getConfigFilePath())) {
+            $presenter = new LDAP_AdministrationPresenter($this->getId());
+            $renderer  = TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR);
+            return $renderer->renderToString('ldap-administration', $presenter);
+        }
+    }
+
+    private function updateAdministrationOptions() {
+        $request   = HTTPRequest::instance();
+        $ldap_type = $request->getValidated('ldap_type', 'string', false);
+
+        if (! $ldap_type) {
+            return;
+        }
+
+        if ($ldap_type === LDAP::SERVER_TYPE_ACTIVE_DIRECTORY) {
+            $config_file = $this->getEtcDir().LDAP::SERVER_TYPE_ACTIVE_DIRECTORY.'.inc';
+        } else {
+            $config_file = $this->getEtcDir().LDAP::SERVER_TYPE_OPEN_LDAP.'.inc';
+        }
+
+        if (! file_exists($this->getConfigFilePath())) {
+            copy($config_file, $this->getConfigFilePath());
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration//?view=properties&plugin_id='.$this->getId());
+        }
+    }
+
+    private function getEtcDir() {
+        return $GLOBALS['sys_custompluginsroot'] .'ldap/etc/';
+    }
+
+    private function getConfigFilePath() {
+        return $this->getEtcDir().'ldap.inc';
     }
 }

@@ -17,17 +17,18 @@ Installation
 1. Install tuleap-plugin-ldap RPM
 2. Go to the "Plugins Administration" web page and install the plugin.
 3. Go in LDAP plugin properties and adjust to your environement.
-   You should customize it in /etc/codendi/plugins/ldap/etc/ldap.inc directly
-   because it contains comments that are useful for beginners.
+   You should customize it in /etc/tuleap/plugins/ldap/etc/ldap.inc directly
+   because it contains comments that are useful for beginners. There are two further templates
+   located at /etc/tuleap/plugins/ldap/etc/OpenLDAP.inc and /etc/tuleap/plugins/ldap/etc/ActiveDirectory.inc
 4. Enable ldap plugin in Plugin Administration
-5. Switch "$sys_auth_type" variable in /etc/codendi/conf/local.inc to "ldap".
+5. Switch "$sys_auth_type" variable in /etc/tuleap/conf/local.inc to "ldap".
 
 Customization
 -------------
 
 To adapt LDAP / Tuleap behaviour you should copy one of the customization files
 (.txt) available in /plugins/ldap/site-content/en_US/ into the configuration
-area, /etc/codendi/plugins/ldap/site-content/en_US.
+area, /etc/tuleap/plugins/ldap/site-content/en_US.
 Once copied, you can adapt the file to fullfill your requirements.
 
 There are 3 files you can customize:
