@@ -1,3 +1,6 @@
+Version 1.11 - Tuleap 8.5
+    * story #8207: use Active Directory as an LDAP directory
+
 Version 1.10 - Tuleap 8.4
     * request #8184: Should not be able to restrict a system plugin
 

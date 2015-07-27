@@ -1,3 +1,6 @@
+Version 3.84 - Tuleap 8.5
+    * story #8207: use Active Directory as an LDAP directory
+
 Version 3.83 - Tuleap 8.5
     * request #7915 Flag gerrit user account as inactive when they are suspended from ldap
 
