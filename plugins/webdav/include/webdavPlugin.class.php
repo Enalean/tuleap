@@ -61,8 +61,20 @@ class WebDAVPlugin extends Plugin {
      * @return void
      */
     function urlVerification(&$params) {
-        $webdavHost = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
+        if (! $this->urlIsWebDav($params['server_param'])) {
+            return;
+        }
+
+        $webdavHost                 = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
         $params['url_verification'] = new Webdav_URLVerification($webdavHost);
+    }
+
+    private function urlIsWebDav(array $server) {
+        $webdav_host     = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
+        $webdav_base_uri = $this->getPluginInfo()->getPropertyValueForName('webdav_base_uri');
+        $http_host       = HTTPRequest::instance()->getFromServer('HTTP_HOST');
+
+        return strpos($http_host.$server['REQUEST_URI'], $webdav_host.$webdav_base_uri) !== false;
     }
 
     /**
