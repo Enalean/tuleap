@@ -1,3 +1,12 @@
+Version 8.4-2 (Monday, July 27th 2015)
+
+	== Bug Fix ==
+	* request #8247: Mirroring mass update: manifest file updated before gitolite configuration
+
+	== Security ==
+	* request #8261: Restricted users can access artifacts in public projects
+	* request #8265: Blind SQL injection in the resend mail of a pending account page
+
 Version 8.4 (Friday, July 17th 2015)
 
 	== Plugins ==
