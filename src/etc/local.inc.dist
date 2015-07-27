@@ -504,4 +504,4 @@ $sys_cvs_convert_cp1252_to_utf8 = 0;
 $sys_rest_api_over_http = 0;
 
 // Continue to store password hashed with MD5 for legacy purposes
-$sys_keep_md5_hashed_password = true;
+$sys_keep_md5_hashed_password = 1;
