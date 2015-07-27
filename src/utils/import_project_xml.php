@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ require_once 'pre.php';
 
 if ($argc < 4) {
     echo <<< EOT
-Usage: $argv[0] project_id admin_user_name xml_file_path
+Usage: $argv[0] project_id admin_user_name archive_path
 
 EOT;
     exit(1);
@@ -48,7 +48,17 @@ try {
         throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($user_name)));
     }
 
-    $xml_importer->import($project_id, $argv[3]);
+    $archive_path = $argv[3];
+
+    $archive = new ZipArchive();
+    if ($archive->open($archive_path) !== true) {
+        fwrite(STDERR, "*** ERROR: Unable to open archive ".$argv[3].PHP_EOL);
+        exit(1);
+    }
+
+    $xml_importer->importFromArchive($project_id, $archive);
+
+    $archive->close();
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
         fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);

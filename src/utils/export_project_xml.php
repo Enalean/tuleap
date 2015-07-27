@@ -25,8 +25,10 @@ $usage_options  = '';
 $usage_options .= 'p:'; // give me a project
 $usage_options .= 'u:'; // give me a user
 $usage_options .= 't:'; // give me a tracker
+$usage_options .= 'o:'; // give me the archive path
 $usage_options .= 'f';  // should we force the export
 $usage_options .= 'h';  // should we display the usage
+$usage_options .= 'x';  // should we display the XML content
 
 function usage() {
     global $argv;
@@ -39,7 +41,9 @@ Dump a project structure to XML format
   -p <project_id> The id of the project to export
   -u <user_name>  The user used to export
   -t <tracker_id> The id of the tracker to include in the export (optional)
+  -o <path>       The path of the archive of the exported XML + data
   -f              Force the export (for example if there are too many artifacts). Use at your own risks.
+  -x              Display the XML content
   -h              Display this help
 
 
@@ -65,6 +69,17 @@ if (! isset($arguments['u'])) {
     $username = $arguments['u'];
 }
 
+if (! isset($arguments['o'])) {
+    usage();
+} else {
+    $output = $arguments['o'];
+}
+
+$display_xml = false;
+if (isset($arguments['x'])) {
+    $display_xml = true;
+}
+
 $options = array();
 if (isset($arguments['t'])) {
     $options['tracker_id'] = (int)$arguments['t'];
@@ -84,9 +99,27 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
             new ProjectXMLExporterLogger()
         );
 
+        $archive  = new ZipArchive();
+        if ($archive->open($output, ZipArchive::CREATE) !== true) {
+            echo '*** ERROR: Cannot create archive: '.$archive_path;
+            exit(1);
+        }
+
+        $xml_security = new XML_Security();
+        $xml_security->enableExternalLoadOfEntities();
+
         $user = UserManager::instance()->forceLogin($username);
 
-        echo $xml_exporter->export($project, $options, $user);
+        $xml_content = $xml_exporter->export($project, $options, $user);
+
+        if ($display_xml) {
+            echo $xml_content;
+        }
+
+        $archive->addFromString('project.xml', $xml_content);
+        $xml_security->disableExternalLoadOfEntities();
+
+        $archive->close();
 
         exit(0);
     } catch (XML_ParseException $exception) {
