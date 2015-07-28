@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -208,13 +209,11 @@ function display_account_form($register_error, array $errors)	{
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
 }
-
 // ###### first check for valid login, if so, congratulate
 $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
 $errors = array();
 if ($request->isPost() && $request->exist('Register')) {
-
     $page = $request->get('page');
 
     $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
@@ -230,26 +229,19 @@ if ($request->isPost() && $request->exist('Register')) {
                 //send an email to the user with th login and password
                 $from = $GLOBALS['sys_noreply'];
                 $to = $request->get('form_email');
-                $subject = $Language->getText('account_register', 'welcome_email_title', $GLOBALS['sys_name']);
-
-                include($Language->getContent('account/new_account_email'));
-
-                $mail = new Mail();
-                $mail->setSubject($subject);
-                $mail->setFrom($from);
-                $mail->setTo($to,true); // Don't invalidate address
-                $mail->setBody($body);
-                if (!$mail->send()) {
+                $login = $hp->purify($request->get('form_loginname'));
+                $password = $hp->purify($request->get('form_pw'));
+                if (!send_new_user_email($to, $login, $password, '', 'mail-admin', true)) {
                     $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
                 }
             }
         }
         $thanks = $Language->getText('account_register', 'msg_thanks');
-        $isThanks = true;
+        $is_thanks = true;
 
         if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
             if(!$admin_creation) {
-                if (!send_new_user_email($request->get('form_email'), $confirm_hash, $user_name)) {
+                if (!send_new_user_email($request->get('form_email'), $user_name, '', $confirm_hash, 'mail', false)) {
                     $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
                 }
             }
@@ -271,7 +263,7 @@ if ($request->isPost() && $request->exist('Register')) {
                                                             )
                                       );
                 $thanks             = '';
-                $isThanks           = false;
+                $is_thanks           = false;
                 $redirect_url       = '/admin';
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect_admin');
             } else {
@@ -290,7 +282,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
         }
 
-        $presenter = new Account_ConfirmationPresenter($title, $content, $thanks, $isThanks, $redirect_url, $redirect_content);
+        $presenter = new Account_ConfirmationPresenter($title, $content, $thanks, $is_thanks, $redirect_url, $redirect_content);
         $template = 'confirmation';
     }
 }

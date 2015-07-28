@@ -106,7 +106,4 @@ echo "Posix real uid     : ".posix_getuid()."\n";
 echo "Posix effective gid: ".posix_getegid()."\n";
 echo "Posix real gid     : ".posix_getgid()."\n";
 */
-
-
-
 ?>

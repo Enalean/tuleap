@@ -22,15 +22,15 @@ class Account_ConfirmationPresenter {
     public $title;
     public $content;
     public $thanks;
-    public $isThanks;
+    public $is_thanks;
     public $redirect_url;
     public $redirect_content;
 
-    public function __construct($title, $content, $thanks, $isThanks, $redirect_url, $redirect_content) {
+    public function __construct($title, $content, $thanks, $is_thanks, $redirect_url, $redirect_content) {
         $this->title            = $title;
         $this->content          = $content;
         $this->thanks           = $thanks;
-        $this->isThanks         = $isThanks;
+        $this->is_thanks        = $is_thanks;
         $this->redirect_url     = $redirect_url;
         $this->redirect_content = $redirect_content;
     }

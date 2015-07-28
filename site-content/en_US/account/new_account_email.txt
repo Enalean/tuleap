@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -6,14 +7,30 @@
 //
 // 
 //
+$title = "Welcome to ".$GLOBALS['sys_name']."!";
 
-$body = "You are now a registered user on ".$GLOBALS['sys_name']
-.". with the login $login and the password $password\nPlease change your password after your first connection to the web site.\n\n"
-."As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
-."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
-."project.\n\n\n ** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".$GLOBALS['sys_name']
-." to create your Shell account. Some features like CVS and SVN access depend on it. Your Shell account will be activated in less than two"
-." hours from now. \n\n\nIn the meantime we highly recommend that you browse through the site, read "
-."the Site Documentation and finalize the setup of your User Profile "
-."(Define your skills profile, your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
-.$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you. \n\n\n-- The ".$GLOBALS['sys_name']." Team";
+$section_one = "You are now a registered user with the login: ";
+
+$section_two = "As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
+               ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
+               ."project.";
+
+$section_three = "** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".$GLOBALS['sys_name']
+                   ." to create your Shell account. Some features like CVS and SVN access depend on it. Your Shell account will be activated in less than two"
+                   ." hours from now. \n\n\nIn the meantime we highly recommend that you browse through the site, read "
+                   ."the Site Documentation and finalize the setup of your User Profile "
+                   ."(Define your skills profile, your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
+                   .$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you.";
+
+$section_after_login = " and the password: ";
+
+$section_after_password = ". \nPlease change your password after your first connection to the web site.";
+
+$thanks = "Thanks!";
+
+$signature = "- The team at ".$GLOBALS['sys_name'];
+
+$help = "For any help contact: ".$GLOBALS['sys_email_admin'];
+
+$message = $title . "\n\n" .  $section_one . $login . $section_after_login . $password . $section_after_password."\n\n" . $section_two . "\n\n"
+            .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;
