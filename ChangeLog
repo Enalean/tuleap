@@ -4,6 +4,7 @@ Version 8.5 (Not Released Yet)
 	* Revert "request #8084: Force user to log in if outside of network"
 
 	== Enhancements ==
+        * story #8248: Have a beautiful register confirmation email
 	* request #8254: Have a way to override tuleap's permissions
 
 	== Security ==
@@ -18,12 +19,12 @@ Version 8.5 (Not Released Yet)
 	* request #8269: use an integer for sys_keep_md5_hashed_password instead of a boolean
 
 	== Themes ==
-	* FlamingParrot: 1.95
+	* FlamingParrot: 1.97
 
 	== Plugins ==
 	* git: 4.72
 	* tracker: 5.670
-	* agiledashboard: 1.246
+	* agiledashboard: 1.247
 	* ldap: 3.84
 	* archivedeleteditems: 0.5
 	* webdav: 1.9.12
