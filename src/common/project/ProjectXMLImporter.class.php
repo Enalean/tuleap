@@ -23,6 +23,8 @@
  */
 class ProjectXMLImporter {
 
+    const PROJECT_XML_FILENAME = "project.xml";
+
     /** @var EventManager */
     private $event_manager;
 
@@ -62,10 +64,30 @@ class ProjectXMLImporter {
         $this->logger          = $logger;
     }
 
+    public function importFromArchive($project_id, ZipArchive $archive) {
+        $this->logger->info('Start importing from archive ' . $archive->filename);
+
+        $xml_content = $archive->getFromName(self::PROJECT_XML_FILENAME);
+
+        if (! $xml_content) {
+            $this->logger->error('No content available in archive for file ' . self::PROJECT_XML_FILENAME);
+            return;
+        }
+
+        return $this->importContent($project_id, $xml_content);
+    }
+
     public function import($project_id, $xml_file_path) {
-        $this->logger->info("Start importing project in project $project_id");
+        $this->logger->info('Start importing from file ' . $xml_file_path);
 
         $file_contents = file_get_contents($xml_file_path, 'r');
+
+        return $this->importContent($project_id, $file_contents);
+    }
+
+    private function importContent($project_id, $file_contents) {
+        $this->logger->info("Importing project in project $project_id");
+
         $this->checkFileIsValidXML($file_contents);
 
         $xml_element = simplexml_load_string($file_contents);
