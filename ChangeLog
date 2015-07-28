@@ -15,6 +15,7 @@ Version 8.5 (Not Released Yet)
 	== Bug fix ==
 	* request #8189: An user with an IPv6 must be able to log in
 	* request #8144: restricted users can no-longer access all services of super public projects
+	* request #8269: use an integer for sys_keep_md5_hashed_password instead of a boolean
 
 	== Themes ==
 	* FlamingParrot: 1.95
