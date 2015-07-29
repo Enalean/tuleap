@@ -1,23 +1,24 @@
 <?php
 /*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/reference/ReferenceManager.class.php');
@@ -223,23 +224,16 @@ class Docman_ItemFactory {
     }
 	
     /**   
-    * This method checks if the item is a wiki page. if true it return its id in wiki, else, it returns null.   
-    *   
-    * @param int $group_id project id   
-    * @param int $item_id  docman item id   
-    *   
-    * @return wiki page id or null if the page is not yet created in wiki.   
+    * @return wiki page id or null if the page is not yet created in wiki.
     */   
-    function getIdInWikiOfWikiPageItem($pagename, $group_id){   
-        // Get wiki id of the pagename   
-        $wiki_dao =& $this->_getWikiDao();   
-        $id_in_wiki = $wiki_dao->retrieveWikiPageId($pagename, $group_id);   
-        if ($id_in_wiki != null){   
-            return $id_in_wiki;   
-        }   
-        else {   
-            return null;   
-        }   
+    function getIdInWikiOfWikiPageItem($pagename, $group_id) {
+        $wiki_page = $this->getWikiPage($group_id, $pagename);
+
+        if ($wiki_page->exist()) {
+            return $wiki_page->getId();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -270,27 +264,35 @@ class Docman_ItemFactory {
     /**
     * This deletes an existant wiki page and all its stored data and infos from codendi db.
     *
-    * @param string $wiki_page name of the wiki page
+    * @param string $wiki_page_name name of the wiki page
     * @param int $group_id project id.
     *
     * @return true if there was no error.
     */
-    function deleteWikiPage($wiki_page, $group_id) {
-        $wiki_dao = $this->_getWikiDao();
-        $id_in_wiki = $wiki_dao->retrieveWikiPageId($wiki_page, $group_id);
-        if($id_in_wiki !== null) {
-            if($wiki_dao->deleteWikiPage($id_in_wiki)
-                && $wiki_dao->deleteWikiPageVersion($id_in_wiki)
-                && $wiki_dao->deleteLinksFromToWikiPage($id_in_wiki)
-                && $wiki_dao->deleteWikiPageFromNonEmptyList($id_in_wiki)
-                && $wiki_dao->deleteWikiPageRecentInfos($id_in_wiki)) {
-                return true;
-            } else {
-                return false;   
-            }
-        } else {
-            return false;
-        } 
+    function deleteWikiPage($wiki_page_name, $group_id) {
+        $wiki_page = $this->getWikiPage($group_id, $wiki_page_name);
+
+        return $wiki_page->delete();
+    }
+
+    private function getWikiPage($project_id, $pagename) {
+        $wiki_page = null;
+
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent(
+            PLUGIN_DOCMAN_EVENT_GET_PHPWIKI_PAGE,
+            array(
+                'phpwiki_page_name' => $pagename,
+                'project_id'        => $project_id,
+                'phpwiki_page'      => $wiki_page
+            )
+        );
+
+        if ($wiki_page === null) {
+            $wiki_page = new WikiPage($project_id, $pagename);
+        }
+
+        return $wiki_page;
     }
 
     function &getItemFromDb($id, $params = array()) {
@@ -777,15 +779,6 @@ class Docman_ItemFactory {
         return $this->dao;
     }
 
-    var $wikidao;
-    function &_getWikiDao() {
-        require_once('common/dao/WikiDao.class.php');
-        if (!$this->wikidao) {
-            $this->wikidao =& new WikiDao(CodendiDataAccess::instance());
-        }
-        return $this->wikidao;
-    }
-
     protected function _getVersionFactory() {
         return new Docman_VersionFactory();
     }
@@ -1200,9 +1193,12 @@ class Docman_ItemFactory {
 
     function getCurrentWikiVersion($item) {
         $version = null;
-        $wiki_dao =& $this->_getWikiDao();
         if($this->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
-            $version = $wiki_dao->searchCurrentWikiVersion($item->getGroupId(), $item->getPagename());
+            $wiki_page = $this->getWikiPage($item->getGroupId(), $item->getPagename());
+
+            if ($wiki_page->exist()) {
+                $version = $wiki_page->getCurrentVersion();
+            }
         }
         return $version;
     }

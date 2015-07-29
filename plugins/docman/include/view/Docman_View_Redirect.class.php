@@ -33,7 +33,13 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
         trigger_error('Redirect view cannot be applied to Folders');
     }
     function visitWiki(&$item, $params = array()) {
-        return '/wiki/?group_id='. $item->getGroupId() .'&pagename='. urlencode($item->getPagename());
+        $project_id = $item->getGroupId();
+        $project    = ProjectManager::instance()->getProject($project_id);
+        $pagename   = urlencode($item->getPagename());
+        if ($project && $project->usesService('plugin_phpwiki')) {
+            return '/plugins/phpwiki/?group_id='. $project_id .'&pagename='. $pagename;
+        }
+        return '/wiki/?group_id='. $project_id .'&pagename='. $pagename;
     }
 
     function visitLink(&$item, $params = array()) {

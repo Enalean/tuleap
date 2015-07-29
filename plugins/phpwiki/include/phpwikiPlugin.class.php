@@ -45,7 +45,15 @@ class phpwikiPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook('site_admin_option_hook');
 
+        if ($this->isDocmanPluginActivated()) {
+            $this->addHook(PLUGIN_DOCMAN_EVENT_GET_PHPWIKI_PAGE, 'getWikiPage');
+        }
+
         $this->addHook('phpwiki_redirection');
+    }
+
+    private function isDocmanPluginActivated() {
+        return defined('PLUGIN_DOCMAN_BASE_DIR');
     }
 
     public function getPluginInfo() {
@@ -160,6 +168,15 @@ class phpwikiPlugin extends Plugin {
     public function purgeFiles($time) {
         $wiki_attachment = new PHPWikiAttachment();
         $wiki_attachment->purgeAttachments($time);
+    }
+
+    public function getWikiPage($params) {
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['project_id']);
+        if ($project->usesService($this->getServiceShortname())) {
+            $wiki_page              = new PHPWikiPage($params['project_id'], $params['wiki_page_name']);
+            $params['phpwiki_page'] = $wiki_page;
+        }
     }
 
     public function phpwiki_redirection($params) {

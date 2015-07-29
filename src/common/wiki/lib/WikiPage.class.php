@@ -47,6 +47,9 @@ class WikiPage {
     /** @var bool */
     private $referenced;
 
+    /** @var WikiDao */
+    private $wiki_dao;
+
     /*
      * Constructor
      */
@@ -75,6 +78,8 @@ class WikiPage {
         }
 
         $this->referenced = $this->isWikiPageReferenced();
+
+        $this->wiki_dao = new WikiDao();
     }
 
     private function setGid($project_id) {
@@ -160,6 +165,13 @@ class WikiPage {
         }
 
         return '';
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentVersion() {
+        return $this->wrapper->getRequest()->getPage($this->pagename)->getCurrentRevision()->getVersion();
     }
 
     private function getLastVersionContent() {
@@ -339,6 +351,26 @@ class WikiPage {
     }
 
     /**
+     * @return bool
+     */
+    public function delete() {
+        if ($this->exist()) {
+            if($this->wiki_dao->deleteWikiPage($this->id)
+                && $this->wiki_dao->deleteWikiPageVersion($this->id)
+                && $this->wiki_dao->deleteLinksFromToWikiPage($this->id)
+                && $this->wiki_dao->deleteWikiPageFromNonEmptyList($this->id)
+                && $this->wiki_dao->deleteWikiPageRecentInfos($this->id)) {
+                $this->id = 0;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @return string[] List of pagename
      */
     public function &getAllAdminPages() {
@@ -429,7 +461,7 @@ class WikiPage {
 
         foreach ($default_pages_used as $default_page_name) {
             $wiki_page = new WikiPage($this->gid, $default_page_name);
-            $version   = $this->wrapper->getRequest()->getPage($default_page_name)->getCurrentRevision()->getVersion();
+            $version   = $wiki_page->getCurrentVersion();
             if ($version > 1) {
                 $indexable_pages[] = $wiki_page;
             }

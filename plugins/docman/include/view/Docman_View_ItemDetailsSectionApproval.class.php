@@ -85,7 +85,14 @@ extends Docman_View_ItemDetailsSection {
                 }
             }
             elseif($itemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
-                $url = '/wiki/index.php?group_id='.$this->item->getGroupId().'&pagename='.$this->item->getPagename().'&version='.$version;
+                $project_id = $this->item->getGroupId();
+                $project    = ProjectManager::instance()->getProject($project_id);
+                $pagename   = urlencode($this->item->getPagename());
+                if ($project && $project->usesService('plugin_phpwiki')) {
+                    $url = '/plugins/phpwiki/index.php?group_id='.$project_id.'&pagename='.$pagename.'&version='.$version;
+                } else {
+                    $url = '/wiki/index.php?group_id='.$project_id.'&pagename='.$pagename.'&version='.$version;
+                }
             }
             $title .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_version_link').' '.$version;
             if($noLink) {

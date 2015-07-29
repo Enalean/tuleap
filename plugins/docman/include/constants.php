@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,6 +73,17 @@ define('PLUGIN_DOCMAN_EVENT_COPY', 'plugin_docman_event_copy');
  *      'version' => Docman_LinkVersion
  */
 define('PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION', 'plugin_docman_event_new_linkVersion');
+
+/**
+ * Event raised when docman need to get a phpwiki page
+ *
+ * Parameters:
+ *      'phpwiki_page_name'
+ *      'project_id'
+ *      'phpwiki_page'
+ */
+define('PLUGIN_DOCMAN_EVENT_GET_PHPWIKI_PAGE', 'plugin_docman_event_get_phpwiki_page');
+
 
 define('PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED', 0);
 define('PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED',  1);
