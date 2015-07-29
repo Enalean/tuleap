@@ -1,3 +1,6 @@
+Version 5.671 - Tuleap 8.5
+    * story #8160: User should be displayed according to user prefs in bound to user list field (REST)
+
 Version 5.670 - Tuleap 8.5
     * story #8206: Add Location header
 
