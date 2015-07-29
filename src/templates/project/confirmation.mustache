@@ -1,0 +1,20 @@
+<div id="project-confirmation-header">
+    <h2>{{ get_title }}</h2>
+</div>
+
+<div id="project-confirmation-content">
+    <p>
+        {{{ get_section_one }}}
+    </p>
+    <p>
+        {{{ get_section_two }}}<i class="icon-envelope-alt"></i>
+    </p>
+</div>
+
+<div id="project-confirmation-thanks">
+    {{ get_thanks }}
+</div>
+
+<div id="project-confirmation-redirect">
+    <a href="{{ get_redirect_url }}" name="personal_page" class="btn btn-large btn-primary" role="button">{{ get_redirect_content }}</a>
+</div>
