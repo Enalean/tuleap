@@ -1292,6 +1292,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->getProperty('default_value');
     }
 
+    public function getDefaultRESTValue() {
+        return $this->getDefaultValue();
+    }
+
     /**
      * Extract data from request
      * Some fields like files doesn't have their value submitted in POST or GET

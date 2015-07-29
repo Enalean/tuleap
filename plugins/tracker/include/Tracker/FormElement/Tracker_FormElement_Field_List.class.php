@@ -1288,6 +1288,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return array_keys($default_array);
     }
 
+
+    public function getDefaultRESTValue() {
+        return $this->getBind()->getDefaultRESTValues();
+    }
+
     /**
      * Say if the value is valid. If not valid set the internal has_error to true.
      *

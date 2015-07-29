@@ -52,6 +52,24 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         return $this->default_values;
     }
 
+    public function getDefaultRESTValues() {
+        $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
+
+        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\FieldValueRepresentation';
+
+        $rest_array = array();
+        foreach ($bind_values as $value) {
+            $representation = new $class_with_right_namespace;
+            $representation->build(array(
+                Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY    => $value->getId(),
+                Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY => $value->getSoapValue()
+            ));
+            $rest_array[] = $representation;
+
+        }
+        return $rest_array;
+    }
+
     public function getDecorators() {
         return $this->decorators;
     }

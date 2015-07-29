@@ -93,7 +93,7 @@ class Tracker_REST_FieldRepresentation {
             $this->collapsed     = (bool) $field->isCollapsed();
         }
 
-        $this->default_value = $field->getDefaultValue();
+        $this->default_value = $field->getDefaultRESTValue();
         $this->type   = $type;
 
         $this->values = null;

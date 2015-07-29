@@ -458,6 +458,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return null;
     }
 
+    public function getDefaultRESTValue() {
+        return $this->getDefaultValue();
+    }
+
     public function getRESTContent() {
         $content_structure = array();
 
