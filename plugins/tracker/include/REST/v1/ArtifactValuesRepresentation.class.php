@@ -51,7 +51,7 @@ class ArtifactValuesRepresentation {
 
         $array_representation['field_id'] = $this->field_id;
 
-        if ($this->value || $this->value === '') {
+        if ($this->value || $this->value === '' || $this->value === '0') {
             $array_representation['value'] = $this->value;
         }
 
