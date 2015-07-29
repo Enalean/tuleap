@@ -529,6 +529,8 @@
 
                         if (checkColumnChanged(item, updated_item)) {
                             self.moveItemAtTheEnd(item, updated_item.in_column);
+                        } else {
+                            item.updating = false;
                         }
 
                         _.extend(item, updated_item);
