@@ -233,7 +233,7 @@ class WikiServiceAdminViews extends WikiViews {
       if($we->wikiPage->permissionExist()) {
         $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
       }
-      print '['.$status.']';
+      print '['.$purifier->purify($status).']';
       print '</a>';
       print '</td>';
 
@@ -348,12 +348,13 @@ class WikiServiceAdminViews extends WikiViews {
     function _browsePages(&$pageList) {
         print html_build_list_table_top(array('Page', 'Permissions'));
 
+        $purifier = Codendi_HTMLPurifier::instance();
         sort($pageList);
         $i=0;
         foreach($pageList as $pagename) {
             print '            <tr class="'.html_get_alt_row_color($i).'">            ';
 
-            print '<td><a href="'.$this->wikiLink.'&pagename='.urlencode($pagename).'">'.$pagename.'</a></td>';
+            print '<td><a href="'.$this->wikiLink.'&pagename='.urlencode($pagename).'">'.$purifier->purify($pagename).'</a></td>';
 
             $page   = new WikiPage($this->gid, $pagename);
             $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
@@ -375,10 +376,10 @@ class WikiServiceAdminViews extends WikiViews {
                 $eM->processEvent('getPermsLabelForWiki', array(
                                   'label'  => &$label
                                 ));
-                print $label;
+                print $purifier->purify($label);
             }
             else {
-                print '<a href="'.$this->wikiAdminLink.'&view=pagePerms&id='.$page->getId().'">['.$status.']</a>';
+                print '<a href="'.$this->wikiAdminLink.'&view=pagePerms&id='.urlencode($page->getId()).'">['.$purifier->purify($status).']</a>';
             }
 
             print '</td>';
@@ -412,7 +413,8 @@ class WikiServiceAdminViews extends WikiViews {
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete')." ?"));
 
-        $wai =& WikiAttachment::getAttachmentIterator($this->gid);
+        $purifier = Codendi_HTMLPurifier::instance();
+        $wai      = WikiAttachment::getAttachmentIterator($this->gid);
         $wai->rewind();
         while($wai->valid()) {
             $wa =& $wai->current();
@@ -423,7 +425,7 @@ class WikiServiceAdminViews extends WikiViews {
                 $filename = basename($wa->getFilename());
                 $id = $wa->getId();
 
-                print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.$id.'">'.$filename.'</a></td>';
+                print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.urlencode($id).'">'.$purifier->purify($filename).'</a></td>';
                 print '<td align="center">'.$wa->count().'</td>';
 
                 $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
@@ -431,7 +433,7 @@ class WikiServiceAdminViews extends WikiViews {
                     $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
                 }
                 print '<td align="center">';
-                print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.']</a>';
+                print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.urlencode($id).'">['.$purifier->purify($status).']</a>';
                 print '</td>';
 
 
