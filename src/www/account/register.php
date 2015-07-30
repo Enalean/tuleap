@@ -214,7 +214,12 @@ $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
 $errors = array();
 if ($request->isPost() && $request->exist('Register')) {
-    $page = $request->get('page');
+    $page            = $request->get('page');
+    $email_is_sent   = true;
+    $email_no_send   = '';
+    $displayedImage  = true;
+    $image_url       = '';
+    $email_presenter = '';
 
     $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
 
@@ -223,16 +228,19 @@ if ($request->isPost() && $request->exist('Register')) {
         $user_name = user_getname($new_userid);
         $content = '';
         $admin_creation = false;
+
         if($page == 'admin_creation'){
             $admin_creation = true;
             if ($request->get('form_send_email')){
                 //send an email to the user with th login and password
-                $from = $GLOBALS['sys_noreply'];
-                $to = $request->get('form_email');
-                $login = $hp->purify($request->get('form_loginname'));
-                $password = $hp->purify($request->get('form_pw'));
-                if (!send_new_user_email($to, $login, $password, '', 'mail-admin', true)) {
+                $from      = $GLOBALS['sys_noreply'];
+                $to        = $request->get('form_email');
+                $login     = $hp->purify($request->get('form_loginname'));
+                $password  = $hp->purify($request->get('form_pw'));
+                if (!send_admin_new_user_email($to, $login, $password, 'mail-admin')) {
                     $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                    $email_no_send = $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
+                    $email_is_sent = false;
                 }
             }
         }
@@ -241,9 +249,12 @@ if ($request->isPost() && $request->exist('Register')) {
 
         if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
             if(!$admin_creation) {
-                if (!send_new_user_email($request->get('form_email'), $user_name, '', $confirm_hash, 'mail', false)) {
-                    $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                if (!send_new_user_email($request->get('form_email'), $user_name, $confirm_hash, 'mail')) {
+                    $email_no_send = $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
+                    $email_is_sent = false;
                 }
+                $presenter = new MailPresenterFactory();
+                $email_presenter = $presenter->createPresenter($user_name, '', $confirm_hash, "user");
             }
 
             $title  = $Language->getText('account_register', 'title_confirm');
@@ -261,11 +272,12 @@ if ($request->isPost() && $request->exist('Register')) {
                                                                     $hp->purify($request->get('form_loginname')),
                                                                     $hp->purify($request->get('form_pw'))
                                                             )
-                                      );
+                                     );
                 $thanks             = '';
                 $is_thanks           = false;
                 $redirect_url       = '/admin';
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect_admin');
+                $displayedImage     = false;
             } else {
                 $content            = $Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'], $user_name));
                 $redirect_url       = '/';
@@ -280,9 +292,22 @@ if ($request->isPost() && $request->exist('Register')) {
             $content            = $Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'], $user_name, $href_approval));
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
+            $presenter          = new MailPresenterFactory();
+            $email_presenter    = $presenter->createPresenter($user_name, '', $confirm_hash, "user");
         }
-
-        $presenter = new Account_ConfirmationPresenter($title, $content, $thanks, $is_thanks, $redirect_url, $redirect_content);
+        $presenter = new Account_ConfirmationPresenter(
+            $title,
+            $content,
+            $thanks,
+            $is_thanks,
+            $redirect_url,
+            $redirect_content,
+            $email_is_sent,
+            $email_no_send,
+            $displayedImage,
+            $image_url,
+            $email_presenter
+        );
         $template = 'confirmation';
     }
 }

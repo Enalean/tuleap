@@ -5,7 +5,7 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
 
-$title = "Bienvenue sur ".$GLOBALS['sys_name']."!";
+$title = "Bienvenue sur ".$GLOBALS['sys_name']." !";
 
 $section_one = "Merci d'avoir créé votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". \nVotre nom d'utilisateur est : ";
 
@@ -15,7 +15,7 @@ $section_after_login = ".";
 
 $redirect_button = "Confirmez votre adresse mail";
 
-$thanks = "Merci!";
+$thanks = "Merci !";
 
 $signature = "- L'équipe ".$GLOBALS['sys_name'];
 

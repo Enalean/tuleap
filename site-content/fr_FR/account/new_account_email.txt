@@ -5,7 +5,7 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 // 
 //
-$title = "Bienvenue sur ".$GLOBALS['sys_name']."!";
+$title = "Bienvenue sur ".$GLOBALS['sys_name']." !";
 
 $section_one = "Vous êtes maintenant un utilisateur enregistré avec le nom d'utilisateur : ";
 
@@ -27,7 +27,7 @@ $section_after_login = " et le mot de passe : ";
 
 $section_after_password = ". \nPensez à changer votre mot de passe après votre première connexion sur le site.";
 
-$thanks = "Merci!";
+$thanks = "Merci !";
 
 $signature = "- L'équipe ".$GLOBALS['sys_name'];
 

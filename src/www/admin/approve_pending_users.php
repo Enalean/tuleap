@@ -110,7 +110,7 @@ $expiry_date = 0;
                      . " WHERE user_id IN (".implode(',', $users_array).")");
             
             while ($row_user = db_fetch_array($res_user)) {
-                if (!send_new_user_email($row_user['email'], $row_user['user_name'], '', $row_user['confirm_hash'], 'mail', false)) {
+                if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'], 'mail')) {
                         $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
                 }
                 usleep(250000);
