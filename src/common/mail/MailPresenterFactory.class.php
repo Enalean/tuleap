@@ -30,7 +30,7 @@ class MailPresenterFactory {
     public function createPresenter($login, $password, $confirm_hash, $presenter_role) {
         $base_url       = get_server_url();
         $defaultTheme   = ForgeConfig::get('sys_themedefault');
-        $color_logo     = "#0000";
+        $color_logo     = "#000";
         $color_button   = "#347DBA";
 
         if ($this::themeIsFlamingParrot($defaultTheme)) {
@@ -53,10 +53,14 @@ class MailPresenterFactory {
             "logo_url"      => $logo_url
         );
 
-        if ($presenter_role == "user") {
+        if ($presenter_role === "user") {
             $presenter = $this->createUserEmailPresenter($attributes_presenter);
-        } else {
+        } else if ($presenter_role === "admin") {
             $presenter = $this->createAdminEmailPresenter($attributes_presenter);
+        } else if ($presenter_role === "admin-notification") {
+            $presenter = $this->createAdminNotificationPresenter($attributes_presenter);
+        } else {
+            $presenter = $this->createApprovalEmailPresenter($attributes_presenter);
         }
         return $presenter;
     }
@@ -76,7 +80,7 @@ class MailPresenterFactory {
      *
      * @return MailRegisterByAdminPresenter
      */
-    private function createAdminEmailPresenter(Array $attributes_presenter) {
+    private function createAdminEmailPresenter(array $attributes_presenter) {
         $login      = $attributes_presenter["login"];
         $password   = $attributes_presenter["password"];
 
@@ -97,7 +101,6 @@ class MailPresenterFactory {
             $section_after_password,
             $password
         );
-
         return $presenter;
     }
 
@@ -107,7 +110,7 @@ class MailPresenterFactory {
      *
      * @return MailRegisterByUserPresenter
      */
-    private function createUserEmailPresenter(Array $attributes_presenter) {
+    private function createUserEmailPresenter(array $attributes_presenter) {
         $base_url       = $attributes_presenter["base_url"];
         $login          = $attributes_presenter["login"];
         $confirm_hash   = $attributes_presenter["confirm_hash"];
@@ -130,6 +133,63 @@ class MailPresenterFactory {
              $redirect_url,
              $redirect_button,
              $attributes_presenter["color_button"]
+        );
+        return $presenter;
+    }
+
+    /**
+     * Create a presenter for
+     * admin notification.
+     *
+     * @return MailRegisterByUserPresenter
+     */
+    private function createAdminNotificationPresenter(array $attributes_presenter) {
+        $base_url     = $attributes_presenter["base_url"];
+        $redirect_url = $base_url ."/admin/approve_pending_users.php?page=pending";
+
+        $presenter = new MailRegisterByAdminNotificationPresenter(
+            $attributes_presenter["has_logo"],
+            $attributes_presenter["logo_url"],
+            $GLOBALS['Language']->getText('account_register', 'mail_approval_title'),
+            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array($GLOBALS['sys_name']), $attributes_presenter["login"]),
+            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two'),
+            $GLOBALS['Language']->getText('account_register', 'mail_thanks'),
+            $GLOBALS['Language']->getText('account_register', 'mail_signature', array($GLOBALS['sys_name'])),
+            $attributes_presenter["color_logo"],
+            $redirect_url,
+            $GLOBALS['Language']->getText('account_register', 'mail_approval_redirect_button'),
+            $attributes_presenter["color_button"],
+            $attributes_presenter["login"],
+            "."
+        );
+        return $presenter;
+    }
+
+    /**
+     * Create a presenter for approval
+     * account register.
+     *
+     * @return MailRegisterByUserPresenter
+     */
+    private function createApprovalEmailPresenter(array $attributes_presenter) {
+        $login      = $attributes_presenter["login"];
+        $base_url   = $attributes_presenter["base_url"];
+
+        include($GLOBALS['Language']->getContent('admin/new_account_email'));
+
+        $presenter = new MailRegisterByAdminApprovalPresenter(
+            $attributes_presenter["has_logo"],
+            $attributes_presenter["logo_url"],
+            $title,
+            $section_one,
+            $section_two,
+            '',
+            $thanks,
+            $signature,
+            $help,
+            $attributes_presenter["color_logo"],
+            $login,
+            $section_three
         );
         return $presenter;
     }

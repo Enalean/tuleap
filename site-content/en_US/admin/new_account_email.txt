@@ -16,7 +16,7 @@ $body = "You are now a registered user on ".$GLOBALS['sys_name']
 .$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you. \n\n\n-- The ".$GLOBALS['sys_name']." Team";
 
 
-$title = "Welcome to ".$GLOBALS['sys_name']." !";
+$title = "Account creation on ".$GLOBALS['sys_name']." !";
 
 $section_one = "You are now a registered user on ".$GLOBALS['sys_name'].". As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
 ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.";
@@ -31,7 +31,6 @@ $thanks = "Thanks!";
 $signature = "- The team at ".$GLOBALS['sys_name'];
 
 $help = "For any help contact: ".$GLOBALS['sys_email_admin'];
-
 
 $message = $title . "\n\n" .  $section_one ."\n\n" . $section_two . "\n\n"
             .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

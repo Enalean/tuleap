@@ -33,24 +33,46 @@ function send_new_project_email(Project $project) {
     return true;
 }
 
-function send_new_user_email($to, $login, $confirm_hash, $template) {
+function send_new_user_email($to, $login, $confirm_hash) {
     //needed by new_user_email.txt
     $base_url  = get_server_url();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
-    $mail = new TuleapRegisterMail($presenter, $renderer, $template);
+    $mail = new TuleapRegisterMail($presenter, $renderer, "mail");
     $mail = $mail->getMail($login, '', $confirm_hash, $base_url, $GLOBALS['sys_noreply'], $to, "user");
     return $mail->send();
 }
 
-function send_admin_new_user_email($to, $login, $password, $template) {
+function send_admin_new_user_email($to, $login, $password) {
     //needed by new_user_email.txt
     $base_url  = get_server_url();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
-    $mail = new TuleapRegisterMail($presenter, $renderer, $template);
+    $mail = new TuleapRegisterMail($presenter, $renderer, "mail-admin");
     $mail = $mail->getMail($login, $password, '', $base_url, $GLOBALS['sys_noreply'], $to, "admin");
+    return $mail->send();
+}
+
+function send_new_user_email_notification($to, $login) {
+    //needed by new_user_email.txt
+    $base_url  = get_server_url();
+    $presenter = new MailPresenterFactory();
+
+    $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
+    $mail = new TuleapRegisterMail($presenter, $renderer, "mail-notification");
+    $mail = $mail->getMail($login, '', '', $base_url, $GLOBALS['sys_noreply'], $to, "admin-notification");
+    return $mail->send();
+}
+
+function send_approval_new_user_email($to, $login) {
+    //needed by new_user_email.txt
+    $base_url  = get_server_url();
+    $presenter = new MailPresenterFactory();
+
+    $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
+    $mail = new TuleapRegisterMail($presenter, $renderer, "mail-admin-approval");
+    $mail = $mail->getMail($login, '', '', $base_url, $GLOBALS['sys_noreply'], $to, "admin-approval");
     return $mail->send();
 }

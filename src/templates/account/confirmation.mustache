@@ -1,15 +1,10 @@
 <div id="account-confirmation-header">
     <h2>{{{ title }}}</h2>
 </div>
-{{^ email_is_sent }}
-    <div id="account-confirmation-email" class="alert alert-error">
-        {{{ email_no_send }}}
-    </div>
-{{/ email_is_sent}}
 <div id="account-confirmation-content">
     <p>{{{ content }}}</p>
 
-    {{# displayedImage }}
+    {{# displayed_image }}
         <object id="account-confirmation-envelope" type="image/svg+xml" data="/themes/common/images/email.svg"></object>
         <div id="account-confirmation-fake-email" class="envelope-animation">
             <div class="thumbnail thumbnail-fake-email">
@@ -26,7 +21,7 @@
                 </div>
             </div>
         </div>
-    {{/ displayedImage}}
+    {{/ displayed_image}}
 </div>
 
 {{# is_thanks }}

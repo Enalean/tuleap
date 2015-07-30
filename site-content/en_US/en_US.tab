@@ -72,7 +72,7 @@ global	Settings	Settings
 global	Personal	Personal
 global	default	Default
 global	no_mail_for_account	No email address for this account.
-global	mail_failed	The mail was not accepted for the delivery. Please contact <a href='mailto:$1'>$1</a>.
+global	mail_failed	The mail was not accepted for the delivery. Please contact the administrator. His email address is: $1.
 global	open	Open
 global	closed	Closed
 global	status	Status
