@@ -20,7 +20,7 @@ Version 8.5 (Not Released Yet)
 	* request #8269: use an integer for sys_keep_md5_hashed_password instead of a boolean
 
 	== Themes ==
-	* FlamingParrot: 1.97
+	* FlamingParrot: 1.99
 
 	== Plugins ==
 	* git: 4.72
