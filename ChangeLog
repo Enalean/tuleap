@@ -5,6 +5,7 @@ Version 8.5 (Not Released Yet)
 	* Revert "request #8084: Force user to log in if outside of network"
 
 	== Enhancements ==
+	* story #7893: Have a beautiful project creation feedback
 	* story #8248: Have a beautiful register confirmation email
 	* story #8173: Use an archive in project export/import process
 	* story #8248: Have a beautiful register confirmation email
@@ -22,7 +23,7 @@ Version 8.5 (Not Released Yet)
 	* request #8269: use an integer for sys_keep_md5_hashed_password instead of a boolean
 
 	== Themes ==
-	* FlamingParrot: 1.99
+	* FlamingParrot: 1.101
 
 	== Plugins ==
 	* git: 4.72
