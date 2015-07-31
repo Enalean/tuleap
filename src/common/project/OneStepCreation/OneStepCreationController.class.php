@@ -98,35 +98,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     private function notifySiteAdmin(Project $project) {
-        $mail = new Mail();
-        $mail->setTo(ForgeConfig::get('sys_email_admin'));
-        $mail->setFrom(ForgeConfig::get('sys_noreply'));
-        $mail->setSubject($GLOBALS['Language']->getText('register_project_one_step', 'complete_mail_subject', array($project->getPublicName())));
-        if ($this->projectsMustBeApprovedByAdmin()) {
-            $mail->setBody(
-                $GLOBALS['Language']->getText(
-                    'register_project_one_step',
-                    'complete_mail_body_approve',
-                    array(
-                        ForgeConfig::get('sys_name'),
-                        $project->getPublicName(),
-                        get_server_url().'/admin/approve-pending.php'
-                    )
-                )
-            );
-        } else {
-            $mail->setBody(
-                $GLOBALS['Language']->getText(
-                    'register_project_one_step',
-                    'complete_mail_body_auto',
-                    array(
-                        ForgeConfig::get('sys_name'),
-                        $project->getPublicName(),
-                        get_server_url().'/admin/groupedit.php?group_id='.$project->getID()
-                    )
-                )
-            );
-        }
+        $subject = $GLOBALS['Language']->getText('register_project_one_step', 'complete_mail_subject', array($project->getPublicName()));
+        $presenter = new MailPresenterFactory();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
+        $mail = new TuleapRegisterMail($presenter, $renderer, "mail-project-register-admin");
+        $mail = $mail->getMailNotificationProject($subject, ForgeConfig::get('sys_noreply'), ForgeConfig::get('sys_email_admin'), $project);
 
         if (! $mail->send()) {
             $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));

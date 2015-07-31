@@ -59,8 +59,46 @@ class TuleapRegisterMail {
         $mail = new Codendi_Mail();
         $mail->setSubject($subject);
         $mail->setTo($to);
-        $mail->setBodyHtml($this->renderer->renderToString($this->template, $this->mail_presenter_factory->createPresenter($login, $password, $confirm_hash, $presenter_role)));
+        $mail->setBodyHtml($this->renderer->renderToString($this->template, $this->mail_presenter_factory->createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role)));
         $mail->setBodyText($message);
+        $mail->setFrom($from);
+
+        return $mail;
+    }
+
+    /**
+     * Returns a new Codendi_Mail.
+     *
+     * @return Codendi_Mail
+     */
+    public function getMailProject($subject, $from, $to, $project) {
+        $mail = new Codendi_Mail();
+        $mail->setSubject($subject);
+        $mail->setTo($to);
+
+        $presenter = $this->mail_presenter_factory->createMailProjectPresenter($project);
+
+        $mail->setBodyHtml($this->renderer->renderToString($this->template, $presenter));
+        $mail->setBodyText($presenter->getMessageText());
+        $mail->setFrom($from);
+
+        return $mail;
+    }
+
+    /**
+     * Returns a new Codendi_Mail.
+     *
+     * @return Codendi_Mail
+     */
+    public function getMailNotificationProject($subject, $from, $to, $project) {
+        $mail = new Codendi_Mail();
+        $mail->setSubject($subject);
+        $mail->setTo($to);
+
+        $presenter = $this->mail_presenter_factory->createMailProjectNotificationPresenter($project);
+
+        $mail->setBodyHtml($this->renderer->renderToString($this->template, $presenter));
+        $mail->setBodyText($presenter->getMessageText());
         $mail->setFrom($from);
 
         return $mail;

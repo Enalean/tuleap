@@ -23,24 +23,17 @@ class MailPresenterFactory {
     const FLAMING_PARROT_THEME = 'FlamingParrot';
 
     /**
-     * Create a presenter for email.
+     * Create a presenter for email account.
      *
      * @return MailRegisterPresenter
      */
-    public function createPresenter($login, $password, $confirm_hash, $presenter_role) {
+    public function createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role) {
+        $color_logo = "#000";
+        $color_button = "#347DBA";
+
         $base_url       = get_server_url();
-        $defaultTheme   = ForgeConfig::get('sys_themedefault');
-        $color_logo     = "#000";
-        $color_button   = "#347DBA";
-
-        if ($this::themeIsFlamingParrot($defaultTheme)) {
-            $defaultThemeVariant = ForgeConfig::get('sys_default_theme_variant');
-            $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
-            $color_button        = $color_logo;
-        }
-
-        $logo_url   = $base_url."/themes/".$defaultTheme."/images/organization_logo.png";
-        $has_logo   = file_exists(dirname(__FILE__) . '/../../www/themes/'.$defaultTheme.'/images/organization_logo.png');
+        $this->setColorTheme($color_logo, $color_button);
+        $this->setLogoUrl($logo_url, $has_logo);
 
         $attributes_presenter = array(
             "login"         => $login,
@@ -66,12 +59,36 @@ class MailPresenterFactory {
     }
 
     /**
-     * Check if we need to display the theme color.
+     * Create a presenter for email project.
      *
-     * @return boolean
      */
-    private function themeIsFlamingParrot($theme) {
-        return $theme === self::FLAMING_PARROT_THEME;
+    public function createMailProjectPresenter(Project $project) {
+        $color_logo = "#000";
+
+        $this->setColorTheme($color_logo);
+        $this->setLogoUrl($logo_url, $has_logo);
+        $presenter = $this->createMailProjectRegisterPresenter($project, $color_logo, $logo_url, $has_logo);
+
+        return $presenter;
+    }
+
+    /**
+     * Create a presenter for email notifiaction project.
+     *
+     */
+    public function createMailProjectNotificationPresenter(Project $project) {
+        $color_logo = "#000";
+        $color_button = "#347DBA";
+
+        $this->setColorTheme($color_logo, $color_button);
+        $this->setLogoUrl($logo_url, $has_logo);
+        if ($project->projectsMustBeApprovedByAdmin()) {
+            $presenter = $this->createMailProjectNotificationMustBeApprovedPresenter($project, $color_logo, $logo_url, $has_logo, $color_button);
+        } else {
+            $presenter = $this->createMailProjectRegisterNotificationPresenter($project, $color_logo, $logo_url, $has_logo, $color_button);
+        }
+
+        return $presenter;
     }
 
     /**
@@ -192,5 +209,94 @@ class MailPresenterFactory {
             $section_three
         );
         return $presenter;
+    }
+
+    /**
+     * Create a presenter for project register.
+     *
+     * @return MailRegisterByUserPresenter
+     */
+    private function createMailProjectRegisterPresenter(Project $project, $color_logo, $logo_url, $has_logo) {
+        $presenter = new MailProjectOneStepRegisterPresenter(
+            $project,
+            $color_logo,
+            $logo_url,
+            $has_logo
+        );
+
+        return $presenter;
+    }
+
+    /**
+     * Create a presenter for project register.
+     *
+     * @return MailRegisterByUserPresenter
+     */
+    private function createMailProjectRegisterNotificationPresenter(Project $project, $color_logo, $logo_url, $has_logo, $color_button) {
+        $presenter = new MailProjectNotificationPresenter(
+            $project,
+            $color_logo,
+            $logo_url,
+            $has_logo,
+            $color_button
+        );
+
+        return $presenter;
+    }
+
+    /**
+     * Create a presenter for project register,
+     * which must be approved
+     *
+     * @return MailRegisterByUserPresenter
+     */
+    private function createMailProjectNotificationMustBeApprovedPresenter(Project $project, $color_logo, $logo_url, $has_logo, $color_button) {
+        $presenter = new MailProjectNotificationMustBeApprovedPresenter(
+            $project,
+            $color_logo,
+            $logo_url,
+            $has_logo,
+            $color_button
+        );
+
+        return $presenter;
+    }
+
+    /**
+     * Return the color of theme
+     * with references parameters
+     *
+     * @return string
+     */
+    private function setColorTheme(&$color_logo = null, &$color_button = null) {
+        $defaultTheme   = ForgeConfig::get('sys_themedefault');
+
+        if ($this->themeIsFlamingParrot($defaultTheme)) {
+            $defaultThemeVariant = ForgeConfig::get('sys_default_theme_variant');
+            $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
+            $color_button        = $color_logo;
+        }
+    }
+
+    /**
+     * Return the logo url with
+     * references parameters
+     *
+     * @return string
+     */
+    private function setLogoUrl(&$logo_url, &$has_logo) {
+        $defaultTheme   = ForgeConfig::get('sys_themedefault');
+        $base_url       = get_server_url();
+        $logo_url   = $base_url."/themes/".$defaultTheme."/images/organization_logo.png";
+        $has_logo   = file_exists(dirname(__FILE__) . '/../../www/themes/'.$defaultTheme.'/images/organization_logo.png');
+    }
+
+    /**
+     * Check if we need to display the theme color.
+     *
+     * @return boolean
+     */
+    private function themeIsFlamingParrot($theme) {
+        return $theme === self::FLAMING_PARROT_THEME;
     }
 }

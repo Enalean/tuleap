@@ -171,3 +171,42 @@ register_confirmation_approval_project_one_step	section_one	Le projet a été so
 register_confirmation_approval_project_one_step	section_two	Vous recevrez une notification par email concernant leur décision et des instructions supplémentaires.
 register_confirmation_approval_project_one_step	thanks	Merci d'utiliser $1
 register_confirmation_approval_project_one_step	redirect_content	Retourner sur ma page personnelle
+#
+# Script: src/common/mail/MailProjectOneStepRegisterPresenter.php
+#
+mail_register_project_one_step	title	Projet $1 approuvé
+mail_register_project_one_step	section_one	Veuillez prendre un peu de temps pour parcourir la <a href="$1">documentation du site</a> concernant les outils et services offerts par $2 aux équipes de projet (y compris un guide complet l'utilisateur).
+mail_register_project_one_step	section_two	Nous vous invitons maintenant à visiter la <a href="$1">page de sommaire</a> de votre projet, à écrire une courte description de votre projet et à le classer dans l'arbre des projets si vous ne l'avez pas encore fait.
+mail_register_project_one_step	section_three	En tant qu'administrateur de projet, vous avez accès à <a href="$1">toutes les fonctions d'administration</a> comme créer des outils de suivi de tâches ou de défauts, créer des listes de distribution, des forums ou encore des dépôts git ou subversion.
+mail_register_project_one_step	section_four	Remarque : si vous possédez déjà un dépôt CVS ou subversion l'équipe $1 est en mesure de le transférer tel quel sur le site. N'hésitez pas à la contacter pour connaître la marche à suivre.
+mail_register_project_one_step	full_name	Nom complet
+mail_register_project_one_step	short_name	Nom court
+mail_register_project_one_step	summary_page	Page de description
+#
+#-----------------------------------------------
+# Script: src/common/mail/MailProjectNotificationPresenter.php
+#
+mail_register_project_one_step_notification	title	Projet enregistré
+mail_register_project_one_step_notification	section_one	Un nouveau projet vient juste d'être enregistré sur $1.
+mail_register_project_one_step_notification	section_two	Nom du projet : $1.
+mail_register_project_one_step_notification	section_three	Conformément à la configuration site, le projet a été automatiquement approuvé.
+mail_register_project_one_step_notification	redirect_button	Aller sur le panneau d'administration
+#
+#-----------------------------------------------
+# Script: src/common/mail/MailProjectNotificationMustBeApprovedPresenter.php
+#
+mail_register_project_one_step_notification_approved	title	Projet enregistré
+mail_register_project_one_step_notification_approved	section_one	Un nouveau projet vient juste d'être enregistré sur $1.
+mail_register_project_one_step_notification_approved	section_two	Nom du projet : $1.
+mail_register_project_one_step_notification_approved	section_three	Veuillez cliquer sur le bouton pour approuver l'enregistrement de ce projet :
+mail_register_project_one_step_notification_approved	redirect_button	Approuver le projet
+#
+#-----------------------------------------------
+# Script:
+#   src/common/mail/MailProjectNotificationMustBeApprovedPresenter.php
+#   src/common/mail/MailProjectNotificationPresenter.php
+#   src/common/mail/MailProjectOneStepRegisterPresenter.php
+#
+mail_outline	help	Pour toute demande d'aide contactez : $1
+mail_outline	thanks	Merci !
+mail_outline	signature	-- L'équipe $1
