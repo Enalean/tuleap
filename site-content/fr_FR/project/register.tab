@@ -153,3 +153,21 @@ register_project_one_step	complete_thanks	Merci d'utiliser $1
 register_project_one_step	complete_mail_subject	Nouveau projet enregistré : $1
 register_project_one_step	complete_mail_body_auto	Un nouveau projet vient juste d'être enregistré sur $1\n\nNom du projet : $2\n\nConformément à la configuration site, le projet a été automatiquement approuvé. Vous pouvez néanmoins accéder au panneau d'administration du site-admin :\n$3\n
 register_project_one_step	complete_mail_body_approve	Un nouveau projet vient juste d'être enregistré sur $1\n\nNom du projet : $2\n\nVeuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n$3\n
+#
+#-----------------------------------------------
+# Script: src/common/project/OneStepRegistration/OneStepRegistrationPresenter.class.php
+#
+register_confirmation_project_one_step	title	Votre projet a été créé
+register_confirmation_project_one_step	section_one	Vous pouvez dès maintenant commencer à l'utiliser.
+register_confirmation_project_one_step	section_two	Vous allez recevoir un mail contenant plus d'informations.
+register_confirmation_project_one_step	thanks	Merci d'utiliser $1
+register_confirmation_project_one_step	redirect_content	Aller à la page d'accueil du projet
+#
+#-----------------------------------------------
+# Script: src/common/project/OneStepRegistration/OneStepRegistrationApprovalPresenter.php
+#
+register_confirmation_approval_project_one_step	title	Votre projet a été créé
+register_confirmation_approval_project_one_step	section_one	Le projet a été soumis à validation aux administrateurs.
+register_confirmation_approval_project_one_step	section_two	Vous recevrez une notification par email concernant leur décision et des instructions supplémentaires.
+register_confirmation_approval_project_one_step	thanks	Merci d'utiliser $1
+register_confirmation_approval_project_one_step	redirect_content	Retourner sur ma page personnelle

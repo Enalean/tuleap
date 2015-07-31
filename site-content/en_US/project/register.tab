@@ -172,3 +172,21 @@ register_project_one_step	complete_thanks	Thank you for using $1
 register_project_one_step	complete_mail_subject	New project registered: $1
 register_project_one_step	complete_mail_body_auto	A new project has just been registered on $1\n\nProject name: $2\n\nAs per site admin configuration it was automatically accepted.\nShall you want to access project's details, you can click on the following URL to access site-admin panel :\n$3\n
 register_project_one_step	complete_mail_body_approve	A new project has just been registered on $1\n\nProject name: $2\n\nPlease click on the following URL to approve the registration: $3
+#
+#-----------------------------------------------
+# Script: src/common/project/OneStepRegistration/OneStepRegistrationPresenter.class.php
+#
+register_confirmation_project_one_step	title	Your project has been created
+register_confirmation_project_one_step	section_one	You can now start using it.
+register_confirmation_project_one_step	section_two	You will receive an email with more information.
+register_confirmation_project_one_step	thanks	Thank you for using $1
+register_confirmation_project_one_step	redirect_content	Go to the project homepage
+#
+#-----------------------------------------------
+# Script: src/common/project/OneStepRegistration/OneStepRegistrationApprovalPresenter.php
+#
+register_confirmation_approval_project_one_step	title	Your project has been created
+register_confirmation_approval_project_one_step	section_one	Your project has been submitted to the administrators for validation.
+register_confirmation_approval_project_one_step	section_two	You will receive decision notification and further instructions by email.
+register_confirmation_approval_project_one_step	thanks	Thank you for using $1
+register_confirmation_approval_project_one_step	redirect_content	Go back to your homepage

@@ -23,6 +23,7 @@ require_once 'OneStepCreationPresenter.class.php';
 require_once 'OneStepCreationRequest.class.php';
 require_once 'OneStepCreationValidator.class.php';
 require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
+require_once 'common/project/OneStepRegistration/OneStepRegistrationPresenterFactory.class.php';
 
 /**
  * Base controller for one step creation project
@@ -133,22 +134,13 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     private function postCreate(Project $project) {
-        if ($this->projectsMustBeApprovedByAdmin()) {
-            $this->renderWait();
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('register_confirmation', 'registration_approved'));
-            $GLOBALS['Response']->redirect('/project/admin/?group_id='.$project->getID());
-        }
-    }
-
-    private function renderWait() {
+        $one_step_registration_factory = new Project_OneStepRegistration_OneStepRegistrationPresenterFactory($project);
         $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_confirmation', 'registration_complete')));
-        $this->render('register-complete', new Project_OneStepCreation_OneStepCreationCompletePresenter());
+        $this->render('confirmation', $one_step_registration_factory->create());
         $GLOBALS['HTML']->footer(array());
-        exit;
     }
 
     private function projectsMustBeApprovedByAdmin() {
-        return ForgeConfig::get('sys_project_approval', 1) == 1;
+        return ForgeConfig::get('sys_project_approval', 1) === 1;
     }
 }
