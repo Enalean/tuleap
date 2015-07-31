@@ -21,12 +21,50 @@
 
 require_once 'pre.php';
 
-if ($argc < 4) {
+$usage_options  = '';
+$usage_options .= 'p:'; // give me a project
+$usage_options .= 'u:'; // give me a user
+$usage_options .= 'i:'; // give me the archive path to import
+
+function usage() {
+    global $argv;
+
     echo <<< EOT
-Usage: $argv[0] project_id admin_user_name archive_path
+Usage: $argv[0] -p project_id -u user_name -i path_to_archive
+
+Import a project structure
+
+  -p <project_id> The id of the project to export
+  -u <user_name>  The user used to export
+  -i <path>       The path of the archive of the exported XML + data
+  -h              Display this help
 
 EOT;
     exit(1);
+}
+
+$arguments = getopt($usage_options);
+
+if (isset($arguments['h'])) {
+    usage();
+}
+
+if (! isset($arguments['p'])) {
+    usage();
+} else {
+    $project_id = (int)$arguments['p'];
+}
+
+if (! isset($arguments['u'])) {
+    usage();
+} else {
+    $username = $arguments['u'];
+}
+
+if (! isset($arguments['i'])) {
+    usage();
+} else {
+    $archive_path = $arguments['i'];
 }
 
 $user_manager = UserManager::instance();
@@ -41,24 +79,22 @@ $xml_importer = new ProjectXMLImporter(
 );
 
 try {
-    $project_id = $argv[1];
-
-    $user = $user_manager->forceLogin($argv[2]);
+    $user = $user_manager->forceLogin($username);
     if ((! $user->isSuperUser() && ! $user->isAdmin($project_id)) || ! $user->isActive()) {
-        throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($user_name)));
+        throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($username)));
     }
-
-    $archive_path = $argv[3];
 
     $archive = new ZipArchive();
     if ($archive->open($archive_path) !== true) {
-        fwrite(STDERR, "*** ERROR: Unable to open archive ".$argv[3].PHP_EOL);
+        fwrite(STDERR, "*** ERROR: Unable to open archive ".$archive_path.PHP_EOL);
         exit(1);
     }
 
     $xml_importer->importFromArchive($project_id, $archive);
 
     $archive->close();
+
+    exit(0);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
         fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);
