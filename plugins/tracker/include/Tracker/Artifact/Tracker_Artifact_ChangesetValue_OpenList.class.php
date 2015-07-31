@@ -47,5 +47,28 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
         return $value->getAPIValue();
     }
+
+    public function getFullRESTValue(PFUser $user) {
+        $full_values = array();
+        $labels      = array();
+        foreach ($this->getListValues() as $list_value) {
+            $full_values[] = $this->getFullRESTBindValue($list_value);
+            $labels[]      = $this->getLabel($list_value);
+        }
+
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueOpenListRepresentation';
+        $representation           = new $classname_with_namespace;
+        $representation->build(
+            $this->field->getId(),
+            $this->field->getLabel(),
+            $this->field->getBind()->getType(),
+            array_values($full_values),
+            array_values($labels)
+        );
+        return $representation;
+    }
+
+    protected function getLabel($value) {
+        return $value->getLabel();
+    }
 }
-?>

@@ -49,12 +49,18 @@ class UserGroupRepresentation {
      */
     public $users_uri;
 
+    /**
+     * @var String
+     */
+    public $short_name;
+
     public function build($project_id, ProjectUGroup $ugroup) {
-        $this->id        = self::getRESTIdForProject($project_id, $ugroup->getId());
-        $this->uri       = UserGroupRepresentation::ROUTE . '/' . $this->id ;
-        $this->label     = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
-        $this->key       = $ugroup->getName();
-        $this->users_uri = self::ROUTE . '/'. $this->id .'/users';
+        $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
+        $this->uri        = UserGroupRepresentation::ROUTE . '/' . $this->id ;
+        $this->label      = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        $this->key        = $ugroup->getName();
+        $this->users_uri  = self::ROUTE . '/'. $this->id .'/users';
+        $this->short_name = $ugroup->getNormalizedName();
     }
 
     static function getRESTIdForProject($project_id, $user_group_id) {

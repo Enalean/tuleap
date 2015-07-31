@@ -63,7 +63,7 @@ if (ForgeConfig::get('DEBUG_MODE')) {
 // a mess.
 $restler->setBaseUrl($sys_default_domain);
 $restler->setAPIVersion($version);
-$restler->setSupportedFormats('JsonFormat', 'XmlFormat');
+$restler->setSupportedFormats('JsonFormat', 'XmlFormat', 'HtmlFormat');
 
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
 $core_resources_injector->populate($restler);

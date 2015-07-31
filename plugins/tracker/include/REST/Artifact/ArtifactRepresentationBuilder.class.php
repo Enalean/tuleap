@@ -131,12 +131,14 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      * @return array
      */
     private function mapAndFilter(array $collection, Closure $function) {
+        $array = array();
+        foreach ($collection as $item) {
+            $array[] = $function($item);
+        }
+
         return array_values(
             array_filter(
-                array_map(
-                    $function,
-                    $collection
-                )
+                $array
             )
         );
     }

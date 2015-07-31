@@ -124,8 +124,6 @@ class ArtifactsTest extends RestBase {
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_array($field['value']));
                     $this->assertTrue(array_key_exists('display_name', $field['value']));
-                    $this->assertTrue(array_key_exists('link', $field['value']));
-                    $this->assertTrue(array_key_exists('user_url', $field['value']));
                     $this->assertTrue(array_key_exists('avatar_url', $field['value']));
                     break;
                 case 'lud':

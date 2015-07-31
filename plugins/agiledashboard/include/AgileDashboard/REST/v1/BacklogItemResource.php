@@ -147,7 +147,7 @@ class BacklogItemResource extends AuthenticatedResource {
     private function updateBacklogItemStatusSemantic(PFUser $current_user, Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item, Tracker_SemanticCollection $semantics) {
         $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
 
-        if ($semantic_status && $semantic_status->getField()->userCanRead($current_user)) {
+        if ($semantic_status && $semantic_status->getField() && $semantic_status->getField()->userCanRead($current_user)) {
             $label = $semantic_status->getNormalizedStatusLabel($artifact);
 
             if ($label) {

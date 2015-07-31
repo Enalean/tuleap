@@ -135,12 +135,17 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     }
 
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
-         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
-             return array_map('intval', $value['bind_value_ids']);
-         }
-         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
-            . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
-     }
+        if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
+           return array_unique(
+               array_map(
+                   array($this->getBind(), 'getFieldDataFromRESTValue'), $value['bind_value_ids']
+               )
+           );
+        }
+
+        throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
+           . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
+    }
 
     /**
      * @return boolean true if the value corresponds to what we defined as "none"
