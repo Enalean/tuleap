@@ -1,11 +1,12 @@
 Version 8.5 (Not Released Yet)
 
 	== Development ==
+	* story #8268: Redirect directly to the login page when the user confirms its account creation
 	* Revert "request #8084: Force user to log in if outside of network"
 
 	== Enhancements ==
 	* story #8248: Have a beautiful register confirmation email
-        * story #8173: Use an archive in project export/import process
+	* story #8173: Use an archive in project export/import process
 	* story #8248: Have a beautiful register confirmation email
 	* request #8254: Have a way to override tuleap's permissions
 
