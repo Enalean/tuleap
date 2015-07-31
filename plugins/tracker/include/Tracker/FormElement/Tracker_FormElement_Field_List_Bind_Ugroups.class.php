@@ -396,6 +396,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getDao() {
         //return new Tracker_FormElement_Field_List_Bind_UsersDao();
     }
+
+    private function getOpenValueDao() {
+        return new Tracker_FormElement_Field_List_OpenValueDao();
+    }
+
     public function getValueDao() {
         return $this->value_dao;
     }
@@ -504,7 +509,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * @return Tracker_FormElement_Field_List_Bind_UgroupsValue or null if no match
      */
-    private function getValueByUGroupId($ugroup_id) {
+    public function getValueByUGroupId($ugroup_id) {
         if (isset($this->values_indexed_by_ugroup_id[$ugroup_id])) {
             return $this->values_indexed_by_ugroup_id[$ugroup_id];
         }
@@ -657,5 +662,71 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         }
         return $rest_array;
+    }
+
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+        if (isset($rest_data['id'])) {
+            $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+            $value      = call_user_func_array($representation_class.'::getProjectAndUserGroupFromRESTId', array($rest_data['id']));
+            $id         = $value['user_group_id'];
+            $project_id = $value['project_id'];
+
+            $bind_value = $this->getValueByUGroupId($id);
+            if ($bind_value) {
+                return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$bind_value->getId();
+            }
+
+            if (! $project_id) {
+                throw new Tracker_FormElement_InvalidFieldValueException('Bind Value with ID '.$id.' does not exist for field ID '.$field->getId());
+            }
+
+            if (! $bind_value) {
+                $project    = $field->getTracker()->getProject();
+                $user_group = $this->ugroup_manager->getUGroup($project, $id);
+                if (! $user_group) {
+                    throw new Tracker_FormElement_InvalidFieldValueException('Bind Value with ID '.$id.' does not exist for field ID '.$field->getId());
+                }
+
+                $identifier = $user_group->getName();
+            }
+        }
+
+        if (isset($rest_data['short_name'])) {
+            $identifier = (string) $rest_data['short_name'];
+        } else {
+            throw new Tracker_FormElement_InvalidFieldValueException('OpenList static fields values should be passed as an object with at least one of the properties "id" or "short_name"');
+        }
+
+        $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
+        if ($row) {
+            return Tracker_FormElement_Field_OpenList::OPEN_PREFIX.$row['id'];
+        }
+
+        return Tracker_FormElement_Field_OpenList::NEW_VALUE_PREFIX.$identifier;
+    }
+
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+        $class_user_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        $ugroup_representation     = new $class_user_representation;
+
+        $ugroup_manager = new UGroupManager();
+        $project        = $this->getField()->getTracker()->getProject();
+        $user_group     = $ugroup_manager->getUGroupByName($project, $value->getLabel());
+
+        $ugroup_representation->build($project->getID(), $user_group);
+        return $ugroup_representation;
+    }
+
+    public function getFieldDataFromRESTValue($rest_data) {
+        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        $value                = call_user_func_array($representation_class.'::getProjectAndUserGroupFromRESTId', array($rest_data));
+        $ugroup_id            = $value['user_group_id'];
+        $bind_value           = $this->getValueByUGroupId($ugroup_id);
+
+        if ($bind_value) {
+            return intval($bind_value->getId());
+        }
+
+        return;
     }
 }

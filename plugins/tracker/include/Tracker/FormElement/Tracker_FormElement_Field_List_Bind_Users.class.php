@@ -315,9 +315,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             }
         }
 
-        if (! empty($sql)) {
-            $dao = $this->getDefaultValueDao();
-            foreach($dao->retrieve(implode(' UNION ', $sql)) as $row) {
+        if (! empty($sql) && $sql[0] != null) {
+            $dao   = $this->getDefaultValueDao();
+            foreach( $dao->retrieve(implode(' UNION ', $sql)) as $row) {
                 $this->values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
                     $row['user_id'],
                     $row['user_name'],
@@ -615,6 +615,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getDao() {
         return new Tracker_FormElement_Field_List_Bind_UsersDao();
     }
+
+    private function getOpenValueDao() {
+        return new Tracker_FormElement_Field_List_OpenValueDao();
+    }
+
     public function getValueDao() {
         return new UserDao();
     }
@@ -898,15 +903,64 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getDefaultRESTValues() {
         $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
 
-        $class_with_right_namespace = '\\Tuleap\\Project\\REST\\UserRepresentation';
+        $class_with_right_namespace = '\\Tuleap\\User\\REST\\UserRepresentation';
 
         $rest_array = array();
         foreach ($bind_values as $value) {
             $representation = new $class_with_right_namespace;
-            $representation->build($value);
+            $representation->build($value->getUser());
             $rest_array[] = $representation;
 
         }
         return $rest_array;
+    }
+
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+        if (isset($rest_data['id']) && is_numeric($rest_data['id'])) {
+            $id   = (int) $rest_data['id'];
+            $user = $this->getValue($id);
+
+            if (! $user) {
+                throw new Tracker_FormElement_InvalidFieldValueException('Cannot Bind to user with ID '.$id.' for field ID '.$field->getId());
+            }
+            return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$id;
+        }
+
+        if (isset($rest_data['username'])) {
+            $identifier = (string) $rest_data['username'];
+            $user       = $this->userManager->getUserByIdentifier($identifier);
+
+            if (! $user) {
+                throw new Tracker_FormElement_InvalidFieldValueException('Cannot Bind to user "'.$identifier.'" for field ID '.$field->getId());
+            }
+
+            return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$user->getId();
+        }
+
+        if (! isset($rest_data['email'])) {
+            throw new Tracker_FormElement_InvalidFieldValueException('OpenList user fields values should be passed as an object with at least one of the properties "id", "username" or "email"');
+        }
+
+        $identifier = (string) $rest_data['email'];
+        $user       = $this->userManager->getUserByIdentifier("email:$identifier");
+
+        if (! $user) {
+            return Tracker_FormElement_Field_OpenList::NEW_VALUE_PREFIX.$identifier;
+        }
+        return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$user->getId();
+    }
+
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+        $user_manager = UserManager::instance();
+        $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
+        $user_representation       = new $class_user_representation;
+        $user = $user_manager->getUserByUserName($value->getLabel());
+        if (! $user) {
+            $user = new PFUser();
+            $user->setEmail($value->getLabel());
+        }
+
+        $user_representation->build($user);
+        return $user_representation;
     }
 }

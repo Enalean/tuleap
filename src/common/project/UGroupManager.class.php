@@ -106,13 +106,27 @@ class UGroupManager {
      */
     public function getUGroupByName(Project $project, $name) {
         $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
-        if (!$row && preg_match('/^ugroup_.*_key$/', $name)) {
+        if (! $row && preg_match('/^ugroup_.*_key$/', $name)) {
             $row = $this->getDao()->searchByGroupIdAndName(100, $name)->getRow();
+        }
+        if (! $row && in_array($this->getUnormalisedName($name), User_ForgeUGroup::$names)) {
+            $row = $this->getDao()->searchByGroupIdAndName(100, $this->getUnormalisedName($name))->getRow();
+        }
+        if (! $row && $ugroup_id = array_search($name, ProjectUGroup::$normalized_names)) {
+            return new ProjectUGroup(array(
+                'ugroup_id' => $ugroup_id,
+                'name'      => $name,
+                'group_id'  => $project->getID()
+            ));
         }
         if ($row) {
             return new ProjectUGroup($row);
         }
         return null;
+    }
+
+    private function getUnormalisedName($name) {
+        return 'ugroup_'.$name.'_name_key';
     }
 
     public function getLabel($group_id, $ugroup_id) {

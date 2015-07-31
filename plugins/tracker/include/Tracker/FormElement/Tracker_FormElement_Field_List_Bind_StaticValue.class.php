@@ -140,6 +140,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         }
 
         return array(
+            'id'    => $this->getId(),
             'label' => $this->getLabel(),
             'color' => $color
         );

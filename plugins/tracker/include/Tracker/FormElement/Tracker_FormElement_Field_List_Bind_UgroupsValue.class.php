@@ -77,4 +77,23 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
     public function getUgroup() {
         return $this->ugroup;
     }
+
+    public function getFullRESTValue(Tracker_FormElement_Field $field) {
+        $class_user_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        $ugroup_representation     = new $class_user_representation;
+
+        $ugroup_manager = new UGroupManager();
+        $project        = $field->getTracker()->getProject();
+
+        $ugroup_representation->build($project->getID(), $ugroup_manager->getById($this->getUgroupId()));
+        return $ugroup_representation;
+    }
+
+    public function getRESTId() {
+        $project_id           = $this->getProject()->getID();
+        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        $user_group_id        = call_user_func_array($representation_class.'::getRESTIdForProject', array($project_id, $this->getUgroupId()));
+
+        return $user_group_id;
+    }
 }

@@ -188,6 +188,10 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
 
     }
 
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+    }
+
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+    }
 }
 
-?>

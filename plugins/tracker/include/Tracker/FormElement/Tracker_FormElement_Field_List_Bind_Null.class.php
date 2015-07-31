@@ -213,4 +213,13 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     public function getType() {
         return self::TYPE;
     }
+
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+        return;
+    }
+
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+        return;
+    }
+
 }

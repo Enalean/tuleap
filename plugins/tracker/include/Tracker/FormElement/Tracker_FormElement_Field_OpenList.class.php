@@ -752,7 +752,9 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     }
 
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
-        if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
+        if (array_key_exists('bind_value_objects', $value['value']) && is_array($value['value']['bind_value_objects'])) {
+            return $this->getFieldDataFromRESTObjects($value['value']['bind_value_objects']);
+        } elseif (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             return $this->getFieldDataFromArray($value['bind_value_ids']);
         }
         throw new Tracker_FormElement_InvalidFieldValueException('OpenList fields values must be passed as an array of labels (string) in \'bind_value_ids\'');
@@ -801,6 +803,19 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $values
             )
         );
+    }
+
+    private function getFieldDataFromRESTObjects(array $values) {
+        $data = array();
+        foreach ($values as $value) {
+            $data[] = $this->getFieldDataFromRESTObject($value);
+        }
+
+        return $this->joinFieldDataFromArray($data);
+    }
+
+    private function getFieldDataFromRESTObject(array $value) {
+        return $this->getBind()->getFieldDataFromRESTObject($value, $this);
     }
 
     protected function getFieldDataFromStringValue($value) {
@@ -868,4 +883,43 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return self::BIND_PREFIX . implode(','.self::BIND_PREFIX, $default_values);
     }
 
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $value = $changeset->getValue($this);
+        if ($value) {
+            return $value->getFullRESTValue($user);
+        }
+        return null;
+    }
+
+    public function getRESTAvailableValues() {
+        $type = $this->getBind()->getType();
+
+        if ($type === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+            return array(
+                'resource' => array(
+                    'type' => 'users',
+                    'uri'  => 'users/?query='
+                )
+            );
+        }
+
+        if ($type === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
+            $class_user_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+
+            $ugroup_manager = new UGroupManager();
+            $project        = $this->getTracker()->getProject();
+            $user_groups    = $ugroup_manager->getUGroups($project);
+
+            $values = array();
+            foreach ($user_groups as $ugroup) {
+                $ugroup_representation = new $class_user_representation;
+                $ugroup_representation->build($project->getID(), $ugroup);
+                $values[] = $ugroup_representation;
+            }
+
+            return $values;
+        }
+
+        return parent::getRESTAvailableValues();
+    }
 }
