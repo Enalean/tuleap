@@ -42,13 +42,14 @@ class TrackerXmlImportTestInstance extends TrackerXmlImport {
 class TrackerXmlImportTest extends TuleapTestCase {
 
     private $tracker_factory;
-
     private $group_id = 145;
-
     private $tracker_xml_importer;
+    private $extraction_path;
 
     public function setUp() {
         parent::setUp();
+
+        $this->extraction_path = '';
 
         $this->xml_input =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -161,7 +162,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         expect($this->tracker_xml_importer)->createFromXML()->count(3);
         expect($this->hierarchy_dao)->updateChildren(2);
 
-        $result = $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
+        $result = $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
 
         $this->assertEqual($result, $this->mapping);
     }
@@ -171,7 +172,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->expectException();
         expect($this->tracker_xml_importer)->createFromXML()->count(1);
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
@@ -182,14 +183,15 @@ class TrackerXmlImportTest extends TuleapTestCase {
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
-                'project_id' => $this->group_id,
+                'project_id'  => $this->group_id,
                 'xml_content' => $this->xml_input,
-                'mapping' => $this->mapping
+                'mapping'     => $this->mapping
             )
         )->once();
 
         expect($this->tracker_xml_importer)->createFromXML()->count(3);
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
+
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
     }
 
     public function itBuildsTrackersHierarchy() {
@@ -227,6 +229,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+
+        $this->extraction_path = '';
 
         $this->xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -275,7 +279,7 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
         stub($this->tracker_xml_importer)->createFromXML()->returns($this->tracker);
         $this->xml_import->expectCallCount('importFromXML', 1);
 
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
     }
 }
 
@@ -417,6 +421,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+
+        $this->extraction_path = '';
 
         $this->xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -578,8 +584,9 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
         );
      }
 
-     public function itDelegatesToRulesManager() {
-         expect($this->trigger_rulesmanager)->createFromXML($this->triggers, $this->xmlFieldMapping)->once();
-         $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
-     }
+    public function itDelegatesToRulesManager() {
+        expect($this->trigger_rulesmanager)->createFromXML($this->triggers, $this->xmlFieldMapping)->once();
+
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
+    }
 }

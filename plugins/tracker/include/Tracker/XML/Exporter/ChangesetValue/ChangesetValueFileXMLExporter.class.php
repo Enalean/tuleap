@@ -41,12 +41,23 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
+
+        if (! $this->isCurrentChangesetTheLastChangeset($artifact, $changeset_value)) {
+            return;
+        }
+
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
         );
 
         $files = $changeset_value->getFiles();
+
+        if (! $files) {
+            $this->appendEmptyValueToFieldChangeNode($field_change);
+
+            return;
+        }
 
         array_walk(
             $files,
@@ -61,6 +72,26 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         );
     }
 
+    private function isCurrentChangesetTheLastChangeset(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $current_changeset_value
+    ) {
+        $file_field     = $current_changeset_value->getField();
+        $last_changeset = $artifact->getLastChangeset();
+
+        if (! $last_changeset) {
+            return false;
+        }
+
+        $last_changeset_value = $last_changeset->getValue($file_field);
+
+        if (! $last_changeset_value) {
+            return false;
+        }
+
+        return ($last_changeset_value->getId() === $current_changeset_value->getId());
+    }
+
     private function appendFileToFieldChangeNode(
         Tracker_FileInfo $file_info,
         $index,
@@ -68,6 +99,10 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
     ) {
         $node = $field_xml->addChild('value');
         $node->addAttribute('ref', $this->getFileInfoIdForXML($file_info));
+    }
+
+    private function appendEmptyValueToFieldChangeNode(SimpleXMLElement $field_xml) {
+        $field_xml->addChild('value');
     }
 
     private function appendFileToArtifactNode(

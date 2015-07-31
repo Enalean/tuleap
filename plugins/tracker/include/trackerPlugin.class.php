@@ -699,7 +699,11 @@ class trackerPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT
      */
     public function import_xml_project($params) {
-        TrackerXmlImport::build()->import($params['project']->getId(), $params['xml_content']);
+        TrackerXmlImport::build()->import(
+            $params['project']->getId(),
+            $params['xml_content'],
+            $params['extraction_path']
+        );
     }
 
     public function user_manager_get_user_instance(array $params) {
@@ -935,7 +939,7 @@ class trackerPlugin extends Plugin {
         }
 
         $this->getTrackerXmlExport($can_bypass_threshold)
-            ->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user);
+            ->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user, $params['archive']);
     }
 
     public function get_reference($params) {

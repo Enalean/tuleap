@@ -194,9 +194,11 @@
     </attribute>
     <oneOrMore>
       <element name="value">
-        <attribute name="ref">
-          <data type="IDREF"/>
-        </attribute>
+        <optional>
+          <attribute name="ref">
+            <data type="IDREF"/>
+          </attribute>
+        </optional>
       </element>
     </oneOrMore>
   </define>

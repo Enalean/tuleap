@@ -1,0 +1,1336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <ugroups>
+    <ugroup name="test" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="tv5admins" description="">
+      <members>
+        <member format="username">testman</member>
+      </members>
+    </ugroup>
+    <ugroup name="group01" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="group02" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="group03" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="group04" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="group05" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="gitadmins" description="">
+      <members/>
+    </ugroup>
+    <ugroup name="bindgroup" description="">
+      <members>
+        <member format="username">testman</member>
+      </members>
+    </ugroup>
+    <ugroup name="docadmin" description="">
+      <members/>
+    </ugroup>
+  </ugroups>
+  <trackers>
+    <tracker id="T1172" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[ToBeExported]]></name>
+      <item_name>ToBeExported</item_name>
+      <description><![CDATA[ToBeExported]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="file" ID="F21552" rank="1">
+          <name>attachment</name>
+          <label><![CDATA[Attachments]]></label>
+        </formElement>
+        <formElement type="perm" ID="F26502" rank="4">
+          <name>perms</name>
+          <label><![CDATA[Perms]]></label>
+        </formElement>
+        <formElement type="art_link" ID="F26472" rank="10">
+          <name>art_link</name>
+          <label><![CDATA[Art link]]></label>
+        </formElement>
+        <formElement type="fieldset" ID="F26165" rank="39">
+          <name>openlists</name>
+          <label><![CDATA[OpenLists]]></label>
+          <formElements>
+            <formElement type="tbl" ID="F26166" rank="0">
+              <name>olugroups</name>
+              <label><![CDATA[OLUgroups]]></label>
+              <properties hint="Type in a search term"/>
+              <bind type="ugroups">
+                <items>
+                  <item ID="V825" label="ugroup_project_members_name_key" is_hidden="0"/>
+                  <item ID="V826" label="ugroup_project_admins_name_key" is_hidden="0"/>
+                  <item ID="V827" label="ugroup_authenticated_users_name_key" is_hidden="0"/>
+                  <item ID="V828" label="ugroup_file_manager_admin_name_key" is_hidden="0"/>
+                  <item ID="V829" label="ugroup_wiki_admin_name_key" is_hidden="0"/>
+                  <item ID="V830" label="ugroup_tracker_admins_name_key" is_hidden="0"/>
+                  <item ID="V831" label="test" is_hidden="0"/>
+                  <item ID="V832" label="tv5admins" is_hidden="0"/>
+                  <item ID="V833" label="group01" is_hidden="0"/>
+                  <item ID="V834" label="group02" is_hidden="0"/>
+                  <item ID="V835" label="group03" is_hidden="0"/>
+                  <item ID="V836" label="group04" is_hidden="0"/>
+                  <item ID="V837" label="group05" is_hidden="0"/>
+                  <item ID="V838" label="gitadmins" is_hidden="0"/>
+                  <item ID="V839" label="bindgroup" is_hidden="0"/>
+                  <item ID="V840" label="docadmin" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="tbl" ID="F25381" rank="2">
+              <name>olstat</name>
+              <label><![CDATA[OLSTat]]></label>
+              <properties hint="Type in a search term"/>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V28382" label="aa" is_hidden="0"/>
+                  <item ID="V28383" label="bb" is_hidden="0"/>
+                  <item ID="V28384" label="cc" is_hidden="0"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="tbl" ID="F25380" rank="3">
+              <name>cc</name>
+              <label><![CDATA[CC]]></label>
+              <properties hint="Type in a search term"/>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="msb" ID="F21840" rank="323">
+          <name>msb</name>
+          <label><![CDATA[MSB]]></label>
+          <properties size="7"/>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="V24058" label="a" is_hidden="0"/>
+              <item ID="V24059" label="b" is_hidden="0"/>
+              <item ID="V24060" label="c" is_hidden="0"/>
+              <item ID="V24061" label="d" is_hidden="0"/>
+              <item ID="V24062" label="e" is_hidden="0"/>
+              <item ID="V24063" label="f" is_hidden="0"/>
+            </items>
+            <default_values>
+              <value REF="V24058"/>
+              <value REF="V24059"/>
+              <value REF="V24060"/>
+            </default_values>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F21665" rank="490">
+          <name>sb-users</name>
+          <label><![CDATA[SB-users]]></label>
+          <bind type="users">
+            <items>
+              <item label="artifact_submitters"/>
+              <item label="group_members"/>
+              <item label="group_admins"/>
+              <item label="ugroup_13"/>
+              <item label="ugroup_12"/>
+              <item label="ugroup_11"/>
+              <item label="ugroup_2"/>
+              <item label="ugroup_14"/>
+              <item label="ugroup_144"/>
+              <item label="ugroup_157"/>
+              <item label="ugroup_143"/>
+              <item label="ugroup_123"/>
+              <item label="ugroup_124"/>
+              <item label="ugroup_125"/>
+              <item label="ugroup_126"/>
+              <item label="ugroup_127"/>
+              <item label="ugroup_103"/>
+              <item label="ugroup_122"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="date" ID="F21622" rank="621">
+          <name>datetime</name>
+          <label><![CDATA[datetime]]></label>
+          <properties default_value="1433109600" display_time="1"/>
+        </formElement>
+        <formElement type="date" ID="F21621" rank="869">
+          <name>date</name>
+          <label><![CDATA[date]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="sb" ID="F21610" rank="871">
+          <name>sb-ugroups</name>
+          <label><![CDATA[SB-ugroups]]></label>
+          <bind type="ugroups">
+            <items>
+              <item ID="V198" label="group01" is_hidden="0"/>
+              <item ID="V199" label="group02" is_hidden="0"/>
+              <item ID="V200" label="group03" is_hidden="0"/>
+              <item ID="V201" label="group04" is_hidden="0"/>
+              <item ID="V202" label="group05" is_hidden="0"/>
+            </items>
+            <default_values>
+              <value REF="V201"/>
+            </default_values>
+          </bind>
+        </formElement>
+        <formElement type="float" ID="F21564" rank="1378">
+          <name>float</name>
+          <label><![CDATA[float]]></label>
+          <properties size="5" default_value="3.1400"/>
+        </formElement>
+        <formElement type="int" ID="F21563" rank="1379">
+          <name>int</name>
+          <label><![CDATA[int]]></label>
+          <properties size="5" default_value="42"/>
+        </formElement>
+        <formElement type="text" ID="F21562" rank="1380">
+          <name>text</name>
+          <label><![CDATA[text]]></label>
+          <properties rows="10" cols="50" default_value="text field"/>
+        </formElement>
+        <formElement type="string" ID="F21561" rank="1381" required="1">
+          <name>string</name>
+          <label><![CDATA[string]]></label>
+          <properties size="30" default_value="string field"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0" is_query_displayed="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns>
+                <field REF="F21561"/>
+                <field REF="F21622"/>
+                <field REF="F21564"/>
+                <field REF="F21563"/>
+                <field REF="F21610"/>
+                <field REF="F21562"/>
+                <field REF="F21665"/>
+                <field REF="F25381"/>
+                <field REF="F25380"/>
+                <field REF="F21621"/>
+                <field REF="F26166"/>
+                <field REF="F21840"/>
+                <field REF="F26472"/>
+                <field REF="F26502"/>
+                <field REF="F21552"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F21552" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21552" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21552" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F26502" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F26502" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F26502" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F26472" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F26472" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F26472" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F26166" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F26166" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F26166" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F25381" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F25381" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F25381" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F25380" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F25380" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F25380" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21840" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21840" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21840" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21665" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21665" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21665" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21622" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21622" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21622" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21621" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21621" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21621" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21610" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21610" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21610" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21564" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21564" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21564" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21563" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21563" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21563" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21562" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21562" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21562" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21561" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21561" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21561" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="7962">
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-16T16:54:43+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[string field]]></value>
+            </field_change>
+            <field_change field_name="text" type="text">
+              <value format="text"><![CDATA[text field]]></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value>42</value>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value>3.1400</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-16T16:57:37+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-16T16:57:37+02:00</submitted_on>
+                <body format="text"><![CDATA[Et un comment en *markdown*]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[Le string field]]></value>
+            </field_change>
+            <field_change field_name="text" type="text">
+              <value format="html"><![CDATA[<p><strong>text</strong> field</p>
+]]></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value>666</value>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value>1.6000</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-17T08:52:09+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-17T08:52:09+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="string" type="string">
+              <value></value>
+            </field_change>
+            <field_change field_name="text" type="text">
+              <value format="html"></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value/>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value></value>
+            </field_change>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-17T16:10:07+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-17T16:10:07+02:00</submitted_on>
+                <body format="text"><![CDATA[MWAWA]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="text" type="text">
+              <value format="html"><![CDATA[<p><strong>qsdqsdq</strong></p>
+]]></value>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value>1.5800</value>
+            </field_change>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value format="id">199</value>
+            </field_change>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-17T16:16:28+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-17T16:16:28+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[Ha ou !]]></value>
+            </field_change>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601">2015-06-25T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601">2015-06-17T16:16:00+02:00</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-17T16:18:09+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-17T16:18:09+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="sb-users" type="list" bind="users">
+              <value format="username">None</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T17:38:03+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T17:38:03+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T17:38:25+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T17:38:25+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T18:13:01+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T18:19:27+02:00</submitted_on>
+                <body format="text"><![CDATA[EDITED !]]></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T19:01:09+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T19:01:09+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T19:01:17+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T19:01:17+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-30T11:17:30+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-30T11:17:30+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24061</value>
+              <value format="id">24062</value>
+              <value format="id">24063</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-30T11:17:38+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-30T11:17:38+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24059</value>
+              <value format="id">24060</value>
+              <value format="id">24063</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-01T11:43:36+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-01T11:43:36+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value/>
+            </field_change>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24063</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-01T11:56:29+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-01T11:56:29+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24059</value>
+              <value format="id">24060</value>
+              <value format="id">24061</value>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="olstat" type="open_list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-02T14:45:58+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-02T14:45:58+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value format="label">yannis.rossetto+datmail@enalean.com</value>
+            </field_change>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T10:18:01+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T10:18:01+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value format="id">b825</value>
+              <value format="id">b833</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T11:13:35+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T11:13:35+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value format="id">b825</value>
+              <value format="id">b833</value>
+              <value format="id">b833</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T11:16:04+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T11:16:04+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value format="id">b825</value>
+              <value format="id">b833</value>
+              <value format="label">new_group</value>
+            </field_change>
+            <field_change field_name="art_link" type="art_link"/>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0">
+              <ugroup ugroup_name="ugroup_anonymous_users_name_key"/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-23T15:54:07+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-23T15:54:07+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="1">
+              <ugroup ugroup_name="group01"/>
+              <ugroup ugroup_name="group02"/>
+              <ugroup ugroup_name="group03"/>
+              <ugroup ugroup_name="group04"/>
+              <ugroup ugroup_name="group05"/>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="7972">
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-17T16:16:38+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[string field]]></value>
+            </field_change>
+            <field_change field_name="text" type="text">
+              <value format="text"><![CDATA[text field]]></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value>42</value>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value>3.1400</value>
+            </field_change>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value format="id">201</value>
+            </field_change>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601">2015-06-17T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601">2015-06-01T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="sb-users" type="list" bind="users">
+              <value format="username">None</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:36:19+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:36:19+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:36:25+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:36:25+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:36:57+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:36:57+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:37:08+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:37:08+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:52:17+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:52:17+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="float" type="float">
+              <value>3.1413</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:54:30+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:54:30+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:55:54+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:55:54+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:57:05+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:57:05+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T15:58:54+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T15:58:54+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T16:01:40+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T16:01:40+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T16:03:48+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T16:03:48+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T17:51:13+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T17:51:13+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T18:10:43+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T18:10:43+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T18:11:15+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-18T18:11:15+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-30T11:17:51+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-30T11:17:51+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24060</value>
+              <value format="id">24061</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-30T11:18:17+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-30T11:18:17+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-01T11:56:52+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-01T11:56:52+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24059</value>
+              <value format="id">24060</value>
+              <value format="id">24061</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-01T11:57:00+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-01T11:57:00+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="olstat" type="open_list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-03T13:36:34+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-03T13:36:34+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value format="ldap">20003</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-03T13:36:42+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-03T13:36:42+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T10:18:14+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T10:18:14+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value format="id">b826</value>
+              <value format="label">new_group</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T10:18:36+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T10:18:36+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value/>
+            </field_change>
+            <field_change field_name="art_link" type="art_link"/>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0">
+              <ugroup ugroup_name="ugroup_anonymous_users_name_key"/>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="8019">
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T17:19:33+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[string field]]></value>
+            </field_change>
+            <field_change field_name="text" type="text">
+              <value format="text"><![CDATA[text field]]></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value>42</value>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value>3.1400</value>
+            </field_change>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value format="id">201</value>
+            </field_change>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601">2015-06-18T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601">2015-06-01T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="sb-users" type="list" bind="users">
+              <value format="ldap">20001</value>
+            </field_change>
+            <field_change field_name="msb" type="list" bind="static">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="olstat" type="open_list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-03T13:36:02+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-03T13:36:02+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value format="username">testman</value>
+            </field_change>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T10:18:23+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T10:18:23+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value format="label">new_group</value>
+            </field_change>
+            <field_change field_name="art_link" type="art_link"/>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0">
+              <ugroup ugroup_name="ugroup_anonymous_users_name_key"/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-23T15:54:17+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-23T15:54:17+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0">
+              <ugroup ugroup_name="ugroup_anonymous_users_name_key"/>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="8024">
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-18T17:39:43+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[string field 5]]></value>
+            </field_change>
+            <field_change field_name="text" type="text">
+              <value format="text"><![CDATA[text field]]></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value>42</value>
+            </field_change>
+            <field_change field_name="float" type="float">
+              <value>3.1400</value>
+            </field_change>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value format="id">201</value>
+            </field_change>
+            <field_change field_name="date" type="date">
+              <value format="ISO8601">2015-06-18T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="datetime" type="date">
+              <value format="ISO8601">2015-06-01T00:00:00+02:00</value>
+            </field_change>
+            <field_change field_name="sb-users" type="list" bind="users">
+              <value format="ldap">20001</value>
+            </field_change>
+            <field_change field_name="msb" type="list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-30T13:33:38+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-30T13:33:38+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24058</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-06-30T13:33:44+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-06-30T13:33:44+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24061</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-01T15:12:32+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-01T15:12:32+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="sb-ugroups" type="list" bind="ugroups">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-02T12:13:58+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-02T12:13:58+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value format="ldap">20001</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-02T12:15:08+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-02T12:15:08+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value format="ldap">20001</value>
+              <value format="label">yannis.rossetto+datmail@enalean.com</value>
+            </field_change>
+            <field_change field_name="olstat" type="open_list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-02T12:27:44+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-02T12:27:44+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olstat" type="open_list" bind="static">
+              <value format="id">b28382</value>
+              <value format="label">tt</value>
+            </field_change>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-06T10:18:30+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-06T10:18:30+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="olugroups" type="open_list" bind="ugroups">
+              <value format="id">b832</value>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-22T14:34:23+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-22T14:41:09+02:00</submitted_on>
+                <body format="text"><![CDATA[See art # 290 and bugs # 290 and aaa # 290]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="art_link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-22T17:01:51+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-22T17:01:51+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="art_link" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-23T09:29:14+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-23T09:29:14+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="string" type="string">
+              <value><![CDATA[string field 5 V2]]></value>
+            </field_change>
+            <field_change field_name="int" type="int">
+              <value>420</value>
+            </field_change>
+            <field_change field_name="msb" type="list" bind="static">
+              <value format="id">24061</value>
+              <value format="id">24062</value>
+              <value format="id">24063</value>
+            </field_change>
+            <field_change field_name="art_link" type="art_link"/>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0">
+              <ugroup ugroup_name="ugroup_anonymous_users_name_key"/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-23T15:53:56+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-23T15:53:56+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="1">
+              <ugroup ugroup_name="ugroup_project_admins_name_key"/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-23T15:54:27+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-23T15:54:27+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="1">
+              <ugroup ugroup_name="test"/>
+              <ugroup ugroup_name="tv5admins"/>
+              <ugroup ugroup_name="group01"/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-23T15:54:39+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-23T15:54:39+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-28T11:10:24+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-28T11:10:24+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-28T11:11:16+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-28T11:11:16+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">testman</submitted_by>
+            <submitted_on format="ISO8601">2015-07-28T14:01:06+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">testman</submitted_by>
+                <submitted_on format="ISO8601">2015-07-28T14:01:06+02:00</submitted_on>
+                <body format="text"></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachment" type="file">
+              <value ref="fileinfo_69"/>
+            </field_change>
+            <field_change field_name="perms" type="permissions_on_artifact" use_perm="0"/>
+          </changeset>
+          <file id="fileinfo_69">
+            <filename>users.txt</filename>
+            <path>data/Artifact69</path>
+            <filesize>17</filesize>
+            <filetype>text/plain</filetype>
+            <description></description>
+          </file>
+        </artifact>
+      </artifacts>
+    </tracker>
+  </trackers>
+</project>

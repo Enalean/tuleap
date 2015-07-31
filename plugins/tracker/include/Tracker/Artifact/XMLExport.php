@@ -48,13 +48,13 @@ class Tracker_Artifact_XMLExport {
         $this->can_bypass_threshold = $can_bypass_threshold;
     }
 
-    public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user) {
+    public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user, ZipArchive $archive) {
         $artifacts_node = $xml_content->addChild('artifacts');
 
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->checkThreshold(count($all_artifacts));
         foreach ($all_artifacts as $artifact) {
-            $artifact->exportToXML($artifacts_node, $user);
+            $artifact->exportToXML($artifacts_node, $user, $archive);
         }
 
         $this->rng_validator->validate(

@@ -23,6 +23,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
     /** @var Tracker_XML_Exporter_ArtifactXMLExporter */
     public function build(
         Tracker_XML_ChildrenCollector $children_collector,
+        Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user
     ) {
         $user_xml_exporter  = new UserXMLExporter(UserManager::instance());
@@ -30,7 +31,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
         $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
-                new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter()
+                $file_path_xml_exporter
             ),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),

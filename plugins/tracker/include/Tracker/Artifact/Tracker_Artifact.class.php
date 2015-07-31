@@ -1897,23 +1897,40 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Adds to $artifacts_node the xml export of the artifact.
      */
-    public function exportToXML(SimpleXMLElement $artifacts_node, PFUser $user) {
-        $children_collector = new Tracker_XML_Exporter_NullChildrenCollector();
+    public function exportToXML(
+        SimpleXMLElement $artifacts_node,
+        PFUser $user,
+        ZipArchive $archive
+    ) {
+        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
+        $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
 
         $artifact_xml_exporter = $this->getArtifactXMLExporter(
             $children_collector,
+            $file_path_xml_exporter,
             $user
         );
 
-        $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
+        $artifact_xml_exporter->exportFullHistory($artifacts_node, $this, $archive);
+
+        $attachment_exporter = $this->getArtifactAttachmentExporter();
+        $attachment_exporter->exportAttachmentsInArchive($this, $archive);
+    }
+
+    /**
+     * @return Tracker_XML_Exporter_ArtifactAttachmentExporter
+     */
+    private function getArtifactAttachmentExporter() {
+        return new Tracker_XML_Exporter_ArtifactAttachmentExporter($this->getFormElementFactory());
     }
 
     private function getArtifactXMLExporter(
         Tracker_XML_ChildrenCollector $children_collector,
+        Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user
     ) {
         $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
 
-        return $builder->build($children_collector, $current_user);
+        return $builder->build($children_collector, $file_path_xml_exporter, $current_user);
     }
 }

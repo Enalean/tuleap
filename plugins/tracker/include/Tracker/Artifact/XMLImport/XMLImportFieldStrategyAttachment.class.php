@@ -50,6 +50,14 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         $values      = $field_change->value;
         $files_infos = array();
 
+        if ($this->isFieldChangeEmpty($values)) {
+            $this->logger->warn(
+                'Skipped attachment field ' . $field->getLabel() . ': field value is empty.'
+            );
+
+            return $files_infos;
+        }
+
         foreach ($values as $value) {
             try {
                 $attributes = $value->attributes();
@@ -61,15 +69,26 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
                     $this->files_importer->markAsImported($file_id);
                 }
             } catch (Tracker_Artifact_XMLImport_Exception_FileNotFoundException $exception) {
-                $this->logger->warn('Skipped attachment field: ' . $exception->getMessage());
+                $this->logger->warn('Skipped attachment field ' . $field->getLabel() . ': ' . $exception->getMessage());
             }
         }
 
         if ($this->itCannotImportAnyFiles($values, $files_infos)) {
-            throw new Tracker_Artifact_XMLImport_Exception_NoAttachementsException();
+            throw new Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException();
         }
 
         return $files_infos;
+    }
+
+    private function isFieldChangeEmpty(SimpleXMLElement $values) {
+        if (count($values) === 1) {
+            $value      = $values[0];
+            $attributes = $value->attributes();
+
+            return (! isset($attributes['ref']));
+        }
+
+        return false;
     }
 
     private function itCannotImportAnyFiles($values, $files_infos) {

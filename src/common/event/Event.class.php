@@ -496,6 +496,8 @@ class Event {
      *   'project'  => The given project
      *   'options'  => The given options
      *   'into_xml' => The SimpleXMLElement to fill in
+     *   'user'     => The user that does the export
+     *   'archive'  => The archive to add element in it
      *
      * Expected Results:
      *   The various plugins inject stuff in the given xml element

@@ -147,7 +147,7 @@ class TrackerXmlImport {
      * @throws XML_ParseException
      * @return Tracker[]
      */
-    public function import($group_id, SimpleXMLElement $xml_input) {
+    public function import($group_id, SimpleXMLElement $xml_input, $extraction_path) {
         if (! $xml_input->trackers) {
             return;
         }
@@ -158,7 +158,13 @@ class TrackerXmlImport {
         $this->rng_validator->validate($xml_input->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
 
         foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker_id => $xml_tracker) {
-            $created_tracker = $this->instanciateTrackerFromXml($group_id, $xml_tracker_id, $xml_tracker);
+            $created_tracker = $this->instanciateTrackerFromXml(
+                $group_id,
+                $xml_tracker_id,
+                $xml_tracker,
+                $extraction_path
+            );
+
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
 
@@ -187,13 +193,16 @@ class TrackerXmlImport {
 
     /**
      *
-     * @param int $group_id
-     * @param int $xml_tracker_id
-     * @param SimpleXMLElement $xml_tracker
      * @return array the link between xml id and new id given by Tuleap
+     *
      * @throws TrackerFromXmlImportCannotBeCreatedException
      */
-    private function instanciateTrackerFromXml($group_id, $xml_tracker_id, SimpleXMLElement $xml_tracker) {
+    private function instanciateTrackerFromXml(
+        $group_id,
+        $xml_tracker_id,
+        SimpleXMLElement $xml_tracker,
+        $extraction_path
+    ) {
         $tracker_created = $this->createFromXML(
                $xml_tracker,
                $group_id,
@@ -206,15 +215,18 @@ class TrackerXmlImport {
             throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
         }
 
-        $this->importArtifactsInNewlyCreatedTracker($tracker_created, $xml_tracker);
+        $this->importArtifactsInNewlyCreatedTracker($tracker_created, $xml_tracker, $extraction_path);
 
         return array($xml_tracker_id => $tracker_created->getId());
     }
 
-    private function importArtifactsInNewlyCreatedTracker(Tracker $tracker, SimpleXMLElement $xml_tracker) {
+    private function importArtifactsInNewlyCreatedTracker(
+        Tracker $tracker,
+        SimpleXMLElement $xml_tracker,
+        $extraction_path
+    ) {
         if (isset($xml_tracker->artifacts)) {
-            $extraction_path = '';
-            $xml_mapping     = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xmlFieldsMapping);
+            $xml_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xmlFieldsMapping);
 
             $this->xml_import->importFromXML(
                 $tracker,

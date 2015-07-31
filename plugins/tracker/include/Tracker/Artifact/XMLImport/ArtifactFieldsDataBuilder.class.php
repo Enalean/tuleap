@@ -125,7 +125,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             } else {
                 $this->logger->warn("Skipped invalid value ".(string)$submitted_value." for field ".$field->getName());
             }
-        } catch(Tracker_Artifact_XMLImport_Exception_NoAttachementsException $exception) {
+        } catch(Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
             $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
         } catch(Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException $exception) {
             return;

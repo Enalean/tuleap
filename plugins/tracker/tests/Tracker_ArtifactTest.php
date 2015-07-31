@@ -1615,10 +1615,14 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
     public function setUp() {
         $this->user_manager = mock('UserManager');
         UserManager::setInstance($this->user_manager);
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        Tracker_FormElementFactory::setInstance($this->formelement_factory);
     }
 
     public function tearDown() {
         UserManager::clearInstance();
+        Tracker_FormElementFactory::clearInstance();
 
         parent::tearDown();
     }
@@ -1626,16 +1630,21 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
     public function itExportsTheArtifactToXML() {
         $user = aUser()->withId(101)->withLdapId('ldap_O1')->withUserName('user_01')->build();
         stub($this->user_manager)->getUserById(101)->returns($user);
+        stub($this->formelement_factory)->getUsedFileFields()->returns(array());
 
         $changeset_01 = stub('Tracker_Artifact_Changeset')->getsubmittedBy()->returns(101);
         $changeset_02 = stub('Tracker_Artifact_Changeset')->getsubmittedBy()->returns(101);
 
-        $artifact       = anArtifact()->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
-        $artifacts_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                             <artifacts/>');
-
         $project = stub('Project')->getID()->returns(101);
         $tracker = aTracker()->withId(101)->withProject($project)->build();
+
+        $artifact = anArtifact()->withTracker($tracker)
+                                      ->withId(101)
+                                      ->withChangesets(array($changeset_01, $changeset_02))
+                                      ->build();
+
+        $artifacts_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <artifacts/>');
 
         $text_field_01 = stub('Tracker_FormElement_Field_Text')->getName()->returns('text_01');
         stub($text_field_01)->getTracker()->returns($tracker);
@@ -1649,7 +1658,9 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         stub($changeset_02)->getArtifact()->returns($artifact);
         stub($changeset_02)->getValues()->returns(array($value_02));
 
-        $artifact->exportToXML($artifacts_node, $user);
+        $archive = new ZipArchive();
+
+        $artifact->exportToXML($artifacts_node, $user, $archive);
 
         $this->assertEqual($artifacts_node->artifact['id'], 101);
     }
