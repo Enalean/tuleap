@@ -164,12 +164,6 @@ account_editsshkeys	update_filesystem	SSH key(s) updated in database, will be pr
 account_editsshkeys	btn_save_keys	Save keys
 #
 #-----------------------------------------------
-# Script: SF/www/account/first.php
-#
-account_first	title	Welcome to $1!
-account_first	message	You are now a registered user on $1. As a registered user, you can now fully participate in the activities of the $1 Web Site. You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.<P>We highly recommend that you browse through the site, read the <A href="/plugins/docman/?group_id=1">Site Documentation</A> and finalize the setup of your <a href="/account/">User Profile</a> (Define your skills profile, your preferences, etc.)<P><center><b><span class="highlight">*-*-*-*</span></b></center> <P>Enjoy the site, provide us with feedback on ways that we can improve $1 and speak of $1 around you. <P>-- The $1 Team
-#
-#-----------------------------------------------
 # Script: SF/www/account/login.php
 #
 account_login	secure	Secure
@@ -312,10 +306,11 @@ account_suspended	title	Suspended Account
 account_suspended	message	Your account has been suspended. If you have questions regarding your suspension, please email <a href="mailto:$1">the site administrators</A>. Inquiries through other channels will be directed to this address.
 #
 #-----------------------------------------------
-# Script: SF/www/account/verify.php
+# Script: SF/www/account/login.php
 #
 account_verify	title	Account Verification
 account_verify	message	In order to complete your registration, login now. Your account will then be activated for normal logins.
 account_verify	err_user	Invalid username.
 account_verify	err_hash	Invalid confirmation hash.
 account_verify	err_status	Invalid status. Site Administrators didn't validate your account.
+account_verify	account_confirm	Your account has been successfully confirmed.

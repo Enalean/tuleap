@@ -975,4 +975,9 @@ class UserManager {
         }
         return false;
     }
+
+    public function removeConfirmHash($confirm_hash) {
+        $dao = $this->getDao();
+        $dao->removeConfirmHash($confirm_hash);
+    }
 }

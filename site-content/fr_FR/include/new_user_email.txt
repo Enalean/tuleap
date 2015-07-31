@@ -23,5 +23,5 @@ $help = "Pour toute demande d'aide contactez : ".$GLOBALS['sys_email_admin'];
 
 
 $message = $title. "\n\n" .$section_one . $login . $section_after_login. "\n\n"
-. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+. "<". $base_url ."/account/login.php?confirm_hash=$confirm_hash>\n\n"
 .$thanks. "\n\n" .$signature. "\n\n" .$help;
