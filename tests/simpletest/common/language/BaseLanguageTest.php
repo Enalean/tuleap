@@ -30,14 +30,18 @@ class BaseLanguage_BaseTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
+        ForgeConfig::store();
+
+        ForgeConfig::set('sys_pluginsroot', dirname(__FILE__) . '/_fixtures/codendi/plugins');
+        ForgeConfig::set('sys_extra_plugin_path', '');
         $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/codendi/site-content';
-        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__) . '/_fixtures/codendi/plugins';
+        $GLOBALS['sys_pluginsroot']       = ForgeConfig::get('sys_pluginsroot');
         $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/codendi/themes';
         $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
         $GLOBALS['codendi_cache_dir']     = dirname(__FILE__) . '/_fixtures/tmp';
-         
+
         if (!is_dir($GLOBALS['codendi_cache_dir'].'/lang')) {
             mkdir($GLOBALS['codendi_cache_dir'].'/lang', 0777, true);
         }
@@ -51,6 +55,15 @@ class BaseLanguage_BaseTest extends TuleapTestCase {
                 unlink($tmpdir .'/'. $file);
             }
         }
+        unset($GLOBALS['sys_incdir']);
+        unset($GLOBALS['sys_pluginsroot']);
+        unset($GLOBALS['sys_themeroot']);
+        unset($GLOBALS['sys_custom_incdir']);
+        unset($GLOBALS['sys_custompluginsroot']);
+        unset($GLOBALS['sys_custom_themeroot']);
+        //unset($GLOBALS['codendi_cache_dir']);
+
+        ForgeConfig::restore();
         parent::tearDown();
     }
 }
@@ -217,7 +230,6 @@ class BaseLanguageTest extends BaseLanguage_BaseTest {
         $l4 = new BaseLanguageTestVersion($this);
         $l4->expectOnce('loadAllTabFiles', array($GLOBALS['sys_custompluginsroot'].'/toto/site-content/en_US', '*'));
         $l4->loadPluginsCustomSiteContent('en_US', $result);
-        
     }
     
     function testLoadOrder() {
@@ -267,4 +279,22 @@ class BaseLanguage_hasTextTest extends BaseLanguage_BaseTest {
         $this->assertFalse($l->hasText('common', 'missing_key'));
     }
 }
-?>
+
+class BaseLanguage_ExtraPluginPathTest extends BaseLanguage_BaseTest {
+
+    private $extra_path;
+
+    public function setUp() {
+        parent::setUp();
+        $this->extra_path = dirname(__FILE__) . '/_fixtures/extra_path';
+        ForgeConfig::set('sys_extra_plugin_path', $this->extra_path);
+    }
+
+    public function itLoadLangFromExtraPath() {
+        $language = partial_mock('BaseLanguage', array('loadAllTabFiles'));
+        expect($language)->loadAllTabFiles()->count(2);
+        expect($language)->loadAllTabFiles($this->extra_path.'/bla/site-content/en_US', '*')->at(0);
+        expect($language)->loadAllTabFiles(ForgeConfig::get('sys_pluginsroot').'/toto/site-content/en_US', '*')->at(1);
+        $language->loadPluginsSiteContent('en_US', $result);
+    }
+}

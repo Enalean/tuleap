@@ -205,6 +205,8 @@ $sys_pluginsroot       = $codendi_dir . "/plugins/";
 $sys_custompluginsroot = $sys_custom_dir . "/plugins/";
 $sys_pluginspath       = "/plugins";
 $sys_custompluginspath = "/customplugins";
+// Comma separated paths where Tuleap can find plugins
+$sys_extra_plugin_path = '';
 
 // Themeing related paths
 $sys_themeroot = $codendi_dir . "/src/www/themes/";

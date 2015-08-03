@@ -37,7 +37,9 @@ class Plugin implements PFO_Plugin {
 
     /** @var bool */
     private $is_custom = false;
-    
+
+    protected $filesystem_path = '';
+
     const SCOPE_SYSTEM  = 0;
     const SCOPE_PROJECT = 1;
     const SCOPE_USER    = 2;
@@ -200,16 +202,19 @@ class Plugin implements PFO_Plugin {
      * @return String
      */
     public function getFilesystemPath() {
-        $pm = $this->_getPluginManager();
-        if ($pm->pluginIsCustom($this)) {
-            $path = $GLOBALS['sys_custompluginsroot'];
-        } else {
-            $path = $GLOBALS['sys_pluginsroot'];
+        if (!$this->filesystem_path) {
+            $pm = $this->_getPluginManager();
+            if ($pm->pluginIsCustom($this)) {
+                $path = $GLOBALS['sys_custompluginsroot'];
+            } else {
+                $path = $GLOBALS['sys_pluginsroot'];
+            }
+            if ($path[strlen($path) -1 ] != '/') {
+                $path .= '/';
+            }
+            $this->filesystem_path = $path . $this->getName();
         }
-        if ($path[strlen($path) -1 ] != '/') {
-            $path .= '/';
-        }
-        return $path . $this->getName();
+        return $this->filesystem_path;
     }
 
     /**
