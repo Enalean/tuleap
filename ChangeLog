@@ -1,3 +1,9 @@
+Version 8.4-3 (Monday, August 3rd 2015)
+
+	== Bug Fix ==
+	* request #8269: use an integer for sys_keep_md5_hashed_password instead of a boolean
+	* request #8288: Cannot update artifact with modal v2
+
 Version 8.4-2 (Monday, July 27th 2015)
 
 	== Bug Fix ==
