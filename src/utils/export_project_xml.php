@@ -34,14 +34,14 @@ function usage() {
     global $argv;
 
     echo <<< EOT
-Usage: $argv[0] -p project_id -u user_name [-t tracker_id] [-f]
+Usage: $argv[0] -p project_id -u user_name -o path_to_archive [-t tracker_id] [-f] [-x]
 
 Dump a project structure to XML format
 
   -p <project_id> The id of the project to export
   -u <user_name>  The user used to export
   -t <tracker_id> The id of the tracker to include in the export (optional)
-  -o <path>       The path of the archive of the exported XML + data
+  -o <path>       The full path where the archive (project in XML + data) will be created (example: /tmp/archive.zip)
   -f              Force the export (for example if there are too many artifacts). Use at your own risks.
   -x              Display the XML content
   -h              Display this help
@@ -120,6 +120,8 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
         $xml_security->disableExternalLoadOfEntities();
 
         $archive->close();
+
+        fwrite(STDOUT, "Archive $output created." . PHP_EOL);
 
         exit(0);
     } catch (XML_ParseException $exception) {
