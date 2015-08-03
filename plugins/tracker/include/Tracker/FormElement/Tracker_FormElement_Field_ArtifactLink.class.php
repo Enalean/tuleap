@@ -28,7 +28,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    
+
     /**
      * @var Tracker_Artifact|null
      */
@@ -46,7 +46,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();
         }
-        $html .= '<input type="text" 
+        $html .= '<input type="text"
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'" autocomplete="off" />';
         $html .= '<br />';
         $html .= '<a href="#">bug #123</a><br />';
@@ -54,7 +54,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html .= '<a href="#">story #10234</a>';
         return $html;
     }
-    
+
     /**
      * Display the field value as a criteria
      *
@@ -71,7 +71,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html .= '" />';
         return $html;
     }
-    
+
     /**
      * Display the field as a Changeset value.
      * Used in report table
@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html = implode(', ', $arr);
         return $html;
     }
-    
+
     /**
      * Display the field as a Changeset value.
      * Used in CSV data export.
@@ -121,7 +121,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $artifact_id_array = $value->getArtifactIds();
         return implode(", ", $artifact_id_array);
     }
-    
+
     /**
      * Get available values of this field for SOAP usage
      * Fields like int, float, date, string don't have available values
@@ -256,7 +256,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     /**
      * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve 
+     * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      *
      * @param Tracker_ReportCriteria $criteria
@@ -287,7 +287,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $expr = '';
         $matches = array();
         if (preg_match('/\/(.*)\//', $criteria_value, $matches)) {
-            
+
             // If it is sourrounded by /.../ then assume a regexp
             $expr = $field_name." RLIKE ".$this->getCriteriaDao()->da->quoteSmart($matches[1]);
         }
@@ -297,18 +297,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 // It's < or >,  = and a number then use as is
                 $matches[2] = (string)($this->cast($matches[2]));
                 $expr = $field_name.' '.$matches[1].' '.$matches[2];
-                
+
             } else if (preg_match("/^($this->pattern)\$/", $criteria_value, $matches)) {
                 // It's a number so use  equality
                 $matches[1] = $this->cast($matches[1]);
                 $expr = $field_name.' = '.$matches[1];
-                
+
             } else if (preg_match("/^($this->pattern)\s*-\s*($this->pattern)\$/", $criteria_value, $matches)) {
                 // it's a range number1-number2
                 $matches[1] = (string)($this->cast($matches[1]));
                 $matches[2] = (string)($this->cast($matches[2]));
                 $expr = $field_name.' >= '.$matches[1].' AND '.$field_name.' <= '. $matches[2];
-                
+
             } else {
                 // Invalid syntax - no condition
                 $expr = '1';
@@ -316,7 +316,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $expr;
     }
-    
+
     /**
      * Get the "where" statement to allow search with this field
      *
@@ -327,22 +327,22 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function getCriteriaWhere($criteria) {
         return '';
     }
-    
+
     public function getQuerySelect() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
         return "$R2.artifact_id AS `". $this->name . "`";
     }
-    
+
     public function getQueryFrom() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
-        
-        return "LEFT JOIN ( tracker_changeset_value AS $R1 
+
+        return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_artifactlink AS $R2 ON ($R2.changeset_value_id = $R1.id)
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
-    
+
     /**
      * Return the dao of the criteria value used with this field.
      * @return DataAccessObject
@@ -581,10 +581,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_title');
 
     }
-    
+
     /**
      * Process the request
-     * 
+     *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
      * @param PFUser                           $current_user    The user who mades the request
@@ -597,12 +597,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $read_only              = false;
                 $prefill_removed_values = array();
                 $only_rows              = true;
-                
+
                 $this_project_id = $this->getTracker()->getProject()->getGroupId();
                 $hp = Codendi_HTMLPurifier::instance();
-                
+
                 $ugroups = $current_user->getUgroups($this_project_id, array());
-                
+
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
                 $result  = array();
@@ -624,7 +624,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                                     $key = $this->id .'_'. $report->id .'_'. $renderer->getId();
                                     $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $only_rows);
                                     $head = '<div class="tracker-form-element-artifactlink-trackerpanel">';
-                                    
+
                                     $project_name = '';
                                     if ($project->getGroupId() != $this_project_id) {
                                         $project_name = ' (<abbr title="'. $hp->purify($project->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML) .'">';
@@ -665,7 +665,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $extracolumn            = Tracker_Report_Renderer_Table::EXTRACOLUMN_UNLINK;
                 $read_only              = true;
                 $use_data_from_db       = false;
-                
+
                 $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId(), array());
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
@@ -711,7 +711,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @param string $name                   The name, if any
      * @param array  $artifact_links         The current artifact links
-     * @param string $prefill_new_values     Prefill new values field (what the user has submitted, if any)     
+     * @param string $prefill_new_values     Prefill new values field (what the user has submitted, if any)
      * @param bool   $read_only              True if the user can't add or remove links
      *
      * @return string html
@@ -720,7 +720,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html = '';
         $html_name_new = '';
         if ($name) {
-            $html_name_new = 'name="'. $name .'[new_values]"';            
+            $html_name_new = 'name="'. $name .'[new_values]"';
         }
         $hp = Codendi_HTMLPurifier::instance();
         if (!$read_only) {
@@ -734,7 +734,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= '<ul class="tracker-form-element-artifactlink-list">';
             foreach ($artifact_links as $artifact_link_info) {
                 $html .= '<li>';
-                $html .= $artifact_link_info->getUrl();                                
+                $html .= $artifact_link_info->getUrl();
                 $html .= '</li>';
             }
             $html .= '</ul>';
@@ -810,7 +810,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             true
         );
     }
-    
+
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -861,7 +861,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $read_only
         );
     }
-    
+
     /**
      * Fetch the html code to display the field value in new artifact submission form
      *
@@ -901,12 +901,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValueMasschange() {
-        $html = '';         
+        $html = '';
         $prefill_new_values     = $GLOBALS['Language']->getText('global','unchanged');
         $read_only              = false;
-        $name                   = 'artifact['. $this->id .']';        
+        $name                   = 'artifact['. $this->id .']';
         $artifact_links         = array();
-        
+
         return $this->fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only);
     }
 
@@ -937,7 +937,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      */
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_ArtifactLinkDao();
-    }   
+    }
 
     /**
      * Fetch the html code to display the field value in artifact
@@ -982,7 +982,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $output;
     }
-    
+
     /**
      * Fetch the value to display changes in followups
      *
@@ -995,7 +995,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function fetchFollowUp($artifact, $from, $to) {
         // never used...
     }
-    
+
     /**
      * Fetch the value in a specific changeset
      *
@@ -1006,7 +1006,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function fetchRawValueFromChangeset($changeset) {
         // never used...
     }
-    
+
     /**
      * Get the value of this field
      *
@@ -1017,10 +1017,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-        $rows            = $this->getValueDao()->searchById($value_id, $this->id);
-        $artifact_links  = $this->getArtifactLinkInfos($rows);
+        $rows                   = $this->getValueDao()->searchById($value_id, $this->id);
+        $artifact_links         = $this->getArtifactLinkInfos($rows);
+        $reverse_artifact_links = array();
 
-        return new Tracker_Artifact_ChangesetValue_ArtifactLink($value_id, $this, $has_changed, $artifact_links);
+        if ($changeset) {
+            $reverse_artifact_links = $this->getReverseLinks($changeset->getArtifact()->getId());
+        }
+
+        return new Tracker_Artifact_ChangesetValue_ArtifactLink($value_id, $this, $has_changed, $artifact_links, $reverse_artifact_links);
     }
 
 
@@ -1038,7 +1043,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         return $artifact_links;
     }
-    
+
     /**
      * @return array
      */
@@ -1053,11 +1058,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     protected function getChangesetValues($changeset_id) {
         if (!isset($this->artifact_links_by_changeset[$changeset_id])) {
             $this->artifact_links_by_changeset[$changeset_id] = array();
-            
+
             $da = CodendiDataAccess::instance();
             $field_id     = $da->escapeInt($this->id);
             $changeset_id = $da->escapeInt($changeset_id);
-            $sql = "SELECT cv.changeset_id, cv.has_changed, val.*, a.tracker_id, a.last_changeset_id 
+            $sql = "SELECT cv.changeset_id, cv.has_changed, val.*, a.tracker_id, a.last_changeset_id
                     FROM tracker_changeset_value_artifactlink AS val
                          INNER JOIN tracker_artifact AS a ON(a.id = val.artifact_id)
                          INNER JOIN tracker_changeset_value AS cv
@@ -1069,7 +1074,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $dao = new DataAccessObject();
             foreach ($dao->retrieve($sql) as $row) {
                 $this->artifact_links_by_changeset[$row['changeset_id']][] = new Tracker_ArtifactLinkInfo(
-                    $row['artifact_id'], 
+                    $row['artifact_id'],
                     $row['keyword'],
                     $row['group_id'],
                     $row['tracker_id'],
@@ -1079,7 +1084,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $this->artifact_links_by_changeset[$changeset_id];
     }
-    
+
     /**
      * Check if there are changes between old and new value for this field
      *
@@ -1091,47 +1096,47 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function hasChanges(Tracker_Artifact_ChangesetValue_ArtifactLink $old_value, $new_value) {
         return $old_value->hasChanges($new_value);
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifact_link_label');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifact_link_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/artifact-chain.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/artifact-chain--plus.png');
     }
-    
+
     /**
      * @return bool say if the field is a unique one
      */
     public static function getFactoryUniqueField() {
         return true;
     }
-    
+
     /**
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param array            $value    data coming from the request. 
+     * @param Tracker_Artifact $artifact The artifact
+     * @param array            $value    data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
@@ -1174,13 +1179,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $ids;
     }
-    
+
     /**
      * Say if the submitted value is empty
      * if no last changeset values and empty submitted values : empty
      * if not empty last changeset values and empty submitted values : not empty
      * if empty new values and not empty last changeset values and not empty removed values have the same size: empty
-     * 
+     *
      * @param array            $submitted_value
      * @param Tracker_Artifact $artifact
      *
@@ -1200,30 +1205,30 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $hasLastChangesetValues   = !$hasNoLastChangesetValues;
 
         if (($hasNoLastChangesetValues && $hasNoNewValues) ||
-             ($hasLastChangesetValues && $hasNoNewValues 
+             ($hasLastChangesetValues && $hasNoNewValues
                 && $this->allLastChangesetValuesRemoved($last_changeset_values, $submitted_value))) {
             return true;
-        } 
+        }
         return false;
     }
-    
+
     /**
      * Say if all values of the changeset have been removed
-     * 
-     * @param array $last_changeset_values   
+     *
+     * @param array $last_changeset_values
      * @param array $submitted_value
-     * 
+     *
      * @return bool true if all values have been removed
      */
     private function allLastChangesetValuesRemoved($last_changeset_values, $submitted_value) {
-        return !empty($submitted_value['removed_values']) 
+        return !empty($submitted_value['removed_values'])
             && count($last_changeset_values) == count($submitted_value['removed_values']);
     }
-    
+
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact 
+     * @param Tracker_Artifact $artifact The artifact
      * @param string           $value    data coming from the request. Should be artifact id separated by comma
      *
      * @return bool true if the value is considered ok
@@ -1248,11 +1253,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         return $is_valid;
     }
-    
+
     public function getRuleArtifactId() {
         return new Tracker_Valid_Rule_ArtifactId();
     }
-    
+
     public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory) {
         $this->artifact_factory = $artifact_factory;
     }
@@ -1313,24 +1318,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     /**
      * Return true if $artifact_to_check is "parent of" $artifact_reference
-     * 
+     *
      * @todo: take planning into account
-     * 
+     *
      * When $artifact_to_check is a Release
      * And  $artifact_reference is a Sprint
      * And Release -> Sprint (in tracker hierarchy)
      * Then return True
-     * 
+     *
      * @param Tracker_Artifact $artifact_to_check
      * @param Tracker_Artifact $artifact_reference
-     * 
+     *
      * @return Boolean
      */
     protected function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
         $children = $this->getTrackerChildrenFromHierarchy($artifact_to_check->getTracker());
         return in_array($artifact_reference->getTracker(), $children);
     }
-    
+
     /**
      * Save the value submitted by the user in the new changeset
      *
@@ -1346,23 +1351,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $submitted_value = $this->updateLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
         return parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
     }
-    
+
     /**
      * Verify (and update if needed) that the link between what submitted the user ($submitted_values) and
      * the current artifact is correct resp. the association definition.
-     * 
+     *
      * Given I defined following hierarchy:
      * Release
      * `-- Sprint
-     * 
+     *
      * If $artifact is a Sprint and I try to link a Release, this method detect
      * it and update the corresponding Release with a link toward current sprint
-     * 
+     *
      * @param Tracker_Artifact           $artifact
      * @param Tracker_Artifact_Changeset $old_changeset
      * @param mixed                      $submitted_value
      * @param PFUser                       $submitter
-     * 
+     *
      * @return mixed The submitted value expurged from updated links
      */
     protected function updateLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, PFUser $submitter) {
@@ -1375,21 +1380,21 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_id_already_linked[] = $artifact_to_add->getId();
             }
         }
-        
+
         return $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
     }
-    
+
     /**
      * Remove from user submitted artifact links the artifact ids that where already
      * linked after the direction checking
-     * 
+     *
      * Should be private to the class but almost impossible to test in the context
      * of saveNewChangeset.
-     * 
+     *
      * @param Array $submitted_value
      * @param Array $artifact_id_already_linked
-     * 
-     * @return Array 
+     *
+     * @return Array
      */
     public function removeArtifactsFromSubmittedValue($submitted_value, array $artifact_id_already_linked) {
         $new_values = explode(',', $submitted_value['new_values']);
@@ -1398,7 +1403,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $submitted_value['new_values'] = implode(',', $new_values);
         return $submitted_value;
     }
-    
+
     protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
         $new_values     = (string)$value['new_values'];
         $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
@@ -1424,12 +1429,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         return $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifact_ids);
     }
-    
+
     /**
      * Save the value and return the id
-     * 
+     *
      * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
+     * @param int                             $changeset_value_id      The id of the changeset_value
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
@@ -1542,10 +1547,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     /**
      * Retrieve linked artifacts according to user's permissions
-     * 
+     *
      * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
      * @param PFUser                       $user      The user who will see the artifacts
-     * 
+     *
      * @return Tracker_Artifact[]
      */
     public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user) {
@@ -1613,7 +1618,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * If request come with a 'parent', it should be automagically transformed as
      * 'new_values'.
      * Please note that it only work on artifact creation.
-     * 
+     *
      * @param type $fields_data
      */
     public function augmentDataFromRequest(&$fields_data) {

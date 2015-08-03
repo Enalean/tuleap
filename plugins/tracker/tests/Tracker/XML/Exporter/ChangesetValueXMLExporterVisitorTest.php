@@ -66,7 +66,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends TuleapTe
 
         $this->int_changeset_value     = new Tracker_Artifact_ChangesetValue_Integer('*', '*', '*', '*');
         $this->float_changeset_value   = new Tracker_Artifact_ChangesetValue_Float('*', '*', '*', '*');
-        $this->artlink_changeset_value = new Tracker_Artifact_ChangesetValue_ArtifactLink('*', '*', '*', '*');
+        $this->artlink_changeset_value = new Tracker_Artifact_ChangesetValue_ArtifactLink('*', '*', '*', '*', '*');
     }
 
     public function itCallsTheIntegerExporterAccordinglyToTheTypeOfTheChangesetValue() {

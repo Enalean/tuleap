@@ -58,6 +58,7 @@ class Test_Tracker_ChangesetValue_Builder {
 
 class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_ChangesetValue_Builder {
     private $artifact_links;
+    private $reverse_artifact_links;
 
     public function __construct() {
         parent::__construct('Tracker_Artifact_ChangesetValue_ArtifactLink');
@@ -73,7 +74,7 @@ class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_Chan
      * @return Tracker_Artifact_ChangesetValue_ArtifactLink
      */
     public function build() {
-        $object = new Tracker_Artifact_ChangesetValue_ArtifactLink($this->id, $this->field, null, $this->artifact_links);
+        $object = new Tracker_Artifact_ChangesetValue_ArtifactLink($this->id, $this->field, null, $this->artifact_links, $this->reverse_artifact_links);
         return $object;
     }
 }
