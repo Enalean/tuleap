@@ -2,6 +2,7 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "<span class=\"total-definitions\">{{ getFilteredDefinitions(environment.filter).length }}</span> test"
@@ -25,6 +26,10 @@ msgstr ""
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -120,6 +125,10 @@ msgstr ""
 msgid "Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests."
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Show test dependencies graph"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Status"
 msgstr ""
@@ -138,8 +147,4 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
 msgstr ""

@@ -21,6 +21,12 @@
             </p>
     </div>
 
+    <button
+        ng-click="showDependenciesGraph(execution.id)"
+        class="btn btn-small"
+        translate
+    >Show test dependencies graph</button>
+
     <div adapt-height id="current-execution-description">
         <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
     </div>

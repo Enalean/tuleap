@@ -86,7 +86,8 @@ module.exports = {
       'vendor/angular-gettext/dist/angular-gettext.min.js',
       'vendor/angular-socket-io/socket.min.js',
       'vendor/angular-ui-utils/unique.min.js',
-      'vendor/angular-cookies/angular-cookies.min.js'
+      'vendor/angular-cookies/angular-cookies.min.js',
+      'vendor/d3/d3.min.js'
     ],
     css: [
     ]

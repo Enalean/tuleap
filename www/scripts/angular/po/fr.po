@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-11-07 17:44+0100\n"
+"PO-Revision-Date: 2015-08-03 11:36+0200\n"
 "Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.8.3\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -49,15 +49,15 @@ msgstr ""
 msgid "All environments"
 msgstr "Tous les environnements"
 
-#: src/app/execution/execution-list.tpl.html
-msgid "Anybody"
-msgstr "N'importe qui"
-
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
 msgstr "Bloqué"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr "par"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
@@ -107,14 +107,6 @@ msgstr "Échoué"
 msgid "Filter..."
 msgstr "Filtrer..."
 
-#: src/app/user/user-login.tpl.html src/app/user/user-login-controller.js
-msgid "Login"
-msgstr "Connexion"
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Logout"
-msgstr "Déconnexion"
-
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr "Nouvelle campagne"
@@ -137,10 +129,6 @@ msgstr "Oh non !"
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
 msgstr "Succès"
-
-#: src/app/user/user-login.tpl.html
-msgid "Password"
-msgstr "Mot de passe"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Please choose the environments for \"{{ campaign.label }}\" campaign:"
@@ -171,6 +159,10 @@ msgstr ""
 "Sélectionner les <strong>{{ environment.nb_selected_all_total }}</strong> "
 "tests."
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Show test dependencies graph"
+msgstr "Afficher le graphe de dépendances"
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Status"
 msgstr "Status"
@@ -187,27 +179,32 @@ msgstr "Les tests sont exécutés pour un environnement."
 msgid "Total"
 msgstr "Total"
 
-#: src/app/user/user-login-controller.js
-msgid "Unable to generate a token: wrong username and/or password."
-msgstr ""
-"Erreur lors de la génération du jeton: mauvais nom d'utilisateur et/ou mot "
-"de passe."
-
-#: src/app/user/user-login-controller.js
-msgid "Unable to retrieve the user"
-msgstr "Erreur lors de la récupération des informations de l'utilisateur"
-
-#: src/app/user/user-login.tpl.html
-msgid "Username"
-msgstr "Utilisateur"
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr "par"
+#~ msgid "Anybody"
+#~ msgstr "N'importe qui"
+
+#~ msgid "Login"
+#~ msgstr "Connexion"
+
+#~ msgid "Logout"
+#~ msgstr "Déconnexion"
+
+#~ msgid "Password"
+#~ msgstr "Mot de passe"
+
+#~ msgid "Unable to generate a token: wrong username and/or password."
+#~ msgstr ""
+#~ "Erreur lors de la génération du jeton: mauvais nom d'utilisateur et/ou "
+#~ "mot de passe."
+
+#~ msgid "Unable to retrieve the user"
+#~ msgstr "Erreur lors de la récupération des informations de l'utilisateur"
+
+#~ msgid "Username"
+#~ msgstr "Utilisateur"
 
 #~ msgid "Assigned to"
 #~ msgstr "Assigné à"

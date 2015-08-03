@@ -2,9 +2,29 @@ angular
     .module('execution')
     .controller('ExecutionDetailCtrl', ExecutionDetailCtrl);
 
-ExecutionDetailCtrl.$inject = ['$scope', '$state', '$sce', '$rootScope','gettextCatalog', 'ExecutionService', 'SharedPropertiesService', 'SocketService'];
+ExecutionDetailCtrl.$inject = [
+    '$scope',
+    '$state',
+    '$sce',
+    '$rootScope',
+    'gettextCatalog',
+    'ExecutionService',
+    'SharedPropertiesService',
+    'SocketService',
+    'ArtifactLinksGraphService'
+];
 
-function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, ExecutionService, SharedPropertiesService, SocketService) {
+function ExecutionDetailCtrl(
+    $scope,
+    $state,
+    $sce,
+    $rootScope,
+    gettextCatalog,
+    ExecutionService,
+    SharedPropertiesService,
+    SocketService,
+    ArtifactLinksGraphService
+) {
     var execution_id = +$state.params.execid,
         campaign_id  = +$state.params.id;
 
@@ -15,17 +35,22 @@ function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, E
         waitForExecutionToBeLoaded();
     }
 
-    $scope.pass           = pass;
-    $scope.fail           = fail;
-    $scope.block          = block;
-    $scope.sanitizeHtml   = sanitizeHtml;
-    $scope.getStatusLabel = getStatusLabel;
+    $scope.pass                  = pass;
+    $scope.fail                  = fail;
+    $scope.block                 = block;
+    $scope.sanitizeHtml          = sanitizeHtml;
+    $scope.getStatusLabel        = getStatusLabel;
+    $scope.showDependenciesGraph = showDependenciesGraph;
 
     viewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
 
     $scope.$on('$destroy', function iVeBeenDismissed() {
         viewTestExecution(execution_id, null);
     });
+
+    function showDependenciesGraph(execution_id) {
+        ArtifactLinksGraphService.showGraph(execution_id);
+    }
 
     function viewTestExecution(execution_id, user) {
         SocketService.viewTestExecution({
