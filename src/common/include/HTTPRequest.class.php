@@ -155,5 +155,21 @@ class HTTPRequest extends Codendi_Request {
     public function isSSL() {
         return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on');
     }
-}
 
+    /**
+     * Return request IP address
+     *
+     * When run behind a reverse proxy, REMOTE_ADDR will be the IP address of the
+     * reverse proxy, use this method if you want to get the actual ip address
+     * of the request without having to deal with reverse-proxy or not.
+     *
+     * @return String
+     */
+    public static function getIPAddress() {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
+}

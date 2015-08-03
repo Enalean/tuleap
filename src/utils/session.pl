@@ -54,51 +54,6 @@ sub session_setglobals {
   }
 }
 
-sub session_set {
-
-  my $id_is_good = 0;
-  my $hash_ref;
-
-  # get cookies 
-  %cookies = fetch CGI::Cookie;
-#  print "Content-type: text/html\n";
-#  print "name =",$cookies{'session_hash'}->name,"<BR>";
-#  print "value =",$cookies{'session_hash'}->value,"<BR>";
-
-  # if hash value given by browser then check to see if it is OK.
-  if ($cookies{sys_cookie_prefix.'_session_hash'}) {
-
-    my $sth = $dbh->prepare("SELECT * FROM session WHERE session_hash='".$cookies{'session_hash'}->value."'");
-    $sth->execute();
-    $hash_ref = $sth->fetchrow_hashref; 
-
-
-    # does hash value exists
-    if ($hash_ref->{'session_hash'}) {
-      if (session_checkip($hash_ref->{'ip_addr'}, $ENV{'REMOTE_ADDR'})) {
-	$id_is_good = 1;
-      }
-    } # else hash was not in database
-  } # else  (hash does not exist) or (session hash is bad)
-
-
-  if ($id_is_good) {
-    foreach my $key (keys %$hash_ref) {
-      $G_SESSION{$key} = $hash_ref->{$key};
-    }
-    session_setglobals($G_SESSION{'user_id'});
-  } else {
-    undef %G_SESSION;
-    undef %G_USER;
-  }
-
-#  print "id_is_good=$id_is_good";
-#  print "G_SESSION=",%G_SESSION;
-#  print "G_USER=",%G_USER;
-
-
-}
-
 #############################
 # Get Codendi apache user from local.inc
 #############################

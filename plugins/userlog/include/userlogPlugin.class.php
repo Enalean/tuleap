@@ -22,8 +22,7 @@
  *
  */
 
-require_once('common/plugin/Plugin.class.php');
-require_once('UserLogManager.class.php');
+require_once 'autoload.php';
 
 class userlogPlugin extends Plugin {
 
@@ -92,7 +91,7 @@ class userlogPlugin extends Plugin {
                                        $request->getFromServer('HTTP_USER_AGENT'),
                                        $request->getFromServer('REQUEST_METHOD'),
                                        $request->getFromServer('REQUEST_URI'),
-                                       $request->getFromServer('REMOTE_ADDR'),
+                                       HTTPRequest::getIPAddress(),
                                        $request->getFromServer('HTTP_REFERER'));
         }
     }
