@@ -24,13 +24,13 @@
                 | orderBy:'id':true
                 track by $index"
             >
-                <td><a ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">{{ campaign.label }}</a></td>
-                <td>{{ campaign.status }}</td>
-                <td>{{ campaign.total }}</td>
-                <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>
-                <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
-                <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
-                <td><span class="badge">{{ campaign.nb_of_not_run }}</span></td>
+                <td><a ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">{{ campaign.label }}</a></td>
+                <td>{{ campaign.status }}</td>
+                <td>{{ campaign.total }}</td>
+                <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>
+                <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
+                <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
+                <td><span class="badge">{{ campaign.nb_of_not_run }}</span></td>
             </tr>
         </tbody>
     </table>

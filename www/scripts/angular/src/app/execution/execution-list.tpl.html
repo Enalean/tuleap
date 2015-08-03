@@ -25,10 +25,10 @@
                             <table border="0" cellpadding="0" cellspacing="0" class="sens-of-progress">
                                 <tbody>
                                     <tr>
-                                        <td class="sens-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">{{ campaign.nb_of_passed }}</td>
-                                        <td class="sens-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">{{ campaign.nb_of_failed }}</td>
-                                        <td class="sens-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">{{ campaign.nb_of_blocked }}</td>
-                                        <td class="sens-of-progress-notrun" ng-if="campaign.nb_of_not_run" style="width: {{ campaign.nb_of_not_run * 100 / campaign.total }}%">{{ campaign.nb_of_not_run }}</td>
+                                        <td class="sens-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">{{ campaign.nb_of_passed }}</td>
+                                        <td class="sens-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">{{ campaign.nb_of_failed }}</td>
+                                        <td class="sens-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">{{ campaign.nb_of_blocked }}</td>
+                                        <td class="sens-of-progress-notrun" ng-if="campaign.nb_of_not_run" style="width: {{ campaign.nb_of_not_run * 100 / campaign.total }}%">{{ campaign.nb_of_not_run }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -44,7 +44,7 @@
                      ui-sref-active="active">
                     <span class="execution-item-content">
                         <span class="execution-item-content-title">
-                            <img class="avatar animated" data-toggle="tooltip" title="{{ execution.viewed_by.real_name }}" ng-if="execution.viewed_by" ng-src="{{ execution.viewed_by.avatar_url }}" alt="avatar">
+                            <img class="avatar animated" data-toggle="tooltip" title="{{ execution.viewed_by.real_name }}" ng-if="execution.viewed_by" ng-src="{{ execution.viewed_by.avatar_url }}" alt="avatar">
                             <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}
                         </span>
                         <span class="execution-item-content-environment"> {{ execution.environment }}</span>

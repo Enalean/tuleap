@@ -28,7 +28,7 @@ function CampaignNewCtrl(
 
     _.extend($scope, {
         ITEMS_PER_PAGE:         15,
-        nb_total_definitions:   0,
+        nb_total_definitions:   0,
         loading_definitions:    true,
         loading_environments:   true,
         definitions:            [],
@@ -108,7 +108,7 @@ function CampaignNewCtrl(
             id:              environment.id,
             is_choosen:      false,
             current_page:    1,
-            select_all:      false,
+            select_all:      false,
             nb_selected_all: 0,
             filter:          '',
             definitions:     {}

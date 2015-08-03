@@ -26,7 +26,7 @@
     "grunt-bump": "0.0.6",
     "phantomjs": "~1.9.7-15",
     "karma-phantomjs-launcher": "~0.1.4",
-    "karma-junit-reporter": "*",
+    "karma-junit-reporter": "<=0.2.2",
     "grunt-angular-gettext": "~0.2.15"
   },
   "scripts": {

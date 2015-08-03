@@ -10,7 +10,7 @@ function ExecutionListFilter($filter) {
             status_list   = _.compact(_.map(status, function(value, key) { return (value) ? key : false; })),
             all_results   = [];
 
-        if (! hasAtLeastOneFilter(keyword_list, status_list, environment)) {
+        if (! hasAtLeastOneFilter(keyword_list, status_list, environment)) {
             return list;
         }
 

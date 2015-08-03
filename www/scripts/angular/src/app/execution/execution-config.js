@@ -11,7 +11,7 @@ function ExecutionConfig($stateProvider) {
             controller:  'ExecutionListCtrl',
             templateUrl: 'execution/execution-list.tpl.html',
             data: {
-                ncyBreadcrumbLabel:  '{{ campaign.label }}',
+                ncyBreadcrumbLabel:  '{{ campaign.label }}',
                 ncyBreadcrumbParent: 'campaigns.list'
             }
         })
@@ -20,7 +20,7 @@ function ExecutionConfig($stateProvider) {
             controller:  'ExecutionDetailCtrl',
             templateUrl: 'execution/execution-detail.tpl.html',
             data: {
-                ncyBreadcrumbLabel:  '{{ execution.definition.summary }}',
+                ncyBreadcrumbLabel:  '{{ execution.definition.summary }}',
                 ncyBreadcrumbParent: 'campaigns.executions'
             }
         });
