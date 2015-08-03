@@ -244,7 +244,10 @@ module.exports = function ( grunt ) {
           noUnderscores: false,
           noIDs: false,
           zeroUnits: false,
-          includePath: [ '<%= tuleap_dir %>' ]
+          includePath: [
+              '/tuleap',
+              grunt.option('tuleap-dir') || '../../../../..'
+          ]
         }
       },
       compile: {

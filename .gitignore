@@ -7,3 +7,4 @@ www/scripts/angular/vendor/
 *.css
 *.mo
 node_modules/
+/nbproject/

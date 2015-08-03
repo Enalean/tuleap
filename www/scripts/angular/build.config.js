@@ -9,7 +9,6 @@ module.exports = {
    */
   build_dir: 'build',
   compile_dir: 'bin',
-  tuleap_dir: '../../../../..',
 
   /**
    * This is a collection of file patterns that refer to our app code (the

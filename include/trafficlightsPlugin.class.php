@@ -27,6 +27,7 @@ class TrafficlightsPlugin extends Plugin {
      */
     function __construct($id) {
         parent::__construct($id);
+        $this->filesystem_path = TRAFFICLIGHTS_BASE_DIR;
         $this->setScope(self::SCOPE_PROJECT);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');

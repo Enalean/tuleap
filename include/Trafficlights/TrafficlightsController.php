@@ -47,4 +47,8 @@ abstract class TrafficlightsController extends MVC2_PluginController {
     public function getBreadcrumbs() {
         return new NoCrumb();
     }
+
+    protected function getTemplatesDir() {
+        return TRAFFICLIGHTS_BASE_DIR.'/templates';
+    }
 }

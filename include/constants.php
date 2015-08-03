@@ -19,3 +19,4 @@
  */
 
 define('TRAFFICLIGHTS_BASE_URL', '/plugins/trafficlights');
+define('TRAFFICLIGHTS_BASE_DIR', realpath(__DIR__.'/..'));
