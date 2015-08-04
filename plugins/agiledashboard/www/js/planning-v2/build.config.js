@@ -87,15 +87,18 @@ module.exports = {
       'vendor/angular-ckeditor/angular-ckeditor.js',
       'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'vendor/angular-filter/dist/angular-filter.min.js',
+      'vendor/angular-ui-select/dist/select.js',
       'vendor/artifact-modal/dist/tuleap-artifact-modal.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
       'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
+      'vendor/angular-ui-select/dist/select.css',
       'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
     ],
     assets: [
-        'vendor/artifact-modal/dist/assets/artifact_attachment_default.png'
+        'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',
+        'vendor/artifact-modal/dist/assets/loader-mini.gif'
     ]
   }
 };
