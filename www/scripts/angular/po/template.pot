@@ -32,6 +32,10 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
 msgstr ""
@@ -151,8 +155,4 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
 msgstr ""
