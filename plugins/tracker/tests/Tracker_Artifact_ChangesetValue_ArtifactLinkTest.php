@@ -35,7 +35,7 @@ Mock::generatePartial(
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
         $this->field_class          = 'MockTracker_FormElement_Field_ArtifactLink';
@@ -123,95 +123,95 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
         $art_links_2 = array('999' => $this->artlink_info_999, '123' => $this->artlink_info_123, '321' => $this->artlink_info_321);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $this->assertFalse($list_1->diff($list_2));
         $this->assertFalse($list_2->diff($list_1));
     }
-    
+
     public function testDiff_cleared() {
         $field  = new $this->field_class();
-        $list_1 = new $this->changesetvalue_class(111, $field, false, array());
+        $list_1 = new $this->changesetvalue_class(111, $field, false, array(), array());
         $art_links_2 = array('999' => $this->artlink_info_999, '123' => $this->artlink_info_123, '321' => $this->artlink_info_321);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText', 'cleared', array('plugin_tracker_artifact','cleared'));
         $this->assertEqual($list_1->diff($list_2), ' cleared');
     }
-    
+
     public function testDiff_setto() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '999' => $this->artlink_info_999);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, array());
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, array(), array());
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText', 'set to', array('plugin_tracker_artifact','set_to'));
         $this->assertEqual($list_1->diff($list_2), ' set to <a>bug #123</a>, <a>story #999</a>');
     }
-    
+
     public function testDiff_changedfrom() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123);
         $art_links_2 = array('321' => $this->artlink_info_321);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
         $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
         $this->assertEqual($list_1->diff($list_2), ' changed from <a>task #321</a> to <a>bug #123</a>');
         $this->assertEqual($list_2->diff($list_1), ' changed from <a>bug #123</a> to <a>task #321</a>');
     }
-    
+
     public function testDiff_changedfromInPlainText() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123);
         $art_links_2 = array('321' => $this->artlink_info_321);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
         $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
         $this->assertEqual($list_1->diff($list_2, 'text'), ' changed from task #321 to bug #123');
         $this->assertEqual($list_2->diff($list_1, 'text'), ' changed from bug #123 to task #321');
     }
-    
+
     public function testDiff_added() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
         $art_links_2 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertEqual($list_1->diff($list_2), '<a>story #999</a> added');
     }
-    
+
     public function testDiff_removed() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321);
         $art_links_2 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $this->assertEqual($list_1->diff($list_2), '<a>story #999</a> removed');
     }
-    
+
     public function testDiff_added_and_removed() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
         $art_links_2 = array('999' => $this->artlink_info_999, '123' => $this->artlink_info_123, '666' => $this->artlink_info_666);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertPattern('%<a>sr #666</a> removed%', $list_1->diff($list_2));
         $this->assertPattern('%<a>task #321</a> added%', $list_1->diff($list_2));
     }
-    
+
     public function testDiff_added_and_removed_no_duplicates() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
         $art_links_2 = array('999' => $this->artlink_info_copy_of_999, '123' => $this->artlink_info_copy_of_123, '666' => $this->artlink_info_copy_of_666);
-        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
-        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
+        $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1, array());
+        $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2, array());
         $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertNoPattern('%<a>bug #123</a>%', $list_1->diff($list_2));
@@ -222,7 +222,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
 
     public function testSoapValue() {
         $field      = new $this->field_class();
-        $value_list = new $this->changesetvalue_class(111, $field, false, array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999));
+        $value_list = new $this->changesetvalue_class(111, $field, false, array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999), array());
         $this->assertEqual($value_list->getSoapValue($this->user), array('value' => "123, 321, 999"));
     }
 }

@@ -43,10 +43,16 @@ class ArtifactFieldValueArtifactLinksFullRepresentation {
      */
     public $links;
 
-    public function build($id, $type, $label, array $values) {
-        $this->field_id = JsonCast::toInt($id);
-        $this->type     = $type;
-        $this->label    = $label;
-        $this->links    = $values;
+    /**
+     * @var Tuleap\Tracker\REST\Artifact\ArtifactReference[]
+     */
+    public $reverse_links;
+
+    public function build($id, $type, $label, array $values, array $reverse_values) {
+        $this->field_id      = JsonCast::toInt($id);
+        $this->type          = $type;
+        $this->label         = $label;
+        $this->links         = $values;
+        $this->reverse_links = $reverse_values;
     }
 }

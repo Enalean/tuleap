@@ -23,26 +23,33 @@
  * Manage values in changeset for 'artifact link' fields
  */
 class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_ChangesetValue {
-    
+
     /**
      * @var array of artifact_id => Tracker_ArtifactLinkInfo
      */
     protected $artifact_links;
 
+    /**
+     * @var array of artifact_id => Tracker_ArtifactLinkInfo
+     */
+    protected $reverse_artifact_links;
+
     /** @var UserManager */
     private $user_manager;
-    
+
     /**
      * Constructor
      *
      * @param Tracker_FormElement_Field_ArtifactLink $field        The field of the value
      * @param boolean                                $has_changed  If the changeset value has chnged from the previous one
      * @param array                                  $artifact_links array of artifact_id => Tracker_ArtifactLinkInfo
+     * @param array                                  $reverse_artifact_links array of artifact_id => Tracker_ArtifactLinkInfo
      */
-    public function __construct($id, $field, $has_changed, $artifact_links) {
+    public function __construct($id, $field, $has_changed, $artifact_links, $reverse_artifact_links) {
         parent::__construct($id, $field, $has_changed);
-        $this->artifact_links = $artifact_links;
-        $this->user_manager   = UserManager::instance();
+        $this->artifact_links         = $artifact_links;
+        $this->reverse_artifact_links = $reverse_artifact_links;
+        $this->user_manager           = UserManager::instance();
     }
 
     /**
@@ -51,7 +58,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitArtifactLink($this);
     }
-    
+
     /**
      * Check if there are changes between current and new value
      *
@@ -71,7 +78,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             return $array_new_values !== $array_cur_values;
         }
     }
-    
+
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
@@ -146,7 +153,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             return $result;
         }
     }
-    
+
     /**
      * Returns the SOAP value of this changeset value
      *
@@ -163,15 +170,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     }
 
     public function getFullRESTValue(PFUser $user) {
-        $values = array();
-        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-
-        foreach ($this->getArtifactIdsUserCanSee($user) as $id) {
-            $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactReference';
-            $artifact_reference = new $classname_with_namespace;
-            $artifact_reference->build($tracker_artifact_factory->getArtifactById($id));
-            $values[] = $artifact_reference;
-        }
+        $outgoing_links = $this->getAllOutgoingArtifactIdsUserCanSee($user);
+        $incoming_links = $this->getAllIncomingArtifactIdsUserCanSee($user);
 
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation';
         $artifact_links_representation = new $classname_with_namespace;
@@ -179,9 +179,40 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
-            $values
+            $outgoing_links,
+            $incoming_links
         );
+
         return $artifact_links_representation;
+    }
+
+    private function getAllOutgoingArtifactIdsUserCanSee(PFUser $user) {
+        $values = array();
+
+        foreach ($this->getArtifactIdsUserCanSee($user) as $id) {
+            $values[] = $this->buildArtifactReference($id);
+        }
+
+        return $values;
+    }
+
+    private function getAllIncomingArtifactIdsUserCanSee(PFUser $user) {
+        $values = array();
+
+        foreach ($this->getIncomingArtifactIdsUserCanSee($user) as $id) {
+            $values[] = $this->buildArtifactReference($id);
+        }
+
+        return $values;
+    }
+
+    private function buildArtifactReference($artifact_id) {
+        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactReference';
+        $artifact_reference       = new $classname_with_namespace;
+        $artifact_reference->build($tracker_artifact_factory->getArtifactById($artifact_id));
+
+        return $artifact_reference;
     }
 
     /**
@@ -192,7 +223,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function getValue() {
         return $this->artifact_links;
     }
-    
+
     public function getArtifactIds() {
         return array_keys($this->artifact_links);
     }
@@ -213,6 +244,18 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         }
 
         return $artifact_links_user_can_see;
+    }
+
+    private function getIncomingArtifactIdsUserCanSee(PFUser $user) {
+        $reverse_artifact_links_user_can_see = array();
+
+        foreach ($this->reverse_artifact_links as $artifact_id => $link) {
+            if ($link->userCanView($user)) {
+                $reverse_artifact_links_user_can_see[] = $artifact_id;
+            }
+        }
+
+        return $reverse_artifact_links_user_can_see;
     }
 
     private function setCurrentUserIfUserIsNotDefined(&$user) {
