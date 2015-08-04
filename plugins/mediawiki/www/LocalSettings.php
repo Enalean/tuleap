@@ -52,14 +52,14 @@ $manager = new MediawikiManager(new MediawikiDao());
 $forbidden_permissions = array(
     'editmyusercss',
     'editmyuserjs',
-    'viewmywatchlist',
-    'editmywatchlist',
     'viewmyprivateinfo',
     'editmyprivateinfo'
 );
 
 $read_permissions = array(
     'read',
+    'viewmywatchlist',
+    'editmywatchlist'
 );
 
 $write_permissions = array(
