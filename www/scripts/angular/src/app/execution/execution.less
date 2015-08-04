@@ -282,11 +282,23 @@
 
             > h2 {
                 margin: 0;
-                padding: 10px 45px 10px 10px;
+                padding: 10px;
                 font-weight: 300;
                 font-size: 1.8em;
                 letter-spacing: 0.05em;
-                background: @notrun no-repeat right 10px center;
+                background: @notrun;
+
+                > #show-artifact-links-graph-modal {
+                    position: relative;
+                    top: 10px;
+                    float: right;
+                    cursor: pointer;
+                    transition: opacity linear 0.07s;
+
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
 
                 &.passed {
                     background: @passed;

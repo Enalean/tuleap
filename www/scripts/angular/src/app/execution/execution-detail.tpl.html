@@ -4,7 +4,17 @@
 
 <div id="current-execution" class="in" ng-if="execution">
     <div id="current-execution-title">
-        <h2 class="{{ execution.status | dasherize }}">{{ execution.definition.summary }}</h2>
+        <h2 class="{{ execution.status | dasherize }}">
+            <img id="show-artifact-links-graph-modal"
+                src="scripts/angular/bin/assets/artifact-link-graph.svg"
+                type="image/svg+xml"
+                alt="Graph"
+                ng-click="showArtifactLinksGraphModal(execution.id)"
+                title="{{ 'Show dependencies graph for this test' | translate }}"
+
+            />
+            {{ execution.definition.summary }}
+        </h2>
     </div>
 
     <div id="current-execution-last-execution" class="{{ execution.status | dasherize }}" ng-if="(execution.status | dasherize) !== 'notrun'">
@@ -22,12 +32,6 @@
                 <span class="read-more" ng-if="execution.previous_result.result.length > 150"></span>
             </p>
     </div>
-
-    <button
-        ng-click="showArtifactLinksGraphModal(execution.id)"
-        class="btn btn-small"
-        translate
-    >Show test dependencies graph</button>
 
     <div adapt-height id="current-execution-description">
         <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>

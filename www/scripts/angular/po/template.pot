@@ -32,10 +32,6 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
 msgstr ""
@@ -72,6 +68,10 @@ msgstr ""
 msgid "Create campaign"
 msgstr ""
 
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Dependencies graph"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
@@ -82,10 +82,6 @@ msgstr ""
 #: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
-msgstr ""
-
-#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
-msgid "Graph dependencie"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -134,7 +130,7 @@ msgid "Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
-msgid "Show test dependencies graph"
+msgid "Show dependencies graph for this test"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -155,4 +151,8 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
 msgstr ""
