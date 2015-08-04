@@ -1,3 +1,6 @@
+Version 5.674 - Tuleap 8.5
+    * request #8298: Add reverse_link to art_link field in REST routes
+
 Version 5.673 - Tuleap 8.5
     * story #8170: export/import attachments
 
