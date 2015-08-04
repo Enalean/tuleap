@@ -11,14 +11,16 @@ ArtifactLinksGraphService.$inject = [
     '$modal',
     'gettextCatalog',
     'ArtifactLinksGraphModalLoading',
-    'ArtifactLinksGraphRestService'
+    'ArtifactLinksGraphRestService',
+    'SharedPropertiesService'
 ];
 
 function ArtifactLinksGraphService(
     $modal,
     gettextCatalog,
     ArtifactLinksGraphModalLoading,
-    ArtifactLinksGraphRestService
+    ArtifactLinksGraphRestService,
+    SharedPropertiesService
 ) {
     var self = this;
 
@@ -27,7 +29,7 @@ function ArtifactLinksGraphService(
         getGraphStructure: getGraphStructure
     });
 
-    function showGraph(artifact_id) {
+    function showGraph(execution_id, definition_id) {
         ArtifactLinksGraphModalLoading.loading.is_loading = true;
 
         return $modal.open({
@@ -36,15 +38,17 @@ function ArtifactLinksGraphService(
             controller : 'ArtifactLinksGraphCtrl as modal',
             resolve: {
                 modal_model: function () {
-                    return ArtifactLinksGraphRestService.getArtifact(artifact_id).then(function(response) {
-                        return self.getGraphStructure(response);
+                    return ArtifactLinksGraphRestService.getArtifact(execution_id).then(function(execution) {
+                        return ArtifactLinksGraphRestService.getArtifact(definition_id).then(function(definition) {
+                            return self.getGraphStructure(execution, definition);
+                        });
                     });
                 }
             }
         });
     }
 
-    function getGraphStructure(artifact) {
+    function getGraphStructure(execution, definition) {
         var modal_model = {
             errors: [],
             graph : {
@@ -53,22 +57,29 @@ function ArtifactLinksGraphService(
             }
         };
 
-        var artifact_link_field = getArtifactLinksField(artifact);
+        var execution_link_field = getArtifactLinksField(execution);
+        var definition_link_field = getArtifactLinksField(definition);
 
-        if (! artifact_link_field) {
+        if (! execution_link_field || ! definition_link_field) {
             modal_model.errors.push(gettextCatalog.getString('Artifact links field not found.'));
 
         } else {
-            var outgoing_links = artifact_link_field.links,
-                incoming_links = artifact_link_field.reverse_links;
+            var outgoing_execution_links = execution_link_field.links,
+                incoming_execution_links = execution_link_field.reverse_links;
 
-            createNodeForCurrentArtifact(modal_model.graph, artifact);
-            createNodesAndLinksForOutgoingLinks(modal_model.graph, artifact, outgoing_links);
-            createNodesAndLinksForIncomingLinks(modal_model.graph, artifact, incoming_links);
+            var outgoing_definition_links = definition_link_field.links,
+                incoming_definition_links = definition_link_field.reverse_links;
+
+            createNodeForCurrentArtifact(modal_model.graph, definition);
+
+            createNodesAndLinksForOutgoingLinks(modal_model.graph, definition, outgoing_execution_links);
+            createNodesAndLinksForIncomingLinks(modal_model.graph, definition, incoming_execution_links);
+
+            createNodesAndLinksForOutgoingLinks(modal_model.graph, definition, outgoing_definition_links);
+            createNodesAndLinksForIncomingLinks(modal_model.graph, definition, incoming_definition_links);
 
             modal_model.graph.nodes = _.uniq(modal_model.graph.nodes, 'id');
         }
-
         return modal_model;
     }
 
@@ -83,22 +94,30 @@ function ArtifactLinksGraphService(
     }
 
     function createNodesAndLinksForOutgoingLinks(graph, artifact, outgoing_links) {
-        _(outgoing_links).forEach(function(outgoing_link) {
-            var link = { source: artifact.id, target: outgoing_link.id, type: 'arrow' },
-                node = { id: outgoing_link.id, label: '#' + outgoing_link.id };
+        _(outgoing_links).forEach(function (outgoing_link) {
+            if (outgoing_link.id !== artifact.id &&
+                outgoing_link.tracker.id !== SharedPropertiesService.getTrackerExecutionId()) {
 
-            graph.links.push(link);
-            graph.nodes.push(node);
+                var link = {source: artifact.id, target: outgoing_link.id, type: 'arrow'},
+                    node = {id: outgoing_link.id, label: '#' + outgoing_link.id};
+
+                graph.links.push(link);
+                graph.nodes.push(node);
+            }
         });
     }
 
     function createNodesAndLinksForIncomingLinks(graph, artifact, incoming_links) {
         _(incoming_links).forEach(function(incoming_link) {
-            var link = { source: incoming_link.id, target: artifact.id, type: 'arrow' },
-                node = { id: incoming_link.id, label: '#' + incoming_link.id };
+            if (incoming_link.id !== artifact.id &&
+                incoming_link.tracker.id !== SharedPropertiesService.getTrackerExecutionId()) {
 
-            graph.links.push(link);
-            graph.nodes.push(node);
+                var link = {source: incoming_link.id, target: artifact.id, type: 'arrow'},
+                    node = {id: incoming_link.id, label: '#' + incoming_link.id};
+
+                graph.links.push(link);
+                graph.nodes.push(node);
+            }
         });
     }
 }

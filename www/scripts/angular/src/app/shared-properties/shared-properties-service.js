@@ -10,16 +10,19 @@ function SharedPropertiesService(Restangular, $window, UserService) {
 
     var property = {
         project_id: undefined,
-        user: undefined
+        user: undefined,
+        execution_id: undefined
     };
 
     return {
-        getNodeServerAddress: getNodeServerAddress,
-        setNodeServerAddress: setNodeServerAddress,
-        getProjectId        : getProjectId,
-        setProjectId        : setProjectId,
-        getCurrentUser      : getCurrentUser,
-        setCurrentUser      : setCurrentUser
+        getNodeServerAddress       : getNodeServerAddress,
+        setNodeServerAddress       : setNodeServerAddress,
+        getProjectId               : getProjectId,
+        setProjectId               : setProjectId,
+        getTrackerExecutionId      : getTrackerExecutionId,
+        setTrackerExecutionId      : setTrackerExecutionId,
+        getCurrentUser             : getCurrentUser,
+        setCurrentUser             : setCurrentUser
     };
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -41,6 +44,14 @@ function SharedPropertiesService(Restangular, $window, UserService) {
 
     function setProjectId(project_id) {
         property.project_id = project_id;
+    }
+
+    function getTrackerExecutionId() {
+        return property.execution_id;
+    }
+
+    function setTrackerExecutionId(execution_id) {
+        property.execution_id = execution_id;
     }
 
     function getCurrentUser() {

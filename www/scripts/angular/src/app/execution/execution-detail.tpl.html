@@ -9,7 +9,7 @@
                 src="scripts/angular/bin/assets/artifact-link-graph.svg"
                 type="image/svg+xml"
                 alt="Graph"
-                ng-click="showArtifactLinksGraphModal(execution.id)"
+                ng-click="showArtifactLinksGraphModal(execution.id, execution.definition.id)"
                 title="{{ 'Show dependencies graph for this test' | translate }}"
 
             />

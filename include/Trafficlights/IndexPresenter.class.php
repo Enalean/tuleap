@@ -70,6 +70,9 @@ class IndexPresenter {
         $user_representation = new UserRepresentation();
         $user_representation->build($current_user);
         $this->current_user = json_encode($user_representation);
+
+        $this->test_definition_tracker_id = $test_definition_tracker_id;
+        $this->test_execution_tracker_id  = $test_execution_tracker_id;
     }
 
     private function getLanguageAbbreviation($current_user) {
