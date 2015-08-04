@@ -12,7 +12,7 @@
     "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
     "angular-ui-bootstrap": "gh-pages",
     "ng-scrollbar": "~0.0.7",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#7ab6c1018d09847f3812056f576affcc475f01b9",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#cad139ac2540f4cb77ef9445e17a457b73df65d7",
     "lodash": "~2.4.0"
   },
   "devDependencies": {

@@ -30,8 +30,5 @@
     "grunt-angular-gettext": "~0.2.15",
     "grunt-notify": "~0.4.1",
     "grunt-contrib-less": "~1.0.1"
-  },
-  "scripts": {
-    "postinstall": "bower install"
   }
 }
