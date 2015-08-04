@@ -1,0 +1,8 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="modal.cancel()" aria-hidden="true"><i class="icon-remove"></i></button>
+    <h3 translate>Graph dependencie</h3>
+</div>
+
+<div class="modal-body">
+    <div ng-repeat="error in modal.errors" class="alert alert-error">{{ error }}</div>
+</div>

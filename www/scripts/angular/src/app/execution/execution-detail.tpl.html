@@ -1,5 +1,7 @@
 <div class="alert alert-error " ng-if="execution.error">{{ execution.error }}</div>
 
+<div class="tuleap-modal-loading" ng-if="artifact_links_graph_modal_loading.is_loading"></div>
+
 <div id="current-execution" class="in" ng-if="execution">
     <div id="current-execution-title">
         <h2 class="{{ execution.status | dasherize }}">{{ execution.definition.summary }}</h2>
@@ -22,7 +24,7 @@
     </div>
 
     <button
-        ng-click="showDependenciesGraph(execution.id)"
+        ng-click="showArtifactLinksGraphModal(execution.id)"
         class="btn btn-small"
         translate
     >Show test dependencies graph</button>

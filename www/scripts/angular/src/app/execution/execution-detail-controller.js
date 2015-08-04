@@ -11,7 +11,8 @@ ExecutionDetailCtrl.$inject = [
     'ExecutionService',
     'SharedPropertiesService',
     'SocketService',
-    'ArtifactLinksGraphService'
+    'ArtifactLinksGraphService',
+    'ArtifactLinksGraphModalLoading'
 ];
 
 function ExecutionDetailCtrl(
@@ -23,7 +24,8 @@ function ExecutionDetailCtrl(
     ExecutionService,
     SharedPropertiesService,
     SocketService,
-    ArtifactLinksGraphService
+    ArtifactLinksGraphService,
+    ArtifactLinksGraphModalLoading
 ) {
     var execution_id = +$state.params.execid,
         campaign_id  = +$state.params.id;
@@ -35,12 +37,13 @@ function ExecutionDetailCtrl(
         waitForExecutionToBeLoaded();
     }
 
-    $scope.pass                  = pass;
-    $scope.fail                  = fail;
-    $scope.block                 = block;
-    $scope.sanitizeHtml          = sanitizeHtml;
-    $scope.getStatusLabel        = getStatusLabel;
-    $scope.showDependenciesGraph = showDependenciesGraph;
+    $scope.pass                               = pass;
+    $scope.fail                               = fail;
+    $scope.block                              = block;
+    $scope.sanitizeHtml                       = sanitizeHtml;
+    $scope.getStatusLabel                     = getStatusLabel;
+    $scope.showArtifactLinksGraphModal        = showArtifactLinksGraphModal;
+    $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
 
     viewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
 
@@ -48,7 +51,7 @@ function ExecutionDetailCtrl(
         viewTestExecution(execution_id, null);
     });
 
-    function showDependenciesGraph(execution_id) {
+    function showArtifactLinksGraphModal(execution_id) {
         ArtifactLinksGraphService.showGraph(execution_id);
     }
 

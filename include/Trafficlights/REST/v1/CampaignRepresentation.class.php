@@ -129,7 +129,9 @@ class CampaignRepresentation {
         $linked_artifacts = $this->artifact->getLinkedArtifacts($this->user);
 
         foreach($linked_artifacts as $artifact) {
-            $executions[$artifact->getStatus()] ++;
+            if (isset($executions[$artifact->getStatus()])) {
+                $executions[$artifact->getStatus()] ++;
+            }
         }
 
         return $executions;

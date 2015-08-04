@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-08-03 11:36+0200\n"
+"PO-Revision-Date: 2015-08-04 12:03+0200\n"
 "Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -49,15 +49,15 @@ msgstr ""
 msgid "All environments"
 msgstr "Tous les environnements"
 
+#: src/app/artifact-links-graph/artifact-links-graph-service.js
+msgid "Artifact links field not found."
+msgstr "Le champ lien vers des artéfacts est inexistant."
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
 msgstr "Bloqué"
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr "par"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
@@ -182,6 +182,10 @@ msgstr "Total"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr "par"
 
 #~ msgid "Anybody"
 #~ msgstr "N'importe qui"

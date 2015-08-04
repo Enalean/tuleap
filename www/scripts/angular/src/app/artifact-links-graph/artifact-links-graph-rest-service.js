@@ -2,8 +2,25 @@ angular
     .module('tuleap.artifact-links-graph')
     .service('ArtifactLinksGraphRestService', ArtifactLinksGraphRestService);
 
-ArtifactLinksGraphRestService.$inject = ['$q', 'Restangular'];
+ArtifactLinksGraphRestService.$inject = ['Restangular'];
 
-function ArtifactLinksGraphRestService($q, Restangular) {
+function ArtifactLinksGraphRestService(Restangular) {
+    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setFullResponse(true);
+        RestangularConfigurer.setBaseUrl('/api/v1');
+    });
+
+    return {
+        getArtifact: getArtifact
+    };
+
+    function getArtifact(artifact_id) {
+        return rest
+            .one('artifacts', artifact_id)
+            .get()
+            .then(function(response) {
+                return response.data;
+            });
+    }
 
 }

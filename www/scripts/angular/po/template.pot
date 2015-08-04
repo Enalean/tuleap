@@ -22,14 +22,14 @@ msgstr ""
 msgid "All environments"
 msgstr ""
 
+#: src/app/artifact-links-graph/artifact-links-graph-service.js
+msgid "Artifact links field not found."
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -78,6 +78,10 @@ msgstr ""
 #: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
+msgstr ""
+
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Graph dependencie"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -147,4 +151,8 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
 msgstr ""

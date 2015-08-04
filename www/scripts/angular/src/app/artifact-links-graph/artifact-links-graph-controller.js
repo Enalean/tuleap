@@ -8,7 +8,9 @@ function ArtifactLinksGraphCtrl($modalInstance, ArtifactLinksGraphModalLoading, 
     var self = this;
 
     _.extend(self, {
-        graph: modal_model.graph
+        graph : modal_model.graph,
+        errors: modal_model.errors,
+        cancel: $modalInstance.dismiss
     });
 
     $modalInstance.opened.then(function() {

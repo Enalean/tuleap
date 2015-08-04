@@ -35,6 +35,7 @@ function ExecutionService(Restangular, $q, $rootScope) {
                 groupExecutionsByCategory(data.results);
 
                 $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
+
                 if (nb_fetched < total_executions) {
                     getExecutions(limit, offset + limit);
                 } else {
