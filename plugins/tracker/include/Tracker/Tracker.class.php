@@ -2251,18 +2251,26 @@ EOS;
         return false;
     }
 
+    public function exportToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
+        return $this->exportTrackerToXML($xmlElem, $xmlMapping, true);
+    }
+
+    public function exportToXMLWithoutHierarchyInfo(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
+        return $this->exportTrackerToXML($xmlElem, $xmlMapping, false);
+    }
+
     /**
      * Exports the tracker to an XML file.
      *
      * @return SimpleXMLElement
      */
-    public function exportToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
+    private function exportTrackerToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array(), $export_parent_info) {
         $xmlElem->addAttribute('id', "T". $this->getId());
 
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
 
         $parent_id = $this->getParentId();
-        if ($parent_id) {
+        if ($parent_id && $export_parent_info) {
             $parent_id = "T". $parent_id;
         } else {
             $parent_id = "0";

@@ -82,7 +82,7 @@ class TrackerXmlExport {
         if ($tracker->isActive()) {
             $tracker_xml = $xml_trackers->addChild('tracker');
 
-            $tracker->exportToXML($tracker_xml, $xml_field_mapping);
+            $tracker->exportToXMLWithoutHierarchyInfo($tracker_xml, $xml_field_mapping);
             $this->artifact_xml_xport->export($tracker, $tracker_xml, $user, $archive);
         }
 
