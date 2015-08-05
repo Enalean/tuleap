@@ -188,7 +188,7 @@ class UserManager {
      *
      * @return PFUser
      */
-    function findUser($ident) {
+    public function findUser($ident) {
         $user = null;
         if ($ident === false) {
             return $user;
