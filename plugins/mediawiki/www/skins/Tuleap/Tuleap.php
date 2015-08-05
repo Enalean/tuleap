@@ -181,6 +181,15 @@ class TuleapTemplate extends BaseTemplate {
                             ?>
                         </div>
                     </div>
+                    <?php $class_no_logo = (! $this->data['logopath']) ? 'no-logo' : ''; ?>
+                    <div class="portlet <?php echo $class_no_logo; ?>" id="p-logo" role="banner">
+                    <?php
+                    echo Html::element( 'a', array(
+                        'href' => $this->data['nav_urls']['mainpage']['href'],
+                        'style' => "background-image: url({$this->data['logopath']});" )
+                        + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ) );
+                    ?>
+                    </div>
                     <?php
                         $this->renderPortals( $this->data['sidebar'] );
                     ?>

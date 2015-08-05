@@ -159,7 +159,8 @@ class Tuleap123Template extends BaseTemplate {
 			</ul>
 		</div>
 	</div>
-	<div class="portlet" id="p-logo" role="banner">
+	<?php $class_no_logo = (! $this->data['logopath']) ? 'no-logo' : ''; ?>
+	<div class="portlet <?php echo $class_no_logo; ?>" id="p-logo" role="banner">
 <?php
 			echo Html::element( 'a', array(
 				'href' => $this->data['nav_urls']['mainpage']['href'],
