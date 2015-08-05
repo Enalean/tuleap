@@ -1,0 +1,59 @@
+Test facilities for Tuleap
+
+Installation
+============
+
+All in one (everything on a single machine)
+-------------------------------------------
+
+1. Install trafficlights node server
+  yum install centos-release-SCL
+  yum install trafficlights-node-server
+
+  -> configure config.tuleap.url = "localhost";
+  /usr/share/trafficlights-node-server/trafficlights-node-server.sh stop
+  /usr/share/trafficlights-node-server/trafficlights-node-server.sh start
+
+2. Update apache to run on 127.0.0.1:8080
+    -> Listen 127.0.0.1:8080
+    -> Virtualhosts
+    -> no longer need ssl config
+
+    Update /etc/tuleap/conf/local.inc:
+    * Set $sys_default_domain with the name of the reverse proxy (for instance trafficlights.docker)
+    * Set $sys_https_host = "";
+    * Set $sys_cookie_domain = "";
+    * Set $sys_force_ssl = 0;
+    * Set $sys_rest_api_over_http = 1;
+    * Set $node_server_address = "<sys_default_domain>:443"; (replace with actual value)
+
+3. Install nginx16
+    yum install -y scl-utils && \
+    rpm -i https://www.softwarecollections.org/en/scls/rhscl/nginx16/epel-6-x86_64/download/rhscl-nginx16-epel-6-x86_64.noarch.rpm && \
+    yum install -y nginx16
+
+    # You might need to customize it but we provide a good starting point:
+    cp /usr/share/trafficlights-node-server/sample_nginx.conf /opt/rh/nginx16/root/etc/nginx/nginx.conf
+
+    # Update ssl config
+    -> get apache values
+    grep ^SSLCertificateFile /etc/httpd/conf/ssl.conf
+      --> corresponds to nginx ssl_certificate
+
+    grep ^SSLCertificateKeyFile /etc/httpd/conf/ssl.conf
+      --> corresponds to nginx ssl_certificate_key
+
+    service nginx16-nginx restart
+
+How to ?
+=======
+
+Build rpms
+----------
+
+WORKSPACE=/tmp TULEAP_PATH=/path/to/tuleap ./build_rpm.sh
+
+-> you need to be able to run docker commands
+
+WORKSPACE is where the RPMs will be published on your local machine
+TULEAP_PATH is the base directory of Tuleap sources

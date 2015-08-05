@@ -25,7 +25,7 @@ Requires: tuleap, tuleap-plugin-tracker
 %description
 Test and tracability plugin
 
-# 
+#
 # Package setup
 %prep
 %setup -q
@@ -33,7 +33,8 @@ Test and tracability plugin
 #
 # Build
 %build
-# Nothing to do
+scl enable nodejs010 "find www/themes -name '*.less' | xargs -l1 ./less.sh"
+find www/themes -name '*.less' | xargs rm -f
 
 #
 # Install
@@ -42,7 +43,7 @@ Test and tracability plugin
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
 
-%{__cp} -ar * $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
+%{__cp} -ar www include db templates site-content README VERSION ChangeLog $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
 
 %pre
 if [ "$1" -eq "1" ]; then

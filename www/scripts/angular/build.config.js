@@ -9,6 +9,7 @@ module.exports = {
    */
   build_dir: 'build',
   compile_dir: 'bin',
+  tuleap_dir: '../../../../..',
 
   /**
    * This is a collection of file patterns that refer to our app code (the
@@ -42,7 +43,7 @@ module.exports = {
         '!src/**/*.spec.js'
     ],
     jsunit: [ 'src/**/*.spec.js' ],
-    
+
     coffee: [ 'src/**/*.coffee', '!src/**/*.spec.coffee' ],
     coffeeunit: [ 'src/**/*.spec.coffee' ],
 

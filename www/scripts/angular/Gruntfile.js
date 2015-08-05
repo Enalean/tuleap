@@ -233,7 +233,8 @@ module.exports = function ( grunt ) {
           compress: false,
           noUnderscores: false,
           noIDs: false,
-          zeroUnits: false
+          zeroUnits: false,
+          includePath: [ '<%= tuleap_dir %>' ]
         }
       },
       compile: {

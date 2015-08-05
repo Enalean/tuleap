@@ -2,9 +2,9 @@
   "author": "Enalean Team",
   "name": "trafficlights",
   "version": "0.0.1",
-  "homepage": "http://tuleap.net",
+  "homepage": "http://enalean.com",
   "licenses": {
-    "type": "Copyright Enalean 2014"
+    "type": "Copyright Enalean 2015"
   },
   "dependencies": {},
   "devDependencies": {
@@ -30,6 +30,6 @@
     "grunt-angular-gettext": "~0.2.15"
   },
   "scripts": {
-      "postinstall": "bower install"
+      "postinstall": "bower install --config.interactive=false"
   }
 }

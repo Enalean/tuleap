@@ -17,12 +17,10 @@ Obsoletes: tuleap-plugin-testing-frontend <= 0.3
 
 AutoReqProv: no
 
-Requires: tuleap-plugin-trafficlights-backend
-
 %description
 Test and tracability plugin
 
-# 
+#
 # Package setup
 %prep
 %setup -q
@@ -30,7 +28,10 @@ Test and tracability plugin
 #
 # Build
 %build
-# Nothing to do
+cd www/scripts/angular
+sed -i -e "s%tuleap_dir: .*%tuleap_dir: '/tuleap',%" build.config.js
+scl enable nodejs010 "npm install"
+scl enable nodejs010 "grunt"
 
 #
 # Install
