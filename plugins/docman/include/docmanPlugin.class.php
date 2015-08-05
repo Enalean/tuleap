@@ -92,6 +92,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->_addHook('project_is_deleted',              'project_is_deleted',          false);
         $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
+        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
     }
 
     public function getHooksAndCallbacks() {
@@ -466,10 +467,11 @@ class DocmanPlugin extends Plugin {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
         //Is this project using docman
         if (is_dir($docmanPath.$params['project']->getUnixName())){
-            require_once('Docman_VersionFactory.class.php');
-            $version      = new Docman_VersionFactory(); 
+            $version      = new Docman_VersionFactory();
+
             return $version->renameProject($docmanPath, $params['project'], $params['new_name']);
         }
+
         return true;
     }
     
@@ -876,5 +878,16 @@ class DocmanPlugin extends Plugin {
         $ugroup_id = $params['ugroup_id'];
 
         $params['is_used'] = $manager->isUgroupUsed($ugroup_id);
+    }
+
+    public function proccess_system_check($params) {
+        $docman_system_check = new Docman_SystemCheck(
+            $this,
+            new Docman_SystemCheckProjectRetriever(new Docman_SystemCheckDao()),
+            BackendSystem::instance(),
+            $params['logger']
+        );
+
+        $docman_system_check->process();
     }
 }

@@ -112,6 +112,7 @@ class Docman_FileStorage {
                 mkdir($path, 0700);
             }
         }
+
         $path .= $name;
         return $path;
     }
