@@ -94,6 +94,11 @@ class TrackerRepresentation {
      */
     public $resources;
 
+    /**
+     * @var array rgb
+     */
+    public $color_name;
+
     public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, WorkflowRepresentation $workflow = null) {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
@@ -115,6 +120,7 @@ class TrackerRepresentation {
                 'uri'  => $this->uri .'/'. ReportRepresentation::ROUTE
             )
         );
+        $this->color_name  = $tracker->getColor();
 
         if ($tracker->getParent()) {
             $this->parent = new TrackerReference();
