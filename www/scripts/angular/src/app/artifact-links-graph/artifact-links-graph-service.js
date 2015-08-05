@@ -29,7 +29,7 @@ function ArtifactLinksGraphService(
         getGraphStructure: getGraphStructure
     });
 
-    function showGraph(execution_id, definition_id) {
+    function showGraph(execution, definition) {
         ArtifactLinksGraphModalLoading.loading.is_loading = true;
 
         return $modal.open({
@@ -38,11 +38,16 @@ function ArtifactLinksGraphService(
             controller : 'ArtifactLinksGraphCtrl as modal',
             resolve: {
                 modal_model: function () {
-                    return ArtifactLinksGraphRestService.getArtifact(execution_id).then(function(execution) {
-                        return ArtifactLinksGraphRestService.getArtifact(definition_id).then(function(definition) {
-                            return self.getGraphStructure(execution, definition);
-                        });
+                    var promises = [];
+                    promises.push(ArtifactLinksGraphRestService.getArtifact(execution.id));
+                    promises.push(ArtifactLinksGraphRestService.getArtifact(definition.id));
+
+                    return Promise.all(promises).then(function(results) {
+                        return self.getGraphStructure(results[0], results[1]);
                     });
+                },
+                title: function() {
+                    return definition.summary;
                 }
             }
         });

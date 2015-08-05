@@ -51,8 +51,8 @@ function ExecutionDetailCtrl(
         viewTestExecution(execution_id, null);
     });
 
-    function showArtifactLinksGraphModal(execution_id, definition_id) {
-        ArtifactLinksGraphService.showGraph(execution_id, definition_id);
+    function showArtifactLinksGraphModal(execution, definition) {
+        ArtifactLinksGraphService.showGraph(execution, definition);
     }
 
     function viewTestExecution(execution_id, user) {

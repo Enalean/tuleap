@@ -73,7 +73,7 @@ msgid "Create campaign"
 msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
-msgid "Dependencies graph"
+msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

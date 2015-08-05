@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-08-04 16:36+0200\n"
+"PO-Revision-Date: 2015-08-05 14:45+0200\n"
 "Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.3\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -59,6 +59,10 @@ msgstr "Le champ lien vers des artéfacts est inexistant."
 msgid "Blocked"
 msgstr "Bloqué"
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr "par"
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
 msgstr "Campagne"
@@ -96,8 +100,8 @@ msgid "Create campaign"
 msgstr "Créer la campagne"
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
-msgid "Dependencies graph"
-msgstr "Graphe des dépendances"
+msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
+msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
@@ -187,9 +191,8 @@ msgstr "Total"
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr "par"
+#~ msgid "Dependencies graph"
+#~ msgstr "Graphe des dépendances"
 
 #~ msgid "Show test dependencies graph"
 #~ msgstr "Afficher le graphe de dépendances"
