@@ -552,5 +552,9 @@ class Project extends Group implements PFO_Project {
     public function getLicenseOther() {
         return $this->project_data_array['license_other'];
     }
+
+    public function projectsMustBeApprovedByAdmin() {
+        return ForgeConfig::get('sys_project_approval', 1) === 1;
+    }
 }
 ?>

@@ -20,14 +20,11 @@ function send_new_project_email(Project $project) {
         /* @var $user PFUser */
         $language = $user->getLanguage();
         $subject = $GLOBALS['sys_name'] . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
-        $message = '';
-        include($language->getContent('include/new_project_email', null, null, '.php'));
+        $presenter = new MailPresenterFactory();
 
-        $mail = $mail_manager->getMailByType('html');
-        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
-        $mail->setTo($user->getEmail());
-        $mail->setSubject($subject);
-        $mail->setBodyHtml($message);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
+        $mail = new TuleapRegisterMail($presenter, $renderer, "mail-project-register");
+        $mail = $mail->getMailProject($subject, $GLOBALS['sys_noreply'], $user->getEmail(), $project);
         $mail->send();
     }
     return true;

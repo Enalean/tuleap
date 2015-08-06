@@ -23,14 +23,6 @@
  */
 class Project_OneStepRegistration_OneStepRegistrationPresenter {
 
-    const HEADER            = 'title';
-    const SECTION_ONE       = 'section_one';
-    const SECTION_TWO       = 'section_two';
-    const THANKS            = 'thanks';
-    const REDIRECT_CONTENT  = 'redirect_content';
-    const REDIRECT_URL      = 'redirect_url';
-    const TEXT              = 'register_confirmation_project_one_step';
-
     /**
      * @var Project
      */
@@ -41,27 +33,27 @@ class Project_OneStepRegistration_OneStepRegistrationPresenter {
     }
 
     public function get_title() {
-        return $GLOBALS['Language']->getText(self::TEXT, self::HEADER);
+        return $GLOBALS['Language']->getText('register_confirmation_project_one_step', 'title');
     }
 
     public function get_section_one() {
-        return $GLOBALS['Language']->getText(self::TEXT, self::SECTION_ONE);
+        return $GLOBALS['Language']->getText('register_confirmation_project_one_step', 'section_one');
     }
 
     public function get_section_two() {
-        return $GLOBALS['Language']->getText(self::TEXT, self::SECTION_TWO);
+        return $GLOBALS['Language']->getText('register_confirmation_project_one_step', 'section_two');
     }
 
     public function get_redirect_url() {
         $project_name = end(explode('/', rtrim($this->project->getHomePage(), '/')));
-        return get_server_url() . '/projects/' . $project_name;
+        return '/projects/' . $project_name;
     }
 
     public function get_redirect_content() {
-        return $GLOBALS['Language']->getText(self::TEXT, self::REDIRECT_CONTENT);
+        return $GLOBALS['Language']->getText('register_confirmation_project_one_step', 'redirect_content');
     }
 
     public function get_thanks() {
-        return $GLOBALS['Language']->getText(self::TEXT, self::THANKS, array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('register_confirmation_project_one_step', 'thanks', array(ForgeConfig::get('sys_name')));
     }
 }
