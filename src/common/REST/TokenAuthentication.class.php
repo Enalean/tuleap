@@ -36,7 +36,7 @@ class TokenAuthentication implements iAuthenticate {
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
     public function __getWWWAuthenticateString() {
-        return 'Query name="api_key"';
+        return 'Basic realm="'.AuthenticatedResource::REALM.'" Token realm="'.AuthenticatedResource::REALM.'"';
     }
 
 }
