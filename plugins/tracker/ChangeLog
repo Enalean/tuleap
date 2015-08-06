@@ -1,3 +1,6 @@
+Version 5.675 - Tuleap 8.5
+    * request #8304 Missing color property in trackers/:id REST route
+
 Version 5.674 - Tuleap 8.5
     * request #8298: Add reverse_link to art_link field in REST routes
 
