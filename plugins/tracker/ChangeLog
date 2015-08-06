@@ -1,3 +1,6 @@
+Version 5.677 - Tuleap 8.5
+    * story #8160: adding permission on artifact field data to /trackers/:id route
+
 Version 5.676 - Tuleap 8.5
     * story #8170: Fix issue when a tracker has a parent
 
