@@ -69,7 +69,8 @@ class TestDataBuilder {
     const STATIC_UGROUP_2_LABEL = 'static_ugroup_2';
 
     const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID        = 3;
-    const DYNAMIC_UGROUP_PROJECT_MEMBERS_LABEL     = 'project_members';
+    const DYNAMIC_UGROUP_PROJECT_MEMBERS_LABEL     = 'Project members';
+    const DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY       = 'ugroup_project_members_name_key';
     const DYNAMIC_UGROUP_PROJECT_ADMINS_ID         = 4;
     const DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL      = 'project_admins';
     const DYNAMIC_UGROUP_AUTHENTICATED_USERS_ID    = 5;

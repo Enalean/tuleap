@@ -569,6 +569,27 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getUsedFieldsBindedToUserGroups($tracker) {
+        $fields = array();
+
+        $permission_field = $this->getUsedFormElementsByType($tracker, array('perm'));
+        if ($permission_field) {
+            $fields[] = $permission_field[0];
+        }
+
+        $binded_fields = (array) $this->getUsedFormElementsByType($tracker, array('tbl',  'sb', 'msb'));
+        foreach($binded_fields as $field) {
+            if ($field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
      * Return the first (and only one) ArtifactLink field (if any)
      *
      * @return Tracker_FormElement_Field_ArtifactLink

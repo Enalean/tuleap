@@ -3319,4 +3319,16 @@ EOS;
             new Tracker_XML_Updater_TemporaryFileCreator()
         );
     }
+
+    public function hasFieldBindedToUserGroupsViewableByUser(PFUser $user) {
+        $form_elements = $this->formElementFactory->getUsedFieldsBindedToUserGroups($this);
+
+        foreach ($form_elements as $field) {
+            if ($field->userCanRead($user)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

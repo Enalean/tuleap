@@ -22,6 +22,8 @@ namespace Tuleap\REST;
 use \PFUser;
 use \Project;
 use \URLVerification;
+use \EventManager;
+use \Event;
 use \Luracast\Restler\RestException;
 use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
@@ -36,6 +38,32 @@ class ProjectAuthorization {
             return true;
         } catch (Project_AccessProjectNotFoundException $exception) {
             throw new RestException(404);
+        } catch (Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        }
+    }
+
+    public static function canUserAccessUserGroupInfo(PFUser $user, Project $project, URLVerification $url_verification) {
+        try {
+            $url_verification->userCanAccessProject($user, $project);
+            $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
+            return true;
+        } catch (Project_AccessProjectNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (Project_AccessNotAdminException $exception) {
+            $can_access    = false;
+            $event_manager = EventManager::instance();
+            $event_manager->processEvent(Event::CAN_USER_ACCESS_UGROUP_INFO, array(
+                'can_access' => &$can_access,
+                'user'       => $user,
+                'project'    => $project
+            ));
+
+            if (! $can_access) {
+                throw new RestException(403, $exception->getMessage());
+            }
+
+            return true;
         } catch (Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }

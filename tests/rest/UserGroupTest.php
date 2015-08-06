@@ -39,10 +39,10 @@ class UserGroupTest extends RestBase {
         $this->assertEquals(
             $response->json(),
             array(
-                'id'        => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
-                'uri'       => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'id'        => REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri'       => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'label'     => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
+                'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
                 'key'       => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL
             )
         );
@@ -53,7 +53,10 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
+            $this->getResponseByToken(
+                $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
+                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID)
+            );
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -66,7 +69,10 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
+            $this->getResponseByToken(
+                $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
+                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID)
+            );
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;

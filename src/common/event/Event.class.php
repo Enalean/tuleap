@@ -961,4 +961,14 @@ class Event {
      *     'user' => PFUser
      */
     const USER_MANAGER_CREATE_ACCOUNT = 'user_manager_create_account';
+
+    /**
+     * When a user account is created
+     *
+     * Parameter:
+     *     'can_access' => bool,
+     *     'user'       => PFUser
+     *     'project'    => Project
+     */
+    const CAN_USER_ACCESS_UGROUP_INFO = 'can_user_access_ugroup_info';
 }

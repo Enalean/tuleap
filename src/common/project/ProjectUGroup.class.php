@@ -53,6 +53,13 @@ class ProjectUGroup implements User_UGroup {
         self::SVN_ADMIN,
     );
 
+    public static $forge_user_groups = array(
+        self::NONE,
+        self::ANONYMOUS,
+        self::REGISTERED,
+        self::AUTHENTICATED,
+    );
+
     public static $normalized_names = array(
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',
@@ -135,6 +142,10 @@ class ProjectUGroup implements User_UGroup {
 
     public function setProject(Project $project) {
         $this->project = $project;
+    }
+
+    public function setProjectId($project_id) {
+        $this->group_id = $project_id;
     }
 
     /**
@@ -544,5 +555,7 @@ class ProjectUGroup implements User_UGroup {
         $this->source_id = ($ugroup === null) ? null : $ugroup->getId();
     }
 
+    public function isStatic() {
+        return $this->getId() > 100;
+    }
 }
-?>

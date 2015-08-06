@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,16 +24,18 @@ use \UserManager;
 use \ProjectUGroup;
 use \PFUser;
 use \UGroupManager;
+use \URLVerification;
 use \Tuleap\Project\REST\UserGroupRepresentation;
 use \Tuleap\User\REST\UserRepresentation;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
 use \Luracast\Restler\RestException;
+use Tuleap\REST\AuthenticatedResource;
 
 /**
  * Wrapper for user_groups related REST methods
  */
-class UserGroupResource {
+class UserGroupResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
 
@@ -41,6 +43,7 @@ class UserGroupResource {
     private $ugroup_manager;
 
     public function __construct() {
+        parent::__construct();
         $this->ugroup_manager = new UGroupManager();
     }
 
@@ -50,9 +53,11 @@ class UserGroupResource {
      * Get the definition of a given user_group
      *
      * @url GET {id}
-     * @access protected
+     * @access hybrid
      *
-     * @param string $id Id of the ugroup (format: projectId_ugroupId)
+     * @param string $id Id of the ugroup This should be one of two formats<br>
+     * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
+     * - format: ugroupId for all other groups (registered users, custom groups, ...)
      *
      * @throws 400
      * @throws 403
@@ -60,16 +65,16 @@ class UserGroupResource {
      *
      * @return \Tuleap\Project\REST\UserGroupRepresentation
      */
-    protected function getId($id) {
-        $this->checkIdIsWellFormed($id);
+    public function getId($id) {
+        $this->checkAccess();
 
-        list($project_id, $ugroup_id) = explode('_', $id);
+        $ugroup     = $this->getExistingUserGroup($id);
+        $project_id = $ugroup->getProjectId();
 
-        $this->isGroupViewable($ugroup_id);
-        $this->checkUserGroupIdExists($ugroup_id);
-        $this->userCanSeeUserGroups($project_id);
+        if ($project_id) {
+            $this->userCanSeeUserGroups($project_id);
+        }
 
-        $ugroup                = $this->ugroup_manager->getById($ugroup_id);
         $ugroup_representation = new UserGroupRepresentation();
         $ugroup_representation->build($project_id, $ugroup);
         $this->sendAllowHeadersForUserGroup();
@@ -98,7 +103,9 @@ class UserGroupResource {
      * @url GET {id}/users
      * @access protected
      *
-     * @param string $id Id of the ugroup (format: projectId_ugroupId)
+     * @param string $id Id of the ugroup This should be one of two formats<br>
+     * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
+     * - format: ugroupId for all other groups (registered users, custom groups, ...)
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
@@ -111,16 +118,12 @@ class UserGroupResource {
      */
     protected function getUsers($id, $limit = 10, $offset = 0) {
         $this->checkLimitValueIsAcceptable($limit);
-        $this->checkIdIsWellFormed($id);
 
-        list($project_id, $ugroup_id) = explode('_', $id);
+        $user_group = $this->getExistingUserGroup($id);
+        $this->checkGroupIsViewable($user_group->getId());
+        $project_id = $user_group->getProjectId();
+        $this->userCanSeeUserGroupMembers($project_id);
 
-        $this->isGroupViewable($ugroup_id);
-        $this->checkUserGroupIdExists($ugroup_id);
-        $this->userCanSeeUserGroups($project_id);
-
-        $user_group_manager     = new UGroupManager();
-        $user_group             = $user_group_manager->getById($ugroup_id);
         $member_representations = array();
         $members                = $this->getUserGroupMembers($user_group, $project_id, $limit, $offset);
 
@@ -178,40 +181,65 @@ class UserGroupResource {
     }
 
     /**
-     * Checks if the given id is well formed (format: projectId_ugroupId)
+     * Checks if the given id is appropriate (format: projectId_ugroupId or format: ugroupId)
      *
-     * @param string $id Id of the ugroup (format: projectId_ugroupId)
+     * @param string $id Id of the ugroup
      *
      * @return boolean
      *
      * @throws 400
      */
-    private function checkIdIsWellFormed($id) {
-        $regexp = '/^[0-9]+_[0-9]+$/';
-
-        if (! preg_match($regexp, $id)) {
-            throw new RestException(400, 'Invalid id format, format must be: projectId_ugroupId');
+    private function checkIdIsAppropriate($id) {
+        try {
+            UserGroupRepresentation::checkRESTIdIsAppropriate($id);
+        } catch (\Exception $e) {
+            throw new RestException(400, $e->getMessage());
         }
-
-        return true;
     }
 
     /**
      * Checks if the given user group exists
      *
-     * @param int $user_group_id
+     * @param int $id
      *
-     * @return boolean
+     * @return ProjectUGroup
      *
      * @throws 404
      */
-    private function checkUserGroupIdExists($user_group_id) {
-        $user_group_manager = new UGroupManager();
-        $user_group         = $user_group_manager->getById($user_group_id);
+    private function getExistingUserGroup($id) {
+        $this->checkIdIsAppropriate($id);
 
-        if ($user_group->getId() != $user_group_id) {
-            throw new RestException(404, 'Given user group id does not exist');
+        $values        = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($id);
+        $user_group_id = $values['user_group_id'];
+
+        $user_group = $this->ugroup_manager->getById($user_group_id);
+
+        if ($user_group->getId() === 0) {
+            throw new RestException(404, 'User Group does not exist');
         }
+
+        if (! $user_group->isStatic()) {
+            $user_group->setProjectId($values['project_id']);
+        }
+
+        if ($user_group->isStatic() && $values['project_id'] && $values['project_id'] != $user_group->getProjectId()) {
+            throw new RestException(404, 'User Group does not exist in project');
+        }
+
+        return $user_group;
+    }
+
+    /**
+     * @throws 403
+     * @throws 404
+     *
+     * @return boolean
+     */
+    private function userCanSeeUserGroups($project_id) {
+        $user_manager = UserManager::instance();
+        $project      = ProjectManager::instance()->getProject($project_id);
+        $user         = $user_manager->getCurrentUser();
+        ProjectAuthorization::canUserAccessUserGroupInfo($user, $project, new URLVerification());
 
         return true;
     }
@@ -222,7 +250,7 @@ class UserGroupResource {
      *
      * @return boolean
      */
-    private function userCanSeeUserGroups($project_id) {
+    private function userCanSeeUserGroupMembers($project_id) {
         $user_manager = UserManager::instance();
         $project      = ProjectManager::instance()->getProject($project_id);
         $user         = $user_manager->getCurrentUser();
@@ -238,10 +266,8 @@ class UserGroupResource {
      *
      * @return boolean
      */
-    private function isGroupViewable($ugroup_id) {
-        $excluded_ugroups_ids = array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
-
-        if (in_array($ugroup_id, $excluded_ugroups_ids)) {
+    private function checkGroupIsViewable($ugroup_id) {
+        if (in_array($ugroup_id, ProjectUGroup::$forge_user_groups)) {
             throw new RestException(404, 'Unable to list the users of this group');
         }
 
