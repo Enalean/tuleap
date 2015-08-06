@@ -1,3 +1,6 @@
+Version 5.676 - Tuleap 8.5
+    * story #8170: Fix issue when a tracker has a parent
+
 Version 5.675 - Tuleap 8.5
     * request #8304 Missing color property in trackers/:id REST route
 
