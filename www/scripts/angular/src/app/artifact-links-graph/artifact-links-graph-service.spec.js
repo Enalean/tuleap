@@ -38,6 +38,9 @@ describe('ArtifactLinksGraphService', function() {
 
         var execution = {
             id: 8,
+            tracker: {
+                id: 70
+            },
             values: [
                 {
                     type: 'int'
@@ -47,11 +50,20 @@ describe('ArtifactLinksGraphService', function() {
 
         var definition = {
             id: 30,
+            tracker: {
+                id: 70
+            },
             values: [
                 {
                     type: 'int'
                 }
             ]
+        };
+
+        var trackers = {
+            70: {
+                item_name: 'test_def'
+            }
         };
 
         var expected_modal_model = {
@@ -62,12 +74,15 @@ describe('ArtifactLinksGraphService', function() {
             }
         };
 
-        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition)).toEqual(expected_modal_model);
+        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition, trackers)).toEqual(expected_modal_model);
     });
 
     it("Given a artifact structure, it uses an empty artifact link field to get a graph model with only current artifact node", function() {
         var execution = {
             id: 8,
+            tracker: {
+                id: 70
+            },
             values: [
                 {
                     type: 'art_link',
@@ -79,6 +94,9 @@ describe('ArtifactLinksGraphService', function() {
 
         var definition = {
             id: 30,
+            tracker: {
+                id: 70
+            },
             values: [
                 {
                     type: 'art_link',
@@ -88,17 +106,23 @@ describe('ArtifactLinksGraphService', function() {
             ]
         };
 
+        var trackers = {
+            70: {
+                item_name: 'test_def'
+            }
+        };
+
         var expected_modal_model = {
             errors: [],
             graph : {
                 links: [],
                 nodes: [
-                    { id: definition.id, label: '#' + definition.id }
+                    { id: definition.id, label: trackers[definition.tracker.id].item_name + ' #' + definition.id }
                 ]
             }
         };
 
-        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition)).toEqual(expected_modal_model);
+        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition, trackers)).toEqual(expected_modal_model);
     });
 
     it("Given a artifact structure, it uses the artifact link field to get a graph model", function() {
@@ -106,6 +130,9 @@ describe('ArtifactLinksGraphService', function() {
 
         var execution = {
             id: 8,
+            tracker: {
+                id: 70
+            },
             values: [
                 {
                     type: 'art_link',
@@ -125,6 +152,9 @@ describe('ArtifactLinksGraphService', function() {
 
         var definition = {
             id: 30,
+            tracker: {
+                id: 70
+            },
             values: [
                 {
                     type: 'art_link',
@@ -134,6 +164,24 @@ describe('ArtifactLinksGraphService', function() {
                     ]
                 }
             ]
+        };
+
+        var trackers = {
+            41: {
+                item_name: 'test_def'
+            },
+            42: {
+                item_name: 'request'
+            },
+            50: {
+                item_name: 'bug'
+            },
+            60: {
+                item_name: 'test_exec'
+            },
+            70: {
+                item_name: 'story'
+            }
         };
 
         var expected_modal_model = {
@@ -147,16 +195,16 @@ describe('ArtifactLinksGraphService', function() {
                     { source: definition.id, target: 14, type: 'arrow' }
                 ],
                 nodes: [
-                    { id: definition.id, label: '#' + definition.id },
-                    { id: 12, label: '#' + 12 },
-                    { id: 20, label: '#' + 20 },
-                    { id: 21, label: '#' + 21 },
-                    { id: 13, label: '#' + 13 },
-                    { id: 14, label: '#' + 14 }
+                    { id: definition.id, label: trackers[definition.tracker.id].item_name + ' #' + definition.id },
+                    { id: 12, label: trackers[42].item_name + ' #' + 12 },
+                    { id: 20, label: trackers[50].item_name + ' #' + 20 },
+                    { id: 21, label: trackers[50].item_name + ' #' + 21 },
+                    { id: 13, label: trackers[60].item_name + ' #' + 13 },
+                    { id: 14, label: trackers[60].item_name + ' #' + 14 }
                 ]
             }
         };
 
-        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition)).toEqual(expected_modal_model);
+        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition, trackers)).toEqual(expected_modal_model);
     });
 });

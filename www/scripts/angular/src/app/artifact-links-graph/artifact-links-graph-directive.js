@@ -26,6 +26,8 @@ function Graph($window) {
                 angular.element($window).bind('resize', function() {
                     resize();
                 });
+
+                return graphd3;
             }
 
             graphd3.init = function () {
@@ -43,10 +45,10 @@ function Graph($window) {
 
                 links.forEach(function(link) {
                     link.source = nodes[link.source] || (nodes[link.source] = {
-                            name: findNodeName(link.source)
+                            name: findNode(link.source, "label"), color_name: findNode(link.source, "color_name")
                         });
                     link.target = nodes[link.target] || (nodes[link.target] = {
-                            name: findNodeName(link.target)
+                            name: findNode(link.target, "label"), color_name: findNode(link.target, "color_name")
                         });
                 });
 
@@ -54,11 +56,11 @@ function Graph($window) {
                 graphd3.nodes(nodes);
                 graphd3.figures(figures);
 
-                function findNodeName(node_id) {
-                    var node_name = _.find(data_nodes, function(node) {
+                function findNode(node_id, data) {
+                    var node = _.find(data_nodes, function(node) {
                         return node.id === node_id;
                     });
-                    return node_name.label;
+                    return node[data];
                 }
 
                 function getAllFigures(links) {
@@ -105,6 +107,9 @@ function Graph($window) {
                 var circle = graphd3.svg().append("g").selectAll("circle")
                     .data(graphd3.graph().nodes())
                     .enter().append("circle")
+                    .attr("class", function(d) {
+                        return d.color_name;
+                    })
                     .attr("r", 8);
 
                 var text = graphd3.svg().append("g").selectAll("text")
