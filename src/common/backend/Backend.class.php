@@ -36,7 +36,7 @@ class Backend {
     const BACKEND     = 'Backend';
     const SYSTEM      = 'System';
     const ALIASES     = 'Aliases';
-    
+
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
 
