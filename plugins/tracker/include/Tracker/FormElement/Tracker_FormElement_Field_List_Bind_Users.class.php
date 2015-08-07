@@ -894,4 +894,19 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         return $representation;
     }
+
+    public function getDefaultRESTValues() {
+        $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
+
+        $class_with_right_namespace = '\\Tuleap\\Project\\REST\\UserRepresentation';
+
+        $rest_array = array();
+        foreach ($bind_values as $value) {
+            $representation = new $class_with_right_namespace;
+            $representation->build($value);
+            $rest_array[] = $representation;
+
+        }
+        return $rest_array;
+    }
 }

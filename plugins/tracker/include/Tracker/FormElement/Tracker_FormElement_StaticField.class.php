@@ -236,4 +236,8 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     public function getDefaultValue() {
         return null;
     }
+
+    public function getDefaultRESTValue() {
+        return $this->getDefaultValue();
+    }
 }

@@ -74,4 +74,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return $this->ugroup->getProject();
     }
 
+    public function getUgroup() {
+        return $this->ugroup;
+    }
 }

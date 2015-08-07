@@ -867,4 +867,5 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         //all default values must be binded
         return self::BIND_PREFIX . implode(','.self::BIND_PREFIX, $default_values);
     }
+
 }
