@@ -1,0 +1,4 @@
+# Force mime-type for PHP scripts without .php extension
+<Files uploads>
+ForceType application/x-httpd-php
+</Files>
