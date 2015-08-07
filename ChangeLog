@@ -21,6 +21,7 @@ Version 8.5 (Not Released Yet)
 	* request #8294: Fix persistent XSS in wiki page name
 
 	== Bug fix ==
+	* request #8310: Fatal error at user registeration
 	* request #7615: Edit SVN commit log messages
 	* request #8189: An user with an IPv6 must be able to log in
 	* request #8144: restricted users can no-longer access all services of super public projects
