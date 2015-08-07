@@ -116,6 +116,12 @@ class TestDataBuilder {
         return $this;
     }
 
+    protected function activatePlugin($name) {
+        $plugin_factory = PluginFactory::instance();
+        $plugin = $plugin_factory->createPlugin($name);
+        $plugin_factory->availablePlugin($plugin);
+    }
+
     protected function setGlobalsForProjectCreation() {
         $GLOBALS['svn_prefix'] = '/tmp';
         $GLOBALS['cvs_prefix'] = '/tmp';

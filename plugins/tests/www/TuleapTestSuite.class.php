@@ -51,6 +51,7 @@ class FilterTestCase extends FilterIterator {
     private function fileCanBeSelectedIntoTestSuite($file) {
         return (strpos($file->getPathname(), '/_') === false &&
                $this->isNotATestsRestDirectory($file->getPathname()) &&
+               $this->isNotATestsSoapDirectory($file->getPathname()) &&
                (preg_match('/Test.php$/', $file->getFilename()) || ($this->phpVersionIsGreaterOrEqualThanPhp53() && preg_match('/TestPHP53.php$/', $file->getFilename())))
         );
     }
@@ -62,6 +63,10 @@ class FilterTestCase extends FilterIterator {
 
     private function isNotATestsRestDirectory($pathName) {
         return !(preg_match("/^.*\/tests\/rest(\/.+|$)$/", $pathName));
+    }
+
+    private function isNotATestsSoapDirectory($pathName) {
+        return !(preg_match("/^.*\/tests\/soap(\/.+|$)$/", $pathName));
     }
 }
 

@@ -39,6 +39,10 @@ $src_dir = realpath(dirname(__FILE__).'/../..');
 
 $xml->testsuites[0]->testsuite[0]->addChild('directory', $src_dir."/tests/soap");
 
+foreach (glob($src_dir.'/plugins/*/tests/soap') as $directory) {
+    $xml->testsuites[0]->testsuite[0]->addChild('directory', $directory);
+}
+
 // Write the XML config
 $xml->asXML("$run_dir/suite.xml");
 

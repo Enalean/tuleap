@@ -23,6 +23,7 @@ require_once dirname(__FILE__).'/../autoload.php';
 
 $data_builder = new SOAP_TestDataBuilder();
 $data_builder
+    ->activatePlugins()
     ->generateUsers()
     ->generateProject()
     ->activateDebug();

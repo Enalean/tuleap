@@ -91,12 +91,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
         }
     }
 
-    protected function activatePlugin($name) {
-        $plugin_factory = PluginFactory::instance();
-        $plugin = $plugin_factory->createPlugin($name);
-        $plugin_factory->availablePlugin($plugin);
-    }
-
     public function generateUsers() {
         $user_1 = new PFUser();
         $user_1->setUserName(self::TEST_USER_1_NAME);
