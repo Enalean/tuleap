@@ -1,3 +1,6 @@
+Version 2.26.78 - Tuleap 8.5
+    * request #8305 System_check event creates missing docman folders
+
 Version 2.26.77 - Tuleap 8.2
     * request #8078 Internationalization of show pending document
 
