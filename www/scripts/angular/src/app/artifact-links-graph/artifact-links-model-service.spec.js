@@ -1,35 +1,23 @@
-describe('ArtifactLinksGraphService', function() {
-    var $modal, gettextCatalog, ArtifactLinksGraphRestService, ArtifactLinksGraphService, SharedPropertiesService;
+describe('ArtifactLinksModelService', function() {
+    var gettextCatalog,
+        SharedPropertiesService,
+        ArtifactLinksModelService;
 
     beforeEach(function() {
-        module('tuleap.artifact-links-graph', function($provide) {
-            gettextCatalog = jasmine.createSpyObj('gettextCatalog', [
-                'getString'
-            ]);
-            $modal = jasmine.createSpyObj('$modal', [
-                'open'
-            ]);
-            ArtifactLinksGraphRestService = jasmine.createSpyObj('ArtifactLinksGraphRestService', [
-                'getArtifact'
-            ]);
-            SharedPropertiesService = jasmine.createSpyObj('SharedPropertiesService', [
-                'getTrackerExecutionId'
-            ]);
+        gettextCatalog = jasmine.createSpyObj('gettextCatalog', [
+            'getString'
+        ]);
+        SharedPropertiesService = jasmine.createSpyObj('SharedPropertiesService', [
+            'getTrackerExecutionId'
+        ]);
 
+        module('tuleap.artifact-links-graph', function($provide) {
             $provide.value('gettextCatalog', gettextCatalog);
-            $provide.value('$modal', $modal);
-            $provide.value('ArtifactLinksGraphRestService', ArtifactLinksGraphRestService);
             $provide.value('SharedPropertiesService', SharedPropertiesService);
         });
 
-        inject(function(
-            _$modal_,
-            _gettextCatalog_,
-            _ArtifactLinksGraphService_
-        ) {
-            $modal = _$modal_;
-            gettextCatalog = _gettextCatalog_;
-            ArtifactLinksGraphService = _ArtifactLinksGraphService_;
+        inject(function(_ArtifactLinksModelService_) {
+            ArtifactLinksModelService = _ArtifactLinksModelService_;
         });
     });
 
@@ -67,14 +55,19 @@ describe('ArtifactLinksGraphService', function() {
         };
 
         var expected_modal_model = {
-            errors: ['aString'],
+            errors: ['aString', 'aString'],
             graph : {
                 links: [],
                 nodes: []
             }
         };
 
-        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition, trackers)).toEqual(expected_modal_model);
+        var artifacts = {
+            nodes: [definition, execution],
+            current_node: definition
+        };
+
+        expect(ArtifactLinksModelService.getGraphStructure(artifacts, trackers)).toEqual(expected_modal_model);
     });
 
     it("Given a artifact structure, it uses an empty artifact link field to get a graph model with only current artifact node", function() {
@@ -108,7 +101,8 @@ describe('ArtifactLinksGraphService', function() {
 
         var trackers = {
             70: {
-                item_name: 'test_def'
+                item_name: 'test_def',
+                color_name: 'blue'
             }
         };
 
@@ -117,12 +111,17 @@ describe('ArtifactLinksGraphService', function() {
             graph : {
                 links: [],
                 nodes: [
-                    { id: definition.id, label: trackers[definition.tracker.id].item_name + ' #' + definition.id }
+                    { id: definition.id, label: trackers[definition.tracker.id].item_name + ' #' + definition.id, color_name: 'blue'}
                 ]
             }
         };
 
-        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition, trackers)).toEqual(expected_modal_model);
+        var artifacts = {
+            nodes: [definition, execution],
+            current_node: definition
+        };
+
+        expect(ArtifactLinksModelService.getGraphStructure(artifacts, trackers)).toEqual(expected_modal_model);
     });
 
     it("Given a artifact structure, it uses the artifact link field to get a graph model", function() {
@@ -168,19 +167,24 @@ describe('ArtifactLinksGraphService', function() {
 
         var trackers = {
             41: {
-                item_name: 'test_def'
+                item_name: 'test_def',
+                color_name: 'blue'
             },
             42: {
-                item_name: 'request'
+                item_name: 'request',
+                color_name: 'blue'
             },
             50: {
-                item_name: 'bug'
+                item_name: 'bug',
+                color_name: 'blue'
             },
             60: {
-                item_name: 'test_exec'
+                item_name: 'test_exec',
+                color_name: 'blue'
             },
             70: {
-                item_name: 'story'
+                item_name: 'story',
+                color_name: 'blue'
             }
         };
 
@@ -188,23 +192,28 @@ describe('ArtifactLinksGraphService', function() {
             errors: [],
             graph : {
                 links: [
+                    { source: definition.id, target: 13, type: 'arrow' },
+                    { source: definition.id, target: 14, type: 'arrow' },
                     { source: definition.id, target: 12, type: 'arrow' },
                     { source: 20, target: definition.id, type: 'arrow' },
-                    { source: 21, target: definition.id, type: 'arrow' },
-                    { source: definition.id, target: 13, type: 'arrow' },
-                    { source: definition.id, target: 14, type: 'arrow' }
+                    { source: 21, target: definition.id, type: 'arrow' }
                 ],
                 nodes: [
-                    { id: definition.id, label: trackers[definition.tracker.id].item_name + ' #' + definition.id },
-                    { id: 12, label: trackers[42].item_name + ' #' + 12 },
-                    { id: 20, label: trackers[50].item_name + ' #' + 20 },
-                    { id: 21, label: trackers[50].item_name + ' #' + 21 },
-                    { id: 13, label: trackers[60].item_name + ' #' + 13 },
-                    { id: 14, label: trackers[60].item_name + ' #' + 14 }
+                    { id: definition.id, label: trackers[definition.tracker.id].item_name + ' #' + definition.id, color_name: 'blue' },
+                    { id: 13, label: trackers[60].item_name + ' #' + 13, color_name: 'blue' },
+                    { id: 14, label: trackers[60].item_name + ' #' + 14, color_name: 'blue' },
+                    { id: 12, label: trackers[42].item_name + ' #' + 12, color_name: 'blue' },
+                    { id: 20, label: trackers[50].item_name + ' #' + 20, color_name: 'blue' },
+                    { id: 21, label: trackers[50].item_name + ' #' + 21, color_name: 'blue' }
                 ]
             }
         };
 
-        expect(ArtifactLinksGraphService.getGraphStructure(execution, definition, trackers)).toEqual(expected_modal_model);
+        var artifacts = {
+            nodes: [definition, execution],
+            current_node: definition
+        };
+
+        expect(ArtifactLinksModelService.getGraphStructure(artifacts, trackers)).toEqual(expected_modal_model);
     });
 });

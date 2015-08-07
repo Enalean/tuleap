@@ -4,6 +4,7 @@
 </div>
 
 <div class="modal-body">
-    <div ng-repeat="error in modal.errors" class="alert alert-error">{{ error }}</div>
+    <div ng-repeat="error in modal.errors track by $index" class="alert alert-error">{{ error }}</div>
+    <img src="scripts/angular/bin/assets/loader.gif" class="loader loader-graph">
     <graph id="graph" model="modal.graph"></graph>
 </div>

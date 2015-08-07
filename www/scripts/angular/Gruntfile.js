@@ -331,6 +331,7 @@ module.exports = function ( grunt ) {
           '<%= vendor_files.js %>',
           '<%= html2js.app.dest %>',
           'vendor/angular-mocks/angular-mocks.js',
+          'vendor/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
           '<%= app_files.modules %>',
           '<%= app_files.js %>',
           '<%= app_files.jsunit %>'
