@@ -63,6 +63,8 @@ function html_image($src,$args,$display=1) {
 }
 
 function html_get_timezone_popup($selected = 0) {
+    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
+    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
     return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($selected));
 }
