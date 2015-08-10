@@ -42,11 +42,13 @@ if ($res['numrows'] == 1) {
     $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$row['group_id']);
 }
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 site_admin_header(array('title'=>$Language->getText('admin_grouplist','title')));
 
 print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
 if ($group_name_search !="0") {
-    print "<b>".$Language->getText('admin_grouplist','begins_with',array($group_name_search))."</b>\n";
+    print "<b>".$Language->getText('admin_grouplist', 'begins_with', array($purifier->purify($group_name_search)))."</b>\n";
 } else {
     print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
 }
@@ -73,7 +75,7 @@ $i = 0;
 $template = TemplateSingleton::instance();
 
 if ($group_name_search != "0") {
-    $group_name_param="&group_name_search=$group_name_search";
+    $group_name_param="&group_name_search=" . urlencode($group_name_search);
 } else {
     $group_name_param="";
 }
