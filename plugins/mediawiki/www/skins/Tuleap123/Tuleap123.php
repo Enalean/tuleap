@@ -230,6 +230,10 @@ echo $footerEnd;
         return $pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission;
      }
 
+     private function isUserAnonymous() {
+         return UserManager::instance()->getCurrentUser()->isAnonymous();
+     }
+
      private function isCompatibilityViewEnabled() {
         $manager = new MediawikiManager(new MediawikiDao());
         $project = $GLOBALS['group'];
@@ -239,11 +243,18 @@ echo $footerEnd;
 
      private function addForgeBackLinksToSidebar() {
         $forge_name    = forge_get_config('sys_fullname');
-        $added_toolbox = array(
-            array(
-                'text' => $GLOBALS['Language']->getText('plugin_mediawiki', 'back_to_forge', array($forge_name)),
-                'href' => '/projects/'.$GLOBALS['group']->getUnixName()
-            )
+        $added_toolbox = array();
+
+        if ($this->isUserAnonymous()) {
+            $added_toolbox[] = array(
+                'text' => $GLOBALS['Language']->getText('include_menu','login'),
+                'href' => '/account/login.php?return_to='. $_SERVER['REQUEST_URI']
+            );
+        }
+
+        $added_toolbox[] = array(
+            'text' => $GLOBALS['Language']->getText('plugin_mediawiki', 'back_to_forge', array($forge_name)),
+            'href' => '/projects/'.$GLOBALS['group']->getUnixName()
         );
 
         if ($this->IsUserAdmin()) {
