@@ -59,7 +59,12 @@ class TuleapRegisterMail {
         $mail = new Codendi_Mail();
         $mail->setSubject($subject);
         $mail->setTo($to);
-        $mail->setBodyHtml($this->renderer->renderToString($this->template, $this->mail_presenter_factory->createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role)));
+        $mail->setBodyHtml(
+            $this->renderer->renderToString(
+                $this->template,
+                $this->mail_presenter_factory->createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role)),
+            Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL
+        );
         $mail->setBodyText($message);
         $mail->setFrom($from);
 
