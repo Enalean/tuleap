@@ -299,6 +299,24 @@ class FlamingParrot_NavBarPresenter {
     }
 
     public function return_to() {
-        return $_SERVER['REQUEST_URI'];
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        if ($this->isUserTryingToLogIn($request_uri)) {
+            return urlencode($this->request->get('return_to'));
+        }
+
+        if ($this->isUserTryingToRegister($request_uri)) {
+            return false;
+        }
+
+        return $request_uri;
+    }
+
+    private function isUserTryingToLogIn($request_uri) {
+        return strpos($request_uri, '/account/login.php') === 0;
+    }
+
+    private function isUserTryingToRegister($request_uri) {
+        return strpos($request_uri, '/account/register.php') === 0;
     }
 }
