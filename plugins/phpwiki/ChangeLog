@@ -1,2 +1,5 @@
+Version 0.2 - Tuleap 8.5
+    * story #7883: Disable register_globals for PHPWiki
+
 Version 0.1 - Tuleap 8.0
 	* Creation of the PHPWiki plugin
