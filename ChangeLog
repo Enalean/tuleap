@@ -1,3 +1,10 @@
+Version 8.4-4 (Monday, August 10th 2015)
+
+	== Bug Fix ==
+	* request #8302: Mediawiki 1.23 - Enable watch tab
+	* request #7615: Edit SVN commit log messages
+	* request #8304: Missing color property in trackers/:id REST route
+
 Version 8.4-3 (Monday, August 3rd 2015)
 
 	== Bug Fix ==
