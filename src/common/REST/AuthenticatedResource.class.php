@@ -28,6 +28,8 @@ class AuthenticatedResource  implements iUseAuthentication {
     const ACCESS_LEVEL_NORMAL      = 0;
     const ACCESS_LEVEL_FORBID_ANON = 1;
 
+    const REALM = 'Restricted Tuleap API';
+
     protected $is_authenticated;
 
     private $access_level;

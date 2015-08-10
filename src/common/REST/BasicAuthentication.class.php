@@ -26,8 +26,6 @@ use UserManager;
 
 class BasicAuthentication implements iAuthenticate {
 
-    const REALM = 'Restricted Tuleap API';
-
     public function __isAllowed() {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $current_user = UserManager::instance()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
@@ -36,7 +34,6 @@ class BasicAuthentication implements iAuthenticate {
                 return true;
             }
 
-            header('WWW-Authenticate: Basic realm="' . self::REALM . '"');
             throw new RestException(401, 'Basic Authentication Required');
         }
     }
@@ -49,7 +46,7 @@ class BasicAuthentication implements iAuthenticate {
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
     public function __getWWWAuthenticateString() {
-        return 'Basic';
+        return 'Basic realm="'.AuthenticatedResource::REALM.'" Token realm="'.AuthenticatedResource::REALM.'"';
     }
 
 }
