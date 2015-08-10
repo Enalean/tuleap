@@ -121,9 +121,9 @@ class Tracker_ArtifactFactory {
      *
      * @return Tracker_Artifact_PaginatedArtifacts
      */
-    public function getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset) {
+    public function getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, $reverse_order) {
         $artifacts = array();
-        foreach ($this->getDao()->searchPaginatedByTrackerId($tracker_id, $limit, $offset) as $row) {
+        foreach ($this->getDao()->searchPaginatedByTrackerId($tracker_id, $limit, $offset, $reverse_order) as $row) {
             $artifacts[$row['id']] = $this->getInstanceFromRow($row);
         }
 

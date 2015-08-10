@@ -49,10 +49,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedByTrackerId($tracker_id, $limit, $offset) {
+    public function searchPaginatedByTrackerId($tracker_id, $limit, $offset, $reverse_order) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
+        $order      = ($reverse_order) ? 'DESC' : 'ASC';
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT.value AS title
                 FROM tracker_artifact AS A
@@ -62,6 +63,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
                     ) ON (A.last_changeset_id = CV.changeset_id)
+                    ORDER BY A.id $order
                     LIMIT $limit OFFSET $offset";
         return $this->retrieve($sql);
     }

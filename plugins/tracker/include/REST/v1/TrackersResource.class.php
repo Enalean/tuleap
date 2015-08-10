@@ -48,12 +48,13 @@ use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
  */
 class TrackersResource extends AuthenticatedResource {
 
-    const MAX_LIMIT        = 50;
-    const DEFAULT_LIMIT    = 10;
-    const DEFAULT_OFFSET   = 0;
-    const DEFAULT_VALUES   = '';
-    const ALL_VALUES       = 'all';
-    const DEFAULT_CRITERIA = '';
+    const MAX_LIMIT                                = 50;
+    const DEFAULT_LIMIT                            = 10;
+    const DEFAULT_OFFSET                           = 0;
+    const DEFAULT_VALUES                           = '';
+    const ALL_VALUES                               = 'all';
+    const DEFAULT_CRITERIA                         = '';
+    const DEFAULT_SHOULD_ORDER_BY_ARTIFACT_ID_DESC = false;
 
     /**
      * @url OPTIONS
@@ -171,21 +172,24 @@ class TrackersResource extends AuthenticatedResource {
      * @url GET {id}/artifacts
      * @access hybrid
      *
-     * @param int    $id     Id of the tracker
+     * @param int    $id     ID of the tracker
      * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
      * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
      * @param int    $offset Position of the first element to display {@from path}{@min 0}
      * @param string $query  JSON object of search criteria properties {@from path}
+     * @param bool   $reverse_order By default the artifacts are returned by Artifact ID ASC. Set this parameter to true
+     *                              to fetch in the reverse order. <b>Does not work with the query parameter</b> {@from path}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      * @throws RestException 400
      */
     public function getArtifacts(
         $id,
-        $values = self::DEFAULT_VALUES,
-        $limit  = self::DEFAULT_LIMIT,
-        $offset = self::DEFAULT_OFFSET,
-        $query  = self::DEFAULT_CRITERIA
+        $values        = self::DEFAULT_VALUES,
+        $limit         = self::DEFAULT_LIMIT,
+        $offset        = self::DEFAULT_OFFSET,
+        $query         = self::DEFAULT_CRITERIA,
+        $reverse_order = self::DEFAULT_SHOULD_ORDER_BY_ARTIFACT_ID_DESC
     ) {
         $this->checkAccess();
         $this->checkLimitValue($limit);
@@ -196,7 +200,14 @@ class TrackersResource extends AuthenticatedResource {
         if ($query) {
             $artifacts = $this->getArtifactsMatchingQuery($user, $valid_tracker, $query, $offset, $limit);
         } else {
-            $pagination = $this->getTrackerArtifactFactory()->getPaginatedArtifactsByTrackerId($id, $limit, $offset);
+            $reverse_order = (bool) $reverse_order;
+
+            $pagination = $this->getTrackerArtifactFactory()->getPaginatedArtifactsByTrackerId(
+                $id,
+                $limit,
+                $offset,
+                $reverse_order
+            );
             $nb_matching = $pagination->getTotalSize();
             $artifacts   = $pagination->getArtifacts();
             Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
