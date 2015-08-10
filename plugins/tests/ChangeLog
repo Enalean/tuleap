@@ -1,3 +1,6 @@
+Version 5.29 - Tuleap 8.5
+    * request #8313 Remove spaces at the end of an item title
+
 Version 5.28 - Tuleap 8.0
     * Replace XmlValidator by XML_RNGValidator
 

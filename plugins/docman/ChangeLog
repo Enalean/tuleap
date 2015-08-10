@@ -1,3 +1,6 @@
+Version 2.26.79 - Tuleap 8.5
+    * request #8313 Remove spaces at the end of an item title
+
 Version 2.26.78 - Tuleap 8.5
     * request #8305 System_check event creates missing docman folders
 
