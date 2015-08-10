@@ -57,11 +57,19 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
     ) {
         $changeset_xml = $artifact_xml->addChild('changeset');
 
-        $this->user_xml_exporter->exportUserByUserId(
-            $changeset->getSubmittedBy(),
-            $changeset_xml,
-            'submitted_by'
-        );
+        if ($changeset->getSubmittedBy()) {
+            $this->user_xml_exporter->exportUserByUserId(
+                $changeset->getSubmittedBy(),
+                $changeset_xml,
+                'submitted_by'
+            );
+        } elseif ($changeset->getEmail()) {
+            $this->user_xml_exporter->exportUserByMail(
+                $changeset->getEmail(),
+                $changeset_xml,
+                'submitted_by'
+            );
+        }
 
         $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
         $submitted_on->addAttribute('format', 'ISO8601');

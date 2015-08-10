@@ -90,6 +90,7 @@
           <value>username</value>
           <value>ldap</value>
           <value>id</value>
+          <value>email</value>
         </choice>
       </attribute>
       <group>
