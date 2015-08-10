@@ -21,6 +21,7 @@ Version 8.5 (Not Released Yet)
 	* request #8257: Properly select charset at the creation of a MySQL connection
 	* request #8265: Fix SQL injection in the resend mail of a pending account page
 	* request #8294: Fix persistent XSS in wiki page name
+	* request #8314: Fix reflected XSS in project search
 
 	== Bug fix ==
 	* request #8310: Fatal error at user registeration
