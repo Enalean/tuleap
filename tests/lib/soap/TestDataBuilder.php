@@ -27,6 +27,19 @@ class SOAP_TestDataBuilder extends TestDataBuilder {
         parent::__construct();
     }
 
+    public function activatePlugins() {
+        $this->activatePlugin('docman');
+        PluginManager::instance()->loadPlugins();
+
+        return $this;
+    }
+
+    public function initPlugins() {
+        foreach (glob(dirname(__FILE__).'/../../../plugins/*/tests/soap/init_test_data.php') as $init_file) {
+            require_once $init_file;
+        }
+    }
+
     public function generateUsers() {
         $user_1 = new PFUser();
         $user_1->setUserName(self::TEST_USER_1_NAME);

@@ -312,6 +312,11 @@ class Docman_Actions extends Actions {
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
             $item = $request->get('item');
+
+            if (isset($item['title'])) {
+                $item['title'] = trim($item['title']);
+            }
+
             $fs =& $this->_getFileStorage();
             if (
                     $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
@@ -519,6 +524,10 @@ class Docman_Actions extends Actions {
             $user =& $this->_controler->getUser();
 
             $data = $request->get('item');
+
+            if (isset($data['title'])) {
+                $data['title'] = trim($data['title']);
+            }
 
             $item_factory =& $this->_getItemFactory($request->get('group_id'));
             $item =& $item_factory->getItemFromDb($data['id']);

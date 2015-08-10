@@ -28,5 +28,6 @@ class SOAP_DatabaseInitialization extends DatabaseInitialization {
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3structure.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
+        $this->mysqlLoadFile('plugins/docman/db/install.sql');
     }
 }
