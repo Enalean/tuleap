@@ -15,6 +15,7 @@ Version 8.5 (Not Released Yet)
 	* story #8173: Use an archive in project export/import process
 	* story #8248: Have a beautiful register confirmation email
 	* request #8254: Have a way to override tuleap's permissions
+	* request #8315: Automatically select an appropriate timezone at the account creation
 
 	== Security ==
 	* request #7953: Continue the removing of the SimpleSanitizer class
