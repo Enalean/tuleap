@@ -1,3 +1,6 @@
+Version 5.30 - Tuleap 8.5
+    * request #7311: Display README markdown file content in GitPHP tree views
+
 Version 5.29 - Tuleap 8.5
     * request #8313 Remove spaces at the end of an item title
 

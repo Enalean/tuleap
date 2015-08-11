@@ -36,7 +36,7 @@ Version 8.5 (Not Released Yet)
 	* FlamingParrot: 1.101
 
 	== Plugins ==
-	* git: 4.72
+	* git: 4.73
 	* tracker: 5.678
 	* agiledashboard: 1.251
 	* ldap: 3.84
@@ -45,7 +45,7 @@ Version 8.5 (Not Released Yet)
 	* pluginsadministration: 1.11
 	* mediawiki: 0.79
 	* docman: 2.26.79
-	* tests: 5.29
+	* tests: 5.30
 	* phpwiki: 0.2
 
 Version 8.4 (Friday, July 17th 2015)

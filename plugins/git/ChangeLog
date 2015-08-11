@@ -1,3 +1,6 @@
+Version 4.73 - Tuleap 8.5
+    * request #7311: Display README markdown file content in GitPHP tree views
+
 Version 4.72 - Tuleap 8.5
     * request #8076: Save deleted git repositories before purging them
 
