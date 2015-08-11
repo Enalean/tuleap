@@ -7,6 +7,7 @@ Version 8.5 (Not Released Yet)
 	* story #8170: add options for import_project_xml_script
 	* Revert "request #8084: Force user to log in if outside of network"
 	* Introduce phpwiki plugin
+	* Development: allow to re-use compile_less by external scripts
 
 	== Enhancements ==
 	* story #7893: Have a beautiful project creation feedback
