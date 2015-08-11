@@ -38,6 +38,7 @@ class phpwikiPlugin extends Plugin {
         $this->addHook('backend_system_purge_files', 'purgeFiles');
 
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICE_PUBLIC_AREAS);
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
@@ -59,6 +60,22 @@ class phpwikiPlugin extends Plugin {
 
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e803';
+    }
+
+    public function service_public_areas($params) {
+        if ($params['project']->usesService($this->getServiceShortname())) {
+            $service   = $params['project']->getService($this->getServiceShortname());
+            $wiki      = new PHPWiki($params['project']->getID());
+
+            $presenter = new WidgetPublicAreaPresenter(
+                $service->getUrl(),
+                $GLOBALS['HTML']->getImagePath('ic/wiki.png'),
+                $this->text,
+                $wiki->getProjectPageCount()
+            );
+            $renderer          = TemplateRendererFactory::build()->getRenderer(PHPWIKI_TEMPLATE_DIR);
+            $params['areas'][] = $renderer->renderToString('widget_public_area', $presenter);
+        }
     }
 
     public function process(HTTPRequest $request) {
