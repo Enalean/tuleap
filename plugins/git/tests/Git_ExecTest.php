@@ -108,6 +108,28 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->git_exec->rm("$this->fixture_dir/toto");
     }
-}
 
-?>
+    public function itListTheContentOfATree() {
+        mkdir("$this->fixture_dir/le_dir");
+        touch("$this->fixture_dir/le_dir/le_file");
+        touch("$this->fixture_dir/le_dir/le_subdir");
+        $this->git_exec->add("$this->fixture_dir/le_dir");
+        $this->git_exec->commit("add stuff");
+
+        $content  = $this->git_exec->lsTree('HEAD', 'le_dir/');
+        $expected = array('le_dir/le_file', 'le_dir/le_subdir');
+
+        $this->assertEqual($content, $expected);
+    }
+
+    public function itReturnsTheContentOfAFile() {
+        file_put_contents("$this->fixture_dir/toto", "stuff");
+        $this->git_exec->add("$this->fixture_dir/toto");
+        $this->git_exec->commit("add stuff");
+
+        $content  = $this->git_exec->getFileContent('HEAD', 'toto');
+        $expected = "stuff";
+
+        $this->assertEqual($content, $expected);
+    }
+}

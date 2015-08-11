@@ -15,14 +15,15 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
     die('Tuleap must be run on a PHP 5.1.6 (or greater) engine');
 }
 
+
+require_once('common/autoload_libs.php');
+require_once('common/autoload.php');
+
 if (server_is_php_version_equal_or_greater_than_53() == true) {
     if (!ini_get('date.timezone')) {
         date_default_timezone_set('Europe/Paris');
     }
 }
-
-require_once('common/autoload_zend.php');
-require_once('common/autoload.php');
 
 // Defines all of the settings first (hosts, databases, etc.)
 $locar_inc_finder = new Config_LocalIncFinder();
@@ -109,8 +110,8 @@ if (!ini_get('variables_order')) {
 }
 //Cast group_id as int.
 foreach(array(
-        'group_id', 
-        'atid', 
+        'group_id',
+        'atid',
         'pv',
     ) as $variable) {
     if (isset($_REQUEST[$variable])) {
@@ -236,7 +237,7 @@ if (license_already_declined()) {
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:
 // a) all scripts where you are not logged in by definition
-// b) if it is a local access from localhost 
+// b) if it is a local access from localhost
 
 // Check URL for valid hostname and valid protocol
 

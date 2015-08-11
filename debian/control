@@ -120,7 +120,7 @@ Description: ForumML plugin for Tuleap
 Package: tuleap-plugin-git
 Architecture: all
 Depends: tuleap (= ${source:Version}), adduser, git (>= 1:1.6), php5-cli,
- php-geshi, php-guzzle, smarty3, gitolite, ${misc:Depends}, ${perl:Depends}
+ php-geshi, php-guzzle, smarty3, gitolite, ${misc:Depends}, ${perl:Depends}, php-markdown
 Description: Git plugin for Tuleap
  Integration of git distributed software configuration management tool together
  with Tuleap.

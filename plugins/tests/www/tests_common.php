@@ -43,7 +43,7 @@ if (isset($GLOBALS['jpgraph_dir'])) {
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['jpgraph_dir']);
 }
 
-require_once('common/autoload_zend.php');
+require_once('common/autoload_libs.php');
 require_once('common/autoload.php');
 
 require_once dirname(__FILE__).'/../include/simpletest/unit_tester.php';
@@ -59,5 +59,3 @@ require_once dirname(__FILE__).'/../../../tests/lib/constants.php';
 //require_once 'TuleapTestCase.class.php';
 //require_once 'TuleapDbTestCase.class.php';
 //require_once 'MockBuilder.php';
-
-?>

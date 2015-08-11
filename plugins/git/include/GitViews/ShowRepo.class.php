@@ -89,6 +89,7 @@ class GitViews_ShowRepo {
             $view = new GitViews_ShowRepo_Content(
                 $this->repository,
                 $git_php_viewer,
+                $this->request,
                 $this->request->getCurrentUser(),
                 $this->controller,
                 $this->url_manager,
