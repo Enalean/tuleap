@@ -18,7 +18,11 @@ FRONTEND_NAME_VERSION=$(FRONTEND_NAME)-$(VERSION)
 BACKEND_NAME_VERSION=$(BACKEND_NAME)-$(VERSION)
 
 ifeq ($(DIST),.el5)
-    RPMBUILD += --define "APP_NAME codendi"
+	RPMBUILD += --define "APP_NAME codendi"
+	# Workaround centos6 change in packaging format and the hell of
+	# rpmlib(FileDigests) and rpmlib(PayloadIsXz) errors on centos5
+	RPMBUILD += --define "%_source_filedigest_algorithm 0" --define "%_binary_filedigest_algorithm 0"
+	RPMBUILD += --define "%_source_payload w9.gzdio" --define "%_binary_payload w9.gzdio"
 endif
 
 all:
