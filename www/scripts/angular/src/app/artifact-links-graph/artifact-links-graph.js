@@ -1,3 +1,5 @@
-angular.module('tuleap.artifact-links-graph', [
-    'templates-app'
-]);
+(function () {
+    angular.module('tuleap.artifact-links-graph', [
+        'templates-app'
+    ]);
+})();

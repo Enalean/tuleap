@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-08-05 14:45+0200\n"
+"PO-Revision-Date: 2015-08-18 15:07+0200\n"
 "Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "All environments"
 msgstr "Tous les environnements"
 
-#: src/app/artifact-links-graph/artifact-links-graph-service.js
+#: src/app/artifact-links-graph/artifact-links-model-service.js
 msgid "Artifact links field not found."
 msgstr "Le champ lien vers des artéfacts est inexistant."
 
@@ -102,6 +102,10 @@ msgstr "Créer la campagne"
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Edit this test"
+msgstr "Editer ce test"
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
@@ -169,7 +173,7 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Show dependencies graph for this test"
-msgstr "Afficher le graph de dépendances pour ce test"
+msgstr "Afficher le graphe de dépendances pour ce test"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Status"
@@ -190,6 +194,15 @@ msgstr "Total"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
+
+#~ msgid "Edit this artifact"
+#~ msgstr "Editer cet artefact"
+
+#~ msgid "Show the edition for this test"
+#~ msgstr "Afficher l’édition de ce test"
+
+#~ msgid "Edition of &#34;{{ modal.title }}&#34;"
+#~ msgstr "Edition de &#34;{{ modal.title }}&#34;"
 
 #~ msgid "Dependencies graph"
 #~ msgstr "Graphe des dépendances"

@@ -19,9 +19,12 @@
     "angular-gettext": "~1.1.0",
     "ngSocket": "~0.2.1",
     "angular-socket-io": "~0.6.0",
-    "angular-ui-utils": "bower-unique"
+    "angular-ui-utils": "bower-unique",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#5509515978208cd7aac5b4acfade5014ca42cbc6"
   },
   "resolutions": {
-    "angular": "1.3.11"
+    "angular": "1.3.11",
+    "moment": "^2.9.0",
+    "angular-sanitize": "1.3.11"
   }
 }

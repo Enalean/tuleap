@@ -88,9 +88,21 @@ module.exports = {
       'vendor/angular-socket-io/socket.min.js',
       'vendor/angular-ui-utils/unique.min.js',
       'vendor/angular-cookies/angular-cookies.min.js',
-      'vendor/d3/d3.min.js'
+      'vendor/d3/d3.min.js',
+      'vendor/angular-ckeditor/angular-ckeditor.js',
+      'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
+      'vendor/angular-filter/dist/angular-filter.min.js',
+      'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
+      'vendor/angular-ui-select/dist/select.js'
     ],
     css: [
+      'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
+      'vendor/angular-ui-select/dist/select.css',
+      'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
+    ],
+    assets: [
+      'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',
+      'vendor/artifact-modal/dist/assets/loader-mini.gif'
     ]
   }
 };

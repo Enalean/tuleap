@@ -76,6 +76,10 @@ msgstr ""
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Edit this test"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html

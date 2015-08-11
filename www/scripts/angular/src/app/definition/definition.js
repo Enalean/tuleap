@@ -1,3 +1,5 @@
-angular.module('definition', [
-    'restangular'
-]);
+(function () {
+    angular.module('definition', [
+        'restangular'
+    ]);
+})();

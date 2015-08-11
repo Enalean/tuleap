@@ -10,5 +10,6 @@ angular.module('trafficlights', [
     'ngAnimate',
     'ngSanitize',
     'ngCookies',
-    'gettext'
+    'gettext',
+    'tuleap.artifact-modal'
 ]);

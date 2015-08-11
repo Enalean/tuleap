@@ -300,6 +300,19 @@
                     }
                 }
 
+                > #edit-artifact {
+                    margin-right: 10px;
+                    position: relative;
+                    top: 8px;
+                    float: right;
+                    cursor: pointer;
+                    transition: opacity linear 0.07s;
+
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
+
                 &.passed {
                     background: @passed;
                     transition: all 0.08s linear;

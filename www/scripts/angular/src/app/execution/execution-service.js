@@ -1,94 +1,121 @@
-angular
-    .module('campaign')
-    .service('ExecutionService', ExecutionService);
+(function () {
+    angular
+        .module('campaign')
+        .service('ExecutionService', ExecutionService)
+        .constant("ExecutionConstants", {
+            "UNCATEGORIZED": "Uncategorized"
+        });
 
-ExecutionService.$inject = ['Restangular', '$q', '$rootScope'];
+    ExecutionService.$inject = ['Restangular', '$q', '$rootScope', 'ExecutionConstants'];
 
-function ExecutionService(Restangular, $q, $rootScope) {
-    var self    = this,
-        baseurl = '/api/v1',
-        rest    = Restangular.withConfig(setRestangularConfig);
+    function ExecutionService(Restangular, $q, $rootScope, ExecutionConstants) {
+        var self    = this,
+            baseurl = '/api/v1',
+            rest    = Restangular.withConfig(setRestangularConfig);
 
-    self.executions_by_categories_by_campaigns = {};
-    self.executions                            = {};
-    self.loading                               = {};
-    self.loadExecutions                        = loadExecutions;
+        _.extend(self, {
+            UNCATEGORIZED                         : ExecutionConstants.UNCATEGORIZED,
+            executions_by_categories_by_campaigns : {},
+            executions                            : {},
+            categories                            : {},
+            loading                               : {},
+            loadExecutions                        : loadExecutions,
+            getExecutionsByDefinitionId           : getExecutionsByDefinitionId
+        });
 
-    function loadExecutions(campaign_id) {
-        if (self.executions_by_categories_by_campaigns[campaign_id]) {
-            return;
-        }
+        function loadExecutions(campaign_id) {
+            self.campaign_id = campaign_id;
 
-        var limit      = 50,
-            offset     = 0,
-            nb_fetched = 0;
+            if (self.executions_by_categories_by_campaigns[campaign_id]) {
+                return;
+            }
 
-        self.loading[campaign_id] = true;
-        self.executions_by_categories_by_campaigns[campaign_id] = {};
-        getExecutions(limit, offset);
+            var limit      = 50,
+                offset     = 0,
+                nb_fetched = 0;
 
-        function getExecutions(limit, offset) {
-            getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
-                var total_executions  = data.total;
+            self.loading[campaign_id] = true;
+            self.executions_by_categories_by_campaigns[campaign_id] = {};
+            getExecutions(limit, offset);
 
-                nb_fetched += data.results.length;
-                groupExecutionsByCategory(data.results);
+            function getExecutions(limit, offset) {
+                getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
+                    var total_executions  = data.total;
 
-                $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
+                    nb_fetched += data.results.length;
+                    groupExecutionsByCategory(data.results);
 
-                if (nb_fetched < total_executions) {
-                    getExecutions(limit, offset + limit);
-                } else {
-                    self.loading[campaign_id] = false;
-                }
-            });
-        }
+                    $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
 
-        function groupExecutionsByCategory(executions) {
-            executions.forEach(function(execution) {
-                var category = execution.definition.category;
-                if (! category) {
-                    category = 'Uncategorized';
-                    execution.definition._uncategorized = category;
-                }
+                    if (nb_fetched < total_executions) {
+                        getExecutions(limit, offset + limit);
+                    } else {
+                        self.loading[campaign_id] = false;
+                    }
+                });
+            }
 
-                self.executions[execution.id] = execution;
+            function groupExecutionsByCategory(executions) {
+                executions.forEach(function(execution) {
+                    var category = execution.definition.category;
+                    if (! category) {
+                        category = ExecutionConstants.UNCATEGORIZED;
+                        execution.definition._uncategorized = category;
+                    }
 
-                if (typeof self.executions_by_categories_by_campaigns[campaign_id][category] === "undefined") {
-                    self.executions_by_categories_by_campaigns[campaign_id][category] = {
-                        label     : category,
-                        executions: []
-                    };
-                }
+                    self.executions[execution.id] = execution;
 
-                self.executions_by_categories_by_campaigns[campaign_id][category].executions.push(execution);
-            });
-        }
+                    if (typeof self.executions_by_categories_by_campaigns[campaign_id][category] === "undefined") {
+                        self.executions_by_categories_by_campaigns[campaign_id][category] = {
+                            label     : category,
+                            executions: []
+                        };
+                    }
 
-        function getRemoteExecutions(campaign_id, limit, offset) {
-            var data = $q.defer();
-
-            rest.one('trafficlights_campaigns', campaign_id)
-                .all('trafficlights_executions')
-                .getList({
-                    limit: limit,
-                    offset: offset
-                })
-                .then(function(response) {
-                    result = {
-                        results: response.data,
-                        total: response.headers('X-PAGINATION-SIZE')
-                    };
-
-                    data.resolve(result);
+                    self.executions_by_categories_by_campaigns[campaign_id][category].executions.push(execution);
                 });
 
-            return data.promise;
+                self.categories = self.executions_by_categories_by_campaigns[campaign_id];
+            }
+
+            function getRemoteExecutions(campaign_id, limit, offset) {
+                var data = $q.defer();
+
+                rest.one('trafficlights_campaigns', campaign_id)
+                    .all('trafficlights_executions')
+                    .getList({
+                        limit: limit,
+                        offset: offset
+                    })
+                    .then(function(response) {
+                        result = {
+                            results: response.data,
+                            total: response.headers('X-PAGINATION-SIZE')
+                        };
+
+                        data.resolve(result);
+                    });
+
+                return data.promise;
+            }
+        }
+
+        function setRestangularConfig(RestangularConfigurer) {
+            RestangularConfigurer.setFullResponse(true);
+            RestangularConfigurer.setBaseUrl(baseurl);
+        }
+
+        function getExecutionsByDefinitionId(artifact_id) {
+            var executions = [];
+            _(self.categories).forEach(function(category) {
+                _(category.executions).forEach(function(execution) {
+                    if (execution.definition.id === artifact_id) {
+                        executions.push(execution);
+                    }
+                });
+            });
+
+            return executions;
         }
     }
-
-    function setRestangularConfig(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl(baseurl);
-    }
-}
+})();
