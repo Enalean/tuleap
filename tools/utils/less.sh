@@ -21,46 +21,18 @@
 mode=$1
 basedir=$2
 
-set_user_id()
-{
-    if [ -n "$USER_ID" ]; then
-        chown $USER_ID:$USER_ID $1;
-    fi
-}
+# Find the path of this directory
+if [ -f "$0" ]; then
+    mydir=$(dirname $(readlink -f $0))
+else
+    mydir=$(dirname $(readlink -f $(which $0)))
+fi
+
+. $mydir/less_utils.sh
 
 clean_process()
 {
     kill -9 `ps aux | grep inotifywait | grep -v grep | awk '{print $2}'`
-}
-
-compile_less()
-{
-    recess_options="--format compact --zeroUnits false --strictPropertyOrder false --noUnderscores false --noOverqualifying false --noIDs false --noUniversalSelectors false"
-    filename=$(basename "$1")
-    extension="${filename##*.}"
-    filename="${filename%.*}"
-    path=$(dirname "$1")
-
-    if [[ 'less' == $extension ]]; then
-        basename "$path" | grep -qE "bootstrap|utils"
-        can_compile_to_css=$?
-
-        if [[ $can_compile_to_css == 1 ]]; then
-            echo "Compiling $1"
-            recess --compile "$path/$filename.less" > "$path/$filename.css"
-            set_user_id "$path/$filename.css"
-            nb_generated_lines=$(wc -l "$path/$filename.css" | awk '{print $1}')
-
-            if [[ $nb_generated_lines == 0 ]]; then
-                recess $recess_options "$path/$filename.less"
-            fi
-
-            if [[ $(echo "$filename" | grep 'FlamingParrot_') ]]; then
-                echo "Splitting $filename.css for IE9"
-                blessc "$path/$filename.css" "$path/$filename-IE9.css"
-            fi
-        fi
-    fi
 }
 
 less()
