@@ -195,8 +195,26 @@ class URLVerification {
      * @return String
      */
     function getRedirectionURL($server) {
-        $location = '';
-        $chunks = $this->getUrlChunks($server);
+        $chunks   = $this->getUrlChunks($server);
+
+        $location = $this->getRedirectLocation($server, $chunks);
+
+        if (isset($chunks['script'])) {
+            $location .= $chunks['script'];
+        } else {
+            $location .= $server['REQUEST_URI'];
+        }
+        return $location;
+    }
+
+    private function getRedirectLocation(array $server, array $chunks) {
+        if (isset($chunks['protocol']) || isset($chunks['host'])) {
+            return $this->rewriteProtocol($server, $chunks);
+        }
+        return '';
+    }
+
+    private function rewriteProtocol(array $server, array $chunks) {
         if (isset($chunks['protocol'])) {
             $location = $chunks['protocol']."://";
         } else {
@@ -206,17 +224,13 @@ class URLVerification {
                 $location = "http://";
             }
         }
-            
-            if (isset($chunks['host'])) {
-                $location .= $chunks['host'];
-            } else {
-                $location .= $server['HTTP_HOST'];
-            } 
-            if (isset($chunks['script'])) {
-                $location .= $chunks['script'];
-            } else {
-                $location  .= $server['REQUEST_URI'];
-            } 
+
+        if (isset($chunks['host'])) {
+            $location .= $chunks['host'];
+        } else {
+            $location .= $server['HTTP_HOST'];
+        }
+
         return $location;
     }
 

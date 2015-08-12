@@ -1,3 +1,10 @@
+rp:
+  image: tuleap-reverseproxy
+  links:
+   - web:web
+  volumes_from:
+   - tuleap_reverseproxy_data
+
 web:
   image: enalean/tuleap-aio-dev:nodb
   links:

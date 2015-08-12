@@ -19,4 +19,3 @@
 function server_is_php_version_equal_or_greater_than_53() {
     return version_compare(phpversion(), '5.3', '>=');
 }
-?>

@@ -91,7 +91,7 @@ function viewvc_utils_passcommand() {
 
   $command = 'HTTP_COOKIE='.viewvc_utils_escape_string_from_server('HTTP_COOKIE').' '.
            'HTTP_USER_AGENT='.viewvc_utils_escape_string_from_server('HTTP_USER_AGENT').' '.
-           'REMOTE_ADDR='.viewvc_utils_escape_string_from_server('REMOTE_ADDR').' '.
+           'REMOTE_ADDR='.escapeshellarg(HTTPRequest::getIPAddress()).' '.
            'QUERY_STRING='.$query_string.' '.
            'SERVER_SOFTWARE='.viewvc_utils_escape_string_from_server('SERVER_SOFTWARE').' '.
            'SCRIPT_NAME='.viewvc_utils_escape_string_from_server('SCRIPT_NAME').' '.

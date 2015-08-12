@@ -504,7 +504,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://secure.example.com/project.php');
+        $this->assertEqual($urlVerification->getRedirectionURL($server), '/project.php');
     }
 
     function testAssertValidUrlWithException() {

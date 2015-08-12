@@ -59,6 +59,9 @@ if (ForgeConfig::get('DEBUG_MODE')) {
     $restler = new Restler();
 }
 
+// Do not let Restler find itself the domain, when behind a reverse proxy, it's
+// a mess.
+$restler->setBaseUrl($sys_default_domain);
 $restler->setAPIVersion($version);
 $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
 

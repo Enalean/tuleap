@@ -185,12 +185,17 @@ dev-setup: .env
 	@docker inspect tuleap_db_data > /dev/null 2>&1 || docker run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
 	@docker inspect tuleap_es_data > /dev/null 2>&1 || docker run -t --name=tuleap_es_data -v /data busybox true
 	@docker inspect tuleap_data > /dev/null 2>&1 || docker run -t --name=tuleap_data -v /data busybox true
+	@docker inspect tuleap_reverseproxy_data > /dev/null 2>&1 || docker run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
 
 show-passwords:
 	@docker run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
 
 start-dns:
 	@docker run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
+
+start-rp:
+	@echo "Start reverse proxy"
+	@docker-compose up --x-smart-recreate -d rp
 
 start:
 	@echo "Start Tuleap Web + LDAP + DB"
