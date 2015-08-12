@@ -1,3 +1,6 @@
+Version 0.80 - Tuleap 8.5
+    * request #8322 Mediawiki Permissions Delegation images not displayed
+
 Version 0.79 - Tuleap 8.5
     * story #8155: be able to log if I access MW in compatibility mode
 
