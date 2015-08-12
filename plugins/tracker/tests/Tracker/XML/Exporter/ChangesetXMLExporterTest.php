@@ -37,15 +37,18 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
     private $artifact;
     private $user_manager;
 
+    /** @var UserXMLExporter */
+    private $user_xml_exporter;
+
     public function setUp() {
         parent::setUp();
-        $this->user_manager    = mock('UserManager');
-        $user_xml_exporter     = new UserXMLExporter($this->user_manager);
-        $this->artifact_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
-        $this->values_exporter = mock('Tracker_XML_Exporter_ChangesetValuesXMLExporter');
-        $this->exporter        = new Tracker_XML_Exporter_ChangesetXMLExporter(
+        $this->user_manager      = mock('UserManager');
+        $this->user_xml_exporter = partial_mock('UserXMLExporter', array('exportUserByMail', 'exportUserByUserId'), array($this->user_manager));
+        $this->artifact_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
+        $this->values_exporter   = mock('Tracker_XML_Exporter_ChangesetValuesXMLExporter');
+        $this->exporter          = new Tracker_XML_Exporter_ChangesetXMLExporter(
             $this->values_exporter,
-            $user_xml_exporter
+            $this->user_xml_exporter
         );
 
         $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', '*', '*', '*');
@@ -88,5 +91,14 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
         expect($this->comment)->exportToXML()->once();
 
         $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
+    }
+
+    public function itExportsAnonUser() {
+        expect($this->user_xml_exporter)->exportUserByMail()->once();
+
+        $changeset = mock('Tracker_Artifact_Changeset');
+        stub($changeset)->getSubmittedBy()->returns(null);
+        stub($changeset)->getEmail()->returns('veloc@dino.com');
+        $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }
 }

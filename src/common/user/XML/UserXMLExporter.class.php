@@ -44,4 +44,9 @@ class UserXMLExporter {
 
         $this->exportUser($user, $members_node, $child_name);
     }
+
+    public function exportUserByMail($email, SimpleXMLElement $members_node, $child_name) {
+        $member_node = $members_node->addChild($child_name, $email);
+        $member_node->addAttribute('format', 'email');
+    }
 }
