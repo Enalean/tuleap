@@ -221,7 +221,9 @@ class MediaWikiPlugin extends Plugin {
 
             if ((! $project->isPublic() || $user->isRestricted())
                 && ! $project->userIsMember()
-                && ! $user->isSuperUser()) {
+                && ! $user->isSuperUser()
+                && ! $this->doesUserHavePermission($user)
+            ) {
                 exit;
             }
 
@@ -599,23 +601,32 @@ class MediaWikiPlugin extends Plugin {
     public function has_user_been_delegated_access($params) {
         if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
 
-            $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
-                new User_ForgeUserGroupPermissionsDao()
-            );
-
-            $can_access = $forge_user_manager->doesUserHavePermission(
-                $params['user'],
-                new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
-            );
-
             /**
              * Only change the access rights to the affirmative.
              * Otherwise, we could overwrite a "true" value set by another plugin.
              */
-            if ($can_access) {
+            if ($this->doesUserHavePermission($params['user'])) {
                 $params['can_access'] = true;
             }
         }
+    }
+
+    private function doesUserHavePermission(PFUser $user) {
+        $forge_user_manager = $this->getForgeUserGroupPermissionsManager();
+
+        return $forge_user_manager->doesUserHavePermission(
+            $user,
+            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+        );
+    }
+
+    /**
+     * @return User_ForgeUserGroupPermissionsManager
+     */
+    private function getForgeUserGroupPermissionsManager() {
+        return new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
     }
 
     /**
