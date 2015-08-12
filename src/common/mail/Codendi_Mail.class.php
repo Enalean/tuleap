@@ -409,6 +409,16 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     public function addAdditionalHeader($name, $value) {
         $this->mail->addHeader($name, $value);
     }
-}
 
-?>
+    public function addInlineAttachment($data, $mime_type, $cid) {
+        $this->getMail()->setType(Zend_Mime::MULTIPART_RELATED);
+
+        $mime_part              = new Zend_Mime_Part($data);
+        $mime_part->id          = $cid;
+        $mime_part->type        = $mime_type;
+        $mime_part->disposition = Zend_Mime::DISPOSITION_INLINE;
+        $mime_part->encoding    = Zend_Mime::ENCODING_BASE64;
+
+        $this->getMail()->addAttachment($mime_part);
+    }
+}

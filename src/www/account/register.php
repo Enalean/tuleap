@@ -228,11 +228,12 @@ $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
 $errors = array();
 if ($request->isPost() && $request->exist('Register')) {
-    $page = $request->get('page');
-    $displayed_image    = true;
-    $image_url          = '';
-    $email_presenter    = '';
-    $confirm_hash       = getConfirmHash();
+    $page            = $request->get('page');
+    $displayed_image = true;
+    $image_url       = '';
+    $email_presenter = '';
+    $logo_retriever  = new LogoRetriever();
+    $confirm_hash    = getConfirmHash();
     if ($new_userid = register_valid($confirm_hash, $errors)) {
         $confirmation_register   = true;
         $user_name               = user_getname($new_userid);
@@ -267,7 +268,7 @@ if ($request->isPost() && $request->exist('Register')) {
                     );
                 }
                 $presenter = new MailPresenterFactory();
-                $email_presenter = $presenter->createMailAccountPresenter($user_name, '', $confirm_hash, "user");
+                $email_presenter = $presenter->createMailAccountPresenter($user_name, '', $confirm_hash, "user", $logo_retriever->getUrl());
             }
 
             $title  = $Language->getText('account_register', 'title_confirm');
@@ -306,7 +307,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             $presenter          = new MailPresenterFactory();
-            $email_presenter    = $presenter->createMailAccountPresenter($user_name, '', $confirm_hash, "user");
+            $email_presenter    = $presenter->createMailAccountPresenter($user_name, '', $confirm_hash, "user", $logo_retriever->getUrl());
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,

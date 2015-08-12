@@ -26,7 +26,6 @@ class MailNotificationPresenter extends MailOutlinePresenter{
     public $color_button;
 
     public function __construct(
-        $has_logo,
         $logo_url,
         $title,
         $section_one,
@@ -37,7 +36,7 @@ class MailNotificationPresenter extends MailOutlinePresenter{
         $redirect_button,
         $color_button
     ) {
-        parent::__construct($has_logo, $logo_url, $title, $thanks, $signature, $color_logo);
+        parent::__construct($logo_url, $title, $thanks, $signature, $color_logo);
         $this->section_one          = $section_one;
         $this->redirect_url         = $redirect_url;
         $this->redirect_button      = $redirect_button;

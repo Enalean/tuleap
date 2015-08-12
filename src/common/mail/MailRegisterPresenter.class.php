@@ -27,7 +27,6 @@ class MailRegisterPresenter extends MailOutlinePresenter {
     public $login;
 
     public function __construct(
-        $has_logo,
         $logo_url,
         $title,
         $section_one,
@@ -39,7 +38,7 @@ class MailRegisterPresenter extends MailOutlinePresenter {
         $color_logo,
         $login
     ) {
-        parent::__construct($has_logo, $logo_url, $title, $thanks, $signature, $color_logo);
+        parent::__construct($logo_url, $title, $thanks, $signature, $color_logo);
         $this->section_one          = $section_one;
         $this->section_two          = $section_two;
         $this->section_after_login  = $section_after_login;

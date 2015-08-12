@@ -27,13 +27,12 @@ class MailPresenterFactory {
      *
      * @return MailRegisterPresenter
      */
-    public function createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role) {
+    public function createMailAccountPresenter($login, $password, $confirm_hash, $presenter_role, $logo_url) {
         $color_logo = "#000";
         $color_button = "#347DBA";
 
         $base_url       = get_server_url();
         $this->setColorTheme($color_logo, $color_button);
-        $this->setLogoUrl($logo_url, $has_logo);
 
         $attributes_presenter = array(
             "login"         => $login,
@@ -42,7 +41,6 @@ class MailPresenterFactory {
             "color_button"  => $color_button,
             "confirm_hash"  => $confirm_hash,
             "base_url"      => $base_url,
-            "has_logo"      => $has_logo,
             "logo_url"      => $logo_url
         );
 
@@ -62,12 +60,11 @@ class MailPresenterFactory {
      * Create a presenter for email project.
      *
      */
-    public function createMailProjectPresenter(Project $project) {
+    public function createMailProjectPresenter(Project $project, $logo_url) {
         $color_logo = "#000";
 
         $this->setColorTheme($color_logo);
-        $this->setLogoUrl($logo_url, $has_logo);
-        $presenter = $this->createMailProjectRegisterPresenter($project, $color_logo, $logo_url, $has_logo);
+        $presenter = $this->createMailProjectRegisterPresenter($project, $color_logo, $logo_url);
 
         return $presenter;
     }
@@ -76,16 +73,15 @@ class MailPresenterFactory {
      * Create a presenter for email notifiaction project.
      *
      */
-    public function createMailProjectNotificationPresenter(Project $project) {
+    public function createMailProjectNotificationPresenter(Project $project, $logo_url) {
         $color_logo = "#000";
         $color_button = "#347DBA";
 
         $this->setColorTheme($color_logo, $color_button);
-        $this->setLogoUrl($logo_url, $has_logo);
         if ($project->projectsMustBeApprovedByAdmin()) {
-            $presenter = $this->createMailProjectNotificationMustBeApprovedPresenter($project, $color_logo, $logo_url, $has_logo, $color_button);
+            $presenter = $this->createMailProjectNotificationMustBeApprovedPresenter($project, $color_logo, $logo_url, $color_button);
         } else {
-            $presenter = $this->createMailProjectRegisterNotificationPresenter($project, $color_logo, $logo_url, $has_logo, $color_button);
+            $presenter = $this->createMailProjectRegisterNotificationPresenter($project, $color_logo, $logo_url, $color_button);
         }
 
         return $presenter;
@@ -103,7 +99,6 @@ class MailPresenterFactory {
 
         include($GLOBALS['Language']->getContent('account/new_account_email'));
         $presenter = new MailRegisterByAdminPresenter(
-            $attributes_presenter["has_logo"],
             $attributes_presenter["logo_url"],
             $title,
             $section_one,
@@ -136,7 +131,6 @@ class MailPresenterFactory {
         $redirect_url = $base_url ."/account/login.php?confirm_hash=$confirm_hash";
 
         $presenter = new MailRegisterByUserPresenter(
-             $attributes_presenter["has_logo"],
              $attributes_presenter["logo_url"],
              $title,
              $section_one,
@@ -165,7 +159,6 @@ class MailPresenterFactory {
         $redirect_url = $base_url ."/admin/approve_pending_users.php?page=pending";
 
         $presenter = new MailRegisterByAdminNotificationPresenter(
-            $attributes_presenter["has_logo"],
             $attributes_presenter["logo_url"],
             $GLOBALS['Language']->getText('account_register', 'mail_approval_title'),
             $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array($GLOBALS['sys_name']), $attributes_presenter["login"]),
@@ -190,13 +183,10 @@ class MailPresenterFactory {
      */
     private function createApprovalEmailPresenter(array $attributes_presenter) {
         $login      = $attributes_presenter["login"];
-        $base_url   = $attributes_presenter["base_url"];
 
         include($GLOBALS['Language']->getContent('admin/new_account_email'));
 
         $presenter = new MailRegisterByAdminApprovalPresenter(
-            $attributes_presenter["has_logo"],
-            $attributes_presenter["logo_url"],
             $title,
             $section_one,
             $section_two,
@@ -216,12 +206,11 @@ class MailPresenterFactory {
      *
      * @return MailRegisterByUserPresenter
      */
-    private function createMailProjectRegisterPresenter(Project $project, $color_logo, $logo_url, $has_logo) {
+    private function createMailProjectRegisterPresenter(Project $project, $color_logo, $logo_url) {
         $presenter = new MailProjectOneStepRegisterPresenter(
             $project,
             $color_logo,
-            $logo_url,
-            $has_logo
+            $logo_url
         );
 
         return $presenter;
@@ -232,12 +221,11 @@ class MailPresenterFactory {
      *
      * @return MailRegisterByUserPresenter
      */
-    private function createMailProjectRegisterNotificationPresenter(Project $project, $color_logo, $logo_url, $has_logo, $color_button) {
+    private function createMailProjectRegisterNotificationPresenter(Project $project, $color_logo, $logo_url, $color_button) {
         $presenter = new MailProjectNotificationPresenter(
             $project,
             $color_logo,
             $logo_url,
-            $has_logo,
             $color_button
         );
 
@@ -250,12 +238,11 @@ class MailPresenterFactory {
      *
      * @return MailRegisterByUserPresenter
      */
-    private function createMailProjectNotificationMustBeApprovedPresenter(Project $project, $color_logo, $logo_url, $has_logo, $color_button) {
+    private function createMailProjectNotificationMustBeApprovedPresenter(Project $project, $color_logo, $logo_url, $color_button) {
         $presenter = new MailProjectNotificationMustBeApprovedPresenter(
             $project,
             $color_logo,
             $logo_url,
-            $has_logo,
             $color_button
         );
 
@@ -276,19 +263,6 @@ class MailPresenterFactory {
             $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
             $color_button        = $color_logo;
         }
-    }
-
-    /**
-     * Return the logo url with
-     * references parameters
-     *
-     * @return string
-     */
-    private function setLogoUrl(&$logo_url, &$has_logo) {
-        $defaultTheme   = ForgeConfig::get('sys_themedefault');
-        $base_url       = get_server_url();
-        $logo_url   = $base_url."/themes/".$defaultTheme."/images/organization_logo.png";
-        $has_logo   = file_exists(dirname(__FILE__) . '/../../www/themes/'.$defaultTheme.'/images/organization_logo.png');
     }
 
     /**
