@@ -1,3 +1,6 @@
+Version 1.5 - Tuleap 8.5
+    * Allow Tuleap to run behind a reverse proxy
+
 Version 1.4 - Tuleap 7.6
     * Update to latest autoload/phpab version
 
