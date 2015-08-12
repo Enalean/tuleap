@@ -1,3 +1,6 @@
+Version 5.681 - Tuleap 8.5
+    * story #8317: fetch tracker artifacts in the reverse order via the API
+
 Version 5.680 - Tuleap 8.5
     * request #5948 Hiding a value in a select box also hides it in the filter area
 
