@@ -1,3 +1,6 @@
+Version 5.680 - Tuleap 8.5
+    * request #5948 Hiding a value in a select box also hides it in the filter area
+
 Version 5.679 - Tuleap 8.5
     * story #8170: import changesets submitted by anonymous users
 
