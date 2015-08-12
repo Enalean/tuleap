@@ -409,15 +409,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<option value="'.Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID.'" '. $selected .' title="'. $GLOBALS['Language']->getText('global','none') .'">'. $GLOBALS['Language']->getText('global','none') .'</option>';
         //Field values
         foreach($this->getBind()->getAllValues() as $id => $value) {
-            if (!$value->isHidden()) {
-                $selected = in_array($id, $criteria_value) ? 'selected="selected"' : '';
-                $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $style .'">';
-                $html .= $this->getBind()->formatCriteriaValue($id);
-                $html .= '</option>';
-            }
+            $selected = in_array($id, $criteria_value) ? 'selected="selected"' : '';
+            $style = $this->getBind()->getSelectOptionInlineStyle($id);
+            $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $style .'">';
+            $html .= $this->getBind()->formatCriteriaValue($id);
+            $html .= '</option>';
         }
         $html .= '</select>';
+
         return $html;
     }
 
