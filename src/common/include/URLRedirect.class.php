@@ -83,7 +83,7 @@ class URLRedirect {
              */
             $url_verifier = new URLVerification();
             if ($url_verifier->isInternal($request->get('return_to'))) {
-                $return_to_parameter .= $request->get('return_to');
+                $return_to_parameter .= urlencode($request->get('return_to'));
             } else {
                 $return_to_parameter .= '/';
             }

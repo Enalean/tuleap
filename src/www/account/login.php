@@ -56,7 +56,7 @@ if($request->valid(new Valid_Pv())) {
 
 $_rVar['return_to'] = null;
 if($request->valid(new Valid_String('return_to'))) {
-    $_rVar['return_to'] = urlencode($request->get('return_to'));
+    $_rVar['return_to'] = $request->get('return_to');
 }
 
 $_cVar['stay_in_ssl'] = null;
