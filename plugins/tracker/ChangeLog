@@ -1,3 +1,6 @@
+Version 5.679 - Tuleap 8.5
+    * story #8170: import changesets submitted by anonymous users
+
 Version 5.678 - Tuleap 8.5
     * story #8160: updating default values in /trackers/:id for openList fields
 
