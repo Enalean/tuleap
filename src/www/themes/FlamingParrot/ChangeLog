@@ -1,3 +1,6 @@
+Version 1.103 - Tuleap 8.5
+    * request #8325 No background image during registration when theme is Dark*
+
 Version 1.102 - Tuleap 8.5
     * story #8248: Embed image of the confirmation mail
 
