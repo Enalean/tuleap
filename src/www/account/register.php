@@ -274,11 +274,8 @@ if ($request->isPost() && $request->exist('Register')) {
             $title  = $Language->getText('account_register', 'title_confirm');
 
             if ($admin_creation){
-                if ($request->get('form_send_email')){
-                    $content_title = 'msg_confirm_admin';
-                } else {
-                    $content_title = 'msg_confirm_no_email';
-                }
+                $title  = $Language->getText('account_register', 'title_confirm_admin');
+                $content_title = 'msg_confirm_admin';
                 $content           = $Language->getText('account_register', $content_title,
                                                             array(
                                                                     $hp->purify($request->get('form_realname')),
