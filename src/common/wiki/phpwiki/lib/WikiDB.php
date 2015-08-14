@@ -931,12 +931,26 @@ class WikiDB_Page
         foreach ($notify as $page => $users) {
             if (glob_match($page, $this->_pagename)) {
                 foreach ($users as $userid => $user) {
-                    $um = UserManager::instance();
-                    $dbUser = $um->getUserByUserName($userid);
-                    $wiki = new Wiki($_REQUEST['group_id']);
-                    $wp = new WikiPage($_REQUEST['group_id'], $_REQUEST['pagename']);
-                    if ($dbUser && ($dbUser->isActive() || ($dbUser->isRestricted() && $dbUser->isMember($_REQUEST['group_id']))) &&
-                        $wiki->isAutorized($dbUser->getId()) && $wp->isAutorized($dbUser->getId())) {
+                    $um           = UserManager::instance();
+                    $dbUser       = $um->getUserByUserName($userid);
+                    $wiki         = new Wiki($_REQUEST['group_id']);
+                    $wp           = new WikiPage($_REQUEST['group_id'], $_REQUEST['pagename']);
+                    $project      = ProjectManager::instance()->getProject($_REQUEST['group_id']);
+                    $url_verifier = new URLVerification();
+
+                    $user_can_access_project = false;
+                    try {
+                        $user_can_access_project = $dbUser !== null &&
+                            $url_verifier->userCanAccessProject($dbUser, $project);
+                    } catch (Project_AccessException $e) {
+                        continue;
+                    }
+
+                    if (
+                        $user_can_access_project &&
+                        $wiki->isAutorized($dbUser->getId()) &&
+                        $wp->isAutorized($dbUser->getId())
+                    ) {
                         if (!$user) { // handle the case for ModeratePage: no prefs, just userid's.
                             global $request;
                             $u = $request->getUser();
