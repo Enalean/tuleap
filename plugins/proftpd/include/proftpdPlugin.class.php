@@ -33,6 +33,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook('register_project_creation');
+        $this->addHook(Event::RENAME_PROJECT);
     }
 
     public function getPluginInfo() {
@@ -151,6 +152,17 @@ class proftpdPlugin extends Plugin {
 
     public function system_event_get_types_for_default_queue($params) {
         $params['types'] = array_merge($params['types'], $this->getProftpdSystemEventManager()->getTypes());
+    }
+
+    public function rename_project ($params) {
+        $project             = $params['project'];
+        $base_sftp_dir       = $this->getPluginInfo()->getPropVal('proftpd_base_directory');
+        $old_repository_path = $base_sftp_dir  . DIRECTORY_SEPARATOR . $project->getUnixName();
+        $new_repository_path = $base_sftp_dir  . DIRECTORY_SEPARATOR . $params['new_name'];
+
+        if (is_dir($old_repository_path)) {
+            rename($old_repository_path, $new_repository_path);
+        }
     }
 
     /**
