@@ -1,4 +1,4 @@
-Version 8.5 (Not Released Yet)
+Version 8.5 (Friday, August 14th 2015)
 
 	== Development ==
 	* story #8206: send consistent WWW-AUTHENTICATE header for 401 responses
