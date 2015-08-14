@@ -1,3 +1,6 @@
+Version 1.5.30 - Tuleap 8.4
+	* request #7953: Continue the removing of the SimpleSanitizer class.
+
 Version 1.5.29 - Tuleap 8.4
     * request #7930: No more errors when adding or removing an user from a project with a recent version of Openfire
 
