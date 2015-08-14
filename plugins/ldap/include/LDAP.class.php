@@ -410,7 +410,7 @@ class LDAP {
     function searchGroup($name) {
         $name = $this->query_escaper->escapeFilter($name);
 
-        if ($this->ldapParams['server_type'] && $this->ldapParams['server_type'] === self::SERVER_TYPE_ACTIVE_DIRECTORY) {
+        if (isset($this->ldapParams['server_type']) && $this->ldapParams['server_type'] === self::SERVER_TYPE_ACTIVE_DIRECTORY) {
             $filter = $this->ldapParams['grp_uid'] . '=' . $name;
             return $this->search($this->ldapParams['grp_dn'], $filter, self::SCOPE_SUBTREE);
         }
