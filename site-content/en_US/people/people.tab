@@ -78,3 +78,6 @@ people_viewprofile	user_name	User Name
 people_viewprofile	resume	Resume
 people_viewprofile	skill_inventory	Skill Inventory
 people_viewprofile	user_id_not_found	user_id not found.
+
+
+people	disabled	This feature has been disabled and will be removed in the future.

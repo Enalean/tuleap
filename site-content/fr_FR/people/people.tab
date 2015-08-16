@@ -71,3 +71,5 @@ people_viewprofile	user_name	Nom de l'utilisateur
 people_viewprofile	resume	CV
 people_viewprofile	skill_inventory	Liste des compétences
 people_viewprofile	user_id_not_found	user_id introuvable.
+
+people	disabled	Cette fonctionnalité a été désactivée et sera supprimée dans une future version.
