@@ -948,8 +948,6 @@ project_memberlist	proj_member_list	Project Member List
 project_memberlist	contact_to_become_member	<P>If you would like to become a member of this project, contact one of the project admins, designated in bold text below.<br><br>
 project_memberlist	developer	Member
 project_memberlist	username	Username
-project_memberlist	skills	Skills
-project_memberlist	view_skills	View Skills
 #
 #-----------------------------------------------
 # Script: SF/www/project/showdetails.php

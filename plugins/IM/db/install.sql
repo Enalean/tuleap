@@ -44,8 +44,7 @@ INSERT INTO user SET
         add_date = 940000000, 
         confirm_hash = NULL, 
         authorized_keys = NULL, 
-        people_view_skills = 0, 
-        timezone = 'GMT', 
+        timezone = 'GMT',
         language_id = 'en_US', 
         last_pwd_update = '0'; 
 

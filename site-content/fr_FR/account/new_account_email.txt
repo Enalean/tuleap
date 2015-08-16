@@ -19,7 +19,7 @@ $section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit 
                   ." Votre compte shell sera activé dans moins de deux heures."
                   ."\n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site"
                   ." et de peaufiner la configuration de votre compte utilisateur "
-                  ."(définir votre profil de compétences, vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
+                  ."(définir vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
                   ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
                   .$GLOBALS['sys_name']." autour de vous.";
 

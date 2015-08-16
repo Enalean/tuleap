@@ -17,8 +17,6 @@ account_options	title		Account Maintenance
 account_options	welcome		Welcome
 account_options	welcome_intro	You can view or change all of your account features from here. You may also wish to view your profile.
 account_options	member_since	Member since:
-account_options	view_developer_profile	View My Developer Profile
-account_options	edit_skills_profile	Edit My Skills Profile
 account_options	user_id	User Id:
 account_options	login_name	$1 Name
 account_options	ldap_name	LDAP Login

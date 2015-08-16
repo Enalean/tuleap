@@ -809,8 +809,6 @@ INSERT INTO user SET
         sticky_login = 0,
         authorized_keys = NULL,
         email_new = NULL,
-        people_view_skills = 0,
-        people_resume = '',
         timezone = 'GMT',
         theme = '',
         language_id = 'en_US',

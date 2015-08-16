@@ -156,7 +156,6 @@ include_menu	site_news_approve	Site News Approval
 include_menu	mass_mail	Mass Mail
 include_menu	trove_cat_list	Trove Cat. List
 include_menu	trove_cat_add	Trove Cat. Add
-include_menu	people_skill	People Skills
 include_menu	bugs	Bugs
 include_menu	tasks	Tasks
 include_menu	supp_requ	Support Requests
@@ -379,7 +378,6 @@ include_user_home	login_name	Login Name
 include_user_home	real_name	Real Name
 include_user_home	email_addr	Email Addr
 include_user_home	user_prof	User Profile
-include_user_home	see_skills	See Skills Profile
 include_user_home	member_since	Site Member Since
 include_user_home	user_status	User Status
 include_user_home	active	Active

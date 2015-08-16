@@ -128,10 +128,33 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-    * create a row in the table user
-    * @return true or id(auto_increment) if there is no error
-    */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $theme, $language_id, $expiry_date, $last_pwd_update) {
+     * create a row in the table user
+     * @param $user_name
+     * @param $email
+     * @param $user_pw
+     * @param $realname
+     * @param $register_purpose
+     * @param $status
+     * @param $shell
+     * @param $unix_status
+     * @param $unix_uid
+     * @param $unix_box
+     * @param $ldap_id
+     * @param $add_date
+     * @param $confirm_hash
+     * @param $mail_siteupdates
+     * @param $mail_va
+     * @param $sticky_login
+     * @param $authorized_keys
+     * @param $email_new
+     * @param $timezone
+     * @param $theme
+     * @param $language_id
+     * @param $expiry_date
+     * @param $last_pwd_update
+     * @return true or id(auto_increment) if there is no error
+     */
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $theme, $language_id, $expiry_date, $last_pwd_update) {
 
         $columns = array();
         $values  = array();
@@ -217,14 +240,6 @@ class UserDao extends DataAccessObject {
         if ($email_new !== null) {
             $columns[] = 'email_new';
             $values[]  = $email_new;
-        }
-        if ($people_view_skills !== null) {
-            $columns[] = 'people_view_skills';
-            $values[]  = $people_view_skills;
-        }
-        if ($people_resume !== null) {
-            $columns[] = 'people_resume';
-            $values[]  = $people_resume;
         }
         if ($timezone !== null) {
             $columns[] = 'timezone';

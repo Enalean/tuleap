@@ -50,7 +50,6 @@ admin_main	site_news_approval	Approbation annonces site
 admin_main	trove_cat	Catégories
 admin_main	trove_cat_list	Liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
-admin_main	skills	Compétences utilisateurs
 admin_main	new_user	Nouvel utilisateur
 admin_main	permission_delegation	Délégation de permission
 admin_main	active_users	Utilisateurs actifs

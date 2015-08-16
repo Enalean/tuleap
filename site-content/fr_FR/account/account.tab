@@ -9,8 +9,6 @@ account_options	title		Maintenance du compte
 account_options	welcome		Bienvenue
 account_options	welcome_intro	Vous pouvez voir et changer toutes les caractéristiques de votre compte depuis cette page. Vous pouvez aussi consulter votre profil.
 account_options	member_since	Membre depuis :
-account_options	view_developer_profile	Voir mon profil de développeur
-account_options	edit_skills_profile	Voir mon profil de compétences
 account_options	user_id	Id utilisateur :
 account_options	login_name	Nom $1
 account_options	ldap_name	Login LDAP
