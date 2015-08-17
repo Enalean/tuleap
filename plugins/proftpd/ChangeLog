@@ -1,3 +1,6 @@
+Version 0.22 - Tuleap 8.6
+    * request #8335: Proftpd project folders are nor renamed when project renamed
+
 Version 0.21 - Tuleap 8.3
     * story #8059: Users can authenticate to ProFTPD on a platform who does not store MD5 passwords
 
