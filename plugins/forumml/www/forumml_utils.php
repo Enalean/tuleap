@@ -1,26 +1,26 @@
 <?php
 #
+# Copyright (c) Enalean, 2012-2015. All Rights Reserved.
 # Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
 
  # Originally written by Jean-Philippe Giola, 2005
  #
- # This file is a part of codendi.
+ # This file is a part of Tuleap.
  #
- # codendi is free software; you can redistribute it and/or modify
+ # Tuleap is free software; you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
  # the Free Software Foundation; either version 2 of the License, or
  # (at your option) any later version.
  #
- # codendi is distributed in the hope that it will be useful,
+ # Tuleap is distributed in the hope that it will be useful,
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
  #
  # You should have received a copy of the GNU General Public License
- # along with codendi; if not, write to the Free Software
+ # along with Tuleap; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  #
- # $Id$
  #
 
 define('FORUMML_MESSAGE_ID', 1);
@@ -734,7 +734,7 @@ function plugin_forumml_process_mail($plug,$reply=false) {
 	$hp =& ForumML_HTMLPurifier::instance();
 	
 	// Instantiate a new Mail class
-	$mail = new Mail();
+	$mail = new Codendi_Mail();
 	
 	// Build mail headers
 	$to = mail_get_listname_from_list_id($request->get('list'))."@".$GLOBALS['sys_lists_host'];
@@ -784,40 +784,17 @@ function plugin_forumml_process_mail($plug,$reply=false) {
 
 	if ($continue) {
 		// Process attachments
+        if (isset($_FILES["files"]) && count($_FILES["files"]['name']) > 0) {
+            foreach ($_FILES["files"]['name'] as $i => $fileName) {
+                $data = file_get_contents($_FILES["files"]["tmp_name"][$i]);
+                $mime_type = $_FILES["files"]["type"][$i];
 
-		// Define boundaries as specified in RFC:
-		// http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
-		$boundary      = '----=_NextPart';
-		$boundaryStart = '--'.$boundary;
-		$boundaryEnd   = '--'.$boundary.'--';
+                $mail->addAttachment($data, $mime_type, $fileName);
+            }
+        }
 
-		// Attachments headers
-		if (isset($_FILES["files"]) && count($_FILES["files"]['name']) > 0) {			
-			$attachment = "";
-			$text = "This is a multi-part message in MIME format.\n";
-			$text = "$boundaryStart\n";
-			$text .= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
-			$text .= "Content-Transfer-Encoding: 8bit\n\n";
-			$text .= $message;
-			$text .= "\n\n";
-            foreach($_FILES["files"]['name'] as $i => $fileName) {
-				$attachment .= "$boundaryStart\n";
-				$attachment .= "Content-Type:".$_FILES["files"]["type"][$i]."; name=".$fileName."\n";
-				$attachment .= "Content-Transfer-Encoding: base64\n";
-				$attachment .= "Content-Disposition: attachment; filename=".$fileName."\n\n";
-                $attachment .= chunk_split(base64_encode(file_get_contents($_FILES["files"]["tmp_name"][$i])));
-			}
-			$attachment .= "\n$boundaryEnd\n";
-			$body = $text.$attachment;
-			// force MimeType to multipart/mixed as default (when instantiating new Mail object) is text/plain
-			$mail->setMimeType('multipart/mixed; boundary="'.$boundary.'"');
-			$mail->addAdditionalHeader("MIME-Version","1.0");
-		} else {
-			$body = $message;
-		}
+		$mail->setBodyText($message);
 
-		$mail->setBody($body);
-		
 		if ($mail->send()) {
 			$GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_forumml','mail_succeed'));
 		} else {
