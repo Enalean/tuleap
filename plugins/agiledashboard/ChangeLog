@@ -1,3 +1,6 @@
+Version 1.252 - Tuleap 8.6
+    * request #8320 Updates to Story Points are not immediately reflected in the V2 Planning
+
 Version 1.251 - Tuleap 8.5
     * story #8160: Handle permission on artifact field (bower update)
 
