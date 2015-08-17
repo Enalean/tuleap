@@ -30,113 +30,28 @@
         </select>
     </label>
     <h3>{{ svn_allow_tag_immutable_title }}</h3>
-    <p><i>{{{ svn_allow_tag_immutable_comment }}}</i></p>
-        <div class="immutable-tags-option">
-            <label class="radio">
-                <input type="radio" name="form_tag_immutable" value="0" {{# no_immutable_tags }}checked{{/ no_immutable_tags}} />
-                {{ no_immutable }}
-                <div class="row-fluid">
-                    <div class="span12">
-                        <p class="muted">{{ no_immutable_help }}</p>
-                    </div>
+    <p class="immutable-tags-comment"><i>{{{ svn_allow_tag_immutable_comment }}}</i></p>
+        <div class="row-fluid immutable-tags-option">
+            <div class="immutable-tags-path span3">
+                <div class="form-group">
+                    <label for="immutable-tags-path">{{ path }}</label>
+                    <textarea
+                        rows="5"
+                        name="immutable-tags-path"
+                        id="immutable-tags-path"
+                    >{{ immutable_tags_path }}</textarea>
                 </div>
-            </label>
-        </div>
-        <div class="immutable-tags-option">
-            <label class="radio">
-                <input type="radio" name="form_tag_immutable" value="1" {{# immutable_tags_in_modules }}checked{{/ immutable_tags_in_modules}} />
-                {{ immutable_in_module }}
-                <div class="row-fluid">
-                    <div class="span12">
-                        <p class="muted">{{{ immutable_in_module_help }}}</p>
-                    </div>
+            </div>
+            <div class="immutable-tags-whitelist span3">
+                <div class="form-group">
+                    <label for="immutable-tags-whitelist">{{ whitelist }}</label>
+                    <textarea
+                        rows="5"
+                        name="immutable-tags-whitelist"
+                        id="immutable-tags-whitelist"
+                    >{{ immutable_tags_whitelist }}</textarea>
                 </div>
-                <div class="row-fluid">
-                    <div class="span4">
-                        <strong>{{ layout_example }}</strong>
-                        <pre class="well">
- ┣ moduleA
- ┃ ┣ trunk
- ┃ ┣ tags
- ┃ ┃  ┖ v1
- ┃ ┖ branches
- ┖ moduleB
-   ┣ trunk
-   ┣ tags
-   ┖ branches</pre>
-                    </div>
-                    <div class="span8">
-                        <strong>{{ impacted_svn }}</strong>
-                        <div class="text-success">svn cp ^/moduleA/trunk ^/moduleA/tags/v1 <i class="icon-ok"></i></div>
-                        <div class="text-error">svn cp ^/moduleA/trunk ^/moduleA/tags/v1/blah <i class="icon-remove"></i></div>
-                        <div class="text-error">svn del ^/moduleA/tags/v1 <i class="icon-remove"></i></div>
-                        <br>
-                        <div>{{ or_svn_status_form }}</div>
-                        <div class="text-success">A /moduleA/tags/v1 <i class="icon-ok"></i></div>
-                        <div class="text-error">U /moduleA/tags/v1 <i class="icon-remove"></i></div>
-                        <div class="text-error">D /moduleA/tags/v1 <i class="icon-remove"></i></div>
-                        <div class="text-error">A /moduleA/tags/v1/README <i class="icon-remove"></i></div>
-                        <div class="text-error">U /moduleA/tags/v1/README <i class="icon-remove"></i></div>
-                        <div class="text-error">D /moduleA/tags/v1/README <i class="icon-remove"></i></div>
-                    </div>
-                </div>
-            </label>
-        </div>
-        <div class="immutable-tags-option">
-            <label class="radio">
-                <input type="radio" name="form_tag_immutable" value="2" {{# immutable_tags_at_root }}checked{{/ immutable_tags_at_root}} />
-                {{ immutable_at_root }}
-                <div class="row-fluid">
-                    <div class="span12">
-                        <p class="muted">{{{ immutable_at_root_help }}}</p>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span4">
-                        <strong>{{ layout_example }}</strong>
-                        <pre class="well">
- ┣ trunk
- ┃ ┣ moduleA
- ┃ ┖ moduleB
- ┖ tags
-   ┣ moduleA
-   ┃ ┖ v1.1
-   ┣ v1
-   ┃ ┣ moduleA
-   ┃ ┖ moduleB
-   ┖ v2</pre>
-                        <div class="immutable-tags-whitelist">
-                            <strong>{{ whitelist }}</strong><br>
-                            <textarea
-                                cols="30"
-                                rows="4"
-                                name="immutable-tags-whitelist"
-                                placeholder="moduleA
-moduleB"
-                            >{{ immutable_tags_whitelist }}</textarea>
-                        </div>
-                    </div>
-                    <div class="span8">
-                        <strong>{{ impacted_svn }}</strong>
-                        <span class="muted">{{ moduleA_whitelist }}</span>
-                        <div class="text-success">svn cp ^/trunk ^/tags/v1 <i class="icon-ok"></i></div>
-                        <div class="text-error">svn cp ^/trunk ^/tags/v1/blah <i class="icon-remove"></i></div>
-                        <div class="text-error">svn del ^/tags/v1 <i class="icon-remove"></i></div>
-                        <div class="text-success">svn cp ^/trunk/moduleA ^/tags/moduleA/v1 <i class="icon-ok"></i></div>
-                        <div class="text-error">svn cp ^/trunk/README ^/tags/moduleA/v1/README <i class="icon-remove"></i></div>
-                        <br>
-                        <div>{{ or_svn_status_form }}</div>
-                        <div class="text-success">A /tags/v1 <i class="icon-ok"></i></div>
-                        <div class="text-error">U /tags/v1 <i class="icon-remove"></i></div>
-                        <div class="text-error">D /tags/v1 <i class="icon-remove"></i></div>
-                        <div class="text-error">A /tags/v1/README <i class="icon-remove"></i></div>
-                        <div class="text-error">U /tags/v1/README <i class="icon-remove"></i></div>
-                        <div class="text-error">D /tags/v1/README <i class="icon-remove"></i></div>
-                        <div class="text-success">A /tags/moduleA/v1 <i class="icon-ok"></i></div>
-                        <div class="text-error">D /tags/moduleA/v1 <i class="icon-remove"></i></div>
-                    </div>
-                </div>
-            </label>
+            </div>
         </div>
     {{{ preamble_title }}}
     <p>

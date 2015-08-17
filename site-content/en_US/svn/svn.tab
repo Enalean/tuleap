@@ -41,19 +41,13 @@ svn_admin_general_settings	mandatory_ref_comment	When Mandatory Reference in com
 svn_admin_general_settings	preamble	<h3>Subversion Preamble</h3><P>Introductory message to replace the default one on the <a href="$1">Subversion welcome page</a>. (HTML tags allowed)
 svn_admin_general_settings	svn_can_change_log	Modify the commit messages
 svn_admin_general_settings	svn_can_change_log_comment	When "Modify the commit messages" is on, the commit message can be modified (svn propset --revprop -r X svn:log)
-svn_admin_general_settings	svn_allow_tag_immutable	Allow immutable tags
-svn_admin_general_settings	svn_allow_tag_immutable_comment	When "Allow immutable tags" is on, tags can no more be modified if added once.<br> The svn repository should respect the chosen layout.
-svn_admin_general_settings	no_immutable	No immutable tags
-svn_admin_general_settings	no_immutable_help	Tags can be updated or deleted.
-svn_admin_general_settings	immutable_in_module	Immutable tags in modules
-svn_admin_general_settings	immutable_in_module_help	Tagging is done per module, in <code>/&lt;module&gt;/tags</code> folder.
-svn_admin_general_settings	immutable_at_root	Immutable tags at root
-svn_admin_general_settings	immutable_at_root_help	Tagging is done in <code>/tags</code> folder. Optionally you are able to whitelist modules in tags folder in order to create tags per module.
+svn_admin_general_settings	svn_allow_tag_immutable	Immutable tags
+svn_admin_general_settings	svn_allow_tag_immutable_comment	Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.
 svn_admin_general_settings	layout_example	Example layout
 svn_admin_general_settings	impacted_svn	Example of impacted svn operations:
 svn_admin_general_settings	or_svn_status_form	Or, in "svn status" form:
-svn_admin_general_settings	whitelist	Whitelist of modules in /tags
-svn_admin_general_settings	moduleA_whitelist	(Given that moduleA is whitelisted)
+svn_admin_general_settings	immutable_whitelist	Global whitelist
+svn_admin_general_settings	immutable_path	Immutable tags paths
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php

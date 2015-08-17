@@ -37,11 +37,24 @@ class SVN_Immutable_Tags_Handler {
             return '';
         }
 
-        return $result['content'];
+        return $result['whitelist'];
     }
 
-    public function saveWhitelistForProject($project_id, $whitelist) {
-        return $this->dao->saveWhitelistForProject($project_id, $whitelist);
+    /**
+     * @return string
+     */
+    public function getImmutableTagsPathForProject($project_id) {
+        $result = $this->dao->getImmutableTagsPathForProject($project_id)->getRow();
+
+        if (! $result) {
+            return '';
+        }
+
+        return $result['paths'];
+    }
+
+    public function saveImmutableTagsForProject($project_id, $whitelist, $path) {
+        return $this->dao->saveImmutableTagsForProject($project_id, $whitelist, $path);
     }
 
     public function getAllowedTagsFromWhiteList(Project $project) {
@@ -52,6 +65,10 @@ class SVN_Immutable_Tags_Handler {
         }
 
         return explode(PHP_EOL, $content);
+    }
+
+    public function doesProjectUsesImmutableTags(Project $project) {
+        return $this->getImmutableTagsPathForProject($project->getID()) != '';
     }
 
 }

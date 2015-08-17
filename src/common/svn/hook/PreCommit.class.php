@@ -80,7 +80,10 @@ class SVN_Hook_PreCommit extends SVN_Hook {
      */
     public function assertCommitToTagIsAllowed($repository, $transaction) {
         $project = $this->getProjectFromRepositoryPath($repository);
-        if ($project->isCommitToTagDenied() && ! $this->isCommitAllowed($project, $transaction)) {
+
+        if ($this->handler->doesProjectUsesImmutableTags($project) &&
+            ! $this->isCommitAllowed($project, $transaction)
+        ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
     }
@@ -116,37 +119,30 @@ class SVN_Hook_PreCommit extends SVN_Hook {
      * @return Boolean
      */
     private function isCommitDoneInImmutableTag(Project $project, $path) {
-        if ($project->isCommitToTagDeniedInModules()) {
-            return $this->isCommitForbiddenInModuleContext($path);
-        } else {
-            return $this->isCommitForbiddenAtRootContext($project, $path);
+        $immutable_paths = explode(PHP_EOL, $this->handler->getImmutableTagsPathForProject($project->getID()));
+
+        foreach ($immutable_paths as $immutable_path) {
+            if ($this->isCommitForbidden($project, $immutable_path, $path)) {
+                return true;
+            }
         }
+
+        return false;
     }
 
-    private function isCommitForbiddenInModuleContext($path) {
-        $pattern = "%^(?:
-            (?:U|D)\s+[^/]+/tags/       # U  moduleA/tags/v1
-                                        # U  moduleA/tags/v1/toto
-            |
-            A\s+[^/]+/tags/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
-            )%x";
+    private function isCommitForbidden(Project $project, $immutable_path, $path) {
+        $immutable_path_regexp = $this->getWellFormedRegexImmutablePath($immutable_path);
 
-        return preg_match($pattern, $path);
-    }
-
-    private function isCommitForbiddenAtRootContext(Project $project, $path) {
         $pattern = "%^(?:
-            (?:U|D)\s+tags/       # U  tags/v1
-                                  # U  tags/v1/toto
+            (?:U|D)\s+$immutable_path_regexp            # U  moduleA/tags/v1
+                                                        # U  moduleA/tags/v1/toto
             |
-            A\s+tags/[^/]+/[^/]+  # A  tags/v1/toto
+            A\s+".$immutable_path_regexp."/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
             )%x";
 
         if (preg_match($pattern, $path)) {
             return ! $this->isCommitDoneOnWhitelistElement($project, $path);
         }
-
-        return false;
     }
 
     private function isCommitDoneOnWhitelistElement(Project $project, $path) {
@@ -155,16 +151,34 @@ class SVN_Hook_PreCommit extends SVN_Hook {
             return false;
         }
 
-        array_walk($whitelist, 'preg_quote');
-        $allowed_tags = implode('|', $whitelist);
+        $whitelist_regexp = array();
+        foreach ($whitelist as $whitelist_path) {
+            $whitelist_regexp[] = $this->getWellFormedRegexImmutablePath($whitelist_path);
+        }
+
+        $allowed_tags = implode('|', $whitelist_regexp);
 
         $pattern = "%^
-            A\s+tags/(?:$allowed_tags)/[^/]+/?$ # A  tags/moduleA/v1/   (allowed)
-                                                # A  tags/moduleA/toto  (allowed)
-                                                # A  tags/moduleA/v1/toto (forbidden)
+            A\s+(?:$allowed_tags)/[^/]+/?$  # A  tags/moduleA/v1/   (allowed)
+                                            # A  tags/moduleA/toto  (allowed)
+                                            # A  tags/moduleA/v1/toto (forbidden)
             %x";
 
         return preg_match($pattern, $path);
     }
 
+    private function getWellFormedRegexImmutablePath($immutable_path) {
+        if (strpos($immutable_path, '/') === 0) {
+            $immutable_path = substr($immutable_path, 1);
+        }
+
+        if (strrpos($immutable_path, '/') === strlen($immutable_path)) {
+            $immutable_path = substr($immutable_path, -1);
+        }
+
+        $immutable_path = preg_quote($immutable_path);
+        $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
+
+        return $immutable_path;
+    }
 }
