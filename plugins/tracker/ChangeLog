@@ -1,3 +1,6 @@
+Version 5.683 - Tuleap 8.6
+    * story #8160: open list fields
+
 Version 5.682 - Tuleap 8.5
     * request #8329: fix inconsitency in ordering of /trackers/:id/artifacts
 
