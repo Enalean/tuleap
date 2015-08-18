@@ -63,7 +63,11 @@ $event_manager->processEvent(
     )
 );
 if ($ref === null) {
-    $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
+    if ($keyword == ReferenceManager::KEYWORD_ARTIFACT_LONG || $keyword == ReferenceManager::KEYWORD_ARTIFACT_SHORT) {
+        $ref = $reference_manager->loadReferenceFromKeyword($keyword, $value);
+    } else {
+        $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
+    }
     if ($ref) {
         if ($project) {
             $project_name = $project->getUnixName();

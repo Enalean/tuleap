@@ -75,6 +75,21 @@ class ReferenceDao extends DataAccessObject {
     }
 
     /**
+     * @return DataAccessResult
+     */
+    public function searchByKeyword($keyword) {
+        $keyword = $this->da->quoteSmart($keyword);
+
+        $sql = "SELECT *
+                FROM reference
+                JOIN reference_group
+                    ON reference_group.reference_id = reference.id
+                WHERE reference.keyword = $keyword";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    /**
     * Searches Reference by scope 
     * @return DataAccessResult
     */

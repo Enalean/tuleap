@@ -956,7 +956,9 @@ class trackerPlugin extends Plugin {
                 $artifact_id
             );
 
-            $params['reference'] = $reference;
+            if ($reference) {
+                $params['reference'] = $reference;
+            }
         }
     }
 
