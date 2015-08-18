@@ -5,13 +5,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-08-18 15:07+0200\n"
-"Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
-"fr/)\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.3\n"
@@ -119,6 +118,10 @@ msgstr "Échoué"
 msgid "Filter..."
 msgstr "Filtrer..."
 
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Focus graph"
+msgstr "Recentrer le graphe"
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr "Nouvelle campagne"
@@ -194,6 +197,14 @@ msgstr "Total"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
+
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Zoom in"
+msgstr "Zoomer"
+
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Zoom out"
+msgstr "Dézoomer"
 
 #~ msgid "Edit this artifact"
 #~ msgstr "Editer cet artefact"

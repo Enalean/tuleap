@@ -52,8 +52,10 @@
                     var links = scope.model.links;
                     var data_nodes = scope.model.nodes;
 
-                    graphd3.initData(links, data_nodes);
                     graphd3.initSvg();
+                    graphd3.initRect();
+                    graphd3.initEvent();
+                    graphd3.initData(links, data_nodes);
                     graphd3.initLayout();
                     graphd3.initGraph();
                 };
@@ -136,7 +138,9 @@
 
                 graphd3.initMarkers = function() {
                     // Define the form of markers
-                    graphd3.svg().append("defs").selectAll("marker")
+                    graphd3.svg().append("defs")
+                        .attr("class", "updatable")
+                        .selectAll("marker")
                         .data(graphd3.figures())
                         .enter().append("marker")
                         .attr("id", function(d) { return d; })
@@ -151,7 +155,9 @@
                 };
 
                 graphd3.initPath = function() {
-                    graphd3.path(graphd3.svg().append("g").selectAll("path")
+                    graphd3.path(graphd3.svg().append("g")
+                        .attr("class", "updatable")
+                        .selectAll("path")
                         .data(graphd3.graph().links(), function(d){{ return d.source.id + "-" + d.target.id; }})
                         .enter().append("path")
                         .attr("class", function(d) {
@@ -165,7 +171,9 @@
                 };
 
                 graphd3.initCircle = function() {
-                    graphd3.circle(graphd3.svg().append("g").selectAll("circle")
+                    graphd3.circle(graphd3.svg().append("g")
+                            .attr("class", "updatable")
+                            .selectAll("circle")
                             .data(graphd3.graph().nodes(), function(d) { return d.id; })
                             .enter().append("circle")
                             .attr("class", function(d) {
@@ -203,12 +211,14 @@
                 };
 
                 graphd3.initText = function() {
-                    graphd3.text(graphd3.svg().append("g").selectAll("text")
+                    graphd3.text(graphd3.svg().append("g")
+                        .attr("class", "updatable")
+                        .selectAll("text")
                         .data(graphd3.graph().nodes(), function(d) { return d.id; })
                         .enter().append("text")
                         .attr("class", function(d) {
                             if (d.id) {
-                                return d.id;
+                                return "updatable " + d.id;
                             }
                         })
                         .attr("x", 10)
@@ -217,13 +227,46 @@
                 };
 
                 graphd3.initSvg = function() {
-                    graphd3.width(angular.element(element).width());
-                    graphd3.height(angular.element(element).height());
+                    graphd3.scaleMin(0.5);
+                    graphd3.scaleMax(8);
+                    graphd3.zoom(d3.behavior.zoom().scaleExtent([graphd3.scaleMin(), graphd3.scaleMax()]).on("zoom", graphd3.transformZoom));
+
+                    d3.select("svg").remove();
+                    graphd3.width(element.width());
+                    graphd3.height(element.height());
 
                     graphd3.svg(d3.select(element[0]).append("svg")
-                        .style("display", "none")
                         .attr("width", graphd3.width())
-                        .attr("height", graphd3.height()));
+                        .attr("height", graphd3.height())
+                        .append("g")
+                        .call(graphd3.zoom())
+                        .append("g")
+                        .attr("class", "graph-elements")
+                    );
+                };
+
+                graphd3.initRect = function() {
+                    graphd3.svg().append("rect")
+                        .attr("class", "overlay")
+                        .attr("width", graphd3.width())
+                        .attr("height", graphd3.height());
+                };
+
+                graphd3.initEvent = function() {
+                    d3.select("#focus-graph")
+                        .on("click", function() {
+                            graphd3.zoom().scale(1);
+                            graphd3.zoom().translate([0,0]);
+                            graphd3.svg().attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ")");
+                        });
+                    d3.select("#zoomin-graph")
+                        .on("click", function() {
+                            graphd3.zoomInOut("zoomin");
+                        });
+                    d3.select("#zoomout-graph")
+                        .on("click", function() {
+                            graphd3.zoomInOut("zoomout");
+                        });
                 };
 
                 graphd3.redraw = function() {
@@ -270,7 +313,7 @@
                     });
                     complements_graph[node_event.id] = complement;
 
-                    d3.select("svg").selectAll("*").remove();
+                    d3.select(".graph-elements").selectAll(".updatable").remove();
                     graphd3.initGraph();
 
                     d3.select(".loader-graph").style("visibility", "hidden");
@@ -285,7 +328,7 @@
                     _(complement.links).compact().forEach(function(link) {
                         graphd3.graph().links().push(link);
                     });
-                    d3.select("svg").selectAll("*").remove();
+                    d3.select(".graph-elements").selectAll(".updatable").remove();
                     graphd3.initGraph();
 
                     d3.select(".loader-graph").style("visibility", "hidden");
@@ -337,6 +380,31 @@
                         graphd3.width(width);
                     }
                     return graphd3;
+                };
+
+                graphd3.transformZoom = function() {
+                    graphd3.svg().attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                };
+
+                graphd3.zoomInOut = function(zoom) {
+                    var scale = graphd3.zoom().scale(),
+                        translate = graphd3.zoom().translate(),
+                        x = translate[0], y = translate[1],
+                        factor = 0.2,
+                        target_scale = (zoom === 'zoomin') ?
+                            scale + factor > graphd3.scaleMax() ?
+                                    graphd3.scaleMax() : scale + factor
+                            : scale - factor < graphd3.scaleMin() ?
+                                graphd3.scaleMin() : scale - factor;
+
+                    if (target_scale !== graphd3.scaleMin() && target_scale !== graphd3.scaleMax()) {
+                        x = (zoom === 'zoomin') ? x - ((graphd3.width() / 2) * factor) : x + ((graphd3.width() / 2) * factor);
+                        y = (zoom === 'zoomin') ? y - ((graphd3.height() / 2) * factor) : y + ((graphd3.height() / 2) * factor);
+
+                        graphd3.zoom().scale(target_scale);
+                        graphd3.zoom().translate([x, y]);
+                        graphd3.svg().attr("transform", "translate(" + graphd3.zoom().translate()[0] + ", " + graphd3.zoom().translate()[1] + ")scale(" + graphd3.zoom().scale() + ")");
+                    }
                 };
 
                 graphd3.svg = function (newSvg) {
@@ -416,6 +484,30 @@
                         return height;
                     }
                     height = newHeight;
+                    return graphd3;
+                };
+
+                graphd3.zoom = function (newZoom) {
+                    if (!arguments.length) {
+                        return zoom;
+                    }
+                    zoom = newZoom;
+                    return graphd3;
+                };
+
+                graphd3.scaleMax = function (newScaleMax) {
+                    if (!arguments.length) {
+                        return scaleMax;
+                    }
+                    scaleMax = newScaleMax;
+                    return graphd3;
+                };
+
+                graphd3.scaleMin = function (newScaleMin) {
+                    if (!arguments.length) {
+                        return scaleMin;
+                    }
+                    scaleMin = newScaleMin;
                     return graphd3;
                 };
 

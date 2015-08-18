@@ -92,6 +92,10 @@ msgstr ""
 msgid "Filter..."
 msgstr ""
 
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Focus graph"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr ""
@@ -159,4 +163,12 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
+msgstr ""
+
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Zoom in"
+msgstr ""
+
+#: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+msgid "Zoom out"
 msgstr ""
