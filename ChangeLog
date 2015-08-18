@@ -1,5 +1,8 @@
 Version 8.6 (Not Released Yet)
 
+	== Enhancement ==
+	* story #8308 generic tag path specification
+
 	== Bug Fix ==
 	* request #8330: Fix XSS in project data restoration page
 
