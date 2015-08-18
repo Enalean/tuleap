@@ -39,28 +39,34 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vPreamble = new Valid_Text('form_preamble');
     $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', array('0', '1'));
     $vCanChangeSVNLog->required();
-    $vAllowedImmutableTags = new Valid_WhiteList('form_tag_immutable', array('0', '1', '2'));
-    $vAllowedImmutableTags->required();
     $vImmutableTagsWhitelist = new Valid_Text('immutable-tags-whitelist');
+    $vImmutableTagsPath      = new Valid_Text('immutable-tags-path');
 
     if( $request->valid($vTracked) &&
         $request->valid($vPreamble) &&
         $request->valid($vMandatoryRef) &&
         $request->valid($vCanChangeSVNLog) &&
-        $request->valid($vAllowedImmutableTags) &&
-        $request->valid($vImmutableTagsWhitelist)
+        $request->valid($vImmutableTagsWhitelist) &&
+        $request->valid($vImmutableTagsPath)
     ) {
         // group_id was validated in index.
         $form_tracked = $request->get('form_tracked');
         $form_preamble = $request->get('form_preamble');
         $form_mandatory_ref = $request->get('form_mandatory_ref');
         $form_can_change_svn_log = $request->get('form_can_change_svn_log');
-        $form_tag_immutable = $request->get('form_tag_immutable');
         $immutable_tags_whitelist = $request->get('immutable-tags-whitelist');
+        $immutable_tags_path = $request->get('immutable-tags-path');
 
-        $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble,$form_mandatory_ref, $form_can_change_svn_log, $form_tag_immutable);
+        $ret = svn_data_update_general_settings(
+            $group_id,
+            $form_tracked,
+            $form_preamble,
+            $form_mandatory_ref,
+            $form_can_change_svn_log
+        );
+
         if ($ret) {
-            $immutable_tags_handler->saveWhitelistForProject($group_id, $immutable_tags_whitelist);
+            $immutable_tags_handler->saveImmutableTagsForProject($group_id, $immutable_tags_whitelist, $immutable_tags_path);
 
             EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, array('group_id' => $group_id));
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings','upd_success'));
@@ -88,7 +94,8 @@ $renderer               = TemplateRendererFactory::build()->getRenderer($templat
 
 $presenter = new SVN_GeneralSettingsPresenter(
     $project,
-    $immutable_tags_handler->getImmutableTagsWhitelistForProject($group_id)
+    $immutable_tags_handler->getImmutableTagsWhitelistForProject($group_id),
+    $immutable_tags_handler->getImmutableTagsPathForProject($group_id)
 );
 
 $renderer->renderToPage(

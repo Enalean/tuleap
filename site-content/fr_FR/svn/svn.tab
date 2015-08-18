@@ -35,18 +35,12 @@ svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'i
 svn_admin_general_settings	svn_can_change_log	Modification des messages de commit
 svn_admin_general_settings	svn_can_change_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
 svn_admin_general_settings	svn_allow_tag_immutable	Interdiction de la modification des tags
-svn_admin_general_settings	svn_allow_tag_immutable_comment	Lorsque l'option "Interdiction de la modification des tags" est activée, les tags ne sont plus modifiables après leur création.<br> Le dépôt subversion doit suivre l'arborescence sélectionnée.
-svn_admin_general_settings	no_immutable	Pas de tag immutable
-svn_admin_general_settings	no_immutable_help	Les tags peuvent être modifiés ou être supprimés
-svn_admin_general_settings	immutable_in_module	Tags immutables dans les modules
-svn_admin_general_settings	immutable_in_module_help	Les tags sont faits par module, dans <code>/&lt;module&gt;/tags</code>.
-svn_admin_general_settings	immutable_at_root	Tags immutables à la racine
-svn_admin_general_settings	immutable_at_root_help	Les tags sont faits dans <code>/tags</code>. Vous avez la possibilité d'autoriser la création de tags pour des modules spécifiques (à condition de les avoir renseignés ci-dessous), afin de pouvoir créer des tags par module.
+svn_admin_general_settings	svn_allow_tag_immutable_comment	Spécifiez les répertoires dans lesquels se trouveront les tags non modifiables. Vous pouvez définir une liste de répertoires où les modifications seront tout de même autorisées.
 svn_admin_general_settings	layout_example	Exemple d'arborescence
 svn_admin_general_settings	impacted_svn	Exemple sur les operations svn :
 svn_admin_general_settings	or_svn_status_form	Ou, à la "svn status" :
-svn_admin_general_settings	whitelist	Modules autorisés dans /tags
-svn_admin_general_settings	moduleA_whitelist	(Avec moduleA autorisé)
+svn_admin_general_settings	immutable_whitelist	Liste globale d'exceptions
+svn_admin_general_settings	immutable_path	Chemin des tags non modifiables
 
 #
 #-----------------------------------------------

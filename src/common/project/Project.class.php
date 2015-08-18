@@ -74,10 +74,6 @@ class Project extends Group implements PFO_Project {
     const ACCESS_PUBLIC_UNRESTRICTED = 'unrestricted';
     const ACCESS_PUBLIC              = 'public';
 
-    const SVN_COMMIT_TO_TAG_ALLOWED           = 0;
-    const SVN_COMMIT_TO_TAG_DENIED_IN_MODULES = 1;
-    const SVN_COMMIT_TO_TAG_DENIED_AT_ROOT    = 2;
-
     var $project_data_array;
 
     // All data concerning services for this project
@@ -336,18 +332,6 @@ class Project extends Group implements PFO_Project {
 
     function isSVNMandatoryRef() {
         return $this->project_data_array['svn_mandatory_ref'];
-    }
-
-    public function isCommitToTagDenied() {
-        return $this->project_data_array['svn_commit_to_tag_denied'] > self::SVN_COMMIT_TO_TAG_ALLOWED;
-    }
-
-    public function isCommitToTagDeniedInModules() {
-        return $this->project_data_array['svn_commit_to_tag_denied'] == self::SVN_COMMIT_TO_TAG_DENIED_IN_MODULES;
-    }
-
-    public function isCommitToTagDeniedAtRoot() {
-        return $this->project_data_array['svn_commit_to_tag_denied'] == self::SVN_COMMIT_TO_TAG_DENIED_AT_ROOT;
     }
 
     function canChangeSVNLog(){
