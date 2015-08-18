@@ -2,7 +2,7 @@
 #  *
 #  * Include scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -35,7 +35,7 @@ svn_admin_general_settings	upd_success	General Settings updated successfully
 svn_admin_general_settings	upd_fail	General Settings update failed
 svn_admin_general_settings	gen_settings	Subversion Administration - General Settings
 svn_admin_general_settings	tracking	Subversion Tracking
-svn_admin_general_settings	tracking_comment	When Subversion tracking is on, the commits (file change, addition and removal) are registered in the $1 database so that they can be browsed and searched. Else commits are not logged in the database	
+svn_admin_general_settings	tracking_comment	When Subversion tracking is on, the commits (file change, addition and removal) are registered in the $1 database so that they can be browsed and searched. Else commits are not logged in the database
 svn_admin_general_settings	mandatory_ref	Mandatory Reference in commit message
 svn_admin_general_settings	mandatory_ref_comment	When Mandatory Reference in commit message is on, the message commit must contain at least one reference (to any other item), or the commit will be refused.
 svn_admin_general_settings	preamble	<h3>Subversion Preamble</h3><P>Introductory message to replace the default one on the <a href="$1">Subversion welcome page</a>. (HTML tags allowed)
@@ -48,6 +48,10 @@ svn_admin_general_settings	impacted_svn	Example of impacted svn operations:
 svn_admin_general_settings	or_svn_status_form	Or, in "svn status" form:
 svn_admin_general_settings	immutable_whitelist	Global whitelist
 svn_admin_general_settings	immutable_path	Immutable tags paths
+svn_admin_general_settings	immutable_tag_configuration	Immutable tags configuration
+
+svn_admin_immutable_tags	title	SVN Immutable Tags
+
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php
@@ -59,6 +63,8 @@ svn_admin_index	access	Access Control
 svn_admin_index	access_comment	Define user access permissions on the subversion repository.
 svn_admin_index	email_sett	Email Notification Settings
 svn_admin_index	email_comment	Define who is going to receive email notification of the changes committed to the subversion repository.
+svn_admin_index	immutable_tags	Immutable Tags
+svn_admin_index	immutable_tags_description	Define which folder is considered as an immutable tag.
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/notification.php
@@ -114,7 +120,7 @@ svn_intro	browse_comment	Browsing the Subversion tree gives you a great view int
 #-----------------------------------------------
 # Script: SF/www/svn/svn_utils.php
 #
-svn_utils	proj_err	Only Projects Can Use The Subversion Manager	
+svn_utils	proj_err	Only Projects Can Use The Subversion Manager
 svn_utils	svn_off	This Project Has Turned Subversion Off
 svn_utils	svn_info	Subversion Info
 svn_utils	browse_tree	Browse SVN Tree
@@ -154,4 +160,3 @@ svn_viewvc	bad_roottype	Invalid roottype
 
 
 svn_widget	svnstats	Svn Statistics
-

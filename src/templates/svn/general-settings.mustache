@@ -29,30 +29,6 @@
             <option value="0" {{^ svn_can_change_log }} selected {{/ svn_can_change_log }}>{{ off }}</option>
         </select>
     </label>
-    <h3>{{ svn_allow_tag_immutable_title }}</h3>
-    <p class="immutable-tags-comment"><i>{{{ svn_allow_tag_immutable_comment }}}</i></p>
-        <div class="row-fluid immutable-tags-option">
-            <div class="immutable-tags-path span3">
-                <div class="form-group">
-                    <label for="immutable-tags-path">{{ path }}</label>
-                    <textarea
-                        rows="5"
-                        name="immutable-tags-path"
-                        id="immutable-tags-path"
-                    >{{ immutable_tags_path }}</textarea>
-                </div>
-            </div>
-            <div class="immutable-tags-whitelist span3">
-                <div class="form-group">
-                    <label for="immutable-tags-whitelist">{{ whitelist }}</label>
-                    <textarea
-                        rows="5"
-                        name="immutable-tags-whitelist"
-                        id="immutable-tags-whitelist"
-                    >{{ immutable_tags_whitelist }}</textarea>
-                </div>
-            </div>
-        </div>
     {{{ preamble_title }}}
     <p>
         <textarea cols="70" rows="8" wrap="virtual" name="form_preamble">{{{ svn_preamble }}}</textarea>
