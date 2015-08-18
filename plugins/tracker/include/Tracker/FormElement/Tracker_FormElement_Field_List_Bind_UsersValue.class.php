@@ -132,30 +132,30 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     }
 
     public function getFullRESTValue(Tracker_FormElement_Field $field) {
+        $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
+        $user_representation       = new $class_user_representation;
+
         if ($this->getId() == 100) {
-            return array(
-                'display_name' => null,
-                'label'        => '-',
-                'user_url'     => null,
-                'avatar_url'   => null
-            );
+            $user = new PFUser();
+        } else {
+            $user_manager = UserManager::instance();
+            $user         = $user_manager->getUserByUserName($this->getUsername());
         }
 
-        return array(
-            'display_name' => $this->getLabel(),
-            'link'         => $this->getLink(),
-            'user_url'     => $this->getUserUrl(),
-            'avatar_url'   => $this->getUser()->getAvatarUrl()
-        );
+        $user_representation->build($user);
+        return $user_representation;
     }
 
     public function getFullRESTValueForAnonymous(Tracker_Artifact_Changeset $changeset) {
-        return array(
-            'label'        => $changeset->getEmail(),
-            'display_name' => $changeset->getEmail(),
-            'user_url'     => null,
-            'avatar_url'   => null
-        );
+        $user = new PFUser();
+        $user->setEmail($changeset->getEmail());
+        $user->setRealName($changeset->getEmail());
+
+        $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
+        $user_representation       = new $class_user_representation;
+
+        $user_representation->build($user);
+        return $user_representation;
     }
 
     private function getUserUrl() {

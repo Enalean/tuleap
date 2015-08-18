@@ -569,5 +569,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         }
         return $rest_values;
     }
+
+    public abstract function getFullRESTValue(Tracker_FormElement_Field_List_Value $value);
+
+    public abstract function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field);
+
+    public function getFieldDataFromRESTValue($value) {
+        return intval($value);
+    }
 }
-?>

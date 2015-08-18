@@ -274,11 +274,15 @@ class UserHelper {
     public function getLinkOnUser(PFUser $user) {
         $hp = Codendi_HTMLPurifier::instance();
         if($user && !$user->isNone()) {
-            return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
+            return '<a href="'.$this->getUserUrl($user).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
         } else {
             $username = $user ? $user->getName() : '';
             return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ;
         }
+    }
+
+    public function getUserUrl(PFUser $user) {
+        return "/users/".urlencode($user->getName());
     }
 
     /**

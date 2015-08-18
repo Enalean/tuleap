@@ -32,6 +32,15 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
                   AND id = $id ";
         return $this->retrieve($sql);
     }
+
+    public function searchByFieldId($field_id) {
+        $field_id  = $this->da->escapeInt($field_id);
+
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE field_id = $field_id";
+        return $this->retrieve($sql);
+    }
     
     public function save($id, $field_id, $label) {
         $id       = $this->da->escapeInt($id);

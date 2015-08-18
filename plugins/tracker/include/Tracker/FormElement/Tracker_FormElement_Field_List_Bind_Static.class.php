@@ -423,6 +423,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getDao() {
         return new Tracker_FormElement_Field_List_Bind_StaticDao();
     }
+
+    private function getOpenValueDao() {
+        return new Tracker_FormElement_Field_List_OpenValueDao();
+    }
+
     public function getValueDao() {
         return new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
     }
@@ -825,5 +830,61 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     public function getType() {
         return self::TYPE;
+    }
+
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+        if (isset($rest_data['id']) && is_numeric($rest_data['id'])) {
+            $id = (int) $rest_data['id'];
+            try {
+                $this->getValue($id);
+            } catch (Tracker_FormElement_InvalidFieldValueException $e) {
+                if (! $this->getOpenValueDao()->searchById($field->getId(), $id)->getRow()) {
+                    throw new Tracker_FormElement_InvalidFieldValueException('Bind Value with ID '.$id.' does not exist for field ID '.$field->getId());
+                }
+
+                return Tracker_FormElement_Field_OpenList::OPEN_PREFIX.$id;
+            }
+            return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$id;
+        }
+        if (isset($rest_data['label'])) {
+            $identifier = (string) $rest_data['label'];
+        } else {
+            throw new Tracker_FormElement_InvalidFieldValueException('OpenList static fields values should be passed as an object with at least one of the properties "id" or "label"');
+        }
+
+        $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
+        if ($row) {
+            return Tracker_FormElement_Field_OpenList::OPEN_PREFIX.$row['id'];
+        }
+
+        return Tracker_FormElement_Field_OpenList::NEW_VALUE_PREFIX.$identifier;
+    }
+
+    public function getRESTAvailableValues() {
+        $rest_values = array();
+        foreach($this->getAllValues() as $value) {
+            $rest_values[] = $this->getRESTBindValue($value);
+        }
+
+        $new_values = $this->getOpenValueDao()->searchByFieldId($this->getField()->getId());
+        foreach($new_values as $row_value) {
+            $bind_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(
+                $row_value['id'],
+                $row_value['label'],
+                '',
+                '',
+                ''
+            );
+            $rest_values[] = $this->getRESTBindValue($bind_value);
+        }
+
+        return $rest_values;
+    }
+
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+        return array(
+            'label' => $value->getLabel(),
+            'id'    => $value->getId(),
+        );
     }
 }

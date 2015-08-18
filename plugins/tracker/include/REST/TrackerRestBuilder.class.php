@@ -193,6 +193,8 @@ class Tracker_REST_TrackerRestBuilder {
 
             if ($field instanceof Tracker_FormElement_Field_Date) {
                 $field_representation = new Tracker_REST_FieldDateRepresentation();
+            } elseif ($field instanceof Tracker_FormElement_Field_OpenList) {
+                $field_representation = new Tracker_REST_FieldOPenListRepresentation();
             } else {
                 $field_representation = new Tracker_REST_FieldRepresentation();
             }

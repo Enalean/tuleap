@@ -27,26 +27,30 @@ class TestDataBuilder {
     const ADMIN_USER_NAME      = 'admin';
     const ADMIN_USER_PASS      = 'siteadmin';
     const ADMIN_REAL_NAME      = 'Site Administrator';
+    const ADMIN_DISPLAY_NAME   = 'Site Administrator (admin)';
     const ADMIN_EMAIL          = 'codendi-admin@_DOMAIN_NAME_';
     const ADMIN_STATUS         = 'A';
 
-    const TEST_USER_1_ID       = 102;
-    const TEST_USER_1_NAME     = 'rest_api_tester_1';
-    const TEST_USER_1_REALNAME = 'Test User 1';
-    const TEST_USER_1_PASS     = 'welcome0';
-    const TEST_USER_1_EMAIL    = 'test_user_1@myzupermail.com';
-    const TEST_USER_1_LDAPID   = 'tester1';
-    const TEST_USER_1_STATUS   = 'A';
+    const TEST_USER_1_ID          = 102;
+    const TEST_USER_1_NAME        = 'rest_api_tester_1';
+    const TEST_USER_1_REALNAME    = 'Test User 1';
+    const TEST_USER_1_DISPLAYNAME = 'Test User 1 (rest_api_tester_1)';
+    const TEST_USER_1_PASS        = 'welcome0';
+    const TEST_USER_1_EMAIL       = 'test_user_1@myzupermail.com';
+    const TEST_USER_1_LDAPID      = 'tester1';
+    const TEST_USER_1_STATUS      = 'A';
 
-    const TEST_USER_2_ID       = 103;
-    const TEST_USER_2_NAME     = 'rest_api_tester_2';
-    const TEST_USER_2_PASS     = 'welcome0';
-    const TEST_USER_2_STATUS   = 'A';
+    const TEST_USER_2_ID          = 103;
+    const TEST_USER_2_NAME        = 'rest_api_tester_2';
+    const TEST_USER_2_DISPLAYNAME = ' (rest_api_tester_2)';
+    const TEST_USER_2_PASS        = 'welcome0';
+    const TEST_USER_2_STATUS      = 'A';
 
-    const TEST_USER_3_ID       = 104;
-    const TEST_USER_3_NAME     = 'rest_api_tester_3';
-    const TEST_USER_3_PASS     = 'welcome0';
-    const TEST_USER_3_STATUS   = 'A';
+    const TEST_USER_3_ID          = 104;
+    const TEST_USER_3_NAME        = 'rest_api_tester_3';
+    const TEST_USER_3_DISPLAYNAME = ' (rest_api_tester_3)';
+    const TEST_USER_3_PASS        = 'welcome0';
+    const TEST_USER_3_STATUS      = 'A';
 
     const ADMIN_PROJECT_ID          = 100;
     const PROJECT_PRIVATE_MEMBER_ID = 101;

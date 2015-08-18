@@ -23,7 +23,7 @@ use PFUser;
 use UserManager;
 use UGroupLiteralizer;
 use PaginatedUserCollection;
-use Tuleap\User\REST\UserRepresentation;
+use Tuleap\User\REST\UserRepresentation as UserRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -88,7 +88,7 @@ class UserResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      *
-     * @return \Tuleap\User\REST\UserRepresentation
+     * @return UserRepresentation {@type UserRepresentation}
      */
     public function getId($id) {
         $this->checkAccess();
@@ -129,7 +129,8 @@ class UserResource extends AuthenticatedResource {
      * will not be returned in the response.
      * </pre>
      *
-     * $query can be either:
+     * <br>
+     * ?query can be either:
      * <ul>
      *   <li>a simple string, then it will search on "real_name" and "username" with wildcard</li>
      *   <li>a json object to search on username with exact match: {"username": "john_doe"}</li>
@@ -141,7 +142,7 @@ class UserResource extends AuthenticatedResource {
      * @param int    $limit  Number of elements displayed per page
      * @param int    $offset Position of the first element to display
      *
-     * @return array {@type \Tuleap\User\REST\UserRepresentation}
+     * @return array {@type UserRepresentation}
      */
     public function get(
         $query,

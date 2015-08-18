@@ -36,6 +36,15 @@ class User_ForgeUGroup implements User_UGroup {
 
     private $description;
 
+    public static $names = array(
+        self::NOBODY,
+        self::ANON,
+        self::AUTHENTICATED,
+        self::REGISTERED,
+        self::PROJECT_MEMBERS,
+        self::PROJECT_ADMINS,
+    );
+
     public function __construct($id, $name, $description) {
         $this->id          = $id;
         $this->name        = self::getUserGroupDisplayName($name);

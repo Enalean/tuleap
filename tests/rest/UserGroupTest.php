@@ -39,11 +39,12 @@ class UserGroupTest extends RestBase {
         $this->assertEquals(
             $response->json(),
             array(
-                'id'        => REST_TestDataBuilder::STATIC_UGROUP_1_ID,
-                'uri'       => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
-                'label'     => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
-                'key'       => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL
+                'id'         => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri'        => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'label'      => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'users_uri'  => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
+                'key'        => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'short_name' => 'static_ugroup_1'
             )
         );
         $this->assertEquals($response->getStatusCode(), 200);
@@ -107,44 +108,56 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'         => REST_TestDataBuilder::ADMIN_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::ADMIN_ID,
-                    'email'      => REST_TestDataBuilder::ADMIN_EMAIL,
-                    'real_name'  => REST_TestDataBuilder::ADMIN_REAL_NAME,
-                    'username'   => REST_TestDataBuilder::ADMIN_USER_NAME,
-                    'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::ADMIN_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::ADMIN_ID,
+                    'user_url'     => '/users/admin',
+                    'email'        => REST_TestDataBuilder::ADMIN_EMAIL,
+                    'real_name'    => REST_TestDataBuilder::ADMIN_REAL_NAME,
+                    'display_name' => REST_TestDataBuilder::ADMIN_DISPLAY_NAME,
+                    'username'     => REST_TestDataBuilder::ADMIN_USER_NAME,
+                    'ldap_id'      => null,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 ),
                 array(
-                    'id'         => REST_TestDataBuilder::TEST_USER_1_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
-                    'email'      => REST_TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name'  => REST_TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'   => REST_TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'    => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'user_url'     => '/users/rest_api_tester_1',
+                    'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
+                    'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 ),
                 array(
-                    'id'         => REST_TestDataBuilder::TEST_USER_2_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
-                    'email'      => '',
-                    'real_name'  => '',
-                    'username'   => REST_TestDataBuilder::TEST_USER_2_NAME,
-                    'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::TEST_USER_2_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
+                    'user_url'     => '/users/rest_api_tester_2',
+                    'email'        => '',
+                    'real_name'    => '',
+                    'display_name' => REST_TestDataBuilder::TEST_USER_2_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_2_NAME,
+                    'ldap_id'      => null,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 ),
                 array(
-                    'id'         => REST_TestDataBuilder::TEST_USER_3_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_3_ID,
-                    'email'      => '',
-                    'real_name'  => '',
-                    'username'   => REST_TestDataBuilder::TEST_USER_3_NAME,
-                    'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::TEST_USER_3_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_3_ID,
+                    'user_url'     => '/users/rest_api_tester_3',
+                    'email'        => '',
+                    'real_name'    => '',
+                    'display_name' => REST_TestDataBuilder::TEST_USER_3_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_3_NAME,
+                    'ldap_id'      => null,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 )
             )
         );
@@ -158,14 +171,17 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'         => REST_TestDataBuilder::TEST_USER_1_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
-                    'email'      => REST_TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name'  => REST_TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'   => REST_TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'    => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'user_url'     => '/users/rest_api_tester_1',
+                    'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
+                    'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 )
             )
         );
@@ -179,24 +195,30 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'         => REST_TestDataBuilder::TEST_USER_1_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
-                    'email'      => REST_TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name'  => REST_TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'   => REST_TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'    => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'user_url'     => '/users/rest_api_tester_1',
+                    'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
+                    'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 ),
                 array(
-                    'id'         => REST_TestDataBuilder::TEST_USER_2_ID,
-                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
-                    'email'      => '',
-                    'real_name'  => '',
-                    'username'   => REST_TestDataBuilder::TEST_USER_2_NAME,
-                    'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png',
-                    'status'     => 'A'
+                    'id'           => REST_TestDataBuilder::TEST_USER_2_ID,
+                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
+                    'user_url'     => '/users/rest_api_tester_2',
+                    'email'        => '',
+                    'real_name'    => '',
+                    'display_name' => REST_TestDataBuilder::TEST_USER_2_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_2_NAME,
+                    'ldap_id'      => null,
+                    'avatar_url'   => '/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false
                 )
             )
         );

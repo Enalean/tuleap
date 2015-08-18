@@ -240,6 +240,8 @@ class ArtifactsResource extends AuthenticatedResource {
             $updater->update($user, $artifact, $values, $comment);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
+            throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             // Do nothing
         } catch (Tracker_Exception $exception) {
