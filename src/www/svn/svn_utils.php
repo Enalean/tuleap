@@ -62,33 +62,35 @@ function svn_header($params) {
 
 function svn_header_admin($params) {
     global $group_id,$Language;
-    
+
     //required params for site_project_header();
     $params['group']  = $group_id;
     $params['toptab'] = 'svn';
-    
+
     $project = ProjectManager::instance()->getProject($group_id);
     $service = $project->getService('svn');
     if (!$service) {
         exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
     }
-    
+
     $toolbar = array();
     $toolbar[] = array('title' => $Language->getText('svn_utils','admin'),
                        'url'   => '/svn/admin/?group_id='.$group_id);
     $toolbar[] = array('title' => $Language->getText('svn_admin_index','gen_sett'),
                        'url'   => '/svn/admin/?func=general_settings&group_id='.$group_id);
+    $toolbar[] = array('title' => $Language->getText('svn_admin_index','immutable_tags'),
+                       'url'   => '/svn/admin/?func=immutable_tags&group_id='.$group_id);
     $toolbar[] = array('title' => $Language->getText('svn_admin_index','access'),
                        'url'   => '/svn/admin/?func=access_control&group_id='.$group_id);
     $toolbar[] = array('title' => $Language->getText('svn_utils','notif'),
                        'url'   => '/svn/admin/?func=notification&group_id='.$group_id);
 
-    if (!$params['help']) { 
+    if (!$params['help']) {
         $params['help'] = "svn.html#subversion-administration-interface";
     }
     $toolbar[] = array('title' => $Language->getText('global','help'),
                        'url' => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
-    
+
     $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
 }
 

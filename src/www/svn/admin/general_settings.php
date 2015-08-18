@@ -22,12 +22,10 @@
 
 
 // CAUTION!!
-// Make the changes before calling svn_header_admin because 
+// Make the changes before calling svn_header_admin because
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
 //
-
-$immutable_tags_handler = new SVN_Immutable_Tags_Handler(new SVN_Immutable_Tags_DAO());
 
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
@@ -39,23 +37,17 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vPreamble = new Valid_Text('form_preamble');
     $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', array('0', '1'));
     $vCanChangeSVNLog->required();
-    $vImmutableTagsWhitelist = new Valid_Text('immutable-tags-whitelist');
-    $vImmutableTagsPath      = new Valid_Text('immutable-tags-path');
 
     if( $request->valid($vTracked) &&
         $request->valid($vPreamble) &&
         $request->valid($vMandatoryRef) &&
-        $request->valid($vCanChangeSVNLog) &&
-        $request->valid($vImmutableTagsWhitelist) &&
-        $request->valid($vImmutableTagsPath)
+        $request->valid($vCanChangeSVNLog)
     ) {
         // group_id was validated in index.
         $form_tracked = $request->get('form_tracked');
         $form_preamble = $request->get('form_preamble');
         $form_mandatory_ref = $request->get('form_mandatory_ref');
         $form_can_change_svn_log = $request->get('form_can_change_svn_log');
-        $immutable_tags_whitelist = $request->get('immutable-tags-whitelist');
-        $immutable_tags_path = $request->get('immutable-tags-path');
 
         $ret = svn_data_update_general_settings(
             $group_id,
@@ -66,8 +58,6 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         );
 
         if ($ret) {
-            $immutable_tags_handler->saveImmutableTagsForProject($group_id, $immutable_tags_whitelist, $immutable_tags_path);
-
             EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, array('group_id' => $group_id));
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings','upd_success'));
         } else {
@@ -93,9 +83,7 @@ $template_dir           = ForgeConfig::get('codendi_dir') .'/src/templates/svn/'
 $renderer               = TemplateRendererFactory::build()->getRenderer($template_dir);
 
 $presenter = new SVN_GeneralSettingsPresenter(
-    $project,
-    $immutable_tags_handler->getImmutableTagsWhitelistForProject($group_id),
-    $immutable_tags_handler->getImmutableTagsPathForProject($group_id)
+    $project
 );
 
 $renderer->renderToPage(

@@ -24,16 +24,8 @@ class SVN_GeneralSettingsPresenter {
     /** @var Project */
     private $project;
 
-    /** @var string */
-    public $immutable_tags_whitelist;
-
-    /** @var string */
-    public $immutable_tags_path;
-
-    public function __construct(Project $project, $immutable_tags_whitelist, $immutable_tags_path) {
-        $this->project                  = $project;
-        $this->immutable_tags_whitelist = $immutable_tags_whitelist;
-        $this->immutable_tags_path      = $immutable_tags_path;
+    public function __construct(Project $project) {
+        $this->project = $project;
     }
 
     public function svn_tracked() {
@@ -86,34 +78,6 @@ class SVN_GeneralSettingsPresenter {
 
     public function svn_can_change_log_comment() {
         return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_can_change_log_comment');
-    }
-
-    public function svn_allow_tag_immutable_title() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_allow_tag_immutable');
-    }
-
-    public function svn_allow_tag_immutable_comment() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_allow_tag_immutable_comment');
-    }
-
-    public function layout_example() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'layout_example');
-    }
-
-    public function impacted_svn() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'impacted_svn');
-    }
-
-    public function or_svn_status_form() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'or_svn_status_form');
-    }
-
-    public function whitelist() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_whitelist');
-    }
-
-    public function path() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_path');
     }
 
     public function preamble_title() {

@@ -1,0 +1,38 @@
+
+<h2>{{ svn_allow_tag_immutable_title }}</h2>
+
+<form action="" method="post">
+    <input type="hidden" name="group_id" value="{{ project_id }}">
+    <input type="hidden" name="func" value="immutable_tags">
+    <input type="hidden" name="post_changes" value="y">
+
+    <h3><i class="icon-tags"></i> {{ immutable_tag_configuration }}</h3>
+    <p class="immutable-tags-comment">{{ svn_allow_tag_immutable_comment }}</p>
+    <div class="row-fluid immutable-tags-option">
+        <div class="immutable-tags-path span3">
+            <div class="form-group">
+                <label for="immutable-tags-path">{{ path }}</label>
+                <textarea
+                    rows="5"
+                    name="immutable-tags-path"
+                    id="immutable-tags-path"
+                    placeholder="/tags"
+                >{{ immutable_tags_path }}</textarea>
+            </div>
+        </div>
+        <div class="immutable-tags-whitelist span3">
+            <div class="form-group">
+                <label for="immutable-tags-whitelist">{{ whitelist }}</label>
+                <textarea
+                    rows="5"
+                    name="immutable-tags-whitelist"
+                    id="immutable-tags-whitelist"
+                    placeholder="/tags/moduleX"
+                >{{ immutable_tags_whitelist }}</textarea>
+            </div>
+        </div>
+    </div>
+    <p>
+        <input type="submit" name="submit" class="btn btn-primary" value="{{ btn_submit }}" />
+    </p>
+</form>
