@@ -32,6 +32,12 @@ class KanbanPresenter {
     /** @var int */
     public $project_id;
 
+    /** @var int */
+    public $user_id;
+
+    /** @var string */
+    public $view_mode;
+
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
@@ -53,5 +59,7 @@ class KanbanPresenter {
         $this->user_is_kanban_admin  = (int) $user_is_kanban_admin;
         $this->language              = $language;
         $this->project_id            = $project_id;
+        $this->user_id               = $user->getId();
+        $this->view_mode             = $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
     }
 }

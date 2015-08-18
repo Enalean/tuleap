@@ -5,19 +5,41 @@
 
     function SharedPropertiesService() {
         var property = {
-            kanban:        undefined,
+            user_id      : undefined,
+            kanban       : undefined,
+            view_mode    : undefined,
             user_is_admin: false,
-            project_id:    undefined
+            project_id   : undefined
         };
 
         return {
-            getKanban: getKanban,
-            setKanban: setKanban,
+            getUserId     : getUserId,
+            setUserId     : setUserId,
+            getViewMode   : getViewMode,
+            setViewMode   : setViewMode,
+            getKanban     : getKanban,
+            setKanban     : setKanban,
             getUserIsAdmin: getUserIsAdmin,
             setUserIsAdmin: setUserIsAdmin,
-            setProjectId: setProjectId,
-            getProjectId: getProjectId
+            setProjectId  : setProjectId,
+            getProjectId  : getProjectId
         };
+
+        function getUserId() {
+            return property.user_id;
+        }
+
+        function setUserId(user_id) {
+            property.user_id = user_id;
+        }
+
+        function getViewMode() {
+            return property.view_mode;
+        }
+
+        function setViewMode(view_mode) {
+            property.view_mode = view_mode;
+        }
 
         function getKanban() {
             return property.kanban;

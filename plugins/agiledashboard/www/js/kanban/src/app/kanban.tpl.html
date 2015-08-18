@@ -1,15 +1,22 @@
 <div class="tuleap-modal-loading" ng-if="kanban.loading_modal.is_loading"></div>
 <div id="kanban-header">
-    <div class="kanban-title">
-        <h1>{{ kanban.label }}</h1>
-        <button type="button" class="btn btn-small" ng-click="kanban.editKanban()" ng-show="kanban.showEditbutton()">
-            <i class="icon-edit"></i>
-            <span translate>Edit this Kanban</span>
-        </button>
-        <div class="input-search">
-            <input type="search" class="search" placeholder="{{ 'Filter...' | translate }}"  ng-model="kanban.filter_terms" ng-keyup="kanban.treeFilter()">
-        </div>
+    <h1>{{ kanban.label }}</h1>
+
+    <button type="button" class="btn btn-small" ng-click="kanban.editKanban()" ng-show="kanban.showEditbutton()">
+        <i class="icon-edit"></i>
+        <span translate>Edit this Kanban</span>
+    </button>
+
+    <div class="btn-group view-switcher" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small" ng-class="{active: kanban.current_view_class === kanban.compact_view_key}" ng-click="kanban.switchViewMode(kanban.compact_view_key)" title="{{ 'Compact view' | translate }}"><i class="icon-list"></i> <span translate>Compact view</span></button>
+        <button type="button" class="btn btn-small" ng-class="{active: kanban.current_view_class === kanban.detailed_view_key}" ng-click="kanban.switchViewMode(kanban.detailed_view_key)" title="{{ 'Detailed view' | translate }}"><i class="icon-th-list"></i> <span translate>Detailed view</span></button>
     </div>
+
+    <div class="input-search">
+        <input type="search" class="search" placeholder="{{ 'Filter...' | translate }}"  ng-model="kanban.filter_terms" ng-keyup="kanban.treeFilter()">
+    </div>
+
+    <div class="clearfix"></div>
 </div>
 
 <div id="kanban-board" resize>
@@ -41,7 +48,7 @@
                 <ul ui-tree-nodes
                     ng-model="kanban.backlog.filtered_content"
                     ng-class="{'has-scrollbar': kanban.backlog.is_scrollbar_shown }"
-                    class="kanban-items backlog"
+                    class="kanban-items backlog {{ kanban.current_view_class }}"
                 >
                     <li ui-tree-node
                         ng-repeat="item in kanban.backlog.filtered_content"
@@ -110,7 +117,7 @@
                 <ul ui-tree-nodes
                     ng-model="column.filtered_content"
                     ng-class="{'has-scrollbar': column.is_scrollbar_shown }"
-                    class="kanban-items column"
+                    class="kanban-items column {{ kanban.current_view_class }}"
                     data-column-id="{{ column.id }}"
                 >
                     <li ui-tree-node
@@ -156,7 +163,7 @@
                 <ul ui-tree-nodes
                     ng-model="kanban.archive.filtered_content"
                     ng-class="{'has-scrollbar': kanban.archive.is_scrollbar_shown }"
-                    class="kanban-items archive"
+                    class="kanban-items archive {{ kanban.current_view_class }}"
                 >
                     <li ui-tree-node
                         ng-repeat="item in kanban.archive.filtered_content"

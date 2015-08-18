@@ -104,7 +104,7 @@
         > span.initial-effort { background-color: @flamingo_pink; }
     }
 
-    > .kanban-item-link {
+    .kanban-item-link {
         position: absolute;
         top: 3px;
         left: 12px;
@@ -166,6 +166,32 @@
                 }
             }
         }
+    }
+}
+
+
+ul.kanban-items.compact-view > li > .kanban-item {
+    padding: 5px 21px 5px 12px;
+    text-align: left;
+
+    > .kanban-item-link {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 0 3px 0 0;
+    }
+
+    .kanban-item-label {
+        display: inline;
+        font-size: 0.9em;
+    }
+
+    > .icon-time {
+        top: 8px;
+    }
+
+    ul.extra_card_fields {
+        display: none;
     }
 }
 

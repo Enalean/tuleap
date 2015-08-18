@@ -30,47 +30,45 @@
 }
 
 #kanban-header {
-    > .kanban-title {
-        padding: 20px 0 10px;
+    padding: 20px;
 
-        > h1 {
-            padding: 0 0 0 20px;
-            margin-top: 0;
-            display: inline-block;
-            vertical-align: middle;
-        }
+    > h1 {
+        float: left;
+        margin: 0 20px 0 0;
+        display: inline-block;
+    }
 
-        > button {
-            display: inline-block;
-            margin-left: 20px;
-            vertical-align: text-bottom;
-            position: relative;
+    > button {
+        float: left;
+        position: relative;
+        top: 10px;
+        margin: 0 10px 10px 0;
+    }
+
+    .view-switcher, > .input-search {
+        float: right;
+        position: relative;
+        top: 10px;
+        margin: 0 10px 10px 0;
+    }
+
+    > .input-search {
+        &:before {
+            position: absolute;
             top: 3px;
+            left: 9px;
+            font-family: FontAwesome;
+            content: '\f002';
+            opacity: 0.5;
+            font-size: 12px;
         }
 
-        > .input-search {
-            position: relative;
-            top: 2px;
-            margin: 0 0 10px 10px;
-            display: inline-block;
-
-            &:before {
-                position: absolute;
-                top: 3px;
-                left: 11px;
-                font-family: FontAwesome;
-                content: '\f002';
-                opacity: 0.5;
-                font-size: 12px;
-            }
-
-            > input {
-                padding-left: 27px;
-                -webkit-appearance: none;
-                box-sizing: border-box;
-                width: 220px;
-                height: 26px;
-            }
+        > input {
+            width: 220px;
+            height: 26px;
+            padding-left: 26px;
+            -webkit-appearance: none;
+            box-sizing: border-box;
         }
     }
 }

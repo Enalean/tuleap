@@ -25,7 +25,7 @@
         href="/plugins/tracker/?aid={{ item.id }}"
         ng-click="kanban.showEditModal($event, item)"
         class="kanban-item-link"
-    >{{ item.item_name }} #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
+    ><span ng-show="kanban.current_view_class === kanban.detailed_view_key">{{ item.item_name }}</span> #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
     </a>
 
     <div class="kanban-item-label" ng-bind-html="kanban.getCardFieldTextValue(item.label) | highlight:kanban.filter_terms"></div>

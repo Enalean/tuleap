@@ -5,6 +5,7 @@
         'ui.bootstrap',
         'templates-app',
         'shared-properties',
+        'user-preferences',
         'restangular',
         'angularMoment',
         'ngSanitize',
