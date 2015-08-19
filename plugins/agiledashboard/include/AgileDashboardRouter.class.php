@@ -82,6 +82,9 @@ class AgileDashboardRouter {
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
 
+    /** @var AgileDashboard_HierarchyChecker */
+    private $hierarchy_checker;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -93,7 +96,8 @@ class AgileDashboardRouter {
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
-        PlanningPermissionsManager $planning_permissions_manager
+        PlanningPermissionsManager $planning_permissions_manager,
+        AgileDashboard_HierarchyChecker $hierarchy_checker
     ) {
         $this->plugin                        = $plugin;
         $this->milestone_factory             = $milestone_factory;
@@ -106,6 +110,7 @@ class AgileDashboardRouter {
         $this->config_manager                = $config_manager;
         $this->kanban_factory                = $kanban_factory;
         $this->planning_permissions_manager  = $planning_permissions_manager;
+        $this->hierarchy_checker             = $hierarchy_checker;
     }
 
     /**
@@ -308,7 +313,8 @@ class AgileDashboardRouter {
             $this->kanban_manager,
             $this->config_manager,
             $this->kanban_factory,
-            $this->planning_permissions_manager
+            $this->planning_permissions_manager,
+            $this->hierarchy_checker
         );
     }
 
@@ -320,7 +326,8 @@ class AgileDashboardRouter {
             $this->kanban_factory,
             $this->config_manager,
             TrackerFactory::instance(),
-            new AgileDashboard_PermissionsManager()
+            new AgileDashboard_PermissionsManager(),
+            $this->hierarchy_checker
         );
     }
 

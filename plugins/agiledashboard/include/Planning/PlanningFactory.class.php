@@ -548,6 +548,10 @@ class PlanningFactory {
         return $this->dao->searchPlanningTrackerIdsByGroupId($group_id);
     }
 
+    public function getBacklogTrackerIdsByGroupId($group_id) {
+        return $this->dao->searchBacklogTrackerIdsByGroupId($group_id);
+    }
+
     public function isTrackerUsedInBacklog($tracker_id) {
         $backlog = $this->dao->searchBacklogItemsByTrackerId($tracker_id)->getRow();
 

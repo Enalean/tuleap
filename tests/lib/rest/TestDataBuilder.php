@@ -63,6 +63,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var AgileDashboard_HierarchyChecker */
+    private $hierarchy_checker;
+
     /** @var string */
     protected $template_path;
 
@@ -81,6 +84,11 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->tracker_artifact_factory    = Tracker_ArtifactFactory::instance();
         $this->tracker_formelement_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory             = TrackerFactory::instance();
+        $this->hierarchy_checker           = new AgileDashboard_HierarchyChecker(
+            Tracker_HierarchyFactory::instance(),
+            PlanningFactory::build(),
+            new AgileDashboard_KanbanFactory($this->tracker_factory, new AgileDashboard_KanbanDao())
+        );
 
         return $this;
     }
@@ -343,7 +351,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     public function generateKanban() {
         echo "Create 'My first kanban'\n";
-        $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory);
+        $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory, $this->hierarchy_checker);
         $kanban_manager->createKanban('My first kanban', self::KANBAN_TRACKER_ID);
 
         echo "Populate kanban\n";

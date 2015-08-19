@@ -66,6 +66,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
 
+    /** @var AgileDashboard_HierarchyChecker */
+    private $hierarchy_checker;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -78,7 +81,8 @@ class Planning_Controller extends MVC2_PluginController {
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
-        PlanningPermissionsManager $planning_permissions_manager
+        PlanningPermissionsManager $planning_permissions_manager,
+        AgileDashboard_HierarchyChecker $hierarchy_checker
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -94,6 +98,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->config_manager               = $config_manager;
         $this->kanban_factory               = $kanban_factory;
         $this->planning_permissions_manager = $planning_permissions_manager;
+        $this->hierarchy_checker            = $hierarchy_checker;
     }
 
     public function index() {
@@ -148,7 +153,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getProjectFromRequest()->getPublicName(),
             $kanban_is_activated,
             $user,
-            $this->kanban_manager->getTrackersWithKanbanUsageAndHierarchy($this->group_id),
+            $this->kanban_manager->getTrackersWithKanbanUsageAndHierarchy($this->group_id, $user),
             $this->getKanbanSummaryPresenters(),
             $this->config_manager->scrumIsActivatedForProject($this->group_id),
             $scrum_is_configured,
@@ -468,12 +473,12 @@ class Planning_Controller extends MVC2_PluginController {
     private function getPlanningTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
         $trackers_filtered = array();
 
-        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker) {
+        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker_presenter) {
             $trackers_filtered[] = array(
-                'name'     => $tracker->getName(),
-                'id'       => $tracker->getId(),
-                'selected' => $tracker->selectedIfPlanningTracker(),
-                'disabled' => in_array($tracker->getId(), $kanban_tracker_ids)
+                'name'     => $tracker_presenter->getName(),
+                'id'       => $tracker_presenter->getId(),
+                'selected' => $tracker_presenter->selectedIfPlanningTracker(),
+                'disabled' => in_array($tracker_presenter->getId(), $kanban_tracker_ids) || $this->hierarchy_checker->isKanbanHierarchy($tracker_presenter->getTracker())
             );
         }
 
@@ -483,12 +488,12 @@ class Planning_Controller extends MVC2_PluginController {
     private function getBacklogTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
         $trackers_filtered = array();
 
-        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker) {
+        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker_presenter) {
             $trackers_filtered[] = array(
-                'name'     => $tracker->getName(),
-                'id'       => $tracker->getId(),
-                'selected' => $tracker->selectedIfBacklogTracker(),
-                'disabled' => in_array($tracker->getId(), $kanban_tracker_ids)
+                'name'     => $tracker_presenter->getName(),
+                'id'       => $tracker_presenter->getId(),
+                'selected' => $tracker_presenter->selectedIfBacklogTracker(),
+                'disabled' => in_array($tracker_presenter->getId(), $kanban_tracker_ids) || $this->hierarchy_checker->isKanbanHierarchy($tracker_presenter->getTracker())
             );
         }
 

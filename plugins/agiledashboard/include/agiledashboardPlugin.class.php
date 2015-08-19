@@ -841,7 +841,8 @@ class AgileDashboardPlugin extends Plugin {
     private function getKanbanManager() {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            $this->getHierarchyChecker()
         );
     }
 
@@ -852,4 +853,27 @@ class AgileDashboardPlugin extends Plugin {
     private function getPlanningPermissionsManager() {
         return new PlanningPermissionsManager();
     }
+
+    /**
+     * @return AgileDashboard_HierarchyChecker
+     */
+    private function getHierarchyChecker() {
+        return new AgileDashboard_HierarchyChecker(
+            $this->getHierarchyFactory(),
+            $this->getPlanningFactory(),
+            $this->getKanbanFactory()
+        );
+    }
+
+    /**
+     * @return AgileDashboard_KanbanFactory
+     */
+    private function getKanbanFactory() {
+        return new AgileDashboard_KanbanFactory(
+            TrackerFactory::instance(),
+            new AgileDashboard_KanbanDao()
+
+        );
+    }
+
 }

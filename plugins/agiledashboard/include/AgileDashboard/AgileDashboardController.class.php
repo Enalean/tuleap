@@ -40,6 +40,9 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     /** @var AgileDashboard_PermissionsManager */
     private $permissions_manager;
 
+    /** @var AgileDashboard_HierarchyChecker */
+    private $hierarchy_checker;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -47,7 +50,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         AgileDashboard_KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager
+        AgileDashboard_PermissionsManager $permissions_manager,
+        AgileDashboard_HierarchyChecker $hierarchy_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -58,6 +62,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $this->config_manager      = $config_manager;
         $this->tracker_factory     = $tracker_factory;
         $this->permissions_manager = $permissions_manager;
+        $this->hierarchy_checker   = $hierarchy_checker;
     }
 
     /**
@@ -260,7 +265,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $tracker_id  = $this->request->get('tracker-kanban');
         $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
         $user        = $this->request->getCurrentUser();
-        $hierarchy   = new Tracker_Hierarchy();
 
         if (! $user->isAdmin($this->group_id)) {
              $GLOBALS['Response']->addFeedback(
@@ -280,23 +284,22 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $this->redirectToHome();
             return;
         }
-
-        try {
-            $hierarchy->getLevel($tracker_id);
-            $is_in_hierarchy = true;
-        } catch (Tracker_Hierarchy_NotInHierarchyException $exeption) {
-            $is_in_hierarchy = false;
-        }
-
-        if ((count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 ||
-            count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0) &&
-            ! $is_in_hierarchy
-        ) {
+        
+        if ($this->isTrackerUsedInScrum($tracker)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'tracker_used_in_scrum')
             );
 
+            $this->redirectToHome();
+            return;
+        }
+
+        if ($this->hierarchy_checker->isScrumHierarchy($tracker)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'hierarchy_used_in_scrum')
+            );
             $this->redirectToHome();
             return;
         }
@@ -358,4 +361,9 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'error_perm_denied'));
         }
     }
+
+    private function isTrackerUsedInScrum(Tracker $tracker) {
+        return count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 || count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0;
+    }
+
 }

@@ -52,4 +52,11 @@ class Planning_TrackerPresenter {
     public function selectedIfPlanningTracker() {
         return ($this->tracker->getId() == $this->planning->getPlanningTrackerId());
     }
+
+    /**
+     * @return Tracker
+     */
+    public function getTracker() {
+        return $this->tracker;
+    }
 }
