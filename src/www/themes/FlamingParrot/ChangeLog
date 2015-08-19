@@ -1,3 +1,6 @@
+Version 1.104 - Tuleap 8.6
+    * request #8355: Login on front page doesn't take reverse proxy into account
+
 Version 1.103 - Tuleap 8.5
     * request #8325 No background image during registration when theme is Dark*
 
