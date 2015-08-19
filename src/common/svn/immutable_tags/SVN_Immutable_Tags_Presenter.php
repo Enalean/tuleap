@@ -30,34 +30,102 @@ class SVN_ImmutableTagsPresenter {
     /** @var string */
     public $immutable_tags_path;
 
-    public function __construct(Project $project, $immutable_tags_whitelist, $immutable_tags_path) {
+    /** @var array */
+    public $existing_tree;
+
+    public function __construct(
+        Project $project,
+        $immutable_tags_whitelist,
+        $immutable_tags_path,
+        array $existing_tree
+    ) {
         $this->project                  = $project;
         $this->immutable_tags_whitelist = $immutable_tags_whitelist;
         $this->immutable_tags_path      = $immutable_tags_path;
+
+        $existing_tree       = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
+        array_walk($existing_tree, array($this, 'addSlasheAsPrefix'));
+        usort($existing_tree, 'strnatcasecmp');
+
+        $this->existing_tree = json_encode($existing_tree);
+    }
+
+    private function keepOnlyDirectories($path) {
+        return substr($path, -1) === '/';
+    }
+
+    private function addSlasheAsPrefix(&$path) {
+        if ($path !== '/') {
+            $path = '/'. $path;
+        }
     }
 
     public function svn_allow_tag_immutable_title() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_allow_tag_immutable');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'title');
     }
 
     public function svn_allow_tag_immutable_comment() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_allow_tag_immutable_comment');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration_description');
     }
 
     public function immutable_tag_configuration() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_tag_configuration');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration');
+    }
+
+    public function tree() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree');
+    }
+
+    public function tree_empty_state() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree_empty_state');
+    }
+
+    public function preview() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'preview');
+    }
+
+    public function preview_description() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'preview_description');
+    }
+
+    public function my_tag() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','my-tag');
+    }
+
+    public function some_path() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','some/path');
+    }
+
+    public function select_tag() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','select_tag');
+    }
+
+    public function loading() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','loading');
+    }
+
+    public function svn_status_style() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','svn_status_style');
+    }
+
+    public function impacted_svn() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'impacted_svn');
+    }
+
+    public function impacted_svn_empty_state() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'impacted_svn_empty_state');
     }
 
     public function whitelist() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_whitelist');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
     }
 
     public function path() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_path');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'path');
     }
 
-    public function btn_submit() {
-        return $GLOBALS['Language']->getText('global','btn_submit');
+    public function save() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','save');
     }
 
     public function project_id() {
