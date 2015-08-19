@@ -22,6 +22,7 @@ use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Trafficlights\REST\v1\CampaignRepresentation;
 use Tuleap\Trafficlights\REST\v1\DefinitionRepresentation;
 use Tuleap\Trafficlights\REST\v1\EnvironmentRepresentation;
+use Tuleap\Trafficlights\REST\v1\NodeReferenceRepresentation;
 
 /**
  * Inject resource into restler
@@ -33,6 +34,7 @@ class Trafficlights_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\CampaignsResource', 'trafficlights_campaigns');
         $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\DefinitionsResource', 'trafficlights_definitions');
         $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\ExecutionsResource', 'trafficlights_executions');
+        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\NodeResource', 'trafficlights_nodes');
     }
 
     public function declareProjectResource(array &$resources, Project $project) {
@@ -40,6 +42,7 @@ class Trafficlights_REST_ResourcesInjector {
             CampaignRepresentation::ROUTE,
             DefinitionRepresentation::ROUTE,
             EnvironmentRepresentation::ROUTE,
+            NodeReferenceRepresentation::ROUTE,
         );
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();
