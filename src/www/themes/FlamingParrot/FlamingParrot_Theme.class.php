@@ -391,7 +391,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $project_dao = new ProjectDao();
         $nb_projects = $project_dao->countActiveProjects();
 
-        $most_secure_url = 'http://'. ForgeConfig::get('sys_default_domain');
+        $most_secure_url = '';
         if (ForgeConfig::get('sys_https_host')) {
             $most_secure_url = 'https://'. ForgeConfig::get('sys_https_host');
         }
