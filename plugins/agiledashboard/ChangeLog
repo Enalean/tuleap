@@ -1,3 +1,6 @@
+Version 1.255 - Tuleap 8.6
+    * story #8160: Handle open list field (include modal)
+
 Version 1.254 - Tuleap 8.6
     * story #8266: Have a compact view of kanban cards
 
