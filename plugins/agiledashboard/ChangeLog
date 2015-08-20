@@ -1,3 +1,6 @@
+Version 1.256 - Tuleap 8.6
+    * story #8251: use a tracker hierarchy for kanban
+
 Version 1.255 - Tuleap 8.6
     * story #8160: Handle open list field (include modal)
 
