@@ -1,3 +1,6 @@
+Version 5.684 - Tuleap 8.6
+    * request #8350: fix use art and artifact keyword for both tracker v3 and v5
+
 Version 5.683 - Tuleap 8.6
     * story #8160: open list fields
 
