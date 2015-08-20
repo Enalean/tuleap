@@ -149,4 +149,6 @@ plugin_agiledashboard	add_kanban_modal_title	Create a kanban
 plugin_agiledashboard	kanban_created	Kanban $1 successfully created.
 plugin_agiledashboard	kanban_creation_error	Error while creating Kanban $1.
 plugin_agiledashboard	kanban_tracker_used	Tracker already used by another Kanban.
+plugin_agiledashboard	no_tracker_selected	No tracker has been selected.
+plugin_agiledashboard	no_tracker_available	No tracker is available.
 plugin_agiledashboard	kanban_not_found	Kanban not found.

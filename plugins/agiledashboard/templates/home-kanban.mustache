@@ -2,7 +2,12 @@
     <div class="ad-homepage-title">
         <h2>{{ kanban_title }}</h2>
         {{# user_is_admin }}
-        <a href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban">
+            {{# are_trackers_available }}
+                <a id="add_kanban_button" href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban">
+            {{/are_trackers_available }}
+            {{^ are_trackers_available }}
+                <a id="add_kanban_button" data-toggle="tooltip" data-placement="right" title="{{ no_tracker_available }}" class="btn add-kanban disabled">
+            {{/are_trackers_available }}
             <i class="icon-plus"></i> {{ add_kanban }}
         </a>
         {{/ user_is_admin }}
