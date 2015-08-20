@@ -908,7 +908,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
             $ugroup_manager = new UGroupManager();
             $project        = $this->getTracker()->getProject();
-            $user_groups    = $ugroup_manager->getUGroups($project);
+            $user_groups    = $ugroup_manager->getUGroups($project, array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::NONE));
 
             $values = array();
             foreach ($user_groups as $ugroup) {
