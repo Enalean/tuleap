@@ -20,16 +20,19 @@
 
 namespace Tuleap\Trafficlights\REST\v1;
 
-use Tuleap\REST\ProjectAuthorization;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
 use PFUser;
-use Tracker_URLVerification;
 use Tracker_ArtifactDao;
 use DataAccessResult;
 use Tracker_ResourceDoesntExistException;
 
 class ArtifactNodeBuilder {
+
+    /**
+     * @var NodeBuilderFactory
+     */
+    private $node_builder_factory;
 
     /**
      * @var ArtifactNodeDao
@@ -44,22 +47,22 @@ class ArtifactNodeBuilder {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao) {
-        $this->artifact_factory = $artifact_factory;
-        $this->artifact_dao     = $artifact_dao;
-        $this->dao              = $dao;
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao, NodeBuilderFactory $node_builder_factory) {
+        $this->artifact_factory     = $artifact_factory;
+        $this->artifact_dao         = $artifact_dao;
+        $this->dao                  = $dao;
+        $this->node_builder_factory = $node_builder_factory;
     }
 
-    public function getNodeRepresentation(PFUser $user, $id) {
+    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact) {
         $nodes        = array();
-        $artifact_ids = array($id);
+        $artifact_ids = array($artifact->getId());
 
-        $artifact = $this->getArtifactById($user, $id);
         $node = new NodeRepresentation();
         $this->buildNode($node, $artifact->getId(), $nodes);
 
-        $node->links         = $this->getLinks($user, $id, $nodes, $artifact_ids);
-        $node->reverse_links = $this->getReverseLinks($user, $id, $nodes, $artifact_ids);
+        $node->links         = $this->getLinks($user, $artifact->getId(), $nodes, $artifact_ids);
+        $node->reverse_links = $this->getReverseLinks($user, $artifact->getId(), $nodes, $artifact_ids);
 
         $this->updateNodesWithArtifactValues($artifact_ids, $nodes);
 
@@ -122,7 +125,7 @@ class ArtifactNodeBuilder {
         foreach ($dar as $row) {
             try {
                 if ($this->notAlreadyLinked($already_linked_ids, $row['id'])) {
-                    $this->getArtifactById($user, $row['id']);
+                    $this->node_builder_factory->getArtifactById($user, $row['id']);
                     $artifact_ids[] = $row['id'];
                 }
             } catch(Tracker_ResourceDoesntExistException $exception) {
@@ -158,23 +161,5 @@ class ArtifactNodeBuilder {
                 );
             }
         }
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Tracker_Artifact
-     */
-    public function getArtifactById(PFUser $user, $id) {
-        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
-        if ($artifact) {
-            ProjectAuthorization::userCanAccessProject(
-                $user,
-                $artifact->getTracker()->getProject(),
-                new Tracker_URLVerification()
-            );
-            return $artifact;
-        }
-        throw new Tracker_ResourceDoesntExistException('404');
     }
 }

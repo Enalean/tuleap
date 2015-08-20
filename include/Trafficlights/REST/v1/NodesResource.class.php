@@ -22,19 +22,10 @@ namespace Tuleap\Trafficlights\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
-use Tracker_ArtifactFactory;
 use Tracker_Artifact;
 use UserManager;
-use Tracker_ArtifactDao;
 
 class NodeResource {
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    public function __construct() {
-        $this->artifact_factory    = Tracker_ArtifactFactory::instance();
-    }
 
     /**
      * @url OPTIONS
@@ -64,18 +55,14 @@ class NodeResource {
      */
     protected function getId($id) {
         try {
-            $builder = new ArtifactNodeBuilder(
-                $this->artifact_factory,
-                new Tracker_ArtifactDao(),
-                new ArtifactNodeDao()
-            );
+            $factory = new NodeBuilderFactory();
             $user = UserManager::instance()->getCurrentUser();
 
-            $artifact = $builder->getArtifactById($user, $id);
+            $artifact = $factory->getArtifactById($user, $id);
 
             $this->sendAllowHeaders($artifact);
 
-            return $builder->getNodeRepresentation($user, $id);
+            return $factory->getNodeRepresentation($user, $artifact);
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
