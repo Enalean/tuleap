@@ -10,7 +10,7 @@ Version 8.6 (Not Released Yet)
     == Plugins ==
 	* agiledashboard: 1.255
 	* proftpd: 0.22
-	* tracker: 5.684
+	* tracker: 5.685
 
     == Api ==
 	* REST API: 1.13

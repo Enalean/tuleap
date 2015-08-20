@@ -1,3 +1,6 @@
+Version 5.685 - Tuleap 8.6
+    * story #8160: Fix too many user groups given is openlist bound to ugroup
+
 Version 5.684 - Tuleap 8.6
     * request #8350: fix use art and artifact keyword for both tracker v3 and v5
 
