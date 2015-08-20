@@ -33,7 +33,8 @@ Test and tracability plugin
 #
 # Build
 %build
-scl enable nodejs010 "find www/themes -name '*.less' | xargs -l1 ./less.sh"
+scl enable nodejs010 "npm install"
+scl enable nodejs010 "grunt"
 find www/themes -name '*.less' | xargs rm -f
 
 #

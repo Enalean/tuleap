@@ -1,0 +1,14 @@
+{
+  "author": "Enalean Team",
+  "name": "trafficlights",
+  "version": "0.3.1",
+  "homepage": "http://www.enalean.com",
+  "licenses": {
+    "type": "GNU General Public License v2"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-less": "~1.0.1"
+  }
+}

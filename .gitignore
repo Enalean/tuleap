@@ -6,3 +6,4 @@ www/scripts/angular/node_modules/
 www/scripts/angular/vendor/
 *.css
 *.mo
+node_modules/
