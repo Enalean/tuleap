@@ -85,9 +85,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->tracker_formelement_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory             = TrackerFactory::instance();
         $this->hierarchy_checker           = new AgileDashboard_HierarchyChecker(
-            Tracker_HierarchyFactory::instance(),
             PlanningFactory::build(),
-            new AgileDashboard_KanbanFactory($this->tracker_factory, new AgileDashboard_KanbanDao())
+            new AgileDashboard_KanbanFactory($this->tracker_factory, new AgileDashboard_KanbanDao()),
+            $this->tracker_factory
         );
 
         return $this;

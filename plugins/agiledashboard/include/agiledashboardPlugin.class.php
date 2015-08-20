@@ -234,8 +234,6 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function tracker_event_trackers_duplicated($params) {
-        require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
-
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
             $params['tracker_mapping'],
@@ -427,7 +425,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance(),
+            $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager()
         );
@@ -831,8 +829,15 @@ class AgileDashboardPlugin extends Plugin {
     public function tracker_event_trackers_cannot_use_in_hierarchy($params) {
         $params['result'] = array_merge(
             $params['result'],
-            $this->getKanbanManager()->getTrackersUsedAsKanban($params['project'])
+            $this->getHierarchyChecker()->getDeniedTrackersForATrackerHierarchy($params['tracker'], $params['user'])
         );
+    }
+
+    /**
+     * @return TrackerFactory
+     */
+    private function getTrackerFactory() {
+        return TrackerFactory::instance();
     }
 
     /**
@@ -841,7 +846,7 @@ class AgileDashboardPlugin extends Plugin {
     private function getKanbanManager() {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
-            TrackerFactory::instance(),
+            $this->getTrackerFactory(),
             $this->getHierarchyChecker()
         );
     }
@@ -859,9 +864,9 @@ class AgileDashboardPlugin extends Plugin {
      */
     private function getHierarchyChecker() {
         return new AgileDashboard_HierarchyChecker(
-            $this->getHierarchyFactory(),
             $this->getPlanningFactory(),
-            $this->getKanbanFactory()
+            $this->getKanbanFactory(),
+            $this->getTrackerFactory()
         );
     }
 
@@ -875,5 +880,4 @@ class AgileDashboardPlugin extends Plugin {
 
         );
     }
-
 }

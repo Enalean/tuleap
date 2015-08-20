@@ -241,7 +241,8 @@ define('TRACKER_USAGE', 'tracker_usage');
  * Event emitted to check if a tracker can be used in hierarchy
  *
  * Parameters:
- *  'project'   Project (in)
+ *  'tracker'   Tracker (in)
+ *  'user'      PFUser (in)
  *  'result'    Array of Tracker that cannot be used in hierarchy (out)
  */
 define('TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY', 'tracker_event_trackers_cannot_use_in_hierarchy');

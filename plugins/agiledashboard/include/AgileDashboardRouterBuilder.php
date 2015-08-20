@@ -157,7 +157,7 @@ class AgileDashboardRouterBuilder {
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance(),
+            $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager()
         );
@@ -184,7 +184,7 @@ class AgileDashboardRouterBuilder {
     private function getKanbanManager() {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
-            TrackerFactory::instance(),
+            $this->getTrackerFactory(),
             $this->getHierarchyChecker()
         );
     }
@@ -194,10 +194,17 @@ class AgileDashboardRouterBuilder {
      */
     private function getHierarchyChecker() {
         return new AgileDashboard_HierarchyChecker(
-            $this->getHierarchyFactory(),
             $this->getPlanningFactory(),
-            $this->getKanbanFactory()
+            $this->getKanbanFactory(),
+            $this->getTrackerFactory()
         );
+    }
+
+    /**
+     * @return TrackerFactory
+     */
+    private function getTrackerFactory() {
+        return TrackerFactory::instance();
     }
 
     /**
@@ -214,7 +221,7 @@ class AgileDashboardRouterBuilder {
      */
     private function getKanbanFactory() {
         return new AgileDashboard_KanbanFactory(
-            TrackerFactory::instance(),
+            $this->getTrackerFactory(),
             new AgileDashboard_KanbanDao()
         );
     }
