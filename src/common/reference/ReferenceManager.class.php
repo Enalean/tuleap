@@ -68,6 +68,9 @@ class ReferenceManager {
      */
     protected static $instance;
 
+    const KEYWORD_ARTIFACT_SHORT = 'art';
+    const KEYWORD_ARTIFACT_LONG  = 'artifact';
+
     const REFERENCE_NATURE_ARTIFACT = 'artifact';
     const REFERENCE_NATURE_DOCUMENT = 'document';
     const REFERENCE_NATURE_CVSCOMMIT = 'cvs_commit';
@@ -288,6 +291,17 @@ class ReferenceManager {
         return null;
     }
 
+    public function loadReferenceFromKeyword($keyword, $reference_id) {
+        $reference_dao = $this->_getReferenceDao();
+        $dar           = $reference_dao->searchByKeyword($keyword);
+
+        if (! $dar) {
+            return null;
+        }
+
+        return $this->_buildReference($dar, $reference_id);
+    }
+
     function loadReference($refid,$group_id) {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByIdAndGroupID($refid,$group_id);
@@ -399,20 +413,36 @@ class ReferenceManager {
      * @return Boolean
      */
     private function isAnArtifactKeyword($keyword) {
-        $natures = $this->getAvailableNatures();
-        return $keyword == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword'];
+        return $keyword == self::KEYWORD_ARTIFACT_LONG
+            || $keyword == self::KEYWORD_ARTIFACT_SHORT;
     }
 
     protected function _buildReference($row, $val = null) {
-        if (isset($row['reference_id'])) $refid=$row['reference_id'];
-        else $refid=$row['id'];
+        if (isset($row['reference_id'])) {
+            $refid=$row['reference_id'];
+        }
+        else {
+            $refid=$row['id'];
+        }
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
-                              $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
-        
-        if ($this->isAnArtifactKeyword($row['keyword']) && !$this->getGroupIdFromArtifactId($val)) {
-            $this->eventManager->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
+            $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']
+        );
+        if ($this->isAnArtifactKeyword($row['keyword']) )  {
+            if (! $this->getGroupIdFromArtifactId($val)) {
+                $this->eventManager->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
+            } else {
+                $this->ensureArtifactDataIsCorrect($ref, $val);
+            }
         }
         return $ref;
+    }
+
+
+    private function ensureArtifactDataIsCorrect(Reference $ref, $val) {
+        $group_id = $this->getGroupIdFromArtifactId($val);
+
+        $ref->setGroupId($this->getGroupIdFromArtifactId($group_id));
+        $ref->setLink("/tracker/?func=detail&aid=$val&group_id=$group_id");
     }
     
     /**
@@ -907,7 +937,7 @@ class ReferenceManager {
         if ($row = $dar->getRow())
             return false;
         else return true;
-    }
+        }
 
     function _isReservedKeyword($keyword) {
         if (in_array($keyword,$this->reservedKeywords)) return true;
@@ -960,6 +990,9 @@ class ReferenceManager {
         return false;
     }
 
+    /**
+     * @return ReferenceDao
+     */
     function _getReferenceDao() {
         if (!is_a($this->referenceDao, 'ReferenceDao')) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
