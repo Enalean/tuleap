@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,12 +30,19 @@ class AgileDashboard_KanbanManager {
      */
     private $dao;
 
+    /**
+     * @var AgileDashboard_HierarchyChecker
+     */
+    private $hierarchy_checker;
+
     public function __construct(
         AgileDashboard_KanbanDao $dao,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        AgileDashboard_HierarchyChecker $hierarchy_checker
     ) {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
+        $this->dao               = $dao;
+        $this->tracker_factory   = $tracker_factory;
+        $this->hierarchy_checker = $hierarchy_checker;
     }
 
     public function doesKanbanExistForTracker(Tracker $tracker) {
@@ -46,8 +53,27 @@ class AgileDashboard_KanbanManager {
         return $this->dao->create($kanban_name, $tracker_id);
     }
 
-    public function getTrackersWithKanbanUsageAndHierarchy($project_id) {
-        return $this->dao->getTrackersWithKanbanUsageAndHierarchy($project_id);
+    public function getTrackersWithKanbanUsageAndHierarchy($project_id, PFUser $user) {
+        $trackers     = array();
+        $all_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($project_id, $user);
+
+
+        foreach ($all_trackers as $tracker) {
+            $tracker_representation         = array();
+            $tracker_representation['id']   = $tracker->getId();
+            $tracker_representation['name'] = $tracker->getName();
+
+            if ($this->doesKanbanExistForTracker($tracker) || $this->hierarchy_checker->isScrumHierarchy($tracker)) {
+                $tracker_representation['used'] = true;
+                $trackers[] = $tracker_representation;
+                continue;
+            }
+
+            $tracker_representation['used'] = false;
+            $trackers[] = $tracker_representation;
+        }
+
+        return $trackers;
     }
 
     /**

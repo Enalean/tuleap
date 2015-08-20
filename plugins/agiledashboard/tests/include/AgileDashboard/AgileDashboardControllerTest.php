@@ -62,7 +62,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager')
+            mock('AgileDashboard_PermissionsManager'),
+            mock('AgileDashboard_HierarchyChecker')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -88,7 +89,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager')
+            mock('AgileDashboard_PermissionsManager'),
+            mock('AgileDashboard_HierarchyChecker')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -112,7 +114,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager')
+            mock('AgileDashboard_PermissionsManager'),
+            mock('AgileDashboard_HierarchyChecker')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -140,7 +143,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager')
+            mock('AgileDashboard_PermissionsManager'),
+            mock('AgileDashboard_HierarchyChecker')
         );
 
         expect($this->kanban_manager)->createKanban()->never();
@@ -168,7 +172,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_factory,
             $this->config_manager,
             $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager')
+            mock('AgileDashboard_PermissionsManager'),
+            mock('AgileDashboard_HierarchyChecker')
         );
 
         expect($this->kanban_manager)->createKanban()->never();
