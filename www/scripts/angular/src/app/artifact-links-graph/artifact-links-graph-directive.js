@@ -206,17 +206,27 @@
                 graphd3.initText = function() {
                     graphd3.text(graphd3.svg().append("g")
                         .attr("class", "updatable")
-                        .selectAll("text")
-                        .data(graphd3.graph().nodes(), function(d) { return d.id; })
-                        .enter().append("text")
-                        .attr("class", function(d) {
+                        .selectAll("a")
+                        .data(graphd3.graph().nodes(), function (d) {
+                            return d.id;
+                        })
+                        .enter()
+                        .append("a")
+                        .attr("class", function (d) {
                             if (d.id) {
                                 return "updatable " + d.id;
                             }
                         })
+                        .attr("xlink:href", function(d) {
+                            return d.url;
+                        })
+                        .append("text")
                         .attr("x", 10)
                         .attr("y", ".31em")
-                        .text(function(d) { return d.title + " " + d.ref_name + " #" + d.id; }));
+                        .text(function (d) {
+                            return d.title + " " + d.ref_name + " #" + d.id;
+                        })
+                    );
                 };
 
                 graphd3.initSvg = function() {
