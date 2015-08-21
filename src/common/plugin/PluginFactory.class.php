@@ -150,14 +150,29 @@ class PluginFactory {
             if ($this->loadClass($this->_getCustomPluginsRoot().$file_name)) {
                 $custom = true;
             } else {
-                // Official !!!
-                $this->loadClass($this->_getOfficialPluginsRoot().$file_name);
+                $this->tryPluginPaths($this->getOfficialPluginPaths(), $file_name);
             }
         }
         if (!class_exists($class_name)) {
             $class_name = false;
         }
         return array('class' => $class_name, 'custom' => $custom);
+    }
+
+    private function getOfficialPluginPaths() {
+        return array_merge(
+            array_filter(array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path')))),
+            array($this->_getOfficialPluginsRoot())
+        );
+    }
+
+    private function tryPluginPaths(array $potential_paths, $file_name) {
+        foreach($potential_paths as $path) {
+            if ($this->loadClass($path.'/'.$file_name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function loadClass($class_path) {

@@ -174,7 +174,13 @@ class BaseLanguage {
      * given language
      */
     function loadPluginsSiteContent($lang, &$text_array) {
-        $this->_loadPluginsSiteContent($GLOBALS['sys_pluginsroot'], $lang, $text_array);
+        $directories = array_merge(
+            array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path'))),
+            array(ForgeConfig::get('sys_pluginsroot'))
+        );
+        foreach ($directories as $dir) {
+            $this->_loadPluginsSiteContent($dir, $lang, $text_array);
+        }
     }
 
     /**

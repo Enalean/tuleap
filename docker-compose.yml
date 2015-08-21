@@ -12,6 +12,7 @@ web:
    - db:db
   volumes:
    - .:/usr/share/tuleap
+   - ../tuleap-plugins:/usr/share/tuleap-plugins
   env_file:
    - .env
   volumes_from:
