@@ -57,7 +57,7 @@ class Tracker_Hierarchy_Controller {
         $presenter = new Tracker_Hierarchy_Presenter(
             $this->tracker,
             $this->getPossibleChildren($trackers_not_in_hierarchy),
-            $this->getHierarchy($trackers_not_in_hierarchy),
+            $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
             $trackers_not_in_hierarchy
         );
         $this->render('admin-hierarchy', $presenter);
@@ -112,26 +112,14 @@ class Tracker_Hierarchy_Controller {
         return $possible_children;
     }
 
-    private function getHierarchy(array $trackers_not_in_hierarchy) {
-        $hierarchy = $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker());
-        $root_elements = $hierarchy->getChildren();
-        foreach ($root_elements as $key => $child) {
-            foreach ($trackers_not_in_hierarchy as $tracker) {
-                if ($child->getId() == $tracker->getId()) {
-                    $hierarchy->removeChild(0, $child);
-                }
-            }
-        }
-
-        return $hierarchy;
-    }
-
     private function getTrackersNotInHierachy() {
         $trackers_not_in_hierarchy = array();
+
         EventManager::instance()->processEvent(
             TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY,
             array(
-                'project' => $this->tracker->getProject(),
+                'tracker' => $this->tracker->getUnhierarchizedTracker(),
+                'user'    => $this->request->getCurrentUser(),
                 'result'  => &$trackers_not_in_hierarchy
             )
         );
