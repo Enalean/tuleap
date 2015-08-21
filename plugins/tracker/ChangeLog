@@ -1,3 +1,6 @@
+Version 5.687 - Tuleap 8.6
+    * request #8357: htmlentities appear in tooltip (they shouldn't)
+
 Version 5.686 - Tuleap 8.6
     * story #8251: take hierarchy type into account in hierarchy definition
 
