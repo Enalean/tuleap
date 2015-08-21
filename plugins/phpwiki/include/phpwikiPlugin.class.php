@@ -28,18 +28,22 @@ class phpwikiPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
+        $this->name = 'phpwiki';
+        $this->text = 'PHPWiki';
+
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->addHook(Event::SEARCH_TYPE);
         $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
 
         $this->addHook('backend_system_purge_files', 'purgeFiles');
 
-        $this->name = 'phpwiki';
-        $this->text = 'PHPWiki';
-
         $this->addHook(Event::SERVICE_ICON);
 
-        $this->addHook('phpwiki_redirection');
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->addHook('site_admin_option_hook');
+
+        $this->addHook("phpwiki_redirection");
     }
 
     public function getPluginInfo() {
@@ -145,5 +149,27 @@ class phpwikiPlugin extends Plugin {
         $requested_uri = $request->getFromServer('REQUEST_URI');
         $new_uri       = preg_replace('/^\/wiki/', PHPWIKI_PLUGIN_BASE_URL, $requested_uri);
         $GLOBALS['Response']->redirect($new_uri);
+    }
+
+    public function site_admin_option_hook() {
+        echo '<li><a href="' . $this->getPluginPath() . '/admin.php?action=index">' . $this->text . '</a></li>';
+    }
+
+    public function system_event_get_types_for_default_queue(array &$params) {
+        $params['types'] = array_merge($params['types'], array(SystemEvent_PHPWIKI_SWITCH_TO_PLUGIN::NAME));
+    }
+
+    public function get_system_event_class($params) {
+        switch($params['type']) {
+            case SystemEvent_PHPWIKI_SWITCH_TO_PLUGIN::NAME:
+                $params['class']        = 'SystemEvent_PHPWIKI_SWITCH_TO_PLUGIN';
+                $params['dependencies'] = array(
+                    $this->getPHPWikiMigratorDao()
+                );
+        }
+    }
+
+    private function getPHPWikiMigratorDao() {
+        return new PHPWikiMigratorDao();
     }
 }

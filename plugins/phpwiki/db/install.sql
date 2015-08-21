@@ -145,6 +145,28 @@ INSERT INTO service(group_id, label, description, short_name, link, is_active, i
                                WHERE short_name
                                LIKE 'plugin_phpwiki');
 
+-- References
+INSERT INTO reference SET
+        keyword='phpwiki',
+        description='plugin_phpwiki:reference_phpwiki_desc_key',
+        link='/plugins/phpwiki/?group_id=$group_id&pagename=$1',
+        scope='S',
+        service_short_name='PHPWiki',
+        nature='wiki_page';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+        SELECT last_insert_id, group_id, 1
+        FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
+INSERT INTO reference SET
+        keyword='phpwiki',
+        description='plugin_phpwiki:reference_phpwikiversion_desc_key',
+        link='/plugins/phpwiki/?group_id=$group_id&pagename=$1&version=$2',
+        scope='S',
+        service_short_name='PHPWiki',
+        nature='wiki_page';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+        SELECT last_insert_id, group_id, 1
+        FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
+
 -- Permissions
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PHPWIKI_READ',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PHPWIKI_READ',1);
