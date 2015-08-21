@@ -28,8 +28,7 @@ function menu_site_admin() {
         $HTML->menu_entry('/admin/trove/trove_cat_list.php',$Language->getText('include_menu','trove_cat_list'));
         $HTML->menu_entry('/admin/trove/trove_cat_add.php',$Language->getText('include_menu','trove_cat_add'));
     }
-    $HTML->menu_entry('/people/admin',$Language->getText('include_menu','people_skill'));
-    
+
     $em =& EventManager::instance();
     $params = array();
     $params['HTML'] =& $HTML;

@@ -7,6 +7,9 @@
 // 
 
 require_once('pre.php');
+
+exit_error($Language->getText('include_exit','info'), $Language->getText('people','disabled'));
+
 require('../people/people_utils.php');
 
 

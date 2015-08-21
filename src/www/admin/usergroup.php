@@ -341,17 +341,6 @@ echo $Language->getText('admin_usergroup', 'last_access_date');
 <?php echo html_time_ago($user->getAddDate());?>
 </td></tr>
 
-
-<?php 
-if(isset($GLOBALS['sys_enable_user_skills']) && $GLOBALS['sys_enable_user_skills']) {
-    echo '<tr><td>';
-    echo $Language->getText('include_user_home','user_prof').': ';
-    echo '</td><td>';
-    echo '<a href="/people/viewprofile.php?user_id='.$user->getId().'">'.$Language->getText('include_user_home','see_skills').'</a>';
-    echo '</td></tr>';
-}
-?>
-
 <?php
 // Plugins entries
 $entry_label = array();

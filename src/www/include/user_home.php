@@ -63,15 +63,6 @@ echo '
 	</TD>
 </TR>';
 
-if(array_key_exists('sys_enable_user_skills', $GLOBALS) && $GLOBALS['sys_enable_user_skills']) {
-    echo '
-<TR valign=top>
-	<TD>'.$Language->getText('include_user_home','user_prof').': </TD>
-        <TD>
-        <A HREF="/people/viewprofile.php?user_id='.$user->getId().'"><B>'.$Language->getText('include_user_home','see_skills').'</B></A></TD>
-</TR>';
-}
-
 echo '
 <TR>
 	<TD>

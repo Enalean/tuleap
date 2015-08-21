@@ -41,7 +41,6 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 $title_arr=array();
 $title_arr[]=$Language->getText('project_memberlist','developer');
 $title_arr[]=$Language->getText('project_export_artifact_history_export','email');
-$title_arr[]=$Language->getText('project_memberlist','skills');
 
 $em = EventManager::instance();
 $user_helper = new UserHelper();
@@ -71,9 +70,6 @@ while ( $row_memb=db_fetch_array($res_memb) ) {
 
 	print "\t\t<td align=\"center\"><A href=\"mailto:".$row_memb['email']."\">".$row_memb['email']."</A></td>\n";
 
-
-	print "\t\t<td align=\"center\"><A href=\"/people/viewprofile.php?user_id=".
-		$row_memb['user_id']."\">".$Language->getText('project_memberlist','view_skills')."</a></td>\n";
 	print "\t<tr>\n";
 }
 print "\t</table>";

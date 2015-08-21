@@ -295,7 +295,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
 	}
 
 	function outerTabs($params) {
-		global $Language,$sys_use_people;
+		global $Language;
 
 		$TABS_DIRS[]='/';
 		$TABS_TITLES[]=$Language->getText('menu','home');
@@ -313,11 +313,6 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
         if ($GLOBALS['sys_use_snippet'] != 0) {
             $TABS_DIRS[]='/snippet/';
             $TABS_TITLES[]=$Language->getText('menu','code_snippet');
-        }
-
-        if ($sys_use_people) {
-            $TABS_DIRS[]='/people/';
-            $TABS_TITLES[]=$Language->getText('menu','project_help_wanted');
         }
 	if (user_ismember(1,'A')) {
             $TABS_DIRS[]='/admin/';
@@ -353,8 +348,6 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
 			$selected=array_search("/softwaremap/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/snippet/')) {
 			$selected=array_search("/snippet/", $TABS_DIRS);
-		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/people/')) {
-			$selected=array_search("/people/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/site/')) {
 			$selected=array_search("/site/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/reporting/')) {

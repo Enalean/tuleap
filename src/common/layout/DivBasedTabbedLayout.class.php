@@ -245,7 +245,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
 	}
 
 	function outerTabs($params) {
-		global $Language,$sys_use_trove,$sys_use_snippet,$sys_use_people,$sys_use_snippet,$sys_use_people;
+		global $Language,$sys_use_trove,$sys_use_snippet;
 		$selected_top_tab = '';
 		if (isset($params['selected_top_tab'])) {
 		    $selected_top_tab = $params['selected_top_tab'];
@@ -330,13 +330,6 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
                                                ,'title'=>$Language->getText('menu','code_snippet')
                                                ,'selected'=>$selected)));
 	}
-        if ($sys_use_people) {
-            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/people/');
-            $sthSelected = ($sthSelected || $selected);
-            $menuTree->addChild(new TreeNode(array('link'=>'/people/'
-                                                   ,'title'=>$Language->getText('menu','project_help_wanted')
-                                                   ,'selected'=>$selected)));
-		}
 
 		if (user_ismember(1,'A')) {
             $selected = strpos(getStringFromServer('REQUEST_URI'),'/admin/') === 0 || $selected_top_tab === 'admin';
