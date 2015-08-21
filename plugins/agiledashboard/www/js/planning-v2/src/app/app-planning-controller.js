@@ -36,6 +36,7 @@
             use_angular_new_modal       = SharedPropertiesService.getUseAngularNewModal(),
             pagination_limit            = 50,
             pagination_offset           = 0,
+            backlog_pagination_offset   = 0,
             show_closed_milestone_items = true;
 
         var self = this;
@@ -55,7 +56,8 @@
                 user_can_move_cards: false
             },
             submilestone_type                     : null,
-            loading_backlog_items                 : true,
+            loading_backlog_items                 : false,
+            backlog_fully_loaded                  : false,
             loading_milestones                    : true,
             loading_modal                         : TuleapArtifactModalLoading.loading,
             use_angular_new_modal                 : use_angular_new_modal,
@@ -155,38 +157,50 @@
             });
         }
 
-        function displayBacklogItems() {
+        function displayBacklogItems(fetch_all) {
+            if ($scope.loading_backlog_items || $scope.backlog_fully_loaded) {
+                return;
+            }
+
+            $scope.loading_backlog_items = true;
+
             if (! angular.isDefined(milestone_id)) {
-                fetchProjectBacklogItems(project_id, pagination_limit, pagination_offset);
+                fetchProjectBacklogItems(project_id, pagination_limit, backlog_pagination_offset, fetch_all);
             } else {
-                fetchMilestoneBacklogItems(milestone_id, pagination_limit, pagination_offset);
+                fetchMilestoneBacklogItems(milestone_id, pagination_limit, backlog_pagination_offset, fetch_all);
             }
         }
 
-        function fetchProjectBacklogItems(project_id, limit, offset) {
+        function fetchProjectBacklogItems(project_id, limit, offset, fetch_all) {
             return BacklogItemService.getProjectBacklogItems(project_id, limit, offset).then(function(data) {
                 angular.forEach(data.results, function(backlog_item, key) {
                     $scope.items[backlog_item.id] = backlog_item;
                     $scope.backlog_items.push($scope.items[backlog_item.id]);
                 });
 
-                if ((offset + limit) < data.total) {
-                    fetchProjectBacklogItems(project_id, limit, offset + limit);
+                backlog_pagination_offset   = offset + limit;
+                $scope.backlog_fully_loaded = backlog_pagination_offset >= data.total;
+
+                if (fetch_all && ! $scope.backlog_fully_loaded) {
+                    fetchProjectBacklogItems(project_id, limit, backlog_pagination_offset);
                 } else {
                     $scope.loading_backlog_items = false;
                 }
             });
         }
 
-        function fetchMilestoneBacklogItems(milestone_id, limit, offset) {
+        function fetchMilestoneBacklogItems(milestone_id, limit, offset, fetch_all) {
             return BacklogItemService.getMilestoneBacklogItems(milestone_id, limit, offset).then(function(data) {
                 angular.forEach(data.results, function(backlog_item, key) {
                     $scope.items[backlog_item.id] = backlog_item;
                     $scope.backlog_items.push($scope.items[backlog_item.id]);
                 });
 
-                if ((offset + limit) < data.total) {
-                    fetchMilestoneBacklogItems(milestone_id, limit, offset + limit);
+                backlog_pagination_offset   = offset + limit;
+                $scope.backlog_fully_loaded = backlog_pagination_offset >= data.total;
+
+                if (fetch_all && ! $scope.backlog_fully_loaded) {
+                    fetchMilestoneBacklogItems(milestone_id, limit, backlog_pagination_offset);
                 } else {
                     $scope.loading_backlog_items = false;
                 }

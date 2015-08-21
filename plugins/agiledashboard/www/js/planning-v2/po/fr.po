@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-07-21 16:09+0200\n"
+"PO-Revision-Date: 2015-08-21 15:38+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
@@ -24,8 +24,7 @@ msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 msgid "Add a new item"
 msgstr "Ajouter un nouvel élément"
 
-#: src/app/backlog-item/backlog-item-details.tpl.html
-#: src/app/planning.tpl.html
+#: src/app/backlog-item/backlog-item-details.tpl.html src/app/planning.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr "Ajouter un(e) {{ accepted_type.label }}"
 
@@ -40,6 +39,10 @@ msgstr "Ajouter un(e) {{ submilestone_type.label }}"
 #: src/app/planning.tpl.html
 msgid "Add an item"
 msgstr "Ajouter un élément"
+
+#: src/app/planning.tpl.html
+msgid "All items have been loaded."
+msgstr "Tous les éléments ont été chargés."
 
 #: src/app/planning.tpl.html
 msgid "Burndown"
