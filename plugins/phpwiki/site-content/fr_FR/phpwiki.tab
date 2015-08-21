@@ -173,3 +173,7 @@ plugin_phpwiki_service	search_wiki_type	Wiki pages
 # Exceptions
 plugin_phpwiki_exception	page_name_invalid_char	Les caractères <>[]{}|" sont interdit dans le nom de la page.
 plugin_phpwiki_exception	page_name_too_long	Le nom de la page est trop long.
+
+# Widget
+plugin_phpwiki_widget	page	page
+plugin_phpwiki_widget	pages	pages

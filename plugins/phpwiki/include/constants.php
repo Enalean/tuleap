@@ -20,3 +20,4 @@
 
 define('PHPWIKI_PLUGIN_BASE_URL', '/plugins/phpwiki');
 define('PHPWIKI_SRC_PATH', '/usr/share/phpwiki-tuleap');
+define('PHPWIKI_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
