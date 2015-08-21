@@ -1,3 +1,6 @@
+Version 1.5.31 - Tuleap 8.6
+    * request #7937: Fix project synchronization with the IM service
+
 Version 1.5.30 - Tuleap 8.4
 	* request #7953: Continue the removing of the SimpleSanitizer class.
 
