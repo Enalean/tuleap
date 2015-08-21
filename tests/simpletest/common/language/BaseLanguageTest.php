@@ -28,9 +28,13 @@ Mock::generatePartial('BaseLanguage', 'BaseLanguageTestVersion', array('loadAllT
 
 class BaseLanguage_BaseTest extends TuleapTestCase {
 
+    protected $cache_dir;
+
     function setUp() {
         parent::setUp();
         ForgeConfig::store();
+
+        $this->cache_dir = dirname(__FILE__) . '/_fixtures/tmp';
 
         ForgeConfig::set('sys_pluginsroot', dirname(__FILE__) . '/_fixtures/codendi/plugins');
         ForgeConfig::set('sys_extra_plugin_path', '');
@@ -40,15 +44,15 @@ class BaseLanguage_BaseTest extends TuleapTestCase {
         $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
-        $GLOBALS['codendi_cache_dir']     = dirname(__FILE__) . '/_fixtures/tmp';
 
-        if (!is_dir($GLOBALS['codendi_cache_dir'].'/lang')) {
-            mkdir($GLOBALS['codendi_cache_dir'].'/lang', 0777, true);
+        ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
+        if (!is_dir($this->cache_dir.'/lang')) {
+            mkdir($this->cache_dir.'/lang', 0777, true);
         }
     }
     
     function tearDown() {
-        $tmpdir = $GLOBALS['codendi_cache_dir'] . '/lang/';
+        $tmpdir = $this->cache_dir . '/lang/';
         $fd = opendir($tmpdir);
         while(false !== ($file = readdir($fd))) {
             if(is_file($tmpdir .'/'. $file)) {
@@ -61,7 +65,6 @@ class BaseLanguage_BaseTest extends TuleapTestCase {
         unset($GLOBALS['sys_custom_incdir']);
         unset($GLOBALS['sys_custompluginsroot']);
         unset($GLOBALS['sys_custom_themeroot']);
-        //unset($GLOBALS['codendi_cache_dir']);
 
         ForgeConfig::restore();
         parent::tearDown();
@@ -248,7 +251,7 @@ class BaseLanguageTest extends BaseLanguage_BaseTest {
         $l = new BaseLanguage('en_US', 'en_US');
         $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
         $this->assertEqual("<?php\n\$this->text_array['module']['key'] = 'value';\n?>",
-            file_get_contents($GLOBALS['codendi_cache_dir'] .'/lang/my_lang.php')
+            file_get_contents($this->cache_dir .'/lang/my_lang.php')
         );
     }
 }

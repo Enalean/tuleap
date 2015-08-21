@@ -101,6 +101,7 @@ class PluginManager {
             $plugin_factory->availablePlugin($plugin);
         
             $plugin->setAvailable(true);
+            $this->getSiteCache()->invalidatePluginBasedCaches();
         }
     }
     function unavailablePlugin($plugin) {
@@ -108,8 +109,16 @@ class PluginManager {
         $plugin_factory->unavailablePlugin($plugin);
         
         $plugin->setAvailable(false);
+        $this->getSiteCache()->invalidatePluginBasedCaches();
     }
-    
+
+    /**
+     * @return SiteCache
+     */
+    protected function getSiteCache() {
+        return new SiteCache();
+    }
+
     function installPlugin($name) {
         $plugin = false;
         if ($this->isNameValid($name)) {

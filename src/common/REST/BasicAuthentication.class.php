@@ -22,13 +22,11 @@ namespace Tuleap\REST;
 use \Luracast\Restler\iAuthenticate;
 use \Luracast\Restler\RestException;
 
-use UserManager;
-
 class BasicAuthentication implements iAuthenticate {
 
     public function __isAllowed() {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $current_user = UserManager::instance()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $current_user = \UserManager::instance()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
             if ($current_user->isLoggedIn()) {
                 return true;

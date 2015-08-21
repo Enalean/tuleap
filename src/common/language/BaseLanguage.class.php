@@ -99,14 +99,14 @@ class BaseLanguage {
      * Load all generated php files to verify if the syntax is correct.
      */
     function testLanguageFiles() {
-        if(is_dir($GLOBALS['codendi_cache_dir'].'/lang/')) {
-            $fd = opendir($GLOBALS['codendi_cache_dir'].'/lang/');
+        if(is_dir($this->getCacheDirectory())) {
+            $fd = opendir($this->getCacheDirectory());
             // Browse all generated php files
             while(false !== ($file = readdir($fd))) {
-                if(is_file($GLOBALS['codendi_cache_dir'].'/lang/'.$file)
+                if(is_file($this->getCacheDirectory().DIRECTORY_SEPARATOR.$file)
                    && preg_match('/\.php$/', $file)) {
                     echo "Test $file\n";
-                    include($GLOBALS['codendi_cache_dir'].'/lang/'.$file);
+                    include($this->getCacheDirectory().DIRECTORY_SEPARATOR.$file);
                     unset($this->text_array);
                 }
             }
@@ -241,11 +241,11 @@ class BaseLanguage {
      */
     function dumpLanguageFile($lang, $text_array) {
         // Create language cache directory if needed
-        if (!file_exists($GLOBALS['codendi_cache_dir'].'/lang/')) {
+        if (!file_exists($this->getCacheDirectory())) {
             // This directory must be world reachable, but writable only by the web-server
-            mkdir($GLOBALS['codendi_cache_dir'].'/lang/', 0755);
+            mkdir($this->getCacheDirectory(), 0755);
         }
-        $fd = @fopen($GLOBALS['codendi_cache_dir'].'/lang/'.$lang.'.php', 'w');
+        $fd = @fopen($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php', 'w');
         if($fd !== false) {
             fwrite($fd, '<?php'."\n");
             foreach($text_array as $key1 => $level2) {
@@ -308,7 +308,7 @@ class BaseLanguage {
         if($this->lang != $lang) {
             $this->lang = $lang;
             setlocale (LC_TIME, $lang);
-            $langFile = $GLOBALS['codendi_cache_dir'].'/lang/'.$this->lang.'.php';
+            $langFile = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$this->lang.'.php';
             if(file_exists($langFile)) {
                 include($langFile);
             } else {
@@ -531,5 +531,14 @@ class BaseLanguage {
     function isLanguageSupported($language) {
         return in_array($language, $this->allLanguages);
     }
+
+    public function invalidateCache() {
+        foreach(glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.php') as $file) {
+            unlink($file);
+        }
+    }
+
+    private function getCacheDirectory() {
+        return ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.'lang';
+    }
 }
-?>

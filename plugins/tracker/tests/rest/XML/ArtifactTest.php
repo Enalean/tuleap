@@ -143,8 +143,8 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
 
-        $this->assertEmpty((string) $artifact_xml->values_by_field);
-        $this->assertNotEmpty((string) $artifact_xml->values);
+        $this->assertGreaterThan(0, count($artifact_xml->values->children()));
+        $this->assertEquals(0, count($artifact_xml->values_by_field->children()));
 
         $this->assertEquals((string) $artifact_xml->values->item[0]->label, 'Slogan');
         $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
@@ -165,8 +165,8 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
 
-        $this->assertEmpty((string) $artifact_xml->values);
-        $this->assertNotEmpty((string) $artifact_xml->values_by_field);
+        $this->assertEquals(0, count($artifact_xml->values->children()));
+        $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
 
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
    }
@@ -183,8 +183,8 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
 
-        $this->assertNotEmpty((string) $artifact_xml->values);
-        $this->assertNotEmpty((string) $artifact_xml->values_by_field);
+        $this->assertGreaterThan(0, count($artifact_xml->values->children()));
+        $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
 
         $this->assertEquals((string) $artifact_xml->values->item[0]->label, 'Slogan');
         $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
@@ -224,8 +224,8 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
 
-        $this->assertEmpty((string) $artifact_xml->values);
-        $this->assertNotEmpty((string) $artifact_xml->values_by_field);
+        $this->assertEquals(0, count($artifact_xml->values->children()));
+        $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
 
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'Sloganv2');
         $this->assertEquals((string) $artifact_xml->values_by_field->epic_desc->format, 'html');

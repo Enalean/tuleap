@@ -1167,6 +1167,14 @@ class Layout extends Response {
         return ! isset($params[self::INCLUDE_FAT_COMBINED]) || $params[self::INCLUDE_FAT_COMBINED] == true;
     }
 
+    public function getCombinedDirectory() {
+        $combined_dir = ForgeConfig::get('sys_combined_dir');
+        if (! is_dir($combined_dir)) {
+            $combined_dir = $GLOBALS['codendi_dir'] . '/src/www/scripts/combined';
+        }
+        return $combined_dir;
+    }
+
     /**
      * Display the Javascript code to be included in <head>
      *
@@ -1177,11 +1185,7 @@ class Layout extends Response {
      * @see includeJavascriptSnippet
      */
     public function displayJavascriptElements($params) {
-        $combined_dir = ForgeConfig::get('sys_combined_dir');
-        if (! is_dir($combined_dir)) {
-            $combined_dir = $GLOBALS['codendi_dir'] . '/src/www/scripts/combined';
-        }
-        $c = new Combined($combined_dir);
+        $c = new Combined($this->getCombinedDirectory());
         if ($this->shouldIncludeFatCombined($params)) {
             echo $c->getScripts(array('/scripts/codendi/common.js'));
         } else {

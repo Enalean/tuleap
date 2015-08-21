@@ -203,5 +203,11 @@ class Combined {
             }
         }
     }
+
+    public function invalidateCache() {
+        $src = $this->getDestinationDir() .'/codendi-';
+        foreach(glob($src .'*.js') as $file) {
+            unlink($file);
+        }
+    }
 }
-?>
