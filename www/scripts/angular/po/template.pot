@@ -22,10 +22,6 @@ msgstr ""
 msgid "All environments"
 msgstr ""
 
-#: src/app/artifact-links-graph/artifact-links-model-service.js
-msgid "Artifact links field not found."
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html

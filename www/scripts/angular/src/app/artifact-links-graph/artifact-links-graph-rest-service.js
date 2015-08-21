@@ -12,27 +12,16 @@
         });
 
         return {
-            getArtifact: getArtifact,
-            getTracker: getTracker
+            getArtifactGraph: getArtifactGraph
         };
 
-        function getArtifact(artifact_id) {
+        function getArtifactGraph(artifact_id) {
             return rest
-                .one('artifacts', artifact_id)
+                .one('trafficlights_nodes', artifact_id)
                 .get()
                 .then(function(response) {
                     return response.data;
                 });
         }
-
-        function getTracker(tracker_id) {
-            return rest
-                .one('trackers', tracker_id)
-                .get()
-                .then(function(response) {
-                    return response.data;
-                });
-        }
-
     }
 })();

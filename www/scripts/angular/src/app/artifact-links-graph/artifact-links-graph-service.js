@@ -12,18 +12,14 @@
         '$modal',
         'ArtifactLinksGraphModalLoading',
         'ArtifactLinksGraphRestService',
-        'ArtifactLinksModelService',
-        'ArtifactLinksTrackerService',
-        '$q'
+        'ArtifactLinksModelService'
     ];
 
     function ArtifactLinksGraphService(
         $modal,
         ArtifactLinksGraphModalLoading,
         ArtifactLinksGraphRestService,
-        ArtifactLinksModelService,
-        ArtifactLinksTrackerService,
-        $q
+        ArtifactLinksModelService
     ) {
         var self = this;
 
@@ -40,14 +36,8 @@
                 controller : 'ArtifactLinksGraphCtrl as modal',
                 resolve: {
                     modal_model: function () {
-                        var promises = [];
-                        promises.push(ArtifactLinksGraphRestService.getArtifact(execution.id));
-                        promises.push(ArtifactLinksGraphRestService.getArtifact(definition.id));
-                        return $q.all(promises).then(function(results) {
-                            var artifacts = constructArtifacts(results[0], results[1]);
-                            return ArtifactLinksTrackerService.initializeTrackers(artifacts).then(function(trackers) {
-                                return ArtifactLinksModelService.getGraphStructure(artifacts, trackers);
-                            });
+                        return ArtifactLinksGraphRestService.getArtifactGraph(execution.id).then(function(artifact) {
+                            return ArtifactLinksModelService.getGraphStructure(artifact);
                         });
                     },
                     title: function() {
@@ -55,24 +45,6 @@
                     }
                 }
             });
-        }
-
-        function constructArtifacts(execution, definition) {
-            var nodes = [];
-
-            if (execution) {
-                nodes.push(execution);
-            }
-            if (definition) {
-                nodes.push(definition);
-            }
-
-            var artifacts = {
-                nodes: nodes,
-                current_node: definition ? definition : execution
-            };
-
-            return artifacts;
         }
     }
 })();

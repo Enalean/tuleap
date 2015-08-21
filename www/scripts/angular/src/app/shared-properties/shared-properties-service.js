@@ -19,8 +19,6 @@ function SharedPropertiesService(Restangular, $window, UserService) {
         setNodeServerAddress       : setNodeServerAddress,
         getProjectId               : getProjectId,
         setProjectId               : setProjectId,
-        getTrackerExecutionId      : getTrackerExecutionId,
-        setTrackerExecutionId      : setTrackerExecutionId,
         getCurrentUser             : getCurrentUser,
         setCurrentUser             : setCurrentUser
     };
@@ -44,14 +42,6 @@ function SharedPropertiesService(Restangular, $window, UserService) {
 
     function setProjectId(project_id) {
         property.project_id = project_id;
-    }
-
-    function getTrackerExecutionId() {
-        return property.execution_id;
-    }
-
-    function setTrackerExecutionId(execution_id) {
-        property.execution_id = execution_id;
     }
 
     function getCurrentUser() {

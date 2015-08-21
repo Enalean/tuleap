@@ -10,16 +10,16 @@
         '$window',
         'ArtifactLinksGraphRestService',
         'ArtifactLinksModelService',
-        'ArtifactLinksTrackerService',
-        'ArtifactLinksArtifactsList'
+        'ArtifactLinksArtifactsList',
+        '$q'
     ];
 
     function Graph(
         $window,
         ArtifactLinksGraphRestService,
         ArtifactLinksModelService,
-        ArtifactLinksTrackerService,
-        ArtifactLinksArtifactsList
+        ArtifactLinksArtifactsList,
+        $q
     ) {
         return {
             restrict: 'E',
@@ -28,6 +28,7 @@
             },
             link: function (scope, element) {
                 var complements_graph = {};
+                var nodes_duplicate = {};
 
                 function graphd3() {
                     graphd3.init();
@@ -66,27 +67,19 @@
                     var nodes = {};
 
                     links.forEach(function(link) {
-                        link.source = nodes[link.source] || (nodes[link.source] = {
-                                name: findNode(link.source, "label"),
-                                color_name: findNode(link.source, "color_name"),
-                                id: findNode(link.source, "id")
-                            });
-                        link.target = nodes[link.target] || (nodes[link.target] = {
-                                name: findNode(link.target, "label"),
-                                color_name: findNode(link.target, "color_name"),
-                                id: findNode(link.target, "id")
-                            });
+                        link.source = nodes[link.source] || (nodes[link.source] = findNode(link.source));
+                        link.target = nodes[link.target] || (nodes[link.target] = findNode(link.target));
                     });
 
                     graphd3.links(links);
                     graphd3.nodes(nodes);
                     graphd3.figures(figures);
 
-                    function findNode(node_id, data) {
+                    function findNode(node_id) {
                         var node = _.find(data_nodes, function(node) {
                             return node.id === node_id;
                         });
-                        return node[data];
+                        return node;
                     }
 
                     function getAllFigures(links) {
@@ -178,9 +171,9 @@
                             .enter().append("circle")
                             .attr("class", function(d) {
                                 if (d.id) {
-                                    return d.color_name + " " + d.id;
+                                    return d.color + " " + d.id;
                                 } else {
-                                    return d.color_name;
+                                    return d.color;
                                 }
                             })
                             .attr("r", 8)
@@ -223,7 +216,7 @@
                         })
                         .attr("x", 10)
                         .attr("y", ".31em")
-                        .text(function(d) { return d.name; }));
+                        .text(function(d) { return d.title + " " + d.ref_name + " #" + d.id; }));
                 };
 
                 graphd3.initSvg = function() {
@@ -232,6 +225,7 @@
                     graphd3.zoom(d3.behavior.zoom().scaleExtent([graphd3.scaleMin(), graphd3.scaleMax()]).on("zoom", graphd3.transformZoom));
 
                     d3.select("svg").remove();
+
                     graphd3.width(element.width());
                     graphd3.height(element.height());
 
@@ -285,14 +279,18 @@
                             return d3_node.id === node.id;
                         });
                         if (! node_exist) {
-                            var d3_node = {
-                                name        : node.label,
-                                color_name  : node.color_name,
-                                id          : node.id
+                            graphd3.nodes()[node.id] = node;
+                            graphd3.graph().nodes().push(node);
+                            nodes_duplicate[node.id] = {
+                                in_graph_counter: 1,
+                                node: node
                             };
-                            graphd3.nodes()[node.id] = d3_node;
-                            graphd3.graph().nodes().push(d3_node);
-                            complement.nodes.push(d3_node);
+                            complement.nodes.push(node);
+                        } else {
+                            if (nodes_duplicate[node.id] && node.id !== node_event.id) {
+                                nodes_duplicate[node.id].in_graph_counter = nodes_duplicate[node.id].in_graph_counter + 1;
+                                complement.nodes.push(nodes_duplicate[node.id].node);
+                            }
                         }
                     });
                     _(graph.links).forEach(function(link) {
@@ -300,17 +298,19 @@
                             return d3_link.source.id === link.source && d3_link.target.id === link.target;
                         });
 
+                        var d3_link = {
+                            source  : graphd3.nodes()[link.source],
+                            target  : graphd3.nodes()[link.target],
+                            type    : link.type,
+                            id      : graphd3.nodes()[link.source].id + "_" + graphd3.nodes()[link.target].id
+                        };
+
                         if (! link_exist) {
-                            var d3_link = {
-                                source  : graphd3.nodes()[link.source],
-                                target  : graphd3.nodes()[link.target],
-                                type    : link.type,
-                                id      : graphd3.nodes()[link.source].id + "_" + graphd3.nodes()[link.target].id
-                            };
                             graphd3.graph().links().push(d3_link);
                             complement.links.push(d3_link);
                         }
                     });
+
                     complements_graph[node_event.id] = complement;
 
                     d3.select(".graph-elements").selectAll(".updatable").remove();
@@ -323,7 +323,19 @@
 
                 graphd3.updateDataReady = function(complement) {
                     _(complement.nodes).compact().forEach(function(node) {
-                        graphd3.graph().nodes().push(node);
+                        if (nodes_duplicate[node.id]) {
+                            nodes_duplicate[node.id].in_graph_counter = nodes_duplicate[node.id].in_graph_counter + 1;
+
+                            if (nodes_duplicate[node.id].in_graph_counter === 1) {
+                                graphd3.graph().nodes().push(nodes_duplicate[node.id].node);
+                            }
+                        } else {
+                            nodes_duplicate[node.id] = {
+                                in_graph_counter: 1,
+                                node: node
+                            };
+                            graphd3.graph().nodes().push(nodes_duplicate[node.id].node);
+                        }
                     });
                     _(complement.links).compact().forEach(function(link) {
                         graphd3.graph().links().push(link);
@@ -333,6 +345,7 @@
 
                     d3.select(".loader-graph").style("visibility", "hidden");
                     graphd3.graph().start();
+                    graphd3.redraw();
                 };
 
                 graphd3.remove = function(node_event) {
@@ -345,18 +358,49 @@
                 };
 
                 graphd3.nodeRemove = function(node_event) {
-                    var complement = complements_graph[node_event.id];
-                    if (complement) {
-                        _(complement.nodes).compact().forEach(function(node) {
-                            _.remove(graphd3.graph().nodes(), function(d3_node) {
-                                if (d3_node.id === node.id) {
-                                    d3.selectAll("." + node.id).remove();
-                                    return true;
-                                } else {
-                                    return false;
+                    var neighbors = [];
+                    var view = [];
+                    var node;
+                    neighbors.push(node_event);
+                    view[node_event.id] = true;
+
+                    while (neighbors.length > 0) {
+                        node = neighbors.shift();
+                        remove(node);
+                        addNeighborsNode(node);
+                    }
+
+                    function addNeighborsNode(node) {
+                        var complement = complements_graph[node.id];
+                        if (complement) {
+                            _(complement.nodes).compact().forEach(function(d3_node) {
+                                if (! view[d3_node.id]) {
+                                    neighbors.push(d3_node);
+                                    if (nodes_duplicate[d3_node.id].in_graph_counter <= 1) {
+                                        view[d3_node.id] = true;
+                                    }
                                 }
                             });
-                            _(complement.links).compact().forEach(function(link) {
+                        }
+                    }
+
+                    function remove(node) {
+                        var mustRemoved = artifactMustRemoved(nodes_duplicate, node);
+                        if (node.id === node_event.id) {
+                            removeLinks(node);
+                        }
+                        if (node.id !== node_event.id && mustRemoved) {
+                            removeNode(node);
+                            removeLinks(node);
+                            delete node['clicked'];
+                            delete node['has_children'];
+                        }
+                    }
+
+                    function removeLinks(node) {
+                        var complement = complements_graph[node.id];
+                        if (complement) {
+                            _(complement.links).compact().forEach(function (link) {
                                 _.remove(graphd3.graph().links(), function (d3_link) {
                                     if (d3_link.source.id === link.source.id && d3_link.target.id === link.target.id) {
                                         d3.selectAll("." + link.id).remove();
@@ -366,10 +410,17 @@
                                     }
                                 });
                             });
-                            delete node['clicked'];
-                            delete node['has_children'];
+                        }
+                    }
 
-                            graphd3.nodeRemove(node);
+                    function removeNode(node) {
+                        _.remove(graphd3.graph().nodes(), function (d3_node) {
+                            if (d3_node.id === node.id) {
+                                d3.selectAll("." + node.id).remove();
+                                return true;
+                            } else {
+                                return false;
+                            }
                         });
                     }
                 };
@@ -517,20 +568,13 @@
 
         function showGraph(artifact_id) {
             if (! artifactExist(artifact_id)) {
-                return ArtifactLinksGraphRestService.getArtifact(artifact_id).then(function(result) {
-                    var artifacts = constructArtifact(result);
-
-                    ArtifactLinksArtifactsList.artifacts[artifact_id] = result;
-
-                    return ArtifactLinksTrackerService.initializeTrackers(artifacts).then(function(trackers) {
-                        return ArtifactLinksModelService.getGraphStructure(artifacts, trackers);
-                    });
+                return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function(artifact) {
+                    ArtifactLinksArtifactsList.artifacts[artifact_id] = ArtifactLinksModelService.getGraphStructure(artifact);
+                    return ArtifactLinksArtifactsList.artifacts[artifact_id];
                 });
             } else {
-                var artifacts = constructArtifact(ArtifactLinksArtifactsList.artifacts[artifact_id]);
-
-                return ArtifactLinksTrackerService.initializeTrackers(artifacts).then(function(trackers) {
-                    return ArtifactLinksModelService.getGraphStructure(artifacts, trackers);
+                return $q(function(resolve) {
+                    return resolve(ArtifactLinksArtifactsList.artifacts[artifact_id]);
                 });
             }
         }
@@ -539,11 +583,11 @@
             return _.has(ArtifactLinksArtifactsList.artifacts, artifact_id);
         }
 
-        function constructArtifact(node) {
-            return {
-                nodes: [node],
-                current_node: node
-            };
+        function artifactMustRemoved(nodes_duplicate, node) {
+            if (nodes_duplicate[node.id]) {
+                nodes_duplicate[node.id].in_graph_counter = nodes_duplicate[node.id].in_graph_counter === 0 ? 0 : nodes_duplicate[node.id].in_graph_counter - 1;
+            }
+            return nodes_duplicate[node.id] && nodes_duplicate[node.id].in_graph_counter === 0;
         }
     }
 })();
