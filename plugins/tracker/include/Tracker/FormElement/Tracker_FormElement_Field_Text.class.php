@@ -389,8 +389,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $html = '';
 
         if ($value) {
-            $purifier = Codendi_HTMLPurifier::instance();
-            $html    .= $purifier->purify($value->getValue());
+            $html .= $value->getValue();
         }
 
         return $html;
