@@ -72,6 +72,14 @@ class Codendi_MailTest extends TuleapTestCase {
         $mail->setBodyHtml($body, Codendi_MailTestVersion::DISCARD_COMMON_LOOK_AND_FEEL);
     }
 
+    public function itAddsAttachments() {
+        $mail = new Codendi_Mail();
+        $mail->addInlineAttachment('dataInline', 'text/plain', 'attachmentInline');
+        $mail->addAttachment('data', 'text/plain', 'attachment');
+
+        $this->assertEqual($mail->getMail()->getPartCount(), 2);
+    }
+
     public function itHasAppropriateTypeForAttachment() {
         $mail = new Codendi_Mail();
         $mail->addInlineAttachment('data', 'text/plain', 'attachment');
