@@ -1,3 +1,6 @@
+Version 0.3 - Tuleap 8.6
+    * story #7883: site admin can choose the project to migrate to PHPWiki plugin
+
 Version 0.2 - Tuleap 8.5
     * story #7883: Disable register_globals for PHPWiki
 

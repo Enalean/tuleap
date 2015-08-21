@@ -11,6 +11,7 @@ Version 8.6 (Not Released Yet)
 	* agiledashboard: 1.257
 	* proftpd: 0.22
 	* tracker: 5.686
+	* phpwiki: 0.3
 
 	== Api ==
 	* REST API: 1.13
