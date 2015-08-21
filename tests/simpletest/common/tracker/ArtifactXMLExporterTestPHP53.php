@@ -671,6 +671,15 @@ class ArtifactXMLExporter_FloatFieldTest extends ArtifactXMLExporter_BaseTest {
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '0');
     }
+
+    public function itConvertsHistoricalValuesWhenFieldTypeChanged() {
+        $this->exportTrackerDataFromFixture('artifact_with_float_history_with_string_value');
+        $this->assertCount($this->xml->artifact->changeset, 4);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, '0');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '2048');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, '43.0');
+    }
 }
 
 class ArtifactXMLExporter_IntegerFieldTest extends ArtifactXMLExporter_BaseTest {
@@ -693,6 +702,16 @@ class ArtifactXMLExporter_IntegerFieldTest extends ArtifactXMLExporter_BaseTest 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, '66');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '0');
+    }
+
+    public function itConvertsHistoricalValuesWhenFieldTypeChanged() {
+        $this->exportTrackerDataFromFixture('artifact_with_integer_history_with_string_value');
+        $this->assertCount($this->xml->artifact->changeset, 5);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, '0');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '0');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, '4');
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value, '43');
     }
 }
 

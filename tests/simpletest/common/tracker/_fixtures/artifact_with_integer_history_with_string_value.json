@@ -1,0 +1,66 @@
+{
+    "artifact": {
+        "1": [
+            {
+                "artifact_id":  "123",
+                "summary":      "Le artifact with full history",
+                "open_date":    "1234567890",
+                "submitted_by": "goofy"
+            }
+        ]
+    },
+    "artifact_history": {
+        "123": [
+            {
+                "data_type":    "2",
+                "display_type": "TF",
+                "field_name":   "field_17",
+                "value_function": "",
+                "old_value":    "",
+                "new_value":    "4Hj",
+                "date":         "3234567400",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            },
+            {
+                "data_type":    "2",
+                "display_type": "TF",
+                "field_name":   "field_17",
+                "value_function": "",
+                "old_value":    "4Hj",
+                "new_value":    "Some text",
+                "date":         "3234567500",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            },
+            {
+                "data_type":    "2",
+                "display_type": "TF",
+                "field_name":   "field_17",
+                "value_function": "",
+                "old_value":    "Some text",
+                "new_value":    "4",
+                "date":         "3234567600",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            }
+        ]
+    },
+    "artifact_field_value" : {
+        "123": [
+            {
+                "data_type":    "2",
+                "display_type": "TF",
+                "field_name":   "field_17",
+                "value_function": "",
+                "valueInt":     "43",
+                "valueText":    null,
+                "valueFloat":   null,
+                "valueDate":    null
+            }
+        ]
+    }
+}
