@@ -1,3 +1,6 @@
+Version 5.686 - Tuleap 8.6
+    * story #8251: take hierarchy type into account in hierarchy definition
+
 Version 5.685 - Tuleap 8.6
     * story #8160: Fix too many user groups given is openlist bound to ugroup
 

@@ -8,9 +8,9 @@ Version 8.6 (Not Released Yet)
 	* request #8330: Fix XSS in project data restoration page
 
     == Plugins ==
-	* agiledashboard: 1.256
+	* agiledashboard: 1.257
 	* proftpd: 0.22
-	* tracker: 5.685
+	* tracker: 5.686
 
     == Api ==
 	* REST API: 1.13
