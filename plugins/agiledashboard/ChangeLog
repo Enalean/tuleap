@@ -1,3 +1,6 @@
+Version 1.258 - Tuleap 8.6
+    * story #8251: fix bug on kanban creation
+
 Version 1.257 - Tuleap 8.6
     * story #8251: take hierarchy type into account in hierarchy definition
 
