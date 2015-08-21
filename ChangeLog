@@ -1,5 +1,8 @@
 Version 8.6 (Not Released Yet)
 
+	== Development ==
+	* request #8309: Get rid of PrototypeJS (is-at-top)
+
 	== Enhancement ==
 	* story #8308 generic tag path specification
 	* story #8316 generic tag path specification - live preview
