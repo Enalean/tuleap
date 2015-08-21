@@ -7,16 +7,19 @@ Version 8.6 (Not Released Yet)
 	== Bug Fix ==
 	* request #8330: Fix XSS in project data restoration page
 
-    == Plugins ==
+	== Plugins ==
 	* agiledashboard: 1.257
 	* proftpd: 0.22
 	* tracker: 5.686
 
-    == Api ==
+	== Api ==
 	* REST API: 1.13
 
-    == Themes ==
-	* FlamingParrot: 1.104
+	== Themes ==
+	* FlamingParrot: 1.104i
+
+	== Security ==
+	* request #8333: Disable people skills feature
 
 Version 8.5 (Friday, August 14th 2015)
 
