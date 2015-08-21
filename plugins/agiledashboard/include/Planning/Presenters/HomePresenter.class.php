@@ -183,4 +183,18 @@ class Planning_Presenter_HomePresenter {
     public function tracker_kanban_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
     }
+
+    public function are_trackers_available() {
+        foreach ($this->trackers as $tracker) {
+            if ($tracker['used'] === false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function no_tracker_available() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','no_tracker_available');
+    }
 }

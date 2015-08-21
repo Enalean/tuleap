@@ -275,6 +275,16 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return;
         }
 
+        if (! $tracker_id) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_tracker_selected')
+            );
+
+            $this->redirectToHome();
+            return;
+        }
+
         if ($this->kanban_manager->doesKanbanExistForTracker($tracker)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
