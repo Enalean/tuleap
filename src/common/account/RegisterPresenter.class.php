@@ -28,6 +28,8 @@ class Account_RegisterPresenter {
     public $purpose;
     public $purpose_directions;
     public $password_robustness;
+    public $good;
+    public $bad;
     public $new_password;
     public $timezone_selector;
     public $should_display_purpose;
@@ -45,6 +47,8 @@ class Account_RegisterPresenter {
         $this->purpose                = $GLOBALS['Language']->getText('account_register', 'purpose');
         $this->purpose_directions     = $GLOBALS['Language']->getText('account_register', 'purpose_directions');
         $this->password_robustness    = $GLOBALS['Language']->getText('account_check_pw', 'password_robustness');
+        $this->good                   = $GLOBALS['Language']->getText('account_check_pw', 'good');
+        $this->bad                    = $GLOBALS['Language']->getText('account_check_pw', 'bad');
         $this->new_password           = $GLOBALS['Language']->getText('account_change_pw', 'new_password');
         $this->timezone_selector      = new Account_TimezoneSelectorPresenter($this->prefill_values->form_timezone);
         $this->should_display_purpose = $GLOBALS['sys_user_approval'] == 1;

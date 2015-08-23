@@ -264,12 +264,14 @@ function user_display_choose_password($page,$user_id = false) {
     <? } ?>
     </td><td>
     <div class="password_strategy">
-        <p><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?> <span class="password_strategy_good_or_bad"></span></p>
+        <p class="robustness"><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?>
+			<span class="password_strategy_good"><?php echo $GLOBALS['Language']->getText('account_check_pw', 'good'); ?></span>
+			<span class="password_strategy_bad"><?php echo $GLOBALS['Language']->getText('account_check_pw', 'bad'); ?></span></p>
         <?php
         $password_strategy = new PasswordStrategy();
         include($GLOBALS['Language']->getContent('account/password_strategy'));
         foreach($password_strategy->validators as $key => $v) {
-            echo '<p class="password_validator_msg_'. $key .'">'. $v->description() .'</p>';
+            echo '<p class="password_validator_msg_'. $key .'"><i class="icon-remove password_strategy_bad"></i> '. $v->description() .'</p>';
         }
         ?>
     </blockquote>

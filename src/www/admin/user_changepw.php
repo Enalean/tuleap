@@ -54,7 +54,7 @@ function register_valid(Codendi_Request $request) {
 }
 
 // ###### first check for valid login, if so, congratulate
-$HTML->includeJavascriptFile('/scripts/check_pw.js.php');
+$HTML->includeJavascriptFile('/scripts/check_pw.js');
 if (register_valid($request)) {
     $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed')));
 ?>

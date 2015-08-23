@@ -29,6 +29,11 @@ var tuleap = tuleap || { };
                         container: '#register-background',
                         content: helper.html()
                     });
+
+                    $(this).on('shown.bs.popover', function (e) {
+                        $(this).data('popover').$tip.find('.popover-content')
+                             .html(helper.html());
+                    }) ;
                 }
             });
         },

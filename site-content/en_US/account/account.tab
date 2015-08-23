@@ -141,7 +141,7 @@ account_change_timezone	no_update	Nothing Updated
 account_change_timezone	choose_tz	Please choose a timezone
 #
 #-----------------------------------------------
-# Script: SF/www/scripts/check_pw.js.php
+# Script: SF/www/scripts/check_pw.js
 #
 account_check_pw	password_robustness	Password robustness:
 account_check_pw	good	Good
