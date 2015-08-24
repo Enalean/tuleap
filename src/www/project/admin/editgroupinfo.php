@@ -61,7 +61,8 @@ if($Update){
 $project_manager = ProjectManager::instance();
 $current_user = $request->getCurrentUser();
 
-$user_can_choose_visibility = $current_user->isSuperUser() || ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+$user_can_choose_visibility       = $current_user->isSuperUser() || ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+$user_can_choose_truncated_emails = $current_user->isSuperUser();
 
 $set_parent = false;
 $valid_parent = true;
@@ -160,9 +161,6 @@ if ($valid_data==1) {
     if ((! $result || db_affected_rows($result) < 1) && ($updatedesc==0) && ! $set_parent) {
         $update_success = false;
     } else {
-        if ($set_parent || (($result || db_affected_rows($result) > 0) && $valid_parent)) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
-        }
         group_add_history('changed_public_info','',$group_id);
         
         // Raise an event
@@ -180,8 +178,19 @@ if ($valid_data==1) {
         }
     }
 
+    //update truncated emails
+    if ($user_can_choose_truncated_emails) {
+        $usage = (int) $request->exist('truncated_emails');
+        if ($currentproject->getTruncatedEmailsUsage() != $usage) {
+            $project_manager->setTruncatedEmailsUsage($currentproject, $usage);
+            $update_success = true;
+        }
+    }
+
     if (! $update_success) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+    } else {
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
     }
 }
 
@@ -202,10 +211,16 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editgroupi
 
 echo '<FORM action="?group_id='.$group_id.'" method="post" id="project_info_form">';
 
+$renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
+
 if ($user_can_choose_visibility) {
     $presenter = new ProjectVisibilityPresenter($Language, ForgeConfig::areRestrictedUsersAllowed(), $currentproject->getAccess());
-    $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
     echo $renderer->renderToString('project_visibility', $presenter);
+}
+
+if ($user_can_choose_truncated_emails) {
+    $presenter = new ProjectTruncatedEmailsPresenter($currentproject);
+    echo $renderer->renderToString('truncated_emails', $presenter);
 }
 
 print "<P><h3>".$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';

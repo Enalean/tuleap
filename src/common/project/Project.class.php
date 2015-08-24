@@ -355,6 +355,10 @@ class Project extends Group implements PFO_Project {
         return $this->data_array['access'];
     }
 
+    public function getTruncatedEmailsUsage() {
+        return $this->data_array['truncated_emails'];
+    }
+
     public function isPublic() {
         $access = $this->data_array['access'];
         return $access != Project::ACCESS_PRIVATE;
