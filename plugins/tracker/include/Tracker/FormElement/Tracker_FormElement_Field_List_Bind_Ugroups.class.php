@@ -665,34 +665,35 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+        $project = $field->getTracker()->getProject();
+
         if (isset($rest_data['id'])) {
             $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-            $value      = call_user_func_array($representation_class.'::getProjectAndUserGroupFromRESTId', array($rest_data['id']));
-            $id         = $value['user_group_id'];
-            $project_id = $value['project_id'];
+            $value                = call_user_func_array($representation_class.'::getProjectAndUserGroupFromRESTId', array($rest_data['id']));
+            $id                   = $value['user_group_id'];
 
             $bind_value = $this->getValueByUGroupId($id);
             if ($bind_value) {
                 return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$bind_value->getId();
             }
 
-            if (! $project_id) {
-                throw new Tracker_FormElement_InvalidFieldValueException('Bind Value with ID '.$id.' does not exist for field ID '.$field->getId());
+            $user_group = $this->ugroup_manager->getUGroup($project, $id);
+            if (! $user_group) {
+                throw new Tracker_FormElement_InvalidFieldValueException('User Group with ID '.$id.' does not exist for field ID '.$field->getId());
             }
 
             if (! $bind_value) {
-                $project    = $field->getTracker()->getProject();
-                $user_group = $this->ugroup_manager->getUGroup($project, $id);
-                if (! $user_group) {
-                    throw new Tracker_FormElement_InvalidFieldValueException('Bind Value with ID '.$id.' does not exist for field ID '.$field->getId());
-                }
-
                 $identifier = $user_group->getName();
             }
-        }
+        } else if (isset($rest_data['short_name'])) {
+            $name       = (string) $rest_data['short_name'];
+            $user_group = $this->ugroup_manager->getUGroupByName($project, $name);
 
-        if (isset($rest_data['short_name'])) {
-            $identifier = (string) $rest_data['short_name'];
+            if (! $user_group) {
+                throw new Tracker_FormElement_InvalidFieldValueException('User Group with short_name '.$name.' does not exist for field ID '.$field->getId());
+            }
+
+            $identifier = $name;
         } else {
             throw new Tracker_FormElement_InvalidFieldValueException('OpenList static fields values should be passed as an object with at least one of the properties "id" or "short_name"');
         }
