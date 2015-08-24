@@ -1,3 +1,16 @@
+Version 8.5-2
+
+	== Development ==
+	* story #8160: add open lists to the planning v2 modal
+
+	== Bug Fix ==
+	* request #8104: Accentuated letters are not properly displayed in the subject of a message
+	* request #8350: fix use art and artifact keyword for both tracker v3 and v5
+	* request #8357: fix htmlentities appear in tooltip
+	* request #7937: Notices when synchronizing project with the IM service
+	* request #8335: Proftpd project folders are nor renamed when project renamed
+	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
+
 Version 8.5 (Friday, August 14th 2015)
 
 	== Development ==
