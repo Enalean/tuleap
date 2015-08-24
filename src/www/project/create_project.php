@@ -356,7 +356,20 @@ function create_project($data, $do_not_exit = false) {
             $reference_manager =& ReferenceManager::instance();
             $reference_manager->addProjectReferences($template_id,$group_id);
         }
-        
+
+        // Copy Truncated email option
+        $sql = "UPDATE groups AS g1
+                JOIN groups AS g2
+                  ON g2.group_id = ".db_ei($template_id)."
+                SET g1.truncated_emails = g2.truncated_emails
+                WHERE g1.group_id = ".db_ei($group_id);
+        db_query($sql);
+
+        $result = db_query($query);
+        if (!$result) {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_truncated_emails'));
+        }
+
         // Raise an event for plugin configuration
         $em =& EventManager::instance();
         $em->processEvent('register_project_creation', array(
