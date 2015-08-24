@@ -30,6 +30,10 @@ msgid "Add an item"
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "All items have been loaded."
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "Burndown"
 msgstr ""
 

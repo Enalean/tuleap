@@ -12,6 +12,7 @@
         'milestone',
         'project',
         'user-preferences',
+        'infinite-scroll',
         'tuleap-artifact-modal',
         'tuleap.artifact-modal'
     ]);

@@ -54,7 +54,11 @@
             You are not allowed to rank on this planning
         </div>
 
-        <div ui-tree="treeOptions">
+        <div ui-tree="treeOptions"
+            infinite-scroll
+            scroll-callback="displayBacklogItems()"
+            scroll-threshold="100"
+        >
             <ul ui-tree-nodes
                 ng-model="backlog_items"
                 class="backlog-items backlog {{ current_view_class }}"
@@ -74,7 +78,8 @@
                 </li>
             </ul>
         </div>
-        <div class="loading" ng-if="loading_backlog_items"></div>
+        <div ng-if="backlog_fully_loaded && backlog_items.length > 0" class="fully-loaded" translate>All items have been loaded.</div>
+        <div ng-if="loading_backlog_items" class="loading"></div>
     </div>
 
     <div id="divider"></div>
