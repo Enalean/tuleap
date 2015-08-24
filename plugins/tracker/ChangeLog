@@ -1,3 +1,6 @@
+Version 5.688 - Tuleap 8.6
+    * story #8160: Fix bug in open lists.
+
 Version 5.687 - Tuleap 8.6
     * request #8357: htmlentities appear in tooltip (they shouldn't)
 
