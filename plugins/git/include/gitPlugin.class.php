@@ -62,6 +62,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_is_deleted',                              'project_is_deleted',                           false);
         $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);

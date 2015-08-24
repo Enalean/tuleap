@@ -18,6 +18,7 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         
         $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
         

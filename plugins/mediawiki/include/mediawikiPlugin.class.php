@@ -49,6 +49,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('group_delete');
             $this->_addHook('cssfile');
             $this->addHook(Event::SERVICE_ICON);
+            $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
             $this->addHook('permission_get_name');
             $this->_addHook('service_is_used');

@@ -21,7 +21,7 @@ class IMPlugin extends Plugin {
 
     function __construct($id,$debug=IM_DEBUG_OFF) {
         parent::__construct($id);
-        
+
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('approve_pending_project', 'projectIsApproved', false);
@@ -43,6 +43,7 @@ class IMPlugin extends Plugin {
         $this->_addHook('project_export_entry', 'provide_exportable_items', false);
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->debug=$debug;
         

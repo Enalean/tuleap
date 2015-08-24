@@ -971,4 +971,13 @@ class Event {
      *     'project'    => Project
      */
     const CAN_USER_ACCESS_UGROUP_INFO = 'can_user_access_ugroup_info';
+
+    /**
+     * Gather the services allowed for a given project
+     *
+     * Parameters:
+     *     'project'  => Project (IN)
+     *     'services' => array of allowed services (OUT)
+     */
+    const SERVICES_ALLOWED_FOR_PROJECT = 'services_allowed_for_project';
 }

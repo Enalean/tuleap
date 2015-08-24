@@ -21,9 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/plugin/Plugin.class.php';
-require_once 'AdminDelegation_UserServiceManager.class.php';
-
 /**
  * AdminDelegationPlugin
  * 

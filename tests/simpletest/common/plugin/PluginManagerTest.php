@@ -24,7 +24,7 @@ Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager
  *
  * Tests the class PluginManager
  */
-class PluginManagerTest extends UnitTestCase {
+class PluginManagerTest extends TuleapTestCase {
 
     function setUp() {
         $this->globals = $GLOBALS;
@@ -122,8 +122,6 @@ class PluginManagerTest extends UnitTestCase {
         $phgm->setReturnValue('getPriorityForPluginHook', 0);
         $phgm->setReturnValueAt(2, 'getPriorityForPluginHook', 10);//124|hook_A
 
-        expect($this->service_manager)->enablePluginBasedService($plugin_1)->at(0);
-        expect($this->service_manager)->enablePluginBasedService($plugin_2)->at(1);
 
         //The plugins manager
         $pm = new PluginManagerTestVersion($this);
