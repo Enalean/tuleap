@@ -1,6 +1,7 @@
 Version 8.6 (Not Released Yet)
 
 	== Development ==
+	* request #8309: Get rid of PrototypeJS (Check Password)
 	* request #8309: Get rid of PrototypeJS (is-at-top)
 	* Allow to define a path for extra plugins
 
@@ -10,6 +11,7 @@ Version 8.6 (Not Released Yet)
 	* story #8316: generic tag path specification - live preview
 
 	== Bug Fix ==
+	* request #8362: Check password is broken when user wants to change it
 	* request #8330: Fix XSS in project data restoration page
 	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
 
@@ -25,7 +27,7 @@ Version 8.6 (Not Released Yet)
 	* REST API: 1.13
 
 	== Themes ==
-	* FlamingParrot: 1.104i
+	* FlamingParrot: 1.105
 
 	== Security ==
 	* request #8333: Disable people skills feature

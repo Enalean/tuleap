@@ -1,3 +1,6 @@
+Version 1.105 - Tuleap 8.6
+    * request #8309: Get rid of PrototypeJS (Check Password)
+
 Version 1.104 - Tuleap 8.6
     * request #8355: Login on front page doesn't take reverse proxy into account
 
