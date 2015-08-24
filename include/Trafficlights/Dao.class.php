@@ -48,15 +48,4 @@ class Dao extends DataAccessObject {
 
         return $this->update($sql);
     }
-
-    public function isExecution($tracker_id) {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "SELECT 1
-                FROM plugin_trafficlights
-                WHERE test_execution_tracker_id = $tracker_id";
-
-        $dar = $this->retrieve($sql);
-        return $dar->count() > 0;
-    }
 }

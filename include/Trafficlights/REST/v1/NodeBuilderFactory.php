@@ -51,19 +51,10 @@ class NodeBuilderFactory {
             new ArtifactNodeDao(),
             $this
         );
-        $this->execution_builder = new ExecutionNodeBuilder(
-            $this->artifact_builder,
-            $this->artifact_factory,
-            $this->dao
-        );
     }
 
     public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact) {
-        if ($this->dao->isExecution($artifact->getTrackerId())) {
-            return $this->execution_builder->getNodeRepresentation($user, $artifact);
-        } else {
-            return $this->artifact_builder->getNodeRepresentation($user, $artifact);
-        }
+        return $this->artifact_builder->getNodeRepresentation($user, $artifact);
     }
 
 
