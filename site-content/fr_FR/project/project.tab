@@ -487,6 +487,7 @@ project_admin_utils	frs_self_add_monitor_package	Auto ajout du suivi de paquet
 project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
 project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
 project_admin_utils	ugroup_binding	Liens
+project_admin_utils	truncated_emails	Utilisation des courriels tronqués
 #... end of values
 #
 #-----------------------------------------------

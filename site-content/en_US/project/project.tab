@@ -491,6 +491,7 @@ project_admin_utils	frs_self_add_monitor_package	Add package monitoring to himse
 project_admin_utils	frs_add_monitor_package	Add package monitoring
 project_admin_utils	frs_stop_monitor_package	Stop package monitoring
 project_admin_utils	ugroup_binding	Binding
+project_admin_utils	truncated_emails	Use truncated emails
 #... end of values
 #
 #-----------------------------------------------
