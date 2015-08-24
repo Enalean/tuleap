@@ -97,7 +97,7 @@ if (register_valid($user_id, $csrf, $em)) {
 <p><a href="/">[ <? echo $Language->getText('global', 'back_home');?> ]</a>
 <?php
 } else { // not valid registration, or first time to page
-	$HTML->includeJavascriptFile('/scripts/check_pw.js.php');
+	$HTML->includeJavascriptFile('/scripts/check_pw.js');
 	$HTML->header(array('title'=>$Language->getText('account_options', 'change_password')));
 
 ?>

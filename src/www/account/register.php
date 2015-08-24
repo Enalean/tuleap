@@ -335,7 +335,7 @@ if($page == 'admin_creation'){
 //
 // not valid registration, or first time to page
 //
-$HTML->includeJavascriptFile('/scripts/check_pw.js.php');
+$HTML->includeJavascriptFile('/scripts/check_pw.js');
 $HTML->includeFooterJavascriptFile('/scripts/mailcheck/mailcheck.min.js');
 $HTML->includeFooterJavascriptFile('/scripts/tuleap/mailchecker.js');
 $HTML->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
