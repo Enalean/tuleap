@@ -9,6 +9,7 @@ Version 8.6 (Not Released Yet)
 	* story #8337: Web UI to set truncated email
 	* story #8308: generic tag path specification
 	* story #8316: generic tag path specification - live preview
+	* story #8337: log activation/deactivation of truncated email in project history
 
 	== Bug Fix ==
 	* request #8362: Check password is broken when user wants to change it
