@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -72,7 +72,7 @@ class Tuleap_Template {
             $file = $this->file;
         }
         if (!$file) {
-            throw Exception('A template file name is required');
+            throw new Exception('A template file name is required');
         }
             
         extract($this->vars);          // Extract the vars to local namespace
@@ -83,4 +83,3 @@ class Tuleap_Template {
         return $contents;              // Return the contents
     }
 }
-?>

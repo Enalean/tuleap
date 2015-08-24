@@ -169,8 +169,11 @@ class FRSRelease extends Error {
     function setReleasedBy($released_by) {
         $this->released_by = $released_by;
     }
-    
-    function getProject() {
+
+    /**
+     * @return Project
+     */
+    public function getProject() {
         if (!isset($this->project)) {
             $this->project = $this->_getProjectManager()->getProject($this->getGroupID());
         }
