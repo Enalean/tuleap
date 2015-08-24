@@ -10,6 +10,7 @@ Version 8.6 (Not Released Yet)
 
 	== Bug Fix ==
 	* request #8330: Fix XSS in project data restoration page
+	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
 
 	== Plugins ==
 	* agiledashboard: 1.260
