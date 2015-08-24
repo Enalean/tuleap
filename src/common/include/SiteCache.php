@@ -31,6 +31,7 @@ class SiteCache {
         $this->invalidateLanguage();
         $this->invalidateJsCombined();
         $this->invalidateWSDL();
+        $this->invalidatePlugin();
     }
 
     private function invalidateRestler() {
@@ -55,5 +56,23 @@ class SiteCache {
         foreach (glob('/tmp/wsdl-') as $file) {
             unlink($file);
         }
+    }
+
+    private function invalidatePlugin() {
+        $this->logger->info('Invalidate Plugin hooks');
+        PluginManager::instance()->invalidateCache();
+    }
+
+    /**
+     * Some files might have been generated as root but should be owned by codendiadm
+     */
+    public function restoreOwnership() {
+        $backend = Backend::instance();
+        $this->logger->debug("Restore ownership to ".$GLOBALS['Language']->getCacheDirectory());
+        $backend->recurseChownChgrp($GLOBALS['Language']->getCacheDirectory(), ForgeConfig::get('sys_http_user'), ForgeConfig::get('sys_http_user'));
+
+        $plugin_manager = PluginManager::instance();
+        $this->logger->debug("Restore ownership to ".$plugin_manager->getCacheFile());
+        $backend->changeOwnerGroupMode($plugin_manager->getCacheFile(), ForgeConfig::get('sys_http_user'), ForgeConfig::get('sys_http_user'), 0600);
     }
 }

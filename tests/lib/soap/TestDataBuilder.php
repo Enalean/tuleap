@@ -29,6 +29,7 @@ class SOAP_TestDataBuilder extends TestDataBuilder {
 
     public function activatePlugins() {
         $this->activatePlugin('docman');
+        PluginManager::instance()->invalidateCache();
         PluginManager::instance()->loadPlugins();
 
         return $this;

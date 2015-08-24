@@ -22,44 +22,108 @@
  * PluginManager
  */
 class PluginManager {
-    
-    var $plugins_loaded;
+
+    const PLUGIN_HOOK_CACHE_FILE = 'hooks.json';
+
+    /** @var EventManager */
+    private $event_manager;
+
+    /** @var PluginFactory */
+    private $plugin_factory;
+
+    /** @var SiteCache */
+    private $site_cache;
+
+    /** @var PluginManager */
+    private static $instance = null;
+
     var $pluginHookPriorityManager;
-    
-    function PluginManager() {
-        $this->plugins_loaded = false;
+
+    public function __construct(PluginFactory $plugin_factory, EventManager $event_manager, SiteCache $site_cache) {
+        $this->plugin_factory = $plugin_factory;
+        $this->event_manager  = $event_manager;
+        $this->site_cache     = $site_cache;
     }
-    
-    function loadPlugins() {
-        $plugin_factory = $this->_getPluginFactory();
-        $event_manager  = $this->_getEventManager();
-        
-        $priority_manager = $this->_getPluginHookPriorityManager();
-        $priority_manager->cacheAllPrioritiesForPluginHook();
-        foreach($plugin_factory->getAvailablePlugins() as $plugin) {
-            $hooks = $plugin->getHooksAndCallbacks();
-            $iter = $hooks->iterator();
-            while($iter->valid()) {
-                $hook = $iter->current();
-                $priority = $priority_manager->getPriorityForPluginHook($plugin, $hook['hook']);
-                $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
-                $iter->next();
-            }
-            $plugin->loaded();
+
+    public static function instance() {
+        if (! self::$instance) {
+            self::$instance = new PluginManager(
+                PluginFactory::instance(),
+                EventManager::instance(),
+                new SiteCache()
+            );
         }
-        $this->plugins_loaded = true;
+        return self::$instance;
+    }
+
+    public function loadPlugins() {
+        foreach ($this->getHooksCache() as $plugin) {
+            $this->loadPluginFiles($plugin['path']);
+            $proxy = new PluginProxy($plugin['class'], $plugin['id']);
+            foreach ($plugin['hooks'] as $hook) {
+                $this->addListener($hook, $proxy);
+            }
+        }
+    }
+
+    private function loadPluginFiles($path) {
+        include_once $path;
+        $autoload = dirname($path).'/autoload.php';
+        if (file_exists($autoload)) {
+            include_once $autoload;
+        }
+    }
+
+    private function addListener($hook, PluginProxy $proxy) {
+        $proxy->addListener(
+            $hook['event'],
+            $hook['callback'],
+            $hook['recall_event']
+        );
+        $this->event_manager->addListener(
+            $hook['event'],
+            $proxy,
+            'processEvent',
+            true
+        );
+    }
+
+    private function getHooksCache() {
+        $hooks_cache_file = $this->getCacheFile();
+        if (! file_exists($hooks_cache_file)) {
+            $hooks_cache = $this->getHooksOfAvailablePlugins();
+            file_put_contents($hooks_cache_file, json_encode($hooks_cache));
+            return $hooks_cache;
+        }
+        return json_decode(file_get_contents($hooks_cache_file), true);
+    }
+
+    public function getCacheFile() {
+        return ForgeConfig::get('codendi_cache_dir').'/'.self::PLUGIN_HOOK_CACHE_FILE;
+    }
+
+    private function getHooksOfAvailablePlugins() {
+        $hooks_cache = array();
+        foreach($this->plugin_factory->getAvailablePlugins() as $plugin) {
+            $hooks_cache[$plugin->getName()] = array(
+                'id'    => $plugin->getId(),
+                'class' => $this->plugin_factory->getClassName($plugin->getName()),
+                'path'  => $this->plugin_factory->getClassPath($plugin->getName()),
+                'hooks' => array()
+            );
+            foreach ($plugin->getHooksAndCallbacks()->iterator() as $hook) {
+                $hooks_cache[$plugin->getName()]['hooks'][] = array(
+                    'event'        => $hook['hook'],
+                    'callback'     => $hook['callback'],
+                    'recall_event' => $hook['recallHook'],
+                );
+            }
+        }
+        return $hooks_cache;
     }
 
     public function getAvailablePlugins() {
-        return $this->_getPluginFactory()->getAvailablePlugins();
-    }
-
-    function _getPluginFactory() {
-        return PluginFactory::instance();
-    }
-    
-    function _getEventManager() {
-        return EventManager::instance();
+        return $this->plugin_factory->getAvailablePlugins();
     }
     
     function _getPluginHookPriorityManager() {
@@ -72,61 +136,48 @@ class PluginManager {
     function _getForgeUpgradeConfig() {
         return new ForgeUpgradeConfig();
     }
-
-    function isPluginsLoaded() {
-        return $this->plugins_loaded;
-    }
-    
-    function instance() {
-        static $_pluginmanager_instance;
-        if (!$_pluginmanager_instance) {
-            $_pluginmanager_instance = new PluginManager();
-        }
-        return $_pluginmanager_instance;
-    }
     
     function getAllPlugins() {
-        $plugin_factory = $this->_getPluginFactory();
-        return $plugin_factory->getAllPlugins();
+        return $this->plugin_factory->getAllPlugins();
     }
     
     function isPluginAvailable($plugin) {
-        $plugin_factory = $this->_getPluginFactory();
-        return $plugin_factory->isPluginAvailable($plugin);
+        return $this->plugin_factory->isPluginAvailable($plugin);
     }
     
     function availablePlugin($plugin) {
         if ($plugin->canBeMadeAvailable()) {
-            $plugin_factory = $this->_getPluginFactory();
-            $plugin_factory->availablePlugin($plugin);
+            $this->plugin_factory->availablePlugin($plugin);
         
             $plugin->setAvailable(true);
-            $this->getSiteCache()->invalidatePluginBasedCaches();
+            $this->site_cache->invalidatePluginBasedCaches();
         }
     }
+
     function unavailablePlugin($plugin) {
-        $plugin_factory = $this->_getPluginFactory();
-        $plugin_factory->unavailablePlugin($plugin);
+        $this->plugin_factory->unavailablePlugin($plugin);
         
         $plugin->setAvailable(false);
-        $this->getSiteCache()->invalidatePluginBasedCaches();
+        $this->site_cache->invalidatePluginBasedCaches();
     }
 
-    /**
-     * @return SiteCache
-     */
-    protected function getSiteCache() {
-        return new SiteCache();
+    public function installAndActivate($name) {
+        $plugin = $this->plugin_factory->getPluginByName($name);
+        if (! $plugin) {
+            $plugin = $this->installPlugin($name);
+        }
+        if (! $this->plugin_factory->isPluginAvailable($plugin)) {
+            $this->plugin_factory->availablePlugin($plugin);
+        }
+        $this->site_cache->invalidatePluginBasedCaches();
     }
 
     function installPlugin($name) {
         $plugin = false;
         if ($this->isNameValid($name)) {
-            $plugin_factory = $this->_getPluginFactory();
-            if (!$plugin_factory->isPluginInstalled($name)) {
+            if (!$this->plugin_factory->isPluginInstalled($name)) {
                 if (!$this->_executeSqlStatements('install', $name)) {
-                    $plugin_factory = $this->_getPluginFactory();
-                    $plugin = $plugin_factory->createPlugin($name);
+                    $plugin = $this->plugin_factory->createPlugin($name);
                     if ($plugin instanceof Plugin) {
                         $this->_createEtc($name);
                         $this->configureForgeUpgrade($name);
@@ -143,14 +194,12 @@ class PluginManager {
     }
 
     function uninstallPlugin($plugin) {
-        $plugin_factory = $this->_getPluginFactory();
-        $name = $plugin_factory->getNameForPlugin($plugin);
+        $name = $this->plugin_factory->getNameForPlugin($plugin);
         if (!$this->_executeSqlStatements('uninstall', $name)) {
             $phpm = $this->_getPluginHookPriorityManager();
             $phpm->removePlugin($plugin);
             $this->uninstallForgeUpgrade($name);
-            $plugin_factory = $this->_getPluginFactory();
-            return $plugin_factory->removePlugin($plugin);
+            return $this->plugin_factory->removePlugin($plugin);
         } else {
             return false;
         }
@@ -280,9 +329,9 @@ class PluginManager {
         }
         return $db_corrupted;
     }
+
     function getNotYetInstalledPlugins() {
-        $plugin_factory = $this->_getPluginFactory();
-        return $plugin_factory->getNotYetInstalledPlugins(); 
+        return $this->plugin_factory->getNotYetInstalledPlugins();
     }
     
     function isNameValid($name) {
@@ -290,10 +339,9 @@ class PluginManager {
     }
     
     function getPluginByName($name) {
-        $plugin_factory = $this->_getPluginFactory();
-        $p = $plugin_factory->getPluginByName($name);
-        return $p;
+        return $this->plugin_factory->getPluginByName($name);
     }
+
     function getAvailablePluginByName($name) {
         $plugin = $this->getPluginByName($name);
         if ($plugin && $this->isPluginAvailable($plugin)) {
@@ -301,14 +349,10 @@ class PluginManager {
         }
     }
     function getPluginById($id) {
-        $plugin_factory = $this->_getPluginFactory();
-        $p = $plugin_factory->getPluginById($id);
-        return $p;
+        return $this->plugin_factory->getPluginById($id);
     }
     function pluginIsCustom($plugin) {
-        $plugin_factory = $this->_getPluginFactory();
-        $p = $plugin_factory->pluginIsCustom($plugin);
-        return $p;
+        return $this->plugin_factory->pluginIsCustom($plugin);
     }
     
     var $plugins_name;
@@ -317,24 +361,16 @@ class PluginManager {
             $this->plugins_name = array();
         }
         if (!isset($this->plugins_name[$plugin->getId()])) {
-            $plugin_factory = $this->_getPluginFactory();
-            $this->plugins_name[$plugin->getId()] = $plugin_factory->getNameForPlugin($plugin);
+            $this->plugins_name[$plugin->getId()] = $this->plugin_factory->getNameForPlugin($plugin);
         }
         return $this->plugins_name[$plugin->getId()];
     }
 
     function getAllowedProjects($plugin) {
-        $prjIds = null;
-        //if($plugin->getScope() == Plugin::SCOPE_PROJECT) {
-        $plugin_factory = $this->_getPluginFactory();
-        $prjIds = $plugin_factory->getProjectsByPluginId($plugin);
-        //}
-        return $prjIds;
+        return $this->plugin_factory->getProjectsByPluginId($plugin);
     }
     
     function _updateProjectForPlugin($action, $plugin, $projectIds) {
-        $plugin_factory = $this->_getPluginFactory();
-        
         $success     = true;
         $successOnce = false;
         
@@ -342,10 +378,10 @@ class PluginManager {
             foreach($projectIds as $prjId) {
                 switch($action){
                 case 'add':
-                    $success = $success && $plugin_factory->addProjectForPlugin($plugin, $prjId);
+                    $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
                     break;
                 case 'del':
-                    $success = $success && $plugin_factory->delProjectForPlugin($plugin, $prjId);
+                    $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
                     break;
                 }
                 
@@ -356,17 +392,17 @@ class PluginManager {
         elseif(is_numeric($projectIds)) {
             switch($action){
             case 'add':
-                $success = $success && $plugin_factory->addProjectForPlugin($plugin, $prjId);
+                $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
                 break;
             case 'del':
-                $success = $success && $plugin_factory->delProjectForPlugin($plugin, $prjId);
+                $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
                 break;
             }
             $successOnce = $success;
         }
         
         if($successOnce && ($action == 'add')) {
-            $plugin_factory->restrictProjectPluginUse($plugin, true);
+            $this->plugin_factory->restrictProjectPluginUse($plugin, true);
         }
     }
 
@@ -379,22 +415,19 @@ class PluginManager {
     }
 
     function isProjectPluginRestricted($plugin) {
-        $plugin_factory = $this->_getPluginFactory();
-        return $plugin_factory->isProjectPluginRestricted($plugin);
+        return $this->plugin_factory->isProjectPluginRestricted($plugin);
     }
 
     function updateProjectPluginRestriction($plugin, $restricted) {
-        $plugin_factory = $this->_getPluginFactory();
-        $plugin_factory->restrictProjectPluginUse($plugin, $restricted);
+        $this->plugin_factory->restrictProjectPluginUse($plugin, $restricted);
         if($restricted == false) {
-            $plugin_factory->truncateProjectPlugin($plugin);
+            $this->plugin_factory->truncateProjectPlugin($plugin);
         }
     }
 
     function isPluginAllowedForProject($plugin, $projectId) {
         if($this->isProjectPluginRestricted($plugin)) {
-            $plugin_factory = $this->_getPluginFactory();
-            return $plugin_factory->isPluginAllowedForProject($plugin, $projectId);
+            return $this->plugin_factory->isPluginAllowedForProject($plugin, $projectId);
         }
         else {
             return true;
@@ -410,7 +443,7 @@ class PluginManager {
      * @return Plugin
      */
     public function getPluginDuringInstall($name) {
-        return $this->_getPluginFactory()->instantiatePlugin(0, $name);
+        return $this->plugin_factory->instantiatePlugin(0, $name);
     }
 
     private function copyDirectory($source, $destination) {
@@ -431,9 +464,9 @@ class PluginManager {
         }
     }
 
-    /** @return ServiceManager */
-    private function getServiceManager() {
-        return ServiceManager::instance();
+    public function invalidateCache() {
+        if (file_exists($this->getCacheFile())) {
+            unlink($this->getCacheFile());
+        }
     }
 }
-?>

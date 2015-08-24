@@ -1,18 +1,11 @@
 <?php
-require_once('common/plugin/PluginManager.class.php');
-Mock::generatePartial('PluginManager', 'PluginManagerTestVersion', array('_getPluginFactory', '_getEventManager', '_getPluginHookPriorityManager', '_getForgeUpgradeConfig'));
-require_once('common/plugin/PluginHookPriorityManager.class.php');
+
 Mock::generate('PluginHookPriorityManager');
-require_once('common/plugin/PluginFactory.class.php');
 Mock::generate('PluginFactory');
-require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
-require_once('common/collection/Collection.class.php');
 Mock::generate('Collection');
 Mock::generate('ArrayIterator', 'MockIterator');
-require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager', array('run'));
@@ -37,112 +30,7 @@ class PluginManagerTest extends TuleapTestCase {
         ServiceManager::clearInstance();
     }
 
-    function testLoadPlugins() {
-        //The hooks
-        $hook_A = array('hook' => 'hook_A', 'callback' => 'CallHook', 'recallHook' => true);
-        $hook_B = array('hook' => 'hook_B', 'callback' => 'CallHook', 'recallHook' => true);
-        $it_hook_p1     = new MockIterator($this);
-        $it_hook_p1->setReturnValue('valid', true);
-        $it_hook_p1->setReturnValueAt(2, 'valid', false);
-        $it_hook_p1->setReturnReferenceAt(0, 'current', $hook_A);
-        $it_hook_p1->setReturnReferenceAt(1, 'current', $hook_B);
-        $hooks_p1       = new MockCollection($this);
-        $hooks_p1->setReturnReference('iterator', $it_hook_p1);
-        
-        $it_hook_p2     = new MockIterator($this);
-        $it_hook_p2->setReturnValue('valid', true);
-        $it_hook_p2->setReturnValueAt(1, 'valid', false);
-        $it_hook_p2->setReturnReferenceAt(0, 'current', $hook_A);
-        $hooks_p2       = new MockCollection($this);
-        $hooks_p2->setReturnReference('iterator', $it_hook_p2);
-
-        //A plugin (available)        --listen A & B
-        $plugin_1       = new MockPlugin($this);
-        $plugin_1->expectCallCount('getHooksAndCallbacks', 1);
-        $plugin_1->setReturnValue('getId', 123);
-        $plugin_1->setReturnReference('getHooksAndCallbacks', $hooks_p1);
-        $plugin_1->expectOnce('loaded');
-
-        //Another Plugin (available)  --listen only A
-        $plugin_2       = new MockPlugin($this);
-        $plugin_2->expectCallCount('getHooksAndCallbacks', 1);
-        $plugin_2->setReturnValue('getId', 124);
-        $plugin_2->setReturnReference('getHooksAndCallbacks', $hooks_p2);
-        $plugin_2->expectOnce('loaded');
-
-        //The plugin factory
-        $plugin_factory = new MockPluginFactory($this);
-        $plugin_factory->setReturnValue('getAvailablePlugins', array(
-            $plugin_1,
-            $plugin_2,
-        ));
-        
-        //The event manager
-        $em             = new MockEventManager($this);
-        $em->expectCallCount('addListener', 3); // 2*A+1*B hooks
-        $args_0 = array();
-        $args_0[] = $hook_A['hook'];
-        $args_0[] = $plugin_1;
-        $args_0[] = $hook_A['callback'];
-        $args_0[] = $hook_A['recallHook'];
-        $args_0[] = 0;       
-        $args_1 = array();
-        $args_1[] = $hook_B['hook'];
-        $args_1[] = $plugin_1;
-        $args_1[] = $hook_B['callback'];
-        $args_1[] = $hook_B['recallHook'];
-        $args_1[] = 0;       
-        $args_2 = array();
-        $args_2[] = $hook_A['hook'];
-        $args_2[] = $plugin_2;
-        $args_2[] = $hook_A['callback'];
-        $args_2[] = $hook_A['recallHook'];
-        $args_2[] = 10;
-        $em->expectAt(0, 'addListener', $args_0);
-        $em->expectAt(1, 'addListener', $args_1);
-        $em->expectAt(2, 'addListener', $args_2);
-
-        //The priorities
-        
-        $phgm = new MockPluginHookPriorityManager($this);
-        $phgm->expectCallCount('getPriorityForPluginHook', 3);
-        $args_phgm_0 = array();
-        $args_phgm_0[] = $plugin_1;
-        $args_phgm_0[] = $hook_A['hook'];
-        $args_phgm_1 = array();
-        $args_phgm_1[] = $plugin_1;
-        $args_phgm_1[] = $hook_B['hook'];
-        $args_phgm_2 = array();
-        $args_phgm_2[] = $plugin_2;
-        $args_phgm_2[] = $hook_A['hook'];
-        
-        $phgm->expectAt(0, 'getPriorityForPluginHook', $args_phgm_0);
-        $phgm->expectAt(1, 'getPriorityForPluginHook', $args_phgm_1);
-        $phgm->expectAt(2, 'getPriorityForPluginHook', $args_phgm_2);
-        $phgm->setReturnValue('getPriorityForPluginHook', 0);
-        $phgm->setReturnValueAt(2, 'getPriorityForPluginHook', 10);//124|hook_A
-
-
-        //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
-        $pm->setReturnReference('_getEventManager', $em);
-        $pm->setReturnReference('_getPluginHookPriorityManager', $phgm);
-        $pm->PluginManager();
-        $this->assertFalse($pm->isPluginsLoaded());
-        $pm->loadPlugins();
-        $this->assertTrue($pm->isPluginsLoaded());
-    }
-    
-    function testSingleton() {
-        $this->assertReference(
-                PluginManager::instance(),
-                PluginManager::instance());
-        $this->assertIsA(PluginManager::instance(), 'PluginManager');
-    }
-    
     function testGetAllPlugins() {
-        
         //The plugins
         $plugins        = new MockCollection($this);
         
@@ -151,8 +39,7 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->setReturnReference('getAllPlugins', $plugins);
         
         //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'));
         
         $this->assertReference($pm->getAllPlugins(), $plugins);
     }
@@ -168,8 +55,7 @@ class PluginManagerTest extends TuleapTestCase {
 
 
         //The plugins manager
-        $pm = partial_mock('PluginManager', array('_getPluginFactory'));
-        stub($pm)->_getPluginFactory()->returns($plugin_factory);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'));
         
         $this->assertTrue($pm->isPluginAvailable($plugin));
         $this->assertFalse($pm->isPluginAvailable($plugin));
@@ -188,9 +74,7 @@ class PluginManagerTest extends TuleapTestCase {
         expect($site_cache)->invalidatePluginBasedCaches()->once();
 
         //The plugins manager
-        $pm = partial_mock('PluginManager', array('_getPluginFactory', 'getSiteCache'));
-        stub($pm)->_getPluginFactory()->returns($plugin_factory);
-        stub($pm)->getSiteCache()->returns($site_cache);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), $site_cache);
         
         $pm->availablePlugin($plugin);
     }
@@ -206,12 +90,11 @@ class PluginManagerTest extends TuleapTestCase {
         expect($site_cache)->invalidatePluginBasedCaches()->once();
 
         //The plugins manager
-        $pm = partial_mock('PluginManager', array('_getPluginFactory', 'getSiteCache'));
-        stub($pm)->_getPluginFactory()->returns($plugin_factory);
-        stub($pm)->getSiteCache()->returns($site_cache);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), $site_cache);
         
         $pm->unavailablePlugin($plugin);
     }
+
     function _remove_directory($dir) {
       if ($handle = opendir("$dir")) {
        while (false !== ($item = readdir($handle))) {
@@ -246,14 +129,14 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->expectOnce('createPlugin', array('New_Plugin'));
         $plugin_factory->setReturnReference('createPlugin', $plugin);
         
-        //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
 
         $fuc = new ForgeUpgradeConfigTestPluginManager($this);
         $fuc->expectOnce('run');
         $fuc->setReturnValue('run', true);
-        $pm->setReturnValue('_getForgeUpgradeConfig', $fuc);
+
+        //The plugins manager
+        $pm = partial_mock('PluginManager', array('_getForgeUpgradeConfig'), array($plugin_factory, mock('EventManager'), mock('SiteCache')));
+        stub($pm)->_getForgeUpgradeConfig()->returns($fuc);
 
         $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
         
@@ -280,7 +163,7 @@ class PluginManagerTest extends TuleapTestCase {
     }
 
     function testIsNameValide() {
-        $pm = new PluginManager();
+        $pm = new PluginManager(mock('PluginFactory'), mock('EventManager'), mock('SiteCache'));
         $this->assertTrue($pm->isNameValid('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'));
         $this->assertFalse($pm->isNameValid(' '));
         $this->assertFalse($pm->isNameValid('*'));
@@ -296,10 +179,79 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->expectOnce('getPluginByName');
         
         //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'));
         
         $pm->getPluginByName('plugin_name');
     }
 }
-?>
+
+class PluginManager_LoadPluginTest extends TuleapTestCase {
+    private $plugin_factory;
+    private $event_manager;
+    private $plugin_manager;
+
+    public function setUp() {
+        parent::setUp();
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_cache_dir', '/tmp');
+
+        $this->plugin_factory = mock('PluginFactory');
+        $this->event_manager  = mock('EventManager');
+        $this->plugin_manager = new PluginManager($this->plugin_factory, $this->event_manager, mock('SiteCache'));
+
+        $plugin = mock('Plugin');
+        stub($plugin)->getName()->returns('DatPlugin');
+        $hooks_and_callback = mock('Collection');
+        stub($hooks_and_callback)->iterator()->returns(array(
+            array('hook' => 'this_event', 'callback' => 'myFunction', 'recallHook' => false)
+        ));
+        stub($plugin)->getHooksAndCallbacks()->returns($hooks_and_callback);
+
+        stub($this->plugin_factory)->getAvailablePlugins()->returns(
+            array($plugin)
+        );
+        stub($this->plugin_factory)->getClassName()->returns('DatPlugin');
+        stub($this->plugin_factory)->getClassPath()->returns(dirname(__FILE__).'/_fixtures/DatPlugin.php');
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        unlink('/tmp/hooks.json');
+        ForgeConfig::restore();
+    }
+
+    public function itGenerateCacheOfHookDefinitions() {
+        $this->plugin_manager->loadPlugins();
+
+        $json_cache = json_decode(file_get_contents('/tmp/hooks.json'), true);
+        $this->assertCount($json_cache['DatPlugin']['hooks'], 1);
+        $this->assertEqual($json_cache['DatPlugin']['hooks'][0]['event'], 'this_event');
+    }
+
+    public function itCachesHooksDefinitions() {
+        expect($this->plugin_factory)->getAvailablePlugins()->once();
+
+        $this->plugin_manager->loadPlugins();
+        $this->plugin_manager->loadPlugins();
+    }
+
+    public function itLoadsClassesFromCacheFile() {
+        $this->assertTrue(class_exists('DatPlugin'));
+        $this->assertFalse(class_exists('NotLoaded'));
+
+        $fake_json = array(
+            'NotLoaded' => array(
+                'id'    => 0,
+                'class' => 'NotLoaded',
+                'path'  => dirname(__FILE__).'/_fixtures/NotLoaded.php',
+                'hooks' => array()
+            )
+        );
+        file_put_contents('/tmp/hooks.json', json_encode($fake_json));
+        $this->plugin_manager->loadPlugins();
+
+        $this->assertTrue(class_exists('DatPlugin'));
+        $this->assertTrue(class_exists('NotLoaded'));
+
+    }
+}

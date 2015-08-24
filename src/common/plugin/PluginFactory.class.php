@@ -37,6 +37,9 @@ class PluginFactory {
 
     /** @var PluginResourceRestrictor */
     private $plugin_restrictor;
+
+    /** @var array */
+    private $plugin_class_path = array();
     
     public function __construct(
         PluginDao $plugin_dao,
@@ -144,17 +147,26 @@ class PluginFactory {
     function _getClassNameForPluginName($name) {
         $class_name = $name."Plugin";
         $custom     = false;
+        $class_path = '';
         if (!class_exists($class_name)) {
             $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
             //Custom ?
             if ($this->loadClass($this->_getCustomPluginsRoot().$file_name)) {
                 $custom = true;
+                $class_path = $this->_getCustomPluginsRoot().$file_name;
             } else {
-                $this->tryPluginPaths($this->getOfficialPluginPaths(), $file_name);
+                $class_path = $this->tryPluginPaths($this->getOfficialPluginPaths(), $file_name);
             }
         }
         if (!class_exists($class_name)) {
             $class_name = false;
+        } else {
+            if ($class_path) {
+                $this->plugin_class_path[$name] = array(
+                    'class' => $class_name,
+                    'path'  => $class_path,
+                );
+            }
         }
         return array('class' => $class_name, 'custom' => $custom);
     }
@@ -168,8 +180,9 @@ class PluginFactory {
 
     private function tryPluginPaths(array $potential_paths, $file_name) {
         foreach($potential_paths as $path) {
-            if ($this->loadClass($path.'/'.$file_name)) {
-                return true;
+            $full_path = $path.'/'.$file_name;
+            if ($this->loadClass($full_path)) {
+                return $full_path;
             }
         }
         return false;
@@ -374,5 +387,13 @@ class PluginFactory {
     /** @return Project */
     private function getProject($project_id) {
         return ProjectManager::instance()->getProject($project_id);
+    }
+
+    public function getClassPath($name) {
+        return $this->plugin_class_path[$name]['path'];
+    }
+
+    public function getClassName($name) {
+        return $this->plugin_class_path[$name]['class'];
     }
 }

@@ -23,6 +23,12 @@
  */
 
 class SystemEventProcessor_Root extends SystemEventProcessor {
+
+    /**
+     * @var SiteCache
+     */
+    private $site_cache;
+
     /**
      * @var BackendAliases
      */
@@ -51,13 +57,15 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
         BackendAliases     $backend_aliases,
         BackendCVS         $backend_cvs,
         BackendSVN         $backend_svn,
-        BackendSystem      $backend_system
+        BackendSystem      $backend_system,
+        SiteCache          $site_cache
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
         $this->backend_aliases      = $backend_aliases;
         $this->backend_cvs          = $backend_cvs;
         $this->backend_svn          = $backend_svn;
         $this->backend_system       = $backend_system;
+        $this->site_cache           = $site_cache;
     }
 
     public function getOwner() {
@@ -65,6 +73,8 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
     }
 
     protected function postEventsActions(array $executed_events_ids, $queue_name) {
+        $this->site_cache->restoreOwnership();
+
          // Since generating aliases may be costly, do it only once everything else is processed
         if ($this->backend_aliases->aliasesNeedUpdate()) {
             $this->backend_aliases->update();

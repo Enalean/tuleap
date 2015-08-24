@@ -20,18 +20,4 @@
 
 require_once 'pre.php';
 
-activatePlugin($argv[1]);
-
-function activatePlugin($name) {
-    $plugin_factory = PluginFactory::instance();
-    $plugin = $plugin_factory->getPluginByName($name);
-    if (! $plugin) {
-        echo "Install plugin\n";
-        $plugin_manager = new PluginManager();
-        $plugin = $plugin_manager->installPlugin($name);
-    }
-    if (! $plugin_factory->isPluginAvailable($plugin)) {
-        echo "Activate plugin\n";
-        $plugin_factory->availablePlugin($plugin);
-    }
-}
+PluginManager::instance()->installAndActivate($argv[1]);

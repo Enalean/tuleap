@@ -36,15 +36,9 @@ class GitDataBuilder extends REST_TestDataBuilder {
     }
 
     public function setUp() {
-        $this->installPlugin();
-        $this->activatePlugin('git');
+        PluginManager::instance()->installAndActivate('git');
         $this->generateProject();
         $this->generateGitRepository();
-    }
-
-    private function installPlugin() {
-        $dbtables = new DBTablesDAO();
-        $dbtables->updateFromFile(dirname(__FILE__).'/../../db/install.sql');
     }
 
     public function generateProject() {

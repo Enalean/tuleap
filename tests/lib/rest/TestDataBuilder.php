@@ -79,6 +79,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->activatePlugin('tracker');
         $this->activatePlugin('agiledashboard');
         $this->activatePlugin('cardwall');
+        PluginManager::instance()->invalidateCache();
         PluginManager::instance()->loadPlugins();
 
         $this->tracker_artifact_factory    = Tracker_ArtifactFactory::instance();

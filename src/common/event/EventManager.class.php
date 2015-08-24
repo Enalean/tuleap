@@ -18,32 +18,28 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/collection/PrioritizedMultiMap.class.php');
-require_once('common/collection/Map.class.php');
-require_once('Event.class.php');
-
 /**
  * EventManager
  */
 class EventManager {
-    
+
     /**
      * @const string The callback to call if everything else fail
      */
     const DEFAULT_CALLBACK = 'CallHook';
 
-    var $listeners;
-    
-    public function EventManager() {
-        $this->listeners = new PrioritizedMultiMap();
+    private $listeners;
+
+    public function __construct() {
+        $this->listeners = array();
     }
-    
+
     /**
      * Holds an instance of the class
      * @var EventManager
      */
     private static $instance;
-    
+
     /**
      * Allows clear instance for test. DO NOT USE IT IN PRODUCTION CODE!
      */
@@ -61,7 +57,7 @@ class EventManager {
 
     /**
      * The singleton method
-     * 
+     *
      * @return EventManager
      */
     public static function instance() {
@@ -70,22 +66,19 @@ class EventManager {
         }
         return self::$instance;
     }
-    
-    public function addListener($event, $listener, $callback, $recallEvent, $priority) {
-        $entry = array();
-        $entry['listener']    = $listener;
-        $entry['callback']    = $callback;
-        $entry['recallEvent'] = $recallEvent;
-        $this->listeners->put( $event, $entry, $priority);
+
+    public function addListener($event, $listener, $callback, $recallEvent) {
+        $this->listeners[$event][] = array(
+            'listener'    => $listener,
+            'callback'    => $callback,
+            'recallEvent' => $recallEvent
+        );
     }
 
     public function processEvent($event, $params) {
-        $listeners = $this->listeners->get($event);
-        if ($listeners) {
-            $it = $listeners->iterator();
-            while($it->valid()) {
-                $this->processEventOnListener($event, $params, $it->current());
-                $it->next();
+        if (isset($this->listeners[$event])) {
+            foreach ($this->listeners[$event] as $hook) {
+                $this->processEventOnListener($event, $params, $hook);
             }
         }
     }
@@ -105,4 +98,3 @@ class EventManager {
         }
     }
 }
-?>
