@@ -489,4 +489,13 @@ class ProjectDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function setTruncatedEmailsUsage($project_id, $usage) {
+        $project_id = $this->da->escapeInt($project_id);
+        $usage      = $this->da->escapeInt($usage);
+
+        $sql = "UPDATE groups SET truncated_emails = $usage WHERE group_id = $project_id";
+
+        return $this->update($sql);
+    }
 }

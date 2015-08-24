@@ -367,6 +367,11 @@ class ProjectManager {
         ));
     }
 
+    public function setTruncatedEmailsUsage(Project $project, $usage) {
+        $project_id = $project->getID();
+        $this->_getDao()->setTruncatedEmailsUsage($project_id, $usage);
+    }
+
     public function disableAllowRestrictedForAll() {
         $this->_getDao()->disableAllowRestrictedForAll();
     }
