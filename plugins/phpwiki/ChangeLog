@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 8.6
+    * story #7883: Redirect from PHPWiki core to the plugin when a project use the plugin
+
 Version 0.4 - Tuleap 8.6
     * story #7883: PHPWiki plugin is visible in the widget Project Public Area
 
