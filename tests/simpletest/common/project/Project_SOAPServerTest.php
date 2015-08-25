@@ -151,7 +151,7 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->um->setReturnValue('getCurrentUser', $another_user, array('789'));
         
         $template = new MockProject();
-        $template->services = array();
+        stub($template)->getServices()->returns(array());
         $template->setReturnValue('isTemplate', true);
         $this->pm->setReturnValue('getProject', $template, array(100));
         
@@ -239,7 +239,7 @@ class Project_SOAPServer_6737_RequesterShouldBeProjectAdmin extends TuleapTestCa
         $this->forge_ugroup_perm_manager = mock('User_ForgeUserGroupPermissionsManager');
 
         $template = stub('Project')->isTemplate()->returns(true);
-        $template->services = array();
+        stub($template)->getServices()->returns(array());
         stub($this->project_manager)->getProject($this->template_id)->returns($template);
 
         stub($this->project_creator)->create()->returns(mock('Project'));

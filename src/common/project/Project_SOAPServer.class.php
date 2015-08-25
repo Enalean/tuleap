@@ -225,7 +225,7 @@ class Project_SOAPServer {
             $data['project']['is_public'] = true;
         }
 
-        foreach ($template->services as $key => $service) {
+        foreach ($template->getServices() as $key => $service) {
             $is_used = $service->isActive() && $service->isUsed();
             $data['project']['services'][$service->getId()]['is_used'] = $is_used;
         }

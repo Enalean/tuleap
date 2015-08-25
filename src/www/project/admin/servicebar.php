@@ -167,11 +167,11 @@ if (($func=='do_create')||($func=='do_update')) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','link_missed'));
     }
     
-    $summary_rank = $project->service_data_array['summary']['rank'];
+    $minimal_rank = $project->getMinimalRank();
    
     if ($short_name!='summary'){
-        if($rank <= $summary_rank){
-            exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','bad_rank', $summary_rank));
+        if($rank <= $minimal_rank){
+            exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','bad_rank', $minimal_rank));
         }
         if (!$rank) {
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','rank_missed'));

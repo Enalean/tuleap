@@ -41,8 +41,7 @@ if ($project && !$project->isError()) {
             //now show the project page
             include_once 'project_home.php';
         } else {
-            $serv = $project->services;
-            $val = array_values($serv);
+            $val = array_values($project->getServices());
             foreach ($val as $containedSrv){
                if ($containedSrv->isUsed()) {
                    $service = $containedSrv;

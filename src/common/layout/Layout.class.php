@@ -2036,12 +2036,7 @@ class Layout extends Response {
                 return;
             }
 
-            print '<H2>'. $project->getPublicName() .' - ';
-
-            if (isset($project->service_data_array[$toptab])) {
-                echo $project->service_data_array[$toptab]['label'];
-            }
-            print '</H2>';
+            print '<H2>'. $project->getPublicName() .' - '. $project->getServiceLabel($toptab).'</H2>';
 
         print '
         <P>
@@ -2062,8 +2057,6 @@ class Layout extends Response {
 
         $user = UserManager::instance()->getCurrentUser();
 
-        reset($project->service_data_array);
-
         if ($this->restrictedMemberIsNotProjectMember($user, $group_id)) {
             $allowed_services = array('summary');
             $this->getEventManager()->processEvent(
@@ -2074,7 +2067,7 @@ class Layout extends Response {
             );
         }
 
-        while (list($short_name,$service_data) = each($project->service_data_array)) {
+        foreach ($project->getServicesData() as $short_name => $service_data) {
                if ((string)$short_name == "admin") {
                 // for the admin service, we will check if the user is allowed to use the service
                 // it means : 1) to be a super user, or

@@ -163,7 +163,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### File Releases (only for Active)
         
         if ($project->usesFile()) {
-            echo $project->services['file']->getPublicArea();
+            echo $project->getService(Service::FILE)->getPublicArea();
         }
         
         // ######################### Trackers (only for Active)
