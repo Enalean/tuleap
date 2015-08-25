@@ -41,16 +41,25 @@ svn_admin_general_settings	mandatory_ref_comment	When Mandatory Reference in com
 svn_admin_general_settings	preamble	<h3>Subversion Preamble</h3><P>Introductory message to replace the default one on the <a href="$1">Subversion welcome page</a>. (HTML tags allowed)
 svn_admin_general_settings	svn_can_change_log	Modify the commit messages
 svn_admin_general_settings	svn_can_change_log_comment	When "Modify the commit messages" is on, the commit message can be modified (svn propset --revprop -r X svn:log)
-svn_admin_general_settings	svn_allow_tag_immutable	Immutable tags
-svn_admin_general_settings	svn_allow_tag_immutable_comment	Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.
-svn_admin_general_settings	layout_example	Example layout
-svn_admin_general_settings	impacted_svn	Example of impacted svn operations:
-svn_admin_general_settings	or_svn_status_form	Or, in "svn status" form:
-svn_admin_general_settings	immutable_whitelist	Global whitelist
-svn_admin_general_settings	immutable_path	Immutable tags paths
-svn_admin_general_settings	immutable_tag_configuration	Immutable tags configuration
 
 svn_admin_immutable_tags	title	SVN Immutable Tags
+svn_admin_immutable_tags	configuration	Immutable tags configuration
+svn_admin_immutable_tags	configuration_description	Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.
+svn_admin_immutable_tags	layout_example	Example layout
+svn_admin_immutable_tags	impacted_svn	Example of impacted svn operations in <span class="label" id="tag-name-example"></span>
+svn_admin_immutable_tags	impacted_svn_empty_state	Example of impacted svn operations
+svn_admin_immutable_tags	whitelist	Global whitelist
+svn_admin_immutable_tags	path	Immutable tags paths
+svn_admin_immutable_tags	tree	Repository tree structure
+svn_admin_immutable_tags	preview	Preview of your configuration
+svn_admin_immutable_tags	preview_description	Here is a preview of what your configuration does. Click on highlighted folders to get more information.
+svn_admin_immutable_tags	save	Save configuration
+svn_admin_immutable_tags	my-tag	my-tag
+svn_admin_immutable_tags	some/path	some/path
+svn_admin_immutable_tags	svn_status_style	SVN status style
+svn_admin_immutable_tags	loading	Loading...
+svn_admin_immutable_tags	select_tag	Please select tag on the left
+svn_admin_immutable_tags	tree_empty_state	Your SVN repository is not impacted by immutable tags because the configuration is empty or does not match the current repository layout
 
 #
 #-----------------------------------------------

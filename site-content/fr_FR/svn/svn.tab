@@ -34,16 +34,26 @@ svn_admin_general_settings	mandatory_ref_comment	Lorsque l'option Référence ob
 svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'introduction sur l'utilisation de SVN en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de Subversion</a>. (balises HTML autorisées)
 svn_admin_general_settings	svn_can_change_log	Modification des messages de commit
 svn_admin_general_settings	svn_can_change_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
-svn_admin_general_settings	svn_allow_tag_immutable	Interdiction de la modification des tags
-svn_admin_general_settings	svn_allow_tag_immutable_comment	Spécifiez les répertoires dans lesquels se trouveront les tags non modifiables. Vous pouvez définir une liste de répertoires où les modifications seront tout de même autorisées.
-svn_admin_general_settings	layout_example	Exemple d'arborescence
-svn_admin_general_settings	impacted_svn	Exemple sur les operations svn :
-svn_admin_general_settings	or_svn_status_form	Ou, à la "svn status" :
-svn_admin_general_settings	immutable_whitelist	Liste globale d'exceptions
-svn_admin_general_settings	immutable_path	Chemin des tags non modifiables
-svn_admin_general_settings	immutable_tag_configuration	Configuration des tags non modifiables
 
 svn_admin_immutable_tags	title	Tags SVN Non Modifiables
+svn_admin_immutable_tags	configuration	Configuration des tags non modifiables
+svn_admin_immutable_tags	configuration_description	Spécifiez les répertoires dans lesquels se trouveront les tags non modifiables. Vous pouvez définir une liste de répertoires où les modifications seront tout de même autorisées.
+svn_admin_immutable_tags	layout_example	Exemple d'arborescence
+svn_admin_immutable_tags	impacted_svn	Exemple d'operations svn dans <span class="label" id="tag-name-example"></span>
+svn_admin_immutable_tags	impacted_svn_empty_state	Exemple d'operations svn
+svn_admin_immutable_tags	whitelist	Liste globale d'exceptions
+svn_admin_immutable_tags	path	Chemin des tags non modifiables
+svn_admin_immutable_tags	tree	Arborescence
+svn_admin_immutable_tags	preview	Prévisualisation de votre configuration
+svn_admin_immutable_tags	preview_description	Voici une prévisualisation des impacts de votre configuration. Cliquez sur les dossiers en surbrillance pour les détails.
+svn_admin_immutable_tags	save	Sauvegarder la configuration
+svn_admin_immutable_tags	my-tag	mon-tag
+svn_admin_immutable_tags	some/path	le/chemin
+svn_admin_immutable_tags	svn_status_style	Façon SVN status
+svn_admin_immutable_tags	loading	Chargement en cours...
+svn_admin_immutable_tags	select_tag	Veuillez sélectionner un tag dans l'arborescence à gauche
+svn_admin_immutable_tags	tree_empty_state	Votre dépôt SVN n'est pas impacté par les tags immutable car la configuration actuelle est vide ou ne correspond pas à l'arborescence du dépôt.
+
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php
@@ -55,7 +65,7 @@ svn_admin_index	access	Contrôle d'accès
 svn_admin_index	access_comment	Définition des permissions d'accès des utilisateurs sur le dépôt Subversion.
 svn_admin_index	email_sett	Options de notification e-mail
 svn_admin_index	email_comment	Définition des destinataires des notification e-mail des changements remontés dans le dépôt Subversion.
-svn_admin_index	immutable_tags	Tags Non Modifiables
+svn_admin_index	immutable_tags	Tags non modifiables
 svn_admin_index	immutable_tags_description	Definition des dossiers considérés comme non modifiables.
 #
 #-----------------------------------------------

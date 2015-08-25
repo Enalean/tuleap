@@ -52,6 +52,14 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
         $this->assertEqual($tags, array('1.0', '2.0'));
     }
 
+    public function itGetsTheTree() {
+        $tree = $this->svnlook->getTree($this->project);
+
+        $expected = array('/', 'tags/', 'tags/2.0/', 'tags/1.0/');
+
+        $this->assertEqual($expected, $tree);
+    }
+
     public function itGetsHistoryOfAPath() {
         $this->assertEqual(
             $this->svnlook->getPathLastHistory($this->project, '/tags'),

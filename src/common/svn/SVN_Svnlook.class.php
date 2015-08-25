@@ -27,6 +27,11 @@ class SVN_Svnlook {
         return $this->execute($command);
     }
 
+    public function getTree(Project $project) {
+        $command = 'tree --full-paths '.escapeshellarg($project->getSVNRootPath());
+        return $this->execute($command);
+    }
+
     /**
      * @throw SVN_SvnlookException
      *

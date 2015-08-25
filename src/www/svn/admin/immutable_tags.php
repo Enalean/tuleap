@@ -47,13 +47,15 @@ svn_header_admin(array ('title'=>$Language->getText('svn_admin_immutable_tags','
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
-$template_dir           = ForgeConfig::get('codendi_dir') .'/src/templates/svn/';
-$renderer               = TemplateRendererFactory::build()->getRenderer($template_dir);
+$template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/svn/';
+$renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
+$svnlook      = new SVN_Svnlook();
 
 $presenter = new SVN_ImmutableTagsPresenter(
     $project,
     $immutable_tags_handler->getImmutableTagsWhitelistForProject($group_id),
-    $immutable_tags_handler->getImmutableTagsPathForProject($group_id)
+    $immutable_tags_handler->getImmutableTagsPathForProject($group_id),
+    $svnlook->getTree($project)
 );
 
 $renderer->renderToPage(

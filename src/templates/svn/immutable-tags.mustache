@@ -1,15 +1,15 @@
 
 <h2>{{ svn_allow_tag_immutable_title }}</h2>
 
-<form action="" method="post">
+<form action="" method="post" id="immutable-tags">
     <input type="hidden" name="group_id" value="{{ project_id }}">
     <input type="hidden" name="func" value="immutable_tags">
     <input type="hidden" name="post_changes" value="y">
 
     <h3><i class="icon-tags"></i> {{ immutable_tag_configuration }}</h3>
-    <p class="immutable-tags-comment">{{ svn_allow_tag_immutable_comment }}</p>
-    <div class="row-fluid immutable-tags-option">
-        <div class="immutable-tags-path span3">
+    <p class="immutable-tags-comment muted">{{ svn_allow_tag_immutable_comment }}</p>
+    <div class="row-fluid immutable-tags-configuration">
+        <div class="immutable-tags-path span6">
             <div class="form-group">
                 <label for="immutable-tags-path">{{ path }}</label>
                 <textarea
@@ -20,7 +20,7 @@
                 >{{ immutable_tags_path }}</textarea>
             </div>
         </div>
-        <div class="immutable-tags-whitelist span3">
+        <div class="immutable-tags-whitelist span6">
             <div class="form-group">
                 <label for="immutable-tags-whitelist">{{ whitelist }}</label>
                 <textarea
@@ -32,7 +32,35 @@
             </div>
         </div>
     </div>
+
+    <h3><i class="icon-eye-open"></i> {{ preview }}</h3>
+    <p class="immutable-tags-comment muted">{{ preview_description }}</p>
+    <div class="row-fluid">
+        <div class="span6 immutable-tags-structure">
+            <h4>{{ tree }}</h4>
+            <pre class="well"
+                id="immutable-tags-tree"
+                data-existing-tree="{{ existing_tree }}"
+                data-empty-state-text="{{ tree_empty_state }}"><span id="loading">{{ loading }}</span></pre>
+        </div>
+        <div class="span6 immutable-tags-examples empty">
+            <h4 class="impacted-svn">
+                <span>{{{ impacted_svn }}}</span>
+                <span class="empty-state">{{ impacted_svn_empty_state }}</span>
+            </h4>
+            <div id="immutable-tags-console" class="well">
+                <div class="empty-state"><i class="icon-hand-left"></i> {{ select_tag }}</div>
+                <div class="text-success add-command">$ svn cp ^/{{ some_path }} ^<span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-ok"></i></div>
+                <div class="text-danger update-command">$ svn cp ^/{{ some_path }}/README ^<span class="tag-path-example">/tags</span>/{{ my_tag }}/README <i class="icon-remove"></i></div>
+                <br>
+                <div>// {{ svn_status_style }}</div>
+                <div class="text-success add-command">A <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-ok"></i></div>
+                <div class="text-danger update-command">U <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-remove"></i></div>
+                <div class="text-danger update-command">D <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-remove"></i></div>
+            </div>
+        </div>
+    </div>
     <p>
-        <input type="submit" name="submit" class="btn btn-primary" value="{{ btn_submit }}" />
+        <input type="submit" name="submit" class="btn btn-primary" value="{{ save }}" />
     </p>
 </form>
