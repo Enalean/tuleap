@@ -18,7 +18,7 @@ Version 8.6 (Not Released Yet)
 	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
 
 	== Plugins ==
-	* agiledashboard: 1.260
+	* agiledashboard: 1.261
 	* proftpd: 0.22
 	* tracker: 5.688
 	* phpwiki: 0.5
