@@ -5,6 +5,8 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
 
 plugin_agiledashboard	Admin	Agile Dashboard Administration
+plugin_agiledashboard	AdminScrum	Scrum Administration of Agile Dashboard
+plugin_agiledashboard	AdminKanban	Kanban Administration of Agile Dashboard
 plugin_agiledashboard	cannot_create_planning	You cannot create new planning because either:
 plugin_agiledashboard	cannot_create_planning_no_trackers	there is no trackers in tracker service
 plugin_agiledashboard	cannot_create_planning_hierarchy	all potential planning trackers ($1) are already used by a planning configuration (see below).
@@ -47,8 +49,8 @@ plugin_agiledashboard	milestone_planning_pane_title	$1 Planning
 plugin_agiledashboard	milestone_planningv2_pane_title	<i class="icon-beaker"></i> $1 PlanningV2
 plugin_agiledashboard	access_to_planning	Access to planning
 plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.
-plugin_agiledashboard	export_template	Export Configuration
-plugin_agiledashboard	import_template	Import Configuration from Template
+plugin_agiledashboard	export_template	Export the configuration
+plugin_agiledashboard	import_template	Import a configuration from a template file
 plugin_agiledashboard	btn_import	Import
 plugin_agiledashboard	import_instructions	You can import a whole Agile Dashboard configuration from an XML template. Tuleap provides a <a href="$1">standard template</a>. Alternatively, you can export the configuration of an existing project and re-use it here.
 plugin_agiledashboard	export_failed	Unable to export the configuration
@@ -56,7 +58,10 @@ plugin_agiledashboard	import_template_success	The configuration has been success
 plugin_agiledashboard	cannot_import	Unable to import the configuration!
 plugin_agiledashboard	import_notes	Note:<br>Importing a template will create new trackers. The import will not work if any existing tracker match those in the template
 plugin_agiledashboard	planning_section	Planning management
-plugin_agiledashboard	import_export_section	Import/ Export
+plugin_agiledashboard	import_export_section	Import/Export
+plugin_agiledashboard	general_settings_section	General settings
+plugin_agiledashboard	edit_action_label	Edit
+plugin_agiledashboard	delete_action_label	Delete
 
 plugin_agiledashboard	home_user_helper_done	Milestones are "Done" when they have their status set to 'closed' as defined in their tracker's semantic.
 plugin_agiledashboard	home_user_helper_others	All milestones that have a status set to 'open' (as defined in their tracker's semantic) are either "Current" or "Next". The existence and values of their date fields (start_date and duration) decide in which tab(s) they appear.
@@ -130,10 +135,17 @@ plugin_agiledashboard	invalid_request	The request is invalid.
 plugin_agiledashboard	no_service_selected	At least one service must be selected.
 plugin_agiledashboard	tracker_used_in_scrum	The selected tracker is already used in a planning.
 plugin_agiledashboard	hierarchy_used_in_scrum	The selected tracker is part of a hierarchy already used in a planning.
-plugin_agiledashboard	activate_service_legend	What do you want to display in the Agile Dashboard homepage ?
 plugin_agiledashboard	config_submit_label	Save the whole configuration
 plugin_agiledashboard	title	Title
+plugin_agiledashboard	title_scrum_help	This will be used to identify the Scrum section from the Agile Dashboard homepage.
+plugin_agiledashboard	title_kanban_help	This will be used to identify the Kanban section from the Agile Dashboard homepage.
 
+plugin_agiledashboard	activate_kanban_label	Activate Kanban
+plugin_agiledashboard	activate_scrum_label	Activate Scrum
+plugin_agiledashboard	scrum_activated_label	Scrum is currently active.
+plugin_agiledashboard	scrum_not_activated_label	Scrum is not currently active.
+plugin_agiledashboard	kanban_activated_label	Kanban is currently active.
+plugin_agiledashboard	kanban_not_activated_label	Kanban is not currently active.
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum
 plugin_agiledashboard	all_label	Scrum and Kanban

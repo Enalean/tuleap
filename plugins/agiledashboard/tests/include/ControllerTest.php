@@ -121,13 +121,13 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
 
 abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest {
 
-    protected function renderAdmin() {
+    protected function renderAdminScrum() {
         $this->planning_factory->expectOnce('getPlannings', array($this->current_user, $this->group_id));
         $this->planning_factory->setReturnValue('getPlannings', $this->plannings);
 
         stub($this->planning_factory)->getRootPlanning()->returns(aPlanning()->withPlanningTracker(aMockTracker()->build())->build());
 
-        $this->output = $this->controller->admin();
+        $this->output = $this->controller->adminScrum();
     }
 
     public function itHasALinkToCreateANewPlanning() {
@@ -144,7 +144,7 @@ class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest 
             aPlanning()->withId(2)->withName('Sprint Planning')->build(),
         );
 
-        $this->renderAdmin();
+        $this->renderAdminScrum();
     }
 
     public function itListsExistingPlannings() {

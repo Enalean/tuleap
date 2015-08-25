@@ -644,10 +644,6 @@ body.agiledashboard_homepage .main .content {
     }
 }
 
-.agiledashboard-admin-section {
-    margin-top: 30px;
-}
-
 .agiledasboard-content-open-items, .agiledasboard-content-inconsistent-items, .agiledasboard-content-closed-items,
 .agiledashboard-planning-backlog, .agiledashboard-planning-submilestones {
     background: #FFFFFF;
@@ -663,10 +659,80 @@ body.agiledashboard_homepage .main .content {
 }
 
 .agiledashboard-admin-kanban {
+    h1 {
+        margin-bottom: 30px;
+    }
 
     > button {
         display: block;
         margin: 10px 0;
+    }
+
+    .alert {
+        max-width: 600px;
+        box-sizing: border-box;
+
+        i > {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    .active-scrum, .active-kanban {
+        margin: 0 0 30px;
+    }
+
+    .agiledashboard-admin-section section {
+        margin: 0 0 40px;
+        max-width: 600px;
+
+        h3 {
+            color: #444444;
+            margin: 0 0 5px;
+        }
+
+        .help-block {
+            font-size: 0.9em;
+        }
+
+        #planning_create {
+            margin: 0 0 20px;
+        }
+
+        .alert-info {
+            font-size: 0.9em;
+        }
+
+        .plannings {
+            & > thead > tr {
+                background: #E4E4E4;
+
+                & > th {
+                    vertical-align: top;
+                    border-left-color: #D2D2D2;
+                    border-bottom: 2px solid #B2B2B2;
+                }
+            }
+
+            & > tbody > tr:first-child > td {
+                border-top: none;
+            }
+
+            td:first-child {
+                width: 100%;
+            }
+
+            td:last-child {
+                white-space: nowrap;
+
+                > a {
+                    margin: 0 15px 0 0;
+
+                    &:last-child {
+                        margin: 0;
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -2,16 +2,16 @@
 
     {{# scrum_activated }}
 
-    {{# user_can_see_kanban }}
-    <div class="row-fluid">
-        <div class="span8 scrum-block">
-    {{/ user_can_see_kanban }}
+        {{# user_can_see_kanban }}
+            <div class="row-fluid">
+                <div class="span8 scrum-block">
+        {{/ user_can_see_kanban }}
 
-            {{^ scrum_is_configured }}
-                {{> empty-scrum }}
-            {{/ scrum_is_configured }}
+        {{^ scrum_is_configured }}
+            {{> empty-scrum }}
+        {{/ scrum_is_configured }}
 
-            {{# scrum_is_configured }}
+        {{# scrum_is_configured }}
             <div class="ad-homepage-title">
                 <h2>{{ scrum_title }}</h2>
                 <a href="?action=show-top&group_id={{ group_id }}&pane=topblcontent" class="btn go-to-backlog">
@@ -31,89 +31,95 @@
             <div class="row-fluid">
                 {{# has_milestone_presenters }}
                     <div class="plannings span4">
-                    {{# milestone_presenters }}
-                        <div class="planning">
-                            <h3>{{ milestone_type }}</h3>
-                            <table class="table table-striped table-hover">
-                                {{# milestones }}
-                                <tr>
-                                    <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="icon-edit"></i></a></td>
-                                    <td class="actions">
-                                        <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
-                                        <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning"><i class="icon-signin"></i> {{ planning }}</a>
-                                    </td>
-                                </tr>
-                                {{/ milestones }}
-                                {{^ milestones }}
-                                    <span class="no-milestone">{{ no_milestone }}</span>
-                                {{/ milestones }}
-                            </table>
-                        </div>
-                    {{/ milestone_presenters }}
+                        {{# milestone_presenters }}
+                            <div class="planning">
+                                <h3>{{ milestone_type }}</h3>
+                                <table class="table table-striped table-hover">
+                                    {{# milestones }}
+                                    <tr>
+                                        <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="icon-edit"></i></a></td>
+                                        <td class="actions">
+                                            <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
+                                            <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning"><i class="icon-signin"></i> {{ planning }}</a>
+                                        </td>
+                                    </tr>
+                                    {{/ milestones }}
+                                    {{^ milestones }}
+                                        <span class="no-milestone">{{ no_milestone }}</span>
+                                    {{/ milestones }}
+                                </table>
+                            </div>
+                        {{/ milestone_presenters }}
                     </div>
                     <div class="last-plannings span8">
                 {{/ has_milestone_presenters }}
                 {{^ has_milestone_presenters }}
-                    <div class="last-plannings last-plannings-only">
+                        <div class="last-plannings last-plannings-only">
                 {{/ has_milestone_presenters }}
 
-                    {{# last_level_milestone_presenters }}
-                        <div class="last-planning">
-                            <h3>{{ milestone_type_name }}</h3>
-                            {{# milestone_summary_presenters }}
-                                <div class="milestone">
-                                    <div class="header">
-                                        <p class="title">{{ milestone_title }} <a href="{{ edit_base_link }}{{ artifact_id }}" class="backlog-item-link" data-artifact-id="{{ artifact_id }}"><i class="icon-edit"></i></a></p>
-                                        <p class="hierarchy">
-                                        <i class="icon-angle-right"></i>
-                                        {{# breadcrumbs }}
-                                            {{# . }}
-                                            {{# title }}
-                                                <a href="{{ url }}">{{{ title }}}</a> <i class="icon-angle-right"></i>
-                                            {{/ title }}
-                                            {{^ title }}
-                                                <a href="{{ url }}">{{{ default_name }}}</a> <i class="icon-angle-right"></i>
-                                            {{/ title }}
-                                            {{/ . }}
-                                        {{/ breadcrumbs }}
-                                        <p>
-                                    </div>
-                                    <div class="content">
-                                        {{# has_burndown }}
-                                            <script type="application/json" class="data-burndown-json" data-for="burndown-placeholder-{{ artifact_id }}">
-                                                {{{ burndown_data }}}
-                                            </script>
-                                            <div id="burndown-placeholder-{{ artifact_id }}" class="milestone-burndown">
+                {{# last_level_milestone_presenters }}
+                            <div class="last-planning">
+                                <h3>{{ milestone_type_name }}</h3>
+                                    {{# milestone_summary_presenters }}
+                                        <div class="milestone">
+                                            <div class="header">
+                                                <p class="title">{{ milestone_title }} <a href="{{ edit_base_link }}{{ artifact_id }}" class="backlog-item-link" data-artifact-id="{{ artifact_id }}"><i class="icon-edit"></i></a></p>
+                                                <p class="hierarchy">
+                                                <i class="icon-angle-right"></i>
+                                                {{# breadcrumbs }}
+                                                    {{# . }}
+                                                    {{# title }}
+                                                        <a href="{{ url }}">{{{ title }}}</a> <i class="icon-angle-right"></i>
+                                                    {{/ title }}
+                                                    {{^ title }}
+                                                        <a href="{{ url }}">{{{ default_name }}}</a> <i class="icon-angle-right"></i>
+                                                    {{/ title }}
+                                                    {{/ . }}
+                                                {{/ breadcrumbs }}
+                                                <p>
                                             </div>
-                                        {{/ has_burndown }}
-                                        {{^ has_burndown }}
-                                            <div class="open"><span class="number">{{ count_open_backlog_items }}</span>{{ open }}</div>
-                                            <div class="closed"><span class="number">{{ count_closed_backlog_items }}</span>{{ closed }}</div>
-                                        {{/ has_burndown }}
-                                    </div>
-                                    <div class="footer">
-                                        <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
-                                        {{# has_cardwall }}
-                                            <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=cardwall"><i class="icon-th-large"></i> {{ cardwall }}</a>
-                                        {{/ has_cardwall }}
-                                    </div>
-                                </div>
-                            {{/ milestone_summary_presenters }}
-                            {{^ milestone_summary_presenters }}
-                                <span class="no-milestone">{{ no_milestone }}</span>
-                            {{/ milestone_summary_presenters }}
-                            <div style="clear: both;"></div>
-                        </div>
-                    {{/ last_level_milestone_presenters }}
+                                            <div class="content">
+                                                {{# has_burndown }}
+                                                    <script type="application/json" class="data-burndown-json" data-for="burndown-placeholder-{{ artifact_id }}">
+                                                        {{{ burndown_data }}}
+                                                    </script>
+                                                    <div id="burndown-placeholder-{{ artifact_id }}" class="milestone-burndown">
+                                                    </div>
+                                                {{/ has_burndown }}
+                                                {{^ has_burndown }}
+                                                    <div class="open"><span class="number">{{ count_open_backlog_items }}</span>{{ open }}</div>
+                                                    <div class="closed"><span class="number">{{ count_closed_backlog_items }}</span>{{ closed }}</div>
+                                                {{/ has_burndown }}
+                                            </div>
+                                            <div class="footer">
+                                                <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
+                                                {{# has_cardwall }}
+                                                    <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=cardwall"><i class="icon-th-large"></i> {{ cardwall }}</a>
+                                                {{/ has_cardwall }}
+                                            </div>
+                                        </div>
+                                    {{/ milestone_summary_presenters }}
+                                    {{^ milestone_summary_presenters }}
+                                        <span class="no-milestone">{{ no_milestone }}</span>
+                                    {{/ milestone_summary_presenters }}
+                                <div style="clear: both;"></div>
+                            </div>
+                {{/ last_level_milestone_presenters }}
+                    </div>
                 </div>
-            </div>
-        {{/ scrum_is_configured }}
+            {{/ scrum_is_configured }}
         </div>
     {{/ scrum_activated }}
 
     {{# user_can_see_kanban }}
         {{> home-kanban }}
 
-    </div>
+        </div>
+    {{/ user_can_see_kanban }}
+
+    {{^ user_can_see_kanban }}
+        {{^ scrum_activated }}
+            {{> empty-home }}
+        {{/ scrum_activated }}
     {{/ user_can_see_kanban }}
 </div>

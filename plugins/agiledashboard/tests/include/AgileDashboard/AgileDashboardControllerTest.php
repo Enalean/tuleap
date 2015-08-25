@@ -45,59 +45,6 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itDoesNothingIfNoServiceSelected() {
-        $admin_user = stub('PFUser')->isAdmin(123)->returns(true);
-        stub($admin_user)->useLabFeatures()->returns(true);
-
-        stub($this->request)->exist('activate-ad-component')->returns(true);
-        stub($this->request)->get('activate-ad-component')->returns('');
-        stub($this->request)->get('group_id')->returns(123);
-        stub($this->request)->getCurrentUser()->returns($admin_user);
-        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
-
-        $controller = new AgileDashboard_Controller(
-            $this->request,
-            $this->planning_factory,
-            $this->kanban_manager,
-            $this->kanban_factory,
-            $this->config_manager,
-            $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker')
-        );
-
-        expect($this->config_manager)->updateConfiguration()->never();
-
-        $controller->updateConfiguration();
-    }
-
-    public function itDoesNothingIfNothingIsInTheRequest() {
-        $admin_user = stub('PFUser')->isAdmin(123)->returns(true);
-        stub($admin_user)->useLabFeatures()->returns(true);
-
-        stub($this->request)->exist('activate-ad-component')->returns(false);
-        stub($this->request)->exist('scrum-title-admin')->returns(false);
-        stub($this->request)->exist('kanban-title-admin')->returns(false);
-        stub($this->request)->get('group_id')->returns(123);
-        stub($this->request)->getCurrentUser()->returns($admin_user);
-        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
-
-        $controller = new AgileDashboard_Controller(
-            $this->request,
-            $this->planning_factory,
-            $this->kanban_manager,
-            $this->kanban_factory,
-            $this->config_manager,
-            $this->tracker_factory,
-            mock('AgileDashboard_PermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker')
-        );
-
-        expect($this->config_manager)->updateConfiguration()->never();
-
-        $controller->updateConfiguration();
-    }
-
     public function itDoesNothingIfIsUserNotAdmin() {
         $user = stub('PFUser')->isAdmin(123)->returns(false);
 

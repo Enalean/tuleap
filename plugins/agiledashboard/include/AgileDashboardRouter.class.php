@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -162,7 +162,11 @@ class AgileDashboardRouter {
                 break;
             case 'admin':
                 if ($this->userIsAdmin($request)) {
-                    $this->renderAction($this->buildController($request), 'admin', $request);
+                    if ($request->get('pane') === 'kanban') {
+                        $this->renderAction($this->buildController($request), 'adminKanban', $request);
+                    } else {
+                        $this->renderAction($this->buildController($request), 'adminScrum', $request);
+                    }
                 } else {
                     $this->renderAction($planning_controller, 'index', $request);
                 }
@@ -220,7 +224,8 @@ class AgileDashboardRouter {
         $header_title = array(
             'index'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
             'exportToFile' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'admin'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
+            'adminScrum'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminScrum'),
+            'adminKanban'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminKanban'),
             'new_'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
             'importForm'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
             'edit'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),

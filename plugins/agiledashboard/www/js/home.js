@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,4 +39,4 @@
 
         $('#add_kanban_button').tooltip();
     });
-})(window.jQuery)
+})(window.jQuery);
