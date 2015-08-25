@@ -16,7 +16,7 @@ describe('ArtifactLinksModelService', function() {
         });
     });
 
-    it("Given an artifact structure, when I transform data then an object with nodes, links and errors will be return", function() {
+    it("Given an artifact structure, when I transform data then an object with nodes, links, errors and title will be return", function() {
         gettextCatalog.getString.andReturn('aString');
 
         var artifact = {
@@ -113,7 +113,51 @@ describe('ArtifactLinksModelService', function() {
                         "nature": "artifact"
                     }
                 ]
-            }
+            },
+            title: "My first test"
+        };
+
+        expect(ArtifactLinksModelService.getGraphStructure(artifact)).toEqual(expected_modal_model);
+    });
+
+    it("Given an artifact structure without links, when I transform data then an object with nodes, links, errors and title will be return", function() {
+        gettextCatalog.getString.andReturn('aString');
+
+        var artifact = {
+            "links": [],
+            "reverse_links": [],
+            "id": 1,
+            "uri": "trafficlights_nodes/1",
+            "ref_name": "test_def",
+            "ref_label": "Validation Test Definition",
+            "color": "sherwood_green",
+            "title": "My first test",
+            "url": "/plugins/tracker/?aid=1",
+            "status_semantic": "open",
+            "status_label": "notrun",
+            "nature": "artifact"
+        };
+
+        var expected_modal_model = {
+            errors: [],
+            graph : {
+                links: [],
+                nodes: [
+                    {
+                        "id": 1,
+                        "uri": "trafficlights_nodes/1",
+                        "ref_name": "test_def",
+                        "ref_label": "Validation Test Definition",
+                        "color": "sherwood_green",
+                        "title": "My first test",
+                        "url": "/plugins/tracker/?aid=1",
+                        "status_semantic": "open",
+                        "status_label": "notrun",
+                        "nature": "artifact"
+                    }
+                ]
+            },
+            title: "My first test"
         };
 
         expect(ArtifactLinksModelService.getGraphStructure(artifact)).toEqual(expected_modal_model);

@@ -68,6 +68,10 @@ msgstr ""
 msgid "Create campaign"
 msgstr ""
 
+#: src/app/graph/graph.tpl.html
+msgid "Dependencies graph of &#34;{{ graph.title }}&#34;"
+msgstr ""
+
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr ""
@@ -89,6 +93,7 @@ msgid "Filter..."
 msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+#: src/app/graph/graph.tpl.html
 msgid "Focus graph"
 msgstr ""
 
@@ -162,9 +167,11 @@ msgid "You have not any environment defined."
 msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+#: src/app/graph/graph.tpl.html
 msgid "Zoom in"
 msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+#: src/app/graph/graph.tpl.html
 msgid "Zoom out"
 msgstr ""

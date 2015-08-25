@@ -5,11 +5,10 @@
 
 <div class="modal-body">
     <div ng-repeat="error in modal.errors track by $index" class="alert alert-error">{{ error }}</div>
-    <img src="scripts/angular/bin/assets/loader.gif" class="loader loader-graph">
-    <div id="utils-graph" class="btn-group btn-group-vertical">
+    <div id="artifact-links-graph-utils" class="btn-group btn-group-vertical">
         <button id="focus-graph" type="button" class="btn" title="{{ 'Focus graph' | translate }}"><i class="icon-screenshot"></i></button>
         <button id="zoomin-graph" type="button" class="btn" title="{{ 'Zoom in' | translate }}"><i class="icon-zoom-in"></i></button>
         <button id="zoomout-graph" type="button" class="btn" title="{{ 'Zoom out' | translate }}"><i class="icon-zoom-out"></i></button>
     </div>
-    <graph id="graph" model="modal.graph"></graph>
+    <graph id="artifact-links-graph" class="graph" model="modal.graph"></graph>
 </div>

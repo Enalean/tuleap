@@ -20,6 +20,7 @@
 
 namespace Tuleap\Trafficlights\REST\v1;
 
+use Tracker_ResourceDoesntExistException;
 use Tuleap\REST\ProjectAuthorization;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
@@ -73,6 +74,6 @@ class NodeBuilderFactory {
             );
             return $artifact;
         }
-        throw new Tracker_ResourceDoesntExistException('404');
+        throw new Tracker_ResourceDoesntExistException();
     }
 }

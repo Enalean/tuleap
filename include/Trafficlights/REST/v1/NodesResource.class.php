@@ -21,6 +21,7 @@
 namespace Tuleap\Trafficlights\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tracker_ResourceDoesntExistException;
 use Tuleap\REST\Header;
 use Tracker_Artifact;
 use UserManager;

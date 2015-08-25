@@ -28,6 +28,10 @@
             $('.breadcrumb').first().replaceWith(origin);
             origin.removeAttr('id');
 
+            if ($('.breadcrumb > li').length === 0) {
+                $('.breadcrumb').remove();
+            }
+
             window.clearInterval(timeout);
         }, 10);
     }

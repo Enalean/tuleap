@@ -42,7 +42,7 @@
                         graphd3.redraw();
                     }
 
-                    angular.element($window).bind('resize', function() {
+                    angular.element($window).bind('resize', function(event) {
                         resize();
                     });
 
@@ -53,6 +53,7 @@
                     var links = scope.model.links;
                     var data_nodes = scope.model.nodes;
 
+                    graphd3.initLoader();
                     graphd3.initSvg();
                     graphd3.initRect();
                     graphd3.initEvent();
@@ -181,7 +182,7 @@
                                 if (d.clicked && d.has_children) {
                                     graphd3.remove(d);
                                 } else {
-                                    d3.select(".loader-graph").style("visibility", "visible");
+                                    d3.select(".loader-node").style("visibility", "visible");
                                     d.clicked = true;
                                     d.has_children = false;
                                     var complement = complements_graph[d.id];
@@ -194,7 +195,7 @@
                                                 d.has_children = true;
                                                 graphd3.update(result.graph, d);
                                             } else {
-                                                d3.select(".loader-graph").style("visibility", "hidden");
+                                                d3.select(".loader-node").style("visibility", "hidden");
                                             }
                                         });
                                     }
@@ -205,27 +206,27 @@
 
                 graphd3.initText = function() {
                     graphd3.text(graphd3.svg().append("g")
-                        .attr("class", "updatable")
-                        .selectAll("a")
-                        .data(graphd3.graph().nodes(), function (d) {
-                            return d.id;
-                        })
-                        .enter()
-                        .append("a")
-                        .attr("class", function (d) {
-                            if (d.id) {
-                                return "updatable " + d.id;
-                            }
-                        })
-                        .attr("xlink:href", function(d) {
-                            return d.url;
-                        })
-                        .append("text")
-                        .attr("x", 10)
-                        .attr("y", ".31em")
-                        .text(function (d) {
-                            return d.title + " " + d.ref_name + " #" + d.id;
-                        })
+                            .attr("class", "updatable")
+                            .selectAll("a")
+                            .data(graphd3.graph().nodes(), function (d) {
+                                return d.id;
+                            })
+                            .enter()
+                            .append("a")
+                            .attr("class", function (d) {
+                                if (d.id) {
+                                    return "updatable " + d.id;
+                                }
+                            })
+                            .attr("xlink:href", function(d) {
+                                return d.url;
+                            })
+                            .append("text")
+                            .attr("x", 10)
+                            .attr("y", ".31em")
+                            .text(function (d) {
+                                return d.title + " " + d.ref_name + " #" + d.id;
+                            })
                     );
                 };
 
@@ -240,12 +241,12 @@
                     graphd3.height(element.height());
 
                     graphd3.svg(d3.select(element[0]).append("svg")
-                        .attr("width", graphd3.width())
-                        .attr("height", graphd3.height())
-                        .append("g")
-                        .call(graphd3.zoom())
-                        .append("g")
-                        .attr("class", "graph-elements")
+                            .attr("width", graphd3.width())
+                            .attr("height", graphd3.height())
+                            .append("g")
+                            .call(graphd3.zoom())
+                            .append("g")
+                            .attr("class", "graph-elements")
                     );
                 };
 
@@ -273,8 +274,16 @@
                         });
                 };
 
+                graphd3.initLoader = function() {
+                    graphd3.loader(d3.select(".graph").append("img")
+                        .attr("src", "scripts/angular/bin/assets/loader.gif")
+                        .attr("class", "loader")
+                        .attr("class", "loader-node"));
+                };
+
                 graphd3.redraw = function() {
-                    graphd3.svg().attr("width", graphd3.width()).attr("height", graphd3.height());
+                    d3.select(".overlay").attr("width", graphd3.width()).attr("height", graphd3.height());
+                    d3.select("svg").attr("width", graphd3.width()).attr("height", graphd3.height());
                     graphd3.graph().size([graphd3.width(), graphd3.height()]).resume();
                 };
 
@@ -326,7 +335,7 @@
                     d3.select(".graph-elements").selectAll(".updatable").remove();
                     graphd3.initGraph();
 
-                    d3.select(".loader-graph").style("visibility", "hidden");
+                    d3.select(".loader-node").style("visibility", "hidden");
                     graphd3.graph().start();
                     graphd3.redraw();
                 };
@@ -353,7 +362,7 @@
                     d3.select(".graph-elements").selectAll(".updatable").remove();
                     graphd3.initGraph();
 
-                    d3.select(".loader-graph").style("visibility", "hidden");
+                    d3.select(".loader-node").style("visibility", "hidden");
                     graphd3.graph().start();
                     graphd3.redraw();
                 };
@@ -454,9 +463,9 @@
                         factor = 0.2,
                         target_scale = (zoom === 'zoomin') ?
                             scale + factor > graphd3.scaleMax() ?
-                                    graphd3.scaleMax() : scale + factor
+                                graphd3.scaleMax() : scale + factor
                             : scale - factor < graphd3.scaleMin() ?
-                                graphd3.scaleMin() : scale - factor;
+                            graphd3.scaleMin() : scale - factor;
 
                     if (target_scale !== graphd3.scaleMin() && target_scale !== graphd3.scaleMax()) {
                         x = (zoom === 'zoomin') ? x - ((graphd3.width() / 2) * factor) : x + ((graphd3.width() / 2) * factor);
@@ -569,6 +578,14 @@
                         return scaleMin;
                     }
                     scaleMin = newScaleMin;
+                    return graphd3;
+                };
+
+                graphd3.loader = function (newloader) {
+                    if (!arguments.length) {
+                        return loader;
+                    }
+                    loader = newloader;
                     return graphd3;
                 };
 

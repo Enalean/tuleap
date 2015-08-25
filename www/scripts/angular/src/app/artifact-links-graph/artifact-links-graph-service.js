@@ -24,10 +24,11 @@
         var self = this;
 
         _.extend(self, {
-            showGraph: showGraph
+            showGraphModal: showGraphModal,
+            showGraph     : showGraph
         });
 
-        function showGraph(execution, definition) {
+        function showGraphModal(execution) {
             ArtifactLinksGraphModalLoading.loading.is_loading = true;
 
             return $modal.open({
@@ -36,14 +37,15 @@
                 controller : 'ArtifactLinksGraphCtrl as modal',
                 resolve: {
                     modal_model: function () {
-                        return ArtifactLinksGraphRestService.getArtifactGraph(execution.id).then(function(artifact) {
-                            return ArtifactLinksModelService.getGraphStructure(artifact);
-                        });
-                    },
-                    title: function() {
-                        return definition.summary;
+                        return self.showGraph(execution.id);
                     }
                 }
+            });
+        }
+
+        function showGraph(artifact_id) {
+            return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function(artifact) {
+                return ArtifactLinksModelService.getGraphStructure(artifact);
             });
         }
     }

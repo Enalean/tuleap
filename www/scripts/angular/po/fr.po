@@ -48,10 +48,6 @@ msgstr ""
 msgid "All environments"
 msgstr "Tous les environnements"
 
-#: src/app/artifact-links-graph/artifact-links-model-service.js
-msgid "Artifact links field not found."
-msgstr "Le champ lien vers des artéfacts est inexistant."
-
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
@@ -98,6 +94,10 @@ msgstr "Créer une campagne"
 msgid "Create campaign"
 msgstr "Créer la campagne"
 
+#: src/app/graph/graph.tpl.html
+msgid "Dependencies graph of &#34;{{ graph.title }}&#34;"
+msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
+
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
@@ -119,6 +119,7 @@ msgid "Filter..."
 msgstr "Filtrer..."
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+#: src/app/graph/graph.tpl.html
 msgid "Focus graph"
 msgstr "Recentrer le graphe"
 
@@ -199,12 +200,17 @@ msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+#: src/app/graph/graph.tpl.html
 msgid "Zoom in"
 msgstr "Zoomer"
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
+#: src/app/graph/graph.tpl.html
 msgid "Zoom out"
 msgstr "Dézoomer"
+
+#~ msgid "Artifact links field not found."
+#~ msgstr "Le champ lien vers des artéfacts est inexistant."
 
 #~ msgid "Edit this artifact"
 #~ msgstr "Editer cet artefact"

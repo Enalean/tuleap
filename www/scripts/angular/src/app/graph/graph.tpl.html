@@ -1,0 +1,19 @@
+<div id="graph-page">
+    <div ng-repeat="error in graph.errors track by $index" class="alert alert-error">{{ error }}</div>
+
+    <div id="graph-title">
+        <h1 translate>Dependencies graph of &#34;{{ graph.title }}&#34;</h1>
+    </div>
+
+    <div id="graph-container">
+        <img ng-if="!graph.graphd3" src="scripts/angular/bin/assets/loader.gif" class="loader loader-graph">
+
+        <div id="graph-utils" class="btn-group btn-group-vertical">
+            <button id="focus-graph" type="button" class="btn" title="{{ 'Focus graph' | translate }}"><i class="icon-screenshot"></i></button>
+            <button id="zoomin-graph" type="button" class="btn" title="{{ 'Zoom in' | translate }}"><i class="icon-zoom-in"></i></button>
+            <button id="zoomout-graph" type="button" class="btn" title="{{ 'Zoom out' | translate }}"><i class="icon-zoom-out"></i></button>
+        </div>
+
+        <graph ng-if="graph.graphd3" class="graph" model="graph.graphd3"></graph>
+    </div>
+</div>

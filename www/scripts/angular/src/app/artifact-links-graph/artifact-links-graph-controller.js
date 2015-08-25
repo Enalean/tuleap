@@ -3,16 +3,16 @@
         .module('tuleap.artifact-links-graph')
         .controller('ArtifactLinksGraphCtrl', ArtifactLinksGraphCtrl);
 
-    ArtifactLinksGraphCtrl.$inject = ['$modalInstance', 'ArtifactLinksGraphModalLoading', 'modal_model', 'title'];
+    ArtifactLinksGraphCtrl.$inject = ['$modalInstance', 'ArtifactLinksGraphModalLoading', 'modal_model'];
 
-    function ArtifactLinksGraphCtrl($modalInstance, ArtifactLinksGraphModalLoading, modal_model, title) {
+    function ArtifactLinksGraphCtrl($modalInstance, ArtifactLinksGraphModalLoading, modal_model) {
         var self = this;
 
         _.extend(self, {
             graph : modal_model.graph,
             errors: modal_model.errors,
             cancel: $modalInstance.dismiss,
-            title:  title
+            title:  modal_model.title
         });
 
         $modalInstance.opened.then(function() {

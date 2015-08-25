@@ -58,8 +58,8 @@
             viewTestExecution(execution_id, null);
         });
 
-        function showArtifactLinksGraphModal(execution, definition) {
-            ArtifactLinksGraphService.showGraph(execution, definition);
+        function showArtifactLinksGraphModal(execution) {
+            ArtifactLinksGraphService.showGraphModal(execution);
         }
 
         function showEditArtifactModal(definition) {

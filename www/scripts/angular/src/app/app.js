@@ -4,6 +4,7 @@ angular.module('trafficlights', [
     'socket',
     'campaign',
     'execution',
+    'graph',
     'tuleap.artifact-links-graph',
     'sharedProperties',
     'ncy-angular-breadcrumb',
