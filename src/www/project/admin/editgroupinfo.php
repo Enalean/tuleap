@@ -219,7 +219,10 @@ if ($user_can_choose_visibility) {
 }
 
 if ($user_can_choose_truncated_emails) {
-    $presenter = new ProjectTruncatedEmailsPresenter($currentproject);
+    $truncated_mails_impacted_services = array(
+        $currentproject->getService(Service::FILE)->getInternationalizedName()
+    );
+    $presenter = new ProjectTruncatedEmailsPresenter($currentproject, $truncated_mails_impacted_services);
     echo $renderer->renderToString('truncated_emails', $presenter);
 }
 

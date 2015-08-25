@@ -22,8 +22,12 @@ class ProjectTruncatedEmailsPresenter {
     /** @var Project */
     private $project;
 
-    public function __construct(Project $project) {
-        $this->project = $project;
+    /** @var array */
+    private $impacted_services_list;
+
+    public function __construct(Project $project, array $impacted_services_list) {
+        $this->project                = $project;
+        $this->impacted_services_list = $impacted_services_list;
     }
     public function truncated_emails_title() {
         return $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'truncated_emails_title');
@@ -35,5 +39,13 @@ class ProjectTruncatedEmailsPresenter {
 
     public function project_uses_truncated_emails() {
         return (bool) $this->project->getTruncatedEmailsUsage();
+    }
+
+    public function impacted_services() {
+        return $this->impacted_services_list;
+    }
+
+    public function truncated_emails_impacted_services_introduction() {
+        return $GLOBALS['Language']->getText('project_admin_editgroupinfo','truncated_emails_impacted_services_introduction');
     }
 }

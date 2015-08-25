@@ -194,6 +194,8 @@ class Service {
     public function isInheritedOnDuplicate() {
         return false;
     }
-}
 
-?>
+    public function getInternationalizedName() {
+        return $GLOBALS['Language']->getText('project_admin_editservice', $this->getLabel());
+    }
+}
