@@ -327,6 +327,9 @@ file_showfiles	hidden_package	Ce paquet est caché.
 file_showfiles	hidden_release	Cette version est cachée.
 file_showfiles	md5sum	Md5sum du fichier
 file_showfiles	user	Propriétaire
+file_showfiles	release	La version
+file_showfiles	package	Le paquet
+file_showfiles	warn_chars	$1 '$2' contient des caractères qui peuvent être incompatibles avec l'usage de webdav
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php

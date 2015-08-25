@@ -333,6 +333,9 @@ file_showfiles	hidden_package	This package is hidden.
 file_showfiles	hidden_release	This release is hidden.
 file_showfiles	md5sum	File md5sum
 file_showfiles	user	Owner
+file_showfiles	release	release
+file_showfiles	package	package
+file_showfiles	warn_chars	The $1 '$2' contains characters that may be incompatible with webdav usage
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php
