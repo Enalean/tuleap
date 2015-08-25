@@ -44,7 +44,7 @@ class phpwikiPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook('site_admin_option_hook');
 
-        $this->addHook("phpwiki_redirection");
+        $this->addHook('phpwiki_redirection');
     }
 
     public function getPluginInfo() {
@@ -163,9 +163,12 @@ class phpwikiPlugin extends Plugin {
 
     public function phpwiki_redirection($params) {
         $request       = HTTPRequest::instance();
-        $requested_uri = $request->getFromServer('REQUEST_URI');
-        $new_uri       = preg_replace('/^\/wiki/', PHPWIKI_PLUGIN_BASE_URL, $requested_uri);
-        $GLOBALS['Response']->redirect($new_uri);
+        $project       = $request->getProject();
+        if ($project && $project->usesService($this->getServiceShortname())) {
+            $requested_uri = $request->getFromServer('REQUEST_URI');
+            $new_uri       = preg_replace('/^\/wiki/', PHPWIKI_PLUGIN_BASE_URL, $requested_uri);
+            $GLOBALS['Response']->redirect($new_uri);
+        }
     }
 
     public function site_admin_option_hook() {

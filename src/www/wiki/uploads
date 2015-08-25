@@ -5,6 +5,9 @@ require_once('common/wiki/lib/WikiAttachment.class.php');
 
 $attch = new WikiAttachment();
 $attch->setUri($_SERVER['REQUEST_URI']);
+
+PHPWikiPluginRedirector::redirect();
+
 if($attch->exist() && $attch->isActive()) {
     if($attch->isAutorized(user_getid())) {
         $attch->htmlDump();
