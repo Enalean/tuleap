@@ -1284,4 +1284,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     frs_display_release_form($is_update, $release, $group_id, $title, $url);
 }
 
-?>
+function detectSpecialCharactersInName($name, $type) {
+    if (preg_match('/\+/', $name)) {
+        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_showfiles', 'warn_chars', array($type, $name)));
+    }
+}
