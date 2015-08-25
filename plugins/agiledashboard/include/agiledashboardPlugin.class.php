@@ -239,6 +239,8 @@ class AgileDashboardPlugin extends Plugin {
             $params['tracker_mapping'],
             $params['ugroups_mapping']
         );
+
+        $this->getKanbanManager()->duplicateKanbans($params['tracker_mapping'], $params['field_mapping']);
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
