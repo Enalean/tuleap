@@ -20,6 +20,54 @@
 
 class AgileDashboard_KanbanDao extends DataAccessObject {
 
+    public function duplicateKanbans(array $tracker_mapping, array $field_mapping) {
+        if (empty($tracker_mapping)) {
+            return;
+        }
+
+        $tracker_ids = $this->da->escapeIntImplode(array_keys($tracker_mapping));
+        ksort($tracker_ids);
+
+        $sql = "SELECT *
+                FROM plugin_agiledashboard_kanban_configuration
+                WHERE tracker_id IN ($tracker_ids)";
+
+        foreach ($this->retrieve($sql) as $row) {
+            $old_kanban_id = $row['id'];
+            $new_kanban_id = $this->create($row['name'], $tracker_mapping[$row['tracker_id']]);
+            $this->duplicateColumns($old_kanban_id, $new_kanban_id, $field_mapping);
+        }
+    }
+
+    private function duplicateColumns($old_kanban_id, $new_kanban_id, array $field_mapping) {
+        $value_mapping = array();
+        foreach ($field_mapping as $mapping) {
+            $value_mapping += $mapping['values'];
+        }
+        $value_mapping = array_filter($value_mapping);
+
+        if (empty($value_mapping)) {
+            return;
+        }
+
+        array_walk($value_mapping, array($this, 'convertValueIdToWhenThenStatement'));
+        $new_value_id = "CASE value_id ". implode(' ', $value_mapping) ." END";
+
+        $sql = "INSERT INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)
+                SELECT $new_kanban_id, $new_value_id, wip_limit
+                FROM plugin_agiledashboard_kanban_configuration_column
+                WHERE kanban_id = $old_kanban_id";
+
+        $this->update($sql);
+    }
+
+    private function convertValueIdToWhenThenStatement(&$new_value_id, $old_value_id) {
+        $new_value_id = $this->da->escapeInt($new_value_id);
+        $old_value_id = $this->da->escapeInt($old_value_id);
+
+        $new_value_id = "WHEN $old_value_id THEN $new_value_id";
+    }
+
     public function create($kanban_name, $tracker_kanban) {
         $tracker_kanban = $this->da->escapeInt($tracker_kanban);
         $kanban_name    = $this->da->quoteSmart($kanban_name);
@@ -27,7 +75,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         $sql = "INSERT INTO plugin_agiledashboard_kanban_configuration (tracker_id, name)
                 VALUES ($tracker_kanban, $kanban_name)";
 
-        return $this->update($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     public function save($kanban_id, $kanban_name) {

@@ -53,6 +53,10 @@ class AgileDashboard_KanbanManager {
         return $this->dao->create($kanban_name, $tracker_id);
     }
 
+    public function duplicateKanbans(array $tracker_mapping, array $field_mapping) {
+        $this->dao->duplicateKanbans($tracker_mapping, $field_mapping);
+    }
+
     public function getTrackersWithKanbanUsageAndHierarchy($project_id, PFUser $user) {
         $trackers     = array();
         $all_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($project_id, $user);
