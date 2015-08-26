@@ -111,7 +111,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
-        $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this));
+        $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this, $this->event_manager));
         if ($this->artifact->getTracker()->getChildren()) {
             $view_collection->add(new Tracker_Artifact_View_Hierarchy($this->artifact, $request, $user));
         }

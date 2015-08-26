@@ -257,3 +257,12 @@ define('TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY', 'tracker_event_trackers
  *  'user'                  PFUser  (IN)
  */
 define('ITEM_PRIORITY_CHANGE', 'item_priority_change');
+
+/**
+ * Event emitted to get complement reference information of an artifact
+ *
+ * Parameters:
+ *  'artifact'              Tracker_Artifact    (IN)
+ *  'reference_information' array               (OUT)
+ */
+define('TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION', 'tracker_event_complement_reference_information');
