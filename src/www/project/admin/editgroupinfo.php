@@ -1,10 +1,27 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright Enalean (c) 2015. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('vars.php');
@@ -219,10 +236,18 @@ if ($user_can_choose_visibility) {
 }
 
 if ($user_can_choose_truncated_emails) {
-    $truncated_mails_impacted_services = array(
-        $currentproject->getService(Service::FILE)->getInternationalizedName(),
-        $currentproject->getService(Service::SVN)->getInternationalizedName()
-    );
+    $truncated_mails_impacted_services = array();
+
+    $file_service = $currentproject->getService(Service::FILE);
+    if ($file_service) {
+        $truncated_mails_impacted_services[] = $file_service->getInternationalizedName();
+    }
+
+    $svn_service  = $currentproject->getService(Service::SVN);
+    if ($svn_service) {
+        $truncated_mails_impacted_services[] = $svn_service->getInternationalizedName();
+    }
+
     $presenter = new ProjectTruncatedEmailsPresenter($currentproject, $truncated_mails_impacted_services);
     echo $renderer->renderToString('truncated_emails', $presenter);
 }
