@@ -13,6 +13,7 @@ Version 8.6 (Not Released Yet)
 	* story #8337: log activation/deactivation of truncated email in project history
 	* story #8337: FRS sends truncated emails
 	* story #8337: list concerned services on truncated email activation
+	* story #8339: SVN service can send truncated emails
 
 	== Bug Fix ==
 	* request #8362: Check password is broken when user wants to change it
