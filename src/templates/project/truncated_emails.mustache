@@ -1,23 +1,20 @@
 <h3>{{ truncated_emails_title }}</h3>
 
-<div>
+<section id="truncated-emails">
+    <p>{{ truncated_emails_impacted_services_introduction }}</p>
+
     {{# has_impacted_services_enabled }}
-        <p>{{ truncated_emails_impacted_services_introduction }}</p>
-        <ul>
-            {{# impacted_services }}
-                <li> {{ . }} </li>
-            {{/ impacted_services }}
-        </ul>
+        <label class="checkbox">
+            <input type="checkbox"
+                   name="truncated_emails"
+                   {{# project_uses_truncated_emails }} checked="checked" {{/ project_uses_truncated_emails }}
+                   {{^ has_impacted_services_enabled }} disabled="disabled" {{/ has_impacted_services_enabled }}
+            /> {{ use_truncated_emails }}
+        </label>
+
+        <p class="has-services"><i class="icon-level-up icon-rotate-90"></i>{{ truncated_emails_impacted_services_impacted_services }} {{ impacted_services }}</p>
     {{/ has_impacted_services_enabled }}
     {{^ has_impacted_services_enabled }}
-        <p>{{ truncated_emails_impacted_services_no_available }}</p>
+        <p class="muted">{{ truncated_emails_impacted_services_no_available }}</p>
     {{/ has_impacted_services_enabled }}
-</div>
-
-<label class="checkbox">
-    <input type="checkbox"
-           name="truncated_emails"
-           {{# project_uses_truncated_emails }} checked="checked" {{/ project_uses_truncated_emails }}
-           {{^ has_impacted_services_enabled }} disabled="disabled" {{/ has_impacted_services_enabled }}
-    /> {{ use_truncated_emails }}
-</label>
+</section>
