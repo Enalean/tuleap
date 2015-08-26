@@ -51,8 +51,9 @@
                     class="kanban-items backlog {{ kanban.current_view_class }}"
                 >
                     <li ui-tree-node
-                        ng-repeat="item in kanban.backlog.filtered_content"
-                        ng-include="'kanban-item/kanban-item.tpl.html'"></li>
+                        ng-repeat="item in kanban.backlog.filtered_content track by $id(item)"
+                        ng-include="'kanban-item/kanban-item.tpl.html'"
+                        id="item_{{ item.id }}"></li>
                 </ul>
             </div>
         </div>
@@ -121,8 +122,9 @@
                     data-column-id="{{ column.id }}"
                 >
                     <li ui-tree-node
-                        ng-repeat="item in column.filtered_content track by $index"
-                        ng-include="'kanban-item/kanban-item.tpl.html'"></li>
+                        ng-repeat="item in column.filtered_content track by $id(item)"
+                        ng-include="'kanban-item/kanban-item.tpl.html'"
+                        id="item_{{ item.id }}"></li>
                 </ul>
             </div>
         </div>
@@ -166,8 +168,9 @@
                     class="kanban-items archive {{ kanban.current_view_class }}"
                 >
                     <li ui-tree-node
-                        ng-repeat="item in kanban.archive.filtered_content"
-                        ng-include="'kanban-item/kanban-item.tpl.html'"></li>
+                        ng-repeat="item in kanban.archive.filtered_content track by $id(item)"
+                        ng-include="'kanban-item/kanban-item.tpl.html'"
+                        id="item_{{ item.id }}"></li>
                 </ul>
             </div>
         </div>
