@@ -5,7 +5,7 @@
 #-----------------------------------------------
 # Script: SF/www/project/admin/editgroupinfo.php
 #
-project_admin_editgroupinfo	upd_fail	LA MISE A JOUR A ECHOUE OU AUCUNE DONNEE N'A ETE MODIFIEE ! $1
+project_admin_editgroupinfo	upd_fail	La mise à jour a échoué ou aucune donnée n'a été modifiée ! $1
 project_admin_editgroupinfo	upd_success	Mis à jour avec succès
 project_admin_editgroupinfo	changed_public_info	Information publique modifiée
 project_admin_editgroupinfo	editing_g_info	Modification des informations du projet
@@ -35,6 +35,7 @@ project_admin_editgroupinfo	public_label	publique
 project_admin_editgroupinfo	choose_visbility	Choissez la visibilité du projet
 project_admin_editgroupinfo	use_truncated_emails	Utiliser les courriels tronqués
 project_admin_editgroupinfo	truncated_emails_title	Courriels Tronqués
+project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	Les services suivants enverront des courriels tronqués :
 project_admin_editgroupinfo	unrestricted_label	publique incluant les utilsateurs restreints
 project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b>. <br>Un projet <b>publique</b> est accessible à tous, <b>sauf les utilsateurs restreints</b>. <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet publique à des <b>utilsateurs restreints</b> sans bonne raison.<br />Notez que <b>Publique incluant les utilisateurs restreints</b> ne s'applique qu'à <em>la page sommaire</em> et aux <em>dépôts git</em>.
 project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b> <br>Un projet <b>publique</b> est accessible à tous.

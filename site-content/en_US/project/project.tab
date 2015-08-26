@@ -5,8 +5,8 @@
 #-----------------------------------------------
 # Script: SF/www/project/admin/editgroupinfo.php
 #
-project_admin_editgroupinfo	upd_fail	UPDATE FAILED OR NO DATA CHANGED! $1
-project_admin_editgroupinfo	upd_success	UPDATE SUCCESSFUL
+project_admin_editgroupinfo	upd_fail	Update failed or no data changed! $1
+project_admin_editgroupinfo	upd_success	Update successful
 project_admin_editgroupinfo	changed_public_info	Changed Public Info
 project_admin_editgroupinfo	editing_g_info	Editing Group Info
 project_admin_editgroupinfo	editing_g_info_for	Editing group info for: <B>$1</B>
@@ -35,6 +35,7 @@ project_admin_editgroupinfo	public_label	public
 project_admin_editgroupinfo	choose_visbility	Choose the visibility of your project
 project_admin_editgroupinfo	use_truncated_emails	Use truncated emails
 project_admin_editgroupinfo	truncated_emails_title	Truncated Emails
+project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	The following services will send truncated emails:
 project_admin_editgroupinfo	unrestricted_label	public incl. restricted users
 project_admin_editgroupinfo	restricted_warning	Only project members can access a <b>private</b> project. <br>A <b>public</b> project is accessible to all <b>except restricted users</b>.<br>It is not advisable to allow <b>restricted users</b> to access you project without good reason.<br />Please not that <b>Public incl. Restricted</b> only applies to <em>project summary page</em> and <em>git repositories</em>.
 project_admin_editgroupinfo	general_warning	Only project members can access a <b>private</b> project <br>A <b>public</b> project is accessible to everyone.
