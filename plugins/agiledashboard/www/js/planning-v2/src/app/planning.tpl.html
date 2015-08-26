@@ -3,7 +3,7 @@
 
 <div class="tuleap-modal-loading" ng-if="loading_modal.is_loading"></div>
 <div id="planning-view">
-    <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
+    <div id="backlog" ng-class="{ loading_content: backlog_items.loading }">
         <div class="planning-header">
             <h2 translate>To be planned</h2>
 
@@ -42,9 +42,21 @@
                 <i class="icon-plus"></i> <span translate>Add a {{ backlog.accepted_types.content[0].label }}</span>
             </button>
 
-            <div ng-if="backlog_items.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
-                <button type="button" class="btn btn-small" ng-class="{active: current_view_class === compact_view_key}" ng-click="switchViewMode(compact_view_key)" title="{{ 'Compact view' | translate }}"><i class="icon-list"></i> <span translate>Compact view</span></button>
-                <button type="button" class="btn btn-small" ng-class="{active: current_view_class === detailed_view_key}" ng-click="switchViewMode(detailed_view_key)" title="{{ 'Detailed view' | translate }}"><i class="icon-th-list"></i> <span translate>Detailed view</span></button>
+            <div class="pull-right">
+                <div ng-if="backlog_items.content.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
+                    <button type="button" class="btn btn-small" ng-class="{active: current_view_class === compact_view_key}" ng-click="switchViewMode(compact_view_key)" title="{{ 'Compact view' | translate }}"><i class="icon-list"></i> <span translate>Compact view</span></button>
+                    <button type="button" class="btn btn-small" ng-class="{active: current_view_class === detailed_view_key}" ng-click="switchViewMode(detailed_view_key)" title="{{ 'Detailed view' | translate }}"><i class="icon-th-list"></i> <span translate>Detailed view</span></button>
+                </div>
+
+                <div class="input-search" ng-show="backlog_items.content.length > 0">
+                    <input
+                        type="search"
+                        class="search input-medium"
+                        placeholder="{{ 'Filter...' | translate }}"
+                        ng-model="filter_terms"
+                        ng-keyup="filterBacklog()"
+                    >
+                </div>
             </div>
 
             <div class="clearfix"></div>
@@ -60,13 +72,13 @@
             scroll-threshold="100"
         >
             <ul ui-tree-nodes
-                ng-model="backlog_items"
+                ng-model="backlog_items.filtered_content"
                 class="backlog-items backlog {{ current_view_class }}"
                 data-accept="{{ backlog.accepted_types.toString() }}"
                 data-nodrag="{{ ! backlog.user_can_move_cards }}"
             >
                 <li ui-tree-node
-                    ng-repeat="backlog_item in backlog_items"
+                    ng-repeat="backlog_item in backlog_items.filtered_content"
                     ng-include="'backlog-item/backlog-item-in-backlog.tpl.html'"
                     data-type="{{ backlog_item.trackerId }}"
                     data-accept="{{ backlog_item.accepted_types.toString() }}"
@@ -78,8 +90,8 @@
                 </li>
             </ul>
         </div>
-        <div ng-if="backlog_fully_loaded && backlog_items.length > 0" class="fully-loaded" translate>All items have been loaded.</div>
-        <div ng-if="loading_backlog_items" class="loading"></div>
+        <div ng-if="backlog_items.fully_loaded && backlog_items.content.length > 0" class="fully-loaded" translate>All items have been loaded.</div>
+        <div ng-if="backlog_items.loading" class="loading"></div>
     </div>
 
     <div id="divider"></div>

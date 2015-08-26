@@ -5,6 +5,8 @@
 
     PlanningCtrl.$inject = [
         '$scope',
+        '$filter',
+        'gettextCatalog',
         'SharedPropertiesService',
         'BacklogItemService',
         'MilestoneService',
@@ -19,6 +21,8 @@
 
     function PlanningCtrl(
         $scope,
+        $filter,
+        gettextCatalog,
         SharedPropertiesService,
         BacklogItemService,
         MilestoneService,
@@ -44,52 +48,61 @@
         self.canBeAddedToBacklogItemChildren = canBeAddedToBacklogItemChildren;
 
         _.extend($scope, {
-            detailed_view_key           : 'detailed-view',
-            compact_view_key            : 'compact-view',
-            items                       : {},
-            rest_error_occured          : false,
-            rest_error                  : "",
-            backlog_items               : [],
-            current_milestone           : {},
-            milestones                  : [],
-            backlog                     : {
+            backlog: {
                 user_can_move_cards: false
             },
-            submilestone_type                     : null,
-            loading_backlog_items                 : false,
-            backlog_fully_loaded                  : false,
-            loading_milestones                    : true,
-            loading_modal                         : TuleapArtifactModalLoading.loading,
-            use_angular_new_modal                 : use_angular_new_modal,
-            toggle                                : toggle,
-            showChildren                          : showChildren,
-            toggleClosedMilestoneItems            : toggleClosedMilestoneItems,
+            backlog_items: {
+                content         : [],
+                filtered_content: [],
+                fully_loaded    : false,
+                loading         : false
+            },
+            compact_view_key     : 'compact-view',
+            current_milestone    : {},
+            detailed_view_key    : 'detailed-view',
+            filter_terms         : '',
+            items                : {},
+            loading_milestones   : true,
+            loading_modal        : TuleapArtifactModalLoading.loading,
+            milestones           : [],
+            rest_error           : '',
+            rest_error_occured   : false,
+            submilestone_type    : null,
+            use_angular_new_modal: use_angular_new_modal,
             canShowBacklogItem                    : canShowBacklogItem,
-            generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
-            showAddChildModal                     : showAddChildModal,
-            showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
-            showCreateNewModal                    : showCreateNewModal,
-            showEditModal                         : showEditModal,
-            showAddSubmilestoneModal              : showAddSubmilestoneModal,
-            cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
-            cardFieldIsList                       : CardFieldsService.cardFieldIsList,
-            cardFieldIsText                       : CardFieldsService.cardFieldIsText,
+            cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
             cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
             cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
-            cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
+            cardFieldIsList                       : CardFieldsService.cardFieldIsList,
             cardFieldIsPermissions                : CardFieldsService.cardFieldIsPermissions,
+            cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
+            cardFieldIsText                       : CardFieldsService.cardFieldIsText,
             cardFieldIsUser                       : CardFieldsService.cardFieldIsUser,
-            getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
-            getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
-            getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
-            getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
-            getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
-            getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
             displayBacklogItems                   : displayBacklogItems,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
+            fetchBacklogItemChildren              : fetchBacklogItemChildren,
+            fetchMilestoneBacklogItems            : fetchMilestoneBacklogItems,
+            fetchProjectBacklogItems              : fetchProjectBacklogItems,
+            filterBacklog                         : filterBacklog,
+            generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
+            getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
+            getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
+            getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
+            getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
+            getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
+            getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
+            getInitialEffortMessage               : getInitialEffortMessage,
             refreshBacklogItem                    : refreshBacklogItem,
-            switchViewMode                        : switchViewMode
+            showAddChildModal                     : showAddChildModal,
+            showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
+            showAddSubmilestoneModal              : showAddSubmilestoneModal,
+            showChildren                          : showChildren,
+            showCreateNewModal                    : showCreateNewModal,
+            showEditModal                         : showEditModal,
+            switchViewMode                        : switchViewMode,
+            toggle                                : toggle,
+            toggleClosedMilestoneItems            : toggleClosedMilestoneItems
         });
 
         $scope.treeOptions = {
@@ -158,11 +171,11 @@
         }
 
         function displayBacklogItems(fetch_all) {
-            if ($scope.loading_backlog_items || $scope.backlog_fully_loaded) {
+            if ($scope.backlog_items.loading || $scope.backlog_items.fully_loaded) {
                 return;
             }
 
-            $scope.loading_backlog_items = true;
+            $scope.backlog_items.loading = true;
 
             if (! angular.isDefined(milestone_id)) {
                 fetchProjectBacklogItems(project_id, pagination_limit, backlog_pagination_offset, fetch_all);
@@ -175,16 +188,17 @@
             return BacklogItemService.getProjectBacklogItems(project_id, limit, offset).then(function(data) {
                 angular.forEach(data.results, function(backlog_item, key) {
                     $scope.items[backlog_item.id] = backlog_item;
-                    $scope.backlog_items.push($scope.items[backlog_item.id]);
+                    $scope.backlog_items.content.push(backlog_item);
+                    $scope.backlog_items.filtered_content.push(backlog_item);
                 });
 
                 backlog_pagination_offset   = offset + limit;
-                $scope.backlog_fully_loaded = backlog_pagination_offset >= data.total;
+                $scope.backlog_items.fully_loaded = backlog_pagination_offset >= data.total;
 
-                if (fetch_all && ! $scope.backlog_fully_loaded) {
+                if (fetch_all && ! $scope.backlog_items.fully_loaded) {
                     fetchProjectBacklogItems(project_id, limit, backlog_pagination_offset);
                 } else {
-                    $scope.loading_backlog_items = false;
+                    $scope.backlog_items.loading = false;
                 }
             });
         }
@@ -193,16 +207,17 @@
             return BacklogItemService.getMilestoneBacklogItems(milestone_id, limit, offset).then(function(data) {
                 angular.forEach(data.results, function(backlog_item, key) {
                     $scope.items[backlog_item.id] = backlog_item;
-                    $scope.backlog_items.push($scope.items[backlog_item.id]);
+                    $scope.backlog_items.content.push(backlog_item);
+                    $scope.backlog_items.filtered_content.push(backlog_item);
                 });
 
                 backlog_pagination_offset   = offset + limit;
-                $scope.backlog_fully_loaded = backlog_pagination_offset >= data.total;
+                $scope.backlog_items.fully_loaded = backlog_pagination_offset >= data.total;
 
-                if (fetch_all && ! $scope.backlog_fully_loaded) {
+                if (fetch_all && ! $scope.backlog_items.fully_loaded) {
                     fetchMilestoneBacklogItems(milestone_id, limit, backlog_pagination_offset);
                 } else {
-                    $scope.loading_backlog_items = false;
+                    $scope.backlog_items.loading = false;
                 }
             });
         }
@@ -243,14 +258,18 @@
             return '?group_id=' + project_id + '&planning_id=' + milestone.planning.id + '&action=show&aid=' + milestone.id + '&pane=' + pane;
         }
 
+        function filterBacklog() {
+            $scope.backlog_items.filtered_content = $filter('InPropertiesFilter')($scope.backlog_items.content, $scope.filter_terms);
+        }
+
         function showCreateNewModal($event, item_type, backlog) {
             $event.preventDefault();
 
             var compared_to;
-            if (!_.isEmpty($scope.backlog_items)) {
+            if (! _.isEmpty($scope.backlog_items.content)) {
                 compared_to = {
                     direction : "before",
-                    item_id   : $scope.backlog_items[0].id
+                    item_id   : $scope.backlog_items.content[0].id
                 };
             }
 
@@ -409,7 +428,7 @@
         function prependItemToBacklog(backlog_item_id) {
             return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
                 $scope.items[backlog_item_id] = data.backlog_item;
-                $scope.backlog_items.unshift($scope.items[backlog_item_id]);
+                $scope.backlog_items.content.unshift($scope.items[backlog_item_id]);
             });
         }
 
@@ -454,7 +473,10 @@
 
         function fetchBacklogItemChildren(backlog_item, limit, offset) {
             return BacklogItemService.getBacklogItemChildren(backlog_item.id, limit, offset).then(function(data) {
-                backlog_item.children.data = backlog_item.children.data.concat(data.results);
+                angular.forEach(data.results, function(child) {
+                    $scope.items[child.id] = child;
+                    backlog_item.children.data.push(child);
+                });
 
                 if ((offset + limit) < data.total) {
                     fetchBacklogItemChildren(backlog_item, limit, offset + limit);
@@ -497,7 +519,7 @@
         }
 
         function hideUserCantPrioritizeForBacklog() {
-            return $scope.backlog.user_can_move_cards || $scope.backlog_items.length === 0;
+            return $scope.backlog.user_can_move_cards || $scope.backlog_items.content.length === 0;
         }
 
         function displayUserCantPrioritizeForBacklog() {
@@ -514,6 +536,10 @@
 
         function displayUserCantPrioritizeForMilestones() {
             return ! hideUserCantPrioritizeForMilestones();
+        }
+
+        function getInitialEffortMessage(initial_effort) {
+            return gettextCatalog.getPlural(initial_effort, "pt", "pts");
         }
 
         function dropped(event) {
@@ -550,7 +576,11 @@
                     case movedFromBacklogToSubmilestone():
                         DroppedService
                             .moveFromBacklogToSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10))
-                            .then(function() {}, catchError);
+                            .then(function() {
+                                _.remove($scope.backlog_items.content, function(item) {
+                                    return item.id === dropped_item_id;
+                                });
+                            }, catchError);
                         break;
 
                     case movedFromChildrenToChildren():

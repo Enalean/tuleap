@@ -1,7 +1,7 @@
 describe("PlanningCtrl", function() {
-    var $scope, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService, SharedPropertiesService,
-        TuleapArtifactModalService, NewTuleapArtifactModalService, UserPreferencesService,
-        deferred, second_deferred;
+    var $scope, $filter, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService,
+        SharedPropertiesService, TuleapArtifactModalService, NewTuleapArtifactModalService,
+        UserPreferencesService, deferred, second_deferred;
 
     beforeEach(function() {
         module('planning');
@@ -13,6 +13,8 @@ describe("PlanningCtrl", function() {
             BacklogItemService = jasmine.createSpyObj("BacklogItemService", [
                 "addToMilestone",
                 "getBacklogItem",
+                "getBacklogItemChildren",
+                "getMilestoneBacklogItems",
                 "getProjectBacklogItems"
             ]);
             _.invoke(BacklogItemService, "andReturn", $q.defer().promise);
@@ -56,8 +58,11 @@ describe("PlanningCtrl", function() {
             ]);
             _.invoke(UserPreferencesService, "andReturn", $q.defer().promise);
 
+            $filter = jasmine.createSpy("$filter");
+
             PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
+                $filter: $filter,
                 BacklogItemService: BacklogItemService,
                 MilestoneService: MilestoneService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
@@ -69,6 +74,161 @@ describe("PlanningCtrl", function() {
         });
         deferred = $q.defer();
         second_deferred = $q.defer();
+    });
+
+    describe("fetchProjectBacklogItems() -", function() {
+        beforeEach(function() {
+            BacklogItemService.getProjectBacklogItems.andReturn(deferred.promise);
+        });
+
+        it("Given a project id, a limit of 50 items and an offset of 0 items and given there are only 2 items, when I fetch the project's backlog items, then the BacklogItemService will be queried, the items will be published in the scope and the loader will be set to false", function() {
+            $scope.fetchProjectBacklogItems(60, 50, 0, false);
+            deferred.resolve({
+                results: [
+                    { id: 300 },
+                    { id: 231 }
+                ],
+                total: 2
+            });
+            $scope.$apply();
+
+            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(60, 50, 0);
+            expect($scope.items).toEqual({
+                300: { id: 300 },
+                231: { id: 231 }
+            });
+            expect($scope.backlog_items.content).toEqual([
+                { id: 300 },
+                { id: 231 }
+            ]);
+            expect($scope.backlog_items.filtered_content).toEqual($scope.backlog_items.content);
+            expect($scope.backlog_items.loading).toBeFalsy();
+        });
+
+        it("Given a project id, a limit of 2 items and an offset of 1 and given there are 4 items and given we want to fetch all items, when I fetch the project's backlog items, then the BacklogItemService will be queried twice", function() {
+            $scope.fetchProjectBacklogItems(57, 2, 1, true);
+            deferred.resolve({
+                total: 4
+            });
+            $scope.$apply();
+
+            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(57, 2, 1);
+            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(57, 2, 3);
+        });
+    });
+
+    describe("fetchMilestoneBacklogItems() -", function() {
+        beforeEach(function() {
+            BacklogItemService.getMilestoneBacklogItems.andReturn(deferred.promise);
+        });
+
+        it("Given a milestone id, a limit of 50 items and an offset of 0 items and given there are only 2 items, when I fetch the milestone's backlog items, then the BacklogItemService will be queried, the items will be published in the scope and the loader will be set to false", function() {
+            $scope.fetchMilestoneBacklogItems(32, 50, 0, false);
+            deferred.resolve({
+                results: [
+                    { id: 376 },
+                    { id: 215 }
+                ],
+                total: 2
+            });
+            $scope.$apply();
+
+            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(32, 50, 0);
+            expect($scope.items).toEqual({
+                376: { id: 376 },
+                215: { id: 215 }
+            });
+            expect($scope.backlog_items.content).toEqual([
+                { id: 376 },
+                { id: 215 }
+            ]);
+            expect($scope.backlog_items.filtered_content).toEqual($scope.backlog_items.content);
+            expect($scope.backlog_items.loading).toBeFalsy();
+        });
+
+        it("Given a milestone id, a limit of 2 items and an offset of 1 and given there are 4 items and given we want to fetch all items, when I fetch the milestone's backlog items, then the BacklogItemService will be queried twice", function() {
+            $scope.fetchMilestoneBacklogItems(10, 2, 1, true);
+            deferred.resolve({
+                total: 4
+            });
+            $scope.$apply();
+
+            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(10, 2, 1);
+            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(10, 2, 3);
+        });
+    });
+
+    describe("fetchBacklogItemChildren() -", function() {
+        beforeEach(function() {
+            BacklogItemService.getBacklogItemChildren.andReturn(deferred.promise);
+        });
+
+        it("Given a backlog item, a limit of 50 items and an offset of 0 items and given there are only 2 children, when I fetch the backlog item's children then the BacklogItemService will be queried, the children will be added to the item and the loader will be set to false", function() {
+            var backlog_item = {
+                id: 95,
+                children: {
+                    data: []
+                }
+            };
+
+            $scope.fetchBacklogItemChildren(backlog_item, 50, 0);
+            deferred.resolve({
+                results: [
+                    { id: 151 },
+                    { id: 857 }
+                ],
+                total: 2
+            });
+            $scope.$apply();
+
+            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(95, 50, 0);
+            expect(backlog_item.children.data).toEqual([
+                { id: 151 },
+                { id: 857 }
+            ]);
+            expect(backlog_item.loading).toBeFalsy();
+            expect(backlog_item.children.loaded).toBeTruthy();
+        });
+
+        it("Given a backlog item, a limit of 2 items and an offset of 1 and given there are 2 children, when I fetch the item's children, then the BacklogItemService will be queried twice", function() {
+            var backlog_item = {
+                id: 317,
+                children: {
+                    data: []
+                }
+            };
+
+            $scope.fetchBacklogItemChildren(backlog_item, 2, 1);
+            deferred.resolve({
+                total: 4
+            });
+            $scope.$apply();
+
+            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(317, 2, 1);
+            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(317, 2, 3);
+        });
+    });
+
+    describe("displayUserCantPrioritizeForBacklog() -", function() {
+        it("Given that the user cannot move cards in the backlog and the backlog is empty, when I display whether the user can prioritize the backlog, then it will return false", function() {
+            $scope.backlog.user_can_move_cards = false;
+            $scope.backlog_items.content = [];
+
+            var result = $scope.displayUserCantPrioritizeForBacklog();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given that the user cannot move cards in the backlog and the backlog is not empty, when I display whether the user can prioritize the backlog, then it will return true", function() {
+            $scope.backlog.user_can_move_cards = false;
+            $scope.backlog_items.content = [
+                { id: 448 }
+            ];
+
+            var result = $scope.displayUserCantPrioritizeForBacklog();
+
+            expect(result).toBeTruthy();
+        });
     });
 
     describe("showCreateNewModal() -", function() {
@@ -102,7 +262,7 @@ describe("PlanningCtrl", function() {
             var fakeBacklog, fakeArtifact;
             beforeEach(function() {
                 BacklogItemService.getBacklogItem.andReturn(deferred.promise);
-                TuleapArtifactModalService.showCreateItemForm.andCallFake(function (a, b, callback) {
+                TuleapArtifactModalService.showCreateItemForm.andCallFake(function(a, b, callback) {
                     callback(5202);
                 });
                 fakeArtifact = {
@@ -121,7 +281,7 @@ describe("PlanningCtrl", function() {
                 });
 
                 it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, published on the scope's items object and prepended to the backlog_items array", function() {
-                    $scope.backlog_items = [
+                    $scope.backlog_items.content = [
                         { id: 3894 }
                     ];
                     ProjectService.removeAddReorderToBacklog.andReturn(second_deferred.promise);
@@ -137,14 +297,14 @@ describe("PlanningCtrl", function() {
                     });
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect($scope.items[5202]).toEqual({ id: 5202 });
-                    expect($scope.backlog_items).toEqual([
+                    expect($scope.backlog_items.content).toEqual([
                         { id: 5202 },
                         { id: 3894 }
                     ]);
                 });
 
                 it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the scope's backlog_items array", function() {
-                    $scope.backlog_items = [];
+                    $scope.backlog_items.content = [];
                     ProjectService.removeAddToBacklog.andReturn(second_deferred.promise);
 
                     $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
@@ -154,7 +314,7 @@ describe("PlanningCtrl", function() {
 
                     expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, 5202);
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect($scope.backlog_items).toEqual([
+                    expect($scope.backlog_items.content).toEqual([
                         { id: 5202 }
                     ]);
                 });
@@ -169,7 +329,7 @@ describe("PlanningCtrl", function() {
                 });
 
                 it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, published on the scope's items object and prepended to the backlog_items array", function() {
-                    $scope.backlog_items = [
+                    $scope.backlog_items.content = [
                         { id: 6240 }
                     ];
                     MilestoneService.removeAddReorderToBacklog.andReturn(second_deferred.promise);
@@ -185,14 +345,14 @@ describe("PlanningCtrl", function() {
                     });
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect($scope.items[5202]).toEqual({ id: 5202 });
-                    expect($scope.backlog_items).toEqual([
+                    expect($scope.backlog_items.content).toEqual([
                         { id: 5202 },
                         { id: 6240 }
                     ]);
                 });
 
                 it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the scope's backlog_items array", function() {
-                    $scope.backlog_items = [];
+                    $scope.backlog_items.content = [];
                     MilestoneService.removeAddToBacklog.andReturn(second_deferred.promise);
 
                     $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
@@ -202,7 +362,7 @@ describe("PlanningCtrl", function() {
 
                     expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 26, 5202);
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect($scope.backlog_items).toEqual([
+                    expect($scope.backlog_items.content).toEqual([
                         { id: 5202 }
                     ]);
                 });

@@ -29,7 +29,7 @@
                 .then(function(response) {
                     augmentBacklogItem(response.data);
 
-                    result = {
+                    var result = {
                         backlog_item: response.data
                     };
 
@@ -51,7 +51,7 @@
                 .then(function(response) {
                     _.forEach(response.data, augmentBacklogItem);
 
-                    result = {
+                    var result = {
                         results: response.data,
                         total: response.headers('X-PAGINATION-SIZE')
                     };
@@ -74,7 +74,7 @@
                 .then(function(response) {
                     _.forEach(response.data, augmentBacklogItem);
 
-                    result = {
+                    var result = {
                         results: response.data,
                         total: response.headers('X-PAGINATION-SIZE')
                     };
@@ -97,7 +97,7 @@
                 .then(function(response) {
                     _.forEach(response.data, augmentBacklogItem);
 
-                    result = {
+                    var result = {
                         results: response.data,
                         total: response.headers('X-PAGINATION-SIZE')
                     };

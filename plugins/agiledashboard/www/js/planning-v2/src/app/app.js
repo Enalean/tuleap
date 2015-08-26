@@ -14,6 +14,8 @@
         'user-preferences',
         'infinite-scroll',
         'tuleap-artifact-modal',
-        'tuleap.artifact-modal'
+        'tuleap.artifact-modal',
+        'inproperties.filter',
+        'highlight.filter'
     ]);
 })();
