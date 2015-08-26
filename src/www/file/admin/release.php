@@ -13,7 +13,6 @@ require_once ('www/file/file_utils.php');
 require_once ('www/file/admin/frsValidator.class.php');
 require_once ('common/include/SimpleSanitizer.class.php');
 require_once ('common/include/Feedback.class.php');
-require_once ('common/mail/Mail.class.php');
 require_once ('www/forum/forum_utils.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FRSReleaseFactory.class.php');

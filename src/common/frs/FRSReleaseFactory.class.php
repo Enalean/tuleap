@@ -410,34 +410,10 @@ class FRSReleaseFactory {
             foreach ($result as $res) {
                 $array_emails[] = $res['email'];
             }
-            $list = implode($array_emails, ', ');
 
-            $pm      = ProjectManager::instance();
-            $project = $pm->getProject($package->getGroupID());
+            $notification = $this->getNotification($release, $package, $array_emails);
 
-            // Subject
-            $subject = ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_subject', array($GLOBALS['sys_name'], $project->getPublicName(), $package->getName()));
-
-            // Body
-            $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
-            $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID()."&group_id=".$package->getGroupID();
-
-            $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($project->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
-
-            if ($release->getNotes() != '') {
-                $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_notes', array($release->getNotes()));
-            }
-            if ($release->getChanges() != '') {
-                $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_changes', array($release->getChanges()));
-            }
-
-            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array($notifUrl));
-            
-            $mail = new Mail();
-            $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setBcc($list);
-            $mail->setSubject($subject);
-            $mail->setBody($body);
+            $mail = $this->getEmail($release, $notification);
 
             if ($mail->send()) {
                 return count($result);
@@ -445,7 +421,61 @@ class FRSReleaseFactory {
                 return false;
             }
         }
+
         return true;
+    }
+
+    /**
+     * @return Notification
+     */
+    private function getNotification(FRSRelease $release, FRSPackage $package, array $array_emails) {
+        $subject = ' '.$GLOBALS['Language']->getText(
+                'file_admin_editreleases',
+                'file_rel_notice_subject',
+                array($GLOBALS['sys_name'], $release->getProject()->getPublicName(), $package->getName())
+        );
+
+        $body_text    = $this->getEmailBody($release, $package);
+        $body_html    = '';
+        $service_name = 'Files';
+        $goto_link    = get_server_url() . '/goto?key=release&val=' . $release->getReleaseID() .
+                        '&group_id=' . $release->getProject()->getID();
+
+        return new Notification(
+            $array_emails,
+            $subject,
+            $body_html,
+            $body_text,
+            $goto_link,
+            $service_name
+        );
+    }
+
+    /**
+     * @return Codendi_Mail
+     */
+    private function getEmail(FRSRelease $release, Notification $notification) {
+        $builder = new MailBuilder(TemplateRendererFactory::build());
+
+        return $builder->buildEmail($release->getProject(), $notification);
+    }
+
+    private function getEmailBody(FRSRelease $release, FRSPackage $package) {
+        $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
+        $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID()."&group_id=".$package->getGroupID();
+
+        $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
+
+        if ($release->getNotes() != '') {
+            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_notes', array($release->getNotes()));
+        }
+        if ($release->getChanges() != '') {
+            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_changes', array($release->getChanges()));
+        }
+
+        $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array($notifUrl));
+
+        return $body;
     }
 
     /**
