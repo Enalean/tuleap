@@ -77,7 +77,23 @@ class Plugin implements PFO_Plugin {
         }
         return $this->allowedForProject[$group_id];
     }
-    
+
+    /**
+     * Hook call for @see Event::SERVICES_ALLOWED_FOR_PROJECT
+     *
+     * You just need to add $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT)
+     * to your plugin to automatically manage presence of service in projects
+     */
+    public function services_allowed_for_project(array $params) {
+        $this->addServiceForProject($params['project'], $params['services']);
+    }
+
+    protected function addServiceForProject(Project $project, array &$services) {
+        if ($this->isAllowed($project->getID())) {
+            $services[] = $this->getServiceShortname();
+        }
+    }
+
     public function getId() {
         return $this->id;
     }

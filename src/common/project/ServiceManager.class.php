@@ -25,9 +25,6 @@ class ServiceManager {
     private $dao;
 
     /** @var string[] */
-    private $list_of_plugin_based_services = array();
-
-    /** @var string[] */
     private $list_of_core_services = array(
         self::CUSTOM_SERVICE_SHORTNAME,
         Service::SUMMARY,
@@ -44,6 +41,8 @@ class ServiceManager {
         Service::TRACKERV3,
         Service::LEGACYDOC,
     );
+
+    private $list_of_services_per_project = array();
 
     /** @var ServiceManager */
     private static $instance;
@@ -80,37 +79,37 @@ class ServiceManager {
         self::$instance = null;
     }
 
-    public function enablePluginBasedService(Plugin $plugin) {
-        $plugin_based_service = $plugin->getServiceShortname();
-        if ($plugin_based_service) {
-            $this->list_of_plugin_based_services[] = $plugin_based_service;
-        }
-
-    }
-
     /**
      * @return Service[]
      */
     public function getListOfAllowedServicesForProject(Project $project) {
-        $list_of_allowed_services = array();
-        $allowed_services_dar = $this->dao->searchByProjectIdAndShortNames(
-            $project->getID(),
-            array_merge(
-                $this->list_of_core_services,
-                $this->list_of_plugin_based_services
-            )
-        );
+        if (! isset($this->list_of_services_per_project[$project->getID()])) {
+            $this->list_of_services_per_project[$project->getID()] = array();
+            $allowed_services_dar = $this->dao->searchByProjectIdAndShortNames(
+                $project->getID(),
+                array_merge(
+                    $this->list_of_core_services,
+                    $this->getListOfPluginBasedServices($project)
+                )
+            );
 
-        foreach ($allowed_services_dar as $row) {
-            $classname = $project->getServiceClassName($row['short_name']);
-            try {
-                $list_of_allowed_services[$row['service_id']] = new $classname($project, $row);
-            } catch (ServiceNotAllowedForProjectException $e) {
-                //don't display the row for this servce
+            foreach ($allowed_services_dar as $row) {
+                $classname = $project->getServiceClassName($row['short_name']);
+                try {
+                    $this->list_of_services_per_project[$project->getID()][$row['service_id']] = new $classname($project, $row);
+                } catch (ServiceNotAllowedForProjectException $e) {
+                    //don't display the row for this servce
+                }
             }
         }
 
-        return $list_of_allowed_services;
+        return $this->list_of_services_per_project[$project->getID()];
+    }
+
+    private function getListOfPluginBasedServices(Project $project) {
+        $services = array();
+        EventManager::instance()->processEvent(Event::SERVICES_ALLOWED_FOR_PROJECT, array('project' => $project, 'services' => &$services));
+        return $services;
     }
 
     public function isServiceAllowedForProject(Project $project, $service_id) {

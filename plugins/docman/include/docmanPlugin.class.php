@@ -76,6 +76,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
         $this->_addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);

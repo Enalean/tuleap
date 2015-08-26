@@ -57,6 +57,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->addHook('widget_instance');
         $this->addHook('widgets');

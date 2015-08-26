@@ -38,6 +38,7 @@ class phpwikiPlugin extends Plugin {
         $this->addHook('backend_system_purge_files', 'purgeFiles');
 
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SERVICE_PUBLIC_AREAS);
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);

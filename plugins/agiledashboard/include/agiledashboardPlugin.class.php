@@ -69,6 +69,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_USAGE);
             $this->addHook(TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY);
             $this->addHook(Event::SERVICE_ICON);
+            $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->_addHook('register_project_creation');
 
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);

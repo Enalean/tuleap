@@ -32,6 +32,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook('register_project_creation');
         $this->addHook(Event::RENAME_PROJECT);
     }
