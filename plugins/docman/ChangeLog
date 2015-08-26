@@ -1,3 +1,6 @@
+Version 2.26.80 - Tuleap 8.6
+    * request #8363: Update service load mecanism
+
 Version 2.26.79 - Tuleap 8.5
     * request #8313 Remove spaces at the end of an item title
 

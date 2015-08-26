@@ -1,3 +1,6 @@
+Version 4.75 - Tuleap 8.6
+    * request #8363: Update service load mecanism
+
 Version 4.74 - Tuleap 8.5
     * Allow Tuleap to run behind a reverse proxy
 
