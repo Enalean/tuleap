@@ -7,13 +7,12 @@
 # For usage, see the usage subroutine or run the script with no
 # command line arguments.
 #
+# Copyright Enalean (c) 2015. All rights reserved.
+#
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
 # $LastChangedDate: 2012-03-23 08:59:24 +0000 (Fri, 23 Mar 2012) $
 # $LastChangedBy: hosniah $
 # $LastChangedRevision: 21391 $
-#
-#
-#
 #
 # Heavily modified by Laurent Julliard for the Codendi project at Xerox
 # Copyright (c) Xerox Corporation, Codendi Team, 2004-2009. All Rights Reserved
@@ -395,7 +394,6 @@ if ($svnmailto ne 'NULL' && $svnmailto ne '') {
 if ($debug) {
   print STDERR "svnmailto: ", $svnmailto, "\n";
 }
-
 # Lose the trailing slash in the directory names if one exists, except
 # in the case of '/'.
 my $rootchanged = 0;
@@ -543,44 +541,48 @@ $dirlist =~ s/\n//;
 
 # Put together the body of the log message.
 my @body;
-push(@body, sprintf("SVN Repository: %s\n",$repos));
-push(@body, sprintf("Changes by:     %s  on %s\n","$fullname <$mailname>", $date));
-push(@body, sprintf("New Revision:   %s   %s/goto?key=rev&val=%s&group_id=%s\n", $rev, $codendi_srv, $rev, $group_id));
-push(@body, "\n");
+my $goto_link = "$codendi_srv/goto?key=rev&val=$rev&group_id=$group_id";
 
-# Changes by SL : we first add the log message to the mail body before adding
-# the list of the affected files.
-push(@body, "\nLog message:\n");
-push(@body, @log);
+if (&isGroupUsingTruncatedMails) {
+  push(@body, "There was an update on $sys_fullname for you: $goto_link");
+} else {
+  push(@body, sprintf("SVN Repository: %s\n",$repos));
+  push(@body, sprintf("Changes by:     %s  on %s\n","$fullname <$mailname>", $date));
+  push(@body, "New Revision:   $rev  $goto_link\n");
+  push(@body, "\n");
 
-if (@adds)
-  {
-    @adds = sort @adds;
-    push(@body, "\nAdded files:\n");
-    push(@body, map { "   $_\n" } @adds);
-  }
-if (@dels)
-  {
-    @dels = sort @dels;
-    push(@body, "\nRemoved files:\n");
-    push(@body, map { "   $_\n" } @dels);
-  }
-if (@mods)
-  {
-    @mods = sort @mods;
-    push(@body, "\nModified files:\n");
-    push(@body, map { "   $_\n" } @mods);
-  }
+  # Changes by SL : we first add the log message to the mail body before adding
+  # the list of the affected files.
+  push(@body, "\nLog message:\n");
+  push(@body, @log);
 
-#push(@body, "\n");
-push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines);
-push(@body, map { "$_\n" } &format_xref(@log));
+  if (@adds)
+    {
+      @adds = sort @adds;
+      push(@body, "\nAdded files:\n");
+      push(@body, map { "   $_\n" } @adds);
+    }
+  if (@dels)
+    {
+      @dels = sort @dels;
+      push(@body, "\nRemoved files:\n");
+      push(@body, map { "   $_\n" } @dels);
+    }
+  if (@mods)
+    {
+      @mods = sort @mods;
+      push(@body, "\nModified files:\n");
+      push(@body, map { "   $_\n" } @mods);
+    }
+
+  push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines);
+  push(@body, map { "$_\n" } &format_xref(@log));
+}
 
 if ($debug) {
   print STDERR @head;
   print STDERR @body;
 }
-
 # Go through each project and see if there are any matches for this
 # project.  If so, send the log out.
 foreach my $project (@project_settings_list)
@@ -604,21 +606,23 @@ foreach my $project (@project_settings_list)
     my $hostname        = $project->{hostname};
     my $log_file        = $project->{log_file};
     my $reply_to        = $project->{reply_to};
-    my $subject_prefix  = $project->{subject_prefix};
     my $subject;
 
-    if ($commondir ne '')
-      {
+    if (&isGroupUsingTruncatedMails) {
+      $subject = "New SVN notification on $sys_fullname";
+    } else {
+      if ($commondir ne '') {
         $subject = "r$rev - in $commondir: $dirlist";
-      }
-    else
-      {
+      } else {
         $subject = "r$rev - $dirlist";
       }
-    if ($subject_prefix =~ /\w/)
-      {
-        $subject = "$subject_prefix $subject";
-      }
+
+      my $subject_prefix  = $project->{subject_prefix};
+      if ($subject_prefix =~ /\w/)
+        {
+          $subject = "$subject_prefix $subject";
+        }
+    }
     $subject = $svnmailheader.$subject;
     # Remove newlines from subject:
     $subject =~ s/\n//g;

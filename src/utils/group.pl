@@ -63,6 +63,10 @@ sub isGroupPublic {
   return ($$GROUP_INFO{'access'} != 'private');
 }
 
+sub isGroupUsingTruncatedMails {
+  return $$GROUP_INFO{'truncated_emails'};
+}
+
 
 # Perl trim function to remove whitespace from the start and end of the string
 sub trim($) {
