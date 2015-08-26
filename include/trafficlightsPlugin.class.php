@@ -34,6 +34,8 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
     }
 
     public function getServiceShortname() {
@@ -46,6 +48,28 @@ class TrafficlightsPlugin extends Plugin {
 
     public function service_classnames($params) {
         $params['classnames'][$this->getServiceShortname()] = 'Trafficlights\\Service';
+    }
+
+    public function tracker_event_complement_reference_information(array $params) {
+        $tracker = $params['artifact']->getTracker();
+        $project = $tracker->getProject();
+
+        $plugin_trafficlights_is_used = $project->usesService($this->getServiceShortname());
+        if ($plugin_trafficlights_is_used) {
+            $reference_information = array(
+                'title' => $GLOBALS['Language']->getText('plugin_trafficlights', 'references_graph_title'),
+                'links' => array()
+            );
+
+            $link = array(
+                'icon' => $this->getPluginPath() . '/themes/default/images/artifact-link-graph.svg',
+                'link' => $this->getPluginPath() . '/?group_id=' . $tracker->getGroupId() . '#/graph/' . $params['artifact']->getId(),
+                'label'=> $GLOBALS['Language']->getText('plugin_trafficlights', 'references_graph_url')
+            );
+
+            $reference_information['links'][] = $link;
+            $params['reference_information'][] = $reference_information;
+        }
     }
 
     /**

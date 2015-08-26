@@ -11,3 +11,6 @@ plugin_trafficlights	admin_tracker_placeholder	Entrez l'id du tracker…
 
 plugin_trafficlights	misconfigured_title	Nom de Zeus !
 plugin_trafficlights	misconfigured_message	Vous devriez configurer la chose avant de pouvoir utiliser ce service.
+
+plugin_trafficlights	references_graph_title	Graphe
+plugin_trafficlights	references_graph_url	Voir le graphe de dépendances
