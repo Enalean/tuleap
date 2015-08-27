@@ -43,7 +43,7 @@ class ProjectTruncatedEmailsPresenter {
     }
 
     public function impacted_services() {
-        return $this->impacted_services_list;
+        return implode(', ', $this->impacted_services_list);
     }
 
     public function truncated_emails_impacted_services_introduction() {
@@ -61,6 +61,13 @@ class ProjectTruncatedEmailsPresenter {
         return $GLOBALS['Language']->getText(
             'project_admin_editgroupinfo',
             'truncated_emails_impacted_services_no_available'
+        );
+    }
+
+    public function truncated_emails_impacted_services_impacted_services() {
+        return $GLOBALS['Language']->getText(
+            'project_admin_editgroupinfo',
+            'truncated_emails_impacted_services_impacted_services'
         );
     }
 }
