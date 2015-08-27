@@ -206,5 +206,16 @@ class SystemEventDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function purgeDataOlderThanOneYear() {
+        $one_year_ago_date = date('Y-m-d 00:00:00', strtotime('-1 year', time()));
+
+        $sql = "DELETE FROM system_event
+                WHERE create_date < '$one_year_ago_date'";
+        $this->update($sql);
+
+        $sql = "OPTIMIZE TABLE system_event";
+        return $this->update($sql);
+    }
 }
 ?>
