@@ -4,7 +4,6 @@ Version 8.6 (Not Released Yet)
 	* request #8309: Get rid of PrototypeJS (Check Password)
 	* request #8309: Get rid of PrototypeJS (is-at-top)
 	* Allow to define a path for extra plugins
-	* story #8316: generic tag path specification - live preview
 
 	== Enhancement ==
 	* story #8337: Web UI to set truncated email
@@ -20,6 +19,7 @@ Version 8.6 (Not Released Yet)
 	* request #8362: Check password is broken when user wants to change it
 	* request #8330: Fix XSS in project data restoration page
 	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
+	* request #8377: Profile script broken on CentOS 6
 
 	== Plugins ==
 	* agiledashboard: 1.263
