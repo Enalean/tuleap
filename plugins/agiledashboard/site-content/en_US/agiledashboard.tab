@@ -168,3 +168,7 @@ plugin_agiledashboard	kanban_tracker_used	Tracker already used by another Kanban
 plugin_agiledashboard	no_tracker_selected	No tracker has been selected.
 plugin_agiledashboard	no_tracker_available	No tracker is available.
 plugin_agiledashboard	kanban_not_found	Kanban not found.
+
+plugin_agiledashboard_first_kanban	error_existing_tracker	We tried to create a first kanban for you but an existing tracker ($1) prevented it.
+plugin_agiledashboard_first_kanban	internal_error	We tried to create a first kanban for you but an internal error prevented it.
+plugin_agiledashboard_first_kanban	created	We created <a href="$1">a first kanban</a> for you. Enjoy!

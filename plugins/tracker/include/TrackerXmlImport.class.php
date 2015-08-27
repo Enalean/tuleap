@@ -257,6 +257,14 @@ class TrackerXmlImport {
         }
     }
 
+    public function getTrackerItemNameFromXMLFile($filepath) {
+        $xml_security = new XML_Security();
+        $tracker_xml = $xml_security->loadFile($filepath);
+        if ($tracker_xml !== false) {
+            return (string)$tracker_xml->item_name;
+        }
+    }
+
     /**
      *
      * @param type $group_id
