@@ -167,8 +167,8 @@ class PHPWikiDao extends DataAccessObject {
     }
 
     public function searchPaginatedUserWikiPages($project_id, $limit, $offset) {
-        $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
-        $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
+        $admin_pages   = $this->da->quoteSmartImplode(',', PHPWikiPage::getAdminPages());
+        $default_pages = $this->da->quoteSmartImplode(',', PHPWikiPage::getDefaultPages());
 
         $project_id = $this->da->escapeInt($project_id);
         $limit      = $this->da->escapeInt($limit);
@@ -185,8 +185,8 @@ class PHPWikiDao extends DataAccessObject {
     }
 
     public function searchPaginatedUserWikiPagesByPagename($project_id, $limit, $offset, $pagename) {
-        $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
-        $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
+        $admin_pages   = $this->da->quoteSmartImplode(',', PHPWikiPage::getAdminPages());
+        $default_pages = $this->da->quoteSmartImplode(',', PHPWikiPage::getDefaultPages());
 
         $project_id = $this->da->escapeInt($project_id);
         $limit      = $this->da->escapeInt($limit);
@@ -205,8 +205,8 @@ class PHPWikiDao extends DataAccessObject {
     }
 
     public function doesWikiPageExistInRESTContext($page_id) {
-        $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
-        $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
+        $admin_pages   = $this->da->quoteSmartImplode(',', PHPWikiPage::getAdminPages());
+        $default_pages = $this->da->quoteSmartImplode(',', PHPWikiPage::getDefaultPages());
 
         $page_id = $this->da->escapeInt($page_id);
 
