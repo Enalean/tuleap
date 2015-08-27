@@ -1,3 +1,6 @@
+Version 1.263 - Tuleap 8.6
+    * request #8376: kanban drag 'n' drop utterly broken on columns
+
 Version 1.262 - Tuleap 8.6
     * request #8363: Update service load mecanism
 
