@@ -2,7 +2,33 @@ body.agiledashboard_planning {
     background: #FCFCFC;
 }
 
+body.agiledashboard_homepage .main .content {
+    padding: 0;
+}
+
+.empty-home {
+    text-align: center;
+    min-height: 500px;
+    padding: 285px 0 0;
+
+    > p {
+        width: 550px;
+        margin: 0 auto 30px;
+        font-family: SourceSansPro, "Helvetica Neue", Arial, sans-serif;
+        font-size: 30px;
+        line-height: 42px;
+        font-weight: 300;
+        color: #2F2F2F;
+
+        &.later {
+            font-size: 24px;
+            color: #676767;
+        }
+    }
+}
+
 #home {
+    padding: 12px;
     @border-color: #DDD;
 
     .go-to-backlog,

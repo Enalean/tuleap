@@ -41,5 +41,8 @@ class Planning_Presenter_EmptyHomePresenter {
 
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
     }
+
+    public function come_back_later() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
+    }
 }
-?>

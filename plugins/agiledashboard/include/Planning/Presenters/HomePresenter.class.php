@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -88,15 +88,32 @@ class Planning_Presenter_HomePresenter {
         $this->kanban_title                    = $kanban_title;
     }
 
-    public function nothing_set_up() {
-        if (! $this->user_is_admin()) {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
-        }
-
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
+    public function kanban_empty_message_must_be_displayed() {
+        return count($this->kanban_summary_presenters) === 0 && ! $this->is_user_admin() ;
     }
 
-    public function user_is_admin() {
+    public function scrum_nothing_set_up() {
+
+        if ($this->is_user_admin()) {
+            return $GLOBALS['Language']->getText(
+                'plugin_agiledashboard',
+                'nothing_set_up_scrum_admin',
+                array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin')
+            );
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_scrum_generic');
+    }
+
+    public function kanban_nothing_set_up() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_kanban_generic');
+    }
+
+    public function come_back_later() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
+    }
+
+    public function is_user_admin() {
         return $this->user->isAdmin($this->group_id);
     }
 
