@@ -87,7 +87,7 @@ if (strpos(':', $GLOBALS['sys_default_domain']) === false) {
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 }
 
-if (isset($toaddress) && !eregi($host,$toaddress)) {
+if (isset($toaddress) && ! preg_match("/$host/",$toaddress)) {
 	exit_error($Language->getText('include_exit', 'error'),
 		   $Language->getText('sendmessage','err_host',array($host)));
 }
@@ -136,7 +136,7 @@ if (isset($touser)) {
     $mail->setToUser(array($to));
     $dest = $to->getRealName();
 } else if (isset($toaddress)) {
-    $to=eregi_replace('_maillink_','@',$toaddress);
+    $to = preg_replace('/_maillink_/i','@',$toaddress);
     $mail->setTo($to);
     $dest = $to;
 }

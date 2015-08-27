@@ -549,7 +549,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	if (user_isloggedin()) {
 		if ($subject) {
 			//if this is a followup, put a RE: before it if needed
-			if (!eregi('RE:',$subject,$test)) {
+			if (! preg_match('/RE:/i',$subject,$test)) {
 				$subject ='RE: '.$subject;
 			}
 		}

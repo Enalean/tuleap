@@ -1,21 +1,26 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All rights reserved
+ * Copyright Enalean (c) 2015. All rights reserved.
  *
- * This file is a part of Codendi.
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'autoload.php';
@@ -173,15 +178,15 @@ class tracker_date_reminderPlugin extends Plugin {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','specify_notified_users'));
                     } else if (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == NULL)) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','specify_notification_start'));
-                    } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
+                    } else if (!preg_match("/^[0-9]+$/",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','positive_value'));
                     } else if (!isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0))) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','specify_notification_frequency'));
-                    } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
+                    } else if (!preg_match("/^[0-9]+$/",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','positive_value'));
                     } else if (!isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0))) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','specify_notification_recurse'));
-                    } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
+                    } else if (!preg_match("/^[0-9]+$/",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','positive_value'));
                     } else {
                         

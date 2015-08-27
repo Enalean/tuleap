@@ -17,7 +17,7 @@ require_once('common/reference/ReferenceManager.class.php');
 
 function uniformat_date($format, $date) {
 
-  if (ereg("([0-9]{4})-?([0-9]{2})-?([0-9]{2}) ?([0-9]{2}):?([0-9]{2}):?([0-9]{2})", $date, $gp)) {
+  if (preg_match("/([0-9]{4})-?([0-9]{2})-?([0-9]{2}) ?([0-9]{2}):?([0-9]{2}):?([0-9]{2})/", $date, $gp)) {
     list(,$y, $m, $d, $h, $min, $s) = $gp;
     $time = mktime($h, $min, $s, $m, $d, $y);
     $date = date($format, $time);
@@ -470,7 +470,7 @@ function show_commit_details ($result) {
 	      while ($l < count($output)) { // parse the rlog result till getting "state: Exp;  lines:" 
 		$line = $output[$l];
 		$l++;
-		if (ereg ('state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$', $line, $na)) {
+		if (preg_match ('/state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$/', $line, $na)) {
 		  $added = $na[1];
 		  $removed = $na[2];
 		  $sql_up = "UPDATE cvs_checkins SET addedlines=".$added.", removedlines=".$removed." WHERE repositoryid=".db_result($result,$i,'repositoryid')." AND dirid=".db_result($result,$i,'dirid')." AND fileid=".db_result($result,$i,'fileid')." AND revision=".$revision;

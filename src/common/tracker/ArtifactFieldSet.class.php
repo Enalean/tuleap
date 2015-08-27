@@ -214,9 +214,10 @@ class ArtifactFieldSet {
      *
      * @return true if the fieldset name must be localized, false otherwise.
      */
-    function isNameMustBeLocalized() {
-        $pattern = "fieldset_(.*)_lbl_key";
-        return ereg($pattern, $this->getName());
+    public function isNameMustBeLocalized()
+    {
+        $pattern = "/fieldset_(.*)_lbl_key/";
+        return preg_match($pattern, $this->getName());
     }
     
     /**
@@ -225,9 +226,10 @@ class ArtifactFieldSet {
      *
      * @return true if the fieldset description must be localized, false otherwise.
      */
-    function isDescriptionMustBeLocalized() {
-        $pattern = "fieldset_(.*)_desc_key";
-        return ereg($pattern, $this->getDescription());
+    public function isDescriptionMustBeLocalized()
+    {
+        $pattern = "/fieldset_(.*)_desc_key/";
+        return preg_match($pattern, $this->getDescription());
     }
     
     /**

@@ -31,7 +31,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
             if (!$list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'provide_correct_list_name'));
             }
-            if (!ereg('(^([a-zA-Z\_0-9\.-]*))$', $list_name)) {
+            if (! preg_replace('/(^([a-zA-Z\_0-9\.-]*))$/', $list_name)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'list_name_unauthorized_char'));
             }
             if (user_is_super_user()) {

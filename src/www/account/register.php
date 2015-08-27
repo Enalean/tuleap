@@ -81,7 +81,7 @@ function register_valid($mail_confirm_code, array &$errors)	{
         return 0;
     }
     $expiry_date = 0;
-    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
+    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
         $errors['form_expiry'] = $Language->getText('account_register', 'data_not_parsed');
         return 0;
