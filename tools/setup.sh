@@ -1378,6 +1378,10 @@ do
         fi
         idx=$[ $idx + 1]
 done
+
+# Remove the last comma causing a bug on Centos6
+field_list=`echo $field_list | sed 's/,$//'`
+
 grplist=`echo $grplist_name | cut -f$field_list -d" "`;
  
 cat <<EOM
