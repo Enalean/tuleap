@@ -1,3 +1,6 @@
+Version 1.264 - Tuleap 8.6
+    * story #8341: Filter backlog items in planning v2 backlog
+
 Version 1.263 - Tuleap 8.6
     * request #8376: kanban drag 'n' drop utterly broken on columns
 

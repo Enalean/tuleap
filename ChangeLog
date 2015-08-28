@@ -24,7 +24,7 @@ Version 8.6 (Not Released Yet)
 	* request #8368: Files with special characters can't be downloaded with WEBDAV
 
 	== Plugins ==
-	* agiledashboard: 1.263
+	* agiledashboard: 1.264
 	* proftpd: 0.23
 	* tracker: 5.690
 	* phpwiki: 0.6
