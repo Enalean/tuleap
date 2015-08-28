@@ -114,7 +114,7 @@
                     function display() {
                         graphd3.path().attr("d", linkArc);
                         graphd3.circle().attr("transform", transform);
-                        graphd3.text().attr("transform", transform);
+                        d3.selectAll(".graph-label").attr("transform", transform);
                         graphd3.svg().style("display", "initial");
                     }
 
@@ -215,19 +215,47 @@
                             .append("a")
                             .attr("class", function (d) {
                                 if (d.id) {
-                                    return "updatable " + d.id;
+                                    return "graph-label updatable " + d.id;
                                 }
                             })
                             .attr("xlink:href", function(d) {
                                 return d.url;
                             })
                             .append("text")
-                            .attr("x", 10)
+                            .attr("x", 13)
                             .attr("y", ".31em")
+                            .attr("id", function (d) {
+                                return d.ref_name + "_" + d.id;
+                            })
+                            .attr("class", "ref-name ")
                             .text(function (d) {
-                                return d.title + " " + d.ref_name + " #" + d.id;
+                                return d.ref_name + " #" + d.id;
                             })
                     );
+
+                    d3.selectAll(".graph-label")
+                        .insert("rect", ":first-child")
+                        .attr("width", function(d) {
+                            return angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().width + 6;
+                        })
+                        .attr("height", function(d) {
+                            return angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().height + 4;
+                        })
+                        .attr("class", function(d) {
+                            return "ref-name-background " + d.color;
+                        })
+                        .attr("x", 10)
+                        .attr("y", -9)
+                        .attr("rx", 3)
+                        .attr('ry', 3);
+
+                    d3.selectAll(".graph-label")
+                        .append("text")
+                        .attr("x", 10)
+                        .attr("y", 20)
+                        .text(function (d) {
+                            return d.title + " ";
+                        });
                 };
 
                 graphd3.initSvg = function() {

@@ -16,9 +16,62 @@
 }
 
 circle {
-    stroke: #333;
-    stroke-width: 1.5px;
+    stroke-width: 2px;
     cursor: pointer;
+    transition: stroke-width linear 0.05s;
+
+    &:hover {
+        stroke-width: 5px;
+    }
+
+    &.inca_silver {
+        stroke: darken(@inca_silver, 20%);
+    }
+    &.chrome_silver {
+        stroke: darken(@chrome_silver, 20%);
+    }
+    &.fiesta_red {
+        stroke: darken(@fiesta_red, 20%);
+    }
+    &.teddy_brown {
+        stroke: darken(@teddy_brown, 20%);
+    }
+    &.clockwork_orange {
+        stroke: darken(@clockwork_orange, 20%);
+    }
+    &.red_wine {
+        stroke: darken(@red_wine, 20%);
+    }
+    &.acid_green {
+        stroke: darken(@acid_green, 20%);
+    }
+    &.army_green {
+        stroke: darken(@army_green, 20%);
+    }
+    &.sherwood_green {
+        stroke: darken(@sherwood_green, 20%);
+    }
+    &.ocean_turquoise {
+        stroke: darken(@ocean_turquoise, 20%);
+    }
+    &.daphne_blue {
+        stroke: darken(@daphne_blue, 20%);
+    }
+    &.lake_placid_blue {
+        stroke: darken(@lake_placid_blue, 20%);
+    }
+    &.deep_blue {
+        stroke: darken(@deep_blue, 20%);
+    }
+    &.plum_crazy {
+        stroke: darken(@plum_crazy, 20%);
+    }
+    &.peggy_pink {
+        stroke: darken(@peggy_pink, 20%);
+    }
+    &.flamingo_pink {
+        stroke: darken(@flamingo_pink, 20%);
+    }
 }
 
 text {
@@ -44,6 +97,24 @@ text {
 .overlay {
     fill: none;
     pointer-events: all;
+}
+
+.graph-label {
+    opacity: 0.8;
+
+    .ref-name {
+        fill: #FFF;
+        font-weight: bold;
+        text-shadow: none;
+    }
+
+    &:hover {
+        text-decoration: none;
+
+        > text:not(.ref-name) {
+            text-decoration: underline;
+        }
+    }
 }
 
 .inca_silver {
