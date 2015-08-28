@@ -4,6 +4,7 @@ Version 8.6 (Not Released Yet)
 	* request #8309: Get rid of PrototypeJS (Check Password)
 	* request #8309: Get rid of PrototypeJS (is-at-top)
 	* Allow to define a path for extra plugins
+	* request #8309: Get rid of PrototypeJS (Toggler)
 
 	== Enhancement ==
 	* story #8337: Web UI to set truncated email
