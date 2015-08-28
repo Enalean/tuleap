@@ -166,7 +166,7 @@ class ProjectResource {
             throw new RestException(403, 'Access denied to the test definition tracker');
         }
 
-        $paginated_artifacts = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset);
+        $paginated_artifacts = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, false);
         $result = array();
 
         foreach ($paginated_artifacts->getArtifacts() as $artifact) {
