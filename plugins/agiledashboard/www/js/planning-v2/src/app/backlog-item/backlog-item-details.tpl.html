@@ -3,20 +3,19 @@
 <span class="initial-effort-placeholder">
     <span ng-if="backlog_item.initial_effort"
         class="initial-effort label"
-        title="{{ 'Itinial effort' | translate }}"
-        translate
-        translate-n="{{ backlog_item.initial_effort }}"
-        translate-plural="{{ backlog_item.initial_effort }} pts"
-    >{{ backlog_item.initial_effort }} pt</span>
+        title="{{ 'Initial effort' | translate }}"
+        ng-bind-html="(backlog_item.initial_effort | tuleapHighlight:filter_terms) + ' ' + getInitialEffortMessage(backlog_item.initial_effort)"
+    ></span>
 
-    <span ng-if="! backlog_item.initial_effort" class="no-initial-effort label" title="{{ 'No itinial effort defined' | translate }}">
+    <span ng-if="! backlog_item.initial_effort" class="no-initial-effort label" title="{{ 'No initial effort defined' | translate }}">
         <i class="icon-question"></i>
     </span>
 </span>
 
 <div ng-if="backlog_item.accept.trackers.length > 0" class="dropdown id" data-nodrag="true">
     <a href="/plugins/tracker/?aid={{ backlog_item.id }}" data-toggle="dropdown" data-target="#">
-        {{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }} <b class="caret"></b>
+        <span ng-bind-html="backlog_item.short_type + ' #' + backlog_item.id | lowercase | tuleapHighlight:filter_terms"></span>
+        <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
         <li>
@@ -34,46 +33,47 @@
 </div>
 <div ng-if="backlog_item.accept.trackers.length === 0" class="id" data-nodrag="true">
     <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item)">
-        {{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }}
+        <span ng-bind-html="backlog_item.short_type + ' #' + backlog_item.id | lowercase | tuleapHighlight:filter_terms"></span>
+        <b class="caret"></b>
     </a>
 </div>
 
-<span class="summary">{{ backlog_item.label }}</span>
-<span class="parent">{{ backlog_item.parent.label }}</span>
+<span class="summary" ng-bind-html="getCardFieldTextValue(backlog_item.label) | tuleapHighlight:filter_terms"></span>
+<span class="parent" ng-bind-html="backlog_item.parent.label | tuleapHighlight:filter_terms"></span>
 
 <ul class="extra_card_fields" ng-if="backlog_item.card_fields.length > 0">
     <li ng-repeat="card_field in backlog_item.card_fields track by $index" ng-class="{ large: cardFieldIsText(card_field.type) && card_field.value }">
         <div ng-if="cardFieldIsSimpleValue(card_field.type) && card_field.value">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            {{ card_field.value }}
+            <span ng-bind-html="getCardFieldTextValue(card_field.value) | tuleapHighlight:filter_terms"></span>
         </div>
         <div ng-if="cardFieldIsList(card_field.type) && card_field.values.length > 0">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span ng-bind-html="getCardFieldListValues(card_field.values)"></span>
+            <span ng-bind-html="getCardFieldListValues(card_field.values, filter_terms)"></span>
         </div>
         <div ng-if="cardFieldIsDate(card_field.type) && card_field.value">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span am-time-ago="card_field.value"></span>
+            <span title="{{ card_field.value }}" ng-bind-html="getCardFieldDateValue(card_field.value) | tuleapHighlight:filter_terms"></span>
         </div>
         <div ng-if="cardFieldIsText(card_field.type) && card_field.value">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span ng-bind-html="getCardFieldTextValue(card_field.value)"></span>
+            <span ng-bind-html="getCardFieldTextValue(card_field.value) | tuleapHighlight:filter_terms"></span>
         </div>
         <div ng-if="cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span ng-bind-html="getCardFieldFileValue(backlog_item.id, card_field.field_id, card_field.file_descriptions)"></span>
+            <span ng-bind-html="getCardFieldFileValue(backlog_item.id, card_field.field_id, card_field.file_descriptions, filter_terms)"></span>
         </div>
         <div ng-if="cardFieldIsCross(card_field.type) && card_field.value">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span ng-bind-html="getCardFieldCrossValue(card_field.value)"></span>
+            <span ng-bind-html="getCardFieldCrossValue(card_field.value, filter_terms)"></span>
         </div>
         <div ng-if="cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span ng-bind-html="getCardFieldPermissionsValue(card_field.granted_groups)"></span>
+            <span ng-bind-html="getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:filter_terms"></span>
         </div>
         <div ng-if="cardFieldIsUser(card_field.type) && card_field.value">
             <span class="extra_card_field_title">{{ card_field.label }}: </span>
-            <span ng-bind-html="getCardFieldUserValue(card_field.value)"></span>
+            <span ng-bind-html="getCardFieldUserValue(card_field.value, filter_terms)"></span>
         </div>
         <!-- Artifact links & Burndown fields are not managed yet -->
     </li>
