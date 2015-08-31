@@ -1,3 +1,6 @@
+Version 2.26.81 - Tuleap 8.6
+    * story #7883: PHPWiki plugin works with Docman
+
 Version 2.26.80 - Tuleap 8.6
     * request #8363: Update service load mecanism
 
