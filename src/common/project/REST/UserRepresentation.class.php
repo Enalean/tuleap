@@ -48,7 +48,7 @@ class UserRepresentation {
     public function build(Tracker_FormElement_Field_List_Bind_UsersValue $user) {
         $this->id        = $user->getId();
         $this->uri       = UserRepresentation::ROUTE . '/' . $this->id;
-        $this->real_name = UserHelper::instance()->getDisplayNameFromUserId($this->id);
+        $this->real_name = $user->getLabel();
         $this->username  = $user->getUsername();
     }
 }
