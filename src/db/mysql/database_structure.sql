@@ -1974,7 +1974,8 @@ CREATE TABLE IF NOT EXISTS system_event (
   end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   owner VARCHAR(255) NOT NULL default 'root',
   log TEXT,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  INDEX type_idx (type(20))
 );
 
 CREATE TABLE system_events_followers (
