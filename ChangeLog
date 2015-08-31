@@ -22,6 +22,7 @@ Version 8.6 (Not Released Yet)
 	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
 	* request #8377: Profile script broken on CentOS 6
 	* request #8368: Files with special characters can't be downloaded with WEBDAV
+	* request #8378: Speed-up queries on this system_event table
 
 	== Plugins ==
 	* agiledashboard: 1.264
