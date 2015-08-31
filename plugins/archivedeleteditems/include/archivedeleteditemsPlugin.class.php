@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,16 +73,18 @@ class ArchivedeleteditemsPlugin extends Plugin {
      */
     public function archive_deleted_item($params) {
         $params['status'] = false;
+
         if (!empty($params['source_path'])) {
-            $sourcePath = $params['source_path'];
+            $source_path = $params['source_path'];
         } else {
             $params['error'] = 'Missing argument source path';
             return false;
         }
 
-        $archivePath = $this->getConfigurationParameter('archive_path');
-        if (!empty($archivePath)) {
-            if(!is_dir($archivePath)) {
+        $archive_path = $this->getWellFormattedArchivePath();
+
+        if (!empty($archive_path)) {
+            if(!is_dir($archive_path)) {
                 $params['error'] = 'Non-existing archive path';
                 return false;
             }
@@ -91,7 +94,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
         }
 
         if (!empty($params['archive_prefix'])) {
-            $archivePrefix = $params['archive_prefix'];
+            $archive_prefix = $params['archive_prefix'];
         } else {
             $params['error'] = 'Missing argument archive prefix';
             return false;
@@ -99,23 +102,33 @@ class ArchivedeleteditemsPlugin extends Plugin {
 
         $ret_val         = null;
         $exec_res        = null;
-        if (file_exists($sourcePath)) {
-            $destinationPath = $archivePath.$archivePrefix.'_'.basename($sourcePath);
-            $cmd             = $this->archiveScript." ".$sourcePath." " .$destinationPath;
+        if (file_exists($source_path)) {
+            $destination_path = $archive_path.$archive_prefix.'_'.basename($source_path);
+            $cmd              = $this->archiveScript." ".$source_path." " .$destination_path;
+
             exec($cmd, $exec_res, $ret_val);
             if ($ret_val == 0) {
                 $params['status'] = true;
                 return true;
             } else {
-                $params['error'] = 'Archiving of "'.$sourcePath.'" in "'.$destinationPath.'" failed';
+                $params['error'] = 'Archiving of "'.$source_path.'" in "'.$destination_path.'" failed';
                 return false;
             }
         } else {
-            $params['error'] = 'Skipping file "'.$sourcePath.'": not found in file system.';
+            $params['error'] = 'Skipping file "'.$source_path.'": not found in file system.';
             return false;
         }
     }
 
-}
+    private function getWellFormattedArchivePath() {
+        $archive_path = $this->getConfigurationParameter('archive_path');
 
-?>
+        if ($archive_path) {
+            $archive_path  = rtrim($archive_path, '/');
+            $archive_path .= '/';
+        }
+
+        return $archive_path;
+    }
+
+}
