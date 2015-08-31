@@ -1,3 +1,10 @@
+Version 8.5-3
+	== Bug Fix ==
+	* request #8368: Files with special characters can't be downloaded with WEBDAV
+	* request #8377: Profile script broken on CentOS 6
+	* request #8320: Updates to Story Points are not immediately reflected in the V2 Planning
+	* request #8376: kanban drag 'n' drop utterly broken on columns
+
 Version 8.5-2
 
 	== Development ==
