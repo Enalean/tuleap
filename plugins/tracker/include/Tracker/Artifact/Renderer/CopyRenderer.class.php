@@ -99,7 +99,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
 
     protected function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
-        $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this));
+        $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this, $this->event_manager));
 
         return $view_collection->fetchRequestedView($request);
     }
