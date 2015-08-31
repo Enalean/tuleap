@@ -1,3 +1,6 @@
+Version 5.691 - Tuleap 8.6
+    * request #8375: Fix fatal error in when copying an artifact
+
 Version 5.690 - Tuleap 8.6
     * request #8375 Give the possibility to complete reference sidebar for an artifact
 
