@@ -9,13 +9,14 @@ describe("PlanningCtrl", function() {
         inject(function ($controller, $rootScope, _$q_) {
             $scope = $rootScope.$new();
             $q = _$q_;
+            $filter = jasmine.createSpy("$filter");
 
             BacklogItemService = jasmine.createSpyObj("BacklogItemService", [
                 "addToMilestone",
-                "getBacklogItem",
                 "getBacklogItemChildren",
                 "getMilestoneBacklogItems",
                 "getProjectBacklogItems",
+                "getBacklogItem",
                 "removeAddBacklogItemChildren"
             ]);
             _.invoke(BacklogItemService, "andReturn", $q.defer().promise);
@@ -59,11 +60,14 @@ describe("PlanningCtrl", function() {
             ]);
             _.invoke(UserPreferencesService, "andReturn", $q.defer().promise);
 
-            $filter = jasmine.createSpy("$filter");
+            $filter.andCallFake(function() {
+                return function() {};
+            });
 
             PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
                 $filter: $filter,
+                $q: $q,
                 BacklogItemService: BacklogItemService,
                 MilestoneService: MilestoneService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
@@ -75,87 +79,178 @@ describe("PlanningCtrl", function() {
         });
         deferred = $q.defer();
         second_deferred = $q.defer();
+
+        installPromiseMatchers();
     });
 
-    describe("fetchProjectBacklogItems() -", function() {
+    describe("displayBacklogItems() -", function() {
         beforeEach(function() {
+            spyOn($scope, "fetchBacklogItems").andReturn(deferred.promise);
+            $scope.backlog_items = {
+                loading: false,
+                fully_loaded: false
+            };
+        });
+
+        it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I display the backlog items, then the REST route will be called and a promise will be resolved", function() {
+            var promise = $scope.displayBacklogItems();
+            deferred.resolve(86);
+
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect(promise).toBeResolved();
+        });
+
+        it("Given that we were already loading backlog_items, when I display the backlog items then the REST route won't be called again and a promise will be resolved", function() {
+            $scope.backlog_items.loading = true;
+
+            var promise = $scope.displayBacklogItems();
+
+            expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
+            expect(promise).toBeResolved();
+        });
+
+        it("Given that all the backlog_items had been loaded, when I display the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
+            $scope.backlog_items.fully_loaded = true;
+
+            var promise = $scope.displayBacklogItems();
+
+            expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
+            expect(promise).toBeResolved();
+        });
+    });
+
+    describe("fetchAllBacklogItems() -", function() {
+        beforeEach(function() {
+            spyOn($scope, "fetchBacklogItems").andReturn(deferred.promise);
+            $scope.backlog_items = {
+                loading: false,
+                fully_loaded: false
+            };
+        });
+
+        it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I fetch all the backlog items, then the REST route will be called and a promise will be resolved", function() {
+            var promise = $scope.fetchAllBacklogItems(50, 0);
+            deferred.resolve(40);
+
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect(promise).toBeResolved();
+        });
+
+        it("Given that there were more items than the current offset and limit, when I fetch all the backlog items, then the REST route will be called twice and a promise will be resolved", function() {
+            var promise = $scope.fetchAllBacklogItems(50, 0);
+            deferred.resolve(83);
+            $scope.$apply();
+
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
+            expect($scope.fetchBacklogItems.calls.length).toEqual(2);
+            expect(promise).toBeResolved();
+        });
+
+        it("Given that we were already loading backlog_items, when I fetch all the backlog items, then the REST route won't be called again and a promise will be rejected", function() {
+            $scope.backlog_items.loading = true;
+
+            var promise = $scope.fetchAllBacklogItems(50, 0);
+
+            expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
+            expect(promise).toBeRejected();
+        });
+
+        it("Given that all the backlog_items had been loaded, when I fetch all the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
+            $scope.backlog_items.fully_loaded = true;
+
+            var promise = $scope.fetchAllBacklogItems(50, 0);
+
+            expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
+            expect(promise).toBeRejected();
+        });
+    });
+
+    describe("fetchBacklogItems() -", function() {
+        beforeEach(function() {
+            spyOn($scope, "appendBacklogItems");
+        });
+
+        it("Given that we are in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
+            SharedPropertiesService.getProjectId.andReturn(736);
             BacklogItemService.getProjectBacklogItems.andReturn(deferred.promise);
-        });
 
-        it("Given a project id, a limit of 50 items and an offset of 0 items and given there are only 2 items, when I fetch the project's backlog items, then the BacklogItemService will be queried, the items will be published in the scope and the loader will be set to false", function() {
-            $scope.fetchProjectBacklogItems(60, 50, 0, false);
+            var promise = $scope.fetchBacklogItems(60, 25);
+            expect($scope.backlog_items.loading).toBeTruthy();
             deferred.resolve({
                 results: [
-                    { id: 300 },
-                    { id: 231 }
+                    { id: 734 }
                 ],
-                total: 2
+                total: 34
             });
             $scope.$apply();
 
-            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(60, 50, 0);
-            expect($scope.items).toEqual({
-                300: { id: 300 },
-                231: { id: 231 }
-            });
-            expect($scope.backlog_items.content).toEqual([
-                { id: 300 },
-                { id: 231 }
-            ]);
-            expect($scope.backlog_items.filtered_content).toEqual($scope.backlog_items.content);
-            expect($scope.backlog_items.loading).toBeFalsy();
+            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
+            expect($scope.appendBacklogItems).toHaveBeenCalledWith([{ id: 734 }]);
+            expect(promise).toBeResolvedWith(34);
         });
 
-        it("Given a project id, a limit of 2 items and an offset of 1 and given there are 4 items and given we want to fetch all items, when I fetch the project's backlog items, then the BacklogItemService will be queried twice", function() {
-            $scope.fetchProjectBacklogItems(57, 2, 1, true);
+        it("Given that we are in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
+            SharedPropertiesService.getMilestoneId.andReturn(592);
+            BacklogItemService.getMilestoneBacklogItems.andReturn(deferred.promise);
+
+            var promise = $scope.fetchBacklogItems(60, 25);
+            expect($scope.backlog_items.loading).toBeTruthy();
             deferred.resolve({
-                total: 4
+                results: [
+                    { id: 836 }
+                ],
+                total: 85
             });
             $scope.$apply();
 
-            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(57, 2, 1);
-            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(57, 2, 3);
+            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
+            expect($scope.appendBacklogItems).toHaveBeenCalledWith([{ id: 836 }]);
+            expect(promise).toBeResolvedWith(85);
         });
     });
 
-    describe("fetchMilestoneBacklogItems() -", function() {
-        beforeEach(function() {
-            BacklogItemService.getMilestoneBacklogItems.andReturn(deferred.promise);
-        });
+    describe("appendBacklogItems() -", function() {
+        it("Given an array of items, when I append backlog items, then the results array will be appended to the scope's items and to the scope's backlog_items' content, the filter will be applied, and the backlog_items will no longer be marked as loading", function() {
+            $scope.appendBacklogItems([
+                { id: 641 },
+                { id: 136 }
+            ]);
 
-        it("Given a milestone id, a limit of 50 items and an offset of 0 items and given there are only 2 items, when I fetch the milestone's backlog items, then the BacklogItemService will be queried, the items will be published in the scope and the loader will be set to false", function() {
-            $scope.fetchMilestoneBacklogItems(32, 50, 0, false);
-            deferred.resolve({
-                results: [
-                    { id: 376 },
-                    { id: 215 }
-                ],
-                total: 2
-            });
-            $scope.$apply();
-
-            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(32, 50, 0);
             expect($scope.items).toEqual({
-                376: { id: 376 },
-                215: { id: 215 }
+                641: { id: 641 },
+                136: { id: 136 }
             });
             expect($scope.backlog_items.content).toEqual([
-                { id: 376 },
-                { id: 215 }
+                { id: 641 },
+                { id: 136 }
             ]);
-            expect($scope.backlog_items.filtered_content).toEqual($scope.backlog_items.content);
+            expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
             expect($scope.backlog_items.loading).toBeFalsy();
         });
+    });
 
-        it("Given a milestone id, a limit of 2 items and an offset of 1 and given there are 4 items and given we want to fetch all items, when I fetch the milestone's backlog items, then the BacklogItemService will be queried twice", function() {
-            $scope.fetchMilestoneBacklogItems(10, 2, 1, true);
-            deferred.resolve({
-                total: 4
-            });
+    describe("filterBacklog() -", function() {
+        beforeEach(function() {
+            spyOn($scope, "fetchAllBacklogItems").andReturn(deferred.promise);
+        });
+
+        it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
+            var promise = $scope.filterBacklog();
+            deferred.resolve(50);
             $scope.$apply();
 
-            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(10, 2, 1);
-            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(10, 2, 3);
+            expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
+            expect($scope.fetchAllBacklogItems).toHaveBeenCalledWith(50, 0);
+        });
+
+        it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
+            var promise = $scope.filterBacklog();
+            deferred.reject(99);
+            $scope.$apply();
+
+            expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
+            expect($scope.fetchAllBacklogItems).toHaveBeenCalledWith(50, 0);
         });
     });
 
@@ -164,14 +259,13 @@ describe("PlanningCtrl", function() {
             BacklogItemService.getBacklogItemChildren.andReturn(deferred.promise);
         });
 
-        it("Given a backlog item, a limit of 50 items and an offset of 0 items and given there are only 2 children, when I fetch the backlog item's children then the BacklogItemService will be queried, the children will be added to the item and the loader will be set to false", function() {
+        it("Given a backlog item and given there are 2 children, when I fetch the backlog item's children then the BacklogItemService will be queried, the children will be added to the item and the loader will be set to false", function() {
             var backlog_item = {
                 id: 95,
                 children: {
                     data: []
                 }
             };
-
             $scope.fetchBacklogItemChildren(backlog_item, 50, 0);
             deferred.resolve({
                 results: [
@@ -189,24 +283,6 @@ describe("PlanningCtrl", function() {
             ]);
             expect(backlog_item.loading).toBeFalsy();
             expect(backlog_item.children.loaded).toBeTruthy();
-        });
-
-        it("Given a backlog item, a limit of 2 items and an offset of 1 and given there are 2 children, when I fetch the item's children, then the BacklogItemService will be queried twice", function() {
-            var backlog_item = {
-                id: 317,
-                children: {
-                    data: []
-                }
-            };
-
-            $scope.fetchBacklogItemChildren(backlog_item, 2, 1);
-            deferred.resolve({
-                total: 4
-            });
-            $scope.$apply();
-
-            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(317, 2, 1);
-            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(317, 2, 3);
         });
     });
 
