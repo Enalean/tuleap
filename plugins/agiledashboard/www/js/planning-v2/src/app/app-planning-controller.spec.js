@@ -15,7 +15,8 @@ describe("PlanningCtrl", function() {
                 "getBacklogItem",
                 "getBacklogItemChildren",
                 "getMilestoneBacklogItems",
-                "getProjectBacklogItems"
+                "getProjectBacklogItems",
+                "removeAddBacklogItemChildren"
             ]);
             _.invoke(BacklogItemService, "andReturn", $q.defer().promise);
 
@@ -272,19 +273,22 @@ describe("PlanningCtrl", function() {
                 };
             });
 
-            describe("Given a project backlog object and an item id", function() {
+            describe("Given a project backlog object and an item id,", function() {
                 beforeEach(function() {
                     fakeBacklog = {
                         rest_route_id: 80,
                         rest_base_route: "projects"
                     };
+                    ProjectService.removeAddReorderToBacklog.andReturn(second_deferred.promise);
                 });
 
-                it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, published on the scope's items object and prepended to the backlog_items array", function() {
+                it("when the new artifact modal calls its callback, then the artifact will be prepended to the backlog using REST, it will be retrieved from the server, published on the scope's items object and prepended to the backlog_items array", function() {
                     $scope.backlog_items.content = [
                         { id: 3894 }
                     ];
-                    ProjectService.removeAddReorderToBacklog.andReturn(second_deferred.promise);
+                    $scope.backlog_items.filtered_content = [
+                        { id: 3894 }
+                    ];
 
                     $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
                     deferred.resolve(fakeArtifact);
@@ -301,6 +305,29 @@ describe("PlanningCtrl", function() {
                         { id: 5202 },
                         { id: 3894 }
                     ]);
+                    expect($scope.backlog_items.filtered_content).toEqual([
+                        { id: 5202 },
+                        { id: 3894 }
+                    ]);
+                });
+
+                it("and given that the backlog was filtered, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog's content but not its filtered content", function() {
+                    $scope.filter_terms = 'needle';
+                    $scope.backlog_items.content = [
+                        { id: 7453 }
+                    ];
+                    $scope.backlog_items.filtered_content = [];
+
+                    $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
+                    deferred.resolve(fakeArtifact);
+                    second_deferred.resolve();
+                    $scope.$apply();
+
+                    expect($scope.backlog_items.content).toEqual([
+                        { id: 5202 },
+                        { id: 7453 }
+                    ]);
+                    expect($scope.backlog_items.filtered_content).toEqual([]);
                 });
 
                 it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the scope's backlog_items array", function() {
@@ -367,7 +394,64 @@ describe("PlanningCtrl", function() {
                     ]);
                 });
             });
+        });
+    });
 
+    describe("showAddChildModal() -", function() {
+        var fake_event, fake_item_type, fake_parent_item;
+        beforeEach(function() {
+            fake_event       = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            fake_item_type   = { id: 77 };
+            fake_parent_item = {
+                id: 928,
+                has_children: true,
+                children: {
+                    loaded: true,
+                    data: [
+                        { id: 3525 }
+                    ]
+                },
+                updating: false
+            };
+            $scope.items[928] = fake_parent_item;
+        });
+
+        it("Given an event, an item type and a parent item, when I show the modal to add a child to an item, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
+            $scope.showAddChildModal(fake_event, fake_item_type, fake_parent_item);
+
+            expect(fake_event.preventDefault).toHaveBeenCalled();
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(77, fake_parent_item, jasmine.any(Function));
+        });
+
+        describe("callback -", function() {
+            var fake_artifact;
+            beforeEach(function() {
+                NewTuleapArtifactModalService.showCreation.andCallFake(function(a, b, callback) {
+                    callback(9268);
+                });
+                BacklogItemService.getBacklogItem.andReturn(deferred.promise);
+                fake_artifact = {
+                    backlog_item: {
+                        id: 9268
+                    }
+                };
+                BacklogItemService.removeAddBacklogItemChildren.andReturn(second_deferred.promise);
+            });
+
+            it("When the new artifact modal calls its callback, then the artifact will be appended to the parent item's children using REST, it will be retrieved from the server, added to the scope's items and appended to the parent's children array", function() {
+                $scope.showAddChildModal(fake_event, fake_item_type, fake_parent_item);
+                deferred.resolve(fake_artifact);
+                second_deferred.resolve();
+                $scope.$apply();
+
+                expect(BacklogItemService.removeAddBacklogItemChildren).toHaveBeenCalledWith(undefined, 928, 9268);
+                expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(9268);
+                expect($scope.items[9268]).toEqual({ id: 9268 });
+                expect(fake_parent_item.children.data).toEqual([
+                    { id: 3525 },
+                    { id: 9268 }
+                ]);
+            });
         });
     });
 
