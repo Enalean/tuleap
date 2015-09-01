@@ -1,7 +1,7 @@
 rp:
-  image: tuleap-reverseproxy
+  image: enalean/tuleap-reverseproxy
   links:
-   - web:web
+   - web:tuleap-web
   volumes_from:
    - tuleap_reverseproxy_data
 

@@ -191,11 +191,13 @@ show-passwords:
 	@docker run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
 
 start-dns:
+	@docker stop dnsdock || true
+	@docker rm dnsdock || true
 	@docker run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
 
 start-rp:
 	@echo "Start reverse proxy"
-	@docker-compose up --x-smart-recreate -d rp
+	@docker-compose up -d rp
 
 start:
 	@echo "Start Tuleap Web + LDAP + DB"
