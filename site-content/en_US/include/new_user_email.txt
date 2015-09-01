@@ -15,7 +15,7 @@ $section_two = "To get started, we need to confirm your email address, so please
 
 $section_after_login = ".";
 
-$redirect_button = "Confirm you email address";
+$redirect_button = "Confirm your email address";
 
 $thanks = "Thanks!";
 
