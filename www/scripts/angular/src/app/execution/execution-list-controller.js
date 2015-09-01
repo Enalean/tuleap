@@ -22,7 +22,9 @@
     ) {
         var campaign_id = $state.params.id;
 
-        ExecutionService.loadExecutions(campaign_id);
+        ExecutionService.loadExecutions(campaign_id).then(function() {
+            SocketService.getGlobalPositions();
+        });
 
         $scope.campaign             = CampaignService.getCampaign(campaign_id);
         $scope.categories           = ExecutionService.executions_by_categories_by_campaigns[campaign_id];

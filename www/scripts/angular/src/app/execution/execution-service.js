@@ -36,10 +36,10 @@
 
             self.loading[campaign_id] = true;
             self.executions_by_categories_by_campaigns[campaign_id] = {};
-            getExecutions(limit, offset);
+            return getExecutions(limit, offset);
 
             function getExecutions(limit, offset) {
-                getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
+                return getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
                     var total_executions  = data.total;
 
                     nb_fetched += data.results.length;

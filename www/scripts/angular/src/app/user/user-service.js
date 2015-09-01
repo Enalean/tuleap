@@ -11,7 +11,8 @@ function UserService($q, $cookies, Restangular) {
     return {
         getUser                  : getUser,
         getCurrentUser           : getCurrentUser,
-        getCurrentUserFromCookies: getCurrentUserFromCookies
+        getCurrentUserFromCookies: getCurrentUserFromCookies,
+        prepareCurrentUser       : prepareCurrentUser
     };
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -23,14 +24,14 @@ function UserService($q, $cookies, Restangular) {
         return rest.one('users', user_id).get();
     }
 
-    function getCurrentUser() {
+    function getCurrentUser(cookies_prefix) {
         var user_id = getUserIdFromCookies(),
             token   = getUserTokenFromCookies(),
             data    = $q.defer();
 
         if (angular.isUndefined(user_id) || angular.isUndefined(token)) {
-            user_id = $cookies.CODENDI_user_id,
-            token   = $cookies.CODENDI_user_token;
+            user_id = $cookies[cookies_prefix+'_user_id'];
+            token   = $cookies[cookies_prefix+'_user_token'];
         }
 
         getUser(user_id).then(function(response) {
@@ -41,6 +42,19 @@ function UserService($q, $cookies, Restangular) {
         });
 
         return data.promise;
+    }
+
+    function prepareCurrentUser(user_json, cookies_prefix) {
+        var user = user_json,
+        token    = getUserTokenFromCookies();
+
+        if (angular.isUndefined(token)) {
+            token = $cookies[cookies_prefix+'_user_token'];
+        }
+
+        user.token = token;
+
+        return user;
     }
 
     function getCurrentUserFromCookies() {

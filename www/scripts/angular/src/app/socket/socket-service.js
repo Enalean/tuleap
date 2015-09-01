@@ -9,7 +9,8 @@ function SocketService(SocketFactory, SharedPropertiesService, ExecutionService)
         viewTestExecution       : viewTestExecution,
         listenToExecutionViewed : listenToExecutionViewed,
         updateTestExecution     : updateTestExecution,
-        listenToExecutionUpdated: listenToExecutionUpdated
+        listenToExecutionUpdated: listenToExecutionUpdated,
+        getGlobalPositions      : getGlobalPositions
     };
 
     function prepareData(data) {
@@ -33,6 +34,16 @@ function SocketService(SocketFactory, SharedPropertiesService, ExecutionService)
                 ExecutionService.executions[response.data.id].viewed_by = response.data.user;
             }
         });
+    }
+
+    function getGlobalPositions() {
+        SocketFactory.on('positions:all', function(response) {
+            response.forEach(function(element) {
+                ExecutionService.executions[element.id].viewed_by = element.user;
+            });
+        });
+
+        SocketFactory.emit('positions:all', prepareData());
     }
 
     function updateTestExecution(execution) {

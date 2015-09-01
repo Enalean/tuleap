@@ -84,4 +84,8 @@ class IndexPresenter {
     public function node_server_address() {
         return TuleapConfig::get('node_server_address', false) ? TuleapConfig::get('node_server_address'): TuleapConfig::get('sys_default_domain');
     }
+
+    public function cookies_prefix() {
+        return TuleapConfig::get('sys_cookie_prefix');
+    }
 }
