@@ -5,6 +5,8 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Dashboard agile
 
 plugin_agiledashboard	Admin	Administration du dashboard agile
+plugin_agiledashboard	AdminScrum	Administration Scrum du dashboard agile
+plugin_agiledashboard	AdminKanban	Administration Kanban du dashboard agile
 plugin_agiledashboard	cannot_create_planning	Vous ne pouvez plus créer de planning soit:
 plugin_agiledashboard	cannot_create_planning_no_trackers	parce qu'il n'y a pas de trackers
 plugin_agiledashboard	cannot_create_planning_hierarchy	ou alors tous les trackers "planning" potentiels ($1) sont déjà utilisés par une configuration (ci-dessous).
@@ -56,7 +58,10 @@ plugin_agiledashboard	import_template_success	La configuration a été importée
 plugin_agiledashboard	cannot_import	Impossible d'importer la configuration!
 plugin_agiledashboard	import_notes	Note:<br>Cette opération va créer des trackers. L'opération ne pourra aboutir si la configuration contient des trackers denommés identiquement à des trackers existants
 plugin_agiledashboard	planning_section	Gestion des plannings
-plugin_agiledashboard	import_export_section	Import/ Export
+plugin_agiledashboard	import_export_section	Import/Export
+plugin_agiledashboard	general_settings_section	Options générales
+plugin_agiledashboard	edit_action_label	Editer
+plugin_agiledashboard	delete_action_label	Supprimer
 
 plugin_agiledashboard	home_user_helper_done	Les jalons terminés ont leur statut défini à 'fermé' tel que précisé dans la sémantique.
 plugin_agiledashboard	home_user_helper_others	Les jalons en cours et à venir ont leur statut défini à 'ouvert' tel que précisé dans la sémantique. De plus, ils sont classés en fonction de leur champs de type date (start_date et duration).
@@ -131,10 +136,17 @@ plugin_agiledashboard	invalid_request	La requête n'est pas valide.
 plugin_agiledashboard	no_service_selected	Un service doit obligatoirement être selectionné.
 plugin_agiledashboard	tracker_used_in_scrum	L'outil de suivi sélectionné est déjà utilisé dans une configuration de planning.
 plugin_agiledashboard	hierarchy_used_in_scrum	L'outil de suivi sélectionné se trouve dans une hiérarchie déjà utilisée dans une configuration de planning.
-plugin_agiledashboard	activate_service_legend	Quel(s) service(s) voulez-vous activer sur la page d'accueil du dashboard agile ?
 plugin_agiledashboard	config_submit_label	Sauvegarder la configuration
 plugin_agiledashboard	title	Titre
+plugin_agiledashboard	title_scrum_help	Titre affiché sur la page d'accueil du service AgileDashboard pour la partie Scrum
+plugin_agiledashboard	title_kanban_help	Titre affiché sur la page d'accueil du service AgileDashboard pour la partie Kanban
 
+plugin_agiledashboard	activate_kanban_label	Activer Kanban
+plugin_agiledashboard	activate_scrum_label	Activer Scrum
+plugin_agiledashboard	scrum_activated_label	Scrum est actuellement actif.
+plugin_agiledashboard	scrum_not_activated_label	Scrum n'est actuellement pas actif.
+plugin_agiledashboard	kanban_activated_label	Kanban est actuellement actif.
+plugin_agiledashboard	kanban_not_activated_label	Kanban n'est actuellement pas actif.
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum
 plugin_agiledashboard	all_label	Scrum et Kanban

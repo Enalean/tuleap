@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -72,17 +72,27 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         return new BreadCrumb_AgileDashboard();
     }
 
-    public function admin() {
+    public function adminScrum() {
         return $this->renderToString(
-            'admin',
-            $this->getAdminPresenter(
+            'admin-scrum',
+            $this->getAdminScrumPresenter(
                 $this->getCurrentUser(),
                 $this->group_id
             )
         );
     }
 
-    private function getAdminPresenter(PFUser $user, $group_id) {
+    public function adminKanban() {
+        return $this->renderToString(
+            'admin-kanban',
+            $this->getAdminKanbanPresenter(
+                $this->getCurrentUser(),
+                $this->group_id
+            )
+        );
+    }
+
+    private function getAdminScrumPresenter(PFUser $user, $group_id) {
         $can_create_planning         = true;
         $tracker_uri                 = '';
         $root_planning_name          = '';
@@ -99,17 +109,22 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
         }
 
-        return new AdminPresenter(
+        return new AdminScrumPresenter(
             $this->getPlanningAdminPresenterList($user, $group_id, $root_planning_name),
             $group_id,
             $can_create_planning,
             $tracker_uri,
             $root_planning_name,
             $potential_planning_trackers,
-            $kanban_activated,
             $scrum_activated,
-            $all_activated,
-            $this->config_manager->getScrumTitle($group_id),
+            $this->config_manager->getScrumTitle($group_id)
+        );
+    }
+
+    private function getAdminKanbanPresenter(PFUser $user, $group_id) {
+        return new AdminKanbanPresenter(
+            $group_id,
+            $this->config_manager->kanbanIsActivatedForProject($group_id),
             $this->config_manager->getKanbanTitle($group_id)
         );
     }
@@ -131,7 +146,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     public function updateConfiguration() {
-        $this->checkIfRequestIsValid();
+        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
+        $token->check();
 
         if (! $this->request->getCurrentUser()->isAdmin($this->group_id)) {
             $GLOBALS['Response']->addFeedback(
@@ -142,122 +158,14 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return;
         }
 
-        switch ($this->request->get('activate-ad-component')) {
-            case 'activate-scrum':
-                 $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated')
-                );
-
-                $scrum_is_activated  = 1;
-                $kanban_is_activated = 0;
-
-                break;
-            case 'activate-kanban':
-                 $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated')
-                );
-
-                $scrum_is_activated  = 0;
-                $kanban_is_activated = 1;
-                break;
-
-            case 'activate-all':
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'all_activated')
-                );
-
-                $scrum_is_activated  = 1;
-                $kanban_is_activated = 1;
-                break;
-
-            default:
-                $this->notifyErrorAndRedirectToAdmin();
-                return;
+        $response = new AgileDashboardConfigurationResponse($this->request->getProject());
+        if ($this->request->exist('activate-kanban')) {
+            $updater = new AgileDashboardKanbanConfigurationUpdater($this->request, $this->config_manager, $response);
+        } else {
+            $updater = new AgileDashboardScrumConfigurationUpdater($this->request, $this->config_manager, $response);
         }
 
-        $this->config_manager->updateConfiguration(
-            $this->group_id,
-            $scrum_is_activated,
-            $kanban_is_activated,
-            $this->getScrumTitle(),
-            $this->getKanbanTitle()
-        );
-
-        $this->redirectToAdmin();
-    }
-
-    private function getScrumTitle() {
-        $scrum_title     = trim($this->request->get('scrum-title-admin'));
-        $old_scrum_title = $this->request->get('old-scrum-title-admin');
-
-        if ($scrum_title !== $old_scrum_title) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_title_changed')
-            );
-        }
-
-        if ($scrum_title == '') {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_title_empty')
-            );
-
-            $scrum_title = $old_scrum_title;
-        }
-
-        return $scrum_title;
-    }
-
-    private function getKanbanTitle() {
-        $kanban_title     = trim($this->request->get('kanban-title-admin'));
-        $old_kanban_title = $this->request->get('old-kanban-title-admin');
-
-        if ($kanban_title !== $old_kanban_title) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_title_changed')
-            );
-        }
-
-        if ($kanban_title == '') {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_title_empty')
-            );
-
-            $kanban_title = $old_kanban_title;
-        }
-
-        return $kanban_title;
-    }
-
-    private function notifyErrorAndRedirectToAdmin() {
-         $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_agiledashboard', 'invalid_request')
-        );
-
-        $this->redirectToAdmin();
-    }
-
-    private function checkIfRequestIsValid() {
-        if (! $this->request->exist('activate-ad-component') &&
-            ! $this->request->exist('scrum-title-admin') &&
-            ! $this->request->exist('kanban-title-admin')
-        ) {
-            $this->notifyErrorAndRedirectToAdmin();
-
-            return false;
-        }
-
-        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
-        $token->check('/', $this->request);
-
-        return true;
+        return $updater->updateConfiguration();
     }
 
     public function createKanban() {
@@ -332,13 +240,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     private function redirectToHome() {
         $this->redirect(array(
             'group_id' => $this->group_id
-        ));
-    }
-
-    private function redirectToAdmin() {
-        $this->redirect(array(
-           'group_id' => $this->group_id,
-           'action'   => 'admin'
         ));
     }
 

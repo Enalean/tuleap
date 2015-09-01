@@ -158,7 +158,8 @@ class Planning_Controller extends MVC2_PluginController {
             $this->config_manager->scrumIsActivatedForProject($this->group_id),
             $scrum_is_configured,
             $this->config_manager->getScrumTitle($this->group_id),
-            $this->config_manager->getKanbanTitle($this->group_id)
+            $this->config_manager->getKanbanTitle($this->group_id),
+            $this->isUserADmin()
         );
         return $this->renderToString('home', $presenter);
     }

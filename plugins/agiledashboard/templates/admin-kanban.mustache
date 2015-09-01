@@ -1,0 +1,43 @@
+<div class="agiledashboard-admin-kanban">
+    <h1>{{ config_title }}</h1>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="?group_id={{ group_id }}&action=admin&pane=scrum">{{ scrum_label }}</a>
+        </li>
+        <li class="active">
+            <a href="?group_id={{ group_id }}&action=admin&pane=kanban">{{ kanban_label }}</a>
+        </li>
+    </ul>
+
+    <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST">
+        {{# kanban_activated }}
+            <div class="alert alert-success">
+                <i class="icon-ok-circle"></i> {{ kanban_activated_label }}
+            </div>
+        {{/ kanban_activated }}
+        {{^ kanban_activated }}
+            <div class="alert alert-warning">
+                <i class="icon-off"></i> {{ kanban_not_activated_label }}
+            </div>
+        {{/ kanban_activated }}
+
+        <input type="hidden" name="activate-kanban" value="0">
+        <label class="checkbox active-kanban">
+            <input type="checkbox" name="activate-kanban" value="1" {{# kanban_activated }} checked {{/ kanban_activated }}>
+            {{ activate_kanban_label }}
+        </label>
+
+        <div class="agiledashboard-admin-section">
+            <section>
+                <h3><i class="icon-cogs"></i> {{ general_settings_section }}</h3>
+                <label for="kanban-title-admin">{{ title_label }}</label>
+                <input id="kanban-title-admin" name="kanban-title-admin" type="text" required value="{{ kanban_title }}" placeholder="{{ title_label }}">
+                <p class="help-block"><i class="icon-info-sign"></i> {{ title_label_help }}</p>
+            </section>
+        </div>
+
+        {{{ token }}}
+        <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
+    </form>
+</div>

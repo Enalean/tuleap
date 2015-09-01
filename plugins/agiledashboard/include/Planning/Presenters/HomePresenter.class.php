@@ -71,7 +71,8 @@ class Planning_Presenter_HomePresenter {
         $scrum_activated,
         $scrum_is_configured,
         $scrum_title,
-        $kanban_title
+        $kanban_title,
+        $is_user_admin
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
@@ -86,6 +87,15 @@ class Planning_Presenter_HomePresenter {
         $this->scrum_is_configured             = $scrum_is_configured;
         $this->scrum_title                     = $scrum_title;
         $this->kanban_title                    = $kanban_title;
+        $this->is_user_admin                   = $is_user_admin;
+    }
+
+    public function nothing_set_up() {
+        if (! $this->is_user_admin) {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
     }
 
     public function kanban_empty_message_must_be_displayed() {

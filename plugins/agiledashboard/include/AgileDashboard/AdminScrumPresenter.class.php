@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AdminPresenter {
+class AdminScrumPresenter {
 
     /** @var int */
     public $group_id;
@@ -27,13 +27,7 @@ class AdminPresenter {
     public $plannings = array();
 
     /** @var bool */
-    public $kanban_activated;
-
-    /** @var bool */
     public $scrum_activated;
-
-    /** @var bool */
-    public $all_activated;
 
     /** @var string */
     public $scrum_title;
@@ -53,22 +47,16 @@ class AdminPresenter {
         $root_planning_tracker_url,
         $root_planning_name,
         array $hierarchy,
-        $kanban_activated,
         $scrum_activated,
-        $all_activated,
-        $scrum_title,
-        $kanban_title
+        $scrum_title
     ) {
         $this->plannings                 = $plannings;
         $this->group_id                  = $group_id;
         $this->can_create_planning       = $can_create_planning;
         $this->root_planning_tracker_url = $root_planning_tracker_url;
         $this->root_planning_name        = $root_planning_name;
-        $this->kanban_activated          = $kanban_activated;
         $this->scrum_activated           = $scrum_activated;
-        $this->all_activated             = $all_activated;
         $this->scrum_title               = $scrum_title;
-        $this->kanban_title              = $kanban_title;
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
@@ -97,6 +85,10 @@ class AdminPresenter {
 
     public function planning_section() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_section');
+    }
+
+    public function general_settings_section() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'general_settings_section');
     }
 
     public function can_create_planning() {
@@ -132,6 +124,14 @@ class AdminPresenter {
         ));
     }
 
+    public function edit_action_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_action_label');
+    }
+
+    public function delete_action_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'delete_action_label');
+    }
+
     public function config_title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_title');
     }
@@ -148,16 +148,24 @@ class AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_label');
     }
 
-    public function all_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'all_label');
-    }
-
-    public function activate_service_legend() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_service_legend');
+    public function activate_scrum_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_scrum_label');
     }
 
     public function title_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title');
+    }
+
+    public function title_label_help() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title_scrum_help');
+    }
+
+    public function scrum_activated_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated_label');
+    }
+
+    public function scrum_not_activated_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_not_activated_label');
     }
 
     public function token() {
