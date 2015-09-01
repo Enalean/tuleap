@@ -22,12 +22,7 @@
 /*
  * PluginsAdministrationViews
  */
-require_once('common/mvc/Views.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/ForgeUpgradeConfig.class.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once('common/plugin/PluginHookPriorityManager.class.php');
-require_once('common/plugin/PluginDependencySolver.class.php');
+
 require_once('bootstrap.php');
 
 class PluginsAdministrationViews extends Views {
@@ -76,8 +71,6 @@ class PluginsAdministrationViews extends Views {
         $output = '';
         $output .= $this->_installedPlugins();
         $output .= $this->_notYetInstalledPlugins();
-        $output .= $this->_installNewPlugin();
-        $output .= $this->_managePriorities();
         echo $output;
     }
 
@@ -233,11 +226,7 @@ class PluginsAdministrationViews extends Views {
                     $hooks->next();
                 }
                 natcasesort($the_hooks);
-                $link_to_hooks = array();
-                foreach($the_hooks as $hook) {
-                    $link_to_hooks[] = '<a href="'.$link_to_plugins.'?selected_hook='.$hook.'" title="'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','display_priorities', array($hook)).'">'.$hook.'</a>';
-                }
-                $link_to_hooks = implode(', ', $link_to_hooks);
+                $link_to_hooks = implode(', ', $the_hooks);
 
                 //PropertyDescriptor
                 $descs = $plug_info->getPropertyDescriptors();
@@ -348,7 +337,6 @@ class PluginsAdministrationViews extends Views {
     }
 
     var $_plugins;
-    var $_priorities;
 
     function _emphasis($name, $enable) {
         if (!$enable) {
@@ -367,9 +355,7 @@ class PluginsAdministrationViews extends Views {
     function _searchPlugins() {
         if (!$this->_plugins) {
             $this->_plugins    = array();
-            $this->_priorities =  array();
 
-            $plugin_hook_priority_manager = new PluginHookPriorityManager();
             $plugin_manager               = $this->plugin_manager;
             try {
                 $forgeUpgradeConfig = new ForgeUpgradeConfig();
@@ -403,21 +389,6 @@ class PluginsAdministrationViews extends Views {
 
                 if (isset($noFUConfig) && !$forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
                     $noFUConfig[] = array('name' => $name, 'plugin' => $plugin);
-                }
-
-                $col_hooks =& $plugin->getHooks();
-                $hooks =& $col_hooks->iterator();
-                while($hooks->valid()) {
-                    $hook     =& $hooks->current();
-                    $priority = $plugin_hook_priority_manager->getPriorityForPluginHook($plugin, $hook);
-                    if (!isset($this->_priorities[$hook])) {
-                        $this->_priorities[$hook] = array();
-                    }
-                    if (!isset($this->_priorities[$hook][$priority])) {
-                        $this->_priorities[$hook][$priority] = array();
-                    }
-                    $this->_priorities[$hook][$priority][$plugin->getId()] = array('name' => $name, 'available' => $available);
-                    $hooks->next();
                 }
             }
 
@@ -492,206 +463,6 @@ class PluginsAdministrationViews extends Views {
         return $output;
     }
 
-    function _installNewPlugin() {
-        //Not yet implemented
-        /**
-        $output .= '<fieldset><legend>'.$Language->getText('plugin_pluginsadministration','install').'</legend>';
-        $output .= '<form><div><input type="file" name="archive" /><input type="submit" name="install" value="'.$Language->getText('plugin_pluginsadministration','upload').'" /></div></form>';
-        $output .= '</fieldset>';
-        /**/
-        return '';
-    }
-
-    function _managePriorities() {
-        $request        =& HTTPRequest::instance();
-        $plugin_manager = $this->plugin_manager;
-        $Language       =& $GLOBALS['Language'];
-        $output = '';
-        $this->_searchPlugins();
-        $priorities = $this->_priorities;
-        if (count($priorities) > 0) {
-            $show_priorities = false;
-            $hooks = array();
-            foreach($priorities as $hook => $priorities_plugins) {
-                $nb_plugins = 0;
-                foreach($priorities_plugins as $priority => $plugins) {
-                    $nb_plugins += count($plugins);
-                }
-                $hooks[$hook] = $nb_plugins;
-                if ($nb_plugins > 0 && !$show_priorities) {
-                    $show_priorities = true;
-                }
-            }
-
-            if($show_priorities) {
-                $form_name = '_'.mt_rand();
-                $output .= '<form  name="'.$form_name.'" action="?" method="POST" onsubmit="return submitForm(this);">';
-                $output .= '<fieldset class="pluginsadministration"><legend>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','priorities').'&nbsp;'.$this->_getHelp('priorities').'</legend>';
-                $output .= '<input type="hidden" name="action" value="update_priorities" />';
-                function emphasis($name, $enable) {
-                    if (!$enable) {
-                        $name = '<span class="pluginsadministration_unavailable">'.$name.'</span>';
-                    }
-                    return $name;
-                }
-                ksort($priorities);
-                ksort($hooks);
-                $discard_changes = $GLOBALS['Language']->getText('plugin_pluginsadministration','discard_changes');
-                $javascript = '<script type="text/javascript">';
-                $javascript .= <<<END
-
-                function submitForm(form) {
-                    form.submit_button.disabled = true;
-                    return true;
-                }
-
-                var currentIdLayer = null;
-                function switchBlock(id) {
-                    if (currentIdLayer && currentIdLayer != null) {
-                        hideBlock(currentIdLayer);
-                    }
-                    currentIdLayer = id;
-                    showBlock(currentIdLayer);
-                }
-                function getElement(id) {
-                    the_element = null;
-                    if(document.getElementById) {//NN6,Mozilla,IE5?
-                        the_element = document.getElementById(id);
-                    } else if(document.all) {      //IE4?
-                        the_element = document.all(id);
-                    } else if(document.layers) {   //NN4?
-                        the_element = document.layers[id];
-                    }
-                    return the_element;
-                }
-
-                function showOrHideBlock(idName, show){
-                    if(document.getElementById) {//NN6,Mozilla,IE5?
-                        document.getElementById(idName).style.display = (show?"block":"none");
-                    }
-                    else if(document.all) {      //IE4?
-                        document.all(idName).style.display = (show?"block":"none");
-                    }
-                    else if(document.layers) {   //NN4?
-                        document.layers[idName].display = (show?"block":"none");
-                    }
-                }
-                function showBlock(idName){
-                    showOrHideBlock(idName, true);
-                }
-                function hideBlock(idName){
-                    showOrHideBlock(idName, false);
-                }
-                function changeHook(select) {
-
-                    nb = inputs_for_hook[currentIdLayer].length;
-                    changes_have_been_made = false;
-                    //Search for changes
-                    for(i = 0 ; i < nb && !changes_have_been_made ; i++) {
-                        element         = getElement(inputs_for_hook[currentIdLayer][i]);
-                        default_element = getElement('default_'+inputs_for_hook[currentIdLayer][i]);
-
-                        if (element.value != default_element.value) {
-                            changes_have_been_made = true;
-                        }
-                    }
-                    if (!changes_have_been_made || confirm('$discard_changes')) {
-                        if (changes_have_been_made) {
-                            //Discard changes: reset values
-                            for(i = 0 ; i < nb ; i++) {
-                                element         = getElement(inputs_for_hook[currentIdLayer][i]);
-                                default_element = getElement('default_'+inputs_for_hook[currentIdLayer][i]);
-                                element.value   = default_element.value;
-                            }
-                        }
-                        currentIndex = select.selectedIndex;
-                        hook_name = select.options[select.selectedIndex].value;
-                        switchBlock('hook_'+hook_name);
-                        getElement('selected_hook').value = hook_name;
-                        return true;
-                    } else {
-                        //Changes have been made and user doesn't want to discard those changes
-                        select.selectedIndex = currentIndex;
-                        return false;
-                    }
-                }
-END;
-                $javascript .= "document.write('".$GLOBALS['Language']->getText('plugin_pluginsadministration', 'select_hook')." ');";
-                $javascript .= "document.write('<select onchange=\"changeHook(this)\">');";
-
-                $first_hook = $request->get('selected_hook');
-                if ($first_hook !== false && !array_key_exists($first_hook, $hooks)) {
-                    $first_hook = false;
-                }
-                $first_index = 0;
-                $i = 0;
-                foreach($hooks as $hook => $nb) {
-                    $etoile = "  ";
-                    if ($nb > 1) {
-                        $etoile = " *";
-                    }
-                    $selected = "";
-                    if (!$first_hook) {
-                        $first_hook  = $hook;
-                    }
-                    if ($first_hook == $hook) {
-                        $first_index = $i;
-                        $selected    = " selected=\"selected\" ";
-                    }
-                    $javascript .= "document.write('<option value=\"".$hook."\" ".$selected." >".$hook.$etoile."</option>');";
-                    $i++;
-                }
-                $javascript .= "document.write('</select>');";
-                $javascript .= "document.write('<input type=\"hidden\" name=\"selected_hook\" id=\"selected_hook\" value=\"".$first_hook."\" />');";
-                $javascript .= "document.write('<div>".addslashes($GLOBALS['Language']->getText('plugin_pluginsadministration', 'hook_asterisk'))."</div>');";
-                $javascript .= '</script>';
-                $output .= $javascript;
-                $javascript_after = '<script type="text/javascript">';
-                $javascript_after .= 'var currentIndex = '.$first_index.';';
-                $javascript_after .= 'var inputs_for_hook = new Array();';
-                foreach($priorities as $hook => $priorities_plugins) {
-                    $javascript_after .= "hideBlock('hook_".$hook."');";
-                    $javascript_after .= "inputs_for_hook['hook_".$hook."'] = new Array();";
-                    $output_for_hook = '';
-                    krsort($priorities_plugins);
-                    $class      = 0;
-                    $nb_plugins = 0;
-                    foreach($priorities_plugins as $priority => $plugins) {
-                        $nb_plugins += count($plugins);
-                        foreach($plugins as $id => $infos) {
-                            $output_for_hook .= '<tr class="'.util_get_alt_row_color($class).'"><td>';
-                            $output_for_hook .= emphasis($infos['name'], $infos['available']);
-                            $output_for_hook .= '</td><td>';
-                            $input_name = 'priorities['.$hook.']['.$id.']';
-                            $input_id   = 'priorities_'.$hook.'_'.$id;
-                            $output_for_hook .= '<input type="text" name="'.$input_name.'" id="'.$input_id.'" size="4" value="'.$priority.'" />';
-                            $output_for_hook .= '<input type="hidden" name="default_'.$input_name.'" id="default_'.$input_id.'" value="'.$priority.'" />';
-                            $output_for_hook .= '</td>';
-                            $output_for_hook .= '</tr>';
-                            $javascript_after .= "inputs_for_hook['hook_".$hook."'][inputs_for_hook['hook_".$hook."'].length] = '".$input_id."';";
-                            $class++;
-                        }
-                    }
-                    $output .= '<div id="hook_'.$hook.'"><h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','Hook:').' '.$hook.'</h3>';
-                    $titles = array();
-                    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
-                    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'Priority');
-                    $output .= html_build_list_table_top($titles, false, false, false);
-                    $output .= $output_for_hook;
-                    $output .= '</table></div>';
-                }
-                $javascript_after .= "switchBlock('hook_".$first_hook."');";
-                $javascript_after .= "</script>";
-                $output .= $javascript_after;
-                $output .= '<div class="pluginsadministration_buttons"><input type="submit" name="submit_button" value="'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'update_priorities').'" /></div>';
-                $output .= '</form>';
-                $output .= '</fieldset>';
-
-            }
-        }
-        return $output;
-    }
-
     function _notYetInstalledPlugins() {
         $plugin_manager = $this->plugin_manager;
         $Language       =& $GLOBALS['Language'];
@@ -715,6 +486,3 @@ END;
         return $output;
     }
 }
-
-
-?>

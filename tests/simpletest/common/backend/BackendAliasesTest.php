@@ -73,8 +73,7 @@ class BackendAliasesTest extends TuleapTestCase {
             Event::BACKEND_ALIAS_GET_ALIASES,
             $plugin,
             'hook',
-            false,
-            0
+            false
         );
     }
 

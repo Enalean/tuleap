@@ -1,6 +1,5 @@
 <?php
 
-Mock::generate('PluginHookPriorityManager');
 Mock::generate('PluginFactory');
 Mock::generate('Plugin');
 Mock::generate('Collection');

@@ -28,11 +28,7 @@ class EventManager {
      */
     const DEFAULT_CALLBACK = 'CallHook';
 
-    private $listeners;
-
-    public function __construct() {
-        $this->listeners = array();
-    }
+    private $listeners = array();
 
     /**
      * Holds an instance of the class

@@ -19,13 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * PluginsAdministrationActions
- */
-require_once('common/mvc/Actions.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once('common/plugin/PluginHookPriorityManager.class.php');
 
 class PluginsAdministrationActions extends Actions {
 
@@ -101,26 +94,6 @@ class PluginsAdministrationActions extends Actions {
                  $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])).'</div>';
             } else {
                  $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($plugin['name'])).'</div>';
-            }
-        }
-    }
-    
-    function updatePriorities() {
-        $request        =& HTTPRequest::instance();
-        if ($request->exist('priorities')) {
-            $plugin_manager               = $this->plugin_manager;
-            $plugin_hook_priority_manager = new PluginHookPriorityManager();
-            $updated = false;
-            foreach($request->get('priorities') as $hook => $plugins) {
-                if (is_array($plugins)) {
-                    foreach($plugins as $id => $priority) {
-                        $plugin =& $plugin_manager->getPluginById((int)$id);
-                        $updated = $updated || $plugin_hook_priority_manager->setPriorityForPluginHook($plugin, $hook, (int)$priority);
-                    }
-                }
-            }
-            if ($updated) {
-                $GLOBALS['feedback'] .= 'Priorities updated';
             }
         }
     }

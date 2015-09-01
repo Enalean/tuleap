@@ -51,9 +51,9 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         $m = new EventManager();
 
         //We register the listeners for the type
-        $m->addListener($e1, $l1, 'doSomething', false, 0);
-        $m->addListener($e1, $l2, 'doSomething', false, 0);
-        $m->addListener($e2, $l3, 'CallHook', true, 0);
+        $m->addListener($e1, $l1, 'doSomething', false);
+        $m->addListener($e1, $l2, 'doSomething', false);
+        $m->addListener($e2, $l3, 'CallHook', true);
 
         //We process event
         $params = array();
@@ -77,9 +77,9 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         $m = new EventManager();
 
         //We register the listeners for the type
-        $m->addListener($e1, $l1, 'doSomething', false, 0);
-        $m->addListener($e1, $l2, 'doSomething', false, 0);
-        $m->addListener($e2, $l3, 'CallHook', true, 0);
+        $m->addListener($e1, $l1, 'doSomething', false);
+        $m->addListener($e1, $l2, 'doSomething', false);
+        $m->addListener($e2, $l3, 'CallHook', true);
 
         //We process event
         $params = array();
@@ -94,7 +94,7 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         stub($listener)->CallHook($event, $params)->once();
 
         $em = new EventManager();
-        $em->addListener($event, $listener, 'doSomething', false, 0);
+        $em->addListener($event, $listener, 'doSomething', false);
 
         $em->processEvent($event, $params);
     }

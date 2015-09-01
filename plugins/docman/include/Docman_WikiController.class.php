@@ -33,8 +33,8 @@ class Docman_WikiController extends Docman_Controller {
     function __construct(&$plugin, $pluginPath, $themePath, $request) {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
         $event_manager =& $this->_getEventManager();
-        $event_manager->addListener('plugin_docman_event_wikipage_update', $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_wikipage_update', $this->logger, 'log', true);
+        $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true);
     }
 
     function request() {

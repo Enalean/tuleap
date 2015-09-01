@@ -62,7 +62,7 @@ class SystemEventManager {
             'codendi_daily_start'
             );
         foreach($events_to_listen as $event) {
-            $event_manager->addListener($event, $this, 'addSystemEvent', true, 0);
+            $event_manager->addListener($event, $this, 'addSystemEvent', true);
         }
     }
 
