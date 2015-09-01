@@ -56,7 +56,9 @@ Defaults::$useUrlBasedVersioning = true;
 if (ForgeConfig::get('DEBUG_MODE')) {
     $restler = new Restler(false, true);
 } else {
-    $restler = new Restler();
+    $restler_cache = new RestlerCache();
+    Defaults::$cacheDirectory = $restler_cache->getAndInitiateCacheDirectory($version);
+    $restler = new Restler(true, false);
 }
 
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's

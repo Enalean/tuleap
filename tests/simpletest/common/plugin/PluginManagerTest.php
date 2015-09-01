@@ -165,10 +165,11 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->setReturnValueAt(0, 'isPluginAvailable', true);
         $plugin_factory->setReturnValueAt(1, 'isPluginAvailable', false);
-        
+
+
         //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+        $pm = partial_mock('PluginManager', array('_getPluginFactory'));
+        stub($pm)->_getPluginFactory()->returns($plugin_factory);
         
         $this->assertTrue($pm->isPluginAvailable($plugin));
         $this->assertFalse($pm->isPluginAvailable($plugin));
@@ -182,10 +183,14 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('availablePlugin');
-        
+
+        $site_cache = mock('SiteCache');
+        expect($site_cache)->invalidatePluginBasedCaches()->once();
+
         //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+        $pm = partial_mock('PluginManager', array('_getPluginFactory', 'getSiteCache'));
+        stub($pm)->_getPluginFactory()->returns($plugin_factory);
+        stub($pm)->getSiteCache()->returns($site_cache);
         
         $pm->availablePlugin($plugin);
     }
@@ -196,10 +201,14 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('unavailablePlugin');
-        
+
+        $site_cache = mock('SiteCache');
+        expect($site_cache)->invalidatePluginBasedCaches()->once();
+
         //The plugins manager
-        $pm = new PluginManagerTestVersion($this);
-        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+        $pm = partial_mock('PluginManager', array('_getPluginFactory', 'getSiteCache'));
+        stub($pm)->_getPluginFactory()->returns($plugin_factory);
+        stub($pm)->getSiteCache()->returns($site_cache);
         
         $pm->unavailablePlugin($plugin);
     }

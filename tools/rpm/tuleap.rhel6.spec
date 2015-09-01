@@ -499,8 +499,11 @@ done
 # Install script
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
 %{__install} -m 755 tools/setup.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
-#
+
 # Install Tuleap executables
+%{__install} -d $RPM_BUILD_ROOT/%{_bindir}
+%{__install} src/utils/tuleap $RPM_BUILD_ROOT/%{_bindir}/tuleap
+
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -716,15 +719,7 @@ else
     # Launch forgeupgrade
     true
 
-    # Re-generate language files
-    %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
-
-    # Remove existing combined js
-    %{__rm} -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
-    %{__chown} %{APP_USER}:%{APP_USER} %{APP_CACHE_DIR}/lang/*.php
-
-    # Remove soap cache
-    rm -f /tmp/wsdl-*
+    %{_bindir}/tuleap --clear-caches
 fi
 
 # In any cases fix the context
@@ -955,6 +950,11 @@ fi
 %dir %{APP_DATA_DIR}
 %dir %{APP_DATA_DIR}/user
 %dir %{APP_DATA_DIR}/images
+
+# Executables (/usr/bin)
+%attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap
+
+# Executables (/usr/lib/tuleap/bin)
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
