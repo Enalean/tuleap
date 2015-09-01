@@ -19,6 +19,7 @@ Version 8.6 (Not Released Yet)
 	* request #8386: tuleap reverse proxy in docker-compose is not working properly
 
 	== Bug Fix ==
+	* request #8360: REST call slowness
 	* request #8388: Typo in new account mails
 	* request #8362: Check password is broken when user wants to change it
 	* request #8330: Fix XSS in project data restoration page
@@ -31,7 +32,7 @@ Version 8.6 (Not Released Yet)
 	== Plugins ==
 	* agiledashboard: 1.265
 	* proftpd: 0.23
-	* tracker: 5.691
+	* tracker: 5.692
 	* phpwiki: 0.7
 	* forumml: 2.6.22
 	* IM: 1.5.32
@@ -42,7 +43,7 @@ Version 8.6 (Not Released Yet)
 	* mediawiki: 0.81
 
 	== Api ==
-	* REST API: 1.13
+	* REST API: 1.14
 
 	== Themes ==
 	* FlamingParrot: 1.107

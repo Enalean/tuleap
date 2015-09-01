@@ -1,3 +1,6 @@
+Version 5.692 - Tuleap 8.6
+    * request #8360: REST call slowness
+
 Version 5.691 - Tuleap 8.6
     * request #8375: Fix fatal error in when copying an artifact
 
