@@ -19,6 +19,7 @@ Version 8.6 (Not Released Yet)
 	* request #8386: tuleap reverse proxy in docker-compose is not working properly
 
 	== Bug Fix ==
+	* request #8388: Typo in new account mails
 	* request #8362: Check password is broken when user wants to change it
 	* request #8330: Fix XSS in project data restoration page
 	* request #8359: tv3->tv5 migration failed when tv3 text field had been switched to numeric ones
