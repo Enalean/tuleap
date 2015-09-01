@@ -16,6 +16,7 @@ Version 8.6 (Not Released Yet)
 	* story #8337: List only services activated
 	* story #8339: SVN service can send truncated emails
 	* request #8379: Purge system_event table data older than one year
+	* request #8386: tuleap reverse proxy in docker-compose is not working properly
 
 	== Bug Fix ==
 	* request #8362: Check password is broken when user wants to change it
