@@ -199,7 +199,10 @@ class AgileDashboardRouter {
                 break;
             case 'index':
             default:
-                $this->renderAction($planning_controller, 'index', $request);
+                $header_options = array(
+                    'body_class' => array('agiledashboard_homepage')
+                );
+                $this->renderAction($planning_controller, 'index', $request, array(), $header_options);
         }
     }
 
