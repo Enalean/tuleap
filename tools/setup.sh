@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, Tuleap 2011,2012
+# Copyright (c) Enalean, Tuleap 2011-2015
 # Copyright (c) STMicroelectronics, Codex 2009,2010
 # Copyright (c) Xerox Corporation, Codendi 2001-2009.
 #
@@ -19,11 +19,31 @@ todo() {
     echo -e "- $1" >> $TODO_FILE
 }
 
-die() {
-  # $1: message to prompt before exiting
-  echo -e "**ERROR** $1"; exit 1
+info() {
+    echo -e "\033[32m$@\033[0m"
 }
 
+error() {
+    echo -e "\033[31m*** ERROR ***: $@\033[0m"
+}
+
+warning() {
+    echo -e "\033[33m*** WARNING ***: $@\033[0m"
+}
+
+die() {
+  error $@
+  exit 1
+}
+
+recoverable_error() {
+    if [ "$error_mode" == "force" ]; then
+	warning $@
+    else
+	error $@
+	exit 1
+    fi
+}
 
 if [ -e /etc/debian_version ]; then
     INSTALL_PROFILE="debian"
@@ -41,7 +61,7 @@ else
     if [ ! -x $lsb_release ]; then
 	die "lsb_release is missing, please install it first (yum install redhat-lsb)"
     fi
-    if lsb_release -s -i | grep -i -P '(centos|redhatenterprise)'; then
+    if lsb_release -s -i | grep -q -i -P '(centos|redhatenterprise)'; then
 	RH_VERSION=$(lsb_release -s -r)
 	RH_MAJOR_VERSION=$(echo $RH_VERSION | cut -d'.' -f1)
 	RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'.' -f2)
@@ -84,8 +104,8 @@ CHOWN='/bin/chown'
 CHGRP='/bin/chgrp'
 CHMOD='/bin/chmod'
 FIND='/usr/bin/find'
-MYSQL='/usr/bin/mysql'
-MYSQLSHOW='/usr/bin/mysqlshow'
+MYSQL='mysql'
+MYSQLSHOW='mysqlshow'
 TOUCH='/bin/touch'
 CAT='/bin/cat'
 GREP='/bin/grep'
@@ -164,7 +184,7 @@ fix_paths() {
 }
 
 generate_passwd() {
-    $CAT /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 9 | head -1
+    $CAT /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1
 }
 
 has_package() {
@@ -440,8 +460,9 @@ EOF
     # Note that if sys_default_domain is not a domain, the script will complain
     LIST_OWNER=$PROJECT_NAME-admin@$sys_default_domain
     if [ "$disable_subdomains" = "y" ]; then
-        LIST_OWNER=$PROJECT_NAME-admin@$sys_fullname
+        LIST_OWNER=$PROJECT_NAME-admin@$sys_default_domain
     fi
+
     /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
 
     # Comment existing mailman aliases in /etc/aliases
@@ -499,6 +520,13 @@ setup_mysql_cnf() {
     fi
 }
 
+check_mysql_sql_mode() {
+    sql_mode=$($MYSQL $pass_opt --skip-column-names --batch  -e 'SHOW VARIABLES LIKE "sql_mode"' | cut -f2)
+    if echo $sql_mode | egrep -q 'STRICT_.*_TABLES'; then
+	recoverable_error "MySQL: unsupported sql_mode: $sql_mode. Please remove STRICT_ALL_TABLES or STRICT_TRANS_TABLES from my.cnf"
+    fi
+}
+
 setup_mysql() {
 
     if [ "$mysql_my_cnf" = "y" ]; then
@@ -525,6 +553,8 @@ setup_mysql() {
     else
         pass_opt="-u$mysql_user --password=$rt_passwd"
     fi
+
+    check_mysql_sql_mode
 
     # Test if tuleap DB already exists
     yn="-"
@@ -558,15 +588,19 @@ EOF
         cd $INSTALL_DIR/src/db/mysql/
         $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < database_structure.sql   # create the DB
         cp database_initvalues.sql /tmp/database_initvalues.sql
+	if [ ! -z "$siteadmin_password" ]; then
+	    admin_md5_pwd=$(echo -n $siteadmin_password | md5sum | cut -d' ' -f1)
+	    substitute '/tmp/database_initvalues.sql' '6f3cac6213ffceee27cc85414f458caa' "$admin_md5_pwd"
+	fi
         substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
         $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
         rm -f /tmp/database_initvalues.sql
 
         # Create dbauthuser
         $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT SELECT ON $PROJECT_NAME.user to dbauthuser@$mysql_httpd_host identified by '$dbauth_passwd';
-GRANT SELECT ON $PROJECT_NAME.groups to dbauthuser@$mysql_httpd_host;
-GRANT SELECT ON $PROJECT_NAME.user_group to dbauthuser@$mysql_httpd_host;
+GRANT SELECT ON $PROJECT_NAME.user to dbauthuser@'$mysql_httpd_host' identified by '$dbauth_passwd';
+GRANT SELECT ON $PROJECT_NAME.groups to dbauthuser@'$mysql_httpd_host';
+GRANT SELECT ON $PROJECT_NAME.user_group to dbauthuser@'$mysql_httpd_host';
 FLUSH PRIVILEGES;
 EOF
     fi
@@ -577,6 +611,9 @@ EOF
 # Mysql sanity check
 #
 test_mysql_host() {
+    info "You might get MySQL message like 'Using a password on the command line interface can be insecure'"
+    info "It's actully harmless in this context"
+
     echo -n "Testing Mysql connexion means... "
     # Root access: w/o password
     if [ -z "$rt_passwd" ]; then
@@ -817,6 +854,7 @@ Options:
   --disable-httpd-restart          Do not restart httpd during the setup
   --disable-generate-ssl-certs     Do not generate a new ssl certificate
   --disable-mysql-configuration    Do not modify my.cnf (not recommended)
+  --disable-selinux                Do not set context (when autodetection fails)
 
   --sys-default-domain=<domain>	   Server Domain name
   --sys-org-name=<string>          Your Company short name
@@ -866,8 +904,9 @@ mysql_package_name="mysql-server"
 mysql_user="root"
 rt_passwd=""
 restart_httpd="y"
+error_mode=""
 
-options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-user:,mysql-user-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs,mysql-server-package:,disable-mysql-configuration -- "$@"`
+options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-user:,mysql-user-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs,mysql-server-package:,disable-mysql-configuration,disable-selinux,force -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 
@@ -876,6 +915,9 @@ eval set -- "$options"
 while true
 do
     case "$1" in
+	--force)
+	    error_mode='force'
+	    shift 1;;
 	--auto)
 		auto_passwd="true";
 		configure_bind="false"
@@ -902,6 +944,8 @@ do
                 generate_ssl_certificate="n"; shift 1 ;;
     --disable-mysql-configuration)
         mysql_my_cnf="n"; shift 1 ;;
+	--disable-selinux)
+	    SELINUX_ENABLED=0; shift 1;;
 	--sys-default-domain)
 		sys_default_domain="$2" ; shift 2 ;;
 	--sys-fullname)
@@ -916,6 +960,7 @@ do
 		mysql_host="$2";shift 2
 		MYSQL="$MYSQL -h$mysql_host"
 		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+		mysql_remote_server=true
 		;;
 	--mysql-port)
 		mysql_port="$2";shift 2
@@ -992,8 +1037,10 @@ fi
 
 # Check if IM plugin is installed (works only on rhel).
 enable_plugin_im="false"
-if [ -d "$INSTALL_DIR/plugins/IM" -a "$INSTALL_PROFILE" = "rhel" ]; then
-    enable_plugin_im="true"
+if [ "$INSTALL_PROFILE" = "rhel" ]; then
+    if rpm -q openfire >/dev/null; then
+	enable_plugin_im="true"
+    fi
 fi
 
 enable_plugin_tracker="false"
@@ -1090,6 +1137,8 @@ if [ "$auto_passwd" = "true" ]; then
     echo "Libnss-mysql DB user (dbauthuser): $dbauth_passwd" >> $passwd_file
 
     # Ask for site admin ?
+    siteadmin_password=$(generate_passwd)
+    echo "Site admin password (admin): $siteadmin_password" >> $passwd_file
 
     todo "Automatically generated passwords are stored in $passwd_file"
 else
@@ -1100,6 +1149,8 @@ else
     fi
 
     codendiadm_passwd=$(input_password "$PROJECT_ADMIN user")
+
+    siteadmin_password=$(input_password "Site admin password (admin)")
 
     if [ "$enable_core_mailman" = "true" ]; then
 	mm_passwd=$(input_password "mailman user")
@@ -1118,7 +1169,7 @@ if [ "$INSTALL_PROFILE" = "rhel" ]; then
     # Update codendiadm user password
     echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
     build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
-    if [ $SELINUX_ENABLED ]; then
+    if [ $SELINUX_ENABLED == 1 ]; then
 	$CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
     fi
 else
@@ -1184,7 +1235,7 @@ build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME/DELETED $PROJECT_ADMIN $PROJE
 
 
 # SELinux specific
-if [ $SELINUX_ENABLED ]; then
+if [ $SELINUX_ENABLED == 1 ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /etc/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /var/lib/$PROJECT_NAME
@@ -1232,7 +1283,7 @@ fi
 # TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
 
 # Make sure SELinux contexts are valid
-if [ $SELINUX_ENABLED ]; then
+if [ $SELINUX_ENABLED == 1 ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/$PROJECT_NAME
 fi
 
@@ -1323,7 +1374,7 @@ fi
 todo "Customize /etc/$PROJECT_NAME/site-content information for your site."
 todo "  For instance: contact/contact.txt "
 todo ""
-todo "Default admin credentials are login: admin / password: siteadmin"
+todo "Default admin credentials are login: admin / password: $siteadmin_password"
 todo "CHANGE DEFAULT CREDENTIALS BEFORE FIRST USAGE"
 
 ##############################################
@@ -1440,7 +1491,7 @@ fi
 ##############################################
 # Set SELinux contexts and load policies
 #
-if [ $SELINUX_ENABLED ]; then
+if [ $SELINUX_ENABLED == 1 ]; then
     echo "Set SELinux contexts and load policies"
     $INSTALL_DIR/src/utils/fix_selinux_contexts.pl
 fi
