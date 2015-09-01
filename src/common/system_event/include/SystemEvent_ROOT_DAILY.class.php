@@ -52,6 +52,9 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
         // it is slooow (due to libnss-mysql)
         $this->userHomeSanityCheck($backend_system);
 
+        // Purge system_event table: we only keep one year history in db
+        $this->purgeSystemEventsDataOlderThanOneYear();
+
         try {
             $this->_getEventManager()->processEvent('root_daily_start', array());
             $this->done();
@@ -80,5 +83,12 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
         foreach($users as $user) {
             $backend_system->userHomeSanityCheck($user);
         }
+    }
+
+    private function purgeSystemEventsDataOlderThanOneYear() {
+        $dao                 = new SystemEventDao();
+        $system_event_purger = new SystemEventPurger($dao);
+
+        return $system_event_purger->purgeSystemEventsDataOlderThanOneYear();
     }
 }
