@@ -30,7 +30,7 @@ Version 8.6 (Not Released Yet)
 	* request #8387: Too many call to the db in the artifact modal when there is a field list bound to user
 
 	== Plugins ==
-	* agiledashboard: 1.265
+	* agiledashboard: 1.266
 	* proftpd: 0.23
 	* tracker: 5.692
 	* phpwiki: 0.7

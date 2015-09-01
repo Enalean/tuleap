@@ -1,3 +1,6 @@
+Version 1.266 - Tuleap 8.6
+    * request #8374 Angular modal is very slow at first run (bower)
+
 Version 1.265 - Tuleap 8.6
     * story #8263: Sexy empty AgildeDashboard homepage both for user and project admin
 
