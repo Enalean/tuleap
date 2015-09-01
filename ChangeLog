@@ -24,6 +24,7 @@ Version 8.6 (Not Released Yet)
 	* request #8377: Profile script broken on CentOS 6
 	* request #8368: Files with special characters can't be downloaded with WEBDAV
 	* request #8378: Speed-up queries on this system_event table
+	* request #8387: Too many call to the db in the artifact modal when there is a field list bound to user
 
 	== Plugins ==
 	* agiledashboard: 1.264
