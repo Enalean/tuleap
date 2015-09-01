@@ -1,3 +1,6 @@
+Version 1.267 - Tuleap 8.6
+    * Tabify AgileDashboard administration
+
 Version 1.266 - Tuleap 8.6
     * request #8374 Angular modal is very slow at first run (bower)
 
