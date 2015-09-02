@@ -22,30 +22,6 @@ function help_window(helpurl) {
     HelpWin.focus();
 }
 
-//http://mir.aculo.us/2009/1/7/using-input-values-as-hints-the-easy-way
-(function(){
-    var methods = {
-        defaultValueActsAsHint: function (element) {
-            element = $(element);
-            element._default = element.value;
-            
-            return element.observe('focus', function (){
-                if (element._default !== element.value) { 
-                    return; 
-                }
-                element.removeClassName('hint').value = '';
-            }).observe('blur', function (){
-                if (element.value.strip() !== '') { 
-                    return; 
-                }
-                element.addClassName('hint').value = element._default;
-            }).addClassName('hint');
-        }
-    };
-   
-  $w('input textarea').each(function(tag){ Element.addMethods(tag, methods); });
-})();
-
 var codendi = codendi || { };
 
 codendi.imgroot = codendi.imgroot || '/themes/common/images/';
@@ -69,7 +45,7 @@ document.observe('dom:loaded', function () {
             col.invoke('removeClassName', 'matrix_highlight_col');
         });
     });
-    
+
     //load protocheck, if needed
     new ProtoCheck();
 });
