@@ -20,8 +20,11 @@
                 </div>
             {{/ scrum_activated }}
             {{^ scrum_activated }}
-                <div class="alert alert-warning">
+                <div class="alert alert-warning admin-scrum-not-activated">
                     <i class="icon-off"></i> {{ scrum_not_activated_label }}
+                    {{^ has_plannings }}
+                        <p>{{ first_scrum_will_be_created }}</p>
+                    {{/ has_plannings }}
                 </div>
             {{/ scrum_activated }}
 
