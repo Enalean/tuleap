@@ -34,23 +34,21 @@ class AgileDashboard_ConfigurationManager {
     }
 
     public function kanbanIsActivatedForProject($project_id) {
-        if (! $this->doesAConfigurationExistForProject($project_id)) {
-            return false;
+        $row = $this->dao->isKanbanActivated($project_id)->getRow();
+        if ($row) {
+            return $row['kanban'];
         }
 
-        $row = $this->dao->isKanbanActivated($project_id)->getRow();
-
-        return $row['kanban'];
+        return false;
     }
 
     public function scrumIsActivatedForProject($project_id) {
-        if (! $this->doesAConfigurationExistForProject($project_id)) {
-            return true;
+        $row = $this->dao->isScrumActivated($project_id)->getRow();
+        if ($row) {
+            return $row['scrum'];
         }
 
-        $row = $this->dao->isScrumActivated($project_id)->getRow();
-
-        return $row['scrum'];
+        return false;
     }
 
     public function getScrumTitle($project_id) {
@@ -71,13 +69,6 @@ class AgileDashboard_ConfigurationManager {
         }
 
         return self::DEFAULT_KANBAN_TITLE;
-    }
-
-    /**
-     * @return boolean
-     */
-    private function doesAConfigurationExistForProject($project_id) {
-        return $this->dao->doesAConfigurationExistForProject($project_id);
     }
 
     public function updateConfiguration(

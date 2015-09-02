@@ -4,4 +4,12 @@
     {{^ is_user_admin }}
         <p class="later">{{ come_back_later }}</p>
     {{/ is_user_admin }}
+    {{# is_user_admin }}
+        <p class="description">{{{ nothing_set_up_admin_description }}}</p>
+        <p class="actions">
+            <a href="{{ create_scrum_url }}" class="btn btn-large">{{ start_scrum }}</a>
+            <span>or</span>
+            <a href="{{ create_kanban_url }}" class="btn btn-large">{{ start_kanban }}</a>
+        </p>
+    {{/ is_user_admin }}
 </div>

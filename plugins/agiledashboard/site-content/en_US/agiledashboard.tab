@@ -85,9 +85,12 @@ plugin_agiledashboard	successful_inconsistencies_solving	Inconsistencies success
 plugin_agiledashboard	nothing_set_up_generic	The Agile Dashboard has not yet been configured by a project administrator.
 plugin_agiledashboard	nothing_set_up_scrum_generic	No Scrum has been yet configured by a project administrator.
 plugin_agiledashboard	nothing_set_up_kanban_generic	No Kanban has been yet configured by a project administrator.
-plugin_agiledashboard	nothing_set_up_admin	The Agile Dashboard has not yet been configured. <a href="$1">Get Started!</a>
+plugin_agiledashboard	nothing_set_up_admin	The Agile Dashboard has not yet been configured.
+plugin_agiledashboard	nothing_set_up_admin_description	Please choose between Scrum or Kanban layout below.<br>Don't worry, you will be able to change your mind and customize your configuration afterwards.
 plugin_agiledashboard	nothing_set_up_scrum_admin	No Scrum has been yet configured by a project administrator. <a href="$1">Get Started!</a>
 plugin_agiledashboard	nothing_set_up_come_back	Please come back later.
+plugin_agiledashboard	start_kanban	Start Kanban
+plugin_agiledashboard	start_scrum	Start Scrum
 
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1
