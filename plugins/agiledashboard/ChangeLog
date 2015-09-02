@@ -1,3 +1,6 @@
+Version 1.270 - Tuleap 8.6
+    * Create a first configuration when admin activate scrum
+
 Version 1.269 - Tuleap 8.6
     * story #8263: Warn user that a first Kanban will be created
 
