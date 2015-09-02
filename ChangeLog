@@ -41,6 +41,7 @@ Version 8.6 (Not Released Yet)
 	* git: 4.75
 	* hudson: 1.20
 	* mediawiki: 0.81
+	* archivedeleteditems: 0.6
 
 	== Api ==
 	* REST API: 1.14
