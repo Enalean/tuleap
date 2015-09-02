@@ -1,3 +1,6 @@
+Version 5.693 - Tuleap 8.6
+    * Create a first kanban when admin activate kanban
+
 Version 5.692 - Tuleap 8.6
     * request #8360: REST call slowness
 
