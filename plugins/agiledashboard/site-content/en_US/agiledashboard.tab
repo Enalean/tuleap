@@ -147,6 +147,7 @@ plugin_agiledashboard	scrum_not_activated_label	Scrum is not currently active.
 plugin_agiledashboard	kanban_activated_label	Kanban is currently active.
 plugin_agiledashboard	kanban_not_activated_label	Kanban is not currently active.
 plugin_agiledashboard	first_kanban_will_be_created	A first Kanban will be created during the activation. This operation can take a few seconds.
+plugin_agiledashboard	first_scrum_will_be_created	A first scrum configuration will be used during the activation. This operation can take a few seconds.
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum
 plugin_agiledashboard	all_label	Scrum and Kanban
@@ -173,3 +174,7 @@ plugin_agiledashboard	kanban_not_found	Kanban not found.
 plugin_agiledashboard_first_kanban	error_existing_tracker	We tried to create a first kanban for you but an existing tracker ($1) prevented it.
 plugin_agiledashboard_first_kanban	internal_error	We tried to create a first kanban for you but an internal error prevented it.
 plugin_agiledashboard_first_kanban	created	We created <a href="$1">a first kanban</a> for you. Enjoy!
+
+plugin_agiledashboard_first_scrum	error_existing_tracker	We tried to create an initial scrum configuration for you but an existing tracker ($1) prevented it.
+plugin_agiledashboard_first_scrum	internal_error	We tried to create an initial scrum configuration for you but an internal error prevented it.
+plugin_agiledashboard_first_scrum	created	We created an initial scrum configuration for you. Enjoy!

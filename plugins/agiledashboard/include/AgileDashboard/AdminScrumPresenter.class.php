@@ -168,6 +168,10 @@ class AdminScrumPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_not_activated_label');
     }
 
+    public function first_scrum_will_be_created() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'first_scrum_will_be_created');
+    }
+
     public function token() {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         return $token->fetchHTMLInput();

@@ -176,7 +176,25 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 )
             );
         } else {
-            $updater = new AgileDashboardScrumConfigurationUpdater($this->request, $this->config_manager, $response);
+            $updater = new AgileDashboardScrumConfigurationUpdater(
+                $this->request,
+                $this->config_manager,
+                $response,
+                new AgileDashboard_FirstScrumCreator(
+                    $this->request->getProject(),
+                    $this->planning_factory,
+                    $this->tracker_factory,
+                    new ProjectXMLImporter(
+                        EventManager::instance(),
+                        ProjectManager::instance(),
+                        new XML_RNGValidator(),
+                        new UGroupManager(),
+                        UserManager::instance(),
+                        new XMLImportHelper(),
+                        new ProjectXMLImporterLogger()
+                    )
+                )
+            );
         }
 
         return $updater->updateConfiguration();

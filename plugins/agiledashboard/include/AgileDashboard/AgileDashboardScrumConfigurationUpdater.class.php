@@ -32,15 +32,20 @@ class AgileDashboardScrumConfigurationUpdater {
     /** @var AgileDashboardConfigurationResponse */
     private $response;
 
+    /** @var AgileDashboard_FirstScrumCreator */
+    private $first_scrum_creator;
+
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboardConfigurationResponse $response
+        AgileDashboardConfigurationResponse $response,
+        AgileDashboard_FirstScrumCreator $first_scrum_creator
     ) {
-        $this->request        = $request;
-        $this->project_id     = (int) $this->request->get('group_id');
-        $this->config_manager = $config_manager;
-        $this->response       = $response;
+        $this->request             = $request;
+        $this->project_id          = (int) $this->request->get('group_id');
+        $this->config_manager      = $config_manager;
+        $this->response            = $response;
+        $this->first_scrum_creator = $first_scrum_creator;
     }
 
     public function updateConfiguration() {
@@ -49,13 +54,19 @@ class AgileDashboardScrumConfigurationUpdater {
             return;
         }
 
+        $scrum_is_activated = $this->getActivatedScrum();
+
         $this->config_manager->updateConfiguration(
             $this->project_id,
-            $this->getActivatedScrum(),
+            $scrum_is_activated,
             $this->config_manager->kanbanIsActivatedForProject($this->project_id),
             $this->getScrumTitle(),
             $this->config_manager->getKanbanTitle($this->project_id)
         );
+
+        if ($scrum_is_activated) {
+            $this->first_scrum_creator->createFirstScrum();
+        }
 
         $this->response->scrumConfigurationUpdated();
     }
