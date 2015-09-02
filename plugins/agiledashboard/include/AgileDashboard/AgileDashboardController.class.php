@@ -121,11 +121,15 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         );
     }
 
-    private function getAdminKanbanPresenter(PFUser $user, $group_id) {
+    private function getAdminKanbanPresenter(PFUser $user, $project_id) {
+
+        $has_kanban = count($this->kanban_factory->getListOfKanbansForProject($user, $project_id)) > 0;
+
         return new AdminKanbanPresenter(
-            $group_id,
-            $this->config_manager->kanbanIsActivatedForProject($group_id),
-            $this->config_manager->getKanbanTitle($group_id)
+            $project_id,
+            $this->config_manager->kanbanIsActivatedForProject($project_id),
+            $this->config_manager->getKanbanTitle($project_id),
+            $has_kanban
         );
     }
 

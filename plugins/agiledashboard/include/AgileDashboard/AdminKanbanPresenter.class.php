@@ -29,14 +29,19 @@ class AdminKanbanPresenter {
     /** @var string */
     public $kanban_title;
 
+    /** @var bool */
+    public $has_kanban;
+
     public function __construct(
         $group_id,
         $kanban_activated,
-        $kanban_title
+        $kanban_title,
+        $has_kanban
     ) {
         $this->group_id         = $group_id;
         $this->kanban_activated = $kanban_activated;
         $this->kanban_title     = $kanban_title;
+        $this->has_kanban       = $has_kanban;
     }
 
     public function config_title() {
@@ -77,6 +82,10 @@ class AdminKanbanPresenter {
 
     public function kanban_not_activated_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_not_activated_label');
+    }
+
+    public function first_kanban_will_be_created() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'first_kanban_will_be_created');
     }
 
     public function token() {

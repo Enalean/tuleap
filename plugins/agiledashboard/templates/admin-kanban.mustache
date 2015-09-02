@@ -17,8 +17,11 @@
             </div>
         {{/ kanban_activated }}
         {{^ kanban_activated }}
-            <div class="alert alert-warning">
+            <div class="alert alert-warning admin-kanban-not-activated">
                 <i class="icon-off"></i> {{ kanban_not_activated_label }}
+                {{^ has_kanban }}
+                <p> {{ first_kanban_will_be_created }} </p>
+                {{/ has_kanban }}
             </div>
         {{/ kanban_activated }}
 

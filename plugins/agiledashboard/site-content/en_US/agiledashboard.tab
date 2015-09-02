@@ -146,6 +146,7 @@ plugin_agiledashboard	scrum_activated_label	Scrum is currently active.
 plugin_agiledashboard	scrum_not_activated_label	Scrum is not currently active.
 plugin_agiledashboard	kanban_activated_label	Kanban is currently active.
 plugin_agiledashboard	kanban_not_activated_label	Kanban is not currently active.
+plugin_agiledashboard	first_kanban_will_be_created	A first Kanban will be created during the activation. This operation can take a few seconds.
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum
 plugin_agiledashboard	all_label	Scrum and Kanban
