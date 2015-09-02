@@ -839,7 +839,7 @@ class UserManager_GetInstanceFromRowEventsTest extends TuleapTestCase {
         $user_row = array('user_id' => 90);
 
         $event_manager = new EventManager();
-        $event_manager->addListener(Event::USER_MANAGER_GET_USER_INSTANCE, $this, 'mockedMethodForEventTest', false, 0);
+        $event_manager->addListener(Event::USER_MANAGER_GET_USER_INSTANCE, $this, 'mockedMethodForEventTest', false);
         EventManager::setInstance($event_manager);
         $result_expected = 'thatValue';
 

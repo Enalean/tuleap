@@ -99,8 +99,7 @@ class BackendTest extends UnitTestCase {
         EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN, 
                                               new BackendTest_Plugin(),
                                               'get_backend',
-                                              false,
-                                              1);
+                                              false);
         $this->assertIsA(Backend::instance(Backend::SVN), 'BackendTest_BackendSVN_overriden_by_plugin'); 
     }
     
@@ -110,8 +109,7 @@ class BackendTest extends UnitTestCase {
         EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN, 
                                               new BackendTest_Plugin_With_SetUp(),
                                               'get_backend',
-                                              false,
-                                              1);
+                                              false);
         $b = Backend::instance(Backend::SVN);
         $this->assertEqual($b->a_variable_for_tests, -25);
     }
@@ -122,8 +120,7 @@ class BackendTest extends UnitTestCase {
         EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN, 
                                               new BackendTest_Plugin_With_SetUp(),
                                               'get_backend',
-                                              false,
-                                              1);
+                                              false);
         $b = Backend::instance(Backend::SVN, null, array(1, 2, 3));
         $this->assertEqual($b->a_variable_for_tests, 9);
     }
@@ -134,8 +131,7 @@ class BackendTest extends UnitTestCase {
         EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN, 
                                               new BackendTest_Plugin_With_SetUp_And_Params(),
                                               'get_backend',
-                                              false,
-                                              1);
+                                              false);
         $b = Backend::instance(Backend::SVN);
         $this->assertEqual($b->a_variable_for_tests, 9);
     }
@@ -146,8 +142,7 @@ class BackendTest extends UnitTestCase {
         EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN, 
                                               new BackendTest_Plugin(),         //no setup !!!
                                               'get_backend',
-                                              false,
-                                              1);
+                                              false);
         $this->expectException();
         $b = Backend::instance(Backend::SVN, null, array(1, 2, 3));
     }

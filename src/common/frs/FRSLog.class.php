@@ -37,7 +37,7 @@ class FRSLog {
                                       'frs_delete_package'
         );
         foreach ($packageEventToListen as $event) {
-            $em->addListener($event, $this, 'addLogPackage', true, 0);
+            $em->addListener($event, $this, 'addLogPackage', true);
         }
 
         $releaseEventToListen = array('frs_create_release',
@@ -45,7 +45,7 @@ class FRSLog {
                                       'frs_delete_release'
         );
         foreach ($releaseEventToListen as $event) {
-            $em->addListener($event, $this, 'addLogRelease', true, 0);
+            $em->addListener($event, $this, 'addLogRelease', true);
         }
 
         $fileEventToListen = array('frs_create_file',
@@ -54,7 +54,7 @@ class FRSLog {
                                    'frs_restore_file'
         );
         foreach ($fileEventToListen as $event) {
-            $em->addListener($event, $this, 'addLogFile', true, 0);
+            $em->addListener($event, $this, 'addLogFile', true);
         }
     }
 

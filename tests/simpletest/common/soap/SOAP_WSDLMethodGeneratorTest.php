@@ -94,7 +94,7 @@ class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
     
     function itAsksToPluginsForUnkownTypes() {
         $plugin = new SOAP_WSDLMethodGeneratorTest_FakePlugin();
-        EventManager::instance()->addListener(Event::WSDL_DOC2SOAP_TYPES, $plugin, 'wsdl_doc2soap_types', false, 0);
+        EventManager::instance()->addListener(Event::WSDL_DOC2SOAP_TYPES, $plugin, 'wsdl_doc2soap_types', false);
         
         $gen = $this->GivenGenerator('returnArrayOfPluginTypes');
         $this->assertEqual($gen->getReturnType(), array('returnArrayOfPluginTypes' => 'tns:ArrayOfStats'));

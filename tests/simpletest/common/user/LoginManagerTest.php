@@ -187,8 +187,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
             Event::SESSION_BEFORE_LOGIN,
             $this, 
             'authenticationSucceed',
-            false,
-            0
+            false
         );
 
         expect($this->user_manager)->getUserByUserName()->never();
@@ -204,8 +203,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
             Event::SESSION_BEFORE_LOGIN,
             $this,
             'authenticationSucceed',
-            false,
-            0
+            false
         );
 
         expect($this->user_manager)->getUserByUserName()->never();
@@ -221,8 +219,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
             Event::SESSION_AFTER_LOGIN,
             $this,
             'refuseLogin',
-            false,
-            0
+            false
         );
 
         $this->login_manager->authenticate('john', 'password');

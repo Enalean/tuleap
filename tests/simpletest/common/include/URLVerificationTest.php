@@ -744,8 +744,7 @@ class URLVerificationTest extends TuleapTestCase {
             Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
             new URL_VERIFACTION_FakeLamaPlugin(),
             'hook',
-            false,
-            0
+            false
         );
 
         $url = mock('URL');

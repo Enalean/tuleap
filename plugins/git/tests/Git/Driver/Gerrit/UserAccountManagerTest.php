@@ -232,7 +232,7 @@ class Git_Driver_Gerrit_UserAccountManager_GetGerritUserTest extends TuleapTestC
         parent::setUp();
 
         $event_manager = new EventManager();
-        $event_manager->addListener(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $this, 'hookReturnsLdapUser', false, 0);
+        $event_manager->addListener(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $this, 'hookReturnsLdapUser', false);
         EventManager::setInstance($event_manager);
 
         $this->ldap_login  = 'bla blo';

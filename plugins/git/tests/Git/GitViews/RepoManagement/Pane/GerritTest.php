@@ -45,8 +45,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_cannot_use_gerrit',
-            false,
-            0
+            false
         );
 
         $gerrit_servers = array();
@@ -67,8 +66,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_cannot_use_gerrit',
-            false,
-            0
+            false
         );
 
         $gerrit_servers = array('IAmAServer');
@@ -89,8 +87,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_can_use_gerrit',
-            false,
-            0
+            false
         );
 
         $gerrit_servers = array();
@@ -111,8 +108,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_can_use_gerrit',
-            false,
-            0
+            false
         );
 
         $gerrit_servers = array('IAmAServer');

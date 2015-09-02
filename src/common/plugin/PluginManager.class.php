@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean SAS, 2015. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -125,13 +126,6 @@ class PluginManager {
     public function getAvailablePlugins() {
         return $this->plugin_factory->getAvailablePlugins();
     }
-    
-    function _getPluginHookPriorityManager() {
-        if (!is_a($this->pluginHookPriorityManager, 'PluginHookPriorityManager')) {
-            $this->pluginHookPriorityManager = new PluginHookPriorityManager();
-        }
-        return $this->pluginHookPriorityManager;
-    }
 
     function _getForgeUpgradeConfig() {
         return new ForgeUpgradeConfig();
@@ -196,8 +190,6 @@ class PluginManager {
     function uninstallPlugin($plugin) {
         $name = $this->plugin_factory->getNameForPlugin($plugin);
         if (!$this->_executeSqlStatements('uninstall', $name)) {
-            $phpm = $this->_getPluginHookPriorityManager();
-            $phpm->removePlugin($plugin);
             $this->uninstallForgeUpgrade($name);
             return $this->plugin_factory->removePlugin($plugin);
         } else {
