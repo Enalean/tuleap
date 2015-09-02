@@ -31,6 +31,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
         $this->system_event_manager = mock('SystemEventManager');
         $this->system_event_dao     = mock('SystemEventDao');
         $this->logger               = mock('Logger');
+        $this->site_cache           = mock('SiteCache');
         $this->processor = partial_mock(
             'SystemEventProcessor_Root',
             array('launchAs'),
@@ -42,7 +43,8 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
                 mock('BackendAliases'),
                 mock('BackendCVS'),
                 mock('BackendSVN'),
-                mock('BackendSystem')
+                mock('BackendSystem'),
+                $this->site_cache
             )
         );
         ForgeConfig::store();
@@ -98,5 +100,11 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
 
         $category = SystemEvent::DEFAULT_QUEUE;
         $this->processor->execute($category);
+    }
+
+    public function itRestoreOwnerShipOnGeneratedCacheFiles() {
+        expect($this->site_cache)->restoreOwnership()->once();
+
+        $this->processor->execute(SystemEvent::DEFAULT_QUEUE);
     }
 }

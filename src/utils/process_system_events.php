@@ -73,7 +73,8 @@ if ($owner === SystemEvent::OWNER_APP) {
         Backend::instance('Aliases'),
         Backend::instance('CVS'),
         Backend::instance('SVN'),
-        Backend::instance('System')
+        Backend::instance('System'),
+        new SiteCache($logger)
     );
 }
 

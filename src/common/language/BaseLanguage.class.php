@@ -538,7 +538,7 @@ class BaseLanguage {
         }
     }
 
-    private function getCacheDirectory() {
+    public function getCacheDirectory() {
         return ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.'lang';
     }
 }
