@@ -1,3 +1,6 @@
+Version 4.77 - Tuleap 8.6
+    * request #8363: Remove hook priorities management
+
 Version 4.76 - Tuleap 8.6
     * request #8363: performance improvements on plugin loading
 

@@ -1,3 +1,6 @@
+Version 1.12 - Tuleap 8.6
+    * request #8363: Remove hook priorities management
+
 Version 1.11 - Tuleap 8.5
     * story #8207: use Active Directory as an LDAP directory
 

@@ -38,11 +38,12 @@ Version 8.6 (Not Released Yet)
 	* forumml: 2.6.22
 	* IM: 1.5.32
 	* admindelegation: 2.10
-	* docman: 2.26.81
-	* git: 4.76
+	* docman: 2.26.82
+	* git: 4.77
 	* hudson: 1.20
 	* mediawiki: 0.81
 	* archivedeleteditems: 0.6
+	* pluginsadministration: 1.12
 
 	== Api ==
 	* REST API: 1.14
