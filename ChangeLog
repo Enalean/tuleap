@@ -5,6 +5,7 @@ Version 8.6 (Not Released Yet)
 	* request #8309: Get rid of PrototypeJS (is-at-top)
 	* Allow to define a path for extra plugins
 	* request #8309: Get rid of PrototypeJS (Toggler)
+	* request #8363: performance improvements on plugin loading
 
 	== Enhancement ==
 	* story #8337: Web UI to set truncated email
@@ -38,7 +39,7 @@ Version 8.6 (Not Released Yet)
 	* IM: 1.5.32
 	* admindelegation: 2.10
 	* docman: 2.26.81
-	* git: 4.75
+	* git: 4.76
 	* hudson: 1.20
 	* mediawiki: 0.81
 	* archivedeleteditems: 0.6
