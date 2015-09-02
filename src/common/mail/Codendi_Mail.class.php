@@ -396,10 +396,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
                         'header' => $this->mail->getHeaders());
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
-        $status = false;        
+        $status = true;
         try {
-            $status = $this->mail->send();
+            $this->mail->send();
         } catch (Exception $e) {
+            $status = false;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
         }
         $this->mail->clearRecipients();

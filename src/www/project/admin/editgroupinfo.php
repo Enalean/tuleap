@@ -247,7 +247,13 @@ if ($user_can_choose_truncated_emails) {
     if ($svn_service) {
         $truncated_mails_impacted_services[] = $svn_service->getInternationalizedName();
     }
-
+    EventManager::instance()->processEvent(
+        Event::SERVICES_TRUNCATED_EMAILS,
+        array(
+            'project'  => $currentproject,
+            'services' => &$truncated_mails_impacted_services
+        )
+    );
     $presenter = new ProjectTruncatedEmailsPresenter($currentproject, $truncated_mails_impacted_services);
     echo $renderer->renderToString('truncated_emails', $presenter);
 }

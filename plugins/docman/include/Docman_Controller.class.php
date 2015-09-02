@@ -1,6 +1,7 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2015.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
@@ -103,21 +104,21 @@ class Docman_Controller extends Controler {
         }
 
         // Other events
-        $this->notificationsManager =& new Docman_NotificationsManager($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $this->notificationsManager =& new Docman_NotificationsManager($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_metadata_update', $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager, 'sendNotifications', true);
-        $this->notificationsManager_Add =& new Docman_NotificationsManager_Add($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $this->notificationsManager_Add =& new Docman_NotificationsManager_Add($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
         $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true);
-        $this->notificationsManager_Delete =& new Docman_NotificationsManager_Delete($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $this->notificationsManager_Delete =& new Docman_NotificationsManager_Delete($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
         $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true);
-        $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true);
-        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers($this->getProject(), get_server_url().$this->getDefaultUrl(), $this->feedback, $this->getMailBuilder());
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true);
     }
 
@@ -1804,5 +1805,15 @@ class Docman_Controller extends Controler {
         }
         return $this->hierarchy[$rootItem->getId()];
     }
+
+    /**
+     * @return Project
+     */
+    private function getProject() {
+        return ProjectManager::instance()->getProject($this->getGroupId());
+    }
+
+    private function getMailBuilder() {
+        return new MailBuilder(TemplateRendererFactory::build());
+    }
 }
-?>

@@ -980,4 +980,13 @@ class Event {
      *     'services' => array of allowed services (OUT)
      */
     const SERVICES_ALLOWED_FOR_PROJECT = 'services_allowed_for_project';
+
+    /**
+     * Gather the services who can send truncated emails
+     *
+     * Parameters:
+     *     'project'  => Project
+     *     'services' => array
+     */
+    const SERVICES_TRUNCATED_EMAILS = 'services_truncated_emails';
 }

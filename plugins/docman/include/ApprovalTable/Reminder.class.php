@@ -128,6 +128,9 @@ class Docman_ApprovalTableReminder {
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
 
+        if (! $reviewer->getEmail()) {
+            return;
+        }
 
         if ($table instanceof Docman_ApprovalTableFile) {
             $versionFactory = new Docman_VersionFactory();
@@ -153,18 +156,22 @@ class Docman_ApprovalTableReminder {
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
 
-        $mail          = new Codendi_Mail();
-        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setTo($reviewer->getEmail());
-        $mail->setSubject($subject);
-
         if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
-                $htmlBody = $this->getBodyHtml($table, $docmanItem);
-                $mail->setBodyHtml($htmlBody);
+                $html_body = $this->getBodyHtml($table, $docmanItem);
+
         }
-        $txtBody = $this->getBodyText($table, $docmanItem);
-        $mail->setBodyText($txtBody);
+        $text_body = $this->getBodyText($table, $docmanItem);
+
+        $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
+        $mail = $mail_notification_builder->buildEmail(
+            $this->getItemProject($docmanItem),
+            array($reviewer->getEmail()),
+            $subject,
+            $html_body,
+            $text_body,
+            $this->getReviewUrl($docmanItem),
+            DocmanPlugin::TRUNCATED_SERVICE_NAME
+        );
 
         return $mail->send();
     }
@@ -335,5 +342,4 @@ class Docman_ApprovalTableReminder {
             }
         }
     }
-
 }

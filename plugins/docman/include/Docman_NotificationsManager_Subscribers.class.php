@@ -27,19 +27,6 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
 
     /**
-     * Constructor
-     *
-     * @param Integer  $group_id The group id
-     * @param String   $url      Default url of docman controller
-     * @param Feedback $feedback Docman controller feedback
-     *
-     * @return void
-     */
-    function __construct($group_id, $url, $feedback) {
-        parent::__construct($group_id, $url, $feedback);
-    }
-
-    /**
      * Trigger notification message build for a list of users monitoring a given docman item.
      *
      * @param String $event  Event listened at Docman_Controller side
@@ -91,7 +78,8 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $this->_addMessage(
             $user,
             $subject,
-            $this->_getMessageForUser($user, $type, $params)
+            $this->_getMessageForUser($user, $type, $params),
+            $this->getMessageLink($type, $params)
         );
     }
 
@@ -108,7 +96,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $msg = '';
         $language = $this->_getLanguageForUser($user);
         $separator = "\n\n--------------------------------------------------------------------\n";
-        $itemUrl = $this->_url .'&action=show&id='. $params['item']->getId();
+        $itemUrl = $this->getMessageLink($message_type, $params);
         switch($message_type) {
         case self::MESSAGE_ADDED:
             $msg .= $language->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
@@ -128,6 +116,19 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         }
         $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
         return $msg;
+    }
+
+    protected function getMessageLink($type, $params) {
+        switch ($type) {
+            case self::MESSAGE_ADDED:
+            case self::MESSAGE_REMOVED:
+                $link = $this->_url .'&action=show&id='. $params['item']->getId();
+                break;
+            default:
+                $link = $this->_url;
+                break;
+        }
+        return $link;
     }
 }
 

@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean 2015. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -25,7 +26,7 @@ require_once('Docman_Path.class.php');
 require_once('DocmanConstants.class.php');
 require_once('Docman_NotificationsDao.class.php');
 
-class Docman_NotificationsManager extends NotificationsManager { 
+class Docman_NotificationsManager extends NotificationsManager {
 
     const MESSAGE_MODIFIED        = 'modified';
     const MESSAGE_NEWVERSION      = 'new_version';
@@ -34,41 +35,47 @@ class Docman_NotificationsManager extends NotificationsManager {
     var $_listeners;
     var $_feedback;
     var $_item_factory;
-    var $_messages;
+    /** @var array */
+    private $notifications;
     var $_url;
-    var $_group_id;
+
+    /**
+     * @var Project
+     */
+    var $project;
+
     var $_group_name;
 
-    function __construct($group_id, $url, $feedback) {
+    /**
+     * @var MailBuilder
+     */
+    private $mail_builder;
+
+    function __construct(Project $project, $url, $feedback, MailBuilder $mail_builder) {
         parent::__construct();
 
-        $this->_group_id     =  $group_id;
+        $this->project       =  $project;
         $this->_url          =  $url;
         $this->_listeners    =  array();
         $this->_feedback     = $feedback;
         $this->_item_factory =  $this->_getItemFactory();
-        $this->_messages     =  array();
-        if (($g = $this->_groupGetObject($group_id)) && !$g->isError()) {
-            $this->_group_name = $g->getPublicName();
+        $this->notifications =  array();
+        $this->mail_builder  = $mail_builder;
+        if ($project && !$project->isError()) {
+            $this->_group_name = $project->getPublicName();
         }
     }
     function _getItemFactory() {
         return new Docman_ItemFactory();
     }
-    function _groupGetObject($group_id) {
-        return ProjectManager::instance()->getProject($group_id);
-    }
     function _getUserManager() {
         return UserManager::instance();
     }
     function _getPermissionsManager() {
-        return Docman_PermissionsManager::instance($this->_group_id);
+        return Docman_PermissionsManager::instance($this->project->getID());
     }
     function _getDocmanPath() {
         return new Docman_Path();
-    }
-    function _getMail() {
-        return new Mail();
     }
     function somethingHappen($event, $params) {
         $um             = $this->_getUserManager();
@@ -91,22 +98,12 @@ class Docman_NotificationsManager extends NotificationsManager {
     function _getListeningUsersItemId($params) {
         return $params['item']->getId();
     }
+
     function sendNotifications($event, $params) {
         $success = true;
-        foreach($this->_messages as $message) {
-            $m = $this->_getMail();
-            $m->setFrom($GLOBALS['sys_noreply']);
-            $m->setSubject($message['title']);
-            $m->setBody($message['content']);
-            $to = array_chunk($message['to'], 50); //We send 50 bcc at once
-            foreach($to as $sub_to) {
-                $cc = '';
-                foreach($sub_to as $recipient) {
-                    $cc .= ','. $recipient->getEmail();
-                }
-                $m->setBcc($cc);
-                $success &= $m->send();
-            }
+        foreach($this->notifications as $notification) {
+            $mail = $this->mail_builder->buildEmail($this->project, $notification);
+            $success &= ($mail->send());
         }
         if (!$success) {
             $this->_feedback->log('warning', 'Error when sending some notifications.');
@@ -193,25 +190,51 @@ class Docman_NotificationsManager extends NotificationsManager {
                 break;
         }
         $this->_addMessage(
-            $user, 
-            $params['item']->getTitle(), 
+            $user,
+            $params['item']->getTitle(),
             $this->_getMessageForUser(
-                $params['user'], 
-                $type, 
+                $params['user'],
+                $type,
                 $params
-            )
+            ),
+            $this->getMessageLink($type, $params)
         );
     }
-    function _addMessage($to, $subject, $msg) {
-        $md5 = md5($msg);
-        if (!isset($this->_messages[$md5])) {
-            $this->_messages[$md5] = array(
-                'title'   => '['. util_unconvert_htmlspecialchars($this->_group_name) .' - Documents] '. $subject,
-                'content' => $msg,
-                'to'      => array()
+
+    protected function _addMessage(PFUser $to, $subject, $msg, $link) {
+        if (!isset($this->notifications[$msg])) {
+            $subject = '['. util_unconvert_htmlspecialchars($this->_group_name) .' - Documents] '. $subject;
+
+            $this->notifications[$msg] = new Notification(
+                array(),
+                $subject,
+                nl2br($msg),
+                $msg,
+                $link,
+                'Documents'
             );
         }
-        $this->_messages[$md5]['to'][$to->getId()] = $to;
+        $this->notifications[$msg]->addEmail($to->getEmail());
+    }
+
+    protected function getMessageLink($type, $params) {
+        if($this->project->getTruncatedEmailsUsage()) {
+            return $this->_url.'&action=details&id='. $params['item']->getId().'&section=history';
+        }
+
+        switch($type) {
+            case self::MESSAGE_MODIFIED:
+            case self::MESSAGE_NEWVERSION:
+                $link = $this->_url .'&action=details&id='. $params['item']->getId();
+                break;
+            case self::MESSAGE_WIKI_NEWVERSION:
+                $link = $params['url'];
+                break;
+            default:
+                $link = $this->_url;
+                break;
+        }
+        return $link;
     }
 
     /**
@@ -252,11 +275,11 @@ class Docman_NotificationsManager extends NotificationsManager {
             case self::MESSAGE_MODIFIED:
             case self::MESSAGE_NEWVERSION:
                 $msg .= $params['path']->get($params['item']) .' '.$language->getText('plugin_docman', 'notif_modified_by').' '. $user->getRealName() .".\n";
-                $msg .= $this->_url .'&action=details&id='. $params['item']->getId() ."\n";
+                $msg .= $this->getMessageLink($message_type, $params) ."\n";
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
                 $msg .= $language->getText('plugin_docman', 'notif_wiki_new_version', $params['wiki_page']).' ' . $user->getRealName() . ".\n";
-                $msg .= $params['url'] . "\n";
+                $msg .= $this->getMessageLink($message_type, $params) . "\n";
                 break;
             default:
                 $msg .= $language->getText('plugin_docman', 'notif_something_happen');

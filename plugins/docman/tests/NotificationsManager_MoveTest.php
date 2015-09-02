@@ -62,6 +62,17 @@ Mock::generate('NotificationsDao');
 class NotificationsManager_MoveTest extends UnitTestCase {
     var $groupId;
 
+    function setUp() {
+        $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', '/tuleap');
+    }
+
+    function tearDown() {
+        unset($GLOBALS['sys_noreply']);
+        ForgeConfig::restore();
+    }
+
     function testNotifications() {
         // {{{ Listener cannot read moved item
         // We expect no notification
@@ -198,14 +209,13 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         $d->setReturnValue('getId', 'd');
         $d->setReturnValue('getParentId', 'b');
 
-        $group_id = 'group_id';
+        $group_id = 101;
+        $project  = aMockProject()->withId($group_id)->build();
 
         $user = mock('PFUser');
         $user->setReturnValue('getId', 'user');
         $listener = mock('PFUser');
         $listener->setReturnValue('getId', 'listener');
-
-        $project =& new MockGroup();
 
         $feedback =& new Feedback();
 
@@ -277,8 +287,10 @@ class NotificationsManager_MoveTest extends UnitTestCase {
             $dnmm->expectNever('_buildMessage', $msg);
         }
 
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+
         //C'est parti
-        $dnmm->__construct($group_id, 'my_url', $feedback);
+        $dnmm->__construct($project, 'my_url', $feedback, $mail_builder);
         $dnmm->somethingHappen('plugin_docman_event_move', array(
             'group_id' => $group_id,
             'item'    => &$d,

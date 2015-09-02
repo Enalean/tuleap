@@ -27,10 +27,6 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
     const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
     const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
     
-    function __construct($group_id, $url, $feedback) {
-        parent::__construct($group_id, $url, $feedback);
-    }
-
     function somethingHappen($event, $params) {
         if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
@@ -62,13 +58,14 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
     function _buildMessage($params, $user, $type) {
         $params['old_parent'] = $this->_item_factory->getItemFromDb($params['item']->getParentId());
         $this->_addMessage(
-            $user, 
-            $type == self::MESSAGE_MOVED ? $params['item']->getTitle() : (  $type == self::MESSAGE_MOVED_FROM ? $params['old_parent']->getTitle() : $params['parent']->getTitle() ),
+            $user,
+            $type == self::MESSAGE_MOVED ? $params['item']->getTitle() : ($type == self::MESSAGE_MOVED_FROM ? $params['old_parent']->getTitle() : $params['parent']->getTitle()),
             $this->_getMessageForUser(
-                $params['user'], 
-                $type, 
+                $params['user'],
+                $type,
                 $params
-            )
+            ),
+            $this->getMessageLink($type, $params)
         );
     }
     function _getMessageForUser(&$user, $message_type, $params) {
@@ -142,6 +139,20 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                 break;
         }
         return $msg;
+    }
+
+    protected function getMessageLink($type, $params) {
+        switch ($type) {
+            case self::MESSAGE_MOVED:
+            case self::MESSAGE_MOVED_TO:
+            case self::MESSAGE_MOVED_FROM:
+                $link = $this->_url . '&action=show&id=' . $params['parent']->getId();
+                break;
+            default:
+                $link = $this->_url;
+                break;
+        }
+        return $link;
     }
 }
 
