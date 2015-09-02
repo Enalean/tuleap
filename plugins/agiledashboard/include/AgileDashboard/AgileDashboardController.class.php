@@ -160,7 +160,17 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
         $response = new AgileDashboardConfigurationResponse($this->request->getProject());
         if ($this->request->exist('activate-kanban')) {
-            $updater = new AgileDashboardKanbanConfigurationUpdater($this->request, $this->config_manager, $response);
+            $updater = new AgileDashboardKanbanConfigurationUpdater(
+                $this->request,
+                $this->config_manager,
+                $response,
+                new AgileDashboard_FirstKanbanCreator(
+                    $this->request->getProject(),
+                    $this->kanban_manager,
+                    $this->tracker_factory,
+                    TrackerXmlImport::build()
+                )
+            );
         } else {
             $updater = new AgileDashboardScrumConfigurationUpdater($this->request, $this->config_manager, $response);
         }
