@@ -1,3 +1,6 @@
+Version 0.82 - Tuleap 8.6
+    * request #8401: mediawiki inaccessible on dev branch (master)
+
 Version 0.81 - Tuleap 8.6
     * request #8363: Update service load mecanism
 
