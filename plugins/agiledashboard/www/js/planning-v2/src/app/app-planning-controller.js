@@ -290,7 +290,13 @@
                 }
 
                 promise.then(function() {
-                    return prependItemToBacklog(item_id);
+                    var subpromise;
+                    if ($scope.filter_terms) {
+                        subpromise = prependItemToFilteredBacklog(item_id);
+                    } else {
+                        subpromise = prependItemToBacklog(item_id);
+                    }
+                    return subpromise;
                 });
 
                 return promise;
@@ -427,8 +433,18 @@
 
         function prependItemToBacklog(backlog_item_id) {
             return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-                $scope.items[backlog_item_id] = data.backlog_item;
-                $scope.backlog_items.content.unshift($scope.items[backlog_item_id]);
+                var new_item = data.backlog_item;
+                $scope.items[backlog_item_id] = new_item;
+                $scope.backlog_items.content.unshift(new_item);
+                $scope.backlog_items.filtered_content.unshift(new_item);
+            });
+        }
+
+        function prependItemToFilteredBacklog(backlog_item_id) {
+            return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
+                var new_item = data.backlog_item;
+                $scope.items[backlog_item_id] = new_item;
+                $scope.backlog_items.content.unshift(new_item);
             });
         }
 
