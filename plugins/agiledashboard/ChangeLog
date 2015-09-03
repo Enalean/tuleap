@@ -1,3 +1,6 @@
+Version 1.272 - Tuleap 8.6
+    * request #8393 New item in planning v2 backlog should be prepended
+
 Version 1.271 - Tuleap 8.6
     * request #8398: When the first card in a Kanban column is dragged, its next sibling goes under the column header
 
