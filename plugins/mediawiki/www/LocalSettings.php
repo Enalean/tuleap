@@ -47,6 +47,13 @@ require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
 require_once __DIR__.'/../include/MediawikiSiteAdminResourceRestrictor.php';
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
 
+/**
+ * HACK
+ */
+require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
+$ff_plugin = new fusionforge_compatPlugin();
+$ff_plugin->loaded();
+
 $manager = new MediawikiManager(new MediawikiDao());
 
 $forbidden_permissions = array(
