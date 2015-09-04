@@ -6,6 +6,7 @@ Version 8.6 (Not Released Yet)
 	* Allow to define a path for extra plugins
 	* request #8309: Get rid of PrototypeJS (Toggler)
 	* request #8363: performance improvements on plugin loading
+	* request #8309: Get rid of PrototypeJS (Tooltip)
 
 	== Enhancement ==
 	* story #8337: Web UI to set truncated email
