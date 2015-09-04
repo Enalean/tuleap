@@ -1,80 +1,56 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
+* Copyright (c) Enalean, 2011-2015. All Rights Reserved.
 *
-* Originally written by Nicolas Terray, 2008
+* This file is a part of Tuleap.
 *
-* This file is a part of Codendi.
-*
-* Codendi is free software; you can redistribute it and/or modify
+* Tuleap is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
 * (at your option) any later version.
 *
-* Codendi is distributed in the hope that it will be useful,
+* Tuleap is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with Codendi; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*
-* 
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var codendi = codendi || { };
 
-codendi.Tooltip = Class.create({
-    initialize: function (element, url, options) {
+(function ($, codendi) {
+
+    codendi.Tooltips = [];
+
+    codendi.Tooltip = function (element, url, options) {
         this.element = $(element);
         this.url     = url;
-        this.options = Object.extend({
-        }, options || { });
-        
+        this.options = options || {};
+
         this.fetching = false;
         this.fetched  = false;
-        this.old_title = this.element.title;
-        
+        this.old_title = this.element.attr('title');
+
         this.tooltip = false;
-        
-        this.showEvent = this.show.bindAsEventListener(this);
-        this.element.observe('mouseover', this.showEvent);
-        this.hideEvent = this.hide.bindAsEventListener(this);
-        this.element.observe('mouseout', this.hideEvent);
-    },
-    fetch: function (evt) {
-        if (!this.fetching) {
-            this.fetching = true;
-            this.element.title = '';
-            var req = new Ajax.Request(this.url, {
-                onSuccess: (function (transport) {
-                    this.fetching = false;
-                    this.fetched  = true;
-                    if (transport.responseText) {
-                        this.createTooltip(transport.responseText);
-                        if (this.show_tooltip) {
-                            this.show(evt);
-                        }
-                    } else {
-                        this.element.title = this.old_title;
-                    }
-                }).bind(this)
-            });
-        }
-    },
-    createTooltip: function (content) {
+
+        this.showEvent = $.proxy(this.show, this);
+        this.element.on('mouseover', this.showEvent);
+        this.hideEvent = $.proxy(this.hide, this);
+        this.element.on('mouseout', this.hideEvent);
+    };
+
+    codendi.Tooltip.prototype.createTooltip = function (content) {
         this.fetched = true;
-        this.tooltip = new Element('div', {
-                'class': "codendi-tooltip",
-                style: "display:none;"
-            }
-        );
-        this.tooltip.update(content);
-        Element.insert(document.body, {
-            bottom: this.tooltip
-        });
-    },
-    show: function (evt) {
+        this.tooltip = $('<div>')
+            .hide()
+            .addClass('codendi-tooltip')
+            .html(content);
+        $(document.body).append(this.tooltip);
+    };
+
+
+    codendi.Tooltip.prototype.show = function (evt) {
         this.show_tooltip = true;
         var mouse_event = evt;
 
@@ -85,94 +61,114 @@ codendi.Tooltip = Class.create({
             if (this.options.atCursorPosition) {
                 var posX = mouse_event.pageX;
                 var posY = mouse_event.pageY;
-                Element.setStyle(this.tooltip, {
-                        top: posY + 10 + "px",
-                        left: posX + 10 + "px"
-                    }
-                );
+                this.tooltip.css({
+                    top:  posY + 10 + "px",
+                    left: posX + 10 + "px"
+                });
             } else {
-                var pos = this.element.cumulativeOffset();
-                Element.setStyle(this.tooltip, {
-                        top: (pos[1] + this.element.offsetHeight) + "px",
-                        left: pos[0] + "px"
-                    }
-                );
+                var pos = this.element.offset();
+                this.tooltip.css({
+                    top: (pos.top + this.element.outerHeight()) + "px",
+                    left: pos.left + "px"
+                });
             }
-            this.tooltip.show(evt);
+            this.tooltip.show();
             if (evt) {
-                //Event.stop(evt);
-                Event.extend(evt);
                 evt.preventDefault();
             }
-        } else if (!this.fetched) {
+        } else if (! this.fetched) {
             this.fetch(evt);
         }
-    },
-    hide: function () {
+    };
+
+    codendi.Tooltip.prototype.hide = function (evt) {
         this.show_tooltip = false;
         if (this.tooltip) {
-            this.timeout = setTimeout((function () { 
+            this.timeout = setTimeout($.proxy(function () {
                 this.tooltip.hide();
-            }).bindAsEventListener(this), 200);
+            }, this), 200);
         }
-    }
-});
+    };
 
-codendi.Tooltip.selectors = ['a[class=cross-reference]'];
+    codendi.Tooltip.prototype.fetch = function (evt) {
+        if (this.fetching) {
+            return;
+        }
 
-codendi.Tooltip.load = function (element, at_cursor_position) {
-    var sparkline_hrefs = { };
-    var options = { };
+        this.fetching = true;
+        this.element.attr('title', '');
+        $.get(this.url).done(
+            $.proxy(success, this)
+        );
 
-    if (typeof(at_cursor_position) != 'undefined' && at_cursor_position === true) {
-        options.atCursorPosition = true;
-    } else {
-        options.atCursorPosition = false;
-    }
-    
-    $(element).select.apply($(element), codendi.Tooltip.selectors).each(function (a) {
-        codendi.Tooltips.push(new codendi.Tooltip(a, a.href, options));
-        //Create an array by hrefs : several 'a' for one href in order to reduce the requests
-        if (sparkline_hrefs[a.href]) {
-            sparkline_hrefs[a.href].push(a);
-        } else {
-            sparkline_hrefs[a.href] = [a];
-        }        
-    });
-    
-    //load sparklines
-    if ($H(sparkline_hrefs).size()) {
-        new Ajax.Request('/sparklines.php', {
-            parameters: { 
-                'sparklines[]': $H(sparkline_hrefs).keys()
-            },
-            onSuccess: function (transport) {
-                if (transport.status == 200) {
-                    $H(transport.responseJSON).each(function (element) {
-                        var href      = element[0];
-                        var sparkline = element[1];
-                        //add the sparkline to each link
-                        sparkline_hrefs[href].each(function(a) {
-                                a.insert({
-                                    top: new Element('img', {
-                                        src: sparkline,
-                                        style: 'vertical-align: middle; padding-right: 2px;',
-                                        width: '10',
-                                        height: '10'
-                                    })
-                                });
-                        });
-                    });
-                    
-                    
+        function success(data) {
+            this.fetching = false;
+            this.fetched  = true;
+            if (data) {
+                this.createTooltip(data);
+                if (this.show_tooltip) {
+                    this.show(evt);
                 }
+            } else {
+                this.element.attr('title', this.old_title);
+            }
+        }
+    };
+
+    codendi.Tooltip.selectors = ['a[class=cross-reference]'];
+
+    codendi.Tooltip.load = function (element, at_cursor_position) {
+        var sparkline_hrefs = {};
+
+        var options = {
+            atCursorPosition: at_cursor_position
+        };
+
+        $(codendi.Tooltip.selectors.join(',')).each(function (index, a) {
+            codendi.Tooltips.push(
+                new codendi.Tooltip(a, a.href, options)
+            );
+            if (sparkline_hrefs[a.href]) {
+                sparkline_hrefs[a.href].push(a);
+            } else {
+                sparkline_hrefs[a.href] = [a];
             }
         });
+
+        loadSparklines(sparkline_hrefs);
+    };
+
+    function loadSparklines(sparkline_hrefs) {
+        var hrefs = Object.keys(sparkline_hrefs);
+
+        if (hrefs.length) {
+            $.get(
+                '/sparklines.php', {
+                    'sparklines[]': hrefs
+                }
+            ).done(function (data, statusText, xhr) {
+                if (xhr.status !== 200) {
+                    return;
+                }
+
+                for (var href in data) {
+                    sparkline_hrefs[href].each(function(a) {
+                        $(a).prepend(
+                            $('<img>')
+                                .attr('src', data[href])
+                                .css('vertical-align', 'middle')
+                                .css('padding-right', '2px')
+                                .css('width', '10px')
+                                .css('height', '10px')
+                        );
+                    });
+                }
+            });
+        }
     }
-};
 
-codendi.Tooltips = [];
+    $(document).ready(function () {
+        codendi.Tooltip.load(document.body);
+    });
 
-document.observe('dom:loaded', function () {
-    codendi.Tooltip.load(document.body);
-});
+})(jQuery, codendi || { });
