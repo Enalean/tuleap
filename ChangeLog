@@ -1,3 +1,8 @@
+Version 8.5-4 (Monday, September 7th)
+	== Bug Fix ==
+	* request #8384: Final / is no more mandatory for archived delete item path
+	* request #8387: Too many call to the db in the artifact modal when there is a field list bound to user
+
 Version 8.5-3
 	== Bug Fix ==
 	* request #8368: Files with special characters can't be downloaded with WEBDAV
