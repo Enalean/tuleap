@@ -1,23 +1,21 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 class BackendCVS extends Backend {
@@ -78,39 +76,63 @@ class BackendCVS extends Backend {
      * @return true if repo is successfully created, false otherwise
      */
     public function createProjectCVS($group_id) {
-        $project=$this->getProjectManager()->getProject($group_id);
+        $project = $this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
 
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $cvs_dir=$GLOBALS['cvs_prefix']."/".$unix_group_name;
-        if (!is_dir($cvs_dir)) {
+        $unix_group_name = $project->getUnixName(false);
+        $cvs_dir         = $GLOBALS['cvs_prefix']."/".$unix_group_name;
+
+        if (! is_dir($cvs_dir)) {
             // Let's create a CVS repository for this group
-            if (!mkdir($cvs_dir)) {
+            if (! mkdir($cvs_dir)) {
                 $this->log("Can't create project CVS dir: $cvs_dir", Backend::LOG_ERROR);
                 return false;
             }
-            $r      = 0;
-            $output = '';
+
+            $return_code = 0;
+            $output      = '';
+            $cvs_command = $GLOBALS['cvs_cmd'];
+
+            if (! file_exists($cvs_command)) {
+                $this->log("CVS command not found", Backend::LOG_ERROR);
+                return false;
+            }
+
             if ($this->useCVSNT()) {
                 // Tell cvsnt not to update /etc/cvsnt/PServer: this is done later by this the script.
-                $output = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n ", $r);
+                $output = $this->system("$cvs_command -d$cvs_dir init -n ", $return_code);
             } else {
-                $output = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init", $r);
+                $output = $this->system("$cvs_command -d$cvs_dir init", $return_code);
             }
-            
-            if ( !$r ) {
-                $this->log($output, Backend::LOG_ERROR);
-            } 
+
+            if ($return_code > 0) {
+                $this->log("CVS init command return: $output", Backend::LOG_ERROR);
+                return false;
+            }
+
+            if (! is_dir("$cvs_dir/CVSROOT")) {
+                $this->log("Folder $cvs_dir/CVSROOT does not exist", Backend::LOG_ERROR);
+                return false;
+            }
+
             // Turn off pserver writers, on anonymous readers
             // See CVS writers update below. Just create an
             // empty writers file so that we can set up the appropriate
             // ownership right below. We will put names in writers
             // later in the script
-            $this->system("echo \"\" > $cvs_dir/CVSROOT/writers");
-           
-            if (!$this->useCVSNT()) {
+
+            $return_code_turn_off = 0;
+
+            $output_turn_off = $this->system("echo '' > $cvs_dir/CVSROOT/writers", $return_code_turn_off);
+
+            if ($return_code_turn_off > 0) {
+               $this->log("Echo in /CVSROOT/writers returns: $output_turn_off", Backend::LOG_ERROR);
+               return false;
+            }
+
+            if (! $this->useCVSNT()) {
                 // But to allow checkout/update to registered users we
                 // need to setup a world writable directory for CVS lock files
                 $lockdir=$GLOBALS['cvslock_prefix']."/$unix_group_name";
@@ -140,7 +162,10 @@ class BackendCVS extends Backend {
         }
 
         // Create writer file
-        $this->updateCVSwriters($group_id);
+        if (! $this->updateCVSwriters($group_id)) {
+            $this->log("Error while updating CVS Writers", Backend::LOG_ERROR);
+            return false;
+        }
 
         // history was deleted (or not created)? Recreate it.
         if ($this->useCVSNT()) {
@@ -152,12 +177,12 @@ class BackendCVS extends Backend {
         }
 
         // Update post-commit hooks
-        if (!$this->updatePostCommit($project)) {
+        if (! $this->updatePostCommit($project)) {
             return false;
         }
 
         // Update watch mode
-        if (!$this->updateCVSWatchMode($group_id)) {
+        if (! $this->updateCVSWatchMode($group_id)) {
             return false;
         }
 
@@ -255,21 +280,22 @@ class BackendCVS extends Backend {
      * @return Boolean
      */
     public function updateCVSwriters($group_id) {
-        $project=$this->getProjectManager()->getProject($group_id);
-        if (!$project) {
+        $project = $this->getProjectManager()->getProject($group_id);
+        if (! $project) {
             return false;
         }
 
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $cvs_dir=$GLOBALS['cvs_prefix']."/".$unix_group_name;
+        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
+        $cvs_dir         = $GLOBALS['cvs_prefix']."/".$unix_group_name;
         $cvswriters_file = "$cvs_dir/CVSROOT/writers";
 
         // Get list of project members (Unix names)
-        $members_id_array=$project->getMembersUserNames();
+        $members_id_array   = $project->getMembersUserNames();
         $members_name_array = array();
         foreach ($members_id_array as $member) {
             $members_name_array[] = strtolower($member['user_name'])."\n";
         }
+
         return $this->writeArrayToFile($members_name_array, $cvswriters_file);
     }
     /**

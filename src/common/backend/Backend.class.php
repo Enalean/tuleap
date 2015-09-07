@@ -511,14 +511,15 @@ class Backend {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
+
         foreach ($file_array as $line ) {
             if (fwrite($handle, $line) === false) {
                 $this->log("Can't write to file: $filename", self::LOG_ERROR);
                 return false;
             }
         }
-        return fclose($handle);
 
+        return fclose($handle);
     }
 
     /**
