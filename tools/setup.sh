@@ -1466,25 +1466,12 @@ substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT
 echo "Install tuleap plugins"
 
 echo "Install Docman"
-$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-$CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-INSERT INTO plugin (name, available) VALUES ('docman', '1');
-EOF
-build_dir /etc/$PROJECT_NAME/plugins/docman/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
-$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/$PROJECT_NAME/plugins/docman/etc/docman.inc
-$CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN /etc/$PROJECT_NAME/plugins/docman/etc/docman.inc
-$CHMOD 644 /etc/$PROJECT_NAME/plugins/docman/etc/docman.inc
-echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
+/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php docman
 
 # Tracker plugin
 if [ "$enable_plugin_tracker" = "true" ]; then
     echo "Install tracker"
-    build_dir /etc/$PROJECT_NAME/plugins/tracker/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
-    $CAT $INSTALL_DIR/plugins/tracker/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-    $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-INSERT INTO plugin (name, available) VALUES ('tracker', '1');
-EOF
-    echo "path[]=\"$INSTALL_DIR/plugins/tracker\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker
 
     # Import all templates
     template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
@@ -1496,12 +1483,7 @@ fi
 # GraphOnTrackersv5 plugin
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
     echo "Install Graphontrackersv5"
-    build_dir /etc/$PROJECT_NAME/plugins/graphontrackersv5/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
-    $CAT $INSTALL_DIR/plugins/graphontrackersv5/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-    $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-INSERT INTO plugin (name, available) VALUES ('graphontrackersv5', '1');
-EOF
-    echo "path[]=\"$INSTALL_DIR/plugins/graphontrackersv5\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php graphontrackersv5
 fi
 
 # IM plugin
@@ -1518,11 +1500,8 @@ GRANT SELECT ON $PROJECT_NAME.session to 'openfireadm'@'$mysql_httpd_host';
 FLUSH PRIVILEGES;
 EOF
     # Install plugin
-    build_dir /etc/$PROJECT_NAME/plugins/IM/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
-    $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-    $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
-INSERT INTO plugin (name, available) VALUES ('IM', '1');
-EOF
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php IM
+
     # Initialize Jabbex
     IM_ADMIN_GROUP='imadmingroup'
     IM_ADMIN_USER='imadmin-bot'
