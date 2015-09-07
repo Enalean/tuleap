@@ -7,6 +7,7 @@ body.agiledashboard_homepage .main .content {
 }
 
 .empty-home {
+    @muted-text-color: #676767;
     text-align: center;
     min-height: 500px;
     padding: 285px 0 0;
@@ -22,7 +23,26 @@ body.agiledashboard_homepage .main .content {
 
         &.later {
             font-size: 24px;
-            color: #676767;
+            color: @muted-text-color;
+        }
+
+        &.description {
+            font-size: 18px;
+            color: @muted-text-color;
+            line-height: 30px;
+        }
+    }
+
+    > .actions {
+
+        > span {
+            font-size: 18px;
+            color: @muted-text-color;
+        }
+
+        > .btn {
+            min-width: 100px;
+            margin: 0 10px;
         }
     }
 }

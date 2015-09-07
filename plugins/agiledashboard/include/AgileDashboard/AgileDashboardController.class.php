@@ -162,7 +162,11 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return;
         }
 
-        $response = new AgileDashboardConfigurationResponse($this->request->getProject());
+        $response = new AgileDashboardConfigurationResponse(
+            $this->request->getProject(),
+            $this->request->exist('home-ease-onboarding')
+        );
+
         if ($this->request->exist('activate-kanban')) {
             $updater = new AgileDashboardKanbanConfigurationUpdater(
                 $this->request,

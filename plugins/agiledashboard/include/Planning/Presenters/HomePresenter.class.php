@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_Presenter_HomePresenter {
+class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresenter {
 
     /** @var array */
     public $kanban_summary_presenters;
@@ -27,9 +27,6 @@ class Planning_Presenter_HomePresenter {
 
     /** @var Planning_Presenter_MilestoneAccessPresenter[] */
     public $milestone_presenters;
-
-    /** @var int */
-    public $group_id;
 
     /** @var Planning_Presenter_LastLevelMilestone[] */
     public $last_level_milestone_presenters;
@@ -74,8 +71,8 @@ class Planning_Presenter_HomePresenter {
         $kanban_title,
         $is_user_admin
     ) {
+        parent::__construct($group_id, $is_user_admin);
         $this->milestone_presenters            = $milestone_access_presenters;
-        $this->group_id                        = $group_id;
         $this->last_level_milestone_presenters = $last_level_milestone_presenters;
         $this->period                          = $period;
         $this->project_name                    = $project_name;
@@ -87,24 +84,15 @@ class Planning_Presenter_HomePresenter {
         $this->scrum_is_configured             = $scrum_is_configured;
         $this->scrum_title                     = $scrum_title;
         $this->kanban_title                    = $kanban_title;
-        $this->is_user_admin                   = $is_user_admin;
-    }
-
-    public function nothing_set_up() {
-        if (! $this->is_user_admin) {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
-        }
-
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
     }
 
     public function kanban_empty_message_must_be_displayed() {
-        return count($this->kanban_summary_presenters) === 0 && ! $this->is_user_admin() ;
+        return count($this->kanban_summary_presenters) === 0 && ! $this->is_user_admin ;
     }
 
     public function scrum_nothing_set_up() {
 
-        if ($this->is_user_admin()) {
+        if ($this->is_user_admin) {
             return $GLOBALS['Language']->getText(
                 'plugin_agiledashboard',
                 'nothing_set_up_scrum_admin',
@@ -121,10 +109,6 @@ class Planning_Presenter_HomePresenter {
 
     public function come_back_later() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
-    }
-
-    public function is_user_admin() {
-        return $this->user->isAdmin($this->group_id);
     }
 
     public function past() {

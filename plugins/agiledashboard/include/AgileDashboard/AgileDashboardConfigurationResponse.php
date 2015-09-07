@@ -23,8 +23,12 @@ class AgileDashboardConfigurationResponse {
     /** @var Project */
     private $project;
 
-    public function __construct(Project $project) {
-        $this->project = $project;
+    /** @var bool */
+    private $redirect_to_home_on_success;
+
+    public function __construct(Project $project, $redirect_to_home_on_success) {
+        $this->project                     = $project;
+        $this->redirect_to_home_on_success = $redirect_to_home_on_success;
     }
 
     public function missingKanbanTitle() {
@@ -36,10 +40,20 @@ class AgileDashboardConfigurationResponse {
     }
 
     public function kanbanConfigurationUpdated() {
+        if ($this->redirect_to_home_on_success) {
+            $this->redirectToHome();
+            return;
+        }
+
         $this->redirectToAdmin('kanban');
     }
 
     public function scrumConfigurationUpdated() {
+        if ($this->redirect_to_home_on_success) {
+            $this->redirectToHome();
+            return;
+        }
+
         $this->redirectToAdmin('scrum');
     }
 
@@ -89,6 +103,13 @@ class AgileDashboardConfigurationResponse {
             'group_id' => $this->project->getId(),
             'action'   => 'admin',
             'pane'     => $pane
+        );
+        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query($query_parts));
+    }
+
+    private function redirectToHome() {
+        $query_parts = array(
+            'group_id' => $this->project->getId()
         );
         $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query($query_parts));
     }

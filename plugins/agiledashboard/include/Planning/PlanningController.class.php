@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once 'common/mvc2/PluginController.class.php';
 
 /**
  * Handles the HTTP actions related to a planning.
- * 
+ *
  * TODO: Rename this file to PlanningController.class.php, to be consistent with
- * other classes. 
+ * other classes.
  */
 class Planning_Controller extends MVC2_PluginController {
 
@@ -85,7 +85,7 @@ class Planning_Controller extends MVC2_PluginController {
         AgileDashboard_HierarchyChecker $hierarchy_checker
     ) {
         parent::__construct('agiledashboard', $request);
-        
+
         $this->group_id                     = (int)$request->get('group_id');
         $this->planning_factory             = $planning_factory;
         $this->planning_shortaccess_factory = $planning_shortaccess_factory;
@@ -188,7 +188,7 @@ class Planning_Controller extends MVC2_PluginController {
      * Home page for when there is nothing set-up.
      */
     private function showEmptyHome() {
-        $presenter = new Planning_Presenter_EmptyHomePresenter(
+        $presenter = new Planning_Presenter_BaseHomePresenter(
             $this->group_id,
             $this->isUserAdmin()
         );
@@ -346,7 +346,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->redirect(array('group_id'=>$this->group_id));
         }
     }
-    
+
     public function new_() {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
@@ -417,7 +417,7 @@ class Planning_Controller extends MVC2_PluginController {
     public function create() {
         $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
-        
+
         if ($validator->isValid($this->request)) {
             $this->planning_factory->createPlanning(
                 $this->group_id,
@@ -425,7 +425,7 @@ class Planning_Controller extends MVC2_PluginController {
                     $this->request->get('planning')
                 )
             );
-            
+
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         } else {
             // TODO: Error message should reflect validation detail
@@ -433,14 +433,14 @@ class Planning_Controller extends MVC2_PluginController {
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
     }
-    
+
     public function edit() {
         $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
-        
+
         return $this->renderToString('edit', $presenter);
     }
-    
+
     private function getFormPresenter(PFUser $user, Planning $planning) {
         $group_id = $planning->getGroupId();
 
@@ -544,7 +544,7 @@ class Planning_Controller extends MVC2_PluginController {
     public function update() {
         $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
-        
+
         if ($validator->isValid($this->request)) {
             $this->planning_factory->updatePlanning(
                 $this->request->get('planning_id'),
@@ -616,7 +616,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->plugin_theme_path
         );
     }
-    
+
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);

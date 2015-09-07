@@ -224,7 +224,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($value) {
-            $html .= $hp->purify($value->getText(), CODENDI_PURIFIER_CONVERT_HTML);
+            $html .= $value->getValue();
         }
         return $html;
     }
