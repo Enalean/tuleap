@@ -30,6 +30,7 @@ Version 8.6 (Not Released Yet)
 	* request #8368: Files with special characters can't be downloaded with WEBDAV
 	* request #8378: Speed-up queries on this system_event table
 	* request #8387: Too many call to the db in the artifact modal when there is a field list bound to user
+	* request #8397: SystemEvent_SERVICE_USAGE_SWITCH always in RUNNING status
 
 	== Plugins ==
 	* agiledashboard: 1.273
