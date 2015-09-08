@@ -602,7 +602,7 @@ describe("PlanningCtrl", function() {
         var fakeEvent, fakeItem;
         beforeEach(function() {
             fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, c, d, callback) {
+            NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, callback) {
                 callback(8541);
             });
         });
@@ -615,15 +615,14 @@ describe("PlanningCtrl", function() {
                     tracker: {
                         id: 30
                     }
-                },
-                color: "stranding-pseudosophy"
+                }
             };
             spyOn($scope, "refreshBacklogItem");
 
             $scope.showEditModal(fakeEvent, fakeItem);
 
             expect(fakeEvent.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(30, 651, "stranding-pseudosophy", undefined, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(30, 651, jasmine.any(Function));
             expect($scope.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
 

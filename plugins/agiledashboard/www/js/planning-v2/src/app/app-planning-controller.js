@@ -413,7 +413,11 @@
             if($event.which === when_left_mouse_click) {
                 $event.preventDefault();
 
-                NewTuleapArtifactModalService.showEdition(backlog_item.artifact.tracker.id, backlog_item.artifact.id, backlog_item.color, undefined, $scope.refreshBacklogItem);
+                NewTuleapArtifactModalService.showEdition(
+                    backlog_item.artifact.tracker.id,
+                    backlog_item.artifact.id,
+                    $scope.refreshBacklogItem
+                );
             }
         }
 
