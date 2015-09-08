@@ -6,6 +6,7 @@
     PlanningCtrl.$inject = [
         '$scope',
         '$filter',
+        '$q',
         'gettextCatalog',
         'SharedPropertiesService',
         'BacklogItemService',
@@ -22,6 +23,7 @@
     function PlanningCtrl(
         $scope,
         $filter,
+        $q,
         gettextCatalog,
         SharedPropertiesService,
         BacklogItemService,
@@ -69,6 +71,7 @@
             rest_error_occured   : false,
             submilestone_type    : null,
             use_angular_new_modal: use_angular_new_modal,
+            appendBacklogItems                    : appendBacklogItems,
             canShowBacklogItem                    : canShowBacklogItem,
             cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
             cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
@@ -81,9 +84,9 @@
             displayBacklogItems                   : displayBacklogItems,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
+            fetchAllBacklogItems                  : fetchAllBacklogItems,
             fetchBacklogItemChildren              : fetchBacklogItemChildren,
-            fetchMilestoneBacklogItems            : fetchMilestoneBacklogItems,
-            fetchProjectBacklogItems              : fetchProjectBacklogItems,
+            fetchBacklogItems                     : fetchBacklogItems,
             filterBacklog                         : filterBacklog,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
             getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
@@ -128,6 +131,10 @@
             UserPreferencesService.setPreference(user_id, 'agiledashboard_planning_item_view_mode_' + project_id, view_mode);
         }
 
+        function isMilestoneContext() {
+            return angular.isDefined(SharedPropertiesService.getMilestoneId());
+        }
+
         function loadBacklog() {
             if (! angular.isDefined(milestone_id)) {
                 $scope.backlog = {
@@ -170,56 +177,73 @@
             });
         }
 
-        function displayBacklogItems(fetch_all) {
-            if ($scope.backlog_items.loading || $scope.backlog_items.fully_loaded) {
-                return;
+        function backlogItemsAreLoadingOrAllLoaded() {
+            return ($scope.backlog_items.loading || $scope.backlog_items.fully_loaded);
+        }
+
+        function displayBacklogItems() {
+            if (backlogItemsAreLoadingOrAllLoaded()) {
+                return $q.when();
             }
 
+            return $scope.fetchBacklogItems(pagination_limit, backlog_pagination_offset).then(function(total) {
+                backlog_pagination_offset         += pagination_limit;
+                $scope.backlog_items.fully_loaded = backlog_pagination_offset >= total;
+            });
+        }
+
+        function fetchBacklogItems(limit, offset) {
             $scope.backlog_items.loading = true;
+            var promise;
 
-            if (! angular.isDefined(milestone_id)) {
-                fetchProjectBacklogItems(project_id, pagination_limit, backlog_pagination_offset, fetch_all);
+            if (isMilestoneContext()) {
+                var milestone_id = SharedPropertiesService.getMilestoneId();
+                promise = BacklogItemService.getMilestoneBacklogItems(milestone_id, limit, offset);
             } else {
-                fetchMilestoneBacklogItems(milestone_id, pagination_limit, backlog_pagination_offset, fetch_all);
+                var project_id = SharedPropertiesService.getProjectId();
+                promise = BacklogItemService.getProjectBacklogItems(project_id, limit, offset);
             }
+
+            return promise.then(function(data) {
+                var items = data.results;
+                $scope.appendBacklogItems(items);
+
+                return data.total;
+            });
         }
 
-        function fetchProjectBacklogItems(project_id, limit, offset, fetch_all) {
-            return BacklogItemService.getProjectBacklogItems(project_id, limit, offset).then(function(data) {
-                angular.forEach(data.results, function(backlog_item, key) {
-                    $scope.items[backlog_item.id] = backlog_item;
-                    $scope.backlog_items.content.push(backlog_item);
-                    $scope.backlog_items.filtered_content.push(backlog_item);
-                });
+        function appendBacklogItems(items) {
+            _.extend($scope.items, _.indexBy(items, 'id'));
+            var backlog_items     = $scope.backlog_items;
+            backlog_items.content = backlog_items.content.concat(items);
+            backlog_items.loading = false;
+            applyFilter();
+        }
 
-                backlog_pagination_offset   = offset + limit;
-                $scope.backlog_items.fully_loaded = backlog_pagination_offset >= data.total;
+        function fetchAllBacklogItems(limit, offset) {
+            if (backlogItemsAreLoadingOrAllLoaded()) {
+                return $q.reject();
+            }
 
-                if (fetch_all && ! $scope.backlog_items.fully_loaded) {
-                    fetchProjectBacklogItems(project_id, limit, backlog_pagination_offset);
+            return $scope.fetchBacklogItems(limit, offset).then(function(total) {
+                if ((offset + limit) > total) {
+                    $scope.backlog_items.fully_loaded = true;
+                    return;
                 } else {
-                    $scope.backlog_items.loading = false;
+                    return fetchAllBacklogItems(limit, offset + limit);
                 }
             });
         }
 
-        function fetchMilestoneBacklogItems(milestone_id, limit, offset, fetch_all) {
-            return BacklogItemService.getMilestoneBacklogItems(milestone_id, limit, offset).then(function(data) {
-                angular.forEach(data.results, function(backlog_item, key) {
-                    $scope.items[backlog_item.id] = backlog_item;
-                    $scope.backlog_items.content.push(backlog_item);
-                    $scope.backlog_items.filtered_content.push(backlog_item);
+        function filterBacklog() {
+            $scope.fetchAllBacklogItems(pagination_limit, backlog_pagination_offset)
+                ['finally'](function() {
+                    applyFilter();
                 });
+        }
 
-                backlog_pagination_offset   = offset + limit;
-                $scope.backlog_items.fully_loaded = backlog_pagination_offset >= data.total;
-
-                if (fetch_all && ! $scope.backlog_items.fully_loaded) {
-                    fetchMilestoneBacklogItems(milestone_id, limit, backlog_pagination_offset);
-                } else {
-                    $scope.backlog_items.loading = false;
-                }
-            });
+        function applyFilter() {
+            $scope.backlog_items.filtered_content = $filter('InPropertiesFilter')($scope.backlog_items.content, $scope.filter_terms);
         }
 
         function displayMilestones() {
@@ -256,10 +280,6 @@
 
         function generateMilestoneLinkUrl(milestone, pane) {
             return '?group_id=' + project_id + '&planning_id=' + milestone.planning.id + '&action=show&aid=' + milestone.id + '&pane=' + pane;
-        }
-
-        function filterBacklog() {
-            $scope.backlog_items.filtered_content = $filter('InPropertiesFilter')($scope.backlog_items.content, $scope.filter_terms);
         }
 
         function showCreateNewModal($event, item_type, backlog) {
