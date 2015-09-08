@@ -139,7 +139,7 @@ plugin_agiledashboard	invalid_request	La requête n'est pas valide.
 plugin_agiledashboard	no_service_selected	Un service doit obligatoirement être selectionné.
 plugin_agiledashboard	tracker_used_in_scrum	L'outil de suivi sélectionné est déjà utilisé dans une configuration de planning.
 plugin_agiledashboard	hierarchy_used_in_scrum	L'outil de suivi sélectionné se trouve dans une hiérarchie déjà utilisée dans une configuration de planning.
-plugin_agiledashboard	config_submit_label	Sauvegarder la configuration
+plugin_agiledashboard	config_submit_label	Sauvegarder
 plugin_agiledashboard	title	Titre
 plugin_agiledashboard	title_scrum_help	Titre affiché sur la page d'accueil du service AgileDashboard pour la partie Scrum
 plugin_agiledashboard	title_kanban_help	Titre affiché sur la page d'accueil du service AgileDashboard pour la partie Kanban
