@@ -22,6 +22,13 @@ require_once 'pre.php';
 require_once dirname(__FILE__) .'/../include/MediawikiAdminController.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiSiteAdminController.class.php';
 
+/**
+ * HACK
+ */
+require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
+$ff_plugin = new fusionforge_compatPlugin();
+$ff_plugin->loaded();
+
 $vWhiteList = new Valid_WhiteList('action', array('save', 'index', 'site_index', 'site_update_allowed_project_list'));
 $vWhiteList->required();
 
