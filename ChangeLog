@@ -33,7 +33,7 @@ Version 8.6 (Not Released Yet)
 	* request #8397: SystemEvent_SERVICE_USAGE_SWITCH always in RUNNING status
 
 	== Plugins ==
-	* agiledashboard: 1.274
+	* agiledashboard: 1.275
 	* proftpd: 0.23
 	* tracker: 5.694
 	* phpwiki: 0.7

@@ -1,3 +1,6 @@
+Version 1.275 - Tuleap 8.6
+    * story #8342 - When the list is filtered, load all the backlog items
+
 Version 1.274 - Tuleap 8.6
     * story #8263: make scrum admin more readable
 
