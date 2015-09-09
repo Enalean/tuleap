@@ -46,10 +46,10 @@ class ProjectCreationData {
     }
 
     public function getAccess() {
-        if(is_null($this->is_public)) {
+        if($this->is_public === null || ForgeConfig::get('sys_user_can_choose_project_privacy') === '0') {
             return ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
         } else {
-            return ($this->is_public) ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+            return $this->is_public ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
         }
     }
 

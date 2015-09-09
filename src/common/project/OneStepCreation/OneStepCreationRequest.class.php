@@ -54,6 +54,12 @@ class Project_OneStepCreation_OneStepCreationRequest {
 
     /**
      *
+     * @var bool
+     */
+    private $user_can_choose_project_privacy;
+
+    /**
+     *
      * @var int
      */
     private $templateId;
@@ -93,10 +99,11 @@ class Project_OneStepCreation_OneStepCreationRequest {
     private $trove_cats;
 
     public function __construct(Codendi_Request $request, ProjectManager $project_manager) {
-        $this->request         = $request;
-        $this->project_manager = $project_manager;
-        $this->is_public       = $GLOBALS['sys_is_project_public'];
-        $request_data = $request->params;
+        $this->request                         = $request;
+        $this->project_manager                 = $project_manager;
+        $this->is_public                       = $GLOBALS['sys_is_project_public'];
+        $this->user_can_choose_project_privacy = ForgeConfig::get('sys_user_can_choose_project_privacy');
+        $request_data                          = $request->params;
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -115,13 +122,14 @@ class Project_OneStepCreation_OneStepCreationRequest {
         return array(
             'project' => array_merge(
                 array(
-                    Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME         => $this->getFullName(),
-                    Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC         => $this->isPublic(),
-                    Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME         => $this->getUnixName(),
-                    Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID       => $this->getTemplateId(),
-                    Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $this->getShortDescription(),
-                    'is_test'                                                           => false,
-                    'services'                                                          => $this->getServices(),
+                    Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME                       => $this->getFullName(),
+                    Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC                       => $this->isPublic(),
+                    Project_OneStepCreation_OneStepCreationPresenter::USER_CAN_CHOOSE_PROJECT_PRIVACY => $this->userCanSelectProjectPrivacy(),
+                    Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME                       => $this->getUnixName(),
+                    Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID                     => $this->getTemplateId(),
+                    Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION               => $this->getShortDescription(),
+                    'is_test'                                                                         => false,
+                    'services'                                                                        => $this->getServices(),
                 ),
                 $this->custom_descriptions,
                 $this->getTroveCatDataForProjectRequest()
@@ -198,6 +206,14 @@ class Project_OneStepCreation_OneStepCreationRequest {
      */
     public function isPublic() {
         return $this->is_public;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function userCanSelectProjectPrivacy() {
+        return $this->user_can_choose_project_privacy;
     }
 
     /**

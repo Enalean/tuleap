@@ -80,6 +80,7 @@
             </div>
         </div>
         {{/getProjectDescriptionFields}}
+        {{# userCanSelectProjectPrivacy }}
         <div class="control-group">
             <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
             <div class="controls">
@@ -101,6 +102,7 @@
                 </label>
             </div>
         </div>
+        {{/ userCanSelectProjectPrivacy }}
     </fieldset>
 
     {{# hasTroveCats }}
