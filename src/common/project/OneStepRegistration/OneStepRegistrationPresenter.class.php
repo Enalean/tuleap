@@ -45,8 +45,7 @@ class Project_OneStepRegistration_OneStepRegistrationPresenter {
     }
 
     public function get_redirect_url() {
-        $project_name = end(explode('/', rtrim($this->project->getHomePage(), '/')));
-        return '/projects/' . $project_name;
+        return '/projects/' . $this->project->getUnixName();
     }
 
     public function get_redirect_content() {
