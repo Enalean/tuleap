@@ -91,6 +91,13 @@ class MediaWikiPlugin extends Plugin {
 
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
+
+            /**
+             * HACK
+             */
+            require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
+            $ff_plugin = new fusionforge_compatPlugin();
+            $ff_plugin->loaded();
     }
 
     public function getServiceShortname() {
