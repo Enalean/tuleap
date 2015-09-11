@@ -55,17 +55,18 @@ Defaults::$useUrlBasedVersioning = true;
 
 if (ForgeConfig::get('DEBUG_MODE')) {
     $restler = new Restler(false, true);
+    $restler->setSupportedFormats('JsonFormat', 'XmlFormat', 'HtmlFormat');
 } else {
     $restler_cache = new RestlerCache();
     Defaults::$cacheDirectory = $restler_cache->getAndInitiateCacheDirectory($version);
     $restler = new Restler(true, false);
+    $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
 }
 
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's
 // a mess.
 $restler->setBaseUrl($sys_default_domain);
 $restler->setAPIVersion($version);
-$restler->setSupportedFormats('JsonFormat', 'XmlFormat', 'HtmlFormat');
 
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
 $core_resources_injector->populate($restler);
