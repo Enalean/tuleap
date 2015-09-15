@@ -456,25 +456,67 @@ fieldset.gerrit_disconnect {
         border-top: none;
     }
 
-    & > thead > tr > th, & > tbody > tr > td {
+    & > thead > tr > th,
+    & > tbody > tr > td {
         min-width: 100px;
         vertical-align: middle;
     }
 
-    & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
+    & > thead > tr > th:first-child,
+    & > tbody > tr > td:first-child {
         min-width: 20px;
         max-width: 20px;
         text-align: center;
     }
 
-    & > thead > tr > th.url, & > tbody > tr > td.name {
+    & > tbody > tr > td.name {
         width: 100%;
         white-space: nowrap;
     }
 
-    & > thead > tr > th.used, & > tbody > tr > td.used {
+    & > thead > tr > th.used,
+    & > tbody > tr > td.used {
         white-space: nowrap;
         text-align: center;
+    }
+}
+
+.mass-mirrors-list {
+
+    > thead > tr {
+        background: #E4E4E4;
+
+        > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+
+            > .check-all,
+            > .uncheck-all {
+                font-weight: normal;
+                padding: 0 5px;
+            }
+        }
+    }
+
+    > tbody > tr:first-child > td {
+        border-top: none;
+    }
+
+    > thead > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+        text-align: center;
+
+        &:first-child {
+            width: 20%;
+            text-align: left;
+        }
+    }
+
+    .check-all,
+    .uncheck-all {
+        white-space: nowrap;
     }
 }
 
@@ -518,55 +560,8 @@ fieldset.gerrit_disconnect {
     }
 }
 
-.update-n-repositories {
-    span {
-        font-weight: bold;
-        cursor: pointer;
-        color: #0088CC;
-
-        &:hover {
-            color: #005580;
-        }
-    }
-
-    .popover {
-        max-width: 800px;
-        font-size: 0.9em;
-        line-height: 1.8em;
-        padding: 0;
-
-        &.bottom .arrow:after {
-            border-bottom-color: #E4E4E4;
-        }
-
-        h3 {
-            margin: 0;
-            background: #E4E4E4;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .popover-content {
-            max-height: 600px;
-            overflow-y: auto;
-            padding: 0;
-
-            > ul {
-                margin: 0;
-
-                > li {
-                    list-style-type: none;
-                    padding: 8px 14px;
-                    border-bottom: 1px solid #DDDDDD;
-                    background-color: #F9F9F9;
-
-                    &:nth-child(2n) {
-                        background-color: #FFFFFF;
-                    }
-                }
-            }
-        }
-    }
+.update-n-repositories > span {
+    font-weight: bold;
 }
 
 .update-n-repositories-popup-content {

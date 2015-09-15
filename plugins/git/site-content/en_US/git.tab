@@ -166,7 +166,7 @@ plugin_git	add_mail_title	Add a mail address or a user to notify
 plugin_git	add_mail_msg	You can add more than one mail/user using comma or semi-column as separator.
 plugin_git	add_mail	Mail address/User
 plugin_git	add_mail_submit	Add
-plugin_git	add_mail_existing	There is no users to be notified yet. 
+plugin_git	add_mail_existing	There is no users to be notified yet.
 
 plugin_git	no_user_mail	The added user $1 have no mail address
 plugin_git	no_user	No user corresponding to entry "$1"
@@ -175,7 +175,7 @@ plugin_git	mail_prefix_updated	Mail prefix updated
 plugin_git	mail_added	Mail added
 plugin_git	mail_not_added	Could not add mail $1
 plugin_git	mail_removed	Mail $1 removed
-plugin_git	mail_not_removed	Could not remove mail $1 
+plugin_git	mail_not_removed	Could not remove mail $1
 plugin_git	mail_existing	The notification is already enabled for this email $1
 
 plugin_git	notified_mails_title	List of notified mails
@@ -278,9 +278,8 @@ plugin_git	view_admin_mass_update_select_repositories	Select the repositories yo
 plugin_git	view_admin_mass_update_repository_list_name	Repository name
 plugin_git	view_admin_mass_update_go_to_mass_change	Update selected repositories
 plugin_git	view_admin_mass_update_selected_repository	You are about to update the repository <b>$1</b>. For now, only mirroring settings can be updated.
-plugin_git	view_admin_mass_update_selected_repositories	You are about to update <span data-title="$1 repositories">$1 repositories</span>. For now, only mirroring settings can be updated.
+plugin_git	view_admin_mass_update_selected_repositories	You are about to update <span>$1 repositories</span>. For now, only mirroring settings can be updated.
 plugin_git	view_admin_mass_update_submit_mass_change	Update repositories
-plugin_git	view_admin_mass_update_mirroring	Note that current repositories mirroring settings will be discarded: repositories will <i>only</i> be mirrored on selected mirrors.
 
 plugin_git	view_admin_template_table_action	Action
 plugin_git	view_admin_template_table_name	Template name

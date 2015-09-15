@@ -111,7 +111,7 @@ class GitViews extends PluginViews {
                     <?php
                     break;
                     case 'create':
-                        ?>                        
+                        ?>
                         <div id="help_create" class="alert alert-info" style="display:<?php echo $display?>">
                             <h3><?php echo $this->getText('help_create_reference_title'); ?></h3>
                         <?php
@@ -140,8 +140,8 @@ class GitViews extends PluginViews {
                         break;
                 default:
                     break;
-            }            
-        }      
+            }
+        }
 
     /**
      * REPO VIEW
@@ -182,7 +182,7 @@ class GitViews extends PluginViews {
         );
         $repo_management_view->display();
     }
-    
+
     /**
      * FORK VIEW
      */
@@ -270,7 +270,7 @@ class GitViews extends PluginViews {
         ?> <a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"><i class="icon-question-sign"></i></a></h2>
 <form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST" class="form-inline">
     <input type="hidden" id="action" name="action" value="add" />
-    
+
     <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
     <input id="repo_name" name="repo_name" class="" type="text" value=""/>
 
@@ -415,16 +415,49 @@ class GitViews extends PluginViews {
         $params = $this->getData();
 
         $repositories = $params['repositories'];
+        $mirrors      = $this->getAdminMassUpdateMirrorPresenters();
         $presenter    = new GitPresenters_AdminMassUpdatePresenter(
             $this->generateMassUpdateCSRF(),
             $this->groupId,
-            $repositories,
-            new GitPresenters_AdminMassUdpdateMirroringPresenter($this->getAdminMassUpdateMirrorPresenters())
+            $this->buildListOfMirroredRepositoriesPresenters(
+                $repositories,
+                $mirrors,
+                $this->mirror_data_mapper->getListOfMirrorIdsPerRepositoryForProject($this->project)
+            ),
+            new GitPresenters_AdminMassUdpdateMirroringPresenter($mirrors)
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         echo $renderer->renderToString('admin', $presenter);
+    }
+
+    private function buildListOfMirroredRepositoriesPresenters(
+        array $repositories,
+        array $mirrors,
+        array $mirror_ids_per_repository
+    ) {
+        $mirrored_repositories_presenters = array();
+
+        foreach ($repositories as $repository) {
+            $used_mirrors = array();
+            foreach ($mirrors as $mirror) {
+                $is_used = isset($mirror_ids_per_repository[$repository->getId()])
+                    && in_array($mirror->mirror_id, $mirror_ids_per_repository[$repository->getId()]);
+
+                $copy_of_mirror = clone $mirror;
+                $copy_of_mirror->is_used = $is_used;
+
+                $used_mirrors[] = $copy_of_mirror;
+            }
+
+            $mirrored_repositories_presenters[] = new GitPresenters_MirroredRepositoryPresenter(
+                $repository,
+                $used_mirrors
+            );
+        }
+
+        return $mirrored_repositories_presenters;
     }
 
     private function generateMassUpdateCSRF() {
@@ -482,7 +515,7 @@ class GitViews extends PluginViews {
                 <input id="choose_project" type="radio" name="choose_destination" value="project" '.$options.' />
                 '.$this->getText('fork_choose_destination_project').'</label>
             </div>';
-            
+
             $html .= '<select name="to_project" id="fork_destination">';
             $html .= $userProjectOptions;
             $html .= '</select>';
@@ -495,18 +528,18 @@ class GitViews extends PluginViews {
         $html       = '';
         $option     = '<option value="%d" title="%s">%s</option>';
         $usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
-        
+
         foreach ($usrProject as $projectId) {
             $project = $manager->getProject($projectId);
             if ($user->isMember($projectId, 'A') && $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
                 $projectName     = $project->getPublicName();
-                $projectUnixName = $purifier->purify($project->getUnixName()); 
+                $projectUnixName = $purifier->purify($project->getUnixName());
                 $html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
             }
         }
         return $html;
     }
-    
+
     /**
      * TREE SUBVIEW
      */

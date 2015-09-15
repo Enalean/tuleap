@@ -35,7 +35,6 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
      */
     public $mirroring_presenter;
 
-
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $project_id,
@@ -55,17 +54,19 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_title');
     }
 
+    public function has_more_than_one_repository() {
+        return count($this->repositories) > 1;
+    }
+
     public function info_mass_update() {
         $nb_selected_repositories = count($this->repositories);
         if ($nb_selected_repositories > 1) {
-            $concatened_repository_names = $this->getConcatenedRepositoryNames();
-
-            return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repositories', array($nb_selected_repositories, $concatened_repository_names));
+            return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repositories', $nb_selected_repositories);
         }
 
         $repository = $this->repositories[0];
 
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repository', array($this->getRepositoryFullName($repository)));
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repository', $repository->name);
     }
 
     public function submit_mass_change() {
@@ -74,16 +75,5 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
 
     public function form_action() {
         return '/plugins/git/?group_id='. $this->project_id .'&action=admin-mass-update';
-    }
-
-    private function getConcatenedRepositoryNames() {
-        return implode(', ', array_map(
-            array($this, 'getRepositoryFullName'),
-            $this->repositories
-        ));
-    }
-
-    private function getRepositoryFullName(GitRepository $repository) {
-        return $repository->getFullName();
     }
 }

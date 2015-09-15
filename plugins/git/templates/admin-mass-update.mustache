@@ -1,12 +1,5 @@
 <h3>{{ title }}</h3>
 
-<div class="update-n-repositories-popup-content">
-    <ul>
-        {{# repositories }}
-        <li>{{ getFullName }}</li>
-        {{/ repositories }}
-    </ul>
-</div>
 <p class="update-n-repositories">{{{ info_mass_update }}}</p>
 
 <form action="{{ form_action }}" method="POST">
@@ -14,30 +7,75 @@
 
     {{# mirroring_presenter }}
         <h4>{{ mirroring_title }}</h4>
-        <p>{{{ mirroring_info }}}</p>
 
-        <table class="table table-striped table-bordered mirrors-list">
+        <table class="table table-striped table-bordered mass-mirrors-list">
+            <colgroup>
+                <col style="width: 20%">
+                {{# mirror_presenters }}
+                    <col style="width: {{ percent_width }}%">
+                {{/ mirror_presenters }}
+                {{# has_more_than_one_mirror }}
+                    <col style="width: 10%">
+                    <col style="width: 10%">
+                {{/ has_more_than_one_mirror }}
+            </colgroup>
             <thead>
                 <tr>
                     <th></th>
-                    <th class="url">{{ mirroring_mirror_name }}</th>
+                    {{# mirror_presenters }}
+                        <th>
+                            {{ name }}
+                            {{# has_more_than_one_repository }}
+                                <br />
+                                <a href="#" class="check-all check-all-mirror" data-id="{{ mirror_id }}">Check all</a>
+                                <a href="#" class="uncheck-all uncheck-all-mirror" data-id="{{ mirror_id }}">Uncheck all</a>
+                            {{/ has_more_than_one_repository }}
+                        </th>
+                    {{/ mirror_presenters }}
+                    {{# has_more_than_one_mirror }}
+                        <th></th>
+                        <th></th>
+                    {{/ has_more_than_one_mirror }}
                 </tr>
             </thead>
             <tbody>
-            {{# mirror_presenters }}
-                <tr>
-                    <td>
-                        <input type="checkbox" name="selected_mirror_ids[]" value="{{ id }}">
-                    </td>
-                    <td class="url">{{ name }}</td>
-                </tr>
-            {{/ mirror_presenters }}
+                {{# repositories }}
+                    <tr>
+                        <td>{{ name }}</td>
+                        {{# used_mirrors }}
+                            <td>
+                                <input
+                                    type="hidden"
+                                    name="selected_mirror_ids[{{ repository_id }}][{{ mirror_id }}]"
+                                    value="0"
+                                    />
+                                <input
+                                    type="checkbox"
+                                    name="selected_mirror_ids[{{ repository_id }}][{{ mirror_id }}]"
+                                    value="1"
+                                    class="check-repository-mirror"
+                                    data-repository-id="{{ repository_id }}"
+                                    data-mirror-id="{{ mirror_id }}"
+                                    {{# is_used }}checked="checked"{{/ is_used }}
+                                    />
+                            </td>
+                        {{/ used_mirrors }}
+                        {{# has_more_than_one_mirror }}
+                            <td>
+                                <a href="#" class="check-all check-all-repository" data-id="{{ repository_id }}">Check all</a>
+                            </td>
+                            <td>
+                                <a href="#" class="uncheck-all uncheck-all-repository" data-id="{{ repository_id }}">Uncheck all</a>
+                            </td>
+                        {{/ has_more_than_one_mirror }}
+                    </tr>
+                {{/ repositories }}
             </tbody>
         </table>
     {{/ mirroring_presenter }}
 
     {{# repositories }}
-        <input type="hidden" name="repository_ids[]" value="{{ getId }}">
+        <input type="hidden" name="repository_ids[]" value="{{ repository_id }}">
     {{/ repositories }}
 
     <input type="submit" class="btn btn-primary" id="save-mass-change" name="save-mass-change" value="{{ submit_mass_change }}">

@@ -28,19 +28,62 @@
             updateSelectAllCheckboxState()
         });
 
-        $('.update-n-repositories > span').popover({
-            placement: 'bottom',
-            trigger: 'click',
-            html: true,
-            content: $('.update-n-repositories-popup-content').html()
-        });
-
         $('body').click(function(event) {
             if ($(event.target).parents('.update-n-repositories').length === 0 && $(event.target).parents('.popover.in').length === 0) {
                 $('.update-n-repositories > span').popover('hide');
             }
         });
+
+        $('.check-all-mirror').on('click', function (evt) {
+            var mirror_id  = $(this).data('id');
+
+            $('[data-mirror-id='+ mirror_id +']').prop('checked', true);
+
+            evt.preventDefault();
+        });
+
+        $('.uncheck-all-mirror').on('click', function (evt) {
+            var mirror_id  = $(this).data('id');
+
+            $('[data-mirror-id='+ mirror_id +']').prop('checked', false);
+
+            evt.preventDefault();
+        });
+
+        $('.check-all-repository').on('click', function (evt) {
+            var repository_id  = $(this).data('id');
+
+            $('[data-repository-id='+ repository_id +']').prop('checked', true);
+
+            evt.preventDefault();
+        });
+
+        $('.uncheck-all-repository').on('click', function (evt) {
+            var repository_id  = $(this).data('id');
+
+            $('[data-repository-id='+ repository_id +']').prop('checked', false);
+
+            evt.preventDefault();
+        });
     });
+
+    function checkMirrorIfNeeded(mirror_id) {
+        var check_mirror = true;
+
+        $('[data-mirror-id='+ mirror_id +']').each(function () {
+            if (! $(this).is(':checked')) {
+                check_mirror = false;
+            }
+        });
+
+        $('.checkall-mirror[value='+ mirror_id +']').prop('checked', check_mirror);
+    }
+
+    function checkRepositoryIfNeeded(repository_id) {
+        var check_repository = $('[data-repository-id='+ repository_id +']:not(:checked)').length === 0;
+
+        $('.checkall-repository[value='+ repository_id +']').prop('checked', check_repository);
+    }
 
     function updateRepositoriesCheckboxesState(state) {
         $('.repository-ids').prop('checked', state);
