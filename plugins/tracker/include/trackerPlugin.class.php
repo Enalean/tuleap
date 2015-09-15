@@ -26,8 +26,10 @@ require_once 'autoload.php';
  */
 class trackerPlugin extends Plugin {
 
-    const EMAILGATEWAY_USERNAME = 'forge__artifacts';
-    const SERVICE_SHORTNAME     = 'plugin_tracker';
+    const EMAILGATEWAY_USERNAME  = 'forge__artifacts';
+    const SERVICE_SHORTNAME      = 'plugin_tracker';
+    const TRUNCATED_SERVICE_NAME = 'Trackers';
+
 
     public function __construct($id) {
         parent::__construct($id);
@@ -82,6 +84,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
+        $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
     }
 
     public function getHooksAndCallbacks() {
@@ -879,6 +882,14 @@ class trackerPlugin extends Plugin {
     public function system_event_get_types_for_custom_queue($params) {
         if ($params['queue'] === Tracker_SystemEvent_Tv3Tv5Queue::NAME) {
             $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
+        }
+    }
+
+    /** @see Event::SERVICES_TRUNCATED_EMAILS */
+    public function services_truncated_emails(array $params) {
+        $project = $params['project'];
+        if ($project->usesService($this->getServiceShortname())) {
+            $params['services'][] = $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
         }
     }
 

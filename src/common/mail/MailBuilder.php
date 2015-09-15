@@ -35,7 +35,7 @@ class MailBuilder {
     /**
      * @return Codendi_Mail
      */
-    public function buildEmail(Project $project, Notification $notification) {
+    public function buildEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer) {
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setBcc($this->getBcc($notification));
@@ -60,6 +60,7 @@ class MailBuilder {
             }
 
             $mail->setSubject($notification->getSubject());
+            $mail_enhancer->enhanceMail($mail);
         }
 
         return $mail;

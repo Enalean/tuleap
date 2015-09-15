@@ -37,6 +37,7 @@ class MailNotificationBuilder {
      * @param $text_body
      * @param $link
      * @param $truncated_service_name
+     * @param MailEnhancer $mail_enhancer
      *
      * @return Codendi_Mail
      */
@@ -47,7 +48,8 @@ class MailNotificationBuilder {
         $html_body,
         $text_body,
         $link,
-        $truncated_service_name
+        $truncated_service_name,
+        MailEnhancer $mail_enhancer
     ) {
         return $this->mail_builder->buildEmail(
             $project,
@@ -58,7 +60,8 @@ class MailNotificationBuilder {
                 $text_body,
                 $link,
                 $truncated_service_name
-            )
+            ),
+            $mail_enhancer
         );
     }
 

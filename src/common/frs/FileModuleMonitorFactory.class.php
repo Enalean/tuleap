@@ -278,7 +278,7 @@ class FileModuleMonitorFactory {
         $notification = $this->getNotification($package, $user, $htmlBody, $txtBody);
         $project      = ProjectManager::instance()->getProject($package->getGroupID());
 
-        $mail = $mail_builder->buildEmail($project, $notification);
+        $mail = $mail_builder->buildEmail($project, $notification, new MailEnhancer());
 
         return $mail->send();
     }
@@ -306,7 +306,7 @@ class FileModuleMonitorFactory {
         $notification = $this->getNotification($package, $user, $htmlBody, $txtBody);
         $project      = ProjectManager::instance()->getProject($package->getGroupID());
 
-        $mail = $mail_builder->buildEmail($project, $notification);
+        $mail = $mail_builder->buildEmail($project, $notification, new MailEnhancer());
 
         return $mail->send();
     }

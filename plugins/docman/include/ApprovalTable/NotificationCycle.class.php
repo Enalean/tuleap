@@ -268,7 +268,8 @@ class Docman_ApprovalTableNotificationCycle {
             '',
             $body,
             $reviewUrl,
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail;
@@ -314,7 +315,8 @@ class Docman_ApprovalTableNotificationCycle {
             '',
             $body,
             $reviewUrl,
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail;
@@ -364,7 +366,8 @@ class Docman_ApprovalTableNotificationCycle {
             '',
             $body,
             $reviewUrl,
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail;
@@ -405,7 +408,8 @@ class Docman_ApprovalTableNotificationCycle {
             '',
             $body,
             $reviewUrl,
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail;
@@ -453,7 +457,8 @@ class Docman_ApprovalTableNotificationCycle {
             '',
             $body,
             $reviewUrl,
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail;    }
@@ -510,7 +515,8 @@ class Docman_ApprovalTableNotificationCycle {
             '',
             $body,
             $reviewUrl,
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail;

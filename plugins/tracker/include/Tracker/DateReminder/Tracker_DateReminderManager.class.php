@@ -192,33 +192,38 @@ class Tracker_DateReminderManager {
      * @return Void
      */
     protected function sendReminder(Tracker_Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody) {
-        $mail          = new Codendi_Mail();
-        $hp            = Codendi_HTMLPurifier::instance();
-        $breadcrumbs   = array();
-        $groupId       = $this->getTracker()->getGroupId();
-        $project       = $this->getTracker()->getProject();
-        $trackerId     = $this->getTracker()->getID();
-        $artifactId    = $artifact->getID();
+        $hp             = Codendi_HTMLPurifier::instance();
+        $breadcrumbs    = array();
+        $project        = $this->getTracker()->getProject();
+        $trackerId      = $this->getTracker()->getID();
+        $artifactId     = $artifact->getID();
+        $mail_enhancer  = new MailEnhancer();
 
         $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
 
-        $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
-        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->addAdditionalHeader("X-Codendi-Project",     $this->getTracker()->getProject()->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getTracker()->getItemName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $artifact->getId());
+        $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
+        $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
+        $mail_enhancer->addHeader("X-Codendi-Project",     $this->getTracker()->getProject()->getUnixName());
+        $mail_enhancer->addHeader("X-Codendi-Tracker",     $this->getTracker()->getItemName());
+        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $artifact->getId());
         foreach($headers as $header) {
-            $mail->addAdditionalHeader($header['name'], $header['value']);
+            $mail_enhancer->addHeader($header['name'], $header['value']);
         }
-        $mail->setTo(implode(', ', $recipients));
-        $mail->setSubject($subject);
-        if ($htmlBody) {
-            $mail->setBodyHTML($htmlBody);
-        }
-        $mail->setBodyText($txtBody);
+
+        $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
+        $mail = $mail_notification_builder->buildEmail(
+            $project,
+            $recipients,
+            $subject,
+            $htmlBody,
+            $txtBody,
+            get_server_url() . $artifact->getUri(),
+            trackerPlugin::TRUNCATED_SERVICE_NAME,
+            $mail_enhancer
+        );
+
         $mail->send();
     }
 

@@ -22,6 +22,18 @@ require_once('common/autoload.php');
 
 class MailBuilderTest extends TuleapTestCase {
 
+    /** @var MailBuilder */
+    private $builder;
+
+    /** @var Notification */
+    private $notification;
+
+    /** @var TemplateRenderer */
+    private $renderer;
+
+    /** @var MailEnhancer */
+    private $mail_enhancer;
+
     public function setUp() {
         parent::setUp();
 
@@ -35,6 +47,8 @@ class MailBuilderTest extends TuleapTestCase {
 
         $this->renderer   = mock('TemplateRenderer');
         $template_factory = stub('TemplateRendererFactory')->getRenderer()->returns($this->renderer);
+
+        $this->mail_enhancer = mock('MailEnhancer');
 
         $this->builder = new MailBuilder($template_factory);
 
@@ -70,9 +84,10 @@ class MailBuilderTest extends TuleapTestCase {
     public function itBuildsATruncatedEmailIfProjectUsesTruncatedEmail() {
         $project = stub('Project')->getTruncatedEmailsUsage()->returns(true);
 
-        $email = $this->builder->buildEmail($project, $this->notification);
+        $email = $this->builder->buildEmail($project, $this->notification, $this->mail_enhancer);
 
         expect($this->renderer)->expectCallCount('renderToString', 2);
+        expect($this->mail_enhancer)->enhanceMail()->count(0);
 
         $this->assertIsA($email, 'Codendi_Mail');
     }
@@ -80,9 +95,10 @@ class MailBuilderTest extends TuleapTestCase {
     public function itBuildsAClassicEmailIfProjectDoesNotUseTruncatedEmail() {
         $project = stub('Project')->getTruncatedEmailsUsage()->returns(false);
 
-        $email = $this->builder->buildEmail($project, $this->notification);
+        $email = $this->builder->buildEmail($project, $this->notification, $this->mail_enhancer);
 
         expect($this->renderer)->renderToString()->never();
+        expect($this->mail_enhancer)->enhanceMail()->count(1);
 
         $this->assertIsA($email, 'Codendi_Mail');
     }

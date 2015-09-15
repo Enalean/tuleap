@@ -170,7 +170,8 @@ class Docman_ApprovalTableReminder {
             $html_body,
             $text_body,
             $this->getReviewUrl($docmanItem),
-            DocmanPlugin::TRUNCATED_SERVICE_NAME
+            DocmanPlugin::TRUNCATED_SERVICE_NAME,
+            new MailEnhancer()
         );
 
         return $mail->send();

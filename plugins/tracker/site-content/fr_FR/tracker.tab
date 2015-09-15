@@ -668,6 +668,7 @@ plugin_tracker_include_type	field_copied_to	Ce champ est utilisé par les outils
 plugin_tracker_include_type	migrate_from_tv3	Migrer le contenu d'un outil de suivi v3
 plugin_tracker_include_type	tv3_migration_introduction	Ou vous pouvez migrer un outil de suivi v3 …
 plugin_tracker_include_type	tv3_being_migrated	Des migrations sont en cours. Les nouveaux outils de suivi apparaîtront dès que les migrations seront terminées.
+plugin_tracker_include_type	untruncated_migration_email	Un courriel non tronqué sera envoyé à la fin du processus de migration.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class.php
