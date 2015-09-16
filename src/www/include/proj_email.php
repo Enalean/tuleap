@@ -6,15 +6,10 @@
 // http://sourceforge.net
 //
 // 
-require_once 'www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
 
 function send_new_project_email(Project $project) {
     $ugroup_manager = new UGroupManager();
     $admin_ugroup   = $ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
-
-    $mail_manager   = new MailManager();
-
-    $hp = Codendi_HTMLPurifier::instance();
 
     foreach ($admin_ugroup->getMembers() as $user) {
         /* @var $user PFUser */
