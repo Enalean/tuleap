@@ -321,7 +321,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 }
 
 
-                $link_goto = '<a href="'.TRACKER_BASE_URL.'/?'. $query_link .'"'.
+                $link_goto = '<a href="'. $query_link .'"'.
                                  'title="'. $sanitized_description .'">';
                 $add .= '<div class="tracker_artifact_attachment_name">' . $link_goto . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) .'</a></div>';
 
