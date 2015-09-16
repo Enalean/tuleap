@@ -1,3 +1,6 @@
+Version 5.695 - Tuleap 8.7
+    * request #8416: Fix the link on the name of an attachment
+
 Version 5.694 - Tuleap 8.6
     * story #8263: On A.D. homepage admin can choose between scrum and kanban
 
