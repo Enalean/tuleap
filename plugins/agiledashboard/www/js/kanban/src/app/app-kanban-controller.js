@@ -561,8 +561,6 @@
                 NewTuleapArtifactModalService.showEdition(
                     kanban.tracker_id,
                     item.id,
-                    item.color,
-                    undefined,
                     callback
                 );
             }

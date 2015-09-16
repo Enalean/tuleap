@@ -105,14 +105,14 @@ describe('KanbanCtrl - ', function() {
                 color: 'Indianhood'
             });
 
-            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(56, 4288, "Indianhood", undefined, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(56, 4288, jasmine.any(Function));
         });
 
         describe("callback -", function() {
             var fake_updated_item;
 
             beforeEach(function() {
-                NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, c, d, callback) {
+                NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, callback) {
                     callback();
                 });
                 KanbanItemService.getItem.andReturn(deferred.promise);
