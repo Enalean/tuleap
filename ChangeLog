@@ -1,3 +1,10 @@
+Version 8.7 (not released yet)
+	== Bug fix ==
+	* request #8423: FlamingParrot is not necessary to use Tuleap
+
+	== Plugins ==
+	* tracker: 5.695
+
 Version 8.6 (Friday, September 11th 2015)
 
 	== Development ==
