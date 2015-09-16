@@ -82,18 +82,19 @@ module.exports = {
       'vendor/tuleap-artifact-modal/dist/tuleap-artifact-modal.min.js',
       'vendor/angular-sanitize/angular-sanitize.min.js',
       'vendor/angular-animate/angular-animate.min.js',
-      'vendor/angular-ui-bootstrap/ui-bootstrap-0.8.0.js',
-      'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js',
+      'vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
       'vendor/angular-ckeditor/angular-ckeditor.js',
       'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'vendor/angular-filter/dist/angular-filter.min.js',
       'vendor/angular-ui-select/dist/select.js',
+      'vendor/ng-scrollbar/dist/ng-scrollbar.js',
       'vendor/artifact-modal/dist/tuleap-artifact-modal.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
       'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
       'vendor/angular-ui-select/dist/select.css',
+      'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
       'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
     ],
     assets: [
