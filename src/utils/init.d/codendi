@@ -70,6 +70,8 @@ start()
         RETVAL=$?
         return $RETVAL
     fi
+    echo "Invalidate application caches:"
+    /usr/bin/tuleap --clear-caches
     echo -n "Starting $prog: "
     InstallCron
     echo "[OK]"
