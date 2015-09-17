@@ -460,7 +460,7 @@
                 var new_item = data.backlog_item;
                 $scope.items[backlog_item_id] = new_item;
                 $scope.backlog_items.content.unshift(new_item);
-                $scope.backlog_items.filtered_content.unshift(new_item);
+                $scope.backlog_items.filtered_content = $scope.backlog_items.content;
             });
         }
 
