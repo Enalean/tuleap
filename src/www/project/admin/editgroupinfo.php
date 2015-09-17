@@ -247,6 +247,12 @@ if ($user_can_choose_truncated_emails) {
     if ($svn_service) {
         $truncated_mails_impacted_services[] = $svn_service->getInternationalizedName();
     }
+
+    $wiki_service = $currentproject->getService(Service::WIKI);
+    if ($wiki_service) {
+        $truncated_mails_impacted_services[] = $wiki_service->getInternationalizedName();
+    }
+
     EventManager::instance()->processEvent(
         Event::SERVICES_TRUNCATED_EMAILS,
         array(
