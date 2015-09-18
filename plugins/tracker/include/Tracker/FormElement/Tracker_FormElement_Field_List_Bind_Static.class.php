@@ -881,6 +881,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $rest_values;
     }
 
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        $class_static_value_representation = '\\Tuleap\\Tracker\\REST\\FieldListStaticValueRepresentation';
+        $representation                  = new $class_static_value_representation;
+        $representation->build($value);
+
+        return $representation;
+    }
+
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
         return array(
             'label' => $value->getLabel(),
