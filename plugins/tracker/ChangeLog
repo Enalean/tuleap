@@ -1,3 +1,6 @@
+Version 5.696 - Tuleap 8.7
+    * request #8429: API REST : missing is_hidden value for static sb fields
+
 Version 5.695 - Tuleap 8.7
     * request #8416: Fix the link on the name of an attachment
 

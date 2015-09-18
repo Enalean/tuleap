@@ -5,7 +5,7 @@ Version 8.7 (not released yet)
 	* request #8424: Force clear caches at Tuleap start
 
 	== Plugins ==
-	* tracker: 5.695
+	* tracker: 5.696
 	* agiledashboard: 1.277
 	* git: 4.78
 
