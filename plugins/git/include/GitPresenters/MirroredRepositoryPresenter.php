@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_MirrorPresenter {
+class GitPresenters_MirroredRepositoryPresenter {
 
     /**
      * @var int
      */
-    public $mirror_id;
+    public $id;
 
     /**
      * @var string
@@ -31,15 +31,14 @@ class GitPresenters_MirrorPresenter {
     public $name;
 
     /**
-     * @var boolean
+     * @var GitPresenters_MirrorPresenter[]
      */
-    public $is_used;
+    public $used_mirrors;
 
 
-    public function __construct(Git_Mirror_Mirror $mirror, $is_used) {
-        $this->mirror_id = $mirror->id;
-        $this->name      = $mirror->name;
-        $this->is_used   = $is_used;
+    public function __construct(GitRepository $repository, array $used_mirrors) {
+        $this->repository_id = $repository->getId();
+        $this->name          = $repository->getFullName();
+        $this->used_mirrors  = $used_mirrors;
     }
-
 }

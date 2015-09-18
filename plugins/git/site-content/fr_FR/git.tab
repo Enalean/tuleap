@@ -172,7 +172,7 @@ plugin_git	mail_prefix_updated	Le préfixe du mail a été mis a jour
 plugin_git	mail_added	Adresse mail ajoutée
 plugin_git	mail_not_added	L'adresse mail $1 n'a pas pu être ajouté
 plugin_git	mail_removed	Adresse mail $1 supprimée
-plugin_git	mail_not_removed	L'adresse mail $1 n'a pas pu être supprimé		
+plugin_git	mail_not_removed	L'adresse mail $1 n'a pas pu être supprimé
 plugin_git	mail_existing	La notification est déja activée pour l'adresse mail $1
 
 plugin_git	notified_mails_title	Liste des adresses mail à notifier
@@ -290,7 +290,6 @@ plugin_git	view_admin_mass_update_go_to_mass_change	Mettre à jour les dépôts 
 plugin_git	view_admin_mass_update_selected_repository	Vous êtes sur le point de mettre à jour les informations du dépôt <b>$1</b>. Seules les informations de réplication peuvent-être modifiées.
 plugin_git	view_admin_mass_update_selected_repositories	Vous êtes sur le point de mettre à jour les informations de <span>$1 dépôts</span>. Seules les informations de réplication peuvent-être modifiées.
 plugin_git	view_admin_mass_update_submit_mass_change	Mettre à jour les dépôts
-plugin_git	view_admin_mass_update_mirroring	Veuillez noter que les options actuelles de réplication des dépôts sélectionnés seront perdues : les dépôts sélectionnés seront répliqués <i>seulement</i> sur les miroirs sélectionnés.
 
 plugin_git	view_admin_git_admins	Administrateurs Git
 plugin_git	view_admin_git_admins_description	Cette section permet de sélectionner les administrateurs du service Git, en plus des administrateurs du projet.

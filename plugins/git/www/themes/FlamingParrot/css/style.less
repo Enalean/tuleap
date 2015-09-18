@@ -61,10 +61,13 @@ body {
 }
 
 .definitions() {
-    .mirrors-list > thead > tr > th,
-    .git-admin-mass-update-table > thead > tr > th,
-    #git_repositories_list > thead > tr > th {
-        border-bottom-color: @main;
+    .mass-mirrors-list,
+    .mirrors-list,
+    .git-admin-mass-update-table,
+    #git_repositories_list {
+        & > thead > tr > th {
+            border-bottom-color: @main;
+        }
     }
 
     .update-n-repositories .popover-title {

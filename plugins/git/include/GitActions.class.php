@@ -42,9 +42,9 @@ class GitActions extends PluginActions {
      * @var Git_SystemEventManager
      */
     protected $git_system_event_manager;
-    
+
     /**
-     * @var GitRepositoryFactory 
+     * @var GitRepositoryFactory
      */
     private $factory;
 
@@ -139,11 +139,11 @@ class GitActions extends PluginActions {
     protected function getText($key, $params = array()) {
         return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
-    
+
     public function process($action, $params) {
        return call_user_func_array(array($this,$action), $params);
     }
-    
+
     public function deleteRepository( $projectId, $repositoryId ) {
         $controller   = $this->getController();
         $projectId    = intval($projectId);
@@ -152,7 +152,7 @@ class GitActions extends PluginActions {
             $this->addError('actions_params_error');
             return false;
         }
-        
+
         $repository = $this->factory->getRepositoryById($repositoryId);
         if ($repository) {
             if ($repository->canBeDeleted()) {
@@ -214,7 +214,7 @@ class GitActions extends PluginActions {
 
     /**
      * Action to load the user's repositories of a project. If user is not given, then load the project repositories instead.
-     * 
+     *
      * @param int $projectId The project id
      * @param int $userId    The user id. (== null for project repositories)
      *
@@ -232,7 +232,7 @@ class GitActions extends PluginActions {
     }
 
     /**
-     * Generates a list of GitRepositoryWithPermissions which are migrated to a 
+     * Generates a list of GitRepositoryWithPermissions which are migrated to a
      * gerrit server and belong to the project or the project's parent.
      *
      * @param Project $project
@@ -251,7 +251,7 @@ class GitActions extends PluginActions {
             'has_gerrit_servers_set_up' => $this->gerrit_server_factory->hasRemotesSetUp()
         ));
     }
-    
+
     protected function getDao() {
         return new GitDao();
     }
@@ -367,7 +367,7 @@ class GitActions extends PluginActions {
             $GLOBALS['Response']->sendStatusCode($e->getCode());
             return;
         }
-        
+
         echo $template->getContent();
     }
 
@@ -722,7 +722,7 @@ class GitActions extends PluginActions {
                 }
             }
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
-            
+
         } catch (GitDaoException $e) {
             $controller->addError( $e->getMessage() );
             $this->redirectToRepoManagement($projectId, $repoId, $pane);
@@ -759,7 +759,7 @@ class GitActions extends PluginActions {
             unset($r);
         }
 
-        
+
     }
 
     /**
@@ -796,7 +796,7 @@ class GitActions extends PluginActions {
 
     /**
      * Fork a bunch of repositories in a project for a given user
-     * 
+     *
      * @param int    $groupId         The project id
      * @param array  $repos_ids       The array of id of repositories to fork
      * @param string $namespace       The namespace where the new repositories will live
@@ -840,7 +840,7 @@ class GitActions extends PluginActions {
     }
 
     /**
-     * 
+     *
      * @param GitRepository $repository
      * @param int $remote_server_id the id of the server to which we want to migrate
      * @param Boolean $migrate_access_right if the acess right will be migrated or not
@@ -980,7 +980,11 @@ class GitActions extends PluginActions {
 
     public function updateMirroring(array $repositories, $selected_mirror_ids) {
         foreach($repositories as $repository) {
-            if (! $this->updateRepositoryMirrors($repository, $selected_mirror_ids)) {
+            if (! isset($selected_mirror_ids[$repository->getId()]) || ! is_array($selected_mirror_ids[$repository->getId()])) {
+                continue;
+            }
+
+            if (! $this->updateRepositoryMirrors($repository, $selected_mirror_ids[$repository->getId()])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_error'));
                 return;
             }
@@ -1003,9 +1007,16 @@ class GitActions extends PluginActions {
     }
 
     private function updateRepositoryMirrors(GitRepository $repository, $selected_mirror_ids) {
-        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($selected_mirror_ids)
+        $mirror_ids = array();
+        foreach ($selected_mirror_ids as $mirror_id => $should_be_mirrored) {
+            if ($should_be_mirrored) {
+                $mirror_ids[] = $mirror_id;
+            }
+        }
+
+        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
             && $this->mirror_data_mapper->unmirrorRepository($repository->getId())
-            && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $selected_mirror_ids)) {
+            && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $mirror_ids)) {
 
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
             $this->history_dao->groupAddHistory(

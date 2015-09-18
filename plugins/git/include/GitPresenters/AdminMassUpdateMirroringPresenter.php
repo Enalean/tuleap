@@ -29,12 +29,20 @@ class GitPresenters_AdminMassUdpdateMirroringPresenter {
         $this->mirror_presenters = $mirror_presenters;
     }
 
-    public function mirroring_title() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_title');
+    public function has_more_than_one_mirror() {
+        return count($this->mirror_presenters) > 1;
     }
 
-    public function mirroring_info() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_mirroring');
+    public function percent_width() {
+        $remaining_percent = 80;
+        if ($this->has_more_than_one_mirror()) {
+            $remaining_percent = 60;
+        }
+        return $remaining_percent / count($this->mirror_presenters);
+    }
+
+    public function mirroring_title() {
+        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_title');
     }
 
     public function mirroring_mirror_name() {

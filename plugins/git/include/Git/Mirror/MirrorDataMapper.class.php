@@ -245,7 +245,7 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     public function doesAllSelectedMirrorIdsExist($selected_mirror_ids) {
-        if ($selected_mirror_ids !== false) {
+        if ($selected_mirror_ids) {
             return count($selected_mirror_ids) === count($this->dao->fetchByIds($selected_mirror_ids));
         }
         return true;
@@ -256,7 +256,7 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     public function mirrorRepositoryTo($repository_id, $selected_mirror_ids) {
-        if ($selected_mirror_ids !== false) {
+        if ($selected_mirror_ids) {
             return $this->dao->mirrorRepositoryTo($repository_id, $selected_mirror_ids);
         }
         return true;
@@ -321,6 +321,19 @@ class Git_Mirror_MirrorDataMapper {
         $owner = $this->getMirrorOwner($row['id']);
 
         return $this->getInstanceFromRow($owner, $row);
+    }
+
+    public function getListOfMirrorIdsPerRepositoryForProject(Project $project) {
+        $repositories = array();
+        foreach ($this->dao->fetchAllRepositoryMirroredInProject($project->getId()) as $row) {
+            if (! isset($repositories[$row['repository_id']])) {
+                $repositories[$row['repository_id']] = array();
+            }
+
+            $repositories[$row['repository_id']][] = $row['mirror_id'];
+        }
+
+        return $repositories;
     }
 
     /**
