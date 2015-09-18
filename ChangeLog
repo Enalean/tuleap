@@ -1,6 +1,7 @@
 Version 8.7 (not released yet)
 	== Bug fix ==
 	* request #8423: FlamingParrot is not necessary to use Tuleap
+	* request #8385: Various setup.sh improvements
 
 	== Plugins ==
 	* tracker: 5.695
