@@ -49,8 +49,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->client = new Client($this->base_url);
-        $this->xml_client = new Client($this->base_url);
+        $this->client = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
+        $this->xml_client = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
 
         $this->client->setDefaultOption('headers/Accept', 'application/json');
         $this->client->setDefaultOption('headers/Content-Type', 'application/json');

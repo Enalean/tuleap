@@ -33,7 +33,7 @@ class ArtifactsChangesetsTest extends RestBase {
     public function __construct() {
         parent::__construct();
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            new Guzzle\Http\Client($this->base_url),
+            new Guzzle\Http\Client($this->base_url, array('ssl.certificate_authority' => 'system')),
             $this->rest_request,
             REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
             REST_TestDataBuilder::TEST_USER_1_NAME
