@@ -1554,6 +1554,7 @@ EOF
     /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php IM
 
     # Initialize Jabbex
+    build_dir /etc/$PROJECT_NAME/plugins/IM/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
     IM_ADMIN_GROUP='imadmingroup'
     IM_ADMIN_USER='imadmin-bot'
     IM_ADMIN_USER_PW='1M@dm1n'
