@@ -54,6 +54,14 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchByCaseInsensitiveUnixGroupName($unixGroupName) {
+        $unixGroupName= $this->da->quoteSmart($unixGroupName);
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE LOWER(unix_group_name)=LOWER($unixGroupName)";
+        return $this->retrieve($sql);
+    }
+
     /**
      * Look for active projects, based on their name (unix/public)
      * 
