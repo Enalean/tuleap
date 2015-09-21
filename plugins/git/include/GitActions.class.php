@@ -978,13 +978,25 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function updateMirroring(array $repositories, $selected_mirror_ids) {
+    public function updateMirroring(Project $project, array $repositories, $selected_mirror_ids) {
+        $current_mirror_ids_per_repository = $this->mirror_data_mapper->getListOfMirrorIdsPerRepositoryForProject($project);
         foreach($repositories as $repository) {
             if (! isset($selected_mirror_ids[$repository->getId()]) || ! is_array($selected_mirror_ids[$repository->getId()])) {
                 continue;
             }
 
-            if (! $this->updateRepositoryMirrors($repository, $selected_mirror_ids[$repository->getId()])) {
+            $mirror_ids = array();
+            foreach ($selected_mirror_ids[$repository->getId()] as $mirror_id => $should_be_mirrored) {
+                if ($should_be_mirrored) {
+                    $mirror_ids[] = $mirror_id;
+                }
+            }
+
+            if (! $this->areThereAnyChanges($repository, $mirror_ids, $current_mirror_ids_per_repository)) {
+                continue;
+            }
+
+            if (! $this->updateRepositoryMirrors($repository, $mirror_ids)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_error'));
                 return;
             }
@@ -1006,14 +1018,7 @@ class GitActions extends PluginActions {
         }
     }
 
-    private function updateRepositoryMirrors(GitRepository $repository, $selected_mirror_ids) {
-        $mirror_ids = array();
-        foreach ($selected_mirror_ids as $mirror_id => $should_be_mirrored) {
-            if ($should_be_mirrored) {
-                $mirror_ids[] = $mirror_id;
-            }
-        }
-
+    private function updateRepositoryMirrors(GitRepository $repository, $mirror_ids) {
         if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
             && $this->mirror_data_mapper->unmirrorRepository($repository->getId())
             && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $mirror_ids)) {
@@ -1029,6 +1034,20 @@ class GitActions extends PluginActions {
         }
 
         return false;
+    }
+
+    private function areThereAnyChanges(
+        GitRepository $repository,
+        array $mirror_ids,
+        array $current_mirror_ids_per_repository
+    ) {
+        $current_mirrors = array();
+        if (isset($current_mirror_ids_per_repository[$repository->getId()])) {
+            $current_mirrors = $current_mirror_ids_per_repository[$repository->getId()];
+        }
+
+        return count(array_diff($mirror_ids, $current_mirrors)) > 0
+            || count(array_diff($current_mirrors, $mirror_ids)) > 0;
     }
 
     public function setSelectedRepositories($repositories) {
