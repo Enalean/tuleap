@@ -1,3 +1,10 @@
+Version 8.6-2 (Monday, September 20th 2015)
+
+	== Bug Fix ==
+	* request #8429: API REST : missing is_hidden value for static sb fields
+	* request #8424: Force clear caches at Tuleap start
+	* request #8385: Make tuleap install compatible with Mysql 5.6
+
 Version 8.6 (Friday, September 11th 2015)
 
 	== Development ==
