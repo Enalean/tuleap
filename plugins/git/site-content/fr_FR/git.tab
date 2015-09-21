@@ -290,6 +290,8 @@ plugin_git	view_admin_mass_update_go_to_mass_change	Mettre à jour les dépôts 
 plugin_git	view_admin_mass_update_selected_repository	Vous êtes sur le point de mettre à jour les informations du dépôt <b>$1</b>. Seules les informations de réplication peuvent-être modifiées.
 plugin_git	view_admin_mass_update_selected_repositories	Vous êtes sur le point de mettre à jour les informations de <span>$1 dépôts</span>. Seules les informations de réplication peuvent-être modifiées.
 plugin_git	view_admin_mass_update_submit_mass_change	Mettre à jour les dépôts
+plugin_git	view_admin_mass_update_previous_state_used	Était utilisé
+plugin_git	view_admin_mass_update_previous_state_unused	N'était pas utilisé
 
 plugin_git	view_admin_git_admins	Administrateurs Git
 plugin_git	view_admin_git_admins_description	Cette section permet de sélectionner les administrateurs du service Git, en plus des administrateurs du projet.

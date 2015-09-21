@@ -14,10 +14,6 @@
                 {{# mirror_presenters }}
                     <col style="width: {{ percent_width }}%">
                 {{/ mirror_presenters }}
-                {{# has_more_than_one_mirror }}
-                    <col style="width: 10%">
-                    <col style="width: 10%">
-                {{/ has_more_than_one_mirror }}
             </colgroup>
             <thead>
                 <tr>
@@ -26,24 +22,29 @@
                         <th>
                             {{ name }}
                             {{# has_more_than_one_repository }}
-                                <br />
-                                <a href="#" class="check-all check-all-mirror" data-id="{{ mirror_id }}">Check all</a>
-                                <a href="#" class="uncheck-all uncheck-all-mirror" data-id="{{ mirror_id }}">Uncheck all</a>
+                                <div class="check-all-panel">
+                                    <a href="#" class="uncheck-all uncheck-all-mirror" data-id="{{ mirror_id }}" data-toggle="tooltip" title="Uncheck all"><i class="icon-check-empty"></i></a>
+                                    <a href="#" class="check-all check-all-mirror" data-id="{{ mirror_id }}" data-toggle="tooltip" title="Check all"><i class="icon-check"></i></a>
+                                </div>
                             {{/ has_more_than_one_repository }}
                         </th>
                     {{/ mirror_presenters }}
-                    {{# has_more_than_one_mirror }}
-                        <th></th>
-                        <th></th>
-                    {{/ has_more_than_one_mirror }}
                 </tr>
             </thead>
             <tbody>
                 {{# repositories }}
                     <tr>
-                        <td>{{ name }}</td>
+                        <td>
+                            {{ name }}
+                            {{# has_more_than_one_mirror }}
+                                <div class="check-all-panel">
+                                    <a href="#" class="uncheck-all uncheck-all-repository" data-id="{{ repository_id }}" data-toggle="tooltip" title="Uncheck all"><i class="icon-check-empty"></i></a>
+                                    <a href="#" class="check-all check-all-repository" data-id="{{ repository_id }}" data-toggle="tooltip" title="Check all"><i class="icon-check"></i></a>
+                                </div>
+                            {{/ has_more_than_one_mirror }}
+                        </td>
                         {{# used_mirrors }}
-                            <td>
+                            <td class="{{# is_used }}was-used{{/ is_used }}{{^ is_used }}was-unused{{/ is_used }}">
                                 <input
                                     type="hidden"
                                     name="selected_mirror_ids[{{ repository_id }}][{{ mirror_id }}]"
@@ -58,16 +59,16 @@
                                     data-mirror-id="{{ mirror_id }}"
                                     {{# is_used }}checked="checked"{{/ is_used }}
                                     />
+                                <div class="previous-state label {{# is_used }}label-important{{/ is_used }}{{^ is_used }}label-sucess{{/ is_used }}">
+                                    {{# is_used }}
+                                        {{ previous_state_used }}
+                                    {{/ is_used }}
+                                    {{^ is_used }}
+                                        {{ previous_state_unused }}
+                                    {{/ is_used }}
+                                </div>
                             </td>
                         {{/ used_mirrors }}
-                        {{# has_more_than_one_mirror }}
-                            <td>
-                                <a href="#" class="check-all check-all-repository" data-id="{{ repository_id }}">Check all</a>
-                            </td>
-                            <td>
-                                <a href="#" class="uncheck-all uncheck-all-repository" data-id="{{ repository_id }}">Uncheck all</a>
-                            </td>
-                        {{/ has_more_than_one_mirror }}
                     </tr>
                 {{/ repositories }}
             </tbody>
@@ -78,5 +79,7 @@
         <input type="hidden" name="repository_ids[]" value="{{ repository_id }}">
     {{/ repositories }}
 
-    <input type="submit" class="btn btn-primary" id="save-mass-change" name="save-mass-change" value="{{ submit_mass_change }}">
+    <div class="mass-mirrors-list-update-bar">
+        <input type="submit" class="btn btn-primary btn-large" id="save-mass-change" name="save-mass-change" value="{{ submit_mass_change }}">
+    </div>
 </form>

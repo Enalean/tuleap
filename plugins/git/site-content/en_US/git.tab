@@ -280,6 +280,8 @@ plugin_git	view_admin_mass_update_go_to_mass_change	Update selected repositories
 plugin_git	view_admin_mass_update_selected_repository	You are about to update the repository <b>$1</b>. For now, only mirroring settings can be updated.
 plugin_git	view_admin_mass_update_selected_repositories	You are about to update <span>$1 repositories</span>. For now, only mirroring settings can be updated.
 plugin_git	view_admin_mass_update_submit_mass_change	Update repositories
+plugin_git	view_admin_mass_update_previous_state_used	Was used
+plugin_git	view_admin_mass_update_previous_state_unused	Was unused
 
 plugin_git	view_admin_template_table_action	Action
 plugin_git	view_admin_template_table_name	Template name
