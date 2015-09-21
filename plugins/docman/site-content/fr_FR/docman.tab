@@ -422,6 +422,8 @@ plugin_docman	details_statistics_item_type_empty	Documents vides :
 plugin_docman	details_statistics_item_type_link	Liens :
 plugin_docman	details_statistics_item_type_folder	Dossiers :
 
+plugin_docman	truncated_email	email tronqué
+
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
 plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.

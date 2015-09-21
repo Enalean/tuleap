@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2015.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -27,6 +28,9 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 class DocmanPlugin extends Plugin {
+
+    const TRUNCATED_SERVICE_NAME = 'Documents';
+
     /**
      * Store docman root items indexed by groupId
      * 
@@ -94,6 +98,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('project_is_deleted',              'project_is_deleted',          false);
         $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
+        $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
     }
 
     public function getHooksAndCallbacks() {
@@ -750,15 +755,14 @@ class DocmanPlugin extends Plugin {
         $groupId = $params['group_id'];
         $userId = $params['user_id'];
 
-        $pm = ProjectManager::instance();
-        $project = $pm->getProject($groupId);
+        $project = $this->getProject($groupId);
         if (!$project->isPublic()) {
             require_once('Docman_ItemFactory.class.php');
             $docmanItemFactory = new Docman_ItemFactory();
             $root = $docmanItemFactory->getRoot($groupId);
             if ($root) {
                 require_once('Docman_NotificationsManager.class.php');
-                $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
+                $notificationsManager = new Docman_NotificationsManager($project, null, null, $this->getMailBuilder());
                 $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
                 if($dar && !$dar->isError()) {
                     foreach ($dar as $row) {
@@ -787,7 +791,7 @@ class DocmanPlugin extends Plugin {
             $root = $docmanItemFactory->getRoot($groupId);
             if ($root) {
                 require_once('Docman_NotificationsManager.class.php');
-                $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
+                $notificationsManager = new Docman_NotificationsManager($this->getProject($groupId), null, null, $this->getMailBuilder());
                 $dar = $notificationsManager->listAllMonitoredItems($groupId);
                 if($dar && !$dar->isError()) {
                     $userManager = UserManager::instance();
@@ -890,5 +894,26 @@ class DocmanPlugin extends Plugin {
         );
 
         $docman_system_check->process();
+    }
+
+    public function services_truncated_emails($params) {
+        $project = $params['project'];
+        if ($project->usesService('docman')) {
+            $params['services'][] = $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key');
+        }
+    }
+
+    /**
+     * @return Project
+     */
+    private function getProject($group_id) {
+        return ProjectManager::instance()->getProject($group_id);
+    }
+
+    /**
+     * @return MailBuilder
+     */
+    private function getMailBuilder() {
+        return new MailBuilder(TemplateRendererFactory::build());
     }
 }

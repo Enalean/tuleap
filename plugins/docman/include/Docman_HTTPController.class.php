@@ -92,7 +92,6 @@ class Docman_HTTPController extends Docman_Controller {
         //require_once('common/mail/TestMail.class.php');
         //$mail = new TestMail();
         //$mail->_testDir = '/local/vm16/codev/servers/docman-2.0/var/spool/mail';
-        $mail = new Mail();
 
         $itemIter = $itemFactory->findFuturObsoleteItems();
         $itemIter->rewind();
@@ -102,7 +101,7 @@ class Docman_HTTPController extends Docman_Controller {
             // Users
             $um    =& UserManager::instance();
             $owner =& $um->getUserById($item->getOwnerId());
-            
+
             // Project
             $group = $pm->getProject($item->getGroupId());
             
@@ -121,11 +120,19 @@ class Docman_HTTPController extends Docman_Controller {
                                                              $obsoDate,
                                                              $directUrl,
                                                              $detailUrl));
-            
-            $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setTo($owner->getEmail());
-            $mail->setSubject($subj);
-            $mail->setBody($body);
+
+
+            $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
+            $mail = $mail_notification_builder->buildEmail(
+                $group,
+                array($owner->getEmail()),
+                $subj,
+                '',
+                $body,
+                $baseUrl,
+                DocmanPlugin::TRUNCATED_SERVICE_NAME
+            );
+
             $mail->send();
             
             $itemIter->next();

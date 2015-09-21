@@ -422,6 +422,8 @@ plugin_docman	details_statistics_item_type_empty	Empty documents:
 plugin_docman	details_statistics_item_type_link	Links:
 plugin_docman	details_statistics_item_type_folder	Folders:
 
+plugin_docman	truncated_email	truncated email
+
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
 plugin_docman	error_alreadyinstalled	Document Manager already installed.

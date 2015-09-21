@@ -65,7 +65,12 @@ extends Docman_View_ItemDetailsSectionApproval {
         $email = $atsm->getNotifReviewer($owner);
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_email_subject').' '.$email->getSubject()."\n";
         $html .= '<p class="docman_approval_email">';
-        $html .= htmlentities($email->getBody(), ENT_COMPAT, 'UTF-8');
+
+        if (ProjectManager::instance()->getProject($this->item->getGroupId())->getTruncatedEmailsUsage()) {
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'truncated_email');
+        } else {
+            $html .= htmlentities(quoted_printable_decode($email->getBodyText()), ENT_COMPAT, 'UTF-8');
+        }
         $html .= '</p>';
         $backurl = $this->url.'&action=approval_create&id='.$this->item->getId();
         $html .= '<a href="'.$backurl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_email_back').'</a>';

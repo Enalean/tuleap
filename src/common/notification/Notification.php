@@ -51,6 +51,10 @@ class Notification {
         return $this->emails;
     }
 
+    public function addEmail($email) {
+        $this->emails[] = $email;
+    }
+
     public function getSubject() {
         return $this->subject;
     }

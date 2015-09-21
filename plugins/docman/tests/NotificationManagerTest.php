@@ -22,7 +22,7 @@ require_once 'bootstrap.php';
 
 Mock::generatePartial('Docman_NotificationsManager',
                       'Docman_NotificationsManager_TestVersion',
-                      array('_getMail',
+                      array('_getMailBuilder',
                             '_getItemFactory',
                             '_groupGetObject',
                             '_getDao',
@@ -49,66 +49,35 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', '/tuleap');
     }
 
     function tearDown() {
         unset($GLOBALS['sys_noreply']);
+        ForgeConfig::restore();
     }
 
     function testSendNotificationsSuccess() {
-        $mail     = new MockMail($this);
+        $mail         = new MockMail($this);
         $mail->setReturnValue('send', true);
-        $feedback = new MockFeedback($this);
-        $project  = new MockProject($this);
-        $project->setReturnValue('getPublicName', 'Guinea Pig');
-        $itemFty  = new MockDocman_ItemFactory($this);
-        $notifDao = new MockNotificationsDao($this);
+        $feedback     = new MockFeedback($this);
+        $project      = new MockProject($this);
+        $project->    setReturnValue('getPublicName', 'Guinea Pig');
+        $itemFty      = new MockDocman_ItemFactory($this);
+        $notifDao     = new MockNotificationsDao($this);
+        $project      = aMockProject()->withId(101)->build();
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
 
         $nm = new Docman_NotificationsManager_TestVersion($this);
         $nm->setReturnValue('_getDao', $notifDao);
         $nm->setReturnValue('_getItemFactory', $itemFty);
         $nm->setReturnValue('_groupGetObject', $project);
-        $nm->setReturnValue('_getMail', $mail);
-        $nm->__construct(101, '/toto', $feedback);
+        $nm->__construct($project, '/toto', $feedback, $mail_builder);
 
         $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'foo@codendi.org');
         $nm->_messages = array(array('title' => 'Move', 'content' => 'Changed', 'to' => array($user)));
-
-        $nm->sendNotifications('', '');
-    }
-
-    function testSendNotificationsFirstIsFailure() {
-        $feedback = new MockFeedback($this);
-
-        // First message fail
-        $mail1     = new MockMail($this);
-        $mail1->setReturnValue('send', false);
-
-        // Second succeed
-        $mail2     = new MockMail($this);
-        $mail2->setReturnValue('send', true);
-
-        // Raises an error
-        $feedback->expectOnce('log', array('warning', '*'));
-
-        $project  = new MockProject($this);
-        $project->setReturnValue('getPublicName', 'Guinea Pig');
-        $itemFty  = new MockDocman_ItemFactory($this);
-        $notifDao = new MockNotificationsDao($this);
-
-        $nm = new Docman_NotificationsManager_TestVersion($this);
-        $nm->setReturnValue('_getDao', $notifDao);
-        $nm->setReturnValue('_getItemFactory', $itemFty);
-        $nm->setReturnValue('_groupGetObject', $project);
-        $nm->setReturnValueAt(0, '_getMail', $mail1);
-        $nm->setReturnValueAt(1, '_getMail', $mail2);
-        $nm->__construct(101, '/toto', $feedback);
-
-        $user = mock('PFUser');
-        $user->setReturnValue('getEmail', 'foo@codendi.org');
-        $nm->_messages[] = array('title' => 'Move 1', 'content' => 'Changed 1', 'to' => array($user));
-        $nm->_messages[] = array('title' => 'Move 2', 'content' => 'Changed 2', 'to' => array($user));
 
         $nm->sendNotifications('', '');
     }
@@ -120,7 +89,13 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $language->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
         $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
         $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
+
+        $project      = aMockProject()->withId(101)->build();
+        $feedback     = new MockFeedback($this);
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
+        $notificationsManager->__construct($project, '/toto', $feedback, $mail_builder);
         $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');
@@ -152,7 +127,13 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $language->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
         $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
         $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
+
+        $project      = aMockProject()->withId(101)->build();
+        $feedback     = new MockFeedback($this);
+        $mail_builder = new MailBuilder(TemplateRendererFactory::build());
+
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
+        $notificationsManager->__construct($project, '/toto', $feedback, $mail_builder);
         $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = mock('PFUser');

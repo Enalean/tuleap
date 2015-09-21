@@ -26,9 +26,6 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
     const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
     const MESSAGE_REMOVED      = 'removed'; // X has been removed
     
-    function __construct($group_id, $url, $feedback) {
-        parent::__construct($group_id, $url, $feedback);
-    }
     function somethingHappen($event, $params) {
         //search for users who monitor the item
         if ($event == 'plugin_docman_event_del') {
@@ -56,8 +53,12 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                 $this->_addMessage(
                     $l['user'],
                     $t == self::MESSAGE_REMOVED ? $last['item']->getTitle() : $p->getTitle(),
-                    $this->_getMessageForUser($u, $t, array('path' => &$path, 'parent' => &$p, 'item' => &$last['item'])),
-                    $p
+                    $this->_getMessageForUser(
+                        $u,
+                        $t,
+                        array('path' => &$path, 'parent' => &$p, 'item' => &$last['item'])
+                    ),
+                    $this->getMessageLink($t, array('path' => &$path, 'parent' => &$p, 'item' => &$last['item']))
                 );
             } else {
                 $i = array_pop($l['items']);
@@ -95,8 +96,12 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                 $this->_addMessage(
                     $l['user'],
                     $title,
-                    $this->_getMessageForUser($e['user'], $e['type'], array_merge($e, $params)),
-                    $e['parent']
+                    $this->_getMessageForUser(
+                        $e['user'],
+                        $e['type'],
+                        array_merge($e, $params)
+                    ),
+                    $this->getMessageLink($e['type'], array_merge($e, $params))
                 );
             }
         }
@@ -127,6 +132,18 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
         }
         return $msg;
     }
+
+    protected function getMessageLink($type, $params) {
+        switch ($type) {
+            case self::MESSAGE_REMOVED_FROM:
+                $link = $this->_url . '&action=show&id=' . $params['parent']->getId();
+                break;
+            default:
+                $link = $this->_url;
+        }
+        return $link;
+    }
+
     function _storeEvents($id, $message_type, $params) {
         $dpm   = $this->_getPermissionsManager();
         $users = $this->_getListeningUsers($id);
