@@ -41,8 +41,7 @@ class ReferenceManager {
     var $referencesByProject = array();
 
     var $referenceDao;
-    var $groupIdByName;
-    var $groupIdByNameLower;
+    private $groupIdByName = array();
 
     /**
      * @var array
@@ -642,15 +641,7 @@ class ReferenceManager {
                     $ref_gid = $target_project;
                 } else {
                     // project name instead...
-                    $this->_initGroupHash();
-
-                    if (isset($this->groupIdByName[$target_project])) {
-                        $ref_gid = $this->groupIdByName[$target_project];
-                    } else if(isset($this->groupIdByNameLower[$target_project])) {
-                        $ref_gid = $this->groupIdByNameLower[$target_project];
-                    }else {
-                        return null;
-                    }
+                    $ref_gid = $this->getProjectIdFromName($target_project);
                 }
             } else {
                 if ($this->tmpGroupIdForCallbackFunction) {
@@ -815,15 +806,7 @@ class ReferenceManager {
             if (is_numeric($target_project)) {
                 $ref_gid = $target_project;
             } else {
-                // project name instead...
-                $this->_initGroupHash();                
-                if (isset($this->groupIdByName[$target_project])) {
-                    $ref_gid = $this->groupIdByName[$target_project];
-                } else if (isset($this->groupIdByNameLower[$target_project])) {
-                    $ref_gid = $this->groupIdByNameLower[$target_project];
-                }else {
-                    return null;
-                }
+                $ref_gid = $this->getProjectIdFromName($target_project);
             }
         } else {
             if ($this->tmpGroupIdForCallbackFunction) {
@@ -915,21 +898,18 @@ class ReferenceManager {
         }
     }
 
-    function _initGroupHash() {
-        if (!isset($this->groupIdByName)) {
-                $gf = new GroupFactory();
-                $p=array();
-                $pl=array();
-                $results = $gf->getAllGroups();
-                while ($groups_array = db_fetch_array($results)) {
-                    $p[$groups_array["unix_group_name"]]=$groups_array["group_id"];
-                    $pl[strtolower($groups_array["unix_group_name"])]=$groups_array["group_id"];
-                }                
-                $this->groupIdByName = $p;
-                $this->groupIdByNameLower =& $pl;               
+    private function getProjectIdFromName($name) {
+        $lowercase_name = strtolower($name);
+        if (! isset($this->groupIdByName[$lowercase_name])) {
+            $project = ProjectManager::instance()->getProjectByCaseInsensitiveUnixName($name);
+            if ($project && !$project->isError()) {
+                $this->groupIdByName[$lowercase_name] = $project->getID();
+            } else {
+                $this->groupIdByName[$lowercase_name] = '';
             }
+        }
+        return $this->groupIdByName[$lowercase_name];
     }
-
 
     function _referenceNotUsed($refid) {
         $reference_dao = $this->_getReferenceDao();

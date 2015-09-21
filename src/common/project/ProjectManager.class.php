@@ -250,6 +250,14 @@ class ProjectManager {
         return $p;
     }
 
+    public function getProjectByCaseInsensitiveUnixName($name) {
+        $dar = $this->_getDao()->searchByCaseInsensitiveUnixGroupName($name);
+        if ($dar && !$dar->isError() && $dar->rowCount() === 1) {
+            return $this->createProjectInstance($dar->getRow());
+        }
+        return null;
+    }
+
     /**
      * Make project available
      *
