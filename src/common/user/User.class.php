@@ -21,31 +21,31 @@
 /**
  *
  * User object
- * 
+ *
  * Sets up database results and preferences for a user and abstracts this info
  */
 class PFUser implements PFO_User, IHaveAnSSHKey {
-    
+
     /**
      * The user is active
      */
     const STATUS_ACTIVE     = 'A';
-    
+
     /**
      * The user is restricted
      */
     const STATUS_RESTRICTED = 'R';
-    
+
     /**
      * The user is pending
      */
     const STATUS_PENDING    = 'P';
-    
+
     /**
      * The user is suspended
      */
     const STATUS_SUSPENDED  = 'S';
-    
+
     /**
      * The user is deleted
      */
@@ -55,17 +55,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * Site admin validated the account as active
      */
     const STATUS_VALIDATED = 'V';
-    
+
     /**
      * Site admin validated the account as restricted
      */
     const STATUS_VALIDATED_RESTRICTED = 'W';
-    
+
     /**
      * Name of the preference for lab features
      */
     const PREF_NAME_LAB_FEATURE = 'use_lab_features';
-    
+
     /**
      * Pref for recent elements
      */
@@ -145,60 +145,60 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * The locale of the user
      */
     protected $locale;
-    
-    
+
+
     /**
      * The preferences
      */
     var $_preferences;
-    
+
     /**
      * The dao used to retrieve preferences
      */
     var $_preferencesdao;
-    
+
     /**
      * The dao used to retrieve user-group info
      */
     var $_usergroupdao;
-    
+
     /**
      * session hash
      * By default it is false. Use explicitly setSessionHash()
      * @see setSessionHash
      */
     protected $session_hash;
-    
+
     /**
      * Special property to store CLEAR password
      * should be used only for update/creation purpose.
      */
     private $clear_password;
-    
+
     /**
      * @var BaseLanguageFactory
      */
     protected $languageFactory;
-    
+
     /**
      * @var BaseLanguage
      */
     protected $language;
-    
+
     /**
      * Constructor
-     * 
-     * You should not create new User directly. 
+     *
+     * You should not create new User directly.
      * Please use the UserManager instead to retrieve users.
-     * 
+     *
      * @param array the row corresponding to the user. default is null (anonymous)
      */
     public function __construct($row = null) {
-        
+
         $this->is_super_user = null;
         $this->locale        = '';
         $this->_preferences  = array();
-        
+
         $this->user_id            = isset($row['user_id'])            ? $row['user_id']            : 0;
         $this->user_name          = isset($row['user_name'])          ? $row['user_name']          : null;
         $this->email              = isset($row['email'])              ? $row['email']              : null;
@@ -228,9 +228,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
         $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
         $this->has_avatar         = isset($row['has_avatar'])         ? $row['has_avatar']         : null;
-        
+
         $this->id = $this->user_id;
-        
+
         //set the locale
         if (!$this->language_id) {
             //Detect browser settings
@@ -239,15 +239,15 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         } else {
             $this->locale = $this->language_id;
         }
-        
+
         $this->session_hash = false;
     }
-    
-    
+
+
 
     /**
      * Return associative array of data from db
-     * 
+     *
      * @return array
      */
     function toRow() {
@@ -282,7 +282,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             'has_avatar'         => $this->has_avatar,
         );
     }
-    
+
     /**
      * clear: clear the cached group data
      */
@@ -297,9 +297,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
        unset($this->_tracker_data);
        $this->_tracker_data = null;
     }
-     
+
     /**
-     * group data row from db. 
+     * group data row from db.
      * For each group_id (the user is part of) one array from the user_group table
      */
     protected $_group_data;
@@ -329,9 +329,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     public function isMember($group_id,$type = 0) {
         $group_data = $this->getUserGroupData();
-        
+
         $is_member = false;
-        
+
         if (isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') {
             //Codendi admins always return true
             $is_member = true;
@@ -402,27 +402,27 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0) {
         return ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
     }
-    
+
     public function isNone() {
         return $this->getId() == 100;
     }
-    
+
     public function isAnonymous() {
         return $this->getId() == 0;
     }
-    
+
     public function isLoggedIn() {
         return $this->getSessionHash() !== false;
     }
-    
-    /** 
+
+    /**
      * is this user admin of the tracker group_artifact_id
      * @return boolean
      */
     public function isTrackerAdmin($group_id,$group_artifact_id) {
       return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
     }
-    
+
     /**
      * tracker permission data
      * for each group_artifact_id (the user is part of) one array from the artifact-perm table
@@ -433,7 +433,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             $this->_tracker_data = array();
             $id = (int)$this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
-            $sql = "SELECT group_artifact_id, perm_level 
+            $sql = "SELECT group_artifact_id, perm_level
                     FROM artifact_perm WHERE user_id = $id";
             $db_res = db_query($sql);
             if (db_numrows($db_res) > 0) {
@@ -454,11 +454,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function isSuperUser() {
         return $this->isMember(1, 'A');
     }
-    
+
     public function getAllUgroups() {
         return $this->getUGroupDao()->searchByUserId($this->user_id);
     }
-    
+
     var $_ugroups;
     function getUgroups($group_id, $instances) {
         $hash = md5(serialize($instances));
@@ -470,7 +470,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return $this->_ugroups[$hash];
     }
-    
+
     var $_static_ugroups;
     function getStaticUgroups($group_id) {
         if (!isset($this->_static_ugroups)) {
@@ -484,7 +484,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return $this->_static_ugroups;
     }
-    
+
     var $_dynamics_ugroups;
     function getDynamicUgroups($group_id, $instances) {
         include_once 'www/project/admin/ugroup_utils.php';
@@ -523,7 +523,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * User's language object corresponding to user's locale
-     * 
+     *
      * @return BaseLanguage
      */
     public function getLanguage() {
@@ -532,7 +532,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return $this->language;
     }
-    
+
     //
     // Getter
     //
@@ -656,11 +656,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function getUnixStatus() {
         return $this->unix_status;
     }
-    
+
     function getUnixUid() {
         return $this->unix_uid;
     }
-    
+
     function getUnixHomeDir() {
         return $GLOBALS['homedir_prefix']."/".$this->getUserName();
     }
@@ -754,7 +754,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function getShell() {
         return $this->shell;
     }
-    
+
     /**
      * Return the local of the user. Ex: en_US, fr_FR
      *
@@ -773,39 +773,39 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return substr($this->locale, 0, 2);
     }
 
-    /** 
+    /**
      * @return String Clear user password
      */
     function getPassword() {
-        return $this->clear_password; 
+        return $this->clear_password;
     }
-    
-   /** 
+
+   /**
      * @return String Register purpose
      */
     function getRegisterPurpose() {
-        return $this->register_purpose; 
+        return $this->register_purpose;
     }
-    
-    /** 
+
+    /**
      * @return String new email
      */
     function getNewMail() {
-         return $this->email_new; 
+         return $this->email_new;
     }
-    
-    /** 
+
+    /**
      * @return String expiry date
      */
     function getExpiryDate() {
-         return $this->expiry_date; 
+         return $this->expiry_date;
     }
-    
-    /** 
+
+    /**
      * @return String Confirm Hash
      */
     function getConfirmHash() {
-         return $this->confirm_hash; 
+         return $this->confirm_hash;
     }
 
     /**
@@ -829,7 +829,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * isRestricted - test if the user is restricted or not
-     * 
+     *
      * @return boolean true if the user is restricted, false otherwise
      */
     function isRestricted() {
@@ -838,7 +838,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * isDeleted - test if the user is deleted or not
-     * 
+     *
      * @return boolean true if the user is deleted, false otherwise
      */
     function isDeleted() {
@@ -847,7 +847,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * isSuspended - test if the user is suspended or not
-     * 
+     *
      * @return boolean true if the user is suspended, false otherwise
      */
     function isSuspended() {
@@ -856,7 +856,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * hasActiveUnixAccount - test if the unix account of the user is active or not
-     * 
+     *
      * @return boolean true if the unix account of the user is active, false otherwise
      */
     function hasActiveUnixAccount() {
@@ -865,7 +865,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * hasSuspendedUnixAccount - test if the unix account of the user is suspended or not
-     * 
+     *
      * @return boolean true if the unix account of the user is suspended, false otherwise
      */
     function hasSuspendedUnixAccount() {
@@ -874,7 +874,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * hasDeletedUnixAccount - test if the unix account of the user is deleted or not
-     * 
+     *
      * @return boolean true if the unix account of the user is deleted, false otherwise
      */
     function hasDeletedUnixAccount() {
@@ -883,13 +883,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * hasNoUnixAccount - test if the user doesn't have a unix account
-     * 
+     *
      * @return boolean true if the user doesn't have a unix account, false otherwise
      */
     function hasNoUnixAccount() {
         return ($this->getUnixStatus() == 'N');
     }
-    
+
     /**
      *
      * @param bool $return_all_data true if you want all groups data instead of only group_id (the later is the default)
@@ -924,9 +924,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     /**
-     * Return all projects that a given member belongs to 
+     * Return all projects that a given member belongs to
      * and also the projects that he is a member of its static ugroup
-     * 
+     *
      * @return Array of Integer
      */
     public function getAllProjects() {
@@ -941,13 +941,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * Wrapper for UGroupDao
-     * 
+     *
      * @return UGroupDao
      */
     protected function getUGroupDao() {
         return new UGroupDao();
     }
-    
+
     //
     // Setters
     //
@@ -1006,7 +1006,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function setLdapId($ldapId) {
         $this->ldap_id = $ldapId;
-    }    
+    }
     /**
      * @param string the registration date of the user (timestamp format)
      */
@@ -1062,14 +1062,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             $this->unix_status = $unixStatus;
         }
     }
-    
+
     /**
      * @param Integer $unixUid Unix uid
      */
     function setUnixUid($unixUid) {
         $this->unix_uid = $unixUid;
     }
-    
+
     /**
      * @param string unix box of the user
      */
@@ -1101,7 +1101,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function setUserPw($userPw) {
         $this->user_pw = $userPw;
     }
-    
+
     /**
      * @param String User shell
      */
@@ -1123,46 +1123,50 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function setLanguage(BaseLanguage $language) {
         $this->language = $language;
     }
-    
+
     /**
      * Set clear password
-     * 
+     *
      * @param  String $password
      */
     function setPassword($password) {
         $this->clear_password = $password;
     }
-    
+
     /**
      * Set new Email
-     * 
+     *
      * @param  String $new_email
      */
     function setNewMail($newEmail) {
         $this->email_new = $newEmail;
     }
-    
+
     /**
      * Set Register Purpose
-     * 
+     *
      * @param  String $regiter_purpose
      */
     function setRegisterPurpose($registerPurpose) {
         $this->register_purpose = $registerPurpose;
     }
-    
+
     /**
      * Set Confirm Hash
-     * 
+     *
      * @param  String $confirm_hash
      */
-    function setConfirmHash($confirmHash) {
+    public function setConfirmHash($confirmHash) {
         $this->confirm_hash = $confirmHash;
     }
-    
+
+    public function clearConfirmHash() {
+        $this->confirm_hash = '';
+    }
+
     /**
      * Set Expiry Date
-     * 
+     *
      * @param  String $expiry date
      */
     function setExpiryDate($expiryDate) {
@@ -1170,21 +1174,21 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
     // Preferences
     //
-    
+
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {
             $this->_preferencesdao = new UserPreferencesDao();
         }
         return $this->_preferencesdao;
     }
-    
+
     protected function getUserGroupDao() {
         if (!$this->_usergroupdao) {
             $this->_usergroupdao = new UserGroupDao();
         }
         return $this->_usergroupdao;
     }
-    
+
     /**
      * getPreference
      *
@@ -1204,7 +1208,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return $this->_preferences[$preference_name];
     }
-    
+
     /**
      * setPreference
      *
@@ -1258,11 +1262,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     private function arePreferencesTheSame($current_preference, $new_preference) {
         return $new_preference == $current_preference;
     }
-    
+
     /**
      * delPreference
      *
-     * @param  string $preference_name  
+     * @param  string $preference_name
      * @return boolean
      */
     function delPreference($preference_name) {
@@ -1275,7 +1279,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return true;
     }
-    
+
     /**
      * setSessionHash
      * @param $session_hash string
@@ -1283,7 +1287,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      public function setSessionHash($session_hash) {
          $this->session_hash = $session_hash;
      }
-     
+
      /**
       * getSessionHash
       * @return string
@@ -1339,7 +1343,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
          $this->has_avatar = ($has_avatar ? 1 : 0);
          return $this;
      }
-     
+
      /**
       * Display the html code for this users's avatar
       *
@@ -1405,7 +1409,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      public function setLabFeatures($toggle) {
          $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
      }
-      
+
      /**
       * Return true if user can do "$permissionType" on "$objectId"
       *
@@ -1420,10 +1424,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      public function hasPermission($permissionType, $objectId, $groupId) {
          return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
      }
-    
+
     /**
      * Get the list of recent elements the user browsed
-     * 
+     *
      * @return Array of Recent_Element_Interface
      */
     public function getRecentElements() {
@@ -1438,17 +1442,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return array();
     }
-     
+
      /**
       * Add in user preference an element "recently accessed"
-      * 
+      *
       * @param Recent_Element_Interface $element
       *
       * @return void
       */
      public function addRecentElement(Recent_Element_Interface $element) {
         $history = $this->getRecentElements();
-        
+
         //search if the artifact is already in the history. If so remove it
         $found = $i = 0;
         reset($history);
@@ -1465,14 +1469,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
                 array_pop($history);
             }
         }
-        
+
         //add the new one
         array_unshift($history, array('id' => $element->getId(), 'link' => $element->fetchXRefLink()));
-        
+
         //store
         $this->setPreference(self::PREFERENCE_RECENT_ELEMENTS, serialize($history));
      }
-     
+
     /**
      * Wrapper for BaseLanguageFactory
      *
@@ -1484,16 +1488,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return $this->languageFactory;
     }
-    
+
     /**
      * Set LanguageFactory
-     * 
-     * @param BaseLanguageFactory $languageFactory 
+     *
+     * @param BaseLanguageFactory $languageFactory
      */
     public function setLanguageFactory(BaseLanguageFactory $languageFactory) {
         $this->languageFactory = $languageFactory;
     }
-    
+
     public function __toString() {
         return "User #". $this->getId();
     }

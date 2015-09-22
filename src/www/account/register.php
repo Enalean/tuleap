@@ -210,31 +210,22 @@ function display_account_form($register_error, array $errors)	{
     $renderer->renderToPage($template, $presenter);
 }
 
-
-function getConfirmHash() {
-    $random       = new RandomNumberGenerator();
-    $confirm_hash = $random->getNumber();
-    $user_manager = UserManager::instance();
-    $check_valid   = false;
-    while (!$check_valid) {
-        $confirm_hash = $random->getNumber();
-        $check_valid   = $user_manager->getUserByConfirmHash($confirm_hash) === null;
-    }
-    return $confirm_hash;
-}
-
 // ###### first check for valid login, if so, congratulate
 $request =& HTTPRequest::instance();
 $hp =& Codendi_HTMLPurifier::instance();
 $errors = array();
 if ($request->isPost() && $request->exist('Register')) {
-    $page            = $request->get('page');
-    $displayed_image = true;
-    $image_url       = '';
-    $email_presenter = '';
-    $logo_retriever  = new LogoRetriever();
-    $confirm_hash    = getConfirmHash();
-    if ($new_userid = register_valid($confirm_hash, $errors)) {
+    $page                        = $request->get('page');
+    $displayed_image             = true;
+    $image_url                   = '';
+    $email_presenter             = '';
+    $mail_confirm_code_generator = new MailConfirmationCodeGenerator(
+        UserManager::instance(),
+        new RandomNumberGenerator()
+    );
+    $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
+    $logo_retriever              = new LogoRetriever();
+    if ($new_userid = register_valid($mail_confirm_code, $errors)) {
         $confirmation_register   = true;
         $user_name               = user_getname($new_userid);
         $content                 = '';
