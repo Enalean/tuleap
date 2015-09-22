@@ -199,7 +199,10 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
             if ($this->context === '0' ) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_backlog');
             } else {
-                $html .= $this->tracker_artifact_factory->getArtifactById($this->context)->fetchColoredXRef();
+                $artifact = $this->tracker_artifact_factory->getArtifactById($this->context);
+                if ($artifact) {
+                    $html .= $artifact->fetchColoredXRef();
+                }
             }
 
             $html .= ' ';
