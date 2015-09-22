@@ -1,0 +1,26 @@
+<form name="admin_group_mediawiki" class="admin_group_mediawiki" method="post" action="{{ route }}">
+    <h1>{{ admin_title }}</h1>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="?group_id={{ group_id }}&pane=permissions">{{ permissions_label }}</a>
+        </li>
+        <li class="active">
+            <a href="?group_id={{ group_id }}&pane=language">{{ language_label }}</a>
+        </li>
+    </ul>
+
+    <h2>{{ available_languages_title }}</h2>
+    <p>
+        {{ available_languages_intro }}
+    </p>
+    {{# available_languages }}
+        <label class="radio">
+            <input type="radio" name="language" value="{{ language }}" {{# used }} checked {{/ used }}>
+            {{ language }}
+        </label>
+    {{/ available_languages }}
+    <div class="admin_group_mediawiki_submit">
+        <input type="submit" name="submit" value="{{ save_changes }}" class="btn btn-primary">
+    </div>
+</form>

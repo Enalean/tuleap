@@ -44,3 +44,9 @@ plugin_mediawiki	allowed_project_list_name	Nom
 plugin_mediawiki	allowed_project_list_empty	Aucun projet n'utilise Mediawiki 1.23.
 plugin_mediawiki	allowed_project_allow_project	Les projets soumis seront migrés vers Mediawiki 1.23 dans un instant (consultez les Evénements Système)
 plugin_mediawiki	allowed_project_update_project_list_error	Une erreur s'est produite lors de l'enregistrement.
+plugin_mediawiki	permissions_label	Permissions
+plugin_mediawiki	language_label	Langue
+plugin_mediawiki	save_label	Sauvegarder
+plugin_mediawiki	available_languages_title	Langues disponibles
+plugin_mediawiki	available_languages_intro	Veuillez choisir une langue pour votre Mediawiki. Entre autres choses elle définit la page d'accueil qui sera utilisée.
+plugin_mediawiki	unsupported_language	La langue $1 n'est pas supportée.

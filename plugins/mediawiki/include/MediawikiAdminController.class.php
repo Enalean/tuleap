@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014, 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'MediawikiAdminPresenter.class.php';
+require_once 'MediawikiAdminPermissionsPanePresenter.class.php';
 require_once 'MediawikiUserGroupsMapper.class.php';
 require_once 'MediawikiManager.class.php';
+require_once 'MediawikiAdminLanguagePanePresenter.php';
+require_once 'MediawikiLanguageManager.php';
+require_once 'MediawikiLanguageDao.php';
 
 class MediawikiAdminController {
 
@@ -36,6 +39,9 @@ class MediawikiAdminController {
     /** @var PermissionsNormalizer */
     private $permissions_normalizer;
 
+    /** @var MediawikiLanguageManager */
+    private $language_manager;
+
     public function __construct() {
         $dao = new MediawikiDao();
         $this->mapper = new MediawikiUserGroupsMapper(
@@ -45,9 +51,10 @@ class MediawikiAdminController {
 
         $this->manager = new MediawikiManager($dao);
 
-        $user_dao = new UserGroupDao();
-        $this->user_group_factory = new User_ForgeUserGroupFactory($user_dao);
+        $user_dao                     = new UserGroupDao();
+        $this->user_group_factory     = new User_ForgeUserGroupFactory($user_dao);
         $this->permissions_normalizer = new PermissionsNormalizer();
+        $this->language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
    }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {
@@ -55,24 +62,39 @@ class MediawikiAdminController {
         $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL.'/forgejs/admin.js');
 
         $project = $request->getProject();
-        $options = $this->manager->getOptions($project);
 
         $read_ugroups  = $this->getReadUGroups($project);
         $write_ugroups = $this->getWriteUGroups($project);
 
-        $service->renderInPage(
-            $request,
-            $GLOBALS['Language']->getText('global', 'Administration'),
-            'admin',
-            new MediawikiAdminPresenter(
-                $project,
-                $this->getMappedGroupPresenter($project),
-                $this->mapper->isDefaultMapping($project),
-                $options,
-                $read_ugroups,
-                $write_ugroups
-            )
-        );
+        switch ($request->get('pane')) {
+            case 'language':
+                $service->renderInPage(
+                    $request,
+                    $GLOBALS['Language']->getText('global', 'Administration'),
+                    'language-pane-admin',
+                    new MediawikiAdminLanguagePanePresenter(
+                        $project,
+                        $this->language_manager->getAvailableLanguagesWithUsage($project)
+                    )
+                );
+                break;
+            case 'permissions':
+            default:
+                $service->renderInPage(
+                    $request,
+                    $GLOBALS['Language']->getText('global', 'Administration'),
+                    'permissions-pane-admin',
+                    new MediawikiAdminPermissionsPanePresenter(
+                       $project,
+                       $this->getMappedGroupPresenter($project),
+                       $this->mapper->isDefaultMapping($project),
+                       $this->manager->isCompatibilityViewEnabled($project),
+                       $read_ugroups,
+                       $write_ugroups
+                    )
+                );
+                break;
+        }
     }
 
     private function getReadUGroups(Project $project) {
@@ -151,22 +173,35 @@ class MediawikiAdminController {
         );
     }
 
-    public function save(ServiceMediawiki $service, HTTPRequest $request) {
+    public function save_language(ServiceMediawiki $service, HTTPRequest $request) {
+        $this->assertUserIsProjectAdmin($service, $request);
+        if ($request->isPost()) {
+            $project  = $request->getProject();
+            $language = $request->get('language');
+
+            try {
+                $this->language_manager->saveLanguageOption($project, $language);
+            } catch(Mediawiki_UnsupportedLanguageException $exception) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_mediawiki', 'unsupported_language', array($exception->getLanguage())));
+            }
+        }
+
+        $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(
+            array(
+                'group_id'   => $request->get('group_id'),
+                'pane'       => 'language',
+            )
+        ));
+    }
+
+    public function save_permissions(ServiceMediawiki $service, HTTPRequest $request) {
         $this->assertUserIsProjectAdmin($service, $request);
         if($request->isPost()) {
             $project          = $request->getProject();
             $new_mapping_list = $this->getSelectedMappingsFromRequest($request, $project);
             $this->mapper->saveMapping($new_mapping_list, $project);
 
-            $options = $this->manager->getDefaultOptions();
-
-            if (! $this->requestIsRestore($request)) {
-                foreach (array_keys($this->manager->getDefaultOptions()) as $key) {
-                    $options[$key] = $request->get($key);
-                }
-            }
-
-            $this->manager->saveOptions($project, $options);
+            $this->manager->saveCompatibilityViewOption($project, $request->get('enable_compatibility_view'));
 
             if (! $this->requestIsRestore($request)) {
 

@@ -19,14 +19,13 @@
  */
 
 require_once 'MediawikiGroupPresenter.class.php';
+require_once 'MediawikiAdminPanePresenter.php';
 
-class MediawikiAdminPresenter {
+class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter {
 
     public  $groups_permissions;
     public  $read_ugroups;
     public  $write_ugroups;
-
-    private $project;
 
     /** @var Boolean */
     private $is_default_mapping;
@@ -37,20 +36,16 @@ class MediawikiAdminPresenter {
         Project $project,
         array $groups_permissions,
         $is_default_mapping,
-        array $options,
+        $is_compatibility_view_enabled,
         array $read_ugroups,
         array $write_ugroups
     ) {
-        $this->project                       = $project;
+        parent::__construct($project);
         $this->groups_permissions            = $groups_permissions;
         $this->is_default_mapping            = $is_default_mapping;
-        $this->is_compatibility_view_enabled = $enable_compatibility_view = (bool) isset($options['enable_compatibility_view']) ? $options['enable_compatibility_view'] : 0;
+        $this->is_compatibility_view_enabled = $is_compatibility_view_enabled;
         $this->read_ugroups                  = $read_ugroups;
         $this->write_ugroups                 = $write_ugroups;
-    }
-
-    public function admin_title() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'admin_title');
     }
 
     public function can_show_options() {
@@ -89,7 +84,7 @@ class MediawikiAdminPresenter {
     public function route() {
         return MEDIAWIKI_BASE_URL . '/forge_admin?' . http_build_query(array(
             'group_id' => $this->project->getID(),
-            'action'   => 'save'
+            'action'   => 'save_permissions'
         ));
     }
 

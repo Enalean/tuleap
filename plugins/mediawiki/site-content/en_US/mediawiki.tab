@@ -43,3 +43,9 @@ plugin_mediawiki	allowed_project_list_name	Name
 plugin_mediawiki	allowed_project_list_empty	Currently, there are no projects that uses Mediawiki 1.23.
 plugin_mediawiki	allowed_project_allow_project	Submitted project will be converted to Mediawiki 1.23 shortly (check System Events).
 plugin_mediawiki	allowed_project_update_project_list_error	Something went wrong during the update.
+plugin_mediawiki	permissions_label	Permissions
+plugin_mediawiki	language_label	Language
+plugin_mediawiki	save_label	Save changes
+plugin_mediawiki	available_languages_title	Available languages
+plugin_mediawiki	available_languages_intro	Please choose a language for your Mediawiki. Among other things it will define which page will be used for welcome page.
+plugin_mediawiki	unsupported_language	The language $1 is not supported.
