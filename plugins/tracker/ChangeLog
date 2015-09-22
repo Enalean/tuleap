@@ -1,3 +1,6 @@
+Version 5.697 - Tuleap 8.7
+    * request #8434: Fatal error when displaying an artifact that has been ranked in a deleted milestone
+
 Version 5.696 - Tuleap 8.7
     * request #8429: API REST : missing is_hidden value for static sb fields
 
