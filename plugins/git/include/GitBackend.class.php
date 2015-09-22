@@ -70,62 +70,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function getDriver() {
         return $this->driver;
     }
-    
-    public function createFork($clone) {
-        if ( $clone->exists() ) {
-           throw new GitBackendException('Repository already exists');
-        }        
-        $parentPath  = $clone->getParent()->getPath();
-        $parentPath  = $this->getGitRootPath().DIRECTORY_SEPARATOR.$parentPath;
-        $forkPath    = $clone->getPath();
-        $forkPath    = $this->getGitRootPath().DIRECTORY_SEPARATOR.$forkPath;        
-        $this->getDriver()->fork($parentPath, $forkPath);
-
-        return $this->setUpRepository($clone);
-    }
-
-    /**
-     * Function that setup a repository , each repository has repo/ directory and forks/ directory
-     * @param <type> $rootPath
-     * @param <type> $mode
-     * @return <type>
-     * @todo move gitroopath creation to an install script
-     */
-    public function createReference($repository) {
-        if ( $repository->exists() ) {
-             throw new GitBackendException('Repository already exists');
-        }        
-        $path = $repository->getPath();
-        //create git root if does not exist
-        $this->createGitRoot();
-        //create project dir if does not exists
-        $this->createProjectRoot($repository);
-        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$path;
-        mkdir($path, 0770, true);
-        chdir($path);
-        $this->getDriver()->init($bare=true);
-
-        return $this->setUpRepository($repository);
-    }
-
-    /**
-     * Once the repository is created/forked, set it up with proper configuration.
-     *
-     * @param GitRepository $repository The repository
-     *
-     * @return Boolean
-     */
-    public function setUpRepository($repository) {
-        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
-        $this->getDriver()->activateHook('post-update', $path);
-        $this->deployPostReceive($path);
-        $id = $this->getDao()->save($repository);
-        $repository->setId($id);
-        $this->setUpMailingHook($repository);
-        $this->changeRepositoryAccess($repository);
-        $this->setRepositoryPermissions($repository);
-        return true;
-    }
 
     public function canBeDeleted(GitRepository $repository) {
         return ($this->getDao()->hasChild($repository) !== true);

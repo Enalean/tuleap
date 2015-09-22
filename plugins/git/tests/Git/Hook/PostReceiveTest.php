@@ -33,6 +33,7 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
     protected $ci_launcher;
     protected $user;
     protected $parse_log;
+    protected $system_event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -43,13 +44,15 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
         $this->repository             = mock('GitRepository');
         $this->ci_launcher            = mock('Git_Ci_Launcher');
         $this->parse_log              = mock('Git_Hook_ParseLog');
+        $this->system_event_manager   = mock('Git_SystemEventManager');
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,
             $this->git_repository_factory,
             $this->user_manager,
             $this->ci_launcher,
-            $this->parse_log
+            $this->parse_log,
+            $this->system_event_manager
         );
     }
 }
@@ -133,6 +136,20 @@ class Git_Hook_PostReceive_TriggerCiTest extends Git_Hook_PostReceive_Common {
     public function itTriggersACiBuild() {
         expect($this->ci_launcher)->executeForRepository($this->repository)->once();
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
+}
+
+class Git_Hook_PostReceive_LaunchGrokMirrorUpdates extends Git_Hook_PostReceive_Common {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+    }
+
+    public function itLaunchesGrokMirrorUpdates() {
+        expect($this->system_event_manager)->queueGrokMirrorManifestFollowingAGitPush($this->repository)->once();
+        $this->post_receive->processGrokMirrorActions('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
     }
 
 }

@@ -2,6 +2,13 @@ If you installed this plugin from the package management system (RPM) all
 dependencies are already installed, you just need to activate the plugin
 to start using it.
 
+=== Deploiement on CentOS 5 ===
+You need to add the following instructions at the end of your sudoers configuration (/etc/sudoers):
+
+    Defaults:gitolite !requiretty
+    Defaults:gitolite !env_reset
+    gitolite ALL= (codendiadm) SETENV: NOPASSWD: /usr/share/codendi/plugins/git/hooks/post-receive.php
+
 === User friendly URLs ===
 
 Since Tuleap 6.11, user friendly URLs have been implemented to browse Git repositories

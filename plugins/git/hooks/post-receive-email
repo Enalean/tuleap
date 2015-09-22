@@ -726,18 +726,8 @@ emailprefix=$(git config hooks.emailprefix || echo '[SCM] ')
 custom_showrev=$(git config hooks.showrev)
 maxlines=$(git config hooks.emailmaxlines)
 
-# --- Main loop
-# Allow dual mode: run from the command line just like the update hook, or
-# if no arguments are given then run as a hook script
+# Expect 3 parameters: oldrev newrev refname
 if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
-	# Output to the terminal in command line mode - if someone wanted to
-	# resend an email; they could redirect the output to sendmail
-	# themselves
-	prep_for_email $2 $3 $1 && PAGER= generate_email
-else
-	while read oldrev newrev refname
-	do
-		prep_for_email $oldrev $newrev $refname || continue
-		generate_email $maxlines | send_mail
-	done
+	prep_for_email $1 $2 $3 || continue
+	generate_email $maxlines | send_mail
 fi

@@ -569,7 +569,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} plugins/git/bin/git-post-receive.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/restore-tar-repository.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
@@ -577,6 +576,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
+%{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
 
 # plugin-git-gitolite3
 %{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
@@ -1037,11 +1037,11 @@ fi
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 
 %files plugin-git-gitolite3
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -1054,11 +1054,11 @@ fi
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 %attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_git
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)

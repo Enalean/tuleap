@@ -22,13 +22,6 @@
 
 interface GitRepositoryCreator {
     /**
-     * Initialize a new reference repository
-     * 
-     * @param GitRepository $repository
-     */
-    public function createReference($repository);
-
-    /**
      * Get the regexp pattern to use for name repository validation
      * @return string eg: 'a-zA-Z0-9_-'
      */
