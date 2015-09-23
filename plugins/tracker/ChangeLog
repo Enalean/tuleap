@@ -1,3 +1,6 @@
+Version 5.698 - Tuleap 8.7
+    * story #8338: Truncate Trackers notifications
+
 Version 5.697 - Tuleap 8.7
     * request #8434: Fatal error when displaying an artifact that has been ranked in a deleted milestone
 

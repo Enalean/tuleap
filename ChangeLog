@@ -6,10 +6,10 @@ Version 8.7 (not released yet)
 	* request #8414: Typo in JabbeX configuration leading to error when browsing
 
 	== Plugins ==
-	* tracker: 5.697
+	* tracker: 5.698
 	* agiledashboard: 1.279
 	* git: 4.79
-	* docman: 2.26.83
+	* docman: 2.26.84
 
 Version 8.6 (Friday, September 11th 2015)
 

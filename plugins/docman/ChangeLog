@@ -1,3 +1,6 @@
+Version 2.26.84 - Tuleap 8.7
+    * story #8338: Truncate Trackers notifications
+
 Version 2.26.83 - Tuleap 8.7
     * story #8338: Docman service can send truncated emails
 
