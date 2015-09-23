@@ -121,7 +121,6 @@ class Docman_HTTPController extends Docman_Controller {
                                                              $directUrl,
                                                              $detailUrl));
 
-
             $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
             $mail = $mail_notification_builder->buildEmail(
                 $group,
@@ -130,7 +129,8 @@ class Docman_HTTPController extends Docman_Controller {
                 '',
                 $body,
                 $baseUrl,
-                DocmanPlugin::TRUNCATED_SERVICE_NAME
+                DocmanPlugin::TRUNCATED_SERVICE_NAME,
+                new MailEnhancer()
             );
 
             $mail->send();

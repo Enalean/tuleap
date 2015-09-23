@@ -713,6 +713,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     private function informUserOfOngoingMigrations(Project $project) {
         if ($this->getTV3MigrationManager()->thereAreMigrationsOngoingForProject($project)) {
             $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','tv3_being_migrated'));
+            $this->informUntruncatedEmailWillBeSent($project);
+        }
+    }
+
+    private function informUntruncatedEmailWillBeSent(Project $project) {
+        if ($project->getTruncatedEmailsUsage()) {
+            $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','untruncated_migration_email'));
         }
     }
 

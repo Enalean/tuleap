@@ -630,8 +630,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                     $message['subject'],
                     $message['htmlBody'],
                     $message['txtBody'],
-                    $message['message-id'],
-                    $message['from']
+                    $message['message-id']
                 );
             }
         }
@@ -781,17 +780,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      * @param string $htmlBody   the html content of the message
      * @param string $txtBody    the text content of the message
      * @param string $message_id the id of the message
-     * @param string $from       the from email address
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody, $message_id, $from) {
-        $mail = new Codendi_Mail();
-
-        if($message_id) {
-            $mail->getMail()->setMessageId($message_id);
-        }
-
+    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody, $message_id) {
         $hp                = Codendi_HTMLPurifier::instance();
         $breadcrumbs       = array();
         $tracker           = $this->getTracker();
@@ -799,33 +791,45 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $artifactId        = $this->getArtifact()->getID();
         $project_unix_name = $project->getUnixName(true);
         $tracker_name      = $tracker->getItemName();
+        $mail_enhancer     = new MailEnhancer();
+
+        if($message_id) {
+            $mail_enhancer->setMessageId($message_id);
+        }
 
         $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
 
-        $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
-        $mail->getLookAndFeelTemplate()->set('unsubscribe_link', $this->getUnsubscribeLink());
-        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
-        $mail->setFrom($from);
-        $mail->addAdditionalHeader("X-Codendi-Project",     $project->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Tracker",     $tracker_name);
-        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getId());
+        $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
+        $mail_enhancer->addPropertiesToLookAndFeel('unsubscribe_link', $this->getUnsubscribeLink());
+        $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
+        $mail_enhancer->addHeader("X-Codendi-Project",     $project->getUnixName());
+        $mail_enhancer->addHeader("X-Codendi-Tracker",     $tracker_name);
+        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $this->getId());
 
         foreach($headers as $header) {
-            $mail->addAdditionalHeader($header['name'], $header['value']);
+            $mail_enhancer->addHeader($header['name'], $header['value']);
         }
-
-        $mail->setTo(implode(', ', $recipients));
-        $mail->setSubject($subject);
 
         if ($htmlBody) {
             $htmlBody .= $this->getHTMLBodyFilter($project_unix_name, $tracker_name);
-            $mail->setBodyHTML($htmlBody);
         }
 
         $txtBody .= $this->getTextBodyFilter($project_unix_name, $tracker_name);
-        $mail->setBodyText($txtBody);
+
+        $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
+        $mail = $mail_notification_builder->buildEmail(
+            $project,
+            $recipients,
+            $subject,
+            $htmlBody,
+            $txtBody,
+            get_server_url().$this->getUri(),
+            trackerPlugin::TRUNCATED_SERVICE_NAME,
+            $mail_enhancer
+        );
+
         $mail->send();
     }
 
@@ -1210,6 +1214,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      * @return String
      */
     public function getUri() {
-        return  TRACKER_BASE_URL.'?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
+        return  TRACKER_BASE_URL.'/?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
     }
 }

@@ -1,0 +1,87 @@
+<?php
+/**
+* Copyright (c) Enalean, 2015. All Rights Reserved.
+*
+* This file is a part of Tuleap.
+*
+* Tuleap is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Tuleap is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// I am responsible for additional decorations to add to a mail
+class MailEnhancer {
+
+    /** @var Array */
+    private $additional_headers = array();
+
+    /** @var Array */
+    private $additional_properties = array();
+
+    /** @var int */
+    private $message_id;
+
+    /**
+     * @param string $header_name
+     * @param string $header_value
+     */
+    public function addHeader($header_name, $header_value) {
+        $this->additional_headers[$header_name] = $header_value;
+    }
+
+    /**
+     * @return Array
+     */
+    private function getAdditionalHeaders() {
+        return $this->additional_headers;
+    }
+
+    /**
+     * @param string $property_name
+     * @param mixed  $property_value
+     */
+    public function addPropertiesToLookAndFeel($property_name, $property_value) {
+        $this->additional_properties[$property_name] = $property_value;
+    }
+
+    /**
+     * @return Array
+     */
+    private function getAdditionalPropertiesForLookAndFeel() {
+        return $this->additional_properties;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setMessageId($id) {
+        $this->message_id = $id;
+    }
+
+    private function getMessageId() {
+        return $this->message_id;
+    }
+
+    public function enhanceMail(Codendi_Mail $mail) {
+        foreach ($this->getAdditionalHeaders() as $name => $value) {
+            $mail->addAdditionalHeader($name, $value);
+        }
+
+        foreach ($this->getAdditionalPropertiesForLookAndFeel() as $property => $value) {
+            $mail->getLookAndFeelTemplate()->set($property, $value);
+        }
+
+        if ($this->getMessageId()) {
+            $mail->getMail()->setMessageId($this->getMessageId());
+        }
+    }
+}
