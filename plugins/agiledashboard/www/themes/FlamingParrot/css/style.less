@@ -167,11 +167,6 @@ body {
         }
     }
 
-    .modal .modal-body fieldset > legend {
-        border-bottom-color: @main;
-        color: @main;
-    }
-
     #kanban-board {
         > div:not(.wip-reached) > .column-header {
             box-shadow: inset 0 3px 0 @main, inset 0 -1px 0 #E0E0E0;
@@ -189,5 +184,20 @@ body {
 
     .modal > .modal-header {
         border-bottom: 3px solid @main;
+    }
+
+    .tuleap-artifact-modal {
+        .modal-header {
+            border-bottom: 3px solid @main;
+        }
+
+        .followups-title {
+            color: @main;
+        }
+
+        .modal-body fieldset > legend {
+            border-bottom-color: @main;
+            color: @main;
+        }
     }
 }

@@ -10,9 +10,9 @@
     "restangular": "~1.4.0",
     "angular-moment": "~0.8.3",
     "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
-    "angular-ui-bootstrap": "gh-pages",
+    "angular-ui-bootstrap-bower": "~0.8.0",
     "ng-scrollbar": "~0.0.7",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#bb6836f564aac19ae934f0e36b7d6d5ab136aefd",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#6762731e73b9270f96e96f43e0418372e97ef541",
     "lodash": "~2.4.0"
   },
   "devDependencies": {
