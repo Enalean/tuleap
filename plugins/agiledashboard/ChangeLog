@@ -1,3 +1,6 @@
+Version 1.279 - Tuleap 8.7
+    * request #8437: A.D. homepage displays a welcome screen instead of plannings
+
 Version 1.278 - Tuleap 8.7
     * story #8372: Have the modal inherit colors from user theme
 
