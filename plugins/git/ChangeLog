@@ -1,3 +1,12 @@
+Version 4.80 - Tuleap 8.7
+    * Enhance UX of mass update repositories
+
+
+Part of story #8332: ease mass update of mirroring
+
+- better styling of check all / uncheck all
+- better styling of submit button bar
+
 Version 4.79 - Tuleap 8.7
     * story #8332: ease mass update of mirroring
 
