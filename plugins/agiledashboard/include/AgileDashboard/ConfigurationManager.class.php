@@ -48,7 +48,7 @@ class AgileDashboard_ConfigurationManager {
             return $row['scrum'];
         }
 
-        return false;
+        return true;
     }
 
     public function getScrumTitle($project_id) {
