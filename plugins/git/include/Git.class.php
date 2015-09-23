@@ -625,6 +625,7 @@ class Git extends PluginController {
 
                 if ($this->request->get('save-mass-change')) {
                     $this->addAction('updateMirroring', array(
+                        $this->request->getProject(),
                         $repositories,
                         $this->request->get('selected_mirror_ids')
                     ));
@@ -774,6 +775,7 @@ class Git extends PluginController {
                 }
 
                 $this->addAction('updateMirroring', array(
+                    $this->request->getProject(),
                     array($repository),
                     $this->request->get('selected_mirror_ids')
                 ));

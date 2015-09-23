@@ -73,6 +73,14 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_submit_mass_change');
     }
 
+    public function previous_state_used() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_previous_state_used');
+    }
+
+    public function previous_state_unused() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_previous_state_unused');
+    }
+
     public function form_action() {
         return '/plugins/git/?group_id='. $this->project_id .'&action=admin-mass-update';
     }

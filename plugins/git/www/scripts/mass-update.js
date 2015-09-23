@@ -34,10 +34,14 @@
             }
         });
 
+        $('.check-repository-mirror').on('change', changeCheckboxChangeState);
+
         $('.check-all-mirror').on('click', function (evt) {
             var mirror_id  = $(this).data('id');
 
-            $('[data-mirror-id='+ mirror_id +']').prop('checked', true);
+            $('[data-mirror-id='+ mirror_id +']')
+                .prop('checked', true)
+                .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
@@ -45,7 +49,9 @@
         $('.uncheck-all-mirror').on('click', function (evt) {
             var mirror_id  = $(this).data('id');
 
-            $('[data-mirror-id='+ mirror_id +']').prop('checked', false);
+            $('[data-mirror-id='+ mirror_id +']')
+                .prop('checked', false)
+                .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
@@ -53,7 +59,9 @@
         $('.check-all-repository').on('click', function (evt) {
             var repository_id  = $(this).data('id');
 
-            $('[data-repository-id='+ repository_id +']').prop('checked', true);
+            $('[data-repository-id='+ repository_id +']')
+                .prop('checked', true)
+                .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
@@ -61,11 +69,24 @@
         $('.uncheck-all-repository').on('click', function (evt) {
             var repository_id  = $(this).data('id');
 
-            $('[data-repository-id='+ repository_id +']').prop('checked', false);
+            $('[data-repository-id='+ repository_id +']')
+                .prop('checked', false)
+                .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
     });
+
+    function changeCheckboxChangeState() {
+        var has_changed = $(this).is(':checked') && $(this).parent('td').hasClass('was-unused')
+            || (! $(this).is(':checked') && $(this).parent('td').hasClass('was-used'));
+
+        if (has_changed) {
+            $(this).parent('td').addClass('has-changed');
+        } else {
+            $(this).parent('td').removeClass('has-changed');
+        }
+    }
 
     function checkMirrorIfNeeded(mirror_id) {
         var check_mirror = true;

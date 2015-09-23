@@ -35,9 +35,7 @@ class GitPresenters_AdminMassUdpdateMirroringPresenter {
 
     public function percent_width() {
         $remaining_percent = 80;
-        if ($this->has_more_than_one_mirror()) {
-            $remaining_percent = 60;
-        }
+
         return $remaining_percent / count($this->mirror_presenters);
     }
 

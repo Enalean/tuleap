@@ -482,6 +482,7 @@ fieldset.gerrit_disconnect {
 }
 
 .mass-mirrors-list {
+    width: 600px;
 
     > thead > tr {
         background: #E4E4E4;
@@ -490,11 +491,10 @@ fieldset.gerrit_disconnect {
             vertical-align: top;
             border-left-color: #D2D2D2;
             border-bottom: 2px solid #B2B2B2;
+            padding: 0 40px;
 
-            > .check-all,
-            > .uncheck-all {
-                font-weight: normal;
-                padding: 0 5px;
+            &:first-child {
+                width: 100%;
             }
         }
     }
@@ -504,20 +504,116 @@ fieldset.gerrit_disconnect {
     }
 
     > thead > tr > th,
+    > tbody > tr > td:first-child {
+        white-space: nowrap;
+        position: relative;
+        height: 45px;
+        min-width: 70px;
+    }
+
+    > tbody > tr > td:first-child {
+        box-sizing: border-box;
+    }
+
+    > thead > tr > th,
     > tbody > tr > td {
         vertical-align: middle;
         text-align: center;
 
         &:first-child {
-            width: 20%;
+            width: 100%;
             text-align: left;
         }
     }
 
-    .check-all,
-    .uncheck-all {
-        white-space: nowrap;
+    > tbody > tr {
+        .check-all-panel {
+            opacity: 0;
+        }
+
+        &:hover {
+            .check-all-panel {
+                opacity: 1;
+            }
+        }
+
+        > td {
+            transition: background linear 0.08s;
+
+            > div {
+                display: block;
+                opacity: 0;
+                margin: 5px 0 0 0;
+                transition: opacity linear 0.08s;
+            }
+
+            &.has-changed {
+                transition: background linear 0.08s;
+
+                > div {
+                    opacity: 1;
+                    transition: opacity linear 0.08s;
+                }
+
+                &.was-used {
+                    background: rgba(218,83,83,0.2);
+
+                    > div {
+                        background: rgb(218,83,83);
+                    }
+                }
+
+                &.was-unused {
+                    background: rgba(88,179,89,0.2);
+
+                    > div {
+                        background: rgb(88,179,89);
+                    }
+                }
+            }
+        }
     }
+
+    .check-all-panel {
+        display: inline-block;
+        width: 20px;
+        position: absolute;
+        top: 3px;
+        right: 3px;
+
+        > .check-all,
+        > .uncheck-all {
+            white-space: nowrap;
+            display: block;
+            color: #777;
+
+            &:hover, &:active {
+                color: #222;
+                text-decoration: none;
+            }
+        }
+
+        > .uncheck-all {
+            margin: 0 2px 0 0;
+        }
+    }
+}
+
+.mass-mirrors-list-update-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid #E0E0E0;
+    box-sizing: border-box;
+}
+
+body.sidebar-expanded .mass-mirrors-list-update-bar {
+  padding-left: 200px;
 }
 
 .git-admin-tabs {
