@@ -457,7 +457,7 @@ class FRSReleaseFactory {
     private function getEmail(FRSRelease $release, Notification $notification) {
         $builder = new MailBuilder(TemplateRendererFactory::build());
 
-        return $builder->buildEmail($release->getProject(), $notification, new MailEnhancer());
+        return $builder->buildAndSendEmail($release->getProject(), $notification, new MailEnhancer());
     }
 
     private function getEmailBody(FRSRelease $release, FRSPackage $package) {

@@ -102,8 +102,7 @@ class Docman_NotificationsManager extends NotificationsManager {
     function sendNotifications($event, $params) {
         $success = true;
         foreach($this->notifications as $notification) {
-            $mail = $this->mail_builder->buildEmail($this->project, $notification, new MailEnhancer());
-            $success &= ($mail->send());
+            $success &= $this->mail_builder->buildAndSendEmail($this->project, $notification, new MailEnhancer());
         }
         if (!$success) {
             $this->_feedback->log('warning', 'Error when sending some notifications.');

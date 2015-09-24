@@ -33,13 +33,26 @@ class MailBuilder {
     }
 
     /**
-     * @return Codendi_Mail
+     * @param Project $project
+     * @param Notification $notification
+     * @param MailEnhancer $mail_enhancer
+     *
+     * @return bool
      */
-    public function buildEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer) {
-        $mail = new Codendi_Mail();
+    public function buildAndSendEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer) {
+        $sent_status = true;
+        foreach ($notification->getEmails() as $email) {
+            $mail = $this->buildEmail($project, $notification, $mail_enhancer, $email);
+            $sent_status = $sent_status && $mail->send();
+        }
+
+        return $sent_status;
+    }
+
+    private function buildEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer, $email) {
+        $mail = $this->getMailSender();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
-        $mail->setBcc($this->getBcc($notification));
-        $mail->setTo('');
+        $mail->setTo($email);
 
         if ($project->getTruncatedEmailsUsage()) {
             $presenter = new MailPresenter(
@@ -66,7 +79,7 @@ class MailBuilder {
         return $mail;
     }
 
-    private function getBcc(Notification $notification) {
-        return implode(', ', $notification->getEmails());
+    protected function getMailSender() {
+        return new Codendi_Mail();
     }
 }

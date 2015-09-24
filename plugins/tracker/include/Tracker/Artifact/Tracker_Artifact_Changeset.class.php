@@ -819,7 +819,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $txtBody .= $this->getTextBodyFilter($project_unix_name, $tracker_name);
 
         $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
-        $mail = $mail_notification_builder->buildEmail(
+        $mail_notification_builder->buildAndSendEmail(
             $project,
             $recipients,
             $subject,
@@ -829,8 +829,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             trackerPlugin::TRUNCATED_SERVICE_NAME,
             $mail_enhancer
         );
-
-        $mail->send();
     }
 
     private function getForgeArtifactEmail() {

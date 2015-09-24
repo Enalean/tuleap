@@ -213,7 +213,7 @@ class Tracker_DateReminderManager {
         }
 
         $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
-        $mail = $mail_notification_builder->buildEmail(
+        $mail_notification_builder->buildAndSendEmail(
             $project,
             $recipients,
             $subject,
@@ -223,8 +223,6 @@ class Tracker_DateReminderManager {
             trackerPlugin::TRUNCATED_SERVICE_NAME,
             $mail_enhancer
         );
-
-        $mail->send();
     }
 
     /**

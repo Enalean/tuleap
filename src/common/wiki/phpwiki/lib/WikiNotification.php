@@ -40,7 +40,6 @@ class WikiNotification {
      */
     public function send() {
         $mail_builder = new MailBuilder(TemplateRendererFactory::build());
-        $mail         = $mail_builder->buildEmail($this->project, $this->notification, $this->mail_enhancer);
-        return $mail->send();
+        return $mail_builder->buildAndSendEmail($this->project, $this->notification, $this->mail_enhancer);
     }
 }
