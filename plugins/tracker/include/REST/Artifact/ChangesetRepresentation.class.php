@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,11 @@
 namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use \Tracker_Artifact_Changeset;
 use \Tracker_Artifact_Changeset_Comment;
+use \PFUser;
+use \UserManager;
 
 class ChangesetRepresentation {
     const ROUTE = 'changesets';
@@ -36,6 +39,11 @@ class ChangesetRepresentation {
      * @var int Who made the change
      */
     public $submitted_by;
+
+    /**
+     * @var  Tuleap\User\REST\MinimalUserRepresentation Representation of who made the change
+     */
+    public $submitted_by_details;
 
     /**
      * @var string Date of the change
@@ -53,20 +61,36 @@ class ChangesetRepresentation {
     public $last_comment;
 
     /**
+     * @var  Tuleap\User\REST\MinimalUserRepresentation Representation of who made the last change
+     */
+    public $last_modified_by;
+
+    /**
      * @var array Field values
      */
     public $values = array();
 
-    public function build(Tracker_Artifact_Changeset $changeset, Tracker_Artifact_Changeset_Comment $last_comment, array $values) {
-        $this->id           = JsonCast::toInt($changeset->getId());
-        $this->submitted_by = JsonCast::toInt($changeset->getSubmittedBy());
-        $this->submitted_on = JsonCast::toDate($changeset->getSubmittedOn());
-        $this->email        = $changeset->getEmail();
+    public function build(
+        Tracker_Artifact_Changeset $changeset,
+        PFUser $user,
+        Tracker_Artifact_Changeset_Comment $last_comment,
+        array $values
+    ) {
+        $this->id                   = JsonCast::toInt($changeset->getId());
+        $this->submitted_by         = JsonCast::toInt($changeset->getSubmittedBy());
+        $this->submitted_by_details = new MinimalUserRepresentation();
+        $this->submitted_by_details->build($user);
+        $this->submitted_on         = JsonCast::toDate($changeset->getSubmittedOn());
+        $this->email                = $changeset->getEmail();
 
         $this->last_comment = new ChangesetCommentRepresentation();
         $this->last_comment->build($last_comment);
 
         $this->values             = $values;
+        $this->last_modified_by   = new MinimalUserRepresentation();
+        $this->last_modified_by->build(
+            UserManager::instance()->getUserById($last_comment->getSubmittedBy())
+        );
         $this->last_modified_date = JsonCast::toDate($last_comment->getSubmittedOn());
     }
 }

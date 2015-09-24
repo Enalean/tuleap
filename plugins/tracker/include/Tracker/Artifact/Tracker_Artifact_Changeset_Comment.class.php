@@ -184,7 +184,7 @@ class Tracker_Artifact_Changeset_Comment {
             $body = $this->getPurifiedBodyForText();
             return PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
         }
-        
+
         $user     = UserManager::instance()->getUserById($this->submitted_by);
         $avatar   = (ForgeConfig::get('sys_enable_avatars')) ? $user->fetchHtmlAvatar() : '';
         $timezone = ($user->getId() != 0) ? ' ('.$user->getTimezone().')' : '';
@@ -230,7 +230,7 @@ class Tracker_Artifact_Changeset_Comment {
                     </div>
                 </td>
             </tr>';
-        
+
         return $html;
     }
 
@@ -300,6 +300,10 @@ class Tracker_Artifact_Changeset_Comment {
         }
 
         return $user_info;
+    }
+
+    public function getSubmittedBy() {
+        return $this->submitted_by;
     }
 
     public function getSubmittedOn() {

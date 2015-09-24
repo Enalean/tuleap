@@ -247,7 +247,34 @@ class UserResource extends AuthenticatedResource {
      * @access public
      */
     public function optionPreferences($id) {
-        Header::allowOptionsPatch();
+        Header::allowOptionsGetPatch();
+    }
+
+    /**
+     * Get a user preference
+     *
+     * @url GET {id}/preferences
+     *
+     * @access hybrid
+     *
+     * @param int    $id  Id of the desired user
+     * @param string $key Preference key
+     *
+     * @throws 401
+     * @throws 404
+     *
+     * @return UserPreferenceRepresentation
+     */
+    public function getPreferences($id, $key) {
+        $this->checkAccess();
+
+        $value = $this->getUserPreference($id, $key);
+
+        $preference_representation = new UserPreferenceRepresentation();
+        $preference_representation->build($key, $value);
+
+        return $preference_representation;
+
     }
 
     /**
@@ -268,13 +295,21 @@ class UserResource extends AuthenticatedResource {
     public function patchPreferences($id, $preference) {
         $this->checkAccess();
 
-        if (! $this->setUserPreference($preference->key, $preference->value)) {
+        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+            throw new RestException(403, 'You can only set your own preferences');
+        }
+
+        if (! $this->setUserPreference($id, $preference->key, $preference->value)) {
             throw new RestException(500, 'Unable to set the user preference');
         }
     }
 
-    private function setUserPreference($key, $value) {
-        return $this->rest_user_manager->getCurrentUser()->setPreference($key, $value);
+    private function getUserPreference($user_id, $key) {
+        return $this->user_manager->getUserById($user_id)->getPreference($key);
+    }
+
+    private function setUserPreference($user_id, $key, $value) {
+        return $this->user_manager->getUserById($user_id)->setPreference($key, $value);
     }
 
     private function checkUserCanSeeOtherUser(PFUser $watcher, PFuser $watchee) {

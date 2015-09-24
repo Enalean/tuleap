@@ -34,7 +34,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public $email;
 
     protected $values;
-    
+
     /**
      * @var Tracker_Artifact_Changeset_Comment
      */
@@ -56,7 +56,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $this->submitted_on = $submitted_on;
         $this->email        = $email;
     }
-        
+
     /**
      * Return the value of a field in the current changeset
      *
@@ -423,7 +423,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         if (isset($this->latest_comment)) {
             return $this->latest_comment;
         }
-        
+
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
                                                     $this,
@@ -560,7 +560,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
         return $result;
     }
-    
+
     /**
     * Display diff messsage
     *
@@ -592,11 +592,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function getUserManager() {
         return UserManager::instance();
     }
-    
+
     public function getTracker() {
         return $this->artifact->getTracker();
     }
-    
+
     /**
      * notify people
      *
@@ -609,7 +609,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
             // 0. Is update
             $is_update = ! $this->getArtifact()->isFirstChangeset($this);
-    
+
             // 1. Get the recipients list
             $recipients = $this->getRecipients($is_update);
 
@@ -928,13 +928,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $recipients = array_merge($recipients, $this->getArtifact()->getCommentators());
         $recipients = array_values(array_unique($recipients));
 
-        
+
         //now force check perms for all this people
         $tablo = array();
         foreach($recipients as $r) {
             $tablo[$r] = true;
         }
-        
+
         // 3 Get from the global notif
         foreach ($this->getArtifact()->getTracker()->getRecipients() as $r) {
             if ( $r['on_updates'] == 1 || !$is_update ) {
@@ -1010,7 +1010,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $followup = $comment->fetchMailFollowUp($format);
         }
 
-        $output = 
+        $output =
         '<table style="width:100%">
             <tr>
                 <td align="left" colspan="2">
@@ -1021,7 +1021,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         if ($followup || $changes) {
 
-            $output .= 
+            $output .=
                 '<tr>
                     <td colspan="2" align="left">
                         <h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'
@@ -1043,7 +1043,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                             </td>
                         </tr>';
                 }
-                $output .= 
+                $output .=
                     '<tr>
                         <td> </td>
                         <td align="left">
@@ -1074,7 +1074,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
         return $output;
     }
-    
+
     /**
      * @return string html call to action button to include in an html mail
      */
@@ -1105,7 +1105,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     protected function getUserHelper() {
         return UserHelper::instance();
     }
-    
+
     /**
      * Get the subject for notification
      *
@@ -1184,6 +1184,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $changeset_representation = new $classname_with_namespace;
         $changeset_representation->build(
             $this,
+            $user,
             $comment,
             $fields  == self::FIELDS_COMMENTS  ? array() : $this->getRESTFieldValues($user)
         );

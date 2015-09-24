@@ -186,11 +186,11 @@ class UsersTest extends RestBase {
     public function testOptionsPreferences() {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/preferences'));
 
-        $this->assertEquals(array('OPTIONS', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testPatchPreference() {
+    public function testPatchPreferences() {
         $preference = json_encode(
             array(
                 'key'   => 'my_preference',
@@ -200,5 +200,30 @@ class UsersTest extends RestBase {
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/preferences', null, $preference));
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPatchPreferencesAnotherUser() {
+        $preference = json_encode(
+            array(
+                'key'   => 'my_preference',
+                'value' => 'my_preference_value'
+            )
+        );
+
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/'.REST_TestDataBuilder::TEST_USER_2_ID.'/preferences', null, $preference));
+        $this->assertEquals($response->getStatusCode(), 403);
+    }
+
+    public function testGETPreferences() {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/preferences?key=my_preference'));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertEquals('my_preference', $json['key']);
+        $this->assertEquals('my_preference_value', $json['value']);
     }
 }
