@@ -33,18 +33,22 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
     protected $ci_launcher;
     protected $user;
     protected $parse_log;
+    protected $git_repository_url_manager;
     protected $system_event_manager;
+    protected $mail_builder;
 
     public function setUp() {
         parent::setUp();
-        $this->user                   = mock('PFUser');
-        $this->log_analyzer           = mock('Git_Hook_LogAnalyzer');
-        $this->git_repository_factory = mock('GitRepositoryFactory');
-        $this->user_manager           = mock('UserManager');
-        $this->repository             = mock('GitRepository');
-        $this->ci_launcher            = mock('Git_Ci_Launcher');
-        $this->parse_log              = mock('Git_Hook_ParseLog');
-        $this->system_event_manager   = mock('Git_SystemEventManager');
+        $this->user                       = mock('PFUser');
+        $this->log_analyzer               = mock('Git_Hook_LogAnalyzer');
+        $this->git_repository_factory     = mock('GitRepositoryFactory');
+        $this->user_manager               = mock('UserManager');
+        $this->repository                 = mock('GitRepository');
+        $this->ci_launcher                = mock('Git_Ci_Launcher');
+        $this->parse_log                  = mock('Git_Hook_ParseLog');
+        $this->git_repository_url_manager = mock('Git_GitRepositoryUrlManager');
+        $this->system_event_manager       = mock('Git_SystemEventManager');
+        $this->mail_builder               = mock('MailBuilder');
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,
@@ -52,8 +56,11 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
             $this->user_manager,
             $this->ci_launcher,
             $this->parse_log,
+            $this->git_repository_url_manager,
             $this->system_event_manager
         );
+
+        stub($this->repository)->getNotifiedMails()->returns(array());
     }
 }
 
@@ -68,13 +75,13 @@ class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common {
 
     public function itGetRepositoryFromFactory() {
         expect($this->git_repository_factory)->getFromFullPath('/var/lib/tuleap/gitolite/repositories/garden/dev.git')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itGetUserFromManager() {
         stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
         expect($this->user_manager)->getUserByUserName('john_doe')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itSkipsIfRepositoryIsNotKnown() {
@@ -82,7 +89,7 @@ class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common {
 
         expect($this->parse_log)->execute()->never();
 
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itFallsBackOnAnonymousIfUserIsNotKnows() {
@@ -92,7 +99,7 @@ class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common {
 
         expect($this->log_analyzer)->getPushDetails($this->repository, new IsAnonymousUserExpectaction(), 'd8f1e57', '469eaa9', 'refs/heads/master')->once();
 
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itGetsPushDetailsFromLogAnalyzer() {
@@ -101,7 +108,7 @@ class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common {
 
         expect($this->log_analyzer)->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/heads/master')->once();
 
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 }
 
@@ -119,7 +126,7 @@ class Git_Hook_PostReceive_ExtractTest extends Git_Hook_PostReceive_Common {
 
         expect($this->parse_log)->execute($this->push_details)->once();
 
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 }
 
@@ -135,7 +142,7 @@ class Git_Hook_PostReceive_TriggerCiTest extends Git_Hook_PostReceive_Common {
 
     public function itTriggersACiBuild() {
         expect($this->ci_launcher)->executeForRepository($this->repository)->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
 }

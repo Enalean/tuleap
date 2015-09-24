@@ -139,6 +139,8 @@ class GitPlugin extends Plugin {
         if (defined('LDAP_DAILY_SYNCHRO_UPDATE_USER')) {
             $this->addHook(LDAP_DAILY_SYNCHRO_UPDATE_USER);
         }
+
+        $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
     }
 
     public function getServiceShortname() {
@@ -1554,6 +1556,14 @@ class GitPlugin extends Plugin {
         foreach($gerrit_servers as $server) {
             $gerritDriver = $gerritDriverFactory->getDriver($server);
             $gerritDriver->setUserAccountInactive($server, $user);
+        }
+    }
+
+    /** @see Event::SERVICES_TRUNCATED_EMAILS */
+    public function services_truncated_emails(array $params) {
+        $project = $params['project'];
+        if ($project->usesService($this->getServiceShortname())) {
+            $params['services'][] = $GLOBALS['Language']->getText('plugin_git', 'service_lbl_key');
         }
     }
 }

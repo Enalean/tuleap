@@ -27,6 +27,8 @@
  * executed
  */
 class Git_Hook_PostReceive {
+    const DEFAULT_MAIL_SUBJECT = 'Git notification';
+
     /** @var Git_Hook_LogAnalyzer */
     private $log_analyzer;
 
@@ -44,20 +46,25 @@ class Git_Hook_PostReceive {
 
     /** @var Git_SystemEventManager */
     private $system_event_manager;
-    
+
+    /** @var Git_GitRepositoryUrlManager */
+    private $repository_url_manager;
+
     public function __construct(
             Git_Hook_LogAnalyzer $log_analyzer,
             GitRepositoryFactory $repository_factory,
             UserManager $user_manager,
             Git_Ci_Launcher $ci_launcher,
             Git_Hook_ParseLog $parse_log,
+            Git_GitRepositoryUrlManager $repository_url_manager,
             Git_SystemEventManager $system_event_manager) {
-        $this->log_analyzer         = $log_analyzer;
-        $this->repository_factory   = $repository_factory;
-        $this->user_manager         = $user_manager;
-        $this->ci_launcher          = $ci_launcher;
-        $this->parse_log            = $parse_log;
-        $this->system_event_manager = $system_event_manager;
+        $this->log_analyzer           = $log_analyzer;
+        $this->repository_factory     = $repository_factory;
+        $this->user_manager           = $user_manager;
+        $this->ci_launcher            = $ci_launcher;
+        $this->parse_log              = $parse_log;
+        $this->system_event_manager   = $system_event_manager;
+        $this->repository_url_manager = $repository_url_manager;
     }
 
     public function processGrokMirrorActions($repository_path) {
@@ -67,14 +74,14 @@ class Git_Hook_PostReceive {
         }
     }
 
-    public function execute($repository_path, $user_name, $oldrev, $newrev, $refname) {
+    public function execute($repository_path, $user_name, $oldrev, $newrev, $refname, MailBuilder $mail_builder) {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
             $user = $this->user_manager->getUserByUserName($user_name);
             if ($user === null) {
                 $user = new PFUser(array('user_id' => 0));
             }
-            $this->sendMail($oldrev, $newrev, $refname);
+            $this->sendMail($repository, $mail_builder, $oldrev, $newrev, $refname);
             $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
         }
     }
@@ -86,9 +93,39 @@ class Git_Hook_PostReceive {
         $this->parse_log->execute($push_details);
     }
 
-    private function sendMail($oldrev, $newrev, $refname) {
+    /**
+     * @return bool
+     */
+    private function sendMail(GitRepository $repository, MailBuilder $mail_builder, $oldrev, $newrev, $refname) {
+        $mail_raw_output = array();
         exec('/usr/share/codendi/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .
-            escapeshellarg($newrev) . ' ' . escapeshellarg($refname));
+            escapeshellarg($newrev) . ' ' . escapeshellarg($refname), $mail_raw_output);
+        $subject       = isset($mail_raw_output[0]) ? $mail_raw_output[0] : self::DEFAULT_MAIL_SUBJECT;
+        $mail_enhancer = new MailEnhancer();
+        $this->addAdditionalMailHeaders($mail_enhancer, $mail_raw_output);
+        $body          = $this->createMailBody($mail_raw_output);
 
+        $access_link   = $repository->getDiffLink($this->repository_url_manager, $newrev);
+
+        $notification  = new Notification($repository->getNotifiedMails(), $subject, '', $body, $access_link, 'Git');
+        return $mail_builder->buildAndSendEmail($repository->getProject(), $notification, $mail_enhancer);
+    }
+
+    private function addAdditionalMailHeaders(MailEnhancer $mail_enhancer, $mail_raw_output) {
+        foreach (array_slice($mail_raw_output, 1, 4) as $raw_header) {
+            $header = explode(':', $raw_header);
+            $mail_enhancer->addHeader($header[0], $header[1]);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function createMailBody($mail_raw_output) {
+        $body = '';
+        foreach (array_slice($mail_raw_output, 5) as $body_part) {
+            $body .= $body_part . "\n";
+        }
+        return $body;
     }
 }

@@ -601,9 +601,7 @@ class GitRepository implements DVCSRepository {
      * @return String
      */
     public function getPostReceiveShowRev(Git_GitRepositoryUrlManager $url_manager) {
-        $url  = 'https://'.$GLOBALS['sys_https_host'];
-        $url .= $url_manager->getRepositoryBaseUrl($this);
-        $url .= '?p='.$this->getName().'.git&a=commitdiff&h=%%H';
+        $url  = $this->getDiffLink($url_manager, '%%H');
 
         $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
@@ -613,6 +611,14 @@ class GitRepository implements DVCSRepository {
             "--pretty='".$format."' ".
             "\$t";
         return $showrev;
+    }
+
+    public function getDiffLink(Git_GitRepositoryUrlManager $url_manager, $revision_hash) {
+        $url  = 'https://'.$GLOBALS['sys_https_host'];
+        $url .= $url_manager->getRepositoryBaseUrl($this);
+        $url .= '?p='.$this->getName().'.git&a=commitdiff&h=' . $revision_hash;
+
+        return $url;
     }
 
     public function getMailPrefix() {
