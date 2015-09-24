@@ -50,7 +50,7 @@ class MediawikiLanguageManager {
     /**
      * @return string
      */
-    private function getUsedLanguageForProject(Project $project) {
+    public function getUsedLanguageForProject(Project $project) {
         $result = $this->dao->getUsedLanguageForProject($project->getID());
 
         if (! $result) {
