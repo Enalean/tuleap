@@ -2,7 +2,7 @@
 rcs_id('$Id: WikiDB.php,v 1.135 2005/09/11 14:19:44 rurban Exp $');
 
 require_once('lib/PageType.php');
-require_once('common/mail/Mail.class.php');
+require_once('lib/WikiNotification.php');
 /**
  * The classes in the file define the interface to the
  * page database.
@@ -230,16 +230,14 @@ class WikiDB {
                 list($emails, $userids) = $page->getPageChangeEmails($notify);
                 if (!empty($emails)) {
                     // Codendi specific
-                    $subject = sprintf(_("Page removed %s"), $pagename);
-                    $from    = user_getemail(user_getid());
-                    $body    = $subject."\n".
-                               sprintf(_("Removed by: %s"), $from)."\n\n";
-                    $m = new Mail();
-                    $m->setFrom($from);
-                    $m->setSubject("[".WIKI_NAME."] ".$subject);
-                    $m->setBcc(join(',', $emails));
-                    $m->setBody($body);
-                    if ($m->send())
+                    $user              = UserManager::instance()->getCurrentUser();
+                    $subject           = sprintf(_("Page removed %s"), $pagename);
+                    $body              = $subject . "\n" .
+                                         sprintf(_("Removed by: %s"), $user->getRealName().' ('.$user->getEmail().')') .
+                                         "\n\n";
+                    $goto_link         = WikiURL($pagename, array('action' => 'PageHistory'), true);
+                    $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
+                    if ($wiki_notification->send())
                         trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                               $pagename, join(',',$userids)), E_USER_NOTICE);
                     else
@@ -1053,16 +1051,12 @@ class WikiDB_Page
             $content .= _("New page");
         }
         // Codendi specific
-        $from    = user_getemail(user_getid());
-        $body    = $subject."\n".
-                   sprintf(_("Edited by: %s"), $from)."\n".
-                   $difflink;
-        $m = new Mail();
-        $m->setFrom($from);
-        $m->setSubject("[".WIKI_NAME."] ".$subject);
-        $m->setBcc(join(',', $emails));
-        $m->setBody($body);
-        if ($m->send())
+        $user              = UserManager::instance()->getCurrentUser();
+        $body              = $subject."\n".
+                             sprintf(_("Edited by: %s"), $user->getRealName().' ('.$user->getEmail().')')."\n".
+                             $difflink;
+        $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $difflink, GROUP_ID);
+        if ($wiki_notification->send())
             trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                   $this->_pagename, join(',',$userids)), E_USER_NOTICE);
         else
@@ -1080,17 +1074,14 @@ class WikiDB_Page
         } else {
             $oldname = $this->_pagename;
             // Codendi specific
-            $subject = sprintf(_("Page rename %s to %s"), $oldname, $to);
-            $from    = user_getemail(user_getid());
-            $body    = $subject."\n".
-                       sprintf(_("Edited by: %s"), $from)."\n".
-                       WikiURL($to, array(), true);
-            $m = new Mail();
-            $m->setFrom($from);
-            $m->setSubject("[".WIKI_NAME."] ".$subject);
-            $m->setBcc(join(',', $emails));
-            $m->setBody($body);
-            if ($m->send())
+            $user              = UserManager::instance()->getCurrentUser();
+            $goto_link         = WikiURL($to, array(), true);
+            $subject           = sprintf(_("Page rename %s to %s"), $oldname, $to);
+            $body              = $subject."\n".
+                                 sprintf(_("Edited by: %s"), $user->getRealName().' ('.$user->getEmail().')')."\n".
+                                 $goto_link;
+            $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
+            if ($wiki_notification->send())
                 trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                       $oldname, join(',',$userids)), E_USER_NOTICE);
             else
