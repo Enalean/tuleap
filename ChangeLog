@@ -1,4 +1,7 @@
 Version 8.7 (not released yet)
+	== Enhancement ==
+	* story #8338: Wiki service can send truncated notifications
+
 	== Bug fix ==
 	* request #8423: FlamingParrot is not necessary to use Tuleap
 	* request #8385: Various setup.sh improvements
