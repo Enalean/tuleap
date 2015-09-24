@@ -26,6 +26,11 @@
 interface PermissionsOverrider_IOverridePermissions {
 
     /**
+     * Allow to grant usage of anonymous even if platform would forbid it
+     */
+    public function forceUsageOfAnonymous();
+
+    /**
      * @param PFUser $user      the user trying to gain access
      * @param Project $project  the incriminated project
      * @return Boolean          true if user can finally access project
