@@ -163,11 +163,11 @@ class MediawikiManager {
     }
 
     private function restrictedUserCanRead(PFUser $user, Project $project) {
-        return in_array(ProjectUGroup::AUTHENTICATED, $this->getReadAccessControl($project));
+        return in_array(ProjectUGroup::AUTHENTICATED, $this->getReadAccessControl($project)) || in_array(ProjectUGroup::ANONYMOUS, $this->getReadAccessControl($project));
     }
 
     private function restrictedUserCanWrite(PFUser $user, Project $project) {
-        return in_array(ProjectUGroup::AUTHENTICATED, $this->getWriteAccessControl($project));
+        return in_array(ProjectUGroup::AUTHENTICATED, $this->getWriteAccessControl($project)) || in_array(ProjectUGroup::ANONYMOUS, $this->getWriteAccessControl($project));
     }
 
     private function getUpgroupsPermissionsManager() {

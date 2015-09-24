@@ -47,6 +47,16 @@ class PermissionsOverrider_PermissionsOverriderManager {
         return $permissions_overrider->decideToLetUserAccessProjectEvenIfTuleapWouldNot($user, $project);
     }
 
+    public function doesOverriderForceUsageOfAnonymous() {
+        $permissions_overrider = $this->getPermissionsOverrider();
+
+        if (! $permissions_overrider) {
+            return false;
+        }
+
+        return $permissions_overrider->forceUsageOfAnonymous();
+    }
+
     private function getPermissionsOverriderDirectory() {
         return ForgeConfig::get("sys_custom_dir")."/".self::PERMISSIONS_OVERRIDER_DIRECTORY;
     }
