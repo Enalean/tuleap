@@ -1,3 +1,6 @@
+Version 3.86 - Tuleap 8.7
+    * request #7951: Mail confirmation code are not properly generated for LDAP validation email
+
 Version 3.85 - Tuleap 8.5
     * request #8331: fix notice on ldap group binding whenconfig is openLDAP and $sys_ldap_server_type is not defined
 
