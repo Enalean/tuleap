@@ -42,12 +42,14 @@ class MediawikiLanguageManager {
     }
 
     private function isLanguageSupported($language) {
-        $supported_languages = explode(',', ForgeConfig::get('sys_supported_languages'));
+        $supported_languages = $this->getAvailableLanguages();
 
         return in_array($language, $supported_languages);
     }
 
     /**
+     * @param Project $project
+     *
      * @return string
      */
     public function getUsedLanguageForProject(Project $project) {
@@ -60,8 +62,12 @@ class MediawikiLanguageManager {
         return $result['language'];
     }
 
+    public function getAvailableLanguages() {
+        return explode(',', ForgeConfig::get('sys_supported_languages'));
+    }
+
     public function getAvailableLanguagesWithUsage(Project $project) {
-        $available_languages = explode(',', ForgeConfig::get('sys_supported_languages'));
+        $available_languages = $this->getAvailableLanguages();
         $project_language    = $this->getUsedLanguageForProject($project);
 
         return $this->formatAvailableLanguagesWithUsage($available_languages, $project_language);

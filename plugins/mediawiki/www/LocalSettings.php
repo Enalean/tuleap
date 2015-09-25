@@ -42,6 +42,8 @@ require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/Group.class.php';
+require_once __DIR__.'/../include/MediawikiFusionForgeProjectRetriever.php';
+require_once __DIR__.'/../include/MediawikiWelcomePageManager.php';
 require_once __DIR__.'/../include/MediawikiDao.class.php';
 require_once __DIR__.'/../include/MediawikiLanguageDao.php';
 require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
@@ -55,9 +57,9 @@ require_once MEDIAWIKI_BASE_DIR.'/MediawikiLanguageManager.php';
 require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
 $ff_plugin = new fusionforge_compatPlugin();
 $ff_plugin->loaded();
-
 $manager = new MediawikiManager(new MediawikiDao());
 $language_manager = new MediawikiLanguageManager(new MediawikiLanguageDao());
+$project_retriever = new MediawikiFusionForgeProjectRetriever();
 
 $forbidden_permissions = array(
     'editmyusercss',
@@ -93,28 +95,20 @@ if (forge_get_config('sys_https_host')) {
     $wgServer = 'http://'. forge_get_config('sys_default_domain');
 }
 
-if (!isset ($fusionforgeproject)) {
-    $gr=new Group(1);
-    $fusionforgeproject=$gr->getUnixName();
-}
+$group              = $project_retriever->getFusionForgeProject();
+$fusionforgeproject = $group->getUnixName();
 
-$exppath = explode('/', $_SERVER['PHP_SELF']) ;
-
-# determine $fusionforgeproject from the URL
-while (count ($exppath) >= 4) {
-    if (($exppath[0] == 'plugins') &&
-        ($exppath[1] == 'mediawiki') &&
-        ($exppath[2] == 'wiki') &&
-        in_array($exppath[4], array(
-            'api.php',
-            'index.php',
-            'load.php',
-        ))) {
-            $fusionforgeproject = $exppath[3] ;
-            break ;
-    } else {
-            array_shift ($exppath) ;
-    }
+/**
+ * If you read this, I'm sorry. We wanted to do this in the index.php file, but the sad thing is that we cannot load
+ * 'pre.php' in it because otherwise it will override Mediawiki classes (phpwiki in the core) whilst we need to have
+ * the project thus including a very big bunch of stuff. So we had to create a variable and do php script kiddie hack.
+ * I've lost karma doing this.
+ */
+if (isset($IS_ACCESSING_INDEX_PHP) && $IS_ACCESSING_INDEX_PHP) {
+    $request = HTTPRequest::instance();
+    $request->set('group_id', $group->getID());
+    $welcome_manager = new MediawikiWelcomePageManager(new MediawikiLanguageManager(new MediawikiLanguageDao()));
+    $welcome_manager->displayWelcomePage($group, $request);
 }
 
 if (!isset($is_tuleap_mediawiki_123)) {
@@ -130,8 +124,6 @@ $IP = '/usr/share/mediawiki-tuleap';
 if ($is_tuleap_mediawiki_123) {
     $IP = '/usr/share/mediawiki-tuleap-123';
 }
-
-$group = group_get_object_by_name($fusionforgeproject) ;
 
 $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
 $project_dir = forge_get_config('projects_path', 'mediawiki') . "/"

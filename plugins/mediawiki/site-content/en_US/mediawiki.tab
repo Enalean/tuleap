@@ -49,3 +49,7 @@ plugin_mediawiki	save_label	Save changes
 plugin_mediawiki	available_languages_title	Available languages
 plugin_mediawiki	available_languages_intro	Please choose a language for your Mediawiki. Among other things it will define which page will be used for welcome page.
 plugin_mediawiki	unsupported_language	The language $1 is not supported.
+plugin_mediawiki	alternative_welcome_page_title	Choose welcome page
+plugin_mediawiki	language_not_set_intro	Please choose your welcome page
+plugin_mediawiki	language_not_set_warning	No language has been set for your Mediawiki instance. Please ask one of your project administrators to do so.
+plugin_mediawiki	language_not_set_admin_warning	No language has been set for your Mediawiki instance. Please choose one <a href="$1">here</a>.
