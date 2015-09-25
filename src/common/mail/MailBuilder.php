@@ -64,6 +64,8 @@ class MailBuilder {
             $mail->setSubject($this->renderer->renderToString(self::TRUNCATED_SUBJECT_TEMPLATE, $presenter));
             $mail->setBodyHtml($this->renderer->renderToString(self::TRUNCATED_BODY_TEMPLATE, $presenter));
         } else {
+            $mail_enhancer->enhanceMail($mail);
+
             if ($notification->hasHTMLBody()) {
                 $mail->setBodyHtml($notification->getHTMLBody());
             }
@@ -73,7 +75,6 @@ class MailBuilder {
             }
 
             $mail->setSubject($notification->getSubject());
-            $mail_enhancer->enhanceMail($mail);
         }
 
         return $mail;
