@@ -25,7 +25,7 @@ if ($user === null) {
 }
 
 $old_email_user = clone $user;
-$user->setConfirmHash('none');
+$user->clearConfirmHash();
 $user->setEmail($old_email_user->getEmailNew());
 $user->setEmailNew($old_email_user->getEmail());
 
