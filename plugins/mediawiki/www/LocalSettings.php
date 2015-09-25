@@ -182,6 +182,7 @@ $wgDBmwschema       = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproje
 $wgDBts2schema      = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
 $wgMainCacheType    = CACHE_NONE;
 $wgMemCachedServers = array();
+$wgEnableParserCache = false;
 
 //$wgEnableUploads = forge_get_config('enable_uploads', 'mediawiki');
 $wgEnableUploads             = true;
