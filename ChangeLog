@@ -7,6 +7,7 @@ Version 8.7 (not released yet)
 	* request #8385: Various setup.sh improvements
 	* request #8424: Force clear caches at Tuleap start
 	* request #8414: Typo in JabbeX configuration leading to error when browsing
+	* request #8435: Reference doesn't work when project is explicitly set
 
 	== Plugins ==
 	* tracker: 5.699
