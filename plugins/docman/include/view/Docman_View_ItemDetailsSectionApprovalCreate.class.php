@@ -62,14 +62,14 @@ extends Docman_View_ItemDetailsSectionApproval {
         $owner =& $um->getUserById($table->getOwner());
         $atsm->setOwner($owner);
 
-        $email = $atsm->getNotifReviewer($owner);
-        $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_email_subject').' '.$email->getSubject()."\n";
+        $atsm->sendNotifReviewer($owner);
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_email_subject').' '.$atsm->getNotificationSubject()."\n";
         $html .= '<p class="docman_approval_email">';
 
         if (ProjectManager::instance()->getProject($this->item->getGroupId())->getTruncatedEmailsUsage()) {
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'truncated_email');
         } else {
-            $html .= htmlentities(quoted_printable_decode($email->getBodyText()), ENT_COMPAT, 'UTF-8');
+            $html .= htmlentities(quoted_printable_decode($atsm->getNotificationBodyText()), ENT_COMPAT, 'UTF-8');
         }
         $html .= '</p>';
         $backurl = $this->url.'&action=approval_create&id='.$this->item->getId();

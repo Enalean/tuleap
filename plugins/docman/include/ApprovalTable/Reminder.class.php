@@ -163,7 +163,7 @@ class Docman_ApprovalTableReminder {
         $text_body = $this->getBodyText($table, $docmanItem);
 
         $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
-        $mail = $mail_notification_builder->buildEmail(
+        return $mail_notification_builder->buildAndSendEmail(
             $this->getItemProject($docmanItem),
             array($reviewer->getEmail()),
             $subject,
@@ -173,8 +173,6 @@ class Docman_ApprovalTableReminder {
             DocmanPlugin::TRUNCATED_SERVICE_NAME,
             new MailEnhancer()
         );
-
-        return $mail->send();
     }
 
     /**

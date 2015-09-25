@@ -39,9 +39,9 @@ class MailNotificationBuilder {
      * @param $truncated_service_name
      * @param MailEnhancer $mail_enhancer
      *
-     * @return Codendi_Mail
+     * @return bool
      */
-    public function buildEmail(
+    public function buildAndSendEmail(
         Project $project,
         array $emails,
         $subject,
@@ -51,7 +51,7 @@ class MailNotificationBuilder {
         $truncated_service_name,
         MailEnhancer $mail_enhancer
     ) {
-        return $this->mail_builder->buildEmail(
+        return $this->mail_builder->buildAndSendEmail(
             $project,
             $this->getNotification(
                 $emails,

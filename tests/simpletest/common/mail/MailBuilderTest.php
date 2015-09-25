@@ -50,7 +50,9 @@ class MailBuilderTest extends TuleapTestCase {
 
         $this->mail_enhancer = mock('MailEnhancer');
 
-        $this->builder = new MailBuilder($template_factory);
+        $this->builder = partial_mock('MailBuilder', array('getMailSender'), array($template_factory));
+        $codendi_mail  = stub('Codendi_Mail')->send()->returns(true);
+        stub($this->builder)->getMailSender()->returns($codendi_mail);
 
         $emails            = array('a@example.com', 'b@example.com');
         $subject           = 'This is an awesome subject';
@@ -81,25 +83,25 @@ class MailBuilderTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itBuildsATruncatedEmailIfProjectUsesTruncatedEmail() {
+    public function itBuildsAndSendsATruncatedEmailIfProjectUsesTruncatedEmail() {
         $project = stub('Project')->getTruncatedEmailsUsage()->returns(true);
 
-        $email = $this->builder->buildEmail($project, $this->notification, $this->mail_enhancer);
+        $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
         expect($this->renderer)->expectCallCount('renderToString', 2);
         expect($this->mail_enhancer)->enhanceMail()->count(0);
 
-        $this->assertIsA($email, 'Codendi_Mail');
+        $this->assertTrue($sent);
     }
 
-    public function itBuildsAClassicEmailIfProjectDoesNotUseTruncatedEmail() {
+    public function itBuildsAndSendsAClassicEmailIfProjectDoesNotUseTruncatedEmail() {
         $project = stub('Project')->getTruncatedEmailsUsage()->returns(false);
 
-        $email = $this->builder->buildEmail($project, $this->notification, $this->mail_enhancer);
+        $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
         expect($this->renderer)->renderToString()->never();
-        expect($this->mail_enhancer)->enhanceMail()->count(1);
+        expect($this->mail_enhancer)->enhanceMail()->count(2);
 
-        $this->assertIsA($email, 'Codendi_Mail');
+        $this->assertTrue($sent);
     }
 }

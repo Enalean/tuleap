@@ -145,15 +145,15 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
     }
 
     function testLastReviewerApprove() {
-        Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalTableNotificationCycleTest2', array('_getReviewerDao', '_getMail', '_getUserManager', '_getUserById', 'getReviewUrl', 'getNotifTableApproved', 'notifyNextReviewer'));
+        Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalTableNotificationCycleTest2', array('_getReviewerDao', '_getMail', '_getUserManager', '_getUserById', 'getReviewUrl', 'sendNotifTableApproved', 'notifyNextReviewer'));
         $cycle =& new Docman_ApprovalTableNotificationCycleTest2($this);
 
         $mail =& new MockMail($this);
         //php5: this will works without having to explicitly return reference.
         //$mail->expectOnce('send');
-        $cycle->setReturnReference('getNotifTableApproved', $mail);
+        $cycle->setReturnReference('sendNotifTableApproved', $mail);
 
-        $cycle->expectOnce('getNotifTableApproved');
+        $cycle->expectOnce('sendNotifTableApproved');
         $cycle->expectNever('notifyNextReviewer');
 
         $reviewer =& new MockDocman_ApprovalReviewer($this);

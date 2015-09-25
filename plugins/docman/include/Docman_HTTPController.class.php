@@ -122,7 +122,7 @@ class Docman_HTTPController extends Docman_Controller {
                                                              $detailUrl));
 
             $mail_notification_builder = new MailNotificationBuilder(new MailBuilder(TemplateRendererFactory::build()));
-            $mail = $mail_notification_builder->buildEmail(
+            $mail_notification_builder->buildAndSendEmail(
                 $group,
                 array($owner->getEmail()),
                 $subj,
@@ -133,8 +133,6 @@ class Docman_HTTPController extends Docman_Controller {
                 new MailEnhancer()
             );
 
-            $mail->send();
-            
             $itemIter->next();
         }
     }
