@@ -1,3 +1,6 @@
+Version 2.26.85 - Tuleap 8.7
+    * request #8442: Tracker service does not send mail anymore
+
 Version 2.26.84 - Tuleap 8.7
     * story #8338: Truncate Trackers notifications
 
