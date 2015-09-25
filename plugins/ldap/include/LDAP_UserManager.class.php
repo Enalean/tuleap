@@ -292,9 +292,6 @@ class LDAP_UserManager {
         );
         $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
         $user->setConfirmHash($mail_confirm_code);
-        // Generates a pseudo-random password. Its not full secure but its
-        // better than nothing.
-        $user->setPassword(md5((string)mt_rand(10000, 999999).time()));
 
         // Default LDAP
         $user->setStatus($this->getLdap()->getLDAPParam('default_user_status'));
