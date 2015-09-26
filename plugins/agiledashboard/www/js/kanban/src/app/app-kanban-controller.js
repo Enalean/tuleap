@@ -559,6 +559,7 @@
                 };
 
                 NewTuleapArtifactModalService.showEdition(
+                    SharedPropertiesService.getUserId(),
                     kanban.tracker_id,
                     item.id,
                     callback

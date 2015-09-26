@@ -602,7 +602,8 @@ describe("PlanningCtrl", function() {
         var fakeEvent, fakeItem;
         beforeEach(function() {
             fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, callback) {
+            SharedPropertiesService.getUserId.andReturn(102);
+            NewTuleapArtifactModalService.showEdition.andCallFake(function(c, a, b, callback) {
                 callback(8541);
             });
         });
@@ -622,7 +623,7 @@ describe("PlanningCtrl", function() {
             $scope.showEditModal(fakeEvent, fakeItem);
 
             expect(fakeEvent.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(30, 651, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(102, 30, 651, jasmine.any(Function));
             expect($scope.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
 
