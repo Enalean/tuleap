@@ -35,6 +35,11 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
      */
     public $mirroring_presenter;
 
+    /**
+     * @var bool
+     */
+    public $is_exceeding_max_input_vars;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $project_id,
@@ -46,8 +51,19 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
 
         $this->csrf_input          = $csrf->fetchHTMLInput();
         $this->manage_mass_update  = true;
-        $this->repositories        = $repositories;
         $this->mirroring_presenter = $mirroring_presenter;
+
+        $nb_mirrors     = count($mirroring_presenter->mirror_presenters);
+        $max_input_vars = (int) ini_get('max_input_vars');
+
+        $this->is_exceeding_max_input_vars = count($repositories) * $nb_mirrors >= $max_input_vars;
+
+        if ($this->is_exceeding_max_input_vars) {
+            $nb_to_keep         = ceil($max_input_vars / ($nb_mirrors + 1));
+            $this->repositories = array_slice($repositories, 0, $nb_to_keep);
+        } else {
+            $this->repositories = $repositories;
+        }
     }
 
     public function title() {
@@ -79,6 +95,10 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
 
     public function previous_state_unused() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_previous_state_unused');
+    }
+
+    public function exceed_max_input_vars_message() {
+        return $GLOBALS['Language']->getText('plugin_git', 'exceed_max_input_vars_message', count($this->repositories));
     }
 
     public function form_action() {
