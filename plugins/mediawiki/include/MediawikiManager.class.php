@@ -30,29 +30,11 @@ class MediawikiManager {
         $this->dao = $dao;
     }
 
-    public function getOptions(Project $project) {
-        $project_id = $project->getID();
-
-        $options = $this->dao->getAdminOptions($project_id);
-
-        if (! $options) {
-            return $this->getDefaultOptions();
-        }
-
-        return $options;
-    }
-
-    public function getDefaultOptions() {
-        return array(
-            'enable_compatibility_view' => false,
-        );
-    }
-
-    public function saveOptions(Project $project, array $options) {
+    public function saveCompatibilityViewOption(Project $project, $compatibility_view_option) {
         $project_id                = $project->getID();
-        $enable_compatibility_view = (bool) isset($options['enable_compatibility_view']) ? $options['enable_compatibility_view'] : 0;
+        $enable_compatibility_view = $compatibility_view_option ? $compatibility_view_option : 0;
 
-        return $this->dao->updateAdminOptions($project_id, $enable_compatibility_view);
+        return $this->dao->updateCompatibilityViewOption($project_id, $enable_compatibility_view);
     }
 
     /**
@@ -153,9 +135,13 @@ class MediawikiManager {
      */
     public function isCompatibilityViewEnabled(Project $project) {
         $plugin_has_view_enabled = (bool) forge_get_config('enable_compatibility_view', 'mediawiki');
-        $project_options         = $this->getOptions($project);
+        $result                  = $this->dao->getCompatibilityViewUsage($project->getID());
 
-        return ($plugin_has_view_enabled && $project_options['enable_compatibility_view']);
+        if (! $result) {
+            return false;
+        }
+
+        return ($plugin_has_view_enabled && (bool) $result['enable_compatibility_view']);
     }
 
     public function instanceUsesProjectID(Project $project) {

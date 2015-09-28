@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -421,9 +421,10 @@ class MediawikiDao extends DataAccessObject {
         return $this->getMediawikiDatabaseName($project, false);
     }
 
-    public function getAdminOptions($project_id) {
+    public function getCompatibilityViewUsage($project_id) {
         $project_id = $this->da->escapeInt($project_id);
-        $sql = "SELECT * FROM plugin_mediawiki_admin_options WHERE project_id = $project_id";
+
+        $sql = "SELECT enable_compatibility_view FROM plugin_mediawiki_admin_options WHERE project_id = $project_id";
 
         return $this->retrieveFirstRow($sql);
     }
@@ -434,12 +435,14 @@ class MediawikiDao extends DataAccessObject {
      * @param bool $enable_compatibility_view
      * @return boolean true if success
      */
-    public function updateAdminOptions($project_id, $enable_compatibility_view) {
+    public function updateCompatibilityViewOption($project_id, $enable_compatibility_view) {
         $project_id = $this->da->escapeInt($project_id);
         $enable_compatibility_view = $this->da->escapeInt($enable_compatibility_view);
 
-        $sql = "REPLACE INTO plugin_mediawiki_admin_options
-                VALUES($project_id, $enable_compatibility_view)";
+        $sql = "INSERT INTO plugin_mediawiki_admin_options (project_id, enable_compatibility_view)
+                VALUES ($project_id, $enable_compatibility_view)
+                ON DUPLICATE KEY
+                    UPDATE enable_compatibility_view = VALUES(enable_compatibility_view)";
 
         return $this->update($sql);
     }
@@ -546,4 +549,3 @@ class MediawikiDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-

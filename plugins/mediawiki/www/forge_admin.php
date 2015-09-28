@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014, 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -29,18 +29,18 @@ require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_c
 $ff_plugin = new fusionforge_compatPlugin();
 $ff_plugin->loaded();
 
-$vWhiteList = new Valid_WhiteList('action', array('save', 'index', 'site_index', 'site_update_allowed_project_list'));
+$vWhiteList = new Valid_WhiteList('action', array('save_permissions', 'save_language', 'index', 'site_index', 'site_update_allowed_project_list'));
 $vWhiteList->required();
 
 $action = $request->getValidated('action', $vWhiteList, 'index');
 switch ($action) {
     case 'index':
-    case 'save':
+    case 'save_language':
+    case 'save_permissions':
         $service = $request->getProject()->getService('plugin_mediawiki');
         $controller = new MediawikiAdminController();
         $controller->$action($service, $request);
         break;
-
     case 'site_index':
     case 'site_update_allowed_project_list':
         $controller = new MediawikiSiteAdminController();
