@@ -1,3 +1,7 @@
+Version 8.6-4 (Monday, September 28th 2015)
+	== Bug Fix ==
+	* request #7951: missing confirm hash
+
 Version 8.6-3 (Monday, September 28th 2015)
 	== Bug Fix ==
 	* request #8414: Typo in JabbeX configuration leading to error when browsing
