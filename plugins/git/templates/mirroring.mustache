@@ -15,7 +15,17 @@
         {{# mirror_presenters }}
             <tr>
                 <td>
-                    <input type="checkbox" name="selected_mirror_ids[]" value="{{ mirror_id }}" {{# is_used }}checked{{/ is_used }}>
+                    <input
+                        type="hidden"
+                        name="selected_mirror_ids[{{ repository_id }}][{{ mirror_id }}]"
+                        value="0"
+                        />
+                    <input
+                        type="checkbox"
+                        name="selected_mirror_ids[{{ repository_id }}][{{ mirror_id }}]"
+                        value="1"
+                        {{# is_used }}checked{{/ is_used }}
+                        />
                 </td>
                 <td class="name">{{ name }}</td>
                 <td class="used">
