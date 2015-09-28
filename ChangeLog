@@ -1,6 +1,7 @@
 Version 8.7 (not released yet)
 	== Enhancement ==
 	* story #8338: Wiki service can send truncated notifications
+	* story #8338: Truncate Trackers notifications
 
 	== Bug fix ==
 	* request #8423: FlamingParrot is not necessary to use Tuleap
