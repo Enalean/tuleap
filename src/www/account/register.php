@@ -252,14 +252,14 @@ if ($request->isPost() && $request->exist('Register')) {
 
         if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
             if(!$admin_creation) {
-                if (!send_new_user_email($request->get('form_email'), $user_name, $confirm_hash)) {
+                if (!send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
                     );
                 }
                 $presenter = new MailPresenterFactory();
-                $email_presenter = $presenter->createMailAccountPresenter($user_name, '', $confirm_hash, "user", $logo_retriever->getUrl());
+                $email_presenter = $presenter->createMailAccountPresenter($user_name, '', $mail_confirm_code, "user", $logo_retriever->getUrl());
             }
 
             $title  = $Language->getText('account_register', 'title_confirm');
