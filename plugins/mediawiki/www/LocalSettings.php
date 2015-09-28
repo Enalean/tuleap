@@ -43,9 +43,11 @@ require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/Group.class.php';
 require_once __DIR__.'/../include/MediawikiDao.class.php';
+require_once __DIR__.'/../include/MediawikiLanguageDao.php';
 require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
 require_once __DIR__.'/../include/MediawikiSiteAdminResourceRestrictor.php';
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
+require_once MEDIAWIKI_BASE_DIR.'/MediawikiLanguageManager.php';
 
 /**
  * HACK
@@ -55,6 +57,7 @@ $ff_plugin = new fusionforge_compatPlugin();
 $ff_plugin->loaded();
 
 $manager = new MediawikiManager(new MediawikiDao());
+$language_manager = new MediawikiLanguageManager(new MediawikiLanguageDao());
 
 $forbidden_permissions = array(
     'editmyusercss',
@@ -195,7 +198,13 @@ $wgShowExceptionDetails      = true ;
 // disable language selection
 $wgHiddenPrefs[] = 'language';
 $user            = UserManager::instance()->getCurrentUser();
-$wgLanguageCode  = substr($user->getLocale(), 0, 2);
+
+$used_language = $language_manager->getUsedLanguageForProject($group);
+if ($used_language) {
+    $wgLanguageCode  = substr($used_language, 0, 2);
+} else {
+    $wgLanguageCode  = substr($user->getLocale(), 0, 2);
+}
 
 $wgHtml5          = false;
 $wgStyleDirectory = forge_get_config('codendi_dir').forge_get_config('mw_style_path', 'mediawiki');
