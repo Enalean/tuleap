@@ -1,3 +1,6 @@
+Version 3.87 - Tuleap 8.7
+    * request #8444: User account created from LDAP does not use generated password
+
 Version 3.86 - Tuleap 8.7
     * request #7951: Mail confirmation code are not properly generated for LDAP validation email
 
