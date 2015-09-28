@@ -1,4 +1,13 @@
-Version 8.6-2 (Monday, September 20th 2015)
+Version 8.6-3 (Monday, September 28th 2015)
+	== Bug Fix ==
+	* request #8414: Typo in JabbeX configuration leading to error when browsing
+	* request #8434: Fatal error when displaying an artifact that has been ranked in a deleted milestone
+	* request #8437: A.D. homepage displays a welcome screen instead of plannings
+	* request #8441: Issue with transclusion plugin when using mediawiki 1.23
+	* request #7951: Ldap validation email
+	* request #8435: Reference doesn't work when project is explicitly set
+
+Version 8.6-2 (Monday, September 21th 2015)
 
 	== Bug Fix ==
 	* request #8429: API REST : missing is_hidden value for static sb fields
