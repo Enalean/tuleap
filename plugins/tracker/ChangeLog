@@ -1,3 +1,6 @@
+Version 5.700 - Tuleap 8.7
+    * story #8372: update /artifacts/:id/changesets and add /users/:id/preferences
+
 Version 5.699 - Tuleap 8.7
     * request #8442: Tracker service does not send mail anymore
 

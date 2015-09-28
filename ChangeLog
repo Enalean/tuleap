@@ -1,7 +1,9 @@
 Version 8.7 (not released yet)
+
 	== Enhancement ==
 	* story #8338: Wiki service can send truncated notifications
 	* story #8338: Truncate Trackers notifications
+	* story #8372: update /artifacts/:id/changesets and add /users/:id/preferences
 
 	== Bug fix ==
 	* request #8423: FlamingParrot is not necessary to use Tuleap
@@ -12,7 +14,7 @@ Version 8.7 (not released yet)
 	* request #8445: Fix errors at the approval of a pending user
 
 	== Plugins ==
-	* tracker: 5.699
+	* tracker: 5.700
 	* agiledashboard: 1.279
 	* git: 4.81
 	* docman: 2.26.85
