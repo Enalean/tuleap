@@ -171,8 +171,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      *
      * @return Tuleap\Tracker\REST\ChangesetRepresentationCollection
      */
-    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact, $fields, $offset, $limit) {
+    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact, $fields, $offset, $limit, $reverse_order) {
         $all_changesets = $artifact->getChangesets();
+
+        if ($reverse_order) {
+            $all_changesets = array_reverse($all_changesets);
+        }
+
         return new Tuleap\Tracker\REST\ChangesetRepresentationCollection(
             $this->mapFilterSlice(
                 $all_changesets,

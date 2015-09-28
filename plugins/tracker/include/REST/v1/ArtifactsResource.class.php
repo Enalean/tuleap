@@ -51,6 +51,8 @@ class ArtifactsResource extends AuthenticatedResource {
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
+    const ORDER_ASC      = 'asc';
+    const ORDER_DESC     = 'desc';
 
     const VALUES_FORMAT_COLLECTION = 'collection';
     const VALUES_FORMAT_BY_FIELD   = 'by_field';
@@ -179,14 +181,21 @@ class ArtifactsResource extends AuthenticatedResource {
      * @param string $fields Whether you want to fetch all fields or just comments {@from path}{@choice all,comments}
      * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
      * @param int    $offset Position of the first element to display {@from path}{@min 0}
-     *
+     * @param string $order  By default the changesets are returned by Changeset Id ASC. Set this parameter to either ASC or DESC {@from path}{@choice asc,desc}
      * @return array {@type Tuleap\Tracker\REST\ChangesetRepresentation}
      */
-    public function getArtifactChangesets($id, $fields = Changeset::FIELDS_ALL, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+    public function getArtifactChangesets(
+        $id,
+        $fields = Changeset::FIELDS_ALL,
+        $limit  = 10,
+        $offset = self::DEFAULT_OFFSET,
+        $order  = self::ORDER_ASC
+    ) {
         $this->checkAccess();
-        $user       = UserManager::instance()->getCurrentUser();
-        $artifact   = $this->getArtifactById($user, $id);
-        $changesets = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit);
+        $user          = UserManager::instance()->getCurrentUser();
+        $artifact      = $this->getArtifactById($user, $id);
+        $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
+        $changesets    = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit, $reverse_order);
 
         $this->sendAllowHeadersForChangesets($artifact);
         Header::sendPaginationHeaders($limit, $offset, $changesets->totalCount(), self::MAX_LIMIT);
