@@ -1,3 +1,6 @@
+Version 4.81 - Tuleap 8.7
+    * request #8447: README files can be rendered in subdirectories
+
 Version 4.80 - Tuleap 8.7
     * Enhance UX of mass update repositories
 
