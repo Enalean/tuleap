@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -135,7 +135,7 @@ class GitViews_ShowRepo_Content {
         $repository_path   = ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/' . $this->repository->getPath();
         $git_markdown_file = new GitMarkdownFile(new Git_Exec($repository_path, $repository_path));
 
-        $readme_file = $git_markdown_file->getReadmeFileContent($repository_path, $node, $commit_sha1);
+        $readme_file = $git_markdown_file->getReadmeFileContent($node, $commit_sha1);
 
         if ($readme_file) {
             $presenter = new ReadmeMarkdownPresenter($readme_file['file_name'], $readme_file['file_content']);

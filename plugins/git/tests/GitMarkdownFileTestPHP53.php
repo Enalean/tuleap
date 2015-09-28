@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,9 +37,9 @@ class GitMarkdownFileTestPHP53 extends TuleapTestCase {
 
     public function testGetMarkdownFilesContent() {
         $files_names = array("test.java", "test.markdown", "readme.md", "test.c", "test.mkd");
-        stub($this->git_exec)->lsTree('commit', 'node')->returns($files_names);
+        stub($this->git_exec)->lsTree('commit', '')->returns($files_names);
 
-        $test_md_content = "Content of test.md\n==========";
+        $test_md_content = "Content of readme.md\n==========";
         stub($this->git_exec)->getFileContent('commit', 'readme.md')->returns($test_md_content);
 
         $expected_result = array(
@@ -47,6 +47,21 @@ class GitMarkdownFileTestPHP53 extends TuleapTestCase {
             'file_content' => Michelf\MarkdownExtra::defaultTransform($test_md_content)
         );
 
-        $this->assertEqual($this->git_markdown_file->getReadmeFileContent('path', 'node', 'commit'), $expected_result);
+        $this->assertEqual($this->git_markdown_file->getReadmeFileContent('', 'commit'), $expected_result);
+    }
+
+    public function itRendersMarkdownFilesInSubDirectory() {
+        $files_names = array("subdir/readme.md");
+        stub($this->git_exec)->lsTree('commit', 'subdir/')->returns($files_names);
+
+        $test_md_content = "Content of readme.text";
+        stub($this->git_exec)->getFileContent('commit', 'subdir/readme.md')->returns($test_md_content);
+
+        $expected_result = array(
+            'file_name'    => "subdir/readme.md",
+            'file_content' => Michelf\MarkdownExtra::defaultTransform($test_md_content)
+        );
+
+        $this->assertEqual($this->git_markdown_file->getReadmeFileContent('subdir/', 'commit'), $expected_result);
     }
 }
