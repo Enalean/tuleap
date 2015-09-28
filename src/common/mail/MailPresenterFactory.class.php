@@ -182,11 +182,13 @@ class MailPresenterFactory {
      * @return MailRegisterByUserPresenter
      */
     private function createApprovalEmailPresenter(array $attributes_presenter) {
+        $base_url   = $attributes_presenter["base_url"];
         $login      = $attributes_presenter["login"];
 
         include($GLOBALS['Language']->getContent('admin/new_account_email'));
 
         $presenter = new MailRegisterByAdminApprovalPresenter(
+            $attributes_presenter["logo_url"],
             $title,
             $section_one,
             $section_two,
