@@ -653,9 +653,12 @@ class FRSFileFactory extends Error {
         $sub_dir = $this->getUploadSubDirectory($release);
         $prefix  = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
         $status  = true;
+        $error   = array();
         $params  = array('status'         => &$status,
                          'source_path'    => $this->getStagingPath($file),
-                         'archive_prefix' => $prefix);
+                         'archive_prefix' => $prefix,
+                         'error'          => &$error
+                );
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
         if ($params['status']) {
             return true;
