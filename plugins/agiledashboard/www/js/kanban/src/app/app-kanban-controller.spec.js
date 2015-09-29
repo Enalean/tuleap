@@ -84,6 +84,7 @@ describe('KanbanCtrl - ', function() {
 
         var fake_event;
         beforeEach(function() {
+            SharedPropertiesService.getUserId.andReturn(102);
             fake_event = {
                 which: 1,
                 preventDefault: jasmine.createSpy("preventDefault")
@@ -105,14 +106,14 @@ describe('KanbanCtrl - ', function() {
                 color: 'Indianhood'
             });
 
-            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(56, 4288, jasmine.any(Function));
+            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(102, 56, 4288, jasmine.any(Function));
         });
 
         describe("callback -", function() {
             var fake_updated_item;
 
             beforeEach(function() {
-                NewTuleapArtifactModalService.showEdition.andCallFake(function(a, b, callback) {
+                NewTuleapArtifactModalService.showEdition.andCallFake(function(c, a, b, callback) {
                     callback();
                 });
                 KanbanItemService.getItem.andReturn(deferred.promise);

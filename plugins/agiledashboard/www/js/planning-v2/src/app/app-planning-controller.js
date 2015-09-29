@@ -414,6 +414,7 @@
                 $event.preventDefault();
 
                 NewTuleapArtifactModalService.showEdition(
+                    SharedPropertiesService.getUserId(),
                     backlog_item.artifact.tracker.id,
                     backlog_item.artifact.id,
                     $scope.refreshBacklogItem
