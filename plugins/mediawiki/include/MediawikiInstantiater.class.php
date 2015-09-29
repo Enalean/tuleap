@@ -56,16 +56,22 @@ class MediaWikiInstantiater {
     /** @var MediawikiManager */
     private $mediawiki_manager;
 
+    /** @var MediawikiLanguageManager */
+    private $language_manager;
+
     /**
-     * @param string $project
+     * @param Project|string $project
+     * @param MediawikiManager $mediawiki_manager
+     * @param MediawikiLanguageManager $language_manager
      */
-    public function __construct(Project $project, MediawikiManager $mediawiki_manager) {
+    public function __construct(Project $project, MediawikiManager $mediawiki_manager, MediawikiLanguageManager $language_manager) {
         $this->logger              = new BackendLogger();
         $this->project             = $project;
         $this->project_name        = $project->getUnixName();
         $this->project_id          = $project->getID();
         $this->dao                 = new MediawikiDao();
         $this->mediawiki_manager   = $mediawiki_manager;
+        $this->language_manager    = $language_manager;
         $this->resource_restrictor = new MediawikiSiteAdminResourceRestrictor(
             new MediawikiSiteAdminResourceRestrictorDao(),
             ProjectManager::instance()
@@ -85,9 +91,22 @@ class MediaWikiInstantiater {
         if ($this->initMediawiki()) {
             $this->seedUGroupMappingFromTemplate($ugroup_mapping);
             $this->setReadWritePermissionsFromTemplate($ugroup_mapping);
+            $this->setLanguageFromTemplate();
         }
     }
 
+    private function setLanguageFromTemplate() {
+        $template_project = ProjectManager::instance()->getProject($this->project->getTemplate());
+
+        if (! $template_project) {
+            return;
+        }
+
+        $this->language_manager->saveLanguageOption(
+            $this->project,
+            $this->language_manager->getUsedLanguageForProject($template_project)
+        );
+    }
 
     private function initMediawiki() {
         try {
