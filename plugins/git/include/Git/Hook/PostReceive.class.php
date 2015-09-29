@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -41,18 +41,30 @@ class Git_Hook_PostReceive {
 
     /** @var Git_Hook_ParseLog */
     private $parse_log;
+
+    /** @var Git_SystemEventManager */
+    private $system_event_manager;
     
     public function __construct(
             Git_Hook_LogAnalyzer $log_analyzer,
             GitRepositoryFactory $repository_factory,
             UserManager $user_manager,
             Git_Ci_Launcher $ci_launcher,
-            Git_Hook_ParseLog $parse_log) {
-        $this->log_analyzer       = $log_analyzer;
-        $this->repository_factory = $repository_factory;
-        $this->user_manager       = $user_manager;
-        $this->ci_launcher        = $ci_launcher;
-        $this->parse_log          = $parse_log;
+            Git_Hook_ParseLog $parse_log,
+            Git_SystemEventManager $system_event_manager) {
+        $this->log_analyzer         = $log_analyzer;
+        $this->repository_factory   = $repository_factory;
+        $this->user_manager         = $user_manager;
+        $this->ci_launcher          = $ci_launcher;
+        $this->parse_log            = $parse_log;
+        $this->system_event_manager = $system_event_manager;
+    }
+
+    public function processGrokMirrorActions($repository_path) {
+        $repository = $this->repository_factory->getFromFullPath($repository_path);
+        if ($repository !== null) {
+            $this->system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
+        }
     }
 
     public function execute($repository_path, $user_name, $oldrev, $newrev, $refname) {
@@ -62,6 +74,7 @@ class Git_Hook_PostReceive {
             if ($user === null) {
                 $user = new PFUser(array('user_id' => 0));
             }
+            $this->sendMail($oldrev, $newrev, $refname);
             $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
         }
     }
@@ -71,5 +84,11 @@ class Git_Hook_PostReceive {
 
         $push_details = $this->log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
         $this->parse_log->execute($push_details);
+    }
+
+    private function sendMail($oldrev, $newrev, $refname) {
+        exec('/usr/share/codendi/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .
+            escapeshellarg($newrev) . ' ' . escapeshellarg($refname));
+
     }
 }

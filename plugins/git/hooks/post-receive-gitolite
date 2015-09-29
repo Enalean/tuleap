@@ -17,5 +17,8 @@
 
 #. /usr/share/git-core/contrib/hooks/post-receive-email
 # !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)
-. /usr/share/codendi/plugins/git/hooks/post-receive 2>/dev/null
+git_dir_path=$(git rev-parse --git-dir 2>/dev/null)
+repository_path=$(cd $git_dir_path; pwd)
+
+sudo -u codendiadm /usr/share/codendi/plugins/git/hooks/post-receive.php $repository_path 2> /dev/null
 # END OF NEEDED CODENDI BLOCK

@@ -47,46 +47,6 @@ class GitBackendTest extends TuleapTestCase {
         @unlink($this->fixturesPath.'/tmp/hooks/post-receive');
     }
 
-    public function testIncludePostReceive() {
-        // Copy reference hook to temporay path
-        $repoPath = $this->fixturesPath.'/tmp';
-        $hookPath = $repoPath.'/hooks/post-receive';
-        copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
-             
-        $driver = new MockGitDriver($this);
-
-        $backend = new GitBackendTestVersion($this);
-        $backend->setReturnValue('getDriver', $driver);
-
-        $backend->deployPostReceive($repoPath);
-
-        // verify that post-receive codendi hook is added
-        $expect = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
-        $lineFound = false;
-        $lines = file($hookPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($lines as $line) {
-            if (strpos($line, $expect) !== false) {
-                $lineFound = true;
-            }
-        }
-        $this->assertTrue($lineFound, "post-receive hook must contains $expect");
-    }
-
-    public function testPostReceiveIsExecutable() {
-        // Copy reference hook to temporay path
-        $repoPath = $this->fixturesPath.'/tmp';
-        $hookPath = $repoPath.'/hooks/post-receive';
-        copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
-
-        $driver = new MockGitDriver($this);
-        $driver->expectOnce('activateHook', array('post-receive', $repoPath));
-
-        $backend = new GitBackendTestVersion($this);
-        $backend->setReturnValue('getDriver', $driver);
-
-        $backend->deployPostReceive($repoPath);
-    }
-
     public function testAddMailingShowRev() {        
         $GLOBALS['sys_https_host'] = 'codendi.org';
 
@@ -108,40 +68,6 @@ class GitBackendTest extends TuleapTestCase {
         $backend->setReturnValue('getDriver', $driver);
 
         $backend->setUpMailingHook($repo);
-    }
-
-    /**
-     * This is almost the same test than testAddMailingShowRev but
-     * through the higher level setUpRepository.
-     * What we want to be sure it that the right repository id is set.
-     */
-    public function testSetUpRepositoryConfigWithRightRepoId() {
-        $GLOBALS['sys_https_host'] = 'codendi.org';
-
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getId', 1750);
-
-        // Use real git object because we need to store values (id)
-        $repo = new GitRepository();
-        $repo->setPath('prj/repo.git');
-        $repo->setName('repo');
-        $repo->setProject($prj);
-        $repo->setId(290);
-
-        $dao = new MockGitDao($this);
-        $dao->expectOnce('save');
-        $dao->setReturnValue('save', 290); // The id we expect below
-
-        $driver = new MockGitDriver($this);
-        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
-
-        $backend = new GitBackend4SetUp($this);
-        $backend->setUp($this->url_manager);
-        $backend->setGitRootPath(Git_Backend_Interface::GIT_ROOT_PATH);
-        $backend->setReturnValue('getDriver', $driver);
-        $backend->setReturnValue('getDao', $dao);
-
-        $backend->setUpRepository($repo);
     }
 
     public function testArchiveCreatesATarGz() {
