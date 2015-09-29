@@ -1,3 +1,6 @@
+Version 0.88 - Tuleap 8.7
+    * story #8433: Have a warning message and a welcome page choice if no language defined in Mediawiki
+
 Version 0.87 - Tuleap 8.7
     * story #8433: Use language defined for mediawiki
 
