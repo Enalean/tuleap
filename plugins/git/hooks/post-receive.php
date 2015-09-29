@@ -39,10 +39,11 @@ $system_event_manager   = new Git_SystemEventManager(
     $git_repository_factory
 );
 
-$git_plugin      = PluginManager::instance()->getPluginByName('git');
-$logger          = $git_plugin->getLogger();
-$repository_path = $argv[1];
-$git_exec        = new Git_Exec($repository_path, $repository_path);
+$git_plugin                 = PluginManager::instance()->getPluginByName('git');
+$logger                     = $git_plugin->getLogger();
+$repository_path            = $argv[1];
+$git_exec                   = new Git_Exec($repository_path, $repository_path);
+$git_repository_url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
 $user_name = getenv('GL_USER');
 if ($user_name === false) {
@@ -74,8 +75,10 @@ $post_receive = new Git_Hook_PostReceive(
         ),
         $logger
     ),
+    $git_repository_url_manager,
     $system_event_manager
 );
+$mail_builder = new MailBuilder(TemplateRendererFactory::build());
 
 $post_receive->processGrokMirrorActions($repository_path);
 
@@ -84,7 +87,7 @@ while ($count <= COUNT_THRESHOLD && $line = fgets(STDIN)) {
     $count += 1;
     list($old_rev, $new_rev, $refname) = explode(' ', trim($line));
     try {
-        $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);
+        $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname, $mail_builder);
     } catch (Exception $exception) {
         $exit_status_code = 1;
         $logger->error("[git post-receive] $repository_path $user_name $refname $old_rev $new_rev " . $exception->getMessage());

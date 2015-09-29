@@ -128,10 +128,6 @@ prep_for_email()
 			# annotated tag
 			refname_type="annotated tag"
 			short_refname=${refname##refs/tags/}
-			# change recipients
-			if [ -n "$announcerecipients" ]; then
-				recipients="$announcerecipients"
-			fi
 			;;
 		refs/heads/*,commit)
 			# branch
@@ -153,21 +149,6 @@ prep_for_email()
 			return 1
 			;;
 	esac
-
-	# Check if we've got anyone to send to
-	if [ -z "$recipients" ]; then
-		case "$refname_type" in
-			"annotated tag")
-				config_name="hooks.announcelist"
-				;;
-			*)
-				config_name="hooks.mailinglist"
-				;;
-		esac
-		echo >&2 "*** $config_name is not set so no email will be sent"
-		echo >&2 "*** for $refname update $oldrev->$newrev"
-		return 1
-	fi
 
 	return 0
 }
@@ -231,18 +212,14 @@ generate_email()
 
 generate_email_header()
 {
-	sender=$(getent passwd $(whoami) | cut -d':' -f5)
 	# --- Email (all stdout will be the email)
 	# Generate header
 	cat <<-EOF
-	From: $sender
-	To: $recipients
-	Subject: ${emailprefix}$refname_type $short_refname ${change_type}d $authors
-	X-Git-Refname: $refname
-	X-Git-Reftype: $refname_type
-	X-Git-Oldrev: $oldrev
-	X-Git-Newrev: $newrev
-
+	${emailprefix}$refname_type $short_refname ${change_type}d $authors
+	X-Git-Refname:$refname
+	X-Git-Reftype:$refname_type
+	X-Git-Oldrev:$oldrev
+	X-Git-Newrev:$newrev
 	The $refname_type, $short_refname has been ${change_type}d
 	EOF
 }
@@ -719,8 +696,6 @@ then
 	projectdesc="UNNAMED PROJECT"
 fi
 
-recipients=$(git config hooks.mailinglist)
-announcerecipients=$(git config hooks.announcelist)
 envelopesender=$(git config hooks.envelopesender)
 emailprefix=$(git config hooks.emailprefix || echo '[SCM] ')
 custom_showrev=$(git config hooks.showrev)
@@ -729,5 +704,5 @@ maxlines=$(git config hooks.emailmaxlines)
 # Expect 3 parameters: oldrev newrev refname
 if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
 	prep_for_email $1 $2 $3 || continue
-	generate_email $maxlines | send_mail
+	generate_email $maxlines
 fi
