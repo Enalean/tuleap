@@ -1,3 +1,6 @@
+Version 4.84 - Tuleap 8.7
+    * story #8340: Move all operations done after a Git push in a single PHP script
+
 Version 4.83 - Tuleap 8.7
     * story #8332: Fix regular mirroring
 
