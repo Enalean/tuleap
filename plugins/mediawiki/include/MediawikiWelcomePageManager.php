@@ -35,10 +35,27 @@ class MediawikiWelcomePageManager {
     }
 
     public function displayWelcomePage(Project $project, HTTPRequest $request) {
-        if (! $this->language_manager->getUsedLanguageForProject($project)) {
+        if (! $this->getLanguageForProject($project)) {
             $this->displayAlternativeWelcomePage($project, $request);
             $this->exterminate();
         }
+    }
+
+    private function getLanguageForProject(Project $project) {
+        $used_language = $this->language_manager->getUsedLanguageForProject($project);
+
+        if ($used_language) {
+            return $used_language;
+        }
+
+        $languages = $this->language_manager->getAvailableLanguages();
+
+        if (count($languages) == 1) {
+            $this->language_manager->saveLanguageOption($project, $languages[0]);
+            return $languages[0];
+        }
+
+        return;
     }
 
     private function displayAlternativeWelcomePage(Project $project, HTTPRequest $request) {

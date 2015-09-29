@@ -49,20 +49,37 @@ class MediawikiWelcomePageManagerTest extends TuleapTestCase {
         $this->service              = mock('ServiceMediawiki');
 
         stub($this->project)->getService(MediaWikiPlugin::SERVICE_SHORTNAME)->returns($this->service);
-        stub($this->language_manager)->getAvailableLanguages()->returns(array('en_US', 'fr_FR'));
     }
 
-    public function itDisplaysTheAlternativeWelcomePageIfNoLanguageIsDefinedForProject() {
+    public function _itDisplaysTheAlternativeWelcomePageIfNoLanguageIsDefinedForProject() {
+        stub($this->language_manager)->getAvailableLanguages()->returns(array('en_US', 'fr_FR'));
         stub($this->language_manager)->getUsedLanguageForProject($this->project)->returns(null);
 
         expect($this->service)->renderInPage()->once();
         $this->welcome_page_manager->displayWelcomePage($this->project, $this->request);
     }
 
-    public function itDoesNotDisplayTheAlternativeWelcomePageIfALanguageIsDefinedForProject() {
+    public function _itDoesNotDisplayTheAlternativeWelcomePageIfALanguageIsDefinedForProject() {
+        stub($this->language_manager)->getAvailableLanguages()->returns(array('en_US', 'fr_FR'));
         stub($this->language_manager)->getUsedLanguageForProject($this->project)->returns('en_US');
 
         expect($this->service)->renderInPage()->never();
+        $this->welcome_page_manager->displayWelcomePage($this->project, $this->request);
+    }
+
+    public function itDoesNotDisplayTheAlternativeWelcomePageIfThereIsOnlyOnePossibleLanguageForProject() {
+        stub($this->language_manager)->getAvailableLanguages()->returns(array('en_US'));
+        stub($this->language_manager)->getUsedLanguageForProject($this->project)->returns(null);
+
+        expect($this->service)->renderInPage()->never();
+        $this->welcome_page_manager->displayWelcomePage($this->project, $this->request);
+    }
+
+    public function itStoresTheLanguageIfThereIsOnlyOnePossibleLanguageForProject() {
+        stub($this->language_manager)->getAvailableLanguages()->returns(array('en_US'));
+        stub($this->language_manager)->getUsedLanguageForProject($this->project)->returns(null);
+
+        expect($this->language_manager)->saveLanguageOption($this->project, 'en_US')->once();
         $this->welcome_page_manager->displayWelcomePage($this->project, $this->request);
     }
 }
