@@ -26,7 +26,6 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         }
 
         $tracker_ids = $this->da->escapeIntImplode(array_keys($tracker_mapping));
-        ksort($tracker_ids);
 
         $sql = "SELECT *
                 FROM plugin_agiledashboard_kanban_configuration
