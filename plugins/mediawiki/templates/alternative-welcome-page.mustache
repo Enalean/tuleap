@@ -1,0 +1,15 @@
+<p class="alert alert-error">
+    <i class="icon-warning-sign icon-white"></i>
+    {{# is_administrator }}
+        {{{ admin_warning_message }}}
+    {{/ is_administrator }}
+    {{^ is_administrator }}
+        {{ warning_message }}
+    {{/is_administrator}}
+</p>
+<p>{{ intro_text }}</p>
+<ul>
+    {{# available_welcome_pages }}
+        <li><a href="{{ url }}">{{ page_name }}</a></li>
+    {{/ available_welcome_pages}}
+</ul>
