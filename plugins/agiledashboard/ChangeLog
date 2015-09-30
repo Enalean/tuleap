@@ -1,3 +1,6 @@
+Version 1.284 - Tuleap 8.7
+    * request #8309: Get rid of PrototypeJS (getText)
+
 Version 1.283 - Tuleap 8.7
     * request #8452: Convert Show
 

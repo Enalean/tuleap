@@ -4,6 +4,7 @@ Version 8.7 (not released yet)
 	* story #8338: Wiki service can send truncated notifications
 	* story #8338: Truncate Trackers notifications
 	* story #8372: update /artifacts/:id/changesets and add /users/:id/preferences
+	* request #8309: Get rid of PrototypeJS (getText)
 
 	== Bug fix ==
 	* request #8423: FlamingParrot is not necessary to use Tuleap
@@ -16,7 +17,7 @@ Version 8.7 (not released yet)
 
 	== Plugins ==
 	* tracker: 5.700
-	* agiledashboard: 1.283
+	* agiledashboard: 1.284
 	* git: 4.85
 	* docman: 2.26.85
 	* ldap: 3.87
