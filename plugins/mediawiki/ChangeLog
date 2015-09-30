@@ -1,3 +1,6 @@
+Version 0.90 - Tuleap 8.7
+    * story #8433: On project creation, inherit mediawiki language
+
 Version 0.89 - Tuleap 8.7
     * story #8433: automatically set language for mediawiki if there is only one possibility
 
