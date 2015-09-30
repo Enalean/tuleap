@@ -12,6 +12,7 @@ Version 8.7 (not released yet)
 	* request #8414: Typo in JabbeX configuration leading to error when browsing
 	* request #8435: Reference doesn't work when project is explicitly set
 	* request #8445: Fix errors at the approval of a pending user
+	* request #8450: tuleap utility could be used in CentOS 5
 
 	== Plugins ==
 	* tracker: 5.700
