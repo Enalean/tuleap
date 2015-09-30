@@ -1,3 +1,7 @@
 #!/bin/bash
 
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php $@
+if [ -d '/usr/share/tuleap' ]; then
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php $@
+else
+    /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/tuleap.php $@
+fi
