@@ -42,8 +42,7 @@
             use_angular_new_modal       = SharedPropertiesService.getUseAngularNewModal(),
             pagination_limit            = 50,
             pagination_offset           = 0,
-            backlog_pagination_offset   = 0,
-            show_closed_milestone_items = true;
+            backlog_pagination_offset   = 0;
 
         var self = this;
 
@@ -60,8 +59,10 @@
                 loading         : false
             },
             compact_view_key     : 'compact-view',
-            current_milestone    : {},
             detailed_view_key    : 'detailed-view',
+            show_closed_view_key : 'show-closed-view',
+            hide_closed_view_key : 'hide-closed-view',
+            current_milestone    : {},
             filter_terms         : '',
             items                : {},
             loading_milestones   : true,
@@ -105,7 +106,7 @@
             showEditModal                         : showEditModal,
             switchViewMode                        : switchViewMode,
             toggle                                : toggle,
-            toggleClosedMilestoneItems            : toggleClosedMilestoneItems
+            switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode
         });
 
         $scope.treeOptions = {
@@ -113,13 +114,14 @@
             dropped: dropped
         };
 
-        initViewMode();
+        initViewModes();
         loadBacklog();
         displayBacklogItems();
         displayMilestones();
 
-        function initViewMode() {
-            $scope.current_view_class = $scope.compact_view_key;
+        function initViewModes() {
+            $scope.current_view_class        = $scope.compact_view_key;
+            $scope.current_closed_view_class = $scope.show_closed_view_key;
 
             if (SharedPropertiesService.getViewMode()) {
                 $scope.current_view_class = SharedPropertiesService.getViewMode();
@@ -129,6 +131,10 @@
         function switchViewMode(view_mode) {
             $scope.current_view_class = view_mode;
             UserPreferencesService.setPreference(user_id, 'agiledashboard_planning_item_view_mode_' + project_id, view_mode);
+        }
+
+        function switchClosedMilestoneItemsViewMode(view_mode) {
+            $scope.current_closed_view_class = view_mode;
         }
 
         function isMilestoneContext() {
@@ -528,13 +534,9 @@
             });
         }
 
-        function toggleClosedMilestoneItems() {
-            show_closed_milestone_items = (show_closed_milestone_items === true) ? false : true;
-        }
-
         function canShowBacklogItem(backlog_item) {
             if (typeof backlog_item.isOpen === 'function') {
-                return backlog_item.isOpen() || show_closed_milestone_items;
+                return backlog_item.isOpen() || $scope.current_closed_view_class === $scope.show_closed_view_key;
             }
 
             return true;

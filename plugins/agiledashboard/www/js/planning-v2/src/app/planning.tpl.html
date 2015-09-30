@@ -100,6 +100,7 @@
         <div class="milestones">
             <div class="planning-header">
                 <h2 translate>Milestones</h2>
+
                 <button ng-if="use_angular_new_modal && submilestone_type  && backlog.user_can_move_cards"
                     class="btn btn-small"
                     ng-click="showAddSubmilestoneModal($event, submilestone_type)"
@@ -107,13 +108,11 @@
                     <i class="icon-plus"></i> <span translate>Add a {{ submilestone_type.label }}</span>
                 </button>
 
-                <button class="btn items-toggle-button btn-small"
-                    data-toggle="button"
-                    ng-if="milestones.length > 0"
-                    ng-click="toggleClosedMilestoneItems()"
-                >
-                    <i class="icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
-                </button>
+                <div ng-if="milestones.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
+                    <button type="button" class="btn btn-small" ng-class="{active: current_closed_view_class === show_closed_view_key}" ng-click="switchClosedMilestoneItemsViewMode(show_closed_view_key)" title="{{ 'Show closed items' | translate }}"><i class="icon-eye-open"></i> <span translate>Show closed items</span></button>
+                    <button type="button" class="btn btn-small" ng-class="{active: current_closed_view_class === hide_closed_view_key}" ng-click="switchClosedMilestoneItemsViewMode(hide_closed_view_key)" title="{{ 'Hide closed items' | translate }}"><i class="icon-eye-close"></i> <span translate>Hide closed items</span></button>
+                </div>
+
                 <div class="clearfix"></div>
             </div>
             <div translate class="alert alert-warning" ng-if="displayUserCantPrioritizeForMilestones()">
