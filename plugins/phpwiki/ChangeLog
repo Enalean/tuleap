@@ -1,3 +1,6 @@
+Version 0.8 - Tuleap 8.7
+    * story #8338: PHPWiki plugin can send truncated notifications
+
 Version 0.7 - Tuleap 8.6
     * story #7883: PHPWiki plugin works with Docman
 
