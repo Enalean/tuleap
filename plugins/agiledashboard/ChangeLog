@@ -1,3 +1,6 @@
+Version 1.283 - Tuleap 8.7
+    * request #8452: Convert Show
+
 Version 1.282 - Tuleap 8.7
     * Fix angular version dependency in bower.json files
 
