@@ -18,15 +18,10 @@
  */
 
 document.observe('dom:loaded', function () {
-    var planner = $('planner'),
-        milestone_planning = $('planning'),
+    var milestone_planning = $('planning'),
         top_milestone_planning = $('topplanning'),
         milestone_content = $('blcontent'),
         top_milestone_content = $('topblcontent');
-
-    if (planner) {
-        new tuleap.agiledashboard.Planning(planner);
-    }
 
     if (milestone_content) {
         tuleap.agiledashboard.MilestoneContent(milestone_content);
