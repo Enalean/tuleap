@@ -62,7 +62,7 @@ msgid "Filter..."
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "Hide \"Closed\" Items"
+msgid "Hide closed items"
 msgstr ""
 
 #: src/app/backlog-item/backlog-item-details.tpl.html
@@ -87,6 +87,10 @@ msgstr ""
 
 #: src/app/planning.tpl.html
 msgid "Planning"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Show closed items"
 msgstr ""
 
 #: src/app/planning.tpl.html
