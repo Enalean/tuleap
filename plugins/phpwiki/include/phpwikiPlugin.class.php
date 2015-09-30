@@ -50,6 +50,8 @@ class phpwikiPlugin extends Plugin {
         }
 
         $this->addHook('phpwiki_redirection');
+
+        $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
     }
 
     private function isDocmanPluginActivated() {
@@ -209,5 +211,12 @@ class phpwikiPlugin extends Plugin {
 
     private function getPHPWikiMigratorDao() {
         return new PHPWikiMigratorDao();
+    }
+
+    public function services_truncated_emails($params) {
+        $project = $params['project'];
+        if ($project->usesService($this->getServiceShortname())) {
+            $params['services'][] = $GLOBALS['Language']->getText('plugin_phpwiki', 'service_lbl_key');
+        }
     }
 }
