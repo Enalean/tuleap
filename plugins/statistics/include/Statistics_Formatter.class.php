@@ -56,7 +56,7 @@ class Statistics_Formatter {
      */
     function addLine($line) {
         foreach ($line as $element) {
-            $this->content .= tocsv($element).$this->separator;
+            $this->content .= tocsv($element, $this->separator).$this->separator;
         }
         $this->content = substr($this->content, 0, -1);
         $this->addEmptyLine();
