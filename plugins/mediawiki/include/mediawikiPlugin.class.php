@@ -680,7 +680,14 @@ class MediaWikiPlugin extends Plugin {
 
         include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
-        return new MediaWikiInstantiater($project, $this->getMediawikiManager());
+        return new MediaWikiInstantiater($project, $this->getMediawikiManager(), $this->getMediawikiLanguageManager());
+    }
+
+	private function getMediawikiLanguageManager() {
+        require_once 'MediawikiLanguageManager.php';
+        require_once 'MediawikiLanguageDao.php';
+
+        return new MediawikiLanguageManager(new MediawikiLanguageDao());
     }
 
     public function plugin_statistics_service_usage($params) {
