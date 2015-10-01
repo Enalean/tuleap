@@ -680,7 +680,12 @@ class MediaWikiPlugin extends Plugin {
 
         include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
-        return new MediaWikiInstantiater($project, $this->getMediawikiManager(), $this->getMediawikiLanguageManager());
+        return new MediaWikiInstantiater(
+            $project,
+            $this->getMediawikiManager(),
+            $this->getMediawikiLanguageManager(),
+            $this->getMediawikiVersionManager()
+        );
     }
 
 	private function getMediawikiLanguageManager() {
@@ -903,7 +908,8 @@ class MediaWikiPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
                 $params['dependencies'] = array(
                     $this->getMediawikiMigrator(),
-                    $this->getProjectManager()
+                    $this->getProjectManager(),
+                    $this->getMediawikiVersionManager()
                 );
                 break;
             default:
@@ -952,6 +958,13 @@ class MediaWikiPlugin extends Plugin {
      */
     public function site_access_change($params) {
         $this->getMediawikiManager()->updateSiteAccess($params['old_value']);
+    }
+
+    private function getMediawikiVersionManager() {
+        require_once 'MediawikiVersionManager.php';
+        require_once 'MediawikiVersionDao.php';
+
+        return new MediawikiVersionManager(new MediawikiVersionDao());
     }
 
 }

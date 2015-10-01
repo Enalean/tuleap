@@ -166,3 +166,9 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_access_control (
     ugroup_id INT(11) NOT NULL,
     INDEX plugin_mediawiki_access_control_idx(project_id, access)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_mediawiki_version (
+    project_id INT(11) UNSIGNED PRIMARY KEY,
+    mw_version VARCHAR(10),
+    INDEX idx_version (mw_version(4))
+) ENGINE=InnoDB
