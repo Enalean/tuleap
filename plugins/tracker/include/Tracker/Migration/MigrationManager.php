@@ -137,7 +137,7 @@ class Tracker_Migration_MigrationManager {
             $this->getArtifactCreator($fields_validator, $changeset_dao),
             $this->getChangesetCreator($fields_validator, $changeset_dao),
             $this->form_element_factory,
-            new Tracker_Artifact_XMLImport_XMLImportHelper($this->user_manager),
+            new Tracker_XMLImport_XMLImportHelper($this->user_manager),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $this->logger,
             false

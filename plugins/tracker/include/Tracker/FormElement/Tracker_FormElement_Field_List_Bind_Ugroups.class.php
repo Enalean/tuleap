@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -535,7 +535,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
             $item = $items->addChild('item');

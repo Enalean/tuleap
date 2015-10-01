@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportHelper extends XMLImportHelper {
+class Tracker_XMLImport_XMLImportHelper extends XMLImportHelper {
 
     /** @var UserManager */
     private $user_manager;

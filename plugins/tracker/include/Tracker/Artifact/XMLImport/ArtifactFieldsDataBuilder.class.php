@@ -53,7 +53,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
+        Tracker_XMLImport_XMLImportHelper $xml_import_helper,
         Tracker $tracker,
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,

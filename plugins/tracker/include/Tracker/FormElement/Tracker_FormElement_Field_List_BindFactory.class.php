@@ -280,12 +280,23 @@ class Tracker_FormElement_Field_List_BindFactory {
         if (isset($xml->default_values)) {
             $row['default_values'] = array();
             foreach ($xml->default_values->value as $default_value) {
-                $ID = (string)$default_value['REF'];
-                if (isset($xmlMapping[$ID])) {
-                    $row['default_values'][$ID] = $xmlMapping[$ID];
+
+                if (isset($default_value['REF'])) {
+                    $ID = (string)$default_value['REF'];
+                    if (isset($xmlMapping[$ID])) {
+                        $row['default_values'][$ID] = $xmlMapping[$ID];
+                    }
+                } else {
+                    $xml_helper = new Tracker_XMLImport_XMLImportHelper(UserManager::instance());
+                    $user       = $xml_helper->getUser($default_value);
+
+                    $row['default_values'][$user->getId()] = new Tracker_FormElement_Field_List_Bind_UsersValue(
+                        $user->getId()
+                    );
                 }
             }
         }
+
         return $this->getInstanceFromRow($row);
     }
 

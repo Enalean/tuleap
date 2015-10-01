@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
     public function itExportsEmptyUgroupList() {
         $bind_ugroup = $this->buildBindUgroups();
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, false);
         $this->assertCount($this->root->items->children(), 0);
     }
 
@@ -71,7 +71,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, false);
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->integrators_ugroup_name);
     }
@@ -82,7 +82,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, false);
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['is_hidden'], true);
     }
@@ -93,7 +93,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, false);
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->project_members_ugroup_name);
     }
@@ -105,7 +105,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, false);
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->integrators_ugroup_name);
         $this->assertEqual($items[1]['label'], $this->customers_ugroup_name);
@@ -121,7 +121,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values, $default_values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, false);
         $items = $this->root->default_values->children();
         $this->assertEqual((string)$items->value['REF'], 'V687');
     }
