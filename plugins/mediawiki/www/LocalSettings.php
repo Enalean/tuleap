@@ -43,7 +43,6 @@ require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/Group.class.php';
 require_once __DIR__.'/../include/MediawikiFusionForgeProjectRetriever.php';
-require_once __DIR__.'/../include/MediawikiWelcomePageManager.php';
 require_once __DIR__.'/../include/MediawikiDao.class.php';
 require_once __DIR__.'/../include/MediawikiLanguageDao.php';
 require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
@@ -101,19 +100,6 @@ if (! isset($fusionforgeproject)) {
 
 $group              = $project_retriever->getFusionForgeProject($fusionforgeproject);
 $fusionforgeproject = $group->getUnixName();
-
-/**
- * If you read this, I'm sorry. We wanted to do this in the index.php file, but the sad thing is that we cannot load
- * 'pre.php' in it because otherwise it will override Mediawiki classes (phpwiki in the core) whilst we need to have
- * the project thus including a very big bunch of stuff. So we had to create a variable and do php script kiddie hack.
- * I've lost karma doing this.
- */
-if (isset($IS_ACCESSING_INDEX_PHP) && $IS_ACCESSING_INDEX_PHP) {
-    $request = HTTPRequest::instance();
-    $request->set('group_id', $group->getID());
-    $welcome_manager = new MediawikiWelcomePageManager(new MediawikiLanguageManager(new MediawikiLanguageDao()));
-    $welcome_manager->displayWelcomePage($group, $request);
-}
 
 if (!isset($is_tuleap_mediawiki_123)) {
     $is_tuleap_mediawiki_123 = false;
@@ -198,6 +184,9 @@ $user            = UserManager::instance()->getCurrentUser();
 $used_language = $language_manager->getUsedLanguageForProject($group);
 if ($used_language) {
     $wgLanguageCode  = substr($used_language, 0, 2);
+} else if ($group->getService(MediaWikiPlugin::SERVICE_SHORTNAME)->userIsAdmin($user)) {
+    header('Location: /plugins/mediawiki/forge_admin?group_id='. $group->getID() .'&pane=language&nolang=1');
+    die();
 } else {
     $wgLanguageCode  = substr($user->getLocale(), 0, 2);
 }

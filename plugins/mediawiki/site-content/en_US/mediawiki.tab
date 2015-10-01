@@ -51,5 +51,4 @@ plugin_mediawiki	available_languages_intro	Please choose a language for your Med
 plugin_mediawiki	unsupported_language	The language $1 is not supported.
 plugin_mediawiki	alternative_welcome_page_title	Choose welcome page
 plugin_mediawiki	language_not_set_intro	Please choose your welcome page
-plugin_mediawiki	language_not_set_warning	No language has been set for your Mediawiki instance. Please ask one of your project administrators to do so.
-plugin_mediawiki	language_not_set_admin_warning	No language has been set for your Mediawiki instance. Please choose one <a href="$1">here</a>.
+plugin_mediawiki	language_not_set_admin_warning	You've been redirected here since no language has been set for your Mediawiki instance.
