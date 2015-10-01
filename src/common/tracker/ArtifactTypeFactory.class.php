@@ -479,15 +479,28 @@ class ArtifactTypeFactory extends Error {
         }
     }
 
-	/**
-	 *  fetch all tracker templates that need to be instantiated for new projects.
-	 *
-	 *  @return query result.
-	 */
-	function getTrackerTemplatesForNewProjects() {
-	  $sql = "SELECT group_artifact_id FROM artifact_group_list WHERE group_id=".db_ei($this->Group->getGroupId()) ." AND instantiate_for_new_projects=1 AND status = 'A'";
-	    return db_query($sql);
-	}
+    /**
+     *  fetch all tracker templates that need to be instantiated for new projects.
+     *
+     *  @return query result.
+     */
+    function getTrackerTemplatesForNewProjects() {
+        $group_id = db_ei($this->Group->getGroupId());
+
+        $sql = "SELECT agl.group_artifact_id
+                FROM artifact_group_list AS agl
+                    INNER JOIN (
+                        SELECT group_id
+                        FROM service
+                        WHERE short_name = 'tracker'
+                          AND is_active = 1
+                    ) as R ON (R.group_id = agl.group_id)
+                WHERE agl.group_id = $group_id
+                  AND agl.instantiate_for_new_projects = 1
+                  AND agl.status = 'A'";
+
+        return db_query($sql);
+    }
     
     /**
      * Check if the name of the tracker is already used
