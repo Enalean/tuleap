@@ -20,9 +20,11 @@
 
 class MediawikiFusionForgeProjectRetriever {
 
-    public function getFusionForgeProject() {
-        $administration_project = new Group(1);
-        $fusionforgeproject     = $administration_project->getUnixName();
+    public function getFusionForgeProject($fusionforgeproject) {
+        if (! $fusionforgeproject) {
+            $administration_project = new Group(1);
+            $fusionforgeproject     = $administration_project->getUnixName();
+        }
 
         $exppath = explode('/', $_SERVER['PHP_SELF']) ;
 

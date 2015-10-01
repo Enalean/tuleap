@@ -95,7 +95,11 @@ if (forge_get_config('sys_https_host')) {
     $wgServer = 'http://'. forge_get_config('sys_default_domain');
 }
 
-$group              = $project_retriever->getFusionForgeProject();
+if (! isset($fusionforgeproject)) {
+    $fusionforgeproject = null;
+}
+
+$group              = $project_retriever->getFusionForgeProject($fusionforgeproject);
 $fusionforgeproject = $group->getUnixName();
 
 /**
