@@ -39,12 +39,22 @@ class UserGroupResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
 
+    const KEY_ID = 'id';
+
     /** @var UGroupManager */
     private $ugroup_manager;
 
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
     public function __construct() {
         parent::__construct();
-        $this->ugroup_manager = new UGroupManager();
+        $this->ugroup_manager  = new UGroupManager();
+        $this->user_manager    = UserManager::instance();
+        $this->project_manager = ProjectManager::instance();
     }
 
     /**
@@ -135,6 +145,99 @@ class UserGroupResource extends AuthenticatedResource {
         $this->sendAllowHeadersForUserGroup();
 
         return $member_representations;
+    }
+
+    /**
+     * Define users of a user_group
+     *
+     * Define the users of a given user_group
+     * <br><br>
+     * Notes on the user reference format. It can be:
+     * <ul>
+     * <li> {"id": user_id} </li>
+     * </ul>
+     *
+     * @url PUT {id}/users
+     *
+     * @access protected
+     *
+     * @param string $id Id of the ugroup This should be one of two formats<br>
+     * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
+     * - format: ugroupId for all other groups (registered users, custom groups, ...)
+     * @param array $user_references {@from body}
+     *
+     * @throws 400
+     * @throws 404
+     */
+    protected function putUsers($id, array $user_references) {
+        $this->checkAccess();
+
+        $user_group = $this->getExistingUserGroup($id);
+        $this->checkUgroupValidity($user_group);
+
+        $project_id = $user_group->getProjectId();
+        $this->userCanSeeUserGroupMembers($project_id);
+
+        $this->checkKeysValidity($user_references);
+
+        $user_group->removeAllUsers();
+        $this->addMembersToUgroup($user_group, $user_references);
+    }
+
+    private function checkUgroupValidity(ProjectUGroup $user_group) {
+        if (! $user_group->isStatic()) {
+            throw new RestException(400, "Not able to deal with dynamic user group");
+        }
+
+        if ($user_group->getSourceGroup() !== null) {
+            throw new RestException(400, "Ugroup is bound to a source group");
+        }
+
+        $this->checkGroupIsViewable($user_group->getId());
+    }
+
+    private function addMembersToUgroup(ProjectUGroup $user_group, $user_references) {
+        foreach ($user_references as $user_reference) {
+            $key     = key($user_reference);
+            $user_id = $user_reference[$key];
+
+            $user = $this->user_manager->getUserById($user_id);
+
+            if (! $user) {
+                throw new RestException(400, "User with id $user_id not known");
+            }
+
+            $user_group->addUser($user);
+        }
+    }
+
+    private function checkKeysValidity(array $user_references) {
+        if (empty($user_references)) {
+            return true;
+        }
+
+        $first_key = null;
+
+        foreach ($user_references as $user_reference) {
+
+            if (count(array_keys($user_reference)) > 1) {
+                throw new RestException(400, "Only one key can be passed in the representation");
+            }
+
+            $key = key($user_reference);
+
+            if ($key !== self::KEY_ID) {
+                throw new RestException(400, "key $key not known");
+            }
+
+            if ($first_key === null) {
+                $first_key = $key;
+            } elseif ($first_key !== $key) {
+                throw new RestException(400, "ids have not the same type");
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -236,9 +339,8 @@ class UserGroupResource extends AuthenticatedResource {
      * @return boolean
      */
     private function userCanSeeUserGroups($project_id) {
-        $user_manager = UserManager::instance();
-        $project      = ProjectManager::instance()->getProject($project_id);
-        $user         = $user_manager->getCurrentUser();
+        $project      = $this->project_manager->getProject($project_id);
+        $user         = $this->user_manager->getCurrentUser();
         ProjectAuthorization::canUserAccessUserGroupInfo($user, $project, new URLVerification());
 
         return true;
@@ -251,9 +353,8 @@ class UserGroupResource extends AuthenticatedResource {
      * @return boolean
      */
     private function userCanSeeUserGroupMembers($project_id) {
-        $user_manager = UserManager::instance();
-        $project      = ProjectManager::instance()->getProject($project_id);
-        $user         = $user_manager->getCurrentUser();
+        $project      = $this->project_manager->getProject($project_id);
+        $user         = $this->user_manager->getCurrentUser();
         ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
 
         return true;
@@ -275,7 +376,7 @@ class UserGroupResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeadersForUserGroup() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
