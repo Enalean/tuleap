@@ -58,10 +58,10 @@ plugin_git	mirroring_mirror_name	Name
 plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Used by this repository?
 plugin_git	mirroring_update_mirroring	Update mirroring of this repository
-plugin_git	mirroring_mirroring_successful	The repository will be replicated on the selected mirrors shortly.
-plugin_git	mirroring_mirroring_successful_plural	The repositories will be replicated on the selected mirrors shortly.
-plugin_git	mirroring_unmirroring_successful	The repository will be completely revoked from mirrors shortly.
-plugin_git	mirroring_unmirroring_successful_plural	The repositories will be completely removed from mirrors shortly.
+plugin_git	mirroring_mirroring_successful	The repository will be replicated on the selected mirrors in a few minutes.
+plugin_git	mirroring_mirroring_successful_plural	The repositories will be replicated on the selected mirrors  in a few minutes.
+plugin_git	mirroring_unmirroring_successful	The repository will be completely revoked from mirrors  in a few minutes.
+plugin_git	mirroring_unmirroring_successful_plural	The repositories will be completely removed from mirrors in a few minutes.
 plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the repository is replicated.
 
 plugin_git	admin_settings	General settings

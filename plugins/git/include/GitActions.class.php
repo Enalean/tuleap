@@ -1005,16 +1005,16 @@ class GitActions extends PluginActions {
         $more_than_one_repository = count($repositories) > 1;
 
         if ($more_than_one_repository && ! $selected_mirror_ids) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirroring_successful_plural'));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirroring_successful_plural'));
 
         } elseif ($more_than_one_repository && $selected_mirror_ids) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful_plural'));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful_plural'));
 
         } elseif (! $more_than_one_repository && ! $selected_mirror_ids) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirroring_successful'));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirroring_successful'));
 
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
         }
     }
 

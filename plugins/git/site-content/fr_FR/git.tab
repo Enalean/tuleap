@@ -58,10 +58,10 @@ plugin_git	mirroring_mirror_name	Nom
 plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Utilisé par ce dépôt ?
 plugin_git	mirroring_update_mirroring	Mettre à jour les réplications de ce dépôt
-plugin_git	mirroring_mirroring_successful	Le dépôt va être rapidement répliqué sur les mirroirs sélectionnés.
-plugin_git	mirroring_mirroring_successful_plural	Les dépôts vont être rapidement répliqués sur les mirroirs sélectionnés.
-plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué dans quelques instants.
-plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques instants.
+plugin_git	mirroring_mirroring_successful	Le dépôt va être répliqué sur les mirroirs sélectionnés dans quelques minutes.
+plugin_git	mirroring_mirroring_successful_plural	Les dépôts vont être répliqués sur les mirroirs sélectionnés dans quelques minutes.
+plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué dans quelques minutes.
+plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques minutes.
 plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
 
 plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
