@@ -488,9 +488,12 @@
         <element name="default_values">
           <zeroOrMore>
             <element name="value">
-              <attribute name="REF">
-                <data type="IDREF"/>
-              </attribute>
+              <choice>
+                <attribute name="REF">
+                  <data type="IDREF"/>
+                </attribute>
+                <ref name="user_content"/>
+              </choice>
             </element>
           </zeroOrMore>
         </element>

@@ -35,7 +35,7 @@ class Tracker_Artifact_XMLImport {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    /** @var Tracker_Artifact_XMLImport_XMLImportHelper */
+    /** @var Tracker_XMLImport_XMLImportHelper */
     private $xml_import_helper;
 
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
@@ -49,7 +49,7 @@ class Tracker_Artifact_XMLImport {
      * @param Tracker_ArtifactCreator $artifact_creator
      * @param Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator
      * @param Tracker_FormElementFactory $formelement_factory
-     * @param Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper
+     * @param Tracker_XMLImport_XMLImportHelper $xml_import_helper
      * @param Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
      * @param Logger $logger
      * @param boolean $send_notifications
@@ -59,7 +59,7 @@ class Tracker_Artifact_XMLImport {
         Tracker_ArtifactCreator $artifact_creator,
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
-        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
+        Tracker_XMLImport_XMLImportHelper $xml_import_helper,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
         Logger $logger,
         $send_notifications

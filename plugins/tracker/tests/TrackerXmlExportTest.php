@@ -76,7 +76,7 @@ class TrackerXmlExportTest extends TuleapTestCase {
         stub($this->tracker1)->isActive()->returns(true);
 
         expect($this->tracker1)->exportToXML()->never();
-        expect($this->tracker1)->exportToXMLWithoutHierarchyInfo()->once();
+        expect($this->tracker1)->exportToXMLInProjectExportContext()->once();
 
         $archive = new ZipArchive();
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -72,7 +72,7 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
 
     }
 
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
 
     }
 

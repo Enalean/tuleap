@@ -2252,11 +2252,11 @@ EOS;
     }
 
     public function exportToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
-        return $this->exportTrackerToXML($xmlElem, $xmlMapping, true);
+        return $this->exportTrackerToXML($xmlElem, $xmlMapping, false);
     }
 
-    public function exportToXMLWithoutHierarchyInfo(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
-        return $this->exportTrackerToXML($xmlElem, $xmlMapping, false);
+    public function exportToXMLInProjectExportContext(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
+        return $this->exportTrackerToXML($xmlElem, $xmlMapping, true);
     }
 
     /**
@@ -2264,17 +2264,22 @@ EOS;
      *
      * @return SimpleXMLElement
      */
-    private function exportTrackerToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array(), $export_parent_info) {
+    private function exportTrackerToXML(
+        SimpleXMLElement $xmlElem,
+        array &$xmlMapping = array(),
+        $project_export_context
+    ) {
         $xmlElem->addAttribute('id', "T". $this->getId());
 
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
 
         $parent_id = $this->getParentId();
-        if ($parent_id && $export_parent_info) {
+        if ($parent_id && ! $project_export_context) {
             $parent_id = "T". $parent_id;
         } else {
             $parent_id = "0";
         }
+
         $xmlElem->addAttribute('parent_id', (string)$parent_id);
 
         // only add attributes which are different from the default value
@@ -2315,9 +2320,11 @@ EOS;
 
         $child = $xmlElem->addChild('formElements');
         // association between ids in database and ids in xml
+
+
         foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
             $grandchild = $child->addChild('formElement');
-            $formElement->exportToXML($grandchild, $xmlMapping);
+            $formElement->exportToXML($grandchild, $xmlMapping, $project_export_context);
         }
 
         // semantic
@@ -3269,7 +3276,7 @@ EOS;
             $artifact_creator,
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
-            new Tracker_Artifact_XMLImport_XMLImportHelper($this->getUserManager()),
+            new Tracker_XMLImport_XMLImportHelper($this->getUserManager()),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $logger,
             $send_notifications

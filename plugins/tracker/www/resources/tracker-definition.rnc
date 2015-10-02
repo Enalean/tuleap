@@ -169,7 +169,10 @@ tracker =
             }?,
             element default_values {
                 element value {
-                    attribute REF { xsd:IDREF }
+                    (
+                        attribute REF { xsd:IDREF } |
+                        user_content
+                    )
                 }*
             }?
         }

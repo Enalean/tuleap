@@ -145,9 +145,9 @@ Mock::generate('Tracker_SharedFormElementFactory');
 
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
         $xmlMapping['F'. $this->getId()] = $this->getId();
-        return parent::exportToXML($root, $xmlMapping);
+        return parent::exportToXML($root, $xmlMapping, $project_export_context);
     }
 }
 

@@ -60,7 +60,7 @@ class Tracker_Artifact_XMLImportBuilder {
             $artifact_creator,
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
-            new Tracker_Artifact_XMLImport_XMLImportHelper($user_manager),
+            new Tracker_XMLImport_XMLImportHelper($user_manager),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $logger,
             $send_notifications

@@ -28,12 +28,12 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
     /** @var TrackerXmlFieldsMapping */
     private $xml_fields_mapping;
 
-    /** @var Tracker_Artifact_XMLImport_XMLImportHelper */
+    /** @var Tracker_XMLImport_XMLImportHelper */
     private $xml_import_helper;
 
     public function __construct(
         TrackerXmlFieldsMapping $xml_fields_mapping,
-        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper
+        Tracker_XMLImport_XMLImportHelper $xml_import_helper
     ) {
         $this->xml_fields_mapping = $xml_fields_mapping;
         $this->xml_import_helper  = $xml_import_helper;

@@ -27,7 +27,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;
 
-    /** @var Tracker_Artifact_XMLImport_XMLImportHelper */
+    /** @var Tracker_XMLImport_XMLImportHelper */
     private $xml_import_helper;
 
     /** @var TrackerXmlFieldsMapping */
@@ -35,7 +35,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
 
     public function __construct(
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
+        Tracker_XMLImport_XMLImportHelper $xml_import_helper,
         TrackerXmlFieldsMapping $xml_fields_mapping
     ) {
         $this->static_value_dao   = $static_value_dao;
