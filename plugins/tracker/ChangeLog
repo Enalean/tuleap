@@ -1,3 +1,6 @@
+Version 5.701 - Tuleap 8.7
+    * story #8175 Export/import default value for bind to users lists
+
 Version 5.700 - Tuleap 8.7
     * story #8372: update /artifacts/:id/changesets and add /users/:id/preferences
 
