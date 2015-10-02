@@ -1182,7 +1182,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $changeset_representation = new $classname_with_namespace;
         $changeset_representation->build(
             $this,
-            $user,
             $comment,
             $fields  == self::FIELDS_COMMENTS  ? array() : $this->getRESTFieldValues($user)
         );

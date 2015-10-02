@@ -72,25 +72,34 @@ class ChangesetRepresentation {
 
     public function build(
         Tracker_Artifact_Changeset $changeset,
-        PFUser $user,
         Tracker_Artifact_Changeset_Comment $last_comment,
         array $values
     ) {
         $this->id                   = JsonCast::toInt($changeset->getId());
         $this->submitted_by         = JsonCast::toInt($changeset->getSubmittedBy());
-        $this->submitted_by_details = new MinimalUserRepresentation();
-        $this->submitted_by_details->build($user);
+        $this->submitted_by_details = null;
+
+        if ($this->submitted_by) {
+            $this->submitted_by_details = new MinimalUserRepresentation();
+            $this->submitted_by_details->build(UserManager::instance()->getUserById($this->submitted_by));
+        }
+
         $this->submitted_on         = JsonCast::toDate($changeset->getSubmittedOn());
         $this->email                = $changeset->getEmail();
 
         $this->last_comment = new ChangesetCommentRepresentation();
         $this->last_comment->build($last_comment);
 
-        $this->values             = $values;
-        $this->last_modified_by   = new MinimalUserRepresentation();
-        $this->last_modified_by->build(
-            UserManager::instance()->getUserById($last_comment->getSubmittedBy())
-        );
+        $this->values           = $values;
+        $this->last_modified_by = null;
+
+        if ($last_comment->getSubmittedBy()) {
+            $this->last_modified_by = new MinimalUserRepresentation();
+            $this->last_modified_by->build(
+                UserManager::instance()->getUserById($last_comment->getSubmittedBy())
+            );
+        }
+
         $this->last_modified_date = JsonCast::toDate($last_comment->getSubmittedOn());
     }
 }
