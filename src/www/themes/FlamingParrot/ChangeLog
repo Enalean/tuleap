@@ -1,3 +1,9 @@
+Version 1.109 - Tuleap 8.7
+    * request #8458: Force H4 HTML tag to be smaller than H3 in wiki service
+
+Version 1.108 - Tuleap 8.7
+    * request #8458: Force H4 HTML tag to be smaller than H3 in wiki service
+
 Version 1.107 - Tuleap 8.6
     * story #8337: Add inline help
 
