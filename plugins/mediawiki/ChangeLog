@@ -1,3 +1,6 @@
+Version 0.93 - Tuleap 8.7
+    * story #8433: redirect admin to language choice
+
 Version 0.92 - Tuleap 8.7
     * request #8426 Update the glue to allow mixed anonymous / restricted usage
 
