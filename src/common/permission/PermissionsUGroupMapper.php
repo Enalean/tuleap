@@ -34,10 +34,16 @@ class PermissionsUGroupMapper {
                 ProjectUGroup::AUTHENTICATED => ProjectUGroup::PROJECT_MEMBERS,
                 ProjectUGroup::REGISTERED    => ProjectUGroup::PROJECT_MEMBERS,
             );
-        } elseif (! ForgeConfig::areAnonymousAllowed()) {
-            $this->mapping[ProjectUGroup::ANONYMOUS] = ProjectUGroup::REGISTERED;
+        } else {
+            if (! ForgeConfig::areAnonymousAllowed()) {
+                if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
+                    $this->mapping[ProjectUGroup::ANONYMOUS] = ProjectUGroup::AUTHENTICATED;
+                } else {
+                    $this->mapping[ProjectUGroup::ANONYMOUS] = ProjectUGroup::REGISTERED;
+                }
+            }
+
             if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
-                $this->mapping[ProjectUGroup::ANONYMOUS] = ProjectUGroup::AUTHENTICATED;
                 $this->mapping[ProjectUGroup::AUTHENTICATED] = ProjectUGroup::AUTHENTICATED;
             }
         }
