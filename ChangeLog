@@ -14,6 +14,7 @@ Version 8.7 (not released yet)
 	* request #8435: Reference doesn't work when project is explicitly set
 	* request #8445: Fix errors at the approval of a pending user
 	* request #8450: tuleap utility could be used in CentOS 5
+	* request #8426: Update the glue to allow mixed anonymous / restricted usage
 
 	== Plugins ==
 	* tracker: 5.702
@@ -21,7 +22,7 @@ Version 8.7 (not released yet)
 	* git: 4.85
 	* docman: 2.26.85
 	* ldap: 3.87
-	* mediawiki: 0.91
+	* mediawiki: 0.92
 	* phpwiki: 0.8
 
     == Themes ==
