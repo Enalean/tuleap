@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__)."/../Migration/MediawikiMigrator.php";
+require_once dirname(__FILE__)."/../MediawikiVersionManager.php";
 
 class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
     const NAME = 'MEDIAWIKI_SWITCH_TO_123';
@@ -29,12 +30,17 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
     /** @var ProjectManager **/
     private $project_manager;
 
+    /** @var MediawikiVersionManager */
+    private $version_manager;
+
     public function injectDependencies(
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
-        ProjectManager                        $project_manager
+        ProjectManager                        $project_manager,
+        MediawikiVersionManager               $version_manager
     ) {
         $this->project_manager    = $project_manager;
         $this->mediawiki_migrator = $mediawiki_migrator;
+        $this->version_manager    = $version_manager;
     }
 
     public function process() {
@@ -42,6 +48,7 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
 
         try {
             $this->mediawiki_migrator->migrateProjectTo123($project);
+            $this->version_manager->saveVersionForProject($project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
             $this->done();
         } catch (System_Command_CommandException $exception) {
             $this->error($exception->getMessage());

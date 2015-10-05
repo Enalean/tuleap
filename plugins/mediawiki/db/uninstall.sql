@@ -8,3 +8,4 @@ DROP TABLE plugin_mediawiki_database;
 DROP TABLE plugin_mediawiki_admin_options;
 DROP TABLE plugin_mediawiki_site_restricted_features;
 DROP TABLE plugin_mediawiki_access_control;
+DROP TABLE plugin_mediawiki_version;
