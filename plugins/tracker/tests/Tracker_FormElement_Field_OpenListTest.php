@@ -104,7 +104,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $dar->setReturnValueAt(11, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
-        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
+        $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
         $bind_values = array(
             1000 => mock('Tracker_FormElement_Field_List_BindValue'),
             1001 => mock('Tracker_FormElement_Field_List_BindValue'),
@@ -391,5 +391,34 @@ class Tracker_FormElement_Field_OpenList_RESTTests extends TuleapTestCase {
         $value = 'some_value';
 
         $field->getFieldDataFromRESTValueByField($value);
+    }
+}
+
+class Tracker_FormElement_Field_OpenList_Validate_Values extends TuleapTestCase {
+    private $artifact;
+    private $bind;
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+        $this->artifact = mock('Tracker_Artifact');
+        $this->bind     = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->field    = partial_mock('Tracker_FormElement_Field_OpenList', array('getBind', 'validate'));
+        stub($this->field)->getBind()->returns($this->bind);
+        stub($this->field)->validate()->returns(true);
+        stub($this->bind)->getAllValues()->returns(array(
+                101 => null,
+                102 => null,
+                103 => null
+            )
+        );
+    }
+
+    public function itAcceptsValidValues() {
+        $this->assertTrue($this->field->isValid($this->artifact, ''));
+        $this->assertTrue($this->field->isValid($this->artifact, 'b101'));
+        $this->assertTrue($this->field->isValid($this->artifact, Tracker_FormElement_Field_OpenList::BIND_PREFIX .
+            Tracker_FormElement_Field_OpenList::NONE_VALUE));
+        $this->assertTrue($this->field->isValid($this->artifact, array('b101', 'b102')));
     }
 }

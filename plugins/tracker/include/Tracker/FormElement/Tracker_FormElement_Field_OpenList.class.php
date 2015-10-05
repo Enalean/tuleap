@@ -922,4 +922,34 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
         return parent::getRESTAvailableValues();
     }
+
+    /**
+     * @return bool
+     */
+    protected function checkValueExists($value, $all_possible_values) {
+        return $this->isValueEmpty($value) || $this->isValueABindNoneValue($value) ||
+            $this->isValueABindValue($value, $all_possible_values);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isValueEmpty($value) {
+        return $value === '';
+    }
+
+    /**
+     * @return bool
+     */
+    private function isValueABindValue($value, $all_possible_values) {
+        return substr($value, 0, 1) === Tracker_FormElement_Field_OpenList::BIND_PREFIX &&
+            array_key_exists(substr($value, 1), $all_possible_values);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isValueABindNoneValue($value) {
+        return $value === Tracker_FormElement_Field_OpenList::BIND_PREFIX . Tracker_FormElement_Field_OpenList::NONE_VALUE;
+    }
 }
