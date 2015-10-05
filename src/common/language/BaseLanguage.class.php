@@ -47,6 +47,8 @@
  */
 class BaseLanguage {
 
+    const DEFAULT_LANG = 'en_US';
+
     //array to hold the string values
     var $text_array ;
     var $lang, $name, $id, $code ;
@@ -140,12 +142,9 @@ class BaseLanguage {
         // 1) load all the en_US for official code (core + plugins) in order
         // to define all the default values (all other language load while
         // override existing values. If no overriding: the en_US value appears.
-        if($lang != 'en_US') {
-            $this->loadCoreSiteContent('en_US', $text_array);
-            // The old code was only loading the core site-content as fallback
-            //$this->loadCustomSiteContent('en_US');
-            //$this->loadCorePluginsSiteContent('en_US');
-            //$this->loadCustomPluginsSiteContent('en_US');
+        if($lang != self::DEFAULT_LANG) {
+            $this->loadCoreSiteContent(self::DEFAULT_LANG, $text_array);
+            $this->loadPluginsSiteContent(self::DEFAULT_LANG, $text_array);
         }
 
         // 2) load the language for official code
@@ -394,7 +393,7 @@ class BaseLanguage {
                 // The custom file exists. 
                 return $fn;
             } else {
-                if ($lang_code == "en_US") {
+                if ($lang_code == self::DEFAULT_LANG) {
                     // return empty content to avoid include error
                     return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
                 } else {
@@ -411,16 +410,11 @@ class BaseLanguage {
     /**
      * @return array pairs of language_code => Language
      */
-    function getLanguages() {
-        $languages =  array(
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
-        );
+    public function getLanguages() {
         $ret = array();
-        foreach($languages as $key => $value) {
-            if (in_array($key, $this->allLanguages)) {
-                $ret[$key] = $value;
-            }
+        foreach($this->allLanguages as $lang) {
+            $text_array = $this->compileLanguage($lang);
+            $ret[$lang] = $text_array['system']['locale_label'];
         }
         return $ret;
     }

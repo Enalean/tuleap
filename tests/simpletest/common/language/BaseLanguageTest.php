@@ -140,29 +140,7 @@ class BaseLanguageTest extends BaseLanguage_BaseTest {
         $l2 = new BaseLanguage('en_US,fr_FR', 'fr_FR');
         $this->assertEqual('fr_FR', $l2->getLanguageFromAcceptLanguage(''));
         $this->assertEqual('fr_FR', $l2->getLanguageFromAcceptLanguage('de-de'));
-        
-    }
-    
-    function testGetLanguages() {
-        $l1 = new BaseLanguage('en_US,fr_FR', 'en_US');
-        $this->assertEqual(array(
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
-        ), $l1->getLanguages());
-        
-        $l2 = new BaseLanguage('en_US', 'en_US');
-        $this->assertEqual(array(
-            'en_US' => 'English',
-        ), $l2->getLanguages());
-        
-        $l3 = new BaseLanguage('fr_FR', 'fr_FR');
-        $this->assertEqual(array(
-            'fr_FR' => 'Français',
-        ), $l3->getLanguages());
-        
-        $l4 = new BaseLanguage('fr_CA', 'fr_CA');
-        $this->assertEqual(array(
-        ), $l4->getLanguages());
+
     }
     
     function testParseLanguageFile() {
@@ -204,12 +182,13 @@ class BaseLanguageTest extends BaseLanguage_BaseTest {
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
         
         $result = array();
-        $l->loadAllTabFiles($GLOBALS['sys_incdir'], $result);
+        $l->loadAllTabFiles($GLOBALS['sys_incdir'].'/en_US/', $result);
         $this->assertEqual(array(
             'file'   => array(
                 'key1' => 'value',
                 'key2' => 'value'
             ),
+            'system' => array('locale_label' => 'English'),
             'inc'    => array('key1' => 'value'),
             'common' => array('key1' => 'value'),
         ), $result);
@@ -252,6 +231,22 @@ class BaseLanguageTest extends BaseLanguage_BaseTest {
         $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
         $this->assertEqual("<?php\n\$this->text_array['module']['key'] = 'value';\n?>",
             file_get_contents($this->cache_dir .'/lang/my_lang.php')
+        );
+    }
+}
+
+class BaseLanguage_getLanguagesTest extends BaseLanguage_BaseTest {
+
+    public function itReturnsLocalisedLanguages() {
+        $language = new BaseLanguage('en_US,fr_FR,ja_JP', 'en_US');
+
+        $this->assertEqual(
+            array(
+                'en_US' => 'English',
+                'fr_FR' => 'Français',
+                'ja_JP' => '日本語'
+            ),
+            $language->getLanguages()
         );
     }
 }
