@@ -1,3 +1,12 @@
+Version 8.6-5 (Monday, October 5th 2015)
+	== Bug Fix ==
+	* request #8426: request #8426 Permission overrider should allow to restore pre-8.1 permissions
+	* request #8458: Force H4 HTML tag to be smaller than H3 in wiki service
+	* request #8449: Warning while duplicating kanban for a project
+	* request #8447: README files can be rendered in subdirectories
+	* request #8444: User account created from LDAP use weak generated password
+	* request #8445: Fix errors at the approval of a pending user
+
 Version 8.6-4 (Monday, September 28th 2015)
 	== Bug Fix ==
 	* request #7951: missing confirm hash
