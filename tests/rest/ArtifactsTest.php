@@ -52,7 +52,7 @@ class ArtifactsTest extends RestBase {
             ),
             'values' => array(
                $this->getSubmitTextValue(REST_TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
-               $this->getSubmitListValue(REST_TestDataBuilder::EPICS_TRACKER_ID, 'Status', 205)
+               $this->getSubmitListValue(REST_TestDataBuilder::EPICS_TRACKER_ID, 'Status', 103)
             ),
         ));
 
