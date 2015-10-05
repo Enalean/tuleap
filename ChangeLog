@@ -1,3 +1,7 @@
+Version 8.6-6 (Monday, October 5th 2015)
+	== Bug Fix ==
+	* Fix angular version dependency in bower.json files
+
 Version 8.6-5 (Monday, October 5th 2015)
 	== Bug Fix ==
 	* request #8426: request #8426 Permission overrider should allow to restore pre-8.1 permissions
