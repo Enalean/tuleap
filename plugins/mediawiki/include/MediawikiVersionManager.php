@@ -46,4 +46,14 @@ class MediawikiVersionManager {
 
         return $this->version_dao->saveMediawikiVersionForProject($project->getID(), $version);
     }
+
+    public function getVersionForProject(Project $project) {
+        $row = $this->version_dao->getVersionForProject($project->getID());
+
+        if (! $row) {
+            return;
+        }
+
+        return $row['mw_version'];
+    }
 }
