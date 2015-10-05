@@ -52,5 +52,4 @@ plugin_mediawiki	available_languages_intro	Veuillez choisir une langue pour votr
 plugin_mediawiki	unsupported_language	La langue $1 n'est pas supportée.
 plugin_mediawiki	alternative_welcome_page_title	Choix de la page d'accueil
 plugin_mediawiki	language_not_set_intro	Veuillez choisir votre page d'accueil
-plugin_mediawiki	language_not_set_warning	Aucune langue n'a été définie pour votre instance de Mediawiki. Veuillez demander à l'un de vos administrateurs de projet d'en choisir une.
-plugin_mediawiki	language_not_set_admin_warning	Aucune langue n'a été définie pour votre instance de Mediawiki. Veuillez en sélectionner une en cliquant <a href="$1">ici</a>.
+plugin_mediawiki	language_not_set_admin_warning	Vous avez été redirigé ici car aucune langue n'a été définie pour votre instance de Mediawiki.

@@ -19,7 +19,7 @@ class ServiceMediawiki extends Service {
 
     public function displayHeader(HTTPRequest $request, $title) {
         $toolbar = array();
-        if ($this->userIsAdmin($request)) {
+        if ($this->userIsAdmin($request->getCurrentUser())) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Administration'),
                 'url'   => MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(array(
@@ -37,8 +37,7 @@ class ServiceMediawiki extends Service {
      * @param HTTPRequest $request
      * @return bool
      */
-    public function userIsAdmin(HTTPRequest $request) {
-        $user = $request->getCurrentUser();
+    public function userIsAdmin(PFUser $user) {
         $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
@@ -47,6 +46,6 @@ class ServiceMediawiki extends Service {
             new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
         );
 
-        return $has_special_permission || $user->isMember($request->getProject()->getID(), 'A');
+        return $has_special_permission || $user->isMember($this->project->getID(), 'A');
     }
 }

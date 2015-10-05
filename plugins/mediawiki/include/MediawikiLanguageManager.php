@@ -41,29 +41,26 @@ class MediawikiLanguageManager {
         return $this->dao->updateLanguageOption($project->getID(), $language);
     }
 
-    private function isLanguageSupported($language) {
-        $supported_languages = $this->getAvailableLanguages();
-
-        return in_array($language, $supported_languages);
-    }
-
     /**
      * @param Project $project
      *
      * @return string
      */
     public function getUsedLanguageForProject(Project $project) {
-        $result = $this->dao->getUsedLanguageForProject($project->getID());
+        $language = null;
+        $result   = $this->dao->getUsedLanguageForProject($project->getID());
 
-        if (! $result) {
-            return;
+        if (isset($result['language'])) {
+            $language = $result['language'];
+        } else {
+            $available_languages = $this->getAvailableLanguages();
+            if (count($available_languages) === 1) {
+                $language = $available_languages[0];
+                $this->saveLanguageOption($project, $language);
+            }
         }
 
-        return $result['language'];
-    }
-
-    public function getAvailableLanguages() {
-        return explode(',', ForgeConfig::get('sys_supported_languages'));
+        return $language;
     }
 
     public function getAvailableLanguagesWithUsage(Project $project) {
@@ -84,5 +81,15 @@ class MediawikiLanguageManager {
         }
 
         return $formatted_available_languages;
+    }
+
+    private function getAvailableLanguages() {
+        return explode(',', ForgeConfig::get('sys_supported_languages'));
+    }
+
+    private function isLanguageSupported($language) {
+        $supported_languages = $this->getAvailableLanguages();
+
+        return in_array($language, $supported_languages);
     }
 }

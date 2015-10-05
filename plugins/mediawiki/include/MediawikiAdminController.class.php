@@ -68,6 +68,12 @@ class MediawikiAdminController {
 
         switch ($request->get('pane')) {
             case 'language':
+                if ($request->exist('nolang')) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        $GLOBALS['Language']->getText('plugin_mediawiki', 'language_not_set_admin_warning')
+                    );
+                }
                 $service->renderInPage(
                     $request,
                     $GLOBALS['Language']->getText('global', 'Administration'),
@@ -257,7 +263,7 @@ class MediawikiAdminController {
     }
 
     private function assertUserIsProjectAdmin(ServiceMediawiki $service, HTTPRequest $request) {
-        if (! $service->userIsAdmin($request)) {
+        if (! $service->userIsAdmin($request->getCurrentUser())) {
             $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL.'/wiki/'.$request->getProject()->getUnixName());
         }
     }
