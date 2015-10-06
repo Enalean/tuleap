@@ -29,29 +29,52 @@ require_once 'common/include/PropertyDescriptor.class.php';
  */
 class PluginFileInfo extends PluginInfo
 {
-    protected $conf_path;
-    
+    /** @var string */
+    private $conf_path;
+
+    /** @var string */
+    private $default_conf_path;
+
     /**
      * Constructor
      *
      * @param Plugin $plugin  The plugin on which PluginInfo applies
      * @param String $incname Name of the '.inc' file in plugin 'etc' directory
      */
-    function __construct(Plugin $plugin, $incname) 
+    function __construct(Plugin $plugin, $incname)
     {
         parent::__construct($plugin);
-        $this->conf_path = $plugin->getPluginEtcRoot() .'/'.$incname.'.inc';
+
+        $this->conf_path         = $plugin->getPluginEtcRoot()  .'/'.$incname.'.inc';
+        $this->default_conf_path = $this->getDefaultConfPath($plugin, $incname);
         $this->loadProperties();
     }
-    
+
+    /**
+     * Override this in order to load default variables (in .dist files). Else only /etc will be loaded.
+     *
+     * This is left intentionnaly protected so that we can deploy this feature progressively. When all concerned plugins
+     * will use it this method will not be required anymore and should be inlined.
+     */
+    protected function getDefaultConfPath(Plugin $plugin, $incname) {
+        return null;
+    }
+
     /**
      * Load properties from the configuration file
      */
-    function loadProperties() 
+    function loadProperties()
     {
         if (is_file($this->conf_path)) {
             $this->checkConfigurationFiles($this->conf_path);
+
             $variables = $this->getVariablesFromConfigurationFile($this->conf_path);
+            if (is_file($this->default_conf_path)) {
+                $variables = array_merge(
+                    $this->getVariablesFromConfigurationFile($this->default_conf_path),
+                    $variables
+                );
+            }
             foreach ($variables as $variable) {
                 $key = $variable['name'];
                 if (preg_match('`^"(.*)"$`', $variable['value'], $match) ||
@@ -69,25 +92,33 @@ class PluginFileInfo extends PluginInfo
     /**
      * Save in memory properties in the configuration file
      */
-    public function saveProperties() 
+    public function saveProperties()
     {
         copy($this->conf_path, $this->conf_path .'.'. date('YmdHis'));
         $content = file_get_contents($this->conf_path);
         $descs   =& $this->getPropertyDescriptors();
         $keys    =& $descs->getKeys();
         $iter    =& $keys->iterator();
+        $content = $this->cleanContentFromClosingPHPTag($content);
         while ($iter->valid()) {
             $key       =& $iter->current();
             $desc      =& $descs->get($key);
             $desc_name =& $desc->getName();
+
             if (is_bool($desc->getValue())) {
-                $replace = '$1'. ($desc->getValue() ? 'true' : 'false') .';';
+                $value = ($desc->getValue() ? 'true' : 'false') .';';
             } else {
-                $replace = '$1"'.addslashes($desc->getValue()).'";';
+                $value = '"'.addslashes($desc->getValue()).'";';
             }
-            $content = preg_replace('`((?:^|\n)\$'. preg_quote($desc_name) .'\s*=\s*)(.*)\s*;`', 
-                $replace, 
+
+            $replace = '$1'. $value;
+            $content = preg_replace('`((?:^|\n)\$'. preg_quote($desc_name) .'\s*=\s*)(.*)\s*;`',
+                $replace,
                 $content);
+
+            if (! preg_match('`(?:^|\n)\$'. preg_quote($desc_name) .'\s*=`', $content)) {
+                $content .= '$' . $desc_name .' = '. $value . PHP_EOL;
+            }
             $iter->next();
         }
         $f = fopen($this->conf_path, 'w');
@@ -97,14 +128,18 @@ class PluginFileInfo extends PluginInfo
         }
     }
 
+    private function cleanContentFromClosingPHPTag($content) {
+        return str_replace('?>', '', $content);
+    }
+
     /**
      * Return the property value for given property name
      *
      * @param String $name Label of the property
-     * 
+     *
      * @return String
      */
-    function getPropertyValueForName($name) 
+    function getPropertyValueForName($name)
     {
         $desc = $this->getPropertyDescriptorForName($name);
         return $desc ? $desc->getValue() : $desc;
@@ -118,16 +153,20 @@ class PluginFileInfo extends PluginInfo
     {
         return $this->getPropertyValueForName($name);
     }
-    
+
     /**
      * Extract PHP variables from the config file
      *
      * @param String $file Full path to the configuration file
-     * 
+     *
      * @return Array All the variables defined in the file
      */
-    protected function getVariablesFromConfigurationFile($file) 
+    protected function getVariablesFromConfigurationFile($file)
     {
+        if (! is_file($file)) {
+            return array();
+        }
+
         $tokens = token_get_all(file_get_contents($file));
 
         $variables = array();
@@ -169,12 +208,12 @@ class PluginFileInfo extends PluginInfo
     }
 
     /**
-     * Check if the configuration file is valid or not 
+     * Check if the configuration file is valid or not
      *
      */
-    protected function checkConfigurationFiles() 
+    private function checkConfigurationFiles($path)
     {
-        require $this->conf_path;
+        require $path;
     }
 }
 ?>
