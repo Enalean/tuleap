@@ -1,3 +1,6 @@
+Version 0.96 - Tuleap 8.7
+    * story #8214: load .inc.dist && .inc
+
 Version 0.95 - Tuleap 8.7
     * story #8214: deal with MLEB installation
 
