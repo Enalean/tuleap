@@ -30,4 +30,8 @@ class MediaWikiPluginInfo extends PluginFileInfo {
         $this->setPluginDescriptor(new MediaWikiPluginDescriptor());
     }
 
+    /** @see PluginFileInfo::getDefaultConfPath() */
+    protected function getDefaultConfPath(Plugin $plugin, $incname) {
+        return $plugin->getFilesystemPath() .'/etc/'. $incname .'.inc.dist';
+    }
 }
