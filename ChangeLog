@@ -15,6 +15,7 @@ Version 8.7 (not released yet)
 	* request #8445: Fix errors at the approval of a pending user
 	* request #8450: tuleap utility could be used in CentOS 5
 	* request #8426: Update the glue to allow mixed anonymous / restricted usage
+	* request #8456: TV3 are instantiated even when unused
 
 	== Plugins ==
 	* tracker: 5.702
