@@ -1548,7 +1548,8 @@ CREATE TABLE service (
         server_id INT( 11 ) UNSIGNED NULL,  -- distributed architecture: to be deleted (but requires to check all plugins)
         is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
 	primary key (service_id),
-        key idx_group_id(group_id)
+    key idx_group_id(group_id),
+    INDEX idx_short_name (short_name(10))
 );
 
 
