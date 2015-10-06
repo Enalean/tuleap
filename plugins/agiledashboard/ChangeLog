@@ -1,3 +1,6 @@
+Version 1.285 - Tuleap 8.7
+    * request #8466: Update kanban template
+
 Version 1.284 - Tuleap 8.7
     * request #8309: Get rid of PrototypeJS (getText)
 
