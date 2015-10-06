@@ -27,4 +27,5 @@ $config_path = "/etc/codendi";
 $src_path = "/usr/share/mediawiki-tuleap";
 $mw_style_path = '/plugins/mediawiki/www/skins';
 $enable_compatibility_view = false;
+$extension_mleb_path = "/usr/share/mediawiki-mleb-tuleap";
 ?>

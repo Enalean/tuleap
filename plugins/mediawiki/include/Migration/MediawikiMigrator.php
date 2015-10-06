@@ -27,12 +27,15 @@ class Mediawiki_Migration_MediawikiMigrator {
      * @throws System_Command_CommandException
      */
     public function migrateProjectTo123(Project $project) {
+        $this->runUpdateScript($project);
+    }
+
+    public function runUpdateScript(Project $project) {
         $system_execution = new System_Command();
         $system_execution->exec($this->getCommandToExecute($project));
-
     }
 
     private function getCommandToExecute(Project $project) {
-        return $GLOBALS['codendi_dir'] . self::PATH_TO_EXECUTION_SCRIPT . " " . escapeshellarg($project->getUnixName()) . " --conf " . $GLOBALS['codendi_dir'] . self::PATH_TO_LOCALSETTINGS;
+        return $GLOBALS['codendi_dir'] . self::PATH_TO_EXECUTION_SCRIPT . " " . escapeshellarg($project->getUnixName()) . " --conf " . $GLOBALS['codendi_dir'] . self::PATH_TO_LOCALSETTINGS . " --quick";
     }
 }

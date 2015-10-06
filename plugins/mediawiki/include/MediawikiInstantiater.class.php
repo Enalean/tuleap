@@ -66,8 +66,16 @@ class MediaWikiInstantiater {
      * @param Project|string $project
      * @param MediawikiManager $mediawiki_manager
      * @param MediawikiLanguageManager $language_manager
+     * @param MediawikiVersionManager $version_manager
+     * @param MediawikiMLEBExtensionManager $mleb_manager
      */
-    public function __construct(Project $project, MediawikiManager $mediawiki_manager, MediawikiLanguageManager $language_manager, MediawikiVersionManager $version_manager) {
+    public function __construct(
+        Project $project,
+        MediawikiManager $mediawiki_manager,
+        MediawikiLanguageManager $language_manager,
+        MediawikiVersionManager $version_manager,
+        MediawikiMLEBExtensionManager $mleb_manager
+    ) {
         $this->logger              = new BackendLogger();
         $this->project             = $project;
         $this->project_name        = $project->getUnixName();
@@ -76,6 +84,7 @@ class MediaWikiInstantiater {
         $this->mediawiki_manager   = $mediawiki_manager;
         $this->language_manager    = $language_manager;
         $this->version_manager     = $version_manager;
+        $this->mleb_manager        = $mleb_manager;
         $this->resource_restrictor = new MediawikiSiteAdminResourceRestrictor(
             new MediawikiSiteAdminResourceRestrictorDao(),
             ProjectManager::instance()
@@ -128,6 +137,7 @@ class MediaWikiInstantiater {
             $this->createDatabase($this->getMediawikiPath());
             if ($this->isMediawiki123()) {
                 $this->version_manager->saveVersionForProject($this->project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
+                $this->mleb_manager->activateMLEBForProject($this->project);
                 $this->resource_restrictor->allowProject($this->project);
             } else {
                 $this->version_manager->saveVersionForProject($this->project, MediawikiVersionManager::MEDIAWIKI_120_VERSION);

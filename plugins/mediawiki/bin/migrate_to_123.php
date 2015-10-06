@@ -27,4 +27,5 @@ if (! isset($argv[1])) {
 
 $fusionforgeproject      = $argv[1];
 $is_tuleap_mediawiki_123 = true;
+$IS_RUNNING_UPDATE       = true;
 include('/usr/share/mediawiki-tuleap-123/maintenance/update.php');

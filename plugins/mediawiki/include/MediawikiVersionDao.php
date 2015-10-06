@@ -30,4 +30,14 @@
 
          return $this->update($sql);
      }
+
+    public function getVersionForProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT mw_version
+                FROM plugin_mediawiki_version
+                WHERE project_id = $project_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
  }
