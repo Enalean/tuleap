@@ -53,6 +53,7 @@ svn_admin_immutable_tags	svn_status_style	Façon SVN status
 svn_admin_immutable_tags	loading	Chargement en cours...
 svn_admin_immutable_tags	select_tag	Veuillez sélectionner un tag dans l'arborescence à gauche
 svn_admin_immutable_tags	tree_empty_state	Votre dépôt SVN n'est pas impacté par les tags immutable car la configuration actuelle est vide ou ne correspond pas à l'arborescence du dépôt.
+svn_admin_immutable_tags	sooo_fat	Votre dépôt contient trop de dossiers (plus que $1), nous ne pouvons pas afficher la prévisualisation de la configuration pour des raisons de performances.
 
 #
 #-----------------------------------------------

@@ -57,7 +57,7 @@
             direct_access_to_node = {},
             immutable_tags_tree   = $('#immutable-tags-tree');
 
-        if (immutable_tags_tree.length === 0) {
+        if (immutable_tags_tree.length === 0 || immutable_tags_tree.data('existing-tree').length === 0 ) {
             return;
         }
 

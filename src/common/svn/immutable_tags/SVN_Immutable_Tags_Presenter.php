@@ -21,6 +21,8 @@
 
 class SVN_ImmutableTagsPresenter {
 
+    const MAX_NUMBER_OF_FOLDERS = 10000;
+
     /** @var Project */
     private $project;
 
@@ -33,6 +35,9 @@ class SVN_ImmutableTagsPresenter {
     /** @var array */
     public $existing_tree;
 
+    /** @var bool */
+    public $exceeds_max_number_of_folders;
+
     public function __construct(
         Project $project,
         $immutable_tags_whitelist,
@@ -43,9 +48,14 @@ class SVN_ImmutableTagsPresenter {
         $this->immutable_tags_whitelist = $immutable_tags_whitelist;
         $this->immutable_tags_path      = $immutable_tags_path;
 
-        $existing_tree       = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
-        array_walk($existing_tree, array($this, 'addSlasheAsPrefix'));
-        usort($existing_tree, 'strnatcasecmp');
+        $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
+        $this->exceeds_max_number_of_folders = count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS;
+        if ($this->exceeds_max_number_of_folders) {
+            $existing_tree = array();
+        } else {
+            array_walk($existing_tree, array($this, 'addSlasheAsPrefix'));
+            usort($existing_tree, 'strnatcasecmp');
+        }
 
         $this->existing_tree = json_encode($existing_tree);
     }
@@ -122,6 +132,10 @@ class SVN_ImmutableTagsPresenter {
 
     public function path() {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'path');
+    }
+
+    public function sooo_fat() {
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'sooo_fat', self::MAX_NUMBER_OF_FOLDERS);
     }
 
     public function save() {
