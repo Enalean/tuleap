@@ -16,6 +16,7 @@ Version 8.7 (not released yet)
 	* request #8450: tuleap utility could be used in CentOS 5
 	* request #8426: Update the glue to allow mixed anonymous / restricted usage
 	* request #8456: TV3 are instantiated even when unused
+	* request #8470: Disable long options of the tuleap utility on PHP 5.1
 
 	== Plugins ==
 	* tracker: 5.702
