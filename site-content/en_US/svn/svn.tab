@@ -60,6 +60,7 @@ svn_admin_immutable_tags	svn_status_style	SVN status style
 svn_admin_immutable_tags	loading	Loading...
 svn_admin_immutable_tags	select_tag	Please select tag on the left
 svn_admin_immutable_tags	tree_empty_state	Your SVN repository is not impacted by immutable tags because the configuration is empty or does not match the current repository layout
+svn_admin_immutable_tags	sooo_fat	Your repository contains too many folders (more than $1), for performance reasons, we cannot display the preview of your configuration.
 
 #
 #-----------------------------------------------
