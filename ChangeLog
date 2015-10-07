@@ -19,7 +19,7 @@ Version 8.7 (not released yet)
 	* request #8470: Disable long options of the tuleap utility on PHP 5.1
 
 	== Plugins ==
-	* tracker: 5.702
+	* tracker: 5.703
 	* agiledashboard: 1.285
 	* git: 4.86
 	* docman: 2.26.85

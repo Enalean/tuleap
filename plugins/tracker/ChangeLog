@@ -1,3 +1,6 @@
+Version 5.703 - Tuleap 8.7
+    * request #8121: Using masschange on Task based artifacts resets assignments
+
 Version 5.702 - Tuleap 8.7
     * story #8372: Fix wrong submitted_by_details value in REST route
 
