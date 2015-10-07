@@ -1,3 +1,6 @@
+Version 4.86 - Tuleap 8.7
+    * request #8469: Fix end of line of the Tuleap Git PostRecevice sudoers file
+
 Version 4.85 - Tuleap 8.7
     * story #8340: Git service can send truncated notifications
 
