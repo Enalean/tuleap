@@ -19,9 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$tuleap_short_options = 'hvc';
+$tuleap_long_options  = array('help', 'version', 'clear-caches');
+
 $command = '';
 
-$options = getopt('hv', array('help', 'version', 'clear-caches'));
+if (version_compare(phpversion(), '5.3', '>=')) {
+    $options = getopt($tuleap_short_options, $tuleap_long_options);
+} else {
+    $options = getopt($tuleap_short_options);
+}
 foreach ($options as $option => $value) {
     switch ($option) {
         case 'h':
@@ -35,6 +42,7 @@ foreach ($options as $option => $value) {
             $command = 'version';
             break;
 
+        case 'c':
         case 'clear-caches':
             $command = 'clear-caches';
             break;
@@ -72,7 +80,7 @@ Options:
 
     -h, --help          Print usage
     -v, --version       Tuleap version
-    --clear-caches      Clear caches
+    -c, --clear-caches      Clear caches
 
 EOT;
 }
