@@ -1819,7 +1819,11 @@ EOS;
         $send_notifications,
         $comment_format
     ) {
+        $fields_data['request_method_called'] = 'artifact-masschange';
+
         $this->augmentDataFromRequest($fields_data);
+
+        unset($fields_data['request_method_called']);
 
         $not_updated_aids = array();
         foreach ( $masschange_aids as $aid ) {
