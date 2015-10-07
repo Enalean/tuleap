@@ -17,6 +17,7 @@ Version 8.7 (not released yet)
 	* request #8426: Update the glue to allow mixed anonymous / restricted usage
 	* request #8456: TV3 are instantiated even when unused
 	* request #8470: Disable long options of the tuleap utility on PHP 5.1
+	* request #8468: Unable to access svn immutable tags configuration with huge repository
 
 	== Plugins ==
 	* tracker: 5.703
@@ -28,7 +29,7 @@ Version 8.7 (not released yet)
 	* phpwiki: 0.8
 
     == Themes ==
-	* FlamingParrot: 1.109
+	* FlamingParrot: 1.110
 
 Version 8.6 (Friday, September 11th 2015)
 
