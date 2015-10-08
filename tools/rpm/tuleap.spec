@@ -836,7 +836,6 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite
     %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite/conf
     %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist $GITOLITE_BASE_DIR/.gitolite/conf/gitolite.conf
-    %{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
     su -c 'gl-setup /tmp/id_rsa_gl-adm.pub' - gitolite
 
     # checkout
@@ -857,6 +856,7 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
 	usermod -a -G gitolite codendiadm
     fi
 fi
+%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
 
 #
 # Post install of tracker plugin (clean combined js)
