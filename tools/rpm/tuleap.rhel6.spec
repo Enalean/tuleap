@@ -761,7 +761,6 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite
     %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite/conf
     %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist $GITOLITE_BASE_DIR/.gitolite/conf/gitolite.conf
-    %{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
     su -c 'gl-setup /tmp/id_rsa_gl-adm.pub' - gitolite
 
     # checkout
@@ -782,6 +781,7 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
 	usermod -a -G gitolite codendiadm
     fi
 fi
+%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
 
 %post plugin-git-gitolite3
 if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
@@ -802,7 +802,6 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     su -c 'git config --global user.name "gitolite"' - gitolite
     su -c 'git config --global user.email gitolite@localhost' - gitolite
     su -c 'gitolite setup -pk /tmp/id_rsa_gl-adm.pub' - gitolite
-    %{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /var/lib/gitolite/.gitolite/hooks/common/post-receive
 
     # checkout
     %{__cat} "%{APP_DIR}/plugins/git/etc/ssh.config.dist" >> "%{APP_HOME_DIR}/.ssh/config"
@@ -826,6 +825,10 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
 	usermod -a -G gitolite codendiadm
     fi
+fi
+%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /var/lib/gitolite/.gitolite/hooks/common/post-receive
+if [ -f /usr/share/gitolite/hooks/common/post-receive ]; then
+	%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
 fi
 
 #
