@@ -1,3 +1,6 @@
+Version 4.87 - Tuleap 8.7
+    * request #8471: Git post receive hooks are not correctly deployed on existing instances
+
 Version 4.86 - Tuleap 8.7
     * request #8469: Fix end of line of the Tuleap Git PostRecevice sudoers file
 
