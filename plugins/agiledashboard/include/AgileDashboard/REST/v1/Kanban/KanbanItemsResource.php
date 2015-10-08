@@ -48,6 +48,7 @@ use Tuleap\Tracker\REST\TrackerReference                  as TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepresentation;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanItemManager;
+use Tuleap\RealTime\NodeJSClient;
 
 class KanbanItemsResource extends AuthenticatedResource {
 
@@ -78,6 +79,11 @@ class KanbanItemsResource extends AuthenticatedResource {
     /** @var AgileDashboardStatisticsAggregator */
     private $statistics_aggregator;
 
+    /** @var NodeJSClient */
+    private $node_js_client;
+
+    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+
     public function __construct() {
         $this->tracker_factory      = TrackerFactory::instance();
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
@@ -105,6 +111,8 @@ class KanbanItemsResource extends AuthenticatedResource {
         $this->kanban_item_manager   = new AgileDashboard_KanbanItemManager($kanban_item_dao);
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
+
+        $this->node_js_client = new NodeJSClient();
     }
 
     /**
@@ -167,7 +175,19 @@ class KanbanItemsResource extends AuthenticatedResource {
             $tracker->getGroupId()
         );
 
-        return $this->buildItemRepresentation($artifact);
+        $item_representation = $this->buildItemRepresentation($artifact);
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $this->node_js_client->sendMessage(
+                $current_user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $item->kanban_id,
+                'kanban_item:create',
+                $item_representation
+            );
+        }
+
+        return $item_representation;
     }
 
     /**

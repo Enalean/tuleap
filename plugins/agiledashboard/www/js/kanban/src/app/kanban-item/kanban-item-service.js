@@ -2,12 +2,13 @@ angular
     .module('kanban')
     .service('KanbanItemService', KanbanItemService);
 
-KanbanItemService.$inject = ['Restangular'];
+KanbanItemService.$inject = ['Restangular', 'SharedPropertiesService'];
 
-function KanbanItemService(Restangular) {
+function KanbanItemService(Restangular, SharedPropertiesService) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl('/api/v1');
+        RestangularConfigurer.setDefaultHeaders({"X-Client-UUID": SharedPropertiesService.getUUID()});
     });
 
     return {

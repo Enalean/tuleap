@@ -1,7 +1,7 @@
 <IfModule mod_headers.c>
     Header set Access-Control-Allow-Origin "*"
     Header set Access-Control-Allow-Credentials true
-    Header set Access-Control-Allow-Headers "Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token"
+    Header set Access-Control-Allow-Headers "Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token, X-Client-Uuid"
     Header set Access-Control-Expose-Headers "X-PAGINATION-SIZE, X-PAGINATION-LIMIT-MAX, X-PAGINATION-LIMIT"
 </IfModule>
 <IfModule mod_rewrite.c>

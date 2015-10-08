@@ -437,7 +437,7 @@ class KanbanTest extends RestBase {
             json_encode(array(
                 "item" => array(
                     "label"     => "New item in backlog",
-                    "kanban_id" => REST_TestDataBuilder::KANBAN_ID,
+                    "kanban_id" => REST_TestDataBuilder::KANBAN_ID
                 )
             ))
         ));
