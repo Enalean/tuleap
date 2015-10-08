@@ -18,6 +18,7 @@ Version 8.7 (not released yet)
 	* request #8456: TV3 are instantiated even when unused
 	* request #8470: Disable long options of the tuleap utility on PHP 5.1
 	* request #8468: Unable to access svn immutable tags configuration with huge repository
+	* request #8471: Git post receive hooks are not correctly deployed on existing instances
 
 	== Plugins ==
 	* tracker: 5.703
