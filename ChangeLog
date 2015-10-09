@@ -28,6 +28,7 @@ Version 8.7 (not released yet)
 	* ldap: 3.87
 	* mediawiki: 0.96
 	* phpwiki: 0.8
+	* webdav: 1.9.13
 
     == Themes ==
 	* FlamingParrot: 1.110

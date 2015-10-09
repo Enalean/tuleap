@@ -1,3 +1,6 @@
+Version 1.9.13 - Tuleap 8.7
+    * request #8476: Unable to write file in Webdav
+
 Version 1.9.12 - Tuleap 8.5
     * request #8261 - Restricted users can access artifacts in public projects
 
