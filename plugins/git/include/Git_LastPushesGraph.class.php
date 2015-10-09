@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -32,7 +33,7 @@ class Git_LastPushesGraph {
     /**
      * @var Array
      */
-    public $repoList;
+    public $repoList   = array();
 
     /**
      * @var Integer
@@ -188,8 +189,6 @@ class Git_LastPushesGraph {
 
     /**
      * Display the graph else an error if no pushes for this period
-     * 
-     * @return void
      */
     public function display() {
         $graph = $this->prepareGraph();
@@ -199,6 +198,6 @@ class Git_LastPushesGraph {
         } else {
             $graph->displayMessage($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_error', $this->weeksNumber));
         }
+        die();
     }
 }
-?>
