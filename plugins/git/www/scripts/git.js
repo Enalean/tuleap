@@ -2,6 +2,21 @@ codendi.git = codendi.git || {};
 codendi.git.base_url = '/plugins/git/';
 
 document.observe('dom:loaded', function () {
+    var entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;'
+    };
+
+    function escapeHtml(string) {
+        return String(string).replace(/[&<>"'\/]/g, function fromEntityMap (s) {
+            return entityMap[s];
+        });
+    }
+
     var fork_repositories_prefix = $('fork_repositories_prefix');
 
     if (fork_repositories_prefix) {
@@ -35,10 +50,10 @@ document.observe('dom:loaded', function () {
                 var tplVars = {
                     path: '',
                     repo: '...',
-                    dest: getForkDestination()
+                    dest: escapeHtml(getForkDestination())
                 };
                 if (fork_destination.disabled && $F('fork_repositories_path').strip()) {
-                    tplVars['path'] = $F('fork_repositories_path').strip() + '/';
+                    tplVars['path'] = escapeHtml($F('fork_repositories_path').strip() + '/');
                 }
                 var reposList = $('fork_repositories_repo');
                 if (reposList.selectedIndex >= 0) {
@@ -46,7 +61,7 @@ document.observe('dom:loaded', function () {
                     preview.update('');
                     for (var repoIndex = 0, len =reposList.options.length ; repoIndex < len ; ++repoIndex) {
                         if (reposList.options[repoIndex].selected) {
-                            tplVars.repo = reposList.options[repoIndex].text;
+                            tplVars.repo = escapeHtml(reposList.options[repoIndex].text);
                             preview.insert(tpl.evaluate(tplVars));
                         }
                     }
