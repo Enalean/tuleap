@@ -110,7 +110,11 @@ class WebDAVPlugin extends Plugin {
 
         // The lock manager is reponsible for making sure users don't overwrite each others changes.
         // The locks repository is where temporary data related to locks is stored.
-        $lockBackend = new Sabre_DAV_Locks_Backend_FS($GLOBALS['codendi_cache_dir'].'/plugins/webdav/locks');
+        $locks_path = $GLOBALS['codendi_cache_dir'].'/plugins/webdav/locks';
+        if (! is_dir($locks_path)) {
+            mkdir($locks_path, 0750, true);
+        }
+        $lockBackend = new Sabre_DAV_Locks_Backend_FS($locks_path);
         $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
         $server->addPlugin($lockPlugin);
 
