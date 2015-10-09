@@ -277,6 +277,16 @@ tracker =
                 }
             )
          |
+             (
+                 attribute type { "description" },
+                 element shortname {xsd:string},
+                 element label {xsd:string},
+                 element description {xsd:string},
+                 element field {
+                     attribute REF { xsd:IDREF }
+                 }
+             )
+          |
             (
                 attribute type { "status" },
                 element shortname {xsd:string},
