@@ -32,7 +32,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         //store the custom access file in db
 
         if ($request->exist('submit_new_version')) {
-            $form_accessfile = $saf->parseGroupLines($project, $request->get('form_accessfile'), true);
+            $form_accessfile = trim(
+                $saf->parseGroupLines($project, $request->get('form_accessfile'), true)
+            );
             $dao->saveNewAccessFileVersionInProject($group_id, $form_accessfile);
         } else {
             $form_accessfile = $saf->parseGroupLines($project, $request->get('other_version_content'), true);
