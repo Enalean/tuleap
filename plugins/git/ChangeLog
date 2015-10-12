@@ -1,3 +1,6 @@
+Version 4.89 - Tuleap 8.8
+    * request #8475: Fix XSS in the fork repository page
+
 Version 4.88 - Tuleap 8.7
     * request #8471: Git post receive hooks are not correctly deployed on existing instances
 

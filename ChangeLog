@@ -6,6 +6,9 @@ Version 8.8 (Not released yet)
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
 
+    == Plugins ==
+	* git: 4.89
+
 Version 8.7 (Monday, October 12th 2015)
 
 	== Enhancement ==
