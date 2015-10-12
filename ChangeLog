@@ -5,6 +5,7 @@ Version 8.8 (Not released yet)
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
+	* request #8101: All access are denied in SVN if a space is added before a path in the SVN access control file
 
     == Plugins ==
 	* git: 4.89
