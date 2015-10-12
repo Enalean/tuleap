@@ -20,6 +20,10 @@
 
 class REST_TestDataBuilder extends TestDataBuilder {
 
+    const TEST_USER_4_NAME        = 'rest_api_tester_4';
+    const TEST_USER_4_PASS        = 'welcome0';
+    const TEST_USER_4_STATUS      = 'A';
+
     const EPICS_TRACKER_ID        = 1;
     const RELEASES_TRACKER_ID     = 2;
     const SPRINTS_TRACKER_ID      = 3;
@@ -116,6 +120,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $user_2->setUserName(self::TEST_USER_2_NAME);
         $user_2->setPassword(self::TEST_USER_2_PASS);
         $user_2->setStatus(self::TEST_USER_2_STATUS);
+        $user_2->setEmail(self::TEST_USER_2_EMAIL);
         $user_2->setLanguage($GLOBALS['Language']);
         $user_2->setAuthorizedKeys('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHk9 toto@marche');
         $this->user_manager->createAccount($user_2);
@@ -124,8 +129,17 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $user_3->setUserName(self::TEST_USER_3_NAME);
         $user_3->setPassword(self::TEST_USER_3_PASS);
         $user_3->setStatus(self::TEST_USER_3_STATUS);
+        $user_3->setEmail(self::TEST_USER_3_EMAIL);
         $user_3->setLanguage($GLOBALS['Language']);
         $this->user_manager->createAccount($user_3);
+
+        $user_4 = new PFUser();
+        $user_4->setUserName(self::TEST_USER_4_NAME);
+        $user_4->setPassword(self::TEST_USER_4_PASS);
+        $user_4->setStatus(self::TEST_USER_4_STATUS);
+        $user_4->setEmail(self::TEST_USER_1_EMAIL);
+        $user_4->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($user_4);
 
         return $this;
     }

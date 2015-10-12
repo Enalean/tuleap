@@ -45,12 +45,14 @@ class TestDataBuilder {
     const TEST_USER_2_DISPLAYNAME = ' (rest_api_tester_2)';
     const TEST_USER_2_PASS        = 'welcome0';
     const TEST_USER_2_STATUS      = 'A';
+    const TEST_USER_2_EMAIL       = 'test_user_2@myzupermail.com';
 
     const TEST_USER_3_ID          = 104;
     const TEST_USER_3_NAME        = 'rest_api_tester_3';
     const TEST_USER_3_DISPLAYNAME = ' (rest_api_tester_3)';
     const TEST_USER_3_PASS        = 'welcome0';
     const TEST_USER_3_STATUS      = 'A';
+    const TEST_USER_3_EMAIL       = 'test_user_3@myzupermail.com';
 
     const ADMIN_PROJECT_ID          = 100;
     const PROJECT_PRIVATE_MEMBER_ID = 101;
