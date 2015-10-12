@@ -1,5 +1,8 @@
 Version 8.8 (Not released yet)
 
+	== Enhancement ==
+	* request #8467: Allow users to use other lang than EN or FR
+
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
 
