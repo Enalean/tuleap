@@ -411,11 +411,10 @@ class FRSReleaseFactory {
                 $array_emails[] = $res['email'];
             }
 
-            $notification = $this->getNotification($release, $package, $array_emails);
+            $notification    = $this->getNotification($release, $package, $array_emails);
+            $is_email_sent   = $this->sendEmail($release, $notification);
 
-            $mail = $this->getEmail($release, $notification);
-
-            if ($mail->send()) {
+            if ($is_email_sent) {
                 return count($result);
             } else {
                 return false;
@@ -452,9 +451,9 @@ class FRSReleaseFactory {
     }
 
     /**
-     * @return Codendi_Mail
+     * @return bool
      */
-    private function getEmail(FRSRelease $release, Notification $notification) {
+    private function sendEmail(FRSRelease $release, Notification $notification) {
         $builder = new MailBuilder(TemplateRendererFactory::build());
 
         return $builder->buildAndSendEmail($release->getProject(), $notification, new MailEnhancer());
