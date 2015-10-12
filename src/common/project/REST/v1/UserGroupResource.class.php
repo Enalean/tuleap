@@ -39,7 +39,8 @@ class UserGroupResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
 
-    const KEY_ID = 'id';
+    const KEY_ID      = 'id';
+    const USERNAME_ID = 'username';
 
     /** @var UGroupManager */
     private $ugroup_manager;
@@ -155,6 +156,7 @@ class UserGroupResource extends AuthenticatedResource {
      * Notes on the user reference format. It can be:
      * <ul>
      * <li> {"id": user_id} </li>
+     * <li> {"username": user_name} </li>
      * </ul>
      *
      * @url PUT {id}/users
@@ -196,15 +198,26 @@ class UserGroupResource extends AuthenticatedResource {
         $this->checkGroupIsViewable($user_group->getId());
     }
 
+    /**
+     * @return PFUser
+     */
+    private function getUserRegardingKey($key, $value) {
+        if ($key === self::KEY_ID) {
+            return $this->user_manager->getUserById($value);
+        } elseif ($key === self::USERNAME_ID) {
+            return $this->user_manager->getUserByUserName($value);
+        }
+    }
+
     private function addMembersToUgroup(ProjectUGroup $user_group, $user_references) {
         foreach ($user_references as $user_reference) {
-            $key     = key($user_reference);
-            $user_id = $user_reference[$key];
+            $key   = key($user_reference);
+            $value = $user_reference[$key];
 
-            $user = $this->user_manager->getUserById($user_id);
+            $user = $this->getUserRegardingKey($key, $value);
 
             if (! $user) {
-                throw new RestException(400, "User with id $user_id not known");
+                throw new RestException(400, "User with reference $key: $value not known");
             }
 
             $user_group->addUser($user);
@@ -216,7 +229,11 @@ class UserGroupResource extends AuthenticatedResource {
             return true;
         }
 
-        $first_key = null;
+        $first_key          = null;
+        $available_keywords = array(
+            self::KEY_ID,
+            self::USERNAME_ID,
+        );
 
         foreach ($user_references as $user_reference) {
 
@@ -226,14 +243,14 @@ class UserGroupResource extends AuthenticatedResource {
 
             $key = key($user_reference);
 
-            if ($key !== self::KEY_ID) {
+            if (! in_array($key, $available_keywords)) {
                 throw new RestException(400, "key $key not known");
             }
 
             if ($first_key === null) {
                 $first_key = $key;
             } elseif ($first_key !== $key) {
-                throw new RestException(400, "ids have not the same type");
+                throw new RestException(400, "references have to use the same type");
             }
         }
 
