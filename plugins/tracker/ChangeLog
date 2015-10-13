@@ -1,3 +1,6 @@
+Version 5.706 - Tuleap 8.8
+    * story #8432: unset semantic description
+
 Version 5.705 - Tuleap 8.8
     * request #8438:Fix warning when using artifact batch iterator during FTS tracker reindex without order params
 
