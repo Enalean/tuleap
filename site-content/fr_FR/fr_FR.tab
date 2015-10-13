@@ -20,7 +20,7 @@
 #
 
 system	locale	fr_FR
-system	locale_label	Française
+system	locale_label	Français
 system	strftimefmt	%e %B %Y  %H:%M
 system	datefmt	d/m/Y H:i
 system	datefmt_short	d/m/Y
@@ -48,6 +48,7 @@ global	btn_create	Créer
 global	btn_preview	Prévisualiser
 global	btn_close	Fermer
 global	btn_reset	Réinitialiser
+global	save_change	Sauvegarder vos modifications
 global	reset	réinitialiser
 global	delete	Supprimer
 global	add	Ajouter
@@ -94,7 +95,7 @@ global	at_the_end	À la fin
 global	after	Après $1
 global	missing_parameters	Paramètres manquants
 global	error_upload	Erreur de chargement de fichier.
-global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
+global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé.
 global	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
 global	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
 global	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.

@@ -1271,6 +1271,9 @@ plugin_tracker_admin_semantic	bad_field_description	Le champ soumis n'est pas un
 plugin_tracker_admin_semantic	description_impossible	Vous ne pouvez pas définir la sémantique <em>description</em> car il n'y a aucun champ texte dans votre outil de suivi.
 plugin_tracker_admin_semantic	description_now	La description est maintenant : $1
 plugin_tracker_admin_semantic	unable_save_description	Impossible de sauvegarder la description
+plugin_tracker_admin_semantic	deleted_description	La sémantique description a été réinitialisée.
+
+plugin_tracker_admin_semantic	unset	Réinitialiser cette sémantique
 plugin_tracker_admin_semantic	choose_one_advice	N'hésitez pas à en choisir un :
 plugin_tracker_admin_semantic	status_label	État
 plugin_tracker_admin_semantic	status_description	Définir l'état d'un artifact
