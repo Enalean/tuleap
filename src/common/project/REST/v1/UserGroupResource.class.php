@@ -186,8 +186,13 @@ class UserGroupResource extends AuthenticatedResource {
 
         $this->checkKeysValidity($user_references);
 
-        $user_group->removeAllUsers();
-        $this->addMembersToUgroup($user_group, $user_references);
+        $users_to_add = $this->getMembersToAdd($user_references);
+
+        try {
+            $this->ugroup_manager->resetUgroupMembers($user_group, $users_to_add);
+        } catch (Exception $exception) {
+            throw new RestException(500, "An error occured while setting members in ugroup");
+        }
     }
 
     private function checkUgroupValidity(ProjectUGroup $user_group) {
@@ -227,7 +232,13 @@ class UserGroupResource extends AuthenticatedResource {
         }
     }
 
-    private function addMembersToUgroup(ProjectUGroup $user_group, $user_references) {
+    /**
+     * @return array
+     * @throws RestException
+     */
+    private function getMembersToAdd(array $user_references) {
+        $users_to_add = array();
+
         foreach ($user_references as $user_reference) {
             $key   = key($user_reference);
             $value = $user_reference[$key];
@@ -238,8 +249,10 @@ class UserGroupResource extends AuthenticatedResource {
                 throw new RestException(400, "User with reference $key: $value not known");
             }
 
-            $user_group->addUser($user);
+            $users_to_add[] = $user;
         }
+
+        return $users_to_add;
     }
 
     private function checkKeysValidity(array $user_references) {

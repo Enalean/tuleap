@@ -1344,7 +1344,7 @@ CREATE TABLE user_group (
   KEY forum_flags_idx (forum_flags),
   KEY project_flags_idx (project_flags),
   KEY admin_flags_idx (admin_flags)
-);
+) ENGINE=InnoDB;
 
 
 #
@@ -1573,7 +1573,7 @@ CREATE TABLE ugroup (
 CREATE TABLE ugroup_user (
   ugroup_id int(11) NOT NULL,
   user_id int(11) NOT NULL
-);
+) ENGINE=InnoDB;
 
 
 #
