@@ -1262,6 +1262,8 @@ plugin_tracker_admin_semantic	bad_field_title	Le champ soumis n'est pas un champ
 plugin_tracker_admin_semantic	title_impossible	Vous ne pouvez pas définir la sémantique <em>titre</em> car il n'y a aucun champ texte dans votre outil de suivi.
 plugin_tracker_admin_semantic	title_now	Le titre est maintenant : $1
 plugin_tracker_admin_semantic	unable_save_title	Impossible de sauvegarder le titre
+plugin_tracker_admin_semantic	deleted_title	La sémantique titre a été réinitialisée.
+
 plugin_tracker_admin_semantic	description_label	Description
 plugin_tracker_admin_semantic	description_description	Définir la description d'un artéfact
 plugin_tracker_admin_semantic	description_long_desc	<p>La <strong>description</strong> est un résumé ou un texte libre à propos de l'artéfact.</p>
