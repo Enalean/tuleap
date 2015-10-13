@@ -331,30 +331,6 @@ Upload new file releases here
 EOF
     $CHOWN ftpadmin.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.message
 
-    if [ "$INSTALL_PROFILE" = "rhel" ]; then
-	# Debian provides a logrotate file by default
-	# Log Rotate
-	$CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/vsftpd.log
-/var/log/xferlog {
-    # ftpd doesn't handle SIGHUP properly
-    nocompress
-    missingok
-    daily
-    postrotate
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="ftp_xferlog_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/xferlog.1 $destdir/$destfile
-    endscript
-}
-EOF
-	$CHOWN root:root /etc/logrotate.d/vsftpd.log
-	$CHMOD 644 /etc/logrotate.d/vsftpd.log
-    fi
-
     # Start service
     enable_service vsftpd
     control_service vsftpd restart
