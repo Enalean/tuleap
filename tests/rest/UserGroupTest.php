@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,13 @@ class UserGroupTest extends RestBase {
     protected function getResponse($request) {
         return $this->getResponseByToken(
             $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
+            $request
+        );
+    }
+
+    private function getResponseWithUser2($request) {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
             $request
         );
     }
@@ -98,7 +105,7 @@ class UserGroupTest extends RestBase {
     public function testOptionsUsers() {
         $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -223,5 +230,107 @@ class UserGroupTest extends RestBase {
             )
         );
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPutUsersInUserGroup() {
+        $put_resource = json_encode(array(
+            array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_2_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_3_ID)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
+        );
+
+        $response_get_json = $response_get->json();
+
+        $this->assertEquals(count($response_get_json), 3);
+        $this->assertEquals($response_get_json[0]["id"], 102);
+        $this->assertEquals($response_get_json[1]["id"], 103);
+        $this->assertEquals($response_get_json[2]["id"], 104);
+    }
+
+    /**
+     * @depends testPutUsersInUserGroup
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPutUsersInUserGroupWithTwoDifferentIds() {
+        $put_resource = json_encode(array(
+            array('id'       => REST_TestDataBuilder::TEST_USER_1_ID),
+            array('id'       => REST_TestDataBuilder::TEST_USER_2_ID),
+            array('username' => REST_TestDataBuilder::TEST_USER_3_NAME)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @depends testPutUsersInUserGroup
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPutUsersInUserGroupWithUnknownKey() {
+        $put_resource = json_encode(array(
+            array('unknown' => REST_TestDataBuilder::TEST_USER_1_ID),
+            array('id'      => REST_TestDataBuilder::TEST_USER_2_ID),
+            array('id'       => REST_TestDataBuilder::TEST_USER_3_NAME)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @depends testPutUsersInUserGroup
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPutUsersInUserGroupWithNonAdminUser() {
+        $put_resource = json_encode(array(
+            array('id' => REST_TestDataBuilder::TEST_USER_1_ID)
+        ));
+
+        $this->getResponseWithUser2($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
+    }
+
+    /**
+     * @depends testPutUsersInUserGroup
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPutUsersInUserGroupWithNonValidRepresentation() {
+        $put_resource = json_encode(array(
+            array(
+                'id'       => REST_TestDataBuilder::TEST_USER_1_ID,
+                'username' => REST_TestDataBuilder::TEST_USER_1_NAME
+            )
+        ));
+
+        $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
     }
 }

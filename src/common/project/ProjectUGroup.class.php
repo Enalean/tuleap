@@ -465,6 +465,12 @@ class ProjectUGroup implements User_UGroup {
         }
     }
 
+    public function removeAllUsers() {
+        foreach ($this->getMembers() as $member) {
+            $this->removeUser($member);
+        }
+    }
+
     /**
      * Remove user from static ugroup
      *
