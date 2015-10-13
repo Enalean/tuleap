@@ -1262,6 +1262,7 @@ plugin_tracker_admin_semantic	bad_field_title	The field you submitted is not a t
 plugin_tracker_admin_semantic	title_impossible	You cannot define the <em>title</em> semantic since there isn't any text field in the tracker
 plugin_tracker_admin_semantic	title_now	The title is now: $1
 plugin_tracker_admin_semantic	unable_save_title	Unable to save the title
+plugin_tracker_admin_semantic	deleted_title	Title semantic has been unset
 
 plugin_tracker_admin_semantic	description_label	Description
 plugin_tracker_admin_semantic	description_description	Define the description of an artifact
