@@ -49,3 +49,13 @@ CREATE TABLE plugin_statistics_disk_quota_exception (
     request_date int(11) unsigned NOT NULL default '0',
     PRIMARY KEY (group_id)
 ) ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS plugin_statistics_aggregator;
+CREATE TABLE plugin_statistics_aggregator (
+    project_id INT(11) NOT NULL,
+    day DATE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    value INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY (project_id, day, name(16)),
+    INDEX idx_day (day, name(16))
+) ENGINE = InnoDB;
