@@ -1,3 +1,6 @@
+Version 5.707 - Tuleap 8.8
+    * request #8464: Check if values set for field list are possible
+
 Version 5.706 - Tuleap 8.8
     * story #8432: unset semantic description
 
