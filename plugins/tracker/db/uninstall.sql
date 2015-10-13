@@ -68,6 +68,7 @@ DROP TABLE IF EXISTS tracker_notification_event_default;
 DROP TABLE IF EXISTS tracker_canned_response;
 DROP TABLE IF EXISTS tracker_staticfield_richtext;
 DROP TABLE IF EXISTS tracker_semantic_title;
+DROP TABLE IF EXISTS tracker_semantic_description;
 DROP TABLE IF EXISTS tracker_semantic_status;
 DROP TABLE IF EXISTS tracker_semantic_contributor;
 DROP TABLE IF EXISTS tracker_perm;

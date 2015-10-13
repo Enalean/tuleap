@@ -34,7 +34,7 @@ plugin_tracker	submit_at_least_one_field	You can't submit an artifact because yo
 #  *
 #  * Tracker scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -111,7 +111,7 @@ plugin_tracker_import	format_msg	To import artifacts from a CSV file you need to
 plugin_tracker_import	sample_cvs_file	Sample CSV file:
 plugin_tracker_import	import_new_hdr	Import Artifacts $1
 plugin_tracker_import	import_new_msg	You can import artifacts into this tracker by specifying a CSV file. <br>See the <a href="$1">CSV Import Format</a> for more details.
-plugin_tracker_import	upload_file	Upload File:	
+plugin_tracker_import	upload_file	Upload File:
 plugin_tracker_import	file_upload_instructions	(The maximum upload file size is $1 Mb. The file must be encoded in UTF-8)
 plugin_tracker_import	submit_info	Load artifacts
 plugin_tracker_import	send_notifications	Send Notifications:
@@ -181,8 +181,8 @@ plugin_tracker_import_utils	field_mandatory	"$1" is a mandatory field in tracker
 plugin_tracker_import_utils	not_a_predefined_value	<b>Line $1 [</b>$2<b>]</b>:<br>value "$3" is not one of the predefined values of field "$4" ($5).
 plugin_tracker_import_utils	field_mandatory_and_current	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file (current value is "$5").
 plugin_tracker_import_utils	incorrect_date	<b>Line $1 [</b>$2<b>]</b>:<br>Date "$3" is not in correct format (YYYY-MM-DD).
-plugin_tracker_import_utils	field_mandatory_and_line	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file.	
-plugin_tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 has already submitted an artifact with the same summary ("$4"). Please don't try to import it again.	
+plugin_tracker_import_utils	field_mandatory_and_line	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file.
+plugin_tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 has already submitted an artifact with the same summary ("$4"). Please don't try to import it again.
 plugin_tracker_import_utils	art_not_exists	<b>Line $1 [</b>$2<b>]</b>:<br>the specified artifact (id=$3) does not exist in tracker $4
 plugin_tracker_import_utils	date	Date
 plugin_tracker_import_utils	type	type
@@ -202,7 +202,7 @@ plugin_tracker_import_utils	problem_insert_followup	Error while inserting follow
 # Script: SF/www/tracker/tracker_selection.php
 #
 plugin_tracker_selection	no_tracker_available	No tracker available for this project!
-plugin_tracker_selection	tracker_sel	Tracker Selection	
+plugin_tracker_selection	tracker_sel	Tracker Selection
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/admin_trackers.php
@@ -212,7 +212,7 @@ plugin_tracker_admin_trackers	all_admin	All Trackers Administration
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/field_usage.php
 #
-plugin_tracker_admin_field_usage	tracker_admin	Tracker Administration 
+plugin_tracker_admin_field_usage	tracker_admin	Tracker Administration
 plugin_tracker_admin_field_usage	usage_admin	- Field Usage Administration
 #
 #-----------------------------------------------
@@ -227,7 +227,7 @@ plugin_tracker_admin_field_values_details	manage_for	 - Manage Field Values for 
 plugin_tracker_admin_index	create_tracker	- Create tracker
 plugin_tracker_admin_index	tracker_created	Tracker created - Click on the new tracker ID to complete the tracker configuration
 plugin_tracker_admin_index	not_create_canned	ArtifactCanned could not be created
-plugin_tracker_admin_index	not_retrieved_report	ArtifactReport could not be retrieved: $1 
+plugin_tracker_admin_index	not_retrieved_report	ArtifactReport could not be retrieved: $1
 plugin_tracker_admin_index	not_updated_report	ArtifactReport could not be updated
 plugin_tracker_admin_index	not_created_report	ArtifactReport could not be created
 plugin_tracker_admin_index	new_report_created	New report created
@@ -256,7 +256,7 @@ plugin_tracker_admin_index	field_removed	Field removed
 plugin_tracker_admin_index	field_added	Field added to the form
 plugin_tracker_admin_index	modify_usage	 - Modify Field Usage
 plugin_tracker_admin_index	modify_usage_for	 - Modify Field Usage for '$1'
-plugin_tracker_admin_index	deletion_failed	Tracker '$1' - Deletion Failed - 
+plugin_tracker_admin_index	deletion_failed	Tracker '$1' - Deletion Failed -
 plugin_tracker_admin_index	delete_success	Tracker '$1' - Successfully Deleted
 plugin_tracker_admin_index	tracker_deleted	In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:$1">Site Administrator</a> within the next 10 days.
 plugin_tracker_admin_index	fieldset_created	Field Set created
@@ -337,14 +337,14 @@ plugin_tracker_include_artifact	field	Field
 plugin_tracker_include_artifact	old_val	Old Value
 plugin_tracker_include_artifact	new_val	New Value
 plugin_tracker_include_artifact	no_changes	No changes have been made yet
-plugin_tracker_include_artifact	no_file_attached	No files currently attached	
+plugin_tracker_include_artifact	no_file_attached	No files currently attached
 plugin_tracker_include_artifact	file_attachment	File Attachments
 plugin_tracker_include_artifact	name	Name
 plugin_tracker_include_artifact	desc	Description
-plugin_tracker_include_artifact	size_kb	Size (KB)	
-plugin_tracker_include_artifact	size	Size	
-plugin_tracker_include_artifact	posted_on	Posted On	
-plugin_tracker_include_artifact	delete_attachment	Delete this attachment?	
+plugin_tracker_include_artifact	size_kb	Size (KB)
+plugin_tracker_include_artifact	size	Size
+plugin_tracker_include_artifact	posted_on	Posted On
+plugin_tracker_include_artifact	delete_attachment	Delete this attachment?
 plugin_tracker_include_artifact	cc_empty	CC List is empty
 plugin_tracker_include_artifact	artifact	Artifact
 plugin_tracker_include_artifact	summary	Summary
@@ -360,7 +360,7 @@ plugin_tracker_include_artifact	delete_comment	Delete this Follow-up Comment?
 plugin_tracker_include_artifact	added_by	Added by
 plugin_tracker_include_artifact	delete_cc	Delete this CC address?
 plugin_tracker_include_artifact	add_cc	Add CC:
-plugin_tracker_include_artifact	check_already_submitted	Did you check if this artifact has not already been submitted?</span></b> (use the search box)	
+plugin_tracker_include_artifact	check_already_submitted	Did you check if this artifact has not already been submitted?</span></b> (use the search box)
 plugin_tracker_include_artifact	latest_modif	LATEST MODIFICATIONS
 plugin_tracker_include_artifact	full_snapshot	FULL $1 SNAPSHOT
 plugin_tracker_include_artifact	follow_link	For detailed info, follow this link:
@@ -425,15 +425,15 @@ plugin_tracker_include_report	using_report	Use report
 plugin_tracker_include_report	btn_go	Go
 plugin_tracker_include_report	or_use	or use
 plugin_tracker_include_report	simple_search	Simple Search
-plugin_tracker_include_report	adv_search	Advanced Search	
+plugin_tracker_include_report	adv_search	Advanced Search
 plugin_tracker_include_report	sorted_by	sorted by
 plugin_tracker_include_report	matching	Matching artifacts: <strong>$1</strong>
-plugin_tracker_include_report	sort_results	Click a column heading to sort results (up or down), 
+plugin_tracker_include_report	sort_results	Click a column heading to sort results (up or down),
 plugin_tracker_include_report	sort_sev	sort by $1
 plugin_tracker_include_report	reset_sort	reset sort
 plugin_tracker_include_report	multicolumn_sort	You can also <a href="$1"><b> $2 multicolumn sort</b></a>.
 plugin_tracker_include_report	sev_colors	Severity Colors:
-plugin_tracker_include_report	no_match	No Matching Artifact Found	
+plugin_tracker_include_report	no_match	No Matching Artifact Found
 plugin_tracker_include_report	report_mgmt	Tracker Administration - Tracker Report Management
 plugin_tracker_include_report	report_admin	  - Reports Administration
 plugin_tracker_include_report	scope	Scope
@@ -448,7 +448,7 @@ plugin_tracker_include_report	no_rep_def	No artifact report defined yet.
 plugin_tracker_include_report	create_report	You can <b><A HREF="$1">Create a New Report</a></b>
 plugin_tracker_include_report	create_rep	Create A New Tracker Report
 plugin_tracker_include_report	field_label	Label
-plugin_tracker_include_report	search_crit	Use as a Search Criteria	
+plugin_tracker_include_report	search_crit	Use as a Search Criteria
 plugin_tracker_include_report	rank_search	Rank on Search
 plugin_tracker_include_report	rep_col	Use as a Report Column
 plugin_tracker_include_report	rank_repo	Rank on Report
@@ -487,7 +487,7 @@ plugin_tracker_include_type	restore_tracker	Restore this tracker?
 plugin_tracker_include_type	warning	** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?
 plugin_tracker_include_type	create_from_scratch	Create a new tracker from scratch or from an existing tracker
 plugin_tracker_include_type	manage	Manage Trackers
-plugin_tracker_include_type	admin_or_del	Administrate or delete a tracker.	
+plugin_tracker_include_type	admin_or_del	Administrate or delete a tracker.
 plugin_tracker_include_type	instantiate	Instantiate for new projects
 plugin_tracker_include_type	priority_changes	Log priority changes in follow-up comments
 plugin_tracker_include_type	administration	Administration
@@ -558,7 +558,7 @@ plugin_tracker_include_type	df	Date Field
 plugin_tracker_include_type	ff	Float Field
 plugin_tracker_include_type	if	Integer Field
 plugin_tracker_include_type	create_field	Create a new field
-plugin_tracker_include_type	upd_label	Update Field '$1'	
+plugin_tracker_include_type	upd_label	Update Field '$1'
 plugin_tracker_include_type	imp_note	<b>** IMPORTANT NOTE **</b> '$1' is a standard field of the tracker. Its purpose is global to all trackers and we strongly advise you not to change its label and description unless they have a similar meaning which preserves the role of the field.
 plugin_tracker_include_type	field_ident	Field Identification and Description
 plugin_tracker_include_type	field_type	Field Type
@@ -587,7 +587,7 @@ plugin_tracker_include_type	no_values	No values defined yet
 plugin_tracker_include_type	exist_values	Existing values
 plugin_tracker_include_type	value_label	Value Label
 plugin_tracker_include_type	rank	Rank
-plugin_tracker_include_type	del_value	Delete this field value?	
+plugin_tracker_include_type	del_value	Delete this field value?
 plugin_tracker_include_type	no_active_val	---- NO ACTIVE VALUES ----
 plugin_tracker_include_type	active_val	---- ACTIVE VALUES ----
 plugin_tracker_include_type	no_hidden_val	---- NO HIDDEN VALUES ----
@@ -607,8 +607,8 @@ plugin_tracker_include_type	admin_not_conf	<P>The tracker administrator hasn't y
 plugin_tracker_include_type	perso_mail_notif	Personal Email Notification
 plugin_tracker_include_type	users_to_watch	Users To Watch
 plugin_tracker_include_type	backup_person	You can receive a carbon copy of email notifications sent to certain users of this project. List the login name of any user you wish to watch, separated by commas.</b>
-plugin_tracker_include_type	watchers	For your information your own artifact notifications are currently watched by: <u>$1</u>	
-plugin_tracker_include_type	no_watcher	For your information <u>nobody</u> is currently watching your own artifact notifications. 
+plugin_tracker_include_type	watchers	For your information your own artifact notifications are currently watched by: <u>$1</u>
+plugin_tracker_include_type	no_watcher	For your information <u>nobody</u> is currently watching your own artifact notifications.
 plugin_tracker_include_type	event_settings	Event/Role Specific Settings
 plugin_tracker_include_type	tune_settings	You can tune your notification settings and decide what artifact changes you want to be aware of depending on your role.
 plugin_tracker_include_type	role_is	If my role in an artifact is:
@@ -623,7 +623,7 @@ plugin_tracker_include_type	avg_time	Average Turnaround Time For Closed $1
 plugin_tracker_include_type	nb_open	Number of Opened $1
 plugin_tracker_include_type	rep_field	Reporting on field
 plugin_tracker_include_type	open_by	Open $1 By $2
-plugin_tracker_include_type	all_by	All $1 By $2 
+plugin_tracker_include_type	all_by	All $1 By $2
 plugin_tracker_include_type	submit_mass_change	Submit
 plugin_tracker_include_type	occurrence	Occurrence
 plugin_tracker_include_type	notify_me	I want to be notified when:
@@ -699,16 +699,16 @@ plugin_tracker_common_artifact	insert_err	INSERT new artifact failed. Report to 
 plugin_tracker_common_artifact	field_err	 Artifact created, but failed to insert the field value - $1 : $2
 plugin_tracker_common_artifact	def_err	 Artifact created, but failed to insert the default field value - $1 : $2
 plugin_tracker_common_artifact	enter_email	 You need to enter an email!
-plugin_tracker_common_artifact	add_comment	 Comment added to artifact 
+plugin_tracker_common_artifact	add_comment	 Comment added to artifact
 plugin_tracker_common_artifact	comment_removed	Follow-up Comment removed
 plugin_tracker_common_artifact	err_del_comment	Error deleting Follow-up Comment ID $1: $2
 plugin_tracker_common_artifact	err_upd_comment	Error editing Follow-up Comment ID $1: $2
 plugin_tracker_common_artifact	field_upd_fail	Failed to update the field value $1
-plugin_tracker_common_artifact	canned_used	 Canned Response Used 
-plugin_tracker_common_artifact	unable_canned	 Unable to use Canned Response 
+plugin_tracker_common_artifact	canned_used	 Canned Response Used
+plugin_tracker_common_artifact	unable_canned	 Unable to use Canned Response
 plugin_tracker_common_artifact	upd_fail	UPDATE FAILED
 plugin_tracker_common_artifact	cc_add_fail	CC addition failed
-plugin_tracker_common_artifact	prob_cc_list	problem deleting old CC List (aid=$1). 
+plugin_tracker_common_artifact	prob_cc_list	problem deleting old CC List (aid=$1).
 plugin_tracker_common_artifact	err_cc_id	Error CC ID $1 doesn't belong to artifact ID
 plugin_tracker_common_artifact	err_del_cc	Error deleting CC ID $1: $2
 plugin_tracker_common_artifact	cc_remove	CC Removed
@@ -764,7 +764,7 @@ plugin_tracker_common_field	use_capacity	Use "capacity" field for ideal initial 
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldFactory.class.php
 #
-plugin_tracker_common_field_factory	missing	Missing fields: $1. Empty values for the above listed field(s) are not allowed. 
+plugin_tracker_common_field_factory	missing	Missing fields: $1. Empty values for the above listed field(s) are not allowed.
 plugin_tracker_common_field_factory	use_ins_err	Error during inserting artifact_field_usage ($1-$2): $3
 plugin_tracker_common_field_factory	vl_ins_err	Error during inserting artifact_field_value_list ($1-$2): $3
 plugin_tracker_common_field_factory	label_requ	Field label, data type or display type are required.
@@ -826,7 +826,7 @@ plugin_tracker_common_type	invalid_name	Error Invalid user name '$1'
 plugin_tracker_common_type	copy_fail	Error during inserting notification event
 plugin_tracker_common_type	notif_fail	Error during inserting notification role
 plugin_tracker_common_type	del_err	Error deleting dependencies $1: $2
-plugin_tracker_common_type	none_found	None Found 
+plugin_tracker_common_type	none_found	None Found
 plugin_tracker_common_type	invalid_mail	"$1" is not a valid email address
 plugin_tracker_common_type	no_view_permission	You don't have the permissions to view this tracker.
 plugin_tracker_common_type	shortname_already_exists	The short name '$1' is already used. Please use another one.
@@ -1026,7 +1026,7 @@ plugin_tracker_artifact	removed	removed
 plugin_tracker_artifact	added	added
 plugin_tracker_artifact	formelement_artifactlink_help	Enter artifact ids separated with a comma
 plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Create a new one
-plugin_tracker_artifact	formelement_artifactlink_choose_parent	Select $1 parent: 
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Select $1 parent:
 plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Will have $1 as parent.
 plugin_tracker_artifact	formelement_artifactlink_open_parent	Open $1
 plugin_tracker_artifact	formelement_artifactlink_title	Artifact links
@@ -1231,7 +1231,7 @@ plugin_tracker_admin	export_desc	Export the tracker structure
 
 plugin_tracker_admin	hierarchy	Hierarchy
 plugin_tracker_admin	hierarchy_desc	Manage tracker hierarchy
-plugin_tracker_admin	manage_hierarchy_title	Manage hierarchy of tracker  
+plugin_tracker_admin	manage_hierarchy_title	Manage hierarchy of tracker
 
 plugin_tracker_admin	manage_dependencies	Manage field dependencies
 plugin_tracker_admin	manage_dependencies_desc	Define how values in one field depend upon other field values.
@@ -1242,7 +1242,7 @@ plugin_tracker_admin	successfully_updated	Tracker successfully updated.
 plugin_tracker_admin	clean	Delete artifacts
 plugin_tracker_admin	clean_desc	Permanently purge an artifact from the tracker
 plugin_tracker_admin	clean_info	Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.
-plugin_tracker_admin	clean_id	Id of the artifact to delete: 
+plugin_tracker_admin	clean_id	Id of the artifact to delete:
 plugin_tracker_admin	clean_error_noart	Artifact $1 doesn't exist or doesn't belong to current tracker
 plugin_tracker_admin	clean_info_deleted	Artifact $1 successfully deleted
 plugin_tracker_admin	clean_confirm	Confirm
@@ -1262,6 +1262,17 @@ plugin_tracker_admin_semantic	bad_field_title	The field you submitted is not a t
 plugin_tracker_admin_semantic	title_impossible	You cannot define the <em>title</em> semantic since there isn't any text field in the tracker
 plugin_tracker_admin_semantic	title_now	The title is now: $1
 plugin_tracker_admin_semantic	unable_save_title	Unable to save the title
+
+plugin_tracker_admin_semantic	description_label	Description
+plugin_tracker_admin_semantic	description_description	Define the description of an artifact
+plugin_tracker_admin_semantic	description_long_desc	<p>The <strong>description</strong> is a free-text account of the content.</p>
+plugin_tracker_admin_semantic	description_field	<p>The artifacts of this tracker will be described by the field <strong>$1</strong>.</p>
+plugin_tracker_admin_semantic	description_no_field	<p>The artifacts of this tracker does not have any <em>description</em> yet.</p>
+plugin_tracker_admin_semantic	bad_field_description	The field you submitted is not a text field
+plugin_tracker_admin_semantic	description_impossible	You cannot define the <em>description</em> semantic since there isn't any text field in the tracker
+plugin_tracker_admin_semantic	description_now	The description is now: $1
+plugin_tracker_admin_semantic	unable_save_description	Unable to save the description
+
 plugin_tracker_admin_semantic	choose_one_advice	Feel free to choose one:
 plugin_tracker_admin_semantic	status_label	Status
 plugin_tracker_admin_semantic	status_description	Define the status of an artifact
@@ -1309,7 +1320,7 @@ plugin_tracker_admin_import	unable_to_open_file	Unable to open file $1
 plugin_tracker_admin_import	file_not_found	File not found
 plugin_tracker_admin_import	missing_required_field	Missing required field: $1
 plugin_tracker_admin_import	missing_required_field_value	Missing value on a required field: $1
-plugin_tracker_admin_import	missing_field_value	Missing field in data: 
+plugin_tracker_admin_import	missing_field_value	Missing field in data:
 plugin_tracker_admin_import	aid_does_not_exist	Artifact Id $1 does not exist
 plugin_tracker_admin_import	field_not_taken_account	The field "$1" will not be taken into account.
 plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
@@ -1399,7 +1410,7 @@ plugin_tracker_search_index	artifact_title	Artifact Title
 #  *
 #  * Workflow scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -1473,7 +1484,7 @@ workflow_admin	post_action_change_value_int_field	Change the value of an int fie
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
 workflow_admin	under_the_following_condition	Under the following condition:
 workflow_admin	following_action_performed	The following action will be automatically performed:
-workflow_admin	add_new_action	Add a new action: 
+workflow_admin	add_new_action	Add a new action:
 workflow_admin	remove_postaction	Remove the action
 workflow_admin	postaction_on_field_already_exist	An action on the field '$1' already exists.
 workflow_admin	no_postaction	There isn't any post action defined yet.

@@ -662,6 +662,25 @@
       </group>
       <group>
         <attribute name="type">
+          <value>description</value>
+        </attribute>
+        <element name="shortname">
+          <data type="string"/>
+        </element>
+        <element name="label">
+          <data type="string"/>
+        </element>
+        <element name="description">
+          <data type="string"/>
+        </element>
+        <element name="field">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </group>
+      <group>
+        <attribute name="type">
           <value>status</value>
         </attribute>
         <element name="shortname">

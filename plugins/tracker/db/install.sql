@@ -1,6 +1,6 @@
 --
 --  Table structure for workflow_tracker
---  
+--
 DROP TABLE IF EXISTS tracker_workflow;
 CREATE TABLE IF NOT EXISTS tracker_workflow (
   workflow_id int(11) NOT NULL auto_increment  PRIMARY KEY,
@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS tracker_workflow (
   field_id int(11) NOT NULL,
   is_used tinyint(1) NOT NULL,
   INDEX idx_wf_tracker_id( tracker_id ),
-  INDEX idx_wf_field_id( field_id )  
+  INDEX idx_wf_field_id( field_id )
 ) ENGINE=InnoDB;
 
---  
+--
 --  Table structure for workflow_transition
--- 
+--
 DROP TABLE IF EXISTS tracker_workflow_transition;
 CREATE TABLE IF NOT EXISTS tracker_workflow_transition (
   transition_id int(11) NOT NULL auto_increment  PRIMARY KEY,
@@ -30,9 +30,9 @@ CREATE TABLE  tracker_workflow_transition_condition_field_notempty(
     field_id INT(11) NOT NULL
 ) ENGINE=InnoDB;
 
---  
+--
 --  Table structure for workflow_transition_postactions_field_date
--- 
+--
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_date;
 CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_date (
   id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_date (
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
---  
+--
 --  Table structure for workflow_transition_postactions_field_int
--- 
+--
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
 CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_int (
   id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_int (
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
---  
+--
 --  Table structure for workflow_transition_postactions_field_float
--- 
+--
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
 CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
   id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
@@ -66,9 +66,9 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
---  
+--
 --  Table structure for tracker_workflow_transition_postactions_cibuild
--- 
+--
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_cibuild;
 CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
   id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
@@ -554,11 +554,11 @@ CREATE TABLE tracker_watcher(
 
 DROP TABLE IF EXISTS tracker_notification_role;
 CREATE TABLE tracker_notification_role(
-    role_id int(11) NOT NULL, 
-    tracker_id int(11) NOT NULL, 
-    role_label VARCHAR(255) NULL, 
-    rank int(11) NOT NULL, 
-    short_description_msg VARCHAR(255) NULL, 
+    role_id int(11) NOT NULL,
+    tracker_id int(11) NOT NULL,
+    role_label VARCHAR(255) NULL,
+    rank int(11) NOT NULL,
+    short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX role_id_idx(role_id),
     INDEX tracker_id_idx(tracker_id)
@@ -566,11 +566,11 @@ CREATE TABLE tracker_notification_role(
 
 DROP TABLE IF EXISTS tracker_notification_event;
 CREATE TABLE  tracker_notification_event(
-    event_id int(11) NOT NULL, 
-    tracker_id int(11) NOT NULL, 
-    event_label VARCHAR(255) NULL, 
-    rank int(11) NOT NULL, 
-    short_description_msg VARCHAR(255) NULL, 
+    event_id int(11) NOT NULL,
+    tracker_id int(11) NOT NULL,
+    event_label VARCHAR(255) NULL,
+    rank int(11) NOT NULL,
+    short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX event_id_idx(event_id),
     INDEX tracker_id_idx(tracker_id)
@@ -578,10 +578,10 @@ CREATE TABLE  tracker_notification_event(
 
 DROP TABLE IF EXISTS tracker_notification;
 CREATE TABLE  tracker_notification(
-    user_id int(11) NOT NULL, 
-    tracker_id int(11) NOT NULL, 
-    role_id int(11) NOT NULL, 
-    event_id int(11) NOT NULL, 
+    user_id int(11) NOT NULL,
+    tracker_id int(11) NOT NULL,
+    role_id int(11) NOT NULL,
+    event_id int(11) NOT NULL,
     notify int(11) NOT NULL DEFAULT 1,
     INDEX user_id_idx(user_id),
     INDEX tracker_id_idx(tracker_id)
@@ -589,29 +589,29 @@ CREATE TABLE  tracker_notification(
 
 DROP TABLE IF EXISTS tracker_notification_role_default;
 CREATE TABLE  tracker_notification_role_default(
-    role_id int(11) NOT NULL, 
-    role_label VARCHAR(255) NULL, 
-    rank int(11) NOT NULL, 
-    short_description_msg VARCHAR(255) NULL, 
+    role_id int(11) NOT NULL,
+    role_label VARCHAR(255) NULL,
+    rank int(11) NOT NULL,
+    short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX role_id_idx(role_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_notification_event_default;
 CREATE TABLE  tracker_notification_event_default(
-    event_id int(11) NOT NULL, 
-    event_label VARCHAR(255) NULL, 
-    rank int(11) NOT NULL, 
-    short_description_msg VARCHAR(255) NULL, 
+    event_id int(11) NOT NULL,
+    event_label VARCHAR(255) NULL,
+    rank int(11) NOT NULL,
+    short_description_msg VARCHAR(255) NULL,
     description_msg VARCHAR(255) NULL,
     INDEX event_id_idx(event_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS  tracker_canned_response;
 CREATE TABLE tracker_canned_response(
-    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-    tracker_id INT(11) NOT NULL, 
-    title TEXT NOT NULL, 
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tracker_id INT(11) NOT NULL,
+    title TEXT NOT NULL,
     body TEXT NOT NULL,
     INDEX tracker_id_idx(tracker_id)
 ) ENGINE=InnoDB;
@@ -625,6 +625,13 @@ CREATE TABLE tracker_staticfield_richtext(
 
 DROP TABLE IF EXISTS tracker_semantic_title;
 CREATE TABLE tracker_semantic_title (
+    tracker_id INT(11) NOT NULL PRIMARY KEY,
+    field_id INT(11) NOT NULL,
+    INDEX filed_id_idx(field_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_semantic_description;
+CREATE TABLE tracker_semantic_description (
     tracker_id INT(11) NOT NULL PRIMARY KEY,
     field_id INT(11) NOT NULL,
     INDEX filed_id_idx(field_id)
@@ -739,7 +746,7 @@ CREATE TABLE IF NOT EXISTS tracker_artifact_unsubscribe (
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
 
 
