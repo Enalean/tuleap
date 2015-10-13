@@ -56,7 +56,9 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
             self::EXPORT_MODE_KEY   => self::EXPORT_SNAPSHOT
         );
 
-        array_walk($changeset_values, array($this, 'exportValue'), $params);
+        foreach ($changeset_values as $changeset_value) {
+            $this->exportValue($changeset_value, $params);
+        }
     }
 
     public function exportChangedFields(
@@ -72,12 +74,12 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
             self::EXPORT_MODE_KEY   => self::EXPORT_CHANGES
         );
 
-        array_walk($changeset_values, array($this, 'exportValue'), $params);
+        foreach ($changeset_values as $changeset_value) {
+            $this->exportValue($changeset_value, $params);
+        }
     }
 
-    private function exportValue(
-        Tracker_Artifact_ChangesetValue $changeset_value,
-        $index,
+    private function exportValue(Tracker_Artifact_ChangesetValue $changeset_value,
         array $params
     ) {
         if ($this->isFieldChangeExportable($params[self::EXPORT_MODE_KEY], $changeset_value)) {

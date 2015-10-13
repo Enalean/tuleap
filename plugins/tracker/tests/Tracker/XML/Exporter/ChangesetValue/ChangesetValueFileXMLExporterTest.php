@@ -19,34 +19,34 @@
  */
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends TuleapTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase extends TuleapTestCase {
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter */
-    private $exporter;
+    protected $exporter;
 
     /** @var SimpleXMLElement */
-    private $changeset_xml;
+    protected $changeset_xml;
 
     /** @var SimpleXMLElement */
-    private $artifact_xml;
+    protected $artifact_xml;
 
     /** @var Tracker_Artifact_ChangesetValue_File */
-    private $changeset_value;
+    protected $changeset_value;
 
     /** @var Tracker_XML_Exporter_FilePathXMLExporter */
-    private $path_exporter;
+    protected $path_exporter;
 
     /** @var string */
-    private $id_prefix;
+    protected $id_prefix;
 
     /** @var Tracker_FormElement_Field */
-    private $field;
+    protected $field;
 
     /** @var Tracker_Artifact_Changeset **/
-    private $changeset;
+    protected $changeset;
 
     /** @var Tracker_Artifact **/
-    private $artifact;
+    protected $artifact;
 
     public function setUp() {
         parent::setUp();
@@ -59,14 +59,22 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->artifact      = mock('Tracker_Artifact');
         $this->changeset     = mock('Tracker_Artifact_Changeset');
 
-        $file1 = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
-        $file2 = new Tracker_FileInfo(456, '*', '*', 'Description 456', 'file456.txt', 456, 'text/html');
         $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_File');
-        stub($this->changeset_value)->getFiles()->returns(array($file1, $file2));
         stub($this->changeset_value)->getField()->returns($this->field);
         stub($this->changeset_value)->getId()->returns(575);
         stub($this->changeset)->getValue()->returns($this->changeset_value);
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+    }
+}
+
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $file1 = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
+        $file2 = new Tracker_FileInfo(456, '*', '*', 'Description 456', 'file456.txt', 456, 'text/html');
+        stub($this->changeset_value)->getFiles()->returns(array($file1, $file2));
     }
 
     public function itCreatesFileNodeInArtifactNode() {
@@ -145,5 +153,29 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         );
 
         $this->assertEqual($this->artifact_xml->file[0]->path, 'data/Artifact123');
+    }
+}
+
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter_EscapedCharsTest extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $file1 = new Tracker_FileInfo(123, '*', '*', 'Description & 123', 'file&123.txt', 123, 'text/xml');
+        stub($this->changeset_value)->getFiles()->returns(array($file1));
+    }
+
+      public function itCreatesFileNodeWithRightName() {
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            $this->changeset_value
+        );
+
+        $this->assertEqual(count($this->artifact_xml->file), 1);
+        $this->assertEqual((string)$this->artifact_xml->file[0]['id'], $this->id_prefix . 123);
+        $this->assertEqual((string)$this->artifact_xml->file[0]->filename, 'file&123.txt');
+        $this->assertEqual((string)$this->artifact_xml->file[0]->description, 'Description & 123');
     }
 }
