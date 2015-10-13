@@ -1301,9 +1301,34 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return bool true if the value is considered ok
      */
     public function isValid(Tracker_Artifact $artifact, $value) {
-        $this->has_errors = !$this->validate($artifact, $value);
+        $this->has_errors = $this->isPossibleValue($value) && $this->validate($artifact, $value);
 
-        return !$this->has_errors;
+        return $this->has_errors;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isPossibleValue($value) {
+        $is_possible_value   = true;
+        $all_possible_values = $this->getBind()->getAllValues();
+
+        if (is_array($value)) {
+            foreach ($value as $id) {
+                $is_possible_value = $is_possible_value && $this->checkValueExists($id, $all_possible_values);
+            }
+        } else {
+            $is_possible_value = $this->checkValueExists($value, $all_possible_values);
+        }
+
+        return $is_possible_value;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function checkValueExists($value, $all_possible_values) {
+        return array_key_exists($value, $all_possible_values) || $value == Tracker_FormElement_Field_List::NONE_VALUE;
     }
 
     /**

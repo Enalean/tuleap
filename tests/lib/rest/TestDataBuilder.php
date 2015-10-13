@@ -275,6 +275,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
     public function generateMilestones() {
         echo "Create milestones\n";
 
+        $this->tracker_formelement_factory->clearInstance();
+        $this->tracker_formelement_factory->instance();
+
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
         $this->createRelease($user, 'Release 1.0', '126');
@@ -291,6 +294,11 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $release->linkArtifact(self::SPRINT_ARTIFACT_ID, $user);
 
         return $this;
+    }
+
+    private function clearFormElementCache() {
+        $this->tracker_formelement_factory->clearInstance();
+        $this->tracker_formelement_factory->instance();
     }
 
     public function generateContentItems() {

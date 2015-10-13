@@ -242,6 +242,12 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $submitted_value_1 = '123'; // $v1
         $submitted_value_2 = '456'; // $v2
         $submitted_value_3 = '789'; // $v3
+        stub($bind)->getAllValues()->returns(array(
+                $submitted_value_1 => null,
+                $submitted_value_2 => null,
+                $submitted_value_3 => null
+            )
+        );
         
         $artifact->setReturnReference('getLastChangeset', $changeset);
         
@@ -295,6 +301,10 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $v1->setReturnValue('__toString', '# 123');
         $v1->setReturnValue('getLabel','label1');
         $submitted_value_1 = '123'; // $v1
+        stub($bind)->getAllValues()->returns(array(
+                $submitted_value_1 => null
+            )
+        );
         
         $artifact->setReturnReference('getLastChangeset', $changeset);
         
@@ -337,6 +347,12 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $v2->setReturnValue('__toString', '# 456');
         $v2->setReturnValue('getLabel','label2');
         $submitted_value_2 = '456'; // $v2
+
+        stub($bind)->getAllValues()->returns(array(
+                $submitted_value_1 => null,
+                $submitted_value_2 => null
+            )
+        );
         
         $artifact->setReturnReference('getLastChangeset', $changeset);
         
@@ -423,14 +439,25 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     }
     
     public function testIsValidRequired() {
-        $artifact  = new MockTracker_Artifact();
+        $artifact   = new MockTracker_Artifact();
+        $bind       = new MockTracker_FormElement_Field_List_Bind_Static();
         $field_list = new $this->field_class();
+        $field_list->setReturnReference('getBind', $bind);
         $field_list->setReturnValue('isRequired', true);
         
         $value1 = '';
         $value2 = null;
         $value3 = '100';
         $value4 = 'value';
+
+        stub($bind)->getAllValues()->returns(array(
+                $value1 => null,
+                $value2 => null,
+                $value3 => null,
+                $value4 => null
+
+            )
+        );
         
         $field_list->setReturnValue('isNone', true, array($value1));
         $field_list->setReturnValue('isNone', true, array($value2));
@@ -598,5 +625,40 @@ class Tracker_FormElement_Field_List_RESTTests extends TuleapTestCase {
         $value = 'some_value';
 
         $field->getFieldDataFromRESTValueByField($value);
+    }
+}
+
+class Tracker_FormElement_Field_List_Validate_Values extends TuleapTestCase {
+
+    private $artifact;
+    private $bind;
+    private $list;
+
+    public function setUp() {
+        parent::setUp();
+        $this->bind     = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->list     = new Tracker_FormElement_Field_ListTestVersion();
+        $this->artifact = new MockTracker_Artifact();
+        stub($this->list)->getBind()->returns($this->bind);
+        stub($this->bind)->getAllValues()->returns(array(
+                101 => null,
+                102 => null,
+                103 => null
+            )
+        );
+    }
+
+    public function itAcceptsValidValues() {
+        $this->assertTrue($this->list->isValid($this->artifact, 101));
+        $this->assertTrue($this->list->isValid($this->artifact, Tracker_FormElement_Field_List::NONE_VALUE));
+        $this->assertTrue($this->list->isValid($this->artifact, strval(Tracker_FormElement_Field_List::NONE_VALUE)));
+        $this->assertTrue($this->list->isValid($this->artifact, array(101, 103)));
+    }
+
+    public function itDoesNotAcceptIncorrectValues() {
+        $this->assertFalse($this->list->isValid($this->artifact, 9999));
+        $this->assertFalse($this->list->isValid($this->artifact, array(9998, 9999)));
+        $this->assertFalse($this->list->isValid($this->artifact, array(101, 9999)));
+
     }
 }
