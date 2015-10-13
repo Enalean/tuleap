@@ -19,25 +19,25 @@
  */
 
 class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
-    
+
     protected $artifacts;
     protected $id = 'artifact_of_tracker';
     /**
      * @var Tracker
      */
     protected $tracker;
-    
+
     ///TODO: change $tracker to a name more explicit like 'stuff'
     public function __construct(Tracker $tracker, array $artifacts) {
         $this->artifacts    = $artifacts;
         $this->tracker      = $tracker;
     }
-    
-    
+
+
     public function getId() {
         return $this->id.'['.$this->tracker->getId().']';
     }
-    
+
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $trackerId         = $this->tracker->getId();
         $html              = '';
@@ -47,7 +47,7 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
         <input type="hidden" name="artifact_criteria[$trackerId]">
         <select id="tracker_report_criteria_adv_$trackerId" multiple="multiple" size="7" name="artifact_criteria[$trackerId][]">
 MARKUP;
-        
+
         $anySelected  = ' selected="selected"';
         $options      = '';
 //         <option value="100">None</option>
@@ -63,13 +63,13 @@ MARKUP;
         }
         $html        .= '<option'.$anySelected.'  value="">Any</option>';
         $html        .= $options;
-        
+
         $html.= <<<MARKUP
         </select>
         </input>
-        </div>       
+        </div>
 MARKUP;
-        
+
         /*
         <option style="" value="571">New</option>
 
@@ -80,11 +80,11 @@ MARKUP;
     public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria) {
         return $this->fetchCriteria($criteria);
     }
-    
+
     public function isUsed() {
         return true;
     }
-    
+
     public function getLabel() {
         return $this->tracker->getName();
     }
@@ -92,7 +92,7 @@ MARKUP;
     public function getTracker() {
         return $this->tracker;
     }
-    
+
     /**
     * Display the field as a Changeset value.
     * Used in report table
@@ -102,15 +102,15 @@ MARKUP;
     * @return string
     */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null) {
-        
-        
+
+
     }
-    
+
     /**
      * Return an index name based on artifact link field id
-     * 
+     *
      * @param Tracker_FormElementFactory $form_element_factory
-     * 
+     *
      * @return String
      */
     public function getArtifactLinkFieldName(Tracker_FormElementFactory $form_element_factory) {

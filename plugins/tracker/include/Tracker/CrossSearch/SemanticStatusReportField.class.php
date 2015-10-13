@@ -29,35 +29,35 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     const STATUS_ANY    = 'any';
     const STATUS_OPEN   = 'open';
     const STATUS_CLOSED = 'closed';
-    
+
     private function getAllStatus() {
         return array(self::STATUS_ANY, self::STATUS_OPEN, self::STATUS_CLOSED);
     }
-    
+
     /**
      * @var string
      */
     private $id = 'status';
-    
+
     /**
      * @var string
      */
     private $searched_status;
-    
+
     /**
      * @var Tracker_CrossSearch_SemanticValueFactory
      */
     private $semantic_value_factory;
-    
+
     public function __construct($searched_status, Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
         $this->searched_status        = $searched_status;
         $this->semantic_value_factory = $semantic_value_factory;
     }
-    
+
     public function isUsed() {
         return true;
     }
-    
+
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html  = '';
         $html .= '<label>'. $this->getLabel() .'</label>
@@ -78,24 +78,24 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     private function getSelected($status) {
         return $this->searched_status === $status ? 'selected="selected"' : '';
     }
-    
+
     private function getValueLabel($status) {
         $semantic_status_value_key = "semantic_status_$status";
         return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', $semantic_status_value_key);
     }
-    
+
     public function getLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_label');
     }
-    
+
     public function getId() {
         return $this->id;
     }
-    
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report =null, $from_aid = null) {
         return $this->semantic_value_factory->getStatus($artifact_id, $changeset_id);
     }
-    
+
 }
 
 ?>

@@ -30,47 +30,47 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
      * @var string
      */
     private $id = 'title';
-    
+
     /**
      * @var string
      */
     private $searched_title;
-    
+
     /**
      * @var Tracker_CrossSearch_SemanticValueFactory
      */
     private $semantic_value_factory;
-    
+
     public function __construct($searched_title, Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
         $this->searched_title         = $searched_title;
         $this->semantic_value_factory = $semantic_value_factory;
     }
-    
+
     public function isUsed() {
         return true;
     }
-    
+
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html  = '';
         $html .= '<label for="tracker_report_criteria_semantic_title">'. $this->getLabel().'</label>';
         $html .= '<br />';
         $html .= '<input type="text" name="semantic_criteria[title]" id="tracker_report_criteria_semantic_title" value="'.$this->searched_title.'" />';
-        
+
         return $html;
     }
 
     public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria) {
         return $this->fetchCriteria($criteria);
     }
-    
+
     public function getLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_title_label');
     }
-    
+
     public function getId() {
         return $this->id;
     }
-    
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null) {
         return $this->semantic_value_factory->getTitle($artifact_id, $changeset_id);
     }
