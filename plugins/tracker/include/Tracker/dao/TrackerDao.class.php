@@ -129,7 +129,8 @@ class TrackerDao extends DataAccessObject {
                         browse_instructions,
                         status,
                         stop_notification,
-                        color)
+                        color,
+                        enable_emailgateway)
                     SELECT
                         $id,
                         $group_id,
@@ -143,7 +144,8 @@ class TrackerDao extends DataAccessObject {
                         browse_instructions,
                         status,
                         stop_notification,
-                        color
+                        color,
+                        enable_emailgateway
                     FROM $this->table_name
                     WHERE id = $atid_template";
             if ($this->update($sql)) {
@@ -166,13 +168,15 @@ class TrackerDao extends DataAccessObject {
         $instantiate_for_new_projects,
         $log_priority_changes,
         $stop_notification,
-        $color
+        $color,
+        $enable_emailgateway
     ) {
         $group_id                     = $this->da->escapeInt($group_id);
         $name                         = $this->da->quoteSmart($name);
         $description                  = $this->da->quoteSmart($description);
         $item_name                    = $this->da->quoteSmart($item_name);
         $allow_copy                   = $this->da->escapeInt($allow_copy);
+        $enable_emailgateway          = $this->da->escapeInt($enable_emailgateway);
         $submit_instructions          = $this->da->quoteSmart($submit_instructions);
         $browse_instructions          = $this->da->quoteSmart($browse_instructions);
         $status                       = $this->da->quoteSmart($status);
@@ -199,7 +203,8 @@ class TrackerDao extends DataAccessObject {
                         instantiate_for_new_projects,
                         log_priority_changes,
                         stop_notification,
-                        color)
+                        color,
+                        enable_emailgateway)
                     VALUES ($id,
                         $group_id,
                         $name,
@@ -213,7 +218,8 @@ class TrackerDao extends DataAccessObject {
                         $instantiate_for_new_projects,
                         $log_priority_changes,
                         $stop_notification,
-                        $color)";
+                        $color,
+                        $enable_emailgateway)";
             if ($this->update($sql)) {
                 return $id;
             }
@@ -229,6 +235,7 @@ class TrackerDao extends DataAccessObject {
         $color                        = $this->da->quoteSmart($tracker->color);
         $item_name                    = $this->da->quoteSmart($tracker->item_name);
         $allow_copy                   = $this->da->escapeInt($tracker->allow_copy);
+        $enable_emailgateway          = $this->da->escapeInt($tracker->isEmailgatewayEnabled());
         $submit_instructions          = $this->da->quoteSmart($tracker->submit_instructions);
         $browse_instructions          = $this->da->quoteSmart($tracker->browse_instructions);
         $status                       = $this->da->quoteSmart($tracker->status);
@@ -249,7 +256,8 @@ class TrackerDao extends DataAccessObject {
                    deletion_date                = $deletion_date,
                    instantiate_for_new_projects = $instantiate_for_new_projects,
                    log_priority_changes         = $log_priority_changes,
-                   stop_notification            = $stop_notification
+                   stop_notification            = $stop_notification,
+                   enable_emailgateway          = $enable_emailgateway
                 WHERE id = $id ";
         return $this->update($sql);
     }

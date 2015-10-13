@@ -30,6 +30,7 @@ Mock::generatePartial(
         'getUserManager',
         'getTracker',
         'getComment',
+        'getTrackerPluginConfig'
     )
 );
 
@@ -257,6 +258,9 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
                 'check_permissions' => false,
             ),
         ));
+
+        $config = mock('TrackerPluginConfig');
+
         $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
         $current_changeset->setReturnValue('getId', 66);
         $current_changeset->setReturnReference('getValueDao', $dao);
@@ -265,6 +269,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $current_changeset->setReturnReference('getUserManager', $um);
         $current_changeset->setReturnReference('getTracker', $tracker);
         $current_changeset->setReturnReference('getComment', $comment);
+        $current_changeset->setReturnReference('getTrackerPluginConfig', $config);
 
         $expected_body = <<<BODY
 story #666

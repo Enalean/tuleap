@@ -598,6 +598,15 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     /**
+     * @protected for testing purpose
+     */
+    protected function getTrackerPluginConfig() {
+        return new TrackerPluginConfig(
+            new TrackerPluginConfigDao()
+        );
+    }
+
+    /**
      * notify people
      *
      * @return void
@@ -616,7 +625,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             // 2. Compute the body of the message + headers
             $messages = array();
 
-            if (ForgeConfig::get('sys_enable_reply_by_mail')) {
+            $config = $this->getTrackerPluginConfig();
+            if ($config->isTokenBasedEmailgatewayEnabled()) {
                 $messages = $this->buildAMessagePerRecipient($recipients, $is_update);
             } else {
                 $messages = $this->buildOneMessageForMultipleRecipients($recipients, $is_update);

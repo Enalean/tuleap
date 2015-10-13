@@ -174,7 +174,8 @@ class TrackerFactory {
                     $row['instantiate_for_new_projects'],
                     $row['log_priority_changes'],
                     $row['stop_notification'],
-                    $row['color']
+                    $row['color'],
+                    $row['enable_emailgateway']
         );
     }
 
@@ -610,7 +611,8 @@ class TrackerFactory {
                 $tracker->instantiate_for_new_projects,
                 $tracker->log_priority_changes,
                 $tracker->stop_notification,
-                $tracker->color
+                $tracker->color,
+                $tracker->isEmailgatewayEnabled()
         );
         if ($tracker_id) {
             $trackerDB = $this->getTrackerById($tracker_id);

@@ -85,6 +85,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
+        $this->addHook('site_admin_option_hook');
     }
 
     public function getHooksAndCallbacks() {
@@ -133,6 +134,12 @@ class trackerPlugin extends Plugin {
         if ($params['character'] === $this->getServiceShortname()) {
             $params['sample'] = new Tracker_Sample();
         }
+    }
+
+    public function site_admin_option_hook($params) {
+        $name = $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name');
+
+        echo '<li><a href="'.$this->getPluginPath().'/config.php">'.$name.'</a></li>';
     }
 
     public function cssFile($params) {
@@ -848,7 +855,11 @@ class trackerPlugin extends Plugin {
      * @see Event::BACKEND_ALIAS_GET_ALIASES
      */
     public function backend_alias_get_aliases($params) {
-        if (! ForgeConfig::get('sys_enable_reply_by_mail')) {
+        $config = new TrackerPluginConfig(
+            new TrackerPluginConfigDao()
+        );
+
+        if (! $config->isTokenBasedEmailgatewayEnabled()) {
             return;
         }
 

@@ -1,0 +1,58 @@
+<h2>{{ title }}</h2>
+
+<form method="POST" action="" id="siteadmin-config">
+    <input type="hidden" name="action" value="update" />
+    {{{ csrf_token }}}
+
+    {{# is_localinc_obsolete }}
+    <div class="alert alert-error">
+        {{{ localinc_obsolete_message }}}
+    </div>
+    {{/ is_localinc_obsolete }}
+
+    <legend>{{ email_gateway }}</legend>
+    <p>{{ email_gateway_desc }}</p>
+
+    <label class="radio">
+        <input
+            type="radio"
+            name="emailgateway_mode"
+            value="disabled"
+            {{# is_emailgateway_disabled }}checked{{/ is_emailgateway_disabled }}
+            />
+        {{ disable }}
+    </label>
+    <p class="help">
+        {{ disable_desc }}
+    </p>
+
+    <label class="radio">
+        <input
+            type="radio"
+            name="emailgateway_mode"
+            value="token"
+            {{# is_token_based_emailgateway_enabled }}checked{{/ is_token_based_emailgateway_enabled }}
+            />
+        {{ token }}
+    </label>
+    <p class="help">
+        {{{ token_desc }}}
+    </p>
+
+    <label class="radio">
+        <input
+            type="radio"
+            name="emailgateway_mode"
+            value="insecure"
+            {{# is_insecure_emailgateway_enabled }}checked{{/ is_insecure_emailgateway_enabled }}
+            />
+        {{ insecure }}
+    </label>
+    <p class="help">
+        {{{ insecure_desc }}}
+    </p>
+
+    <div id="submit-panel">
+        <button type="submit" class="btn btn-primary">{{ save_conf }}</button>
+    </div>
+</form>

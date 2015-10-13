@@ -80,6 +80,8 @@ DROP TABLE IF EXISTS tracker_workflow_trigger_rule_static_value;
 DROP TABLE IF EXISTS tracker_workflow_trigger_rule_trg_field_static_value;
 DROP TABLE IF EXISTS tracker_artifact_unsubscribe;
 
+DROP TABLE IF EXISTS plugin_tracker_config;
+
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 

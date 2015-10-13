@@ -28,14 +28,31 @@ class Tracker_GeneralSettings_Presenter {
     /** @var Tracker_ColorPresenterCollection */
     private $color_presenter_collection;
 
+    /** @var TrackerPluginConfig */
+    private $config;
+
     public function __construct(
         Tracker $tracker,
         $action_url,
-        Tracker_ColorPresenterCollection $color_presenter_collection
+        Tracker_ColorPresenterCollection $color_presenter_collection,
+        TrackerPluginConfig $config
     ) {
         $this->tracker                    = $tracker;
         $this->action_url                 = $action_url;
         $this->color_presenter_collection = $color_presenter_collection;
+        $this->config                     = $config;
+    }
+
+    public function enable_insecure_emailgateway() {
+        return $this->config->isInsecureEmailgatewayEnabled();
+    }
+
+    public function tracker_emailgateway() {
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type','emailgateway');
+    }
+
+    public function is_emailgateway_used() {
+        return $this->tracker->isEmailgatewayEnabled();
     }
 
     public function colors() {

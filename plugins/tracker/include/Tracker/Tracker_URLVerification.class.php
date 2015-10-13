@@ -39,6 +39,8 @@ class Tracker_URLVerification extends URLVerification {
         $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/invert_comments_order.php';
         $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/invert_display_changes.php';
         $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/unsubscribe_notifications.php';
+        $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/config.php';
+
         return $userRequestsDefaultTemplates || parent::isException($server);
     }
     /**

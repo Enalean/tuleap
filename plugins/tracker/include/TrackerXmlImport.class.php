@@ -347,6 +347,8 @@ class TrackerXmlImport {
         );
         $row['allow_copy'] = isset($att['allow_copy']) ?
                 (int) $att['allow_copy'] : 0;
+        $row['enable_emailgateway'] = isset($att['enable_emailgateway']) ?
+                (int) $att['enable_emailgateway'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
                 (int) $att['instantiate_for_new_projects'] : 0;
         $row['log_priority_changes'] = isset($att['log_priority_changes']) ?
