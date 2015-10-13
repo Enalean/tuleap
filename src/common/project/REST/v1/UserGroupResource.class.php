@@ -42,6 +42,7 @@ class UserGroupResource extends AuthenticatedResource {
     const KEY_ID      = 'id';
     const USERNAME_ID = 'username';
     const EMAIL_ID    = 'email';
+    const LDAP_ID_ID  = 'ldap_id';
 
     /** @var UGroupManager */
     private $ugroup_manager;
@@ -159,6 +160,7 @@ class UserGroupResource extends AuthenticatedResource {
      * <li> {"id": user_id} </li>
      * <li> {"username": user_name} </li>
      * <li> {"email": user_email} </li>
+     * <li> {"ldap_id": user_ldap_id} </li>
      * </ul>
      *
      * @url PUT {id}/users
@@ -218,6 +220,10 @@ class UserGroupResource extends AuthenticatedResource {
             }
 
             return $users[0];
+        } elseif ($key === self::LDAP_ID_ID) {
+            $identifier = 'ldapId:' . $value;
+
+            return $this->user_manager->getUserByIdentifier($identifier);
         }
     }
 
@@ -246,6 +252,7 @@ class UserGroupResource extends AuthenticatedResource {
             self::KEY_ID,
             self::USERNAME_ID,
             self::EMAIL_ID,
+            self::LDAP_ID_ID,
         );
 
         foreach ($user_references as $user_reference) {
