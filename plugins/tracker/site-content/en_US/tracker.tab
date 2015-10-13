@@ -1272,7 +1272,9 @@ plugin_tracker_admin_semantic	bad_field_description	The field you submitted is n
 plugin_tracker_admin_semantic	description_impossible	You cannot define the <em>description</em> semantic since there isn't any text field in the tracker
 plugin_tracker_admin_semantic	description_now	The description is now: $1
 plugin_tracker_admin_semantic	unable_save_description	Unable to save the description
+plugin_tracker_admin_semantic	deleted_description	Description semantic has been unset
 
+plugin_tracker_admin_semantic	unset	Unset this semantic
 plugin_tracker_admin_semantic	choose_one_advice	Feel free to choose one:
 plugin_tracker_admin_semantic	status_label	Status
 plugin_tracker_admin_semantic	status_description	Define the status of an artifact
