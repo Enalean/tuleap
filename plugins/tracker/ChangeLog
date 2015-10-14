@@ -1,3 +1,6 @@
+Version 5.709 - Tuleap 8.8
+    * Fix request #8464: Check if values set for field list are possible
+
 Version 5.708 - Tuleap 8.8
     * story #8432: unset title description
 
