@@ -12,7 +12,8 @@ Version 8.8 (Not released yet)
 
 	== Plugins ==
 	* git: 4.90
-	* tracker: 5.709
+	* tracker: 5.710
+	* graphontrackersv5: 5.17
 
 	== Themes ==
 	* FlamingParrot: 1.111
