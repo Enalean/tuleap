@@ -1309,7 +1309,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    private function isPossibleValue($value) {
+    protected function isPossibleValue($value) {
         $is_possible_value   = true;
         $all_possible_values = $this->getBind()->getAllValues();
 
@@ -1327,8 +1327,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    protected function checkValueExists($value, $all_possible_values) {
-        return array_key_exists($value, $all_possible_values) || $value == Tracker_FormElement_Field_List::NONE_VALUE;
+    protected function checkValueExists($value_id, array $all_possible_values) {
+        return (array_key_exists($value_id, $all_possible_values) ||
+               $value_id == Tracker_FormElement_Field_List::NONE_VALUE);
     }
 
     /**
@@ -1385,4 +1386,3 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $values;
     }
 }
-?>
