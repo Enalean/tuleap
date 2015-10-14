@@ -8,10 +8,14 @@ Version 8.8 (Not released yet)
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
 	* request #8101: All access are denied in SVN if a space is added before a path in the SVN access control file
+	* request #8318: redirect_to loop
 
 	== Plugins ==
 	* git: 4.90
 	* tracker: 5.709
+
+	== Themes ==
+	* FlamingParrot: 1.111
 
 Version 8.7 (Monday, October 12th 2015)
 
