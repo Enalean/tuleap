@@ -24,7 +24,7 @@
  * Set of criteria + set of Renderer to search and display artifacts
  */
 class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
-    
+
     const ACTION_SAVE         = 'report-save';
     const ACTION_SAVEAS       = 'report-saveas';
     const ACTION_REPLACE      = 'report-replace';
@@ -34,7 +34,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     const ACTION_CLEANSESSION = 'clean-session';
     const TYPE_CRITERIA       = 'criteria';
     const TYPE_TABLE          = 'table';
-    
+
     public $id;
     public $name;
     public $description;
@@ -47,7 +47,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     public $is_query_displayed;
     public $updated_by;
     public $updated_at;
-    
+
     public $renderers;
     public $criteria;
 
@@ -92,7 +92,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     public function registerInSession() {
         $this->report_session = new Tracker_Report_Session($this->id);
     }
-    
+
     protected function getCriteriaDao() {
         return new Tracker_Report_CriteriaDao();
     }
@@ -103,7 +103,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         if (isset($this->report_session)) {
             $session_criteria = &$this->report_session->getCriteria();
         }
-        
+
         $this->criteria = array();
         $ff = $this->getFormElementFactory();
         //there is previously stored
@@ -127,7 +127,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-        } else {            
+        } else {
             //retrieve data from database
             foreach($this->getCriteriaDao()->searchByReportId($this->id) as $row) {
                 if ($formElement = $ff->getFormElementFieldById($row['field_id'])) {
@@ -140,8 +140,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                                 $row['is_advanced']
                         );
                         $criterion_value = $formElement->getCriteriaValue($this->criteria[$row['field_id']]);
-                        $criterion_opts['is_advanced'] = $row['is_advanced'];     
-                        if (isset($this->report_session)) {                   
+                        $criterion_opts['is_advanced'] = $row['is_advanced'];
+                        if (isset($this->report_session)) {
                             $this->report_session->storeCriterion($row['field_id'], $criterion_value, $criterion_opts );
                         }
                     }
@@ -150,7 +150,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this->criteria;
     }
-    
+
     public function getCriteriaFromDb() {
         $this->criteria = array();
         $ff = $this->getFormElementFactory();
@@ -176,7 +176,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
     /**
      * Sets or adds a criterion to the global report search criteria list
-     * @param integer $field_id criterion id to be added or set 
+     * @param integer $field_id criterion id to be added or set
      * @return Tracker_Report_Criteria
      * @TODO refactor : must be renamed after addCriterion, and return the current criterion
      */
@@ -184,12 +184,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $ff = $this->getFormElementFactory();
         $formElement = $ff->getFormElementById($field_id);
         $this->criteria[$field_id] = new Tracker_Report_Criteria(
-                                0, 
-                                $this, 
-                                $formElement, 
-                                0, 
+                                0,
+                                $this,
+                                $formElement,
+                                0,
                                 0
-                            );        
+                            );
         return $this->criteria[$field_id];
     }
 
@@ -302,25 +302,25 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         $dao->logStart(__METHOD__, json_encode(array(
             'user'     => $user->getUserName(),
-            'project'  => $tracker->getGroupId(), 
+            'project'  => $tracker->getGroupId(),
             'query'    => $dump_criteria,
             'trackers' => array($tracker->getId()),
         )));
-        
+
         $matching_ids = array();
-        
+
         $group_id             = $tracker->getGroupId();
         $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
-        
+
         $additional_from  = array();
         $additional_where = array();
         foreach($criteria as $c) {
             if ($f = $c->getFrom()) {
                 $additional_from[]  = $f;
             }
-            
+
             if ($w = $c->getWhere()) {
                 $additional_where[] = $w;
             }
@@ -339,20 +339,20 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
             }
         }
-        
+
         $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $dao->logEnd(__METHOD__, $nb_matching);
-        
+
         return $matching_ids;
     }
-    
+
     /**
      * @return boolean true if the report has been modified since the last checkout
      */
     public function isObsolete() {
         return isset($this->report_session) && $this->updated_at && ($this->report_session->get('checkout_date') < $this->updated_at);
     }
-    
+
     /**
      * @return string html the user who has modified the report. Or false if the report has not been modified
      */
@@ -371,7 +371,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         );
         $header_builder->displayHeader($layout, $request, $current_user, $this, $report_can_be_modified);
     }
-    
+
     public function nbPublicReport($reports) {
         $i = 0;
         foreach ($reports as $report) {
@@ -381,13 +381,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $i;
     }
-    
+
     public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user) {
         $hp              = Codendi_HTMLPurifier::instance();
-        $user_can_update = $this->userCanUpdate($current_user);
 
-        $html = '';
-        
+        $html  = '';
         $html .= '<div id="tracker_report_query" data-report-id="'.$this->id.'">';
         $html .= '<form action="" method="POST" id="tracker_report_query_form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
@@ -400,18 +398,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $li = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">';
-                if ($user_can_update) {
-                    $li .= $criterion->fetch();
-                } else {
+                $li  = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">';
+                if ($current_user->isAnonymous()) {
                     $li .= $criterion->fetchWithoutExpandFunctionnality();
+                } else {
+                    $li .= $criterion->fetch();
                 }
                 $li .= '</li>';
                 $criteria_fetched[] = $li;
                 $used[$criterion->field->getId()] = $criterion->field;
             }
         }
-        if ($report_can_be_modified && $user_can_update) {
+        if ($report_can_be_modified && ! $current_user->isAnonymous()) {
             $html .= '<div class="pull-right">';
             $html .= $this->getAddCriteriaDropdown($used);
             $html .= '</div>';
@@ -498,21 +496,21 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        
+
         $link_artifact_id       = (int)$request->get('link-artifact-id');
         $report_can_be_modified = !$link_artifact_id;
-        
+
         $hp = Codendi_HTMLPurifier::instance();
         $current_user = UserManager::instance()->getCurrentUser();
         $renderer_preference_key = 'tracker_'. $this->tracker_id .'_report_'. $this->id .'_last_renderer';
-        
+
         if ($link_artifact_id) {
             //Store in user preferences
             if ($current_user->getPreference('tracker_'. $this->tracker_id .'_last_report') != $this->id) {
                 $current_user->setPreference('tracker_'. $this->tracker_id .'_last_report', $this->id);
             }
         }
-        
+
         $renderers = $this->getRenderers();
         $current_renderer = null;
         //search for the current renderer
@@ -524,7 +522,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         if (!$current_renderer) {
             foreach($renderers as $r) {
-                if (!$current_renderer || ($request->get('renderer') == $r->id) 
+                if (!$current_renderer || ($request->get('renderer') == $r->id)
                                        || (!$request->get('renderer') && $r->id == $this->current_renderer_id)
                                        || (!$request->get('renderer') && $r->id == $current_user->getPreference($renderer_preference_key))) {
                     $current_renderer = $r;
@@ -537,7 +535,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         if ($current_renderer && $current_user->getPreference($renderer_preference_key) != $current_renderer->id) {
             $current_user->setPreference($renderer_preference_key, $current_renderer->id);
         }
-        
+
         // We need an ArtifactLinkable renderer for ArtifactLink
         if ($link_artifact_id && !is_a($current_renderer, 'Tracker_Report_Renderer_ArtifactLinkable')) {
             foreach($renderers as $r) {
@@ -551,9 +549,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
         } else {
             $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
-            
+
             $html = '';
-            
+
             //Display Criteria
             $registered_criteria = array();
             $this->getCriteria();
@@ -571,11 +569,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $additional_criteria = $this->getAdditionalCriteria();
 
             $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
-            
+
             //Display Renderers
             $html .= '<div>';
             $html .= '<ul id="tracker_report_renderers" class="nav nav-tabs">';
-            
+
             foreach($renderers as $r) {
                 $active = $r->id == $current_renderer->id ? 'tracker_report_renderers-current active dropdown' : '';
                 if ($active || !$link_artifact_id || is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
@@ -602,19 +600,19 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $html .= ' '. $hp->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML) ;
                     if ($active) {
                         //Check that user can update the renderer
-                        if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+                        if ($report_can_be_modified && ! $current_user->isAnonymous()) {
                             $html .= ' <b class="caret" id="tracker_renderer_updater_handle"></b>';
                         }
                     }
                     $html .= '</a>';
-                    if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+                    if ($report_can_be_modified && ! $current_user->isAnonymous()) {
                         $html .= '<div class="dropdown-menu">'. $this->fetchUpdateRendererForm($r) .'</div>';
                     }
                     $html .= '</li>';
                 }
             }
-            
-            if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+
+            if ($report_can_be_modified && ! $current_user->isAnonymous()) {
                 $html .= '<li class="tracker_report_renderers-add dropdown">
                     <a id="tracker_renderer_add_handle"
                        href="#"
@@ -625,10 +623,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $html .= '<div class="dropdown-menu">'. $this->fetchAddRendererForm($current_renderer) .'</div>';
                 $html .= '</li>';
             }
-            
+
             $html .= '</ul>';
-            
-    
+
+
             if ($current_renderer) {
                 $html .= '<div class="tracker_report_renderer"
                                id="tracker_report_renderer_current"
@@ -672,13 +670,13 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
     public function getRenderers() {
         return Tracker_Report_RendererFactory::instance()->getReportRenderersByReport($this);
-    }    
+    }
 
     protected function orderRenderersByRank($renderers) {
         $array_rank = array();
         foreach($renderers as $field_id => $properties) {
             $array_rank[$field_id] = $properties->rank;
-        }        
+        }
         asort($array_rank);
         $renderers_sort = array();
         foreach ($array_rank as $id => $rank) {
@@ -690,10 +688,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     protected function getRendererFactory() {
         return Tracker_Report_RendererFactory::instance();
     }
-    
+
     protected function _fetchAddCriteria($used) {
         $html = '';
-        
+
         $options = '';
         foreach($this->getTracker()->getFormElements() as $formElement) {
             if ($formElement->userCanRead()) {
@@ -708,7 +706,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $html;
     }
-    
+
     /**
      * Say if the report is public
      *
@@ -717,7 +715,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     public function isPublic() {
         return empty($this->user_id);
     }
-    
+
     /**
      * Only owners of a report can update it.
      * owner = report->user_id
@@ -762,7 +760,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $this->is_query_displayed = !$this->is_query_displayed;
         return $this;
     }
-    
+
     /**
      * Remove a formElement from criteria
      * @param int $formElement_id the formElement used for the criteria
@@ -777,7 +775,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this;
     }
-    
+
     /**
      * Add a criteria
      *
@@ -793,7 +791,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     public function deleteAllCriteria() {
         $this->getCriteriaDao()->deleteAll($this->id);
     }
-    
+
     /**
      * Toggle the state 'is_advanced' of a criteria
      * @param int $formElement_id the formElement used for the criteria
@@ -807,7 +805,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $this->report_session->updateCriterion($formElement_id, '', array('is_advanced'=>$advanced));
         return $this;
     }
-    
+
     /**
      * Store the criteria value
      * NOTICE : if a criterion does not exist it is not created
@@ -822,7 +820,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));
                 }
             }
-        }        
+        }
     }
 
     public function updateAdditionalCriteriaValues($additional_criteria_values) {
@@ -844,7 +842,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $renderer->process($layout, $request, $current_user);
         }
     }
-    
+
     /**
      * Delete a renderer from the report
      * @param mixed the renderer to remove (Tracker_Report_Renderer or the id as int)
@@ -862,7 +860,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this;
     }
-    
+
     /**
      * Move a renderer at a specific position
      *
@@ -880,7 +878,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this;
     }
-    
+
     /**
      * Add a new renderer to the report
      *
@@ -899,7 +897,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $rrf->createInSession($this, $name, $description, $type);
     }
 
-    
+
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         if ($this->isObsolete()) {
             header('X-Codendi-Tracker-Report-IsObsolete: '. $this->getLastUpdaterUserName());
@@ -924,12 +922,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $masschange_aids = array();
                     $renderer_table  =  $request->get('renderer_table');
 
-                    if ( !empty($renderer_table['masschange_checked']) ) {                
-                        $masschange_aids = $request->get('masschange_aids');                
+                    if ( !empty($renderer_table['masschange_checked']) ) {
+                        $masschange_aids = $request->get('masschange_aids');
                     } else if (!empty($renderer_table['masschange_all'])) {
-                        $masschange_aids = $request->get('masschange_aids_all');                
+                        $masschange_aids = $request->get('masschange_aids_all');
                     }
-                    
+
                     if( empty($masschange_aids) ) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
@@ -945,13 +943,13 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $masschange_updater->updateArtifacts($current_user, $request);
                 break;
            case 'remove-criteria':
-                if ($this->userCanUpdate($current_user) && $request->get('field')) {
+                if ($request->get('field') && ! $current_user->isAnonymous()) {
                     $this->report_session->removeCriterion($request->get('field'));
                     $this->report_session->setHasChanged();
                 }
                 break;
             case 'add-criteria':
-                if ($this->userCanUpdate($current_user) && $request->get('field')) {
+                if ($request->get('field') && ! $current_user->isAnonymous()) {
                     //TODO: make sure that the formElement exists and the user can read it
                     if ($request->isAjax()) {
                         $criteria = $this->getCriteria();
@@ -964,7 +962,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'toggle-advanced':
-                if ($this->userCanUpdate($current_user) && $request->get('field')) {
+                if ($request->get('field') && ! $current_user->isAnonymous()) {
                     $this->toggleAdvancedCriterion($request->get('field'));
                     $this->report_session->setHasChanged();
                     if ($request->isAjax()) {
@@ -982,7 +980,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 )));
                 break;
             case 'renderer':
-                if (/* $this->userCanUpdate($current_user) &&  // NTY: user should access to charts even if they can't update the renderer */ $request->get('renderer')) {
+                if ($request->get('renderer')) {
                     $store_in_session = true;
                     if ($request->exist('store_in_session')) {
                         $store_in_session = (bool)$request->get('store_in_session');
@@ -993,16 +991,16 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             case 'rename-renderer':
                 if ($request->get('new_name') == '') {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_report','renderer_name_mandatory'));
-                } else if ($this->userCanUpdate($current_user) && (int)$request->get('renderer') && trim($request->get('new_name'))) { 
+                } else if (! $current_user->isAnonymous() && (int)$request->get('renderer') && trim($request->get('new_name'))) {
                     $this->report_session->renameRenderer((int)$request->get('renderer'), trim($request->get('new_name')), trim($request->get('new_description')));
-                    $this->report_session->setHasChanged();                    
+                    $this->report_session->setHasChanged();
                 }
                 $GLOBALS['Response']->redirect('?'. http_build_query(array(
                                                             'report'   => $this->id
                                                             )));
                 break;
             case 'delete-renderer':
-                if ($this->userCanUpdate($current_user) && (int)$request->get('renderer')) {
+                if (! $current_user->isAnonymous() && (int)$request->get('renderer')) {
                     $this->report_session->removeRenderer((int)$request->get('renderer'));
                     $this->report_session->setHasChanged();
                     $GLOBALS['Response']->redirect('?'. http_build_query(array(
@@ -1011,12 +1009,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'move-renderer':
-                if ($this->userCanUpdate($current_user) && (int)$request->get('renderer')) {
+                if (! $current_user->isAnonymous() && (int)$request->get('renderer')) {
                     if ($request->isAjax()) {
                         $this->report_session->moveRenderer($request->get('tracker_report_renderers'));
                         $this->report_session->setHasChanged();
                     } else {
-                        if ( $request->get('move-renderer-direction')) {                            
+                        if ( $request->get('move-renderer-direction')) {
                             $this->moveRenderer((int)$request->get('renderer'), $request->get('move-renderer-direction'));
                             $GLOBALS['Response']->redirect('?'. http_build_query(array(
                                                                     'report'   => $this->id
@@ -1029,7 +1027,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $new_name        = trim($request->get('new_name'));
                 $new_description = trim($request->get('new_description'));
                 $new_type        = trim($request->get('new_type'));
-                if ($this->userCanUpdate($current_user) && $new_name) {                    
+                if (! $current_user->isAnonymous() && $new_name) {
                     $new_renderer_id = $this->addRendererInSession($new_name, $new_description, $new_type);
                     $GLOBALS['Response']->redirect('?'. http_build_query(array(
                                                             'report'   => $this->id,
@@ -1044,7 +1042,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $this->saveRenderers();
                 //Clean session
                 $this->report_session->cleanNamespace();
-                
+
                 $GLOBALS['Response']->addFeedback('info', '<a href="?report='. $this->id .'">'. $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'</a> has been saved.', CODENDI_PURIFIER_DISABLED);
                 $GLOBALS['Response']->redirect('?'. http_build_query(array(
                     'report'   => $this->id
@@ -1134,7 +1132,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 break;
         }
     }
-    
+
     public function setDefaultReport() {
         $default_report = Tracker_ReportFactory::instance()->getDefaultReportByTrackerId($this->tracker_id);
         if ($default_report) {
@@ -1142,7 +1140,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             Tracker_ReportFactory::instance()->save($default_report);
         }
         Tracker_ReportFactory::instance()->save($this);
-        
+
     }
     /**
      * NOTICE: make sure you are in the correct session namespace
@@ -1195,18 +1193,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      */
     public function saveRenderers() {
         $rrf = Tracker_Report_RendererFactory::instance();
-        
+
         //Get the renderers in the session and in the db
         $renderers_session = $this->getRenderers();
         $renderers_db      = $rrf->getReportRenderersByReportFromDb($this);
-        
+
         //Delete renderers in db if they are deleted in the session
         foreach ($renderers_db as $renderer_db_key => $renderer_db) {
             if ( ! isset($renderers_session[$renderer_db_key]) ) {
                 $this->deleteRenderer($renderer_db_key);
             }
         }
-        
+
         //Create or update renderers in db
         if(is_array($renderers_session)) {
             foreach ($renderers_session as $renderer_key => $renderer) {
@@ -1220,8 +1218,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
             }
         }
-    }    
-    
+    }
+
     /**
      * Delete the report and its renderers
      */
@@ -1229,40 +1227,40 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         //Delete user preferences
         $dao = new UserPreferencesDao();
         $dao->deleteByPreferenceNameAndValue('tracker_'. $this->tracker_id .'_last_report', $this->id);
-        
+
         //Delete criteria
         foreach($this->getCriteria() as $criteria) {
             $this->removeCriteria($criteria->field->id);
         }
-        
+
         //Delete renderers
         foreach($this->getRenderers() as $renderer) {
             $this->deleteRenderer($renderer);
         }
-       
+
         //clean session
         $this->report_session->cleanNamespace();
 
         //Delete me
         return Tracker_ReportFactory::instance()->delete($this->id);
     }
-    
+
     public function duplicate($from_report, $formElement_mapping) {
         //Duplicate criteria
         Tracker_Report_CriteriaFactory::instance()->duplicate($from_report, $this, $formElement_mapping);
-        
+
         //Duplicate renderers
         Tracker_Report_RendererFactory::instance()->duplicate($from_report, $this, $formElement_mapping);
     }
-    
+
     /**
      * Transforms Report into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root the node to which the Report is attached (passed by reference)
      */
     public function exportToXml(SimpleXMLElement $roott, $xmlMapping) {
         $root = $roott->addChild('report');
-        // if old ids are important, modify code here 
+        // if old ids are important, modify code here
         if (false) {
             $root->addAttribute('id', $this->id);
             $root->addAttribute('tracker_id', $this->tracker_id);

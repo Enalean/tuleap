@@ -13,16 +13,18 @@
 
     <ul class="dropdown-menu pull-right">
         {{# report_is_created }}
-        <li>
-            <a title="{{ add_to_my_dashboard_label }}" href="{{ my_dashboard_url }}">
-                {{ add_to_my_dashboard_label }}
-            </a>
-        </li>
-        <li>
-            <a title="{{ add_to_project_dashboard_label }}" href="{{ project_dashboard_url }}">
-                {{ add_to_project_dashboard_label }}
-            </a>
-        </li>
+            <li>
+                <a title="{{ add_to_my_dashboard_label }}" href="{{ my_dashboard_url }}">
+                    {{ add_to_my_dashboard_label }}
+                </a>
+            </li>
+            {{# project_dashboard_url }}
+                <li>
+                    <a title="{{ add_to_project_dashboard_label }}" href="{{ project_dashboard_url }}">
+                        {{ add_to_project_dashboard_label }}
+                    </a>
+                </li>
+            {{/ project_dashboard_url }}
         {{/ report_is_created }}
         {{# can_be_updated }}
         <li>

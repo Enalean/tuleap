@@ -1,11 +1,16 @@
-<div class="btn-group" id="{{id}}">
-    <a href="{{default_option.url}}" class="btn {{btn_class}}" id="{{default_option.id}}">{{default_option.label}}</a>
-    <button class="btn dropdown-toggle {{btn_class}}" data-toggle="dropdown">
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        {{#options}}
-        <li><a href="{{url}}" id="{{id}}" data-toggle="{{data_toggle}}">{{label}}</a></li>
-        {{/options}}
-    </ul>
+<div class="btn-group" id="{{ id }}">
+    <a href="{{ default_option.url }}"
+        class="btn {{ btn_class }}"
+        id="{{ default_option.id }}"
+        data-toggle="{{ default_option.data_toggle }}">{{default_option.label}}</a>
+    {{# has_options }}
+        <button class="btn dropdown-toggle {{ btn_class }}" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {{# options }}
+            <li><a href="{{ url }}" id="{{ id }}" data-toggle="{{ data_toggle }}">{{ label }}</a></li>
+            {{/ options }}
+        </ul>
+    {{/ has_options }}
 </div>

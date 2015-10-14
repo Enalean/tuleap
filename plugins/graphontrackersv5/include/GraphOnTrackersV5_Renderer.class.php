@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php');
 
 class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
-    
+
     protected $charts;
     protected $chart_to_edit;
     protected $plugin;
-    
+
     public function __construct($id, $report, $name, $description, $rank, $plugin) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->charts        = null;
@@ -34,20 +34,20 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $this->plugin        = $plugin;
         $this->chart_factories = array();
     }
-    
+
     public function initiateSession() {
         $this->report_session = new Tracker_Report_Session($this->report->id);
         $this->report_session->changeSessionNamespace('renderers');
     }
-    
+
     public function setCharts($charts) {
         $this->charts = $charts;
     }
-    
+
     public function getCharts() {
         return $this->charts;
     }
-    
+
     /**
      * Delete the renderer
      */
@@ -58,7 +58,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
                  ->deleteChart($this->id, $chart->getId());
         }
     }
-    
+
     /**
      * Fetch content of the renderer
      * @param array $matching_ids
@@ -72,7 +72,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
 
         if (!$readonly && $this->chart_to_edit) {
             $html .= '<script type="text/javascript" src="/plugins/graphontrackersv5/dependencies.js"></script>';
-            
+
             $url = '?'. http_build_query(array(
                                                'report'   => $this->report->id,
                                                'renderer' => $this->id));
@@ -111,7 +111,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         }
         return $html;
     }
-    
+
     /**
      * Fetch content to be displayed in widget
      */
@@ -123,7 +123,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $html .= $this->fetchWidgetGoToReport();
         return $html;
     }
-    
+
     protected function fetchCharts($matching_ids, PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
@@ -186,7 +186,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     public function processRequest(TrackerManager $tracker_manager, $request, $current_user) {
         $renderer_parameters = $request->get('renderer_plugin_graphontrackersv5');
         if ($renderer_parameters && is_array($renderer_parameters)) {
-            if (isset($renderer_parameters['add_chart'])) { 
+            if (isset($renderer_parameters['add_chart'])) {
                 $this->chart_to_edit = $this->getChartFactory()
                                             ->createChart($this, $renderer_parameters['add_chart']);
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
@@ -196,41 +196,32 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
                     'renderer_plugin_graphontrackersv5[edit_chart]' => $this->chart_to_edit->id,
                 )));
             }
-            
-            if (isset($renderer_parameters['edit_chart']) ||
-                isset($renderer_parameters['delete_chart']) && is_array($renderer_parameters['delete_chart'])
-            ) {
-                if ($this->report->userCanUpdate($current_user)) {
-                    if (isset($renderer_parameters['edit_chart'])) {
-                        $this->chart_to_edit = $this->getChartFactory()
-                                                    ->getChart($this, $renderer_parameters['edit_chart']);
-                        if (isset($renderer_parameters['update_chart']) && is_array($request->get('chart'))) {
-                            $chart_data = $request->get('chart');
-                            if ($this->chart_to_edit->update($chart_data)) {
-                                //force the rank for all charts
-                                $this->getChartFactory()->forceChartsRankInSession(
-                                    $this,
-                                    $this->chart_to_edit,
-                                    $chart_data['rank']
-                                );
-                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','updated_report'));
-                            }
-                        }
-                        $this->report->display($tracker_manager, $request, $current_user);
+
+            if (isset($renderer_parameters['edit_chart']) && ! $current_user->isAnonymous()) {
+                $this->chart_to_edit = $this->getChartFactory()
+                                            ->getChart($this, $renderer_parameters['edit_chart']);
+                if (isset($renderer_parameters['update_chart']) && is_array($request->get('chart'))) {
+                    $chart_data = $request->get('chart');
+                    if ($this->chart_to_edit->update($chart_data)) {
+                        //force the rank for all charts
+                        $this->getChartFactory()->forceChartsRankInSession(
+                            $this,
+                            $this->chart_to_edit,
+                            $chart_data['rank']
+                        );
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','updated_report'));
                     }
-                    
-                    if (isset($renderer_parameters['delete_chart']) && is_array($renderer_parameters['delete_chart'])) {
-                        list($chart_id,) = each($renderer_parameters['delete_chart']);
-                        if ($chart_id) {
-                            $this->getChartFactory()->deleteChart($this, $chart_id);
-                        }
-                    }
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-                    $this->report->display($tracker_manager, $request, $current_user);
+                }
+                $this->report->display($tracker_manager, $request, $current_user);
+            }
+
+            if (isset($renderer_parameters['delete_chart']) && is_array($renderer_parameters['delete_chart']) && ! $current_user->isAnonymous()) {
+                list($chart_id,) = each($renderer_parameters['delete_chart']);
+                if ($chart_id) {
+                    $this->getChartFactory()->deleteChart($this, $chart_id, $this->report->userCanUpdate($current_user));
                 }
             }
-            
+
             if (isset($renderer_parameters['stroke'])) {
                 $store_in_session = true;
                 if ($request->exist('store_in_session')) {
@@ -250,24 +241,24 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     public function duplicate($from_renderer, $field_mapping) {
         $this->getChartFactory()->duplicate($from_renderer, $this, $field_mapping);
     }
-    
+
     public function afterProcessRequest($engine, $request, $current_user) {
         if (!$this->chart_to_edit) {
             parent::afterProcessRequest($engine, $request, $current_user);
         }
     }
-    
+
     protected function getChartFactory() {
         return GraphOnTrackersV5_ChartFactory::instance();
     }
-    
+
     public function getType(){
         return 'plugin_graphontrackersv5';
     }
-    
+
     /**
      * Transforms Tracker_Renderer into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
     public function exportToXml(SimpleXMLElement $root, $formsMapping) {
@@ -278,10 +269,10 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $chart->exportToXML($grandchild, $formsMapping);
         }
     }
-    
+
     /**
      * Finnish saving renderer to database by creating charts
-     * 
+     *
      * @param Report_Renderer $renderer containing the charts
      */
     public function afterSaveObject($renderer) {
@@ -290,7 +281,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $chartDB = $cf->createDb($this->id, $chart);
         }
     }
-    
+
    /**
     * Set the session
     *
@@ -304,7 +295,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         //$this->report_session->set("{$this->id}.plugin", $this->plugin);
         $this->report_session->set("{$this->id}.rank", $this->rank);
     }
-    
+
     /**
      * Update the renderer
      *
@@ -324,7 +315,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
                 }
             }
         }
-        
+
         foreach($charts as $chart_id => $chart) {
             //Update charts
             if ($chart_id > 0 ) {
@@ -336,7 +327,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         }
         return $success;
     }
-        
+
     /**
      * Create a renderer
      *

@@ -26,7 +26,7 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
 
 /**
  * Describe a chart
- * 
+ *
  * This class must be overriden to provide your own concrete chart (Pie, Bar, ..)
  */
 abstract class GraphOnTrackersV5_Chart {
@@ -36,7 +36,7 @@ abstract class GraphOnTrackersV5_Chart {
     protected $description;
     protected $width;
     protected $height;
-    
+
     public $renderer;
     private $mustache_renderer;
 
@@ -59,7 +59,7 @@ abstract class GraphOnTrackersV5_Chart {
         $this->height            = $height;
         $this->mustache_renderer = TemplateRendererFactory::build()->getRenderer(GRAPH_ON_TRACKER_V5_TEMPLATE_DIR);
     }
-    
+
     public function registerInSession() {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $this->report_session->set("$this->id.id",                $this->id);
@@ -70,10 +70,10 @@ abstract class GraphOnTrackersV5_Chart {
         $this->report_session->set("$this->id.height",            $this->height);
         $this->report_session->set("$this->id.report_graphic_id", $this->renderer->id);
     }
-    
+
     public abstract function loadFromSession();
     public abstract function loadFromDb();
-    
+
     /**
      *
      * @param int $report_id
@@ -87,7 +87,7 @@ abstract class GraphOnTrackersV5_Chart {
         $session->changeSessionNamespace("renderers.{$renderer_id}.charts");
         return $session;
     }
-    
+
     /* Getters and setters */
     public function getId() { return $this->id; }
     public function getRank() { return $this->rank; }
@@ -109,10 +109,10 @@ abstract class GraphOnTrackersV5_Chart {
      */
     public function fetchImgTag($store_in_session = true) {
         $html = '';
-        
+
         $urlimg = $this->getStrokeUrl($store_in_session);
-        
-        
+
+
         $html .= '<img  src="'. $urlimg .'"  ismap usemap="#map'. $this->getId() .'"  ';
         if ($this->width) {
             $html .= ' width="'. $this->width .'" ';
@@ -123,7 +123,7 @@ abstract class GraphOnTrackersV5_Chart {
         $html .= ' alt="'. $this->title .'" border="0">';
         return $html;
     }
-    
+
     public function getStrokeUrl($store_in_session = true) {
         return TRACKER_BASE_URL.'/?' . http_build_query(array(
                      '_jpg_csimd' => '1',
@@ -133,18 +133,18 @@ abstract class GraphOnTrackersV5_Chart {
                      'store_in_session' => $store_in_session,
                      'renderer_plugin_graphontrackersv5[stroke]' => $this->getId()));
     }
-    
+
     /**
      * Display both <img /> and <map /> tags to embed the chart in a html page
      */
     public function display() {
         echo $this->fetch();
     }
-    
+
     public function fetch($store_in_session = true) {
         $html = '';
         if($this->userCanVisualize()){
-            
+
             $e = $this->buildGraph();
             if($e){
                 $html .= $e->graph->GetHTMLImageMap("map".$this->getId());
@@ -214,16 +214,20 @@ abstract class GraphOnTrackersV5_Chart {
             ), $add_to_dashboard_params)
         );
 
-        $project_dashboard_url = '/widgets/updatelayout.php?'.
-            http_build_query(array_merge(array(
-                'owner' => 'g' . $renderer->report->getTracker()->getProject()->getGroupId(),
-                'name' => array(
-                    'project_plugin_graphontrackersv5_chart' => array (
-                        'add' => 1
+        $project_dashboard_url = '';
+        $project = $renderer->report->getTracker()->getProject();
+        if ($project->userIsAdmin($current_user)) {
+            $project_dashboard_url = '/widgets/updatelayout.php?'.
+                http_build_query(array_merge(array(
+                    'owner' => 'g' . $project->getGroupId(),
+                    'name' => array(
+                        'project_plugin_graphontrackersv5_chart' => array (
+                            'add' => 1
+                        )
                     )
-                )
-            ), $add_to_dashboard_params)
-        );
+                ), $add_to_dashboard_params)
+            );
+        }
 
         $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
         $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
@@ -232,7 +236,7 @@ abstract class GraphOnTrackersV5_Chart {
             'graph-actions',
             new GraphOnTrackersV5_GraphActionsPresenter(
                 $this,
-                $this->graphCanBeUpdated($current_user, $renderer, $readonly),
+                $this->graphCanBeUpdated($readonly, $current_user),
                 $my_dashboard_url,
                 $project_dashboard_url,
                 $delete_chart_url,
@@ -241,8 +245,8 @@ abstract class GraphOnTrackersV5_Chart {
         );
     }
 
-    private function graphCanBeUpdated(PFUser $current_user, $renderer, $readonly) {
-        return !$readonly && $renderer->report->userCanUpdate($current_user);
+    private function graphCanBeUpdated($readonly, PFUser $current_user) {
+        return !$readonly && ! $current_user->isAnonymous();
     }
 
     /**
@@ -255,18 +259,18 @@ abstract class GraphOnTrackersV5_Chart {
 
         return $this->getEngineWithData()->toArray();
     }
-    
+
     public function getRow() {
         return array_merge(array(
             'id'          => $this->getId(),
-            'rank'        => $this->getRank(), 
-            'title'       => $this->getTitle(), 
+            'rank'        => $this->getRank(),
+            'title'       => $this->getTitle(),
             'description' => $this->getDescription(),
-            'width'       => $this->getWidth(), 
+            'width'       => $this->getWidth(),
             'height'      => $this->getHeight(),
         ), $this->getSpecificRow());
     }
-    
+
     /**
      * Stroke the chart.
      * Build the image and send it to the client
@@ -274,10 +278,10 @@ abstract class GraphOnTrackersV5_Chart {
     public function stroke() {
         $e = $this->buildGraph();
         if ($e && is_object($e->graph)) {
-            $e->graph->StrokeCSIM(); 
+            $e->graph->StrokeCSIM();
         }
     }
-    
+
     /**
      * Prepare the building of the graph
      * @return GraphOnTracker_Chart_Engine
@@ -319,12 +323,12 @@ abstract class GraphOnTrackersV5_Chart {
     protected function getTracker() {
         return TrackerFactory::instance()->getTrackerById($this->renderer->report->tracker_id);
     }
-    
+
     /**
      * Get the properties of the chart as a HTML_Element array.
-     * 
+     *
      * Default properties are id, title, description, rank and dimensions
-     * 
+     *
      * Feel free to override this method to provide your own properties
      * @return array
      */
@@ -360,15 +364,15 @@ abstract class GraphOnTrackersV5_Chart {
 
         return $siblings;
     }
-    
+
     /**
      * Update the properties of the chart
      *
      * @return boolean true if the update is successful
      */
-    public function update($row) {    
+    public function update($row) {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
-        
+
         //Set in session
         $session->set("$this->id.rank", $row['rank']);
         $session->set("$this->id.title", $row['title']);
@@ -379,29 +383,29 @@ abstract class GraphOnTrackersV5_Chart {
         if (isset($row['height'])) {
                 $session->set("$this->id.height", $row['height']);
         }
-        
-        
+
+
         $this->setRank($row['rank']);
         $this->setTitle($row['title']);
         $this->setDescription($row['description']);
         if (isset($row['width'])) {
                 $this->setWidth($row['width']);
         }
-        
+
         if (isset($row['height'])) {
                 $this->setHeight($row['height']);
         }
-        
+
         return $this->updateSpecificProperties($row);
     }
-    
+
     /**
      * @return string The inline help of the chart
      */
     public function getHelp() {
         return '';
     }
-    
+
     public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         $root->addAttribute('type', $this->getChartType());
         $root->addAttribute('width', $this->width);
@@ -421,61 +425,61 @@ abstract class GraphOnTrackersV5_Chart {
     public function duplicate($from_chart, $field_mapping) {
         return $this->getDao()->duplicate($from_chart->id, $this->id, $field_mapping);
     }
-    
+
     /**
      * Return the specific properties as a row
      * array('prop1' => 'value', 'prop2' => 'value', ...)
      * @return array
      */
     abstract public function getSpecificRow();
-    
+
     /**
      * Return the chart type (gantt, bar, pie, ...)
      */
     abstract public function getChartType();
-    
+
     /**
      * @return GraphOnTracker_Engine The engine associated to the concrete chart
      */
     abstract protected function getEngine();
-    
+
     /**
      * @return ChartDataBuilder The data builder associated to the concrete chart
      */
     abstract protected function getChartDataBuilder($artifacts);
-    
+
     /**
      * Allow update of the specific properties of the concrete chart
      * @return boolean true if the update is successful
      */
     abstract protected function updateSpecificProperties($row);
-    
+
     /**
      * Creates an array of specific properties of chart
-     * 
+     *
      * @return array containing the properties
      */
     abstract protected function arrayOfSpecificProperties();
-    
+
     /**
      * Sets the specific properties of the concrete chart from XML
-     * 
+     *
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
     abstract public function setSpecificPropertiesFromXML($xml, $formsMapping);
-    
+
      /**
      * User as permission to visualize the chart
      */
     abstract public function userCanVisualize();
-    
+
     /**
      * Create an instance of the chart
      * @return GraphOnTrackersV5_Chart
      */
     abstract public static function create($renderer, $id, $rank, $title, $description, $width, $height);
-    
+
     /**
      * Get the dao of the chart
      */

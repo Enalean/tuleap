@@ -151,15 +151,15 @@ class GraphOnTrackersV5_ChartFactory {
         }
         return $chart;
     }
-    
-    public function deleteChart($renderer,  $id) {
+
+    public function deleteChart($renderer, $id, $user_can_update_report) {
         $ok = false;
         $session = new Tracker_Report_Session($renderer->report->id);
         $session->changeSessionNamespace("renderers.{$renderer->id}");
         if (isset($session->charts[$id])) {
             $session->set("charts.$id", 'removed');
             $session->setHasChanged();
-        } else {
+        } else if ($user_can_update_report) {
             $this->deleteDb($renderer,  $id);
         }
     }

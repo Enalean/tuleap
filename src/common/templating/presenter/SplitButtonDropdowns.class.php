@@ -57,4 +57,8 @@ class Templating_Presenter_SplitButtonDropdowns {
     public function options() {
         return $this->options;
     }
+
+    public function has_options() {
+        return count($this->options) > 0;
+    }
 }

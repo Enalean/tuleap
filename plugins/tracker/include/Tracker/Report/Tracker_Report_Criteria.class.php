@@ -19,19 +19,19 @@
  */
 
 class Tracker_Report_Criteria {
-    
+
     public $id;
     public $report;
     public $field;
     public $rank;
     public $is_advanced;
-    
+
     /**
      * Constructor
      *
      * WARNING: cannot add typehinting on parameters as sometimes they might be
      * null (and it's crappy to have null args in the middle of arg list).
-     * 
+     *
      * @param int $id the id of the criteria
      * @param Tracker_Report $report the id of the report
      * @param Tracker_FormElement_Field $field the name of the renderer
@@ -56,11 +56,11 @@ class Tracker_Report_Criteria {
     public function getFrom() {
         return $this->field->getCriteriaFrom($this);
     }
-    
+
     public function getWhere() {
         return $this->field->getCriteriaWhere($this);
     }
-    
+
     public function fetch() {
         return $this->field->fetchCriteria($this);
     }
@@ -68,26 +68,26 @@ class Tracker_Report_Criteria {
     public function fetchWithoutExpandFunctionnality() {
         return $this->field->fetchCriteriaWithoutExpandFunctionnality($this);
     }
-    
+
     public function delete() {
         return $this->field->deleteCriteriaValue($this);
     }
-    
+
     public function setId($id) {
         $this->id = $id;
     }
-    
-    
+
+
     /**
      * @param mixed $value
      */
     public function updateValue($value) {
         $this->field->updateCriteriaValue($this, $value);
     }
-    
+
     /**
      * Transforms Criteria into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root the node to which the Criteria is attached (passed by reference)
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping) {

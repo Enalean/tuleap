@@ -610,7 +610,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $value = $this->fetchCardValue($artifact, $display_preferences);
         $data_field_id   = '';
         $data_field_type = '';
-        
+
         if ($this->userCanUpdate()) {
             $data_field_id   = 'data-field-id="'.$this->getId().'"';
             $data_field_type = 'data-field-type="'.$this->getFormElementFactory()->getType($this).'"';
@@ -681,7 +681,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
-        
+
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
         $html .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
@@ -821,7 +821,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance());
         return $rm->isUsedInFieldDependency($this);
     }
-    
+
     /**
      * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
