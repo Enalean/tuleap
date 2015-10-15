@@ -137,7 +137,7 @@ class UsersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $json = $response->json();
-        $this->assertCount(3, $json);
+        $this->assertCount(4, $json);
     }
 
     public function testGetUserWithExactSearch() {

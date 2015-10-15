@@ -41,6 +41,7 @@ class UserGroupResource extends AuthenticatedResource {
 
     const KEY_ID      = 'id';
     const USERNAME_ID = 'username';
+    const EMAIL_ID    = 'email';
 
     /** @var UGroupManager */
     private $ugroup_manager;
@@ -157,6 +158,7 @@ class UserGroupResource extends AuthenticatedResource {
      * <ul>
      * <li> {"id": user_id} </li>
      * <li> {"username": user_name} </li>
+     * <li> {"email": user_email} </li>
      * </ul>
      *
      * @url PUT {id}/users
@@ -206,6 +208,16 @@ class UserGroupResource extends AuthenticatedResource {
             return $this->user_manager->getUserById($value);
         } elseif ($key === self::USERNAME_ID) {
             return $this->user_manager->getUserByUserName($value);
+        } elseif ($key === self::EMAIL_ID) {
+            $users = $this->user_manager->getAllUsersByEmail($value);
+
+            if (count($users) > 1 ) {
+                throw new RestException(400, "More than one user use the email address $value");
+            } elseif (count($users) === 0) {
+                return null;
+            }
+
+            return $users[0];
         }
     }
 
@@ -233,6 +245,7 @@ class UserGroupResource extends AuthenticatedResource {
         $available_keywords = array(
             self::KEY_ID,
             self::USERNAME_ID,
+            self::EMAIL_ID,
         );
 
         foreach ($user_references as $user_reference) {

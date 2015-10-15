@@ -144,7 +144,7 @@ class UserGroupTest extends RestBase {
                     'id'           => REST_TestDataBuilder::TEST_USER_2_ID,
                     'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
                     'user_url'     => '/users/rest_api_tester_2',
-                    'email'        => '',
+                    'email'        => REST_TestDataBuilder::TEST_USER_2_EMAIL,
                     'real_name'    => '',
                     'display_name' => REST_TestDataBuilder::TEST_USER_2_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_2_NAME,
@@ -157,7 +157,7 @@ class UserGroupTest extends RestBase {
                     'id'           => REST_TestDataBuilder::TEST_USER_3_ID,
                     'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_3_ID,
                     'user_url'     => '/users/rest_api_tester_3',
-                    'email'        => '',
+                    'email'        => REST_TestDataBuilder::TEST_USER_3_EMAIL,
                     'real_name'    => '',
                     'display_name' => REST_TestDataBuilder::TEST_USER_3_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_3_NAME,
@@ -218,7 +218,7 @@ class UserGroupTest extends RestBase {
                     'id'           => REST_TestDataBuilder::TEST_USER_2_ID,
                     'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
                     'user_url'     => '/users/rest_api_tester_2',
-                    'email'        => '',
+                    'email'        => REST_TestDataBuilder::TEST_USER_2_EMAIL,
                     'real_name'    => '',
                     'display_name' => REST_TestDataBuilder::TEST_USER_2_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_2_NAME,
@@ -259,6 +259,53 @@ class UserGroupTest extends RestBase {
 
     /**
      * @depends testPutUsersInUserGroupWithUsername
+     */
+    public function testPutUsersInUserGroupWithEmail() {
+        $put_resource = json_encode(array(
+            array('email' => REST_TestDataBuilder::TEST_USER_2_EMAIL),
+            array('email' => REST_TestDataBuilder::TEST_USER_3_EMAIL)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users')
+        );
+
+        $response_get_json = $response_get->json();
+
+        $this->assertEquals(count($response_get_json), 2);
+        $this->assertEquals($response_get_json[0]["id"], 103);
+        $this->assertEquals($response_get_json[1]["id"], 104);
+    }
+
+    /**
+     * @depends testPutUsersInUserGroupWithUsername
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPutUsersInUserGroupWithEmailMultipleUsers() {
+        $put_resource = json_encode(array(
+            array('email' => REST_TestDataBuilder::TEST_USER_1_EMAIL),
+            array('email' => REST_TestDataBuilder::TEST_USER_3_EMAIL)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+            null,
+            $put_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @depends testPutUsersInUserGroupWithEmail
      */
     public function testPutUsersInUserGroup() {
         $put_resource = json_encode(array(
