@@ -1,3 +1,6 @@
+Version 0.51 - Tuleap 8.8
+    * request #8484: Service usage statistics does not try to use non existant TV3 tables
+
 Version 0.50 - Tuleap 8.3
     * request #8133: statistics purge is too silent- need to know what's going on
 
