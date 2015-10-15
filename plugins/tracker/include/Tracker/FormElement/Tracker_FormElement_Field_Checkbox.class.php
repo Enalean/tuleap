@@ -22,8 +22,6 @@
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
 
-    const VALUE_NOT_SELECTED = 0;
-
     protected function fetchFieldContainerStart($id, $name) {
         return '';
     }
@@ -105,13 +103,5 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitCheckbox($this);
-    }
-
-    /**
-     * @return bool
-     */
-    protected function checkValueExists($value_id, array $all_possible_values) {
-        return parent::checkValueExists($value_id, $all_possible_values) ||
-               $value_id == self::VALUE_NOT_SELECTED;
     }
 }
