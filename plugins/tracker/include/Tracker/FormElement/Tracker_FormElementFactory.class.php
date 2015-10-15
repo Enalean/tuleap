@@ -120,6 +120,17 @@ class Tracker_FormElementFactory {
         self::$_instance = null;
     }
 
+    public function clearCaches() {
+        $this->formElements              = array();
+        $this->formElements_by_parent    = array();
+        $this->formElements_by_name      = array();
+        $this->used_formElements         = array();
+        $this->used_formElements_by_name = array();
+        $this->used                      = array();
+
+        self::clearInstance();
+    }
+
     /**
      * Returns the short name of the type of the given field
      *
