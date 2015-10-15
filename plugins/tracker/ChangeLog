@@ -1,3 +1,6 @@
+Version 5.711 - Tuleap 8.8
+    * request #8486: Can no longer update artifact with modale in kanban
+
 Version 5.710 - Tuleap 8.8
     * story 8411: modify a public report in Trackers
 
