@@ -99,14 +99,29 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     }
 
     private function injectCopyItemInToolbar(array &$toolbar) {
-        $position_of_submitnew_item = 0;
-
         $item = array(
             'title' => $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
             'url'   => TRACKER_BASE_URL.'/?func=copy-artifact&aid='. $this->artifact->getId()
         );
 
-        array_splice($toolbar, $position_of_submitnew_item + 1, 0, array($item));
+        array_splice($toolbar, $this->findLastPositionOfSubmitNewItemInToolbar($toolbar) + 1, 0, array($item));
+    }
+
+    private function findLastPositionOfSubmitNewItemInToolbar(array $toolbar) {
+        $submit_new_found = false;
+        $last_position_of_submitnew_item = 0;
+
+        foreach ($toolbar as $item) {
+            if (isset($item['submit-new'])) {
+                $submit_new_found = true;
+            } elseif ($submit_new_found) {
+                $last_position_of_submitnew_item--;
+                break;
+            }
+            $last_position_of_submitnew_item++;
+        }
+
+        return $last_position_of_submitnew_item;
     }
 
     protected function fetchView(Codendi_Request $request, PFUser $user) {

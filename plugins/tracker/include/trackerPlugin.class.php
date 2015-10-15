@@ -190,6 +190,7 @@ class trackerPlugin extends Plugin {
             $params['scripts'],
             array(
                 '/plugins/tracker/scripts/TrackerReports.js',
+                '/plugins/tracker/scripts/TrackerEmailCopyPaste.js',
                 '/plugins/tracker/scripts/TrackerReportsSaveAsModal.js',
                 '/plugins/tracker/scripts/TrackerBinds.js',
                 '/plugins/tracker/scripts/ReorderColumns.js',

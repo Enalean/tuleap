@@ -32,7 +32,24 @@ var tuleap = tuleap || { };
         },
 
         isIE : function() {
-            return eval('/*@cc_on !@*/false');
+            var user_agent = window.navigator.userAgent;
+
+            var msie = user_agent.indexOf('MSIE ');
+            if (msie > 0) {
+                return true;
+            }
+
+            var trident = user_agent.indexOf('Trident/');
+            if (trident > 0) {
+                return true;
+            }
+
+            var edge = user_agent.indexOf('Edge/');
+            if (edge > 0) {
+               return true;
+            }
+
+            return false;
         }
     };
 })(jQuery);

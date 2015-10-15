@@ -1,6 +1,3 @@
-{{# has_browse_instructions }}
-    <p class="browse_instructions">{{{ browse_instructions }}}</p>
-{{/ has_browse_instructions }}
 {{# has_warnings }}
     <div id="feedback">
         <ul class="feedback_warning">
@@ -9,22 +6,25 @@
             {{/ warnings }}
         </ul>
     </div>
-    <p class="browse_instructions"></p>
 {{/ has_warnings }}
+
+{{# has_browse_instructions }}
+    <div class="browse_instructions">{{{ browse_instructions }}}</div>
+{{/ has_browse_instructions }}
 
 <div id="tracker_report_config_options" class="row-fluid">
     <div id="tracker_report_selection" class="pull-left">
         <h2>
-        <form id="tracker_report_form" action="{{ select_report_url }}" method="POST" class="form-horizontal form-inline">
-            {{ title }} {{{ reports_selector }}}
-        </form>
+            <form id="tracker_report_form" action="{{ select_report_url }}" method="POST" class="form-horizontal form-inline">
+                {{ title }} {{{ reports_selector }}}
+            </form>
 
-    {{# can_save }}
-        {{# options_dropdown }}
-            {{> button_dropdowns }}
-        {{/ options_dropdown }}
-    {{/ can_save }}
-    </h2>
+            {{# can_save }}
+                {{# options_dropdown }}
+                    {{> button_dropdowns }}
+                {{/ options_dropdown }}
+            {{/ can_save }}
+        </h2>
     </div>
 
     {{# can_save }}

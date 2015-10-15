@@ -1168,13 +1168,40 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
     }
 
+    private function canUserCreateArtifactByMail() {
+        $config = new TrackerPluginConfig(
+            new TrackerPluginConfigDao()
+        );
+
+        return $config->isInsecureEmailgatewayEnabled()
+            && $this->enable_emailgateway;
+    }
+
     public function getDefaultToolbar() {
         $toolbar = array();
+
         $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
-                'url'   => $this->getSubmitUrl(),
-                'class' => 'tracker-submit-new',
+                'title'      => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
+                'url'        => $this->getSubmitUrl(),
+                'class'      => 'tracker-submit-new',
+                'submit-new' => 1
         );
+
+        if ($this->canUserCreateArtifactByMail()) {
+            $email_domain = ForgeConfig::get('sys_default_mail_domain');
+
+            if (! $email_domain) {
+                $email_domain = ForgeConfig::get('sys_default_domain');
+            }
+
+            $email = 'forge__tracker+'. $this->id .'@'. $email_domain;
+            $toolbar[] = array(
+                    'title'      => '<span class="email-tracker" data-email="'. $email .'"><i class="icon-envelope"></i></span>',
+                    'url'        => 'javascript:;',
+                    'submit-new' => 1
+            );
+        }
+
         if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
             $toolbar[] = array(
                     'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
