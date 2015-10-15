@@ -300,25 +300,31 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfOpenArtifactsBetweenStartDateAndEndDate() {
-        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
-                FROM artifact_group_list, artifact
-                WHERE ( open_date >= $this->start_date
-                    AND open_date < $this->end_date
-                    AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
-                GROUP BY artifact_group_list.group_id";
-
-        return $this->retrieve($sql);
+        if (TrackerV3::instance()->available()) {
+            $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
+                    FROM artifact_group_list, artifact
+                    WHERE ( open_date >= $this->start_date
+                        AND open_date < $this->end_date
+                        AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
+                    GROUP BY artifact_group_list.group_id";
+            return $this->retrieve($sql);
+        } else {
+            return array();
+        }
     }
 
     public function getNumberOfClosedArtifactsBetweenStartDateAndEndDate() {
-        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
-                FROM artifact_group_list, artifact
-                WHERE ( close_date >= $this->start_date
-                    AND close_date < $this->end_date
-                    AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
-                GROUP BY artifact_group_list.group_id";
-
-        return $this->retrieve($sql);
+        if (TrackerV3::instance()->available()) {
+            $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
+                    FROM artifact_group_list, artifact
+                    WHERE ( close_date >= $this->start_date
+                        AND close_date < $this->end_date
+                        AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
+                    GROUP BY artifact_group_list.group_id";
+            return $this->retrieve($sql);
+        } else {
+            return array();
+        }
     }
 
     public function getNumberOfUserAddedBetweenStartDateAndEndDate() {
