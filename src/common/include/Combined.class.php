@@ -97,6 +97,7 @@ class Combined {
             '/scripts/tuleap/project-privacy-tooltip.js',
             '/scripts/tuleap/massmail_project_members.js',
             '/scripts/tuleap/manage-allowed-projects-on-resource.js',
+            '/scripts/tuleap/escaper.js',
             '/scripts/admin/system_events.js',
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
