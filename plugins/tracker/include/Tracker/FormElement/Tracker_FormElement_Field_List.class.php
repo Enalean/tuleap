@@ -22,7 +22,8 @@
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
 
-    const NONE_VALUE = 100;
+    const NONE_VALUE          = 100;
+    const NOT_INDICATED_VALUE = 0;
 
     protected $bind;
 
@@ -1328,8 +1329,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return bool
      */
     protected function checkValueExists($value_id, array $all_possible_values) {
-        return (array_key_exists($value_id, $all_possible_values) ||
-               $value_id == Tracker_FormElement_Field_List::NONE_VALUE);
+        return array_key_exists($value_id, $all_possible_values) ||
+               $value_id == Tracker_FormElement_Field_List::NONE_VALUE ||
+               $value_id == Tracker_FormElement_Field_List::NOT_INDICATED_VALUE;
     }
 
     /**

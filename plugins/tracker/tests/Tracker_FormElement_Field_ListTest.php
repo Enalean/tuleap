@@ -652,6 +652,7 @@ class Tracker_FormElement_Field_List_Validate_Values extends TuleapTestCase {
         $this->assertTrue($this->list->isValid($this->artifact, 101));
         $this->assertTrue($this->list->isValid($this->artifact, Tracker_FormElement_Field_List::NONE_VALUE));
         $this->assertTrue($this->list->isValid($this->artifact, strval(Tracker_FormElement_Field_List::NONE_VALUE)));
+        $this->assertTrue($this->list->isValid($this->artifact, Tracker_FormElement_Field_List::NOT_INDICATED_VALUE));
         $this->assertTrue($this->list->isValid($this->artifact, array(101, 103)));
     }
 
