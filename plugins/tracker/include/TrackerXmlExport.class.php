@@ -86,7 +86,6 @@ class TrackerXmlExport {
             $this->artifact_xml_xport->export($tracker, $tracker_xml, $user, $archive);
         }
 
-        $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
         return $xml_trackers;
     }
 }

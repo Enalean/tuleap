@@ -1,0 +1,18 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+include "ugroups-definition.rnc"
+include "../../../../plugins/tracker/www/resources/tracker-definition.rnc"
+
+start = element project {
+    element ugroups {
+        element ugroup {
+            ugroup
+        }*
+    }?,
+
+    element trackers {
+        element tracker {
+            tracker
+        }*
+    }?
+}

@@ -76,9 +76,6 @@ class ProjectXMLExporter {
                 $this->user_xml_exporter->exportUser($member, $members_node, 'member');
             }
         }
-
-        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
-        $this->xml_validator->validate($ugroups_node, $rng_path);
     }
 
     private function exportPlugins(
@@ -111,6 +108,9 @@ class ProjectXMLExporter {
                                              <project />');
         $this->exportProjectUgroups($project, $xml_element);
         $this->exportPlugins($project, $xml_element, $options, $user, $archive);
+
+        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project.rng');
+        $this->xml_validator->validate($xml_element, $rng_path);
 
         $this->logger->info("Finish exporting project " . $project->getPublicName());
 
