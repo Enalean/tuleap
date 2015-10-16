@@ -32,6 +32,7 @@ use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnDao;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanItemDao;
+use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
@@ -74,6 +75,9 @@ class KanbanItemsResource extends AuthenticatedResource {
     /** @var AgileDashboard_KanbanItemManager */
     private $kanban_item_manager;
 
+    /** @var AgileDashboardStatisticsAggregator */
+    private $statistics_aggregator;
+
     public function __construct() {
         $this->tracker_factory      = TrackerFactory::instance();
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
@@ -96,9 +100,11 @@ class KanbanItemsResource extends AuthenticatedResource {
             $this->tracker_factory
         );
 
-        $kanban_item_dao           = new AgileDashboard_KanbanItemDao();
-        $this->time_info_factory   = new TimeInfoFactory($kanban_item_dao);
-        $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($kanban_item_dao);
+        $kanban_item_dao             = new AgileDashboard_KanbanItemDao();
+        $this->time_info_factory     = new TimeInfoFactory($kanban_item_dao);
+        $this->kanban_item_manager   = new AgileDashboard_KanbanItemManager($kanban_item_dao);
+
+        $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
     }
 
     /**
@@ -156,6 +162,10 @@ class KanbanItemsResource extends AuthenticatedResource {
         if (! $artifact) {
             throw new RestException(500, implode('. ', $GLOBALS['Response']->getFeedbackErrors()));
         }
+
+        $this->statistics_aggregator->addKanbanAddInPlaceHit(
+            $tracker->getGroupId()
+        );
 
         return $this->buildItemRepresentation($artifact);
     }

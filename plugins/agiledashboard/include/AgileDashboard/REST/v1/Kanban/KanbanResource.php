@@ -230,6 +230,9 @@ class KanbanResource extends AuthenticatedResource {
         if ($label) {
             $this->checkUserCanUpdateKanban($user, $kanban);
             $this->kanban_dao->save($id, $label);
+            $this->statistics_aggregator->addKanbanRenamingHit(
+                $this->getProjectIdForKanban($kanban)
+            );
         }
 
         if ($collapse_column) {
@@ -241,6 +244,9 @@ class KanbanResource extends AuthenticatedResource {
             } else {
                 $this->user_preferences->openColumn($kanban, $collapse_column->column_id, $user);
             }
+            $this->statistics_aggregator->addExpandCollapseColumnHit(
+                $this->getProjectIdForKanban($kanban)
+            );
         }
 
         if ($collapse_archive !== null) {
@@ -249,6 +255,9 @@ class KanbanResource extends AuthenticatedResource {
             } else {
                 $this->user_preferences->openArchive($kanban, $user);
             }
+            $this->statistics_aggregator->addExpandCollapseColumnHit(
+                $this->getProjectIdForKanban($kanban)
+            );
         }
 
         if ($collapse_backlog !== null) {
@@ -257,6 +266,9 @@ class KanbanResource extends AuthenticatedResource {
             } else {
                 $this->user_preferences->openBacklog($kanban, $user);
             }
+            $this->statistics_aggregator->addExpandCollapseColumnHit(
+                $this->getProjectIdForKanban($kanban)
+            );
         }
 
         Header::allowOptionsGetPatchDelete();

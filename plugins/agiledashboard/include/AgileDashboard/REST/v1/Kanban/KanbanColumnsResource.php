@@ -32,6 +32,7 @@ use AgileDashboard_KanbanColumnDao;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanColumnNotFoundException;
 use AgileDashboard_UserNotAdminException;
+use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
 use UserManager;
 use PFUser;
@@ -50,11 +51,17 @@ class KanbanColumnsResource {
     /** @var AgileDashboard_KanbanColumnManager */
     private $kanban_column_manager;
 
+    /** @var AgileDashboardStatisticsAggregator */
+    private $statistics_aggregator;
+
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
     public function __construct() {
-        $tracker_factory = TrackerFactory::instance();
+        $this->tracker_factory = TrackerFactory::instance();
 
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
-            $tracker_factory,
+            $this->tracker_factory,
             new AgileDashboard_KanbanDao()
         );
 
@@ -67,8 +74,10 @@ class KanbanColumnsResource {
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
             $permissions_manager,
-            $tracker_factory
+            $this->tracker_factory
         );
+
+        $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
     }
 
     /**
@@ -113,6 +122,9 @@ class KanbanColumnsResource {
         } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
+        $this->statistics_aggregator->addWIPModificationHit(
+            $this->getProjectIdForKanban($kanban)
+        );
     }
 
     /** @return AgileDashboard_Kanban */
@@ -132,5 +144,12 @@ class KanbanColumnsResource {
         $user = UserManager::instance()->getCurrentUser();
 
         return $user;
+    }
+
+    /**
+     * @return int
+     */
+    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
+        return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
     }
 }
