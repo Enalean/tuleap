@@ -1,3 +1,6 @@
+Version 5.712 - Tuleap 8.8
+    * Fix request #8464: Check if values set for field list are possible
+
 Version 5.711 - Tuleap 8.8
     * request #8486: Can no longer update artifact with modale in kanban
 
