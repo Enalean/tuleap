@@ -20,6 +20,7 @@
 
 class REST_TestDataBuilder extends TestDataBuilder {
 
+    const TEST_USER_4_ID          = 105;
     const TEST_USER_4_NAME        = 'rest_api_tester_4';
     const TEST_USER_4_PASS        = 'welcome0';
     const TEST_USER_4_STATUS      = 'A';

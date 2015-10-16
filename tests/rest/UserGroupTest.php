@@ -232,6 +232,74 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    /**
+     * @depends testGetMultipleUsersFromAStaticGroup
+     */
+    public function testPutUsersInProjectMembersAddsMembers() {
+        $put_resource = json_encode(array(
+            array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_4_ID)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
+            null,
+            $put_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users')
+        );
+
+        $response_get_json = $response_get->json();
+
+        $this->assertEquals(count($response_get_json), 3);
+        // The project is created by siteadmin user, and PUT does not remove admins
+        $this->assertEquals($response_get_json[0]["id"], 101);
+        $this->assertEquals($response_get_json[1]["id"], 102);
+        $this->assertEquals($response_get_json[2]["id"], 105);
+
+        $this->restoreProjectMembersToAvoidBreakingOtherTests();
+    }
+
+    private function restoreProjectMembersToAvoidBreakingOtherTests() {
+        $put_resource = json_encode(array(
+            array('id' => REST_TestDataBuilder::ADMIN_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_2_ID),
+            array('id' => REST_TestDataBuilder::TEST_USER_3_ID)
+        ));
+
+        $response_put = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
+            null,
+            $put_resource
+        ));
+    }
+
+    /**
+     * @depends testPutUsersInProjectMembersAddsMembers
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPutUsersInProjectAdmins() {
+        $put_resource = json_encode(array(
+            array('id' => REST_TestDataBuilder::TEST_USER_2_ID)
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
+            null,
+            $put_resource
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @depends testPutUsersInProjectAdmins
+     */
     public function testPutUsersInUserGroupWithUsername() {
         $put_resource = json_encode(array(
             array('username' => REST_TestDataBuilder::TEST_USER_1_NAME),

@@ -186,18 +186,18 @@ class UserGroupResource extends AuthenticatedResource {
 
         $this->checkKeysValidity($user_references);
 
-        $users_to_add = $this->getMembersToAdd($user_references);
+        $users_from_references = $this->getMembersFromReferences($user_references);
 
         try {
-            $this->ugroup_manager->resetUgroupMembers($user_group, $users_to_add);
+            $this->ugroup_manager->syncUgroupMembers($user_group, $users_from_references);
         } catch (Exception $exception) {
             throw new RestException(500, "An error occured while setting members in ugroup");
         }
     }
 
     private function checkUgroupValidity(ProjectUGroup $user_group) {
-        if (! $user_group->isStatic()) {
-            throw new RestException(400, "Not able to deal with dynamic user group");
+        if (! $user_group->isStatic() && $user_group->getId() != ProjectUGroup::PROJECT_MEMBERS) {
+            throw new RestException(400, "Only project members can be taken into account for the dynamic user groups");
         }
 
         if ($user_group->getSourceGroup() !== null) {
@@ -236,7 +236,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @return array
      * @throws RestException
      */
-    private function getMembersToAdd(array $user_references) {
+    private function getMembersFromReferences(array $user_references) {
         $users_to_add = array();
 
         foreach ($user_references as $user_reference) {

@@ -223,6 +223,13 @@ class ProjectUGroup implements User_UGroup {
         return $this->members;
     }
 
+    public function getMembersIncludingSuspended() {
+        if (! $this->members) {
+            $this->members = $this->getStaticOrDynamicMembersInludingSuspended($this->group_id);
+        }
+        return $this->members;
+    }
+
     /**
      *
      * @return Users
@@ -250,6 +257,15 @@ class ProjectUGroup implements User_UGroup {
             return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
         }
         $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+        return $dar->instanciateWith(array($this, 'newUser'));
+    }
+
+    private function getStaticOrDynamicMembersInludingSuspended($group_id) {
+        if ($this->is_dynamic) {
+            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupIdIncludingSuspended($this->id, $group_id);
+            return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+        }
+        $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupIdIncludingSuspended($this->id);
         return $dar->instanciateWith(array($this, 'newUser'));
     }
 
@@ -462,12 +478,6 @@ class ProjectUGroup implements User_UGroup {
             } else {
                 throw new UGroup_Invalid_Exception();
             }
-        }
-    }
-
-    public function removeAllUsers() {
-        foreach ($this->getMembers() as $member) {
-            $this->removeUser($member);
         }
     }
 
