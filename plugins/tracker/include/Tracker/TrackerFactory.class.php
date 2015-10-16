@@ -67,6 +67,12 @@ class TrackerFactory {
         self::$_instance = null;
     }
 
+    public function clearCaches() {
+        $this->trackers = array();
+
+        self::clearInstance();
+    }
+
     /**
      * @param int $id the id of the tracker to retrieve
      * @return Tracker identified by id (null if not found)

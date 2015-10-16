@@ -315,6 +315,9 @@ class TrackerXmlImport {
             }
         }
 
+        $this->formelement_factory->clearCaches();
+        $this->tracker_factory->clearCaches();
+
         return $tracker;
     }
 
@@ -457,6 +460,7 @@ class TrackerXmlImport {
                 }
             }
         }
+
         return $tracker;
     }
 
