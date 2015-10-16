@@ -348,4 +348,15 @@ class UGroupManager {
     public function addUserToUgroup($project_id, $ugroup_id, $user_id) {
         return ugroup_add_user_to_ugroup($project_id, $ugroup_id, $user_id);
     }
+
+    public function resetUgroupMembers(ProjectUGroup $user_group, array $users_to_add) {
+        $this->getDao()->startTransaction();
+
+        $user_group->removeAllUsers();
+        foreach ($users_to_add as $user) {
+            $user_group->addUser($user);
+        }
+
+        $this->getDao()->commit();
+    }
 }
