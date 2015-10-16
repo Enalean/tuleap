@@ -53,10 +53,14 @@ class Tracker_XML_Exporter_ArtifactAttachmentExporter {
         $archive->addEmptyDir(self::DATA_DIR);
 
         foreach ($value->getFiles() as $file_info) {
-            $archive->addFile(
-                $file_info->getPath(),
-                self::DATA_DIR . DIRECTORY_SEPARATOR . self::FILE_PREFIX . $file_info->getId()
-            );
+            if (file_exists($file_info->getPath())) {
+                $archive->addFile(
+                    $file_info->getPath(),
+                    self::DATA_DIR . DIRECTORY_SEPARATOR . self::FILE_PREFIX . $file_info->getId()
+                );
+            } else {
+                $archive->addFromString(self::DATA_DIR . DIRECTORY_SEPARATOR . self::FILE_PREFIX . $file_info->getId(), $file_info->getPath());
+            }
         }
     }
 }

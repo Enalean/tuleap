@@ -22,7 +22,7 @@
 // Check if the package from EPEL repository is available
 if(file_exists('/usr/share/php/password_compat/password.php')) {
     require_once('/usr/share/php/password_compat/password.php');
-} else {
+} elseif(file_exists('/usr/share/php-password-compat/lib/password.php')) {
     require_once('/usr/share/php-password-compat/lib/password.php');
 }
 
