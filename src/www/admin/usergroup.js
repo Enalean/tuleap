@@ -39,7 +39,7 @@ document.observe('dom:loaded', function() {
         } else {
             var txt = $F(elt);
         }
-        span.update(txt);
+        span.update(tuleap.escaper.html(txt));
         var container = new Element('span', {'style': 'margin-left: 1em;'});
         container.update(codendi.locales['admin_usergroup'].was+' ');
         container.appendChild(span);
