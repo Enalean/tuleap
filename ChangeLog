@@ -4,6 +4,7 @@ Version 8.8 (Not released yet)
 	* request #8467: Allow users to use other lang than EN or FR
 	* story #8289: synchronize users in users groups
 	* request #8427: Remove vsFTPd logrotate configuration
+	* story #6256: to be able to create an artifact by sending an email
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
@@ -12,7 +13,7 @@ Version 8.8 (Not released yet)
 
 	== Plugins ==
 	* git: 4.90
-	* tracker: 5.712
+	* tracker: 5.713
 	* graphontrackersv5: 5.17
 	* statistics: 0.51
 	* mediawiki: 0.97
