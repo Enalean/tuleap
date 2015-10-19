@@ -49,7 +49,7 @@ class MediawikiMLEBExtensionManager {
         $this->language_manager = $language_manager;
     }
 
-    private function isMLEBExtensionInstalled() {
+    public function isMLEBExtensionInstalled() {
         return is_dir(forge_get_config('extension_mleb_path', 'mediawiki'));
     }
 
@@ -76,6 +76,10 @@ class MediawikiMLEBExtensionManager {
         }
 
         $this->runUpdate($project);
+        return $this->saveMLEBActivationForProject($project);
+    }
+
+    public function saveMLEBActivationForProject(Project $project) {
         return $this->mleb_dao->saveMLEBActivationForProject($project->getID());
     }
 

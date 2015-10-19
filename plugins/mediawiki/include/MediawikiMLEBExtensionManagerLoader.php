@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-
 require_once 'MediawikiLanguageDao.php';
 require_once 'MediawikiLanguageManager.php';
 require_once 'MediawikiVersionDao.php';
@@ -29,8 +28,10 @@ require_once 'MediawikiMLEBExtensionManager.php';
 
 class MediawikiMLEBExtensionManagerLoader {
 
+    /**
+     * @return MediawikiMLEBExtensionManager
+     */
     public function getMediawikiMLEBExtensionManager() {
-
         return new MediawikiMLEBExtensionManager(
             new Mediawiki_Migration_MediawikiMigrator(),
             new MediawikiMLEBExtensionDao(),
