@@ -59,6 +59,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     private $project;
     private $children;
     private $parent = false;
+    private $enable_emailgateway;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
@@ -82,7 +83,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $instantiate_for_new_projects,
             $log_priority_changes,
             $stop_notification,
-            $color) {
+            $color,
+            $enable_emailgateway) {
         $this->id                           = $id;
         $this->group_id                     = $group_id;
         $this->name                         = $name;
@@ -96,6 +98,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->log_priority_changes         = $log_priority_changes;
         $this->stop_notification            = $stop_notification;
+        $this->enable_emailgateway          = $enable_emailgateway;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
         $this->renderer                     = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
@@ -1385,6 +1388,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return $this->color;
     }
 
+    public function isEmailgatewayEnabled() {
+        return $this->enable_emailgateway;
+    }
+
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $this->displayAdminItemHeader($layout, 'editoptions');
 
@@ -1393,7 +1400,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
             new Tracker_GeneralSettings_Presenter(
                 $this,
                 TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&func=admin-editoptions',
-                new Tracker_ColorPresenterCollection($this)
+                new Tracker_ColorPresenterCollection($this),
+                new TrackerPluginConfig(
+                    new TrackerPluginConfigDao()
+                )
             )
         );
 
@@ -1865,6 +1875,7 @@ EOS;
         $this->color                        = trim($request->getValidated('tracker_color', 'string', ''));
         $this->item_name                    = trim($request->getValidated('item_name', 'string', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
+        $this->enable_emailgateway          = $request->getValidated('enable_emailgateway') ? 1 : 0;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
         $this->browse_instructions          = $request->getValidated('browse_instructions', 'text', '');
         $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
@@ -2287,6 +2298,9 @@ EOS;
         $xmlElem->addAttribute('parent_id', (string)$parent_id);
 
         // only add attributes which are different from the default value
+        if ($this->enable_emailgateway) {
+            $xmlElem->addAttribute('enable_emailgateway', $this->enable_emailgateway);
+        }
         if ($this->allow_copy) {
             $xmlElem->addAttribute('allow_copy', $this->allow_copy);
         }

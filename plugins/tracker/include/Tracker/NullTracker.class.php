@@ -23,9 +23,9 @@
  */
 class NullTracker extends Tracker {
     public function __construct() {
-        parent::__construct(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        parent::__construct(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
-    
+
     public function getId() {}
     public function getName() {}
 }

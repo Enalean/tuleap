@@ -38,6 +38,14 @@
                 <input type="checkbox" name="log_priority_changes" value="1" {{# is_log_priority_changes }} checked {{/ is_log_priority_changes }}>
             </td>
         </tr>
+        {{# enable_insecure_emailgateway }}
+        <tr>
+            <td width="15%"><b>{{ tracker_emailgateway }}:</b></td>
+            <td>
+                <input type="checkbox" name="enable_emailgateway" value="1" {{# is_emailgateway_used }} checked {{/ is_emailgateway_used }}>
+            </td>
+        </tr>
+        {{/ enable_insecure_emailgateway }}
         <tr>
             <td width="15%"><b>{{ submit_instruction_label }}</b>: <br><i>{{ html_tags }}</i></td>
             <td>

@@ -29,6 +29,15 @@
     </optional>
     <optional>
       <!-- default is false -->
+      <attribute name="enable_emailgateway">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <!-- default is false -->
       <attribute name="instantiate_for_new_projects">
         <choice>
           <value>0</value>

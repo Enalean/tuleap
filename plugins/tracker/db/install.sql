@@ -104,6 +104,7 @@ CREATE TABLE tracker(
     stop_notification INT( 11 ) NOT NULL default '0',
     from_tv3_id INT(11) NULL,
     color varchar(64) NOT NULL DEFAULT 'inca_silver',
+    enable_emailgateway TINYINT(1) NOT NULL DEFAULT '0',
     INDEX idx_fk_group_id( group_id )
 ) ENGINE=InnoDB;
 
@@ -743,6 +744,13 @@ CREATE TABLE IF NOT EXISTS tracker_artifact_unsubscribe (
     artifact_id int(11) NOT NULL,
     user_id int(11) NOT NULL,
     PRIMARY KEY (artifact_id, user_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS plugin_tracker_config;
+CREATE TABLE plugin_tracker_config (
+    name VARCHAR(255) NOT NULL,
+    value VARCHAR(255) NOT NULL DEFAULT '',
+    PRIMARY KEY idx(name(10))
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100

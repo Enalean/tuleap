@@ -669,6 +669,7 @@ plugin_tracker_include_type	migrate_from_tv3	Migrer le contenu d'un outil de sui
 plugin_tracker_include_type	tv3_migration_introduction	Ou vous pouvez migrer un outil de suivi v3 …
 plugin_tracker_include_type	tv3_being_migrated	Des migrations sont en cours. Les nouveaux outils de suivi apparaîtront dès que les migrations seront terminées.
 plugin_tracker_include_type	untruncated_migration_email	Un courriel non tronqué sera envoyé à la fin du processus de migration.
+plugin_tracker_include_type	emailgateway	Autoriser la création/réponse à des artéfacts par courriel
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class.php
@@ -1632,3 +1633,14 @@ plugin_tracker	tracker_fulltextsearch_info	Seulement disponible quand vous chois
 plugin_tracker	field_not_stored_exception	Le champs "$1" n'a pas pu être sauvegardé.
 plugin_tracker	comment_not_stored_exception	Le commentaire n'a pas pu être sauvegardé.
 plugin_tracker	changeset_not_stored_exception	Le changeset n'a pas pu être sauvegardé.
+
+plugin_tracker_config	title	Configuration générale des outils de suivi
+plugin_tracker_config	email_gateway	Passerelle Courriel
+plugin_tracker_config	email_gateway_desc	Autoriser les utilisateurs à intéragir avec les outils de suivi par courriel.
+plugin_tracker_config	disable	Désactiver la passerelle
+plugin_tracker_config	disable_desc	La fonctionnalité est désactivée, personne ne peut intéragir avec les outils de suivi par courriel.
+plugin_tracker_config	token	Passerelle basée sur un jeton d'authentification
+plugin_tracker_config	token_desc	Les utilisateurs peuvent intéragir avec les outils de suivi par courriel. L'authentification est effectuée grâce à un jeton injecté dans les entêtes des courriels. Ceci réduit les risques de courriel forgé, nous pouvons modérément avoir confiance en l'émetteur. <br /> Actuellement, seulement les réponses (ajout d'un commentaire à un artifact) par courriel sont supportées par cette option.
+plugin_tracker_config	insecure	Passerelle NON sécurisée
+plugin_tracker_config	insecure_desc	Les utilisateurs peuvent intéragir avec les outils de suivi par courriel. Il n'y a aucune authentification. <span class="text-error">Avec cette option, nous <strong>ne pouvons pas avoir confiance en l'émetteur du courriel</strong>. Ce qui veut dire que des personnes mal intentionnées peuvent facilement forger un courriel et se faire passer pour quelqu'un d'autre.</span><br />Actuellement, les utilisateurs peuvent créer des artifacts et répondre (ajout d'un commentaire à un artifact) par courriel avec cette option.
+plugin_tracker_config	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer la variable suivante : <code>$sys_enable_reply_by_mail</code>.</p>

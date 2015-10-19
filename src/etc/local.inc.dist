@@ -438,10 +438,6 @@ $sys_generic_user_suffix = '';
 // Only used in news service for now
 $sys_max_number_of_emailed_people = 100;
 
-// Allow users to reply by mail to artifact notifications
-// As of today only adding a follow-up comment is supported
-$sys_enable_reply_by_mail = 0;
-
 // Enable experimental feature to strip outlook quotes
 $sys_strip_outlook = 0;
 
