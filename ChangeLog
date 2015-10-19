@@ -12,7 +12,7 @@ Version 8.8 (Not released yet)
 	* request #8318: redirect_to loop
 
 	== Plugins ==
-	* git: 4.90
+	* git: 4.91
 	* tracker: 5.713
 	* graphontrackersv5: 5.17
 	* statistics: 0.51
