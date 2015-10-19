@@ -1,3 +1,18 @@
+Version 8.7-2 (Monday, October 19th 2015)
+
+	== Bug fix ==
+	* request #8481 Notifications in FRS can not be sent and generate a fatal error
+	* request #8101 All access are denied in SVN if a space is added before a path in the SVN access control file
+	* request #8438 Fix warning when using artifact batch iterator during FTS tracker reindex without order param
+	* request #8464 List value ID are not filtered which could lead to a fatal error
+	* request #8479 Last Git push widget in project is broken if there isn't an existing repo
+	* request #8318 redirect_to loop
+	* request #8486 Can no longer update artifact with modale in kanban
+	* request #8484 Service usage statistics CSV export triggers errors when TV3 tables are not present
+
+	== Security ==
+	* request #8475 Reflected XSS in the form allowing to fork a Git repo
+
 Version 8.7 (Monday, October 12th 2015)
 
 	== Enhancement ==
