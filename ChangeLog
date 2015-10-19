@@ -10,13 +10,16 @@ Version 8.8 (Not released yet)
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
 	* request #8101: All access are denied in SVN if a space is added before a path in the SVN access control file
 	* request #8318: redirect_to loop
+	* request #8333: Fully remove people skills feature
 
 	== Plugins ==
 	* git: 4.91
-	* tracker: 5.713
+	* tracker: 5.714
 	* graphontrackersv5: 5.17
 	* statistics: 0.51
 	* mediawiki: 0.97
+	* IM: 1.5.33
+	* docman: 2.26.86
 
 	== Themes ==
 	* FlamingParrot: 1.111
