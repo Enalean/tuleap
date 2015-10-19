@@ -1,3 +1,6 @@
+Version 0.97 - Tuleap 8.8
+    * request #8490 MediaWikiLanguageExtensionBundle not loaded
+
 Version 0.96 - Tuleap 8.7
     * story #8214: load .inc.dist && .inc
 
