@@ -58,7 +58,6 @@ admin_main	site_news_approval	Site news approval
 admin_main	trove_cat	Trove categories
 admin_main	trove_cat_list	List all
 admin_main	trove_cat_add	Add one
-admin_main	skills	People skills
 admin_main	new_user	New user
 admin_main	permission_delegation	Permission delegation
 admin_main	active_users	Per activities

@@ -945,8 +945,6 @@ project_memberlist	proj_member_list	Liste des membres du projet
 project_memberlist	contact_to_become_member	<P>Si vous souhaitez devenir membre de ce projet, contactez l'un des administrateurs du projet dont les noms apparaissent en caractères gras ci-dessous.<br><br>
 project_memberlist	developer	Membre
 project_memberlist	username	Nom d'utilisateur
-project_memberlist	skills	Compétences
-project_memberlist	view_skills	Voir les compétences
 #
 #-----------------------------------------------
 # Script: SF/www/project/showdetails.php

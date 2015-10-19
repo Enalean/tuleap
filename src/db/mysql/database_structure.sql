@@ -1,4 +1,4 @@
-# 
+#
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
 #
@@ -20,7 +20,7 @@
 
 #
 # Purpose:
-#    Create all the Codendi tables. (The Database must be created first by hand)
+#    Create all the Tuleap tables. (The Database must be created first by hand)
 #
 # MySQL dump 8.22
 #
@@ -623,49 +623,6 @@ CREATE TABLE news_bytes (
   KEY idx_news_bytes_forum (forum_id),
   KEY idx_news_bytes_group (group_id),
   KEY idx_news_bytes_approved (is_approved)
-);
-
-#
-# Table structure for table 'people_skill'
-#
-
-CREATE TABLE people_skill (
-  skill_id int(11) NOT NULL auto_increment,
-  name text,
-  PRIMARY KEY  (skill_id)
-);
-
-#
-# Table structure for table 'people_skill_inventory'
-#
-
-CREATE TABLE people_skill_inventory (
-  skill_inventory_id int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  skill_id int(11) NOT NULL default '0',
-  skill_level_id int(11) NOT NULL default '0',
-  skill_year_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (skill_inventory_id)
-);
-
-#
-# Table structure for table 'people_skill_level'
-#
-
-CREATE TABLE people_skill_level (
-  skill_level_id int(11) NOT NULL auto_increment,
-  name text,
-  PRIMARY KEY  (skill_level_id)
-);
-
-#
-# Table structure for table 'people_skill_year'
-#
-
-CREATE TABLE people_skill_year (
-  skill_year_id int(11) NOT NULL auto_increment,
-  name text,
-  PRIMARY KEY  (skill_year_id)
 );
 
 #
@@ -1275,8 +1232,6 @@ CREATE TABLE user (
   sticky_login int(11) NOT NULL default '0',
   authorized_keys text,
   email_new text,
-  people_view_skills int(11) NOT NULL default '0',
-  people_resume text NOT NULL,
   timezone varchar(64) default 'GMT',
   theme varchar(50),
   language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',

@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -127,8 +128,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     protected $sticky_login;
     protected $authorized_keys;
     protected $email_new;
-    protected $people_view_skills;
-    protected $people_resume;
     protected $timezone;
     protected $theme;
     protected $language_id;
@@ -220,8 +219,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->sticky_login       = isset($row['sticky_login'])       ? $row['sticky_login']       : null;
         $this->authorized_keys    = isset($row['authorized_keys'])    ? $row['authorized_keys']    : null;
         $this->email_new          = isset($row['email_new'])          ? $row['email_new']          : null;
-        $this->people_view_skills = isset($row['people_view_skills']) ? $row['people_view_skills'] : null;
-        $this->people_resume      = isset($row['people_resume'])      ? $row['people_resume']      : null;
         $this->timezone           = isset($row['timezone'])           ? $row['timezone']           : null;
         $this->theme              = isset($row['theme'])              ? $row['theme']              : null;
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
@@ -272,8 +269,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             'sticky_login'       => $this->sticky_login,
             'authorized_keys'    => $this->authorized_keys,
             'email_new'          => $this->email_new,
-            'people_view_skills' => $this->people_view_skills,
-            'people_resume'      => $this->people_resume,
             'timezone'           => $this->timezone,
             'theme'              => $this->theme,
             'language_id'        => $this->language_id,
@@ -720,18 +715,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     /**
-     * @return string resume of the user
-     */
-    function getPeopleResume() {
-        return $this->people_resume;
-    }
-    /**
-     * @return int 1 if the user skills are public, 0 otherwise
-     */
-    function getPeopleViewSkills() {
-        return $this->people_view_skills;
-    }
-    /**
      * @return int ID of the language of the user
      */
     function getLanguageID() {
@@ -1081,18 +1064,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function setAuthorizedKeys($authorizedKeys) {
         $this->authorized_keys = $authorizedKeys;
-    }
-    /**
-     * @param string resume of the user
-     */
-    function setPeopleResume($peopleResume) {
-        $this->people_resume = $peopleResume;
-    }
-    /**
-     * @param int 1 if the user skills are public, 0 otherwise
-     */
-    function setPeopleViewSkills($peopleViewSkills) {
-        $this->people_view_skills = $peopleViewSkills;
     }
 
     /**

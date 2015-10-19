@@ -831,31 +831,31 @@ class UserManager {
      */
     function createAccount($user){
         $dao = $this->getDao();
-        $user_id = $dao->create($user->getUserName(),
-                                $user->getEmail(),
-                                $user->getPassword(),
-                                $user->getRealName(),
-                                $user->getRegisterPurpose(),
-                                $user->getStatus(),
-                                $user->getShell(),
-                                $user->getUnixStatus(),
-                                $user->getUnixUid(),
-                                $user->getUnixBox(),
-                                $user->getLdapId(),
-                                $_SERVER['REQUEST_TIME'],
-                                $user->getConfirmHash(),
-                                $user->getMailSiteUpdates(),
-                                $user->getMailVA(),
-                                $user->getStickyLogin(),
-                                $user->getAuthorizedKeys(),
-                                $user->getNewMail(),
-                                $user->getPeopleViewSkills(),
-                                $user->getPeopleResume(),
-                                $user->getTimeZone(),
-                                $user->getTheme(),
-                                $user->getLanguageID(),
-                                $user->getExpiryDate(),
-                                $_SERVER['REQUEST_TIME']);
+        $user_id = $dao->create(
+            $user->getUserName(),
+            $user->getEmail(),
+            $user->getPassword(),
+            $user->getRealName(),
+            $user->getRegisterPurpose(),
+            $user->getStatus(),
+            $user->getShell(),
+            $user->getUnixStatus(),
+            $user->getUnixUid(),
+            $user->getUnixBox(),
+            $user->getLdapId(),
+            $_SERVER['REQUEST_TIME'],
+            $user->getConfirmHash(),
+            $user->getMailSiteUpdates(),
+            $user->getMailVA(),
+            $user->getStickyLogin(),
+            $user->getAuthorizedKeys(),
+            $user->getNewMail(),
+            $user->getTimeZone(),
+            $user->getTheme(),
+            $user->getLanguageID(),
+            $user->getExpiryDate(),
+            $_SERVER['REQUEST_TIME']
+        );
         if (!$user_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit','error'));
             return 0;

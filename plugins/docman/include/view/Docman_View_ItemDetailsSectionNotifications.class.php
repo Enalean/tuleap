@@ -77,7 +77,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 $content .= '<form name="remove_monitoring" method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
                 $content .= '<table><tr><td>';
-                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
+                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_user_name'), $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
                 foreach ($listeners as $userId => $item) {
