@@ -33,14 +33,19 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
     /** @var MediawikiVersionManager */
     private $version_manager;
 
+    /** @var MediawikiMLEBExtensionManager */
+    private $mleb_manager;
+
     public function injectDependencies(
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
         ProjectManager                        $project_manager,
-        MediawikiVersionManager               $version_manager
+        MediawikiVersionManager               $version_manager,
+        MediawikiMLEBExtensionManager         $mleb_manager
     ) {
         $this->project_manager    = $project_manager;
         $this->mediawiki_migrator = $mediawiki_migrator;
         $this->version_manager    = $version_manager;
+        $this->mleb_manager       = $mleb_manager;
     }
 
     public function process() {
@@ -49,6 +54,10 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
         try {
             $this->mediawiki_migrator->migrateProjectTo123($project);
             $this->version_manager->saveVersionForProject($project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
+            if ($this->mleb_manager->isMLEBExtensionInstalled()) {
+                $this->mleb_manager->saveMLEBActivationForProject($project);
+            }
+
             $this->done();
         } catch (System_Command_CommandException $exception) {
             $this->error($exception->getMessage());

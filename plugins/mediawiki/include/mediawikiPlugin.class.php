@@ -918,7 +918,8 @@ class MediaWikiPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getMediawikiMigrator(),
                     $this->getProjectManager(),
-                    $this->getMediawikiVersionManager()
+                    $this->getMediawikiVersionManager(),
+                    $this->getMediawikiMLEBExtensionManager()
                 );
                 break;
             default:
@@ -978,6 +979,9 @@ class MediaWikiPlugin extends Plugin {
         return new MediawikiVersionManager(new MediawikiVersionDao());
     }
 
+    /**
+     * @return MediawikiMLEBExtensionManager
+     */
     private function getMediawikiMLEBExtensionManager() {
         require_once 'MediawikiMLEBExtensionManager.php';
 
