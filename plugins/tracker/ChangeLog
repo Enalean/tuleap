@@ -1,3 +1,6 @@
+Version 5.715 - Tuleap 8.8
+    * request #8491 Field not empty transitions are not deleted
+
 Version 5.714 - Tuleap 8.8
     * request #8333: Fully remove people skills feature
 
