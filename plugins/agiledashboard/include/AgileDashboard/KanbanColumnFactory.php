@@ -76,7 +76,7 @@ class AgileDashboard_KanbanColumnFactory {
             throw new AgileDashboard_SemanticStatusNotFoundException();
         }
 
-        $open_values  = $this->getOpenValues($semantic);
+        $open_values = $this->getOpenValues($semantic);
 
         foreach ($open_values as $id) {
             if ($id == $column_id) {
@@ -128,7 +128,7 @@ class AgileDashboard_KanbanColumnFactory {
             return;
         }
 
-        $semantic = Tracker_Semantic_Status::load($tracker);
+        $semantic = Tracker_Semantic_Status::forceLoad($tracker);
         if (! $semantic->getFieldId()) {
             return;
         }

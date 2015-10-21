@@ -1387,4 +1387,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return $values;
     }
+
+    /**
+     * @param string $new_value
+     *
+     * @return int | null
+     */
+    public function addBindValue($new_value) {
+        return $this->getBind()->addValue($new_value);
+    }
 }

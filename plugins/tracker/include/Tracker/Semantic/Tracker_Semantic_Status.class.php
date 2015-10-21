@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU GeLneral Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('common/include/Codendi_Request.class.php');
 require_once('common/user/User.class.php');
@@ -46,6 +47,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         parent::__construct($tracker);
         $this->list_field  = $list_field;
         $this->open_values = $open_values;
+    }
+
+    private function getDao() {
+        return new Tracker_Semantic_StatusDao();
     }
 
     /**
@@ -341,6 +346,21 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return $dao->save($this->tracker->getId(), $this->getFieldId(), $this->open_values);
     }
 
+    /**
+     * @param string $new_value
+     */
+    public function addOpenValue($new_value) {
+        $dao = $this->getDao();
+
+        $dao->startTransaction();
+        $new_id = $this->list_field->addBindValue($new_value);
+        $this->open_values[] = $new_id;
+        $this->save();
+        $dao->commit();
+
+        return $new_id;
+    }
+
     protected static $_instances;
     /**
      * Load an instance of a Tracker_Semantic_Status
@@ -350,21 +370,32 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @return Tracker_Semantic_Status
      */
     public static function load(Tracker $tracker) {
-        if (!isset(self::$_instances[$tracker->getId()])) {
-            $field_id = null;
-            $open_values = array();
-            $dao = new Tracker_Semantic_StatusDao();
-            foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
-                $field_id      = $row['field_id'];
-                $open_values[] = (int)$row['open_value_id'];
-            }
-            if (!$open_values) {
-                $open_values[] = 100;
-            }
-            $fef = Tracker_FormElementFactory::instance();
-            $field = $fef->getFieldById($field_id);
-            self::$_instances[$tracker->getId()] = new Tracker_Semantic_Status($tracker, $field, $open_values);
+        if (! isset(self::$_instances[$tracker->getId()])) {
+            return self::forceLoad($tracker);
         }
+
+        return self::$_instances[$tracker->getId()];
+    }
+
+    public static function forceLoad(Tracker $tracker) {
+        $field_id    = null;
+        $open_values = array();
+        $dao         = new Tracker_Semantic_StatusDao();
+
+        foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
+            $field_id      = $row['field_id'];
+            $open_values[] = (int)$row['open_value_id'];
+        }
+
+        if (!$open_values) {
+            $open_values[] = 100;
+        }
+
+        $fef   = Tracker_FormElementFactory::instance();
+        $field = $fef->getFieldById($field_id);
+
+        self::$_instances[$tracker->getId()] = new Tracker_Semantic_Status($tracker, $field, $open_values);
+
         return self::$_instances[$tracker->getId()];
     }
 
@@ -428,5 +459,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         }
         return false;
     }
+
+    public function isFieldBoundToStaticValues() {
+        $bindType = $this->list_field->getBind()->getType();
+
+        return ($bindType == Tracker_FormElement_Field_List_Bind_Static::TYPE);
+    }
 }
-?>

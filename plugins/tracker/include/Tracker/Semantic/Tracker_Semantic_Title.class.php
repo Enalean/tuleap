@@ -231,6 +231,20 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
     }
 
     /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function setInstance(Tracker_Semantic_Title $semantic_title, Tracker $tracker) {
+        self::$_instances[$tracker->getId()] = $semantic_title;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstances() {
+        self::$_instances = null;
+    }
+
+    /**
      * Export semantic to XML
      *
      * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)

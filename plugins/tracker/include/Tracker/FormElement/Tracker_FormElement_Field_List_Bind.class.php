@@ -578,4 +578,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function getFieldDataFromRESTValue($value) {
         return intval($value);
     }
+
+    public function addValue() {
+        return;
+    }
 }
