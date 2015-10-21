@@ -20,6 +20,11 @@
 
 class AgileDashboardStatisticsAggregator {
     const CARD_DRAG_AND_DROP     = 'ad_kanban_card_drag_drop';
+    const EXPAND_COLLAPSE_COLUMN = 'ad_kanban_expand_collapse_column';
+    const WIP_MODIFICATION       = 'ad_kanban_wip_modification';
+    const KANBAN_RENAMING        = 'ad_kanban_renaming';
+    const KANBAN_ADD_IN_PLACE    = 'ad_kanban_add_in_place';
+
 
     /**
      * @var EventManager
@@ -42,8 +47,28 @@ class AgileDashboardStatisticsAggregator {
         $this->addHit($project_id, self::CARD_DRAG_AND_DROP);
     }
 
+    public function addExpandCollapseColumnHit($project_id) {
+        $this->addHit($project_id, self::EXPAND_COLLAPSE_COLUMN);
+    }
+
+    public function addWIPModificationHit($project_id) {
+        $this->addHit($project_id, self::WIP_MODIFICATION);
+    }
+
+    public function addKanbanRenamingHit($project_id) {
+        $this->addHit($project_id, self::KANBAN_RENAMING);
+    }
+
+    public function addKanbanAddInPlaceHit($project_id) {
+        $this->addHit($project_id, self::KANBAN_ADD_IN_PLACE);
+    }
+
     public function getStatisticsLabels() {
-        $res[self::CARD_DRAG_AND_DROP] = 'Kanban card drag & drop';
+        $res[self::CARD_DRAG_AND_DROP]     = 'Kanban card drag & drop';
+        $res[self::EXPAND_COLLAPSE_COLUMN] = 'Kanban expanded or collapsed column';
+        $res[self::WIP_MODIFICATION]       = 'Kanban WIP modification';
+        $res[self::KANBAN_RENAMING]        = 'Kanban renaming';
+        $res[self::KANBAN_ADD_IN_PLACE]    = 'Kanban add in place';
 
         return $res;
     }
