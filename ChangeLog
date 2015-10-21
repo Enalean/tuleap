@@ -1,3 +1,9 @@
+Version 8.7-3 (Wednesday, October 21th 2015)
+
+	== Bug fix ==
+	* request #8490 MediaWikiLanguageExtensionBundle not loaded
+	* request #8491 Field not empty transitions are not deleted
+
 Version 8.7-2 (Monday, October 19th 2015)
 
 	== Bug fix ==
