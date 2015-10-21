@@ -1,3 +1,6 @@
+Version 0.52 - Tuleap 8.8
+    * story #8477: Add Kanban card drag & drop in usage statistics
+
 Version 0.51 - Tuleap 8.8
     * request #8484: Service usage statistics does not try to use non existant TV3 tables
 
