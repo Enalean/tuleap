@@ -12,6 +12,7 @@ Version 8.8 (Not released yet)
 	* request #8318: redirect_to loop
 	* request #8333: Fully remove people skills feature
 	* Fix request #8333: Fully remove people skills feature
+	* request #8520: Packages build is broken due to some changes in Docker image
 
 	== Plugins ==
 	* git: 4.91
