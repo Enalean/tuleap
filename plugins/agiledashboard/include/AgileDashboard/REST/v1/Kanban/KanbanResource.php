@@ -31,6 +31,7 @@ use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnDao;
+use AgileDashboardStatisticsAggregator;
 use UserManager;
 use Exception;
 use TrackerFactory;
@@ -84,6 +85,9 @@ class KanbanResource extends AuthenticatedResource {
     /** @var AgileDashboard_KanbanUserPreferences */
     private $user_preferences;
 
+    /** @var AgileDashboardStatisticsAggregator */
+    private $statistics_aggregator;
+
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->tracker_factory = TrackerFactory::instance();
@@ -124,6 +128,8 @@ class KanbanResource extends AuthenticatedResource {
             $this->tracker_factory,
             $this->form_element_factory
         );
+
+        $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
     }
 
     /**
@@ -375,7 +381,13 @@ class KanbanResource extends AuthenticatedResource {
             $this->resources_patcher->updateArtifactPriorities(
                 $order,
                 Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+                $this->getProjectIdForKanban($kanban)
+            );
+        }
+
+        if ($add || $order) {
+            $this->statistics_aggregator->addCardDragAndDropHit(
+                $this->getProjectIdForKanban($kanban)
             );
         }
     }
@@ -553,7 +565,13 @@ class KanbanResource extends AuthenticatedResource {
             $this->resources_patcher->updateArtifactPriorities(
                 $order,
                 Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+                $this->getProjectIdForKanban($kanban)
+            );
+        }
+
+        if ($add || $order) {
+            $this->statistics_aggregator->addCardDragAndDropHit(
+                $this->getProjectIdForKanban($kanban)
             );
         }
     }
@@ -690,10 +708,15 @@ class KanbanResource extends AuthenticatedResource {
             $this->resources_patcher->updateArtifactPriorities(
                 $order,
                 Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+                $this->getProjectIdForKanban($kanban)
             );
         }
 
+        if ($add || $order) {
+            $this->statistics_aggregator->addCardDragAndDropHit(
+                $this->getProjectIdForKanban($kanban)
+            );
+        }
     }
 
     private function getItemsInColumn($tracker_id, $column_id) {
@@ -782,5 +805,12 @@ class KanbanResource extends AuthenticatedResource {
         }
 
         return $tracker;
+    }
+
+    /**
+     * @return int
+     */
+    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
+        return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
     }
 }

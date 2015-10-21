@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012, 2013, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -529,9 +529,17 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function plugin_statistics_service_usage($params) {
-        $dao = new AgileDashboard_Dao();
-
+        $dao                  = new AgileDashboard_Dao();
+        $statistic_aggregator = new AgileDashboardStatisticsAggregator();
         $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
+        foreach ($statistic_aggregator->getStatisticsLabels() as $statistic_key => $statistic_name) {
+            $statistic_data = $statistic_aggregator->getStatistics(
+                $statistic_key,
+                $params['start_date'],
+                $params['end_date']
+            );
+            $params['csv_exporter']->buildDatas($statistic_data, $statistic_name);
+        }
     }
 
     /**
