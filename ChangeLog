@@ -1,3 +1,8 @@
+Version 8.7-4 (Wednesday, October 21th 2015)
+
+	== Bug fix ==
+	* request #8520: Packages build is broken due to some changes in Docker image
+
 Version 8.7-3 (Wednesday, October 21th 2015)
 
 	== Bug fix ==
