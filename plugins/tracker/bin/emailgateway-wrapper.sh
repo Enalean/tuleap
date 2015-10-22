@@ -22,4 +22,4 @@
 script_dir=$(dirname $0)
 src_dir=$(readlink -f "$script_dir/../../..")
 
-$src_dir/src/utils/php-launcher.sh $src_dir/plugins/tracker/bin/emailgateway.php
+$src_dir/src/utils/php-launcher.sh $src_dir/plugins/tracker/bin/emailgateway.php > /dev/null 2>&1

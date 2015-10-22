@@ -180,7 +180,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function userCanUpdate(PFUser $user) {
-        if ($user->isAnonymous()) {
+        if ($user->isAnonymous() || !$this->userCanView($user)) {
             return false;
         }
         return true;

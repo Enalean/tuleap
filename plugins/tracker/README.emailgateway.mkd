@@ -15,9 +15,9 @@ Installation
 
 * Add `nobody` in sudoers with visudo (yum install sudo if necessary).
   See `etc/sudoers.d/tuleap-plugin-tracker`.
-* Then activate mail gateway feature in local.inc and wait for system check backend
-  event to be processed (less than 30 minutes). Check you system event monitor to
-  know when it is ok.
+* Activate mail gateway feature from the site admin plugin tracker administration
+  and wait for system event to be processed (less than 30 minutes).
+  Check you system event monitor to know when it is ok.
 * After that you can test the mail gateway, see next chapter.
 
 > **Note:** This assumes that your Tuleap is using legacy user/path (codendiadm,

@@ -52,7 +52,8 @@ Mock::generatePartial('Tracker',
                           'aidExists',
                           'getUserManager',
                           'getHierarchyFactory',
-                          'getPermissionController'
+                          'getPermissionController',
+                          'userCanView'
                       )
 );
 
@@ -498,6 +499,7 @@ class TrackerTest extends TuleapTestCase {
         ));
 
         // site admin can submit artifacts
+        stub($this->tracker)->userCanView()->returns(true);
         $this->tracker->expectOnce('displaySubmit');
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
@@ -513,6 +515,7 @@ class TrackerTest extends TuleapTestCase {
         ));
 
         // project admin can submit artifacts
+        stub($this->tracker)->userCanView()->returns(true);
         $this->tracker->expectOnce('displaySubmit');
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_admin_user);
     }
@@ -528,6 +531,7 @@ class TrackerTest extends TuleapTestCase {
         ));
 
         // tracker admin can submit artifacts
+        stub($this->tracker)->userCanView()->returns(true);
         $this->tracker->expectOnce('displaySubmit');
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->all_trackers_admin_user);
     }
@@ -538,6 +542,7 @@ class TrackerTest extends TuleapTestCase {
 
         $tracker_field = mock('Tracker_FormElement_Field_Text');
         stub($tracker_field)->userCanSubmit()->returns(true);
+        stub($this->tracker)->userCanView()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field
         ));
@@ -553,6 +558,7 @@ class TrackerTest extends TuleapTestCase {
 
         $tracker_field = mock('Tracker_FormElement_Field_Text');
         stub($tracker_field)->userCanSubmit()->returns(true);
+        stub($this->tracker)->userCanView()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field
         ));
@@ -595,6 +601,7 @@ class TrackerTest extends TuleapTestCase {
         ));
 
         // registered user can submit artifacts
+        stub($this->tracker)->userCanView()->returns(true);
         $this->tracker->expectOnce('displaySubmit');
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
@@ -1420,7 +1427,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsRegisteredFullAccess() {
-        $t_access_registered = new TrackerTestVersion();
+        $t_access_registered = new TrackerTestVersionForAccessPerms();
         $t_access_registered->setReturnValue('getId', 2);
         $t_access_registered->setReturnValue('getGroupId', 101);
         $t_access_registered->setReturnValue('getProject', $this->project);
@@ -1444,7 +1451,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsMemberFullAccess() {
-        $t_access_members = new TrackerTestVersion();
+        $t_access_members = new TrackerTestVersionForAccessPerms();
         $t_access_members->setReturnValue('getId', 3);
         $t_access_members->setReturnValue('getGroupId', 101);
         $t_access_members->setReturnValue('getProject', $this->project);
@@ -1468,7 +1475,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsTrackerAdminAllProjects() {
-        $t_access_members = new TrackerTestVersion();
+        $t_access_members = new TrackerTestVersionForAccessPerms();
         $t_access_members->setReturnValue('getId', 3);
         $t_access_members->setReturnValue('getGroupId', 101);
         $t_access_members->setReturnValue('getProject', $this->project);
@@ -1488,7 +1495,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsAdminFullAccess() {
-        $t_access_admin = new TrackerTestVersion();
+        $t_access_admin = new TrackerTestVersionForAccessPerms();
         $t_access_admin->setReturnValue('getId', 4);
         $t_access_admin->setReturnValue('getGroupId', 101);
         $t_access_admin->setReturnValue('getProject', $this->project);
@@ -1512,7 +1519,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsSubmitterFullAccess() {
-        $t_access_submitter = new TrackerTestVersion();
+        $t_access_submitter = new TrackerTestVersionForAccessPerms();
         $t_access_submitter->setReturnValue('getId', 5);
         $t_access_submitter->setReturnValue('getGroupId', 101);
         $t_access_submitter->setReturnValue('getProject', $this->project);
@@ -1537,7 +1544,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsAssigneeFullAccess() {
-        $t_access_assignee = new TrackerTestVersion();
+        $t_access_assignee = new TrackerTestVersionForAccessPerms();
         $t_access_assignee->setReturnValue('getId', 6);
         $t_access_assignee->setReturnValue('getGroupId', 101);
         $t_access_assignee->setReturnValue('getProject', $this->project);
@@ -1562,7 +1569,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsSubmitterAssigneeFullAccess() {
-        $t_access_submitterassignee  = new TrackerTestVersion();
+        $t_access_submitterassignee  = new TrackerTestVersionForAccessPerms();
         $t_access_submitterassignee->setReturnValue('getId', 7);
         $t_access_submitterassignee->setReturnValue('getGroupId', 101);
         $t_access_submitterassignee->setReturnValue('getProject', $this->project);
@@ -1589,7 +1596,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsPrivateProject() {
-        $t_access_registered  = new TrackerTestVersion();
+        $t_access_registered  = new TrackerTestVersionForAccessPerms();
         $t_access_registered->setReturnValue('getId', 7);
         $t_access_registered->setReturnValue('getGroupId', 102);
         $t_access_registered->setReturnValue('getProject', $this->project_private);

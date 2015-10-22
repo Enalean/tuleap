@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,24 +29,45 @@ class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
     private $body          = 'justaucorps';
     private $stripped_body = 'stripped justaucorps';
 
-    public function setUp(){
-        $this->artifact      = mock('Tracker_Artifact');
-        $this->user          = mock('PFUser');
-        $email               = 'whatever';
-        $parser              = mock('Tracker_Artifact_MailGateway_Parser');
-        $logger              = mock('Logger');
-        $recipient           = new Tracker_Artifact_MailGateway_Recipient($this->user, $this->artifact, $email);
+    public function setUp() {
+        parent::setUp();
+        $this->artifact           = mock('Tracker_Artifact');
+        $this->user               = mock('PFUser');
+        $tracker                  = mock('Tracker');
+        $incoming_message_factory = mock('Tracker_Artifact_MailGateway_IncomingMessageFactory');
+        $artifact_factory         = mock('Tracker_ArtifactFactory');
+        $parser                   = mock('Tracker_Artifact_MailGateway_Parser');
+        $tracker_config           = mock('TrackerPluginConfig');
+        $logger                   = mock('Logger');
+        $notifier                 = mock('Tracker_Artifact_MailGateway_Notifier');
 
         $citation_stripper = stub('Tracker_Artifact_MailGateway_CitationStripper')
             ->stripText($this->body)
             ->returns($this->stripped_body);
 
-        $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage($this->body, $recipient);
-        stub($parser)
-            ->parse($this->raw_email)
-            ->returns($incoming_message);
+        $tracker->setReturnValue('isEmailgatewayEnabled', true);
 
-        $this->mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $citation_stripper, $logger);
+        $incoming_message = mock('Tracker_Artifact_MailGateway_IncomingMessage');
+        $incoming_message->setReturnValue('isAFollowUp', true);
+        $incoming_message->setReturnValue('getUser', $this->user);
+        $incoming_message->setReturnValue('getArtifact', $this->artifact);
+        $incoming_message->setReturnValue('getTracker', $tracker);
+        $incoming_message->setReturnValue('getBody', $this->body);
+
+        $incoming_message_factory->setReturnValue('build', $incoming_message);
+
+        $tracker_config->setReturnValue('isInsecureEmailgatewayEnabled', false);
+        $tracker_config->setReturnValue('isTokenBasedEmailgatewayEnabled', true);
+
+        $this->mailgateway = new Tracker_Artifact_MailGateway_MailGateway(
+            $parser,
+            $incoming_message_factory,
+            $citation_stripper,
+            $notifier,
+            $artifact_factory,
+            $tracker_config,
+            $logger
+        );
     }
 
     public function itCreatesANewChangeset() {

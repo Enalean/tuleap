@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +22,6 @@ require_once 'Mail/mimeDecode.php';
 
 class Tracker_Artifact_MailGateway_Parser {
 
-    /**
-     * @var Tracker_Artifact_MailGateway_RecipientFactory
-     */
-    private $recipient_factory;
-
-    public function __construct(Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory) {
-        $this->recipient_factory = $recipient_factory;
-    }
-
     public function parse($input) {
         $decoder = new Mail_mimeDecode($input, "\r\n");
 
@@ -41,10 +32,10 @@ class Tracker_Artifact_MailGateway_Parser {
             )
         );
 
-        return new Tracker_Artifact_MailGateway_IncomingMessage(
-            $this->getBody($structure),
-            $this->getRecipient($structure)
-        );
+        $raw_mail         = (array) $structure;
+        $raw_mail['body'] = $this->getBody($structure);
+
+        return $raw_mail;
     }
 
     private function getBody(stdClass $structure) {
@@ -79,15 +70,5 @@ class Tracker_Artifact_MailGateway_Parser {
     private function isAttachment($part) {
         return isset($part->headers['content-disposition'])
             && strpos($part->headers['content-disposition'], 'attachment') !== false;
-    }
-
-    private function getRecipient(stdClass $structure) {
-        preg_match(
-            Tracker_Artifact_MailGateway_RecipientFactory::EMAIL_PATTERN,
-            $structure->headers['references'],
-            $matches
-        );
-
-        return $this->recipient_factory->getFromEmail($matches[0]);
     }
 }

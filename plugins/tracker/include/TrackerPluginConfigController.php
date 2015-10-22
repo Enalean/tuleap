@@ -29,9 +29,17 @@ class TrackerPluginConfigController {
     /** @var Config_LocalIncFinder */
     private $localincfinder;
 
-    public function __construct(TrackerPluginConfig $config, Config_LocalIncFinder $localincfinder) {
+    /** @var EventManager */
+    private $event_manager;
+
+    public function __construct(
+        TrackerPluginConfig $config,
+        Config_LocalIncFinder $localincfinder,
+        EventManager $event_manager
+    ) {
         $this->config         = $config;
         $this->localincfinder = $localincfinder;
+        $this->event_manager  = $event_manager;
     }
 
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
@@ -57,8 +65,9 @@ class TrackerPluginConfigController {
     public function update(Codendi_Request $request, Response $response) {
         $emailgateway_mode = $request->get('emailgateway_mode');
         if ($emailgateway_mode && $this->config->setEmailgatewayMode($emailgateway_mode)) {
-            $response->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_main', 'successfully_updated'));
+            $response->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_config', 'successfully_updated'));
         }
+        $this->event_manager->processEvent(Event::UPDATE_ALIASES, null);
         $response->redirect($_SERVER['REQUEST_URI']);
     }
 }

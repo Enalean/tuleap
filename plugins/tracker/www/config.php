@@ -32,7 +32,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             new TrackerPluginConfig(
                 new TrackerPluginConfigDao()
             ),
-            new Config_LocalIncFinder()
+            new Config_LocalIncFinder(),
+            EventManager::instance()
         )
     );
     $router->process($request, $GLOBALS['HTML'], $current_user);

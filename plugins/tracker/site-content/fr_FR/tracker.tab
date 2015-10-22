@@ -1644,3 +1644,15 @@ plugin_tracker_config	token_desc	Les utilisateurs peuvent intéragir avec les ou
 plugin_tracker_config	insecure	Passerelle NON sécurisée
 plugin_tracker_config	insecure_desc	Les utilisateurs peuvent intéragir avec les outils de suivi par courriel. Il n'y a aucune authentification. <span class="text-error">Avec cette option, nous <strong>ne pouvons pas avoir confiance en l'émetteur du courriel</strong>. Ce qui veut dire que des personnes mal intentionnées peuvent facilement forger un courriel et se faire passer pour quelqu'un d'autre.</span><br />Actuellement, les utilisateurs peuvent créer des artifacts et répondre (ajout d'un commentaire à un artifact) par courriel avec cette option.
 plugin_tracker_config	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer la variable suivante : <code>$sys_enable_reply_by_mail</code>.</p>
+plugin_tracker_config	successfully_updated	Mise à jour effectuée, les modifications seront actives dans quelques minutes.
+
+plugin_tracker_emailgateway	creation_error	L'artéfact n'a pas été créé
+plugin_tracker_emailgateway	update_error	L'artéfact n'a pas été mis à jour
+plugin_tracker_emailgateway	artifact_error_name	L'artéfact avec le titre "$1" n'a pas pu être créé.
+plugin_tracker_emailgateway	artifact_error_update_id	L'artéfact #$1 n'a pas pu être mis à jour.
+plugin_tracker_emailgateway	multiple_users	Plusieurs utilisateurs correspondent à votre adresse email. Votre utilisateur doit posséder une adresse mail unique pour permettre l'édition d'artéfact par mail.
+plugin_tracker_emailgateway	unknown_user	Aucun utilisateur correspond à votre adresse email.
+plugin_tracker_emailgateway	insufficient_permission	Vous n'avez pas les droits nécessaires pour l'édition de cet artefact.
+plugin_tracker_emailgateway	tracker_misconfiguration	Le tracker ne semble pas permettre l'édition d'artéfact par mail.
+plugin_tracker_emailgateway	semantic_missing	Les sémantiques titre et description permettant d'utiliser la création des artéfacts par mail ne sont pas définies.
+plugin_tracker_emailgateway	invalid_required_fields	Seuls les champs définis dans la sémantique titre et description peuvent être requis afin de permettre la création d'artéfacts par mail.
