@@ -47,18 +47,18 @@
             columns: kanban.columns
         };
         self.backlog = _.extend(kanban.backlog, {
-            content: [],
-            filtered_content: [],
-            loading_items: true,
+            content: [],
+            filtered_content: [],
+            loading_items: true,
             resize_left: '',
             resize_top: '',
             resize_width: '',
             is_small_width: false
         });
         self.archive = _.extend(kanban.archive, {
-            content: [],
-            filtered_content: [],
-            loading_items: true,
+            content: [],
+            filtered_content: [],
+            loading_items: true,
             resize_left: '',
             resize_top: '',
             resize_width: '',
@@ -332,11 +332,13 @@
             $modal.open({
                 backdrop:     'static',
                 templateUrl:  'edit-kanban/edit-kanban.tpl.html',
-                controller:   EditKanbanCtrl,
-                controllerAs: 'modal',
+                controller:   'EditKanbanCtrl as edit_modal',
                 resolve: {
                     kanban: function() {
                         return kanban;
+                    },
+                    augmentColumn: function() {
+                        return augmentColumn;
                     }
                 }
             }).result.then(
@@ -363,22 +365,26 @@
 
         function loadColumns() {
             kanban.columns.forEach(function (column) {
-                column.content          = [];
-                column.filtered_content = [];
-                column.loading_items    = true;
-                column.resize_left      = '';
-                column.resize_top       = '';
-                column.resize_width     = '';
-                column.wip_in_edit      = false;
-                column.limit_input      = column.limit;
-                column.saving_wip       = false;
-                column.is_small_width   = false;
-                column.is_defered       = ! column.is_open;
+                augmentColumn(column);
 
                 if (column.is_open) {
                     loadColumnContent(column, limit, offset);
                 }
             });
+        }
+
+        function augmentColumn(column) {
+            column.content          = [];
+            column.filtered_content = column.content;
+            column.loading_items    = true;
+            column.resize_left      = '';
+            column.resize_top       = '';
+            column.resize_width     = '';
+            column.wip_in_edit      = false;
+            column.limit_input      = column.limit;
+            column.saving_wip       = false;
+            column.is_small_width   = false;
+            column.is_defered       = ! column.is_open;
         }
 
         function loadDeferedColumns() {
@@ -494,7 +500,7 @@
 
         function createItemInPlaceInBacklog(label) {
             var item = {
-                label: label,
+                label: label,
                 updating: true
             };
 
@@ -511,7 +517,7 @@
 
         function createItemInPlace(label, column) {
             var item = {
-                label: label,
+                label: label,
                 updating: true
             };
 
