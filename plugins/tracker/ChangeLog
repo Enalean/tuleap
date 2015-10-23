@@ -1,3 +1,6 @@
+Version 5.716 - Tuleap 8.8
+    * story #6256: add the tracker email info in the report header
+
 Version 5.715 - Tuleap 8.8
     * request #8491 Field not empty transitions are not deleted
 

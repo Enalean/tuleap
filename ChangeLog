@@ -5,6 +5,7 @@ Version 8.8 (Not released yet)
 	* story #8289: synchronize users in users groups
 	* request #8427: Remove vsFTPd logrotate configuration
 	* story #6256: to be able to create an artifact by sending an email
+	* story #6256: add the tracker email info in the report header
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
@@ -16,7 +17,7 @@ Version 8.8 (Not released yet)
 
 	== Plugins ==
 	* git: 4.91
-	* tracker: 5.715
+	* tracker: 5.716
 	* graphontrackersv5: 5.17
 	* statistics: 0.52
 	* mediawiki: 0.97
