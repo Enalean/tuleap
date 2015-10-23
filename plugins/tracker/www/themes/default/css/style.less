@@ -3,6 +3,10 @@ button[name=tracker_query_submit] {
     margin-top:16px;
 }
 
+.browse_instructions {
+    padding: 0 15px;
+}
+
 #tracker_report_config_options {
     display: block;
     width: 100%;
@@ -42,7 +46,8 @@ div.tracker-cant-delete {
 #tracker_report_save_or_revert {
     display: none;
     text-align: right;
-    padding-top: 20px;
+    padding-top: 18px;
+    font-size: 0.9em;
 }
 
 #tracker_report_save_or_revert li {
@@ -2821,5 +2826,28 @@ body.in_tracker_report .main .content {
 
     > #submit-panel > button[type=submit] {
         margin: 20px 0 10px;
+    }
+}
+
+.submit-new-by-mail-copy-fallback {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#submit-new-by-mail-popover-container > .popover {
+    max-width: 288px;
+
+    #tracker-email-copy-to-clipboard {
+        margin: 0;
+    }
+
+    .text-info {
+        font-size: 0.8em;
+        margin: 0;
+        visibility: hidden;
+
+        &.copied {
+            visibility: visible;
+        }
     }
 }

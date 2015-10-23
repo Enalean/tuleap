@@ -74,7 +74,7 @@
             bindThemeSelect();
             fetchThemeVariants();
 
-            if (! tuleap.browserCompatibility.isIE()) {
+            if (! tuleap.browserCompatibility.isIE7()) {
                 $('.navbar-inner').attr('data-content',codendi.locales.account.theme_variant_preview);
                 $('.navbar-inner').popover({
                     placement: 'bottom',
@@ -125,7 +125,7 @@
         theme_variant_group.css('display', 'none');
 
         if (themes_length > 0) {
-            if (! tuleap.browserCompatibility.isIE()) {
+            if (! tuleap.browserCompatibility.isIE7()) {
                 addCSSFilestoDOM(themes.css_files);
             }
 
@@ -190,7 +190,7 @@
     }
 
     function applyThemeVariantToBody(theme_variant) {
-        if (tuleap.browserCompatibility.isIE()) {
+        if (tuleap.browserCompatibility.isIE7()) {
             return;
         }
 
