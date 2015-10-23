@@ -46,6 +46,18 @@ class UGroupUserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchUserByStaticUGroupIdIncludingSuspended($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT *
+                FROM ugroup_user INNER JOIN user USING(user_id)
+                WHERE ugroup_id = $ugroup_id
+                AND user.status IN ('A', 'R', 'S')
+                ORDER BY user_name";
+
+        return $this->retrieve($sql);
+    }
+
     /**
      * Searches ProjectUGroup members by UGroupId paginated
      *
@@ -130,8 +142,18 @@ class UGroupUserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchUserByDynamicUGroupIdIncludingSuspended($ugroupId, $groupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
+
+        if (! $sql) {
+            return new DataAccessResultEmpty();
+        }
+
+        return $this->retrieve($sql);
+    }
+
     /**
-     * Get uGroup members for both dynamic & sttic uGroups
+     * Get uGroup members for both dynamic & static uGroups
      *
      * @param Integer $ugroupId Id of the uGroup
      * @param Integer $groupId  Id of the project
@@ -146,7 +168,7 @@ class UGroupUserDao extends DataAccessObject {
         $limit    = $this->da->escapeInt($limit);
         $offset   = $this->da->escapeInt($offset);
 
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
 
         if (! $sql) {
             return false;

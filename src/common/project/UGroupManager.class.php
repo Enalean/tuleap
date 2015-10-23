@@ -20,6 +20,7 @@
  */
 
 require_once('www/project/admin/ugroup_utils.php');
+require_once('www/include/account.php');
 
 class UGroupManager {
     
@@ -349,14 +350,58 @@ class UGroupManager {
         return ugroup_add_user_to_ugroup($project_id, $ugroup_id, $user_id);
     }
 
-    public function resetUgroupMembers(ProjectUGroup $user_group, array $users_to_add) {
+    public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references) {
         $this->getDao()->startTransaction();
 
-        $user_group->removeAllUsers();
-        foreach ($users_to_add as $user) {
-            $user_group->addUser($user);
+        $current_members   = $this->getUgroupMembers($user_group);
+        $members_to_remove = $this->getUsersToRemove($current_members, $users_from_references);
+        $members_to_add    = $this->getUsersToAdd($current_members, $users_from_references);
+
+        foreach ($members_to_remove as $member_to_remove) {
+            $this->removeUserFromUserGroup($user_group, $member_to_remove);
+        }
+
+        foreach ($members_to_add as $member_to_add) {
+            $this->addUserToUserGroup($user_group, $member_to_add);
         }
 
         $this->getDao()->commit();
+    }
+
+    /**
+     * @return array
+     */
+    private function getUgroupMembers(ProjectUGroup $user_group) {
+        $members = array();
+
+        foreach ($user_group->getMembersIncludingSuspended() as $member) {
+            $members[] = $member;
+        }
+
+        return $members;
+    }
+
+    private function getUsersToRemove(array $current_members, array $users_from_references) {
+        return array_diff($current_members, $users_from_references);
+    }
+
+    private function getUsersToAdd(array $current_members, array $users_from_references) {
+        return array_diff($users_from_references, $current_members);
+    }
+
+    private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user) {
+        if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
+            return account_add_user_obj_to_group($user_group->getProjectId(), $user);
+        }
+
+        return $user_group->addUser($user);
+    }
+
+    private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user) {
+        if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
+            return account_remove_user_from_group($user_group->getProjectId(), $user->getId());
+        }
+
+        return $user_group->removeUser($user);
     }
 }
