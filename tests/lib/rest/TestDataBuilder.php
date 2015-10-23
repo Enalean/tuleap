@@ -53,8 +53,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     const KANBAN_ITEM_1_ARTIFACT_ID = 16;
 
-    const KANBAN_ONGOING_COLUMN_ID = 231;
-    const KANBAN_DONE_VALUE_ID     = 233;
+    const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
+    const KANBAN_ONGOING_COLUMN_ID    = 231;
+    const KANBAN_REVIEW_COLUMN_ID     = 232;
+    const KANBAN_DONE_VALUE_ID        = 233;
 
     const PHPWIKI_PAGE_ID          = 6097;
     const PHPWIKI_SPACE_PAGE_ID    = 6100;

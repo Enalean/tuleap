@@ -52,6 +52,8 @@ use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use AgileDashboard_KanbanUserPreferences;
 use Kanban_SemanticStatus_Not_Defined;
 use Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException;
+use Kanban_SemanticStatus_AllColumnIdsNotProvidedException;
+use Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException;
 use AgileDashboard_KanbanColumnManager;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
 use AgileDashboard_KanbanAddInPlaceChecker;
@@ -807,7 +809,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param string $id Id of the Kanban
      */
     public function optionsColumns($id) {
-        Header::allowOptionsPost();
+        Header::allowOptionsPostPut();
     }
 
     /**
@@ -858,6 +860,48 @@ class KanbanResource extends AuthenticatedResource {
         return $column_representation;
     }
 
+    /**
+     * Reorder Kanban columns
+     *
+     * @url PUT {id}/columns
+     *
+     * @param string $id         Id of the Kanban
+     * @param array  $column_ids The created kanban column {@from body} {@type int}
+     *
+     * @throws 400
+     * @throws 401
+     * @throws 404
+     */
+    protected function putColumns($id, array $column_ids) {
+        $user      = $this->getCurrentUser();
+        $kanban_id = $id;
+        $kanban    = $this->getKanban($user, $kanban_id);
+
+        $this->checkColumnIdsExist($user, $kanban, $column_ids);
+
+        try {
+            $this->kanban_column_manager->reorderColumns($user, $kanban, $column_ids);
+        } catch (AgileDashboard_UserNotAdminException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch(Kanban_SemanticStatus_Not_Defined $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Kanban_SemanticStatus_AllColumnIdsNotProvidedException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    private function checkColumnIdsExist(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids) {
+        foreach ($column_ids as $column_id) {
+            if (! $this->columnIsInTracker($kanban, $user, $column_id)) {
+                throw new RestException(404, "Column $column_id is not known");
+            }
+        }
+    }
+
     /** @return AgileDashboard_Kanban */
     private function getKanban(PFUser $user, $id) {
         try {
@@ -871,6 +915,9 @@ class KanbanResource extends AuthenticatedResource {
         return $kanban;
     }
 
+    /**
+     * @return PFUser
+     */
     private function getCurrentUser() {
         $user = UserManager::instance()->getCurrentUser();
 
@@ -891,6 +938,9 @@ class KanbanResource extends AuthenticatedResource {
         return $semantic;
     }
 
+    /**
+     * @return Tracker
+     */
     private function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if (! $tracker) {
