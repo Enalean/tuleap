@@ -6,6 +6,7 @@ Version 8.8 (Not released yet)
 	* request #8427: Remove vsFTPd logrotate configuration
 	* story #6256: to be able to create an artifact by sending an email
 	* story #6256: add the tracker email info in the report header
+	* story #8289: Take into account the project_members group
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
