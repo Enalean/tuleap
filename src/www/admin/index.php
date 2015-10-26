@@ -284,6 +284,8 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 // Start output
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
+echo site_admin_warnings();
+
 echo '<div class="container-fluid site_admin">';
 
 echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
