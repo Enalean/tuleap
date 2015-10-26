@@ -1,36 +1,44 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
  * Manage interactions with ForgeUpgrade configuration
  */
 class ForgeUpgradeConfig {
-    protected $filePath;
-    protected $config;
+    const FORGEUPGRADE_PATH = '/usr/lib/forgeupgrade/bin/forgeupgrade';
+
+    /**
+     * @var System_Command
+     */
+    private $command;
+    private $filePath;
+    private $config;
 
     /**
      * Constructor
      *
      * @param String $filePath Path to a .ini config file
      */
-    public function __construct($filePath=null) {
+    public function __construct(System_Command $command, $filePath=null) {
+        $this->command = $command;
         if (is_file($filePath)) {
             $this->setFilePath($filePath);
         }
@@ -70,6 +78,15 @@ class ForgeUpgradeConfig {
             return in_array($path, $this->config['core']['path']);
         }
         return false;
+    }
+
+    /**
+     * Mark buckets as executed for a given path
+     *
+     * @param string $path
+     */
+    public function recordOnlyPath($path) {
+        $this->command->exec(self::FORGEUPGRADE_PATH.' --dbdriver='.escapeshellarg($this->config['core']['dbdriver']).' --path='.escapeshellarg($path).' record-only');
     }
 
     /**
@@ -141,29 +158,6 @@ class ForgeUpgradeConfig {
      * @param String $cmd The command to execute
      */
     public function execute($cmd) {
-        $this->run('/usr/lib/forgeupgrade/bin/forgeupgrade --config='.escapeshellarg($this->filePath).' '.escapeshellarg($cmd));
+        $this->command->exec(self::FORGEUPGRADE_PATH.' --config='.escapeshellarg($this->filePath).' '.escapeshellarg($cmd));
     }
-
-    /**
-     * Perform forgeupgrade command
-     *
-     * @param String $cmd The command
-     *
-     * @return Boolean
-     */
-    protected function run($cmd) {
-        $out = array();
-        $ret = 0;
-        exec($cmd, $out, $ret);
-        // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
-        // So "convert" the unix "success" value to the php one (basically 0 => true).
-        if ($ret == 0) {
-            return true;
-        } else {
-            throw new Exception('ForgeUpgrade didn\'t success to execute '.$cmd);
-        }
-    }
-
 }
-
-?>

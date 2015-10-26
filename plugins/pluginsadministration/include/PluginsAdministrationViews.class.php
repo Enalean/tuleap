@@ -358,7 +358,7 @@ class PluginsAdministrationViews extends Views {
 
             $plugin_manager               = $this->plugin_manager;
             try {
-                $forgeUpgradeConfig = new ForgeUpgradeConfig();
+                $forgeUpgradeConfig = new ForgeUpgradeConfig(new System_Command());
                 $forgeUpgradeConfig->loadDefaults();
                 $noFUConfig = array();
             } catch (Exception $e) {

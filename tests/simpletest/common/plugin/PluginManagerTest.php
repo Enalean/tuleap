@@ -38,7 +38,7 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->setReturnReference('getAllPlugins', $plugins);
         
         //The plugins manager
-        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'));
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'), mock('ForgeUpgradeConfig'));
         
         $this->assertReference($pm->getAllPlugins(), $plugins);
     }
@@ -54,7 +54,7 @@ class PluginManagerTest extends TuleapTestCase {
 
 
         //The plugins manager
-        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'));
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'), mock('ForgeUpgradeConfig'));
         
         $this->assertTrue($pm->isPluginAvailable($plugin));
         $this->assertFalse($pm->isPluginAvailable($plugin));
@@ -73,7 +73,7 @@ class PluginManagerTest extends TuleapTestCase {
         expect($site_cache)->invalidatePluginBasedCaches()->once();
 
         //The plugins manager
-        $pm = new PluginManager($plugin_factory, mock('EventManager'), $site_cache);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), $site_cache, mock('ForgeUpgradeConfig'));
         
         $pm->availablePlugin($plugin);
     }
@@ -89,7 +89,7 @@ class PluginManagerTest extends TuleapTestCase {
         expect($site_cache)->invalidatePluginBasedCaches()->once();
 
         //The plugins manager
-        $pm = new PluginManager($plugin_factory, mock('EventManager'), $site_cache);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), $site_cache, mock('ForgeUpgradeConfig'));
         
         $pm->unavailablePlugin($plugin);
     }
@@ -114,11 +114,9 @@ class PluginManagerTest extends TuleapTestCase {
         $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
         $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
-        $GLOBALS['forgeupgrade_file'] = dirname(__FILE__).'/test/forgeupgrade.ini';
 
         mkdir(dirname(__FILE__).'/test');
         mkdir(dirname(__FILE__).'/test/custom');
-        touch($GLOBALS['forgeupgrade_file']);
 
         //The plugins
         $plugin = new MockPlugin($this);
@@ -127,15 +125,13 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('createPlugin', array('New_Plugin'));
         $plugin_factory->setReturnReference('createPlugin', $plugin);
-        
 
-        $fuc = new ForgeUpgradeConfigTestPluginManager($this);
-        $fuc->expectOnce('run');
-        $fuc->setReturnValue('run', true);
+        $forgeupgrade_config = mock('ForgeUpgradeConfig');
+        expect($forgeupgrade_config)->addPath($GLOBALS['sys_pluginsroot'].'New_Plugin')->once();
+        expect($forgeupgrade_config)->recordOnlyPath($GLOBALS['sys_pluginsroot'].'New_Plugin')->once();
 
         //The plugins manager
-        $pm = partial_mock('PluginManager', array('_getForgeUpgradeConfig'), array($plugin_factory, mock('EventManager'), mock('SiteCache')));
-        stub($pm)->_getForgeUpgradeConfig()->returns($fuc);
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'), $forgeupgrade_config);
 
         $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
         
@@ -145,24 +141,11 @@ class PluginManagerTest extends TuleapTestCase {
         // Plugin dir was created in "/etc"
         $this->assertTrue(is_dir(dirname(__FILE__).'/test/custom/New_Plugin'));
 
-        // Forgeupgrade config updated
-        // do not use parse_ini_file to be independent of implementation
-        $wantedLine = dirname(__FILE__).'/test/custom/New_Plugin';
-        $lineFound  = false;
-        $conf       = file($GLOBALS['forgeupgrade_file'], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($conf as $line) {
-            if (preg_match('%path\[\]\s*=\s*"'.$wantedLine.'"%', $line)) {
-                $lineFound = true;
-            }
-        }
-        $this->assertTrue($lineFound, "Forgeupgrade configuration file must contains $wantedLine");
-
-
         $this->_remove_directory(dirname(__FILE__).'/test');
     }
 
     function testIsNameValide() {
-        $pm = new PluginManager(mock('PluginFactory'), mock('EventManager'), mock('SiteCache'));
+        $pm = new PluginManager(mock('PluginFactory'), mock('EventManager'), mock('SiteCache'), mock('ForgeUpgradeConfig'));
         $this->assertTrue($pm->isNameValid('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'));
         $this->assertFalse($pm->isNameValid(' '));
         $this->assertFalse($pm->isNameValid('*'));
@@ -178,7 +161,7 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->expectOnce('getPluginByName');
         
         //The plugins manager
-        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'));
+        $pm = new PluginManager($plugin_factory, mock('EventManager'), mock('SiteCache'), mock('ForgeUpgradeConfig'));
         
         $pm->getPluginByName('plugin_name');
     }
@@ -196,7 +179,7 @@ class PluginManager_LoadPluginTest extends TuleapTestCase {
 
         $this->plugin_factory = mock('PluginFactory');
         $this->event_manager  = mock('EventManager');
-        $this->plugin_manager = new PluginManager($this->plugin_factory, $this->event_manager, mock('SiteCache'));
+        $this->plugin_manager = new PluginManager($this->plugin_factory, $this->event_manager, mock('SiteCache'), mock('ForgeUpgradeConfig'));
 
         $plugin = mock('Plugin');
         stub($plugin)->getName()->returns('DatPlugin');
