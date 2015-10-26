@@ -25,6 +25,8 @@
 class ForgeUpgradeConfig {
     const FORGEUPGRADE_PATH = '/usr/lib/forgeupgrade/bin/forgeupgrade';
 
+    const COMMAND_CHECK_UPDATE = 'check-update';
+
     /**
      * @var System_Command
      */
@@ -152,12 +154,24 @@ class ForgeUpgradeConfig {
         }
     }
 
-    /**
-     * Execute a ForgeUpgrade command
-     *
-     * @param String $cmd The command to execute
-     */
-    public function execute($cmd) {
-        $this->command->exec(self::FORGEUPGRADE_PATH.' --config='.escapeshellarg($this->filePath).' '.escapeshellarg($cmd));
+    public function isSystemUpToDate() {
+        $output = $this->execute(self::COMMAND_CHECK_UPDATE);
+
+        if ($this->checkForgeUpgradeReturn($output)) {
+            return true;
+        }
+        return false;
+    }
+
+    private function checkForgeUpgradeReturn(array $output) {
+        $string = implode('', $output);
+        if (strpos($string, 'INFO - System up-to-date') !== false) {
+            return true;
+        }
+        return false;
+    }
+
+    private function execute($cmd) {
+        return $this->command->exec(self::FORGEUPGRADE_PATH.' --config='.escapeshellarg($this->filePath).' '.escapeshellarg($cmd));
     }
 }
