@@ -53,6 +53,39 @@ class AgileDashboard_KanbanColumnManager {
         return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
+    public function reorderColumns(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids) {
+        $project_id = $this->getProjectIdForKanban($kanban);
+
+        $this->checkUserCanAdministrate($user, $project_id);
+
+        $semantic = $this->getSemanticStatus($kanban);
+        if (! $semantic) {
+            throw new Kanban_SemanticStatus_Not_DefinedException();
+        }
+
+        if (! $semantic->isFieldBoundToStaticValues()) {
+            throw new Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException();
+        }
+
+        $this->checkAllColumnsAreProvided($semantic, $column_ids);
+
+        return $semantic->getField()->getBind()->getValueDao()->reorder($column_ids);
+    }
+
+    private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids) {
+        $all_open_values     = $semantic->getOpenValues();
+        $values_not_provided = array_diff($all_open_values, $column_ids);
+        $values_not_open     = array_diff($column_ids, $all_open_values);
+
+        if (! empty($values_not_provided)) {
+            throw new Kanban_SemanticStatus_AllColumnIdsNotProvidedException();
+        }
+
+        if (! empty($values_not_open)) {
+            throw new Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException();
+        }
+    }
+
     public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label) {
         $project_id = $this->getProjectIdForKanban($kanban);
 
@@ -83,6 +116,9 @@ class AgileDashboard_KanbanColumnManager {
         }
     }
 
+    /**
+     * @return Tracker_Semantic_Status
+     */
     private function getSemanticStatus(AgileDashboard_Kanban $kanban) {
         $tracker = $this->getTrackerForKanban($kanban);
         if (! $tracker) {

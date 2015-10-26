@@ -429,6 +429,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return new Tracker_FormElement_Field_List_OpenValueDao();
     }
 
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_Static_ValueDao
+     */
     public function getValueDao() {
         return new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
     }

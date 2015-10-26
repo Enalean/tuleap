@@ -383,10 +383,42 @@ class KanbanTest extends RestBase {
         $kanban       = $response_get->json();
 
         $this->assertEquals($kanban['columns'][3]['label'], 'objective');
+
+        return $kanban['columns'][3]['id'];
     }
+
+
 
     /**
      * @depends testPOSTKanbanColumn
+     */
+    public function testPUTKanbanColumn($new_column_id) {
+        $data = json_encode(array(
+            $new_column_id,
+            REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
+            REST_TestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID,
+            REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID,
+        ));
+
+        $response = $this->getResponse($this->client->put(
+            'kanban/'. REST_TestDataBuilder::KANBAN_ID.'/columns',
+            null,
+            $data
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $kanban       = $response_get->json();
+
+        $this->assertEquals($kanban['columns'][0]['id'], $new_column_id);
+        $this->assertEquals($kanban['columns'][1]['id'], REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID);
+        $this->assertEquals($kanban['columns'][2]['id'], REST_TestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID);
+        $this->assertEquals($kanban['columns'][3]['id'], REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID);
+    }
+
+    /**
+     * @depends testPUTKanbanColumn
      */
     public function testOPTIONSKanbanItems() {
         $response = $this->getResponse($this->client->options('kanban_items'));
