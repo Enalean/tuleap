@@ -423,17 +423,31 @@ class ReferenceManager {
         else {
             $refid=$row['id'];
         }
-        $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
-            $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']
+
+        $reference = new Reference(
+            $refid,
+            $row['keyword'],
+            $row['description'],
+            $row['link'],
+            $row['scope'],
+            $row['service_short_name'],
+            $row['nature'],
+            $row['is_active'],
+            $row['group_id']
         );
+
         if ($this->isAnArtifactKeyword($row['keyword']) )  {
             if (! $this->getGroupIdFromArtifactId($val)) {
-                $this->eventManager->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
+                $this->eventManager->processEvent(
+                    Event::BUILD_REFERENCE,
+                    array('row' => $row, 'ref_id' => $refid, 'ref' => &$reference)
+                );
             } else {
-                $this->ensureArtifactDataIsCorrect($ref, $val);
+                $this->ensureArtifactDataIsCorrect($reference, $val);
             }
         }
-        return $ref;
+
+        return $reference;
     }
 
 
@@ -629,38 +643,15 @@ class ReferenceManager {
         }
         
         $matches = $this->_extractAllMatches($html);
+
         foreach ($matches as $match) {
-            // Analyse match
-            $key=strtolower($match['key']);
-            if ($match['project_name']) {
-                // A target project name or ID was specified
-                // remove trailing colon
-                $target_project=substr($match['project_name'],0,strlen($match['project_name'])-1);
-                // id or name?
-                if (is_numeric($target_project)) {
-                    $ref_gid = $target_project;
-                } else {
-                    // project name instead...
-                    $ref_gid = $this->getProjectIdFromName($target_project);
-                }
-            } else {
-                if ($this->tmpGroupIdForCallbackFunction) {
-                    $ref_gid = $this->tmpGroupIdForCallbackFunction;
-                } else {
-                    if (array_key_exists('group_id', $GLOBALS)) {
-                        $ref_gid=$GLOBALS['group_id']; // might not be set
-                    } else {
-                        $ref_gid = '';
-                    }
-                }
-            }
+            $key   = strtolower($match['key']);
+            $value = $match['value'];
 
-            $value=$match['value'];
-            if ($ref_gid=="") $ref_gid=100; // use system references only
-            $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
-            $ref = $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+            $reference = $this->getReferenceFromMatch($match);
 
-            if ($ref) {
+            if ($reference) {
+
                 //Cross reference
                 $sqlkey='SELECT link, nature
                     FROM reference r,reference_group rg
@@ -668,15 +659,17 @@ class ReferenceManager {
                         AND r.id = rg.reference_id
                         AND rg.group_id='. db_ei($source_gid);
                 $reskey = db_query($sqlkey);
+
                 if ($reskey && db_numrows($reskey) > 0) {
                     $key_array = db_fetch_array($reskey);
 
                     $target_type = $key_array['nature'];
-                    $target_id = $value;
-                    $target_key = $key;
-                    $target_gid = $ref_gid;
-                    if ($user_id==0){
-                        $user_id=user_getid();
+                    $target_id   = $value;
+                    $target_key  = $key;
+                    $target_gid  = $reference->getGroupId();
+
+                    if (! $user_id){
+                        $user_id = user_getid();
                     }
 
                     $this->insertCrossReference(new CrossReference(
@@ -693,6 +686,7 @@ class ReferenceManager {
                 }
             }
         }
+
         return true;
     }
 
@@ -787,17 +781,15 @@ class ReferenceManager {
         return $group_id;
     }
 
-    // Get a Reference object from a matching pattern
-    // if it is not a reference (e.g. wrong keyword) return null;
-    private function _getReferenceInstanceFromMatch($match) {
+    private function getReferenceFromMatch($match) {
         // Analyse match
         $key   = strtolower($match['key']);
         $value = $match['value'];
-        
+
         if ($this->isAnArtifactKeyword($key)) {
             $ref_gid = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
         }
-        
+
         if ($match['project_name']) {
             // A target project name or ID was specified
             // remove trailing colon
@@ -824,12 +816,22 @@ class ReferenceManager {
             $ref_gid = 100; // use system references only
         }
 
-        $ref = $this->getReference($key, $value, $ref_gid);
+        return $this->getReference($key, $value, $ref_gid);
+    }
+
+    // Get a Reference object from a matching pattern
+    // if it is not a reference (e.g. wrong keyword) return null;
+    private function _getReferenceInstanceFromMatch($match) {
+        // Analyse match
+        $key   = strtolower($match['key']);
+        $value = $match['value'];
+
+        $ref = $this->getReferenceFromMatch($match);
 
         $refInstance = null;
         if ($ref) {
             $refInstance= new ReferenceInstance($key ." #". $match['project_name'] . $value, $ref, $value);
-            $refInstance->computeGotoLink($key, $value, $ref_gid);
+            $refInstance->computeGotoLink($key, $value, $ref->getGroupId());
           
         }
         return $refInstance;
