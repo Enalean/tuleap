@@ -366,6 +366,28 @@ class KanbanTest extends RestBase {
     /**
      * @depends testPATCHArchiveWithAddAndOrder
      */
+    public function testPOSTKanbanColumn() {
+        $data = json_encode(array(
+            'label' => 'objective'
+        ));
+
+        $response = $this->getResponse($this->client->post(
+            'kanban/'. REST_TestDataBuilder::KANBAN_ID.'/columns',
+            null,
+            $data
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $response_get = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $kanban       = $response_get->json();
+
+        $this->assertEquals($kanban['columns'][3]['label'], 'objective');
+    }
+
+    /**
+     * @depends testPOSTKanbanColumn
+     */
     public function testOPTIONSKanbanItems() {
         $response = $this->getResponse($this->client->options('kanban_items'));
         $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());

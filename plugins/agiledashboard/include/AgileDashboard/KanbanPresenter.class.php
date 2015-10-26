@@ -45,16 +45,19 @@ class KanbanPresenter {
         $language,
         $project_id
     ) {
-        $user_preferences = new AgileDashboard_KanbanUserPreferences();
+        $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
             $user_preferences,
             new AgileDashboard_KanbanColumnFactory(
                 new AgileDashboard_KanbanColumnDao(),
                 $user_preferences
             ),
-            TrackerFactory::instance(),
-            Tracker_FormElementFactory::instance()
+            new AgileDashboard_KanbanAddInPlaceChecker(
+                TrackerFactory::instance(),
+                Tracker_FormElementFactory::instance()
+            )
         );
+
         $this->kanban_representation = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->user_is_kanban_admin  = (int) $user_is_kanban_admin;
         $this->language              = $language;

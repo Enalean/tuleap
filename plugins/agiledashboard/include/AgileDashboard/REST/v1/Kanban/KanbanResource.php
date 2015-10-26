@@ -50,6 +50,11 @@ use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use AgileDashboard_KanbanUserPreferences;
+use Kanban_SemanticStatus_Not_Defined;
+use Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException;
+use AgileDashboard_KanbanColumnManager;
+use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
+use AgileDashboard_KanbanAddInPlaceChecker;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -87,6 +92,11 @@ class KanbanResource extends AuthenticatedResource {
 
     /** @var AgileDashboardStatisticsAggregator */
     private $statistics_aggregator;
+    /** @var AgileDashboard_KanbanColumnManager */
+    private $kanban_column_manager;
+
+    /** @var AgileDashboard_KanbanAddInPlaceChecker */
+    private $add_in_place_checker;
 
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
@@ -111,8 +121,8 @@ class KanbanResource extends AuthenticatedResource {
             UserManager::instance(),
             $this->artifact_factory
         );
-        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager);
 
+        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager);
         $this->resources_patcher = new ResourcesPatcher(
             $artifactlink_updater,
             $this->artifact_factory,
@@ -122,11 +132,21 @@ class KanbanResource extends AuthenticatedResource {
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->permissions_manager  = new AgileDashboard_PermissionsManager();
 
+        $this->add_in_place_checker = new AgileDashboard_KanbanAddInPlaceChecker(
+            $this->tracker_factory,
+            $this->form_element_factory
+        );
+
         $this->kanban_representation_builder = new KanbanRepresentationBuilder(
             $this->user_preferences,
             $this->kanban_column_factory,
-            $this->tracker_factory,
-            $this->form_element_factory
+            $this->add_in_place_checker
+        );
+
+        $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
+            new AgileDashboard_KanbanColumnDao(),
+            $this->permissions_manager,
+            $this->tracker_factory
         );
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
@@ -283,7 +303,7 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @url OPTIONS {id}
      *
-     * @param string $id Id of the milestone
+     * @param string $id Id of the Kanban
      */
     public function optionsId($id) {
         Header::allowOptionsGetPatchDelete();
@@ -482,7 +502,7 @@ class KanbanResource extends AuthenticatedResource {
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
-     * @param string $id Id of the milestone
+     * @param string $id Id of the Kanban
      */
     public function optionsBacklog($id) {
         Header::allowOptionsGetPatch();
@@ -604,7 +624,7 @@ class KanbanResource extends AuthenticatedResource {
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
-     * @param string $id Id of the milestone
+     * @param string $id Id of the Kanban
      */
     public function optionsArchive($id) {
         Header::allowOptionsGetPatch();
@@ -747,7 +767,7 @@ class KanbanResource extends AuthenticatedResource {
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
-     * @param string $id Id of the milestone
+     * @param string $id Id of the Kanban
      */
     public function optionsItems($id) {
         Header::allowOptionsGetPatch();
@@ -775,6 +795,67 @@ class KanbanResource extends AuthenticatedResource {
         $this->kanban_dao->delete($id);
 
         Header::allowOptionsGetPatchDelete();
+    }
+
+    /**
+     * @url OPTIONS {id}/columns
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @param string $id Id of the Kanban
+     */
+    public function optionsColumns($id) {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Add a new column
+     *
+     * Create a new kanban column. Will add another open value to the field corresponding to
+     * the 'Status' semantic. An error will be thrown if the semantic 'Status' is not bound to
+     * static values.
+     *
+     * @url POST {id}/columns
+     *
+     * @param string                         $id     Id of the Kanban
+     * @param KanbanColumnPOSTRepresentation $column The created kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPOSTRepresentation}
+     *
+     * @throws 400
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     *
+     * @status 201
+     *
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation
+     */
+    protected function postColumns($id, KanbanColumnPOSTRepresentation $column) {
+        $current_user = $this->getCurrentUser();
+        $kanban_id    = $id;
+        $kanban       = $this->getKanban($current_user, $kanban_id);
+        $column_label = $column->label;
+
+        try {
+            $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
+        } catch (AgileDashboard_UserNotAdminException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch(Kanban_SemanticStatus_Not_Defined $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $this->form_element_factory->clearCaches();
+
+        $new_column   = $this->kanban_column_factory->getColumnForAKanban($kanban, $new_column_id, $current_user);
+        $add_in_place = $this->add_in_place_checker->canUserAddInPlace($current_user, $kanban);
+
+        $column_representation = new KanbanColumnRepresentation();
+        $column_representation->build($new_column, $add_in_place);
+
+        return $column_representation;
     }
 
     /** @return AgileDashboard_Kanban */

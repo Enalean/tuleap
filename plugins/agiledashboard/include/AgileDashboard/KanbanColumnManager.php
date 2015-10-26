@@ -46,12 +46,63 @@ class AgileDashboard_KanbanColumnManager {
      * @return bool
      */
     public function setColumnWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit) {
-        $project_id = $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
+        $project_id = $this->getProjectIdForKanban($kanban);
 
+        $this->checkUserCanAdministrate($user, $project_id);
+
+        return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
+    }
+
+    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label) {
+        $project_id = $this->getProjectIdForKanban($kanban);
+
+        $this->checkUserCanAdministrate($user, $project_id);
+
+        $semantic = $this->getSemanticStatus($kanban);
+        if (! $semantic) {
+            throw new Kanban_SemanticStatus_Not_DefinedException();
+        }
+
+        if (! $semantic->isFieldBoundToStaticValues()) {
+            throw new Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException();
+        }
+
+        return $semantic->addOpenValue($label);
+    }
+
+    /**
+     * @return int
+     */
+    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
+        return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
+    }
+
+    private function checkUserCanAdministrate($user, $project_id) {
         if (! $this->permissions_manager->userCanAdministrate($user, $project_id)) {
             throw new AgileDashboard_UserNotAdminException($user);
         }
+    }
 
-        return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
+    private function getSemanticStatus(AgileDashboard_Kanban $kanban) {
+        $tracker = $this->getTrackerForKanban($kanban);
+        if (! $tracker) {
+            return;
+        }
+
+        $semantic = Tracker_Semantic_Status::load($tracker);
+        if (! $semantic->getFieldId()) {
+            return;
+        }
+
+        return $semantic;
+    }
+
+    private function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
+        $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        if (! $tracker) {
+            throw new RestException(500, 'The tracker used by the kanban does not exist anymore');
+        }
+
+        return $tracker;
     }
 }

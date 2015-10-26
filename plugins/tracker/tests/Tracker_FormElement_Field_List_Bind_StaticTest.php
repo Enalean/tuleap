@@ -1,26 +1,28 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElement_Field_List_Bind_StaticValue');
 Mock::generate('Tracker_FormElement_Field_List');
+Mock::generate('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
 class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
     
@@ -83,4 +85,31 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         $this->assertEqual($res, $f->getFieldData('Admin,User Interface,Docman', true));
     }
 }
-?>
+
+class Tracker_FormElement_Field_List_Bind_Static_AddBindValue extends TuleapTestCase {
+
+    public function itAddsANewValue() {
+        $field         = aSelectBoxField()->withId(101)->build();
+        $is_rank_alpha = $values = $default_values = $decorators = '';
+        $value_dao     = new MockTracker_FormElement_Field_List_Bind_Static_ValueDao();
+        $value_dao->setReturnValue('create', 321);
+        $bind_static = partial_mock(
+            'Tracker_FormElement_Field_List_Bind_Static',
+            array('getValueDao'),
+            array($field, $is_rank_alpha, $values, $default_values, $decorators)
+        );
+        $bind_static->setReturnValue('getValueDao', $value_dao);
+
+        $value_dao->expect('create', array(
+            101,
+            'intermodulation',
+            '*',
+            '*',
+            '*'
+        ));
+
+        $new_id = $bind_static->addValue(' intermodulation	');
+
+        $this->assertEqual($new_id, 321);
+    }
+}
