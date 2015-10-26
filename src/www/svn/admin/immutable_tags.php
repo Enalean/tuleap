@@ -30,8 +30,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     if ($request->valid($vImmutableTagsWhitelist) &&
         $request->valid($vImmutableTagsPath)
     ) {
-        $immutable_tags_whitelist = $request->get('immutable-tags-whitelist');
-        $immutable_tags_path      = $request->get('immutable-tags-path');
+        $immutable_tags_whitelist = trim($request->get('immutable-tags-whitelist'));
+        $immutable_tags_path      = trim($request->get('immutable-tags-path'));
 
         $immutable_tags_handler->saveImmutableTagsForProject($group_id, $immutable_tags_whitelist, $immutable_tags_path);
     } else {
