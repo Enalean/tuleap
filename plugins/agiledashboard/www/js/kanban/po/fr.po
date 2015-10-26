@@ -37,6 +37,10 @@ msgid "Archive:"
 msgstr "Archive :"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Are you sure to delete this Kanban?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce Kanban ?"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr "Backlog"
 
@@ -125,8 +129,8 @@ msgid "OK, reload the page"
 msgstr "OK, rafraichir la page"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Save modifications"
-msgstr "Enregistrer les modifications"
+msgid "Save"
+msgstr "Enregistrer"
 
 #: src/app/error/error.tpl.html
 msgid "Show details"
@@ -154,6 +158,9 @@ msgstr "Basculer l'affichage de cette colonne"
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
+
+#~ msgid "Save modifications"
+#~ msgstr "Enregistrer les modifications"
 
 #~ msgid ""
 #~ "Based on the <a href=\"/plugins/tracker/?tracker={{ kanban.tracker."

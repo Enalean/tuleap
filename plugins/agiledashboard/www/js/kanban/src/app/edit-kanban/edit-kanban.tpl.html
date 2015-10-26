@@ -10,8 +10,15 @@
     <div class="modal-body">
         <h3><i class="icon-cogs"></i> <span translate>General configuration</span></h3>
         <div class="kanban-configuration">
-            <label class="control-label" for="input-kanban-label" translate>Kanban label:</label>
-            <input type="text" ng-model="edit_modal.kanban.label" id="input-kanban-label" required autofocus />
+            <form ng-submit="edit_modal.saveModifications()">
+                <label class="control-label" for="input-kanban-label" translate>Kanban label:</label>
+                <div class="input-append">
+                    <input type="text" ng-model="edit_modal.kanban.label" id="input-kanban-label" required autofocus />
+                    <button class="btn" type="submit" ng-disabled="edit_modal.processing()">
+                        <i class="icon-spinner icon-spin" ng-show="edit_modal.saving"></i> <span translate>Save</span>
+                    </button>
+                </div>
+            </form>
         </div>
 
         <h3><i class="icon-columns"></i> <span translate>Columns configuration</span></h3>
@@ -33,15 +40,17 @@
                                 add-column-input
                                 required
                             >
-                            <button class="btn btn-small" type="submit">
-                                <i class="icon-plus"></i> <span translate>Add</span>
+                            <button class="btn" type="submit" ng-disabled="edit_modal.processing()">
+                                <i class="icon-spinner icon-spin" ng-show="edit_modal.saving_new_column"></i>
+                                <i class="icon-plus" ng-show="! edit_modal.saving_new_column"></i>
+                                <span translate>Add</span>
                             </button>
-                            <button class="btn btn-small" ng-click="edit_modal.cancelAddColumn()">
+                            <button class="btn" ng-click="edit_modal.cancelAddColumn()" ng-disabled="edit_modal.processing()">
                                 <i class="icon-remove"></i> <span translate>Cancel</span>
                             </button>
                         </div>
                     </form>
-                    <button class="btn btn-small" ng-click="edit_modal.addColumn()" ng-show="! edit_modal.adding_column">
+                    <button class="btn" ng-disabled="edit_modal.processing()" ng-click="edit_modal.addColumn()" ng-show="! edit_modal.adding_column">
                         <i class="icon-plus"></i> <span translate>Add a column</span>
                     </button>
                 </li>
@@ -52,18 +61,12 @@
         <h3><i class="icon-warning-sign"></i> <span translate>Danger zone</span></h3>
         <div class="danger-zone">
             <p translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>
-            <button class="btn btn-danger btn-small" ng-click="edit_modal.deleteKanban()" ng-disabled="edit_modal.processing()">
+            <button class="btn" ng-class="{'btn-danger': edit_modal.confirm_delete }" ng-click="edit_modal.deleteKanban()" ng-disabled="edit_modal.processing()">
                 <i class="icon-spinner icon-spin" ng-show="edit_modal.deleting"></i>
                 <i class="icon-trash" ng-hide="edit_modal.deleting"></i>
-                <span translate>Delete this Kanban</span>
+                <span ng-if="edit_modal.confirm_delete" translate>Are you sure to delete this Kanban?</span>
+                <span ng-if="! edit_modal.confirm_delete" translate>Delete this Kanban</span>
             </button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" ng-click="edit_modal.cancel()" translate>Cancel</button>
-        <button class="btn btn-primary"
-                ng-disabled="edit_modal.processing()"
-                ng-click="edit_modal.saveModifications();">
-            <i class="icon-spinner icon-spin" ng-show="edit_modal.saving"></i> <span translate>Save modifications</span></button>
     </div>
 </div>

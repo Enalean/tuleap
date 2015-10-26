@@ -330,7 +330,7 @@
 
         function editKanban() {
             $modal.open({
-                backdrop:     'static',
+                backdrop:     true,
                 templateUrl:  'edit-kanban/edit-kanban.tpl.html',
                 controller:   'EditKanbanCtrl as edit_modal',
                 resolve: {
@@ -339,6 +339,9 @@
                     },
                     augmentColumn: function() {
                         return augmentColumn;
+                    },
+                    updateKanbanName: function() {
+                        return updateKanbanName;
                     }
                 }
             }).result.then(
