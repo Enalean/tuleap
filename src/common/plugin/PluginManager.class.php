@@ -24,6 +24,7 @@
  */
 class PluginManager {
 
+
     const PLUGIN_HOOK_CACHE_FILE = 'hooks.json';
 
     /** @var EventManager */
@@ -38,12 +39,16 @@ class PluginManager {
     /** @var PluginManager */
     private static $instance = null;
 
+    /** @var ForgeUpgradeConfig */
+    private $forgeupgrade_config;
+
     var $pluginHookPriorityManager;
 
-    public function __construct(PluginFactory $plugin_factory, EventManager $event_manager, SiteCache $site_cache) {
-        $this->plugin_factory = $plugin_factory;
-        $this->event_manager  = $event_manager;
-        $this->site_cache     = $site_cache;
+    public function __construct(PluginFactory $plugin_factory, EventManager $event_manager, SiteCache $site_cache, ForgeUpgradeConfig $forgeupgrade_config) {
+        $this->plugin_factory      = $plugin_factory;
+        $this->event_manager       = $event_manager;
+        $this->site_cache          = $site_cache;
+        $this->forgeupgrade_config = $forgeupgrade_config;
     }
 
     public static function instance() {
@@ -51,7 +56,10 @@ class PluginManager {
             self::$instance = new PluginManager(
                 PluginFactory::instance(),
                 EventManager::instance(),
-                new SiteCache()
+                new SiteCache(),
+                new ForgeUpgradeConfig(
+                    new System_Command()
+                )
             );
         }
         return self::$instance;
@@ -125,10 +133,6 @@ class PluginManager {
 
     public function getAvailablePlugins() {
         return $this->plugin_factory->getAvailablePlugins();
-    }
-
-    function _getForgeUpgradeConfig() {
-        return new ForgeUpgradeConfig();
     }
     
     function getAllPlugins() {
@@ -255,11 +259,11 @@ class PluginManager {
      * @param String $name Plugin's name
      */
     protected function configureForgeUpgrade($name) {
-        $fuc = $this->_getForgeUpgradeConfig();
         try {
-            $fuc->loadDefaults();
-            $fuc->addPath($GLOBALS['sys_pluginsroot'].$name);
-            $fuc->execute('record-only');
+            $plugin_path = $GLOBALS['sys_pluginsroot'].$name;
+            $this->forgeupgrade_config->loadDefaults();
+            $this->forgeupgrade_config->addPath($GLOBALS['sys_pluginsroot'].$name);
+            $this->forgeupgrade_config->recordOnlyPath($plugin_path);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
         }
@@ -273,10 +277,9 @@ class PluginManager {
      * @param String $name Plugin's name
      */
     protected function uninstallForgeUpgrade($name) {
-        $fuc = new ForgeUpgradeConfig();
         try {
-            $fuc->loadDefaults();
-            $fuc->removePath($GLOBALS['sys_pluginsroot'].$name);
+            $this->forgeupgrade_config->loadDefaults();
+            $this->forgeupgrade_config->removePath($GLOBALS['sys_pluginsroot'].$name);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
         }
