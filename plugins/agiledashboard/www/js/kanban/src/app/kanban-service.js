@@ -14,6 +14,7 @@
         return {
             getKanban           : getKanban,
             getBacklog          : getBacklog,
+            getColumn           : getColumn,
             getArchive          : getArchive,
             getItems            : getItems,
             collapseColumn      : collapseColumn,
@@ -30,7 +31,9 @@
             moveInColumn        : moveInColumn,
             setWipLimitForColumn: setWipLimitForColumn,
             updateKanbanLabel   : updateKanbanLabel,
-            deleteKanban        : deleteKanban
+            deleteKanban        : deleteKanban,
+            addColumn           : addColumn,
+            reorderColumns      : reorderColumns
         };
 
         function getKanban(id) {
@@ -260,6 +263,25 @@
             return rest.one('kanban', kanban_id).patch({
                 collapse_archive: true
             });
+        }
+
+        function getColumn(column_id) {
+            return rest.one('kanban_columns', column_id).get();
+        }
+
+        function addColumn(kanban_id, column_label) {
+            return rest
+                .one('kanban', kanban_id)
+                .post('columns', {
+                    label: column_label
+                });
+        }
+
+        function reorderColumns(kanban_id, sorted_columns_ids) {
+            return rest
+                .one('kanban', kanban_id)
+                .all('columns')
+                .customPUT(sorted_columns_ids);
         }
     }
 })();

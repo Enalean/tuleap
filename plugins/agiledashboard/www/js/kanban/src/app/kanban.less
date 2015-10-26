@@ -495,6 +495,31 @@
             background: #AAAAAA;
         }
     }
+
+    .angular-ui-tree-empty {
+        background: transparent url('column-empty.png') no-repeat center 100px;
+        margin: 0;
+        border: none;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 1;
+    }
+
+    .angular-ui-tree-placeholder {
+        background: #58B359;
+        max-height: 3px;
+        min-height: 3px;
+        margin: 10px;
+
+        &:only-child {
+            background: transparent url('column-empty-drop-default.png') no-repeat center 100px;
+            width: 100%;
+            min-height: 200px;
+            max-height: 200px;
+            margin: 0;
+        }
+    }
 }
 
 ul.kanban-items {
@@ -528,32 +553,6 @@ ul.kanban-items {
 
         &:last-child {
             margin-bottom: @kanban-column-footer-height + 10px;
-        }
-    }
-}
-
-.modal-error {
-    > .modal-header {
-        border-radius: 4px 4px 0 0;
-        background: #DA5353;
-        color: white;
-    }
-}
-
-.modal-body {
-    .btn-link {
-        padding-left: 0;
-    }
-
-    > .danger-zone {
-        margin: 0 0 10px;
-    }
-
-    > .form-horizontal {
-        margin: 0 0 30px;
-
-        > .control-group {
-            margin-bottom: 10px;
         }
     }
 }

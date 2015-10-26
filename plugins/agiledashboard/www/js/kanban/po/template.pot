@@ -4,12 +4,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Add"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Add a column"
+msgstr ""
+
 #: src/app/error/error.tpl.html
 msgid "An error occured while saving one of your last action. We're afraid that you will have to reload the page in order to bring you back to a consistent state."
 msgstr ""
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Archive"
+msgstr ""
+
 #: src/app/app-kanban-controller.js
 msgid "Archive:"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Backlog"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Based on the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">{{ edit_modal.kanban.tracker.label }}</a> tracker."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -20,16 +40,20 @@ msgstr ""
 msgid "Card summary"
 msgstr ""
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Column name"
+msgstr ""
+
 #: src/app/app-kanban-controller.js
 msgid "Column:"
 msgstr ""
 
-#: src/app/kanban.tpl.html
-msgid "Compact view"
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Columns configuration"
 msgstr ""
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Configuration"
+#: src/app/kanban.tpl.html
+msgid "Compact view"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -61,11 +85,15 @@ msgid "Filter..."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Kanban label:"
+msgid "General configuration"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Kanban {{ label }} successfuly deleted"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Kanban label:"
 msgstr ""
 
 #: src/app/app-kanban-controller.js
@@ -73,11 +101,11 @@ msgid "Kanban:"
 msgstr ""
 
 #: src/app/error/error.tpl.html
-msgid "OK, reload the page"
+msgid "Oh snap!"
 msgstr ""
 
 #: src/app/error/error.tpl.html
-msgid "Oh snap!"
+msgid "OK, reload the page"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -102,10 +130,6 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
-msgstr ""
-
-#: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Tracker used:"
 msgstr ""
 
 #: src/app/kanban.tpl.html

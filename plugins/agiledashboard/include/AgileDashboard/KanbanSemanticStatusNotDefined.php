@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Kanban_SemanticStatus_Not_Defined extends Exception {
+class Kanban_SemanticStatus_Not_DefinedException extends Exception {
     public function __construct() {
         parent::__construct("Semantic status is not defined for the tracker used by kanban");
     }

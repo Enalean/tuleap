@@ -50,7 +50,7 @@ use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use AgileDashboard_KanbanUserPreferences;
-use Kanban_SemanticStatus_Not_Defined;
+use Kanban_SemanticStatus_Not_DefinedException;
 use Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException;
 use Kanban_SemanticStatus_AllColumnIdsNotProvidedException;
 use Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException;
@@ -843,7 +843,7 @@ class KanbanResource extends AuthenticatedResource {
             $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Kanban_SemanticStatus_Not_Defined $exception) {
+        } catch(Kanban_SemanticStatus_Not_DefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -883,7 +883,7 @@ class KanbanResource extends AuthenticatedResource {
             $this->kanban_column_manager->reorderColumns($user, $kanban, $column_ids);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Kanban_SemanticStatus_Not_Defined $exception) {
+        } catch(Kanban_SemanticStatus_Not_DefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException $exception) {
             throw new RestException(400, $exception->getMessage());

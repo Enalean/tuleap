@@ -1,0 +1,107 @@
+.edit-kanban-modal {
+    > .modal-header {
+        h2 {
+            margin: 0 0 5px;
+        }
+
+        > .base-tracker {
+            margin: 0;
+            font-size: 13px;
+
+            > i {
+                margin: 0 3px 0 0;
+            }
+        }
+    }
+
+    > .modal-body {
+        max-height: 60vh;
+        font-size: 13px;
+
+        > h3 {
+            margin: 30px 0 10px;
+            line-height: 30px;
+
+            &:first-child {
+                margin: 0 0 10px;
+            }
+        }
+
+        > .kanban-configuration > label {
+            font-size: 13px;
+        }
+
+        > .column-configuration {
+            .angular-ui-tree-empty {
+                display: none;
+            }
+
+            > ul.column-configuration-column-list {
+                margin: 0;
+
+                > li {
+                    padding: 2px 0 2px 3px;
+                    list-style-type: none;
+                    background: none;
+
+                    &:first-child, &:last-child {
+                        color: #888;
+
+                        > i {
+                            margin: 0 4px 0 0;
+                        }
+                    }
+
+                    &.add-column {
+                        padding: 10px 4px;
+
+                        > form > .input-append {
+                            margin-bottom: 0;
+
+                            > input[type="text"] {
+                                width: 160px;
+                                height: 16px;
+                                font-size: 13px;
+                            }
+                        }
+
+                        .btn {
+                            min-width: 75px;
+
+                            > i {
+                                margin: 0 3px 0 0;
+                            }
+                        }
+                    }
+
+                    &.draggable {
+                        padding: 2px 0 2px 22px;
+                        background: url('drag.png') no-repeat 5px 6px;
+                        cursor: move;
+                    }
+
+                    &.angular-ui-tree-placeholder {
+                        background: #58B359;
+                        max-height: 3px;
+                        min-height: 3px;
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+ul.column-configuration-column-list.angular-ui-tree-drag {
+    opacity: 1;
+
+    > li {
+        float: left;
+        font-size: 13px;
+        padding: 2px 7px 2px 22px;
+        background: #FFFFFF url('drag.png') no-repeat 5px 6px;
+        cursor: move;
+        border-radius: 3px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+    }
+}
