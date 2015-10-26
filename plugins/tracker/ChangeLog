@@ -1,3 +1,6 @@
+Version 5.717 - Tuleap 8.8
+    * story #8451: REST route to add a kanban column
+
 Version 5.716 - Tuleap 8.8
     * story #6256: add the tracker email info in the report header
 
