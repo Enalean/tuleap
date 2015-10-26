@@ -10,6 +10,7 @@ require_once('pre.php');
 require_once('my_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
+require_once('../admin/admin_utils.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 if (user_isloggedin()) {
@@ -32,6 +33,10 @@ if (user_isloggedin()) {
     $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
     my_header(array('title'=>$title, 'body_class' => array('widgetable')));
+
+    if (user_is_super_user()) {
+        echo site_admin_warnings();
+    }
 
     echo '<p>'. $Language->getText('my_index', 'message') .'</p>';
 
