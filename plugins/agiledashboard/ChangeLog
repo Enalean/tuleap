@@ -1,3 +1,6 @@
+Version 1.290 - Tuleap 8.8
+    * story #8451: Add & reorder kanban columns from kanban administration
+
 Version 1.289 - Tuleap 8.8
     * story #8451: REST route to reorder kanban columns
 
