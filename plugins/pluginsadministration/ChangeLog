@@ -1,3 +1,6 @@
+Version 1.13 - Tuleap 8.8
+    * request #8521: ForgeUpgrade skip ALL pending buckets when installing a new plugin
+
 Version 1.12 - Tuleap 8.6
     * request #8363: Remove hook priorities management
 
