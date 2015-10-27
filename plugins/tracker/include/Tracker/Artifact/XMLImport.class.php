@@ -185,12 +185,13 @@ class Tracker_Artifact_XMLImport {
         SimpleXMLElement $xml_changeset,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
-        $fields_data = $fields_data_builder->getFieldsData($xml_changeset);
+        $submitted_by = $this->getSubmittedBy($xml_changeset);
+        $fields_data = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by);
         if (count($fields_data) > 0) {
             $artifact = $this->artifact_creator->create(
                 $tracker,
                 $fields_data,
-                $this->getSubmittedBy($xml_changeset),
+                $submitted_by,
                 $this->getSubmittedOn($xml_changeset),
                 $this->send_notifications
             );
@@ -231,11 +232,12 @@ class Tracker_Artifact_XMLImport {
                     $initial_comment_body   = (string)$xml_changeset->comments->comment[0]->body;
                     $initial_comment_format = (string)$xml_changeset->comments->comment[0]->body['format'];
                 }
+                $submitted_by = $this->getSubmittedBy($xml_changeset);
                 $changeset = $this->new_changeset_creator->create(
                     $artifact,
-                    $fields_data_builder->getFieldsData($xml_changeset),
+                    $fields_data_builder->getFieldsData($xml_changeset, $submitted_by),
                     $initial_comment_body,
-                    $this->getSubmittedBy($xml_changeset),
+                    $submitted_by,
                     $this->getSubmittedOn($xml_changeset),
                     $this->send_notifications,
                     $initial_comment_format

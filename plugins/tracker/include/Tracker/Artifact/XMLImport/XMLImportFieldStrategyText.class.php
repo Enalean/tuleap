@@ -28,7 +28,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_A
      *
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
         $data = array(
             'format'  => (string) $field_change->value['format'],
             'content' => (string) $field_change->value

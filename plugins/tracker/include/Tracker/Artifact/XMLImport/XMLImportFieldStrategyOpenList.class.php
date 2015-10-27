@@ -47,7 +47,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
      *
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
         $values = array();
         $bind   = (string) $field_change['bind'];
 

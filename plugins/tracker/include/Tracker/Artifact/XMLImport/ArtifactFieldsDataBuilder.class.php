@@ -95,7 +95,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     /**
      * @return array
      */
-    public function getFieldsData(SimpleXMLElement $xml_field_change) {
+    public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by) {
         $data = array();
 
         if (! $xml_field_change->field_change) {
@@ -109,7 +109,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             );
 
             if ($field) {
-                $this->appendValidValue($data, $field, $field_change);
+                $this->appendValidValue($data, $field, $field_change, $submitted_by);
             } else {
                 $this->logger->debug("Skipped unknown/unused field ".(string) $field_change['field_name']);
             }
@@ -117,9 +117,14 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         return $data;
     }
 
-    private function appendValidValue(array &$data, Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+    private function appendValidValue(
+        array &$data,
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by
+    ) {
         try {
-            $submitted_value = $this->getFieldData($field, $field_change);
+            $submitted_value = $this->getFieldData($field, $field_change, $submitted_by);
             if ($field->validateField($this->createFakeArtifact(), $submitted_value)) {
                 $data[$field->getId()] = $submitted_value;
             } else {
@@ -144,12 +149,16 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         return new Tracker_Artifact(-1, -1, -1, -1, -1);
     }
 
-    private function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+    private function getFieldData(
+        Tracker_FormElement_Field $field,
+        SimpleXMLElement $field_change,
+        PFUser $submitted_by
+    ) {
         $type = (string)$field_change['type'];
 
         if (! isset($this->strategies[$type])) {
             throw new Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException();
         }
-        return $this->strategies[$type]->getFieldData($field, $field_change);
+        return $this->strategies[$type]->getFieldData($field, $field_change, $submitted_by);
     }
 }

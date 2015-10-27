@@ -28,5 +28,5 @@ interface Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
      *
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change);
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by);
 }
