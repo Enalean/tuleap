@@ -8,6 +8,7 @@ Version 8.8 (Not released yet)
 	* story #6256: add the tracker email info in the report header
 	* story #8289: Take into account the project_members group
 	* request #8525: Site admin should be warned about lack of forgeupgrade
+	* story #8289: enhance the REST route documentation (project members rules)
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
