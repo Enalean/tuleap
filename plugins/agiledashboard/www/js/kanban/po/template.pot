@@ -25,6 +25,10 @@ msgid "Archive:"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Are you sure to delete this Kanban?"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr ""
 
@@ -109,7 +113,7 @@ msgid "OK, reload the page"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Save modifications"
+msgid "Save"
 msgstr ""
 
 #: src/app/error/error.tpl.html

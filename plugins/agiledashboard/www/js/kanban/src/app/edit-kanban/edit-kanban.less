@@ -17,6 +17,7 @@
     > .modal-body {
         max-height: 60vh;
         font-size: 13px;
+        padding: 15px 15px 25px;
 
         > h3 {
             margin: 30px 0 10px;
@@ -25,6 +26,10 @@
             &:first-child {
                 margin: 0 0 10px;
             }
+        }
+
+        .input-append {
+            margin-bottom: 0;
         }
 
         > .kanban-configuration > label {
@@ -55,18 +60,8 @@
                     &.add-column {
                         padding: 10px 4px;
 
-                        > form > .input-append {
-                            margin-bottom: 0;
-
-                            > input[type="text"] {
-                                width: 160px;
-                                height: 16px;
-                                font-size: 13px;
-                            }
-                        }
-
                         .btn {
-                            min-width: 75px;
+                            min-width: 90px;
 
                             > i {
                                 margin: 0 3px 0 0;
