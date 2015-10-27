@@ -157,10 +157,17 @@ class UserGroupResource extends AuthenticatedResource {
      * <br><br>
      * Notes on the user reference format. It can be:
      * <ul>
-     * <li> {"id": user_id} </li>
-     * <li> {"username": user_name} </li>
-     * <li> {"email": user_email} </li>
-     * <li> {"ldap_id": user_ldap_id} </li>
+     * <li>* {"id": user_id}</li>
+     * <li>* {"username": user_name}</li>
+     * <li>* {"email": user_email}</li>
+     * <li>* {"ldap_id": user_ldap_id}</li>
+     * </ul>
+     * <br><br>
+     * <p>Concerning the group <b>project members</b>, please note:</p>
+     * <ul>
+     * <li>* Suspended users will be removed from the group if they are not provided</li>
+     * <li>* Suspended users will not be added to the group, even if they are provided</li>
+     * <li>* Project admins will not be removed from the group, even if they are provided</li>
      * </ul>
      *
      * @url PUT {id}/users
