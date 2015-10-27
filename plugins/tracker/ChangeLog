@@ -1,3 +1,6 @@
+Version 5.719 - Tuleap 8.8
+    * request #8526: Wrong attachement owner at tv5 creation from a tv3
+
 Version 5.718 - Tuleap 8.8
     * story #8451: REST route to reorder kanban columns
 
