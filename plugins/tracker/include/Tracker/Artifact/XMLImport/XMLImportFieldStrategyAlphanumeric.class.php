@@ -28,7 +28,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric implements T
      *
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
         return (string) $field_change->value;
     }
 }
