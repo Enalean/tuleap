@@ -68,14 +68,14 @@ if ($ref === null) {
     } else {
         $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
     }
-    if ($ref) {
-        if ($project) {
-            $project_name = $project->getUnixName();
-        }
-        $ref->replaceLink($args, $project_name);
-    }
 }
-if ( ! $ref) {
+
+if ($ref) {
+    if ($project) {
+        $project_name = $project->getUnixName();
+    }
+    $ref->replaceLink($args, $project_name);
+} else {
     exit_error($GLOBALS['Language']->getText('global','error'),
                $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
 }

@@ -99,6 +99,22 @@ class ReferenceDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * @return DataAccessResult
+     */
+    public function searchSystemReferenceByNatureAndKeyword($keyword, $nature) {
+        $keyword = $this->da->quoteSmart($keyword);
+        $nature  = $this->da->quoteSmart($nature);
+
+        $sql = "SELECT *
+                FROM reference
+                WHERE keyword = $keyword
+                  AND nature = $nature
+                  AND scope = 'S'";
+
+        return $this->retrieve($sql);
+    }
+
 
     /**
     * Searches Reference by service short name 
