@@ -1,3 +1,6 @@
+Version 1.291 - Tuleap 8.8
+    * story #8451: Replace the global save button with a local save button on Kanban label
+
 Version 1.290 - Tuleap 8.8
     * story #8451: Add & reorder kanban columns from kanban administration
 
