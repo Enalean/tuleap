@@ -836,10 +836,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     }
 
                 } else {
+                    $submitted_by = $current_user;
+                    if (isset($file_info['submitted_by'])) {
+                        $submitted_by = $file_info['submitted_by'];
+                    }
                     $attachment = new Tracker_FileInfo(
                         null,
                         $this,
-                        $current_user->getId(),
+                        $submitted_by->getId(),
                         trim($file_info['description']),
                         $file_info['name'],
                         $file_info['size'],

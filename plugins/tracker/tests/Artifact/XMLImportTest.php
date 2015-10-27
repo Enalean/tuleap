@@ -774,19 +774,20 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
         $data = array(
             $this->file_field_id    => array(
                 array(
-                    'is_migrated' => true,
-                    'name'        => 'A.png',
-                    'type'        => 'image/png',
-                    'description' => 'None',
-                    'size'        => 87947,
-                    'tmp_name'    => $this->extraction_path.'/34_File33.png',
-                    'error'       => UPLOAD_ERR_OK,
+                    'is_migrated'  => true,
+                    'submitted_by' => $this->john_doe,
+                    'name'         => 'A.png',
+                    'type'         => 'image/png',
+                    'description'  => 'None',
+                    'size'         => 87947,
+                    'tmp_name'     => $this->extraction_path.'/34_File33.png',
+                    'error'        => UPLOAD_ERR_OK,
                )
             ),
             $this->summary_field_id => 'Newly submitted'
         );
-        expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
 }
@@ -901,22 +902,24 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
         $data = array(
             $this->file_field_id    => array(
                 array(
-                    'is_migrated' => true,
-                    'name'        => 'A.png',
-                    'type'        => 'image/png',
-                    'description' => 'None',
-                    'size'        => 87947,
-                    'tmp_name'    => $this->extraction_path.'/34_File33.png',
-                    'error'       => UPLOAD_ERR_OK,
+                    'is_migrated'  => true,
+                    'submitted_by' => $this->john_doe,
+                    'name'         => 'A.png',
+                    'type'         => 'image/png',
+                    'description'  => 'None',
+                    'size'         => 87947,
+                    'tmp_name'     => $this->extraction_path.'/34_File33.png',
+                    'error'        => UPLOAD_ERR_OK,
                 ),
                 array(
-                    'is_migrated' => true,
-                    'name'        => 'B.pdf',
-                    'type'        => 'application/x-download',
-                    'description' => 'A Zuper File',
-                    'size'        => 84895,
-                    'tmp_name'    => $this->extraction_path.'/34_File34.pdf',
-                    'error'       => UPLOAD_ERR_OK,
+                    'is_migrated'  => true,
+                    'submitted_by' => $this->john_doe,
+                    'name'         => 'B.pdf',
+                    'type'         => 'application/x-download',
+                    'description'  => 'A Zuper File',
+                    'size'         => 84895,
+                    'tmp_name'     => $this->extraction_path.'/34_File34.pdf',
+                    'error'        => UPLOAD_ERR_OK,
                 )
             ),
             $this->summary_field_id => 'Newly submitted'
@@ -996,13 +999,14 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         $initial_changeset_data = array(
             $this->file_field_id    => array(
                 array(
-                    'is_migrated' => true,
-                    'name'        => 'A.png',
-                    'type'        => 'image/png',
-                    'description' => 'None',
-                    'size'        => 87947,
-                    'tmp_name'    => $this->extraction_path.'/34_File33.png',
-                    'error'       => UPLOAD_ERR_OK,
+                    'is_migrated'  => true,
+                    'submitted_by' => $this->john_doe,
+                    'name'         => 'A.png',
+                    'type'         => 'image/png',
+                    'description'  => 'None',
+                    'size'         => 87947,
+                    'tmp_name'     => $this->extraction_path.'/34_File33.png',
+                    'error'        => UPLOAD_ERR_OK,
                 )
             ),
             $this->summary_field_id => 'Newly submitted'
@@ -1011,13 +1015,14 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         $second_changeset_data = array(
             $this->file_field_id    => array(
                 array(
-                    'is_migrated' => true,
-                    'name'        => 'B.pdf',
-                    'type'        => 'application/x-download',
-                    'description' => 'A Zuper File',
-                    'size'        => 84895,
-                    'tmp_name'    => $this->extraction_path.'/34_File34.pdf',
-                    'error'       => UPLOAD_ERR_OK,
+                    'is_migrated'  => true,
+                    'submitted_by' => $this->john_doe,
+                    'name'         => 'B.pdf',
+                    'type'         => 'application/x-download',
+                    'description'  => 'A Zuper File',
+                    'size'         => 84895,
+                    'tmp_name'     => $this->extraction_path.'/34_File34.pdf',
+                    'error'        => UPLOAD_ERR_OK,
                 )
             )
         );

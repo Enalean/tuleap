@@ -46,8 +46,9 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
      *
      * @return mixed
      */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
         $values      = $field_change->value;
+
         $files_infos = array();
 
         if ($this->isFieldChangeEmpty($values)) {
@@ -65,7 +66,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
                 $file       = $this->files_importer->getFileXML($file_id);
 
                 if (! $this->files_importer->fileIsAlreadyImported($file_id)) {
-                    $files_infos[] = $this->getFileInfoForAttachment($file);
+                    $files_infos[] = $this->getFileInfoForAttachment($file, $submitted_by);
                     $this->files_importer->markAsImported($file_id);
                 }
             } catch (Tracker_Artifact_XMLImport_Exception_FileNotFoundException $exception) {
@@ -95,13 +96,14 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         return count($values) > 0 && count($files_infos) === 0;
     }
 
-    private function getFileInfoForAttachment(SimpleXMLElement $file_xml) {
+    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by) {
         $file_path =  $this->extraction_path .'/'. (string) $file_xml->path;
         if (! is_file($file_path)) {
             throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($file_path);
         }
         return array(
             self::FILE_INFO_COPY_OPTION => true,
+            'submitted_by'              => $submitted_by,
             'name'                      => (string) $file_xml->filename,
             'type'                      => (string) $file_xml->filetype,
             'description'               => (string) $file_xml->description,
