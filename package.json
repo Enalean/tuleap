@@ -1,0 +1,28 @@
+{
+  "author": "Enalean Team",
+  "name": "tuleap-realtime",
+  "version": "0.0.3",
+  "main": "server.js",
+  "dependencies": {
+    "amdefine": "^1.0.0",
+    "body-parser": "1.14.1",
+    "convict": "^1.0.2",
+    "express": "*",
+    "jsonfile": "^2.2.3",
+    "jsonwebtoken": "^5.4.1",
+    "lodash": "^3.10.1",
+    "nconf": "^0.8.2",
+    "optimist": "^0.6.1",
+    "socket.io": "^1.3.7"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-jasmine-node-new": "^0.3.2",
+    "jasmine": "^2.4.1",
+    "jasmine-reporters": "^2.1.1"
+  },
+  "scripts": {
+    "test": "grunt test"
+  }
+}
