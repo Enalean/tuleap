@@ -1,3 +1,6 @@
+Version 5.720 - Tuleap 8.8
+    * request #8443: System keywords don't generate the right cross reference when cross projects
+
 Version 5.719 - Tuleap 8.8
     * request #8526: Wrong attachement owner at tv5 creation from a tv3
 
