@@ -55,11 +55,17 @@ class Tracker_Artifact_MailGateway_MailGateway {
      */
     private $logger;
 
+    /**
+     * @var Tracker_Artifact_Changeset_IncomingMailDao
+     */
+    private $incoming_mail_dao;
+
     public function __construct(
         Tracker_Artifact_MailGateway_Parser $parser,
         Tracker_Artifact_MailGateway_IncomingMessageFactory $incoming_message_factory,
         Tracker_Artifact_MailGateway_CitationStripper $citation_stripper,
         Tracker_Artifact_MailGateway_Notifier $notifier,
+        Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
         Tracker_ArtifactFactory $artifact_factory,
         TrackerPluginConfig $tracker_plugin_config,
         Logger $logger
@@ -71,6 +77,7 @@ class Tracker_Artifact_MailGateway_MailGateway {
         $this->notifier                 = $notifier;
         $this->artifact_factory         = $artifact_factory;
         $this->tracker_plugin_config    = $tracker_plugin_config;
+        $this->incoming_mail_dao        = $incoming_mail_dao;
     }
 
     public function process($raw_mail) {
@@ -84,7 +91,7 @@ class Tracker_Artifact_MailGateway_MailGateway {
                 $this->tracker_plugin_config
             );
             if ($tracker_artifactbyemail->canCreateArtifact() || $tracker_artifactbyemail->canUpdateArtifact()) {
-                $this->createChangeset($incoming_message, $body);
+                $this->createChangeset($incoming_message, $body, $raw_mail);
             } else {
                 $this->logger->info(
                     'An artifact for the tracker #' . $incoming_message->getTracker()->getId() .
@@ -105,19 +112,33 @@ class Tracker_Artifact_MailGateway_MailGateway {
         }
     }
 
-    private function createChangeset(Tracker_Artifact_MailGateway_IncomingMessage $incoming_message, $body) {
+    private function createChangeset(Tracker_Artifact_MailGateway_IncomingMessage $incoming_message, $body, $raw_mail) {
+        $changeset = null;
         if ($incoming_message->isAFollowUp()) {
-            $this->addFollowUp($incoming_message->getUser(), $incoming_message->getArtifact(), $body);
+            $changeset = $this->addFollowUp($incoming_message->getUser(), $incoming_message->getArtifact(), $body);
         } else {
-            $this->createArtifact(
+            $artifact = $this->createArtifact(
                 $incoming_message->getUser(),
                 $incoming_message->getTracker(),
                 $incoming_message->getSubject(),
                 $body
             );
+            if ($artifact) {
+                $this->logger->debug('New artifact created: '. $artifact->getXRef());
+                $changeset = $artifact->getFirstChangeset();
+            }
+        }
+
+        if ($changeset) {
+            $this->linkRawMailToChangeset($raw_mail, $changeset);
         }
     }
 
+    private function linkRawMailToChangeset($raw_mail, Tracker_Artifact_Changeset $changeset) {
+        $this->incoming_mail_dao->save($changeset->getId(), $raw_mail);
+    }
+
+    /** @return Tracker_Artifact_Changeset */
     private function addFollowUp(PFUser $user, Tracker_Artifact $artifact, $body) {
         $this->logger->debug("Receiving new follow-up comment from ". $user->getUserName());
 
@@ -127,7 +148,7 @@ class Tracker_Artifact_MailGateway_MailGateway {
             return;
         }
 
-        $artifact->createNewChangeset(
+        return $artifact->createNewChangeset(
             array(),
             $body,
             $user,
@@ -136,6 +157,7 @@ class Tracker_Artifact_MailGateway_MailGateway {
         );
     }
 
+    /** @return Tracker_Artifact */
     private function createArtifact(PFUser $user, Tracker $tracker, $title, $body) {
         $this->logger->debug("Receiving new artifact from ". $user->getUserName());
 
@@ -157,6 +179,6 @@ class Tracker_Artifact_MailGateway_MailGateway {
         );
 
         UserManager::instance()->setCurrentUser($user);
-        $this->artifact_factory->createArtifact($tracker, $field_data, $user, '');
+        return $this->artifact_factory->createArtifact($tracker, $field_data, $user, '');
     }
 }
