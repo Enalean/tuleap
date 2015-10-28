@@ -178,8 +178,6 @@ $wgImageMagickConvertCommand = "/usr/bin/convert";
 $wgLocalInterwiki            = $wgSitename;
 $wgShowExceptionDetails      = true ;
 
-// disable language selection
-$wgHiddenPrefs[] = 'language';
 $user            = UserManager::instance()->getCurrentUser();
 
 $used_language = $language_manager->getUsedLanguageForProject($group);
