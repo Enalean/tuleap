@@ -261,7 +261,7 @@
                                 updateTimeInfo('archive', dropped_item);
                             },
                             reload
-                        );
+                    );
                 }
             }
 
@@ -278,12 +278,8 @@
                                 updateTimeInfo(column_id, dropped_item);
                             },
                             reload
-                        );
+                    );
                 }
-            }
-
-            function updateTimeInfo(column_id, dropped_item) {
-                dropped_item.timeinfo[column_id] = new Date();
             }
 
             function isDroppedInSameColumn(event) {
@@ -399,8 +395,8 @@
 
         function loadDeferedColumns() {
             if (kanban.columns.every(function (column){
-                return column.is_defered || ! column.loading_items;
-            })) {
+                    return column.is_defered || ! column.loading_items;
+                })) {
                 kanban.columns.forEach(function (column) {
                     if (column.is_defered) {
                         column.is_defered = false;
@@ -459,10 +455,10 @@
         function setWipLimitForColumn(column) {
             column.saving_wip = true;
             return KanbanService.setWipLimitForColumn(column.id, kanban.id, column.limit_input).then(function(data) {
-                column.limit       = column.limit_input;
-                column.wip_in_edit = false;
-                column.saving_wip  = false;
-            },
+                    column.limit       = column.limit_input;
+                    column.wip_in_edit = false;
+                    column.saving_wip  = false;
+                },
                 reload
             );
         }
@@ -670,34 +666,103 @@
             return index;
         }
 
-        function listenNodeJSServer() {
-            if(checkServerNodeJSExist()) {
+        function getContentColumnByItemInColumn(data, item) {
+            var content;
+            if (data.in_column === 'archive') {
+                content = self.archive.content;
+            } else if (data.in_column === 'backlog') {
+                content = self.backlog.content;
+            } else {
+                content = getColumn(item.in_column).content;
+            }
+            return content;
+        }
 
+        function findItemInColumnById(item_id) {
+            var item;
+            self.board.columns.forEach(function(column) {
+                var item_found = _.find(column.content, function (item) {
+                    return item.id === item_id;
+                });
+
+                if(item_found) {
+                    item = item_found;
+                    return;
+                }
+            });
+
+            if (! item) {
+                item = _.find(self.backlog.content, function (item) {
+                    return item.id === item_id;
+                });
+            }
+
+            if (! item) {
+                item = _.find(self.archive.content, function (item) {
+                    return item.id === item_id;
+                });
+            }
+
+            return item;
+        }
+
+        function replaceCard(compared_to, direction, content, item) {
+            var compared_to_index = _.findIndex(content, {
+                id: compared_to
+            });
+            if (direction === 'after') {
+                content.splice(compared_to_index + 1, 0, item);
+            } else {
+                content.splice(compared_to_index, 0, item);
+            }
+        }
+
+        function checkServerNodeJSExist() {
+            return SocketFactory.hasOwnProperty('on');
+        }
+
+        function updateTimeInfo(column_id, dropped_item) {
+            dropped_item.timeinfo[column_id] = new Date();
+        }
+
+        function removeItemInColumn(item_id, column) {
+            var column_remove = getColumn(column);
+            _.remove(column_remove.content, {
+                id: item_id
+            });
+        }
+
+        function updateItemColumn(item, column) {
+            item.in_column = column;
+        }
+
+        function listenNodeJSServer() {
+            if (checkServerNodeJSExist()) {
                 /**
                  * Data received looks like:
                  *  {
-             *      id: 79584,
-             *      item_name: 'kanbantask',
-             *      label: 'Documentation API',
-             *      color: 'inca_silver',
-             *      card_fields: [
-             *          {
-             *              field_id: 15261,
-             *              type: 'msb',
-             *              label: 'Assigned to',
-             *              values: [Object],
-             *              bind_value_ids: [Object]
-             *          }
-             *      ],
-             *      timeinfo: {
-             *                  kanban: null,
-             *                  archive: null
-             *                },
-             *      in_column: 'backlog'
-             *  }
+                 *      id: 79584,
+                 *      item_name: 'kanbantask',
+                 *      label: 'Documentation API',
+                 *      color: 'inca_silver',
+                 *      card_fields: [
+                 *          {
+                 *              field_id: 15261,
+                 *              type: 'msb',
+                 *              label: 'Assigned to',
+                 *              values: [Object],
+                 *              bind_value_ids: [Object]
+                 *          }
+                 *      ],
+                 *      timeinfo: {
+                 *                  kanban: null,
+                 *                  archive: null
+                 *                },
+                 *      in_column: 'backlog'
+                 *  }
                  *
                  */
-                SocketFactory.on('kanban_item:create', function(data) {
+                SocketFactory.on('kanban_item:create', function (data) {
                     _.extend(data, {
                         updating: false
                     });
@@ -705,11 +770,50 @@
                     var column = getColumn(data.in_column);
                     column.content.push(data);
                 });
-            }
-        }
 
-        function checkServerNodeJSExist() {
-            return SocketFactory.hasOwnProperty('on');
+                /**
+                 * Data received looks like:
+                 *  {
+                 *      order: {
+                 *          ids: [79213],
+                 *          direction: 'before',
+                 *          compared_to: 79790
+                 *      },
+                 *      add: {
+                 *          ids: [79213]
+                 *      },
+                 *      in_column: 6816
+                 *  }
+                 *
+                 */
+                SocketFactory.on('kanban_item:move', function (data) {
+                    var ids = data.add ? data.add.ids : data.order.ids;
+                    ids.forEach(function (id) {
+                        var item = findItemInColumnById(id);
+
+                        _.extend(item, {
+                            updating: false
+                        });
+
+                        removeItemInColumn(item.id, item.in_column);
+
+                        if(item.in_column !== data.in_column) {
+                            if(item.in_column === 'backlog') {
+                                updateTimeInfo('kanban', item);
+                            }
+                            updateTimeInfo(data.in_column, item);
+                            updateItemColumn(item, data.in_column);
+                        }
+
+                        var content = getContentColumnByItemInColumn(data, item);
+                        if(data.order) {
+                            replaceCard(data.order.compared_to, data.order.direction, content, item);
+                        } else {
+                            content.push(item);
+                        }
+                    });
+                });
+            }
         }
     }
 })();
