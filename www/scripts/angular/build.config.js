@@ -88,6 +88,7 @@ module.exports = {
       'vendor/angular-ui-utils/unique.min.js',
       'vendor/angular-cookies/angular-cookies.min.js',
       'vendor/d3/d3.min.js',
+      'vendor/ng-scrollbar/dist/ng-scrollbar.min.js',
       'vendor/angular-ckeditor/angular-ckeditor.js',
       'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'vendor/angular-filter/dist/angular-filter.min.js',
@@ -95,6 +96,7 @@ module.exports = {
       'vendor/angular-ui-select/dist/select.js'
     ],
     css: [
+      'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
       'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
       'vendor/angular-ui-select/dist/select.css',
       'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'

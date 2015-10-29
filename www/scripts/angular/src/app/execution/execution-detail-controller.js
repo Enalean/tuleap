@@ -63,7 +63,8 @@
         }
 
         function showEditArtifactModal(definition) {
-            var old_category = $scope.execution.definition.category;
+            var old_category    = $scope.execution.definition.category;
+            var current_user_id = SharedPropertiesService.getCurrentUser().id;
 
             var callback = function(artifact_id) {
                 var executions = ExecutionService.getExecutionsByDefinitionId(artifact_id);
@@ -84,7 +85,12 @@
             };
 
             DefinitionService.getArtifactById(definition.id).then(function(artifact) {
-                NewTuleapArtifactModalService.showEdition(artifact.tracker.id, artifact.id, "inca_silver", undefined, callback);
+                NewTuleapArtifactModalService.showEdition(
+                    current_user_id,
+                    artifact.tracker.id,
+                    artifact.id,
+                    callback
+                );
             });
 
             TuleapArtifactModalLoading.loading.is_loading = true;

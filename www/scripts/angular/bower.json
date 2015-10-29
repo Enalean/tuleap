@@ -20,7 +20,7 @@
     "ngSocket": "~0.2.1",
     "angular-socket-io": "~0.6.0",
     "angular-ui-utils": "bower-unique",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#ef2d4d70d7962cc13e65b255a09820872dadaf4f"
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#d3630409a1515bbaeee4c7eb37053f03575d9b3d"
   },
   "resolutions": {
     "angular": "1.3.11",
