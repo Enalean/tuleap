@@ -295,6 +295,9 @@ class Docman_ItemFactory {
         return $wiki_page;
     }
 
+    /**
+     * @return Docman_Item
+     */
     function &getItemFromDb($id, $params = array()) {
         $_id = (int) $id;
         $dao =& $this->_getItemDao();

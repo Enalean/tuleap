@@ -30,6 +30,7 @@ require_once 'constants.php';
 class DocmanPlugin extends Plugin {
 
     const TRUNCATED_SERVICE_NAME = 'Documents';
+    const SYSTEM_NATURE_NAME     = 'document';
 
     /**
      * Store docman root items indexed by groupId
@@ -99,6 +100,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
+
+        $this->addHook(Event::GET_REFERENCE);
     }
 
     public function getHooksAndCallbacks() {
@@ -915,5 +918,36 @@ class DocmanPlugin extends Plugin {
      */
     private function getMailBuilder() {
         return new MailBuilder(TemplateRendererFactory::build());
+    }
+
+    public function get_reference($params) {
+        $keyword       = $params['keyword'];
+        $reference_row = $this->getSystemDocmanReferenceByKeyword($keyword);
+
+        if ($reference_row) {
+            $docman_element_id   = $params['value'];
+            $docman_item_factory = new Docman_ItemFactory();
+            $reference_factory   = new Docman_ReferenceFactory();
+
+            $docman_item = $docman_item_factory->getItemFromDb($docman_element_id);
+
+            $reference = $reference_factory->getInstanceFromRowAndProjectId(
+                $reference_row,
+                $docman_item->getGroupId()
+            );
+
+            $params['reference'] = $reference;
+        }
+    }
+
+    private function getSystemDocmanReferenceByKeyword($keyword) {
+        $dao    = new ReferenceDao();
+        $result = $dao->searchSystemReferenceByNatureAndKeyword($keyword, self::SYSTEM_NATURE_NAME);
+
+        if (! $result || $result->rowCount() < 1) {
+            return null;
+        }
+
+        return $result->getRow();
     }
 }
