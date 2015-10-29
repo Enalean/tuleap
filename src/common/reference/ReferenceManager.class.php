@@ -872,6 +872,15 @@ class ReferenceManager {
                 }
 
                 break;
+            case self::REFERENCE_NATURE_NEWS:
+                $news_dao          = new NewsBytesDao();
+                $news_group_id_row = $news_dao->searchByForumId($value)->getRow();
+
+                if ($news_group_id_row) {
+                    $ref_gid = $news_group_id_row['group_id'];
+                }
+
+                break;
         }
 
         return $ref_gid;
