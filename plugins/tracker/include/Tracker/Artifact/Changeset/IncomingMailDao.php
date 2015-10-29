@@ -29,4 +29,17 @@ class Tracker_Artifact_Changeset_IncomingMailDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function searchByArtifactId($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT M.*
+                FROM tracker_changeset_incomingmail AS M
+                    INNER JOIN tracker_changeset AS C ON (
+                        C.id = M.changeset_id
+                        AND C.artifact_id = $artifact_id
+                    )";
+
+        return $this->retrieve($sql);
+    }
 }
