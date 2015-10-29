@@ -20,6 +20,7 @@
 
 class Git_HTTP_CommandFactory {
 
+
     /**
      * @var Logger
      */
@@ -40,11 +41,17 @@ class Git_HTTP_CommandFactory {
      */
     private $repository_factory;
 
-    public function __construct(GitRepositoryFactory $repository_factory, User_LoginManager $login_manager, PermissionsManager $permissions_manager, Logger $logger) {
+    /**
+     * @var URLVerification
+     */
+    private $url_verification;
+
+    public function __construct(GitRepositoryFactory $repository_factory, User_LoginManager $login_manager, PermissionsManager $permissions_manager, URLVerification $url_verification, Logger $logger) {
         $this->repository_factory  = $repository_factory;
         $this->login_manager       = $login_manager;
         $this->permissions_manager = $permissions_manager;
         $this->logger              = $logger;
+        $this->url_verification    = $url_verification;
     }
 
     public function getCommandForRepository(GitRepository $repository, Git_URL $url) {
@@ -70,7 +77,7 @@ class Git_HTTP_CommandFactory {
     }
 
     private function needAuthentication(GitRepository $repository, Git_URL $url) {
-        return ! ForgeConfig::areAnonymousAllowed() ||
+        return $this->url_verification->doesPlatformRequireLogin() ||
             $this->isGitPush($url) ||
             ! $this->canBeReadByAnonymous($repository) ||
             $this->isInPrivateProject($repository);

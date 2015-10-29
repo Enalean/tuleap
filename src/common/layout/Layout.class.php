@@ -2090,7 +2090,7 @@ class Layout extends Response {
                 }
             }
 
-             $permissions_overrider = new PermissionsOverrider_PermissionsOverriderManager();
+             $permissions_overrider = PermissionsOverrider_PermissionsOverriderManager::instance();
 
             if (! $this->isProjectSuperPublic($group_id)
                     && $this->restrictedMemberIsNotProjectMember($user, $group_id)

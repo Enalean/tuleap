@@ -125,9 +125,8 @@ class ForgeConfig {
     }
 
     public static function areAnonymousAllowed() {
-        $permissions_overrider_manager = new PermissionsOverrider_PermissionsOverriderManager();
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::ANONYMOUS ||
-                $permissions_overrider_manager->doesOverriderForceUsageOfAnonymous();
+                PermissionsOverrider_PermissionsOverriderManager::instance()->doesOverriderForceUsageOfAnonymous();
     }
 
     public static function areRestrictedUsersAllowed() {
