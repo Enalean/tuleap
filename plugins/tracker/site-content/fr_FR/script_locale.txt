@@ -71,8 +71,10 @@ codendi.locales['tracker_report'] = {
     delete_report: 'Etes-vous sûr de vouloir supprimer ce rapport ?'
 };
 codendi.locales['tracker_email'] = {
-    title:       'Créer un artéfact par courriel',
-    description: 'Vous pouvez envoyer un courriel à l\'addresse suivante afin de créer un artéfact :',
-    copy:        'Copier dans le presse-papier',
-    copied:      'L\'addresse a été copiée dans votre presse-papier'
+    title:             'Créer un artéfact par courriel',
+    description:       'Vous pouvez envoyer un courriel à l\'addresse suivante afin de créer un artéfact :',
+    title_reply:       'Répondre à un artéfact par courriel',
+    description_reply: 'Vous pouvez envoyer un courriel à l\'addresse suivante afin de répondre à cet artéfact :',
+    copy:              'Copier dans le presse-papier',
+    copied:            'L\'addresse a été copiée dans votre presse-papier'
 };

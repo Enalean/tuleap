@@ -72,8 +72,10 @@ codendi.locales['tracker_report'] = {
     delete_report: 'Are you sure that you want to delete this report ?'
 };
 codendi.locales['tracker_email'] = {
-    title:       'Submit artifact by mail',
-    description: 'You can send an email to the following email address in order to create an artifact:',
-    copy:        'Copy to clipboard',
-    copied:      'The email has been copied to clipboard'
+    title:             'Submit artifact by mail',
+    description:       'You can send an email to the following email address in order to create an artifact:',
+    title_reply:       'Reply artifact by mail',
+    description_reply: 'You can send an email to the following email address in order to reply to this artifact:',
+    copy:              'Copy to clipboard',
+    copied:            'The email has been copied to clipboard'
 };
