@@ -54,6 +54,8 @@ class FRSReleaseFactory {
 	 * @param $group_id
 	 * @param $package_id
 	 * @param $extraFlags
+         *
+         * @return FRSRelease
 	 */
 	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
 		$_id = (int) $release_id;

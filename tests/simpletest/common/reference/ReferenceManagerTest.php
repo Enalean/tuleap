@@ -78,6 +78,7 @@ class ReferenceManagerTest extends TuleapTestCase {
     function testExtractReference() {
         $dao = new MockReferenceDao($this);
         $dar = new MockDataAccessResult($this);
+
         $dao->setReturnReference('searchActiveByGroupID', $dar, array(100));
         $dar->setReturnValueAt(0, 'getRow', array(
             'id' => 1,

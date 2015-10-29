@@ -69,6 +69,7 @@ class Project extends Group implements PFO_Project {
     const STATUS_HOLDING = 'H';
 
     const SITE_NEWS_PROJECT_ID = 46;
+    const ADMIN_PROJECT_ID     = 100;
 
     const ACCESS_PRIVATE             = 'private';
     const ACCESS_PUBLIC_UNRESTRICTED = 'unrestricted';

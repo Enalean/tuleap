@@ -783,40 +783,94 @@ class ReferenceManager {
 
     private function getReferenceFromMatch($match) {
         // Analyse match
-        $key   = strtolower($match['key']);
-        $value = $match['value'];
+        $keyword = strtolower($match['key']);
+        $value   = $match['value'];
 
-        if ($this->isAnArtifactKeyword($key)) {
+        if ($this->isAnArtifactKeyword($keyword)) {
             $ref_gid = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
         }
+
+        $ref_gid = $this->getProjectIdForReference($match, $keyword, $value);
+
+        return $this->getReference($keyword, $value, $ref_gid);
+    }
+
+    private function getProjectIdForReference($match, $keyword, $value) {
+        $ref_gid = $this->getProjectIdFromMatch($match);
+
+        if (! $ref_gid) {
+            $ref_gid = $this->getProjectIdForSystemReference($keyword, $value);
+        }
+
+        if (! $ref_gid) {
+            $ref_gid = $this->getCurrentProjectId();
+        }
+
+        if (! $ref_gid) {
+            $ref_gid = Project::ADMIN_PROJECT_ID;
+        }
+
+        return $ref_gid;
+    }
+
+    private function getProjectIdFromMatch($match) {
+        $ref_gid = null;
 
         if ($match['project_name']) {
             // A target project name or ID was specified
             // remove trailing colon
-            $target_project=substr($match['project_name'], 0, strlen($match['project_name']) - 1);
+            $target_project = substr($match['project_name'], 0, strlen($match['project_name']) - 1);
             // id or name?
             if (is_numeric($target_project)) {
                 $ref_gid = $target_project;
             } else {
                 $ref_gid = $this->getProjectIdFromName($target_project);
             }
-        } else {
-            if ($this->tmpGroupIdForCallbackFunction) {
-                $ref_gid = $this->tmpGroupIdForCallbackFunction;
-            } else {
-                if (array_key_exists('group_id', $GLOBALS)) {
-                    $ref_gid=$GLOBALS['group_id']; // might not be set
-                } else {
-                    $ref_gid = '';
-                }
+        }
+
+        return $ref_gid;
+    }
+
+    private function getProjectIdForSystemReference($keyword, $value) {
+        $ref_gid = null;
+        $nature  = $this->getSystemReferenceNatureByKeyword($keyword);
+
+        if ($nature === FRSRelease::REFERENCE_NATURE) {
+            $release_factory = new FRSReleaseFactory();
+            $release         = $release_factory->getFRSReleaseFromDb($value);
+
+            if ($release) {
+                $ref_gid = $release->getProject()->getID();
             }
         }
 
-        if ($ref_gid == "") {
-            $ref_gid = 100; // use system references only
+        return $ref_gid;
+    }
+
+    /**
+     * @return string
+     */
+    private function getSystemReferenceNatureByKeyword($keyword) {
+        $dao                         = $this->_getReferenceDao();
+        $system_reference_nature_row = $dao->getSystemReferenceNatureByKeyword($keyword);
+
+        if (! $system_reference_nature_row) {
+            return null;
         }
 
-        return $this->getReference($key, $value, $ref_gid);
+        return $system_reference_nature_row['nature'];
+    }
+
+    private function getCurrentProjectId() {
+        $ref_gid = null;
+
+        if ($this->tmpGroupIdForCallbackFunction) {
+            $ref_gid = $this->tmpGroupIdForCallbackFunction;
+        } elseif (array_key_exists('group_id', $GLOBALS)) {
+            $ref_gid = $GLOBALS['group_id'];
+        }
+
+        return $ref_gid;
     }
 
     // Get a Reference object from a matching pattern
@@ -862,6 +916,9 @@ class ReferenceManager {
         return $reference;
     }
 
+    /**
+     * @return Reference
+     */
     function _getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
         $this->_initProjectReferences($group_id);
         $refs = $this->activeReferencesByProject[$group_id];
@@ -869,11 +926,13 @@ class ReferenceManager {
         // wiki #sub/page/2 should extract a link to the version 2 of the wikipage "sub/page"
         // References contains a "num_args" (args separated by '/') nevertheless
         // we don't know in advance the number of sub pages
-        if (isset($refs["$keyword"]))
-            if (isset($refs["$keyword"][$num_args]))
+        if (isset($refs["$keyword"])) {
+            if (isset($refs["$keyword"][$num_args])) {
                 return $refs["$keyword"][$num_args];
-        $ref = null;
-        return $ref;
+            }
+        }
+
+        return null;
     }
 
     /**
