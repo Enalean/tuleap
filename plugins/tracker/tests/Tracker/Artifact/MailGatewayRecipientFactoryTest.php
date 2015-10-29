@@ -57,7 +57,7 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
 
     public function itThrowsAnAxceptionWhenArtifactDoesNotExist() {
         $email = '<000000-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
-        $this->expectException('Tracker_Artifact_MailGateway_RecipientArtifactDoesNotExistException');
+        $this->expectException('Tracker_Artifact_MailGateway_ArtifactDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 

@@ -29,9 +29,13 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
      */
     private $tracker_factory;
 
-    public function __construct(UserManager $user_manager, TrackerFactory $tracker_factory) {
-        $this->user_manager    = $user_manager;
-        $this->tracker_factory = $tracker_factory;
+    private $artifact_factory;
+
+    public function __construct(UserManager $user_manager, TrackerFactory $tracker_factory,
+                                    Tracker_ArtifactFactory $artifact_factory) {
+        $this->user_manager     = $user_manager;
+        $this->tracker_factory  = $tracker_factory;
+        $this->artifact_factory = $artifact_factory;
     }
 
     /**
@@ -40,17 +44,23 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     public function build(array $raw_mail) {
         $subject        = $raw_mail['headers']['subject'];
         $body           = $raw_mail['body'];
-        $is_a_followup  = false;
         $user           = $this->getUserFromMailHeader($raw_mail['headers']['from']);
-        $tracker        = $this->getTrackerFromMailHeader($raw_mail['headers']['to']);
+        $is_a_followup  = $this->isAFollowUp($raw_mail['headers']['to']);
+        if ($is_a_followup) {
+            $artifact   = $this->getArtifactFromMailHeader($raw_mail['headers']['to']);
+            $tracker    = $artifact->getTracker();
+        } else {
+            $tracker    = $this->getTrackerFromMailHeader($raw_mail['headers']['to']);
+            $artifact   = null;
+        }
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage(
             $raw_mail['headers'],
             $subject,
             $body,
-            $is_a_followup,
             $user,
-            $tracker
+            $tracker,
+            $artifact
         );
 
         return $incoming_message;
@@ -69,10 +79,11 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
         return $users[0];
     }
 
+    /**
+     * @return Tracker
+     */
     private function getTrackerFromMailHeader($mail_header) {
-        $mail_receiver = $this->extractMailFromHeader($mail_header);
-        $mail_splitted = explode('@', $mail_receiver);
-        $mail_userpart = explode('+', $mail_splitted[0]);
+        $mail_userpart = $this->extractMailUserParts($mail_header);
 
         if (count($mail_userpart) !== 2) {
             throw new Tracker_Artifact_MailGateway_TrackerIdMissingException();
@@ -86,6 +97,44 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
         }
 
         return $tracker;
+    }
+
+    /**
+     * @return Tracker_Artifact
+     */
+    private function getArtifactFromMailHeader($mail_header) {
+        $mail_userpart = $this->extractMailUserParts($mail_header);
+
+        if (count($mail_userpart) !== 2) {
+            throw new Tracker_Artifact_MailGateway_ArtifactIdMissingException();
+        }
+
+        $artifact_id = (int)$mail_userpart[1];
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+
+        if ($artifact === null) {
+            throw new Tracker_Artifact_MailGateway_ArtifactDoesNotExistException();
+        }
+
+        return $artifact;
+    }
+
+    /**
+     * @return array
+     */
+    private function extractMailUserParts($mail_header) {
+        $mail_receiver = $this->extractMailFromHeader($mail_header);
+        $mail_splitted = explode('@', $mail_receiver);
+        $mail_userpart = explode('+', $mail_splitted[0]);
+
+        return $mail_userpart;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAFollowUp($mail_header) {
+        return strpos($mail_header, trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) !== false;
     }
 
     private function extractMailFromHeader($mail_header) {

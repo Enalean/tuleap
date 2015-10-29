@@ -82,7 +82,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
     /**
      * @param string $email the email message id
      *
-     * @throws Tracker_Artifact_MailGateway_RecipientArtifactDoesNotExistException
+     * @throws Tracker_Artifact_MailGateway_ArtifactDoesNotExistException
      * @throws Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException
      * @throws Tracker_Artifact_MailGateway_RecipientInvalidHashException
      *
@@ -133,7 +133,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
     private function getArtifact($artifact_id) {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (! $artifact) {
-            throw new Tracker_Artifact_MailGateway_RecipientArtifactDoesNotExistException();
+            throw new Tracker_Artifact_MailGateway_ArtifactDoesNotExistException();
         }
 
         return $artifact;

@@ -26,10 +26,11 @@ require_once 'autoload.php';
  */
 class trackerPlugin extends Plugin {
 
-    const EMAILGATEWAY_TOKEN_USERNAME     = 'forge__artifacts';
-    const EMAILGATEWAY_INSECURE_USERNAME  = 'forge__tracker';
-    const SERVICE_SHORTNAME               = 'plugin_tracker';
-    const TRUNCATED_SERVICE_NAME          = 'Trackers';
+    const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
+    const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
+    const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
+    const SERVICE_SHORTNAME                       = 'plugin_tracker';
+    const TRUNCATED_SERVICE_NAME                  = 'Trackers';
 
 
     public function __construct($id) {
@@ -876,11 +877,12 @@ class trackerPlugin extends Plugin {
         $command = "sudo -u codendiadm $script";
 
         if ($config->isTokenBasedEmailgatewayEnabled() || $config->isInsecureEmailgatewayEnabled()) {
-            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_TOKEN_USERNAME, "\"|$command\"");
+            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE, "\"|$command\"");
         }
 
         if ($config->isInsecureEmailgatewayEnabled()) {
-            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_USERNAME, "\"|$command\"");
+            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION, "\"|$command\"");
+            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE, "\"|$command\"");
         }
 
     }
