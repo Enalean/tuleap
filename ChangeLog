@@ -9,6 +9,7 @@ Version 8.8 (Not released yet)
 	* story #8289: Take into account the project_members group
 	* request #8525: Site admin should be warned about lack of forgeupgrade
 	* story #8289: enhance the REST route documentation (project members rules)
+	* request #8443: System keywords don't generate the right cross reference when cross projects
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
@@ -17,7 +18,6 @@ Version 8.8 (Not released yet)
 	* request #8333: Fully remove people skills feature
 	* Fix request #8333: Fully remove people skills feature
 	* request #8520: Packages build is broken due to some changes in Docker image
-	* request #8443: System keywords don't generate the right cross reference when cross projects
 
 	== Plugins ==
 	* git: 4.91
@@ -26,7 +26,7 @@ Version 8.8 (Not released yet)
 	* statistics: 0.52
 	* mediawiki: 0.97
 	* IM: 1.5.33
-	* docman: 2.26.86
+	* docman: 2.26.87
 	* agiledashboard: 1.291
 	* pluginsadministration: 1.13
 

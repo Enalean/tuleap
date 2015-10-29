@@ -1,3 +1,6 @@
+Version 2.26.87 - Tuleap 8.8
+    * request #8443: Take into account docman system references
+
 Version 2.26.86 - Tuleap 8.8
     * request #8333: Fully remove people skills feature
 
