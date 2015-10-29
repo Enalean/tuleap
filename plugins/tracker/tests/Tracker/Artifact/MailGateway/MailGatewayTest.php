@@ -20,54 +20,69 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
+class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
 
-    private $user;
-    private $mailgateway;
-    private $artifact;
-    private $raw_email     = '...';
-    private $body          = 'justaucorps';
-    private $stripped_body = 'stripped justaucorps';
+    protected $user;
+    protected $mailgateway;
+    protected $artifact;
+    protected $raw_email     = '...';
+    protected $body          = 'justaucorps';
+    protected $stripped_body = 'stripped justaucorps';
+    protected $incoming_mail_dao;
+    protected $tracker_config;
+    protected $tracker;
+    protected $incoming_message;
+    protected $artifact_factory;
 
     public function setUp() {
         parent::setUp();
         $this->artifact           = mock('Tracker_Artifact');
         $this->user               = mock('PFUser');
-        $tracker                  = mock('Tracker');
+        $this->tracker            = mock('Tracker');
         $incoming_message_factory = mock('Tracker_Artifact_MailGateway_IncomingMessageFactory');
-        $artifact_factory         = mock('Tracker_ArtifactFactory');
+        $this->artifact_factory   = mock('Tracker_ArtifactFactory');
         $parser                   = mock('Tracker_Artifact_MailGateway_Parser');
-        $tracker_config           = mock('TrackerPluginConfig');
+        $this->tracker_config     = mock('TrackerPluginConfig');
         $logger                   = mock('Logger');
         $notifier                 = mock('Tracker_Artifact_MailGateway_Notifier');
+        $this->incoming_mail_dao  = mock('Tracker_Artifact_Changeset_IncomingMailDao');
 
         $citation_stripper = stub('Tracker_Artifact_MailGateway_CitationStripper')
             ->stripText($this->body)
             ->returns($this->stripped_body);
 
-        $tracker->setReturnValue('isEmailgatewayEnabled', true);
+        stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
 
-        $incoming_message = mock('Tracker_Artifact_MailGateway_IncomingMessage');
-        $incoming_message->setReturnValue('isAFollowUp', true);
-        $incoming_message->setReturnValue('getUser', $this->user);
-        $incoming_message->setReturnValue('getArtifact', $this->artifact);
-        $incoming_message->setReturnValue('getTracker', $tracker);
-        $incoming_message->setReturnValue('getBody', $this->body);
+        $this->incoming_message = mock('Tracker_Artifact_MailGateway_IncomingMessage');
+        stub($this->incoming_message)->getUser()->returns($this->user);
+        stub($this->incoming_message)->getArtifact()->returns($this->artifact);
+        stub($this->incoming_message)->getTracker()->returns($this->tracker);
+        stub($this->incoming_message)->getBody()->returns($this->body);
 
-        $incoming_message_factory->setReturnValue('build', $incoming_message);
-
-        $tracker_config->setReturnValue('isInsecureEmailgatewayEnabled', false);
-        $tracker_config->setReturnValue('isTokenBasedEmailgatewayEnabled', true);
+        stub($incoming_message_factory)->build()->returns($this->incoming_message);
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_MailGateway(
             $parser,
             $incoming_message_factory,
             $citation_stripper,
             $notifier,
-            $artifact_factory,
-            $tracker_config,
+            $this->incoming_mail_dao,
+            $this->artifact_factory,
+            $this->tracker_config,
             $logger
         );
+    }
+}
+
+class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->incoming_message)->isAFollowUp()->returns(true);
+
+        stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
+        stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(true);
     }
 
     public function itCreatesANewChangeset() {
@@ -82,6 +97,51 @@ class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
         stub($this->artifact)->userCanUpdate($this->user)->returns(false);
 
         expect($this->artifact)->createNewChangeset()->never();
+
+        $this->mailgateway->process($this->raw_email);
+    }
+
+    public function itLinksRawEmailToCreatedChangeset() {
+        $changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(666);
+        stub($this->artifact)->userCanUpdate($this->user)->returns(true);
+        stub($this->artifact)->createNewChangeset()->returns($changeset);
+
+        expect($this->incoming_mail_dao)->save(666, $this->raw_email)->once();
+
+        $this->mailgateway->process($this->raw_email);
+    }
+}
+
+class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
+
+    private $changeset_id = 666;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
+        stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
+
+        $title_field       = aStringField()->build();
+        $description_field = aTextField()->build();
+
+        stub($this->tracker)->getTitleField()->returns($title_field);
+        stub($this->tracker)->getDescriptionField()->returns($description_field);
+        stub($this->tracker)->getFormElementFields()->returns(array($title_field, $description_field));
+
+        $this->changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(666);
+    }
+
+    public function itLinksRawEmailToCreatedChangeset() {
+        $artifact = anArtifact()
+            ->withChangesets(array($this->changeset))
+            ->withTracker($this->tracker)
+            ->build();
+        stub($this->incoming_message)->isAFollowUp()->returns(false);
+        stub($this->artifact_factory)->createArtifact()->returns($artifact);
+        stub($this->tracker)->userCanSubmitArtifact()->returns(true);
+
+        expect($this->incoming_mail_dao)->save(666, $this->raw_email)->once();
 
         $this->mailgateway->process($this->raw_email);
     }

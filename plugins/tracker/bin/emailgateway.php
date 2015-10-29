@@ -46,6 +46,7 @@ $incoming_message_factory = new Tracker_Artifact_MailGateway_IncomingMessageFact
     $incoming_message_token_builder,
     $incoming_message_insecure_builder
 );
+$incoming_mail_dao = new Tracker_Artifact_Changeset_IncomingMailDao();
 
 $parser            = new Tracker_Artifact_MailGateway_Parser();
 $citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
@@ -55,6 +56,7 @@ $mailgateway       = new Tracker_Artifact_MailGateway_MailGateway(
     $incoming_message_factory,
     $citation_stripper,
     $notifier,
+    $incoming_mail_dao,
     $artifact_factory,
     $tracker_config,
     $logger

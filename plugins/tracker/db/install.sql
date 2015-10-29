@@ -281,6 +281,12 @@ CREATE TABLE tracker_changeset_comment(
     INDEX changeset_idx(changeset_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_changeset_incomingmail;
+CREATE TABLE tracker_changeset_incomingmail(
+    changeset_id INT(11) NOT NULL PRIMARY KEY,
+    raw_mail TEXT NOT NULL
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_changeset_value;
 CREATE TABLE tracker_changeset_value(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
