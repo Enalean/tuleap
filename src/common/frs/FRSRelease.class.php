@@ -25,7 +25,8 @@ require_once('common/frs/FRSFileFactory.class.php');
 
 
 class FRSRelease extends Error {
-    const PERM_READ      = 'RELEASE_READ';
+    const PERM_READ        = 'RELEASE_READ';
+    const REFERENCE_NATURE = 'release';
 
     const STATUS_ACTIVE  = 1;
     const STATUS_DELETED = 2;
