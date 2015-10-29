@@ -321,7 +321,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}, libxslt
+Requires: %{PKG_NAME}, libxslt, %{php_base}-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 

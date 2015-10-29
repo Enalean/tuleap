@@ -42,6 +42,7 @@ class SystemEventManager {
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
             Event::SVN_UPDATE_HOOKS,
+            Event::UPDATE_ALIASES,
             'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
@@ -249,6 +250,9 @@ class SystemEventManager {
                 $params['group_id'],
                 SystemEvent::PRIORITY_MEDIUM
             );
+            break;
+        case Event::UPDATE_ALIASES:
+            $this->createEvent(SystemEvent::TYPE_UPDATE_ALIASES, '', SystemEvent::PRIORITY_HIGH);
             break;
 
         default:

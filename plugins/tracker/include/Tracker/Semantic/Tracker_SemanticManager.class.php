@@ -23,9 +23,10 @@
 
 class Tracker_SemanticManager {
 
+    /** @var Tracker */
     protected $tracker;
 
-    public function __construct($tracker) {
+    public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
     }
 
@@ -41,6 +42,7 @@ class Tracker_SemanticManager {
 
     public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
+        $this->tracker->displayWarningArtifactByEmailSemantic();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
 
         echo '<p>';

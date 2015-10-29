@@ -26,9 +26,10 @@ require_once 'autoload.php';
  */
 class trackerPlugin extends Plugin {
 
-    const EMAILGATEWAY_USERNAME  = 'forge__artifacts';
-    const SERVICE_SHORTNAME      = 'plugin_tracker';
-    const TRUNCATED_SERVICE_NAME = 'Trackers';
+    const EMAILGATEWAY_TOKEN_USERNAME     = 'forge__artifacts';
+    const EMAILGATEWAY_INSECURE_USERNAME  = 'forge__tracker';
+    const SERVICE_SHORTNAME               = 'plugin_tracker';
+    const TRUNCATED_SERVICE_NAME          = 'Trackers';
 
 
     public function __construct($id) {
@@ -869,16 +870,19 @@ class trackerPlugin extends Plugin {
             new TrackerPluginConfigDao()
         );
 
-        if (! $config->isTokenBasedEmailgatewayEnabled()) {
-            return;
-        }
-
         $src_dir  = ForgeConfig::get('codendi_dir');
         $script   = $src_dir .'/plugins/tracker/bin/emailgateway-wrapper.sh';
 
         $command = "sudo -u codendiadm $script";
 
-        $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_USERNAME, "\"|$command\"");
+        if ($config->isTokenBasedEmailgatewayEnabled() || $config->isInsecureEmailgatewayEnabled()) {
+            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_TOKEN_USERNAME, "\"|$command\"");
+        }
+
+        if ($config->isInsecureEmailgatewayEnabled()) {
+            $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_USERNAME, "\"|$command\"");
+        }
+
     }
     public function get_projectid_from_url($params) {
         $url = $params['url'];

@@ -254,7 +254,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: tuleap, libxslt
+Requires: tuleap, libxslt, %{php_base}-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -591,6 +591,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 %{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
 
 # Plugin mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
@@ -1094,6 +1095,7 @@ fi
 %{APP_DIR}/plugins/tracker
 %dir %{APP_DATA_DIR}/tracker
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker
 
 %files plugin-graphontrackers
 %defattr(-,%{APP_USER},%{APP_USER},-)

@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,13 +31,32 @@ fclose($fd);
 $logger = new BackendLogger();
 $logger->info("Entering email gateway");
 
-$recipient_factory = Tracker_Artifact_MailGateway_RecipientFactory::build();
+$recipient_factory                 = Tracker_Artifact_MailGateway_RecipientFactory::build();
+$tracker_config                    = new TrackerPluginConfig(new TrackerPluginConfigDao());
+$user_manager                      = UserManager::instance();
+$tracker_factory                   = TrackerFactory::instance();
+$artifact_factory                  = Tracker_ArtifactFactory::instance();
+$incoming_message_token_builder    = new Tracker_Artifact_IncomingMessageTokenBuilder($recipient_factory);
+$incoming_message_insecure_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
+    $user_manager,
+    $tracker_factory
+);
+$incoming_message_factory = new Tracker_Artifact_MailGateway_IncomingMessageFactory(
+    $tracker_config,
+    $incoming_message_token_builder,
+    $incoming_message_insecure_builder
+);
 
-$parser           = new Tracker_Artifact_MailGateway_Parser($recipient_factory);
-$citation_sripper = new Tracker_Artifact_MailGateway_CitationStripper();
-$mailgateway      = new Tracker_Artifact_MailGateway_MailGateway(
+$parser            = new Tracker_Artifact_MailGateway_Parser();
+$citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
+$notifier          = new Tracker_Artifact_MailGateway_Notifier();
+$mailgateway       = new Tracker_Artifact_MailGateway_MailGateway(
     $parser,
-    $citation_sripper,
+    $incoming_message_factory,
+    $citation_stripper,
+    $notifier,
+    $artifact_factory,
+    $tracker_config,
     $logger
 );
 

@@ -18,13 +18,6 @@ A powerful tracking system with extensive configuration capabilities to manage a
  - **Import-export** data from or to third tool
  - Keep up-to-date with **email notification alerts**
 
-Screenshots
------------
-
-![Screenshot of an artifact](http://www.tuleap.com/sites/default/files/styles/x-large/public/artifacts-traceability.png)
-
-![Screenshot of the admin interface](http://www.tuleap.com/sites/default/files/styles/x-large/public/easy-customizable-tracker.png)
-
 Installation
 ============
 

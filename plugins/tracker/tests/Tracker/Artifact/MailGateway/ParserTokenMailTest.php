@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,11 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class Tracker_Artifact_MailGateway_Parser_BaseTest extends TuleapTestCase {
+class Tracker_Artifact_MailGateway_Parser_TokenMail_BaseTest extends TuleapTestCase {
 
+    private $parser;
+    private $incoming_message_factory;
     protected $plain_plus_html_reply;
-    protected $parser;
     protected $recipient_factory;
     protected $fixtures_dir;
 
@@ -38,58 +39,72 @@ class Tracker_Artifact_MailGateway_Parser_BaseTest extends TuleapTestCase {
         $this->with_attachment_reply  = file_get_contents($this->fixtures_dir .'/reply-comment.(plain+html)+attachment.eml');
         $this->expected_followup_text = file_get_contents($this->fixtures_dir .'/expected_followup.text.txt');
 
-        $this->recipient_factory = mock('Tracker_Artifact_MailGateway_RecipientFactory');
+        $this->recipient_factory           = mock('Tracker_Artifact_MailGateway_RecipientFactory');
+        $incoming_message_insecure_builder = mock('Tracker_Artifact_IncomingMessageInsecureBuilder');
+        $tracker_config                    = mock('TrackerPluginConfig');
+        $tracker_config->setReturnValue('isTokenBasedEmailgatewayEnabled', true);
 
-        $this->parser = new Tracker_Artifact_MailGateway_Parser($this->recipient_factory);
+        $incoming_message_token_builder    = new Tracker_Artifact_IncomingMessageTokenBuilder($this->recipient_factory);
+        $this->parser                      = new Tracker_Artifact_MailGateway_Parser();
+        $this->incoming_message_factory    = new Tracker_Artifact_MailGateway_IncomingMessageFactory(
+            $tracker_config,
+            $incoming_message_token_builder,
+            $incoming_message_insecure_builder
+        );
+    }
+
+    protected function parseEmailToIncomingMessage($raw_email) {
+        $raw_email_parsed = $this->parser->parse($raw_email);
+        return $this->incoming_message_factory->build($raw_email_parsed);
     }
 }
 
-class Tracker_Artifact_MailGateway_Parser_BodyTest extends Tracker_Artifact_MailGateway_Parser_BaseTest {
+class Tracker_Artifact_MailGateway_Parser_TokenMail_BodyTest extends Tracker_Artifact_MailGateway_Parser_TokenMail_BaseTest {
 
     public function setUp() {
         parent::setUp();
+        $recipient = mock('Tracker_Artifact_MailGateway_Recipient');
+        $artifact  = mock('Tracker_Artifact');
+        $artifact->setReturnValue('getTracker', mock('Tracker'));
+        $recipient->setReturnValue('getArtifact', $artifact);
+        $recipient->setReturnValue('getUser', mock('PFUser'));
         stub($this->recipient_factory)
             ->getFromEmail()
-            ->returns(mock('Tracker_Artifact_MailGateway_Recipient'));
-    }
-
-    private function utility_function_to_generate_message_body() {
-        $body = $this->parser->parse(file_get_contents($this->fixtures_dir .'/outlook_2.msg'))->getBody();
-        file_put_contents($this->fixtures_dir.'/outlook_quote_fr.msg', $body);
+            ->returns($recipient);
     }
 
     public function itReturnsTheFollowUpCommentToAddInTextPlainFormat() {
-        $incoming_message = $this->parser->parse($this->plain_plus_html_reply);
+        $incoming_message = $this->parseEmailToIncomingMessage($this->plain_plus_html_reply);
 
         $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
     }
 
     public function itReturnsTheFollowUpCommentToAddInTextPlainFormatEvenIfTheHtmlPartIsTheFirstOne() {
-        $incoming_message = $this->parser->parse($this->html_plus_plain_reply);
+        $incoming_message = $this->parseEmailToIncomingMessage($this->html_plus_plain_reply);
 
         $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
     }
 
     public function itReturnsTheFollowUpCommentToAddInTextPlainFormatEvenIfThereIsAnAttachment() {
-        $incoming_message = $this->parser->parse($this->with_attachment_reply);
+        $incoming_message = $this->parseEmailToIncomingMessage($this->with_attachment_reply);
 
         $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
     }
 
     public function itReturnsTheFollowUpCommentToAddInTextPlainFormatWhenThereIsOnlyATextPlain() {
-        $incoming_message = $this->parser->parse($this->plain_reply);
+        $incoming_message = $this->parseEmailToIncomingMessage($this->plain_reply);
 
         $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
     }
 
     public function itReturnsEmptyStringWhenNoTextPlain() {
-        $incoming_message = $this->parser->parse($this->html_reply);
+        $incoming_message = $this->parseEmailToIncomingMessage($this->html_reply);
 
         $this->assertIdentical($incoming_message->getBody(), '');
     }
 }
 
-class Tracker_Artifact_MailGateway_Parser_RecipientTest extends Tracker_Artifact_MailGateway_Parser_BaseTest {
+class Tracker_Artifact_MailGateway_Parser_TokenMail_RecipientTest extends Tracker_Artifact_MailGateway_Parser_TokenMail_BaseTest {
 
     public function setUp() {
         parent::setUp();
@@ -97,12 +112,18 @@ class Tracker_Artifact_MailGateway_Parser_RecipientTest extends Tracker_Artifact
 
     public function itReturnsTheCorrespondingRecipient() {
         $recipient = mock('Tracker_Artifact_MailGateway_Recipient');
+        $artifact  = mock('Tracker_Artifact');
+        $user      = mock('PFuser');
+        $artifact->setReturnValue('getTracker', mock('Tracker'));
+        $recipient->setReturnValue('getArtifact', $artifact);
+        $recipient->setReturnValue('getUser', $user);
         stub($this->recipient_factory)
             ->getFromEmail('<1661-08c450c149f11d38955ad983a9b3b857-107-1234@crampons.cro.example.com>')
             ->returns($recipient);
 
-        $incoming_message = $this->parser->parse($this->plain_plus_html_reply);
+        $incoming_message = $this->parseEmailToIncomingMessage($this->plain_plus_html_reply);
 
-        $this->assertIdentical($incoming_message->getRecipient(), $recipient);
+        $this->assertIdentical($incoming_message->getArtifact(), $artifact);
+        $this->assertIdentical($incoming_message->getUser(), $user);
     }
 }

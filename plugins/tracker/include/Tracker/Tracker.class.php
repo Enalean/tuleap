@@ -244,6 +244,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     /**
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getFormElementFields() {
+        return Tracker_FormElementFactory::instance()->getUsedFields($this);
+    }
+
+    /**
      * @param string $name
      * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
      *
@@ -1168,15 +1175,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
     }
 
-    private function canUserCreateArtifactByMail() {
-        $config = new TrackerPluginConfig(
-            new TrackerPluginConfigDao()
-        );
-
-        return $config->isInsecureEmailgatewayEnabled()
-            && $this->enable_emailgateway;
-    }
-
     public function getDefaultToolbar() {
         $toolbar = array();
 
@@ -1187,14 +1185,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 'submit-new' => 1
         );
 
-        if ($this->canUserCreateArtifactByMail()) {
+        $artifact_by_email_status = $this->getArtifactByMailStatus();
+        if ($artifact_by_email_status->canCreateArtifact()) {
             $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
             if (! $email_domain) {
                 $email_domain = ForgeConfig::get('sys_default_domain');
             }
 
-            $email = 'forge__tracker+'. $this->id .'@'. $email_domain;
+            $email = trackerPlugin::EMAILGATEWAY_INSECURE_USERNAME .'+'. $this->id .'@'. $email_domain;
             $toolbar[] = array(
                     'title'      => '<span class="email-tracker" data-email="'. $email .'"><i class="icon-envelope"></i></span>',
                     'url'        => 'javascript:;',
@@ -1420,6 +1419,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+        $this->displayWarningArtifactByEmailSemantic();
+        $this->displayWarningArtifactByEmailRequiredFields();
         $this->displayAdminItemHeader($layout, 'editoptions');
 
         $this->renderer->renderToPage(
@@ -1428,9 +1429,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $this,
                 TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&func=admin-editoptions',
                 new Tracker_ColorPresenterCollection($this),
-                new TrackerPluginConfig(
-                    new TrackerPluginConfigDao()
-                )
+                $this->getTrackerPluginConfig()
             )
         );
 
@@ -1723,6 +1722,7 @@ EOS;
 
     public function displayAdminFormElements(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
+        $this->displayWarningArtifactByEmailRequiredFields();
         $items = $this->getAdminItems();
         $title = $items['editformElements']['title'];
         $this->displayAdminFormElementsHeader($layout, $title, array());
@@ -2048,6 +2048,22 @@ EOS;
     }
 
     /**
+     * @return TrackerPluginConfig
+     */
+    private function getTrackerPluginConfig() {
+        return new TrackerPluginConfig(
+            new TrackerPluginConfigDao()
+        );
+    }
+
+    /**
+     * @return Tracker_ArtifactByEmailStatus
+     */
+    private function getArtifactByMailStatus() {
+        return new Tracker_ArtifactByEmailStatus($this, $this->getTrackerPluginConfig());
+    }
+
+    /**
      * @return string
      */
     public function displayRulesAsJavascript() {
@@ -2220,7 +2236,7 @@ EOS;
             $user = $um->getCurrentUser();
         }
 
-        if ($user->isAnonymous()) {
+        if ($user->isAnonymous() || ! $this->userCanView($user)) {
             return false;
         }
 
@@ -2622,6 +2638,28 @@ EOS;
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'file_not_found'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
+        }
+    }
+
+    public function displayWarningArtifactByEmailSemantic() {
+        $artifactbyemail_status = $this->getArtifactByMailStatus();
+
+        if (! $artifactbyemail_status->isSemanticConfigured()) {
+            $GLOBALS['Response']->addFeedback(
+                'warning',
+                $GLOBALS['Language']->getText('plugin_tracker_emailgateway','semantic_missing')
+            );
+        }
+    }
+
+    public function displayWarningArtifactByEmailRequiredFields() {
+        $artifactbyemail_status = $this->getArtifactByMailStatus();
+
+        if (! $artifactbyemail_status->isRequiredFieldsConfigured()) {
+            $GLOBALS['Response']->addFeedback(
+                'warning',
+                $GLOBALS['Language']->getText('plugin_tracker_emailgateway','invalid_required_fields')
+            );
         }
     }
 
@@ -3029,10 +3067,33 @@ EOS;
     /**
      * Return the title field, or null if no title field defined
      *
-     * @return Tracker_FormElement_Text the title field, or null if not defined
+     * @return Tracker_FormElement_Field_Text the title field, or null if not defined
      */
     public function getTitleField() {
         $title_field = Tracker_Semantic_Title::load($this)->getField();
+        if ($title_field) {
+            return $title_field;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Say if the tracker as "description" defined
+     *
+     * @return bool
+     */
+    public function hasSemanticsDescription() {
+        return Tracker_Semantic_Description::load($this)->getFieldId() ? true : false;
+    }
+
+    /**
+     * Return the description field, or null if no title field defined
+     *
+     * @return Tracker_FormElement_Field_Text the title field, or null if not defined
+     */
+    public function getDescriptionField() {
+        $title_field = Tracker_Semantic_Description::load($this)->getField();
         if ($title_field) {
             return $title_field;
         } else {
@@ -3052,7 +3113,7 @@ EOS;
     /**
      * Return the status field, or null if no status field defined
      *
-     * @return Tracker_FormElement_List the status field, or null if not defined
+     * @return Tracker_FormElement_Field_List the status field, or null if not defined
      */
     public function getStatusField() {
         $status_field = Tracker_Semantic_Status::load($this)->getField();
@@ -3066,7 +3127,7 @@ EOS;
     /**
      * Return the contributor field, or null if no contributor field defined
      *
-     * @return Tracker_FormElement_List the contributor field, or null if not defined
+     * @return Tracker_FormElement_Field_List the contributor field, or null if not defined
      */
     public function getContributorField() {
         $contributor_field = Tracker_Semantic_Contributor::load($this)->getField();

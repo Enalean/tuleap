@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,18 +19,54 @@
  */
 
 class Tracker_Artifact_MailGateway_IncomingMessage {
+    /** @var array */
+    private $headers;
 
-    /**
-     * @var Tracker_Artifact_MailGateway_Recipient
-     */
-    private $recipient;
+    /** @var string */
+    private $subject;
 
     /** @var string */
     private $body;
 
-    public function __construct($body, Tracker_Artifact_MailGateway_Recipient $recipient) {
-        $this->body      = $body;
-        $this->recipient = $recipient;
+    /** @var boolean */
+    private $is_follow_up;
+
+    /** @var  PFUser */
+    private $user;
+
+    /** @var Tracker */
+    private $tracker;
+
+    /** @var Tracker_Artifact */
+    private $artifact;
+
+    public function __construct(
+        array $headers,
+        $subject,
+        $body,
+        $is_follow_up,
+        PFUser $user,
+        Tracker $tracker,
+        Tracker_Artifact $artifact = null
+    ) {
+        $this->headers      = $headers;
+        $this->subject      = $subject;
+        $this->body         = $body;
+        $this->is_follow_up = $is_follow_up;
+        $this->user         = $user;
+        $this->tracker      = $tracker;
+        $this->artifact     = $artifact;
+    }
+
+    public function getHeaders() {
+        return $this->headers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject() {
+        return $this->subject;
     }
 
     /**
@@ -41,9 +77,30 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
     }
 
     /**
-     * @return Tracker_Artifact_MailGateway_Recipient
+     * @return PFUser
      */
-    public function getRecipient() {
-        return $this->recipient;
+    public function getUser() {
+        return $this->user;
+    }
+
+    /**
+     * @return Tracker
+     */
+    public function getTracker() {
+        return $this->tracker;
+    }
+
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getArtifact() {
+        return $this->artifact;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAFollowUp() {
+        return $this->is_follow_up;
     }
 }

@@ -66,6 +66,14 @@ class Event {
     const USER_EMAIL_CHANGED = 'user_email_changed';
 
     /**
+     * Force aliases database update.
+     *
+     * No Parameters.
+     * No expected results
+     */
+    const UPDATE_ALIASES = 'update_aliases';
+
+    /**
      * The user is updated
      *
      * Parameters:
