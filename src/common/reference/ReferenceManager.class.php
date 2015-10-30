@@ -836,7 +836,7 @@ class ReferenceManager {
         $nature   = $this->getSystemReferenceNatureByKeyword($keyword);
 
         switch ($nature) {
-            case FRSRelease::REFERENCE_NATURE:
+            case self::REFERENCE_NATURE_RELEASE:
                 $release_factory = new FRSReleaseFactory();
                 $release         = $release_factory->getFRSReleaseFromDb($value);
 
@@ -845,12 +845,21 @@ class ReferenceManager {
                 }
 
                 break;
-            case FRSFile::REFERENCE_NATURE:
+            case self::REFERENCE_NATURE_FILE:
                 $file_factory = new FRSFileFactory();
                 $file         = $file_factory->getFRSFileFromDb($value);
 
                 if ($file) {
                     $ref_gid = $file->getGroup()->getID();
+                }
+
+                break;
+            case self::REFERENCE_NATURE_FORUM:
+                $forum_dao = new ForumDao();
+                $forum_group_id_row = $forum_dao->searchByGroupForumId($value)->getRow();
+
+                if ($forum_group_id_row) {
+                    $ref_gid = $forum_group_id_row['group_id'];
                 }
 
                 break;

@@ -45,8 +45,6 @@ class FRSFile extends Error {
      */
     const PEAR_BUFFER_SIZE = 8192;
 
-    const REFERENCE_NATURE = 'file';
-
 	/**
      * @var int $file_id the ID of this FRSFile
      */
