@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,20 +42,50 @@ use \PermissionsManager;
 use \Tracker_ReportDao;
 use \Tracker_FormElementFactory                   as FormElementFactory;
 use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
+use \Tracker_Artifact_PossibleParentsRetriever;
+use \Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 
 /**
  * Wrapper for Tracker related REST methods
  */
 class TrackersResource extends AuthenticatedResource {
 
-    const MAX_LIMIT        = 50;
-    const DEFAULT_LIMIT    = 10;
+    const MAX_LIMIT        = 1000;
+    const DEFAULT_LIMIT    = 100;
     const DEFAULT_OFFSET   = 0;
     const DEFAULT_VALUES   = '';
     const ALL_VALUES       = 'all';
     const DEFAULT_CRITERIA = '';
     const ORDER_ASC        = 'asc';
     const ORDER_DESC       = 'desc';
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var Tracker_FormElementFactory */
+    private $formelement_factory;
+
+    /** @var Tracker_ReportFactory */
+    private $report_factory;
+
+    /** @var PermissionsManager */
+    private $permission_manager;
+
+    /** @var Tracker_Factory */
+    private $tracker_factory;
+
+    /** @var Tracker_ArtifactFactory */
+    private $tracker_artifact_factory;
+
+    public function __construct() {
+        $this->user_manager             = UserManager::instance();
+        $this->formelement_factory      = Tracker_FormElementFactory::instance();
+        $this->report_factory           = Tracker_ReportFactory::instance();
+        $this->permission_manager       = PermissionsManager::instance();
+        $this->tracker_factory          = TrackerFactory::instance();
+        $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+    }
+
 
     /**
      * @url OPTIONS
@@ -87,8 +117,8 @@ class TrackersResource extends AuthenticatedResource {
      */
     public function getId($id) {
         $this->checkAccess();
-        $builder = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
-        $user    = UserManager::instance()->getCurrentUser();
+        $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
+        $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
         $this->sendAllowHeaderForTracker();
 
@@ -122,9 +152,9 @@ class TrackersResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->checkLimitValue($limit);
 
-        $user    = UserManager::instance()->getCurrentUser();
-        $tracker = $this->getTrackerById($user, $id);
-        $all_reports = Tracker_ReportFactory::instance()->getReportsByTrackerId($tracker->getId(), $user->getId());
+        $user        = $this->user_manager->getCurrentUser();
+        $tracker     = $this->getTrackerById($user, $id);
+        $all_reports = $this->report_factory->getReportsByTrackerId($tracker->getId(), $user->getId());
 
         $nb_of_reports = count($all_reports);
         $reports = array_slice($all_reports, $offset, $limit);
@@ -195,7 +225,7 @@ class TrackersResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->checkLimitValue($limit);
 
-        $user          = UserManager::instance()->getCurrentUser();
+        $user          = $this->user_manager->getCurrentUser();
         $valid_tracker = $this->getTrackerById($user, $id);
 
         if ($query) {
@@ -203,7 +233,7 @@ class TrackersResource extends AuthenticatedResource {
         } else {
             $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
 
-            $pagination = $this->getTrackerArtifactFactory()->getPaginatedArtifactsByTrackerId(
+            $pagination = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId(
                 $id,
                 $limit,
                 $offset,
@@ -231,9 +261,9 @@ class TrackersResource extends AuthenticatedResource {
         $report = new Tracker_Report_REST(
             $user,
             $tracker,
-            PermissionsManager::instance(),
+            $this->permission_manager,
             new Tracker_ReportDao(),
-            FormElementFactory::instance()
+            $this->formelement_factory
         );
 
         try {
@@ -252,7 +282,7 @@ class TrackersResource extends AuthenticatedResource {
 
         Header::sendPaginationHeaders($limit, $offset, count($matching_artifact_ids), self::MAX_LIMIT);
 
-        $artifacts = $this->getTrackerArtifactFactory()->getArtifactsByArtifactIdList($slice_matching_ids);
+        $artifacts = $this->tracker_artifact_factory->getArtifactsByArtifactIdList($slice_matching_ids);
         return array_filter($artifacts);
     }
 
@@ -261,7 +291,7 @@ class TrackersResource extends AuthenticatedResource {
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
         $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance()
+            $this->formelement_factory
         );
 
         $build_artifact_representation = function ($artifact) use (
@@ -286,11 +316,58 @@ class TrackersResource extends AuthenticatedResource {
     }
 
     /**
+     * @url OPTIONS {id}/parent_artifacts
+     */
+    public function optionsParentArtifacts($id) {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get all possible parent artifacts for a given tracker
+     *
+     * Given a tracker, get all open artifacts of its parent tracker ordered by their artifact id
+     * in decreasing order.
+     * If the given tracker doesn't have a parent, it throws an error.
+     *
+     * @url GET {id}/parent_artifacts
+     * @access hybrid
+     *
+     * @param int    $id
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array {@type Tuleap\Tracker\REST\Artifact\ParentArtifactReference}
+     */
+    public function getParentArtifacts($id, $limit  = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET) {
+        $this->checkAccess();
+        $this->checkLimitValue($limit);
+
+        $user    = $this->user_manager->getCurrentUser();
+        $tracker = $this->getTrackerById($user, $id);
+        $parent  = $this->getParentTracker($user, $tracker);
+
+        $possible_parents_getr                       = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory);
+        list($label, $pagination, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
+
+        if ($display_selector) {
+            $nb_matching = $pagination->getTotalSize();
+            Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
+            $collection = array();
+            foreach ($pagination->getArtifacts() as $artifact) {
+                $reference    = new ParentArtifactReference();
+                $reference->build($artifact);
+                $collection[] = $reference;
+            }
+            return $collection;
+        }
+    }
+
+    /**
      * @return Tracker
      * @throws RestException
      */
     private function getTrackerById(\PFUser $user, $id) {
-        $tracker = TrackerFactory::instance()->getTrackerById($id);
+        $tracker = $this->tracker_factory->getTrackerById($id);
         if ($tracker) {
 
             if ($tracker->isDeleted()) {
@@ -306,11 +383,21 @@ class TrackersResource extends AuthenticatedResource {
         throw new RestException(404);
     }
 
-    /**
-     * @return Tracker_ArtifactFactory
-     */
-    private function getTrackerArtifactFactory() {
-        return Tracker_ArtifactFactory::instance();
+    private function getParentTracker(\PFUser $user, Tracker $tracker) {
+        $parent = $tracker->getParent();
+
+        if (! $parent) {
+            throw new RestException(404, 'This tracker has no parent tracker');
+        }
+
+        if ($parent->isDeleted()) {
+            throw new RestException(404, "This tracker's parent is deleted");
+        }
+
+        if (! $parent->userCanView($user)) {
+            throw new RestException(403);
+        }
+        return $parent;
     }
 
     private function sendAllowHeaderForTracker() {

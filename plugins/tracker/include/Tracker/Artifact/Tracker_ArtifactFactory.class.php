@@ -179,6 +179,27 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
 
+    /**
+     *
+     * @param PFUser $user
+     * @param type $tracker_id
+     * @param type $limit
+     * @param type $offset
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    public function getPaginatedPossibleParentArtifactsUserCanView(PFUser $user, $tracker_id, $limit, $offset) {
+        $artifacts = array();
+        foreach ($this->getDao()->searchOpenByTrackerIdWithTitle($tracker_id, $limit, $offset)->instanciateWith(array($this, 'getInstanceFromRow')) as $artifact) {
+            if ($artifact->userCanView($user)) {
+                $artifacts[$artifact->getId()] = $artifact;
+            }
+        }
+
+        $size = (int) $this->getDao()->foundRows();
+
+        return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
+    }
+
     public function getClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchClosedByTrackerId($tracker_id) as $row) {

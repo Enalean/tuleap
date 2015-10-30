@@ -67,6 +67,13 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testOptionsGetParentArtifacts() {
+        $response = $this->getResponse($this->client->options('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/parent_artifacts'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     public function testGetTrackersId() {
         $tracker_uri = $this->getReleaseTrackerUri();
         $response    = $this->getResponse($this->client->get($tracker_uri));
@@ -202,6 +209,19 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
+    public function testGetParentArtifacts() {
+        $response         = $this->getResponse($this->client->get('trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID . '/parent_artifacts'));
+        $parent_artifacts = $response->json();
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertCount(5, $parent_artifacts);
+        $this->assertEquals($parent_artifacts[0]['title'], "Epic epoc");
+        $this->assertEquals($parent_artifacts[1]['title'], "Epic c'est tout");
+        $this->assertEquals($parent_artifacts[2]['title'], "Epic pic");
+        $this->assertEquals($parent_artifacts[3]['title'], "Fourth epic");
+        $this->assertEquals($parent_artifacts[4]['title'], "First epic");
+    }
+
     private function getDeletedTrackerId() {
         return 'trackers/' . REST_TestDataBuilder::DELETED_TRACKER_ID;
     }
@@ -239,5 +259,4 @@ class TrackersTest extends RestBase {
             }
         }
     }
-
 }
