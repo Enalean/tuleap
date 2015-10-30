@@ -220,6 +220,10 @@
                 source_list_element = event.source.nodesScope.$element,
                 dest_list_element   = event.dest.nodesScope.$element;
 
+            if (dropped_item.in_column === 'backlog' && ! dest_list_element.hasClass('backlog')) {
+                updateTimeInfo('kanban', dropped_item);
+            }
+
             if (dest_list_element.hasClass('backlog')) {
                 return droppedInBacklog(event, dropped_item, compared_to);
             } else if(dest_list_element.hasClass('archive')) {
