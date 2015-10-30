@@ -1,3 +1,6 @@
+Version 1.294 - Tuleap 8.8
+    * request #8538: Missing Kanban date in tooltip when item is created in backlog then dropped in other column
+
 Version 1.293 - Tuleap 8.8
     * request #8533: Real time synchronization of created card on Kanban
 
