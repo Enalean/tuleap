@@ -13,6 +13,7 @@ Version 8.8 (Not released yet)
 	* request #8443: Take into account release system references
 	* request #8443: Take into account file system references
 	* request #8443: Take into account forum system references
+	* request #8443: Take into account msg system references
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
