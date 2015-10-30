@@ -1,3 +1,6 @@
+Version 0.98 - Tuleap 8.8
+    * request #8529: Mediawiki: Language selector does not work when a page is translated
+
 Version 0.97 - Tuleap 8.8
     * request #8490 MediaWikiLanguageExtensionBundle not loaded
 
