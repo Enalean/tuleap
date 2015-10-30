@@ -17,24 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban;
+namespace Tuleap\RealTime;
 
-class KanbanItemPOSTRepresentation {
-
-    const ROUTE = 'kanban_items';
+interface Client {
 
     /**
-     * @var int {@type int}
+     * Method to send an Https request when
+     * want to broadcast a message
+     *
+     * @param $user_id : Id of user
+     * @param $hash    : Hash to distinguish client with same user id
+     * @param $room_id : Room's id to broadcast message to this room
+     * @param $cmd     : Broadcast on event command
+     * @param $data    : Data broadcasting
      */
-    public $kanban_id;
-
-    /**
-     * @var string {@type string}
-     */
-    public $label;
-
-    /**
-     * @var int {@type int} {@required false}
-     */
-    public $column_id = null;
+    public function sendMessage($user_id, $hash, $room_id, $cmd, $data);
 }

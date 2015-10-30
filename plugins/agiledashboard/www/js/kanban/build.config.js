@@ -87,7 +87,9 @@ module.exports = {
       'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'vendor/angular-filter/dist/angular-filter.min.js',
       'vendor/angular-ui-select/dist/select.js',
-      'vendor/artifact-modal/dist/tuleap-artifact-modal.js'
+      'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
+      'vendor/angular-socket-io/socket.js',
+      'vendor/socket.io-client/socket.io.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',

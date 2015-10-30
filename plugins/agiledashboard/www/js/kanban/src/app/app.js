@@ -3,6 +3,7 @@
         'ui.router',
         'ui.tree',
         'ui.bootstrap',
+        'socket',
         'templates-app',
         'shared-properties',
         'user-preferences',
@@ -12,6 +13,7 @@
         'gettext',
         'ngAnimate',
         'ngScrollbar',
-        'tuleap.artifact-modal'
+        'tuleap.artifact-modal',
+        'uuid-generator'
     ]);
 })();

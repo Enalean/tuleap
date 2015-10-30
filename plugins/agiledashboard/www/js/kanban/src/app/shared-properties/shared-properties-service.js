@@ -9,20 +9,26 @@
             kanban       : undefined,
             view_mode    : undefined,
             user_is_admin: false,
-            project_id   : undefined
+            project_id   : undefined,
+            nodejs_server: undefined,
+            uuid         : undefined
         };
 
         return {
-            getUserId     : getUserId,
-            setUserId     : setUserId,
-            getViewMode   : getViewMode,
-            setViewMode   : setViewMode,
-            getKanban     : getKanban,
-            setKanban     : setKanban,
-            getUserIsAdmin: getUserIsAdmin,
-            setUserIsAdmin: setUserIsAdmin,
-            setProjectId  : setProjectId,
-            getProjectId  : getProjectId
+            getUserId            : getUserId,
+            setUserId            : setUserId,
+            getViewMode          : getViewMode,
+            setViewMode          : setViewMode,
+            getKanban            : getKanban,
+            setKanban            : setKanban,
+            getUserIsAdmin       : getUserIsAdmin,
+            setUserIsAdmin       : setUserIsAdmin,
+            setProjectId         : setProjectId,
+            getProjectId         : getProjectId,
+            getNodeServerAddress : getNodeServerAddress,
+            setNodeServerAddress : setNodeServerAddress,
+            getUUID              : getUUID,
+            setUUID              : setUUID
         };
 
         function getUserId() {
@@ -63,6 +69,22 @@
 
         function getProjectId() {
             return property.project_id;
+        }
+
+        function getNodeServerAddress() {
+            return property.nodejs_server;
+        }
+
+        function setNodeServerAddress(nodejs_server) {
+            property.nodejs_server = nodejs_server;
+        }
+
+        function setUUID(uuid){
+            property.uuid = uuid;
+        }
+
+        function getUUID() {
+            return property.uuid;
         }
     }
 })();

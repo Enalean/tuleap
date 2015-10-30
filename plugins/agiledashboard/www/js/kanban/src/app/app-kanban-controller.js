@@ -17,7 +17,8 @@
         'CardFieldsService',
         'NewTuleapArtifactModalService',
         'TuleapArtifactModalLoading',
-        'UserPreferencesService'
+        'UserPreferencesService',
+        'SocketFactory'
     ];
 
     function KanbanCtrl(
@@ -34,7 +35,8 @@
         CardFieldsService,
         NewTuleapArtifactModalService,
         TuleapArtifactModalLoading,
-        UserPreferencesService
+        UserPreferencesService,
+        SocketFactory
     ) {
         var self    = this,
             limit   = 50,
@@ -107,6 +109,7 @@
         loadColumns();
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
+        listenNodeJSServer();
 
         self.treeOptions = {
             dragStart: dragStart,
@@ -661,6 +664,48 @@
                 index  = _.indexOf(column.content, item);
 
             return index;
+        }
+
+        function listenNodeJSServer() {
+            if(checkServerNodeJSExist()) {
+
+                /**
+                 * Data received looks like:
+                 *  {
+             *      id: 79584,
+             *      item_name: 'kanbantask',
+             *      label: 'Documentation API',
+             *      color: 'inca_silver',
+             *      card_fields: [
+             *          {
+             *              field_id: 15261,
+             *              type: 'msb',
+             *              label: 'Assigned to',
+             *              values: [Object],
+             *              bind_value_ids: [Object]
+             *          }
+             *      ],
+             *      timeinfo: {
+             *                  kanban: null,
+             *                  archive: null
+             *                },
+             *      in_column: 'backlog'
+             *  }
+                 *
+                 */
+                SocketFactory.on('kanban_item:create', function(data) {
+                    _.extend(data, {
+                        updating: false
+                    });
+
+                    var column = getColumn(data.in_column);
+                    column.content.push(data);
+                });
+            }
+        }
+
+        function checkServerNodeJSExist() {
+            return SocketFactory.hasOwnProperty('on');
         }
     }
 })();

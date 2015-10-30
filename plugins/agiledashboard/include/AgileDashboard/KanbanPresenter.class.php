@@ -38,6 +38,9 @@ class KanbanPresenter {
     /** @var string */
     public $view_mode;
 
+    /** @var string */
+    public $nodejs_server;
+
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
@@ -64,5 +67,6 @@ class KanbanPresenter {
         $this->project_id            = $project_id;
         $this->user_id               = $user->getId();
         $this->view_mode             = $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
+        $this->nodejs_server           = ForgeConfig::get('nodejs_server');
     }
 }
