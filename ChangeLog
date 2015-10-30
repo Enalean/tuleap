@@ -12,6 +12,7 @@ Version 8.8 (Not released yet)
 	* request #8443: System keywords don't generate the right cross reference when cross projects
 	* request #8443: Take into account release system references
 	* request #8443: Take into account file system references
+	* request #8443: Take into account forum system references
 
 	== Bug fix ==
 	* request #8481: Notifications in FRS can not be sent and generate a fatal error
