@@ -44,13 +44,11 @@ class Tracker_Artifact_IncomingMessageTokenBuilder {
         $recipient     = $this->recipient_factory->getFromEmail($matches[0]);
         $subject       = $raw_mail['headers']['subject'];
         $body          = $raw_mail['body'];
-        $is_a_followup = true;
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage(
             $raw_mail['headers'],
             $subject,
             $body,
-            $is_a_followup,
             $recipient->getUser(),
             $recipient->getArtifact()->getTracker(),
             $recipient->getArtifact()

@@ -28,9 +28,6 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
     /** @var string */
     private $body;
 
-    /** @var boolean */
-    private $is_follow_up;
-
     /** @var  PFUser */
     private $user;
 
@@ -41,18 +38,11 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
     private $artifact;
 
     public function __construct(
-        array $headers,
-        $subject,
-        $body,
-        $is_follow_up,
-        PFUser $user,
-        Tracker $tracker,
-        Tracker_Artifact $artifact = null
+        array $headers, $subject, $body, PFUser $user, Tracker $tracker, Tracker_Artifact $artifact = null
     ) {
         $this->headers      = $headers;
         $this->subject      = $subject;
         $this->body         = $body;
-        $this->is_follow_up = $is_follow_up;
         $this->user         = $user;
         $this->tracker      = $tracker;
         $this->artifact     = $artifact;
@@ -101,6 +91,6 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
      * @return bool
      */
     public function isAFollowUp() {
-        return $this->is_follow_up;
+        return $this->artifact !== null;
     }
 }

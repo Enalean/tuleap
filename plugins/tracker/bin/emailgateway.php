@@ -39,7 +39,8 @@ $artifact_factory                  = Tracker_ArtifactFactory::instance();
 $incoming_message_token_builder    = new Tracker_Artifact_IncomingMessageTokenBuilder($recipient_factory);
 $incoming_message_insecure_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
     $user_manager,
-    $tracker_factory
+    $tracker_factory,
+    $artifact_factory
 );
 $incoming_message_factory = new Tracker_Artifact_MailGateway_IncomingMessageFactory(
     $tracker_config,

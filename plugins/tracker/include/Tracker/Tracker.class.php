@@ -1193,7 +1193,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $email_domain = ForgeConfig::get('sys_default_domain');
             }
 
-            $email = trackerPlugin::EMAILGATEWAY_INSECURE_USERNAME .'+'. $this->id .'@'. $email_domain;
+            $email = trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION .'+'. $this->id .'@'. $email_domain;
             $toolbar[] = array(
                     'title'      => '<span class="email-tracker" data-email="'. $email .'"><i class="icon-envelope"></i></span>',
                     'url'        => 'javascript:;',

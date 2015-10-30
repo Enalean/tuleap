@@ -57,10 +57,17 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactory {
      * @return Tracker_Artifact_MailGateway_IncomingMessage
      */
     private function buildIncomingMessageInInsecureMode(array $raw_mail) {
-        if (strpos($raw_mail['headers']['to'], trackerPlugin::EMAILGATEWAY_TOKEN_USERNAME) !== false) {
+        if ($this->isATokenMail($raw_mail['headers']['to'])) {
             return $this->incoming_message_token_builder->build($raw_mail);
         } else {
             return $this->incoming_message_insecure_builder->build($raw_mail);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isATokenMail($mail_header_to) {
+        return strpos($mail_header_to, trackerPlugin::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE) !== false;
     }
 }
