@@ -1,3 +1,6 @@
+Version 1.293 - Tuleap 8.8
+    * request #8533: Real time synchronization of created card on Kanban
+
 Version 1.292 - Tuleap 8.8
     * request #8530 Modal: title not well displayed when text field
 

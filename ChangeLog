@@ -32,11 +32,14 @@ Version 8.8 (Not released yet)
 	* mediawiki: 0.97
 	* IM: 1.5.33
 	* docman: 2.26.87
-	* agiledashboard: 1.292
+	* agiledashboard: 1.293
 	* pluginsadministration: 1.13
 
 	== Themes ==
 	* FlamingParrot: 1.111
+
+    == Api ==
+	* REST API: 1.16
 
 Version 8.7 (Monday, October 12th 2015)
 
