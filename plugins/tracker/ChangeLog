@@ -1,3 +1,6 @@
+Version 5.723 - Tuleap 8.8
+    * story #8399: send an update to an artifact by email
+
 Version 5.722 - Tuleap 8.8
     * story #6256: store raw email alongside changeset
 
