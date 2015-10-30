@@ -32,6 +32,17 @@ class ForumDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getMessageProjectId($message_id) {
+        $message_id = $this->da->escapeInt($message_id);
+
+        $sql = "SELECT forum_group_list.group_id
+                FROM forum
+                  JOIN forum_group_list ON (forum.group_forum_id = forum_group_list.group_forum_id)
+                WHERE forum.msg_id = $message_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
     public function searchGlobal($words, $exact, $offset, $forum_id) {
         $this->searchGlobalPaginated($words, $exact, $offset, $forum_id, 26);
     }
