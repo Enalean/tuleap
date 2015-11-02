@@ -1,3 +1,6 @@
+Version 4.92 - Tuleap 8.8
+    * request #8532: Permission overrider doesn't deal properly with forceAnonymous
+
 Version 4.91 - Tuleap 8.8
     * request #8488: Persistent XSS in site admin user management page
 
