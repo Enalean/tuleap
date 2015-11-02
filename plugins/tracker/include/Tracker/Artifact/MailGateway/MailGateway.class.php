@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_MailGateway_MailGateway {
+abstract class Tracker_Artifact_MailGateway_MailGateway {
 
     /**
      * @var Tracker_Artifact_MailGateway_CitationStripper
@@ -46,9 +46,9 @@ class Tracker_Artifact_MailGateway_MailGateway {
     private $artifact_factory;
 
     /**
-     * @var TrackerPluginConfig
+     * @var Tracker_ArtifactByEmailStatus
      */
-    private $tracker_plugin_config;
+    protected $tracker_artifactbyemail;
 
     /**
      * @var Logger
@@ -67,7 +67,7 @@ class Tracker_Artifact_MailGateway_MailGateway {
         Tracker_Artifact_MailGateway_Notifier $notifier,
         Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
         Tracker_ArtifactFactory $artifact_factory,
-        TrackerPluginConfig $tracker_plugin_config,
+        Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         Logger $logger
     ) {
         $this->logger                   = $logger;
@@ -76,29 +76,16 @@ class Tracker_Artifact_MailGateway_MailGateway {
         $this->citation_stripper        = $citation_stripper;
         $this->notifier                 = $notifier;
         $this->artifact_factory         = $artifact_factory;
-        $this->tracker_plugin_config    = $tracker_plugin_config;
+        $this->tracker_artifactbyemail  = $tracker_artifactbyemail;
         $this->incoming_mail_dao        = $incoming_mail_dao;
     }
 
     public function process($raw_mail) {
         $raw_mail_parsed = $this->parser->parse($raw_mail);
         try {
-            $incoming_message = $this->incoming_message_factory->build($raw_mail_parsed);
-            $body             = $this->citation_stripper->stripText($incoming_message->getBody());
-
-            $tracker_artifactbyemail = new Tracker_ArtifactByEmailStatus(
-                $incoming_message->getTracker(),
-                $this->tracker_plugin_config
-            );
-            if ($tracker_artifactbyemail->canCreateArtifact() || $tracker_artifactbyemail->canUpdateArtifact()) {
-                $this->createChangeset($incoming_message, $body, $raw_mail);
-            } else {
-                $this->logger->info(
-                    'An artifact for the tracker #' . $incoming_message->getTracker()->getId() .
-                    ' has been received but this tracker does not allow create/reply by mail or' .
-                    ' his configuration is not compatible with this feature'
-                );
-                $this->notifier->sendErrorMailTrackerGeneric($raw_mail_parsed);
+            $changeset = $this->createChangeset($raw_mail_parsed);
+            if ($changeset) {
+                $this->linkRawMailToChangeset($raw_mail, $changeset);
             }
         } catch (Tracker_Artifact_MailGateway_MultipleUsersExistException $e) {
             $this->logger->debug('Multiple users match with ' . $raw_mail_parsed['headers']['from']);
@@ -112,11 +99,31 @@ class Tracker_Artifact_MailGateway_MailGateway {
         }
     }
 
-    private function createChangeset(Tracker_Artifact_MailGateway_IncomingMessage $incoming_message, $body, $raw_mail) {
-        $changeset = null;
+    /**
+     * @return bool
+     */
+    protected abstract function canCreateArtifact(Tracker $tracker);
+
+    /**
+     * @return bool
+     */
+    protected abstract function canUpdateArtifact(Tracker $tracker);
+
+    /**
+     * @return Tracker_Artifact_Changeset|null
+     */
+    private function createChangeset(array $raw_mail_parsed) {
+        $changeset        = null;
+        $incoming_message = $this->incoming_message_factory->build($raw_mail_parsed);
+        $body             = $this->citation_stripper->stripText($incoming_message->getBody());
+
         if ($incoming_message->isAFollowUp()) {
-            $changeset = $this->addFollowUp($incoming_message->getUser(), $incoming_message->getArtifact(), $body);
-        } else {
+            if ($this->canUpdateArtifact($incoming_message->getTracker())) {
+                $changeset = $this->addFollowUp($incoming_message->getUser(), $incoming_message->getArtifact(), $body);
+            } else {
+                $this->logNoSufficientRightsToCreateChangeset($incoming_message, $raw_mail_parsed);
+            }
+        } else if ($this->canCreateArtifact($incoming_message->getTracker())) {
             $artifact = $this->createArtifact(
                 $incoming_message->getUser(),
                 $incoming_message->getTracker(),
@@ -127,14 +134,15 @@ class Tracker_Artifact_MailGateway_MailGateway {
                 $this->logger->debug('New artifact created: '. $artifact->getXRef());
                 $changeset = $artifact->getFirstChangeset();
             }
+        } else {
+            $this->logNoSufficientRightsToCreateChangeset($incoming_message, $raw_mail_parsed);
         }
 
-        if ($changeset) {
-            $this->linkRawMailToChangeset($raw_mail, $changeset);
-        }
+        return $changeset;
     }
 
     private function linkRawMailToChangeset($raw_mail, Tracker_Artifact_Changeset $changeset) {
+        $this->logger->debug('Linking created changeset ('. $changeset->getId() .') to the raw mail.');
         $this->incoming_mail_dao->save($changeset->getId(), $raw_mail);
     }
 
@@ -180,5 +188,17 @@ class Tracker_Artifact_MailGateway_MailGateway {
 
         UserManager::instance()->setCurrentUser($user);
         return $this->artifact_factory->createArtifact($tracker, $field_data, $user, '');
+    }
+
+    private function logNoSufficientRightsToCreateChangeset(
+        Tracker_Artifact_MailGateway_IncomingMessage $incoming_message,
+        $raw_mail_parsed
+    ) {
+        $this->logger->info(
+            'An artifact for the tracker #' . $incoming_message->getTracker()->getId() .
+            ' has been received but this tracker does not allow create/reply by mail or' .
+            ' his configuration is not compatible with this feature'
+        );
+        $this->notifier->sendErrorMailTrackerGeneric($raw_mail_parsed);
     }
 }

@@ -190,23 +190,13 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     private function fetchReplyByMailHelp() {
         $html = '';
         if ($this->canUpdateArtifactByMail()) {
-            $email = Codendi_HTMLPurifier::instance()->purify($this->getReplyByMailEmail());
+            $email = Codendi_HTMLPurifier::instance()->purify($this->artifact->getInsecureEmailAddress());
             $html .= '<p class="email-tracker-help"><i class="icon-info-sign"></i> ';
             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'reply_by_mail_help', $email);
             $html .= '</p>';
         }
 
         return $html;
-    }
-
-    private function getReplyByMailEmail() {
-        $email_domain = ForgeConfig::get('sys_default_mail_domain');
-
-        if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
-        }
-
-        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE .'+'. $this->artifact->getId() .'@'. $email_domain;
     }
 
     /**
@@ -217,9 +207,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             new TrackerPluginConfigDao()
         );
 
-        $status = new Tracker_ArtifactByEmailStatus($this->artifact->getTracker(), $config);
+        $status = new Tracker_ArtifactByEmailStatus($config);
 
-        return $status->canUpdateArtifact();
+        return $status->canUpdateArtifactInInsecureMode($this->artifact->getTracker());
     }
 
     private function fetchSubmitButton() {

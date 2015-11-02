@@ -34,7 +34,7 @@ class Tracker_Artifact_MailGateway_Notifier {
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
             'artifact_error_name',
-            array($raw_mail_parsed['headers']['subject'])
+            $this->getSubjectFromRawMail($raw_mail_parsed)
         );
         $message .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'multiple_users');
         $this->sendErrorMail($to, $subject, $message);
@@ -46,7 +46,7 @@ class Tracker_Artifact_MailGateway_Notifier {
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
             'artifact_error_name',
-            array($raw_mail_parsed['headers']['subject'])
+            $this->getSubjectFromRawMail($raw_mail_parsed)
         );
         $message .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'unknown_user');
         $this->sendErrorMail($to, $subject, $message);
@@ -80,9 +80,13 @@ class Tracker_Artifact_MailGateway_Notifier {
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
             'artifact_error_name',
-            array($raw_mail_parsed['headers']['subject'])
+            $this->getSubjectFromRawMail($raw_mail_parsed)
         );
         $message .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'tracker_misconfiguration');
         $this->sendErrorMail($to, $subject, $message);
+    }
+
+    private function getSubjectFromRawMail($raw_mail_parsed) {
+        return isset($raw_mail_parsed['headers']['subject']) ? $raw_mail_parsed['headers']['subject'] : '';
     }
 }
