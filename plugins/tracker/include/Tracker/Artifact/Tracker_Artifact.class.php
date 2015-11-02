@@ -425,28 +425,33 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= $prefix;
         $html .= $this->getXRefAndTitle();
         if ($unsubscribe_button) {
-            $html .= $this->fetchUnsubscribeButton();
+            $html .= $this->fetchEmailActionButtons();
         }
         $html .= '</div>';
         return $html;
     }
 
-    public function fetchUnsubscribeButton() {
-        $alternate_text = $this->getUnsubscribeButtonAlternateText();
-
-        $html = '<div class="tracker_artifact_notification">';
-        $html .= '<a href="#" class="btn"';
-        $html .= 'title="'.$alternate_text.'">';
-        $html .= '<i class="icon-bell-alt"></i>';
-        $html .= $this->getUnsubscribeButtonLabel();
-        $html .= '</a>';
+    public function fetchEmailActionButtons() {
+        $html = '<div class="tracker-artifact-email-actions">';
+        $html .= $this->fetchIncomingMailButton() . ' ';
+        $html .= $this->fetchNotificationButton();
         $html .= '</div>';
 
         return $html;
     }
 
+    private function fetchNotificationButton() {
+        $alternate_text = $this->getUnsubscribeButtonAlternateText();
+
+        $html  = '<button class="btn btn-default tracker-artifact-notification" title="' . $alternate_text . '">';
+        $html .= '<i class="icon-bell-alt"></i> ' . $this->getUnsubscribeButtonLabel();
+        $html .= '</button>';
+
+        return $html;
+    }
+
     private function getUnsubscribeButtonLabel() {
-        $user = $this->getUserManager()->getCurrentUser();
+        $user = $this->getCurrentUser();
 
         if ($this->doesUserHaveUnsubscribedFromNotification($user)) {
             return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications');
@@ -455,8 +460,29 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications');
     }
 
+    private function fetchIncomingMailButton() {
+        if (! $this->getCurrentUser()->isSuperUser()) {
+            return '';
+        }
+
+        $retriever = Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance();
+        $raw_mail  = $retriever->getRawMailThatCreatedArtifact($this);
+        if (! $raw_mail) {
+            return '';
+        }
+
+        $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
+        $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
+
+        $html = '<button type="button" class="btn btn-default artifact-incoming-mail-button" data-raw-email="'. $raw_mail .'">
+                      <i class="icon-envelope"></i> '. $raw_email_button_title .'
+                 </button>';
+
+        return $html;
+    }
+
     private function getUnsubscribeButtonAlternateText() {
-        $user = $this->getUserManager()->getCurrentUser();
+        $user = $this->getCurrentUser();
 
         if ($this->doesUserHaveUnsubscribedFromNotification($user)) {
             return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications_alternate_text');
@@ -794,7 +820,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 'user_is_authorized' => &$user_is_authorized,
                 'group_id'           => $this->getProjectId(),
                 'milestone_id'       => $milestone_id,
-                'user'               => $this->getUserManager()->getCurrentUser()
+                'user'               => $this->getCurrentUser()
             )
         );
 
@@ -1400,6 +1426,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getUserManager() {
         return UserManager::instance();
+    }
+
+    private function getCurrentUser() {
+        return $this->getUserManager()->getCurrentUser();
     }
 
     /**

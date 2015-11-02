@@ -201,18 +201,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         $html .= '<div class="tracker_artifact_followup_header">';
         $html .= $this->getPermalink();
-
-        if ($this->userCanEdit() ||$this->userCanDelete()) {
-            $html .= '<div class="tracker_artifact_followup_comment_controls">';
-            //edit
-            if ($this->userCanEdit()) {
-                $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
-                $html .= '<button class="btn btn-mini"><i class="icon-edit"></i> ' . $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit') . '</button>';
-                $html .= '</a>';
-            }
-            $html .= '</div>';
-        }
-
+        $html .= $this->fetchChangesetActionButtons();
         $html .= $this->getUserLink();
         $html .= $this->getTimeAgo();
         $html .= '</div>';
@@ -223,6 +212,56 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';
+        return $html;
+    }
+
+    private function fetchChangesetActionButtons() {
+        $html        = '';
+        $edit_button = $this->fetchEditButton();
+        $mail_button = $this->fetchIncomingMailButton();
+
+        if ($edit_button || $mail_button) {
+            $html .= '<div class="tracker_artifact_followup_comment_controls">';
+            $html .= $mail_button;
+            $html .= ' ';
+            $html .= $edit_button;
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    private function fetchEditButton() {
+        if (! $this->userCanEdit()) {
+            return '';
+        }
+
+        $html  = '';
+        $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
+        $html .= '<button class="btn btn-mini"><i class="icon-edit"></i> ' . $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit') . '</button>';
+        $html .= '</a>';
+
+        return $html;
+    }
+
+    private function fetchIncomingMailButton() {
+        if (! $this->getUserManager()->getCurrentUser()->isSuperUser()) {
+            return '';
+        }
+
+        $retriever = Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance();
+        $raw_mail  = $retriever->getRawMailThatCreatedChangeset($this);
+        if (! $raw_mail) {
+            return '';
+        }
+
+        $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
+        $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
+
+        $html = '<button type="button" class="btn btn-mini tracker_artifact_followup_comment_controls_raw_email" data-raw-email="'. $raw_mail .'">
+                      <i class="icon-envelope"></i> '. $raw_email_button_title .'
+                 </button>';
+
         return $html;
     }
 

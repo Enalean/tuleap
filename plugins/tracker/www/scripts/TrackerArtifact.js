@@ -25,7 +25,7 @@
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
-codendi.tracker.artifact = { };
+codendi.tracker.artifact = { };
 
 codendi.tracker.artifact.editor = {
     disableWarnOnPageLeave: function() {
@@ -84,44 +84,6 @@ document.observe('dom:loaded', function () {
                     header.previousSiblings().invoke('toggle');
                 }
             });
-        }
-    });
-
-    $$('.tracker_artifact_title').each(function(title_section) {
-        var unsubscribe_buttons = $$('div.tracker_artifact_notification > a');
-        var artifact_id = $('artifact_informations').getAttribute('data-artifact-id');
-
-        unsubscribe_buttons.each(function(button) {
-            button.on('click', function() {
-
-                new Ajax.Request(codendi.tracker.base_url + "?aid="+ artifact_id +"&func=manage-subscription", {
-                    parameters: {
-                        artifact: artifact_id
-                    },
-                    onSuccess: function(response) {
-                        codendi.feedback.clear();
-                        codendi.feedback.log('info', response.responseJSON.message);
-
-                        updateButtonLabel(button, response.responseJSON.notification);
-                        return true;
-                    },
-                    onFailure: function(response) {
-                        codendi.feedback.clear();
-                        codendi.feedback.log('error', codendi.locales.tracker_artifact.notification_update_error);
-                        return false;
-                    }
-                });
-            })
-        })
-
-        function updateButtonLabel(button, notification) {
-            if (notification === true) {
-                button.title = codendi.locales.tracker_artifact.disable_notifications_alternate_text;
-                button.update('<i class="icon-bell-alt"></i>' + codendi.locales.tracker_artifact.disable_notifications);
-            } else {
-                button.title = codendi.locales.tracker_artifact.enable_notifications_alternate_text;
-                button.update('<i class="icon-bell-alt"></i>' + codendi.locales.tracker_artifact.enable_notifications);
-            }
         }
     });
 
