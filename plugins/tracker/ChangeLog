@@ -1,3 +1,6 @@
+Version 5.728 - Tuleap 8.8
+    * request #8487: Special chars not properly escaped in XML export
+
 Version 5.727 - Tuleap 8.8
     * story #8399: rejects insecure mail when token based
 
