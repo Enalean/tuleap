@@ -1,3 +1,6 @@
+Version 5.727 - Tuleap 8.8
+    * story #8399: rejects insecure mail when token based
+
 Version 5.726 - Tuleap 8.8
     * story #8537: have 'None' as a possible target value in field dependencies
 
