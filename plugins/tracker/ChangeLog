@@ -1,3 +1,6 @@
+Version 5.726 - Tuleap 8.8
+    * story #8537: have 'None' as a possible target value in field dependencies
+
 Version 5.725 - Tuleap 8.8
     * story #8431: see email headers for changesets created by email
 
