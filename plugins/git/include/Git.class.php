@@ -227,6 +227,7 @@ class Git extends PluginController {
                 PasswordHandlerFactory::getPasswordHandler()
             ),
             PermissionsManager::instance(),
+            new URLVerification(),
             $logger
         );
 

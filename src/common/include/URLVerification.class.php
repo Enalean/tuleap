@@ -71,9 +71,13 @@ class URLVerification {
         return new Url();
     }
 
-    private function getPermissionsOverriderManager() {
-        return new PermissionsOverrider_PermissionsOverriderManager();
+    /**
+     * @return PermissionsOverrider_PermissionsOverriderManager
+     */
+    protected function getPermissionsOverriderManager() {
+        return PermissionsOverrider_PermissionsOverriderManager::instance();
     }
+
     /**
      * Tests if the requested script name is allowed for anonymous or not
      *
@@ -273,14 +277,23 @@ class URLVerification {
         $user = $this->getCurrentUser();
 
         if (
-            ! ForgeConfig::areAnonymousAllowed() &&
+            $this->doesPlatformRequireLogin() &&
             $user->isAnonymous() &&
-            !$this->isScriptAllowedForAnonymous($server) &&
-            !$this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessPlatform($user)
+            ! $this->isScriptAllowedForAnonymous($server)
         ) {
             $redirect = new URLRedirect();
             $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }
+    }
+
+    public function doesPlatformRequireLogin() {
+        $anonymous_user = new PFUser(array('user_id' => 0));
+        if (ForgeConfig::areAnonymousAllowed() && ! $this->getPermissionsOverriderManager()->doesOverriderForceUsageOfAnonymous()) {
+            return false;
+        } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessPlatform($anonymous_user)) {
+            return false;
+        }
+        return true;
     }
 
     /**

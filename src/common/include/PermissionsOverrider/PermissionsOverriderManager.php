@@ -27,6 +27,40 @@ class PermissionsOverrider_PermissionsOverriderManager {
     const PERMISSIONS_OVERRIDER_DIRECTORY = "local_glue";
     const PERMISSIONS_OVERRIDER_FILE      = "PermissionsOverrider.php";
 
+    /**
+     * Holds an instance of the class
+     * @var EventManager
+     */
+    private static $instance;
+
+    /**
+     * Allows clear instance for test. DO NOT USE IT IN PRODUCTION CODE!
+     */
+    public static function clearInstance() {
+        self::$instance = null;
+    }
+
+    /**
+     * Set current instance of singleton.  DO NOT USE IT IN PRODUCTION CODE!
+     * @param EventManager $instance
+     */
+    public static function setInstance(PermissionsOverrider_PermissionsOverriderManager $instance) {
+        self::$instance = $instance;
+    }
+
+    /**
+     * The singleton method
+     *
+     * @return EventManager
+     */
+    public static function instance() {
+        if (! self::$instance) {
+            self::$instance = new PermissionsOverrider_PermissionsOverriderManager();
+        }
+        return self::$instance;
+    }
+
+
     public function doesOverriderAllowUserToAccessPlatform(PFUser $user) {
         $permissions_overrider = $this->getPermissionsOverrider();
 
