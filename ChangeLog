@@ -1,3 +1,11 @@
+Version 8.7-5 (Monday, November 2nd 2015)
+	== Bug Fix ==
+	* request #8538: Missing Kanban date in tooltip when item is created in backlog then dropped in other column
+	* request #8529: Mediawiki: Language selector does not work when a page is translated
+	* request #8526: Wrong attachement owner at tv5 creation from a tv3
+	* request #8521: ForgeUpgrade skip ALL pending buckets when installing a new plugin
+	* request #8525: Site admin should be warned about lack of forgeupgrade
+
 Version 8.7-4 (Wednesday, October 21th 2015)
 
 	== Bug fix ==
