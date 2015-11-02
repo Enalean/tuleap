@@ -110,13 +110,16 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         $index,
         SimpleXMLElement $artifact_xml
     ) {
+
+        $cdata_factory = new XML_SimpleXMLCDATAFactory();
+
         $node = $artifact_xml->addChild('file');
         $node->addAttribute('id',      $this->getFileInfoIdForXML($file_info));
-        $node->addChild('filename',    $file_info->getFilename());
+        $cdata_factory->insert($node, 'filename', $file_info->getFilename());
         $node->addChild('path',        $this->path_exporter->getPath($file_info));
         $node->addChild('filesize',    $file_info->getFilesize());
         $node->addChild('filetype',    $file_info->getFiletype());
-        $node->addChild('description', $file_info->getDescription());
+        $cdata_factory->insert($node, 'description', $file_info->getDescription());
     }
 
     private function getFileInfoIdForXML(Tracker_FileInfo $file_info) {

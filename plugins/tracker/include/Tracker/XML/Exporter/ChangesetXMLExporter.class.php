@@ -79,6 +79,9 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
             $changeset->getComment()->exportToXML($comments_node);
         }
 
-        $this->values_exporter->exportChangedFields($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
+        $changeset_values = $changeset->getValues();
+        if ($changeset_values !== null) {
+            $this->values_exporter->exportChangedFields($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset_values);
+        }
     }
 }
