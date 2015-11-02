@@ -32,6 +32,7 @@ describe("PlanningCtrl", function() {
             MilestoneService = jasmine.createSpyObj("MilestoneService", [
                 "addReorderToContent",
                 "addToContent",
+                "getMilestone",
                 "getMilestones",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
@@ -637,6 +638,45 @@ describe("PlanningCtrl", function() {
         });
     });
 
+    describe("showEditSubmilestoneModal() -", function() {
+        var fakeEvent, fakeItem;
+        beforeEach(function() {
+            fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            SharedPropertiesService.getUserId.andReturn(102);
+            NewTuleapArtifactModalService.showEdition.andCallFake(function(c, a, b, callback) {
+                callback(9040);
+            });
+        });
+
+        it("Given a left click event and a submilestone to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
+            fakeEvent.which = 1;
+            fakeItem = {
+                artifact: {
+                    id: 9040,
+                    tracker: {
+                        id: 12
+                    }
+                }
+            };
+            spyOn($scope, "refreshSubmilestone");
+
+            $scope.showEditSubmilestoneModal(fakeEvent, fakeItem);
+
+            expect(fakeEvent.preventDefault).toHaveBeenCalled();
+            expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(102, 12, 9040, jasmine.any(Function));
+            expect($scope.refreshSubmilestone).toHaveBeenCalledWith(9040);
+        });
+
+        it("Given a middle click event and a submilestone to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function() {
+            fakeEvent.which = 2;
+
+            $scope.showEditSubmilestoneModal(fakeEvent, fakeItem);
+
+            expect(fakeEvent.preventDefault).not.toHaveBeenCalled();
+            expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
+        });
+    });
+
     describe("showAddItemToSubMilestoneModal() -", function() {
         var fakeItemType, fakeArtifact, fakeSubmilestone;
         beforeEach(function() {
@@ -724,10 +764,39 @@ describe("PlanningCtrl", function() {
                 backlog_item: { id: 7088 }
             });
 
-            expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
             expect($scope.items[7088]).toEqual({ id: 7088, updating: true });
+
+            $scope.$apply();
+
+            expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
+            expect($scope.items[7088]).toEqual({ id: 7088, updating: false });
             expect($scope.backlog_items).toEqual([
                 { id: 7088 }
+            ]);
+        });
+    });
+
+    describe("refreshSubmilestone() -", function() {
+        it("Given an existing submilestone, when I refresh it, it gets the submilestone from the server and publishes it to the scope", function() {
+            $scope.milestones = [
+                { id: 9040 }
+            ];
+            MilestoneService.getMilestone.andReturn(deferred.promise);
+
+            $scope.refreshSubmilestone(9040);
+            deferred.resolve({
+                results: { id: 9040 }
+            });
+
+            expect($scope.milestones).toEqual([
+                { id: 9040, updating: true }
+            ]);
+
+            $scope.$apply();
+
+            expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
+            expect($scope.milestones).toEqual([
+                { id: 9040, updating: false }
             ]);
         });
     });

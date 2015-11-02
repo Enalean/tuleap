@@ -98,9 +98,11 @@
             getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
             getInitialEffortMessage               : getInitialEffortMessage,
             refreshBacklogItem                    : refreshBacklogItem,
+            refreshSubmilestone                   : refreshSubmilestone,
             showAddChildModal                     : showAddChildModal,
             showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
             showAddSubmilestoneModal              : showAddSubmilestoneModal,
+            showEditSubmilestoneModal             : showEditSubmilestoneModal,
             showChildren                          : showChildren,
             showCreateNewModal                    : showCreateNewModal,
             showEditModal                         : showEditModal,
@@ -352,6 +354,21 @@
             NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
         }
 
+        function showEditSubmilestoneModal($event, submilestone) {
+            var when_left_mouse_click = 1;
+
+            if($event.which === when_left_mouse_click) {
+                $event.preventDefault();
+
+                NewTuleapArtifactModalService.showEdition(
+                    SharedPropertiesService.getUserId(),
+                    submilestone.artifact.tracker.id,
+                    submilestone.artifact.id,
+                    $scope.refreshSubmilestone
+                );
+            }
+        }
+
         function showAddSubmilestoneModal($event, submilestone_type) {
             $event.preventDefault();
 
@@ -476,6 +493,22 @@
                 var new_item = data.backlog_item;
                 $scope.items[backlog_item_id] = new_item;
                 $scope.backlog_items.content.unshift(new_item);
+            });
+        }
+
+        function refreshSubmilestone(submilestone_id) {
+            var submilestone = _.find($scope.milestones, { 'id': submilestone_id });
+
+            submilestone.updating = true;
+
+            return MilestoneService.getMilestone(submilestone_id).then(function(data) {
+                submilestone.label           = data.results.label;
+                submilestone.capacity        = data.results.capacity;
+                submilestone.semantic_status = data.results.semantic_status;
+                submilestone.status_value    = data.results.status_value;
+                submilestone.start_date      = data.results.start_date;
+                submilestone.end_date        = data.results.end_date;
+                submilestone.updating        = false;
             });
         }
 
