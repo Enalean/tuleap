@@ -20,6 +20,8 @@
 
 (function ($, window, document) {
 
+    var popovers = [];
+
     /**
      * Return true if the copy is supported by the current browser
      *
@@ -57,29 +59,31 @@
     }
 
     function initTrackerEmail() {
-        var envelope = $('.email-tracker');
+        var title, description,
+            envelope = $(this);
 
-        if (envelope.length == 0) {
-            return;
-        }
+        title = codendi.getText(
+            'tracker_email',
+            envelope.hasClass('email-tracker-reply') ? 'title_reply' : 'title'
+        );
+        description = codendi.getText(
+            'tracker_email',
+            envelope.hasClass('email-tracker-reply') ? 'description_reply' : 'description'
+        );
 
         envelope.popover({
             placement: 'right',
             html: true,
             trigger: 'click',
             container: '#submit-new-by-mail-popover-container',
-            title: codendi.getText('tracker_email', 'title'),
+            title: title,
             content: buildPopoverContent
         });
 
-        $('body').click(function(event) {
-            if ($(event.target).parents('.email-tracker').length === 0 && $(event.target).parents('.popover.in').length === 0) {
-                envelope.popover('hide');
-            }
-        });
+        popovers.push(envelope);
 
         function buildPopoverContent() {
-            var content = $('<div><p>'+ codendi.getText('tracker_email', 'description') +'</p></div>'),
+            var content = $('<div><p>'+ description +'</p></div>'),
                 email   = envelope.data('email');
 
             if (isCopyToClipboardSupported()) {
@@ -128,5 +132,23 @@
         }
     }
 
-    $(initTrackerEmail);
+    $(function () {
+        $('.email-tracker').each(initTrackerEmail);
+
+        $('body').click(function(event) {
+            if ($(event.target).parents('.email-tracker').length === 0 && $(event.target).parents('.popover.in').length === 0) {
+                popovers.forEach(function (popover) { popover.popover('hide'); });
+                return;
+            }
+
+            if ($(event.target).parents('.email-tracker').length === 1) {
+                var clicked = $(event.target).parents('.email-tracker')[0];
+                $('.email-tracker').each(function (index, element) {
+                    if (element !== clicked) {
+                        $(element).popover('hide');
+                    }
+                })
+            }
+        });
+    });
 }(jQuery, window, document));

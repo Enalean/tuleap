@@ -172,6 +172,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
         if ($this->artifact->userCanUpdate($this->user)) {
             $html .= '<textarea id="tracker_followup_comment_new" class="user-mention" wrap="soft" rows="8" cols="80" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+            $html .= $this->fetchReplyByMailHelp();
             $html .= '</div>';
         }
 
@@ -186,10 +187,44 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $html;
     }
 
+    private function fetchReplyByMailHelp() {
+        $html = '';
+        if ($this->canUpdateArtifactByMail()) {
+            $email = Codendi_HTMLPurifier::instance()->purify($this->getReplyByMailEmail());
+            $html .= '<p class="email-tracker-help"><i class="icon-info-sign"></i> ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'reply_by_mail_help', $email);
+            $html .= '</p>';
+        }
+
+        return $html;
+    }
+
+    private function getReplyByMailEmail() {
+        $email_domain = ForgeConfig::get('sys_default_mail_domain');
+
+        if (! $email_domain) {
+            $email_domain = ForgeConfig::get('sys_default_domain');
+        }
+
+        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE .'+'. $this->artifact->getId() .'@'. $email_domain;
+    }
+
+    /**
+     * @return Tracker_ArtifactByEmailStatus
+     */
+    private function canUpdateArtifactByMail() {
+        $config = new TrackerPluginConfig(
+            new TrackerPluginConfigDao()
+        );
+
+        $status = new Tracker_ArtifactByEmailStatus($this->artifact->getTracker(), $config);
+
+        return $status->canUpdateArtifact();
+    }
+
     private function fetchSubmitButton() {
         if ($this->artifact->userCanUpdate($this->user)) {
             return $this->renderer->fetchSubmitButton($this->user);
         }
     }
 }
-?>

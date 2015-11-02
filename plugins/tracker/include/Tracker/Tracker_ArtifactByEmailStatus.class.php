@@ -38,7 +38,9 @@ class Tracker_ArtifactByEmailStatus {
      * @return bool
      */
     public function canCreateArtifact() {
-        return $this->isCreationEnabled() && $this->isSemanticDefined() && $this->isRequiredFieldsPossible();
+        return $this->isCreationEnabled()
+            && $this->isSemanticDefined()
+            && $this->isRequiredFieldsPossible();
     }
 
     /**

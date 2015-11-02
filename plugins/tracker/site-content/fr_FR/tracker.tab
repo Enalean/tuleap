@@ -398,6 +398,7 @@ plugin_tracker_include_artifact	priority_change_before_than	et il est maintenant
 plugin_tracker_include_artifact	priority_change_after_than	et il est maintenant placé après
 plugin_tracker_include_artifact	priority_change_in	dans
 plugin_tracker_include_artifact	priority_change_backlog	le backlog du projet
+plugin_tracker_include_artifact	reply_by_mail_help	Vous pouvez également répondre à cet artéfact <a href="javascript:;" class="email-tracker email-tracker-reply" data-email="$1"><span>par courriel</span></a>.
 
 
 #
