@@ -1933,4 +1933,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         return $builder->build($children_collector, $file_path_xml_exporter, $current_user);
     }
+
+    /** @return string */
+    public function getTokenBasedEmailAddress() {
+        return trackerPlugin::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE .'@' . $this->getEmailDomain();
+    }
+
+    /** @return string */
+    public function getInsecureEmailAddress() {
+        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE .'+'. $this->getId() .'@' . $this->getEmailDomain();
+    }
+
+    private function getEmailDomain() {
+        $email_domain = ForgeConfig::get('sys_default_mail_domain');
+
+        if (! $email_domain) {
+            $email_domain = ForgeConfig::get('sys_default_domain');
+        }
+
+        return $email_domain;
+    }
 }

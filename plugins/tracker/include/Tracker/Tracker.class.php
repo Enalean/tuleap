@@ -1186,7 +1186,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         );
 
         $artifact_by_email_status = $this->getArtifactByMailStatus();
-        if ($artifact_by_email_status->canCreateArtifact()) {
+        if ($artifact_by_email_status->canCreateArtifact($this)) {
             $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
             if (! $email_domain) {
@@ -2061,7 +2061,7 @@ EOS;
      * @return Tracker_ArtifactByEmailStatus
      */
     private function getArtifactByMailStatus() {
-        return new Tracker_ArtifactByEmailStatus($this, $this->getTrackerPluginConfig());
+        return new Tracker_ArtifactByEmailStatus($this->getTrackerPluginConfig());
     }
 
     /**
@@ -2645,7 +2645,7 @@ EOS;
     public function displayWarningArtifactByEmailSemantic() {
         $artifactbyemail_status = $this->getArtifactByMailStatus();
 
-        if (! $artifactbyemail_status->isSemanticConfigured()) {
+        if (! $artifactbyemail_status->isSemanticConfigured($this)) {
             $GLOBALS['Response']->addFeedback(
                 'warning',
                 $GLOBALS['Language']->getText('plugin_tracker_emailgateway','semantic_missing')
@@ -2656,7 +2656,7 @@ EOS;
     public function displayWarningArtifactByEmailRequiredFields() {
         $artifactbyemail_status = $this->getArtifactByMailStatus();
 
-        if (! $artifactbyemail_status->isRequiredFieldsConfigured()) {
+        if (! $artifactbyemail_status->isRequiredFieldsConfigured($this)) {
             $GLOBALS['Response']->addFeedback(
                 'warning',
                 $GLOBALS['Language']->getText('plugin_tracker_emailgateway','invalid_required_fields')

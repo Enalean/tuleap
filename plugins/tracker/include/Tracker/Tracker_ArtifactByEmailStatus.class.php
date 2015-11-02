@@ -19,34 +19,34 @@
  */
 
 class Tracker_ArtifactByEmailStatus {
-    private $tracker;
+
+    /** @var TrackerPluginConfig */
     private $tracker_plugin_config;
 
-    public function __construct(Tracker $tracker, TrackerPluginConfig $tracker_plugin_config) {
-        $this->tracker               = $tracker;
+    public function __construct(TrackerPluginConfig $tracker_plugin_config) {
         $this->tracker_plugin_config = $tracker_plugin_config;
     }
 
     /**
      * @return bool
      */
-    private function isCreationEnabled() {
-        return $this->tracker_plugin_config->isInsecureEmailgatewayEnabled() && $this->tracker->isEmailgatewayEnabled();
+    private function isCreationEnabled(Tracker $tracker) {
+        return $this->tracker_plugin_config->isInsecureEmailgatewayEnabled() && $tracker->isEmailgatewayEnabled();
     }
 
     /**
      * @return bool
      */
-    public function canCreateArtifact() {
-        return $this->isCreationEnabled()
-            && $this->isSemanticDefined()
-            && $this->isRequiredFieldsPossible();
+    public function canCreateArtifact(Tracker $tracker) {
+        return $this->isCreationEnabled($tracker)
+            && $this->isSemanticDefined($tracker)
+            && $this->isRequiredFieldsPossible($tracker);
     }
 
     /**
      * @return bool
      */
-    public function canUpdateArtifact() {
+    public function canUpdateArtifactInTokenMode(Tracker $tracker) {
         return $this->tracker_plugin_config->isTokenBasedEmailgatewayEnabled() ||
             $this->tracker_plugin_config->isInsecureEmailgatewayEnabled();
     }
@@ -54,20 +54,27 @@ class Tracker_ArtifactByEmailStatus {
     /**
      * @return bool
      */
-    private function isSemanticDefined() {
-        $title_field       = $this->tracker->getTitleField();
-        $description_field = $this->tracker->getDescriptionField();
+    public function canUpdateArtifactInInsecureMode(Tracker $tracker) {
+        return $this->tracker_plugin_config->isInsecureEmailgatewayEnabled() && $tracker->isEmailgatewayEnabled();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSemanticDefined(Tracker $tracker) {
+        $title_field       = $tracker->getTitleField();
+        $description_field = $tracker->getDescriptionField();
         return $title_field !== null && $description_field !== null;
     }
 
     /**
      * @return bool
      */
-    private function isRequiredFieldsPossible() {
-        if ($this->isSemanticDefined()) {
-            $title_field       = $this->tracker->getTitleField();
-            $description_field = $this->tracker->getDescriptionField();
-            return $this->isRequiredFieldsValid($title_field, $description_field);
+    private function isRequiredFieldsPossible(Tracker $tracker) {
+        if ($this->isSemanticDefined($tracker)) {
+            $title_field       = $tracker->getTitleField();
+            $description_field = $tracker->getDescriptionField();
+            return $this->isRequiredFieldsValid($tracker, $title_field, $description_field);
         }
         return false;
     }
@@ -75,27 +82,28 @@ class Tracker_ArtifactByEmailStatus {
     /**
      * @return bool
      */
-    public function isSemanticConfigured() {
-        return !$this->isCreationEnabled() || $this->isSemanticDefined();
+    public function isSemanticConfigured(Tracker $tracker) {
+        return !$this->isCreationEnabled($tracker) || $this->isSemanticDefined($tracker);
     }
 
     /**
      * @return bool
      */
-    public function isRequiredFieldsConfigured() {
-        return !$this->isCreationEnabled() || !$this->isSemanticDefined() || $this->isRequiredFieldsPossible();
+    public function isRequiredFieldsConfigured(Tracker $tracker) {
+        return !$this->isCreationEnabled($tracker) || !$this->isSemanticDefined($tracker) || $this->isRequiredFieldsPossible($tracker);
     }
 
     /**
      * @return bool
      */
     private function isRequiredFieldsValid(
+        Tracker $tracker,
         Tracker_FormElement_Field $title_field,
         Tracker_FormElement_Field $description_field
     ) {
         $is_required_fields_valid = true;
 
-        $form_elements = $this->tracker->getFormElementFields();
+        $form_elements = $tracker->getFormElementFields();
         reset($form_elements);
         while ($is_required_fields_valid && list(, $form_element) = each($form_elements)) {
             if ($form_element->isRequired()) {

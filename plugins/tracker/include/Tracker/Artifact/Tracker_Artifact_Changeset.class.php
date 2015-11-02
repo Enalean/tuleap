@@ -655,8 +655,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $ignore_perms = !$check_perms;
                 $recipient_mail = $user->getEmail();
                 $message_content = $this->getMessageContent($user, $is_update, $check_perms);
-                $headers = array();
-                $hash = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($headers) . serialize($message_content['subject']));
+                $headers = array($this->getCustomReplyToHeader());
+                $hash = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($message_content['subject']));
 
                 if (isset($messages[$hash])) {
                     $messages[$hash]['recipients'][] = $recipient_mail;
@@ -687,7 +687,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $message_id = $this->getMessageId($user);
 
                 $messages[$message_id]               = $this->getMessageContent($user, $is_update, $check_perms);
-                $messages[$message_id]['from']       = ForgeConfig::get('sys_name') . '<' .$this->getForgeArtifactEmail() . '>';
+                $messages[$message_id]['from']       = ForgeConfig::get('sys_name') . '<' .$this->getArtifact()->getTokenBasedEmailAddress() . '>';
                 $messages[$message_id]['message-id'] = $message_id;
                 $messages[$message_id]['headers']    = $headers;
                 $messages[$message_id]['recipients'] = array($user->getEmail());
@@ -721,10 +721,22 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     private function getCustomReplyToHeader() {
-        return array(
-            "name" => "Reply-to",
-            "value" => $this->getForgeArtifactEmail()
-        );
+        $config         = $this->getTrackerPluginConfig();
+        $artifactbymail = new Tracker_ArtifactByEmailStatus($config);
+
+        if ($config->isTokenBasedEmailgatewayEnabled()) {
+            return array(
+                "name" => "Reply-to",
+                "value" => $this->getArtifact()->getTokenBasedEmailAddress()
+            );
+        } else if ($artifactbymail->canUpdateArtifactInInsecureMode($this->getArtifact()->getTracker())) {
+            return array(
+                "name" => "Reply-to",
+                "value" => $this->getArtifact()->getInsecureEmailAddress()
+            );
+        }
+
+        return array();
     }
 
     private function getMessageContent($user, $is_update, $check_perms) {
@@ -816,7 +828,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
         $mail_enhancer->addHeader("X-Codendi-Project",     $project->getUnixName());
         $mail_enhancer->addHeader("X-Codendi-Tracker",     $tracker_name);
-        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $this->getId());
+        $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $this->artifact->getId());
 
         foreach($headers as $header) {
             $mail_enhancer->addHeader($header['name'], $header['value']);
@@ -839,16 +851,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             trackerPlugin::TRUNCATED_SERVICE_NAME,
             $mail_enhancer
         );
-    }
-
-    private function getForgeArtifactEmail() {
-        $email_domain = ForgeConfig::get('sys_default_mail_domain');
-
-        if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
-        }
-
-        return "forge__artifacts@" . $email_domain;
     }
 
     private function getTextBodyFilter($project_name, $tracker_name) {

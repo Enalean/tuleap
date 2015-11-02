@@ -42,7 +42,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
      * @return Tracker_Artifact_MailGateway_IncomingMessage
      */
     public function build(array $raw_mail) {
-        $subject        = $raw_mail['headers']['subject'];
+        $subject        = isset($raw_mail['headers']['subject']) ? $raw_mail['headers']['subject'] : '';
         $body           = $raw_mail['body'];
         $user           = $this->getUserFromMailHeader($raw_mail['headers']['from']);
         $is_a_followup  = $this->isAFollowUp($raw_mail['headers']['to']);
