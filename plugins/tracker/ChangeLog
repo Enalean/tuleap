@@ -1,3 +1,6 @@
+Version 5.731 - Tuleap 8.8
+    * story #8399: send an update to an artifact by email
+
 Version 5.730 - Tuleap 8.8
     * request #8536 Allow export process to be ran on a different server than front
 
