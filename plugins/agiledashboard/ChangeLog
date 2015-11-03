@@ -1,3 +1,6 @@
+Version 1.295 - Tuleap 8.8
+    * story #8371: Edit sub-milestones in planning v2
+
 Version 1.294 - Tuleap 8.8
     * request #8538: Missing Kanban date in tooltip when item is created in backlog then dropped in other column
 
