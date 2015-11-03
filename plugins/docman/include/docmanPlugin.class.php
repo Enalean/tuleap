@@ -931,12 +931,14 @@ class DocmanPlugin extends Plugin {
 
             $docman_item = $docman_item_factory->getItemFromDb($docman_element_id);
 
-            $reference = $reference_factory->getInstanceFromRowAndProjectId(
-                $reference_row,
-                $docman_item->getGroupId()
-            );
+            if ($docman_item) {
+                $reference = $reference_factory->getInstanceFromRowAndProjectId(
+                    $reference_row,
+                    $docman_item->getGroupId()
+                );
 
-            $params['reference'] = $reference;
+                $params['reference'] = $reference;
+            }
         }
     }
 
