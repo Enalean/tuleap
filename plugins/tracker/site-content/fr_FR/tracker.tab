@@ -1658,3 +1658,10 @@ plugin_tracker_emailgateway	insufficient_permission	Vous n'avez pas les droits n
 plugin_tracker_emailgateway	tracker_misconfiguration	Le tracker ne semble pas permettre l'édition d'artéfact par mail.
 plugin_tracker_emailgateway	semantic_missing	Les sémantiques titre et description permettant d'utiliser la création des artéfacts par mail ne sont pas définies.
 plugin_tracker_emailgateway	invalid_required_fields	Seuls les champs définis dans la sémantique titre et description peuvent être requis afin de permettre la création d'artéfacts par mail.
+plugin_tracker_emailgateway	invalid_configuration	La création d'artéfacts par courriel n'est pas possible à cause de la configuration courante de l'outil de suivi.
+plugin_tracker_emailgateway	reply_possible	Répondre à un artéfact par courriel est possible
+plugin_tracker_emailgateway	create_not_possible	Créer un artéfact par courriel <b>n'est pas</b> possible :
+plugin_tracker_emailgateway	semantic_ok	La sémantique est correctement configurée
+plugin_tracker_emailgateway	required_ok	Les champs requis sont correctement configurés
+plugin_tracker_emailgateway	semantic_ko	La sémantique titre et/ou description ne sont pas configurées
+plugin_tracker_emailgateway	required_ko	Les champs autres que titre ou description ne peuvent pas être requis

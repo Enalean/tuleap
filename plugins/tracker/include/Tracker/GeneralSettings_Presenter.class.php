@@ -31,16 +31,34 @@ class Tracker_GeneralSettings_Presenter {
     /** @var TrackerPluginConfig */
     private $config;
 
+    /** @var Tracker_ArtifactByEmailStatus */
+    private $artifactbyemail_status;
+
     public function __construct(
         Tracker $tracker,
         $action_url,
         Tracker_ColorPresenterCollection $color_presenter_collection,
-        TrackerPluginConfig $config
+        TrackerPluginConfig $config,
+        Tracker_ArtifactByEmailStatus $artifactbyemail_status
     ) {
         $this->tracker                    = $tracker;
         $this->action_url                 = $action_url;
         $this->color_presenter_collection = $color_presenter_collection;
         $this->config                     = $config;
+        $this->artifactbyemail_status     = $artifactbyemail_status;
+    }
+
+    public function is_insecure_emailgateway_properly_configured() {
+        return $this->is_semantic_configured_for_insecure_emailgateway()
+            && $this->are_required_fields_configured_for_insecure_emailgateway();
+    }
+
+    public function is_semantic_configured_for_insecure_emailgateway() {
+        return $this->artifactbyemail_status->isSemanticConfigured($this->tracker);
+    }
+
+    public function are_required_fields_configured_for_insecure_emailgateway() {
+        return $this->artifactbyemail_status->isRequiredFieldsConfigured($this->tracker);
     }
 
     public function enable_insecure_emailgateway() {
@@ -115,23 +133,47 @@ class Tracker_GeneralSettings_Presenter {
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact','preview');
     }
 
-    public function submit_instruction_label() {
+    public function submit_instructions_label() {
         return $GLOBALS['Language']->getText('plugin_tracker_include_type','submit_instr');
     }
 
-    public function submit_insrtuctions() {
+    public function submit_instructions() {
         return $this->tracker->submit_instructions;
     }
 
-    public function browse_instruction_label() {
+    public function browse_instructions_label() {
         return $GLOBALS['Language']->getText('plugin_tracker_include_type','browse_instr');
     }
 
-    public function browse_instruction() {
+    public function browse_instructions() {
         return $this->tracker->browse_instructions;
     }
 
     public function submit_button() {
-        return $GLOBALS['Language']->getText('global','btn_submit');
+        return $GLOBALS['Language']->getText('global','save_change');
+    }
+
+    public function reply_possible() {
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','reply_possible');
+    }
+
+    public function create_not_possible() {
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','create_not_possible');
+    }
+
+    public function semantic_ok() {
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','semantic_ok');
+    }
+
+    public function required_ok() {
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','required_ok');
+    }
+
+    public function semantic_ko() {
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','semantic_ko');
+    }
+
+    public function required_ko() {
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','required_ko');
     }
 }

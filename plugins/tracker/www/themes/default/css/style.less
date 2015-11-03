@@ -2466,39 +2466,72 @@ body.in_tracker_report .main .content {
 
 @import "src/www/themes/common/css/utils/colors.less";
 
-.tracker_settings_colors {
-    margin-bottom: 10px;
+#tracker-settings {
 
-    & > .tracker_color_selector {
+    > label {
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    > textarea {
         margin: 0;
     }
 
-    & > .icon-stack {
-        cursor: pointer;
+    > .tracker_settings_colors {
+        margin-bottom: 10px;
 
-        & > .icon-ok {
-            color: #FFFFFF;
-            visibility: hidden;
+        & > .tracker_color_selector {
+            margin: 0;
+        }
 
-            &.selected {
-                visibility: visible;
+        & > .icon-stack {
+            cursor: pointer;
+
+            & > .icon-ok {
+                color: #FFFFFF;
+                visibility: hidden;
+
+                &.selected {
+                    visibility: visible;
+                }
+            }
+        }
+
+        & > .tracker_color_preview {
+            display: inline;
+            margin: auto 10px;
+            white-space: nowrap;
+
+            & > .tracker_color_preview_label {
+                font-size: 0.8em;
+                position: relative;
+                top: -1px;
+            }
+
+            & > .xref-in-title {
+                margin-left: 3px;
+                font-size: 1.2em;
+                top: 1px;
             }
         }
     }
 
-    & > .tracker_color_preview {
-        display: block;
-        margin-top: 10px;
-
-        & > .tracker_color_preview_label {
-            font-size: 0.8em;
-        }
-
-        & > .xref-in-title {
-            margin-left: 10px;
-            font-size: 1.2em;
-        }
+    > .submit-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        width: 100%;
+        padding: 20px 0;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        border-top: 1px solid #E0E0E0;
+        box-sizing: border-box;
     }
+}
+
+body.sidebar-expanded #tracker-settings > .submit-bar {
+  padding-left: 200px;
 }
 
 .inca_silver {

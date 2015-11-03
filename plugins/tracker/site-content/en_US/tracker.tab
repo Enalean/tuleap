@@ -1659,3 +1659,10 @@ plugin_tracker_emailgateway	insufficient_permission	You do not have the necessar
 plugin_tracker_emailgateway	tracker_misconfiguration	The tracker does not seem to have the create/reply by mail feature enabled.
 plugin_tracker_emailgateway	semantic_missing	Semantic title and description for creating an artifact by mail are not defined.
 plugin_tracker_emailgateway	invalid_required_fields	Only fields selected in title or description semantic can be required if you want to create artifacts by email.
+plugin_tracker_emailgateway	invalid_configuration	Creating artifact by mail is not possible due to the current configuration of the tracker.
+plugin_tracker_emailgateway	reply_possible	Reply to artifact by mail is possible
+plugin_tracker_emailgateway	create_not_possible	Create artifact by mail is <b>not</b> possible:
+plugin_tracker_emailgateway	semantic_ok	Semantic is properly configured
+plugin_tracker_emailgateway	required_ok	Required fields are properly configured
+plugin_tracker_emailgateway	semantic_ko	Semantic title and/or description are not configured
+plugin_tracker_emailgateway	required_ko	Other fields than title or description cannot be required
