@@ -1,3 +1,6 @@
+Version 5.732 - Tuleap 8.8
+    * request #8535: There should be only one validation of the whole XML import file
+
 Version 5.731 - Tuleap 8.8
     * story #8399: send an update to an artifact by email
 
