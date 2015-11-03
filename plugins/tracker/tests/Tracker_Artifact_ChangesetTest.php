@@ -334,6 +334,9 @@ BODY;
         $changeset = $this->buildChangeSet($user);
         stub($changeset)->getUserFromRecipientName('user01')->returns($user);
 
+        $config = stub('TrackerPluginConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
+        stub($changeset)->getTrackerPluginConfig()->returns($config);
+
         $recipients = array(
             'user01' => false
         );
@@ -363,6 +366,9 @@ BODY;
         stub($changeset)->getUserFromRecipientName('user01')->returns($user1);
         stub($changeset)->getUserFromRecipientName('user02')->returns($user2);
         stub($changeset)->getUserFromRecipientName('user03')->returns($user3);
+
+        $config = stub('TrackerPluginConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
+        stub($changeset)->getTrackerPluginConfig()->returns($config);
 
         $recipient1 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email1');
         $recipient2 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email2');
@@ -406,7 +412,8 @@ BODY;
                 'getComment',
                 'getLanguageFactory',
                 'getUserFromRecipientName',
-                'getRecipientFactory'
+                'getRecipientFactory',
+                'getTrackerPluginConfig',
             )
         );
         $changeset->setReturnValue('getUserHelper', $uh);
