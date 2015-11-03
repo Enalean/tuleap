@@ -1,3 +1,6 @@
+Version 2.26.89 - Tuleap 8.8
+    * request #8453: Optimize the CSV exportation in statistics plugin
+
 Version 2.26.88 - Tuleap 8.8
     * request #8543 Can no longer browse epics
 
