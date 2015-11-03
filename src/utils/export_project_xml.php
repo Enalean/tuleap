@@ -116,12 +116,17 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
             echo $xml_content;
         }
 
-        $archive->addFromString('project.xml', $xml_content);
+        if (! $archive->addFromString('project.xml', $xml_content)) {
+            fwrite(STDERR, "Unable to add project.xml into archive." . PHP_EOL);
+        }
         $xml_security->disableExternalLoadOfEntities();
 
-        $archive->close();
-
-        fwrite(STDOUT, "Archive $output created." . PHP_EOL);
+        if (! $archive->close()) {
+            fwrite(STDERR, "Unable to close ZipArchive." . PHP_EOL);
+            fwrite(STDERR, "Archive error: " . $archive->getStatusString() . PHP_EOL);
+        } else {
+            fwrite(STDOUT, "Archive $output created." . PHP_EOL);
+        }
 
         exit(0);
     } catch (XML_ParseException $exception) {
