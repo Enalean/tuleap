@@ -1,3 +1,6 @@
+Version 5.729 - Tuleap 8.8
+    * story #8399: Fix unit tests
+
 Version 5.728 - Tuleap 8.8
     * request #8487: Special chars not properly escaped in XML export
 
