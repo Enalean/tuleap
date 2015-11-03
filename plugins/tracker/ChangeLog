@@ -1,3 +1,6 @@
+Version 5.730 - Tuleap 8.8
+    * request #8536 Allow export process to be ran on a different server than front
+
 Version 5.729 - Tuleap 8.8
     * story #8399: Fix unit tests
 
