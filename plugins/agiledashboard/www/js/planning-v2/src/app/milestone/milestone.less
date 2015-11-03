@@ -119,6 +119,12 @@ div.milestones {
                             color: #444444;
                             transition: all 0.05s linear;
 
+                            @media screen and (max-width: 1400px) {
+                                > span {
+                                    display: none;
+                                }
+                            }
+
                             &:hover {
                                 text-decoration: none;
                                 color: #888888;
@@ -172,6 +178,10 @@ div.milestones {
                     display: none;
                 }
             }
+        }
+
+        &.updating > legend {
+            background: #FFF url('loader-mini.gif') no-repeat 10px center;
         }
     }
 

@@ -118,7 +118,7 @@
             <div translate class="alert alert-warning" ng-if="displayUserCantPrioritizeForMilestones()">
                 You are not allowed to rank on this planning
             </div>
-            <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed }">
+            <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }">
                 <legend ng-click="toggle($event, milestone)">
                     {{ milestone.label }}
                     <div
@@ -155,10 +155,31 @@
                         <span class="initial-effort-value" ng-if="milestone.initialEffort" ng-class="{ higher: milestone.initialEffort > milestone.capacity }">{{ milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestone.initialEffort" translate>N/A</span>
 
                         <ul>
-                            <li><a href="{{ generateMilestoneLinkUrl(milestone, 'blcontent') }}"><i class="icon-list-ul"></i> <span translate>Content</span></a></li>
-                            <li ng-if="milestone.resources.milestones.accept.trackers.length > 0"><a href="{{ generateMilestoneLinkUrl(milestone, 'planning-v2') }}"><i class="icon-signin"></i> <span translate>Planning</span></a></li>
-                            <li ng-if="milestone.resources.burndown"><a href="{{ generateMilestoneLinkUrl(milestone, 'burndown') }}"><i class="icon-bar-chart"></i> <span translate>Burndown</span></a></li>
-                            <li ng-if="milestone.resources.cardwall"><a href="{{ generateMilestoneLinkUrl(milestone, 'cardwall') }}"><i class="icon-table"></i> <span translate>Cardwall</span></a></li>
+                            <li>
+                                <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditSubmilestoneModal($event, milestone)" title="{{ 'Edit' | translate }}">
+                                    <i class="icon-edit"></i> <span translate>Edit</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ generateMilestoneLinkUrl(milestone, 'blcontent') }}" title="{{ 'Content' | translate }}">
+                                    <i class="icon-list-ul"></i> <span translate>Content</span>
+                                </a>
+                            </li>
+                            <li ng-if="milestone.resources.milestones.accept.trackers.length > 0">
+                                <a href="{{ generateMilestoneLinkUrl(milestone, 'planning-v2') }}" title="{{ 'Planning' | translate }}">
+                                    <i class="icon-signin"></i> <span translate>Planning</span>
+                                </a>
+                            </li>
+                            <li ng-if="milestone.resources.burndown">
+                                <a href="{{ generateMilestoneLinkUrl(milestone, 'burndown') }}" title="{{ 'Burndown' | translate }}">
+                                    <i class="icon-bar-chart"></i> <span translate>Burndown</span>
+                                </a>
+                            </li>
+                            <li ng-if="milestone.resources.cardwall">
+                                <a href="{{ generateMilestoneLinkUrl(milestone, 'cardwall') }}" title="{{ 'Cardwall' | translate }}">
+                                    <i class="icon-table"></i> <span translate>Cardwall</span>
+                                </a>
+                            </li>
                         </ul>
 
                         <div style="clear: both"></div>

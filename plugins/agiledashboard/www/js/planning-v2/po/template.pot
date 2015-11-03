@@ -58,6 +58,14 @@ msgid "Detailed view"
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "Edit"
+msgstr ""
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Edit this item"
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "Filter..."
 msgstr ""
 
