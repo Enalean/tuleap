@@ -32,7 +32,7 @@ class Widget_ProjectLatestFileReleases extends Widget {
         $pm = ProjectManager::instance();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
-            $this->content = $project->services['file']->getSummaryPageContent();
+            $this->content = $project->getService(Service::FILE)->getSummaryPageContent();
         }
     }
     function getTitle() {

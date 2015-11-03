@@ -62,7 +62,7 @@ function file_utils_admin_header($params) {
         $p = $pm->getProject($group_id);
 
         echo '<strong>';
-        echo '<a href="/file/?group_id='.$group_id.'">'. $Language->getText('project_admin_editservice', $p->services['file']->getLabel()) .'</a>';
+        echo '<a href="/file/?group_id='.$group_id.'">'. $Language->getText('project_admin_editservice', $p->getService(Service::FILE)->getLabel()) .'</a>';
         echo ' | <a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
 	echo ' | <a href="/file/admin/manageprocessors.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','manage_proc').'</a>';
 	if (!isset($params['help'])) { $params['help'] = "frs.html";}

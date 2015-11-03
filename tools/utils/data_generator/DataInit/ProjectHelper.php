@@ -103,7 +103,7 @@ class ProjectHelper {
     private function getServices() {
         $services = array();
         $template = \ProjectManager::instance()->getProject(100);
-        foreach ($template->services as $key => $service) {
+        foreach ($template->getServices() as $key => $service) {
             $is_used = $service->isActive() && $service->isUsed();
             $services[$service->getId()]['is_used'] = $is_used;
         }

@@ -78,15 +78,14 @@ class Project extends Group implements PFO_Project {
     var $project_data_array;
 
     // All data concerning services for this project
-    var $service_data_array;
-    var $use_service;
-    var $cache_active_service;
-    var $services;
+    private $service_data_array = null;
+    private $cache_active_services;
+    private $services;
     
     /**
      * @var array The classnames for services
      */
-    protected $serviceClassnames;
+    private $serviceClassnames;
     
     /*
 		basically just call the parent to set up everything
@@ -98,13 +97,19 @@ class Project extends Group implements PFO_Project {
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table
         $this->project_data_array = $this->data_array;
-        
-        // Get defined classname of services
-        // TODO: Move this in a helper for performances pov (load of many projects)
-        $this->serviceClassnames = array('file' => 'ServiceFile',
-                            'svn'  => 'ServiceSVN');
+    }
+
+    private function cacheServices() {
+        if ($this->services !== null) {
+            return;
+        }
+
+        $this->serviceClassnames = array(
+            'file' => 'ServiceFile',
+            'svn'  => 'ServiceSVN'
+        );
         EventManager::instance()->processEvent(Event::SERVICE_CLASSNAMES, array('classnames' => &$this->serviceClassnames));
-        
+
         // Get Service data
         $allowed_services = ServiceManager::instance()->getListOfAllowedServicesForProject($this);
         if (count($allowed_services) < 1) {
@@ -117,7 +122,7 @@ class Project extends Group implements PFO_Project {
             if (! $short_name) {
                 $short_name = $j++;
             }
-            
+
             // needed for localisation
             $matches = array();
             if ($res_row['description'] == "service_" . $short_name . "_desc_key") {
@@ -136,14 +141,30 @@ class Project extends Group implements PFO_Project {
             }
 
             $this->service_data_array[$short_name] = $res_row;
-            if ($short_name) {
-                $this->use_service[$short_name] = $service->isUsed();
-            }
             $this->services[$short_name] = $service;
             if ($service->isActive()) {
                 $this->cache_active_services[] = $service;
             }
         }
+    }
+
+    public function getMinimalRank() {
+        // get it, no matter if summary is enabled or not
+        $this->cacheServices();
+        return $this->services[Service::SUMMARY]->getRank();
+    }
+
+    public function getServiceLabel($short_name) {
+        return $this->getService($short_name)->getLabel();
+    }
+
+    private function getServiceLink($short_name) {
+        return $this->getService($short_name)->getUrl();
+    }
+
+    public function getServicesData() {
+        $this->cacheServices();
+        return $this->service_data_array;
     }
 
     /**
@@ -169,18 +190,19 @@ class Project extends Group implements PFO_Project {
      * @return Service
      */
     public function getService($service_name) {
+        $this->cacheServices();
         return $this->usesService($service_name) ? $this->services[$service_name] : null;
     }
-    
+
     /**
      * 
      * @return array
      */
     public function getAllUsedServices() {
         $used_services = array();
-        foreach($this->use_service as $service_name => $is_service_used) {
-            if($is_service_used) {
-                $used_services[] = $service_name;
+        foreach($this->getServices() as $service) {
+            if ($service->isUsed()) {
+                $used_services[] = $service->getShortName();
             }
         }
         
@@ -191,106 +213,109 @@ class Project extends Group implements PFO_Project {
      * @return Service[]
      */
     public function getServices() {
+        $this->cacheServices();
         return $this->services;
     }
 
     public function getActiveServices() {
+        $this->cacheServices();
         return $this->cache_active_services;
     }
     
     function usesHomePage() {
-        return isset($this->use_service['homepage']) && $this->use_service['homepage'];
+        return $this->usesService(Service::HOMEPAGE);
     }
     
     function usesAdmin() {
-        return isset($this->use_service['admin']) && $this->use_service['admin'];
+        return $this->usesService(Service::ADMIN);
     }
     
     function usesSummary() {
-        return isset($this->use_service['summary']) && $this->use_service['summary'];
+        return $this->usesService(Service::SUMMARY);
     }
 
     function usesTracker() {
-        return isset($this->use_service['tracker']) && $this->use_service['tracker'];
+        return $this->usesService(Service::TRACKERV3);
     }
 
     function usesCVS() {
-        return isset($this->use_service['cvs']) && $this->use_service['cvs'];
+        return $this->usesService(Service::CVS);
     }
 
     function usesSVN() {
-        return isset($this->use_service['svn']) && $this->use_service['svn'];
+        return $this->usesService(Service::SVN);
     }
 
     function usesDocman() {
-        return isset($this->use_service['doc']) && $this->use_service['doc'];
+        return $this->usesService(Service::LEGACYDOC);
     }
 
     function usesFile() {
-        return isset($this->use_service['file']) && $this->use_service['file'];
+        return $this->usesService(Service::FILE);
     }
 
     //whether or not this group has opted to use mailing lists
     function usesMail() {
-        return isset($this->use_service['mail']) && $this->use_service['mail'];
+        return $this->usesService(Service::ML);
     }
 
     //whether or not this group has opted to use news
     function usesNews() {
-        return isset($this->use_service['news']) && $this->use_service['news'];
+        return $this->usesService(Service::NEWS);
     }
 
     //whether or not this group has opted to use discussion forums
     function usesForum() {
-        return isset($this->use_service['forum']) && $this->use_service['forum'];
+        return $this->usesService(Service::FORUM);
     }       
 
     //whether or not this group has opted to use surveys
     function usesSurvey() {
-        return isset($this->use_service['survey']) && $this->use_service['survey'];
+        return $this->usesService(Service::SURVEY);
     }       
 
     //whether or not this group has opted to use wiki
     function usesWiki() {
-        return isset($this->use_service['wiki']) && $this->use_service['wiki'];
+        return $this->usesService(Service::WIKI);
     }   
 
 
     // Generic versions
 
     function usesService($service_short_name) {
-        return isset($this->use_service[$service_short_name]) && $this->use_service[$service_short_name];
+        $data = $this->getServicesData();
+        return isset($data[$service_short_name]) && $data[$service_short_name]['is_used'];
     }
 
     /*
         The URL for this project's home page
     */
     function getHomePage() {
-        return $this->usesHomePage() ? $this->service_data_array['homepage']['link'] : '';
+        return $this->usesHomePage() ? $this->getServiceLink(Service::HOMEPAGE) : '';
     }
     
     function getWikiPage(){
-        return $this->service_data_array['wiki']['link'];
+        return $this->getServiceLink(Service::WIKI);
     }
 
     function getForumPage(){
-        return $this->service_data_array['forum']['link'];
+        return $this->getServiceLink(Service::FORUM);
     }
     
     function getMailPage(){
-        return $this->service_data_array['mail']['link'];
+        return $this->getServiceLink(Service::ML);
     }
     
     function getCvsPage(){
-        return $this->service_data_array['cvs']['link'];
+        return $this->getServiceLink(Service::CVS);
     }
     
     function getSvnPage(){
-        return $this->service_data_array['svn']['link'];
+        return $this->getServiceLink(Service::SVN);
     }
     
     function getTrackerPage(){
-        return $this->service_data_array['tracker']['link'];
+        return $this->getServiceLink(Service::TRACKERV3);
     }
     
     /*
