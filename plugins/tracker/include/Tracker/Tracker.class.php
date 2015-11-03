@@ -1408,7 +1408,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $breadcrumbs
         );
         $this->displayAdminHeader($layout, $title, $breadcrumbs);
-        echo '<h2>'. $title .'</h2>';
+        echo '<h1>'. $title .'</h1>';
     }
 
     public function getColor() {
@@ -1420,8 +1420,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        $this->displayWarningArtifactByEmailSemantic();
-        $this->displayWarningArtifactByEmailRequiredFields();
+        $this->displayWarningGeneralsettings();
         $this->displayAdminItemHeader($layout, 'editoptions');
 
         $this->renderer->renderToPage(
@@ -1430,7 +1429,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $this,
                 TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&func=admin-editoptions',
                 new Tracker_ColorPresenterCollection($this),
-                $this->getTrackerPluginConfig()
+                $this->getTrackerPluginConfig(),
+                $this->getArtifactByMailStatus()
             )
         );
 
@@ -2660,6 +2660,19 @@ EOS;
             $GLOBALS['Response']->addFeedback(
                 'warning',
                 $GLOBALS['Language']->getText('plugin_tracker_emailgateway','invalid_required_fields')
+            );
+        }
+    }
+
+    public function displayWarningGeneralsettings() {
+        $artifactbyemail_status = $this->getArtifactByMailStatus();
+
+        if (! $artifactbyemail_status->isRequiredFieldsConfigured($this)
+            || ! $artifactbyemail_status->isSemanticConfigured($this)
+        ) {
+            $GLOBALS['Response']->addFeedback(
+                'warning',
+                $GLOBALS['Language']->getText('plugin_tracker_emailgateway','invalid_configuration')
             );
         }
     }
