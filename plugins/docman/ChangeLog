@@ -1,3 +1,9 @@
+Version 2.26.88 - Tuleap 8.8
+    * request #8543 Can no longer browse epics
+
+
+
+
 Version 2.26.87 - Tuleap 8.8
     * request #8443: Take into account docman system references
 
