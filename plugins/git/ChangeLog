@@ -1,3 +1,6 @@
+Version 4.93 - Tuleap 8.8
+    * request #8459: Display messages as warning isntead of info during update Mirroring
+
 Version 4.92 - Tuleap 8.8
     * request #8532: Permission overrider doesn't deal properly with forceAnonymous
 
