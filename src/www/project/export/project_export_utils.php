@@ -12,26 +12,20 @@ $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 require_once('utils.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
-function tocsv($string) {
+function tocsv($string, $csv_separator) {
 
     // Escape the double quote character by doubling it
-    $string = ereg_replace('"', '""', $string);
+    $string = str_replace('"', '""', $string);
 
     //Surround with double quotes if there is a comma; 
     // a space or the user separator in the string
-    if (strchr($string,' ') || strchr($string,',') ||
-        strchr($string, get_csv_separator()) ||
-	strchr($string,'"') ||
-	strchr($string,"\n") ||
-	strchr($string,"\t") ||
-	strchr($string,"\r") ||
-	strchr($string,"\0") ||
-	strchr($string,"\x0B")) {
-	return "\"$string\"";
+    if (strpos($string, ' ') !== false || strpos($string, ',') !== false || strpos($string, $csv_separator) !== false ||
+        strpos($string, '"') !== false || strpos($string, "\n") !== false || strpos($string, "\t") !== false ||
+        strpos($string, "\r") !== false || strpos($string, "\0") !== false || strpos($string,"\x0B") !== false) {
+        return "\"$string\"";
     } else {
-	return $string;
+        return $string;
     }
-
 }
 
 /**
@@ -63,11 +57,12 @@ function get_csv_separator() {
 }
 
 function build_csv_header($col_list, $lbl_list) {
-    $line = '';
+    $line      = '';
+    $separator = get_csv_separator();
     reset($col_list);
     while (list(,$col) = each($col_list)) {
     	if (isset($lbl_list[$col])) {
-			$line .= tocsv($lbl_list[$col]).get_csv_separator();
+			$line .= tocsv($lbl_list[$col], $separator) . $separator;
     	}
     }
     $line = substr($line,0,-1);
@@ -75,10 +70,11 @@ function build_csv_header($col_list, $lbl_list) {
 }
 
 function build_csv_record($col_list, $record) {
-    $line = '';
+    $line      = '';
+    $separator = get_csv_separator();
     reset($col_list);
     while (list(,$col) = each($col_list)) {
-	$line .= tocsv($record[$col]).get_csv_separator();
+	$line .= tocsv($record[$col], $separator) . $separator;
     }
     $line = substr($line,0,-1);
     return $line;

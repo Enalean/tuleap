@@ -95,7 +95,7 @@ class Docman_PermissionsExport {
         header('Content-Disposition: filename='.$filename);
         header('Content-Type: text/csv');
         // Context
-        echo $GLOBALS['Language']->getText('plugin_docman','format_export_project').$sep.tocsv($this->group->getPublicName()).$sep.tocsv($this->group->getUnixName()).$sep.$this->group->getId().PHP_EOL;
+        echo $GLOBALS['Language']->getText('plugin_docman','format_export_project').$sep.tocsv($this->group->getPublicName(), $sep).$sep.tocsv($this->group->getUnixName(), $sep).$sep.$this->group->getId().PHP_EOL;
         echo $GLOBALS['Language']->getText('plugin_docman','format_export_date').$sep.format_date(util_get_user_preferences_export_datefmt(), $_SERVER['REQUEST_TIME']).PHP_EOL;
         echo PHP_EOL;
         
@@ -109,7 +109,7 @@ class Docman_PermissionsExport {
         echo PHP_EOL;
         foreach($output as $itemid => $row) {
             echo $itemid.$sep;
-            echo tocsv($row['title']).$sep;
+            echo tocsv($row['title'], $sep).$sep;
             echo $this->itemTypeToString($row['type']).$sep;
             foreach($this->getUgroups() as $id => $name) {
                 if (isset($row[$id])) {
