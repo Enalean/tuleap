@@ -248,10 +248,18 @@ tracker =
                 attribute REF { xsd:IDREF }
             },
             element source_value {
-                attribute REF { xsd:IDREF }
+                (
+                    attribute REF { xsd:IDREF }
+                |
+                    attribute is_none { "1" }
+                )
             },
             element target_value {
-                attribute REF { xsd:IDREF }
+                (
+                    attribute REF { xsd:IDREF }
+                |
+                    attribute is_none { "1" }
+                )
             }
         )
     dateRuleContent =

@@ -747,7 +747,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($values) {
             if (! $this->isRequired()) {
                 $none = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
-                $values = array_merge(array($none), $values);
+                $values = array($none->getId() => $none) + $values;
             }
         }
         return $values;

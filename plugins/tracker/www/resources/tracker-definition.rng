@@ -621,14 +621,24 @@
       </attribute>
     </element>
     <element name="source_value">
-      <attribute name="REF">
-        <data type="IDREF"/>
-      </attribute>
+      <choice>
+        <attribute name="REF">
+          <data type="IDREF"/>
+        </attribute>
+        <attribute name="is_none">
+          <value>1</value>
+        </attribute>
+      </choice>
     </element>
     <element name="target_value">
-      <attribute name="REF">
-        <data type="IDREF"/>
-      </attribute>
+      <choice>
+        <attribute name="REF">
+          <data type="IDREF"/>
+        </attribute>
+        <attribute name="is_none">
+          <value>1</value>
+        </attribute>
+      </choice>
     </element>
   </define>
   <define name="dateRuleContent">

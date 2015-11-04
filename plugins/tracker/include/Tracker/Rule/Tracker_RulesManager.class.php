@@ -334,10 +334,10 @@ class Tracker_RulesManager {
 
                 //Add dependencies in db
                 $field_source = $this->form_element_factory->getFormElementById($request->get('source_field'));
-                $field_source_values = $field_source->getBind()->getAllValues();
+                $field_source_values = $field_source->getVisibleValuesPlusNoneIfAny();
 
                 $field_target = $this->form_element_factory->getFormElementById($request->get('target_field'));
-                $field_target_values = $field_target->getBind()->getAllValues();
+                $field_target_values = $field_target->getVisibleValuesPlusNoneIfAny();
 
                 $currMatrix=array();
 
@@ -462,20 +462,8 @@ class Tracker_RulesManager {
 
 
     protected function displayDependenciesMatrix($source_field, $target_field, $dependencies=null) {
-
-       $source_field_values = array();
-       foreach ($source_field->getBind()->getAllValues() as $id => $v) {
-           if (!$v->isHidden()) {
-               $source_field_values[$id] = $v;
-           }
-       }
-
-       $target_field_values = array();
-       foreach ($target_field->getBind()->getAllValues() as $id => $v) {
-           if (!$v->isHidden()) {
-               $target_field_values[$id] = $v;
-           }
-       }
+       $source_field_values = $source_field->getVisibleValuesPlusNoneIfAny();
+       $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
 
        $nb_target_field_values =count($target_field_values);
        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
