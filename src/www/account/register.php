@@ -26,7 +26,7 @@ if($page == "admin_creation"){
    session_require(array('group'=>'1','admin_flags'=>'A'));
 }
 
-function register_valid($confirm_hash, array &$errors)	{
+function register_valid($mail_confirm_code, array &$errors)	{
     global $Language;
 
     $request =& HTTPRequest::instance();
@@ -112,7 +112,7 @@ function register_valid($confirm_hash, array &$errors)	{
                           ,$request->get('form_register_purpose')
                           ,$request->get('form_email')
                           ,$status
-                          ,$confirm_hash
+                          ,$mail_confirm_code
                           ,$request->get('form_mail_site')
                           ,$request->get('form_mail_va')
                           ,$tz
@@ -295,7 +295,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             $presenter          = new MailPresenterFactory();
-            $email_presenter    = $presenter->createMailAccountPresenter($user_name, '', $confirm_hash, "user", $logo_retriever->getUrl());
+            $email_presenter    = $presenter->createMailAccountPresenter($user_name, '', $mail_confirm_code, "user", $logo_retriever->getUrl());
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,
