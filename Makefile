@@ -128,6 +128,12 @@ clean-rng:
 # Tests and all
 #
 
+generate-po: ## Generate translatable strings
+	@tools/utils/generate-po.sh `pwd`
+
+generate-mo: ## Compile tranlated strings into binary format
+	@tools/utils/generate-mo.sh `pwd`
+
 composer_update:
 	cp tests/rest/bin/composer.json .
 	php $(COMPOSER) install

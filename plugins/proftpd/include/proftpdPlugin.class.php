@@ -24,6 +24,8 @@ class proftpdPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
+        bindtextdomain('tuleap-proftpd', __DIR__.'/../site-content');
+
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICE_IS_USED);
@@ -121,8 +123,8 @@ class proftpdPlugin extends Plugin {
 
         $params['logs'][] = array(
             'sql'   => $dao->getLogQuery($params['group_id'], $params['logs_cond']),
-            'field' => $GLOBALS['Language']->getText('plugin_proftpd', 'log_filepath'),
-            'title' => $GLOBALS['Language']->getText('plugin_proftpd', 'log_title')
+            'field' => dgettext('tuleap-proftpd', 'Filepath'),
+            'title' => dgettext('tuleap-proftpd', 'FTP access')
         );
     }
 

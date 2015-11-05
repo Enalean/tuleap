@@ -114,7 +114,7 @@ if (!$silent_mode) {
   print "***\n" if ($verbose_mode);
 }
 
-my @lang_tab_dir=`/bin/ls $tab_dir`;
+my @lang_tab_dir=`(cd $tab_dir && /bin/ls -d */)`;
 
 foreach my $my_tab_dir (@lang_tab_dir) {
   chomp $my_tab_dir;

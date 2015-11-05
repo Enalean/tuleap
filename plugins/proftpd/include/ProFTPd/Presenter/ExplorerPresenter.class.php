@@ -87,15 +87,15 @@ class ExplorerPresenter {
     }
 
     public function file_column_name() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'file_column_name');
+        return dgettext('tuleap-proftpd', 'File');
     }
 
     public function size_column_name() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'size_column_name');
+        return dgettext('tuleap-proftpd', 'Size (Bytes)');
     }
 
     public function date_added_column_name() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'date_added_column_name');
+        return dgettext('tuleap-proftpd', 'Date Added');
     }
 
     public function folder_list() {

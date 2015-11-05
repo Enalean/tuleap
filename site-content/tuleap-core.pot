@@ -1,0 +1,89 @@
+msgid "Agile Dashboard"
+msgstr ""
+
+msgid "And more..."
+msgstr ""
+
+msgid "CVS"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Dashboard of the project"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
+msgstr ""
+
+msgid "Escape from input/textarea, close dropdown or modal"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Forums"
+msgstr ""
+
+msgid "Git"
+msgstr ""
+
+msgid "Homepage"
+msgstr ""
+
+msgid "Instant messaging"
+msgstr ""
+
+msgid "Lists"
+msgstr ""
+
+msgid "Mediawiki"
+msgstr ""
+
+msgid "My personnal page"
+msgstr ""
+
+msgid "Navebar"
+msgstr ""
+
+msgid "News"
+msgstr ""
+
+msgid "Open \"Help\" dropdown"
+msgstr ""
+
+msgid "Open \"More\" dropdown"
+msgstr ""
+
+msgid "Open \"Projects\" dropdown"
+msgstr ""
+
+msgid "Open the account management dropdown (need to be connected)"
+msgstr ""
+
+msgid "Open/Close the shortcut window"
+msgstr ""
+
+msgid "Open/Collapse the sidebar"
+msgstr ""
+
+msgid "Project web site"
+msgstr ""
+
+msgid "SVN"
+msgstr ""
+
+msgid "Shortcut list"
+msgstr ""
+
+msgid "Sidebar (project)"
+msgstr ""
+
+msgid "Tracker"
+msgstr ""
+
+msgid "Wiki"
+msgstr ""

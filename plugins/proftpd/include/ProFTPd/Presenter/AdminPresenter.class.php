@@ -103,35 +103,40 @@ class AdminPresenter {
     }
 
     public function admin_title() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'admin_title');
+        return dgettext('tuleap-proftpd', '(S)FTP administration');
     }
 
     public function permissions_title() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_title');
+        return dgettext('tuleap-proftpd', 'Permissions');
     }
 
     public function readers_header() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'readers_header');
+        return dgettext('tuleap-proftpd', 'Readers');
     }
 
     public function writers_header() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'writers_header');
+        return dgettext('tuleap-proftpd', 'Writers');
     }
 
     public function permissions_pitch() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_pitch');
+        return dgettext('tuleap-proftpd', 'Select the user group that will be allowed to access and/or'.
+            ' modify content in the FTP area. Please note that Writers will automatically have read access as well.');
     }
 
     public function permissions_create_modify() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_create_modify', array(
+        return sprintf(
+            dgettext('tuleap-proftpd', 'You can also <a href="%1$s">create</a> or <a href="%2$s">modify</a>
+                user groups in project administration.'
+            ),
             $this->create_ugroup_url,
             $this->update_ugroup_url
-        ));
+        );
     }
 
     public function permissions_create() {
-        return $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_create', array(
+        return sprintf(
+            dgettext('tuleap-proftpd', 'No user group defined yet ! You should <a href="%1$s">create</a> some in project administration.'),
             $this->create_ugroup_url
-        ));
+        );
     }
 }
