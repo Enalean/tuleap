@@ -1,9 +1,19 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
-include "ugroups-definition.rnc"
+grammar {
+    start = element ugroups {
+        element ugroup {
+            attribute name { xsd:string },
+            attribute description { xsd:string },
+            element members {
+                element member {
+                    user_content
+                }*
+            }
+        }+
+    }
 
-start = element ugroups {
-            element ugroup {
-                ugroup
-            }+
-        }
+    user_content =
+        attribute format { "username" | "ldap" | "id" },
+        xsd:string
+}
