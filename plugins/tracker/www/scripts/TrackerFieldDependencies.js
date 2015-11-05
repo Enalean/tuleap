@@ -19,7 +19,7 @@
 * along with Codendi; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *
-*
+* 
 */
 
 // Define namespace to prevent clashes
@@ -72,7 +72,7 @@ codendi.tracker.RuleNode = Class.create({
     initialize:function(field) {
         this.field = field;
         this.targets = {};
-
+        
         //Register event on the field
         var f = codendi.tracker.fields.get(this.field);
         this.onchangeEvent = f.onchange.bind(f);
@@ -101,31 +101,27 @@ codendi.tracker.RuleNode = Class.create({
     process: function() {
         //retrieve selected source values
         var selected_sources = codendi.tracker.fields.get(this.field).element().getValue();
-        var NONE_OPTION      = 100;
 
         //var selected_sources = codendi.tracker.fields.get(this.field)./*element().getValue()*/label;
         if (!Object.isArray(selected_sources)) {
             selected_sources = [selected_sources];
         }
-
+        
         //Store only if we are root (else already stored before we reach this field)
         if (codendi.tracker.rule_forest.isTree(this.field)) {
             codendi.tracker.fields.get(this.field).updateSelectedState(selected_sources);
         }
-
+        
         //for each targets of this field
         $H(this.targets).each(function (target) {
             var target_field_id = target.key;
             var transitions = target.value;
-
+            
             //retrieve options of the target
             var target_options = codendi.tracker.fields.get(target_field_id).options;
-
+            
             //Build the new options accordingly to the rules
             var new_target_options = {};
-
-            new_target_options[NONE_OPTION] = Object.clone(target_options[NONE_OPTION]);
-
             selected_sources.each(function (selected_value) {
                 if (transitions.values[selected_value]) {
                     transitions.values[selected_value].each(function (target_value) {
@@ -135,7 +131,7 @@ codendi.tracker.RuleNode = Class.create({
             });
             //Force field to new options
             codendi.tracker.fields.get(target_field_id).force(new_target_options);
-
+            
             //Chain the process
             codendi.tracker.rule_forest.getNode(target_field_id).process();
         });
@@ -164,14 +160,14 @@ codendi.tracker.Field = Class.create({
     force: function(new_options) {
         var el = this.element();
         //Clear the field
-        var len = el.options.length;
+        var len = el.options.length; 
         for (var i = len; i >= 0; i--) {
             el.options[i] = null;
         }
-
+        
         //Revert selected state for all options
         this.updateSelectedState();
-
+        
         //Add options
         $H(this.options).values().each((function (option) {
             if ($H(new_options).keys().find(function(value) { return value == option.value; })) {
@@ -184,7 +180,7 @@ codendi.tracker.Field = Class.create({
                 el.options[el.options.length] = opt;
             }
         }).bind(this));
-
+        
         //We've finished. Highlight the field to indicate to the user that it has changed (or not)
         this.highlight();
     },
@@ -211,8 +207,8 @@ codendi.tracker.Field = Class.create({
 
         var el = this.element();
         //Store the selected state
-        var len = el.options.length;
-
+        var len = el.options.length; 
+        
         for (var i = 0; i < len; ++i) {
             if (typeof this.options[el.options[i].value] !== "undefined") {
                 this.options[el.options[i].value].selected = el.options[i].selected;
@@ -241,8 +237,8 @@ codendi.tracker.runTrackerFieldDependencies = function() {
     //Only if fields and values exist
     codendi.tracker.rule_forest.reset();
     codendi.tracker.rules_definitions.each(function (rule_definition) {
-        if (rule_definition.source_field != rule_definition.target_field
-            && codendi.tracker.fields.get(rule_definition.source_field)
+        if (rule_definition.source_field != rule_definition.target_field 
+            && codendi.tracker.fields.get(rule_definition.source_field) 
             && codendi.tracker.fields.get(rule_definition.target_field)
             && codendi.tracker.fields.get(rule_definition.source_field).element()
             && codendi.tracker.fields.get(rule_definition.target_field).element()
@@ -255,22 +251,22 @@ codendi.tracker.runTrackerFieldDependencies = function() {
                                                 );
         }
     });
-
+    
     //Apply the initial rules
-    $H(codendi.tracker.rule_forest.trees).each(function (rule_node) {
+    $H(codendi.tracker.rule_forest.trees).each(function (rule_node) {      
         rule_node.value.process();
     });
-
+    
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
     var codendi_field_dependencies_highlight_change = tuleap.getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
     if (codendi_field_dependencies_highlight_change && codendi_field_dependencies_highlight_change != '') {
         HIGHLIGHT_STARTCOLOR = codendi_field_dependencies_highlight_change;
     }
     var hexChars = "0123456789ABCDEF";
-    function Dec2Hex (Dec) {
-        var a = Dec % 16;
-        var b = (Dec - a)/16;
-        var hex = "" + hexChars.charAt(b) + hexChars.charAt(a);
+    function Dec2Hex (Dec) { 
+        var a = Dec % 16; 
+        var b = (Dec - a)/16; 
+        var hex = "" + hexChars.charAt(b) + hexChars.charAt(a); 
         return hex;
     }
     var re = new RegExp(/rgb\([^0-9]*([0-9]+)[^0-9]*([0-9]+)[^0-9]*([0-9]+)\)/); //Fx returns rgb(123, 64, 32) instead of hexa color
@@ -290,3 +286,4 @@ codendi.tracker.runTrackerFieldDependencies = function() {
 document.observe('dom:loaded', codendi.tracker.runTrackerFieldDependencies);
 
 //}}}
+
