@@ -56,6 +56,11 @@ class Tracker_Artifact_XMLExport {
         foreach ($all_artifacts as $artifact) {
             $artifact->exportToXML($artifacts_node, $user, $archive);
         }
+
+        $this->rng_validator->validate(
+            $artifacts_node,
+            realpath(dirname(TRACKER_BASE_DIR) . self::ARTIFACTS_RNG_PATH)
+        );
     }
 
     private function checkThreshold($nb_artifacts) {
