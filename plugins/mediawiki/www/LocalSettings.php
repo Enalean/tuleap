@@ -178,12 +178,13 @@ $wgImageMagickConvertCommand = "/usr/bin/convert";
 $wgLocalInterwiki            = $wgSitename;
 $wgShowExceptionDetails      = true ;
 
-$user            = UserManager::instance()->getCurrentUser();
+$user       = UserManager::instance()->getCurrentUser();
+$mw_service = $group->getService(MediaWikiPlugin::SERVICE_SHORTNAME);
 
 $used_language = $language_manager->getUsedLanguageForProject($group);
 if ($used_language) {
     $wgLanguageCode  = substr($used_language, 0, 2);
-} else if ($group->getService(MediaWikiPlugin::SERVICE_SHORTNAME)->userIsAdmin($user)) {
+} else if ($mw_service && $mw_service->userIsAdmin($user)) {
     header('Location: /plugins/mediawiki/forge_admin?group_id='. $group->getID() .'&pane=language&nolang=1');
     die();
 } else {
