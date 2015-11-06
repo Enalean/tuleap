@@ -1,3 +1,6 @@
+Version 5.734 - Tuleap 8.8
+    * Revert "request #8535 There should be only one validation of the whole XML import file"
+
 Version 5.733 - Tuleap 8.8
     * Revert "story #8537: have None as a possible target value in field dependencies"
 
