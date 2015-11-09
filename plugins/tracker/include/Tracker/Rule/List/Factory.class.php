@@ -128,13 +128,21 @@ class Tracker_Rule_List_Factory {
                     $duplicate_source_field_id = $mapping['to'];
 
                     $mapping_values = $mapping['values'];
-                    $duplicate_source_value_id = $mapping_values[$source_value_id];
+                    if ((int)$source_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                        $duplicate_source_value_id = $source_value_id;
+                    } else {
+                        $duplicate_source_value_id = $mapping_values[$source_value_id];
+                    }
                 }
                 if ($mapping['from'] == $target_field_id) {
                     $duplicate_target_field_id = $mapping['to'];
 
                     $mapping_values = $mapping['values'];
-                    $duplicate_target_value_id = $mapping_values[$target_value_id];
+                    if ((int)$target_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                        $duplicate_target_value_id = $target_value_id;
+                    } else {
+                        $duplicate_target_value_id = $mapping_values[$target_value_id];
+                    }
                 }
             }
             $this->dao->create($to_tracker_id, $duplicate_source_field_id, $duplicate_source_value_id, $duplicate_target_field_id, $duplicate_target_value_id);
@@ -161,8 +169,17 @@ class Tracker_Rule_List_Factory {
                 $child = $list_rules->addChild('rule');
                 $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
                 $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
-                $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
-                $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+                if ($rule->source_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    $child->addChild('source_value')->addAttribute('is_none', '1');
+                } else {
+                    $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
+                }
+
+                if ($rule->target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    $child->addChild('target_value')->addAttribute('is_none', '1');
+                } else {
+                    $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+                }
             }
         }
     }

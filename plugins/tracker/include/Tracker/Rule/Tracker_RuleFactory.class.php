@@ -363,10 +363,18 @@ class Tracker_RuleFactory {
             $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
 
             $xml_source_value_attributes = $xml_rule->source_value->attributes();
-            $source_value = $xmlMapping[(string)$xml_source_value_attributes['REF']];
+            if (isset($xml_source_value_attributes['is_none'])) {
+                $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            } else {
+                $source_value = $xmlMapping[(string)$xml_source_value_attributes['REF']];
+            }
 
             $xml_target_value_attributes = $xml_rule->target_value->attributes();
-            $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
+            if (isset($xml_target_value_attributes['is_none'])) {
+                $target_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            } else {
+                $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
+            }
 
             $rule_list = new Tracker_Rule_List();
             $rule_list->setSourceValue($source_value)
