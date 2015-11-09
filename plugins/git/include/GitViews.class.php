@@ -550,6 +550,7 @@ class GitViews extends PluginViews {
         if (!empty($params['repository_list']) || (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0)) {
             echo '<h1>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"><i class="icon-question-sign"></i></a></h1>';
             if (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0) {
+                $purifier   = Codendi_HTMLPurifier::instance();
                 $current_id = null;
                 if (!empty($params['user'])) {
                     $current_id = (int)$params['user'];
@@ -559,7 +560,10 @@ class GitViews extends PluginViews {
                 $selected = 'selected="selected"';
                 $select .= '<option value="" '. ($current_id ? '' : $selected) .'>'. $this->getText('tree_title_available_repo') .'</option>';
                 foreach ($params['repositories_owners'] as $owner) {
-                    $select .= '<option value="'. (int)$owner['repository_creation_user_id'] .'" '. ($owner['repository_creation_user_id'] == $current_id ? $selected : '') .'>'. $uh->getDisplayName($owner['user_name'], $owner['realname']) .'</option>';
+                    $select .= '<option value="'. (int)$owner['repository_creation_user_id'] .'" '.
+                        ($owner['repository_creation_user_id'] == $current_id ? $selected : '') .'>'.
+                        $purifier->purify($uh->getDisplayName($owner['user_name'], $owner['realname'])) .
+                        '</option>';
                 }
                 $select .= '</select>';
                 echo '<form action="" class="form-tree" method="GET">';
