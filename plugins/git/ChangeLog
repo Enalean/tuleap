@@ -1,3 +1,6 @@
+Version 4.94 - Tuleap 8.9
+    * request #8554: Fix XSS in the selector of forked Git repositories
+
 Version 4.93 - Tuleap 8.8
     * request #8459: Display messages as warning isntead of info during update Mirroring
 
