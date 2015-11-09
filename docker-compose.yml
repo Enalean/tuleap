@@ -29,7 +29,7 @@ es:
   image: enalean/elasticsearch-tuleap
   volumes_from:
    - tuleap_es_data
-  command: /elasticsearch/bin/elasticsearch -Des.config=/data/elasticsearch.yml
+  command: -Des.script.disable_dynamic=false
 
 db:
   image: mysql:5.5
