@@ -353,9 +353,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, PFUser $user, $can_create) {
         $purifier = Codendi_HTMLPurifier::instance();
+        $possible_parents_getr = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory());
         $html     = '';
         $html    .= '<p>';
-        list($label, $possible_parents, $display_selector) = $this->getPossibleArtifactParents($parent_tracker, $user);
+        list($label, $possible_parents, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent_tracker, $user);
         if ($display_selector) {
             $html .= '<label>';
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $purifier->purify($parent_tracker->getItemName()));
@@ -389,27 +390,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= '</optgroup>';
         }
         return $html;
-    }
-
-    private function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user) {
-        $label            = '';
-        $possible_parents = array();
-        $display_selector = true;
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR,
-            array(
-                'user'             => $user,
-                'parent_tracker'   => $parent_tracker,
-                'possible_parents' => &$possible_parents,
-                'label'            => &$label,
-                'display_selector' => &$display_selector,
-            )
-        );
-        if (!$possible_parents) {
-            $label            = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_open_parent', array($parent_tracker->getName()));
-            $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
-        }
-        return array($label, $possible_parents, $display_selector);
     }
 
     /**

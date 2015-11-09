@@ -111,6 +111,36 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchOpenByTrackerIdWithTitle($tracker_id, $limit, $offset) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $limit      = $this->da->escapeInt($limit);
+        $offset     = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT_title.value as title
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
+                    LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
+                    LEFT JOIN (                         -- For the /title/ if any
+                        tracker_changeset_value AS CV_title
+                        INNER JOIN tracker_semantic_title as ST ON (CV_title.field_id = ST.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT_title ON (CV_title.id = CVT_title.changeset_value_id)
+                    ) ON (C.id = CV_title.changeset_id)
+                WHERE (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )
+                ORDER BY A.id DESC
+                LIMIT $limit OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchClosedByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT a.*

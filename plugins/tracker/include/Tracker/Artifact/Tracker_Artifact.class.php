@@ -533,6 +533,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->title;
     }
 
+    public function getCachedTitle() {
+        return $this->title;
+    }
+
     /**
      * @param string $title
      */
