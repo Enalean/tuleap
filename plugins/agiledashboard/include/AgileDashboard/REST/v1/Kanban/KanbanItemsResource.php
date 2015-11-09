@@ -50,6 +50,7 @@ use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanItemManager;
 use Tuleap\RealTime\NodeJSClient;
 use AgileDashboard_KanbanActionsChecker;
+use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 
 class KanbanItemsResource extends AuthenticatedResource {
 
@@ -103,6 +104,7 @@ class KanbanItemsResource extends AuthenticatedResource {
         );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             new AgileDashboard_KanbanActionsChecker(
                 $this->tracker_factory,
                 $permissions_manager,

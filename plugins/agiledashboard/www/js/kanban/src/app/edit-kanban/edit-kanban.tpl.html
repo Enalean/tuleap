@@ -23,39 +23,57 @@
 
         <h3><i class="icon-columns"></i> <span translate>Columns configuration</span></h3>
         <div ui-tree="edit_modal.reorderColumnsTreeOptions" class="column-configuration">
+            <p translate>
+                You can reorder and remove columns. More information about columns are available in the field administration used by the semantic status in the <a href="/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}">tracker</a>.
+            </p>
             <ul ui-tree-nodes ng-model="edit_modal.kanban.columns" class="column-configuration-column-list">
-                <li><i class="icon-inbox"></i> <span translate>Backlog</span></li>
+                <li>
+                    <div>
+                        <i class="icon-inbox"></i> <span translate>Backlog</span>
+                    </div>
+                </li>
                 <li ui-tree-node
                     data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
                     ng-repeat="column in edit_modal.kanban.columns"
                     ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns }"
                 >
-                    {{ column.label }}
+                    <div>{{ column.label }}</div>
+                    <div>
+                        <button ng-if="column.user_can_remove_column" data-nodrag="true" ng-click="edit_modal.removeColumn(column.id)" class="btn btn-mini">
+                            <i class="icon-trash"></i> <span translate>Remove</span>
+                        </button>
+                    </div>
                 </li>
                 <li ng-if="edit_modal.kanban.user_can_add_columns" class="add-column">
-                    <form ng-submit="edit_modal.addColumn()" ng-show="edit_modal.adding_column">
-                        <div class="input-append">
-                            <input type="text"
-                                ng-model="edit_modal.new_column_label"
-                                placeholder="{{ 'Column name' | translate }}"
-                                add-column-input
-                                required
-                            >
-                            <button class="btn" type="submit" ng-disabled="edit_modal.processing()">
-                                <i class="icon-spinner icon-spin" ng-show="edit_modal.saving_new_column"></i>
-                                <i class="icon-plus" ng-show="! edit_modal.saving_new_column"></i>
-                                <span translate>Add</span>
-                            </button>
-                            <button class="btn" ng-click="edit_modal.cancelAddColumn()" ng-disabled="edit_modal.processing()">
-                                <i class="icon-remove"></i> <span translate>Cancel</span>
-                            </button>
-                        </div>
-                    </form>
-                    <button class="btn" ng-disabled="edit_modal.processing()" ng-click="edit_modal.addColumn()" ng-show="! edit_modal.adding_column">
-                        <i class="icon-plus"></i> <span translate>Add a column</span>
-                    </button>
+                    <div>
+                        <form ng-submit="edit_modal.addColumn()" ng-show="edit_modal.adding_column">
+                            <div class="input-append">
+                                <input type="text"
+                                    ng-model="edit_modal.new_column_label"
+                                    placeholder="{{ 'Column name' | translate }}"
+                                    add-column-input
+                                    required
+                                >
+                                <button class="btn" type="submit" ng-disabled="edit_modal.processing()">
+                                    <i class="icon-spinner icon-spin" ng-show="edit_modal.saving_new_column"></i>
+                                    <i class="icon-plus" ng-show="! edit_modal.saving_new_column"></i>
+                                    <span translate>Add</span>
+                                </button>
+                                <button class="btn" ng-click="edit_modal.cancelAddColumn()" ng-disabled="edit_modal.processing()">
+                                    <i class="icon-remove"></i> <span translate>Cancel</span>
+                                </button>
+                            </div>
+                        </form>
+                        <button class="btn" ng-disabled="edit_modal.processing()" ng-click="edit_modal.addColumn()" ng-show="! edit_modal.adding_column">
+                            <i class="icon-plus"></i> <span translate>Add a column</span>
+                        </button>
+                    </div>
                 </li>
-                <li><i class="icon-archive"></i> <span translate>Archive</span></li>
+                <li>
+                    <div>
+                        <i class="icon-archive"></i> <span translate>Archive</span>
+                    </div>
+                </li>
             </ul>
         </div>
 

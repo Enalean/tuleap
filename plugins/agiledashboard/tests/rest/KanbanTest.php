@@ -418,6 +418,17 @@ class KanbanTest extends RestBase {
     }
 
     /**
+     * @depends testPOSTKanbanColumn
+     */
+    public function testDELETEKanbanColumns() {
+        $url = 'kanban_columns/'. REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID.'?kanban_id='. REST_TestDataBuilder::KANBAN_ID;
+
+        $response = $this->getResponse($this->client->delete($url, null));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
      * @depends testPUTKanbanColumn
      */
     public function testOPTIONSKanbanItems() {

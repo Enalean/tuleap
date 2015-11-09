@@ -25,7 +25,9 @@ use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use TrackerFactory;
 use PFUser;
+use Exception;
 use AgileDashboard_KanbanUserPreferences;
+use AgileDashboard_KanbanActionsChecker;
 
 class KanbanRepresentation {
 
@@ -87,6 +89,7 @@ class KanbanRepresentation {
         AgileDashboard_Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanUserPreferences $user_preferences,
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
         $user_can_add_columns,
         $user_can_reorder_columns,
         $user_can_add_in_place,
@@ -109,7 +112,7 @@ class KanbanRepresentation {
         $this->tracker = new TrackerReference();
         $this->tracker->build($this->getTracker($kanban));
 
-        $this->setColumns($kanban, $column_factory, $user_can_add_in_place, $user);
+        $this->setColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user);
 
         $this->resources = array(
             'backlog' => array(
@@ -124,14 +127,23 @@ class KanbanRepresentation {
     private function setColumns(
         AgileDashboard_Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
         $user_can_add_in_place,
         PFUser $user
     ) {
         $columns = $column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
 
+
         foreach ($columns as $column) {
+            try {
+                $kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);
+                $user_can_remove_column = true;
+            } catch (Exception $exception) {
+                $user_can_remove_column = false;
+            }
+
             $column_representation = new KanbanColumnRepresentation();
-            $column_representation->build($column, $user_can_add_in_place);
+            $column_representation->build($column, $user_can_add_in_place, $user_can_remove_column);
 
             $this->columns[] = $column_representation;
         }

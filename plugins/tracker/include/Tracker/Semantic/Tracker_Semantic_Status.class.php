@@ -361,6 +361,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return $new_id;
     }
 
+    public function removeOpenValue($value) {
+        $this->open_values = array_diff($this->open_values, array($value));
+        return $this->save();
+    }
+
     protected static $_instances;
     /**
      * Load an instance of a Tracker_Semantic_Status

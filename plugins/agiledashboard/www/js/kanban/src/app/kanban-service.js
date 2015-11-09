@@ -33,7 +33,8 @@
             updateKanbanLabel   : updateKanbanLabel,
             deleteKanban        : deleteKanban,
             addColumn           : addColumn,
-            reorderColumns      : reorderColumns
+            reorderColumns      : reorderColumns,
+            removeColumn        : removeColumn
         };
 
         function getKanban(id) {
@@ -282,6 +283,12 @@
                 .one('kanban', kanban_id)
                 .all('columns')
                 .customPUT(sorted_columns_ids);
+        }
+
+        function removeColumn(kanban_id, column_id) {
+            return rest.one('kanban_columns', column_id).remove({
+                kanban_id: kanban_id
+            });
         }
     }
 })();

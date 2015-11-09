@@ -83,6 +83,7 @@ class KanbanRepresentationBuilder {
             $kanban,
             $this->kanban_column_factory,
             $this->user_preferences,
+            $this->kanban_actions_checker,
             $user_can_add_columns,
             $user_can_reorder_columns,
             $user_can_add_in_place,

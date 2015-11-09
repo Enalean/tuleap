@@ -49,15 +49,21 @@ class AgileDashboard_KanbanColumn {
     /**
      * @var int
      */
-     private $limit;
+    private $limit;
 
-    public function __construct($id, $kanban_id, $label, $is_open, $color, $limit) {
-        $this->id        = $id;
-        $this->kanban_id = $kanban_id;
-        $this->label     = $label;
-        $this->is_open   = $is_open;
-        $this->color     = $color;
-        $this->limit     = $limit;
+     /**
+      * @var boolean
+      */
+    private $is_removable;
+
+    public function __construct($id, $kanban_id, $label, $is_open, $color, $limit, $is_removable) {
+        $this->id           = $id;
+        $this->kanban_id    = $kanban_id;
+        $this->label        = $label;
+        $this->is_open      = $is_open;
+        $this->color        = $color;
+        $this->limit        = $limit;
+        $this->is_removable = $is_removable;
     }
 
     public function getId() {
@@ -71,6 +77,7 @@ class AgileDashboard_KanbanColumn {
     public function getLabel() {
         return $this->label;
     }
+
     public function isOpen() {
         return $this->is_open;
     }
@@ -81,6 +88,10 @@ class AgileDashboard_KanbanColumn {
 
     public function getLimit() {
         return $this->limit;
+    }
+
+    public function isRemovable() {
+        return $this->is_removable;
     }
 
 }

@@ -58,6 +58,7 @@ use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
 use AgileDashboard_KanbanColumnManager;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
 use AgileDashboard_KanbanActionsChecker;
+use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -149,8 +150,8 @@ class KanbanResource extends AuthenticatedResource {
 
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             new AgileDashboard_KanbanColumnDao(),
-            $this->kanban_actions_checker,
-            $this->tracker_factory
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            $this->kanban_actions_checker
         );
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
@@ -864,8 +865,15 @@ class KanbanResource extends AuthenticatedResource {
             $add_in_place = false;
         }
 
+        try {
+            $this->kanban_actions_checker->checkUserCanDeleteColumn($current_user, $kanban, $new_column);
+            $user_can_remove_column = true;
+        } catch (Exception $exception) {
+            $user_can_remove_column = false;
+        }
+
         $column_representation = new KanbanColumnRepresentation();
-        $column_representation->build($new_column, $add_in_place);
+        $column_representation->build($new_column, $add_in_place, $user_can_remove_column);
 
         return $column_representation;
     }

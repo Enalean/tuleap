@@ -30,13 +30,13 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     protected $values;
     protected $is_rank_alpha;
-    
+
     public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->is_rank_alpha = $is_rank_alpha;
         $this->values        = $values;
     }
-    
+
     /**
      * @return string
      */
@@ -44,7 +44,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $hp = Codendi_HTMLPurifier::instance();
         return  $hp->purify($value->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
     }
-    
+
     /**
      * Get a bindvalue by its row
      *
@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getValueFromRow($row) {
         return new Tracker_FormElement_Field_List_Bind_StaticValue($row['id'], $row['label'], $row['description'], $row['rank'], $row['is_hidden']);
     }
-    
+
     /**
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
      * Used by OpenList.
@@ -69,10 +69,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getBindtableSqlFragment() {
         return array(
-            'select'     => "tracker_field_list_bind_static_value.id, 
-                             tracker_field_list_bind_static_value.label, 
-                             tracker_field_list_bind_static_value.description, 
-                             tracker_field_list_bind_static_value.rank, 
+            'select'     => "tracker_field_list_bind_static_value.id,
+                             tracker_field_list_bind_static_value.label,
+                             tracker_field_list_bind_static_value.description,
+                             tracker_field_list_bind_static_value.rank,
                              tracker_field_list_bind_static_value.is_hidden",
             'select_nb'  => 5,
             'from'       => 'tracker_field_list_bind_static_value',
@@ -84,7 +84,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         // returns empty array as static are already listed in 'values'
         return array();
     }
-    
+
     /**
      * @return string
      */
@@ -133,7 +133,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return $this->values[$value['id']]->getLabel();
         }
     }
-    
+
     /**
      * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
@@ -186,14 +186,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         return $this->values[$value_id];
     }
-    
+
     /*
-     * 
+     *
      */
     public function getIsRankAlpha() {
         return $this->is_rank_alpha;
     }
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
@@ -202,7 +202,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function fetchRawValue($value) {
         return $this->values[$value]->getLabel();
     }
-    
+
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
@@ -224,14 +224,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $value = '';
         $values_array = array();
         if ($v = $changeset->getValue($this->field)) {
-            $values = $v->getListValues();            
+            $values = $v->getListValues();
             foreach($values as $val) {
                 $values_array[] = $val->getLabel();
             }
         }
         return implode(",", $values_array);
     }
-    
+
     /**
      * @return array
      */
@@ -242,32 +242,32 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         }
         return $values;
     }
-    
+
     /**
      * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve 
+     * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      * @param array $criteria_value array of id => criteria_value (which are array)
      * @return string
      */
-     public function getCriteriaFrom($criteria_value) {         
+     public function getCriteriaFrom($criteria_value) {
          //Only filter query if criteria is valuated
         if ($criteria_value) {
             $fields_id = array($this->field->id);
             $values_id = array_values($criteria_value);
-            
+
             /* Manage cross tracker query based on shared fields
             $res = db_query('SELECT id FROM tracker_field WHERE original_field_id = '.$this->field->id.' AND id != original_field_id');
             while ($row = db_fetch_array($res)) {
                 $fieldids[] = $row['id'];
             }
-            
+
             $res = db_query('SELECT id FROM tracker_field_list_bind_static_value WHERE original_value_id IN ('.implode(',', $values).') AND id != original_value_id');
             while ($row = db_fetch_array($res)) {
                 $values[] = $row['id'];
             }
             */
-            
+
             $a = 'A_'. $this->field->id;
             $b = 'B_'. $this->field->id;
             $c = 'C_'. $this->field->id;
@@ -280,7 +280,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         }
         return '';
      }
-    
+
     /**
      * Get the "where" statement to allow search with this field
      * @param array $criteria_value array of id => criteria_value (which are array)
@@ -290,7 +290,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getCriteriaWhere($criteria_value) {
         return '';
     }
-    
+
     /**
      * Get the "select" statement to retrieve field values
      * @return string
@@ -301,7 +301,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $R2 = 'R2_'. $this->field->id;
         return "$R2.id AS `". $this->field->name ."`";
     }
-    
+
 	/**
      * Get the "select" statement to retrieve field values with the RGB values of their decorator
      * @return string
@@ -310,10 +310,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getQuerySelectWithDecorator() {
         return $this->getQuerySelect() . ", color.red, color.green, color.blue";
     }
-    
+
     /**
      * Get the "from" statement to retrieve field values
-     * You can join on artifact AS a, tracker_changeset AS c 
+     * You can join on artifact AS a, tracker_changeset AS c
      * which tables used to retrieve the last changeset of matching artifacts.
      *
      * @param string $changesetvalue_table The changeset value table to use
@@ -324,15 +324,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $R1 = 'R1_'. $this->field->id;
         $R2 = 'R2_'. $this->field->id;
         $R3 = 'R3_'. $this->field->id;
-        
+
         return "LEFT JOIN (
-                    tracker_changeset_value AS $R1 
+                    tracker_changeset_value AS $R1
                     INNER JOIN $changesetvalue_table AS $R3 ON ($R3.changeset_value_id = $R1.id)
                     LEFT JOIN tracker_field_list_bind_static_value AS $R2 ON ($R2.id = $R3.bindvalue_id AND $R2.field_id = ". $this->field->id ." )
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->field->id ." )
                ";
     }
-    
+
 /**
      * Get the "from" statement to retrieve field values with the RGB values of their decorator
      * Has no sense for fields other than lists
@@ -342,7 +342,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $R2 = 'R2_'. $this->field->id;
         return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON (color.value_id = $R2.id)";
     }
-    
+
     /**
      * Get the "order by" statement to retrieve field values
      */
@@ -351,7 +351,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $R2 = 'R2_'. $this->field->id;
         return $this->is_rank_alpha ? "$R2.label" : "$R2.rank";
     }
-    
+
     /**
      * Get the "group by" statement to retrieve field values
      */
@@ -360,7 +360,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $R2 = 'R2_'. $this->field->id;
         return "$R2.id";
     }
-    
+
     /**
      * Fetch sql snippets needed to compute aggregate functions on this field.
      *
@@ -420,7 +420,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             'separate_queries' => $separate,
         );
     }
-    
+
     public function getDao() {
         return new Tracker_FormElement_Field_List_Bind_StaticDao();
     }
@@ -435,7 +435,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getValueDao() {
         return new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
     }
-    
+
     /**
      * Allow the user to define the bind
      *
@@ -454,7 +454,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '</p>';
         return $html;
     }
-    
+
     /**
      * Fetch the form to edit the formElement
      *
@@ -465,14 +465,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return $this->fetchAdminEditFormNotModifiable();
         } else {
             return $this->fetchAdminEditFormModifiable();
-            
+
         }
     }
-    
+
     private function fetchAdminEditFormModifiable() {
         $html = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','static_values') .'</h3>';
-        
+
         $h = new HTML_Element_Input_Checkbox( $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alphabetically_sort'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
         $h->setId('is_rank_alpha');
         $h->addParam('class', 'is_rank_alpha');
@@ -486,7 +486,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         }
         $html .= '</ul>';
         $html .= '</td></tr></table>';
-        
+
         //Add new values
         $html .= '<p id="tracker-admin-bind-static-addnew">';
         $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_values') . '</strong><br />';
@@ -496,15 +496,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         //Select default values
         $html .= $this->getSelectDefaultValues();
-        
+
         return $html;
     }
-        
+
     private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $v) {
         $html = '';
-        
+
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         $is_hidden = $v->isHidden();
 
         $html .= '<li id="staticvalue_'. $v->getId() .'" class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
@@ -573,22 +573,22 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '</li>';
         return $html;
     }
-    
+
     private function fetchAdminEditFormNotModifiable() {
         $html = '';
-        
+
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','static_values') .'</h3>';
         $html .= '<table cellpadding="2" cellspacing="0" border="0">';
         foreach ($this->getAllValues() as $v) {
             $html .= $this->fetchAdminEditRowNotModifiable($v);
         }
         $html .= '</table>';
-        
+
         // @todo: Show default value ?
-        
+
         return $html;
     }
-        
+
     private function fetchAdminEditRowNotModifiable(Tracker_FormElement_Field_List_Value $v) {
         $html = '';
         $html .= '<tr valign="top" class="' . ($v->isHidden() ? 'tracker_admin_static_value_hidden' : '') . '">';
@@ -596,10 +596,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '</tr>';
         return $html;
     }
-    
+
     /**
      * Say if a value can be hidden
-     * 
+     *
      * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
      *
      * @return boolean true if the value can be hidden
@@ -607,10 +607,21 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function canValueBeHidden(Tracker_FormElement_Field_List_Bind_StaticValue $value) {
         return $this->getValueDao()->canValueBeHidden($this->field->id, $value->getId());
     }
-    
+
+    /**
+     * Say if a value can be hidden without checking the semantic status
+     *
+     * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
+     *
+     * @return boolean true if the value can be hidden
+     */
+    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field_List_Bind_StaticValue $value) {
+        return $this->getValueDao()->canValueBeHiddenWithoutCheckingSemanticStatus($this->field->id, $value->getId());
+    }
+
     /**
      * Say if a value can be deleted
-     * 
+     *
      * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
      *
      * @return boolean true if the value can be deleted
@@ -618,7 +629,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function canValueBeDeleted(Tracker_FormElement_Field_List_Bind_StaticValue $value) {
         return $this->getValueDao()->canValueBeDeleted($this->field->id, $value->getId());
     }
-    
+
     /**
      * Process the request
      *
@@ -695,7 +706,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     if(isset($params['decorators'])) {
                         $params['decorator'] = array();
                         foreach ($params['decorators'] as $key => $deco) {
-                            $params['decorator'][$valueMapping[$key]] = 
+                            $params['decorator'][$valueMapping[$key]] =
                                    ColorHelper::RGBtoHexa($deco->r, $deco->g, $deco->b);
                         }
                     }
@@ -727,12 +738,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         return $id;
     }
-    
+
     public function propagateCreation($field, $original_value_id) {
         $value_dao = $this->getValueDao();
         $value_dao->propagateCreation($field, $original_value_id);
     }
-    
+
     /**
      * Transforms Bind into a SimpleXMLElement
      */
@@ -753,7 +764,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 $xmlMapping['values'][$ID] = $val->getId();
                 $grandchild->addAttribute('label', $val->getLabel());
                 $grandchild->addAttribute('is_hidden', $val->isHidden());
-                
+
                 if ($val->getDescription() != '') {
                     $cdata_section_factory->insert($grandchild, 'description', $val->getDescription());
                 }
@@ -774,9 +785,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             }
         }
     }
-    
+
     /**
-     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
      * If the $bindvalue_ids is null then return all values.
      *
      * @param array $bindvalue_ids The ids of BindValue to retrieve
@@ -796,7 +807,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return $bv;
         }
     }
-    
+
     /**
      * Saves a bind in the database
      *
@@ -814,18 +825,18 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         }
         parent::saveObject();
     }
-    
+
     public function isValid($value) {
         return true;
     }
-    
+
     /**
      * @see Tracker_FormElement_Field_Shareable
      */
     public function fixOriginalValueIds(array $value_mapping) {
         $value_dao = $this->getValueDao();
         $field_id  = $this->getField()->getId();
-        
+
         foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
             $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
         }

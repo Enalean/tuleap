@@ -113,6 +113,10 @@ msgid "OK, reload the page"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Remove"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Save"
 msgstr ""
 
@@ -134,6 +138,10 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "You can reorder and remove columns. More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
 msgstr ""
 
 #: src/app/kanban.tpl.html

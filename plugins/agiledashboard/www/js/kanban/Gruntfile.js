@@ -5,7 +5,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     // Lazy-load grunt tasks automatically
     require('jit-grunt')(grunt, {
-        nggettext_extract: 'grunt-angular-gettext'
+        nggettext_extract: 'grunt-angular-gettext',
+        nggettext_compile: 'grunt-angular-gettext'
     });
 
     // Time how long tasks take. Can help when optimizing build times

@@ -44,4 +44,15 @@ class AgileDashboard_KanbanColumnDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function deleteColumn($kanban_id, $column_id) {
+        $kanban_id = $this->da->escapeInt($kanban_id);
+        $column_id = $this->da->escapeInt($column_id);
+
+        $sql = "DELETE FROM plugin_agiledashboard_kanban_configuration_column
+                WHERE kanban_id = $kanban_id
+                AND value_id = $column_id";
+
+        return $this->update($sql);
+    }
+
 }
