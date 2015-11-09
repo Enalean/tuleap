@@ -135,8 +135,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR
                         CVL2.bindvalue_id = SS.open_value_id
                      )
-                ORDER BY A.id DESC
-                LIMIT $limit OFFSET $offset";
+                ORDER BY A.id DESC";
+
+        if ($limit !== '0' || $offset !== '0') {
+            $sql .= PHP_EOL . "LIMIT $limit OFFSET $offset";
+        }
 
         return $this->retrieve($sql);
     }
