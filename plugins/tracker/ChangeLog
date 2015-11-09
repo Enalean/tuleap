@@ -1,3 +1,6 @@
+Version 5.737 - Tuleap 8.9
+    * request #8574 PHP fatal error on artifact-creation
+
 Version 5.736 - Tuleap 8.9
     * story #8537: have 'None' as a possible target value in field dependencies
 
