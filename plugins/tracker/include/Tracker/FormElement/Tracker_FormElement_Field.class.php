@@ -1027,10 +1027,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($bypass_permissions) {
             $hasPermission = true;
         } else {
-            $hasPermission = $this->userCanUpdate();
+            $hasPermission = $this->userCanUpdate($submitter);
             //If a field is not submitable, but has a required default value, the value has to  be submitted ...
             if ($is_submission) {
-                $hasPermission = $this->userCanSubmit() || (!$this->userCanSubmit() && $this->isrequired() && $this->getDefaultValue()!= null);
+                $hasPermission = $this->userCanSubmit($submitter) ||
+                    (!$this->userCanSubmit($submitter) && $this->isrequired() && $this->getDefaultValue()!= null);
             }
         }
 
