@@ -1,3 +1,6 @@
+Version 5.736 - Tuleap 8.9
+    * story #8537: have 'None' as a possible target value in field dependencies
+
 Version 5.735 - Tuleap 8.9
     * request #8428 'Select Parent' in V2 Modal displays all artifacts Open/Closed
 
