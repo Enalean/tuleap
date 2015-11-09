@@ -91,11 +91,14 @@ $options['force'] = isset($arguments['f']);
 $project = ProjectManager::instance()->getProject($project_id);
 if ($project && ! $project->isError() && ! $project->isDeleted()) {
     try {
+        $rng_validator    = new XML_RNGValidator();
+        $users_collection = new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory());
+
         $xml_exporter = new ProjectXMLExporter(
             EventManager::instance(),
             new UGroupManager(),
-            new XML_RNGValidator(),
-            new UserXMLExporter(UserManager::instance()),
+            $rng_validator,
+            new UserXMLExporter(UserManager::instance(), $users_collection),
             new ProjectXMLExporterLogger()
         );
 
@@ -110,14 +113,21 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
 
         $user = UserManager::instance()->forceLogin($username);
 
-        $xml_content = $xml_exporter->export($project, $options, $user, $archive);
+        $xml_content       = $xml_exporter->export($project, $options, $user, $archive);
+        $users_xml_content = $users_collection->toXML();
 
         if ($display_xml) {
             echo $xml_content;
+            echo PHP_EOL;
+            echo $users_xml_content;
         }
 
         if (! $archive->addFromString('project.xml', $xml_content)) {
             fwrite(STDERR, "Unable to add project.xml into archive." . PHP_EOL);
+        }
+
+        if (! $archive->addFromString('users.xml', $users_xml_content)) {
+            fwrite(STDERR, "Unable to add users.xml into archive." . PHP_EOL);
         }
         $xml_security->disableExternalLoadOfEntities();
 

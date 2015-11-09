@@ -696,7 +696,10 @@ class trackerPlugin extends Plugin {
      */
     public function agiledashboard_export_xml($params) {
         $can_bypass_threshold = true;
-        $user_xml_exporter    = new UserXMLExporter($this->getUserManager());
+        $user_xml_exporter    = new UserXMLExporter(
+            $this->getUserManager(),
+            new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
+        );
 
         $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
             ->exportToXml($params['project']->getID(), $params['into_xml']);

@@ -46,7 +46,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_User
 
         $user              = aUser()->withId(112)->withLdapId('ldap_01')->build();
         $user_manager      = stub('UserManager')->getUserById(112)->returns($user);
-        $user_xml_exporter = new UserXMLExporter($user_manager);
+        $user_xml_exporter = new UserXMLExporter($user_manager, mock('UserXMLExportedCollection'));
 
         $this->field = stub('Tracker_FormElement_Field_OpenList')->getBind()->returns($bind);
         stub($this->field)->getName()->returns('CC');
@@ -166,7 +166,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_Stat
     public function setUp() {
         parent::setUp();
 
-        $user_xml_exporter = new UserXMLExporter(mock('UserManager'));
+        $user_xml_exporter = new UserXMLExporter(mock('UserManager'), mock('UserXMLExportedCollection'));
         $this->exporter    = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter(
             $user_xml_exporter
         );

@@ -2311,7 +2311,7 @@ EOS;
     }
 
     public function exportToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
-        $user_xml_exporter = new UserXMLExporter($this->getUserManager());
+        $user_xml_exporter = $this->getUserXMLExporter();
 
         return $this->exportTrackerToXML($xmlElem, $user_xml_exporter, $xmlMapping, false);
     }
@@ -3424,9 +3424,16 @@ EOS;
         PFUser $current_user
     ) {
         $builder           = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
-        $user_xml_exporter = new UserXMLExporter($this->getUserManager());
+        $user_xml_exporter = $this->getUserXMLExporter();
 
         return $builder->build($children_collector, $file_path_xml_exporter, $current_user, $user_xml_exporter);
+    }
+
+    private function getUserXMLExporter() {
+        return new UserXMLExporter(
+            $this->getUserManager(),
+            new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
+        );
     }
 
     private function getChangesetXMLUpdater() {
