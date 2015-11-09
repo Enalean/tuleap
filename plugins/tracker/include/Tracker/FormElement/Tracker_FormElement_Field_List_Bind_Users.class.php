@@ -750,11 +750,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     /**
      * Transforms Bind into a SimpleXMLElement
-     *
-     * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
-     * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
         if ($this->value_function) {
             $child = $root->addChild('items');
             foreach ($this->value_function as $vf) {
@@ -766,7 +768,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             if ($project_export_context) {
                 $default_values_root = $root->addChild('default_values');
                 foreach ($this->default_values as $user_id => $default_value) {
-                    $user_xml_exporter = new UserXMLExporter(UserManager::instance());
                     $user_xml_exporter->exportUserByUserId($user_id, $default_values_root, 'value');
                 }
             }

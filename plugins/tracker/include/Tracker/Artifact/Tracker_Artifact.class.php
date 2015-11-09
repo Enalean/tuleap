@@ -1934,7 +1934,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function exportToXML(
         SimpleXMLElement $artifacts_node,
         PFUser $user,
-        ZipArchive $archive
+        ZipArchive $archive,
+        UserXMLExporter $user_xml_exporter
     ) {
         $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
         $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
@@ -1942,7 +1943,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $artifact_xml_exporter = $this->getArtifactXMLExporter(
             $children_collector,
             $file_path_xml_exporter,
-            $user
+            $user,
+            $user_xml_exporter
         );
 
         $artifact_xml_exporter->exportFullHistory($artifacts_node, $this, $archive);
@@ -1961,11 +1963,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getArtifactXMLExporter(
         Tracker_XML_ChildrenCollector $children_collector,
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
-        PFUser $current_user
+        PFUser $current_user,
+        UserXMLExporter $user_xml_exporter
     ) {
         $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
 
-        return $builder->build($children_collector, $file_path_xml_exporter, $current_user);
+        return $builder->build($children_collector, $file_path_xml_exporter, $current_user, $user_xml_exporter);
     }
 
     /** @return string */

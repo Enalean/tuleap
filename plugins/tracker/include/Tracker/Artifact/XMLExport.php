@@ -38,14 +38,19 @@ class Tracker_Artifact_XMLExport {
      */
     private $can_bypass_threshold;
 
+    /** @var UserXMLExporter */
+    private $user_xml_exporter;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactFactory $artifact_factory,
-        $can_bypass_threshold
+        $can_bypass_threshold,
+        UserXMLExporter $user_xml_exporter
     ) {
         $this->rng_validator        = $rng_validator;
         $this->artifact_factory     = $artifact_factory;
         $this->can_bypass_threshold = $can_bypass_threshold;
+        $this->user_xml_exporter    = $user_xml_exporter;
     }
 
     public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user, ZipArchive $archive) {
@@ -54,7 +59,7 @@ class Tracker_Artifact_XMLExport {
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());
         $this->checkThreshold(count($all_artifacts));
         foreach ($all_artifacts as $artifact) {
-            $artifact->exportToXML($artifacts_node, $user, $archive);
+            $artifact->exportToXML($artifacts_node, $user, $archive, $this->user_xml_exporter);
         }
 
         $this->rng_validator->validate(

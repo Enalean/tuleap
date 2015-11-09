@@ -146,7 +146,12 @@ Mock::generate('Tracker_SharedFormElementFactory');
 
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
         $xmlMapping['F'. $this->getId()] = $this->getId();
         return parent::exportToXML($root, $xmlMapping, $project_export_context);
     }
@@ -1819,6 +1824,7 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->tracker = new TrackerTestVersion();
         stub($this->tracker)->getID()->returns(110);
         stub($this->tracker)->getColor()->returns('inca_gray');
+        stub($this->tracker)->getUserManager()->returns(mock('UserManager'));
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         stub($this->tracker)->getFormElementFactory()->returns($this->formelement_factory);

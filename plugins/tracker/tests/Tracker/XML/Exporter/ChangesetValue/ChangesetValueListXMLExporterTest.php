@@ -38,7 +38,9 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest exte
 
     public function setUp() {
         parent::setUp();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter();
+        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
+            mock('UserXmlExporter')
+        );
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 

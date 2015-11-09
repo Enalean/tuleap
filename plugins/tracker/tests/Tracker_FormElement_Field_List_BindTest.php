@@ -72,7 +72,12 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
 
     }
 
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
 
     }
 

@@ -501,11 +501,12 @@ class Event {
      * Event launched while exporting a project into xml format
      *
      * Parameters:
-     *   'project'  => The given project
-     *   'options'  => The given options
-     *   'into_xml' => The SimpleXMLElement to fill in
-     *   'user'     => The user that does the export
-     *   'archive'  => The archive to add element in it
+     *   'project'           => The given project
+     *   'options'           => The given options
+     *   'into_xml'          => The SimpleXMLElement to fill in
+     *   'user'              => The user that does the export
+     *   'user_xml_exporter' => The user_xml_exporter object
+     *   'archive'           => The archive to add element in it
      *
      * Expected Results:
      *   The various plugins inject stuff in the given xml element

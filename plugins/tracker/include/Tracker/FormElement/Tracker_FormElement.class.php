@@ -726,13 +726,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Transforms FormElement into a SimpleXMLElement
-     *
-     * @param SimpleXMLElement $root        the node to which the FormElement is attached (passed by reference)
-     * @param array            &$xmlMapping correspondance between real ids and xml IDs
-     *
-     * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
 
         $root->addAttribute('type', Tracker_FormElementFactory::instance()->getType($this));

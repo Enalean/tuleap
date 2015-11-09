@@ -20,6 +20,15 @@
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
 
+    /**
+     * @var UserXMLExporter
+     */
+    private $user_xml_exporter;
+
+    public function __construct(UserXMLExporter $user_xml_exporter) {
+        $this->user_xml_exporter = $user_xml_exporter;
+    }
+
     protected function getFieldChangeType() {
         return 'list';
     }
@@ -43,11 +52,9 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends 
         if (empty($values)) {
             $field_change->addChild('value');
         } elseif($bind_type === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
-            array_walk(
-                $values,
-                array($this, 'appendUserValueToFieldChangeNode'),
-                $field_change
-            );
+            foreach ($values as $value) {
+                $this->user_xml_exporter->exportUserByUserId($value, $field_change, 'value');
+            }
         } else {
             array_walk(
                 $values,
@@ -64,14 +71,5 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends 
     ) {
         $value_xml = $field_xml->addChild('value', $value);
         $value_xml->addAttribute('format', 'id');
-    }
-
-    private function appendUserValueToFieldChangeNode(
-        $value,
-        $index,
-        SimpleXMLElement $field_xml
-    ) {
-        $xml_user_exporter = new UserXMLExporter(UserManager::instance());
-        $xml_user_exporter->exportUserByUserId($value, $field_xml, 'value');
     }
 }

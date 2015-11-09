@@ -310,10 +310,9 @@ class Tracker_Artifact_Changeset_Comment {
         return $this->submitted_on;
     }
 
-    public function exportToXML(SimpleXMLElement $comments_node) {
+    public function exportToXML(SimpleXMLElement $comments_node, UserXMLExporter $user_xml_exporter) {
         $comment_node = $comments_node->addChild('comment');
 
-        $user_xml_exporter = new UserXMLExporter(UserManager::instance());
         $user_xml_exporter->exportUserByUserId($this->submitted_by, $comment_node, 'submitted_by');
 
         $submitted_on_node = $comment_node->addChild('submitted_on', date('c', $this->submitted_on));

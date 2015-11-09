@@ -735,11 +735,13 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     
     /**
      * Transforms Bind into a SimpleXMLElement
-     * 
-     * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
-     * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha);
         if ($this->getAllValues()) {
