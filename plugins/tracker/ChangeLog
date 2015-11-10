@@ -1,3 +1,6 @@
+Version 5.741 - Tuleap 8.9
+    * Fix tests for Refacto: inject UserXmlExporter (part of story #8528)
+
 Version 5.740 - Tuleap 8.9
     * story #8528: Refacto: inject UserXmlExporter
 
