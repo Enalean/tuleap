@@ -92,7 +92,7 @@ class Tracker_ArtifactCreator {
     }
 
     private function getBareArtifact(Tracker $tracker, PFUser $user, $submitted_on) {
-        return $this->artifact_factory->getInstanceFromRow(
+        $artifact = $this->artifact_factory->getInstanceFromRow(
             array(
                 'id'                       => 0,
                 'tracker_id'               => $tracker->id,
@@ -101,5 +101,8 @@ class Tracker_ArtifactCreator {
                 'use_artifact_permissions' => 0,
             )
         );
+
+        $artifact->setTracker($tracker);
+        return $artifact;
     }
 }
