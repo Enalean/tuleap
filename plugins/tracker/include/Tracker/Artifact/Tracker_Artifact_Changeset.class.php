@@ -694,7 +694,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $ignore_perms = !$check_perms;
                 $recipient_mail = $user->getEmail();
                 $message_content = $this->getMessageContent($user, $is_update, $check_perms);
-                $headers = array($this->getCustomReplyToHeader());
+                $headers = array_filter(array($this->getCustomReplyToHeader()));
                 $hash = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($message_content['subject']));
 
                 if (isset($messages[$hash])) {
@@ -722,7 +722,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $user = $this->getUserFromRecipientName($recipient);
 
             if (! $user->isAnonymous()) {
-                $headers    = array($this->getCustomReplyToHeader());
+            $headers = array_filter(array($this->getCustomReplyToHeader()));
                 $message_id = $this->getMessageId($user);
 
                 $messages[$message_id]               = $this->getMessageContent($user, $is_update, $check_perms);
@@ -774,8 +774,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 "value" => $this->getArtifact()->getInsecureEmailAddress()
             );
         }
-
-        return array();
     }
 
     private function getMessageContent($user, $is_update, $check_perms) {
