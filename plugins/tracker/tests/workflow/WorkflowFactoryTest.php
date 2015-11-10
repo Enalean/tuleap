@@ -54,11 +54,11 @@ class WorkflowFactoryTest extends TuleapTestCase {
         $tracker = new MockTracker();
         
         $mapping = array(
-                    'F1' => 110,
-                    'F32'  => 111,
-                    'F32-V0' => 801,
-                    'F32-V1' => 802
-                  );
+            'F1'     => aSelectBoxField()->withId(110)->build(),
+            'F32'    => aSelectBoxField()->withId(111)->build(),
+            'F32-V0' => 801,
+            'F32-V1' => 802
+        );
         
         $condition_factory  = mock('Workflow_Transition_ConditionFactory');
         stub($condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
