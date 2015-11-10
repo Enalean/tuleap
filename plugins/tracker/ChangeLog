@@ -1,3 +1,6 @@
+Version 5.739 - Tuleap 8.9
+    * request #8563: Notification mails incorrect formatted and not displayable by client
+
 Version 5.738 - Tuleap 8.9
     * request #8576: Artifact updated by email does not take into account which user updates the artifact
 
