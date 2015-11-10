@@ -1,30 +1,30 @@
-describe('DroppedServiceTest:', function () {
+describe('DroppedServiceTest:', function() {
     var DroppedService,
         ProjectService,
         MilestoneService,
         BacklogItemService;
 
     beforeEach(module('planning'));
-    beforeEach(inject(function (_DroppedService_, _ProjectService_, _MilestoneService_, _BacklogItemService_) {
+    beforeEach(inject(function(_DroppedService_, _ProjectService_, _MilestoneService_, _BacklogItemService_) {
         DroppedService     = _DroppedService_;
         ProjectService     = _ProjectService_;
         MilestoneService   = _MilestoneService_;
         BacklogItemService = _BacklogItemService_;
 
-        spyOn(ProjectService, 'reorderBacklog').andCallThrough();
-        spyOn(ProjectService, 'removeAddReorderToBacklog').andCallThrough();
-        spyOn(ProjectService, 'removeAddToBacklog').andCallThrough();
-        spyOn(MilestoneService, 'reorderBacklog').andCallThrough();
-        spyOn(MilestoneService, 'reorderContent').andCallThrough();
-        spyOn(MilestoneService, 'addReorderToContent').andCallThrough();
-        spyOn(MilestoneService, 'addToContent').andCallThrough();
-        spyOn(MilestoneService, 'removeAddReorderToBacklog').andCallThrough();
-        spyOn(MilestoneService, 'removeAddToBacklog').andCallThrough();
-        spyOn(MilestoneService, 'removeAddReorderToContent').andCallThrough();
-        spyOn(MilestoneService, 'removeAddToContent').andCallThrough();
-        spyOn(BacklogItemService, 'reorderBacklogItemChildren').andCallThrough();
-        spyOn(BacklogItemService, 'removeAddReorderBacklogItemChildren').andCallThrough();
-        spyOn(BacklogItemService, 'removeAddBacklogItemChildren').andCallThrough();
+        spyOn(ProjectService, 'reorderBacklog').and.callThrough();
+        spyOn(ProjectService, 'removeAddReorderToBacklog').and.callThrough();
+        spyOn(ProjectService, 'removeAddToBacklog').and.callThrough();
+        spyOn(MilestoneService, 'reorderBacklog').and.callThrough();
+        spyOn(MilestoneService, 'reorderContent').and.callThrough();
+        spyOn(MilestoneService, 'addReorderToContent').and.callThrough();
+        spyOn(MilestoneService, 'addToContent').and.callThrough();
+        spyOn(MilestoneService, 'removeAddReorderToBacklog').and.callThrough();
+        spyOn(MilestoneService, 'removeAddToBacklog').and.callThrough();
+        spyOn(MilestoneService, 'removeAddReorderToContent').and.callThrough();
+        spyOn(MilestoneService, 'removeAddToContent').and.callThrough();
+        spyOn(BacklogItemService, 'reorderBacklogItemChildren').and.callThrough();
+        spyOn(BacklogItemService, 'removeAddReorderBacklogItemChildren').and.callThrough();
+        spyOn(BacklogItemService, 'removeAddBacklogItemChildren').and.callThrough();
     }));
 
     describe('defineComparedTo:', function() {

@@ -19,7 +19,7 @@ describe('BacklogItemFactory', function() {
             };
 
         beforeEach(inject(function(BacklogItemFactory) {
-            spyOn(BacklogItemFactory, 'augment').andCallThrough();
+            spyOn(BacklogItemFactory, 'augment').and.callThrough();
 
             BacklogItemFactory.augment(item);
         }));

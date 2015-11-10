@@ -2,6 +2,7 @@ describe('PlanningCtrl', function() {
     var $scope,
         itemService,
         milestoneService,
+        projectService,
         project_id = 123,
         milestone_id = 1;
 
@@ -17,8 +18,8 @@ describe('PlanningCtrl', function() {
             milestoneService = MilestoneService;
             projectService   = ProjectService;
 
-            spyOn(itemService, 'getProjectBacklogItems').andCallThrough();
-            spyOn(milestoneService, 'getMilestones').andCallThrough();
+            spyOn(itemService, 'getProjectBacklogItems').and.callThrough();
+            spyOn(milestoneService, 'getMilestones').and.callThrough();
             SharedPropertiesService.setProjectId(project_id);
 
             $controller('PlanningCtrl', {
@@ -47,8 +48,8 @@ describe('PlanningCtrl', function() {
             itemService      = BacklogItemService;
             milestoneService = MilestoneService;
 
-            spyOn(itemService, 'getMilestoneBacklogItems').andCallThrough();
-            spyOn(milestoneService, 'getSubMilestones').andCallThrough();
+            spyOn(itemService, 'getMilestoneBacklogItems').and.callThrough();
+            spyOn(milestoneService, 'getSubMilestones').and.callThrough();
             SharedPropertiesService.setMilestoneId(milestone_id);
 
             $controller('PlanningCtrl', {
