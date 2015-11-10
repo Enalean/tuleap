@@ -6,6 +6,9 @@ Version 8.9 (Not released yet)
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
 
+	== Bug fix ==
+	* request #8334: PhpWiki notifications can leak data
+
 	== Plugins ==
 	* mediawiki: 0.99
 	* git: 4.94
