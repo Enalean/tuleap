@@ -213,10 +213,13 @@ class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase {
             ->returns(array_fill(0, Tracker_Artifact_XMLExport::THRESHOLD + 1, null));
         $can_bypass_threshold = false;
 
+        $user_xml_exporter = mock('UserXMLExporter');
+
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,
             $artifact_factory,
-            $can_bypass_threshold
+            $can_bypass_threshold,
+            $user_xml_exporter
         );
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
