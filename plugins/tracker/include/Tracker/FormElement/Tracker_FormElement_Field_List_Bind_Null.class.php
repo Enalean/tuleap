@@ -181,11 +181,15 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     
     /**
      * Transforms Bind into a SimpleXMLElement
-     * 
-     * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
-     * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) { return ''; }
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
+        return '';
+    }
     
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 

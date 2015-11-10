@@ -76,12 +76,17 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
 
         $comments_node = $changeset_xml->addChild('comments');
         if ($changeset->getComment()) {
-            $changeset->getComment()->exportToXML($comments_node);
+            $changeset->getComment()->exportToXML($comments_node, $this->user_xml_exporter);
         }
 
         $changeset_values = $changeset->getValues();
         if ($changeset_values !== null) {
-            $this->values_exporter->exportChangedFields($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset_values);
+            $this->values_exporter->exportChangedFields(
+                $artifact_xml,
+                $changeset_xml,
+                $changeset->getArtifact(),
+                $changeset_values
+            );
         }
     }
 }

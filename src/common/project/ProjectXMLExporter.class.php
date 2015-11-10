@@ -91,11 +91,12 @@ class ProjectXMLExporter {
         $this->logger->info("Export plugins");
 
         $params = array(
-            'project'  => $project,
-            'options'  => $options,
-            'into_xml' => $into_xml,
-            'user'     => $user,
-            'archive'  => $archive,
+            'project'           => $project,
+            'options'           => $options,
+            'into_xml'          => $into_xml,
+            'user'              => $user,
+            'user_xml_exporter' => $this->user_xml_exporter,
+            'archive'           => $archive,
         );
 
         $this->event_manager->processEvent(

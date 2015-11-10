@@ -38,7 +38,8 @@ class TrackerXmlExportTest extends TuleapTestCase {
             $tracker_factory,
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('XML_RNGValidator'),
-            mock('Tracker_Artifact_XMLExport')
+            mock('Tracker_Artifact_XMLExport'),
+            mock('UserXMLExporter')
         );
     }
 

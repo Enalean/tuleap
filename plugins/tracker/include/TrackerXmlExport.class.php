@@ -20,6 +20,11 @@
 
 class TrackerXmlExport {
 
+    /**
+     * @var UserXMLExporter
+     */
+    private $user_xml_exporter;
+
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -36,12 +41,14 @@ class TrackerXmlExport {
         TrackerFactory $tracker_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         XML_RNGValidator $rng_validator,
-        Tracker_Artifact_XMLExport $artifact_xml_export
+        Tracker_Artifact_XMLExport $artifact_xml_export,
+        UserXMLExporter $user_xml_exporter
     ) {
         $this->tracker_factory       = $tracker_factory;
         $this->trigger_rules_manager = $trigger_rules_manager;
         $this->rng_validator         = $rng_validator;
         $this->artifact_xml_xport    = $artifact_xml_export;
+        $this->user_xml_exporter     = $user_xml_exporter;
     }
 
     public function exportToXml($group_id, SimpleXMLElement $xml_content) {
@@ -82,7 +89,7 @@ class TrackerXmlExport {
         if ($tracker->isActive()) {
             $tracker_xml = $xml_trackers->addChild('tracker');
 
-            $tracker->exportToXMLInProjectExportContext($tracker_xml, $xml_field_mapping);
+            $tracker->exportToXMLInProjectExportContext($tracker_xml, $this->user_xml_exporter, $xml_field_mapping);
             $this->artifact_xml_xport->export($tracker, $tracker_xml, $user, $archive);
         }
 

@@ -174,10 +174,13 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
             ));
         $can_bypass_threshold = true;
 
+        $user_xml_exporter = new UserXMLExporter($this->user_manager);
+
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,
             $artifact_factory,
-            $can_bypass_threshold
+            $can_bypass_threshold,
+            $user_xml_exporter
         );
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>

@@ -2311,11 +2311,17 @@ EOS;
     }
 
     public function exportToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
-        return $this->exportTrackerToXML($xmlElem, $xmlMapping, false);
+        $user_xml_exporter = new UserXMLExporter($this->getUserManager());
+
+        return $this->exportTrackerToXML($xmlElem, $user_xml_exporter, $xmlMapping, false);
     }
 
-    public function exportToXMLInProjectExportContext(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
-        return $this->exportTrackerToXML($xmlElem, $xmlMapping, true);
+    public function exportToXMLInProjectExportContext(
+        SimpleXMLElement $xmlElem,
+        UserXMLExporter $user_xml_exporter,
+        array &$xmlMapping = array()
+    ) {
+        return $this->exportTrackerToXML($xmlElem, $user_xml_exporter, $xmlMapping, true);
     }
 
     /**
@@ -2325,7 +2331,8 @@ EOS;
      */
     private function exportTrackerToXML(
         SimpleXMLElement $xmlElem,
-        array &$xmlMapping = array(),
+        UserXMLExporter $user_xml_exporter,
+        array &$xmlMapping,
         $project_export_context
     ) {
         $xmlElem->addAttribute('id', "T". $this->getId());
@@ -2386,7 +2393,7 @@ EOS;
 
         foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
             $grandchild = $child->addChild('formElement');
-            $formElement->exportToXML($grandchild, $xmlMapping, $project_export_context);
+            $formElement->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
 
         // semantic
@@ -3416,9 +3423,10 @@ EOS;
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user
     ) {
-        $builder = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $builder           = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
+        $user_xml_exporter = new UserXMLExporter($this->getUserManager());
 
-        return $builder->build($children_collector, $file_path_xml_exporter, $current_user);
+        return $builder->build($children_collector, $file_path_xml_exporter, $current_user, $user_xml_exporter);
     }
 
     private function getChangesetXMLUpdater() {

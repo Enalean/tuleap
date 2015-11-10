@@ -152,17 +152,19 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     
     /**
      * Transforms FormElement into a SimpleXMLElement
-     * 
-     * @param SimpleXMLElement $root        the node to which the FormElement is attached (passed by reference)
-     * @param array            &$xmlMapping correspondance between real ids and xml IDs
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context) {
-        parent::exportToXML($root, $xmlMapping, $project_export_context);
+    public function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    ) {
+        parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
         $subfields = $this->getAllFormElements();
         $child = $root->addChild('formElements');
         foreach($subfields as $subfield) {
             $grandchild = $child->addChild('formElement');
-            $subfield->exportToXML($grandchild, $xmlMapping, $project_export_context);
+            $subfield->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
     }
 

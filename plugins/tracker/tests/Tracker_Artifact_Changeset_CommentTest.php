@@ -51,9 +51,10 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                 <comments/>';
 
-        $changeset_node = new SimpleXMLElement($xml);
+        $changeset_node    = new SimpleXMLElement($xml);
+        $user_xml_exporter = new UserXmlExporter($this->user_manager);
 
-        $comment->exportToXML($changeset_node);
+        $comment->exportToXML($changeset_node, $user_xml_exporter);
 
         $this->assertNotNull($changeset_node->comment);
         $this->assertNotNull($changeset_node->comment->submitted_by);
@@ -81,9 +82,10 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                 <comments/>';
 
-        $changeset_node = new SimpleXMLElement($xml);
+        $changeset_node    = new SimpleXMLElement($xml);
+        $user_xml_exporter = new UserXmlExporter($this->user_manager);
 
-        $comment->exportToXML($changeset_node);
+        $comment->exportToXML($changeset_node, $user_xml_exporter);
 
         $this->assertNotNull($changeset_node->comment);
         $this->assertNotNull($changeset_node->comment->submitted_by);

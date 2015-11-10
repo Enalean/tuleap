@@ -696,14 +696,16 @@ class trackerPlugin extends Plugin {
      */
     public function agiledashboard_export_xml($params) {
         $can_bypass_threshold = true;
+        $user_xml_exporter    = new UserXMLExporter($this->getUserManager());
 
-        $this->getTrackerXmlExport($can_bypass_threshold)->exportToXml($params['project']->getID(), $params['into_xml']);
+        $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
+            ->exportToXml($params['project']->getID(), $params['into_xml']);
     }
 
     /**
      * @return TrackerXmlExport
      */
-    private function getTrackerXmlExport($can_bypass_threshold) {
+    private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold) {
         $rng_validator = new XML_RNGValidator();
 
         return new TrackerXmlExport(
@@ -713,8 +715,10 @@ class trackerPlugin extends Plugin {
             new Tracker_Artifact_XMLExport(
                 $rng_validator,
                 $this->getArtifactFactory(),
-                $can_bypass_threshold
-            )
+                $can_bypass_threshold,
+                $user_xml_exporter
+            ),
+            $user_xml_exporter
         );
     }
 
@@ -979,7 +983,7 @@ class trackerPlugin extends Plugin {
             throw new Exception ('Tracker ID does not belong to project ID');
         }
 
-        $this->getTrackerXmlExport($can_bypass_threshold)
+        $this->getTrackerXmlExport($params['user_xml_exporter'], $can_bypass_threshold)
             ->exportSingleTrackerToXml($params['into_xml'], $tracker_id, $user, $params['archive']);
     }
 

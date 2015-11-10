@@ -852,6 +852,9 @@ class Tracker_FormElementFactory {
         return array_filter($unused);
     }
 
+    /**
+     * @return Tracker_FormElement
+     */
     public function getUsedFormElementForTracker($tracker) {
         $tracker_id = $tracker->getId();
         if (!isset($this->used[$tracker_id])) {

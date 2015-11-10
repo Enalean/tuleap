@@ -402,11 +402,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
 
     /**
      * Transforms Bind into a SimpleXMLElement
-     *
-     * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
-     * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      */
-    public abstract function exportToXml(SimpleXMLElement $root, &$xmlMapping, $project_export_context);
+    public abstract function exportToXml(
+        SimpleXMLElement $root,
+        &$xmlMapping,
+        $project_export_context,
+        UserXMLExporter $user_xml_exporter
+    );
 
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
