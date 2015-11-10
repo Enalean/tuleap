@@ -3,6 +3,9 @@ Version 8.9 (Not released yet)
 	== Enhancement ==
 	* story #8528: Refacto: inject UserXmlExporter
 
+	== Development ==
+	* request #8519: Add the possibility to build the packages and install a fresh instance
+
 	== Plugins ==
 	* mediawiki: 0.99
 	* git: 4.94
