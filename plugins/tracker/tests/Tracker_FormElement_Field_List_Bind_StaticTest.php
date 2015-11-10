@@ -83,4 +83,12 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         $this->assertEqual($res, $f->getFieldData('Admin,User Interface,Docman', true));
     }
 }
-?>
+
+class Tracker_FormElement_Field_List_Bind_Static_ImportInvalidValue extends TuleapTestCase {
+
+    public function itDoesntCrashWhenInvalidValueShouldBePrinted() {
+        $field         = aSelectBoxField()->withId(101)->build();
+        $bind = new Tracker_FormElement_Field_List_Bind_Static($field, 0, array(), null, null);
+        $this->assertEqual('-', $bind->formatArtifactValue(0));
+    }
+}

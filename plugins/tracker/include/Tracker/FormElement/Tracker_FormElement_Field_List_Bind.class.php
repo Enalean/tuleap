@@ -197,7 +197,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string
      */
     public function formatArtifactValue($value_id) {
-        if ($value_id != self::NONE_VALUE) {
+        if ($value_id && $value_id != self::NONE_VALUE) {
             return $this->formatCriteriaValue($value_id);
         } else {
             return '-';
