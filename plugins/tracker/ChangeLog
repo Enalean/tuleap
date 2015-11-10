@@ -1,3 +1,6 @@
+Version 5.740 - Tuleap 8.9
+    * story #8528: Refacto: inject UserXmlExporter
+
 Version 5.739 - Tuleap 8.9
     * request #8563: Notification mails incorrect formatted and not displayable by client
 
