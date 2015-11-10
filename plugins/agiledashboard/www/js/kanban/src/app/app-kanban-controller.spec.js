@@ -18,7 +18,7 @@ describe('KanbanCtrl - ', function() {
             'getViewMode'
         ]);
 
-        SharedPropertiesService.getKanban.andReturn({
+        SharedPropertiesService.getKanban.and.returnValue({
             id: 38,
             label: '',
             archive: {},
@@ -55,10 +55,7 @@ describe('KanbanCtrl - ', function() {
             $q = _$q_;
             deferred = $q.defer();
 
-            // Make the service return fake promises
-            _.forOwn(KanbanService, function(method) {
-                method.andReturn($q.defer().promise);
-            });
+            _(KanbanService).map('and').invoke('returnValue', $q.defer().promise);
 
             KanbanCtrl = $controller('KanbanCtrl', {
                 $scope                       : $scope,
@@ -84,7 +81,7 @@ describe('KanbanCtrl - ', function() {
 
         var fake_event;
         beforeEach(function() {
-            SharedPropertiesService.getUserId.andReturn(102);
+            SharedPropertiesService.getUserId.and.returnValue(102);
             fake_event = {
                 which: 1,
                 preventDefault: jasmine.createSpy("preventDefault")
@@ -113,10 +110,10 @@ describe('KanbanCtrl - ', function() {
             var fake_updated_item;
 
             beforeEach(function() {
-                NewTuleapArtifactModalService.showEdition.andCallFake(function(c, a, b, callback) {
+                NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
                     callback();
                 });
-                KanbanItemService.getItem.andReturn(deferred.promise);
+                KanbanItemService.getItem.and.returnValue(deferred.promise);
                 spyOn(KanbanCtrl, "moveItemAtTheEnd");
 
                 KanbanCtrl.archive = {
@@ -180,7 +177,7 @@ describe('KanbanCtrl - ', function() {
     describe("moveItemAtTheEnd() -", function() {
 
         it("Given a kanban item in a column and another empty kanban column, when I move the item to the column, then the item will be marked as updating, will be removed from the previous column's content, will be appended to the given column's content, the REST backend will be called to move the item in the new column and a resolved promise will be returned", function() {
-            KanbanService.moveInColumn.andReturn(deferred.promise);
+            KanbanService.moveInColumn.and.returnValue(deferred.promise);
             var item =  {
                 id: 1654,
                 updating: false,
