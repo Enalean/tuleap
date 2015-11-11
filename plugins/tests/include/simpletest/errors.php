@@ -45,7 +45,7 @@ class SimpleErrorTrappingInvoker extends SimpleInvokerDecorator {
      */
     function invoke($method) {
         $queue = &$this->_createErrorQueue();
-        set_error_handler('SimpleTestErrorHandler');
+        set_error_handler('SimpleTestErrorHandler', (E_ALL | E_STRICT) & ~E_RECOVERABLE_ERROR);
         parent::invoke($method);
         restore_error_handler();
         $queue->tally();
