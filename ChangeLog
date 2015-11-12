@@ -6,6 +6,7 @@ Version 8.9 (Not released yet)
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
+	* request #8588 Remove RequestHelp plugin
 
 	== Bug fix ==
 	* request #8334: PhpWiki notifications can leak data
