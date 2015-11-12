@@ -1,3 +1,6 @@
+Version 5.742 - Tuleap 8.9
+    * story #8528: Generate users.xml
+
 Version 5.741 - Tuleap 8.9
     * Fix tests for Refacto: inject UserXmlExporter (part of story #8528)
 

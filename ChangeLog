@@ -2,6 +2,7 @@ Version 8.9 (Not released yet)
 
 	== Enhancement ==
 	* story #8528: Refacto: inject UserXmlExporter
+	* story #8528: Generate users.xml
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
@@ -12,7 +13,7 @@ Version 8.9 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.99
 	* git: 4.94
-	* tracker: 5.741
+	* tracker: 5.742
 	* agiledashboard: 1.298
 	* tests: 5.31
 
