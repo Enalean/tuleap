@@ -278,7 +278,15 @@ class Tracker_DateReminderManager {
         $link     = $protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId();
 
         $output   ='<h1>'.$hp->purify($artifact->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;
-        $output   .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
+        $output   .= $language->getText(
+            'plugin_tracker_date_reminder',
+            'body_header',
+            array(
+                $hp->purify($GLOBALS['sys_name']),
+                $hp->purify($reminder->getField()->getLabel()),
+                $reminder->getFieldValue($artifact)
+            )
+        );
         $output   .= '<br>';
         $output   .= $language->getText('plugin_tracker_date_reminder','body_art_html_link', array($link));
         $output   .= '<br>';

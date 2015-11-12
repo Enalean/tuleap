@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -96,7 +96,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      * @return string html
      */
     public function fetch() {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
 
         //define the selectbox for value_type
         $select_value_type = '<select name="workflow_postaction_field_date_value_type['. $this->id .']">';
@@ -120,7 +121,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
         $tff = $this->getFormElementFactory();
         $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
         
-        $select_field  = '<select name="workflow_postaction_field_date['.$this->id.']">';
+        $select_field  = '<select name="workflow_postaction_field_date['.$purifier->purify($this->id).']">';
         $options_field = '';
         $one_selected  = false;
         foreach ($fields_date as $field_date) {
@@ -129,7 +130,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
                 $selected     = 'selected="selected"';
                 $one_selected = true;
             }            
-            $options_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
+            $options_field .= '<option value="'. $purifier->purify($field_date->getId()) .'" '. $selected.'>'.$purifier->purify($field_date->getLabel()).'</option>';
         }
         if (!$one_selected) {
             $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';

@@ -188,7 +188,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     private function buildReportCriteria(Tracker_Report_Criteria $criteria, $advanced_criteria) {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if ($advanced_criteria) {
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';
             $html .= $GLOBALS['HTML']->getImage('ic/toggle_'. ($criteria->is_advanced ? 'minus' : 'plus' ) .'.png',
@@ -196,8 +197,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             );
             $html .= '</td><td>';
         }
-        $html .= '<label for="tracker_report_criteria_'. $this->id .'" title="#'.$this->id.'">'. $this->getLabel();
-        $html .= '<input type="hidden" id="tracker_report_criteria_'. $this->id .'_parent" value="'. $this->parent_id .'" />';
+        $html .= '<label for="tracker_report_criteria_'. $purifier->purify($this->id) .'" title="#'.
+            $purifier->purify($this->id).'">'. $purifier->purify($this->getLabel());
+        $html .= '<input type="hidden" id="tracker_report_criteria_'. $purifier->purify($this->id) .
+            '_parent" value="'. $purifier->purify($this->parent_id) .'" />';
         $html .= '</label>';
 
         if ($advanced_criteria) {
@@ -607,19 +610,22 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchCard(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
 
-        $value = $this->fetchCardValue($artifact, $display_preferences);
+        $value           = $this->fetchCardValue($artifact, $display_preferences);
         $data_field_id   = '';
         $data_field_type = '';
 
+        $purifier        = Codendi_HTMLPurifier::instance();
+
         if ($this->userCanUpdate()) {
-            $data_field_id   = 'data-field-id="'.$this->getId().'"';
-            $data_field_type = 'data-field-type="'.$this->getFormElementFactory()->getType($this).'"';
+            $data_field_id   = 'data-field-id="'. $purifier->purify($this->getId()) .'"';
+            $data_field_type = 'data-field-type="'. $purifier->purify($this->getFormElementFactory()->getType($this)) .'"';
         }
 
+
         $html = '<tr>
-                    <td>'. $this->getLabel().':
+                    <td>'. $purifier->purify($this->getLabel()) .':
                     </td>
-                    <td class="valueOf_'.$this->getName().'"'.
+                    <td class="valueOf_'. $purifier->purify($this->getName()) .'"'.
                         $data_field_id.
                         $data_field_type.
                         '>'.
@@ -699,7 +705,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         $html .= '</div>';
 
-        $html .= '<label title="'. $hp->purify($this->description, CODENDI_PURIFIER_LIGHT) .'" class="tracker_formelement_label">'. $this->getLabel() . $required .'</label>';
+        $html .= '<label title="'. $hp->purify($this->description, CODENDI_PURIFIER_LIGHT) .'" class="tracker_formelement_label">'.
+            $hp->purify($this->getLabel()) . $required .'</label>';
         $html .= $this->fetchAdminFormElement();
         $html .= '</div>';
 

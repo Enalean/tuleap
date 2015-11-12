@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
  * http://sourceforge.net
@@ -7,20 +7,20 @@
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -759,15 +759,16 @@ class Layout extends Response {
     }
 
     protected function selectRank_optgroup($id, $items, $prefix = '', $value_prefix = '') {
-        $html = '';
+        $html      = '';
         $optgroups = '';
+        $purifier  = Codendi_HTMLPurifier::instance();
         foreach($items as $i => $item) {
             // don't include the item itself
             if ($item['id'] != $id) {
 
                 // need an optgroup ?
                 if (isset($item['subitems'])) {
-                    $optgroups .= '<optgroup label="'. $prefix . $item['name'] .'">';
+                    $optgroups .= '<optgroup label="'. $purifier->purify($prefix . $item['name']) .'">';
 
                     $selected = '';
                     if ( count($item['subitems']) ) {
@@ -779,7 +780,7 @@ class Layout extends Response {
                             $selected = 'selected="selected"';
                         }
                     }
-                    $optgroups .= '<option value="'. $item['id'] . ':' . 'beginning' .'" '. $selected .'>'. 'At the beginning of '. $prefix . $item['name'] .'</option>';
+                    $optgroups .= '<option value="'. $purifier->purify($item['id']) . ':' . 'beginning' .'" '. $selected .'>'. 'At the beginning of '. $purifier->purify($prefix . $item['name']) .'</option>';
                     list($o, $g) = $this->selectRank_optgroup($id, $item['subitems'], $prefix . $item['name'] .'::', $item['id'] . ':');
                     $optgroups .= $o;
                     $optgroups .= '</optgroup>';
@@ -795,8 +796,8 @@ class Layout extends Response {
                 if (isset($items[$i + 1]) && $items[$i + 1]['id'] == $id) {
                     $selected = 'selected="selected"';
                 }
-                $html .= '<option value="'. $value_prefix . $value .'" '. $selected .'>';
-                $html .= $GLOBALS['Language']->getText('global', 'after', $prefix . $item['name']);
+                $html .= '<option value="'. $purifier->purify($value_prefix . $value) .'" '. $selected .'>';
+                $html .= $GLOBALS['Language']->getText('global', 'after', $purifier->purify($prefix . $item['name']));
                 $html .= '</option>';
             }
         }
@@ -896,12 +897,13 @@ class Layout extends Response {
     }
 
     public function addBreadcrumbs($breadcrumbs) {
+        $purifier = Codendi_HTMLPurifier::instance();
         foreach($breadcrumbs as $b) {
             $classname = '';
             if (isset($b['classname'])) {
-                $classname = 'class="breadcrumb-step-'. $b['classname'] .'"';
+                $classname = 'class="breadcrumb-step-'. $purifier->purify($b['classname']) .'"';
             }
-            $this->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $b['title'] .'</a>');
+            $this->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $purifier->purify($b['title']) .'</a>');
         }
     }
 

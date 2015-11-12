@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,13 +74,14 @@ class Tracker_FormElement_View_Admin {
      * @return string html
      */
     public function fetchLabelForUpdate() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
-        $html .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="'. $this->formElement->getLabel() .'" size="40" />';
-        $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
-        $html .= '</p>';
-        $html .= $this->fetchCustomHelp();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= '<p>';
+        $html    .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
+        $html    .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="'. $purifier->purify($this->formElement->getLabel()) .'" size="40" />';
+        $html    .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
+        $html    .= '</p>';
+        $html    .= $this->fetchCustomHelp();
         return $html;
     }
     
@@ -117,13 +118,14 @@ class Tracker_FormElement_View_Admin {
      * @return string html
      */
     public function fetchLabelForShared() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').'</label>';
-        $html .= $this->formElement->getLabel();
-        $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
-        $html .= '</p>';
-        $html .= $this->fetchCustomHelp();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= '<p>';
+        $html    .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').'</label>';
+        $html    .= $purifier->purify($this->formElement->getLabel());
+        $html    .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
+        $html    .= '</p>';
+        $html    .= $this->fetchCustomHelp();
         return $html;
     }
     

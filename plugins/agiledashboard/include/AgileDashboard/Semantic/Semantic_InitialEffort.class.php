@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013. All rights reserved.
+* Copyright Enalean (c) 2013-2015. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -101,7 +101,12 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
         echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_long_desc');
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
-            echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_field', array($field->getLabel()));
+            $purifier = Codendi_HTMLPurifier::instance();
+            echo $GLOBALS['Language']->getText(
+                'plugin_agiledashboard_admin_semantic',
+                'initial_effort_field',
+                array($purifier->purify($field->getLabel()))
+            );
         } else {
             echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_no_field');
         }

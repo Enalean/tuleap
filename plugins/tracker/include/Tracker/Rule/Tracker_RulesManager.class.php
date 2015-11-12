@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -383,14 +384,14 @@ class Tracker_RulesManager {
             echo '<option value="0">'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_source_field') .'</option>';
             $sources = $this->getAllSourceFields(null);
             foreach($sources as $id => $field) {
-                echo '<option value="'. $id .'">';
+                echo '<option value="'. $hp->purify($id) .'">';
                 echo $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
                 echo '</option>';
             }
             echo '</select>';
         } else {
-            echo '<input type="hidden" name="source_field" value="'. $source_field_id .'" />';
-            echo $source_field->getLabel();
+            echo '<input type="hidden" name="source_field" value="'. $hp->purify($source_field_id) .'" />';
+            echo $hp->purify($source_field->getLabel());
         }
 
         echo ' &rarr; ';
@@ -430,7 +431,7 @@ class Tracker_RulesManager {
                                 'target_field' => $row['target_field_id'],
                             )
                         ) .'">';
-                        $d .= $source->getLabel() .' &rarr; '. $target->getLabel();
+                        $d .= $hp->purify($source->getLabel()) .' &rarr; '. $hp->purify($target->getLabel());
                         $d .= '</a>';
                         $dependencies[] = $d;
                     }
@@ -455,7 +456,14 @@ class Tracker_RulesManager {
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
         echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_title').'</h3>';
-        echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_help', array($source_field->getlabel(), $target_field->getlabel())) .'</p>';
+        echo '<p>'. $GLOBALS['Language']->getText(
+                'plugin_tracker_field_dependencies',
+                'dependencies_matrix_help',
+                array(
+                    $hp->purify($source_field->getlabel()),
+                    $hp->purify($target_field->getlabel())
+                )
+            ) .'</p>';
 
         $this->displayDependenciesMatrix($source_field, $target_field);
     }

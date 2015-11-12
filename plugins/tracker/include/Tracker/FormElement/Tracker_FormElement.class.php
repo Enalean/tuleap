@@ -408,7 +408,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html .= Tracker_FormElementFactory::instance()->getFactoryButton(__CLASS__, 'add-formElement['. $this->id .']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
         $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field') .' '. addslashes($this->getLabel()) .'?';
+        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field') .' '. $this->getLabel() .'?';
         $query = http_build_query(
             array(
                 'tracker'  => $this->getTracker()->id,
@@ -417,8 +417,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             )
         );
         $html .= '<a class="delete-field"
-                     onclick="return confirm(\''. $confirm .'\')"
-                     title="'. $confirm .'"
+                     onclick="return confirm(\''. $hp->purify($confirm, CODENDI_PURIFIER_JS_QUOTE) .'\')"
+                     title="'. $hp->purify($confirm) .'"
                      href="?'. $query .'">'. $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete')) .'</a>';
         $html .= '</td></tr>';
         return $html;

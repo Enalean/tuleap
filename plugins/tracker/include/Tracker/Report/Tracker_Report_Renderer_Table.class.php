@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/include/Codendi_HTTPPurifier.class.php');
@@ -737,7 +738,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         $sort_columns = $this->getSort($store_in_session);
 
-        $i = count($columns);
+        $purifier = Codendi_HTMLPurifier::instance();
         foreach($columns as $column) {
             if ($column['width']) {
                 $width = 'width="'.$column['width'].'%"';
@@ -752,7 +753,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                  id="tracker_report_table_column_'. $column['field']->id .'_parent"
                                  value="'. $column['field']->parent_id .'" />';
 
-                $label = $column['field']->getLabel($this->report);
+                $label = $purifier->purify($column['field']->getLabel($this->report));
 
                 if ($with_sort_links) {
                     $sort_url = $url . $column['field']->id;
