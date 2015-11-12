@@ -2,7 +2,7 @@ SetEnv GIT_PROJECT_ROOT /var/lib/tuleap/gitolite/repositories
 SetEnv GIT_HTTP_EXPORT_ALL
 SetEnv GITOLITE_HTTP_HOME /var/lib/gitolite
 SetEnv GIT_HTTP_BACKEND /usr/libexec/git-core/git-http-backend
-ScriptAlias /git/ /usr/lib/tuleap/bin/gitolite-suexec-wrapper.sh/
+ScriptAlias /git/ /usr/lib/tuleap/bin/gitolite3-suexec-wrapper.sh/
 
  <Location /git>
         AuthType Basic
