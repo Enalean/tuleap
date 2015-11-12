@@ -21,6 +21,12 @@
 
 require_once 'pre.php';
 
+$sys_user = getenv("USER");
+if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
+    fwrite(STDERR, 'Unsufficient privileges for user '.$sys_user.PHP_EOL);
+    exit(1);
+}
+
 $usage_options  = '';
 $usage_options .= 'p:'; // give me a project
 $usage_options .= 'u:'; // give me a user
