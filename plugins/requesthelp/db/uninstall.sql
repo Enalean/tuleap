@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS plugin_request_help;
