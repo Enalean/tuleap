@@ -1,3 +1,6 @@
+Version 5.31 - Tuleap 8.9
+    * request #8584: Unit tests on PHP 5.3+ should considered recoverable errors as fatal errors
+
 Version 5.30 - Tuleap 8.5
     * request #7311: Display README markdown file content in GitPHP tree views
 
