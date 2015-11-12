@@ -129,6 +129,7 @@ $sys_server_id = 0;
 
 // Tuleap directory (PHP pages, site-content, etc)
 $codendi_dir = "/usr/share/codendi";
+$tuleap_dir  = $codendi_dir;
 
 // Site specific settings are stored there:
 $sys_custom_dir = "/etc/codendi";

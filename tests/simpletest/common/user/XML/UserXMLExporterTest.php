@@ -20,6 +20,7 @@
 
 class UserXMLExporterTest extends TuleapTestCase {
 
+    private $collection;
     private $user_xml_exporter;
     private $user_manager;
     private $base_xml;
@@ -28,7 +29,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         parent::setUp();
 
         $this->user_manager      = mock('UserManager');
-        $this->user_xml_exporter = new UserXMLExporter($this->user_manager);
+        $this->collection        = mock('UserXMLExportedCollection');
+        $this->user_xml_exporter = new UserXMLExporter($this->user_manager, $this->collection);
         $this->base_xml          = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
              <whatever />'
@@ -71,5 +73,34 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->assertEqual((string) $this->base_xml->user['format'], 'ldap');
         $this->assertEqual((string) $this->base_xml->user, 'ldap_01');
     }
-}
 
+    public function itExportsEmailInXML() {
+        $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
+
+        $this->assertEqual((string) $this->base_xml->user['format'], 'email');
+        $this->assertEqual((string) $this->base_xml->user, 'email@example.com');
+    }
+
+    public function itCollectsUser() {
+        $user = aUser()->withId(101)->withUserName('user_01')->build();
+
+        expect($this->collection)->add($user)->once();
+
+        $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
+    }
+
+    public function itCollectsUserById() {
+        $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
+        stub($this->user_manager)->getUserById(101)->returns($user);
+
+        expect($this->collection)->add($user)->once();
+
+        $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
+    }
+
+    public function itDoesNotCollectUserByMail() {
+        expect($this->collection)->add()->never();
+
+        $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
+    }
+}

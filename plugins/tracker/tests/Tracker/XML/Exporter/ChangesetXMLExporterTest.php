@@ -43,7 +43,11 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_manager      = mock('UserManager');
-        $this->user_xml_exporter = partial_mock('UserXMLExporter', array('exportUserByMail', 'exportUserByUserId'), array($this->user_manager));
+        $this->user_xml_exporter = partial_mock(
+            'UserXMLExporter',
+            array('exportUserByMail', 'exportUserByUserId'),
+            array($this->user_manager, mock('UserXMLExportedCollection'))
+        );
         $this->artifact_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->values_exporter   = mock('Tracker_XML_Exporter_ChangesetValuesXMLExporter');
         $this->exporter          = new Tracker_XML_Exporter_ChangesetXMLExporter(

@@ -174,7 +174,7 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
             ));
         $can_bypass_threshold = true;
 
-        $user_xml_exporter = new UserXMLExporter($this->user_manager);
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, mock('UserXMLExportedCollection'));
 
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,

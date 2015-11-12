@@ -25,8 +25,14 @@ class UserXMLExporter {
      */
     private $user_manager;
 
-    public function __construct(UserManager $user_manager) {
+    /**
+     * @var UserXMLExportedCollection
+     */
+    private $collection;
+
+    public function __construct(UserManager $user_manager, UserXMLExportedCollection $collection) {
         $this->user_manager = $user_manager;
+        $this->collection   = $collection;
     }
 
     public function exportUser(PFUser $user, SimpleXMLElement $members_node, $child_name) {
@@ -37,6 +43,7 @@ class UserXMLExporter {
             $member_node = $members_node->addChild($child_name, $user->getUserName());
             $member_node->addAttribute('format', 'username');
         }
+        $this->collection->add($user);
     }
 
     public function exportUserByUserId($user_id, SimpleXMLElement $members_node, $child_name) {
