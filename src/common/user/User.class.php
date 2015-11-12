@@ -1354,7 +1354,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
              return 'http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar';
          } else {
              if ($this->hasAvatar()) {
-                return get_server_url() .'/users/'. $purifier->purify($this->getUserName()) .'/avatar.png';
+                return HTTPRequest::instance()->getServerUrl() .'/users/'. $purifier->purify($this->getUserName()) .'/avatar.png';
              }
          }
 

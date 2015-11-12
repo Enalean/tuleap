@@ -1,29 +1,37 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2015. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('browser.php');
 
-/**
- * @package Codendi
- */
 class HTTPRequest extends Codendi_Request {
+
+    const HEADER_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO';
+    const HEADER_X_FORWARDED_FOR   = 'HTTP_X_FORWARDED_FOR';
+    const HEADER_HOST              = 'HTTP_HOST';
+    const HEADER_REMOTE_ADDR       = 'REMOTE_ADDR';
+
+    /**
+     * @var array
+     */
+    private $trusted_proxied;
 
     /**
      * Constructor
@@ -152,8 +160,82 @@ class HTTPRequest extends Codendi_Request {
         }
     }
 
+    /**
+     * Returns true if request is served in HTTPS by current server
+     *
+     * @return boolean
+     */
     public function isSSL() {
+        return $this->doWeTerminateSSL();
+    }
+
+    private function doWeTerminateSSL() {
         return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on');
+    }
+
+    /**
+     * What are the IP adresses trusted to be a proxy
+     *
+     * @param array $proxies
+     */
+    public function setTrustedProxies(array $proxies) {
+        foreach($proxies as $proxy) {
+            $this->trusted_proxied[$proxy] = true;
+        }
+    }
+
+    /**
+     * isSSL version that take into account reverse proxy
+     *
+     * @return type
+     */
+    private function isSSLForEndUser() {
+        if ($this->reverseProxyForwardsOriginalProtocol()) {
+            return $this->isOriginalProtocolSSL();
+        }
+        return $this->doWeTerminateSSL();
+    }
+
+    private function reverseProxyForwardsOriginalProtocol() {
+        return $this->isFromTrustedProxy() && isset($_SERVER[self::HEADER_X_FORWARDED_PROTO]);
+    }
+
+    private function isFromTrustedProxy() {
+        return isset($_SERVER[self::HEADER_REMOTE_ADDR]) && isset($this->trusted_proxied[$_SERVER[self::HEADER_REMOTE_ADDR]]);
+    }
+
+    private function isOriginalProtocolSSL() {
+        return strtolower($_SERVER[self::HEADER_X_FORWARDED_PROTO]) === 'https';
+    }
+
+
+    private function getScheme() {
+        if ($this->isSSLForEndUser()) {
+            return 'https://';
+        } else {
+            return 'http://';
+        }
+    }
+
+    /**
+     * Returns the ServerURL the user requested, taking into account reverse proxy
+     * and protocols variations
+     *
+     * Logic:
+     * -> when we detect a reverse proxy, return reverse proxy URL
+     *   -> this assume that reverse proxy rewite HOST and HTTP_X_FORWARDED_PROTO headers
+     *
+     *
+     * @return String Fully qualified URL
+     */
+    public function getServerUrl() {
+        if ($this->reverseProxyForwardsOriginalProtocol()) {
+            return $this->getScheme().$_SERVER[self::HEADER_HOST];
+        } elseif ($this->isSSLForEndUser() && ForgeConfig::get('sys_https_host')) {
+            return $this->getScheme().ForgeConfig::get('sys_https_host');
+        } else {
+            return $this->getScheme().ForgeConfig::get('sys_default_domain');
+        }
     }
 
     /**
@@ -165,11 +247,11 @@ class HTTPRequest extends Codendi_Request {
      *
      * @return String
      */
-    public static function getIPAddress() {
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    public function getIPAddress() {
+        if ($this->isFromTrustedProxy() && isset($_SERVER[self::HEADER_X_FORWARDED_FOR])) {
+            return $_SERVER[self::HEADER_X_FORWARDED_FOR];
         } else {
-            return $_SERVER['REMOTE_ADDR'];
+            return $_SERVER[self::HEADER_REMOTE_ADDR];
         }
     }
 }

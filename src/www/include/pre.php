@@ -247,6 +247,7 @@ if (!IS_SCRIPT) {
     $urlVerif->assertValidUrl($_SERVER);
 }
 $request = HTTPRequest::instance();
+$request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
 
 //Check post max size
 if ($request->exist('postExpected') && !$request->exist('postReceived')) {

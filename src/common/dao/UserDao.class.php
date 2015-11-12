@@ -364,7 +364,7 @@ class UserDao extends DataAccessObject {
         } while ($dar && $dar->rowCount() == 1);
         $sql = sprintf("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES (%s, %s, %d, %d)",
             $this->da->quoteSmart($token),
-            $this->da->quoteSmart(HTTPRequest::getIPAddress()),
+            $this->da->quoteSmart(HTTPRequest::instance()->getIPAddress()),
             $time,
             $user_id
         );

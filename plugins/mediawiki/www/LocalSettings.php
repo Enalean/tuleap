@@ -88,12 +88,7 @@ $xml_security->enableExternalLoadOfEntities();
 
 sysdebug_lazymode(true);
 
-
-if (forge_get_config('sys_https_host')) {
-    $wgServer = 'https://'. forge_get_config('sys_https_host');
-} else {
-    $wgServer = 'http://'. forge_get_config('sys_default_domain');
-}
+$wgServer = HTTPRequest::instance()->getServerUrl();
 
 if (! isset($fusionforgeproject)) {
     $fusionforgeproject = null;

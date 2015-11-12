@@ -91,7 +91,7 @@ class userlogPlugin extends Plugin {
                                        $request->getFromServer('HTTP_USER_AGENT'),
                                        $request->getFromServer('REQUEST_METHOD'),
                                        $request->getFromServer('REQUEST_URI'),
-                                       HTTPRequest::getIPAddress(),
+                                       HTTPRequest::instance()->getIPAddress(),
                                        $request->getFromServer('HTTP_REFERER'));
         }
     }

@@ -54,6 +54,11 @@ abstract class TuleapTestCase extends UnitTestCase {
     private $tmp_dir;
 
     /**
+     * @var Array keep original $_SERVER[] values
+     */
+    private $original_server = array();
+
+    /**
      * SetUp a test (called before each test)
      */
     public function setUp() {
@@ -77,6 +82,7 @@ abstract class TuleapTestCase extends UnitTestCase {
             $GLOBALS = $this->globals;
         }
         $this->removeTmpDir();
+        $this->restoreOriginalServer();
 
         // Sometime, somewhere, you (yes I'm looking at you crappy developer) will
         // include code that set time limit. Later on, tests will start to fail and
@@ -298,5 +304,19 @@ abstract class TuleapTestCase extends UnitTestCase {
         }
         clearstatcache();
     }
+
+    protected function preserveServer($variable) {
+        $this->original_server[$variable] = isset($_SERVER[$variable]) ? $_SERVER[$variable] : null;
+        unset($_SERVER[$variable]);
+    }
+
+    protected function restoreOriginalServer() {
+        foreach ($this->original_server as $variable => $value) {
+            if ($value === null) {
+                unset($_SERVER[$variable]);
+            } else {
+                $_SERVER[$variable] = $value;
+            }
+        }
+    }
 }
-?>

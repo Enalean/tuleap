@@ -513,3 +513,18 @@ $sys_rest_api_over_http = 0;
 
 // Continue to store password hashed with MD5 for legacy purposes
 $sys_keep_md5_hashed_password = 1;
+
+// Comma separated list of IP addresses that are trusted reverse proxy.
+//
+// When you setup a reverse proxy in front of Tuleap (for SSL termination or
+// load balancer for instance, you should set there the IP address of the proxy
+//
+// /!\ SECURITY WARINING /!\
+//
+// When enabled, Tuleap will trust following HTTP headers:
+// - X_FORWARDED_FOR
+// - X_FORWARDED_PROTO
+// - REMOTE_ADDR
+// You have to ensure those headers are properly set by your reverse proxy
+// otherwise it might be an injection point for an attacker
+$sys_trusted_proxies = '';
