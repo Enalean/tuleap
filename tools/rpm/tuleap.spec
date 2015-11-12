@@ -302,20 +302,6 @@ Provides: tuleap-plugin-webdav = %{version}
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
-%package plugin-requesthelp
-Summary: Insert Remedy tickets using Codex
-Group: Development/Tools
-Version: @@PLUGIN_REQUESTHELP_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}, %{php_base}-pecl-oci8 = 1.4.5
-%if %{PKG_NAME} == codendi_st
-Provides: codendi-plugin-requesthelp = %{version}
-%else
-Provides: tuleap-plugin-requesthelp = %{version}
-%endif
-%description plugin-requesthelp
-Plugin to insert Remedy tickets using Codex (used for ST only)
-
 %package plugin-tracker
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
@@ -1082,10 +1068,6 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/webdav
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
-
-%files plugin-requesthelp
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/requesthelp
 
 %files plugin-tracker
 %defattr(-,%{APP_USER},%{APP_USER},-)

@@ -157,13 +157,6 @@ Depends: tuleap (= ${source:Version}), php-sabredav, ${misc:Depends}
 Description: WebDAV plugin for Tuleap
  Plugin to access to file releases & docman though WebDAV.
 
-# NOTE: Disabled because there's no Debian package for php-oci8
-#Package: tuleap-plugin-requesthelp
-#Architecture: all
-#Depends: tuleap (= ${source:Version}), php-oci8, ${misc:Depends}
-#Description: Insert Remedy tickets using Codex
-# Plugin to insert Remedy tickets using Codex (used for ST only).
-
 Package: tuleap-plugin-tracker
 Architecture: all
 Depends: tuleap (= ${source:Version}), xsltproc, ${misc:Depends}
