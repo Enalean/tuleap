@@ -109,7 +109,12 @@ artifact =
     field_user_list =
         attribute type { "list" },
         attribute bind { "users" },
-        element value  { user_content }*
+        (
+            empty_value
+            | element value  {
+                user_content
+            }*
+        )
 
     field_ugroup_list =
         attribute type { "list" },

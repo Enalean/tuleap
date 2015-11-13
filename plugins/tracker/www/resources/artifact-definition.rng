@@ -241,11 +241,14 @@
     <attribute name="bind">
       <value>users</value>
     </attribute>
-    <zeroOrMore>
-      <element name="value">
-        <ref name="user_content"/>
-      </element>
-    </zeroOrMore>
+    <choice>
+      <ref name="empty_value"/>
+      <zeroOrMore>
+        <element name="value">
+          <ref name="user_content"/>
+        </element>
+      </zeroOrMore>
+    </choice>
   </define>
   <define name="field_ugroup_list">
     <attribute name="type">
