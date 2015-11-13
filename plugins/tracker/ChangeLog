@@ -1,3 +1,6 @@
+Version 5.743 - Tuleap 8.9
+    * request #8460: Fix error when exporting field list bound to users with no value
+
 Version 5.742 - Tuleap 8.9
     * story #8528: Generate users.xml
 
