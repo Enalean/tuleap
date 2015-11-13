@@ -71,7 +71,7 @@ class ProjectXMLImporter {
         $xml_content = $project_archive->getXML();
 
         if (! $xml_content) {
-            $this->logger->error('No content available in archive for file ' . self::PROJECT_XML_FILENAME);
+            $this->logger->error('No content available in archive for file ' . ProjectXMLImporter_XMLImportZipArchive::PROJECT_XML_FILENAME);
             return;
         }
 
