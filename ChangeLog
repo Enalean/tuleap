@@ -10,6 +10,7 @@ Version 8.9 (Not released yet)
 
 	== Bug fix ==
 	* request #8334: PhpWiki notifications can leak data
+	* request #8595: Fix ProjectXMLImporter undefined class constant error
 
 	== Plugins ==
 	* mediawiki: 0.99
