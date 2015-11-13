@@ -31,13 +31,15 @@ class Docman_XMLExportVisitor {
     protected $statistics;
     protected $userCache;
     protected $dataPath;
+    protected $logger;
 
-    public function __construct(DOMDocument $doc) {
+    public function __construct(DOMDocument $doc, Logger $logger) {
         $this->doc = $doc;
 
         $this->fileCounter = 0;
         $this->userCache = array();
-        
+        $this->logger = $logger;
+
         $this->statistics['nb_items']   = 0;
         $this->statistics['nb_folder']  = 0;
         $this->statistics['nb_empty']   = 0;
@@ -46,6 +48,7 @@ class Docman_XMLExportVisitor {
         $this->statistics['nb_file']    = 0;
         $this->statistics['nb_version'] = 0;
         $this->statistics['nb_embedded'] = 0;
+
     }
 
     public function setDataPath($path) {
@@ -197,7 +200,12 @@ class Docman_XMLExportVisitor {
         $this->appendChild($vNode, 'content', $fileName);
         if(is_dir($this->dataPath)) {
             $res = copy($version->getPath(), $this->dataPath.'/'.$fileName);
-            if(!$res) echo $version->getPath()." not copied to ".$this->dataPath.'/'.$fileName."<br>";
+            if(!$res) {
+                echo $version->getPath()." not copied to ".$this->dataPath.'/'.$fileName."<br>";
+                $this->logger->warn($version->getPath()." not copied to [".$this->dataPath."]");
+            } else {
+                $this->logger->info($version->getPath()." copied to [".$this->dataPath."]");
+            }
         }
         return $vNode;
     }

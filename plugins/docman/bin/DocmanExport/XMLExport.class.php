@@ -16,8 +16,10 @@ class XMLExport {
     protected $groupId;
     protected $dataPath;
     protected $packagePath;
+    protected $logger;
 
-    public function __construct() {
+    public function __construct(Logger $logger) {
+        $this->logger = new WrapperLogger($logger, 'Export Docman');
     }
 
     public function setGroupId($groupId) {
@@ -26,6 +28,10 @@ class XMLExport {
 
     public function setArchiveName($name) {
         $this->archiveName = $name;
+    }
+
+    public function setPackagePath($path) {
+        $this->packagePath = $path;
     }
 
     public function createDomDocument() {
@@ -40,9 +46,13 @@ class XMLExport {
     }
 
     public function dumpPackage() {
-        $this->createDirectories();
-        $doc = $this->dump();
-        $doc->save($this->packagePath.'/'.$this->archiveName.'.xml');
+        $directoryPath = $this->packagePath.'/'.$this->archiveName;
+        $this->logger->info("Exporting documents of project [".$this->groupId."] in [".$directoryPath."]");
+        if($this->createDirectories()) {
+            $doc = $this->dump();
+            $doc->save($this->packagePath.'/'.$this->archiveName.'.xml');
+            $this->logger->info("Documents of project [".$this->groupId."] dumped in [".$directoryPath."]");
+        }
     }
 
     public function dump() {
@@ -52,22 +62,41 @@ class XMLExport {
     }
 
     public function appendDocman($doc) {
-        $docmanExport = new Docman_XMLExport();
+        $docmanExport = new Docman_XMLExport($this->logger);
         $docmanExport->setGroupId($this->groupId);
         $docmanExport->setDataPath($this->dataPath);
         $doc->appendChild($docmanExport->getXML($doc));
     }
 
     public function createDirectories() {
-        $dirCreated = mkdir($this->archiveName.'/'.$this->archiveName, 0755, true);
-        if($dirCreated) {
-            $this->packagePath = $this->archiveName;
-            $this->dataPath = $this->archiveName.'/'.$this->archiveName;
-
-            //$this->asXML();
-            //$this->doc->validate();
-            //$this->doc->save($this->archiveName.'/'.$this->archiveName.'.xml');
-            //$this->displayStatistics();
+        try {
+            $directoryPath = $this->packagePath.'/'.$this->archiveName;
+            if (is_dir($directoryPath)) {
+                throw new DocmanExportException("Folder [".$directoryPath."] already exist");
+                return false;
+            }
+            $parentDirectory = dirname($directoryPath);
+            if(!is_dir($parentDirectory)) {
+                throw new DocmanExportException("Folder [".$parentDirectory."] does not exist");
+                return false;
+            }
+            if(!is_writable($parentDirectory)) {
+                throw new DocmanExportException("Folder [".$parentDirectory."] is not writable");
+                return false;
+            }
+            $dirCreated = mkdir($directoryPath, 0755, true);
+            if($dirCreated == true) {
+                $this->dataPath = $directoryPath;
+                $this->logger->info("Folder [".$directoryPath."] created for project [".$this->groupId."]");
+                return true;
+            } else {
+                throw new DocmanExportException("Unable to create folder [".$directoryPath."]");
+                return false;
+            }
+        } catch (Exception $exception) {
+            $this->logger->error("Unable to create folder [".$directoryPath."] for project [".$this->groupId."] Error message: ".$exception->getMessage());
+            throw new DocmanExportException("Unable to create folder [".$directoryPath."] for project [".$this->groupId."] Error message: ".$exception->getMessage());
+            return false;
         }
     }
 }

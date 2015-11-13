@@ -28,38 +28,47 @@
 set_include_path(get_include_path() .PATH_SEPARATOR. dirname(__FILE__).'/../../../../src' .PATH_SEPARATOR. dirname(__FILE__).'/../../../../src/www/include');
 require 'pre.php';
 require 'XMLExport.class.php';
+require 'Docman_ExportException.class.php';
 
-function error($str) {
-    echo "*** Error: $str".PHP_EOL;
+
+$consoleLogger = new Log_ConsoleLogger();
+
+$sys_user = getenv("USER");
+if ( $sys_user !== 'root' && $sys_user !== ForgeConfig::get('sys_http_user') ) {
+    $consoleLogger->error('Unsufficient privileges for user '.$sys_user);
+    return false;
 }
 
 function usage() {
-    echo "Usage: export.php groupId targetname".PHP_EOL;
+    $consoleLogger = new Log_ConsoleLogger();
+    $consoleLogger->error("Usage: export.php groupId targetname");
 }
 
 if(!isset($argv[2])) {
-    error("No target directory specified");
+    $consoleLogger->error("No target directory specified");
     usage();
     return false;
 }
 
 if(is_file($argv[2])) {
-    error("Target directoy already exists");
-    usage();
+    $consoleLogger->error("Target directoy already exists");
     return false;
 }
 
 $start = microtime(true);
 
-$XMLExport = new XMLExport();
-$XMLExport->setGroupId($argv[1]);
-$XMLExport->setArchiveName($argv[2]);
-
-//echo $XMLExport->dump()->saveXML();
-$XMLExport->dumpPackage();
+try {
+    $logger    = new BackendLogger();
+    $XMLExport = new XMLExport($logger);
+    $XMLExport->setGroupId($argv[1]);
+    $XMLExport->setArchiveName($argv[2]);
+    $XMLExport->dumpPackage();
+}catch (Exception $exception) {
+    $consoleLogger->error("Export failed : ".$exception->getMessage());
+    return false;
+}
 
 $end = microtime(true);
-
-echo "Elapsed time: ".($end-$start).PHP_EOL;
+$consoleLogger->info("Elapsed time: ".($end-$start));
 
 ?>

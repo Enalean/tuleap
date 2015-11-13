@@ -27,8 +27,10 @@ require 'Docman_XMLExportVisitor.class.php';
 class Docman_XMLExport {
     protected $groupId;
     protected $dataPath;
-    
-    public function __construct() {
+    protected $logger;
+
+    public function __construct(Logger $logger) {
+        $this->logger = $logger;
     }
 
     public function setGroupId($groupId) {
@@ -98,7 +100,7 @@ class Docman_XMLExport {
         $rootItem = $itemFactory->getRoot($this->groupId);
         $tree = $itemFactory->getItemSubTree($rootItem, $user, true, true);
 
-        $xmlExport = new Docman_XMLExportVisitor($doc);
+        $xmlExport = new Docman_XMLExportVisitor($doc, $this->logger);
         $xmlExport->setDataPath($this->dataPath);
         
         return $xmlExport->getXML($tree);
