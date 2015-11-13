@@ -41,6 +41,12 @@ class ReferenceManager {
     var $referencesByProject = array();
 
     var $referenceDao;
+
+    /**
+     * @var CrossReferenceDao
+     */
+    var $cross_reference_dao;
+
     private $groupIdByName = array();
 
     /**
@@ -691,15 +697,17 @@ class ReferenceManager {
     }
 
     public function insertCrossReference(CrossReference $cross_reference) {
-        if(! $cross_reference->existInDb()) {
-            return $cross_reference->createDbCrossRef();
+        $dao = $this->_getCrossReferenceDao();
+        if(! $dao->existInDb($cross_reference)) {
+            return $dao->createDbCrossRef($cross_reference);
         }
 
         return true;
     }
 
     public function removeCrossReference(CrossReference $cross_reference) {
-        return $cross_reference->deleteCrossReference();
+        $dao = $this->_getCrossReferenceDao();
+        return $dao->deleteCrossReference($cross_reference);
     }
 
     /**
@@ -1081,7 +1089,10 @@ class ReferenceManager {
     }
 
     function _getCrossReferenceDao() {
-        return new CrossReferenceDao();
+        if (!is_a($this->cross_reference_dao, 'CrossReferenceDao')) {
+            $this->cross_reference_dao = new CrossReferenceDao();
+        }
+        return $this->cross_reference_dao;
     }
 
     /**
