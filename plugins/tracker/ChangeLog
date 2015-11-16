@@ -1,3 +1,6 @@
+Version 5.745 - Tuleap 8.9
+    * request #8583 Invalid value in tracker XML import data crash import process
+
 Version 5.744 - Tuleap 8.9
     * request #8598: Static Text field type are deleted, not added in Unused elements
 
