@@ -19,7 +19,30 @@
  */
 namespace User\XML\Import;
 
-interface User {
+use TuleapTestCase;
 
-    public function getUserName();
+class AlreadyExistingUser_isActionAllowedTest extends TuleapTestCase {
+
+    /** @var AlreadyExistingUser */
+    protected $user;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user = new AlreadyExistingUser(
+            aUser()->withUserName('cstevens')->build()
+        );
+    }
+
+    public function itReturnsFalseWhenActionIsCreate() {
+        $this->assertFalse($this->user->isActionAllowed('create'));
+    }
+
+    public function itReturnsFalseWhenActionIsActivate() {
+        $this->assertTrue($this->user->isActionAllowed('activate'));
+    }
+
+    public function itReturnsFalseWhenActionIsMap() {
+        $this->assertTrue($this->user->isActionAllowed('map'));
+    }
 }

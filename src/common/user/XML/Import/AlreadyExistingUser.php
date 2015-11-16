@@ -21,7 +21,9 @@ namespace User\XML\Import;
 
 use PFUser;
 
-class AlreadyExistingUser extends User {
+class AlreadyExistingUser extends ActionToBeTakenForUser {
+
+    private static $ALLOWED_ACTIONS = array('activate', 'map');
 
     public function __construct(PFUser $user) {
         parent::__construct(
@@ -35,5 +37,9 @@ class AlreadyExistingUser extends User {
     /** @return array */
     public function getCSVData() {
         return array();
+    }
+
+    public function isActionAllowed($action) {
+        return in_array($action, self::$ALLOWED_ACTIONS);
     }
 }

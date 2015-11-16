@@ -19,7 +19,6 @@
  */
 namespace User\XML\Import;
 
-interface User {
+use Exception;
 
-    public function getUserName();
-}
+class UserNotFoundException extends Exception {}

@@ -19,37 +19,34 @@
  */
 namespace User\XML\Import;
 
-class ToBeCreatedUser extends ActionToBeTakenForUser {
+use TuleapTestCase;
 
-    private static $ALLOWED_ACTIONS = array('create', 'map');
+class ToBeMappedUser_isActionAllowedTest extends TuleapTestCase {
 
-    const ACTION = 'create';
+    /** @var ToBeMappedUser */
+    protected $user;
 
-    public function __construct(
-        $username,
-        $realname,
-        $email
-    ) {
-        $ldapid = '';
+    public function setUp() {
+        parent::setUp();
 
-        parent::__construct($username, $realname, $email, $ldapid);
-    }
-
-    /** @return array */
-    public function getCSVData() {
-        return array(
-            $this->username,
-            self::ACTION,
-            sprintf(
-                '%s (%s) <%s> must be created',
-                $this->realname,
-                $this->username,
-                $this->email
+        $this->user = new ToBeMappedUser(
+            'to.be.mapped',
+            'To Be Mapped',
+            array(
+                aUser()->withUserName('cstevens')->build()
             )
         );
     }
 
-    public function isActionAllowed($action) {
-        return in_array($action, self::$ALLOWED_ACTIONS);
+    public function itReturnsFalseWhenActionIsCreate() {
+        $this->assertFalse($this->user->isActionAllowed('create'));
+    }
+
+    public function itReturnsFalseWhenActionIsActivate() {
+        $this->assertFalse($this->user->isActionAllowed('activate'));
+    }
+
+    public function itReturnsFalseWhenActionIsMap() {
+        $this->assertTrue($this->user->isActionAllowed('map'));
     }
 }

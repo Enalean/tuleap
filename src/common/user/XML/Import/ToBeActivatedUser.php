@@ -21,9 +21,11 @@ namespace User\XML\Import;
 
 use PFUser;
 
-class ToBeActivatedUser extends User {
+class ToBeActivatedUser extends ActionToBeTakenForUser {
 
-    private static $ACTION = 'activate';
+    private static $ALLOWED_ACTIONS = array('activate', 'map');
+
+    const ACTION = 'activate';
 
     private $status;
 
@@ -42,12 +44,16 @@ class ToBeActivatedUser extends User {
     public function getCSVData() {
         return array(
             $this->username,
-            self::$ACTION,
+            self::ACTION,
             sprintf(
                 'Existing user %s must be activated (was [%s])',
                 $this->username,
                 $this->status
             )
         );
+    }
+
+    public function isActionAllowed($action) {
+        return in_array($action, self::$ALLOWED_ACTIONS);
     }
 }

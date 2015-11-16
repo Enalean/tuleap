@@ -19,37 +19,47 @@
  */
 namespace User\XML\Import;
 
-class ToBeCreatedUser extends ActionToBeTakenForUser {
+abstract class ActionToBeTakenForUser implements User {
 
-    private static $ALLOWED_ACTIONS = array('create', 'map');
+    /** @var string */
+    protected $username;
 
-    const ACTION = 'create';
+    /** @var string */
+    protected $realname;
+
+    /** @var string */
+    protected $email;
+
+    /** @var string */
+    protected $ldapid;
 
     public function __construct(
         $username,
         $realname,
-        $email
+        $email,
+        $ldapid
     ) {
-        $ldapid = '';
+        $this->username      = $username;
+        $this->realname      = $realname;
+        $this->email         = $email;
+        $this->ldapid        = $ldapid;
+    }
 
-        parent::__construct($username, $realname, $email, $ldapid);
+    public function getUserName() {
+        return $this->username;
+    }
+
+    public function getRealName() {
+        return $this->realname;
+    }
+
+    public function getEmail() {
+        return $this->email;
     }
 
     /** @return array */
-    public function getCSVData() {
-        return array(
-            $this->username,
-            self::ACTION,
-            sprintf(
-                '%s (%s) <%s> must be created',
-                $this->realname,
-                $this->username,
-                $this->email
-            )
-        );
-    }
+    public abstract function getCSVData();
 
-    public function isActionAllowed($action) {
-        return in_array($action, self::$ALLOWED_ACTIONS);
-    }
+    /** @return bool */
+    public abstract function isActionAllowed($action);
 }

@@ -19,7 +19,26 @@
  */
 namespace User\XML\Import;
 
-interface User {
+use PFUser;
 
-    public function getUserName();
+class WillBeActivatedUser implements User {
+
+    /** @var PFUser */
+    private $user;
+
+    public function __construct(PFUser $user) {
+        $this->user = $user;
+    }
+
+    public function getUserName() {
+        return $this->user->getUserName();
+    }
+
+    /**
+     *
+     * @return PFUser
+     */
+    public function getUser() {
+        return $this->user;
+    }
 }
