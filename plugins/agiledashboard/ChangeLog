@@ -1,3 +1,6 @@
+Version 1.299 - Tuleap 8.9
+    * request #8413: Select box in modal display hidden values
+
 Version 1.298 - Tuleap 8.9
     * request #8556: Update grunt build (Update kanban grunt build)
 
