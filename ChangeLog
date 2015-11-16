@@ -1,3 +1,10 @@
+Version 8.8-3 (Monday, November 16th 2015)
+	== Bug Fix ==
+	* request #8576: Artifact updated by email does not take into account which user updates the artifact
+	* request #8563: Notification mails incorrect formatted and not displayable by client
+	* request #8595: import_project_xml.php: fatal error, undefined class constant
+	* request #8598: Static Text field type are deleted, not added in Unused elements
+
 Version 8.8-2 (Monday, November 9th 2015)
 	== Bug Fix ==
 	* request #8490: MediaWikiLanguageExtensionBundle not loaded
