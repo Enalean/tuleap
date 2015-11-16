@@ -35,7 +35,7 @@ class MailEnhancer {
      * @param string $header_value
      */
     public function addHeader($header_name, $header_value) {
-        $this->additional_headers[$header_name] = $header_value;
+        $this->additional_headers[strtolower($header_name)] = $header_value;
     }
 
     /**
@@ -72,7 +72,22 @@ class MailEnhancer {
     }
 
     public function enhanceMail(Codendi_Mail $mail) {
-        foreach ($this->getAdditionalHeaders() as $name => $value) {
+        $headers   = $this->getAdditionalHeaders();
+        $from_mail = null;
+
+        if (array_key_exists('from', $headers)) {
+            $from_mail = $headers['from'];
+            unset($headers['from']);
+        }
+        if ($from_mail=== null && array_key_exists('reply-to', $headers)) {
+            $from_mail = $headers['reply-to'];
+        }
+
+        if ($from_mail !== null) {
+            $mail->clearFrom();
+            $mail->setFrom($from_mail);
+        }
+        foreach ($headers as $name => $value) {
             $mail->addAdditionalHeader($name, $value);
         }
 

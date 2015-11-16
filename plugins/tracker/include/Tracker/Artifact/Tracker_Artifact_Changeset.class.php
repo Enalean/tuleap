@@ -24,6 +24,8 @@ require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
 class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
+    const DEFAULT_MAIL_SENDER = 'forge__artifacts';
+
     const FIELDS_ALL      = 'all';
     const FIELDS_COMMENTS = 'comments';
 
@@ -676,6 +678,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $this->sendNotification(
                     $message['recipients'],
                     $message['headers'],
+                    $message['from'],
                     $message['subject'],
                     $message['htmlBody'],
                     $message['txtBody'],
@@ -707,7 +710,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                     $messages[$hash]['recipients'] = array($recipient_mail);
                 }
 
-                $messages[$hash]['from'] = ForgeConfig::get('sys_noreply');
+                $messages[$hash]['from'] = $this->getDefaultEmailSenderAddress();
             }
         }
 
@@ -733,7 +736,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
             } else {
                 $messages[$anonymous_mail]               = $this->getMessageContent($user, $is_update, $check_perms);
-                $messages[$anonymous_mail]['from']       = ForgeConfig::get('sys_noreply');
+                $messages[$anonymous_mail]['from']       = $this->getDefaultEmailSenderAddress();
                 $messages[$anonymous_mail]['message-id'] = null;
                 $messages[$anonymous_mail]['headers']    = array();
                 $messages[$anonymous_mail]['recipients'] = array($user->getEmail());
@@ -743,6 +746,16 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
 
         return $messages;
+    }
+
+    private function getDefaultEmailSenderAddress() {
+        $email_domain = ForgeConfig::get('sys_default_mail_domain');
+
+        if (! $email_domain) {
+            $email_domain = ForgeConfig::get('sys_default_domain');
+        }
+
+        return ForgeConfig::get('sys_name') . '<' . self::DEFAULT_MAIL_SENDER . '@' . $email_domain . '>';
     }
 
     private function getMessageId(PFUser $user) {
@@ -835,6 +848,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @param array  $recipients the list of recipients
      * @param array  $headers    the additional headers
+     * @param string $from       the mail of the sender
      * @param string $subject    the subject of the message
      * @param string $htmlBody   the html content of the message
      * @param string $txtBody    the text content of the message
@@ -842,7 +856,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody, $message_id) {
+    protected function sendNotification($recipients, $headers, $from, $subject, $htmlBody, $txtBody, $message_id) {
         $hp                = Codendi_HTMLPurifier::instance();
         $breadcrumbs       = array();
         $tracker           = $this->getTracker();
@@ -866,6 +880,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $mail_enhancer->addHeader("X-Codendi-Project",     $project->getUnixName());
         $mail_enhancer->addHeader("X-Codendi-Tracker",     $tracker_name);
         $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $this->artifact->getId());
+        $mail_enhancer->addHeader('From', $from);
 
         foreach($headers as $header) {
             $mail_enhancer->addHeader($header['name'], $header['value']);
