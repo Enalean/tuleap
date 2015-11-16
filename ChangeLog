@@ -1,3 +1,9 @@
+Version 8.7-6 (Mondayn November 16th 2015)
+	== Bug fix ==
+	* request #8583: Invalid value in tracker XML import data crash import process
+	* request #8487: Special chars not properly escaped in XML export
+	* request #8536: Allow export process to be ran on a different server than front
+
 Version 8.7-5 (Monday, November 2nd 2015)
 	== Bug Fix ==
 	* request #8538: Missing Kanban date in tooltip when item is created in backlog then dropped in other column
