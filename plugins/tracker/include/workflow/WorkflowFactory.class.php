@@ -343,7 +343,7 @@ class WorkflowFactory {
 
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
-        $field_id = $xmlMapping[(string)$xml_field_attributes['REF']];
+        $field = $xmlMapping[(string)$xml_field_attributes['REF']];
 
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
@@ -351,16 +351,19 @@ class WorkflowFactory {
             $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping);
         }
 
-        return new Workflow(
+        $workflow = new Workflow(
             $this->getGlobalRulesManager($tracker),
             $this->trigger_rules_manager,
             $this->logger,
-            0,
+            0, // not available yet
             $tracker->getId(),
-            $field_id,
+            0, // not available yet
             (string)$xml->is_used,
             $transitions
         );
+
+        $workflow->setField($field);
+        return $workflow;
     }
 
     /**
@@ -374,9 +377,8 @@ class WorkflowFactory {
     public function saveObject($workflow, $tracker) {
         $workflow->setTracker($tracker);
         $dao = $this->getDao();
-        $daot = $this->getTransitionDao();
 
-        $workflow_id = $dao->save($workflow->tracker_id, $workflow->field_id->id, $workflow->is_used);
+        $workflow_id = $dao->save($workflow->tracker_id, $workflow->getField()->getId(), $workflow->is_used);
 
         //Save transitions
         foreach($workflow->getTransitions() as $transition) {
