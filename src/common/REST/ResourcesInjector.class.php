@@ -20,6 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
+use Tuleap\JWT\REST\JWTRepresentation;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
@@ -41,6 +42,7 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\User\\REST\\UserResource',         UserRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\User\\REST\\v1\\UserMembershipResource', UserMembershipRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\PhpWiki\\REST\\v1\\PhpWikiResource',  PhpWikiPageRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\JWT\\REST\\v1\\JWTResource',  JWTRepresentation::ROUTE);
     }
 
     public function declareProjectUserGroupResource(array &$resources, Project $project) {

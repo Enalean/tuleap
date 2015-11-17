@@ -89,7 +89,8 @@ module.exports = {
             'vendor/angular-ui-select/dist/select.js',
             'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
             'vendor/angular-socket-io/socket.js',
-            'vendor/socket.io-client/socket.io.js'
+            'vendor/socket.io-client/socket.io.js',
+            'vendor/angular-locker/dist/angular-locker.min.js'
         ],
         css: [
             'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',

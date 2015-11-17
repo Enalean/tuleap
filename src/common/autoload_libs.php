@@ -74,3 +74,23 @@ function autoload_markdown($class) {
     }
 }
 spl_autoload_register('autoload_markdown');
+
+function autoload_jwt($class) {
+    if (version_compare(phpversion(), '5.3', '<')) {
+        return;
+    }
+    static $classes = null;
+    if ($classes === null) {
+        $classes = array(
+            'firebase\\jwt\\jwt'                       => 'JWT.php',
+            'firebase\\jwt\\beforevalidexception'      => 'BeforeValidException.php',
+            'firebase\\jwt\\signatureinvalidexception' => 'SignatureInvalidException.php',
+            'firebase\\jwt\\expiredexception'          => 'ExpiredException.php'
+        );
+    }
+    $cn = strtolower($class);
+    if (isset($classes[$cn])) {
+        require '/usr/share/php-jwt/' . $classes[$cn];
+    }
+}
+spl_autoload_register('autoload_jwt');

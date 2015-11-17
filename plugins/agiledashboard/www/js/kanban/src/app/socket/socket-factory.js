@@ -3,34 +3,50 @@
         .module('socket')
         .service('SocketFactory', SocketFactory);
 
-    SocketFactory.$inject = ['socketFactory', 'SharedPropertiesService'];
+    SocketFactory.$inject = ['socketFactory', 'SharedPropertiesService', 'locker', 'JWTService'];
 
-    function SocketFactory(socketFactory, SharedPropertiesService) {
+    function SocketFactory(socketFactory, SharedPropertiesService, locker, JWTService) {
         if (SharedPropertiesService.getNodeServerAddress()) {
             var kanban = SharedPropertiesService.getKanban();
             var kanban_id;
             if(kanban) {
                 kanban_id = kanban.id;
             }
-            var user_id    = SharedPropertiesService.getUserId();
+            return JWTService.getJWT().then(function(data) {
+                locker.driver('session').put('token', data.token);
 
-            var io_socket = io.connect('https://' + SharedPropertiesService.getNodeServerAddress(),
-                {
-                    secure: true,
-                    path: '/socket.io'
+                var io_socket = io.connect('https://' + SharedPropertiesService.getNodeServerAddress(),
+                    {
+                        secure: true,
+                        path: '/socket.io'
+                    });
+
+                socket = socketFactory({
+                    ioSocket: io_socket
                 });
 
-            socket = socketFactory({
-                ioSocket: io_socket
+                subscribe();
+
+                socket.on('error-jwt', function(error) {
+                    if(error === 'JWTExpired') {
+                        JWTService.getJWT().then(function (data) {
+                            locker.driver('session').put('token', data.token);
+                            subscribe();
+                        });
+                    }
+                });
+
+                function subscribe() {
+                    socket.emit('subscription', {
+                        token: locker.driver('session').get('token'),
+                        room_id: kanban_id,
+                        uuid: SharedPropertiesService.getUUID()
+                    });
+                }
+
+                return socket;
             });
 
-            socket.emit('subscription', {
-                room_id: kanban_id,
-                user_id  : user_id,
-                uuid     : SharedPropertiesService.getUUID()
-            });
-
-            return socket;
         }
     }
 })();

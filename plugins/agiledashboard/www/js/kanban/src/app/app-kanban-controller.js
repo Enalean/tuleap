@@ -232,11 +232,14 @@
             }
 
             if (dest_list_element.hasClass('backlog')) {
+                updateItemColumn(dropped_item, 'backlog');
                 return droppedInBacklog(event, dropped_item, compared_to);
             } else if(dest_list_element.hasClass('archive')) {
+                updateItemColumn(dropped_item, 'archive');
                 return droppedInArchive(event, dropped_item, compared_to);
             } else if (dest_list_element.hasClass('column')) {
                 var column_id = dest_list_element.attr('data-column-id');
+                updateItemColumn(dropped_item, parseInt(column_id));
                 return droppedInColumn(event, column_id, dropped_item, compared_to);
             }
 
@@ -724,10 +727,6 @@
             }
         }
 
-        function checkServerNodeJSExist() {
-            return SocketFactory.hasOwnProperty('on');
-        }
-
         function updateTimeInfo(column_id, dropped_item) {
             dropped_item.timeinfo[column_id] = new Date();
         }
@@ -783,80 +782,83 @@
         }
 
         function listenNodeJSServer() {
-            if (checkServerNodeJSExist()) {
-                /**
-                 * Data received looks like:
-                 *  {
-                 *      id: 79584,
-                 *      item_name: 'kanbantask',
-                 *      label: 'Documentation API',
-                 *      color: 'inca_silver',
-                 *      card_fields: [
-                 *          {
-                 *              field_id: 15261,
-                 *              type: 'msb',
-                 *              label: 'Assigned to',
-                 *              values: [Object],
-                 *              bind_value_ids: [Object]
-                 *          }
-                 *      ],
-                 *      timeinfo: {
-                 *                  kanban: null,
-                 *                  archive: null
-                 *                },
-                 *      in_column: 'backlog'
-                 *  }
-                 *
-                 */
-                SocketFactory.on('kanban_item:create', function (data) {
-                    _.extend(data, {
-                        updating: false
-                    });
-
-                    var column = getColumn(data.in_column);
-                    column.content.push(data);
-                });
-
-                /**
-                 * Data received looks like:
-                 *  {
-                 *      order: {
-                 *          ids: [79213],
-                 *          direction: 'before',
-                 *          compared_to: 79790
-                 *      },
-                 *      add: {
-                 *          ids: [79213]
-                 *      },
-                 *      in_column: 6816
-                 *  }
-                 *
-                 */
-                SocketFactory.on('kanban_item:move', function (data) {
-                    var ids = data.add ? data.add.ids : data.order.ids;
-                    ids.forEach(function (id) {
-                        var item = findItemInColumnById(id);
-
-                        _.extend(item, {
+            if (!_.isEmpty(SocketFactory)) {
+                SocketFactory.then(function (data) {
+                    SocketFactory = data;
+                    /**
+                     * Data received looks like:
+                     *  {
+                     *      id: 79584,
+                     *      item_name: 'kanbantask',
+                     *      label: 'Documentation API',
+                     *      color: 'inca_silver',
+                     *      card_fields: [
+                     *          {
+                     *              field_id: 15261,
+                     *              type: 'msb',
+                     *              label: 'Assigned to',
+                     *              values: [Object],
+                     *              bind_value_ids: [Object]
+                     *          }
+                     *      ],
+                     *      timeinfo: {
+                     *                  kanban: null,
+                     *                  archive: null
+                     *                },
+                     *      in_column: 'backlog'
+                     *  }
+                     *
+                     */
+                    SocketFactory.on('kanban_item:create', function (data) {
+                        _.extend(data, {
                             updating: false
                         });
 
-                        removeItemInColumn(item.id, item.in_column);
+                        var column = getColumn(data.in_column);
+                        column.content.push(data);
+                    });
 
-                        if(item.in_column !== data.in_column) {
-                            if(item.in_column === 'backlog') {
-                                updateTimeInfo('kanban', item);
+                    /**
+                     * Data received looks like:
+                     *  {
+                     *      order: {
+                     *          ids: [79213],
+                     *          direction: 'before',
+                     *          compared_to: 79790
+                     *      },
+                     *      add: {
+                     *          ids: [79213]
+                     *      },
+                     *      in_column: 6816
+                     *  }
+                     *
+                     */
+                    SocketFactory.on('kanban_item:move', function (data) {
+                        var ids = data.add ? data.add.ids : data.order.ids;
+                        ids.forEach(function (id) {
+                            var item = findItemInColumnById(id);
+
+                            _.extend(item, {
+                                updating: false
+                            });
+
+                            removeItemInColumn(item.id, item.in_column);
+
+                            if(item.in_column !== data.in_column) {
+                                if(item.in_column === 'backlog') {
+                                    updateTimeInfo('kanban', item);
+                                }
+                                updateTimeInfo(data.in_column, item);
+                                updateItemColumn(item, data.in_column);
                             }
-                            updateTimeInfo(data.in_column, item);
-                            updateItemColumn(item, data.in_column);
-                        }
 
-                        var content = getContentColumnByItemInColumn(data, item);
-                        if(data.order) {
-                            replaceCard(data.order.compared_to, data.order.direction, content, item);
-                        } else {
-                            content.push(item);
-                        }
+                            var content = getContentColumnByItemInColumn(data, item);
+                            if(data.order) {
+                                replaceCard(data.order.compared_to, data.order.direction, content, item);
+                            } else {
+                                content.push(item);
+                            }
+                        });
                     });
                 });
             }
