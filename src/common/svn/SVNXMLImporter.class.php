@@ -22,13 +22,12 @@ class SVNXMLImporter {
     /** @var Logger */
     private $logger;
 
-    public function __construct(Logger $logger) {
-        $this->logger = $logger;
-    }
+    /** @var SvnNotificationDao */
+    private $notification_dao;
 
-    // @return SVNXMLImporter
-    public static function build(Logger $logger) {
-        return new SVNXMLImporter($logger);
+    public function __construct(Logger $logger, SvnNotificationDao $notification_dao = null) {
+        $this->notification_dao = $notification_dao;
+        $this->logger = $logger;
     }
 
     // @return boolean specifying the success of the import
@@ -38,7 +37,16 @@ class SVNXMLImporter {
             return true;
         }
 
+        $dumpfile_ok = $this->import_dumpfile($project, $xml_svn, $extraction_path);
+        $notification_ok = $this->import_notification($project, $xml_svn);
+
+        return $dumpfile_ok && $notification_ok;
+    }
+
+    // @return boolean true on success, false on failure
+    private function import_dumpfile(Project $project, $xml_svn, $extraction_path) {
         $attrs = $xml_svn->attributes();
+        if(!isset($attrs['dump-file'])) return true;
 
         $rootpath_arg = escapeshellarg($project->getSVNRootPath());
         $dumpfile_arg = escapeshellarg("$extraction_path/{$attrs["dump-file"]}");
@@ -61,6 +69,28 @@ class SVNXMLImporter {
         $this->logger->debug("Exited with status $return_status");
 
         return 0 === $return_status;
+    }
+
+    // @return boolean true on success, false on failure
+    private function import_notification(Project $project, $xml_svn) {
+        $dao = $this->getNotificationDAO();
+        $res = true;
+        foreach($xml_svn->notification as $notif) {
+            $attrs = $notif->attributes();
+            $path = $attrs['path'];
+            $emails = $attrs['emails'];
+            $ok = $dao->setSvnMailingList($project->getID(), $emails, $path);
+            if (!$ok) $res = false;
+        }
+        return $res;
+    }
+
+    // @return SvnNotificationDao the Notification DAO
+    private function getNotificationDAO() {
+        if(empty($this->notification_dao)) {
+            $this->notification_dao = new SvnNotificationDao(CodendiDataAccess::instance());
+        }
+        return $this->notification_dao;
     }
 }
 

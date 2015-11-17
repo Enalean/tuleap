@@ -21,20 +21,27 @@
 class SVNXMLImporterTest extends TuleapTestCase {
     private $importer;
     private $temp_project_dir;
+    private $svn_notification_dao;
     private $old_homedir;
 
     public function setUp() {
         parent::setUp();
+
+        $dao = mock("SvnNotificationDao");
+        $dao->setReturnValue('setSvnMailingList', true);
+        $this->svn_notification_dao = $dao;
 
         // Create a temporary home, else svnadmin will complain it cannot access
         // its ~/.svnadmin directory
         $this->old_homedir = getenv('HOME');
         putenv("HOME=" . parent::getTmpDir());
 
+        $this->importer = new SVNXMLImporter(mock('Logger'), $this->svn_notification_dao);
+
+        // Create a temp dir with subversion repositories
         $tmp_dir = parent::getTmpDir();
         ForgeConfig::store();
         ForgeConfig::set('svn_prefix', $tmp_dir);
-        $this->importer = SVNXMLImporter::build(mock('Logger'));
         $this->temp_project_dir = $tmp_dir . DIRECTORY_SEPARATOR . 'test_project';
         $return_status = 0;
         $out = array();
@@ -71,6 +78,28 @@ class SVNXMLImporterTest extends TuleapTestCase {
         $res = $this->importer->import($project, $xml_element, parent::getTmpDir());
         $this->assertRevision(0, $this->temp_project_dir);
         $this->assertFalse($res);
+    }
+
+    public function itShouldImportNotifications(){
+        $project = new Project(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $xml_document = <<<XML
+            <project>
+                <svn>
+                    <notification path="/trunk" emails="test1@domain1, test2@domain2"/>
+                    <notification path="/tags" emails="tags@domain3"/>
+                </svn>
+            </project>
+XML;
+        $res = $this->importer->import(
+            $project,
+            new SimpleXMLElement($xml_document),
+            parent::getTmpDir());
+
+        $this->assertTrue($res);
+        $dao = $this->svn_notification_dao;
+        $dao->expectAt(0, 'setSvnMailingList', array(123, "test1@domain1, test2@domain2", "/trunk"));
+        $dao->expectAt(1, 'setSvnMailingList', array(123, "tags@domain3", "/tags"));
+        $dao->expectCallCount('setSvnMailingList', 2);
     }
 
     private function assertRevision($expected, $svn_dir) {
