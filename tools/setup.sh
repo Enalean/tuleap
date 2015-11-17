@@ -1029,7 +1029,6 @@ if [ -d "$INSTALL_DIR/plugins/graphontrackersv5" ]; then
     enable_plugin_graphontrackersv5="true"
 fi
 
-
 # Check if mailman is installed
 enable_core_mailman="false"
 if has_package mailman-tuleap; then
@@ -1541,6 +1540,20 @@ EOF
     enable_service openfire
     control_service openfire restart
 fi
+
+# Agile Dashboard plugin
+if [ -d "$INSTALL_DIR/plugins/agiledashboard" ]; then
+    echo "Install AgileDashboard"
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php cardwall
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard
+fi
+
+# Git plugin
+if [ -d "$INSTALL_DIR/plugins/git" ]; then
+    echo "Install Git"
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php git
+fi
+
 
 
 ##############################################
