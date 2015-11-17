@@ -108,7 +108,9 @@ class ProjectXMLImporter {
         $xml_element = simplexml_load_string($xml_contents);
 
         $this->importUgroups($project, $xml_element);
-        SVNXMLImporter::build($this->logger)->import($project, $xml_element, $extraction_path);
+
+        $svn = new SVNXMLImporter($this->logger);
+        $svn->import($project, $xml_element, $extraction_path);
 
         $this->logger->info("Ask to plugin to import data from XML");
         $this->event_manager->processEvent(
