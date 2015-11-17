@@ -134,19 +134,19 @@ class PluginManager {
     public function getAvailablePlugins() {
         return $this->plugin_factory->getAvailablePlugins();
     }
-    
+
     function getAllPlugins() {
         return $this->plugin_factory->getAllPlugins();
     }
-    
+
     function isPluginAvailable($plugin) {
         return $this->plugin_factory->isPluginAvailable($plugin);
     }
-    
+
     function availablePlugin($plugin) {
         if ($plugin->canBeMadeAvailable()) {
             $this->plugin_factory->availablePlugin($plugin);
-        
+
             $plugin->setAvailable(true);
             $this->site_cache->invalidatePluginBasedCaches();
         }
@@ -154,7 +154,7 @@ class PluginManager {
 
     function unavailablePlugin($plugin) {
         $this->plugin_factory->unavailablePlugin($plugin);
-        
+
         $plugin->setAvailable(false);
         $this->site_cache->invalidatePluginBasedCaches();
     }
@@ -202,15 +202,15 @@ class PluginManager {
     }
     function getPostInstall($name) {
         $path_to_file = '/'.$name.'/POSTINSTALL.txt';
-        return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ? 
-            file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) : 
+        return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ?
+            file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) :
             false;
     }
-    
+
     function getInstallReadme($name) {
         return $GLOBALS['sys_pluginsroot'] .'/'. $name .'/README';
     }
-    
+
     /**
      * Format the readme file of a plugin
      *
@@ -234,15 +234,15 @@ class PluginManager {
             }
             return $this->getEscapedReadme($content);
         }
-        
+
         if (is_file("$file.txt")) {
             return $this->getEscapedReadme(file_get_contents("$file.txt"));
         }
-        
+
         if (is_file($file)) {
             return $this->getEscapedReadme(file_get_contents($file));
         }
-        
+
         return '';
     }
 
@@ -312,7 +312,7 @@ class PluginManager {
         $db_corrupted = false;
         $path_found   = false;
         $path_to_file = '/'.$name.'/db/'.$file.'.sql';
-        $possible_file_names = array(   $GLOBALS['sys_pluginsroot'].$path_to_file, 
+        $possible_file_names = array(   $GLOBALS['sys_pluginsroot'].$path_to_file,
                                         $GLOBALS['sys_custompluginsroot'].$path_to_file);
         while(!$path_found && (list(,$sql_filename) = each($possible_file_names))) {
             if (file_exists($sql_filename)) {
@@ -328,11 +328,11 @@ class PluginManager {
     function getNotYetInstalledPlugins() {
         return $this->plugin_factory->getNotYetInstalledPlugins();
     }
-    
+
     function isNameValid($name) {
         return (0 === preg_match('/[^a-zA-Z0-9_-]/', $name));
     }
-    
+
     function getPluginByName($name) {
         return $this->plugin_factory->getPluginByName($name);
     }
@@ -349,7 +349,7 @@ class PluginManager {
     function pluginIsCustom($plugin) {
         return $this->plugin_factory->pluginIsCustom($plugin);
     }
-    
+
     var $plugins_name;
     function getNameForPlugin($plugin) {
         if (!$this->plugins_name) {
@@ -364,11 +364,11 @@ class PluginManager {
     function getAllowedProjects($plugin) {
         return $this->plugin_factory->getProjectsByPluginId($plugin);
     }
-    
+
     function _updateProjectForPlugin($action, $plugin, $projectIds) {
         $success     = true;
         $successOnce = false;
-        
+
         if(is_array($projectIds)) {
             foreach($projectIds as $prjId) {
                 switch($action){
@@ -379,7 +379,7 @@ class PluginManager {
                     $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
                     break;
                 }
-                
+
                 if($success === true)
                     $successOnce = true;
             }
@@ -395,7 +395,7 @@ class PluginManager {
             }
             $successOnce = $success;
         }
-        
+
         if($successOnce && ($action == 'add')) {
             $this->plugin_factory->restrictProjectPluginUse($plugin, true);
         }

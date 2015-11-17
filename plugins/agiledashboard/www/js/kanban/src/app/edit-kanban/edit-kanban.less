@@ -49,18 +49,16 @@
 
                 > li {
                     display: table-row;
-                    padding: 4px 0 4px 3px;
                     background: none;
 
                     > div {
                         display: table-cell;
                     }
 
-                    .btn-mini {
+                    .btn-small {
                         white-space: nowrap;
-                        position: relative;
-                        top: -1px;
-                        margin: 0 0 0 5px;
+                        padding: 2px;
+                        margin-left: 10px;
                     }
 
                     &:first-child, &:last-child {
@@ -94,16 +92,12 @@
                     &.add-column > div {
                         padding: 3px 4px 8px;
 
-                        .btn {
-                            min-width: 90px;
-
-                            > i {
-                                margin: 0 3px 0 0;
-                            }
+                        .btn > i {
+                            margin: 0 3px 0 0;
                         }
                     }
 
-                    &.draggable {
+                    &.draggable:not(.editing) {
                         cursor: move;
 
                         & > div:first-child {
@@ -111,6 +105,10 @@
                             padding: 4px 0 4px 22px;
                             background: url('drag.png') no-repeat 5px 8px;
                         }
+                    }
+
+                    &.editing > div {
+                        padding: 4px 0 4px 15px;
                     }
                 }
             }
@@ -131,7 +129,7 @@ ul.column-configuration-column-list.angular-ui-tree-drag {
         box-shadow: 0 1px 5px rgba(0,0,0,0.3);
         white-space: nowrap;
 
-        .btn-mini {
+        .btn-small {
             display: none;
         }
     }

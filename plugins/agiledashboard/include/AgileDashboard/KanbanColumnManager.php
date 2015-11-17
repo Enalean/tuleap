@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation;
+
 class AgileDashboard_KanbanColumnManager {
 
     /** @var AgileDashboard_KanbanColumnDao */
@@ -36,17 +38,6 @@ class AgileDashboard_KanbanColumnManager {
         $this->column_dao                                   = $column_dao;
         $this->formelement_field_list_bind_static_value_dao = $formelement_field_list_bind_static_value_dao;
         $this->kanban_actions_checker                       = $kanban_actions_checker;
-    }
-
-    /**
-     * @throws AgileDashboard_UserNotAdminException
-     *
-     * @return bool
-     */
-    public function setColumnWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit) {
-        $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
-
-        return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
     public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label) {
@@ -88,6 +79,19 @@ class AgileDashboard_KanbanColumnManager {
         $this->column_dao->commit();
 
         return true;
+    }
+
+    public function updateWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit) {
+        $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
+
+        return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
+    }
+
+    public function updateLabel(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $label) {
+        $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
+        $this->kanban_actions_checker->checkUserCanEditColumnLabel($user, $kanban);
+
+        return $this->formelement_field_list_bind_static_value_dao->updateLabel($column->getId(), $label);
     }
 
     private function hideColumnFromTrackerFieldStaticValues(AgileDashboard_KanbanColumn $column, Tracker_Semantic_Status $semantic) {

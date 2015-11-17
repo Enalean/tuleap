@@ -111,6 +111,21 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
+    public function checkUserCanEditColumnLabel(PFUser $user, AgileDashboard_Kanban $kanban) {
+        $this->checkUserCanAdministrate($user, $kanban);
+
+        $tracker         = $this->getTrackerForKanban($kanban);
+        $semantic_status = $this->getSemanticStatus($tracker);
+
+        if (! $semantic_status->isFieldBoundToStaticValues()) {
+            throw new Kanban_SemanticStatusNotBoundToStaticValuesException();
+        }
+
+        if ($semantic_status->isBasedOnASharedField()) {
+            throw new Kanban_SemanticStatusBasedOnASharedFieldException();
+        }
+    }
+
     public function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 

@@ -43,7 +43,8 @@ class KanbanColumnsTest extends RestBase {
             $url,
             null,
             json_encode(array(
-                "wip_limit" => 200
+                "wip_limit" => 200,
+                "label"     => "yummy"
             ))
         ));
 
@@ -53,5 +54,6 @@ class KanbanColumnsTest extends RestBase {
         $kanban   = $response->json();
 
         $this->assertEquals($kanban['columns'][1]['limit'], 200);
+        $this->assertEquals($kanban['columns'][1]['label'], "yummy");
     }
 }

@@ -32,19 +32,31 @@ function EditKanbanCtrl($scope,
         deleting                 : false,
         confirm_delete           : false,
         saving_new_column        : false,
+        saving_column            : false,
         cancel                   : cancel,
         adding_column            : false,
         new_column_label         : '',
         reorderColumnsTreeOptions: {
             dropped: columnDropped
         },
-        processing       : processing,
-        deleteKanban     : deleteKanban,
-        saveModifications: saveModifications,
-        addColumn        : addColumn,
-        cancelAddColumn  : cancelAddColumn,
-        removeColumn     : removeColumn
+        processing          : processing,
+        deleteKanban        : deleteKanban,
+        saveModifications   : saveModifications,
+        addColumn           : addColumn,
+        cancelAddColumn     : cancelAddColumn,
+        removeColumn        : removeColumn,
+        turnColumnToEditMode: turnColumnToEditMode,
+        cancelEditColumn    : cancelEditColumn,
+        editColumn          : editColumn
     });
+
+    initModalValues();
+
+    function initModalValues() {
+        _.each(self.kanban.columns, function(column) {
+            column.editing = false;
+        });
+    }
 
     function saveModifications() {
         self.saving = true;
@@ -82,11 +94,12 @@ function EditKanbanCtrl($scope,
     }
 
     function processing() {
-        return self.deleting || self.saving || self.saving_new_column;
+        return self.deleting || self.saving || self.saving_new_column || self.saving_column;
     }
 
     function cancelAddColumn() {
-        self.adding_column = false;
+        self.new_column_label = '';
+        self.adding_column    = false;
     }
 
     function addColumn() {
@@ -128,6 +141,29 @@ function EditKanbanCtrl($scope,
         }, function(response) {
             $modalInstance.dismiss(response);
         });
+    }
+
+    function editColumn(column) {
+        self.saving_column = true;
+
+        KanbanService.editColumn(kanban.id, column).then(function(data) {
+            self.saving_column    = false;
+            column.editing        = false;
+            column.original_label = column.label;
+
+        }, function (response) {
+            $modalInstance.dismiss(response);
+        });
+    }
+
+    function turnColumnToEditMode(column) {
+        column.editing = true;
+    }
+
+    function cancelEditColumn(column) {
+        self.saving_column = false;
+        column.editing     = false;
+        column.label       = column.original_label;
     }
 
     function removeColumn(column_id) {
