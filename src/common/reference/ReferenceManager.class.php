@@ -636,6 +636,8 @@ class ReferenceManager {
      * @retrun Boolean True if no error
      */
     function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0, $source_key=null) {
+        $dao = $this->_getReferenceDao();
+
         if ($source_key == null) {
             $available_natures = $this->getAvailableNatures();
             if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
@@ -659,15 +661,9 @@ class ReferenceManager {
             if ($reference) {
 
                 //Cross reference
-                $sqlkey='SELECT link, nature
-                    FROM reference r,reference_group rg
-                    WHERE keyword="'. db_es($key) .'"
-                        AND r.id = rg.reference_id
-                        AND rg.group_id='. db_ei($source_gid);
-                $reskey = db_query($sqlkey);
 
-                if ($reskey && db_numrows($reskey) > 0) {
-                    $key_array = db_fetch_array($reskey);
+                $res = $dao->searchByKeywordAndGroupId($key, $source_gid);
+                if ($key_array = $res->getRow()) {
 
                     $target_type = $key_array['nature'];
                     $target_id   = $value;
