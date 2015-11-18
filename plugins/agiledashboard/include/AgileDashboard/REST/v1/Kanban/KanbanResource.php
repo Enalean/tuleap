@@ -50,13 +50,14 @@ use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use AgileDashboard_KanbanUserPreferences;
-use Kanban_SemanticStatus_Not_DefinedException;
-use Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException;
-use Kanban_SemanticStatus_AllColumnIdsNotProvidedException;
-use Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException;
+use Kanban_SemanticStatusNotDefinedException;
+use Kanban_SemanticStatusNotBoundToStaticValuesException;
+use Kanban_SemanticStatusBasedOnASharedFieldException;
+use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
+use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
 use AgileDashboard_KanbanColumnManager;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
-use AgileDashboard_KanbanAddInPlaceChecker;
+use AgileDashboard_KanbanActionsChecker;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -97,8 +98,8 @@ class KanbanResource extends AuthenticatedResource {
     /** @var AgileDashboard_KanbanColumnManager */
     private $kanban_column_manager;
 
-    /** @var AgileDashboard_KanbanAddInPlaceChecker */
-    private $add_in_place_checker;
+    /** @var AgileDashboard_KanbanActionsChecker */
+    private $kanban_actions_checker;
 
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
@@ -134,20 +135,21 @@ class KanbanResource extends AuthenticatedResource {
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->permissions_manager  = new AgileDashboard_PermissionsManager();
 
-        $this->add_in_place_checker = new AgileDashboard_KanbanAddInPlaceChecker(
+        $this->kanban_actions_checker = new AgileDashboard_KanbanActionsChecker(
             $this->tracker_factory,
+            $this->permissions_manager,
             $this->form_element_factory
         );
 
         $this->kanban_representation_builder = new KanbanRepresentationBuilder(
             $this->user_preferences,
             $this->kanban_column_factory,
-            $this->add_in_place_checker
+            $this->kanban_actions_checker
         );
 
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             new AgileDashboard_KanbanColumnDao(),
-            $this->permissions_manager,
+            $this->kanban_actions_checker,
             $this->tracker_factory
         );
 
@@ -843,16 +845,24 @@ class KanbanResource extends AuthenticatedResource {
             $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Kanban_SemanticStatus_Not_DefinedException $exception) {
+        } catch(Kanban_SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
-        } catch (Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException $exception) {
+        } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Kanban_SemanticStatusBasedOnASharedFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
         $this->form_element_factory->clearCaches();
 
-        $new_column   = $this->kanban_column_factory->getColumnForAKanban($kanban, $new_column_id, $current_user);
-        $add_in_place = $this->add_in_place_checker->canUserAddInPlace($current_user, $kanban);
+        $new_column = $this->kanban_column_factory->getColumnForAKanban($kanban, $new_column_id, $current_user);
+
+        try {
+            $this->kanban_actions_checker->checkUserCanAddInPlace($current_user, $kanban);
+            $add_in_place = true;
+        } catch (Exception $exception) {
+            $add_in_place = false;
+        }
 
         $column_representation = new KanbanColumnRepresentation();
         $column_representation->build($new_column, $add_in_place);
@@ -883,13 +893,15 @@ class KanbanResource extends AuthenticatedResource {
             $this->kanban_column_manager->reorderColumns($user, $kanban, $column_ids);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Kanban_SemanticStatus_Not_DefinedException $exception) {
+        } catch(Kanban_SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
-        } catch (Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException $exception) {
+        } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Kanban_SemanticStatus_AllColumnIdsNotProvidedException $exception) {
+        } catch (Kanban_SemanticStatusBasedOnASharedFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException $exception) {
+        } catch (Kanban_SemanticStatusAllColumnIdsNotProvidedException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Kanban_SemanticStatusColumnIdsNotInOpenSemanticException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }

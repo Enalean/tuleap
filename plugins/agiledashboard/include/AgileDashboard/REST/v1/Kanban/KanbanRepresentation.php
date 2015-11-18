@@ -73,18 +73,32 @@ class KanbanRepresentation {
      */
     public $archive;
 
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_add_columns;
+
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_reorder_columns;
+
     public function build(
         AgileDashboard_Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanUserPreferences $user_preferences,
+        $user_can_add_columns,
+        $user_can_reorder_columns,
         $user_can_add_in_place,
         PFUser $user
     ) {
-        $this->id         = JsonCast::toInt($kanban->getId());
-        $this->tracker_id = JsonCast::toInt($kanban->getTrackerId());
-        $this->uri        = self::ROUTE.'/'.$this->id;
-        $this->label      = $kanban->getName();
-        $this->columns    = array();
+        $this->id                       = JsonCast::toInt($kanban->getId());
+        $this->tracker_id               = JsonCast::toInt($kanban->getTrackerId());
+        $this->uri                      = self::ROUTE.'/'.$this->id;
+        $this->label                    = $kanban->getName();
+        $this->columns                  = array();
+        $this->user_can_add_columns     = $user_can_add_columns;
+        $this->user_can_reorder_columns = $user_can_reorder_columns;
 
         $this->backlog = new KanbanBacklogInfoRepresentation();
         $this->backlog->build('Backlog', $user_preferences->isBacklogOpen($kanban, $user), $user_can_add_in_place);

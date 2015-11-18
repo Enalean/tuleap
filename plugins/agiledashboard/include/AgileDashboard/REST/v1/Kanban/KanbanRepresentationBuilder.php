@@ -22,8 +22,9 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use PFUser;
-use AgileDashboard_KanbanAddInPlaceChecker;
+use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanUserPreferences;
+use Exception;
 
 class KanbanRepresentationBuilder {
 
@@ -37,31 +38,53 @@ class KanbanRepresentationBuilder {
     private $kanban_column_factory;
 
     /**
-     * @var AgileDashboard_KanbanAddInPlaceChecker
+     * @var AgileDashboard_KanbanActionsChecker
      */
-    private $add_in_place_checked;
+    private $kanban_actions_checker;
 
     public function __construct(
         AgileDashboard_KanbanUserPreferences $user_preferences,
         AgileDashboard_KanbanColumnFactory $kanban_column_factory,
-        AgileDashboard_KanbanAddInPlaceChecker $add_in_place_checked
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker
     ) {
-        $this->kanban_column_factory = $kanban_column_factory;
-        $this->user_preferences      = $user_preferences;
-        $this->add_in_place_checked  = $add_in_place_checked;
+        $this->kanban_column_factory  = $kanban_column_factory;
+        $this->user_preferences       = $user_preferences;
+        $this->kanban_actions_checker = $kanban_actions_checker;
     }
 
     /**
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
      */
     public function build(AgileDashboard_Kanban $kanban, PFUser $user) {
-        $user_can_add_in_place = $this->add_in_place_checked->canUserAddInPlace($user, $kanban);
+
+        try {
+            $this->kanban_actions_checker->checkUserCanAddInPlace($user, $kanban);
+            $user_can_add_in_place = true;
+        } catch (Exception $exception) {
+            $user_can_add_in_place = false;
+        }
+
+        try {
+            $this->kanban_actions_checker->checkUserCanAddColumns($user, $kanban);
+            $user_can_add_columns = true;
+        } catch (Exception $exception) {
+            $user_can_add_columns = false;
+        }
+
+        try {
+            $this->kanban_actions_checker->checkUserCanReorderColumns($user, $kanban);
+            $user_can_reorder_columns = true;
+        } catch (Exception $exception) {
+            $user_can_reorder_columns = false;
+        }
 
         $kanban_representation = new KanbanRepresentation();
         $kanban_representation->build(
             $kanban,
             $this->kanban_column_factory,
             $this->user_preferences,
+            $user_can_add_columns,
+            $user_can_reorder_columns,
             $user_can_add_in_place,
             $user
         );

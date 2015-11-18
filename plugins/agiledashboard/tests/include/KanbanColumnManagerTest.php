@@ -34,21 +34,19 @@ class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
         $this->tracker    = aTracker()->withProjectId($this->project_id)->withId($this->tracker_id)->build();
         $this->column     = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2);
 
-        $this->column_dao          = mock("AgileDashboard_KanbanColumnDao");
-        $this->tracker_factory     = stub("TrackerFactory")->getTrackerById($this->tracker_id)->returns($this->tracker);
-        $this->permissions_manager = mock("AgileDashboard_PermissionsManager");
+        $this->column_dao             = mock("AgileDashboard_KanbanColumnDao");
+        $this->tracker_factory        = stub("TrackerFactory")->getTrackerById($this->tracker_id)->returns($this->tracker);
+        $this->kanban_actions_checker = mock("AgileDashboard_KanbanActionsChecker");
 
         $this->kanban                = new AgileDashboard_Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $this->column_dao,
-            $this->permissions_manager,
-            $this->tracker_factory
+            $this->kanban_actions_checker
         );
     }
 
     public function itUpdatesTheWIPLimit() {
         $wip_limit = 12;
-        stub($this->permissions_manager)->userCanAdministrate($this->user, $this->project_id)->returns(true);
 
         expect($this->column_dao)->setColumnWipLimit($this->kanban_id, $this->column_id, $wip_limit)->once();
 
@@ -57,7 +55,7 @@ class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionIfUserNotAdmin() {
         $wip_limit = 12;
-        stub($this->permissions_manager)->userCanAdministrate($this->user, $this->project_id)->returns(false);
+        stub($this->kanban_actions_checker)->checkUserCanAdministrate($this->user, $this->kanban)->throws(new AgileDashboard_UserNotAdminException($this->user));
 
         expect($this->column_dao)->setColumnWipLimit($this->kanban_id, $this->column_id, $wip_limit)->never();
         $this->expectException("AgileDashboard_UserNotAdminException");
