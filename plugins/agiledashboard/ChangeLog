@@ -1,3 +1,6 @@
+Version 1.300 - Tuleap 8.9
+    * story #8485: Can't add & reorder column if semantic status field is a shared field
+
 Version 1.299 - Tuleap 8.9
     * request #8413: Select box in modal display hidden values
 

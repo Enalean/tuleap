@@ -1,3 +1,6 @@
+Version 5.748 - Tuleap 8.9
+    * story #8485: Can't add & reorder column if semantic status field is a shared field
+
 Version 5.747 - Tuleap 8.9
     * request #8605: Artifacts changeset notification come from forge__artifacts@<forge email domain>
 
