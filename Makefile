@@ -1,10 +1,15 @@
 # How to:
 # Run the rest tests in Jenkins: make -C tuleap BUILD_ENV=ci ci_api_test
 # Run the phpunit tests in Jenkins: make -C tuleap BUILD_ENV=ci ci_phpunit
+# Run docker as a priviledged user: make SUDO=sudo ... or make SUDO=pkexec ...
 
 TULEAP_INCLUDE_PATH=$(CURDIR)/src/www/include:$(CURDIR)/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src
 PHP_INCLUDE_PATH=/usr/share/php:/usr/share/pear:$(TULEAP_INCLUDE_PATH):/usr/share/jpgraph:.
 PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d memory_limit=256M -d display_errors=On
+
+SUDO=
+DOCKER=$(SUDO) docker
+DOCKER_COMPOSE=$(SUDO) docker-compose
 
 DOCKER_REST_TESTS_IMAGE=enalean/tuleap-test-rest
 DOCKER_REST_TESTS_IMGINIT=$(DOCKER_REST_TESTS_IMAGE)-init
@@ -63,7 +68,7 @@ autoload-with-userid:
 		done;
 
 autoload-docker:
-	@docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --autoload
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --autoload
 
 autoload-dev:
 	@tools/utils/autoload.sh
@@ -75,7 +80,7 @@ less-dev:
 	@tools/utils/less.sh watch `pwd`
 
 less-docker:
-	@docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --less
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --less
 
 composer_update:
 	cp tests/rest/bin/composer.json .
@@ -132,13 +137,13 @@ docker_api_partial:
 	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php $(REST_TESTS_OPTIONS)
 
 tests_php51:
-	docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c5-php51
+	$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c5-php51
 
 tests_php53:
-	docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c6-php53
+	$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c6-php53
 
 tests_phpunit:
-	docker run -ti --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-phpunit-c6-php53
+	$(DOCKER) run -ti --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-phpunit-c6-php53
 
 phpunit:
 	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit
@@ -153,21 +158,21 @@ ci_simpletest: simpletest
 test: simpletest phpunit api_test
 
 rest_docker_snapshot:
-	@docker run -ti --name=rest-init -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMAGE) --init
-	@docker commit rest-init $(DOCKER_REST_TESTS_IMGINIT)
-	@docker rm -f rest-init
+	@$(DOCKER) run -ti --name=rest-init -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMAGE) --init
+	@$(DOCKER) commit rest-init $(DOCKER_REST_TESTS_IMGINIT)
+	@$(DOCKER) rm -f rest-init
 	@echo "Image ready: $(DOCKER_REST_TESTS_IMGINIT)"
 	@echo "You can use it like:"
 	@echo "# docker run --rm=true -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMGINIT) --run"
 	@echo "# docker run --rm=true -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMGINIT) --run tests/rest/ArtifactsTest.php"
 
 rest_docker_clean:
-	@docker rmi $(DOCKER_REST_TESTS_IMGINIT)
+	@$(DOCKER) rmi $(DOCKER_REST_TESTS_IMGINIT)
 
 rest_docker_snap_run:
 	@echo "Once inside the container, just run:"
 	@echo "# ./run.sh --run tests/rest/UsersTest.php"
-	@docker run -ti --rm=true -v $(CURDIR):/tuleap --entrypoint=/bin/bash $(DOCKER_REST_TESTS_IMGINIT) +x
+	@$(DOCKER) run -ti --rm=true -v $(CURDIR):/tuleap --entrypoint=/bin/bash $(DOCKER_REST_TESTS_IMGINIT) +x
 
 #
 # Start development enviromnent with Docker Compose
@@ -181,40 +186,40 @@ rest_docker_snap_run:
 
 dev-setup: .env
 	@echo "Create all data containers"
-	@docker inspect tuleap_ldap_data > /dev/null 2>&1 || docker run -t --name=tuleap_ldap_data -v /data busybox true
-	@docker inspect tuleap_db_data > /dev/null 2>&1 || docker run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
-	@docker inspect tuleap_es_data > /dev/null 2>&1 || docker run -t --name=tuleap_es_data -v /data busybox true
-	@docker inspect tuleap_data > /dev/null 2>&1 || docker run -t --name=tuleap_data -v /data busybox true
-	@docker inspect tuleap_reverseproxy_data > /dev/null 2>&1 || docker run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
+	@$(DOCKER) inspect tuleap_ldap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_ldap_data -v /data busybox true
+	@$(DOCKER) inspect tuleap_db_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
+	@$(DOCKER) inspect tuleap_es_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_es_data -v /data busybox true
+	@$(DOCKER) inspect tuleap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_data -v /data busybox true
+	@$(DOCKER) inspect tuleap_reverseproxy_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
 
 show-passwords:
-	@docker run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
+	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
 
 dev-forgeupgrade:
-	@docker exec tuleap_web_1 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
+	@$(DOCKER) exec tuleap_web_1 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
 
 dev-clear-cache:
-	@docker exec tuleap_web_1 /usr/share/tuleap/src/utils/tuleap --clear-caches
+	@$(DOCKER) exec tuleap_web_1 /usr/share/tuleap/src/utils/tuleap --clear-caches
 
 start-dns:
-	@docker stop dnsdock || true
-	@docker rm dnsdock || true
-	@docker run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
+	@$(DOCKER) stop dnsdock || true
+	@$(DOCKER) rm dnsdock || true
+	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
 
 start-rp:
 	@echo "Start reverse proxy"
-	@docker-compose up -d rp
+	@$(DOCKER_COMPOSE) up -d rp
 
 start:
 	@echo "Start Tuleap Web + LDAP + DB"
-	@docker-compose up -d web
+	@$(DOCKER_COMPOSE) up -d web
 	@echo -n "Your instance will be soon available: http://"
 	@grep VIRTUAL_HOST .env | cut -d= -f2
 	@echo "You might want to type 'make show-passwords' to see site default passwords"
 
 start-es:
-	@docker-compose up -d es
+	@$(DOCKER_COMPOSE) up -d es
 
 start-all:
 	echo "Start all containers (Web, LDAP, DB, Elasticsearch)"
-	@docker-compose up -d
+	@$(DOCKER_COMPOSE) up -d
