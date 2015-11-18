@@ -1,3 +1,6 @@
+Version 2.26.90 - Tuleap 8.9
+    * request #8599: Manage exception and add logging for docman export
+
 Version 2.26.89 - Tuleap 8.8
     * request #8453: Optimize the CSV exportation in statistics plugin
 
