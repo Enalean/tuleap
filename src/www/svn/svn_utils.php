@@ -477,27 +477,8 @@ function svn_utils_format_svn_history($group_id) {
 
 // read permission access file. The default settings part.
 function svn_utils_read_svn_access_file_defaults($project_svnroot, $display=false) {
-    $filename = "$project_svnroot/.SVNAccessFile";
-
-    $fd = @fopen("$filename", "r");
-    $buffer = '';
-    if ($fd) {
-        $in_settings = false;
-        while (!feof($fd)) {
-            $line = fgets($fd, 4096);
-            //if for display: don't include comment lines
-            if ($display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
-            else if (!$display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
-
-            if ($in_settings) { $buffer .= $line; }
-
-            if ($display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
-            else if (!$display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
-        }
-        fclose($fd);
-    }
-    return $buffer;
-
+    $accessfile = new SVN_AccessFile_Writer($project_svnroot);
+    return $accessfile->read_defaults($display);
 }
 
 // read permission access file. The project specific part.
@@ -525,24 +506,24 @@ function svn_utils_read_svn_access_file($project_svnroot) {
     return $buffer;
 }
 
+function svn_utils_write_svn_access_file_with_defaults($project_svnroot, $contents) {
+    $buffer = svn_utils_read_svn_access_file_defaults($project_svnroot);
+    return svn_utils_write_svn_access_file($project_svnroot, $buffer . $contents);
+}
+
 function svn_utils_write_svn_access_file($project_svnroot, $contents) {
 
     global $feedback,$Language;
 
-    $filename = "$project_svnroot/.SVNAccessFile";
-    $fd = fopen("$filename", "w+");
-    if ($fd) {
-	if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
-	    $feedback .= $Language->getText('svn_utils','write_err',$filename);
-	    $ret = false;
-	} else {
-	    $ret = true;
-	}
-    } else {
-	$feedback .= $Language->getText('svn_utils','file_err',$filename);
-	$ret = false;
+    $accessfile = new SVN_AccessFile_Writer($project_svnroot);
+    $ret = $accessfile->write($contents);
+
+    if($accessfile->isErrorFile()) {
+	$feedback .= $Language->getText('svn_utils','file_err',$accessfile->filename());
+    } else if($accessfile->isErrorWrite()) {
+	$feedback .= $Language->getText('svn_utils','write_err',$accessfile->filename());
     }
-    fclose($fd);
+
     return $ret;
 }
 

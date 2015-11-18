@@ -42,9 +42,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $dao->updateAccessFileVersionInProject($group_id, $version_id);
         }
 
-        $buffer = svn_utils_read_svn_access_file_defaults($project_svnroot);
-        $buffer .= $form_accessfile;
-        $ret    = svn_utils_write_svn_access_file($project_svnroot, $buffer);
+        $ret = svn_utils_write_svn_access_file_with_defaults($project_svnroot, $form_accessfile);
 
         if ($ret) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_access_control','upd_success'));
