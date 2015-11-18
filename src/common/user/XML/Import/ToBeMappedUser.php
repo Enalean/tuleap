@@ -21,9 +21,9 @@ namespace User\XML\Import;
 
 use RuntimeException;
 
-class ToBeMappedUser extends User {
+class ToBeMappedUser extends ActionToBeTakenForUser {
 
-    private static $ACTION = 'map:';
+    const ACTION = 'map';
 
     /** @var PFUser[] */
     private $matching_users;
@@ -51,12 +51,12 @@ class ToBeMappedUser extends User {
         $actions  = array();
         foreach ($this->matching_users as $user) {
             $matching[] = $user->getRealName() .' ('. $user->getUserName() .') ['. $user->getStatus() .']';
-            $actions[]  = '"'. self::$ACTION . $user->getUserName() .'"';
+            $actions[]  = '"'. self::ACTION .':'. $user->getUserName() .'"';
         }
 
         return array(
             $this->username,
-            self::$ACTION,
+            self::ACTION .':',
             sprintf(
                 'User %s (%s) has the same email address than following users: %s.'
                 . ' Use one of the following actions to confirm the mapping: %s.',
@@ -66,5 +66,9 @@ class ToBeMappedUser extends User {
                 implode(', ', $actions)
             )
         );
+    }
+
+    public function isActionAllowed($action) {
+        return $action === self::ACTION;
     }
 }

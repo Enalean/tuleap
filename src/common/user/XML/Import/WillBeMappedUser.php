@@ -19,7 +19,29 @@
  */
 namespace User\XML\Import;
 
-interface User {
+use PFUser;
 
-    public function getUserName();
+class WillBeMappedUser implements User {
+
+    /** @var string */
+    private $username;
+
+    /** @var PFUser */
+    private $mapped_user;
+
+    public function __construct(
+        $username,
+        PFUser $mapped_user
+    ) {
+        $this->username    = $username;
+        $this->mapped_user = $mapped_user;
+    }
+
+    public function getUserName() {
+        return $this->username;
+    }
+
+    public function getMappedUser() {
+        return $this->mapped_user;
+    }
 }

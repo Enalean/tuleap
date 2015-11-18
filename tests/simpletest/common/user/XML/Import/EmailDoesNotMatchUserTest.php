@@ -19,7 +19,31 @@
  */
 namespace User\XML\Import;
 
-interface User {
+use TuleapTestCase;
 
-    public function getUserName();
+class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase {
+
+    /** @var EmailDoesNotMatchUser */
+    protected $user;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user = new EmailDoesNotMatchUser(
+            aUser()->withUserName('cstevens')->build(),
+            'email.in.xml'
+        );
+    }
+
+    public function itReturnsFalseWhenActionIsCreate() {
+        $this->assertFalse($this->user->isActionAllowed('create'));
+    }
+
+    public function itReturnsFalseWhenActionIsActivate() {
+        $this->assertFalse($this->user->isActionAllowed('activate'));
+    }
+
+    public function itReturnsFalseWhenActionIsMap() {
+        $this->assertTrue($this->user->isActionAllowed('map'));
+    }
 }

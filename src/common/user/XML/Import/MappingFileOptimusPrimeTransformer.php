@@ -1,0 +1,144 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+namespace User\XML\Import;
+
+use UserManager;
+
+class MappingFileOptimusPrimeTransformer {
+
+    private static $ALLOWED_ACTIONS = array(
+        ToBeActivatedUser::ACTION,
+        ToBeCreatedUser::ACTION,
+        ToBeMappedUser::ACTION
+    );
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    public function __construct(UserManager $user_manager) {
+        $this->user_manager = $user_manager;
+    }
+
+    /** @return User\XML\Import\UsersToBeImportedCollection */
+    public function transform(UsersToBeImportedCollection $collection_from_archive, $filename) {
+        $csv_lines = $this->parseCSVFile($filename);
+
+        $collection_for_import = new UsersToBeImportedCollection();
+        foreach ($collection_from_archive->toArray() as $username => $to_be_imported_user) {
+            if (isset($csv_lines[$username])) {
+                $action = $csv_lines[$username];
+                $collection_for_import->add(
+                    $this->transformUser($collection_from_archive, $username, $action, $to_be_imported_user)
+                );
+            } else if ($to_be_imported_user instanceof AlreadyExistingUser) {
+                $collection_for_import->add($to_be_imported_user);
+            } else {
+                throw new MissingEntryInMappingFileException("user $username should be in the mapping file");
+            }
+        }
+
+        return $collection_for_import;
+    }
+
+    private function transformUser(
+        UsersToBeImportedCollection $collection_from_archive,
+        $username,
+        $action,
+        User $to_be_imported_user
+    ) {
+        if (strpos($action, ':') !== false) {
+            list($action, $mapped_username) = split(':', $action);
+        }
+
+        if (! in_array($action, self::$ALLOWED_ACTIONS)) {
+            throw new InvalidMappingFileException("Unknown action $action");
+        }
+
+        if (! $to_be_imported_user->isActionAllowed($action)) {
+            throw new InvalidMappingFileException("Action $action is not allowed for user $username");
+        }
+
+        if ($action === ToBeMappedUser::ACTION) {
+            $mapped_user = $this->getMappedUser($collection_from_archive, $username, $mapped_username);
+
+            return new WillBeMappedUser($username, $mapped_user);
+        } elseif ($action === ToBeCreatedUser::ACTION) {
+            return new WillBeCreatedUser(
+                $to_be_imported_user->getUserName(),
+                $to_be_imported_user->getRealName(),
+                $to_be_imported_user->getEmail()
+            );
+        } elseif ($action === ToBeActivatedUser::ACTION) {
+            return new WillBeActivatedUser($this->getExistingUser($username));
+        }
+
+        return $to_be_imported_user;
+    }
+
+    private function getExistingUser($username) {
+        $existing_user = $this->user_manager->getUserByUsername($username);
+        if (! $existing_user) {
+            throw new InvalidMappingFileException("User with username $username does not exist on the platform");
+        }
+
+        return $existing_user;
+    }
+
+    private function getMappedUser(UsersToBeImportedCollection $collection, $username, $mapped_username) {
+        if (! $mapped_username) {
+            throw new InvalidMappingFileException("map action for $username must be filled");
+        }
+
+        return $this->getExistingUser($mapped_username);
+    }
+
+    /**
+     * @return array
+     */
+    private function parseCSVFile($filename) {
+        if (! is_readable($filename)) {
+            throw new MappingFileDoesNotExistException("$filename does not exist");
+        }
+
+        $csv = fopen($filename, 'r');
+        if ($csv === false) {
+            throw new MappingFileDoesNotExistException("$filename does not exist");
+        }
+
+        $header = fgetcsv($csv);
+        $lines  = array();
+
+        while (($data = fgetcsv($csv)) !== FALSE) {
+            $username = $data[0];
+            $action   = $data[1];
+
+            if (isset($lines[$username])) {
+                throw new InvalidMappingFileException("user $username appears multiple times in mapping file");
+            }
+            $lines[$username] = $action;
+        }
+
+        fclose($csv);
+
+        return $lines;
+    }
+}
