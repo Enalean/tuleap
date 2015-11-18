@@ -92,8 +92,7 @@ class XMLDocmanImport {
 
     protected $retryCounter;
 
-    // Log file, can be null
-    protected $logFile = null;
+    protected $logger;
 
     /**
      * XMLDocmanImport constructor
@@ -102,28 +101,19 @@ class XMLDocmanImport {
      * @param string $wsdl     WSDL location
      * @param string $login    Login
      * @param string $password Password
+     * @param Logger $logger   Logger
      */
-    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log) {
-
-        if ($log === true) {
-            $logFolder = dirname(__FILE__).'/log';
-            $logFile = 'import_'.date('Y-m-d_H\hi\ms\s').'.log';
-            if (is_dir($logFolder)) {
-               $logFile = $this->searchNextFreeFileName($logFolder, $logFile);
-            } else {
-                mkdir($logFolder, 0700, true);
-            }
-
-            $this->logFile = fopen("$logFolder/$logFile", 'w');
-            fwrite($this->logFile, "Command: $command".PHP_EOL.PHP_EOL);
-            $this->log("* Logging output to \"$logFile\" *".PHP_EOL);
-        }
+    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, Logger $logger) {
+        $xml_security = new XML_Security();
+        $xml_security->enableExternalLoadOfEntities();
 
         $this->force = $force;
         $this->reorder = $reorder;
         $this->importMessageMetadata = $importMessageMetadata;
         $this->autoRetry = $autoRetry;
+        $this->logger = new WrapperLogger($logger, 'Import Docman');
 
+        $this->logger->info("Init Import process");
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
             $this->hash = $this->soap->login($login, $password, "3.6")->session_hash;
@@ -136,39 +126,11 @@ class XMLDocmanImport {
             $this->printSoapResponseAndThrow($e);
         }
 
-        $this->log("Connected to $wsdl as $login.".PHP_EOL);
+        $this->logger->info("Connected to $wsdl as $login.");
     }
 
     public function __destruct() {
         $this->soap->logout($this->hash);
-
-        if ($this->logFile !== null) {
-            fclose($this->logFile);
-        }
-    }
-
-    /**
-     * Search the next file name that can be used
-     * If the file "name" exists in the folder, the next name to use is "name (2)", then "name (3)", etc.
-     */
-    private function searchNextFreeFileName($folder, $fileName) {
-
-        if (!file_exists("$folder/$fileName")) {
-            return $fileName;
-        } else {
-            $cpt = 2;
-            if (preg_match('/(.*)\.([^\.]+)/', $fileName, $matches)) {
-                while (file_exists("$folder/".$matches[1]." ($cpt).".$matches[2])) {
-                    $cpt++;
-                }
-                return $matches[1]." ($cpt).".$matches[2];
-            } else {
-                while (file_exists("$folder/$fileName ($cpt)")) {
-                    $cpt++;
-                }
-                return "$fileName ($cpt)";
-            }
-        }
     }
 
     /**
@@ -181,11 +143,12 @@ class XMLDocmanImport {
         // DTD validation
         $dom = new DOMDocument();
         if (!$dom->load($rootPath.'/'.$archiveName.'.xml')) {
-            $this->exitError("Failed to load XML document.".PHP_EOL);
+            $this->logger->error("Failed to load XML document.");
+            throw new Exception("Unable to load the following XML document : ".$rootPath."/".$archiveName.".xml");
         }
 
         if (!@$dom->validate()) {
-            $this->warn("DTD Validation failed.");
+            $this->logger->warn("DTD Validation failed.");
         }
 
         $this->doc = simplexml_import_dom($dom);
@@ -196,11 +159,11 @@ class XMLDocmanImport {
         // Import message metadata checks
         if ($this->importMessageMetadata != '') {
             if (!array_key_exists($this->importMessageMetadata, $this->metadataMap)) {
-                $this->exitError("You specified an incorrect import message metadata: ".$this->importMessageMetadata.PHP_EOL);
+                throw new Exception("You specified an incorrect import message metadata: ".$this->importMessageMetadata);
             } else {
                 $type = $this->metadataMap[$this->importMessageMetadata]['type'];
                 if ($type != PLUGIN_DOCMAN_METADATA_TYPE_TEXT && $type != PLUGIN_DOCMAN_METADATA_TYPE_STRING) {
-                    $this->exitError("The import message metadata type must be 'string' or 'text'".PHP_EOL);
+                    throw new Exception("The import message metadata type must be 'string' or 'text'");               
                 }
             }
         }
@@ -209,13 +172,13 @@ class XMLDocmanImport {
         $this->buildUgroupMap();
 
         // Sanity checks
-        $this->log("Checking the XML document... ");
+        $this->logger->info("Checking the XML document... ");
         $this->checkMetadataDefinition();
         $this->checkHardCodedMetadataUsage();
         $this->checkMetadataUsage();
         $this->checkUgroupDefinition();
         $this->checkUgroupsUsage();
-        $this->log("Done.".PHP_EOL);
+        $this->logger->info("Done.");
     }
 
     /**
@@ -258,7 +221,6 @@ class XMLDocmanImport {
         }
 
         $this->loadXML($xmlDoc);
-
         $rootNode = $this->findPath($path);
         if ($rootNode instanceof SimpleXMLElement) {
             foreach($this->reorderItemNodes($rootNode->xpath('item')) as $child) {
@@ -272,7 +234,7 @@ class XMLDocmanImport {
      * the group name and the group ID. The members are also retrieved.
      */
     private function buildUgroupMap () {
-        $this->log("Retrieving ugroups... ");
+        $this->logger->info("Retrieving ugroups... ");
         try {
             $ugroups = $this->soap->getGroupUgroups($this->hash, $this->groupId);
             foreach ($ugroups as $ugroup) {
@@ -288,7 +250,7 @@ class XMLDocmanImport {
             $this->printSoapResponseAndThrow($e);
         }
 
-        $this->log("Done.".PHP_EOL);
+        $this->logger->info("Done.");
     }
 
     /**
@@ -296,7 +258,7 @@ class XMLDocmanImport {
      * the metadata name and the metadata label. For list of values, the values are also retrieved.
      */
     private function buildMetadataMap() {
-        $this->log("Retrieving metadata definition... ");
+        $this->logger->info("Retrieving metadata definition... ");
 
         $hardCodedMetadataLabels = array('title', 'description', 'owner' , 'create_date', 'update_date' , 'status', 'obsolescence_date');
 
@@ -331,10 +293,10 @@ class XMLDocmanImport {
         }
 
         if (isset($missingProp)) {
-            $this->exitError("The following propert".((count($missingProp) > 1)? "ies don't": "y doesn't")." allow empty values and must be defined in the <propdefs> node: ".implode(", ", $missingProp).PHP_EOL);
+             throw new Exception("The following propert".((count($missingProp) > 1)? "ies don't": "y doesn't")." allow empty values and must be defined in the <propdefs> node: ".implode(", ", $missingProp));
         }
 
-        $this->log("Done.".PHP_EOL);
+        $this->logger->info("Done.");
     }
 
     private function buildUserMap() {
@@ -347,7 +309,7 @@ class XMLDocmanImport {
         }
 
         if (count($userIdentifiers) > 0) {
-            $this->log("Retrieving users... ");
+            $this->logger->info("Retrieving users... ");
 
             try {
                 $res = $this->soap->checkUsersExistence($this->hash, $userIdentifiers);
@@ -362,7 +324,7 @@ class XMLDocmanImport {
             if (count($absentUsers) != 0) {
                 $msg = "Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers);
                 if ($this->force) {
-                    $this->warn($msg);
+                    $this->logger->warn($msg);
 
                     // Record item owners loss
                     foreach ($absentUsers as $absentUser) {
@@ -391,11 +353,11 @@ class XMLDocmanImport {
                         }
                     }
                 } else {
-                    $this->exitError($msg);
+                    throw new Exception($msg);
                 }
             }
 
-            $this->log("Done.".PHP_EOL);
+            $this->logger->info("Done.");
         }
     }
 
@@ -438,24 +400,16 @@ class XMLDocmanImport {
     }
 
     protected function printSoapResponseAndThrow(SoapFault $e) {
-        $this->log("Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL);
-        throw $e;
+        throw new Exception("Response: ".$this->soap->__getLastResponse()."\n".$e);
     }
 
     private function checkHardCodedMetadataUsage() {
-
-        $errorMsg = '';
-
         if ($this->doc->xpath('//item/properties/obsolescence_date') != null && !in_array('obsolescence_date', $this->hardCodedMetadata)) {
-            $errorMsg .= "The Obsolescence Date property is not used on the target project.".PHP_EOL;
+            throw new Exception("The Obsolescence Date property is not used on the target project.");
         }
 
         if ($this->doc->xpath('//item/properties/status') != null && !in_array('status', $this->hardCodedMetadata)) {
-            $errorMsg .= "The Status property is not used on the target project.".PHP_EOL;
-        }
-
-        if ($errorMsg != '') {
-            $this->exitError($errorMsg);
+            throw new Exception("The Status property is not used on the target project.");
         }
     }
 
@@ -464,8 +418,6 @@ class XMLDocmanImport {
      */
     private function checkMetadataUsage() {
         $propertyList = $this->doc->xpath('//item/properties/property');
-
-        $errorMsg = '';
 
         // Check the values set to the properties
         foreach ($propertyList as $property) {
@@ -483,21 +435,21 @@ class XMLDocmanImport {
                         // Check if the defined values exist
                         foreach ($values as $value) {
                             if (!isset($metadataDef['values'][(string)$value])) {
-                                $errorMsg .= "Item '$item_name':\tThe list property '$title' is set to an incorrect value: '$value'".PHP_EOL;
+                                throw new Exception("Item '$item_name':\tThe list property '$title' is set to an incorrect value: '$value'");
                             }
                         }
 
                         // Check that just one value is given to a list that allow only one value
                         if (count($values) > 1 && !$metadataDef['isMultipleValuesAllowed']) {
-                            $errorMsg .= "Item '$item_name':\tThe list property '$title' allows only one value, but ".count($values)." values are given.".PHP_EOL;
+                            throw new Exception("Item '$item_name':\tThe list property '$title' allows only one value, but ".count($values)." values are given.");
                         }
                         // Check if no value is given to a list that require a value
                         else if (count($values) == 0 && !$metadataDef['isEmptyAllowed']) {
-                            $errorMsg .= "Item '$item_name':\tThe list property '$title' is required, but no <value> element is found.".PHP_EOL;
+                            throw new Exception("Item '$item_name':\tThe list property '$title' is required, but no <value> element is found.");
                         }
                 }
             } else {
-                $errorMsg .= "Item '$item_name':\tThe property '$title' is not defined in a 'propdef' element.".PHP_EOL;
+                throw new Exception("Item '$item_name':\tThe property '$title' is not defined in a 'propdef' element.");
             }
         }
 
@@ -519,15 +471,11 @@ class XMLDocmanImport {
                 $item_name = $properties->title;
                 $searchedProperty = $properties->xpath("property[@title='$requiredProperty']");
                 if (count($searchedProperty) == 0) {
-                    $errorMsg .= "Item '$item_name':\tThe required property '$requiredProperty' is not set.".PHP_EOL;
+                    throw new Exception("Item '$item_name':\tThe required property '$requiredProperty' is not set.");
                 } else if ((string)$searchedProperty[0] == '') {
-                    $errorMsg .= "Item '$item_name':\tThe required property '$requiredProperty' is set to an empty value.".PHP_EOL;
+                    throw new Exception("Item '$item_name':\tThe required property '$requiredProperty' is set to an empty value.");
                 }
             }
-        }
-
-        if ($errorMsg != '') {
-            $this->exitError($errorMsg);
         }
     }
 
@@ -537,21 +485,14 @@ class XMLDocmanImport {
     private function checkUgroupsUsage() {
         $permissions = $this->doc->xpath('//item/permissions/permission');
 
-        $errorMsg = '';
-
         foreach ($permissions as $permission) {
             $ugroup_id = (string)$permission['ugroup'];
 
             if (!isset($this->ugroupMap[$ugroup_id])) {
                 $item_nodes = $permission->xpath('../..');
-                $item_name = $item_nodes[0]->properties->title;
-
-                $errorMsg .= "Item '$item_name':\tThe permission references an undefined group: '$ugroup_id'".PHP_EOL;
+                $item_name  = $item_nodes[0]->properties->title;
+                throw new Exception("Item '$item_name':\tThe permission references an undefined group: '$ugroup_id'");
             }
-        }
-
-        if ($errorMsg != '') {
-            $this->exitError($errorMsg);
         }
     }
 
@@ -572,22 +513,22 @@ class XMLDocmanImport {
                     $user_name = (string)$member;
                     $members[] = $user_name;
                     if (!isset($this->ugroupMap[$ugroup_id]['members'][$user_name])) {
-                        $this->warn("The user '$user_name' is not a member of the ugroup '$ugroup_name' on the target project.");
+                        $this->logger->warn("The user '$user_name' is not a member of the ugroup '$ugroup_name' on the target project.");
                     }
                 }
 
                 foreach ($this->ugroupMap[$ugroup_id]['members'] as $user_name => $member) {
                     if (!in_array($user_name, $members)) {
-                        $this->warn("The user '$user_name' is a member of the ugroup '$ugroup_name' on the target project, but he's not inside the ugroup definition in the XML document.");
+                        $this->logger->warn("The user '$user_name' is a member of the ugroup '$ugroup_name' on the target project, but he's not inside the ugroup definition in the XML document.");
                     }
                 }
             } else {
-                $errorMsg .= "The ugroup '$ugroup_name' doesn't exist on the target project.".PHP_EOL;
+                throw new Exception("The ugroup '$ugroup_name' doesn't exist on the target project.");
             }
         }
 
         if ($errorMsg != '') {
-            $this->exitError($errorMsg);
+            $this->logger->error($errorMsg);
         }
     }
 
@@ -620,28 +561,29 @@ class XMLDocmanImport {
                         if ($values != $server_values) {
                             $diff1 = array_diff($values, $server_values);
                             $diff2 = array_diff($server_values, $values);
-                            $errorMsg = "The property '$name' doesn't declare the same list of values as in the target project:".PHP_EOL;
+                            $errorMsg = "The property '$name' doesn't declare the same list of values as in the target project:";
                             if (count($diff1)) {
-                                $errorMsg .= "\tNot on the target:\t".implode(', ', $diff1).PHP_EOL;
+                                $errorMsg .= "\tNot on the target:\t".implode(', ', $diff1);
                             }
                             if (count($diff2)) {
-                                $errorMsg .= "\tNot on the archive:\t".implode(', ', $diff2).PHP_EOL;
+                                $errorMsg .= "\tNot on the archive:\t".implode(', ', $diff2);
                             }
+			    throw new Exception($errorMsg);
                         }
                     }
                 } else if ($type === null) {
-                    $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
+                      throw new Exception("The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'");
                 } else {
-                    $errorMsg .= "The property '$name' has not the same type as in the target project: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
+                     throw new Exception("The property '$name' has not the same type as in the target project: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'");
                 }
 
                 // Check if the metadata value can be empty
                 $empty = (string)$propdef['empty'];
                 // 'true' is the default value if nothing is specified
                 if (($empty == 'true' || $empty == null) && !$this->metadataMap[$name]['isEmptyAllowed']) {
-                    $errorMsg .= "The property '$name' doesn't allow empty values in the target project. Please set the \"empty\" attribute to \"false\" to the corresponding propdef element.".PHP_EOL;
+                    throw new Exception("The property '$name' doesn't allow empty values in the target project. Please set the \"empty\" attribute to \"false\" to the corresponding propdef element.");
                 } else if ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
-                    $errorMsg .= "The property '$name' allows empty values in the target project. Please set the \"empty\" attribute to \"true\", or remove this attribute (\"true\" is implicit).".PHP_EOL;
+                    throw new Exception("The property '$name' allows empty values in the target project. Please set the \"empty\" attribute to \"true\", or remove this attribute (\"true\" is implicit).");
                 }
 
                 // Check if multiple values are allowed
@@ -649,18 +591,14 @@ class XMLDocmanImport {
                     $multival = (string)$propdef['multivalue'];
                     // 'false' is the default value if nothing is specified
                     if (($multival == 'false' || $multival == null) && $this->metadataMap[$name]['isMultipleValuesAllowed']) {
-                        $errorMsg .= "The property '$name' allows multiple values. Please set the attribute multivalue to \"true\" to the corresponding propdef element.".PHP_EOL;
+                        throw new Exception("The property '$name' allows multiple values. Please set the attribute multivalue to \"true\" to the corresponding propdef element.");
                     } else if ($multival == 'true' && !$this->metadataMap[$name]['isMultipleValuesAllowed']) {
-                        $errorMsg .= "The property '$name' doesn't allow multiple values. Please set the attribute empty to \"false\", or remove this attribute (\"false\" is implicit).".PHP_EOL;
+                        throw new Exception("The property '$name' doesn't allow multiple values. Please set the attribute empty to \"false\", or remove this attribute (\"false\" is implicit).");
                     }
                 }
             } else {
-                $errorMsg .= "The property '$name' (".(string)$propdef['type']." metadata) doesn't exist on the target project.".PHP_EOL;
+                throw new Exception("The property '$name' (".(string)$propdef['type']." metadata) doesn't exist on the target project.");
             }
-        }
-
-        if ($errorMsg != '') {
-            $this->exitError($errorMsg);
         }
     }
 
@@ -691,17 +629,6 @@ class XMLDocmanImport {
     }
 
     /**
-     * Displays an error and terminates execution of the script
-     */
-    protected function exitError($error) {
-        exit (PHP_EOL."Fatal error: ".PHP_EOL.$error.PHP_EOL);
-    }
-
-    private function warn($msg) {
-        $this->log("Warning: $msg".PHP_EOL);
-    }
-
-    /**
      * Returns the node that corresponds to the given unix-like path
      */
     protected function findPath($path) {
@@ -710,12 +637,12 @@ class XMLDocmanImport {
         $nodeList = $this->doc->xpath($xpath);
 
         if ($nodeList === false || count($nodeList) == 0) {
-            $this->exitError("Can't find the element \"$path\" ($xpath)".PHP_EOL);
+            throw new Exception("Can't find the element \"$path\" ($xpath)");
         } else {
             if (count($nodeList) == 1) {
                 return $nodeList[0];
             } else {
-                $this->exitError("$path ($xpath) found more than one target element".PHP_EOL);
+                throw new Exception("$path ($xpath) found more than one target element");
             }
         }
     }
@@ -960,23 +887,23 @@ class XMLDocmanImport {
         self::printException($e);
 
         if ($this->autoRetry == true && $this->retryCounter-- > 0) {
-            $this->log("Auto-retrying in 5s... ($this->retryCounter auto-retries left)".PHP_EOL);
+            $this->logger->info("Auto-retrying in 5s... ($this->retryCounter auto-retries left)");
             sleep(5);
             $retry = true;
         } else {
             do {
-                $this->log("(R)etry, (A)bort, (C)ontinue? [R] ");
+                $this->logger->info("(R)etry, (A)bort, (C)ontinue? [R] ");
                 $op = strtoupper(trim(fgets(STDIN)));
             } while ($op != '' && $op != 'R' && $op != 'C' && $op != 'A');
 
             if ($op == 'A') {
-                $this->log('Import aborted.'.PHP_EOL);
+                $this->logger->info('Import aborted.');
                 die;
             } else if ($op == 'C') {
-                $this->log('Continuing...'.PHP_EOL);
+                $this->logger->info('Continuing...');
                 $retry = false;
             } else {
-                $this->log('Retrying...'.PHP_EOL);
+                $this->logger->info('Retrying...');
                 $retry = true;
             }
         }
@@ -989,7 +916,7 @@ class XMLDocmanImport {
     }
 
     private function printException($e) {
-        $this->log(PHP_EOL.PHP_EOL.$e->__toString().PHP_EOL.PHP_EOL);
+        $this->logger->info($e->__toString());
     }
 
     /**
@@ -1000,11 +927,11 @@ class XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Creating folder            '$title'");
+            $this->logger->info("Creating folder            '$title'");
 
             try {
                 $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$id".PHP_EOL);
+                $this->logger->info(" #$id");
                 return $id;
             } catch (Exception $e){
                 $retry = $this->askWhatToDo($e);
@@ -1020,11 +947,11 @@ class XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Creating empty document    '$title'");
+            $this->logger->info("Creating empty document    '$title'");
 
             try {
                 $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$id".PHP_EOL);
+                $this->logger->info(" #$id");
                 return $id;
             } catch (Exception $e){
                 $retry = $this->askWhatToDo($e);
@@ -1040,11 +967,11 @@ class XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Creating wiki page         '$title' ($pagename)");
+            $this->logger->info("Creating wiki page         '$title' ($pagename)");
 
             try {
                 $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$id".PHP_EOL);
+                $this->logger->info(" #$id");
                 return $id;
             } catch (Exception $e){
                 $retry = $this->askWhatToDo($e);
@@ -1060,11 +987,11 @@ class XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Creating link              '$title' ($url)");
+            $this->logger->info("Creating link              '$title' ($url)");
 
             try {
                 $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$id".PHP_EOL);
+                $this->logger->info(" #$id");
                 return $id;
             } catch (Exception $e){
                 $retry = $this->askWhatToDo($e);
@@ -1080,13 +1007,13 @@ class XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Creating embedded file     '$title' ($file)");
+            $this->logger->info("Creating embedded file     '$title' ($file)");
             $fullPath = $this->dataBaseDir.'/'.$file;
             $contents = file_get_contents($fullPath);
 
             try {
                 $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date, $owner, $createDate, $updateDate);
-                $this->log(" #$id".PHP_EOL);
+                $this->logger->info(" #$id");
                 return $id;
             } catch (Exception $e){
                 $retry = $this->askWhatToDo($e);
@@ -1119,7 +1046,7 @@ class XMLDocmanImport {
                 $retry = false;
 
                 // Display progression indicator
-                $this->log("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
+                $this->logger->info("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
 
                 // Retrieve the current chunk of the file
                 $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
@@ -1139,14 +1066,14 @@ class XMLDocmanImport {
             } while ($retry);
         }
         // Finish!
-        $this->log("\r$infoStr #$item_id".PHP_EOL);
+        $this->logger->info("\r$infoStr #$item_id");
 
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($item_id, $fullPath) === true) {
                 return $item_id;
             } else {
-                $this->log("ERROR: Checksum error".PHP_EOL);
+                $this->logger->info("ERROR: Checksum error");
                 return false;
             }
         } catch (Exception $e){
@@ -1197,7 +1124,7 @@ class XMLDocmanImport {
                 $retry = false;
 
                 // Display progression indicator
-                $this->log("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
+                $this->logger->info("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
 
                 // Retrieve the current chunk of the file
                 $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
@@ -1217,14 +1144,14 @@ class XMLDocmanImport {
             } while ($retry);
         }
         // Finish!
-        $this->log("\r$infoStr     ".PHP_EOL);
+        $this->logger->info("\r$infoStr     ");
 
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($itemId, $fullPath) == true) {
                 return true;
             } else {
-                $this->log("ERROR: Checksum error".PHP_EOL);
+                $this->logger->info("ERROR: Checksum error");
                 return false;
             }
         } catch (Exception $e){
@@ -1237,7 +1164,7 @@ class XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("                      Version '$label' ($file)".PHP_EOL);
+            $this->logger->info("                      Version '$label' ($file)");
             $fullPath = "$this->dataBaseDir/$file";
 
             $contents = file_get_contents($fullPath);
@@ -1248,17 +1175,6 @@ class XMLDocmanImport {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
-    }
-
-    /**
-     * Prints a message, and stores it into a log file if one has been defined
-     */
-    protected function log($msg) {
-        echo $msg;
-
-        if ($this->logFile !== null) {
-            fwrite($this->logFile, $msg);
-        }
     }
 }
 ?>
