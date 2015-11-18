@@ -1,3 +1,6 @@
+Version 5.746 - Tuleap 8.9
+    * request #8606: As a tracker admin, I can't mass change a field if 'can submit' is not checked
+
 Version 5.745 - Tuleap 8.9
     * request #8583 Invalid value in tracker XML import data crash import process
 
