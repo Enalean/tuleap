@@ -71,7 +71,7 @@ class ProjectDao extends DataAccessObject {
      * of are returned
      * If $userId is provided, you can also choose to restrict the result set to
      * the projects the user is member of or is admin of.
-     * 
+     *
      * @param String  $name
      * @param Integer $limit
      * @param Integer $userId
@@ -201,31 +201,33 @@ class ProjectDao extends DataAccessObject {
     
     /**
      * Return all projects matching given parameters
-     * 
-     * @param Integer $offset
-     * @param Integer $limit
-     * @param String  $status
-     * @param String  $groupName
      *
      * @return Array ('projects' => DataAccessResult, 'numrows' => int)
      */
     public function returnAllProjects($offset, $limit, $status=false, $groupName=false) {
         $cond = array();
-        if ($status != false) {
-            $cond[] = 'status='.$this->da->quoteSmart($status);
+        if (is_array($status)) {
+            if (! empty($status)) {
+                $cond[] = 'status IN ('.$this->da->quoteSmartImplode(',', $status).')';
+            }
+        } else {
+            if ($status != false) {
+                $cond[] = 'status='.$this->da->quoteSmart($status);
+            }
         }
-        
+
         if ($groupName != false) {
             $pattern = $this->da->quoteSmart('%'.$groupName.'%');
             $cond[] = '(group_name LIKE '.$pattern.' OR group_id LIKE '.$pattern.' OR unix_group_name LIKE '.$pattern.')';
         }
-        
+
+
         if (count($cond) > 0) {
             $stm = ' WHERE '.implode(' AND ', $cond);
         } else {
             $stm = '';
         }
-        
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *
                 FROM groups '.$stm.'
                 ORDER BY group_name 
