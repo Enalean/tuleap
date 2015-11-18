@@ -1,3 +1,6 @@
+Version 5.747 - Tuleap 8.9
+    * request #8605: Artifacts changeset notification come from forge__artifacts@<forge email domain>
+
 Version 5.746 - Tuleap 8.9
     * request #8606: As a tracker admin, I can't mass change a field if 'can submit' is not checked
 

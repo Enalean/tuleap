@@ -80,6 +80,11 @@ class Codendi_MailTest extends TuleapTestCase {
         $this->assertEqual($mail->getMail()->getPartCount(), 2);
     }
 
+    public function itDoesNotSetEmptyAddress() {
+        $mail = new Codendi_Mail();
+
+
+    }
     public function itHasAppropriateTypeForAttachment() {
         $mail = new Codendi_Mail();
         $mail->addInlineAttachment('data', 'text/plain', 'attachment');
