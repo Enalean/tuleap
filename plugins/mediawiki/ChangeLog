@@ -1,3 +1,6 @@
+Version 0.100 - Tuleap 8.9
+    * request #8590: Properly generate absolute server URL when behind a reverse proxy
+
 Version 0.99 - Tuleap 8.9
     * request #8490: MediaWikiLanguageExtensionBundle is not loaded
 

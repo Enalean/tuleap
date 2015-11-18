@@ -1,3 +1,6 @@
+Version 4.96 - Tuleap 8.9
+    * request #8590: Properly generate absolute server URL when behind a reverse proxy
+
 Version 4.95 - Tuleap 8.9
     * request #8589: Apache logs filled with No entry for terminal type "unknown"
 

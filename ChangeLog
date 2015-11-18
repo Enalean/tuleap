@@ -2,13 +2,10 @@ Version 8.9 (Not released yet)
 
 	== Enhancement ==
 	* story #8528: create nonexistant user account at import time
-	  * Refacto: inject UserXmlExporter
-	  * Generate users.xml
-	  * generates a mapping file between users in archive and on platform
-
+	* Refacto: inject UserXmlExporter
 	* story #8557 import a subversion repository
-	  * tasks #8567 Import svn revisions
-	  * import subversions notifications
+	* tasks #8567 Import svn revisions
+	* import subversions notifications
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
@@ -18,14 +15,16 @@ Version 8.9 (Not released yet)
 	* request #8334: PhpWiki notifications can leak data
 	* request #8595: Fix ProjectXMLImporter undefined class constant error
 	* request #8589: Apache logs filled with No entry for terminal type "unknown"
+	* request #8590: Properly generate absolute server URL when behind a reverse proxy
 
 	== Plugins ==
-	* mediawiki: 0.99
-	* git: 4.95
+	* mediawiki: 0.100
+	* git: 4.96
 	* tracker: 5.745
 	* agiledashboard: 1.299
 	* tests: 5.31
 	* docman: 2.26.90
+	* userlog: 1.6
 
 Version 8.8 (Friday, November 6th 2015)
 
