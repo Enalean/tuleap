@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 /*
 
@@ -39,8 +39,8 @@ function project_admin_header($params) {
     }
     echo '</td></tr>';
     echo '</td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_permissions').'</b></td><td><b>
-	<A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> | 
-	<A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> | 
+	<A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> |
+	<A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> |
 	<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','permission_request').'</A>';
     echo '</td><td></td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_data').'</b></td><td><b>
 	<A HREF="/project/export/index.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','project_data_export').'</A> |
@@ -87,7 +87,7 @@ function project_admin_footer($params) {
  * The array is stored as a string at the end of the field_name
  * with the following format:
  * field_name %% [arg1, arg2...]
- * 
+ *
  * @param String  $fieldName Event category
  * @param String  $oldValue  Event value
  * @param Integer $groupId   Project ID
@@ -242,7 +242,7 @@ function convert_project_history_events($array, $subevents) {
                         if (is_string($value) && !empty($value)) {
                             $value            = $hp->purify($value, CODENDI_PURIFIER_JS_QUOTE);
                             $translated_value = $hp->purify($GLOBALS['Language']->getText('project_admin_utils', $value), CODENDI_PURIFIER_JS_QUOTE);
-                            
+
                             $output .= $comma . "'$value': '$translated_value'";
                             $comma = ', ';
                         }
@@ -422,9 +422,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
     $translatedSelectedEvents = convert_project_history_events($subEventsBox, true);
 
-    $js = "options = new Array();
-           options['defaultValueActsAsHint'] = false;
-           new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true, options);
+    $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
            new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
 
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');

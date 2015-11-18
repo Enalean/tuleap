@@ -16,11 +16,6 @@
  */
 
 document.observe('dom:loaded', function() {
-    var element = $('new_followers_email');
-
-    if (element !== null) {
-        element.defaultValueActsAsHint();
-    }
 
     $$('.remove_followers').each( function(link) {
         link.href += '&challenge='+$$('input[name=challenge]')[0].value;

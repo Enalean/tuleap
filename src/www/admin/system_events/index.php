@@ -31,9 +31,8 @@ $sefdao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
 
 $request_queue = $request->get('queue');
 
-$default_new_followers_email = 'Type logins, emails or mailing lists. Multiple values separated by coma.';
 if ($new_followers = $request->get('new_followers')) {
-    if (isset($new_followers['emails']) && $new_followers['emails'] && $new_followers['emails'] != $default_new_followers_email) {
+    if (isset($new_followers['emails']) && $new_followers['emails']) {
         if (count($new_followers['types'])) {
             $sefdao->create($new_followers['emails'], implode(',', $new_followers['types']));
             $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
@@ -101,10 +100,10 @@ $full          = true;
 $filter_status = $request->get('filter_status');
 if (!$filter_status) {
     $filter_status = array(
-        SystemEvent::STATUS_NEW, 
-        SystemEvent::STATUS_RUNNING, 
-        SystemEvent::STATUS_DONE, 
-        SystemEvent::STATUS_WARNING, 
+        SystemEvent::STATUS_NEW,
+        SystemEvent::STATUS_RUNNING,
+        SystemEvent::STATUS_DONE,
+        SystemEvent::STATUS_WARNING,
         SystemEvent::STATUS_ERROR,
     );
 }

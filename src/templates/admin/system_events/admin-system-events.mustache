@@ -105,7 +105,7 @@
 
                 {{^ request_is_edit }}
                     <tr valign="top"><td>
-                    <textarea name="new_followers[emails]" id="new_followers_email" rows="4" cols="40">{{ default_new_followers_email }}</textarea>
+                    <textarea name="new_followers[emails]" id="new_followers_email" rows="4" cols="40" placeholder="{{ default_new_followers_email }}"></textarea>
                     </td><td>
                     <select name="new_followers[types][]" size="5" multiple="multiple">
                         {{# status_new_followers }}

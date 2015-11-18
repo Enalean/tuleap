@@ -9,7 +9,6 @@ var AutoCompleter = Class.create({
         this.elementId = elementId;
         this.options = Object.extend({
             autoLoad: true,
-            defaultValueActsAsHint: true,
             imgPath: imgPath,
             multiple: multiple
         }, options || { });
@@ -31,10 +30,6 @@ var AutoCompleter = Class.create({
 
         if (this.element === null) {
             return;
-        }
-
-        if (this.options['defaultValueActsAsHint']) {
-            this.element.defaultValueActsAsHint();
         }
 
         if (this.options['allowNull']) {
@@ -67,7 +62,7 @@ var AutoCompleter = Class.create({
                 'id':    'search_choices',
                 'class': 'searchAsYouType'});
             Element.hide(update);
-            
+
             // Insert the div at the bottom of the document because the old way
             // this.element.parentNode was not working in some cases with
             // IE6. This case happens in cc fields in trackers (probably
@@ -95,7 +90,7 @@ var AutoCompleter = Class.create({
 /**
  * Usage:
  * new UserAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
- 
+
  */
 var UserAutoCompleter = Class.create(AutoCompleter, {
     /**
@@ -113,7 +108,7 @@ var UserAutoCompleter = Class.create(AutoCompleter, {
 /**
  * Usage:
  * new ProjectAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
- 
+
  */
 var ProjectAutoCompleter = Class.create(AutoCompleter, {
     /**
