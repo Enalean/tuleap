@@ -1,3 +1,6 @@
+Version 1.301 - Tuleap 8.9
+    * request #8591: Fix persistent XSS triggerable via a form element field label
+
 Version 1.300 - Tuleap 8.9
     * story #8485: Can't add & reorder column if semantic status field is a shared field
 
