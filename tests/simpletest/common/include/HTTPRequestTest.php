@@ -331,8 +331,6 @@ class HTTPRequestTest extends UnitTestCase {
 
 class HTTPRequest_BrowserTests extends TuleapTestCase {
 
-    private $user_agent;
-
     /** @var HTTPRequest */
     private $request;
 
@@ -344,7 +342,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+        $this->preserveServer('HTTP_USER_AGENT');
 
         $this->setText($this->msg_ie7_deprecated, array('*', 'ie7_deprecated'));
         $this->setText($this->msg_ie7_deprecated_button, array('*', 'ie7_deprecated_button'));
@@ -358,11 +356,6 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
     }
 
     public function tearDown() {
-        unset($_SERVER['HTTP_USER_AGENT']);
-        if ($this->user_agent) {
-            $_SERVER['HTTP_USER_AGENT'] = $this->user_agent;
-        }
-
         UserManager::clearInstance();
         parent::tearDown();
     }
@@ -433,5 +426,139 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $browser = $this->request->getBrowser();
 
         $this->assertIsA($browser, 'BrowserIE8');
+    }
+}
+
+abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
+    protected $request;
+
+    public function setUp() {
+        parent::setUp();
+        $this->preserveServer('HTTPS');
+        $this->preserveServer('HTTP_X_FORWARDED_PROTO');
+        $this->preserveServer('HTTP_HOST');
+        $this->preserveServer('REMOTE_ADDR');
+
+        $_SERVER['REMOTE_ADDR'] = '17.18.19.20';
+
+        ForgeConfig::store();
+
+        $this->request = new HTTPRequest();
+    }
+
+    public function tearDown() {
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+}
+
+class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerURLTests {
+
+    public function setUp() {
+        parent::setUp();
+
+        $_SERVER['HTTPS']       = 'on';
+
+        ForgeConfig::set('sys_default_domain', 'meow.bzh');
+        ForgeConfig::set('sys_https_host',     'meow.bzh');
+    }
+
+    public function itDoesntTakeHostWhenForwardedProtoIsSetByAnUntrustedProxy() {
+        $_SERVER['HTTP_HOST']              = 'h4cker.backhat';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itTrustsProxy() {
+        $_SERVER['HTTP_HOST']              = 'woof.bzh';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
+
+        $this->request->setTrustedProxies(array('192.168.1.1'));
+        $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
+    }
+}
+
+
+class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->request->setTrustedProxies(array('17.18.19.20'));
+        $_SERVER['HTTP_HOST'] = 'meow.bzh';
+        ForgeConfig::set('sys_default_domain', 'meow.bzh');
+    }
+
+    public function itReturnsHttpsWhenHTTPSIsTerminatedBySelf() {
+        $_SERVER['HTTPS'] = 'on';
+
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHttpWhenHTTPSIsNotEnabled() {
+        $this->assertEqual('http://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPSWhenReverseProxyTerminateSSLAndCommunicateInClearWithTuleap() {
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInClearWithTuleap() {
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+
+        $this->assertEqual('http://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInSSLWithTuleap() {
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+
+        $this->assertEqual('http://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPSWhenEverythingIsSSL() {
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+}
+
+class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServerURLTests {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->request->setTrustedProxies(array('17.18.19.20'));
+        ForgeConfig::set('sys_default_domain', 'example.clear');
+        ForgeConfig::set('sys_https_host', 'example.ssl');
+    }
+
+    public function itReturnsHostNameOfProxyWhenBehindAProxy() {
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['HTTP_HOST'] = 'meow.bzh';
+
+        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+    }
+
+    public function itReturnsTheConfiguredHTTPNameWhenInHTTP() {
+        $this->assertEqual('http://example.clear', $this->request->getServerUrl());
+    }
+
+    public function itReturnsTheConfiguredHTTPSNameWhenInHTTPS() {
+        $_SERVER['HTTPS'] = 'on';
+
+        $this->assertEqual('https://example.ssl', $this->request->getServerUrl());
+    }
+
+    public function itReturnsTheDefaultDomainNameWhenInHTTPButNothingConfiguredAsHTTPSHost() {
+        $_SERVER['HTTPS'] = 'on';
+        ForgeConfig::set('sys_https_host', '');
+
+        $this->assertEqual('https://example.clear', $this->request->getServerUrl());
     }
 }

@@ -22,9 +22,6 @@ use Tuleap\REST\GateKeeper;
 abstract class GateKeeperTestPHP53  extends TuleapTestCase {
     protected $user;
     protected $anonymous;
-    private $cache_is_https;
-    private $referer = null;
-    private $host    = null;
 
     public function skip() {
         $this->skipIfNotPhp53();
@@ -35,19 +32,12 @@ abstract class GateKeeperTestPHP53  extends TuleapTestCase {
         $this->user        = new PFUser(array('user_id' => 112));
         $this->anonymous   = new PFUser(array('user_id' => 0));
         $this->gate_keeper = new GateKeeper();
-        $this->cache_is_https = isset($_SERVER['HTTPS']) ? true : false;
-        $this->referer        = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
-        $this->host           = isset($_SERVER['HTTP_HOST'])    ? $_SERVER['HTTP_HOST'] : null;
+        $this->preserveServer('HTTPS');
+        $this->preserveServer('HTTP_REFERER');
+        $this->preserveServer('HTTP_HOST');
     }
 
     public function tearDown() {
-        if ($this->cache_is_https) {
-            $_SERVER['HTTPS'] = 1;
-        } else {
-            unset($_SERVER['HTTPS']);
-        }
-        $this->referer !== null ? $_SERVER['HTTP_REFERER'] = $this->referer : null;
-        $this->host    !== null ? $_SERVER['HTTP_HOST']    = $this->host    : null;
         unset($GLOBALS['DEBUG_MODE']);
         parent::tearDown();
     }
