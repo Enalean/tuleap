@@ -1,3 +1,6 @@
+Version 4.95 - Tuleap 8.9
+    * request #8589: Apache logs filled with No entry for terminal type "unknown"
+
 Version 4.94 - Tuleap 8.9
     * request #8554: Fix XSS in the selector of forked Git repositories
 

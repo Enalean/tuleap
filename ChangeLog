@@ -17,10 +17,11 @@ Version 8.9 (Not released yet)
 	== Bug fix ==
 	* request #8334: PhpWiki notifications can leak data
 	* request #8595: Fix ProjectXMLImporter undefined class constant error
+	* request #8589: Apache logs filled with No entry for terminal type "unknown"
 
 	== Plugins ==
 	* mediawiki: 0.99
-	* git: 4.94
+	* git: 4.95
 	* tracker: 5.745
 	* agiledashboard: 1.299
 	* tests: 5.31
