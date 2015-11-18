@@ -96,7 +96,12 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
     public function display() {
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_long_desc');
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
-            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_field', array($field->getLabel()));
+            $purifier = Codendi_HTMLPurifier::instance();
+            echo $GLOBALS['Language']->getText(
+                'plugin_tracker_admin_semantic',
+                'description_field',
+                array($purifier->purify($field->getLabel()))
+            );
         } else {
             echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_no_field');
         }

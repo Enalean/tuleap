@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,7 +56,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             foreach ($this->form_element_factory->getUsedFormElementsByType($this->tracker, 'sb') as $field) {
                 $bf = new Tracker_FormElement_Field_List_BindFactory();
                 if ($bf->getType($field->getBind())=='static') {
-                    echo '<OPTION value='.$field->id.'>'.$field->label.'</OPTION>';
+                    echo '<OPTION value='.$hp->purify($field->id).'>'.$hp->purify($field->label).'</OPTION>';
                 }
             }
             echo '</SELECT>';

@@ -106,6 +106,8 @@ class Tracker_DateReminderRenderer {
                 $enabled  = "";
                 $disabled = "selected";
             }
+            $purifier = Codendi_HTMLPurifier::instance();
+
             $output .= "<h3>".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title')."</h3>";
             $output .= '<form action="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" method="post" name="update_date_field_reminder" class="form-inline">';
             $output .= '<input type="hidden" name="reminder_id" value="'.$reminderId.'">
@@ -122,7 +124,7 @@ class Tracker_DateReminderRenderer {
                             <option value="0" '.$before.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
                             <option value="1" '.$after.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
                             </select></td>';
-            $output .= '<td style="white-space: nowrap; padding-top: 7px;">'.$reminder->getField()->getLabel().'</td>';
+            $output .= '<td style="white-space: nowrap; padding-top: 7px;">'.$purifier->purify($reminder->getField()->getLabel()).'</td>';
             $output .= '<td><select name="notif_status" class="input-small">
                             <option value="0" '.$disabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled').'
                             <option value="1" '.$enabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled').'
@@ -173,11 +175,13 @@ class Tracker_DateReminderRenderer {
             new Tracker_DateReminder_Role_Assignee(),
             new Tracker_DateReminder_Role_Commenter()
         );
+        $purifier = Codendi_HTMLPurifier::instance();
         foreach ($all_possible_roles as $role) {
             if ($roles && in_array($role, $roles)) {
-                $output .= '<option value="r_'.$role->getIdentifier().'" selected>'.$role->getLabel().'</option>';
+                $output .= '<option value="r_'.$purifier->purify($role->getIdentifier()).'" selected>'.
+                    $purifier->purify($role->getLabel()).'</option>';
             } else {
-                $output .= '<option value="r_'.$role->getIdentifier().'">'.$role->getLabel().'</option>';
+                $output .= '<option value="r_'.$purifier->purify($role->getIdentifier()).'">'.$purifier->purify($role->getLabel()).'</option>';
             }
         }
         $output  .= '</optgroup>';
@@ -191,11 +195,12 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     protected function getTrackerDateFields() {
+        $purifier          = Codendi_HTMLPurifier::instance();
         $tff               = Tracker_FormElementFactory::instance();
         $trackerDateFields = $tff->getUsedDateFields($this->tracker);
         $ouptut            = '<select name="reminder_field_date">';
         foreach ($trackerDateFields as $dateField) {
-            $ouptut .= '<option value="'. $dateField->getId() .'">'.$dateField->getLabel().'</option>';
+            $ouptut .= '<option value="'. $purifier->purify($dateField->getId()) .'">'. $purifier->purify($dateField->getLabel()) .'</option>';
         }
         $ouptut .= '</select>';
         return $ouptut;
@@ -411,7 +416,8 @@ class Tracker_DateReminderRenderer {
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders(true);
         if (!empty($trackerReminders)) {
-            $output = '';
+            $purifier = Codendi_HTMLPurifier::instance();
+            $output   = '';
             foreach ($trackerReminders as $reminder) {
                 if ($reminder->getStatus() == Tracker_DateReminder::ENABLED) {
                     $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
@@ -421,7 +427,7 @@ class Tracker_DateReminderRenderer {
                 $output .= '<td>'.$reminder->getUgroupsLabel();
                 $output .= $reminder->getRolesLabel().'</td>';
                 $output .= '<td>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'</td>';
-                $output .= '<td>'.$reminder->getField()->getLabel().'</td>';
+                $output .= '<td>'.$purifier->purify($reminder->getField()->getLabel()).'</td>';
                 $output .= '<td><span style="float:left;"><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_action').' '. $GLOBALS['Response']->getimage('ic/edit.png') .'</a></span>';
                 $output .= '&nbsp;&nbsp;&nbsp;<span style="float:right;"><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'" id="delete_reminder"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_delete_action').' '. $GLOBALS['Response']->getimage('ic/bin.png') .'</a></span></td>';
                 $output .= '</tr>';
@@ -442,11 +448,12 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     function displayConfirmDelete($reminderId) {
+        $purifier        = Codendi_HTMLPurifier::instance();
         $reminder        = $this->dateReminderFactory->getReminder($reminderId);
         $reminderString  = '<b>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to');
         $reminderString .= '&nbsp;'.$reminder->getUgroupsLabel().'&nbsp;';
         $reminderString .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'&nbsp;"';
-        $reminderString .= $reminder->getField()->getLabel().'"</b>';
+        $reminderString .= $purifier->purify($reminder->getField()->getLabel()).'"</b>';
 
         $output = '<p><form action="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'" id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
         $output .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_txt', array($reminderString));

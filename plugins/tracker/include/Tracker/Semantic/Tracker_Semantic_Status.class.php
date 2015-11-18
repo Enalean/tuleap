@@ -183,13 +183,18 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      */
     public function display() {
         if ($this->list_field) {
-            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_long_desc', array($this->list_field->getLabel()));
+            $purifier = Codendi_HTMLPurifier::instance();
+            echo $GLOBALS['Language']->getText(
+                'plugin_tracker_admin_semantic',
+                'status_long_desc',
+                array($purifier->purify($this->list_field->getLabel()))
+            );
             if ($this->open_values) {
                 echo '<ul>';
                 $field_values = $this->list_field->getAllValues();
                 foreach ($this->open_values as $v) {
                     if (isset($field_values[$v])) {
-                        echo '<li><strong>'. $field_values[$v]->getLabel() .'</strong></li>';
+                        echo '<li><strong>'. $purifier->purify($field_values[$v]->getLabel()) .'</strong></li>';
                     }
                 }
                 echo '</ul>';

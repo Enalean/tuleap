@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -236,7 +236,8 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
             ),
         );
         $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-        echo '<h2>'. $title .'</h2>';
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo '<h2>'. $purifier->purify($title) .'</h2>';
         echo $form;
         $this->element->getTracker()->displayFooter($tracker_manager);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -159,11 +159,12 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         foreach ($used_fields as $field) {
             if (! $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
                 $this->changeset_dao->rollBack();
+                $purifier = Codendi_HTMLPurifier::instance();
                 throw new Tracker_FieldValueNotStoredException(
                     $GLOBALS['Language']->getText(
                         'plugin_tracker',
                         'field_not_stored_exception',
-                        array($field->getLabel())
+                        array($purifier->purify($field->getLabel()))
                     )
                 );
             }

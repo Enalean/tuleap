@@ -65,15 +65,16 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      * @see Transition_PostActionSubFactory::fetchPostActions()
      */
     public function fetchPostActions() {
-        $html = '';
-        $html .= '<option value="" selected>--</option>';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= '<option value="" selected>--</option>';
 
         $post_actions_classes = $this->post_actions_classes;
         foreach ($post_actions_classes as $shortname => $klass) {
             //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
             eval("\$label = $klass::getLabel();");
             $html .= '<option value="'. $shortname .'">';
-            $html .= $label;
+            $html .= $purifier->purify($label);
             $html .= '</option>';
         }
         return $html;

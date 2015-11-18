@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,15 +50,17 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      * @return string html
      */
     public function fetch() {
-        $html = '';        
-        $input_value = '<input type="text" name="workflow_postaction_field_float_value['. $this->id .']" value="'.$this->getValue().'"/>';
+        $purifier    = Codendi_HTMLPurifier::instance();
+        $html        = '';
+        $input_value = '<input type="text" name="workflow_postaction_field_float_value['. $purifier->purify($this->id) .
+            ']" value="'.$purifier->purify($this->getValue()) .'"/>';
         
         //define the selectbox for date fields
         $tracker = $this->transition->getWorkflow()->getTracker();
         $tff = $this->getFormElementFactory();
         $fields_float = $tff->getUsedFormElementsByType($tracker, array('float'));
         
-        $select_field  = '<select name="workflow_postaction_field_float['.$this->id.']">';
+        $select_field  = '<select name="workflow_postaction_field_float['.$purifier->purify($this->id).']">';
         $options_field = '';
         $one_selected  = false;
         foreach ($fields_float as $field_float) {
@@ -67,7 +69,8 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
                 $selected     = 'selected="selected"';
                 $one_selected = true;
             }            
-            $options_field .= '<option value="'. $field_float->getId() .'" '. $selected.'>'.$field_float->getLabel().'</option>';
+            $options_field .= '<option value="'. $purifier->purify($field_float->getId()) .'" '. $selected.'>'.
+                $purifier->purify($field_float->getLabel()).'</option>';
         }
         if (!$one_selected) {
             $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';

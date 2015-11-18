@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -122,9 +122,9 @@ tuleap.trackers.trigger = Class.create({
 
         function createOption(data, class_names) {
             return new Element('option', {
-                "value" : data.id,
-                "class" : class_names
-            }).update(data.label)
+                "value" : tuleap.escaper.html(data.id),
+                "class" : tuleap.escaper.html(class_names)
+            }).update(tuleap.escaper.html(data.label))
         }
 
         function makeTargetFieldValuesDynamic(child_trackers) {
@@ -420,9 +420,9 @@ tuleap.trackers.trigger.triggering_field = Class.create({
 
         function createOption(data, class_names) {
             return new Element('option', {
-                "value" : data.id,
-                "class" : class_names
-            }).update(data.label);
+                "value" : tuleap.escaper.html(data.id),
+                "class" : tuleap.escaper.html(class_names)
+            }).update(tuleap.escaper.html(data.label));
         }
     },
 
@@ -448,9 +448,9 @@ tuleap.trackers.trigger.triggering_field = Class.create({
 
         function createOption(data, class_names) {
             return new Element('option', {
-                "value" : data.id,
-                "class" : class_names
-            }).update(data.label);
+                "value" : tuleap.escaper.html(data.id),
+                "class" : tuleap.escaper.html(class_names)
+            }).update(tuleap.escaper.html(data.label));
         }
     },
 

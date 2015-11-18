@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,15 +50,17 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      * @return string html
      */
     public function fetch() {
-        $html = '';
-        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $this->id .']" value="'.$this->getValue().'"/>';
+        $purifier    = Codendi_HTMLPurifier::instance();
+        $html        = '';
+        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $purifier->purify($this->id) .
+            ']" value="'.$purifier->purify($this->getValue()).'"/>';
         
         //define the selectbox for date fields
         $tracker = $this->transition->getWorkflow()->getTracker();
         $tff = $this->getFormElementFactory();
         $fields_int = $tff->getUsedFormElementsByType($tracker, array('int'));
         
-        $select_field  = '<select name="workflow_postaction_field_int['.$this->id.']">';
+        $select_field  = '<select name="workflow_postaction_field_int['.$purifier->purify($this->id).']">';
         $options_field = '';
         $one_selected  = false;
         foreach ($fields_int as $field_int) {
@@ -67,7 +69,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
                 $selected     = 'selected="selected"';
                 $one_selected = true;
             }            
-            $options_field .= '<option value="'. $field_int->getId() .'" '. $selected.'>'.$field_int->getLabel().'</option>';
+            $options_field .= '<option value="'. $purifier->purify($field_int->getId()) .'" '. $selected.'>'.
+                $purifier->purify($field_int->getLabel()).'</option>';
         }
         if (!$one_selected) {
             $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';

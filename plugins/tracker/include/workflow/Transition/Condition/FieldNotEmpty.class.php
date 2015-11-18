@@ -41,11 +41,12 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @return string The field wrapped in Html
      */
     public function fetch() {
-        $html  = '';
-        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_required_field');
-        $html .= '<br />';
-        $html .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
-        $html .= '<select name="add_notempty_condition">';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_required_field');
+        $html    .= '<br />';
+        $html    .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
+        $html    .= '<select name="add_notempty_condition">';
 
         $selected = '';
         if (! $this->getField()) {
@@ -61,8 +62,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
                 $selected .= 'selected="selected"';
             }
 
-            $html .= '<option value="' . $field->getId() . '" '. $selected .'>';
-            $html .= $field->getLabel();
+            $html .= '<option value="' . $purifier->purify($field->getId()) . '" '. $selected .'>';
+            $html .= $purifier->purify($field->getLabel());
             $html .= '</option>';
         }
         $html .= '</select>';

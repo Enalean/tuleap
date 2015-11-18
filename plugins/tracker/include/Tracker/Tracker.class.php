@@ -1612,7 +1612,7 @@ EOS;
                     $html .= $attributes_for_selected;
                 }
                 $html .= ' >';
-                $html .= $part_permissions['values']['name'];
+                $html .= $hp->purify($part_permissions['values']['name']);
                 if ($group_first) {
                     if (isset($part_permissions['tracker_permissions'])
                             && count($part_permissions['tracker_permissions']) === 0) {
@@ -1641,7 +1641,7 @@ EOS;
                 $html .= '<td>';
 
                 $name = '<a href="'. $url_action_without_group_first .'&amp;selected_id='. (int)$second_part['id'] .'&amp;group_first='. ($group_first?0:1) .'">';
-                $name .=  $hp->purify($second_part['name'], $group_first ? CODENDI_PURIFIER_DISABLED : CODENDI_PURIFIER_BASIC ) ;
+                $name .=  $hp->purify($second_part['name']) ;
                 $name .= '</a>';
                 if (!$group_first && isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
                     $name = '<span >'. $name .' *</span>'; //TODO css
