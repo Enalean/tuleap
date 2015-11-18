@@ -55,8 +55,9 @@ class KanbanPresenter {
                 new AgileDashboard_KanbanColumnDao(),
                 $user_preferences
             ),
-            new AgileDashboard_KanbanAddInPlaceChecker(
+            new AgileDashboard_KanbanActionsChecker(
                 TrackerFactory::instance(),
+                new AgileDashboard_PermissionsManager(),
                 Tracker_FormElementFactory::instance()
             )
         );
@@ -67,6 +68,6 @@ class KanbanPresenter {
         $this->project_id            = $project_id;
         $this->user_id               = $user->getId();
         $this->view_mode             = $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
-        $this->nodejs_server           = ForgeConfig::get('nodejs_server');
+        $this->nodejs_server         = ForgeConfig::get('nodejs_server');
     }
 }

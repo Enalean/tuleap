@@ -26,12 +26,13 @@
             <ul ui-tree-nodes ng-model="edit_modal.kanban.columns" class="column-configuration-column-list">
                 <li><i class="icon-inbox"></i> <span translate>Backlog</span></li>
                 <li ui-tree-node
+                    data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
                     ng-repeat="column in edit_modal.kanban.columns"
-                    class="draggable"
+                    ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns }"
                 >
                     {{ column.label }}
                 </li>
-                <li class="add-column">
+                <li ng-if="edit_modal.kanban.user_can_add_columns" class="add-column">
                     <form ng-submit="edit_modal.addColumn()" ng-show="edit_modal.adding_column">
                         <div class="input-append">
                             <input type="text"

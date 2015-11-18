@@ -24,20 +24,15 @@ class AgileDashboard_KanbanColumnManager {
      */
     private $column_dao;
 
-    /** @var AgileDashboard_PermissionsManager */
-    private $permissions_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
+    /** @var AgileDashboard_KanbanActionsChecker */
+    private $kanban_actions_checker;
 
     public function __construct(
         AgileDashboard_KanbanColumnDao $column_dao,
-        AgileDashboard_PermissionsManager $permissions_manager,
-        TrackerFactory $tracker_factory
+        AgileDashboard_KanbanActionsChecker $kanban_actions_checker
     ) {
-        $this->column_dao          = $column_dao;
-        $this->permissions_manager = $permissions_manager;
-        $this->tracker_factory     = $tracker_factory;
+        $this->column_dao             = $column_dao;
+        $this->kanban_actions_checker = $kanban_actions_checker;
     }
 
     /**
@@ -46,26 +41,25 @@ class AgileDashboard_KanbanColumnManager {
      * @return bool
      */
     public function setColumnWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit) {
-        $project_id = $this->getProjectIdForKanban($kanban);
-
-        $this->checkUserCanAdministrate($user, $project_id);
+        $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
 
         return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
+    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label) {
+        $this->kanban_actions_checker->checkUserCanAddColumns($user, $kanban);
+
+        $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
+        $semantic = $this->kanban_actions_checker->getSemanticStatus($tracker);
+
+        return $semantic->addOpenValue($label);
+    }
+
     public function reorderColumns(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids) {
-        $project_id = $this->getProjectIdForKanban($kanban);
+        $this->kanban_actions_checker->checkUserCanReorderColumns($user, $kanban);
 
-        $this->checkUserCanAdministrate($user, $project_id);
-
-        $semantic = $this->getSemanticStatus($kanban);
-        if (! $semantic) {
-            throw new Kanban_SemanticStatus_Not_DefinedException();
-        }
-
-        if (! $semantic->isFieldBoundToStaticValues()) {
-            throw new Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException();
-        }
+        $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
+        $semantic = $this->kanban_actions_checker->getSemanticStatus($tracker);
 
         $this->checkAllColumnsAreProvided($semantic, $column_ids);
 
@@ -78,67 +72,11 @@ class AgileDashboard_KanbanColumnManager {
         $values_not_open     = array_diff($column_ids, $all_open_values);
 
         if (! empty($values_not_provided)) {
-            throw new Kanban_SemanticStatus_AllColumnIdsNotProvidedException();
+            throw new Kanban_SemanticStatusAllColumnIdsNotProvidedException();
         }
 
         if (! empty($values_not_open)) {
-            throw new Kanban_SemanticStatus_ColumnIdsNotInOpenSemanticException();
+            throw new Kanban_SemanticStatusColumnIdsNotInOpenSemanticException();
         }
-    }
-
-    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label) {
-        $project_id = $this->getProjectIdForKanban($kanban);
-
-        $this->checkUserCanAdministrate($user, $project_id);
-
-        $semantic = $this->getSemanticStatus($kanban);
-        if (! $semantic) {
-            throw new Kanban_SemanticStatus_Not_DefinedException();
-        }
-
-        if (! $semantic->isFieldBoundToStaticValues()) {
-            throw new Kanban_SemanticStatus_Not_Bound_To_Static_ValuesException();
-        }
-
-        return $semantic->addOpenValue($label);
-    }
-
-    /**
-     * @return int
-     */
-    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
-        return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
-    }
-
-    private function checkUserCanAdministrate($user, $project_id) {
-        if (! $this->permissions_manager->userCanAdministrate($user, $project_id)) {
-            throw new AgileDashboard_UserNotAdminException($user);
-        }
-    }
-
-    /**
-     * @return Tracker_Semantic_Status
-     */
-    private function getSemanticStatus(AgileDashboard_Kanban $kanban) {
-        $tracker = $this->getTrackerForKanban($kanban);
-        if (! $tracker) {
-            return;
-        }
-
-        $semantic = Tracker_Semantic_Status::load($tracker);
-        if (! $semantic->getFieldId()) {
-            return;
-        }
-
-        return $semantic;
-    }
-
-    private function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
-        $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-        if (! $tracker) {
-            throw new RestException(500, 'The tracker used by the kanban does not exist anymore');
-        }
-
-        return $tracker;
     }
 }

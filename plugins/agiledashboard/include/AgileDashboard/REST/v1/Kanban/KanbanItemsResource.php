@@ -49,6 +49,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepre
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanItemManager;
 use Tuleap\RealTime\NodeJSClient;
+use AgileDashboard_KanbanActionsChecker;
 
 class KanbanItemsResource extends AuthenticatedResource {
 
@@ -102,8 +103,11 @@ class KanbanItemsResource extends AuthenticatedResource {
         );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
-            $permissions_manager,
-            $this->tracker_factory
+            new AgileDashboard_KanbanActionsChecker(
+                $this->tracker_factory,
+                $permissions_manager,
+                $this->form_element_factory
+            )
         );
 
         $kanban_item_dao             = new AgileDashboard_KanbanItemDao();

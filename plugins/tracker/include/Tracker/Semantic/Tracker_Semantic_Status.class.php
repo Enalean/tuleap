@@ -161,12 +161,12 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      */
     private function getOpenLabels() {
         $labels = array();
-        
+
         if (! $this->list_field instanceof Tracker_FormElement_Field_List) {
             return $labels;
         }
         $field_values = $this->list_field->getAllValues();
-        
+
         foreach ($this->open_values as $value) {
             if (isset($field_values[$value])) {
                 $labels[] = $field_values[$value]->getLabel();
@@ -464,5 +464,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $bindType = $this->list_field->getBind()->getType();
 
         return ($bindType == Tracker_FormElement_Field_List_Bind_Static::TYPE);
+    }
+
+    public function isBasedOnASharedField() {
+        return $this->list_field->isTargetSharedField();
     }
 }

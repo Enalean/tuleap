@@ -37,6 +37,8 @@ use TrackerFactory;
 use UserManager;
 use PFUser;
 use AgileDashboard_KanbanUserPreferences;
+use AgileDashboard_KanbanActionsChecker;
+use Tracker_FormElementFactory;
 
 class KanbanColumnsResource {
 
@@ -73,8 +75,11 @@ class KanbanColumnsResource {
         );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
-            $permissions_manager,
-            $this->tracker_factory
+            new AgileDashboard_KanbanActionsChecker(
+                $this->tracker_factory,
+                $permissions_manager,
+                Tracker_FormElementFactory::instance()
+            )
         );
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
