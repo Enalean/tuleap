@@ -28,21 +28,21 @@ if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
 }
 
 $usage_options  = '';
-$usage_options .= 'p:'; // give me a project
 $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
+$usage_options .= 'o:'; // give me the output path of the csv file
 
 function usage() {
     global $argv;
 
     echo <<< EOT
-Usage: $argv[0] -p project_id -u user_name -i path_to_archive
+Usage: $argv[0] -i path_to_archive
 
-Import a project structure
+Generate the file mapping that is needed for project import.
 
-  -p <project_id> The id of the project to export
   -u <user_name>  The user used to export
   -i <path>       The path of the archive of the exported XML + data
+  -o <path>       The path of the generated CSV content
   -h              Display this help
 
 EOT;
@@ -55,16 +55,16 @@ if (isset($arguments['h'])) {
     usage();
 }
 
-if (! isset($arguments['p'])) {
-    usage();
-} else {
-    $project_id = (int)$arguments['p'];
-}
-
 if (! isset($arguments['u'])) {
     usage();
 } else {
     $username = $arguments['u'];
+}
+
+if (! isset($arguments['o'])) {
+    usage();
+} else {
+    $output = $arguments['o'];
 }
 
 if (! isset($arguments['i'])) {
@@ -73,40 +73,46 @@ if (! isset($arguments['i'])) {
     $archive_path = $arguments['i'];
 }
 
-$user_manager = UserManager::instance();
-$xml_importer = new ProjectXMLImporter(
-    EventManager::instance(),
-    ProjectManager::instance(),
-    new XML_RNGValidator(),
-    new UGroupManager(),
-    UserManager::instance(),
-    new XMLImportHelper(),
-    new ProjectXMLImporterLogger()
-);
+$security      = new XML_Security();
+$xml_validator = new XML_RNGValidator();
+$user_manager  = UserManager::instance();
+$logger        = new ProjectXMLImporterLogger();
+$builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder($user_manager, $logger);
+$console       = new Log_ConsoleLogger();
 
 try {
     $user = $user_manager->forceLogin($username);
-    if ((! $user->isSuperUser() && ! $user->isAdmin($project_id)) || ! $user->isActive()) {
-        throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($username)));
+    if (! $user->isActive() || ! $user->isSuperUser()) {
+        throw new RuntimeException("User $username must be site administrator");
     }
 
     $archive = new ZipArchive();
     if ($archive->open($archive_path) !== true) {
-        fwrite(STDERR, "*** ERROR: Unable to open archive ".$archive_path.PHP_EOL);
+        $console->error("Unable to open archive ".$archive_path);
         exit(1);
     }
 
-    $xml_importer->importFromArchive($project_id, $archive);
+    $xml_contents = $archive->getFromName('users.xml');
+    if (! $xml_contents) {
+        $console->error("users.xml is missing from archive");
+        exit(1);
+    }
+    $xml_element  = $security->loadString($xml_contents);
+
+    $rng_path = realpath(__DIR__ .'/../common/xml/resources/users.rng');
+    $xml_validator->validate($xml_element, $rng_path);
+
+    $collection = $builder->build($xml_element);
+    $collection->toCSV($output);
 
     $archive->close();
 
     exit(0);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
-        fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);
+        $console->error($parse_error);
     }
-    exit(1);
 } catch (Exception $exception) {
-    fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
-    exit(1);
+    $console->error($exception->getMessage());
 }
+exit(1);

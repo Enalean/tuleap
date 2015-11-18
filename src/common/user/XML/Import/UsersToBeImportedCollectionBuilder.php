@@ -1,0 +1,118 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+namespace User\XML\Import;
+
+use UserManager;
+use Logger;
+use SimpleXMLElement;
+use PFUser;
+
+class UsersToBeImportedCollectionBuilder {
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var Logger */
+    private $logger;
+
+    public function __construct(
+        UserManager $user_manager,
+        Logger $logger
+    ) {
+        $this->user_manager = $user_manager;
+        $this->logger       = $logger;
+
+    }
+
+    /** @return UsersToBeImportedCollection */
+    public function build(SimpleXMLElement $xml) {
+        $collection = new UsersToBeImportedCollection();
+
+        foreach ($xml as $user) {
+            $to_be_imported_user = $this->instantiateUserToBeImported($user);
+            $collection->add($to_be_imported_user);
+        }
+
+        return $collection;
+    }
+
+    private function instantiateUserToBeImported(SimpleXMLElement $user) {
+        $existing_user = $this->getExistingUserFromXML($user);
+
+        if (! $existing_user) {
+            return $this->instantiateUserByMail($user);
+        }
+
+        if ($existing_user->getLdapId()) {
+            return $this->instantiateMatchingUser($existing_user);
+        }
+
+        $email_found_in_xml = (string) $user->email;
+        if ($existing_user->getEmail() !== $email_found_in_xml) {
+            return new EmailDoesNotMatchUser($existing_user, $email_found_in_xml);
+        }
+
+        return $this->instantiateMatchingUser($existing_user);
+    }
+
+    private function instantiateUserByMail(SimpleXMLElement $user) {
+        $matching_users = $this->user_manager->getAllUsersByEmail((string) $user->email);
+
+        if (empty($matching_users)) {
+            return new ToBeCreatedUser(
+                (string) $user->username,
+                (string) $user->realname,
+                (string) $user->email
+            );
+        }
+
+        return new ToBeMappedUser(
+            (string) $user->username,
+            (string) $user->realname,
+            $matching_users
+        );
+    }
+
+    /** @return \PFUser */
+    private function getExistingUserFromXML(SimpleXMLElement $user) {
+        $ldap_id = (string) $user->ldapid;
+
+        $existing_user = null;
+        if ($ldap_id) {
+            $existing_user = $this->user_manager->getUserByIdentifier("ldapId:$ldap_id");
+        }
+
+        if (! $existing_user) {
+            $existing_user = $this->user_manager->getUserByIdentifier((string) $user->username);
+        }
+
+        return $existing_user;
+    }
+
+    private function instantiateMatchingUser(PFUser $user) {
+        if ($user->isAlive()) {
+            $to_be_imported_user = new AlreadyExistingUser($user);
+        } else {
+            $to_be_imported_user = new ToBeActivatedUser($user);
+        }
+
+        return $to_be_imported_user;
+    }
+}
