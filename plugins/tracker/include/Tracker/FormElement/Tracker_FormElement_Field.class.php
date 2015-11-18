@@ -469,7 +469,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function fetchSubmitMasschange() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        if ($this->userCanSubmit()) {
+        if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
