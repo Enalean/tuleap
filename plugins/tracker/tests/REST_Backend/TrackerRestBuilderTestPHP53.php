@@ -30,18 +30,18 @@ class TrackerRestBuilderTestPHP53 extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->tracker             = mock('Tracker');
-        $this->user                = mock('PFUser');
-        $this->semantic_manager    = mock('Tracker_SemanticManager');
-        $this->builder             = partial_mock('Tracker_REST_TrackerRestBuilder', array('getSemanticManager'), array($this->formelement_factory));
+        $this->formelement_factory   = mock('Tracker_FormElementFactory');
+        $this->tracker               = mock('Tracker');
+        $this->user                  = mock('PFUser');
+        $this->semantic_manager      = mock('Tracker_SemanticManager');
+        $this->builder               = partial_mock('Tracker_REST_TrackerRestBuilder', array('getSemanticManager'), array($this->formelement_factory));
+        $this->workflow              = mock('Workflow');
 
         stub($this->builder)->getSemanticManager()->returns($this->semantic_manager);
     }
 
     public function itReturnsAnArrayEvenWhenFieldsAreNotReadable() {
         stub($this->semantic_manager)->exportToREST()->returns(array());
-        stub($this->tracker)->getWorkflow()->returns(mock('Workflow'));
 
         $field1 = aMockField()->withId(1)->build();
         stub($field1)->userCanRead()->returns(true);
@@ -56,6 +56,8 @@ class TrackerRestBuilderTestPHP53 extends TuleapTestCase {
         stub($field3)->exportCurrentUserPermissionsToSOAP()->returns(array());
         stub($field3)->getSoapBindingProperties()->returns(aStringField()->build()->getSoapBindingProperties());
 
+        stub($this->workflow)->getField()->returns($field2);
+        stub($this->tracker)->getWorkflow()->returns($this->workflow);
         stub($this->formelement_factory)->getUsedFields()->returns(array($field1, $field2, $field3));
         stub($this->formelement_factory)->getAllUsedFormElementOfAnyTypesForTracker()->returns(array($field1, $field2, $field3));
         stub($this->formelement_factory)->getType()->returns('string');
