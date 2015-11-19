@@ -19,33 +19,10 @@
  */
 namespace User\XML\Import;
 
-use PFUser;
-use Logger;
 use UserManager;
+use Logger;
 
-class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImportedUser {
+interface ReadyToBeImportedUser {
 
-    private static $ALLOWED_ACTIONS = array('activate', 'map');
-
-    public function __construct(PFUser $user) {
-        parent::__construct(
-            $user->getUserName(),
-            $user->getRealName(),
-            $user->getEmail(),
-            $user->getLdapId()
-        );
-    }
-
-    /** @return array */
-    public function getCSVData() {
-        return array();
-    }
-
-    public function isActionAllowed($action) {
-        return in_array($action, self::$ALLOWED_ACTIONS);
-    }
-
-    public function process(UserManager $user_manager, Logger $logger) {
-        $logger->info("Nothing to do for $this->username");
-    }
+    public function process(UserManager $user_manager, Logger $logger);
 }

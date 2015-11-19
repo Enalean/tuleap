@@ -23,8 +23,21 @@ use UserManager;
 use Logger;
 use SimpleXMLElement;
 use PFUser;
+use ZipArchive;
+use XML_Security;
+use XML_RNGValidator;
 
 class UsersToBeImportedCollectionBuilder {
+
+    /**
+     * @var XML_RNGValidator
+     */
+    private $xml_validator;
+
+    /**
+     * @var XML_Security
+     */
+    private $security;
 
     /** @var UserManager */
     private $user_manager;
@@ -34,11 +47,14 @@ class UsersToBeImportedCollectionBuilder {
 
     public function __construct(
         UserManager $user_manager,
-        Logger $logger
+        Logger $logger,
+        XML_Security $security,
+        XML_RNGValidator $xml_validator
     ) {
-        $this->user_manager = $user_manager;
-        $this->logger       = $logger;
-
+        $this->user_manager  = $user_manager;
+        $this->logger        = $logger;
+        $this->security      = $security;
+        $this->xml_validator = $xml_validator;
     }
 
     /** @return UsersToBeImportedCollection */
@@ -51,6 +67,21 @@ class UsersToBeImportedCollectionBuilder {
         }
 
         return $collection;
+    }
+
+    /** @return UsersToBeImportedCollection */
+    public function buildFromArchive(ZipArchive $archive) {
+        $xml_contents = $archive->getFromName('users.xml');
+        if (! $xml_contents) {
+            throw new UsersXMLNotFoundException();
+        }
+
+        $xml_element = $this->security->loadString($xml_contents);
+
+        $rng_path = realpath(__DIR__ .'/../../../xml/resources/users.rng');
+        $this->xml_validator->validate($xml_element, $rng_path);
+
+        return $this->build($xml_element);
     }
 
     private function instantiateUserToBeImported(SimpleXMLElement $user) {
