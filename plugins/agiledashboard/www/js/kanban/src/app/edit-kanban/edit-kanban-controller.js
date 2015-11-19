@@ -41,20 +41,24 @@ function EditKanbanCtrl($scope,
         },
         processing          : processing,
         deleteKanban        : deleteKanban,
+        cancelDeleteKanban  : cancelDeleteKanban,
         saveModifications   : saveModifications,
         addColumn           : addColumn,
         cancelAddColumn     : cancelAddColumn,
         removeColumn        : removeColumn,
+        cancelRemoveColumn  : cancelRemoveColumn,
         turnColumnToEditMode: turnColumnToEditMode,
         cancelEditColumn    : cancelEditColumn,
-        editColumn          : editColumn
+        editColumn          : editColumn,
+        columnsCanBeManaged : columnsCanBeManaged
     });
 
     initModalValues();
 
     function initModalValues() {
         _.each(self.kanban.columns, function(column) {
-            column.editing = false;
+            column.editing        = false;
+            column.confirm_delete = false;
         });
     }
 
@@ -91,6 +95,10 @@ function EditKanbanCtrl($scope,
         } else {
             self.confirm_delete = true;
         }
+    }
+
+    function cancelDeleteKanban() {
+        self.confirm_delete = false;
     }
 
     function processing() {
@@ -166,14 +174,26 @@ function EditKanbanCtrl($scope,
         column.label       = column.original_label;
     }
 
-    function removeColumn(column_id) {
-        KanbanService.removeColumn(kanban.id, column_id).then(function() {
-            _.remove(kanban.columns, function(column) {
-                return column.id === column_id;
-            });
+    function removeColumn(column_to_remove) {
+        if (column_to_remove.confirm_delete) {
+            KanbanService.removeColumn(kanban.id, column_to_remove.id).then(function() {
+                _.remove(kanban.columns, function(column) {
+                    return column.id === column_to_remove.id;
+                });
 
-        }, function(response) {
-            $modalInstance.dismiss(response);
-        });
+            }, function(response) {
+                $modalInstance.dismiss(response);
+            });
+        } else {
+           column_to_remove.confirm_delete = true;
+        }
+    }
+
+    function cancelRemoveColumn(column_to_remove) {
+        column_to_remove.confirm_delete = false;
+    }
+
+    function columnsCanBeManaged() {
+        return kanban.user_can_reorder_columns && kanban.user_can_add_columns;
     }
 }

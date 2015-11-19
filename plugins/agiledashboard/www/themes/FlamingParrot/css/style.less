@@ -1,13 +1,16 @@
 @import "plugins/agiledashboard/www/themes/default/css/style.less";
 
 body {
-    @import "src/www/themes/FlamingParrot/css/utils/variables-orange.less";
-    .definitions;
-    #kanban-board .angular-ui-tree-placeholder:only-child {
-        background: transparent url('../images/column-empty-drop-orange.png') no-repeat center 100px;
-    }
-    .empty-home {
-        background: transparent url('../images/agile-dashboard-not-configured-orange.png') no-repeat center 20px;
+    &.FlamingParrot_Orange {
+        @import "src/www/themes/FlamingParrot/css/utils/variables-orange.less";
+
+        .definitions;
+        #kanban-board .angular-ui-tree-placeholder:only-child {
+            background: transparent url('../images/column-empty-drop-orange.png') no-repeat center 100px;
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-orange.png') no-repeat center 20px;
+        }
     }
 
     &.FlamingParrot_Blue {
@@ -182,8 +185,8 @@ body {
         }
     }
 
-    .edit-kanban-modal > .modal-body > .column-configuration > ul > li.angular-ui-tree-placeholder {
-        background: @main;
+    .edit-kanban-modal > .modal-body > .column-configuration > ul > li.column.draggable:not(.editing):hover {
+        background: fade(@main, 10%);
     }
 
     .modal-header {

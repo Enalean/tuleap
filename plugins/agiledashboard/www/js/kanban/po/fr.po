@@ -37,10 +37,6 @@ msgid "Archive:"
 msgstr "Archive :"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Are you sure to delete this Kanban?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce Kanban ?"
-
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr "Backlog"
 
@@ -75,6 +71,14 @@ msgstr "Configuration des colonnes"
 #: src/app/kanban.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Confirm deletion of this Kanban"
+msgstr "Confirmer la suppression de ce Kanban"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Danger zone"
@@ -124,6 +128,17 @@ msgstr "Label du Kanban :"
 msgid "Kanban:"
 msgstr "Kanban :"
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid ""
+"More information about columns are available in the field administration "
+"used by the semantic status in the <a href=\"/plugins/tracker/?"
+"tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+msgstr ""
+"Plus d’informations concernant les colonnes sont disponibles dans "
+"l’administration du champs utilisé par la sémantique de statut dans <a href="
+"\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">l’outil de "
+"suivi</a>."
+
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"
@@ -165,20 +180,61 @@ msgstr "Basculer l'affichage de cette colonne"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid ""
-"You can reorder, rename and remove columns. More information about columns "
-"are available in the field administration used by the semantic status in the "
-"<a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker."
-"id }}\">tracker</a>."
+"You can't manage columns of the tracker configuration. More information "
+"about columns are available in the field administration used by the semantic "
+"status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban."
+"tracker.id }}\">tracker</a>."
 msgstr ""
-"Vous pouvez réordonner, renommer et supprimer les colonnes. Plus "
-"d’informations concernant les colonnes sont disponibles dans "
-"l’administration du champs utilisé par la sémantique de statut dans <a href="
-"\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">l’outil de "
-"suivi</a>."
+"Vous ne pouvez pas gérer les colonnes. Plus d’informations concernant les "
+"colonnes sont disponibles dans l’administration du champ utilisé par la "
+"sémantique de statut dans <a href=\"/plugins/tracker/?tracker={{ edit_modal."
+"kanban.tracker.id }}\">l’outil de suivi</a>."
 
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
+
+#~ msgid "Are you sure to delete this Kanban?"
+#~ msgstr "Êtes-vous sûr de vouloir supprimer ce Kanban ?"
+
+#~ msgid "Are you sure?"
+#~ msgstr "Êtes-vous sûr ?"
+
+#~ msgid ""
+#~ "You can't add columns and/or reorder them because of the tracker "
+#~ "configuration. More information about columns are available in the field "
+#~ "administration used by the semantic status in the <a href=\"/plugins/"
+#~ "tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+#~ msgstr ""
+#~ "Vous ne pouvez pas ajouter ni/ou réordonner les colonnes. Plus "
+#~ "d’informations concernant les colonnes sont disponibles dans "
+#~ "l’administration du champs utilisé par la sémantique de statut dans <a "
+#~ "href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker."
+#~ "id }}\">l’outil de suivi</a>."
+
+#~ msgid ""
+#~ "You can't add columns nor reorder them because of the tracker "
+#~ "configuration. More information about columns are available in the field "
+#~ "administration used by the semantic status in the <a href=\"/plugins/"
+#~ "tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+#~ msgstr ""
+#~ "Vous ne pouvez pas ajouter ni réordonner les colonnes. Plus "
+#~ "d’informations concernant les colonnes sont disponibles dans "
+#~ "l’administration du champs utilisé par la sémantique de statut dans <a "
+#~ "href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker."
+#~ "id }}\">l’outil de suivi</a>."
+
+#~ msgid ""
+#~ "You can reorder, rename and remove columns. More information about "
+#~ "columns are available in the field administration used by the semantic "
+#~ "status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban."
+#~ "tracker.id }}\">tracker</a>."
+#~ msgstr ""
+#~ "Vous pouvez réordonner, renommer et supprimer les colonnes. Plus "
+#~ "d’informations concernant les colonnes sont disponibles dans "
+#~ "l’administration du champs utilisé par la sémantique de statut dans <a "
+#~ "href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker."
+#~ "id }}\">l’outil de suivi</a>."
 
 #~ msgid ""
 #~ "You can reorder and remove columns. More information about columns are "
