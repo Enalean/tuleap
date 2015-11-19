@@ -576,7 +576,7 @@ class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_TwoGroupsT
         );
     }
 
-     public function itReturnsSupportTeamWhenSubmittedBySupportMember() {
+    public function itReturnsSupportTeamWhenSubmittedBySupportMember() {
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact()
                 ->withSubmitter($this->support_member_only)
@@ -641,7 +641,7 @@ class Tracker_Permission_PermissionSerializer_SeveralPermissions_Test extends Tr
         );
     }
 
-     public function itHasAnExternaSubmitter() {
+    public function itHasAnExternaSubmitter() {
         $this->assertTrackerUGroupIdsEquals(
             $this->anArtifact()
                 ->withSubmitter($this->user_not_project_member)

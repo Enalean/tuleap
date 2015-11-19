@@ -3,9 +3,9 @@
         .module('socket')
         .service('SocketFactory', SocketFactory);
 
-    SocketFactory.$inject = ['socketFactory', 'SharedPropertiesService', 'locker', 'JWTService'];
+    SocketFactory.$inject = ['$state', 'socketFactory', 'SharedPropertiesService', 'locker', 'JWTService'];
 
-    function SocketFactory(socketFactory, SharedPropertiesService, locker, JWTService) {
+    function SocketFactory($state, socketFactory, SharedPropertiesService, locker, JWTService) {
         if (SharedPropertiesService.getNodeServerAddress()) {
             var kanban = SharedPropertiesService.getKanban();
             var kanban_id;
@@ -32,15 +32,17 @@
                         JWTService.getJWT().then(function (data) {
                             locker.driver('session').put('token', data.token);
                             subscribe();
+                            $state.reload();
                         });
                     }
                 });
 
                 function subscribe() {
                     socket.emit('subscription', {
-                        token: locker.driver('session').get('token'),
-                        room_id: kanban_id,
-                        uuid: SharedPropertiesService.getUUID()
+                        nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
+                        token                : locker.driver('session').get('token'),
+                        room_id              : kanban_id,
+                        uuid                 : SharedPropertiesService.getUUID()
                     });
                 }
 

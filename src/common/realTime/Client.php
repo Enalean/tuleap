@@ -28,8 +28,9 @@ interface Client {
      * @param $user_id : Id of user
      * @param $hash    : Hash to distinguish client with same user id
      * @param $room_id : Room's id to broadcast message to this room
+     * @param $rights  : To send at clients who have rights
      * @param $cmd     : Broadcast on event command
      * @param $data    : Data broadcasting
      */
-    public function sendMessage($user_id, $hash, $room_id, $cmd, $data);
+    public function sendMessage($user_id, $hash, $room_id, $rights, $cmd, $data);
 }

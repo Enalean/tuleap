@@ -51,6 +51,8 @@ use AgileDashboard_KanbanItemManager;
 use Tuleap\RealTime\NodeJSClient;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_Permission_PermissionRetrieveAssignee;
 
 class KanbanItemsResource extends AuthenticatedResource {
 
@@ -83,6 +85,9 @@ class KanbanItemsResource extends AuthenticatedResource {
 
     /** @var NodeJSClient */
     private $node_js_client;
+
+    /** @var Tracker_Permission_PermissionsSerializer */
+    private $permissions_serializer;
 
     const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
@@ -118,7 +123,10 @@ class KanbanItemsResource extends AuthenticatedResource {
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
-        $this->node_js_client = new NodeJSClient();
+        $this->node_js_client     = new NodeJSClient();
+        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
     }
 
     /**
@@ -184,10 +192,16 @@ class KanbanItemsResource extends AuthenticatedResource {
         $item_representation = $this->buildItemRepresentation($artifact);
 
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $rights = array(
+                'tracker'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
+                'artifact' => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact)
+            );
+
             $this->node_js_client->sendMessage(
                 $current_user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
                 $item->kanban_id,
+                $rights,
                 'kanban_item:create',
                 $item_representation
             );

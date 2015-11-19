@@ -104,12 +104,12 @@ msgstr ""
 msgid "General configuration"
 msgstr ""
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Kanban label:"
-msgstr ""
-
 #: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Kanban {{ label }} successfuly deleted"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Kanban label:"
 msgstr ""
 
 #: src/app/app-kanban-controller.js
@@ -129,11 +129,11 @@ msgid "Move to top"
 msgstr ""
 
 #: src/app/error/error.tpl.html
-msgid "OK, reload the page"
+msgid "Oh snap!"
 msgstr ""
 
 #: src/app/error/error.tpl.html
-msgid "Oh snap!"
+msgid "OK, reload the page"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html

@@ -478,10 +478,10 @@
         function setWipLimitForColumn(column) {
             column.saving_wip = true;
             return KanbanService.editColumn(kanban.id, column).then(function(data) {
-                column.limit       = column.limit_input;
-                column.wip_in_edit = false;
-                column.saving_wip  = false;
-            },
+                    column.limit       = column.limit_input;
+                    column.wip_in_edit = false;
+                    column.saving_wip  = false;
+                },
                 reload
             );
         }
@@ -613,7 +613,7 @@
         function moveItemAtTheEnd(item, column_id) {
             var previous_column          = getColumn(item.in_column),
                 new_column               = getColumn(column_id),
-                previous_index_in_column = getItemIndex(item);
+                previous_index_in_column = getItemIndex(item),
                 compared_to              = getComparedToBeLastItemOfColumn(new_column);
 
             item.updating = true;
@@ -735,14 +735,19 @@
             return item;
         }
 
-        function replaceCard(compared_to, direction, content, item) {
-            var compared_to_index = _.findIndex(content, {
+        function replaceCard(compared_to, direction, column, item) {
+            var compared_to_index = _.findIndex(column.content, {
                 id: compared_to
             });
-            if (direction === 'after') {
-                content.splice(compared_to_index + 1, 0, item);
+
+            if(compared_to_index !== -1) {
+                if (direction === 'after') {
+                    column.content.splice(compared_to_index + 1, 0, item);
+                } else {
+                    column.content.splice(compared_to_index, 0, item);
+                }
             } else {
-                content.splice(compared_to_index, 0, item);
+                column.content.push(item);
             }
         }
 
@@ -858,25 +863,27 @@
                         ids.forEach(function (id) {
                             var item = findItemInColumnById(id);
 
-                            _.extend(item, {
-                                updating: false
-                            });
+                            if(item) {
+                                _.extend(item, {
+                                    updating: false
+                                });
 
-                            removeItemInColumn(item.id, item.in_column);
+                                removeItemInColumn(item.id, item.in_column);
 
-                            if(item.in_column !== data.in_column) {
-                                if(item.in_column === 'backlog') {
-                                    updateTimeInfo('kanban', item);
+                                if (item.in_column !== data.in_column) {
+                                    if (item.in_column === 'backlog') {
+                                        updateTimeInfo('kanban', item);
+                                    }
+                                    updateTimeInfo(data.in_column, item);
+                                    updateItemColumn(item, data.in_column);
                                 }
-                                updateTimeInfo(data.in_column, item);
-                                updateItemColumn(item, data.in_column);
-                            }
 
-                            var content = getContentColumnByItemInColumn(data, item);
-                            if(data.order) {
-                                replaceCard(data.order.compared_to, data.order.direction, content, item);
-                            } else {
-                                content.push(item);
+                                var column = getColumn(data.in_column);
+                                if (data.order && data.order !== null) {
+                                    replaceCard(data.order.compared_to, data.order.direction, column, item);
+                                } else {
+                                    column.content.push(item);
+                                }
                             }
                         });
                     });

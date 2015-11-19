@@ -205,6 +205,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function getAuthorizedUGroups() {
         if (! isset($this->authorized_ugroups)) {
+            $this->authorized_ugroups = array();
             if ($this->useArtifactPermissions()) {
                 $this->authorized_ugroups = PermissionsManager::instance()->getAuthorizedUgroupIds(
                     $this->id,

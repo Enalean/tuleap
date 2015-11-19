@@ -61,6 +61,8 @@ use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tuleap\RealTime\NodeJSClient;
 use Tracker_Workflow_GlobalRulesViolationException;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_Permission_PermissionRetrieveAssignee;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -107,6 +109,9 @@ class KanbanResource extends AuthenticatedResource {
 
     /** @var NodeJSClient */
     private $node_js_client;
+
+    /** @var Tracker_Permission_PermissionsSerializer */
+    private $permissions_serializer;
 
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
@@ -162,7 +167,10 @@ class KanbanResource extends AuthenticatedResource {
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
-        $this->node_js_client = new NodeJSClient();
+        $this->node_js_client         = new NodeJSClient();
+        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
     }
 
     /**
@@ -251,11 +259,11 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 404
      */
     public function patchId(
-            $id,
-            $label = null,
-            KanbanCollapseColumnRepresentation $collapse_column = null,
-            $collapse_archive = null,
-            $collapse_backlog = null
+        $id,
+        $label = null,
+        KanbanCollapseColumnRepresentation $collapse_column = null,
+        $collapse_archive = null,
+        $collapse_backlog = null
     ) {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
@@ -435,6 +443,7 @@ class KanbanResource extends AuthenticatedResource {
                 $this->getProjectIdForKanban($kanban)
             );
             $in_column = 'backlog';
+
             $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column);
         }
     }
@@ -1001,20 +1010,41 @@ class KanbanResource extends AuthenticatedResource {
         return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
     }
 
-    private function sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column) {
+    private function sendMessageForDroppingItem(PFUser $current_user, AgileDashboard_Kanban $kanban, $order, $add, $in_column) {
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $data = array(
-                'order'     => $order,
+            $data_to_send = array(
                 'add'       => $add,
+                'order'     => $order,
                 'in_column' => $in_column
             );
-            $this->node_js_client->sendMessage(
-                $current_user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                'kanban_item:move',
-                $data
-            );
+            if($add) {
+                $this->sendMessageForEachArtifact($current_user, $kanban, $add->ids, $data_to_send);
+            } else {
+                $this->sendMessageForEachArtifact($current_user, $kanban, $order->ids, $data_to_send);
+            }
+
         }
+    }
+
+    private function sendMessageForEachArtifact(PFUser $current_user, AgileDashboard_Kanban $kanban, array $artifact_ids, array $data) {
+        foreach($artifact_ids as $artifact_id) {
+            $artifact          = $this->artifact_factory->getArtifactById($artifact_id);
+            $rights            = array(
+                'tracker'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
+                'artifact' => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact)
+            );
+            $this->sendMessage($current_user, $kanban, $data, $rights);
+        }
+    }
+
+    private function sendMessage(PFUser $current_user, AgileDashboard_Kanban $kanban, array $data, $rights) {
+        $this->node_js_client->sendMessage(
+            $current_user->getId(),
+            $_SERVER[self::HTTP_CLIENT_UUID],
+            $kanban->getId(),
+            $rights,
+            'kanban_item:move',
+            $data
+        );
     }
 }
