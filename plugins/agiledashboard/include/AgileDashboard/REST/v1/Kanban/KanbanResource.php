@@ -59,10 +59,12 @@ use AgileDashboard_KanbanColumnManager;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\RealTime\NodeJSClient;
 
 class KanbanResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 100;
+    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
@@ -101,6 +103,9 @@ class KanbanResource extends AuthenticatedResource {
 
     /** @var AgileDashboard_KanbanActionsChecker */
     private $kanban_actions_checker;
+
+    /** @var NodeJSClient */
+    private $node_js_client;
 
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
@@ -155,6 +160,8 @@ class KanbanResource extends AuthenticatedResource {
         );
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
+
+        $this->node_js_client = new NodeJSClient();
     }
 
     /**
@@ -426,6 +433,8 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
+            $in_column = 'backlog';
+            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column);
         }
     }
 
@@ -610,6 +619,9 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
+
+            $in_column = 'archive';
+            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column);
         }
     }
 
@@ -753,6 +765,7 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
+            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $column_id);
         }
     }
 
@@ -975,5 +988,22 @@ class KanbanResource extends AuthenticatedResource {
      */
     private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
         return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
+    }
+
+    private function sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column) {
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $data = array(
+                'order'     => $order,
+                'add'       => $add,
+                'in_column' => $in_column
+            );
+            $this->node_js_client->sendMessage(
+                $current_user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                'kanban_item:move',
+                $data
+            );
+        }
     }
 }
