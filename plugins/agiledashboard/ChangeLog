@@ -1,3 +1,6 @@
+Version 1.303 - Tuleap 8.9
+    * request #8539: Real time synchronization of moved card on Kanban
+
 Version 1.302 - Tuleap 8.9
     * story #8485: Delete a Kanban column
 
