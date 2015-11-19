@@ -32,7 +32,7 @@ class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
 
         $this->user       = aUser()->build();
         $this->tracker    = aTracker()->withProjectId($this->project_id)->withId($this->tracker_id)->build();
-        $this->column     = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2);
+        $this->column     = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2, true);
 
         $this->column_dao             = mock("AgileDashboard_KanbanColumnDao");
         $this->tracker_factory        = stub("TrackerFactory")->getTrackerById($this->tracker_id)->returns($this->tracker);
@@ -41,6 +41,7 @@ class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
         $this->kanban                = new AgileDashboard_Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $this->column_dao,
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $this->kanban_actions_checker
         );
     }

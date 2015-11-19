@@ -42,23 +42,57 @@
             }
 
             > ul.column-configuration-column-list {
+                width: 100%;
+                display: table;
+                border-collapse: collapse;
                 margin: 0;
 
                 > li {
-                    padding: 2px 0 2px 3px;
-                    list-style-type: none;
+                    display: table-row;
+                    padding: 4px 0 4px 3px;
                     background: none;
+
+                    > div {
+                        display: table-cell;
+                    }
+
+                    .btn-mini {
+                        white-space: nowrap;
+                        position: relative;
+                        top: -1px;
+                        margin: 0 0 0 5px;
+                    }
 
                     &:first-child, &:last-child {
                         color: #888;
 
-                        > i {
-                            margin: 0 4px 0 0;
+                        i {
+                            margin: 0 2px 0 0;
                         }
                     }
 
-                    &.add-column {
-                        padding: 10px 4px;
+                    &:first-child > div:before {
+                        content: '↳';
+                        display: inline-block;
+                        -webkit-transform: rotate(90deg);
+                        transform: rotate(90deg);
+                        position: relative;
+                        top: 3px;
+                        left: 1px;
+                        margin: 0 6px 0 0;
+                    }
+
+                    &:last-child > div:before {
+                        content: '↳';
+                        display: inline-block;
+                        position: relative;
+                        top: 0px;
+                        left: 6px;
+                        margin: 0 6px 0 0;
+                    }
+
+                    &.add-column > div {
+                        padding: 3px 4px 8px;
 
                         .btn {
                             min-width: 90px;
@@ -70,16 +104,13 @@
                     }
 
                     &.draggable {
-                        padding: 2px 0 2px 22px;
-                        background: url('drag.png') no-repeat 5px 6px;
                         cursor: move;
-                    }
 
-                    &.angular-ui-tree-placeholder {
-                        background: #58B359;
-                        max-height: 3px;
-                        min-height: 3px;
-                        padding: 0;
+                        & > div:first-child {
+                            width: 100%;
+                            padding: 4px 0 4px 22px;
+                            background: url('drag.png') no-repeat 5px 8px;
+                        }
                     }
                 }
             }
@@ -93,10 +124,15 @@ ul.column-configuration-column-list.angular-ui-tree-drag {
     > li {
         float: left;
         font-size: 13px;
-        padding: 2px 7px 2px 22px;
-        background: #FFFFFF url('drag.png') no-repeat 5px 6px;
+        padding: 5px 7px 5px 22px;
+        background: #FFFFFF url('drag.png') no-repeat 5px 9px;
         cursor: move;
         border-radius: 3px;
         box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+        white-space: nowrap;
+
+        .btn-mini {
+            display: none;
+        }
     }
 }

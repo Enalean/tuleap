@@ -31,7 +31,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static_value';
     }
-    
+
     public function searchById($id) {
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
@@ -39,12 +39,12 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 WHERE id = $id";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByFieldId($field_id, $is_rank_alpha) {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE field_id = $field_id 
+                WHERE field_id = $field_id
                 ORDER BY ". ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
@@ -54,7 +54,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         if ($by_reference) {
             $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
-            
+
         } else {
             $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, original_value_id";
@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $sql = $insert . "
                 FROM $this->table_name
                 WHERE id = $from_value_id";
-                
+
         return $this->updateAndGetLastId($sql);
     }
 
@@ -72,26 +72,37 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $description  = $this->da->quoteSmart($description);
         $rank         = $this->da->escapeInt($this->prepareRanking(0, $field_id, $rank, 'id', 'field_id'));
         $is_hidden    = $this->da->escapeInt($is_hidden);
-        
+
         $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
                 VALUES ($field_id, $label, $description, $rank, $is_hidden)";
         return $this->updateAndGetLastId($sql);
     }
-    
+
     public function propagateCreation($field, $original_value_id) {
         $field_id     = $this->da->escapeInt($field->id);
         $original_value_id     = $this->da->escapeInt($original_value_id);
-        
+
         $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                 SELECT target.id, original_value.label, original_value.description, original_value.rank, original_value.is_hidden, $original_value_id
                     FROM tracker_field_list_bind_static_value AS original_value
                     INNER JOIN tracker_field AS target ON (target.original_field_id = original_value.field_id)
-                    WHERE original_value.field_id = $field_id 
-                        AND original_value.id = $original_value_id 
+                    WHERE original_value.field_id = $field_id
+                        AND original_value.id = $original_value_id
                         AND original_value.field_id != target.id";
         return $this->retrieve($sql);
     }
-    
+
+    public function hideValue($id) {
+        $id  = $this->da->escapeInt($id);
+
+        $sql = "UPDATE $this->table_name
+                SET is_hidden = 1
+                WHERE id = $id
+                   OR original_value_id = $id";
+
+        return $this->update($sql);
+    }
+
     public function save($id, $field_id, $label, $description, $rank, $is_hidden) {
         $id           = $this->da->escapeInt($id);
         $field_id     = $this->da->escapeInt($field_id);
@@ -99,31 +110,31 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $description  = $this->da->quoteSmart($description);
         $rank         = $this->da->escapeInt($this->prepareRanking($id, $field_id, $rank, 'id', 'field_id'));
         $is_hidden    = $this->da->escapeInt($is_hidden);
-        
-        $sql = "UPDATE $this->table_name 
-                SET label = $label, 
+
+        $sql = "UPDATE $this->table_name
+                SET label = $label,
                     description = $description,
-                    rank = $rank, 
+                    rank = $rank,
                     is_hidden = $is_hidden
                 WHERE id = $id
                   OR original_value_id = $id";
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
         $id       = $this->da->escapeInt($id);
-        $sql = "DELETE FROM $this->table_name 
-                WHERE id = $id 
+        $sql = "DELETE FROM $this->table_name
+                WHERE id = $id
                    OR original_value_id = $id";
-        
+
         return $this->update($sql);
     }
-    
+
     public function searchChangesetValues($changeset_id, $field_id, $is_rank_alpha) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
         $sql = "SELECT f.id
-                FROM tracker_field_list_bind_static_value AS f 
+                FROM tracker_field_list_bind_static_value AS f
                      INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id)
                      INNER JOIN tracker_changeset_value AS c
                      ON ( l.changeset_value_id = c.id
@@ -134,7 +145,27 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 
+    public function canValueBeHiddenWithoutCheckingSemanticStatus($field_id, $value_id) {
+        $semantic_status_statement = '';
+
+        return $this->isValueHiddenable($field_id, $value_id, $semantic_status_statement);
+    }
+
     public function canValueBeHidden($field_id, $value_id) {
+        $field_id = $this->da->escapeInt($field_id);
+
+        $semantic_status_statement = "UNION
+            SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
+            FROM $this->table_name AS v
+                INNER JOIN tracker_semantic_status AS s
+                ON ((s.open_value_id = v.id OR s.open_value_id = v.original_value_id)
+                    AND s.field_id = v.field_id)
+            WHERE v.field_id = $field_id";
+
+        return $this->isValueHiddenable($field_id, $value_id, $semantic_status_statement);
+    }
+
+    private function isValueHiddenable($field_id, $value_id, $semantic_status_statement) {
         $field_id = $this->da->escapeInt($field_id);
 
         if (! isset($this->cache_canbehidden_values[$field_id])) {
@@ -161,13 +192,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                             (wt.to_id = v.id OR wt.to_id = v.original_value_id)
                         )
                     WHERE v.field_id = $field_id
-                    UNION
-                    SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
-                    FROM $this->table_name AS v
-                        INNER JOIN tracker_semantic_status AS s
-                        ON ((s.open_value_id = v.id OR s.open_value_id = v.original_value_id)
-                            AND s.field_id = v.field_id)
-                    WHERE v.field_id = $field_id
+                    $semantic_status_statement
                     UNION
                     SELECT v.id AS id
                     FROM $this->table_name AS v
@@ -232,24 +257,23 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
             foreach ($this->retrieve($sql) as $row) {
                 $this->cache_canbedeleted_values[$field_id][$row['id']] = true;
             }
-
         }
 
         return $this->canValueBeHidden($field_id, $value_id) && ! isset($this->cache_canbedeleted_values[$field_id][$value_id]);
     }
-    
+
     public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
         $field_id              = $this->da->escapeInt($field_id);
         $old_original_value_id = $this->da->escapeInt($old_original_value_id);
         $new_original_value_id = $this->da->escapeInt($new_original_value_id);
-        
+
         $sql = "
             UPDATE $this->table_name
             SET   original_value_id = $new_original_value_id
             WHERE field_id          = $field_id
             AND   original_value_id = $old_original_value_id
         ";
-        
+
         return $this->update($sql);
     }
 

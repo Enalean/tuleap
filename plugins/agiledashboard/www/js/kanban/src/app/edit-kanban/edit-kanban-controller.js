@@ -2,9 +2,28 @@ angular
     .module('kanban')
     .controller('EditKanbanCtrl', EditKanbanCtrl);
 
-EditKanbanCtrl.$inject = ['$scope', '$window', '$modalInstance', 'KanbanService', 'kanban', 'augmentColumn', 'updateKanbanName', 'SharedPropertiesService', 'gettextCatalog'];
+EditKanbanCtrl.$inject = [
+    '$scope',
+    '$window',
+    '$modalInstance',
+    'KanbanService',
+    'kanban',
+    'augmentColumn',
+    'updateKanbanName',
+    'SharedPropertiesService',
+    'gettextCatalog'
+];
 
-function EditKanbanCtrl($scope, $window, $modalInstance, KanbanService, kanban, augmentColumn, updateKanbanName, SharedPropertiesService, gettextCatalog) {
+function EditKanbanCtrl($scope,
+    $window,
+    $modalInstance,
+    KanbanService,
+    kanban,
+    augmentColumn,
+    updateKanbanName,
+    SharedPropertiesService,
+    gettextCatalog
+) {
     var self = this;
 
     _.extend(self, {
@@ -23,7 +42,8 @@ function EditKanbanCtrl($scope, $window, $modalInstance, KanbanService, kanban, 
         deleteKanban     : deleteKanban,
         saveModifications: saveModifications,
         addColumn        : addColumn,
-        cancelAddColumn  : cancelAddColumn
+        cancelAddColumn  : cancelAddColumn,
+        removeColumn     : removeColumn
     });
 
     function saveModifications() {
@@ -105,6 +125,17 @@ function EditKanbanCtrl($scope, $window, $modalInstance, KanbanService, kanban, 
 
         KanbanService.reorderColumns(kanban.id, sorted_columns_ids).then(function() {
             // nothing to do
+        }, function(response) {
+            $modalInstance.dismiss(response);
+        });
+    }
+
+    function removeColumn(column_id) {
+        KanbanService.removeColumn(kanban.id, column_id).then(function() {
+            _.remove(kanban.columns, function(column) {
+                return column.id === column_id;
+            });
+
         }, function(response) {
             $modalInstance.dismiss(response);
         });

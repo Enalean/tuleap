@@ -96,7 +96,8 @@ class AgileDashboard_KanbanColumnFactory {
             $field_values[$id]->getLabel(),
             $this->user_preferences->isColumnOpen($kanban, $id, $user),
             $this->getColorForColumn($id),
-            $this->getWIPLimitForColumn($kanban, $id)
+            $this->getWIPLimitForColumn($kanban, $id),
+            $this->isColumnRemovable($kanban, $field_values[$id])
         );
     }
 
@@ -112,6 +113,16 @@ class AgileDashboard_KanbanColumnFactory {
         }
 
         return $row['wip_limit'];
+    }
+
+    private function isColumnRemovable(AgileDashboard_Kanban $kanban, Tracker_FormElement_Field_List_Bind_StaticValue $value) {
+        $semantic = $this->getSemanticStatus($kanban);
+
+        if (! $semantic) {
+            return;
+        }
+
+        return $semantic->getField()->getBind()->canValueBeHiddenWithoutCheckingSemanticStatus($value) && ! $semantic->isBasedOnASharedField();
     }
 
     private function getOpenValues(Tracker_Semantic_Status $semantic) {

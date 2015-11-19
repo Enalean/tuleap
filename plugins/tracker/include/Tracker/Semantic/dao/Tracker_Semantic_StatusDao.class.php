@@ -21,12 +21,12 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class Tracker_Semantic_StatusDao extends DataAccessObject {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_semantic_status';
     }
-    
+
     public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -34,16 +34,16 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
                 WHERE tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
-    
+
     public function save($tracker_id, $field_id, $open_value_ids) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
-        
+
         //Start to delete all previous entries
         $sql = "DELETE FROM $this->table_name
                 WHERE tracker_id = $tracker_id";
         $this->update($sql);
-        
+
         // Now save the new values
         $values = array();
         foreach($open_value_ids as $vid) {
@@ -51,13 +51,13 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
             $values[] = "($tracker_id, $field_id, $vid)";
         }
         if ($values = implode(', ', $values)) {
-            $sql = "INSERT INTO $this->table_name (tracker_id, field_id, open_value_id) 
+            $sql = "INSERT INTO $this->table_name (tracker_id, field_id, open_value_id)
                     VALUES $values";
             return $this->update($sql);
         }
         return true;
     }
-    
+
     public function delete($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "DELETE FROM tracker_semantic_status

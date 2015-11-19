@@ -32,6 +32,7 @@ use AgileDashboard_KanbanColumnDao;
 use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanColumnNotFoundException;
 use AgileDashboard_UserNotAdminException;
+use AgileDashboard_KanbanColumnNotRemovableException;
 use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
 use UserManager;
@@ -39,6 +40,7 @@ use PFUser;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElementFactory;
+use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 
 class KanbanColumnsResource {
 
@@ -75,6 +77,7 @@ class KanbanColumnsResource {
         );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             new AgileDashboard_KanbanActionsChecker(
                 $this->tracker_factory,
                 $permissions_manager,
@@ -93,7 +96,7 @@ class KanbanColumnsResource {
      * </pre>
      */
     public function options() {
-        Header::allowOptionsPatch();
+        Header::allowOptionsPatchDelete();
     }
 
     /**
@@ -110,16 +113,20 @@ class KanbanColumnsResource {
      * @param int $id           Id of the column
      * @param int $kanban_id    Id of the Kanban {@from query}
      * @param int $wip_limit    The new wip limit {@from body} {@type int}
+     *
+     * @throws 401
+     * @throws 404
      */
     protected function patch($id, $kanban_id, $wip_limit) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
 
-        try{
+        try {
             $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
             if (! $this->kanban_column_manager->setColumnWipLimit($current_user, $kanban, $column, $wip_limit)) {
                 throw new RestException(500);
             }
+
         } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (AgileDashboard_UserNotAdminException $exception) {
@@ -130,6 +137,44 @@ class KanbanColumnsResource {
         $this->statistics_aggregator->addWIPModificationHit(
             $this->getProjectIdForKanban($kanban)
         );
+    }
+
+    /**
+     * Delete column
+     *
+     * Delete a column from its Kanban
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url DELETE {id}
+     *
+     * @param int $id           Id of the column
+     * @param int $kanban_id    Id of the Kanban {@from query}
+     *
+     * @throws 401
+     * @throws 404
+     */
+    protected function delete($id, $kanban_id) {
+        $current_user = $this->getCurrentUser();
+        $kanban       = $this->getKanban($current_user, $kanban_id);
+
+        try {
+            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
+            if (! $this->kanban_column_manager->deleteColumn($current_user, $kanban, $column)) {
+                throw new RestException(500);
+            }
+
+        } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (AgileDashboard_UserNotAdminException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (AgileDashboard_KanbanColumnNotRemovableException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        }
     }
 
     /** @return AgileDashboard_Kanban */

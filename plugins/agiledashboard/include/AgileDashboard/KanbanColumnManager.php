@@ -19,20 +19,23 @@
 
 class AgileDashboard_KanbanColumnManager {
 
-    /**
-     * @var AgileDashboard_KanbanColumnDao
-     */
+    /** @var AgileDashboard_KanbanColumnDao */
     private $column_dao;
+
+    /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    private $formelement_field_list_bind_static_value_dao;
 
     /** @var AgileDashboard_KanbanActionsChecker */
     private $kanban_actions_checker;
 
     public function __construct(
         AgileDashboard_KanbanColumnDao $column_dao,
+        Tracker_FormElement_Field_List_Bind_Static_ValueDao $formelement_field_list_bind_static_value_dao,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker
     ) {
-        $this->column_dao             = $column_dao;
-        $this->kanban_actions_checker = $kanban_actions_checker;
+        $this->column_dao                                   = $column_dao;
+        $this->formelement_field_list_bind_static_value_dao = $formelement_field_list_bind_static_value_dao;
+        $this->kanban_actions_checker                       = $kanban_actions_checker;
     }
 
     /**
@@ -64,6 +67,31 @@ class AgileDashboard_KanbanColumnManager {
         $this->checkAllColumnsAreProvided($semantic, $column_ids);
 
         return $semantic->getField()->getBind()->getValueDao()->reorder($column_ids);
+    }
+
+    public function deleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column) {
+        $this->kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);
+
+        $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
+        $semantic = $this->kanban_actions_checker->getSemanticStatus($tracker);
+
+        $this->column_dao->startTransaction();
+
+        if (! $semantic->removeOpenValue($column->getId())
+            || ! $this->hideColumnFromTrackerFieldStaticValues($column, $semantic)
+            || ! $this->column_dao->deleteColumn($column->getKanbanId(), $column->getId())
+        ) {
+            $this->column_dao->rollBack();
+            return;
+        }
+
+        $this->column_dao->commit();
+
+        return true;
+    }
+
+    private function hideColumnFromTrackerFieldStaticValues(AgileDashboard_KanbanColumn $column, Tracker_Semantic_Status $semantic) {
+        return $this->formelement_field_list_bind_static_value_dao->hideValue($column->getId());
     }
 
     private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids) {

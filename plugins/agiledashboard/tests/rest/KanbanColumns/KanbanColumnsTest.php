@@ -33,7 +33,7 @@ class KanbanColumnsTest extends RestBase {
 
     public function testOPTIONSKanbanColumns() {
         $response = $this->getResponse($this->client->options('kanban_columns'));
-        $this->assertEquals(array('OPTIONS', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testPATCHKanbanColumns() {

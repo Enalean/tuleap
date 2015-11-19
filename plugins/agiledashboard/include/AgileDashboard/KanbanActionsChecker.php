@@ -92,6 +92,25 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
+    public function checkUserCanDeleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column) {
+        $this->checkUserCanAdministrate($user, $kanban);
+
+        if (! $column->isRemovable()) {
+            throw new AgileDashboard_KanbanColumnNotRemovableException();
+        }
+
+        $tracker         = $this->getTrackerForKanban($kanban);
+        $semantic_status = $this->getSemanticStatus($tracker);
+
+        if (! $semantic_status->isFieldBoundToStaticValues()) {
+            throw new Kanban_SemanticStatusNotBoundToStaticValuesException();
+        }
+
+        if ($semantic_status->isBasedOnASharedField()) {
+            throw new Kanban_SemanticStatusBasedOnASharedFieldException();
+        }
+    }
+
     public function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 
