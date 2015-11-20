@@ -36,7 +36,7 @@ function usage() {
     global $argv;
 
     echo <<< EOT
-Usage: $argv[0] -i path_to_archive
+Usage: $argv[0] -u user_name -i path_to_archive -o path_to_generated_csv_content
 
 Generate the file mapping that is needed for project import.
 

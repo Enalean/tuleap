@@ -22,6 +22,7 @@ namespace User\XML\Import;
 use PFUser;
 use UserManager;
 use Logger;
+use RandomNumberGenerator;
 
 class WillBeCreatedUser implements User, ReadyToBeImportedUser {
 
@@ -57,6 +58,30 @@ class WillBeCreatedUser implements User, ReadyToBeImportedUser {
     }
 
     public function process(UserManager $user_manager, Logger $logger) {
-        $logger->warn($this->username .' should be created. Not yet implemented');
+        $random_generator = new RandomNumberGenerator();
+        $random_password  = $random_generator->getNumber();
+
+        $fake_user = new PFUser();
+        $fake_user->setUserName($this->username);
+        $fake_user->setRealName($this->realname);
+        $fake_user->setPassword($random_password);
+        $fake_user->setLdapId('');
+        $fake_user->setRegisterPurpose('Created by xml import');
+        $fake_user->setEmail($this->email);
+        $fake_user->setStatus(PFUser::STATUS_SUSPENDED);
+        $fake_user->setConfirmHash('');
+        $fake_user->setMailSiteUpdates(0);
+        $fake_user->setMailVA(0);
+        $fake_user->setTimezone('GMT');
+        $fake_user->setLanguageID('en_US');
+        $fake_user->setUnixStatus('N');
+        $fake_user->setExpiryDate(0);
+
+        $created_user = $user_manager->createAccount($fake_user);
+        if ($created_user) {
+            $logger->info($this->username .' successfuly created ! It has id #'. $created_user->getId());
+        } else {
+            throw new UserCannotBeCreatedException('An error occured while creating '. $this->username);
+        }
     }
 }
