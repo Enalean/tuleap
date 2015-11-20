@@ -77,18 +77,6 @@ class Project_OneStepCreation_OneStepCreationRequest {
     private $form_submission_path;
 
     /**
-     *
-     * @var string
-     */
-    private $license_type;
-
-    /**
-     *
-     * @var blob
-     */
-    private $custom_license = null;
-
-    /**
      * @var array
      */
     private $custom_descriptions = array();
@@ -114,8 +102,6 @@ class Project_OneStepCreation_OneStepCreationRequest {
             ->setShortDescription($request_data)
             ->setIsPublic($request_data)
             ->setTemplateId($request_data)
-            ->setLicenseType($request_data)
-            ->setCustomLicense($request_data)
             ->setTosApproval($request_data)
             ->setCustomDescriptions($request_data);
     }
@@ -125,10 +111,6 @@ class Project_OneStepCreation_OneStepCreationRequest {
      * @return array
      */
     public function getProjectValues() {
-        $custom_license = null;
-        if ($this->getLicenseType() == 'other') {
-            $custom_license = $this->getCustomLicense();
-        }
         return array(
             'project' => array_merge(
                 array(
@@ -136,8 +118,6 @@ class Project_OneStepCreation_OneStepCreationRequest {
                     Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC         => $this->isPublic(),
                     Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME         => $this->getUnixName(),
                     Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID       => $this->getTemplateId(),
-                    Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE      => $this->getLicenseType(),
-                    Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE    => $custom_license,
                     Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $this->getShortDescription(),
                     'is_test'                                                           => false,
                     'services'                                                          => $this->getServices(),
@@ -200,22 +180,6 @@ class Project_OneStepCreation_OneStepCreationRequest {
      */
     public function isPublic() {
         return $this->is_public;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getLicenseType() {
-        return $this->license_type;
-    }
-
-    /**
-     *
-     * @return blob
-     */
-    public function getCustomLicense() {
-        return $this->custom_license;
     }
 
     /**

@@ -58,8 +58,6 @@ class DataGeneratorActions extends Actions {
                         create_project(array('project' => array(
                             'form_unix_name'            => $project['name'],
                             'form_full_name'            => $project['name'],
-                            'form_license'              => '',
-                            'form_license_other'        => '',
                             'form_short_description'    => $project['description'],
                             'form_purpose'              => $project['description'],
                             'form_required_sw'          => '',

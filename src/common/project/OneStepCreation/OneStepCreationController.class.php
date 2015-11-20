@@ -57,7 +57,6 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
 
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
             $this->creation_request,
-            $GLOBALS['LICENSE'],
             $this->required_custom_descriptions,
             $project_manager
         );
