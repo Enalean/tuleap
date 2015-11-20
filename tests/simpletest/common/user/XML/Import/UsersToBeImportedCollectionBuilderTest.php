@@ -80,7 +80,12 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
             $this->suspended_user_in_ldap
         ));
 
-        $this->builder = new UsersToBeImportedCollectionBuilder($user_manager, $logger);
+        $this->builder = new UsersToBeImportedCollectionBuilder(
+            $user_manager,
+            $logger,
+            mock('XML_Security'),
+            mock('XML_RNGValidator')
+        );
     }
 
     private function createUser($id, $username, $realname, $email, $ldapid, $status) {

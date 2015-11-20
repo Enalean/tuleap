@@ -31,6 +31,11 @@ $usage_options  = '';
 $usage_options .= 'p:'; // give me a project
 $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
+$usage_options .= 'm:'; // give me the path of the user mapping file
+
+$long_options = array(
+    'force-create-all-users-active'
+);
 
 function usage() {
     global $argv;
@@ -43,13 +48,16 @@ Import a project structure
   -p <project_id> The id of the project to export
   -u <user_name>  The user used to export
   -i <path>       The path of the archive of the exported XML + data
+  -m <path>       The path of the user mapping file
   -h              Display this help
+
+  --force-create-all-users-active Force creation/activation of all users before import
 
 EOT;
     exit(1);
 }
 
-$arguments = getopt($usage_options);
+$arguments = getopt($usage_options, $long_options);
 
 if (isset($arguments['h'])) {
     usage();
@@ -73,16 +81,37 @@ if (! isset($arguments['i'])) {
     $archive_path = $arguments['i'];
 }
 
-$user_manager = UserManager::instance();
-$xml_importer = new ProjectXMLImporter(
+if (! isset($arguments['m'])) {
+    usage();
+} else {
+    $mapping_path = $arguments['m'];
+}
+
+$force_create_all_users_active = isset($arguments['force-create-all-users-active']);
+
+$user_manager  = UserManager::instance();
+$security      = new XML_Security();
+$xml_validator = new XML_RNGValidator();
+$xml_importer  = new ProjectXMLImporter(
     EventManager::instance(),
     ProjectManager::instance(),
-    new XML_RNGValidator(),
+    $xml_validator,
     new UGroupManager(),
-    UserManager::instance(),
+    $user_manager,
     new XMLImportHelper(),
     new ProjectXMLImporterLogger()
 );
+
+$transformer = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager);
+$logger      = new ProjectXMLImporterLogger();
+$builder     = new User\XML\Import\UsersToBeImportedCollectionBuilder(
+    $user_manager,
+    $logger,
+    $security,
+    $xml_validator
+);
+
+$console = new Log_ConsoleLogger();
 
 try {
     $user = $user_manager->forceLogin($username);
@@ -92,8 +121,14 @@ try {
 
     $archive = new ZipArchive();
     if ($archive->open($archive_path) !== true) {
-        fwrite(STDERR, "*** ERROR: Unable to open archive ".$archive_path.PHP_EOL);
+        $console->error("Unable to open archive $archive_path");
         exit(1);
+    }
+
+    if ($force_create_all_users_active) {
+        $collection_from_archive = $builder->buildFromArchive($archive);
+        $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
+        $users_collection->process($user_manager, $console);
     }
 
     $xml_importer->importFromArchive($project_id, $archive);
@@ -103,10 +138,9 @@ try {
     exit(0);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
-        fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);
+        $console->error($parse_error);
     }
-    exit(1);
 } catch (Exception $exception) {
-    fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
-    exit(1);
+    $console->error($exception->getMessage());
 }
+exit(1);

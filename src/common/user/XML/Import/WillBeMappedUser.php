@@ -20,8 +20,10 @@
 namespace User\XML\Import;
 
 use PFUser;
+use UserManager;
+use Logger;
 
-class WillBeMappedUser implements User {
+class WillBeMappedUser implements User, ReadyToBeImportedUser {
 
     /** @var string */
     private $username;
@@ -43,5 +45,9 @@ class WillBeMappedUser implements User {
 
     public function getMappedUser() {
         return $this->mapped_user;
+    }
+
+    public function process(UserManager $user_manager, Logger $logger) {
+        $logger->warn($this->username .' should be mapped. Not yet implemented');
     }
 }

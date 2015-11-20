@@ -20,8 +20,10 @@
 namespace User\XML\Import;
 
 use PFUser;
+use Logger;
+use UserManager;
 
-class WillBeActivatedUser implements User {
+class WillBeActivatedUser implements User, ReadyToBeImportedUser {
 
     /** @var PFUser */
     private $user;
@@ -40,5 +42,9 @@ class WillBeActivatedUser implements User {
      */
     public function getUser() {
         return $this->user;
+    }
+
+    public function process(UserManager $user_manager, Logger $logger) {
+        $logger->warn($this->user->getUserName().' should be activated. Not yet implemented');
     }
 }

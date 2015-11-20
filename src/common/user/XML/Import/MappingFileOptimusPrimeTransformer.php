@@ -38,11 +38,11 @@ class MappingFileOptimusPrimeTransformer {
         $this->user_manager = $user_manager;
     }
 
-    /** @return User\XML\Import\UsersToBeImportedCollection */
+    /** @return User\XML\Import\ReadyToBeImportedUsersCollection */
     public function transform(UsersToBeImportedCollection $collection_from_archive, $filename) {
         $csv_lines = $this->parseCSVFile($filename);
 
-        $collection_for_import = new UsersToBeImportedCollection();
+        $collection_for_import = new ReadyToBeImportedUsersCollection();
         foreach ($collection_from_archive->toArray() as $username => $to_be_imported_user) {
             if (isset($csv_lines[$username])) {
                 $action = $csv_lines[$username];

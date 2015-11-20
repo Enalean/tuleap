@@ -19,44 +19,29 @@
  */
 namespace User\XML\Import;
 
-use PFUser;
 use UserManager;
 use Logger;
 
-class WillBeCreatedUser implements User, ReadyToBeImportedUser {
+class ReadyToBeImportedUsersCollection {
 
-    /** @var string */
-    private $username;
+    private $users = array();
 
-    /** @var string */
-    private $realname;
-
-    /** @var string */
-    private $email;
-
-    public function __construct(
-        $username,
-        $realname,
-        $email
-    ) {
-        $this->username = $username;
-        $this->realname = $realname;
-        $this->email    = $email;
+    public function add(ReadyToBeImportedUser $user) {
+        $this->users[$user->getUserName()] = $user;
     }
 
-    public function getUserName() {
-        return $this->username;
-    }
+    /** @return User\XML\Import\User */
+    public function getUser($username) {
+        if (! isset($this->users[$username])) {
+            throw new UserNotFoundException();
+        }
 
-    public function getRealName() {
-        return $this->realname;
-    }
-
-    public function getEmail() {
-        return $this->email;
+        return $this->users[$username];
     }
 
     public function process(UserManager $user_manager, Logger $logger) {
-        $logger->warn($this->username .' should be created. Not yet implemented');
+        foreach ($this->users as $user) {
+            $user->process($user_manager, $logger);
+        }
     }
 }

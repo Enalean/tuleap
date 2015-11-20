@@ -77,8 +77,13 @@ $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
 $user_manager  = UserManager::instance();
 $logger        = new ProjectXMLImporterLogger();
-$builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder($user_manager, $logger);
 $console       = new Log_ConsoleLogger();
+$builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder(
+    $user_manager,
+    $logger,
+    $security,
+    $xml_validator
+);
 
 try {
     $user = $user_manager->forceLogin($username);
@@ -92,17 +97,7 @@ try {
         exit(1);
     }
 
-    $xml_contents = $archive->getFromName('users.xml');
-    if (! $xml_contents) {
-        $console->error("users.xml is missing from archive");
-        exit(1);
-    }
-    $xml_element  = $security->loadString($xml_contents);
-
-    $rng_path = realpath(__DIR__ .'/../common/xml/resources/users.rng');
-    $xml_validator->validate($xml_element, $rng_path);
-
-    $collection = $builder->build($xml_element);
+    $collection = $builder->buildFromArchive($archive);
     $collection->toCSV($output);
 
     $archive->close();
