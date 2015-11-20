@@ -24,23 +24,48 @@ use Logger;
 
 class ReadyToBeImportedUsersCollection {
 
-    private $users = array();
+    private $users_by_name    = array();
+    private $users_by_id      = array();
+    private $users_by_ldap_id = array();
 
-    public function add(ReadyToBeImportedUser $user) {
-        $this->users[$user->getUserName()] = $user;
+    public function add(ReadyToBeImportedUser $user, $user_id, $username, $ldap_id) {
+        $this->users_by_name[$username] = $user;
+        $this->users_by_id[$user_id]    = $user;
+
+        if ($ldap_id) {
+            $this->users_by_ldap_id[$ldap_id] = $user;
+        }
     }
 
     /** @return User\XML\Import\User */
-    public function getUser($username) {
-        if (! isset($this->users[$username])) {
+    public function getUserByUserName($username) {
+        if (! isset($this->users_by_name[$username])) {
             throw new UserNotFoundException();
         }
 
-        return $this->users[$username];
+        return $this->users_by_name[$username];
+    }
+
+    /** @return User\XML\Import\User */
+    public function getUserById($id) {
+        if (! isset($this->users_by_id[$id])) {
+            throw new UserNotFoundException();
+        }
+
+        return $this->users_by_id[$id];
+    }
+
+    /** @return User\XML\Import\User */
+    public function getUserByLdapId($ldap_id) {
+        if (! isset($this->users_by_ldap_id[$ldap_id])) {
+            throw new UserNotFoundException();
+        }
+
+        return $this->users_by_ldap_id[$ldap_id];
     }
 
     public function process(UserManager $user_manager, Logger $logger) {
-        foreach ($this->users as $user) {
+        foreach ($this->users_by_name as $user) {
             $user->process($user_manager, $logger);
         }
     }

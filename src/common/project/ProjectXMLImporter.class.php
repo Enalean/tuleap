@@ -35,11 +35,8 @@ class ProjectXMLImporter {
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var XMLImportHelper */
-    private $xml_helper;
+    /** @var User\XML\Import\IFindUserFromXMLReference */
+    private $user_finder;
 
     /** @var Logger */
     private $logger;
@@ -49,16 +46,14 @@ class ProjectXMLImporter {
         ProjectManager $project_manager,
         XML_RNGValidator $xml_validator,
         UGroupManager $ugroup_manager,
-        UserManager $user_manager,
-        XMLImportHelper $xml_helper,
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
         Logger $logger
     ) {
         $this->event_manager   = $event_manager;
         $this->project_manager = $project_manager;
         $this->xml_validator   = $xml_validator;
         $this->ugroup_manager  = $ugroup_manager;
-        $this->user_manager    = $user_manager;
-        $this->xml_helper      = $xml_helper;
+        $this->user_finder     = $user_finder;
         $this->logger          = $logger;
     }
 
@@ -92,10 +87,11 @@ class ProjectXMLImporter {
     public function import($project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
-        $xml_contents = file_get_contents($xml_file_path, 'r');
-        $project      = $this->getProject($project_id);
+        $xml_contents    = file_get_contents($xml_file_path, 'r');
+        $project         = $this->getProject($project_id);
+        $extraction_path = '';
 
-        return $this->importContent($project, $xml_contents, '');
+        return $this->importContent($project, $xml_contents, $extraction_path);
     }
 
     private function importContent(Project $project, $xml_contents, $extraction_path) {
@@ -118,7 +114,8 @@ class ProjectXMLImporter {
             array(
                 'project'         => $project,
                 'xml_content'     => $xml_element,
-                'extraction_path' => $extraction_path
+                'extraction_path' => $extraction_path,
+                'user_finder'     => $this->user_finder,
             )
         );
 
@@ -197,15 +194,7 @@ class ProjectXMLImporter {
         $ugroup_members = array();
 
         foreach ($ugroup->members->member as $xml_member) {
-            $identifier = $this->xml_helper->getUserFormat($xml_member);
-            $user       = $this->user_manager->getUserByIdentifier($identifier);
-
-            if (! $user) {
-                $this->logger->debug("User ($identifier) does not exist -> skipped");
-                continue;
-            }
-
-            $ugroup_members[] = $user;
+            $ugroup_members[] = $this->user_finder->getUser($xml_member);
         }
 
         return $ugroup_members;

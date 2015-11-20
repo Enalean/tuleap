@@ -23,8 +23,9 @@ class Tracker_Artifact_XMLImportBuilder {
     /**
      * @return Tracker_Artifact_XMLImport
      */
-    public function build() {
-        $user_manager          = UserManager::instance();
+    public function build(
+        User\XML\Import\IFindUserFromXMLReference $user_finder
+    ) {
         $artifact_factory      = Tracker_ArtifactFactory::instance();
         $formelement_factory   = Tracker_FormElementFactory::instance();
         $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($formelement_factory);
@@ -60,7 +61,7 @@ class Tracker_Artifact_XMLImportBuilder {
             $artifact_creator,
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
-            new Tracker_XMLImport_XMLImportHelper($user_manager),
+            $user_finder,
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $logger,
             $send_notifications

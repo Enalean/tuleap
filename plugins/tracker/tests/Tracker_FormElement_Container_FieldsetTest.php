@@ -72,9 +72,9 @@ class Tracker_FormElement_Container_FieldsetTest extends TuleapTestCase {
         $f = new Tracker_FormElement_Container_FieldsetTestVersion();
         $f->setTracker(aTracker()->withProject(mock('Project'))->build());
         $f->setReturnReference('getFormElementFactory', $factory);
-        
-        $f->continueGetInstanceFromXML($xml, $mapping);
-        
+
+        $f->continueGetInstanceFromXML($xml, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
+
         $container_should_load_child = array($a_formelement);
         $this->assertEqual($f->getFormElements(), $container_should_load_child);
     }

@@ -54,7 +54,9 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
     protected function addAlreadyExistingUserToCollection() {
         $this->collection->add(
             new AlreadyExistingUser(
-                aUser()->withUserName('already.existing')->build()
+                aUser()->withUserName('already.existing')->build(),
+                104,
+                'ldap1234'
             )
         );
     }
@@ -62,7 +64,9 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
     protected function addToBeActivatedUserToCollection() {
         $this->collection->add(
             new ToBeActivatedUser(
-                aUser()->withUserName('to.be.activated')->build()
+                aUser()->withUserName('to.be.activated')->build(),
+                104,
+                'ldap1234'
             )
         );
     }
@@ -72,7 +76,9 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
             new ToBeCreatedUser(
                 'to.be.created',
                 'To Be Created',
-                'to.be.created@example.com'
+                'to.be.created@example.com',
+                104,
+                'ldap1234'
             )
         );
     }
@@ -81,7 +87,9 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
         $this->collection->add(
             new EmailDoesNotMatchUser(
                 aUser()->withUserName('email.does.not.match')->build(),
-                'email.does.not.match@example.com'
+                'email.does.not.match@example.com',
+                104,
+                'ldap1234'
             )
         );
     }
@@ -93,7 +101,9 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
                 'To Be Mapped',
                 array(
                     aUser()->withUserName('cstevens')->build()
-                )
+                ),
+                104,
+                'ldap1234'
             )
         );
     }
@@ -133,14 +143,16 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
             new ToBeMappedUser(
                 'to.be.mapped',
                 'To Be Mapped',
-                array($cstevens, $cstevens2)
+                array($cstevens, $cstevens2),
+                104,
+                'ldap1234'
             )
         );
         $this->generateCSV('to.be.mapped', 'map:cstevens');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
 
-        $user = $new_collection->getUser('to.be.mapped');
+        $user = $new_collection->getUserByUserName('to.be.mapped');
         $this->assertIsA($user, 'User\XML\Import\WillBeMappedUser');
         $this->assertEqual($user->getMappedUser(), $cstevens);
     }
@@ -151,7 +163,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('email.does.not.match', 'map:cstevens');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('email.does.not.match');
+        $user           = $new_collection->getUserByUserName('email.does.not.match');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeMappedUser');
         $this->assertEqual($user->getMappedUser(), $cstevens);
@@ -163,7 +175,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('to.be.created', 'map:cstevens');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('to.be.created');
+        $user           = $new_collection->getUserByUserName('to.be.created');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeMappedUser');
         $this->assertEqual($user->getMappedUser(), $cstevens);
@@ -175,7 +187,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('to.be.activated', 'map:cstevens');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('to.be.activated');
+        $user           = $new_collection->getUserByUserName('to.be.activated');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeMappedUser');
         $this->assertEqual($user->getMappedUser(), $cstevens);
@@ -187,7 +199,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('already.existing', 'map:cstevens');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('already.existing');
+        $user           = $new_collection->getUserByUserName('already.existing');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeMappedUser');
         $this->assertEqual($user->getMappedUser(), $cstevens);
@@ -198,7 +210,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('to.be.created', 'create');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('to.be.created');
+        $user           = $new_collection->getUserByUserName('to.be.created');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeCreatedUser');
         $this->assertEqual($user->getUserName(), 'to.be.created');
@@ -212,7 +224,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('to.be.activated', 'activate');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('to.be.activated');
+        $user           = $new_collection->getUserByUserName('to.be.activated');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeActivatedUser');
         $this->assertEqual($user->getUser(), $to_be_activated);
@@ -225,7 +237,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->generateCSV('already.existing', 'activate');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
-        $user           = $new_collection->getUser('already.existing');
+        $user           = $new_collection->getUserByUserName('already.existing');
 
         $this->assertIsA($user, 'User\XML\Import\WillBeActivatedUser');
         $this->assertEqual($user->getUser(), $already_existing);
@@ -261,7 +273,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
 
         $this->assertEqual(
             $this->collection->getUser('already.existing'),
-            $new_collection->getUser('already.existing')
+            $new_collection->getUserByUserName('already.existing')
         );
     }
 

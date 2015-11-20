@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase {
                 )
             )
         );
-        $bind->getInstanceFromXML($xml, $field, $mapping);
+        $bind->getInstanceFromXML($xml, $field, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
         $this->assertReference($mapping['F6-V0'], $v1);
         $this->assertReference($mapping['F6-V1'], $v2);
     }
@@ -123,7 +123,7 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase {
                 )
             )
         );
-        $bind->getInstanceFromXML($xml, $field, $mapping);
+        $bind->getInstanceFromXML($xml, $field, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
         $this->assertEqual($mapping, array());
     }
 
@@ -171,7 +171,8 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
         $this->project        = mock('Project');
         $this->field          = aSelectBoxField()->withTracker(aTracker()->withProject($this->project)->build())->build();
         $this->ugroup_manager = mock('UGroupManager');
-        $this->value_dao      = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao'); 
+        $this->value_dao      = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao');
+        $this->user_finder    = mock('User\XML\Import\IFindUserFromXMLReference');
         $this->bind_factory   = new Tracker_FormElement_Field_List_BindFactory($this->ugroup_manager);
         $this->bind_factory->setUgroupsValueDao($this->value_dao);
 
@@ -191,7 +192,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'Integrators')->returns(new ProjectUGroup(array('name' => 'Integrators')));
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'Customers')->returns(new ProjectUGroup(array('name' => 'Customers')));
 
-        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping, $this->user_finder);
 
         $values = $bind->getAllValues();
         $this->assertEqual($values["F1-V0"]->getLabel(), 'Integrators');
@@ -209,7 +210,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'NotInProject')->returns(false);
 
-        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping, $this->user_finder);
 
         $this->assertCount($bind->getAllValues(), 0);
     }
@@ -225,7 +226,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new ProjectUGroup(array('name' => 'ugroup_registered_users_name_key')));
 
-        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping, $this->user_finder);
 
         $values = $bind->getAllValues();
         $this->assertEqual($values["F1-V0"]->getLabel(), 'Registered users');
@@ -242,10 +243,9 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new ProjectUGroup(array('name' => 'ugroup_registered_users_name_key')));
 
-        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping, $this->user_finder);
 
         $values = $bind->getAllValues();
         $this->assertTrue($values["F1-V0"]->isHidden());
     }
 }
-?>

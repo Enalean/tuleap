@@ -3403,7 +3403,7 @@ EOS;
             $artifact_creator,
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
-            new Tracker_XMLImport_XMLImportHelper($this->getUserManager()),
+            new XMLImportHelper($this->getUserManager()),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
             $logger,
             $send_notifications

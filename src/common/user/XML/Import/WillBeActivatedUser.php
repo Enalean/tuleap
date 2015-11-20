@@ -23,7 +23,7 @@ use PFUser;
 use Logger;
 use UserManager;
 
-class WillBeActivatedUser implements User, ReadyToBeImportedUser {
+class WillBeActivatedUser implements ReadyToBeImportedUser {
 
     /** @var PFUser */
     private $user;
@@ -41,6 +41,10 @@ class WillBeActivatedUser implements User, ReadyToBeImportedUser {
      * @return PFUser
      */
     public function getUser() {
+        return $this->user;
+    }
+
+    public function getRealUser(UserManager $user_manager) {
         return $this->user;
     }
 

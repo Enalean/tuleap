@@ -435,7 +435,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $date->setReturnValue('formatDate', '2009-02-13', array('1234567890'));
         $date->setReturnValue('formatDate', 'date-of-today', array($_SERVER['REQUEST_TIME']));
 
-        $date->continueGetInstanceFromXML($xml, $mapping);
+        $date->continueGetInstanceFromXML($xml, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
 
         $this->assertEqual($date->getDefaultValue(), '2009-02-13');
     }
@@ -456,7 +456,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $date->setReturnValue('formatDate', '2009-02-13', array('1234567890'));
         $date->setReturnValue('formatDate', 'date-of-today', array($_SERVER['REQUEST_TIME']));
 
-        $date->continueGetInstanceFromXML($xml, $mapping);
+        $date->continueGetInstanceFromXML($xml, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
 
         $this->assertEqual($date->getDefaultValue(), 'date-of-today');
     }
@@ -477,7 +477,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $date->setReturnValue('formatDate', '2009-02-13', array('1234567890'));
         $date->setReturnValue('formatDate', 'date-of-today', array($_SERVER['REQUEST_TIME']));
 
-        $date->continueGetInstanceFromXML($xml, $mapping);
+        $date->continueGetInstanceFromXML($xml, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
 
         $this->assertEqual($date->getDefaultValue(), '');
     }
@@ -498,7 +498,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $date->setReturnValue('formatDate', '2009-02-13', array('1234567890'));
         $date->setReturnValue('formatDate', 'date-of-today', array($_SERVER['REQUEST_TIME']));
 
-        $date->continueGetInstanceFromXML($xml, $mapping);
+        $date->continueGetInstanceFromXML($xml, $mapping, mock('User\XML\Import\IFindUserFromXMLReference'));
 
         $this->assertEqual($date->getDefaultValue(), '');
     }

@@ -23,7 +23,7 @@ use PFUser;
 use UserManager;
 use Logger;
 
-class WillBeMappedUser implements User, ReadyToBeImportedUser {
+class WillBeMappedUser implements ReadyToBeImportedUser {
 
     /** @var string */
     private $username;
@@ -47,7 +47,11 @@ class WillBeMappedUser implements User, ReadyToBeImportedUser {
         return $this->mapped_user;
     }
 
+    public function getRealUser(UserManager $user_manager) {
+        return $this->mapped_user;
+    }
+
     public function process(UserManager $user_manager, Logger $logger) {
-        $logger->warn($this->username .' should be mapped. Not yet implemented');
+        $logger->info($this->username .' will be mapped to '. $this->mapped_user->getUserName());
     }
 }

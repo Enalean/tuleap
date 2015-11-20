@@ -31,16 +31,17 @@ class ToBeMappedUser extends ActionToBeTakenForUser {
     public function __construct(
         $username,
         $realname,
-        array $matching_users
+        array $matching_users,
+        $original_user_id,
+        $original_ldap_id
     ) {
         if (empty($matching_users)) {
             throw new RuntimeException('Matching users should not be empty');
         }
 
-        $ldapid = '';
         $email  = $matching_users[0]->getEmail();
 
-        parent::__construct($username, $realname, $email, $ldapid);
+        parent::__construct($username, $realname, $email, $original_user_id, $original_ldap_id);
 
         $this->matching_users = $matching_users;
     }

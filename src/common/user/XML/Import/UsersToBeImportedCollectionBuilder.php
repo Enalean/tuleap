@@ -92,15 +92,20 @@ class UsersToBeImportedCollectionBuilder {
         }
 
         if ($existing_user->getLdapId()) {
-            return $this->instantiateMatchingUser($existing_user);
+            return $this->instantiateMatchingUser($existing_user, $user);
         }
 
         $email_found_in_xml = (string) $user->email;
         if ($existing_user->getEmail() !== $email_found_in_xml) {
-            return new EmailDoesNotMatchUser($existing_user, $email_found_in_xml);
+            return new EmailDoesNotMatchUser(
+                $existing_user,
+                $email_found_in_xml,
+                (string) $user->id,
+                (string) $user->ldapid
+            );
         }
 
-        return $this->instantiateMatchingUser($existing_user);
+        return $this->instantiateMatchingUser($existing_user, $user);
     }
 
     private function instantiateUserByMail(SimpleXMLElement $user) {
@@ -110,14 +115,18 @@ class UsersToBeImportedCollectionBuilder {
             return new ToBeCreatedUser(
                 (string) $user->username,
                 (string) $user->realname,
-                (string) $user->email
+                (string) $user->email,
+                (string) $user->id,
+                (string) $user->ldapid
             );
         }
 
         return new ToBeMappedUser(
             (string) $user->username,
             (string) $user->realname,
-            $matching_users
+            $matching_users,
+            (string) $user->id,
+            (string) $user->ldapid
         );
     }
 
@@ -137,11 +146,11 @@ class UsersToBeImportedCollectionBuilder {
         return $existing_user;
     }
 
-    private function instantiateMatchingUser(PFUser $user) {
+    private function instantiateMatchingUser(PFUser $user, SimpleXMLElement $xml_user) {
         if ($user->isAlive()) {
-            $to_be_imported_user = new AlreadyExistingUser($user);
+            $to_be_imported_user = new AlreadyExistingUser($user, (string) $xml_user->id, (string) $xml_user->ldapid);
         } else {
-            $to_be_imported_user = new ToBeActivatedUser($user);
+            $to_be_imported_user = new ToBeActivatedUser($user, (string) $xml_user->id, (string) $xml_user->ldapid);
         }
 
         return $to_be_imported_user;

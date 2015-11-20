@@ -174,7 +174,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                     $this->request->getProject(),
                     $this->kanban_manager,
                     $this->tracker_factory,
-                    TrackerXmlImport::build()
+                    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()))
                 )
             );
         } else {
@@ -191,8 +191,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                         ProjectManager::instance(),
                         new XML_RNGValidator(),
                         new UGroupManager(),
-                        UserManager::instance(),
-                        new XMLImportHelper(),
+                        new XMLImportHelper(UserManager::instance()),
                         new ProjectXMLImporterLogger()
                     )
                 )

@@ -78,7 +78,8 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
     }
     
     public function testImportFormElement() {
-        
+        $user_finder = mock('User\XML\Import\IFindUserFromXMLReference');
+
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <formElement type="mon_type" ID="F0" rank="20" required="1" notifications="1">
                 <name>field_name</name>
@@ -92,7 +93,8 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $a_formelement = new MockTracker_FormElement_Container_Fieldset();
         $a_formelement->expect('continueGetInstanceFromXML', array(
             $xml,
-            '*' //$mapping
+            '*',
+            $user_finder
         ));
         
         $tf = new Tracker_FormElementFactoryTestVersion();
@@ -121,9 +123,9 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $tracker = aTracker()->build();
         
         stub($a_formelement)->setTracker($tracker)->once();
-        
-        $f = $tf->getInstanceFromXML($tracker, $xml, $mapping);
-        
+
+        $f = $tf->getInstanceFromXML($tracker, $xml, $mapping, $user_finder);
+
         $this->assertReference($f, $a_formelement);
         $this->assertReference($mapping['F0'], $a_formelement);
     }

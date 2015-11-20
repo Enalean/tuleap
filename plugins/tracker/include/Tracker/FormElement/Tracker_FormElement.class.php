@@ -819,7 +819,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return void
      */
-    public function continueGetInstanceFromXML($xml, &$xmlMapping) {
+    public function continueGetInstanceFromXML(
+        $xml,
+        &$xmlMapping,
+        User\XML\Import\IFindUserFromXMLReference $user_finder
+    ) {
         // add properties to specific fields
         if (isset($xml->properties)) {
             foreach($xml->properties->attributes() as $name => $prop){

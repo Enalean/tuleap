@@ -122,7 +122,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap)
+            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
         );
 
         $this->assertEqual(
@@ -146,7 +146,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap)
+            'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234')
         );
 
         $this->assertEqual(
@@ -170,7 +170,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'cstevens' => new AlreadyExistingUser($this->active_user_in_db)
+            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, '')
         );
 
         $this->assertEqual(
@@ -194,7 +194,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'kperry' => new ToBeActivatedUser($this->suspended_user_in_db)
+            'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, '')
         );
 
         $this->assertEqual(
@@ -218,7 +218,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'cstevens' => new AlreadyExistingUser($this->active_user_in_db)
+            'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id')
         );
 
         $this->assertEqual(
@@ -242,7 +242,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com')
+            'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, '')
         );
 
         $this->assertEqual(
@@ -266,7 +266,7 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
 
         $collection = $this->builder->build($xml);
         $expected   = array(
-            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap)
+            'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
         );
 
         $this->assertEqual(
@@ -293,7 +293,9 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
             'mmanson' => new ToBeCreatedUser(
                 'mmanson',
                 'Marylin Manson',
-                'mmanson@example.com'
+                'mmanson@example.com',
+                111,
+                ''
             )
         );
 
@@ -324,7 +326,9 @@ class UsersToBeImportedCollectionBuilderTest extends TuleapTestCase {
                 array(
                     $this->active_user_in_ldap,
                     $this->suspended_user_in_ldap
-                )
+                ),
+                109,
+                ''
             )
         );
 

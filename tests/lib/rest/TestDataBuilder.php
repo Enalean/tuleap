@@ -273,8 +273,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             $this->project_manager,
             new XML_RNGValidator(),
             new UGroupManager(),
-            UserManager::instance(),
-            new XMLImportHelper(),
+            new XMLImportHelper(UserManager::instance()),
             new ProjectXMLImporterLogger()
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);

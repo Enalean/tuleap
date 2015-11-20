@@ -311,16 +311,25 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return void
      */
-    public function continueGetInstanceFromXML($xml, &$xmlMapping) {
-        parent::continueGetInstanceFromXML($xml, $xmlMapping);
+     public function continueGetInstanceFromXML(
+         $xml,
+         &$xmlMapping,
+         User\XML\Import\IFindUserFromXMLReference $user_finder
+     ) {
+        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
         // add children
         if ($xml->formElements) {
             foreach ($xml->formElements->formElement as $elem) {
-                $this->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($this->getTracker(), $elem, $xmlMapping);
+                $this->formElements[] = $this->getFormElementFactory()->getInstanceFromXML(
+                    $this->getTracker(),
+                    $elem,
+                    $xmlMapping,
+                    $user_finder
+                );
             }
         }
     }
-    
+
     /**
      * Callback called after factory::saveObject. Use this to do post-save actions
      *

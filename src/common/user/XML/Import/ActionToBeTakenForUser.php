@@ -31,18 +31,23 @@ abstract class ActionToBeTakenForUser implements User {
     protected $email;
 
     /** @var string */
-    protected $ldapid;
+    protected $original_ldap_id;
+
+    /** @var int */
+    protected $original_user_id;
 
     public function __construct(
         $username,
         $realname,
         $email,
-        $ldapid
+        $original_user_id,
+        $original_ldap_id
     ) {
-        $this->username      = $username;
-        $this->realname      = $realname;
-        $this->email         = $email;
-        $this->ldapid        = $ldapid;
+        $this->username         = $username;
+        $this->realname         = $realname;
+        $this->email            = $email;
+        $this->original_user_id = $original_user_id;
+        $this->original_ldap_id = $original_ldap_id;
     }
 
     public function getUserName() {
@@ -55,6 +60,14 @@ abstract class ActionToBeTakenForUser implements User {
 
     public function getEmail() {
         return $this->email;
+    }
+
+    public function getOriginalUserId() {
+        return $this->original_user_id;
+    }
+
+    public function getOriginalLdapId() {
+        return $this->original_ldap_id;
     }
 
     /** @return array */

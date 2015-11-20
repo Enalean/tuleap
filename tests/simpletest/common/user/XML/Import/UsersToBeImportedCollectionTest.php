@@ -72,7 +72,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
     }
 
     public function itDoesNotDumpAlreadyExistingUser() {
-        $this->collection->add(new AlreadyExistingUser(mock('PFUser')));
+        $this->collection->add(new AlreadyExistingUser(mock('PFUser'), 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
@@ -84,7 +84,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         stub($user)->getUserName()->returns('jdoe');
         stub($user)->getStatus()->returns('S');
 
-        $this->collection->add(new ToBeActivatedUser($user));
+        $this->collection->add(new ToBeActivatedUser($user, 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
@@ -92,7 +92,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
     }
 
     public function itDumpsToBeCreatedUser() {
-        $this->collection->add(new ToBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com'));
+        $this->collection->add(new ToBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
@@ -105,7 +105,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         stub($user)->getEmail()->returns('john.doe@example.com');
         stub($user)->getStatus()->returns('S');
 
-        $this->collection->add(new EmailDoesNotMatchUser($user, 'jdoe@example.com'));
+        $this->collection->add(new EmailDoesNotMatchUser($user, 'jdoe@example.com', 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
@@ -129,7 +129,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         stub($user2)->getEmail()->returns('john.doe@example.com');
         stub($user2)->getStatus()->returns('A');
 
-        $this->collection->add(new ToBeMappedUser('jdoe', 'John Doe', array($user1, $user2)));
+        $this->collection->add(new ToBeMappedUser('jdoe', 'John Doe', array($user1, $user2), 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();

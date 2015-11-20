@@ -60,6 +60,9 @@ class TrackerXmlImport {
     /** @var Tracker_Artifact_XMLImport */
     private $xml_import;
 
+    /** @var User\XML\Import\IFindUserFromXMLReference */
+    private $user_finder;
+
     public function __construct(
             TrackerFactory $tracker_factory,
             EventManager $event_manager,
@@ -72,7 +75,8 @@ class TrackerXmlImport {
             WorkflowFactory $workflow_factory,
             XML_RNGValidator $rng_validator,
             Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager,
-            Tracker_Artifact_XMLImport $xml_import
+            Tracker_Artifact_XMLImport $xml_import,
+            User\XML\Import\IFindUserFromXMLReference $user_finder
     ) {
         $this->tracker_factory         = $tracker_factory;
         $this->event_manager           = $event_manager;
@@ -86,13 +90,16 @@ class TrackerXmlImport {
         $this->rng_validator           = $rng_validator;
         $this->trigger_rulesmanager    = $trigger_rulesmanager;
         $this->xml_import              = $xml_import;
+        $this->user_finder             = $user_finder;
 
     }
 
     /**
      * @return TrackerXmlImport
      */
-    public static function build() {
+    public static function build(
+        User\XML\Import\IFindUserFromXMLReference $user_finder
+    ) {
         $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();
 
@@ -110,7 +117,10 @@ class TrackerXmlImport {
             WorkflowFactory::instance(),
             new XML_RNGValidator(),
             $tracker_factory->getTriggerRulesManager(),
-            $builder->build()
+            $builder->build(
+                $user_finder
+            ),
+            $user_finder
         );
     }
 
@@ -162,7 +172,8 @@ class TrackerXmlImport {
                 $group_id,
                 $xml_tracker_id,
                 $xml_tracker,
-                $extraction_path
+                $extraction_path,
+                $this->user_finder
             );
 
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
@@ -370,7 +381,12 @@ class TrackerXmlImport {
 
         // set formElements
         foreach ($xml->formElements->formElement as $index => $elem) {
-            $tracker->formElements[] = $this->formelement_factory->getInstanceFromXML($tracker, $elem, $this->xmlFieldsMapping);
+            $tracker->formElements[] = $this->formelement_factory->getInstanceFromXML(
+                $tracker,
+                $elem,
+                $this->xmlFieldsMapping,
+                $this->user_finder
+            );
         }
 
         // set semantics

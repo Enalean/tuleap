@@ -27,12 +27,13 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser {
 
     private $email_found_in_xml;
 
-    public function __construct(PFUser $user, $email_found_in_xml) {
+    public function __construct(PFUser $user, $email_found_in_xml, $original_user_id, $original_ldap_id) {
         parent::__construct(
             $user->getUserName(),
             $user->getRealName(),
             $user->getEmail(),
-            $user->getLdapId()
+            $original_user_id,
+            $original_ldap_id
         );
 
         $this->email_found_in_xml = $email_found_in_xml;
