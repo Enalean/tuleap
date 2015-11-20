@@ -391,6 +391,7 @@
             column.saving_wip       = false;
             column.is_small_width   = false;
             column.is_defered       = ! column.is_open;
+            column.original_label   = column.label;
         }
 
         function loadDeferedColumns() {
@@ -454,11 +455,11 @@
 
         function setWipLimitForColumn(column) {
             column.saving_wip = true;
-            return KanbanService.setWipLimitForColumn(column.id, kanban.id, column.limit_input).then(function(data) {
-                    column.limit       = column.limit_input;
-                    column.wip_in_edit = false;
-                    column.saving_wip  = false;
-                },
+            return KanbanService.editColumn(kanban.id, column).then(function(data) {
+                column.limit       = column.limit_input;
+                column.wip_in_edit = false;
+                column.saving_wip  = false;
+            },
                 reload
             );
         }

@@ -49,18 +49,36 @@
 
                 > li {
                     display: table-row;
-                    padding: 4px 0 4px 3px;
                     background: none;
 
                     > div {
                         display: table-cell;
+                        position: relative;
+
+                        &.cancel-deletion {
+                            position: absolute;
+                            left: 0;
+                            width: 100%;
+
+                            .btn-small {
+                                position: relative;
+                                float: right;
+                                top: 2px;
+                            }
+                        }
                     }
 
-                    .btn-mini {
+                    .btn-small {
                         white-space: nowrap;
-                        position: relative;
-                        top: -1px;
-                        margin: 0 0 0 5px;
+                        margin-left: 10px;
+
+                        &.btn-link {
+                            padding: 2px;
+                        }
+                    }
+
+                    .input-append > input[type="text"] {
+                        width: 150px;
                     }
 
                     &:first-child, &:last-child {
@@ -94,23 +112,33 @@
                     &.add-column > div {
                         padding: 3px 4px 8px;
 
-                        .btn {
-                            min-width: 90px;
+                        .btn > i {
+                            margin: 0 3px 0 0;
+                        }
+                    }
 
-                            > i {
-                                margin: 0 3px 0 0;
+                    &.column {
+                        > div:first-child {
+                            padding: 4px 0 4px 7px;
+                        }
+
+                        &.draggable:not(.editing) {
+                            cursor: move;
+
+                            > div:first-child {
+                                width: 100%;
+                                padding: 4px 0 4px 22px;
+                                background: url('drag.png') no-repeat 5px 8px;
+                            }
+
+                            &:hover {
+                                background: #EEE;
                             }
                         }
                     }
 
-                    &.draggable {
-                        cursor: move;
-
-                        & > div:first-child {
-                            width: 100%;
-                            padding: 4px 0 4px 22px;
-                            background: url('drag.png') no-repeat 5px 8px;
-                        }
+                    &.editing > div {
+                        padding: 4px 0 4px 15px;
                     }
                 }
             }
@@ -131,7 +159,7 @@ ul.column-configuration-column-list.angular-ui-tree-drag {
         box-shadow: 0 1px 5px rgba(0,0,0,0.3);
         white-space: nowrap;
 
-        .btn-mini {
+        .btn-small {
             display: none;
         }
     }

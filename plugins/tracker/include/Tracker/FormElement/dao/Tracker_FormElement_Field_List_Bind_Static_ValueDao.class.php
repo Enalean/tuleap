@@ -103,6 +103,18 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
+    public function updateLabel($id, $label) {
+        $id    = $this->da->escapeInt($id);
+        $label = $this->da->quoteSmart($label);
+
+        $sql = "UPDATE $this->table_name
+                SET label = $label
+                WHERE id = $id
+                   OR original_value_id = $id";
+
+        return $this->update($sql);
+    }
+
     public function save($id, $field_id, $label, $description, $rank, $is_hidden) {
         $id           = $this->da->escapeInt($id);
         $field_id     = $this->da->escapeInt($field_id);

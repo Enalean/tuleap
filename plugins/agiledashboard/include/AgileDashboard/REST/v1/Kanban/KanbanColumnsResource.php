@@ -102,7 +102,7 @@ class KanbanColumnsResource {
     /**
      * Update column
      *
-     * Change a column properties (wip_limit for now)
+     * Change column properties
      *
      * <pre>
      * /!\ Kanban REST routes are under construction and subject to changes /!\
@@ -110,20 +110,25 @@ class KanbanColumnsResource {
      *
      * @url PATCH {id}
      *
-     * @param int $id           Id of the column
-     * @param int $kanban_id    Id of the Kanban {@from query}
-     * @param int $wip_limit    The new wip limit {@from body} {@type int}
+     * @param int                             $id        Id of the column
+     * @param int                             $kanban_id Id of the Kanban {@from query}
+     * @param KanbanColumnPATCHRepresentation $column    The kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation}
      *
      * @throws 401
      * @throws 404
      */
-    protected function patch($id, $kanban_id, $wip_limit) {
+    protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
 
         try {
             $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
-            if (! $this->kanban_column_manager->setColumnWipLimit($current_user, $kanban, $column, $wip_limit)) {
+
+            if (isset($updated_column_properties->wip_limit) && ! $this->kanban_column_manager->updateWipLimit($current_user, $kanban, $column, $updated_column_properties->wip_limit)) {
+                throw new RestException(500);
+            }
+
+            if (isset($updated_column_properties->label) && ! $this->kanban_column_manager->updateLabel($current_user, $kanban, $column, $updated_column_properties->label)) {
                 throw new RestException(500);
             }
 

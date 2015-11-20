@@ -61,11 +61,16 @@ class KanbanColumnRepresentation {
      */
     public $user_can_remove_column;
 
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_edit_label;
+
     const ARCHIVE_COLUMN = 'archive';
 
     const BACKLOG_COLUMN = 'backlog';
 
-    public function build(AgileDashboard_KanbanColumn $column, $user_can_add_in_place, $user_can_remove_column) {
+    public function build(AgileDashboard_KanbanColumn $column, $user_can_add_in_place, $user_can_remove_column, $user_can_edit_label) {
         $this->id                     = JsonCast::toInt($column->getId());
         $this->label                  = $column->getLabel();
         $this->is_open                = $column->isOpen();
@@ -73,5 +78,6 @@ class KanbanColumnRepresentation {
         $this->limit                  = JsonCast::toInt($column->getLimit());
         $this->user_can_add_in_place  = $user_can_add_in_place;
         $this->user_can_remove_column = $user_can_remove_column;
+        $this->user_can_edit_label    = $user_can_edit_label;
     }
 }

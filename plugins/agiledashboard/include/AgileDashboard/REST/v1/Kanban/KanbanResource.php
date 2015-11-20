@@ -885,8 +885,15 @@ class KanbanResource extends AuthenticatedResource {
             $user_can_remove_column = false;
         }
 
+        try {
+            $this->kanban_actions_checker->checkUserCanEditColumnLabel($current_user, $kanban);
+            $user_can_edit_label = true;
+        } catch (Exception $exception) {
+            $user_can_edit_label = false;
+        }
+
         $column_representation = new KanbanColumnRepresentation();
-        $column_representation->build($new_column, $add_in_place, $user_can_remove_column);
+        $column_representation->build($new_column, $add_in_place, $user_can_remove_column, $user_can_edit_label);
 
         return $column_representation;
     }

@@ -30,12 +30,12 @@
             moveInBacklog       : moveInBacklog,
             moveInArchive       : moveInArchive,
             moveInColumn        : moveInColumn,
-            setWipLimitForColumn: setWipLimitForColumn,
             updateKanbanLabel   : updateKanbanLabel,
             deleteKanban        : deleteKanban,
             addColumn           : addColumn,
             reorderColumns      : reorderColumns,
-            removeColumn        : removeColumn
+            removeColumn        : removeColumn,
+            editColumn          : editColumn
         };
 
         function getKanban(id) {
@@ -202,19 +202,6 @@
             };
         }
 
-        function setWipLimitForColumn(column_id, kanban_id, wip_limit) {
-            wip_limit = wip_limit || 0;
-            return rest.one('kanban_columns', column_id)
-                .patch(
-                    {
-                        wip_limit: wip_limit
-                    },
-                    {
-                        kanban_id: kanban_id
-                    }
-                 );
-        }
-
         function updateKanbanLabel(kanban_id, kanban_label) {
             return rest.one('kanban', kanban_id).patch({
                 label: kanban_label
@@ -287,9 +274,22 @@
         }
 
         function removeColumn(kanban_id, column_id) {
-            return rest.one('kanban_columns', column_id).remove({
-                kanban_id: kanban_id
-            });
+            return rest
+                .one('kanban_columns', column_id)
+                .remove({
+                    kanban_id: kanban_id
+                });
+        }
+
+        function editColumn(kanban_id, column) {
+            return rest
+                .one('kanban_columns', column.id)
+                .patch({
+                    label    : column.label,
+                    wip_limit: column.limit_input || 0
+                }, {
+                    kanban_id: kanban_id
+                });
         }
     }
 })();

@@ -25,10 +25,6 @@ msgid "Archive:"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Are you sure to delete this Kanban?"
-msgstr ""
-
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr ""
 
@@ -61,6 +57,14 @@ msgid "Compact view"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Confirm deletion"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Confirm deletion of this Kanban"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Danger zone"
 msgstr ""
 
@@ -74,6 +78,10 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "Detailed view"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Edit"
 msgstr ""
 
 #: src/app/kanban.tpl.html
@@ -102,6 +110,10 @@ msgstr ""
 
 #: src/app/app-kanban-controller.js
 msgid "Kanban:"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
 msgstr ""
 
 #: src/app/error/error.tpl.html
@@ -141,7 +153,7 @@ msgid "Toggle this column"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "You can reorder and remove columns. More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+msgid "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
 msgstr ""
 
 #: src/app/kanban.tpl.html
