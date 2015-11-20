@@ -79,8 +79,6 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
             Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => 'short description',
             Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => true,
             Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
-            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => 'other',
-            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => 'do not copy',
             Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => 'approved',
         );
         $validator = $this->aCreationValidator($request_data, $required_custom_descriptions);

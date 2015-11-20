@@ -428,20 +428,6 @@ include_utils	over_X_years	$1 ans
 #-----------------------------------------------
 # Script: SF/www/include/vars.php
 #
-include_vars	policy	Politique d'échange $1
-include_vars	website_only	Site Web seul
-include_vars	other	Autre
-include_vars	comip	Licence Open Source approuvée par $1
-include_vars	gpl	Licence Licence Publique Générale (GPL)
-include_vars	lgpl	Licence Licence Publique Générale Amoindrie (LGPL)
-include_vars	bsdl	Licence BSD
-include_vars	mitxl	Licence MIT/X Consortium
-include_vars	artistic_l	Licence Artistic
-include_vars	moz_l	Licence Mozilla Public
-include_vars	qtp_l	Licence Qt Public
-include_vars	ibm_l	Licence IBM Public
-include_vars	p_l	Licence Python
-include_vars	public_domain	Domaine public
 include_vars	other_env	Autre environnement
 include_vars	web_env	Environment Web
 include_vars	other_lang	Autre Langue
