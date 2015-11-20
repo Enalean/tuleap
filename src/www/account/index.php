@@ -95,10 +95,16 @@ $themes     = util_get_theme_list();
 natcasesort($themes);
 
 foreach ($themes as $theme) {
+    $is_default  = $theme === $GLOBALS['sys_themedefault'];
+    $is_selected = $is_default;
+    if ($user->getTheme()) {
+        $is_selected = $theme === $user->getTheme();
+    }
+
     $all_themes[] = array(
         'theme_name'  => $theme,
-        'is_selected' => $theme === $user->getTheme(),
-        'is_default'  => $theme === $GLOBALS['sys_themedefault']
+        'is_selected' => $is_selected,
+        'is_default'  => $is_default
     );
 }
 
