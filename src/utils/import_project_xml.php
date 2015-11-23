@@ -35,14 +35,14 @@ $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'm:'; // give me the path of the user mapping file
 
 $long_options = array(
-    'force-create-all-users-active'
+    'force-create-all-users'
 );
 
 function usage() {
     global $argv;
 
     echo <<< EOT
-Usage: $argv[0] -p project_id -u user_name -i path_to_archive
+Usage: $argv[0] -p project_id -u user_name -i path_to_archive -m path_to_mapping
 
 Import a project structure
 
@@ -52,7 +52,7 @@ Import a project structure
   -m <path>       The path of the user mapping file
   -h              Display this help
 
-  --force-create-all-users-active Force creation/activation of all users before import
+  --force-create-all-users Force creation/activation of all users before import
 
 EOT;
     exit(1);
@@ -88,7 +88,7 @@ if (! isset($arguments['m'])) {
     $mapping_path = $arguments['m'];
 }
 
-$force_create_all_users_active = isset($arguments['force-create-all-users-active']);
+$force_create_all_users_active = isset($arguments['force-create-all-users']);
 
 $user_manager  = UserManager::instance();
 $security      = new XML_Security();
