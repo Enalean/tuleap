@@ -90,7 +90,7 @@ class ProjectCreatorTest extends UnitTestCase {
         $projectManager       = new MockProjectManager();
         
         $creator = TestHelper::getPartialMock('ProjectCreator', array('create_project'));
-        $creator->__construct($projectManager);
+        $creator->__construct($projectManager, ReferenceManager::instance());
         
         return $creator;
     }

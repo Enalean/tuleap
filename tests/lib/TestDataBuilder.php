@@ -107,7 +107,7 @@ class TestDataBuilder {
         $this->user_manager         = UserManager::instance();
         $this->user_permissions_dao = new UserPermissionsDao();
 
-        $this->project_creator = new ProjectCreator($this->project_manager);
+        $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance());
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['sys_lf'] = '\n';

@@ -122,19 +122,16 @@ class Group extends Error {
         return $template->isProject($this->data_array['type']);
     }
 
-	/*
-		Database field status of 'A' returns true
-	*/
-	function isActive() {
-		if ($this->getStatus()=='A') {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public function isActive() {
+        return $this->getStatus() == 'A';
+    }
 
     public function isDeleted() {
         return $this->getStatus() == 'D';
+    }
+
+    public function isSystem() {
+        return $this->getStatus() == 's' || $this->getStatus() == 'S';
     }
 
 	function getUnixName($tolower = true) {
