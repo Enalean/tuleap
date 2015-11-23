@@ -478,9 +478,8 @@ class ProjectCreator {
                       ON g2.group_id = ".db_ei($template_id)."
                     SET g1.truncated_emails = g2.truncated_emails
                     WHERE g1.group_id = ".db_ei($group_id);
-            db_query($sql);
 
-            $result = db_query($query);
+            $result = db_query($sql);
             if (!$result) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_truncated_emails'));
             }
