@@ -11,7 +11,9 @@ Version 8.9 (Not released yet)
 	* story #8557 import a subversion repository
             * tasks #8567 Import svn revisions
             * import subversions notifications
-  * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
+            * task #8568: separate .SVNAccessFile writer from www/svn
+
+        * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
