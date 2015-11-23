@@ -7,6 +7,7 @@ Version 8.9 (Not released yet)
             * Generates a mapping file between users in archive and on platform
             * Check mapping file
             * Introduce option force-create-all-users-active
+	    * Create user when needed
 
 	* story #8557 import a subversion repository
             * tasks #8567 Import svn revisions
