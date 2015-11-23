@@ -21,7 +21,8 @@
 
 require_once 'pre.php';
 
-$sys_user = getenv("USER");
+$posix_user = posix_getpwuid(posix_geteuid());
+$sys_user   = $posix_user['name'];
 if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
     fwrite(STDERR, 'Unsufficient privileges for user '.$sys_user.PHP_EOL);
     exit(1);
@@ -40,7 +41,7 @@ Usage: $argv[0] -u username -i path_to_archive -m path_to_mapping
 
 Check that the user mapping file is well formed and can be used for the import.
 
-  -u <user_name>  The user used to export
+  -u <user_name>  The user used to import
   -i <path>       The path of the archive of the exported XML + data
   -m <path>       The path of the user mapping file
   -h              Display this help

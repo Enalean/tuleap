@@ -21,7 +21,8 @@
 
 require_once 'pre.php';
 
-$sys_user = getenv("USER");
+$posix_user = posix_getpwuid(posix_geteuid());
+$sys_user   = $posix_user['name'];
 if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
     fwrite(STDERR, 'Unsufficient privileges for user '.$sys_user.PHP_EOL);
     exit(1);
@@ -45,8 +46,8 @@ Usage: $argv[0] -p project_id -u user_name -i path_to_archive
 
 Import a project structure
 
-  -p <project_id> The id of the project to export
-  -u <user_name>  The user used to export
+  -p <project_id> The id of the project to import the archive
+  -u <user_name>  The user used to import
   -i <path>       The path of the archive of the exported XML + data
   -m <path>       The path of the user mapping file
   -h              Display this help
