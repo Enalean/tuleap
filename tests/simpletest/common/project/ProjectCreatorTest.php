@@ -29,7 +29,7 @@ Mock::generate('SystemEventManager');
 
 class ProjectCreatorTest_BaseLanguage extends MockBaseLanguage {
     
-    public function getText($section, $name, $args) {
+    public function getText($section, $name, $args = array()) {
         $args = implode($args, ',');
         return "$section.$name($args)";
     }
@@ -89,8 +89,8 @@ class ProjectCreatorTest extends UnitTestCase {
     private function GivenAProjectCreator() {
         $projectManager       = new MockProjectManager();
         
-        $creator = TestHelper::getPartialMock('ProjectCreator', array('create_project'));
-        $creator->__construct($projectManager);
+        $creator = TestHelper::getPartialMock('ProjectCreator', array('createProject'));
+        $creator->__construct($projectManager, ReferenceManager::instance());
         
         return $creator;
     }
