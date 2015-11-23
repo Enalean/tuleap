@@ -22,6 +22,7 @@ Version 8.9 (Not released yet)
 	* request #8595: Fix ProjectXMLImporter undefined class constant error
 	* request #8589: Apache logs filled with No entry for terminal type "unknown"
 	* request #8590: Properly generate absolute server URL when behind a reverse proxy
+	* request #8613: Wrong preselection of theme for new user
 
 	== Plugins ==
 	* mediawiki: 0.100
