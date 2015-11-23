@@ -1,3 +1,6 @@
+Version 5.752 - Tuleap 8.9
+    * story #7858: return field dependencies regardless of workflow usage
+
 Version 5.751 - Tuleap 8.9
     * story #8485: enhance modal UX & Update a Kanban column
 
