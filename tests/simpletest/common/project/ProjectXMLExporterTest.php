@@ -41,6 +41,10 @@ class ProjectXMLExporterTest extends TuleapTestCase {
         );
     }
 
+    public function tearDown() {
+        parent::tearDown();
+    }
+
     public function itExportsStaticUgroupsForTheGivenProject() {
         $user_01 = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         $user_02 = aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
@@ -74,7 +78,7 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             'tracker_id' => 10
         );
 
-        $archive = new ZipArchive();
+        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
         $user      = mock('PFUser');
         $xml       = $this->xml_exporter->export($this->project, $options, $user, $archive);

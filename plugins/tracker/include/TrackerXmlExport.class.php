@@ -81,7 +81,7 @@ class TrackerXmlExport {
         }
     }
 
-    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id, PFUser $user, ZipArchive $archive) {
+    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id, PFUser $user, Tuleap\Project\XML\Export\ArchiveInterface $archive) {
         $xml_field_mapping = array();
         $xml_trackers      = $xml_content->addChild('trackers');
         $tracker           = $this->tracker_factory->getTrackerById($tracker_id);

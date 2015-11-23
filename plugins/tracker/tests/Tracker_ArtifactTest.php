@@ -1658,7 +1658,7 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         stub($changeset_02)->getArtifact()->returns($artifact);
         stub($changeset_02)->getValues()->returns(array($value_02));
 
-        $archive = new ZipArchive();
+        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
         $user_xml_exporter = new UserXmlExporter($this->user_manager, mock('UserXMLExportedCollection'));
 

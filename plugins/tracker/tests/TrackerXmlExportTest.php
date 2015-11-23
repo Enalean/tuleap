@@ -79,7 +79,7 @@ class TrackerXmlExportTest extends TuleapTestCase {
         expect($this->tracker1)->exportToXML()->never();
         expect($this->tracker1)->exportToXMLInProjectExportContext()->once();
 
-        $archive = new ZipArchive();
+        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
         $this->xml_export->exportSingleTrackerToXml($xml_content, $tracker_id, $user, $archive);
     }

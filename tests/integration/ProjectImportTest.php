@@ -71,9 +71,9 @@ class ProjectImportTest extends TuleapDbTestCase {
             new Log_ConsoleLogger()
         );
 
-        $xml_project = dirname(__FILE__).'/_fixtures/fake_project.xml';
+        $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__.'/_fixtures/fake_project');
 
-        $importer->import(null, $xml_project);
+        $importer->importNewFromArchive($archive);
 
         // Reset Project Manager (and its cache)
         ProjectManager::clearInstance();
@@ -87,4 +87,3 @@ class ProjectImportTest extends TuleapDbTestCase {
         $this->assertEqual($project->usesCVS(), false);
     }
 }
-?>

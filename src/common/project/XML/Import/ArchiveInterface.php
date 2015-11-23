@@ -18,9 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerXmlFieldsMapping_ValueNotFoundException extends Exception {
+namespace Tuleap\Project\XML\Import;
 
-    public function __construct($old_value_id, $old_reference) {
-        parent::__construct("Unable to find $old_reference (based on $old_value_id) in XML mapping");
-    }
+interface ArchiveInterface extends \Tuleap\Project\XML\ArchiveInterface {
+
+    /**
+     * Returns project.xml content
+     */
+    public function getProjectXML();
+
+    /**
+     * Returns users.xml content
+     */
+    public function getUsersXML();
+
+    /**
+     * Extrac archive files
+     */
+    public function extractFiles();
+
+    /**
+     * Return where the files are extracted
+     */
+    public function getExtractionPath();
+
+    /**
+     * Delete everythin in the temporary extraction path
+     */
+    public function cleanUp();
 }

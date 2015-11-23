@@ -188,7 +188,7 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
 
         $admin_user = stub('PFUser')->isSuperUser()->returns(true);
 
-        $archive = new ZipArchive();
+        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
         $exporter->export($tracker, $xml_element, $admin_user, $archive);
 
@@ -227,7 +227,7 @@ class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase {
 
         $this->expectException('Tracker_Artifact_XMLExportTooManyArtifactsException');
 
-        $archive = new ZipArchive();
+        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
         $exporter->export(mock('Tracker'), $xml_element, mock('PFUser'), $archive);
     }

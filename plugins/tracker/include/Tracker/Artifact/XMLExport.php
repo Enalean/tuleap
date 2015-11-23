@@ -53,7 +53,7 @@ class Tracker_Artifact_XMLExport {
         $this->user_xml_exporter    = $user_xml_exporter;
     }
 
-    public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user, ZipArchive $archive) {
+    public function export(Tracker $tracker, SimpleXMLElement $xml_content, PFUser $user, Tuleap\Project\XML\Export\ArchiveInterface $archive) {
         $artifacts_node = $xml_content->addChild('artifacts');
 
         $all_artifacts = $this->artifact_factory->getArtifactsByTrackerId($tracker->getId());

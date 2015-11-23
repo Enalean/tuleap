@@ -135,7 +135,7 @@ class Tracker_Artifact_XMLImport {
         } catch (Tracker_Artifact_Exception_EmptyChangesetException $exception) {
             $this->logger->error("Impossible to create artifact, there is no valid data to import for initial changeset: ".$exception->getMessage());
         } catch (Exception $exception) {
-            $this->logger->error("Unexpected exception: ".$exception->getMessage());
+            $this->logger->error("".get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
         }
     }
 

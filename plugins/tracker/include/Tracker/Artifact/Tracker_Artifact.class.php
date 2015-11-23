@@ -1939,7 +1939,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function exportToXML(
         SimpleXMLElement $artifacts_node,
         PFUser $user,
-        ZipArchive $archive,
+        Tuleap\Project\XML\Export\ArchiveInterface $archive,
         UserXMLExporter $user_xml_exporter
     ) {
         $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
@@ -1952,7 +1952,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $user_xml_exporter
         );
 
-        $artifact_xml_exporter->exportFullHistory($artifacts_node, $this, $archive);
+        $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
 
         $attachment_exporter = $this->getArtifactAttachmentExporter();
         $attachment_exporter->exportAttachmentsInArchive($this, $archive);

@@ -23,9 +23,9 @@ use UserManager;
 use Logger;
 use SimpleXMLElement;
 use PFUser;
-use ZipArchive;
 use XML_Security;
 use XML_RNGValidator;
+use Tuleap\Project\XML\Import\ArchiveInterface;
 
 class UsersToBeImportedCollectionBuilder {
 
@@ -70,8 +70,8 @@ class UsersToBeImportedCollectionBuilder {
     }
 
     /** @return UsersToBeImportedCollection */
-    public function buildFromArchive(ZipArchive $archive) {
-        $xml_contents = $archive->getFromName('users.xml');
+    public function buildFromArchive(ArchiveInterface $archive) {
+        $xml_contents = $archive->getUsersXML();
         if (! $xml_contents) {
             throw new UsersXMLNotFoundException();
         }

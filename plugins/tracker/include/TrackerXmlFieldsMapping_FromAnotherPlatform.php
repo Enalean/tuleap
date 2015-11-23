@@ -38,7 +38,7 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
             return $value->getId();
         }
 
-        throw new TrackerXmlFieldsMapping_ValueNotFoundException();
+        throw new TrackerXmlFieldsMapping_ValueNotFoundException($old_value_id, $old_reference);
     }
 
     private function getOldValueReferenceFromOldValueId($old_value_id) {

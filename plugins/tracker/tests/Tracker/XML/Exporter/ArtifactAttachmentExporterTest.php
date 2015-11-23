@@ -79,16 +79,15 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
     }
 
     private function initArchive() {
-        $this->archive = new ZipArchive();
-
-        $this->archive->open($this->archive_path, ZipArchive::CREATE);
+        $this->archive = new Tuleap\Project\XML\Export\ZipArchive($this->archive_path);
     }
 
     private function extractArchive() {
         $this->archive->close();
 
-        $this->archive->open($this->archive_path);
-        $this->archive->extractTo($this->extraction_path);
-        $this->archive->close();
+        $zip = new ZipArchive();
+        $zip->open($this->archive_path);
+        $zip->extractTo($this->extraction_path);
+        $zip->close();
     }
 }
