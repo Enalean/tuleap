@@ -190,6 +190,12 @@ dev-setup: .env
 show-passwords:
 	@docker run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
 
+dev-forgeupgrade:
+	@docker exec tuleap_web_1 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
+
+dev-clear-cache:
+	@docker exec tuleap_web_1 /usr/share/tuleap/src/utils/tuleap --clear-caches
+
 start-dns:
 	@docker stop dnsdock || true
 	@docker rm dnsdock || true
