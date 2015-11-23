@@ -15,9 +15,15 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 // ########################################################
 $request =& HTTPRequest::instance();
 if ($request->exist('Submit')) {
-	$newroot = trove_getrootcat($request->get('form_parent'));
+	$newroot   = trove_getrootcat($request->get('form_parent'));
+        $mandatory = $request->get('form_mandatory');
+
+        if ($newroot !== '0') {
+            $mandatory = 0;
+        }
+
 	if (db_escape_string($request->get('form_shortname'))) {
-		db_query('UPDATE trove_cat '
+            db_query('UPDATE trove_cat '
 			.'SET '
 			.'shortname=\''.db_escape_string($request->get('form_shortname'))
 			.'\',fullname=\''.db_escape_string($request->get('form_fullname'))
@@ -25,8 +31,9 @@ if ($request->exist('Submit')) {
 			.'\',parent=\''.db_escape_string($request->get('form_parent'))
 			.'\',version='.date("Ymd",time()).'01'
 			.',root_parent=\''.$newroot
-			.'\' WHERE trove_cat_id='.$request->getValidated('form_trove_cat_id', 'uint', 0));
-	} 
+                        .'\',mandatory='.db_escape_int($mandatory)
+			.' WHERE trove_cat_id='.$request->getValidated('form_trove_cat_id', 'uint', 0));
+	}
 	// update full paths now
 	trove_genfullpaths($newroot,trove_getfullname($newroot),$newroot);
 
@@ -50,16 +57,21 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title'))
 <p><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?>
 <br><input type="text"  size="25" maxlen="80" name="form_shortname" value="<?php print $purifier->purify($row_cat["shortname"]); ?>">
 <?php echo $Language->getText('admin_trove_cat_add','short_name_note'); ?>
-<p><?php echo $Language->getText('admin_trove_cat_add','full_name'); ?>
+</p><p><?php echo $Language->getText('admin_trove_cat_add','full_name'); ?>
 <br><input type="text"  size="45" maxlen="80" name="form_fullname" value="<?php print $purifier->purify($row_cat["fullname"]); ?>">
 <?php echo $Language->getText('admin_trove_cat_add','full_name_note'); ?>
-<p><?php echo $Language->getText('admin_trove_cat_add','description'); ?>
+</p><p><?php echo $Language->getText('admin_trove_cat_add','description'); ?>
 <br><input type="text" name="form_description" size="80"  maxlen="255" value="<?php print $purifier->purify($row_cat["description"]); ?>">
 <?php echo $Language->getText('admin_trove_cat_add','description_note'); ?>
-<p><?php echo $Language->getText('admin_trove_cat_add','parent'); ?>:
+</p><p><?php echo $Language->getText('admin_trove_cat_add','parent'); ?>:
 <?php echo trove_get_html_cat_select_parent($row_cat["parent"], $row_cat["fullpath"]); ?>
+</p><label class="trove-mandatory">
+<input type="checkbox" value="1" name="form_mandatory" <?php if ($row_cat["mandatory"]) { echo ("checked=checked"); } ?>>
+<?php echo $Language->getText('admin_trove_cat_add','mandatory'); ?>
+</label>
+<span class="help-block"><?php echo $Language->getText('admin_trove_cat_add','mandatory_note'); ?></span>
 <p><input type="submit" name="Submit" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_submit'); ?>">
-</form>
+</p></form>
 
 <?php
 $HTML->footer(array());

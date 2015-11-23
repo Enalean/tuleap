@@ -91,6 +91,7 @@ class Combined {
             '/scripts/placeholder/jquery.placeholder.js',
             '/scripts/tuleap/datetimepicker.js',
             '/scripts/tuleap/svn.js',
+            '/scripts/tuleap/trovecat.js',
             '/scripts/tuleap/account-maintenance.js',
             '/scripts/tuleap/search.js',
             '/scripts/tuleap/tuleap-mention.js',

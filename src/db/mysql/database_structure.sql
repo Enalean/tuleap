@@ -1184,6 +1184,7 @@ CREATE TABLE trove_cat (
   count_subproj int(11) NOT NULL default '0',
   fullpath text NOT NULL,
   fullpath_ids text,
+  mandatory TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (trove_cat_id),
   KEY parent_idx (parent),
   KEY root_parent_idx (root_parent),
