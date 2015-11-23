@@ -83,7 +83,7 @@ class Tracker_REST_TrackerRestBuilder {
      * @return Tuleap\Tracker\REST\WorkflowRepresentation | null
      */
     private function getWorkflowRepresentation(Workflow $workflow, PFUser $user, $project_id) {
-        if (! $workflow->isUsed() || ! $workflow->getField()->userCanRead($user)) {
+        if ($workflow->getField() && ! $workflow->getField()->userCanRead($user)) {
             return;
         }
 
