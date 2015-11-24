@@ -31,10 +31,23 @@ class SVNXMLImporter {
     /** @var SVN_AccessFile_DAO */
     private $accessfile_dao;
 
-    public function __construct(Logger $logger, SvnNotificationDao $notification_dao = null, SVN_AccessFile_DAO $accessfile_dao = null) {
+    /** @var XML_RNGValidator */
+    private $xml_validator;
+
+    public function __construct(
+        Logger $logger,
+        XML_RNGValidator $xml_validator = null,
+        SvnNotificationDao $notification_dao = null,
+        SVN_AccessFile_DAO $accessfile_dao = null)
+    {
         $this->notification_dao = $notification_dao;
         $this->accessfile_dao = $accessfile_dao;
         $this->logger = $logger;
+        $this->xml_validator = $xml_validator;
+
+        if (empty($this->xml_validator)) {
+            $this->xml_validator = new XML_RNGValidator();
+        }
     }
 
     // @return boolean specifying the success of the import
@@ -43,6 +56,10 @@ class SVNXMLImporter {
         if(!$xml_svn) {
             return true;
         }
+
+        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/svn.rng');
+        $this->xml_validator->validate($xml_svn, $rng_path);
+        $this->logger->debug("XML tag <svn/> is valid");
 
         $this->importDumpFile($project, $xml_svn, $extraction_path);
         $this->importNotification($project, $xml_svn);
@@ -96,8 +113,10 @@ class SVNXMLImporter {
     private function importAccessFile(Project $project, $xml_svn) {
         $dao = $this->getAccessFileDAO();
         $tagname = "access-file";
-        $contents = (string) $xml_svn->$tagname;
+        $contents = (string) $xml_svn->$tagname . "\n";
         $writer = new SVN_AccessFile_Writer($project->getSVNRootPath());
+
+        $this->logger->debug("Write SVN AccessFile: " . $writer->filename());
 
         if(!$dao->saveNewAccessFileVersionInProject($project->getID(), $contents)) {
             throw new SVNXMLImporterException("Could not save new access file version");
