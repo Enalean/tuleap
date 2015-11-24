@@ -47,6 +47,7 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
 use PlanningPermissionsManager;
+use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 
 /**
  * Wrapper for milestone related REST methods
@@ -233,26 +234,12 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeadersForMilestone($milestone);
 
-        $milestone_representation = new MilestoneRepresentation();
-        $milestone_representation->build(
-            $milestone,
-            $this->milestone_factory->getMilestoneStatusCount(
-                $user,
-                $milestone
-            ),
-            $this->getBacklogTrackers($milestone),
-            $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
+        $milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->milestone_factory,
+            $this->backlog_strategy_factory,
+            $this->event_manager
         );
-
-        $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
-            array(
-                'version'                  => 'v1',
-                'user'                     => $user,
-                'milestone'                => $milestone,
-                'milestone_representation' => &$milestone_representation,
-            )
-        );
+        $milestone_representation = $milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
 
         return $milestone_representation;
     }
@@ -919,10 +906,6 @@ class MilestoneResource extends AuthenticatedResource {
             $strategy,
             ''
         );
-    }
-
-    private function getBacklogTrackers(Planning_Milestone $milestone) {
-        return $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
     }
 
     private function checkContentLimit($limit) {
