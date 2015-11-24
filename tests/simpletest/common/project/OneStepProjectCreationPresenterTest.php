@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,10 +23,16 @@ require_once 'common/include/Response.class.php';
 
 class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {
-        $project_manager = mock('ProjectManager');
-        $request = aRequest()->withParams($request_data)->build();
+        $project_manager  = mock('ProjectManager');
+        $request          = aRequest()->withParams($request_data)->build();
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
-        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), $project_manager);
+
+        return new Project_OneStepCreation_OneStepCreationPresenter(
+            $creation_request,
+            array(),
+            $project_manager,
+            array()
+        );
     }
 
     public function testNewObjectSetsFullName() {

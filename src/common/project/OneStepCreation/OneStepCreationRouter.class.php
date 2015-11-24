@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'OneStepCreationController.class.php';
-
 /**
  * Routes the one step creation requests
  */
 class Project_OneStepCreation_OneStepCreationRouter {
+
+    /**
+     * @var TroveCatFactory
+     */
+    private $trove_cat_factory;
 
     /** @var ProjectManager */
     private $project_manager;
@@ -33,14 +36,21 @@ class Project_OneStepCreation_OneStepCreationRouter {
 
     public function __construct(
         ProjectManager $project_manager,
-        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory
+        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
+        TroveCatFactory $trove_cat_factory
     ) {
         $this->project_manager            = $project_manager;
         $this->custom_description_factory = $custom_description_factory;
+        $this->trove_cat_factory          = $trove_cat_factory;
     }
 
     public function route(Codendi_Request $request) {
-        $controller = new Project_OneStepCreation_OneStepCreationController($request, $this->project_manager, $this->custom_description_factory);
+        $controller = new Project_OneStepCreation_OneStepCreationController(
+            $request,
+            $this->project_manager,
+            $this->custom_description_factory,
+            $this->trove_cat_factory
+        );
 
         if ($request->get('create_project')) {
             $controller->create();
@@ -49,4 +59,3 @@ class Project_OneStepCreation_OneStepCreationRouter {
         }
     }
 }
-?>

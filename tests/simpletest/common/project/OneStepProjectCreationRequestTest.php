@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -98,11 +98,25 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase {
         $request_data = array(
             Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
         );
+
         $creation_request = $this->aCreationRequest($request_data);
         $values = $creation_request->getProjectValues();
 
         $this->assertEqual($values['project']['services'][$this->service_tracker_id]['is_used'], 1);
         $this->assertEqual($values['project']['services'][$this->service_git_id]['is_used'], 0);
     }
+
+    public function itIncludesMandatoryTroveCats() {
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::TROVE_CAT_PREFIX => array(
+                1 => 235
+            )
+        );
+
+        $creation_request = $this->aCreationRequest($request_data);
+        $values           = $creation_request->getProjectValues();
+
+        $this->assertNotNull($values['project']['trove'][1]);
+        $this->assertEqual($values['project']['trove'][1], array(235));
+    }
 }
-?>

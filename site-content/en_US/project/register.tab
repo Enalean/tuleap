@@ -138,6 +138,7 @@ register_project_one_step	title	Project Creation request
 register_project_one_step	page_description_beg	Creating a new project on
 register_project_one_step	page_description_end	only takes a few steps.
 register_project_one_step	custom_description_missing	The field '$1' is required
+register_project_one_step	mandatory_trovecat_missing	The category '$1' is required
 register_project_one_step	warning	Warning
 register_project_one_step	warning_message	Before being able to do anything with your project, a system administrator must approve the project.
 register_project_one_step	description_container_title	Describe your project
@@ -170,6 +171,7 @@ register_project_one_step	complete_thanks	Thank you for using $1
 register_project_one_step	complete_mail_subject	New project registered: $1
 register_project_one_step	complete_mail_body_auto	A new project has just been registered on $1\n\nProject name: $2\n\nAs per site admin configuration it was automatically accepted.\nShall you want to access project's details, you can click on the following URL to access site-admin panel :\n$3\n
 register_project_one_step	complete_mail_body_approve	A new project has just been registered on $1\n\nProject name: $2\n\nPlease click on the following URL to approve the registration: $3
+register_project_one_step	trove_cat_legend	Trove Category
 #
 #-----------------------------------------------
 # Script: src/common/project/OneStepRegistration/OneStepRegistrationPresenter.class.php

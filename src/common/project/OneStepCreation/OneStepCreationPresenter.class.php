@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2015. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -38,6 +38,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     const SHORT_DESCRIPTION = 'form_short_description';
     const TOS_APPROVAL      = 'form_terms_of_services_approval';
     const PROJECT_DESCRIPTION_PREFIX = 'form_';
+    const TROVE_CAT_PREFIX           = 'trove';
 
     public $full_name_label                = self::FULL_NAME;
     public $unix_name_label                = self::UNIX_NAME;
@@ -66,14 +67,25 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     private $creation_request;
 
+    /**
+     * @var array
+     */
+    public $trove_cats;
+
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
         array $required_custom_descriptions,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
+        array $trove_cats
     ) {
         $this->creation_request                       = $creation_request;
         $this->project_manager                        = $project_manager;
         $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
+        $this->trove_cats                             = $trove_cats;
+    }
+
+    public function hasTroveCats() {
+        return count($this->trove_cats) > 0;
     }
 
     /**
@@ -261,6 +273,15 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     public function getAboutToCreateOptionalLabel() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'about_to_create_optional');
     }
+
+    public function trove_cat_legend() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'trove_cat_legend');
+    }
+
+    public function none_selected() {
+        return $GLOBALS['Language']->getText('include_trove', 'none_selected');
+    }
+
     /**
      * @return bool
      */
@@ -314,5 +335,3 @@ class Project_OneStepCreation_OneStepCreationPresenter {
         return $templates;
     }
 }
-
-?>

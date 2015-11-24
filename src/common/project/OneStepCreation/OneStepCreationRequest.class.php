@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2015. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -81,16 +81,16 @@ class Project_OneStepCreation_OneStepCreationRequest {
      */
     private $custom_descriptions = array();
 
-    /**
-     * @var array
-     */
-    private $available_licenses;
-
     /** @var ProjectManager */
     private $project_manager;
 
     /** @var Codendi_Request */
     private $request;
+
+    /**
+     * @var array
+     */
+    private $trove_cats;
 
     public function __construct(Codendi_Request $request, ProjectManager $project_manager) {
         $this->request         = $request;
@@ -103,7 +103,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
             ->setIsPublic($request_data)
             ->setTemplateId($request_data)
             ->setTosApproval($request_data)
-            ->setCustomDescriptions($request_data);
+            ->setCustomDescriptions($request_data)
+            ->setTroveCats($request_data);
     }
 
     /**
@@ -122,9 +123,26 @@ class Project_OneStepCreation_OneStepCreationRequest {
                     'is_test'                                                           => false,
                     'services'                                                          => $this->getServices(),
                 ),
-                $this->custom_descriptions
+                $this->custom_descriptions,
+                $this->getTroveCatDataForProjectRequest()
             )
         );
+    }
+
+    private function getTroveCatDataForProjectRequest() {
+        $trove_data = array();
+
+        if (count($this->trove_cats) > 0) {
+            $troves = array();
+
+            foreach ($this->trove_cats as $trove_id => $selected_child_trove_id) {
+                $troves[$trove_id] = array($selected_child_trove_id);
+            }
+
+            $trove_data['trove'] = $troves;
+        }
+
+        return $trove_data;
     }
 
     /**
@@ -196,6 +214,15 @@ class Project_OneStepCreation_OneStepCreationRequest {
     public function getCustomProjectDescription($id) {
         if (isset($this->custom_descriptions[Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . $id])) {
             return $this->custom_descriptions[Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . $id];
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getTroveCat($id) {
+        if (isset($this->trove_cats[$id])) {
+            return $this->trove_cats[$id];
         }
     }
 
@@ -323,6 +350,20 @@ class Project_OneStepCreation_OneStepCreationRequest {
                 $this->custom_descriptions[$key] = $value;
             }
         }
+
+        return $this;
+    }
+
+    private function setTroveCats($data) {
+        foreach ($data as $key => $trove_value) {
+            if ($key === Project_OneStepCreation_OneStepCreationPresenter::TROVE_CAT_PREFIX) {
+                foreach ($trove_value as $trove_id => $selected_child_trove_id) {
+                    $this->trove_cats[$trove_id] = $selected_child_trove_id;
+                }
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -338,5 +379,3 @@ class Project_OneStepCreation_OneStepCreationRequest {
         return $services;
     }
 }
-
-?>
