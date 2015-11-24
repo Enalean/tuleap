@@ -14,6 +14,7 @@ Version 8.9 (Not released yet)
             * tasks #8567 Import svn revisions
             * import subversions notifications
             * task #8568: separate .SVNAccessFile writer from www/svn
+            * task #8568: import subversion accessfile
 
         * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
 
