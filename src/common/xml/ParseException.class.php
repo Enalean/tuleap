@@ -19,6 +19,7 @@
  */
 
 class XML_ParseException extends Exception {
+    /** @var XML_ParseError[] */
     private $errors;
     private $indented_xml;
     private $rng_path;
@@ -35,7 +36,11 @@ class XML_ParseException extends Exception {
     }
 
     public function getErrors() {
-        return $this->errors;
+        $errors = array();
+        foreach ($this->errors as $error) {
+            $errors[] = $error.' in '.$this->indented_xml[$error->getLine()-1].'';
+        }
+        return $errors;
     }
 
     public function getIndentedXml() {
