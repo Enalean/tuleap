@@ -3,7 +3,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 grammar {
     start = element ugroups {
         element ugroup {
-            attribute name { xsd:string },
+            attribute name { ugroup_name },
             attribute description { xsd:string },
             element members {
                 element member {
@@ -16,4 +16,6 @@ grammar {
     user_content =
         attribute format { "username" | "ldap" | "id" },
         xsd:string
+
+    ugroup_name = xsd:string { pattern = "[a-zA-Z0-9_\-]+" }
 }

@@ -139,7 +139,7 @@ try {
     exit(0);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
-        $console->error($parse_error);
+        $console->error('XML: '.$parse_error);
     }
 } catch (Exception $exception) {
     $console->error($exception->getMessage());

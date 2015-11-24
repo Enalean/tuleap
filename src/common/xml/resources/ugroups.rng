@@ -5,7 +5,7 @@
       <oneOrMore>
         <element name="ugroup">
           <attribute name="name">
-            <data type="string"/>
+            <ref name="ugroup_name"/>
           </attribute>
           <attribute name="description">
             <data type="string"/>
@@ -30,5 +30,10 @@
       </choice>
     </attribute>
     <data type="string"/>
+  </define>
+  <define name="ugroup_name">
+    <data type="string">
+      <param name="pattern">[a-zA-Z0-9_\-]+</param>
+    </data>
   </define>
 </grammar>
