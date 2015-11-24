@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class SVNXMLImporterException extends Exception {
+}
+
 class SVNXMLImporter {
     /** @var Logger */
     private $logger;
@@ -25,8 +28,12 @@ class SVNXMLImporter {
     /** @var SvnNotificationDao */
     private $notification_dao;
 
-    public function __construct(Logger $logger, SvnNotificationDao $notification_dao = null) {
+    /** @var SVN_AccessFile_DAO */
+    private $accessfile_dao;
+
+    public function __construct(Logger $logger, SvnNotificationDao $notification_dao = null, SVN_AccessFile_DAO $accessfile_dao = null) {
         $this->notification_dao = $notification_dao;
+        $this->accessfile_dao = $accessfile_dao;
         $this->logger = $logger;
     }
 
@@ -37,14 +44,13 @@ class SVNXMLImporter {
             return true;
         }
 
-        $dumpfile_ok = $this->import_dumpfile($project, $xml_svn, $extraction_path);
-        $notification_ok = $this->import_notification($project, $xml_svn);
-
-        return $dumpfile_ok && $notification_ok;
+        $this->importDumpFile($project, $xml_svn, $extraction_path);
+        $this->importNotification($project, $xml_svn);
+        $this->importAccessFile($project, $xml_svn);
     }
 
     // @return boolean true on success, false on failure
-    private function import_dumpfile(Project $project, $xml_svn, $extraction_path) {
+    private function importDumpFile(Project $project, $xml_svn, $extraction_path) {
         $attrs = $xml_svn->attributes();
         if(!isset($attrs['dump-file'])) return true;
 
@@ -57,32 +63,48 @@ class SVNXMLImporter {
         try {
             $cmd = new System_Command();
             $command_output = $cmd->exec($commandline);
-            $return_status = 0;
+            foreach($command_output as $line) {
+                $this->logger->debug("svnadmin: $line");
+            }
+            $this->logger->debug("svnadmin returned with status 0");
         } catch (System_Command_CommandException $e) {
-            $command_output = $e->output;
-            $return_status = $e->return_value;
+            foreach($e->output as $line) {
+                $this->logger->error("svnadmin: $line");
+            }
+            $this->logger->error("svnadmin returned with status {$e->return_value}");
+            throw new SVNXMLImporterException(
+                "failed to svnadmin load $dumpfile_arg in $rootpath_arg:".
+                " exited with status {$e->return_value}");
         }
-
-        foreach($command_output as $line) {
-            $this->logger->debug($line);
-        }
-        $this->logger->debug("Exited with status $return_status");
-
-        return 0 === $return_status;
     }
 
     // @return boolean true on success, false on failure
-    private function import_notification(Project $project, $xml_svn) {
+    private function importNotification(Project $project, $xml_svn) {
         $dao = $this->getNotificationDAO();
-        $res = true;
         foreach($xml_svn->notification as $notif) {
             $attrs = $notif->attributes();
             $path = $attrs['path'];
             $emails = $attrs['emails'];
             $ok = $dao->setSvnMailingList($project->getID(), $emails, $path);
-            if (!$ok) $res = false;
+            if (!$ok) {
+                throw new SVNXMLImporterException("Could not set svn mailing lists");
+            }
         }
-        return $res;
+    }
+
+    // @return boolean true on success, false on failure
+    private function importAccessFile(Project $project, $xml_svn) {
+        $dao = $this->getAccessFileDAO();
+        $tagname = "access-file";
+        $contents = (string) $xml_svn->$tagname;
+        $writer = new SVN_AccessFile_Writer($project->getSVNRootPath());
+
+        if(!$dao->saveNewAccessFileVersionInProject($project->getID(), $contents)) {
+            throw new SVNXMLImporterException("Could not save new access file version");
+        }
+        if(!$writer->write_with_defaults($contents)) {
+            throw new SVNXMLImporterException("Could not write to " . $writer->filename());
+        }
     }
 
     // @return SvnNotificationDao the Notification DAO
@@ -91,6 +113,14 @@ class SVNXMLImporter {
             $this->notification_dao = new SvnNotificationDao(CodendiDataAccess::instance());
         }
         return $this->notification_dao;
+    }
+
+    // @return SVN_AccessFile_DAO the AccessFile DAO
+    private function getAccessFileDAO() {
+        if(empty($this->accessfile_dao)){
+            $this->accessfile_dao = new SVN_AccessFile_DAO();
+        }
+        return $this->accessfile_dao;
     }
 }
 

@@ -22,21 +22,27 @@ class SVNXMLImporterTest extends TuleapTestCase {
     private $importer;
     private $temp_project_dir;
     private $svn_notification_dao;
+    private $svn_accessfile_dao;
     private $old_homedir;
 
     public function setUp() {
         parent::setUp();
 
-        $dao = mock("SvnNotificationDao");
-        $dao->setReturnValue('setSvnMailingList', true);
-        $this->svn_notification_dao = $dao;
+        $dao1 = mock("SvnNotificationDao");
+        $dao1->setReturnValue('setSvnMailingList', true);
+        $this->svn_notification_dao = $dao1;
+
+        $dao2 = mock("SVN_AccessFile_DAO");
+        $dao2->setReturnValue('saveNewAccessFileVersionInProject', true);
+        $this->svn_accessfile_dao = $dao2;
+
+        $this->importer = new SVNXMLImporter(mock('Logger'), $this->svn_notification_dao, $this->svn_accessfile_dao);
 
         // Create a temporary home, else svnadmin will complain it cannot access
         // its ~/.svnadmin directory
         $this->old_homedir = getenv('HOME');
         putenv("HOME=" . parent::getTmpDir());
 
-        $this->importer = new SVNXMLImporter(mock('Logger'), $this->svn_notification_dao);
 
         // Create a temp dir with subversion repositories
         $tmp_dir = parent::getTmpDir();
@@ -55,29 +61,31 @@ class SVNXMLImporterTest extends TuleapTestCase {
         putenv("HOME=" . $this->old_homedir);
     }
 
-    public function itShouldImportOneRevisionAndReturnTrue() {
+    public function itShouldImportOneRevision() {
         copy(__DIR__ . '/_fixtures/svn_2revs.dump', parent::getTmpDir() . DIRECTORY_SEPARATOR . 'svn.dump');
         $project = new Project(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml_element = new SimpleXMLElement('<project><svn dump-file="svn.dump"/></project>');
-        $res = $this->importer->import($project, $xml_element, parent::getTmpDir());
+        $this->importer->import($project, $xml_element, parent::getTmpDir());
         $this->assertRevision(1, $this->temp_project_dir);
-        $this->assertTrue($res);
     }
 
-    public function itShouldDoNothingIfNoSvnNodeAndReturnTrue() {
+    public function itShouldDoNothingIfNoSvnNode() {
         $project = new Project(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml_element = new SimpleXMLElement('<project></project>');
-        $res = $this->importer->import($project, $xml_element, 'an_extraction_path');
+        $this->importer->import($project, $xml_element, 'an_extraction_path');
         $this->assertRevision(0, $this->temp_project_dir);
-        $this->assertTrue($res);
     }
 
-    public function itShouldFailToImportIfTheSVNFileIsNotPresentAndReturnFalse() {
+    public function itShouldFailToImportIfTheSVNFileIsNotPresent() {
         $project = new Project(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml_element = new SimpleXMLElement('<project><svn dump-file="svn.dump"/></project>');
-        $res = $this->importer->import($project, $xml_element, parent::getTmpDir());
+        try {
+            $this->importer->import($project, $xml_element, parent::getTmpDir());
+            $this->assertTrue(false);
+        } catch (SVNXMLImporterException $e) {
+            $this->assertTrue(true);
+        }
         $this->assertRevision(0, $this->temp_project_dir);
-        $this->assertFalse($res);
     }
 
     public function itShouldImportNotifications(){
@@ -90,16 +98,40 @@ class SVNXMLImporterTest extends TuleapTestCase {
                 </svn>
             </project>
 XML;
-        $res = $this->importer->import(
+        $this->importer->import(
             $project,
             new SimpleXMLElement($xml_document),
             parent::getTmpDir());
 
-        $this->assertTrue($res);
         $dao = $this->svn_notification_dao;
         $dao->expectAt(0, 'setSvnMailingList', array(123, "test1@domain1, test2@domain2", "/trunk"));
         $dao->expectAt(1, 'setSvnMailingList', array(123, "tags@domain3", "/tags"));
         $dao->expectCallCount('setSvnMailingList', 2);
+    }
+
+    public function itShouldImportSvnAccessFile() {
+        $project = new Project(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $access_file = "[groups]\nmembers = usernameTOTO123\n\n\n[/]\n* = r\n@members = rw\n";
+        $xml_document = <<<XML
+            <project>
+                <svn>
+                    <access-file>$access_file</access-file>
+                </svn>
+            </project>
+XML;
+        $this->importer->import(
+            $project,
+            new SimpleXMLElement($xml_document),
+            parent::getTmpDir());
+
+        $dao = $this->svn_accessfile_dao;
+        $dao->expectCallCount('saveNewAccessFileVersionInProject', 1);
+        $dao->expectAt(0, 'saveNewAccessFileVersionInProject', array(123, $access_file));
+
+        $svnroot = $project->getSVNRootPath();
+        $accessfile = "$svnroot/.SVNAccessFile";
+        $found = strstr(file_get_contents($accessfile), "TOTO123") !== false;
+        $this->assertTrue($found);
     }
 
     private function assertRevision($expected, $svn_dir) {
