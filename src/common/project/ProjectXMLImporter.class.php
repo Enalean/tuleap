@@ -56,7 +56,7 @@ class ProjectXMLImporter {
         $this->user_finder     = $user_finder;
         $this->logger          = $logger;
 
-        $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance());
+        $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance(), true);
     }
 
     public function importNewFromArchive(ZipArchive $archive) {

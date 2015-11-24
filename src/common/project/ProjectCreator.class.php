@@ -47,6 +47,12 @@ define('PROJECT_APPROVAL_AUTO',     'A');
  * For now, mainly a wrapper for create_project method
  */
 class ProjectCreator {
+
+    /**
+     * @var bool true to bypass manual activation
+     */
+    private $force_activation;
+
     /**
      * @var ProjectManager
      */
@@ -67,7 +73,8 @@ class ProjectCreator {
      */
     var $ruleFullName;
 
-    public function __construct(ProjectManager $projectManager, ReferenceManager $reference_manager) {
+    public function __construct(ProjectManager $projectManager, ReferenceManager $reference_manager, $force_activation = false) {
+        $this->force_activation  = $force_activation;
         $this->reference_manager = $reference_manager;
         $this->ruleShortName  = new Rule_ProjectName();
         $this->ruleFullName   = new Rule_ProjectFullName();
@@ -555,7 +562,7 @@ class ProjectCreator {
     private function autoActivateProject($group){
         $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
-        if ($auto_approval == PROJECT_APPROVAL_AUTO) {
+        if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
             $this->projectManager->activate($group);
         }
     }
