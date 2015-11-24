@@ -1,3 +1,6 @@
+Version 1.113 - Tuleap 8.9
+    * story #8560: Define a trovecat as "mandatory"
+
 Version 1.112 - Tuleap 8.9
     * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
 

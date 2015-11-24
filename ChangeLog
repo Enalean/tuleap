@@ -1,6 +1,7 @@
 Version 8.9 (Not released yet)
 
 	== Enhancement ==
+	* story #8560: Define a trovecat as "mandatory"
 	* story #8528: create nonexistant user account at import time
             * Refacto: inject UserXmlExporter
             * Generate users.xml
@@ -38,7 +39,7 @@ Version 8.9 (Not released yet)
 	* userlog: 1.6
 
     == Themes ==
-	* FlamingParrot: 1.112
+	* FlamingParrot: 1.113
 
 Version 8.8 (Friday, November 6th 2015)
 
