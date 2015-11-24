@@ -1,3 +1,6 @@
+Version 1.305 - Tuleap 8.9
+    * story #8380: result of v1/milestones/:id is now injected to the angular init() method
+
 Version 1.304 - Tuleap 8.9
     * story #8485: enhance modal UX & Update a Kanban column
 
