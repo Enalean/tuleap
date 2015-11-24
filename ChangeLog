@@ -15,6 +15,7 @@ Version 8.9 (Not released yet)
             * import subversions notifications
             * task #8568: separate .SVNAccessFile writer from www/svn
             * task #8568: import subversion accessfile
+            * validate <svn/> tag using RelaxNG on import
 
         * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
 
