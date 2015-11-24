@@ -109,7 +109,7 @@ class ProjectXMLImporter {
 
         $this->importUgroups($project, $xml_element);
 
-        $svn = new SVNXMLImporter($this->logger);
+        $svn = new SVNXMLImporter($this->logger, $this->xml_validator);
         $svn->import($project, $xml_element, $extraction_path);
 
         $this->logger->info("Ask to plugin to import data from XML");

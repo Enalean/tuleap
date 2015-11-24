@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="svn">
+      <interleave>
+        <optional>
+          <!-- Path to the svn dump file -->
+          <attribute name="dump-file">
+            <data type="string"/>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Content of the .SVNAccessFile inline in the XML -->
+          <element name="access-file">
+            <data type="string"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <!-- E-mail subscriptions -->
+          <element name="notification">
+            <attribute name="path">
+              <data type="string"/>
+            </attribute>
+            <attribute name="emails">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </start>
+</grammar>

@@ -36,7 +36,7 @@ class SVNXMLImporterTest extends TuleapTestCase {
         $dao2->setReturnValue('saveNewAccessFileVersionInProject', true);
         $this->svn_accessfile_dao = $dao2;
 
-        $this->importer = new SVNXMLImporter(mock('Logger'), $this->svn_notification_dao, $this->svn_accessfile_dao);
+        $this->importer = new SVNXMLImporter(mock('Logger'), null, $this->svn_notification_dao, $this->svn_accessfile_dao);
 
         // Create a temporary home, else svnadmin will complain it cannot access
         // its ~/.svnadmin directory
