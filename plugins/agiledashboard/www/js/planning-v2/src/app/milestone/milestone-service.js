@@ -12,20 +12,22 @@
         });
 
         return {
-            getSubMilestones         : getSubMilestones,
-            putSubMilestones         : putSubMilestones,
-            getMilestones            : getMilestones,
-            getMilestone             : getMilestone,
-            getContent               : getContent,
-            reorderBacklog           : reorderBacklog,
-            removeAddReorderToBacklog: removeAddReorderToBacklog,
-            removeAddToBacklog       : removeAddToBacklog,
-            reorderContent           : reorderContent,
-            addReorderToContent      : addReorderToContent,
-            addToContent             : addToContent,
-            removeAddReorderToContent: removeAddReorderToContent,
-            removeAddToContent       : removeAddToContent,
-            updateInitialEffort      : updateInitialEffort
+            getSubMilestones             : getSubMilestones,
+            putSubMilestones             : putSubMilestones,
+            getMilestones                : getMilestones,
+            getMilestone                 : getMilestone,
+            getContent                   : getContent,
+            reorderBacklog               : reorderBacklog,
+            removeAddReorderToBacklog    : removeAddReorderToBacklog,
+            removeAddToBacklog           : removeAddToBacklog,
+            reorderContent               : reorderContent,
+            addReorderToContent          : addReorderToContent,
+            addToContent                 : addToContent,
+            removeAddReorderToContent    : removeAddReorderToContent,
+            removeAddToContent           : removeAddToContent,
+            updateInitialEffort          : updateInitialEffort,
+            defineAllowedBacklogItemTypes: defineAllowedBacklogItemTypes,
+            augmentMilestone             : augmentMilestone
         };
 
         function getMilestone(milestone_id, limit, offset, scope_items) {
@@ -189,8 +191,7 @@
 
             milestone.backlog_accepted_types = {
                 content : allowed_trackers,
-
-                toString : function() {
+                toString: function() {
                     var accept = [];
                     _.forEach(this.content, function(allowed_tracker) {
                         accept.push('trackerId' + allowed_tracker.id);
@@ -206,8 +207,7 @@
 
             milestone.content_accepted_types = {
                 content : allowed_trackers,
-
-                toString : function() {
+                toString: function() {
                     var accept = [];
                     _.forEach(this.content, function(allowed_tracker) {
                         accept.push('trackerId' + allowed_tracker.id);

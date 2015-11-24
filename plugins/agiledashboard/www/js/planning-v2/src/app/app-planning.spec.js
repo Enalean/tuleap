@@ -3,16 +3,34 @@ describe('PlanningCtrl', function() {
         itemService,
         milestoneService,
         projectService,
+        PlanningCtrl,
         project_id = 123,
         milestone_id = 1;
+        milestone = {
+            resources: {
+                backlog: {
+                    accept: {
+                        trackers: [
+                            { id: 99, label: 'story'}
+                        ]
+                    }
+                },
+                content: {
+                    accept: {
+                        trackers: [
+                            { id: 99, label: 'story'}
+                        ]
+                    }
+                }
+            }
+        };
 
     beforeEach(module('project'));
     beforeEach(module('planning'));
     beforeEach(module('backlog-item'));
-    beforeEach(module('shared-properties'));
 
     describe('in top backlog', function() {
-        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService, ProjectService, SharedPropertiesService) {
+        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService, ProjectService) {
             $scope           = $rootScope.$new();
             itemService      = BacklogItemService;
             milestoneService = MilestoneService;
@@ -20,13 +38,15 @@ describe('PlanningCtrl', function() {
 
             spyOn(itemService, 'getProjectBacklogItems').and.callThrough();
             spyOn(milestoneService, 'getMilestones').and.callThrough();
-            SharedPropertiesService.setProjectId(project_id);
 
-            $controller('PlanningCtrl', {
+            PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
                 BacklogItemService: itemService,
                 MilestoneService: milestoneService
             });
+
+            spyOn(PlanningCtrl, 'isMilestoneContext').and.returnValue(false);
+            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone);
         }));
 
         describe('backlog items', function() {
@@ -43,20 +63,20 @@ describe('PlanningCtrl', function() {
     });
 
     describe('in milestone', function() {
-        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService, SharedPropertiesService) {
+        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService) {
             $scope           = $rootScope.$new();
             itemService      = BacklogItemService;
             milestoneService = MilestoneService;
 
             spyOn(itemService, 'getMilestoneBacklogItems').and.callThrough();
             spyOn(milestoneService, 'getSubMilestones').and.callThrough();
-            SharedPropertiesService.setMilestoneId(milestone_id);
 
             $controller('PlanningCtrl', {
                 $scope: $scope,
                 BacklogItemService: itemService,
                 MilestoneService: milestoneService
             });
+            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone);
         }));
 
         describe('backlog items', function() {

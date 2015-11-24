@@ -171,11 +171,35 @@ class Planning_MilestonePaneFactory {
             $pane_info->setActive(true);
             $this->active_pane[$milestone->getArtifactId()] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
                 $pane_info,
-                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter($this->request->getCurrentUser(), $this->request->getProject(), $milestone->getArtifactId())
+                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
+                    $this->request->getCurrentUser(),
+                    $this->request->getProject(),
+                    $milestone->getArtifactId(),
+                    $this->getMilestoneRepresentation($milestone, $this->request->getCurrentUser())
+                )
             );
         }
 
         return $pane_info;
+    }
+
+    private function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user) {
+        $milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->milestone_factory,
+            $this->getBacklogStrategyFactory(),
+            EventManager::instance()
+        );
+        $milestone_representation = $milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
+
+        return $milestone_representation;
+    }
+
+    private function getBacklogStrategyFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            Tracker_ArtifactFactory::instance(),
+            PlanningFactory::build()
+        );
     }
 
     private function buildAdditionnalPanes(Planning_Milestone $milestone) {

@@ -7,7 +7,6 @@
         'angularMoment',
         'ngSanitize',
         'ngAnimate',
-        'shared-properties',
         'backlog-item',
         'milestone',
         'project',

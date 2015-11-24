@@ -1,3 +1,3 @@
-<div id="planning-app" ng-app="planning" ng-controller="MainCtrl" ng-init="init({{ user_id }}, {{ project_id }}, {{ milestone_id }}, '{{ lang }}', {{ use_angular_new_modal }}, '{{ view_mode }}')">
-    <ui-view></ui-view>
+<div id="planning-app" ng-app="planning" ng-controller="PlanningCtrl" ng-init="init({{ user_id }}, {{ project_id }}, '{{ milestone_id }}', '{{ lang }}', {{ use_angular_new_modal }}, '{{ view_mode }}', {{ milestone_representation }})">
+    <ng-include src="'planning.tpl.html'"></ng-include>
 </div>

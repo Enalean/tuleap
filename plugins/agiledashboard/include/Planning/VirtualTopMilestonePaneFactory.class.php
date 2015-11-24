@@ -58,8 +58,8 @@ class Planning_VirtualTopMilestonePaneFactory {
         $active_pane = $this->getActivePane($milestone);//This needs to be run first!
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
-        $available_milestones = 
-                (isset($this->available_milestones[$milestone_artifact_id])) ? 
+        $available_milestones =
+                (isset($this->available_milestones[$milestone_artifact_id])) ?
                 $this->available_milestones[$milestone_artifact_id] : array();
 
         return new AgileDashboard_Milestone_Pane_PresenterData(
@@ -176,7 +176,12 @@ class Planning_VirtualTopMilestonePaneFactory {
             $pane_info->setActive(true);
             $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
                 $pane_info,
-                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter($this->request->getCurrentUser(), $this->request->getProject(), $milestone_artifact_id)
+                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
+                    $this->request->getCurrentUser(),
+                    $this->request->getProject(),
+                    $milestone_artifact_id,
+                    null
+                )
             );
         }
 
