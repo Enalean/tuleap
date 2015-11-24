@@ -128,8 +128,6 @@ INSERT INTO groups SET \
   short_description = 'Administration Project', \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
-  license = 'cdi', \
-  license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
   new_bug_address = 'codendi-admin@_DOMAIN_NAME_', \
@@ -167,8 +165,6 @@ INSERT INTO groups SET \
   short_description = 'Site News Private Project. All Site News should be posted from this project', \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
-  license = 'cdi', \
-  license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
   new_bug_address = '', \
@@ -207,8 +203,6 @@ INSERT INTO groups SET \
   short_description = 'The default Tuleap template', \
   cvs_box = '', \
   svn_box = '', \
-  license = '', \
-  license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
   new_bug_address = '', \

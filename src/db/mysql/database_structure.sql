@@ -508,8 +508,6 @@ CREATE TABLE groups (
   short_description varchar(255) default NULL,
   cvs_box varchar(20) NOT NULL default 'cvs1',
   svn_box varchar(20) NOT NULL default 'svn1',
-  license varchar(16) default NULL,
-  license_other text,
   register_time int(11) NOT NULL default '0',
   rand_hash text,
   new_bug_address text NOT NULL,

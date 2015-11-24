@@ -50,7 +50,6 @@ class Project_OneStepCreation_OneStepCreationValidator {
             ->validateProjectPrivacy()
             ->validateFullName()
             ->validateShortDescription()
-            ->validateLicense()
             ->validateTosApproval()
             ->validateCustomDescriptions();
         return $this->is_valid;
@@ -140,19 +139,6 @@ class Project_OneStepCreation_OneStepCreationValidator {
      */
     private function validateProjectPrivacy() {
         if ($this->creation_request->isPublic() === null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationValidator
-     */
-    private function validateLicense() {
-        if ($this->creation_request->getLicenseType() === null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }

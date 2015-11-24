@@ -75,8 +75,6 @@ class ProjectHelper {
 
         $project = $this->project_creator->create($project_short_name, $project_long_name, array(
             'project' => array(
-                'form_license'           => 'xrx',
-                'form_license_other'     => '',
                 'form_short_description' => '',
                 'is_test'                => false,
                 'is_public'              => $is_public,

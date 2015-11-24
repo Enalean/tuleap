@@ -51,11 +51,9 @@ class ProjectCreator {
 
     /**
      * Create a new project
-     * 
+     *
      * $data['project']['form_unix_name']
      * $data['project']['form_full_name']
-     * $data['project']['form_license']
-     * $data['project']['form_license_other']
      * $data['project']['form_short_description']
      * $data['project']['built_from_template']
      * $data['project']['is_test']
