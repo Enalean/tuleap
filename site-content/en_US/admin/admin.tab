@@ -415,6 +415,8 @@ admin_trove_cat_add	full_name_note	(80 chars max)
 admin_trove_cat_add	description	Category description
 admin_trove_cat_add	description_note	(255 chars max)
 admin_trove_cat_add	parent	Parent Category
+admin_trove_cat_add	mandatory	Mandatory
+admin_trove_cat_add	mandatory_note	Can be selected if the parent is "Root"
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
