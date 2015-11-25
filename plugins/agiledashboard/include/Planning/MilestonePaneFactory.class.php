@@ -189,7 +189,8 @@ class Planning_MilestonePaneFactory {
                     $this->request->getProject(),
                     $milestone->getArtifactId(),
                     $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $this->request->getCurrentUser()),
-                    $this->getPaginatedBacklogItemsRepresentationsForMilestone($milestone, $this->request->getCurrentUser())
+                    $this->getPaginatedBacklogItemsRepresentationsForMilestone($milestone, $this->request->getCurrentUser()),
+                    $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $this->request->getCurrentUser())
                 )
             );
         }

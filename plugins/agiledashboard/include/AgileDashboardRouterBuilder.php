@@ -68,6 +68,7 @@ class AgileDashboardRouterBuilder {
             $request,
             $pane_presenter_builder_factory,
             $plugin,
+            $milestone_representation_builder,
             $paginated_backlog_items_representations_builder
         );
 
@@ -130,12 +131,14 @@ class AgileDashboardRouterBuilder {
         $request,
         $pane_presenter_builder_factory,
         Plugin $plugin,
+        AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
         AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
         return new Planning_VirtualTopMilestonePaneFactory(
             $request,
             $pane_presenter_builder_factory,
             $plugin->getThemePath(),
+            $milestone_representation_builder,
             $paginated_backlog_items_representations_builder
         );
     }

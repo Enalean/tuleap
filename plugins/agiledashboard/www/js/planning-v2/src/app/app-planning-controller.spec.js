@@ -77,7 +77,7 @@ describe("PlanningCtrl", function() {
                 UserPreferencesService: UserPreferencesService
             });
 
-            $scope.init(102, 736, 592, 'en', true, 'compact-view', {}, { backlog_items_representations: [ {id: 7} ], total_size: 104 });
+            $scope.init(102, 736, 592, 'en', true, 'compact-view', {}, { backlog_items_representations: [ {id: 7} ], total_size: 104 }, {});
         });
         deferred = $q.defer();
         second_deferred = $q.defer();

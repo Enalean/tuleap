@@ -45,6 +45,9 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
     /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations */
     public $paginated_backlog_items_representations;
 
+    /** @var AgileDashboard_Milestone_PaginatedMilestonesRepresentations */
+    public $paginated_milestones_representations;
+
     /** @var string */
     public $use_angular_new_modal = 'true';
 
@@ -53,7 +56,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
         Project $project,
         $milestone_id,
         $milestone_representation,
-        $paginated_backlog_items_representations
+        $paginated_backlog_items_representations,
+        $paginated_milestones_representations
     ) {
         $this->user_id                                 = $current_user->getId();
         $this->lang                                    = $this->getLanguageAbbreviation($current_user);
@@ -62,6 +66,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
         $this->view_mode                               = $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
         $this->milestone_representation                = json_encode($milestone_representation);
         $this->paginated_backlog_items_representations = json_encode($paginated_backlog_items_representations);
+        $this->paginated_milestones_representations    = json_encode($paginated_milestones_representations);
     }
 
     private function getLanguageAbbreviation($current_user) {

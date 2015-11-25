@@ -42,6 +42,7 @@
 
         _.extend(self, {
             loadInitialBacklogItems        : loadInitialBacklogItems,
+            loadInitialMilestones          : loadInitialMilestones,
             isMilestoneContext             : isMilestoneContext,
             canBeAddedToBacklogItemChildren: canBeAddedToBacklogItemChildren
         });
@@ -117,7 +118,7 @@
             dropped: dropped
         };
 
-        function init(user_id, project_id, milestone_id, lang, use_angular_new_modal, view_mode, milestone, initial_backlog_items) {
+        function init(user_id, project_id, milestone_id, lang, use_angular_new_modal, view_mode, milestone, initial_backlog_items, initial_milestones) {
             self.user_id                   = user_id;
             self.project_id                = project_id;
             self.milestone_id              = parseInt(milestone_id, 10);
@@ -132,7 +133,7 @@
             initViewModes(view_mode);
             loadBacklog(milestone);
             self.loadInitialBacklogItems(initial_backlog_items);
-            displayMilestones();
+            self.loadInitialMilestones(initial_milestones);
         }
 
         function initLocale(lang) {
@@ -281,6 +282,21 @@
 
         function applyFilter() {
             $scope.backlog_items.filtered_content = $filter('InPropertiesFilter')($scope.backlog_items.content, $scope.filter_terms);
+        }
+
+        function loadInitialMilestones(initial_milestones) {
+            _.forEach(initial_milestones.milestones_representations, function(milestone) {
+                MilestoneService.augmentMilestone(milestone, self.pagination_limit, self.pagination_offset, $scope.items);
+            });
+
+            $scope.milestones      = $scope.milestones.concat(initial_milestones.milestones_representations);
+            self.pagination_offset = self.pagination_limit;
+
+            if (self.pagination_offset < initial_milestones.total_size) {
+                displayMilestones();
+            } else {
+                $scope.loading_milestones = false;
+            }
         }
 
         function displayMilestones() {

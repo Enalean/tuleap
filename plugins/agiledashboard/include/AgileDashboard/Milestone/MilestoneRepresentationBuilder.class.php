@@ -63,7 +63,46 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         return $milestone_representation;
     }
 
+    public function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user) {
+        $submilestones                 = $this->milestone_factory->getSubMilestones($user, $milestone);
+        $submilestones_representations = array();
+
+        foreach($submilestones as $submilestone) {
+            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user);
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations($submilestones_representations, count($submilestones_representations));
+    }
+
+    public function getPaginatedTopMilestonesRepresentations(Project $project, PFUser $user, $limit, $offset, $order) {
+        $all_top_milestones = $this->getTopMilestones($user, $project);
+
+        if ($order === 'desc') {
+            $all_top_milestones = array_reverse($all_top_milestones);
+        }
+
+        $top_milestones                 = array_slice($all_top_milestones, $offset, $limit);
+        $top_milestones_representations = array();
+
+        foreach($top_milestones as $top_milestone) {
+            $top_milestones_representations[] = $this->getMilestoneRepresentation($top_milestone, $user);
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations($top_milestones_representations, count($all_top_milestones));
+    }
+
     private function getBacklogTrackers(Planning_Milestone $milestone) {
         return $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
+    }
+
+    private function getTopMilestones(PFUser $user, Project $project) {
+        $top_milestones = array();
+        $milestones     = $this->milestone_factory->getSubMilestones($user, $this->milestone_factory->getVirtualTopMilestone($user, $project));
+
+        foreach ($milestones as $milestone) {
+            $top_milestones[] = $milestone;
+        }
+
+        return $top_milestones;
     }
 }

@@ -25,6 +25,24 @@ describe('PlanningCtrl', function() {
                 }
             }
         },
+        initial_milestones = [{
+            resources: {
+                backlog: {
+                    accept: {
+                        trackers: [
+                            { id: 98, label: 'task'}
+                        ]
+                    }
+                },
+                content: {
+                    accept: {
+                        trackers: [
+                            { id: 98, label: 'task'}
+                        ]
+                    }
+                }
+            }
+        }],
         initial_backlog_items = {
             backlog_items_representations: [
                 { id: 7, artifact: { tracker: { id: 90 }}, accept: { trackers: [] } }
@@ -56,7 +74,8 @@ describe('PlanningCtrl', function() {
 
             spyOn(PlanningCtrl, 'isMilestoneContext').and.returnValue(false);
             spyOn(PlanningCtrl, 'loadInitialBacklogItems');
-            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', null, initial_backlog_items);
+            spyOn(PlanningCtrl, 'loadInitialMilestones');
+            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', null, initial_backlog_items, initial_milestones);
         }));
 
         describe('backlog items', function() {
@@ -67,7 +86,7 @@ describe('PlanningCtrl', function() {
 
         describe('milestones', function() {
             it('asks top milestones of current project', inject(function() {
-                expect(milestoneService.getMilestones).toHaveBeenCalledWith(project_id, jasmine.any(Number), jasmine.any(Number), jasmine.any(Object));
+                expect(PlanningCtrl.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
             }));
         });
     });
@@ -89,7 +108,8 @@ describe('PlanningCtrl', function() {
                 MilestoneService: milestoneService
             });
             spyOn(PlanningCtrl, 'loadInitialBacklogItems');
-            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone, initial_backlog_items);
+            spyOn(PlanningCtrl, 'loadInitialMilestones');
+            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone, initial_backlog_items, initial_milestones);
         }));
 
         describe('backlog items', function() {
@@ -100,7 +120,7 @@ describe('PlanningCtrl', function() {
 
         describe('milestones', function() {
             it('asks top milestones of current project', inject(function() {
-                expect(milestoneService.getSubMilestones).toHaveBeenCalledWith(milestone_id, jasmine.any(Number), jasmine.any(Number), jasmine.any(Object));
+                expect(PlanningCtrl.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
             }));
         });
     });

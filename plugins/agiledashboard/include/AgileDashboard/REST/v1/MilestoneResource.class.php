@@ -84,6 +84,9 @@ class MilestoneResource extends AuthenticatedResource {
     /** @var ResourcesPatcher */
     private $resources_patcher;
 
+    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
+    private $milestone_representation_builder;
+
     public function __construct() {
         $planning_factory               = PlanningFactory::build();
         $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
@@ -143,6 +146,12 @@ class MilestoneResource extends AuthenticatedResource {
         );
 
         $this->event_manager = EventManager::instance();
+
+        $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->milestone_factory,
+            $this->backlog_strategy_factory,
+            $this->event_manager
+        );
     }
 
     /**
@@ -235,12 +244,8 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeadersForMilestone($milestone);
 
-        $milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
-            $this->milestone_factory,
-            $this->backlog_strategy_factory,
-            $this->event_manager
-        );
-        $milestone_representation = $milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
+
+        $milestone_representation = $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
 
         return $milestone_representation;
     }
@@ -298,40 +303,13 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone_factory = $this->milestone_factory;
         $strategy_factory  = $this->backlog_strategy_factory;
 
-        $milestones = array_map(
-            function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory, $strategy_factory) {
-                $milestone_representation = new MilestoneRepresentation();
-                $milestone_representation->build(
-                    $milestone,
-                    $milestone_factory->getMilestoneStatusCount(
-                        $user,
-                        $milestone
-                    ),
-                    $strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers(),
-                    $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
-                );
-
-                $event_manager->processEvent(
-                    AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
-                    array(
-                        'user'                     => $user,
-                        'milestone'                => $milestone,
-                        'milestone_representation' => &$milestone_representation,
-                        'version'                  => 'v1'
-
-                    )
-                );
-
-                return $milestone_representation;
-            },
-            $this->milestone_factory->getSubMilestones($user, $milestone)
-        );
+        $milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user)->getMilestonesRepresentations();
 
         if ($order === 'desc') {
-            return array_reverse($milestones);
+            return array_reverse($milestones_representations);
         }
 
-        return $milestones;
+        return $milestones_representations;
     }
 
     /**

@@ -25,6 +25,7 @@ class Planning_VirtualTopMilestonePaneFactory {
     const TOP_MILESTONE_DUMMY_ARTIFACT_ID = "ABC";
     const PRELOAD_PAGINATION_LIMIT        = 50;
     const PRELOAD_PAGINATION_OFFSET       = 0;
+    const PRELOAD_PAGINATION_ORDER        = 'desc';
 
     /** @var AgileDashboard_PaneInfo[] */
     private $list_of_pane_info = array();
@@ -45,6 +46,9 @@ class Planning_VirtualTopMilestonePaneFactory {
     /** @var string */
     private $theme_path;
 
+    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
+    private $milestone_representation_builder;
+
     /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
     private $paginated_backlog_items_representations_builder;
 
@@ -52,11 +56,13 @@ class Planning_VirtualTopMilestonePaneFactory {
         Codendi_Request $request,
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
         $theme_path,
+        AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
         AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
         $this->request                                         = $request;
         $this->pane_presenter_builder_factory                  = $pane_presenter_builder_factory;
         $this->theme_path                                      = $theme_path;
+        $this->milestone_representation_builder                = $milestone_representation_builder;
         $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
     }
 
@@ -188,7 +194,14 @@ class Planning_VirtualTopMilestonePaneFactory {
                     $this->request->getProject(),
                     $milestone_artifact_id,
                     null,
-                    $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $this->request->getCurrentUser())
+                    $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $this->request->getCurrentUser()),
+                    $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations(
+                        $this->request->getProject(),
+                        $this->request->getCurrentUser(),
+                        self::PRELOAD_PAGINATION_LIMIT,
+                        self::PRELOAD_PAGINATION_OFFSET,
+                        self::PRELOAD_PAGINATION_ORDER
+                    )
                 )
             );
         }
