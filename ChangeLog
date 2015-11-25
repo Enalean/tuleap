@@ -33,6 +33,7 @@ Version 8.9 (Not released yet)
 	* request #8589: Apache logs filled with No entry for terminal type "unknown"
 	* request #8590: Properly generate absolute server URL when behind a reverse proxy
 	* request #8613: Wrong preselection of theme for new user
+	* request #8627: Site admin browsing of user list is broken when restricted to a project
 
 	== Plugins ==
 	* mediawiki: 0.100
