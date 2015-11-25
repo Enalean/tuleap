@@ -64,6 +64,7 @@ if ($group_name_search !="0") {
 <TH><b><?php echo $Language->getText('global','status'); ?></b></TH>
 <TH><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TH>
 <TH><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TH>
+<TH><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TH>
 <TH><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TH>
 </TR>
 </thead>
@@ -96,6 +97,7 @@ if ($res['numrows'] > 0) {
         print "<td>".$template->getLabel($grp['type'])."</td>";
 
         print '<td>'.$grp['access'].'</td>';
+        print '<td>'.$grp['license'].'</td>';
 
         // members
         print '<td>'.$daoUsers->returnUsersNumberByGroupId($grp['group_id']).'</td>';

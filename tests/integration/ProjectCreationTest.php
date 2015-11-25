@@ -63,6 +63,8 @@ class ProjectCreationTest extends TuleapDbTestCase {
         $projectCreator = new ProjectCreator(ProjectManager::instance(), new Rule_ProjectName(), new Rule_ProjectFullName());
         $projectCreator->create('short-name', 'Long name', array(
             'project' => array(
+                'form_license'           => 'xrx',
+                'form_license_other'     => '',
                 'form_short_description' => '',
                 'is_test'                => false,
                 'is_public'              => false,

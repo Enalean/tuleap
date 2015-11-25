@@ -26,7 +26,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $project_manager = mock('ProjectManager');
         $request = aRequest()->withParams($request_data)->build();
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
-        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), $project_manager);
+        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), array(), $project_manager);
     }
 
     public function testNewObjectSetsFullName() {
@@ -89,6 +89,28 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
         $this->assertEqual(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID , $single_step->getTemplateId());
+    }
+
+    public function testNewObjectSetsLicenseType() {
+        $type = 'artistic';
+
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
+        );
+
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $this->assertEqual($type, $single_step->getLicenseType());
+    }
+
+    public function testNewObjectSetsCustomLicense() {
+        $license = 'do not copy';
+
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
+        );
+
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $this->assertEqual($license, $single_step->getCustomLicense());
     }
 
     public function testNewObjectSetsProjectApprobation() {

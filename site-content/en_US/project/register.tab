@@ -126,6 +126,7 @@ register_confirmation	form_patents	Intellectual Property
 register_confirmation	form_comments	Other Comments
 register_confirmation	form_full_name	Full Name
 register_confirmation	form_unix_name	Short Name
+register_confirmation	form_license	Policy
 register_confirmation	trove	Categories
 #
 #-----------------------------------------------
@@ -153,6 +154,8 @@ register_project_one_step	description_container_project_description	Project Desc
 register_project_one_step	description_container_project_privacy	Project Privacy
 register_project_one_step	description_container_project_private_label	Private (limit access only to the project members)
 register_project_one_step	description_container_project_public_label	Public
+register_project_one_step	description_container_project_license	License
+register_project_one_step	description_container_project_license_help	Please provide an explanation along with a description of your license.
 register_project_one_step	submit_button	Create the project
 register_project_one_step	agree_TOS_label	I agree to the
 register_project_one_step	TOS_label	policy agreement

@@ -41,4 +41,26 @@ document.observe('dom:loaded', function () {
             });
         }
     })();
+
+    (function displayTheCustomLicenseBlockWhenTheUserSelectOther() {
+        var select_licenses = $$('.one_step_project select[name="form_license"]');
+
+        function toggleOther(select) {
+            if ($F(select) == 'other') {
+                select.up('.controls').down('.custom_license_block').show();
+            } else {
+                select.up('.controls').down('.custom_license_block').hide();
+            }
+        }
+
+        if (select_licenses) {
+            select_licenses.map(toggleOther);
+            select_licenses.each(function (select) {
+                select.observe('change', function () {
+                    toggleOther(select);
+                });
+            });
+        }
+    })();
 });
+

@@ -100,6 +100,22 @@
                     {{getDescriptionContainerPrivateLabel}}
                 </label>
             </div>
+        </div><div class="control-group">
+            <label class="control-label">{{getDescriptionContainerProjectLicense}}</label>
+            <div class="controls">
+                <select name="{{license_type_label}}">
+                    {{#getAvailableLicenses}}
+                        <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                    {{/getAvailableLicenses}}
+                </select>
+                <div class="custom_license_block">
+                    <textarea name="{{custom_license_label}}"
+                        wrap=virtual
+                        cols=60
+                        rows=10>{{getCustomLicense}}</textarea>
+                    <div class="help">{{getDescriptionContainerProjectLicenseHelp}}</div>
+                </div>
+            </div>
         </div>
     </fieldset>
 

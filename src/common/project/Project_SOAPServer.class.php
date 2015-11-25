@@ -211,6 +211,8 @@ class Project_SOAPServer {
     private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template) {
         $data = array(
             'project' => array(
+                'form_license'           => 'xrx',
+                'form_license_other'     => '',
                 'form_short_description' => '',
                 'is_test'                => false,
                 'is_public'              => false,

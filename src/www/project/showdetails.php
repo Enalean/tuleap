@@ -65,7 +65,24 @@ print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>'
 
 // Now fetch the project details
 
+$result=db_query("SELECT license_other ".
+		"FROM groups ".
+		"WHERE group_id=".db_ei($group_id));
+
+if (!$result || db_numrows($result) < 1) {
+	echo db_error();
+	exit_error($Language->getText('project_showdetails','proj_not_found'),$Language->getText('project_showdetails','no_detail'));
+}
+
+$license_other = db_result($result,0,'license_other');
+
 $currentproject->displayProjectsDescFieldsValue();	
+
+if ($license_other != '') {
+	print '<P>';
+	print '<b><u>'.$Language->getText('project_admin_editgroupinfo','license_comment').'</u></b>';
+	print '<P>'.$hp->purify(util_unconvert_htmlspecialchars($license_other), CODENDI_PURIFIER_BASIC, $group_id);
+}
 
 echo getReferencesTable($group_id);
 

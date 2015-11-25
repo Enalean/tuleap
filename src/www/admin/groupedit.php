@@ -55,6 +55,7 @@ if ($request->existAndNonEmpty('Update')) {
     $group_type   = $request->getValidated('group_type', 'string', $group->getType());
     $form_domain  = $request->getValidated('form_domain', 'string', $group->getHTTPDomain());
     $form_box     = $request->getValidated('form_box', 'string', $group->getUnixBox());
+    $form_license = $request->getValidated('form_license', 'string', $group->getLicense());
     if ($group->getStatus() != $form_status) {
         group_add_history('status', $Language->getText('admin_groupedit', 'status_' . $group->getStatus()) . " :: " . $Language->getText('admin_groupedit', 'status_' . $form_status), $group_id);
     }
@@ -69,7 +70,7 @@ if ($request->existAndNonEmpty('Update')) {
     }
     if (isset($form_status) && $form_status) {
         db_query("UPDATE groups SET status='".db_es($form_status)."',"
-            . "type='".db_es($group_type)."',"
+            . "license='".db_es($form_license)."',type='".db_es($group_type)."',"
             . "unix_box='".db_es($form_box)."',http_domain='".db_es($form_domain)."'"
             . " WHERE group_id=".db_ei($group_id));
     }
@@ -136,6 +137,20 @@ echo $template->showTypeBox('group_type',$group->getType());
 
 <a href="/project/admin/editgroupinfo.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('admin_groupedit', 'manage_access'); ?></a>
 
+<P><B><?php echo $Language->getText('admin_groupedit','license'); ?></B>
+<SELECT name="form_license">
+<OPTION value="none"><?php echo $Language->getText('admin_groupedit','license_na'); ?>
+<OPTION value="other"><?php echo $Language->getText('admin_groupedit','other'); ?>
+<?php
+	while (list($k,$v) = each($LICENSE)) {
+		print "<OPTION value=\"$k\"";
+		if ($k == $group->getLicense()) print " selected";
+		print ">$v\n";
+	}
+?>
+</SELECT>
+
+
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <BR><?php echo $Language->getText('admin_groupedit','home_box'); ?>:
 <INPUT type="text" name="form_box" value="<?php print $group->getUnixBox(); ?>">
@@ -163,6 +178,8 @@ print $Language->getText('admin_groupedit','unix_grp').": ".$group->getUnixName(
 
 <?php 
 $group->displayProjectsDescFieldsValue();
+
+print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> ".$group->getLicenseOther();
 
 $template_group = $pm->getProject($group->getTemplate());
 print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';

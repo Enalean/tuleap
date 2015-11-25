@@ -16,6 +16,7 @@ project_admin_editgroupinfo	long_desc	Description longue&nbsp;:
 project_admin_editgroupinfo	patents	Brevets et propositions d'inventions
 project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
+project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
 project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
 project_admin_editgroupinfo	parent_project	Projet parent :
 project_admin_editgroupinfo	sub_projects	Sous projets :

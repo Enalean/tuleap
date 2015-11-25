@@ -201,14 +201,17 @@ admin_groupedit	status_H	En suspend
 admin_groupedit	status_D	Détruit
 admin_groupedit	status_s	Système
 admin_groupedit	public	Public ?
+admin_groupedit	license	Licence
 admin_groupedit	home_box	Serveur maison
 admin_groupedit	http_domain	Domaine HTTP
 admin_groupedit	other	Autre
+admin_groupedit	license_na	N/A
 admin_groupedit	send_email	Envoyer les instructions pour un nouveau projet
 admin_groupedit	other_info	Autre information
 admin_groupedit	grp_name	Nom du projet
 admin_groupedit	unix_grp	Nom du groupe unix
 admin_groupedit	description	Description
+admin_groupedit	license_other	Autre licence
 admin_groupedit	built_from_template	Créé à partir du patron
 admin_groupedit	rename_project_title	Renommage du Projet	
 admin_groupedit	rename_project_label	Renommage du Projet en 
