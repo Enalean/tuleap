@@ -436,9 +436,9 @@ class AgileDashboardRouter {
             $controller->getHeaderOptions()
         );
 
+        $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
         $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar, $header_options);
-
-        $this->executeAction($controller, 'showTop', array());
+        echo $top_planning_rendered;
         $this->displayFooter($request);
     }
 }

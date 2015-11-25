@@ -160,7 +160,7 @@
                                     <i class="icon-edit"></i> <span translate>Edit</span>
                                 </a>
                             </li>
-                            <li>
+                            <li ng-if="! milestone.sub_milestone_type">
                                 <a href="{{ generateMilestoneLinkUrl(milestone, 'blcontent') }}" title="{{ 'Content' | translate }}">
                                     <i class="icon-list-ul"></i> <span translate>Content</span>
                                 </a>

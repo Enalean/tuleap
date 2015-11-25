@@ -128,12 +128,7 @@ class Planning_VirtualTopMilestonePaneFactory {
 
         $this->active_pane[$milestone_artifact_id] = null;
 
-        $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopContentPaneInfo($milestone);
-        $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningPaneInfo($milestone);
-
-        if ($this->request->getCurrentUser()->useLabFeatures() && defined('CARDWALL_BASE_URL')) {
-            $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningV2PaneInfo($milestone);
-        }
+        $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningV2PaneInfo($milestone);
     }
 
     /**
@@ -190,21 +185,18 @@ class Planning_VirtualTopMilestonePaneFactory {
         }
 
         $pane_info = new AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningV2PaneInfo($milestone, $this->theme_path, $milestone_tracker);
-
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningV2PaneInfo::IDENTIFIER) {
-            $pane_info->setActive(true);
-            $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
-                $pane_info,
-                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
-                    $this->request->getCurrentUser(),
-                    $this->request->getProject(),
-                    $milestone_artifact_id,
-                    null,
-                    $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $this->request->getCurrentUser()),
-                    $this->getPaginatedTopMilestonesRepresentations($this->request->getProject(), $this->request->getCurrentUser())
-                )
-            );
-        }
+        $pane_info->setActive(true);
+        $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
+            $pane_info,
+            new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
+                $this->request->getCurrentUser(),
+                $this->request->getProject(),
+                $milestone_artifact_id,
+                null,
+                $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $this->request->getCurrentUser()),
+                $this->getPaginatedTopMilestonesRepresentations($this->request->getProject(), $this->request->getCurrentUser())
+            )
+        );
 
         return $pane_info;
     }

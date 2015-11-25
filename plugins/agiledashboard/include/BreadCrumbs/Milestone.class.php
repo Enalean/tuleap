@@ -36,6 +36,7 @@ class BreadCrumb_Milestone implements BreadCrumb_BreadCrumbGenerator {
         $url_parameters = array(
             'planning_id' => $this->milestone->getPlanningId(),
             'action'      => 'show',
+            'pane'        => 'planning-v2',
             'group_id'    => $this->milestone->getGroupId(),
             'aid'         => $this->milestone->getArtifactId()
         );

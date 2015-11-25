@@ -38,7 +38,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo extends AgileDas
     }
 
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'milestone_planningv2_pane_title', $this->submilestone_tracker->getName());
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'milestone_planning_pane_title', $this->submilestone_tracker->getName());
     }
 
     protected function getIcon() {

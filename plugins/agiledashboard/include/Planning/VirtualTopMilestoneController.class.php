@@ -66,10 +66,23 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
             $this->redirect($query_parts);
         }
 
-        $this->render(
+        $this->redirectToCorrectPane();
+        return $this->renderToString(
             'show-top',
             $this->getTopMilestonePresenter()
         );
+    }
+
+    private function redirectToCorrectPane() {
+        $current_pane_identifier = $this->getActivePaneIdentifier();
+        if ($current_pane_identifier !== $this->request->get('pane')) {
+            $this->request->set('pane', $current_pane_identifier);
+            $this->redirect($this->request->params);
+        }
+    }
+
+    private function getActivePaneIdentifier() {
+        return $this->top_milestone_pane_factory->getActivePane($this->milestone)->getIdentifier();
     }
 
     public function getHeaderOptions() {
@@ -79,7 +92,7 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
 
             return array(
                 Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
-                    $this->top_milestone_pane_factory->getActivePane($this->milestone)->getIdentifier()
+                    $this->getActivePaneIdentifier()
                 )
             );
         } catch (Planning_NoPlanningsException $e) {

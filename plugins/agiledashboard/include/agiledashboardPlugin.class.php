@@ -377,7 +377,7 @@ class AgileDashboardPlugin extends Plugin {
         $request = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
-        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
+        return $request->get('pane') === false || $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
     public function combined_scripts($params) {

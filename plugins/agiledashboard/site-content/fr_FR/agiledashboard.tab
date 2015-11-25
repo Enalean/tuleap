@@ -46,7 +46,6 @@ plugin_agiledashboard	past	Terminé
 plugin_agiledashboard	now	En cours
 plugin_agiledashboard	future	À venir
 plugin_agiledashboard	milestone_planning_pane_title	Planification de $1
-plugin_agiledashboard	milestone_planningv2_pane_title	<i class="icon-beaker"></i> Planification V2 de $1
 plugin_agiledashboard	access_to_planning	Accéder au planning
 plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un élément pour le déplacer vers le milestone courant ou les flèches haut/bas pour prioriser les éléments entre eux.
 plugin_agiledashboard	export_template	Exporter la configuration
