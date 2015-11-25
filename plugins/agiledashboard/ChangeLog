@@ -1,3 +1,6 @@
+Version 1.308 - Tuleap 8.9
+    * request #8621: A submilestone can be edited in a new tab/window
+
 Version 1.307 - Tuleap 8.9
     * story #8528 create nonexistant user account at import time
 
