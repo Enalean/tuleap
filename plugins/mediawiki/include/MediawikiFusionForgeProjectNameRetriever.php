@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MediawikiFusionForgeProjectRetriever {
+class MediawikiFusionForgeProjectNameRetriever {
 
-    public function getFusionForgeProject($fusionforgeproject) {
-        if (! $fusionforgeproject) {
+    public function getFusionForgeProjectName($fusionforgeprojectname) {
+        if (! $fusionforgeprojectname) {
             $administration_project = new Group(1);
-            $fusionforgeproject     = $administration_project->getUnixName();
+            $fusionforgeprojectname     = $administration_project->getUnixName();
         }
 
         $exppath = explode('/', $_SERVER['PHP_SELF']) ;
@@ -38,13 +38,13 @@ class MediawikiFusionForgeProjectRetriever {
                     'index.php',
                     'load.php',
                 ))) {
-                    $fusionforgeproject = $exppath[3] ;
+                    $fusionforgeprojectname = $exppath[3] ;
                     break ;
             } else {
                     array_shift ($exppath) ;
             }
         }
 
-        return group_get_object_by_name($fusionforgeproject);
+        return $fusionforgeprojectname;
     }
 }
