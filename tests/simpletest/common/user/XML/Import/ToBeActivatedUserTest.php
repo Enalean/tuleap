@@ -41,7 +41,7 @@ class ToBeActivatedUser_isActionAllowedTest extends TuleapTestCase {
     }
 
     public function itReturnsFalseWhenActionIsActivate() {
-        $this->assertTrue($this->user->isActionAllowed('activate'));
+        $this->assertTrue($this->user->isActionAllowed('noop'));
     }
 
     public function itReturnsFalseWhenActionIsMap() {

@@ -23,9 +23,9 @@ use PFUser;
 
 class ToBeActivatedUser extends ActionToBeTakenForUser {
 
-    private static $ALLOWED_ACTIONS = array('activate', 'map');
+    private static $ALLOWED_ACTIONS = array(self::ACTION, ToBeMappedUser::ACTION);
 
-    const ACTION = 'activate';
+    const ACTION = 'noop';
 
     private $status;
 
@@ -47,7 +47,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser {
             $this->username,
             self::ACTION,
             sprintf(
-                'Existing user %s must be activated (was [%s])',
+                'Status of existing user %s is [%s]',
                 $this->username,
                 $this->status
             )
