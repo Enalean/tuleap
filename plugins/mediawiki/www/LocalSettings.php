@@ -42,7 +42,7 @@ require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/Group.class.php';
-require_once __DIR__.'/../include/MediawikiFusionForgeProjectRetriever.php';
+require_once __DIR__.'/../include/MediawikiFusionForgeProjectNameRetriever.php';
 require_once __DIR__.'/../include/MediawikiDao.class.php';
 require_once __DIR__.'/../include/MediawikiLanguageDao.php';
 require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
@@ -57,9 +57,10 @@ require_once MEDIAWIKI_BASE_DIR.'/MediawikiMLEBExtensionManagerLoader.php';
 require_once MEDIAWIKI_BASE_DIR.'/../../fusionforge_compat/include/fusionforge_compatPlugin.class.php';
 $ff_plugin = new fusionforge_compatPlugin();
 $ff_plugin->loaded();
-$manager = new MediawikiManager(new MediawikiDao());
-$language_manager = new MediawikiLanguageManager(new MediawikiLanguageDao());
-$project_retriever = new MediawikiFusionForgeProjectRetriever();
+$manager                = new MediawikiManager(new MediawikiDao());
+$language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
+$project_name_retriever = new MediawikiFusionForgeProjectNameRetriever();
+$project_manager        = ProjectManager::instance();
 
 $forbidden_permissions = array(
     'editmyusercss',
@@ -99,8 +100,9 @@ if (! isset($fusionforgeproject)) {
     $fusionforgeproject = null;
 }
 
-$group              = $project_retriever->getFusionForgeProject($fusionforgeproject);
-$fusionforgeproject = $group->getUnixName();
+$fusionforgeproject = $project_name_retriever->getFusionForgeProjectName($fusionforgeproject);
+
+$group = $project_manager->getProjectByUnixName($fusionforgeproject);
 
 if (!isset($is_tuleap_mediawiki_123)) {
     $is_tuleap_mediawiki_123 = false;
