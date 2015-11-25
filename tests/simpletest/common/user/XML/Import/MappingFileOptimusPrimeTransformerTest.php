@@ -221,7 +221,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
     public function itTransformsAToBeActivatedToAWillBeActivatedUser() {
         $to_be_activated = $this->user_manager->getUserByUserName('to.be.activated');
         $this->addToBeActivatedUserToCollection();
-        $this->generateCSV('to.be.activated', 'activate');
+        $this->generateCSV('to.be.activated', 'noop');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.activated');
@@ -234,7 +234,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
     public function itTransformsAnAlreadyExistingToAWillBeActivatedUser() {
         $already_existing = $this->user_manager->getUserByUserName('already.existing');
         $this->addAlreadyExistingUserToCollection();
-        $this->generateCSV('already.existing', 'activate');
+        $this->generateCSV('already.existing', 'noop');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('already.existing');
@@ -247,7 +247,7 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
     public function itThrowsAnExceptionWhenAUserInCollectionIsNotTransformedOrKept() {
         $this->addToBeActivatedUserToCollection();
         $this->addToBeMappedUserToCollection();
-        $this->generateCSV('to.be.activated', 'activate');
+        $this->generateCSV('to.be.activated', 'noop');
 
         $this->expectException('User\XML\Import\MissingEntryInMappingFileException');
 
@@ -383,7 +383,7 @@ class MappingFileOptimusPrimeTransformer_activateTest extends MappingFileOptimus
     public function itDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeActivatedUser() {
         $this->addToBeActivatedUserToCollection();
 
-        $this->generateCSV('to.be.activated', 'activate');
+        $this->generateCSV('to.be.activated', 'noop');
 
         $this->transformer->transform($this->collection, $this->filename);
     }
@@ -391,7 +391,7 @@ class MappingFileOptimusPrimeTransformer_activateTest extends MappingFileOptimus
     public function itThrowsAnExceptionWhenEmailDoesNotMatch() {
         $this->addEmailDoesNotMatchUserToCollection();
 
-        $this->generateCSV('email.does.not.match', 'activate');
+        $this->generateCSV('email.does.not.match', 'noop');
 
         $this->expectException('User\XML\Import\InvalidMappingFileException');
 

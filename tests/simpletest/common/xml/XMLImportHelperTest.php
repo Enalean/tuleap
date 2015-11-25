@@ -17,38 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace User\XML\Import;
 
-use PFUser;
-use Logger;
-use UserManager;
+class XMLImportHelperTest extends TuleapTestCase {
 
-class WillBeActivatedUser implements ReadyToBeImportedUser {
+   public function testItImportsAnonymousUser() {
+       $user_manager  = mock('UserManager');
+       $import_helper = new XMLImportHelper($user_manager);
+       stub($user_manager)->getUserByIdentifier()->returns(null);
+       stub($user_manager)->getUserAnonymous()->returns(new PFUser());
 
-    /** @var PFUser */
-    private $user;
+       $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+<user>veloc@dino.com</user>');
 
-    public function __construct(PFUser $user) {
-        $this->user = $user;
-    }
+       $user = $import_helper->getUser($xml);
 
-    public function getUserName() {
-        return $this->user->getUserName();
-    }
-
-    /**
-     *
-     * @return PFUser
-     */
-    public function getUser() {
-        return $this->user;
-    }
-
-    public function getRealUser(UserManager $user_manager) {
-        return $this->user;
-    }
-
-    public function process(UserManager $user_manager, Logger $logger) {
-        $logger->info($this->user->getUserName().' is not alive. Nothing to do.');
-    }
+       $this->assertEqual($user->getEmail(), 'veloc@dino.com');
+   }
 }

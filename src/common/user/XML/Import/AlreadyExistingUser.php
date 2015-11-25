@@ -25,7 +25,7 @@ use UserManager;
 
 class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImportedUser {
 
-    private static $ALLOWED_ACTIONS = array('activate', 'map');
+    private static $ALLOWED_ACTIONS = array(ToBeActivatedUser::ACTION, ToBeMappedUser::ACTION);
 
     /** @var PFUser */
     private $user;

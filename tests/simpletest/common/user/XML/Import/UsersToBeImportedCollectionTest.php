@@ -88,7 +88,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEqual($data, array('jdoe', 'activate', 'Existing user jdoe must be activated (was [S])'));
+        $this->assertEqual($data, array('jdoe', 'noop', 'Status of existing user jdoe is [S]'));
     }
 
     public function itDumpsToBeCreatedUser() {
