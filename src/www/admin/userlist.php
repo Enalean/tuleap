@@ -127,7 +127,7 @@ if ($request->exist('export')) {
     exit;
 }
 
-function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_params, $status_values) {
+function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_params, $status_values, $group_id) {
     $result = $res['users'];
     $hp = Codendi_HTMLPurifier::instance();
     global $Language;
@@ -151,14 +151,18 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
     echo "<tr><th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=user_name&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('include_user_home','login_name')." <span class=\"pull-right ".$sort_params["user_name_icon"]."\"></span></a></th>";
     echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=realname&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('include_user_home','real_name')." <span class=\"pull-right ".$sort_params["realname_icon"]."\"></span></a></th>";
     echo "<th>Profile</th>\n";
-    echo "<th>".$hp->purify($Language->getText('admin_userlist','nb_projects'))."</th>";
+    if(!$group_id) {
+        echo "<th>".$hp->purify($Language->getText('admin_userlist','nb_projects'))."</th>";
+    }
     echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=status&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('admin_userlist','status')." <span class=\"pull-right ".$sort_params["status_icon"]."\"></span></a></th>";
     echo '</thead>';
     
     echo '<tbody>';
     if ($res['numrows'] > 0) {
         foreach ($result as $usr) {
-            $tooltip_values = tooltip_values($usr['member_of'], $usr['admin_of'], $Language);
+            if(!$group_id) {
+                $tooltip_values = tooltip_values($usr['member_of'], $usr['admin_of'], $Language);
+            }
             switch ($usr['status']) {
                 case PFUser::STATUS_ACTIVE:
                     $status = $Language->getText('admin_userlist','active');
@@ -193,7 +197,9 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
             echo "\n<TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">".$name."</a></TD>";
             echo "\n<TD>". $hp->purify($usr['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
             echo "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
-            echo "<TD class='tooltip_selector' data-toggle='tooltip' data-placement='top' data-original-title='".$hp->purify($tooltip_values['tooltip'])."'>".$hp->purify($tooltip_values['content'])."</TD>";
+            if(!$group_id) {
+                echo "<TD class='tooltip_selector' data-toggle='tooltip' data-placement='top' data-original-title='".$hp->purify($tooltip_values['tooltip'])."'>".$hp->purify($tooltip_values['content'])."</TD>";
+            }
             echo "\n<TD><span class=\"site_admin_user_status_".$usr['status']."\">&nbsp;</span>".$status."</TD>";
             echo "\n</TR>";
         }
@@ -345,7 +351,7 @@ echo '<form name="usersrch" action="userlist.php" method="get" class="form-horiz
        </div>
       </form>';
 echo "</p>";
-show_users_list ($result, $offset, $limit, $user_name_search, $sort_params, $status_values);
+show_users_list ($result, $offset, $limit, $user_name_search, $sort_params, $status_values, $group_id);
 echo '<script type="text/javascript" src="/scripts/tuleap/userlist.js"></script>';
 $HTML->footer(array());
 ?>
