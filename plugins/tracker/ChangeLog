@@ -1,3 +1,6 @@
+Version 5.753 - Tuleap 8.9
+    * story #8528 create nonexistant user account at import time
+
 Version 5.752 - Tuleap 8.9
     * story #7858: return field dependencies regardless of workflow usage
 
