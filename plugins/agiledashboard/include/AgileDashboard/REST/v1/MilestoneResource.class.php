@@ -48,6 +48,7 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
 use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
+use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 
 /**
  * Wrapper for milestone related REST methods
@@ -561,22 +562,21 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
-        $user          = $this->getCurrentUser();
-        $milestone     = $this->getMilestoneById($user, $id);
-        $strategy      = $this->backlog_strategy_factory->getBacklogStrategy($milestone, $limit, $offset);
-        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone, $strategy);
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
 
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
-        $backlog_items_representation        = array();
+        $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+            new BacklogItemRepresentationFactory(),
+            $this->backlog_item_collection_factory,
+            $this->backlog_strategy_factory
+        );
 
-        foreach ($backlog_items as $backlog_item) {
-            $backlog_items_representation[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
-        }
+        $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $limit, $offset);
 
         $this->sendAllowHeaderForBacklog();
-        $this->sendPaginationHeaders($limit, $offset, $backlog_items->getTotalAvaialableSize());
+        $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());
 
-        return $backlog_items_representation;
+        return $paginated_backlog_items_representations->getBacklogItemsRepresentations();
     }
 
     /**
@@ -888,15 +888,6 @@ class MilestoneResource extends AuthenticatedResource {
 
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
-    }
-
-    private function getMilestoneBacklogItems(PFUser $user, $milestone, $strategy) {
-        return $this->backlog_item_collection_factory->getUnplannedOpenCollection(
-            $user,
-            $milestone,
-            $strategy,
-            false
-        );
     }
 
     private function getMilestoneContentItems($milestone, $strategy) {

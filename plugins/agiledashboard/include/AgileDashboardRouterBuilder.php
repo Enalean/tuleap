@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+
 class AgileDashboardRouterBuilder {
 
     /** PluginFactory */
@@ -37,10 +39,12 @@ class AgileDashboardRouterBuilder {
             AgileDashboardPlugin::PLUGIN_NAME
         );
 
-        $planning_factory    = $this->getPlanningFactory();
-        $milestone_factory   = $this->getMilestoneFactory();
-        $hierarchy_factory   = $this->getHierarchyFactory();
-        $submilestone_finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory);
+        $planning_factory                                = $this->getPlanningFactory();
+        $milestone_factory                               = $this->getMilestoneFactory();
+        $hierarchy_factory                               = $this->getHierarchyFactory();
+        $submilestone_finder                             = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory);
+        $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
+        $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
 
         $pane_info_factory = new AgileDashboard_PaneInfoFactory(
             $request->getCurrentUser(),
@@ -56,12 +60,15 @@ class AgileDashboardRouterBuilder {
             $pane_presenter_builder_factory,
             $submilestone_finder,
             $pane_info_factory,
-            $plugin
+            $plugin,
+            $milestone_representation_builder,
+            $paginated_backlog_items_representations_builder
         );
         $top_milestone_pane_factory = $this->getTopMilestonePaneFactory(
             $request,
             $pane_presenter_builder_factory,
-            $plugin
+            $plugin,
+            $paginated_backlog_items_representations_builder
         );
 
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
@@ -101,7 +108,9 @@ class AgileDashboardRouterBuilder {
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         AgileDashboard_PaneInfoFactory $pane_info_factory,
-        Plugin $plugin
+        Plugin $plugin,
+        AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
+        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
         return new Planning_MilestonePaneFactory(
             $request,
@@ -109,7 +118,8 @@ class AgileDashboardRouterBuilder {
             $pane_presenter_builder_factory,
             $submilestone_finder,
             $pane_info_factory,
-            $plugin->getThemePath()
+            $milestone_representation_builder,
+            $paginated_backlog_items_representations_builder
         );
     }
 
@@ -119,12 +129,14 @@ class AgileDashboardRouterBuilder {
     private function getTopMilestonePaneFactory(
         $request,
         $pane_presenter_builder_factory,
-        Plugin $plugin
+        Plugin $plugin,
+        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
         return new Planning_VirtualTopMilestonePaneFactory(
             $request,
             $pane_presenter_builder_factory,
-            $plugin->getThemePath()
+            $plugin->getThemePath(),
+            $paginated_backlog_items_representations_builder
         );
     }
 
@@ -238,11 +250,39 @@ class AgileDashboardRouterBuilder {
         );
     }
 
+    private function getMilestoneRepresentationBuilder() {
+        return new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->getMilestoneFactory(),
+            $this->getBacklogStrategyFactory(),
+            EventManager::instance()
+        );
+    }
+
+    private function getPaginatedBacklogItemsRepresentationsBuilder() {
+        return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+            new BacklogItemRepresentationFactory(),
+            $this->getBacklogItemCollectionFactory(),
+            $this->getBacklogStrategyFactory()
+        );
+    }
+
+    private function getBacklogItemCollectionFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance(),
+            $this->getMilestoneFactory(),
+            $this->getPlanningFactory(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
+    }
+
     private function getBacklogStrategyFactory() {
         return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            PlanningFactory::build()
+            $this->getPlanningFactory()
         );
     }
+
 }

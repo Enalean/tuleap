@@ -36,10 +36,10 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory,
         EventManager $event_manager
     ) {
-         $this->milestone_factory        = $milestone_factory;
-         $this->backlog_strategy_factory = $backlog_strategy_factory;
-         $this->event_manager            = $event_manager;
-     }
+        $this->milestone_factory        = $milestone_factory;
+        $this->backlog_strategy_factory = $backlog_strategy_factory;
+        $this->event_manager            = $event_manager;
+    }
 
     public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user) {
         $milestone_representation = new MilestoneRepresentation();

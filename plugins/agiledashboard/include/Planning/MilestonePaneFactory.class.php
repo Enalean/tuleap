@@ -23,6 +23,9 @@
  */
 class Planning_MilestonePaneFactory {
 
+    const PRELOAD_PAGINATION_LIMIT  = 50;
+    const PRELOAD_PAGINATION_OFFSET = 0;
+
     /** @var AgileDashboard_PaneInfo[] */
     private $list_of_pane_info = array();
 
@@ -50,18 +53,28 @@ class Planning_MilestonePaneFactory {
     /** @var AgileDashboard_PaneInfoFactory */
     private $pane_info_factory;
 
+    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
+    private $milestone_representation_builder;
+
+    /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
+    private $paginated_backlog_items_representations_builder;
+
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
-        AgileDashboard_PaneInfoFactory $pane_info_factory
+        AgileDashboard_PaneInfoFactory $pane_info_factory,
+        AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
+        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
-        $this->request                        = $request;
-        $this->milestone_factory              = $milestone_factory;
-        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
-        $this->submilestone_finder            = $submilestone_finder;
-        $this->pane_info_factory              = $pane_info_factory;
+        $this->request                                         = $request;
+        $this->milestone_factory                               = $milestone_factory;
+        $this->pane_presenter_builder_factory                  = $pane_presenter_builder_factory;
+        $this->submilestone_finder                             = $submilestone_finder;
+        $this->pane_info_factory                               = $pane_info_factory;
+        $this->milestone_representation_builder                = $milestone_representation_builder;
+        $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
     }
 
     /** @return AgileDashboard_Milestone_Pane_PresenterData */
@@ -175,7 +188,8 @@ class Planning_MilestonePaneFactory {
                     $this->request->getCurrentUser(),
                     $this->request->getProject(),
                     $milestone->getArtifactId(),
-                    $this->getMilestoneRepresentation($milestone, $this->request->getCurrentUser())
+                    $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $this->request->getCurrentUser()),
+                    $this->getPaginatedBacklogItemsRepresentationsForMilestone($milestone, $this->request->getCurrentUser())
                 )
             );
         }
@@ -183,22 +197,12 @@ class Planning_MilestonePaneFactory {
         return $pane_info;
     }
 
-    private function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user) {
-        $milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
-            $this->milestone_factory,
-            $this->getBacklogStrategyFactory(),
-            EventManager::instance()
-        );
-        $milestone_representation = $milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
-
-        return $milestone_representation;
-    }
-
-    private function getBacklogStrategyFactory() {
-        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
-            new AgileDashboard_BacklogItemDao(),
-            Tracker_ArtifactFactory::instance(),
-            PlanningFactory::build()
+    private function getPaginatedBacklogItemsRepresentationsForMilestone(Planning_Milestone $milestone, PFUser $user) {
+        return $this->paginated_backlog_items_representations_builder->getPaginatedBacklogItemsRepresentationsForMilestone(
+            $user,
+            $milestone,
+            self::PRELOAD_PAGINATION_LIMIT,
+            self::PRELOAD_PAGINATION_OFFSET
         );
     }
 

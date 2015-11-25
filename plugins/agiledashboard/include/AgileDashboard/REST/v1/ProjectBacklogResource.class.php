@@ -42,6 +42,7 @@ use Tracker_Artifact_PriorityHistoryDao;
 use UserManager;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use PlanningPermissionsManager;
+use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 
 /**
  * Wrapper for backlog related REST methods
@@ -73,6 +74,9 @@ class ProjectBacklogResource {
 
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
+
+    /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
+    private $paginated_backlog_item_representation_builder;
 
     public function __construct() {
         $this->planning_factory             = PlanningFactory::build();
@@ -132,6 +136,12 @@ class ProjectBacklogResource {
             $tracker_artifact_factory,
             $priority_manager
         );
+
+        $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+            new BacklogItemRepresentationFactory(),
+            $this->backlog_item_collection_factory,
+            $this->backlog_strategy_factory
+        );
     }
 
     /**
@@ -143,20 +153,13 @@ class ProjectBacklogResource {
         }
 
         $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
-        $strategy      = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone, $limit, $offset);
 
-        $backlog_items                       = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $top_milestone, $strategy, false);
-        $backlog_item_representations        = array();
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
-
-        foreach($backlog_items as $backlog_item) {
-            $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
-        }
+        $paginated_backlog_items_representations = $this->paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForTopMilestone($user, $top_milestone, $limit, $offset);
 
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, $backlog_items->getTotalAvaialableSize());
+        $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());
 
-        return $backlog_item_representations;
+        return $paginated_backlog_items_representations->getBacklogItemsRepresentations();
     }
 
     private function limitValueIsAcceptable($limit) {
