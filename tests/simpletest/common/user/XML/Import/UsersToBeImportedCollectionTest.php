@@ -96,7 +96,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEqual($data, array('jdoe', 'create', 'John Doe (jdoe) <jdoe@example.com> must be created'));
+        $this->assertEqual($data, array('jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'));
     }
 
     public function itDumpsEmailDoesNotMatchUser() {

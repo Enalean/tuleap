@@ -26,6 +26,12 @@ use RandomNumberGenerator;
 
 class WillBeCreatedUser implements ReadyToBeImportedUser {
 
+    public static $ALLOWED_STATUSES = array(
+        PFUser::STATUS_ACTIVE,
+        PFUser::STATUS_RESTRICTED,
+        PFUser::STATUS_SUSPENDED,
+    );
+
     /** @var string */
     private $username;
 
@@ -35,14 +41,19 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
     /** @var string */
     private $email;
 
+    /** @var string */
+    private $status;
+
     public function __construct(
         $username,
         $realname,
-        $email
+        $email,
+        $status
     ) {
         $this->username = $username;
         $this->realname = $realname;
         $this->email    = $email;
+        $this->status   = $status;
     }
 
     public function getUserName() {
@@ -57,6 +68,10 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         return $this->email;
     }
 
+    public function getStatus() {
+        return $this->status;
+    }
+
     public function process(UserManager $user_manager, Logger $logger) {
         $random_generator = new RandomNumberGenerator();
         $random_password  = $random_generator->getNumber();
@@ -68,7 +83,7 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         $fake_user->setLdapId('');
         $fake_user->setRegisterPurpose('Created by xml import');
         $fake_user->setEmail($this->email);
-        $fake_user->setStatus(PFUser::STATUS_SUSPENDED);
+        $fake_user->setStatus($this->status);
         $fake_user->setConfirmHash('');
         $fake_user->setMailSiteUpdates(0);
         $fake_user->setMailVA(0);
