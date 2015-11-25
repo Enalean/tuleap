@@ -1,3 +1,11 @@
+Version 8.8-4 (Wednesday, November 25th 2015)
+	== Bug Fix ==
+	* request #8614: Project license removal
+	* request #8613: Wrong preselection of theme for new user
+	* request #8605: Artifacts changeset notification come from forge__artifacts@<forge email domain>
+	* request #8589: Apache logs filled with No entry for terminal type "unknown"
+	* request #8583: Invalid value in tracker XML import data crash import process
+
 Version 8.8-3 (Monday, November 16th 2015)
 	== Bug Fix ==
 	* request #8576: Artifact updated by email does not take into account which user updates the artifact
