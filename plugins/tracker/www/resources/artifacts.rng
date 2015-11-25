@@ -3,11 +3,7 @@
   <include href="artifact-definition.rng"/>
   <start>
     <element name="artifacts">
-      <zeroOrMore>
-        <element name="artifact">
-          <ref name="artifact"/>
-        </element>
-      </zeroOrMore>
+      <ref name="artifacts"/>
     </element>
   </start>
 </grammar>

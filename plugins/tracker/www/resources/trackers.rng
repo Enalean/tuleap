@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <include href="tracker-definition.rng"/>
-  <include href="triggers.rng"/>
   <start>
     <element name="trackers">
-      <zeroOrMore>
-        <element name="tracker">
-          <ref name="tracker"/>
-        </element>
-      </zeroOrMore>
-      <optional>
-        <element name="triggers">
-          <ref name="triggers"/>
-        </element>
-      </optional>
+      <ref name="trackers"/>
     </element>
   </start>
 </grammar>

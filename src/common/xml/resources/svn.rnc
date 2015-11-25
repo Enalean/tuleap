@@ -1,17 +1,7 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 grammar {
-    start = element svn {
-        # Path to the svn dump file
-        attribute dump-file { xsd:string }? &
+    include "svn-definition.rnc"
 
-        # Content of the .SVNAccessFile inline in the XML
-        element access-file { xsd:string }? &
-
-        # E-mail subscriptions
-        element notification {
-            attribute path { xsd:string },
-            attribute emails { xsd:string }
-        }*
-    }
+    start = element svn { svn }
 }

@@ -1,9 +1,7 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
-include "artifact-definition.rnc"
+grammar {
+    include "artifact-definition.rnc"
 
-start = element artifacts {
-    element artifact {
-        artifact
-    }*
+    start = element artifacts { artifacts }
 }

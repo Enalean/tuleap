@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <include href="ugroups-definition.rng"/>
+  <include href="svn-definition.rng"/>
+  <include href="tracker-definition.rng"/>
+  <start>
+    <element name="project">
+      <optional>
+        <element name="ugroups">
+          <ref name="ugroups"/>
+        </element>
+      </optional>
+      <zeroOrMore>
+        <element name="trackers">
+          <ref name="trackers"/>
+        </element>
+      </zeroOrMore>
+      <optional>
+        <element name="svn">
+          <ref name="svn"/>
+        </element>
+      </optional>
+    </element>
+  </start>
+</grammar>

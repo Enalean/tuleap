@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="triggers">
+    <zeroOrMore>
+      <element name="trigger_rule">
+        <element name="triggers">
+          <zeroOrMore>
+            <element name="trigger">
+              <ref name="fieldValueContent"/>
+            </element>
+          </zeroOrMore>
+        </element>
+        <element name="condition">
+          <data type="string"/>
+        </element>
+        <element name="target">
+          <ref name="fieldValueContent"/>
+        </element>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="fieldValueContent">
+    <element name="field_id">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="field_value_id">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+  </define>
+</grammar>

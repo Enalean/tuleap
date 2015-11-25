@@ -1,4 +1,13 @@
 include "artifact-definition.rnc"
+include "triggers.rnc"
+
+trackers =
+    element tracker {
+        tracker
+    }*,
+    element triggers {
+        triggers
+    }?
 
 tracker =
         # old ids
@@ -75,9 +84,7 @@ tracker =
         }?,
 
         element artifacts {
-            element artifact {
-                artifact
-            }*
+            artifacts
         }?
 
     formElementsContent =
@@ -172,7 +179,7 @@ tracker =
                 element value {
                     (
                         attribute REF { xsd:IDREF } |
-                        user_content
+                        tracker_user_content
                     )
                 }*
             }?
