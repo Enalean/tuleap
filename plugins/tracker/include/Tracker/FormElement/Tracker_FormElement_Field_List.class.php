@@ -1052,11 +1052,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return void
      */
-    public function continueGetInstanceFromXML($xml, &$xmlMapping) {
-        parent::continueGetInstanceFromXML($xml, $xmlMapping);
+     public function continueGetInstanceFromXML(
+         $xml,
+         &$xmlMapping,
+         User\XML\Import\IFindUserFromXMLReference $user_finder
+     ) {
+        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
         // if field is a list add bind
         if ($xml->bind) {
-            $bind = $this->getBindFactory()->getInstanceFromXML($xml->bind, $this, $xmlMapping);
+            $bind = $this->getBindFactory()->getInstanceFromXML($xml->bind, $this, $xmlMapping, $user_finder);
             $this->setBind($bind);
         }
     }

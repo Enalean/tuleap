@@ -30,7 +30,9 @@ class ToBeActivatedUser_isActionAllowedTest extends TuleapTestCase {
         parent::setUp();
 
         $this->user = new ToBeActivatedUser(
-            aUser()->withUserName('cstevens')->build()
+            aUser()->withUserName('cstevens')->build(),
+            104,
+            'cs1234'
         );
     }
 

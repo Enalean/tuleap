@@ -35,8 +35,8 @@ class Tracker_Artifact_XMLImport {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    /** @var Tracker_XMLImport_XMLImportHelper */
-    private $xml_import_helper;
+    /** @var User\XML\Import\IFindUserFromXMLReference */
+    private $user_finder;
 
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;
@@ -44,22 +44,12 @@ class Tracker_Artifact_XMLImport {
     /** @var WrapperLogger */
     private $logger;
 
-    /**
-     * @param XML_RNGValidator $rng_validator
-     * @param Tracker_ArtifactCreator $artifact_creator
-     * @param Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator
-     * @param Tracker_FormElementFactory $formelement_factory
-     * @param Tracker_XMLImport_XMLImportHelper $xml_import_helper
-     * @param Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
-     * @param Logger $logger
-     * @param boolean $send_notifications
-     */
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
-        Tracker_XMLImport_XMLImportHelper $xml_import_helper,
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
         Logger $logger,
         $send_notifications
@@ -69,7 +59,7 @@ class Tracker_Artifact_XMLImport {
         $this->artifact_creator      = $artifact_creator;
         $this->new_changeset_creator = $new_changeset_creator;
         $this->formelement_factory   = $formelement_factory;
-        $this->xml_import_helper     = $xml_import_helper;
+        $this->user_finder           = $user_finder;
         $this->static_value_dao      = $static_value_dao;
         $this->logger                = new WrapperLogger($logger, 'XML import');
         $this->send_notifications    = $send_notifications;
@@ -128,7 +118,7 @@ class Tracker_Artifact_XMLImport {
             $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($xml_artifact);
             $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
                 $this->formelement_factory,
-                $this->xml_import_helper,
+                $this->user_finder,
                 $tracker,
                 $files_importer,
                 $extraction_path,
@@ -274,7 +264,7 @@ class Tracker_Artifact_XMLImport {
     }
 
     private function getSubmittedBy(SimpleXMLElement $xml_changeset) {
-        return $this->xml_import_helper->getUser($xml_changeset->submitted_by);
+        return $this->user_finder->getUser($xml_changeset->submitted_by);
     }
 
     private function getSubmittedOn(SimpleXMLElement $xml_changeset) {

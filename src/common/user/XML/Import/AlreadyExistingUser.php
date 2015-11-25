@@ -27,13 +27,19 @@ class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImp
 
     private static $ALLOWED_ACTIONS = array('activate', 'map');
 
-    public function __construct(PFUser $user) {
+    /** @var PFUser */
+    private $user;
+
+    public function __construct(PFUser $user, $original_user_id, $original_ldap_id) {
         parent::__construct(
             $user->getUserName(),
             $user->getRealName(),
             $user->getEmail(),
-            $user->getLdapId()
+            $original_user_id,
+            $original_ldap_id
         );
+
+        $this->user = $user;
     }
 
     /** @return array */
@@ -47,5 +53,9 @@ class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImp
 
     public function process(UserManager $user_manager, Logger $logger) {
         $logger->info("Nothing to do for $this->username");
+    }
+
+    public function getRealUser(UserManager $user_manager) {
+        return $this->user;
     }
 }

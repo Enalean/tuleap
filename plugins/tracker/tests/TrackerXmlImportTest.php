@@ -134,7 +134,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('WorkflowFactory'),
                 mock('XML_RNGValidator'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                $this->xml_import
+                $this->xml_import,
+                mock('User\XML\Import\IFindUserFromXMLReference')
             )
         );
 
@@ -270,7 +271,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
                 mock('WorkflowFactory'),
                 mock('XML_RNGValidator'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                $this->xml_import
+                $this->xml_import,
+                mock('User\XML\Import\IFindUserFromXMLReference')
             )
         );
     }
@@ -305,7 +307,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             mock('WorkflowFactory'),
             mock('XML_RNGValidator'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
-            mock('Tracker_Artifact_XMLImport')
+            mock('Tracker_Artifact_XMLImport'),
+            mock('User\XML\Import\IFindUserFromXMLReference')
         );
 
         $this->xml_security = new XML_Security();
@@ -368,7 +371,8 @@ XML;
             mock('WorkflowFactory'),
             mock('XML_RNGValidator'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
-            mock('Tracker_Artifact_XMLImport')
+            mock('Tracker_Artifact_XMLImport'),
+            mock('User\XML\Import\IFindUserFromXMLReference')
         );
 
         //create data passed
@@ -580,7 +584,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             mock('WorkflowFactory'),
             mock('XML_RNGValidator'),
             $this->trigger_rulesmanager,
-            mock('Tracker_Artifact_XMLImport')
+            mock('Tracker_Artifact_XMLImport'),
+            mock('User\XML\Import\IFindUserFromXMLReference')
         );
      }
 

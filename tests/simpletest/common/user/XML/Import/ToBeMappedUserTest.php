@@ -34,7 +34,9 @@ class ToBeMappedUser_isActionAllowedTest extends TuleapTestCase {
             'To Be Mapped',
             array(
                 aUser()->withUserName('cstevens')->build()
-            )
+            ),
+            104,
+            'cs1234'
         );
     }
 

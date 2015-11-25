@@ -47,10 +47,18 @@ class MappingFileOptimusPrimeTransformer {
             if (isset($csv_lines[$username])) {
                 $action = $csv_lines[$username];
                 $collection_for_import->add(
-                    $this->transformUser($collection_from_archive, $username, $action, $to_be_imported_user)
+                    $this->transformUser($collection_from_archive, $username, $action, $to_be_imported_user),
+                    $to_be_imported_user->getOriginalUserId(),
+                    $to_be_imported_user->getUserName(),
+                    $to_be_imported_user->getOriginalLdapId()
                 );
             } else if ($to_be_imported_user instanceof AlreadyExistingUser) {
-                $collection_for_import->add($to_be_imported_user);
+                $collection_for_import->add(
+                    $to_be_imported_user,
+                    $to_be_imported_user->getOriginalUserId(),
+                    $to_be_imported_user->getUserName(),
+                    $to_be_imported_user->getOriginalLdapId()
+                );
             } else {
                 throw new MissingEntryInMappingFileException("user $username should be in the mapping file");
             }

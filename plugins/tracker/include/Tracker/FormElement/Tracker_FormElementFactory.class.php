@@ -960,7 +960,12 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement Object
      */
-    public function getInstanceFromXML(Tracker $tracker, $xml, &$xmlMapping) {
+    public function getInstanceFromXML(
+        Tracker $tracker,
+        $xml,
+        &$xmlMapping,
+        User\XML\Import\IFindUserFromXMLReference $user_finder
+    ) {
         $att = $xml->attributes();
         $row = array(
             'formElement_type' => (string)$att['type'],
@@ -980,7 +985,7 @@ class Tracker_FormElementFactory {
         $curElem = $this->getInstanceFromRow($row);
         $curElem->setTracker($tracker);
         $xmlMapping[(string)$xml['ID']] = $curElem;
-        $curElem->continueGetInstanceFromXML($xml, $xmlMapping);
+        $curElem->continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
         return $curElem;
     }
 

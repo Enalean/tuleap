@@ -731,7 +731,7 @@ class trackerPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT
      */
     public function import_xml_project($params) {
-        TrackerXmlImport::build()->import(
+        TrackerXmlImport::build($params['user_finder'])->import(
             $params['project']->getId(),
             $params['xml_content'],
             $params['extraction_path']

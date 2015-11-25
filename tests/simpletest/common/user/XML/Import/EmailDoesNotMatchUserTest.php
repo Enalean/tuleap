@@ -31,7 +31,9 @@ class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase {
 
         $this->user = new EmailDoesNotMatchUser(
             aUser()->withUserName('cstevens')->build(),
-            'email.in.xml'
+            'email.in.xml',
+            104,
+            'cs1234'
         );
     }
 

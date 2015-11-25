@@ -18,7 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XMLImportHelper {
+class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference {
+
+    /** @var UserManager */
+    private $user_manager;
+
+    public function __construct(UserManager $user_manager) {
+        $this->user_manager = $user_manager;
+    }
 
     public function getUserFormat(SimpleXMLElement $xml_element) {
         $format       = (string) $xml_element['format'];
@@ -34,5 +41,19 @@ class XMLImportHelper {
             default :
                 return (string) $xml_element;
         }
+    }
+
+    /**
+     * @param SimpleXMLElement $xml_element
+     * @return PFUser
+     */
+    public function getUser(SimpleXMLElement $xml_element) {
+        $submitter = $this->user_manager->getUserByIdentifier($this->getUserFormat($xml_element));
+        if (! $submitter) {
+            $submitter = $this->user_manager->getUserAnonymous();
+            $submitter->setEmail((string) $xml_element);
+        }
+
+        return $submitter;
     }
 }

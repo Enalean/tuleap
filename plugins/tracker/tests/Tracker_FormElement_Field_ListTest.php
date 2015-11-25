@@ -403,20 +403,21 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         );
         
         $mapping = array();
-        
-        $bind    = new MockTracker_FormElement_Field_List_Bind_Static();
-        $factory = new MockTracker_FormElement_Field_List_BindFactory();
-        
-        $f = new $this->field_class_for_import();
-        $f->setReturnReference('getBindFactory', $factory);
-        
-        $factory->setReturnReference('getInstanceFromXML', $bind, array($xml->bind, '*', $mapping));
-        
-        $f->continueGetInstanceFromXML($xml, $mapping);
-        
-        $this->assertReference($f->getBind(), $bind);
+
+        $bind        = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $factory     = mock('Tracker_FormElement_Field_List_BindFactory');
+        $user_finder = mock('User\XML\Import\IFindUserFromXMLReference');
+
+        $field = new $this->field_class_for_import();
+        stub($field)->getBindFactory()->returns($factory);
+
+        stub($factory)->getInstanceFromXML($xml->bind, '*', $mapping, $user_finder)->returns($bind);
+
+        $field->continueGetInstanceFromXML($xml, $mapping, $user_finder);
+
+        $this->assertReference($field->getBind(), $bind);
     }
-    
+
     public function test_afterSaveObject() {
         $tracker = new MockTracker();
         $bind    = new MockTracker_FormElement_Field_List_Bind_Static();

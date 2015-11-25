@@ -24,7 +24,7 @@ use UserManager;
 use Logger;
 use RandomNumberGenerator;
 
-class WillBeCreatedUser implements User, ReadyToBeImportedUser {
+class WillBeCreatedUser implements ReadyToBeImportedUser {
 
     /** @var string */
     private $username;
@@ -83,5 +83,15 @@ class WillBeCreatedUser implements User, ReadyToBeImportedUser {
         } else {
             throw new UserCannotBeCreatedException('An error occured while creating '. $this->username);
         }
+    }
+
+    public function getRealUser(UserManager $user_manager) {
+        $user = $user_manager->getUserByUserName($this->username);
+
+        if (! $user) {
+            throw new UserNotFoundException('An error occured while retrieving previously created user '. $this->username);
+        }
+
+        return $user;
     }
 }

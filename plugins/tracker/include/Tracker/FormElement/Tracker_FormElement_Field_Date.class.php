@@ -160,8 +160,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return void
      */
-    public function continueGetInstanceFromXML($xml, &$xmlMapping) {
-        parent::continueGetInstanceFromXML($xml, $xmlMapping);
+     public function continueGetInstanceFromXML(
+         $xml,
+         &$xmlMapping,
+         User\XML\Import\IFindUserFromXMLReference $user_finder
+     ) {
+        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
 
         // add children
         if (isset($this->default_properties['default_value'])) {

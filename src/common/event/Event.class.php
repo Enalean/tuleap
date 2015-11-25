@@ -517,8 +517,10 @@ class Event {
      * Event launched while importing a project from a xml content
      *
      * Parameters:
-     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
-     *   'xml_content' => The xml content in string to check in
+     *   'project'         => The project where trackers, cardwall and AD must be created
+     *   'xml_content'     => The xml content in string to check in
+     *   'extraction_path' => Path where archive has been extracted
+     *   'user_finder'     => IFindUserFromXMLReference
      *
      * Expected Results:
      *   The various plugins create objects from the xml content

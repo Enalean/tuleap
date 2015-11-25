@@ -27,19 +27,19 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;
 
-    /** @var Tracker_XMLImport_XMLImportHelper */
-    private $xml_import_helper;
+    /** @var User\XML\Import\IFindUserFromXMLReference */
+    private $user_finder;
 
     /** @var TrackerXmlFieldsMapping */
     private $xml_fields_mapping;
 
     public function __construct(
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Tracker_XMLImport_XMLImportHelper $xml_import_helper,
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
         TrackerXmlFieldsMapping $xml_fields_mapping
     ) {
         $this->static_value_dao   = $static_value_dao;
-        $this->xml_import_helper  = $xml_import_helper;
+        $this->user_finder        = $user_finder;
         $this->xml_fields_mapping = $xml_fields_mapping;
     }
 
@@ -65,7 +65,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
             }
         } else {
             foreach ($field_change as $value) {
-                $user   = $this->xml_import_helper->getUser($value);
+                $user   = $this->user_finder->getUser($value);
                 $data[] = $user->getId();
             }
         }

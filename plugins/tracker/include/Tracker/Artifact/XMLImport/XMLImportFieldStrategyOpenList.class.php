@@ -28,15 +28,15 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
     /** @var TrackerXmlFieldsMapping */
     private $xml_fields_mapping;
 
-    /** @var Tracker_XMLImport_XMLImportHelper */
-    private $xml_import_helper;
+    /** @var User\XML\Import\IFindUserFromXMLReference */
+    private $user_finder;
 
     public function __construct(
         TrackerXmlFieldsMapping $xml_fields_mapping,
-        Tracker_XMLImport_XMLImportHelper $xml_import_helper
+        User\XML\Import\IFindUserFromXMLReference $user_finder
     ) {
         $this->xml_fields_mapping = $xml_fields_mapping;
-        $this->xml_import_helper  = $xml_import_helper;
+        $this->user_finder        = $user_finder;
     }
 
     /**
@@ -68,7 +68,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
         }
 
         if ($this->doesValueConcernUser($value)){
-            $user = $this->xml_import_helper->getUser($value);
+            $user = $this->user_finder->getUser($value);
 
             if ($user->isAnonymous()) {
                 return '';

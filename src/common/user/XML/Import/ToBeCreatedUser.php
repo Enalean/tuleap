@@ -25,16 +25,6 @@ class ToBeCreatedUser extends ActionToBeTakenForUser {
 
     const ACTION = 'create';
 
-    public function __construct(
-        $username,
-        $realname,
-        $email
-    ) {
-        $ldapid = '';
-
-        parent::__construct($username, $realname, $email, $ldapid);
-    }
-
     /** @return array */
     public function getCSVData() {
         return array(

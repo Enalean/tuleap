@@ -32,7 +32,9 @@ class ToBeCreatedUser_isActionAllowedTest extends TuleapTestCase {
         $this->user = new ToBeCreatedUser(
             'cstevens',
             'Cat Stevens',
-            'cstevens@example.com'
+            'cstevens@example.com',
+            104,
+            'cs1234'
         );
     }
 

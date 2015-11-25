@@ -212,7 +212,12 @@ class Tracker_FormElement_Field_List_BindFactory {
      *
      * @return Tooltip Object
      */
-    public function getInstanceFromXML($xml, $field, &$xmlMapping) {
+    public function getInstanceFromXML(
+        $xml,
+        $field,
+        &$xmlMapping,
+        User\XML\Import\IFindUserFromXMLReference $user_finder
+    ) {
         $row = array('type' => (string)$xml['type'],
                      'field' => $field,
                      'default_values' => null,
@@ -287,8 +292,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                         $row['default_values'][$ID] = $xmlMapping[$ID];
                     }
                 } else {
-                    $xml_helper = new Tracker_XMLImport_XMLImportHelper(UserManager::instance());
-                    $user       = $xml_helper->getUser($default_value);
+                    $user = $user_finder->getUser($default_value);
 
                     $row['default_values'][$user->getId()] = new Tracker_FormElement_Field_List_Bind_UsersValue(
                         $user->getId()

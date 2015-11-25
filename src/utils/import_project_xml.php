@@ -34,10 +34,6 @@ $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'm:'; // give me the path of the user mapping file
 
-$long_options = array(
-    'force-create-all-users'
-);
-
 function usage() {
     global $argv;
 
@@ -52,13 +48,11 @@ Import a project structure
   -m <path>       The path of the user mapping file
   -h              Display this help
 
-  --force-create-all-users Force creation/activation of all users before import
-
 EOT;
     exit(1);
 }
 
-$arguments = getopt($usage_options, $long_options);
+$arguments = getopt($usage_options);
 
 if (isset($arguments['h'])) {
     usage();
@@ -88,20 +82,9 @@ if (! isset($arguments['m'])) {
     $mapping_path = $arguments['m'];
 }
 
-$force_create_all_users_active = isset($arguments['force-create-all-users']);
-
 $user_manager  = UserManager::instance();
 $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
-$xml_importer  = new ProjectXMLImporter(
-    EventManager::instance(),
-    ProjectManager::instance(),
-    $xml_validator,
-    new UGroupManager(),
-    $user_manager,
-    new XMLImportHelper(),
-    new ProjectXMLImporterLogger()
-);
 
 $transformer = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager);
 $logger      = new ProjectXMLImporterLogger();
@@ -126,12 +109,20 @@ try {
         exit(1);
     }
 
-    if ($force_create_all_users_active) {
-        $collection_from_archive = $builder->buildFromArchive($archive);
-        $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
-        $users_collection->process($user_manager, $console);
-    }
+    $collection_from_archive = $builder->buildFromArchive($archive);
+    $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
+    $users_collection->process($user_manager, $console);
 
+    $user_finder = new User\XML\Import\Mapping($user_manager, $users_collection, $logger);
+
+    $xml_importer  = new ProjectXMLImporter(
+        EventManager::instance(),
+        ProjectManager::instance(),
+        $xml_validator,
+        new UGroupManager(),
+        $user_finder,
+        new ProjectXMLImporterLogger()
+    );
     $xml_importer->importFromArchive($project_id, $archive);
 
     $archive->close();

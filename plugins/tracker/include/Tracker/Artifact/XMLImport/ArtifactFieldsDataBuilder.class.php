@@ -53,7 +53,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        Tracker_XMLImport_XMLImportHelper $xml_import_helper,
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
         Tracker $tracker,
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,
@@ -77,7 +77,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             ),
             self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(
                 $xml_fields_mapping,
-                $xml_import_helper
+                $user_finder
             ),
             self::FIELDTYPE_STRING   => $alphanum_strategy,
             self::FIELDTYPE_TEXT     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyText(),
@@ -86,7 +86,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             self::FIELDTYPE_DATE     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate(),
             self::FIELDTYPE_LIST     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyList(
                 $static_value_dao,
-                $xml_import_helper,
+                $user_finder,
                 $xml_fields_mapping
             )
         );

@@ -66,7 +66,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByIdentifier('john_doe')->returns($this->john_doe);
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
-        $this->xml_import_helper = new Tracker_XMLImport_XMLImportHelper($this->user_manager);
+        $this->xml_import_helper = new XMLImportHelper($this->user_manager);
 
         $this->artifact = mock('Tracker_Artifact');
 
@@ -398,7 +398,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
         $this->user_manager = mock('UserManager');
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
-        $this->xml_import_helper = new Tracker_XMLImport_XMLImportHelper($this->user_manager);
+        $this->xml_import_helper = new XMLImportHelper($this->user_manager);
 
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
@@ -604,7 +604,7 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
 
     public function itCreatesTheChangesetsAccordingToDates() {
         expect($this->artifact_creator)->create('*', '*', '*', strtotime('2014-01-15T10:38:06+01:00'), '*')->once();
-        
+
         expect($this->new_changeset_creator)->create($this->artifact, '*', '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*', '*')->once();
 
         $this->importer->importFromXML(

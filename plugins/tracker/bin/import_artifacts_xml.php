@@ -27,7 +27,9 @@ try {
     $tracker = TrackerFactory::instance()->getTrackerById($argv[2]);
     if ($tracker) {
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
-        $xml_import = $xml_import_builder->build();
+        $xml_import = $xml_import_builder->build(
+            new XMLImportHelper($user_manager)
+        );
 
         $zip = new ZipArchive();
         if ($zip->open($argv[3]) !== true) {
@@ -48,4 +50,3 @@ try {
     echo implode(PHP_EOL, $exception->getErrors()).PHP_EOL;
     exit(1);
 }
-
