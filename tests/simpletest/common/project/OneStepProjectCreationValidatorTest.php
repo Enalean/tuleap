@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -54,17 +54,22 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function aCreationValidator($request_data, $required_custom_descriptions) {
-        $request = aRequest()->withParams($request_data)->build();
+    protected function aCreationValidator($request_data, $required_custom_descriptions, $trove_cats) {
+        $request          = aRequest()->withParams($request_data)->build();
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, ProjectManager::instance());
-        $validator = new Project_OneStepCreation_OneStepCreationValidator($creation_request, $required_custom_descriptions);
+        $validator        = new Project_OneStepCreation_OneStepCreationValidator(
+            $creation_request, 
+            $required_custom_descriptions,
+            $trove_cats
+        );
 
         return $validator;
     }
 
     public function testValidateAndGenerateErrorsValidatesFullname() {
         $request_data = array();
-        $validator = $this->aCreationValidator($request_data, array());
+        $trove_cats   = array();
+        $validator    = $this->aCreationValidator($request_data, array(), $trove_cats);
 
         $validator->validateAndGenerateErrors();
     }
@@ -81,12 +86,33 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
             Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
             Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => 'approved',
         );
-        $validator = $this->aCreationValidator($request_data, $required_custom_descriptions);
+
+        $trove_cats = array();
+        $validator  = $this->aCreationValidator($request_data, $required_custom_descriptions, $trove_cats);
 
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
         expect($GLOBALS['Language'])->getText('register_project_one_step', 'custom_description_missing', "A REQUIRED description field")->once();
         $this->assertFalse($validator->validateAndGenerateErrors());
     }
-}
 
-?>
+    public function itReturnsFalseIfAMandatoryTroveCatIsNotSet() {
+        $required_custom_descriptions = array(
+            101 => new Project_CustomDescription_CustomDescription(101, "A REQUIRED description field", "desc", Project_CustomDescription_CustomDescription::REQUIRED, Project_CustomDescription_CustomDescription::TYPE_TEXT, 1),
+        );
+
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => 'my_test proj',
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => 'fdgd',
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => 'short description',
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => true,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
+            Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => 'approved',
+        );
+
+        $trove_cat  = new TroveCat(1, 'whatever', 'WhatEver');
+        $trove_cats = array($trove_cat);
+        $validator  = $this->aCreationValidator($request_data, $required_custom_descriptions, $trove_cats);
+
+        $this->assertFalse($validator->validateAndGenerateErrors());
+    }
+}

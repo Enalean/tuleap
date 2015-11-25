@@ -44,21 +44,27 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     /** @var Project_CustomDescription_CustomDescription[] */
     private $required_custom_descriptions;
 
+    /** @var TroveCats[] */
+    private $trove_cats;
+
     public function __construct(
         Codendi_Request $request,
         ProjectManager $project_manager,
-        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory
+        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
+        TroveCatFactory $trove_cat_factory
     ) {
         parent::__construct('project', $request);
         $this->project_manager              = $project_manager;
         $this->required_custom_descriptions = $custom_description_factory->getRequiredCustomDescriptions();
+        $this->trove_cats                   = $trove_cat_factory->getMandatoryParentCategoriesUnderRoot();
 
         $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
 
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
             $this->creation_request,
             $this->required_custom_descriptions,
-            $project_manager
+            $project_manager,
+            $this->trove_cats
         );
     }
 
@@ -83,7 +89,12 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     private function validate() {
-        $validator = new Project_OneStepCreation_OneStepCreationValidator($this->creation_request, $this->required_custom_descriptions);
+        $validator = new Project_OneStepCreation_OneStepCreationValidator(
+            $this->creation_request,
+            $this->required_custom_descriptions,
+            $this->trove_cats
+        );
+
         if (! $validator->validateAndGenerateErrors()) {
             $this->index();
         }

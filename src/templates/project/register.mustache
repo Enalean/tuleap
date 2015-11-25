@@ -103,6 +103,25 @@
         </div>
     </fieldset>
 
+    {{# hasTroveCats }}
+    <fieldset>
+        <legend>{{ trove_cat_legend }}</legend>
+        {{# trove_cats }}
+        <div class="control-group">
+            <label class="control-label">{{ getFullname }} <span class="mandatory_field">*</span></label>
+            <div class="controls">
+                <select name="trove[{{ getId }}]">
+                    <option disabled selected> {{ none_selected }} </option>
+                    {{# getChildren }}
+                    <option value="{{ getId }}">{{ getFullname }}</option>
+                    {{/ getChildren }}
+                </select>
+            </div>
+        </div>
+        {{/ trove_cats }}
+    </fieldset>
+    {{/ hasTroveCats }}
+
         {{#hasMoreThanOneAvailableTemplate}}
         <fieldset>
             <legend>{{getChooseTemplateContainerTitle}}</legend>

@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2015. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -18,10 +18,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once 'common/valid/Rule.class.php';
-require_once 'OneStepCreationRequest.class.php';
-require_once 'OneStepCreationPresenter.class.php';
-
 /**
  * Validates the request
  */
@@ -33,13 +29,20 @@ class Project_OneStepCreation_OneStepCreationValidator {
     /** @var Project_CustomDescription_CustomDescription[] */
     private $required_custom_descriptions;
 
-    public function __construct(Project_OneStepCreation_OneStepCreationRequest $creation_request, array $required_custom_descriptions) {
+    /** @var TroveCats[] */
+    private $trove_cats;
+
+    public function __construct(
+        Project_OneStepCreation_OneStepCreationRequest $creation_request,
+        array $required_custom_descriptions,
+        array $trove_cats
+    ) {
         $this->creation_request             = $creation_request;
         $this->required_custom_descriptions = $required_custom_descriptions;
+        $this->trove_cats                   = $trove_cats;
     }
 
     /**
-     *
      * @return boolean
      */
     public function validateAndGenerateErrors() {
@@ -51,7 +54,9 @@ class Project_OneStepCreation_OneStepCreationValidator {
             ->validateFullName()
             ->validateShortDescription()
             ->validateTosApproval()
-            ->validateCustomDescriptions();
+            ->validateCustomDescriptions()
+            ->validateTroveCats();
+
         return $this->is_valid;
     }
 
@@ -174,12 +179,25 @@ class Project_OneStepCreation_OneStepCreationValidator {
     }
 
     /**
-     * @return \Project_OneStepCreation_OneStepCreationValidator
+     *
+     * @return Project_OneStepCreation_OneStepCreationValidator
+     */
+    private function validateTroveCats() {
+        foreach ($this->trove_cats as $trove_cat) {
+            if (! $this->creation_request->getTroveCat($trove_cat->getId())) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_project_one_step', 'mandatory_trovecat_missing', $trove_cat->getFullname()));
+                $this->setIsNotValid();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Project_OneStepCreation_OneStepCreationValidator
      */
     private function setIsNotValid() {
         $this->is_valid = false;
         return $this;
     }
 }
-
-?>

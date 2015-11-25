@@ -120,6 +120,7 @@ register_project_one_step	title	Création d'un projet
 register_project_one_step	page_description_beg	Création d'un nouveau projet sur
 register_project_one_step	page_description_end	en seulement quelques clics.
 register_project_one_step	custom_description_missing	Le champ '$1' est requis
+register_project_one_step	mandatory_trovecat_missing	La catégorie '$1' est requise
 register_project_one_step	warning	Attention
 register_project_one_step	warning_message	Votre projet sera validé par un administrateur de la plateforme.
 register_project_one_step	description_container_title	Description du projet
@@ -152,6 +153,7 @@ register_project_one_step	complete_thanks	Merci d'utiliser $1
 register_project_one_step	complete_mail_subject	Nouveau projet enregistré : $1
 register_project_one_step	complete_mail_body_auto	Un nouveau projet vient juste d'être enregistré sur $1\n\nNom du projet : $2\n\nConformément à la configuration site, le projet a été automatiquement approuvé. Vous pouvez néanmoins accéder au panneau d'administration du site-admin :\n$3\n
 register_project_one_step	complete_mail_body_approve	Un nouveau projet vient juste d'être enregistré sur $1\n\nNom du projet : $2\n\nVeuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n$3\n
+register_project_one_step	trove_cat_legend	Catégories
 #
 #-----------------------------------------------
 # Script: src/common/project/OneStepRegistration/OneStepRegistrationPresenter.class.php

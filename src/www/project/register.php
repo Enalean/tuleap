@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,8 @@ $request = HTTPRequest::instance();
 
 $router = new Project_OneStepCreation_OneStepCreationRouter(
     ProjectManager::instance(),
-    new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao())
+    new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao()),
+    new TroveCatFactory(new TrovecatDao())
 );
+
 $router->route($request);
