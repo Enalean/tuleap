@@ -205,9 +205,9 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->assertEqual($user->getMappedUser(), $cstevens);
     }
 
-    public function itTransformsAToBeCreatedToAWillBeCreatedUser() {
+    public function itTransformsAToBeCreatedToAWillBeCreatedUserInActiveStatus() {
         $this->addToBeCreatedUserToCollection();
-        $this->generateCSV('to.be.created', 'create');
+        $this->generateCSV('to.be.created', 'create:A');
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.created');
@@ -216,6 +216,46 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
         $this->assertEqual($user->getUserName(), 'to.be.created');
         $this->assertEqual($user->getRealName(), 'To Be Created');
         $this->assertEqual($user->getEmail(), 'to.be.created@example.com');
+        $this->assertEqual($user->getStatus(), PFUser::STATUS_ACTIVE);
+    }
+
+    public function itTransformsAToBeCreatedToAWillBeCreatedUserInARestrictedStatus() {
+        $this->addToBeCreatedUserToCollection();
+        $this->generateCSV('to.be.created', 'create:R');
+
+        $new_collection = $this->transformer->transform($this->collection, $this->filename);
+        $user           = $new_collection->getUserByUserName('to.be.created');
+
+        $this->assertEqual($user->getStatus(), PFUser::STATUS_RESTRICTED);
+    }
+
+    public function itTransformsAToBeCreatedToAWillBeCreatedUserInASuspendedStatus() {
+        $this->addToBeCreatedUserToCollection();
+        $this->generateCSV('to.be.created', 'create:S');
+
+        $new_collection = $this->transformer->transform($this->collection, $this->filename);
+        $user           = $new_collection->getUserByUserName('to.be.created');
+
+        $this->assertEqual($user->getStatus(), PFUser::STATUS_SUSPENDED);
+    }
+
+    public function itTransformsAToBeCreatedToAWillBeCreatedUserInDefaultStatusSuspended() {
+        $this->addToBeCreatedUserToCollection();
+        $this->generateCSV('to.be.created', 'create');
+
+        $new_collection = $this->transformer->transform($this->collection, $this->filename);
+        $user           = $new_collection->getUserByUserName('to.be.created');
+
+        $this->assertEqual($user->getStatus(), PFUser::STATUS_SUSPENDED);
+    }
+
+    public function itThrowsAnExceptionWhenGivenStatusIsInvalid() {
+        $this->addToBeCreatedUserToCollection();
+        $this->generateCSV('to.be.created', 'create:D');
+
+        $this->expectException('User\XML\Import\InvalidMappingFileException');
+
+        $new_collection = $this->transformer->transform($this->collection, $this->filename);
     }
 
     public function itTransformsAToBeActivatedToAWillBeActivatedUser() {
@@ -372,7 +412,7 @@ class MappingFileOptimusPrimeTransformer_createTest extends MappingFileOptimusPr
     public function itDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedUser() {
         $this->addToBeCreatedUserToCollection();
 
-        $this->generateCSV('to.be.created', 'create');
+        $this->generateCSV('to.be.created', 'create:S');
 
         $this->transformer->transform($this->collection, $this->filename);
     }

@@ -20,6 +20,7 @@
 namespace User\XML\Import;
 
 use UserManager;
+use PFUser;
 
 class MappingFileOptimusPrimeTransformer {
 
@@ -73,8 +74,9 @@ class MappingFileOptimusPrimeTransformer {
         $action,
         User $to_be_imported_user
     ) {
+        $argument = null;
         if (strpos($action, ':') !== false) {
-            list($action, $mapped_username) = split(':', $action);
+            list($action, $argument) = split(':', $action);
         }
 
         if (! in_array($action, self::$ALLOWED_ACTIONS)) {
@@ -86,20 +88,37 @@ class MappingFileOptimusPrimeTransformer {
         }
 
         if ($action === ToBeMappedUser::ACTION) {
-            $mapped_user = $this->getMappedUser($collection_from_archive, $username, $mapped_username);
-
-            return new WillBeMappedUser($username, $mapped_user);
+            return $this->getWillBeMappedUser($username, $argument, $collection_from_archive);
         } elseif ($action === ToBeCreatedUser::ACTION) {
-            return new WillBeCreatedUser(
-                $to_be_imported_user->getUserName(),
-                $to_be_imported_user->getRealName(),
-                $to_be_imported_user->getEmail()
-            );
+            return $this->getWillBeCreatedUser($username, $argument, $to_be_imported_user);
         } elseif ($action === ToBeActivatedUser::ACTION) {
             return new WillBeActivatedUser($this->getExistingUser($username));
         }
 
         return $to_be_imported_user;
+    }
+
+    private function getWillBeMappedUser($username, $mapped_username, $collection_from_archive) {
+        $mapped_user = $this->getMappedUser($collection_from_archive, $username, $mapped_username);
+
+        return new WillBeMappedUser($username, $mapped_user);
+    }
+
+    private function getWillBeCreatedUser($username, $status, $to_be_imported_user) {
+        if (! $status) {
+            $status = PFUser::STATUS_SUSPENDED;
+        }
+
+        if (! in_array($status, WillBeCreatedUser::$ALLOWED_STATUSES)) {
+            throw new InvalidMappingFileException("Invalid status [$status] for $username creation. Valid status are S, R and A.");
+        }
+
+        return new WillBeCreatedUser(
+            $to_be_imported_user->getUserName(),
+            $to_be_imported_user->getRealName(),
+            $to_be_imported_user->getEmail(),
+            $status
+        );
     }
 
     private function getExistingUser($username) {

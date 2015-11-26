@@ -41,7 +41,8 @@ class WillBeCreatedUser_processTest extends TuleapTestCase {
         $this->user = new WillBeCreatedUser(
             'cstevens',
             'Cat Stevens',
-            'cstevens@example.com'
+            'cstevens@example.com',
+            'S'
         );
     }
 
