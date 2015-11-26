@@ -20,6 +20,8 @@ Version 8.9 (Not released yet)
             * task #8568: import subversion accessfile
             * validate <svn/> tag using RelaxNG on import
 
+        * story #8572: import a new project with its metadata
+            * import a new project with its metadata
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
