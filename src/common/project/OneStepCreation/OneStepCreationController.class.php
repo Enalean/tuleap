@@ -101,10 +101,9 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     private function doCreate() {
+        $projectCreator = new ProjectCreator($this->project_manager);
         $data = $this->creation_request->getProjectValues();
-        require_once 'www/project/create_project.php';
-        $group_id = create_project($data);
-        return $this->project_manager->getProject($group_id);
+        return $projectCreator->build($data);
     }
 
     private function notifySiteAdmin(Project $project) {

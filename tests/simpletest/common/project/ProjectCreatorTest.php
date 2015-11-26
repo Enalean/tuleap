@@ -18,19 +18,52 @@
  */
 
 require_once 'common/project/ProjectCreator.class.php';
+require_once('common/language/BaseLanguage.class.php');
 
 Mock::generate('Project');
 Mock::generate('ProjectManager');
-Mock::generate('Rule_ProjectName');
-Mock::generate('Rule_ProjectFullName');
-        
-class ProjectCreatorTest extends UnitTestCase {
+Mock::generate('BaseLanguage');
+Mock::generate('UserManager');
+Mock::generate('ProjectManager');
+Mock::generate('SystemEventManager');
+
+class ProjectCreatorTest_BaseLanguage extends MockBaseLanguage {
     
+    public function getText($section, $name, $args) {
+        $args = implode($args, ',');
+        return "$section.$name($args)";
+    }
+
+}
+
+class ProjectCreatorTest extends UnitTestCase {
+
+    public function setUp(){
+        $GLOBALS['Language'] = new ProjectCreatorTest_BaseLanguage();
+
+        $this->event_manager = new MockSystemEventManager();
+        $this->event_manager->setReturnValue('isUserNameAvailable', true);
+        $this->event_manager->setReturnValue('isProjectNameAvailable', true);
+        SystemEventManager::setInstance($this->event_manager);
+
+        $this->project_manager = new MockProjectManager();
+        $this->project_manager->setReturnValue('getProjectByUnixName', null);
+        ProjectManager::setInstance($this->project_manager);
+
+        $this->user_manager = new MockUserManager();
+        $this->user_manager->setReturnValue('getUserByUserName', null);
+        UserManager::setInstance($this->user_manager);
+    }
+
+    public function tearDown(){
+        UserManager::clearInstance();
+        ProjectManager::clearInstance();
+        SystemEventManager::clearInstance();
+        unset($GLOBALS['Language']);
+    }
+
     public function testInvalidShortNameShouldRaiseException() {
         $creator = $this->GivenAProjectCreator();
-        
-        $this->ruleShortName->setReturnValue('isValid', false);
-        $this->ruleShortName->setReturnValue('getErrorMessage', 'Yippee-ki-yay motherfucker');
         
         $this->expectException('Project_InvalidShortName_Exception');
         $creator->create('contains.point', 'sdf', array());
@@ -39,25 +72,15 @@ class ProjectCreatorTest extends UnitTestCase {
     public function testInvalidFullNameShouldRaiseException() {
         $creator = $this->GivenAProjectCreator();
         
-        $this->ruleShortName->setReturnValue('isValid', true);
-
-        $this->ruleFullName->setReturnValue('isValid', false);
-        $this->ruleFullName->setReturnValue('getErrorMessage', 'Yippee-ki-yay motherfucker');
-        
         $this->expectException('Project_InvalidFullName_Exception');
-        $creator->create('contains.point', 'sdf', array());
+        $creator->create('shortname', 'a', array()); // a is too short
     }
     
     public function testCreationFailureShouldRaiseException() {
         $creator = $this->GivenAProjectCreator();
 
-        $this->ruleShortName->setReturnValue('isValid', true);
-        $this->ruleFullName->setReturnValue('isValid', true);
-
-        $creator->setReturnValue('create_project', false);
-
         $this->expectException('Project_Creation_Exception');
-        $creator->create('contains.point', 'sdf', array());
+        $creator->create('shortname', 'Valid Full Name', array());
     }
     
     /**
@@ -65,11 +88,9 @@ class ProjectCreatorTest extends UnitTestCase {
      */
     private function GivenAProjectCreator() {
         $projectManager       = new MockProjectManager();
-        $this->ruleShortName  = new MockRule_ProjectName();
-        $this->ruleFullName   = new MockRule_ProjectFullName();
         
-        $creator              = TestHelper::getPartialMock('ProjectCreator', array('create_project'));
-        $creator->__construct($projectManager, $this->ruleShortName, $this->ruleFullName);
+        $creator = TestHelper::getPartialMock('ProjectCreator', array('create_project'));
+        $creator->__construct($projectManager);
         
         return $creator;
     }

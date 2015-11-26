@@ -26,7 +26,7 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 *
 * @param  data  
 */
-function create_project($data, $do_not_exit = false) {
+function create_project($data) {
     srand((double)microtime()*1000000);
     $random_num=rand(0,1000000);
     
