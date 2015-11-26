@@ -18,6 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function get_markdown_path() {
+    $potential_paths = array(
+        '/usr/share/php-markdown',
+        '/usr/share/php', // php55 from remi repo has a different php path
+    );
+
+    foreach($potential_paths as $path) {
+        $path .= '/Michelf/';
+        if (is_dir($path)) {
+            return $path;
+        }
+    }
+}
+
+require_once('/usr/share/php/Zend/Loader/StandardAutoloader.php');
+$loader = new Zend\Loader\StandardAutoloader(
+    array(
+        'autoregister_zf' => true,
+        'namespaces' => array(
+            'Firebase\JWT' => '/usr/share/php-jwt/',
+            'Michelf'      => get_markdown_path()
+        )
+    )
+);
+$loader->register();
+
 /**
  * Function called when a class is not defined.
  *
@@ -44,29 +70,3 @@ function autoload_zend($className) {
     }
 }
 spl_autoload_register('autoload_zend');
-
-function get_markdown_path() {
-    $potential_paths = array(
-        '/usr/share/php-markdown',
-        '/usr/share/php', // php55 from remi repo has a different php path
-    );
-
-    foreach($potential_paths as $path) {
-        $path .= '/Michelf/';
-        if (is_dir($path)) {
-            return $path;
-        }
-    }
-}
-
-require_once('/usr/share/php/Zend/Loader/StandardAutoloader.php');
-$loader = new Zend\Loader\StandardAutoloader(
-    array(
-        'autoregister_zf' => true,
-        'namespaces' => array(
-            'Firebase\JWT' => '/usr/share/php-jwt/',
-            'Michelf'      => get_markdown_path()
-        )
-    )
-);
-$loader->register();

@@ -355,6 +355,15 @@ Requires: %{php_base}-openid
 %description plugin-openid
 Connect to Tuleap using an OpenId provider
 
+%package plugin-openidconnectclient
+Summary: OpenId consumer plugin
+Group: Development/Tools
+Version: @@PLUGIN_OPENIDCONNECTCLIENT_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{php_base}-openid-connect-client
+%description plugin-openidconnectclient
+Connect to Tuleap using an OpenID Connect provider
+
 %package plugin-proftpd
 Summary: Proftpd plugin
 Group: Development/Tools
@@ -1135,6 +1144,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/openid
 %{APP_CACHE_DIR}/openid_consumer_store
+
+%files plugin-openidconnectclient
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/openidconnectclient
 
 %files plugin-proftpd
 %defattr(-,%{APP_USER},%{APP_USER},-)
