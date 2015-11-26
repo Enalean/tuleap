@@ -21,7 +21,7 @@ Version 8.9 (Not released yet)
             * validate <svn/> tag using RelaxNG on import
 
         * story #8572: import a new project with its metadata
-            * import a new project with its metadata
+            * Refactoring create_project -> ProjectCreator
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
