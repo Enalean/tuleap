@@ -48,6 +48,7 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
 use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
+use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 
 /**
  * Wrapper for milestone related REST methods
@@ -82,6 +83,9 @@ class MilestoneResource extends AuthenticatedResource {
 
     /** @var ResourcesPatcher */
     private $resources_patcher;
+
+    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
+    private $milestone_representation_builder;
 
     public function __construct() {
         $planning_factory               = PlanningFactory::build();
@@ -142,6 +146,12 @@ class MilestoneResource extends AuthenticatedResource {
         );
 
         $this->event_manager = EventManager::instance();
+
+        $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->milestone_factory,
+            $this->backlog_strategy_factory,
+            $this->event_manager
+        );
     }
 
     /**
@@ -234,12 +244,8 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeadersForMilestone($milestone);
 
-        $milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
-            $this->milestone_factory,
-            $this->backlog_strategy_factory,
-            $this->event_manager
-        );
-        $milestone_representation = $milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
+
+        $milestone_representation = $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
 
         return $milestone_representation;
     }
@@ -297,40 +303,13 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone_factory = $this->milestone_factory;
         $strategy_factory  = $this->backlog_strategy_factory;
 
-        $milestones = array_map(
-            function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory, $strategy_factory) {
-                $milestone_representation = new MilestoneRepresentation();
-                $milestone_representation->build(
-                    $milestone,
-                    $milestone_factory->getMilestoneStatusCount(
-                        $user,
-                        $milestone
-                    ),
-                    $strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers(),
-                    $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
-                );
-
-                $event_manager->processEvent(
-                    AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
-                    array(
-                        'user'                     => $user,
-                        'milestone'                => $milestone,
-                        'milestone_representation' => &$milestone_representation,
-                        'version'                  => 'v1'
-
-                    )
-                );
-
-                return $milestone_representation;
-            },
-            $this->milestone_factory->getSubMilestones($user, $milestone)
-        );
+        $milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user)->getMilestonesRepresentations();
 
         if ($order === 'desc') {
-            return array_reverse($milestones);
+            return array_reverse($milestones_representations);
         }
 
-        return $milestones;
+        return $milestones_representations;
     }
 
     /**
@@ -561,22 +540,21 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
-        $user          = $this->getCurrentUser();
-        $milestone     = $this->getMilestoneById($user, $id);
-        $strategy      = $this->backlog_strategy_factory->getBacklogStrategy($milestone, $limit, $offset);
-        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone, $strategy);
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
 
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
-        $backlog_items_representation        = array();
+        $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+            new BacklogItemRepresentationFactory(),
+            $this->backlog_item_collection_factory,
+            $this->backlog_strategy_factory
+        );
 
-        foreach ($backlog_items as $backlog_item) {
-            $backlog_items_representation[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
-        }
+        $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $limit, $offset);
 
         $this->sendAllowHeaderForBacklog();
-        $this->sendPaginationHeaders($limit, $offset, $backlog_items->getTotalAvaialableSize());
+        $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());
 
-        return $backlog_items_representation;
+        return $paginated_backlog_items_representations->getBacklogItemsRepresentations();
     }
 
     /**
@@ -888,15 +866,6 @@ class MilestoneResource extends AuthenticatedResource {
 
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
-    }
-
-    private function getMilestoneBacklogItems(PFUser $user, $milestone, $strategy) {
-        return $this->backlog_item_collection_factory->getUnplannedOpenCollection(
-            $user,
-            $milestone,
-            $strategy,
-            false
-        );
     }
 
     private function getMilestoneContentItems($milestone, $strategy) {

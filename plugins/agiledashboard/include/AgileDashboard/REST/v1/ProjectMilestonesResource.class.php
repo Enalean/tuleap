@@ -34,6 +34,8 @@ use \AgileDashboard_BacklogItemDao;
 use \Planning_Milestone;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \PlanningPermissionsManager;
+use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
+use EventManager;
 
 /**
  * Wrapper for milestone related REST methods
@@ -59,6 +61,9 @@ class ProjectMilestonesResource {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
+    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
+    private $milestone_representation_builder;
+
     public function __construct() {
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $this->planning_factory             = PlanningFactory::build();
@@ -77,6 +82,18 @@ class ProjectMilestonesResource {
             $this->status_counter,
             new PlanningPermissionsManager()
         );
+
+        $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->tracker_artifact_factory,
+            $this->planning_factory
+        );
+
+        $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->milestone_factory,
+            $backlog_strategy_factory,
+            EventManager::instance()
+        );
     }
 
     /**
@@ -88,41 +105,12 @@ class ProjectMilestonesResource {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $all_milestones = $this->getTopMilestones($user, $project);
-        if ($order === 'desc') {
-            $all_milestones = array_reverse($all_milestones);
-        }
-
-        $milestones                = array_slice($all_milestones, $offset, $limit);
-        $milestone_representations = array();
-
-        foreach($milestones as $milestone) {
-            $milestone_representation = new MilestoneRepresentation();
-            $milestone_representation->build(
-                $milestone,
-                $this->milestone_factory->getMilestoneStatusCount($user, $milestone),
-                $this->getBacklogTrackers($milestone),
-                $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
-            );
-            $milestone_representations[] = $milestone_representation;
-        }
+        $paginated_top_milestones_representations = $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations($project, $user, $limit, $offset, $order);
 
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_milestones));
+        $this->sendPaginationHeaders($limit, $offset, $paginated_top_milestones_representations->getTotalSize());
 
-        return $milestone_representations;
-    }
-
-    private function getStrategyFactory() {
-        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
-            new AgileDashboard_BacklogItemDao(),
-            Tracker_ArtifactFactory::instance(),
-            PlanningFactory::build()
-        );
-    }
-
-    private function getBacklogTrackers(Planning_Milestone $milestone) {
-        return $this->getStrategyFactory()->getBacklogStrategy($milestone)->getDescendantTrackers();
+        return $paginated_top_milestones_representations->getMilestonesRepresentations();
     }
 
     private function limitValueIsAcceptable($limit) {
@@ -131,24 +119,6 @@ class ProjectMilestonesResource {
 
     public function options(PFUser $user, Project $project, $limit, $offset) {
         $this->sendAllowHeaders();
-    }
-
-    /**
-     * Return all the top milestones of all the plannings of the project
-     * @param PFUser $user
-     * @param int $project_id
-     * @return array Planning_ArtifactMilestone
-     */
-    private function getTopMilestones(PFUser $user, Project $project) {
-
-        $top_milestones = array();
-        $milestones     = $this->milestone_factory->getSubMilestones($user, $this->milestone_factory->getVirtualTopMilestone($user, $project));
-
-        foreach ($milestones as $milestone) {
-            $top_milestones[] = $milestone;
-        }
-
-        return $top_milestones;
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {

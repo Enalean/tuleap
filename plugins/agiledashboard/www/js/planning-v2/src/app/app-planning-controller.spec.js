@@ -1,5 +1,5 @@
 describe("PlanningCtrl", function() {
-    var $scope, $filter, $q, PlanningCtrl, BacklogItemService, ProjectService, MilestoneService,
+    var $scope, $filter, $q, PlanningCtrl, BacklogItemService, BacklogItemFactory, ProjectService, MilestoneService,
         TuleapArtifactModalService, NewTuleapArtifactModalService,
         UserPreferencesService, deferred, second_deferred;
 
@@ -20,6 +20,10 @@ describe("PlanningCtrl", function() {
                 "removeAddBacklogItemChildren"
             ]);
             _(BacklogItemService).map('and').invoke('returnValue', $q.defer().promise);
+
+            BacklogItemFactory = jasmine.createSpyObj("BacklogItemFactory", [
+                "augment"
+            ]);
 
             ProjectService = jasmine.createSpyObj("ProjectService", [
                 "getProjectBacklog",
@@ -65,6 +69,7 @@ describe("PlanningCtrl", function() {
                 $filter: $filter,
                 $q: $q,
                 BacklogItemService: BacklogItemService,
+                BacklogItemFactory: BacklogItemFactory,
                 MilestoneService: MilestoneService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
                 ProjectService: ProjectService,
@@ -72,7 +77,7 @@ describe("PlanningCtrl", function() {
                 UserPreferencesService: UserPreferencesService
             });
 
-            $scope.init(102, 736, 592, 'en', true, 'compact-view', {});
+            $scope.init(102, 736, 592, 'en', true, 'compact-view', {}, { backlog_items_representations: [ {id: 7} ], total_size: 104 }, {});
         });
         deferred = $q.defer();
         second_deferred = $q.defer();
@@ -93,7 +98,7 @@ describe("PlanningCtrl", function() {
             var promise = $scope.displayBacklogItems();
             deferred.resolve(86);
 
-            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
             expect(promise).toBeResolved();
         });
 
@@ -126,20 +131,20 @@ describe("PlanningCtrl", function() {
         });
 
         it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I fetch all the backlog items, then the REST route will be called and a promise will be resolved", function() {
-            var promise = $scope.fetchAllBacklogItems(50, 0);
+            var promise = $scope.fetchAllBacklogItems(50, 50);
             deferred.resolve(40);
 
-            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
             expect(promise).toBeResolved();
         });
 
         it("Given that there were more items than the current offset and limit, when I fetch all the backlog items, then the REST route will be called twice and a promise will be resolved", function() {
-            var promise = $scope.fetchAllBacklogItems(50, 0);
-            deferred.resolve(83);
+            var promise = $scope.fetchAllBacklogItems(50, 50);
+            deferred.resolve(134);
             $scope.$apply();
 
-            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 0);
             expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
+            expect($scope.fetchBacklogItems).toHaveBeenCalledWith(50, 100);
             expect($scope.fetchBacklogItems.calls.count()).toEqual(2);
             expect(promise).toBeResolved();
         });
@@ -147,7 +152,7 @@ describe("PlanningCtrl", function() {
         it("Given that we were already loading backlog_items, when I fetch all the backlog items, then the REST route won't be called again and a promise will be rejected", function() {
             $scope.backlog_items.loading = true;
 
-            var promise = $scope.fetchAllBacklogItems(50, 0);
+            var promise = $scope.fetchAllBacklogItems(50, 50);
 
             expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
             expect(promise).toBeRejected();
@@ -156,7 +161,7 @@ describe("PlanningCtrl", function() {
         it("Given that all the backlog_items had been loaded, when I fetch all the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
             $scope.backlog_items.fully_loaded = true;
 
-            var promise = $scope.fetchAllBacklogItems(50, 0);
+            var promise = $scope.fetchAllBacklogItems(50, 50);
 
             expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
             expect(promise).toBeRejected();
@@ -214,10 +219,12 @@ describe("PlanningCtrl", function() {
             ]);
 
             expect($scope.items).toEqual({
+                7  : { id: 7 },
                 641: { id: 641 },
                 136: { id: 136 }
             });
             expect($scope.backlog_items.content).toEqual([
+                { id: 7 },
                 { id: 641 },
                 { id: 136 }
             ]);
@@ -237,7 +244,7 @@ describe("PlanningCtrl", function() {
             $scope.$apply();
 
             expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
-            expect($scope.fetchAllBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect($scope.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
         });
 
         it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
@@ -246,7 +253,7 @@ describe("PlanningCtrl", function() {
             $scope.$apply();
 
             expect($filter).toHaveBeenCalledWith('InPropertiesFilter');
-            expect($scope.fetchAllBacklogItems).toHaveBeenCalledWith(50, 0);
+            expect($scope.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
         });
     });
 
@@ -262,7 +269,7 @@ describe("PlanningCtrl", function() {
                     data: []
                 }
             };
-            $scope.fetchBacklogItemChildren(backlog_item, 50, 0);
+            $scope.fetchBacklogItemChildren(backlog_item, 50, 50);
             deferred.resolve({
                 results: [
                     { id: 151 },
@@ -272,7 +279,7 @@ describe("PlanningCtrl", function() {
             });
             $scope.$apply();
 
-            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(95, 50, 0);
+            expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(95, 50, 50);
             expect(backlog_item.children.data).toEqual([
                 { id: 151 },
                 { id: 857 }

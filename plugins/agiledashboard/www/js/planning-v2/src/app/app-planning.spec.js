@@ -1,11 +1,12 @@
 describe('PlanningCtrl', function() {
     var $scope,
         itemService,
+        backlogItemFactory,
         milestoneService,
         projectService,
         PlanningCtrl,
         project_id = 123,
-        milestone_id = 1;
+        milestone_id = 1,
         milestone = {
             resources: {
                 backlog: {
@@ -23,6 +24,30 @@ describe('PlanningCtrl', function() {
                     }
                 }
             }
+        },
+        initial_milestones = [{
+            resources: {
+                backlog: {
+                    accept: {
+                        trackers: [
+                            { id: 98, label: 'task'}
+                        ]
+                    }
+                },
+                content: {
+                    accept: {
+                        trackers: [
+                            { id: 98, label: 'task'}
+                        ]
+                    }
+                }
+            }
+        }],
+        initial_backlog_items = {
+            backlog_items_representations: [
+                { id: 7, artifact: { tracker: { id: 90 }}, accept: { trackers: [] } }
+            ],
+            total_size: 104
         };
 
     beforeEach(module('project'));
@@ -30,64 +55,72 @@ describe('PlanningCtrl', function() {
     beforeEach(module('backlog-item'));
 
     describe('in top backlog', function() {
-        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService, ProjectService) {
-            $scope           = $rootScope.$new();
-            itemService      = BacklogItemService;
-            milestoneService = MilestoneService;
-            projectService   = ProjectService;
+        beforeEach(inject(function($controller, $rootScope, BacklogItemService, BacklogItemFactory, MilestoneService, ProjectService) {
+            $scope             = $rootScope.$new();
+            itemService        = BacklogItemService;
+            backlogItemFactory = BacklogItemFactory;
+            milestoneService   = MilestoneService;
+            projectService     = ProjectService;
 
-            spyOn(itemService, 'getProjectBacklogItems').and.callThrough();
             spyOn(milestoneService, 'getMilestones').and.callThrough();
+            spyOn(backlogItemFactory, 'augment');
 
             PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
                 BacklogItemService: itemService,
+                BacklogItemFactory: backlogItemFactory,
                 MilestoneService: milestoneService
             });
 
             spyOn(PlanningCtrl, 'isMilestoneContext').and.returnValue(false);
-            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone);
+            spyOn(PlanningCtrl, 'loadInitialBacklogItems');
+            spyOn(PlanningCtrl, 'loadInitialMilestones');
+            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', null, initial_backlog_items, initial_milestones);
         }));
 
         describe('backlog items', function() {
-            it('asks backlog items of current project', inject(function() {
-                expect(itemService.getProjectBacklogItems).toHaveBeenCalledWith(project_id, jasmine.any(Number), jasmine.any(Number));
+            it('load initial backlog items of current project', inject(function() {
+                expect(PlanningCtrl.loadInitialBacklogItems).toHaveBeenCalledWith(initial_backlog_items);
             }));
         });
 
         describe('milestones', function() {
             it('asks top milestones of current project', inject(function() {
-                expect(milestoneService.getMilestones).toHaveBeenCalledWith(project_id, jasmine.any(Number), jasmine.any(Number), jasmine.any(Object));
+                expect(PlanningCtrl.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
             }));
         });
     });
 
     describe('in milestone', function() {
-        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService) {
-            $scope           = $rootScope.$new();
-            itemService      = BacklogItemService;
-            milestoneService = MilestoneService;
+        beforeEach(inject(function($controller, $rootScope, BacklogItemService, BacklogItemFactory, MilestoneService) {
+            $scope             = $rootScope.$new();
+            itemService        = BacklogItemService;
+            backlogItemFactory = BacklogItemFactory;
+            milestoneService   = MilestoneService;
 
-            spyOn(itemService, 'getMilestoneBacklogItems').and.callThrough();
             spyOn(milestoneService, 'getSubMilestones').and.callThrough();
+            spyOn(backlogItemFactory, 'augment');
 
-            $controller('PlanningCtrl', {
+            PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,
                 BacklogItemService: itemService,
+                BacklogItemFactory: backlogItemFactory,
                 MilestoneService: milestoneService
             });
-            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone);
+            spyOn(PlanningCtrl, 'loadInitialBacklogItems');
+            spyOn(PlanningCtrl, 'loadInitialMilestones');
+            $scope.init(102, project_id, milestone_id, 'en', true, 'compact-view', milestone, initial_backlog_items, initial_milestones);
         }));
 
         describe('backlog items', function() {
-            it('asks backlog items of current milestone', inject(function() {
-                expect(itemService.getMilestoneBacklogItems).toHaveBeenCalledWith(milestone_id, jasmine.any(Number), jasmine.any(Number));
+            it('load initial backlog items of current milestone', inject(function() {
+                expect(PlanningCtrl.loadInitialBacklogItems).toHaveBeenCalledWith(initial_backlog_items);
             }));
         });
 
         describe('milestones', function() {
             it('asks top milestones of current project', inject(function() {
-                expect(milestoneService.getSubMilestones).toHaveBeenCalledWith(milestone_id, jasmine.any(Number), jasmine.any(Number), jasmine.any(Object));
+                expect(PlanningCtrl.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
             }));
         });
     });
