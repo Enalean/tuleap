@@ -1,3 +1,6 @@
+Version 0.101 - Tuleap 8.9
+    * request #8626: Mediawiki: can no longer access to url with CamelCase unix_name
+
 Version 0.100 - Tuleap 8.9
     * request #8590: Properly generate absolute server URL when behind a reverse proxy
 

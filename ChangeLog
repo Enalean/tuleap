@@ -36,7 +36,7 @@ Version 8.9 (Not released yet)
 	* request #8627: Site admin browsing of user list is broken when restricted to a project
 
 	== Plugins ==
-	* mediawiki: 0.100
+	* mediawiki: 0.101
 	* git: 4.96
 	* tracker: 5.753
 	* agiledashboard: 1.308
