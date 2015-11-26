@@ -18,6 +18,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+var codendi = codendi || { };
 
 (function ($, codendi) {
 
@@ -115,7 +116,7 @@
         }
     };
 
-    codendi.Tooltip.selectors = ['a[class=cross-reference]'];
+    codendi.Tooltip.selectors = ['a.cross-reference'];
 
     codendi.Tooltip.load = function (element, at_cursor_position) {
         var sparkline_hrefs = {};
@@ -166,9 +167,5 @@
             });
         }
     }
-
-    $(document).ready(function () {
-        codendi.Tooltip.load(document.body);
-    });
 
 })(jQuery, codendi || { });

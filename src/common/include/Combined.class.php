@@ -73,6 +73,7 @@ class Combined {
             '/scripts/codendi/CreateProject.js',
             '/scripts/codendi/cross_references.js',
             '/scripts/codendi/Tooltip.js',
+            '/scripts/codendi/Tooltip-loader.js',
             '/scripts/codendi/Toggler.js',
             '/scripts/codendi/LayoutManager.js',
             '/scripts/codendi/DropDownPanel.js',

@@ -29,13 +29,19 @@ class ChangesetCommentRepresentation {
     public $body = '';
 
     /**
+     * @var string Content of the comment with interpreted cross-references {@required false}
+     */
+    public $post_processed_body = '';
+
+    /**
      * @var string Type of the comment (text|html)
      */
     public $format;
 
     public function build(Tracker_Artifact_Changeset_Comment $comment) {
-        $this->body   = $comment->body;
-        $this->format = $comment->bodyFormat;
+        $this->body                = $comment->body;
+        $this->post_processed_body = $comment->getPurifiedBodyForHTML();
+        $this->format              = $comment->bodyFormat;
     }
 
 }
