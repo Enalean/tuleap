@@ -36,17 +36,38 @@ class ProjectCreator {
     /**
      * @var Rule_ProjectName
      */
-    private $ruleShortName;
+    var $ruleShortName;
     
     /**
      * @var Rule_ProjectFullName
      */
-    private $ruleFullName;
+    var $ruleFullName;
 
-    public function __construct(ProjectManager $projectManager, Rule_ProjectName $ruleShortName, Rule_ProjectFullName $ruleFullName) {
+    public function __construct(ProjectManager $projectManager) {
+        $this->ruleShortName  = new Rule_ProjectName();
+        $this->ruleFullName   = new Rule_ProjectFullName();
         $this->projectManager = $projectManager;
-        $this->ruleShortName  = $ruleShortName;
-        $this->ruleFullName   = $ruleFullName;
+    }
+
+    /**
+     * Build a new project
+     *
+     * @param Array $data project data
+     * @return Project created
+     */
+    public function build($data){
+        if (!$this->ruleShortName->isValid($data['project']['form_unix_name'])) {
+            throw new Project_InvalidShortName_Exception($this->ruleShortName->getErrorMessage());
+        }
+        if (!$this->ruleFullName->isValid($data['project']['form_full_name'])) {
+            throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
+        }
+
+        $id = $this->create_project($data);
+        if ($id) {
+            return $this->projectManager->getProject($id);
+        }
+        throw new Project_Creation_Exception();
     }
 
     /**
@@ -70,26 +91,15 @@ class ProjectCreator {
      * @return Project
      */
     public function create($shortName, $publicName, $data) {
-        if (!$this->ruleShortName->isValid($shortName)) {
-            throw new Project_InvalidShortName_Exception($this->ruleShortName->getErrorMessage());
-        }
         $data['project']['form_unix_name'] = $shortName;
-
-        if (!$this->ruleFullName->isValid($publicName)) {
-            throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
-        }
         $data['project']['form_full_name'] = $publicName;
 
-        $id = $this->create_project($data);
-        if ($id) {
-            return $this->projectManager->getProject($id);
-        }
-        throw new Project_Creation_Exception();
+        return $this->build($data);
     }
 
     protected function create_project($data) {
         include_once 'www/project/create_project.php';
-        return create_project($data, true);
+        return create_project($data);
     }
 
 }

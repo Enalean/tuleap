@@ -54,8 +54,8 @@ class DataGeneratorActions extends Actions {
                 $nb_done = 0;
                 while((list(,$project) = each($projects)) && ($nb_wanted > $nb_done)) {
                     if (!group_get_object_by_name($project['name'])) {
-                        require_once('www/project/create_project.php');
-                        create_project(array('project' => array(
+			$projectCreator = new ProjectCreator(ProjectManager::instance());
+			$projectCreator->create(array('project' => array(
                             'form_unix_name'            => $project['name'],
                             'form_full_name'            => $project['name'],
                             'form_short_description'    => $project['description'],
@@ -67,8 +67,7 @@ class DataGeneratorActions extends Actions {
                             'is_test'                   => false,
                             'is_public'                 => true,
                             'trove'                     => array(),
-                        )),
-                        $do_not_exit = true);/**/
+                        )));
                         $nb_done++;
                     }
                 }
