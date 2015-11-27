@@ -49,28 +49,21 @@ describe("PlanningCtrl", function() {
 
     beforeEach(function() {
         module('planning');
+        module('shared-properties');
 
-        inject(function($controller, $rootScope, _$q_) {
+        inject(function($controller, $rootScope, _$q_, _SharedPropertiesService_) {
             $scope = $rootScope.$new();
             $q = _$q_;
             $filter = jasmine.createSpy("$filter");
+            SharedPropertiesService = _SharedPropertiesService_;
 
-            SharedPropertiesService = jasmine.createSpyObj("SharedPropertiesService", [
-                "getUserId",
-                "getMilestoneId",
-                "getProjectId",
-                "getMilestone",
-                "getInitialMilestones",
-                "getInitialBacklogItems",
-                "getViewMode",
-                "getUseAngularNewModal"
-            ]);
-            SharedPropertiesService.getUserId.and.returnValue(102);
-            SharedPropertiesService.getProjectId.and.returnValue(736);
-            SharedPropertiesService.getMilestoneId.and.returnValue(592);
-            SharedPropertiesService.getUseAngularNewModal.and.returnValue(true);
-            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
-            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
+            spyOn(SharedPropertiesService, 'getUserId').and.returnValue(102);
+            spyOn(SharedPropertiesService, 'getProjectId').and.returnValue(736);
+            spyOn(SharedPropertiesService, 'getMilestoneId').and.returnValue(592);
+            spyOn(SharedPropertiesService, 'getUseAngularNewModal').and.returnValue(true);
+            spyOn(SharedPropertiesService, 'getMilestone').and.returnValue(undefined);
+            spyOn(SharedPropertiesService, 'getInitialMilestones').and.returnValue(initial_milestones);
+            spyOn(SharedPropertiesService, 'getInitialBacklogItems').and.returnValue(initial_backlog_items);
 
             BacklogItemService = jasmine.createSpyObj("BacklogItemService", [
                 "addToMilestone",
@@ -147,10 +140,20 @@ describe("PlanningCtrl", function() {
 
     describe('Load injected', function() {
         beforeEach(function() {
+            SharedPropertiesService.getMilestone.and.returnValue(milestone);
+            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
+            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
+
+            spyOn(PlanningCtrl, 'loadBacklog').and.callThrough();
             spyOn(PlanningCtrl, 'loadInitialBacklogItems').and.callThrough();
             spyOn(PlanningCtrl, 'loadInitialMilestones').and.callThrough();
             spyOn($scope, 'appendBacklogItems');
         });
+
+        it('milestone', inject(function() {
+            PlanningCtrl.init();
+            expect(PlanningCtrl.loadBacklog).toHaveBeenCalledWith(milestone);
+        }));
 
         it('backlog items', inject(function() {
             PlanningCtrl.init();

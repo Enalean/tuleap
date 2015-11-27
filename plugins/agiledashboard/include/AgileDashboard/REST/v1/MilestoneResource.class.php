@@ -303,11 +303,7 @@ class MilestoneResource extends AuthenticatedResource {
         $milestone_factory = $this->milestone_factory;
         $strategy_factory  = $this->backlog_strategy_factory;
 
-        $milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user)->getMilestonesRepresentations();
-
-        if ($order === 'desc') {
-            return array_reverse($milestones_representations);
-        }
+        $milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user, $order)->getMilestonesRepresentations();
 
         return $milestones_representations;
     }

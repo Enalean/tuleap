@@ -63,12 +63,16 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         return $milestone_representation;
     }
 
-    public function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user) {
+    public function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user, $order) {
         $submilestones                 = $this->milestone_factory->getSubMilestones($user, $milestone);
         $submilestones_representations = array();
 
         foreach($submilestones as $submilestone) {
             $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user);
+        }
+
+        if ($order === 'desc') {
+            $submilestones_representations = array_reverse($submilestones_representations);
         }
 
         return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations($submilestones_representations, count($submilestones_representations));
