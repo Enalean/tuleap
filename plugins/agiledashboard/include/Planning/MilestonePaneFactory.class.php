@@ -23,8 +23,14 @@
  */
 class Planning_MilestonePaneFactory {
 
+    /**
+     * If PRELOAD_ENABLED is set to true, planning v2 data will be injected to the view.
+     * If it's set to false, data will be asynchronously fetched via REST calls.
+     */
+    const PRELOAD_ENABLED           = false;
     const PRELOAD_PAGINATION_LIMIT  = 50;
     const PRELOAD_PAGINATION_OFFSET = 0;
+    const PRELOAD_PAGINATION_ORDER  = 'desc';
 
     /** @var AgileDashboard_PaneInfo[] */
     private $list_of_pane_info = array();
@@ -188,9 +194,9 @@ class Planning_MilestonePaneFactory {
                     $this->request->getCurrentUser(),
                     $this->request->getProject(),
                     $milestone->getArtifactId(),
-                    $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $this->request->getCurrentUser()),
+                    $this->getMilestoneRepresentation($milestone, $this->request->getCurrentUser()),
                     $this->getPaginatedBacklogItemsRepresentationsForMilestone($milestone, $this->request->getCurrentUser()),
-                    $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $this->request->getCurrentUser())
+                    $this->getPaginatedSubMilestonesRepresentations($milestone, $this->request->getCurrentUser())
                 )
             );
         }
@@ -198,13 +204,33 @@ class Planning_MilestonePaneFactory {
         return $pane_info;
     }
 
+    private function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user) {
+        if (! self::PRELOAD_ENABLED) {
+            return null;
+        }
+
+        return $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
+    }
+
     private function getPaginatedBacklogItemsRepresentationsForMilestone(Planning_Milestone $milestone, PFUser $user) {
+        if (! self::PRELOAD_ENABLED) {
+            return null;
+        }
+
         return $this->paginated_backlog_items_representations_builder->getPaginatedBacklogItemsRepresentationsForMilestone(
             $user,
             $milestone,
             self::PRELOAD_PAGINATION_LIMIT,
             self::PRELOAD_PAGINATION_OFFSET
         );
+    }
+
+    private function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user) {
+        if (! self::PRELOAD_ENABLED) {
+            return null;
+        }
+
+        return $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user, self::PRELOAD_PAGINATION_ORDER);
     }
 
     private function buildAdditionnalPanes(Planning_Milestone $milestone) {

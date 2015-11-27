@@ -23,6 +23,12 @@
  */
 class Planning_VirtualTopMilestonePaneFactory {
     const TOP_MILESTONE_DUMMY_ARTIFACT_ID = "ABC";
+
+    /**
+     * If PRELOAD_ENABLED is set to true, planning v2 data will be injected to the view.
+     * If it's set to false, data will be asynchronously fetched via REST calls.
+     */
+    const PRELOAD_ENABLED                 = false;
     const PRELOAD_PAGINATION_LIMIT        = 50;
     const PRELOAD_PAGINATION_OFFSET       = 0;
     const PRELOAD_PAGINATION_ORDER        = 'desc';
@@ -195,13 +201,7 @@ class Planning_VirtualTopMilestonePaneFactory {
                     $milestone_artifact_id,
                     null,
                     $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $this->request->getCurrentUser()),
-                    $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations(
-                        $this->request->getProject(),
-                        $this->request->getCurrentUser(),
-                        self::PRELOAD_PAGINATION_LIMIT,
-                        self::PRELOAD_PAGINATION_OFFSET,
-                        self::PRELOAD_PAGINATION_ORDER
-                    )
+                    $this->getPaginatedTopMilestonesRepresentations($this->request->getProject(), $this->request->getCurrentUser())
                 )
             );
         }
@@ -210,11 +210,29 @@ class Planning_VirtualTopMilestonePaneFactory {
     }
 
     private function getPaginatedBacklogItemsRepresentationsForTopMilestone(Planning_Milestone $milestone, PFUser $user) {
+        if (! self::PRELOAD_ENABLED) {
+            return null;
+        }
+
         return $this->paginated_backlog_items_representations_builder->getPaginatedBacklogItemsRepresentationsForTopMilestone(
             $user,
             $milestone,
             self::PRELOAD_PAGINATION_LIMIT,
             self::PRELOAD_PAGINATION_OFFSET
+        );
+    }
+
+    private function getPaginatedTopMilestonesRepresentations(Project $project, PFUser $user) {
+        if (! self::PRELOAD_ENABLED) {
+            return null;
+        }
+
+        return $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations(
+            $project,
+            $user,
+            self::PRELOAD_PAGINATION_LIMIT,
+            self::PRELOAD_PAGINATION_OFFSET,
+            self::PRELOAD_PAGINATION_ORDER
         );
     }
 

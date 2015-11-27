@@ -44,6 +44,7 @@
 
         _.extend(self, {
             init                           : init,
+            loadBacklog                    : loadBacklog,
             loadInitialBacklogItems        : loadInitialBacklogItems,
             loadInitialMilestones          : loadInitialMilestones,
             isMilestoneContext             : isMilestoneContext,
@@ -134,7 +135,7 @@
             $scope.use_angular_new_modal   = self.use_angular_new_modal;
 
             initViewModes(SharedPropertiesService.getViewMode());
-            loadBacklog(SharedPropertiesService.getMilestone());
+            self.loadBacklog(SharedPropertiesService.getMilestone());
             self.loadInitialBacklogItems(SharedPropertiesService.getInitialBacklogItems());
             self.loadInitialMilestones(SharedPropertiesService.getInitialMilestones());
         }
@@ -157,16 +158,34 @@
             $scope.current_closed_view_class = view_mode;
         }
 
+
         function isMilestoneContext() {
             return ! isNaN(self.milestone_id);
         }
 
-        function loadBacklog(milestone) {
-            if (! milestone) {
+        function loadBacklog(initial_milestone) {
+            if (! self.isMilestoneContext()) {
+                loadProject();
+
+            } else {
+                if (initial_milestone) {
+                    MilestoneService.defineAllowedBacklogItemTypes(initial_milestone);
+                    MilestoneService.augmentMilestone(initial_milestone, self.pagination_limit, self.pagination_offset, $scope.items);
+
+                    loadMilestone(initial_milestone);
+
+                } else {
+                    MilestoneService.getMilestone(self.milestone_id, self.pagination_limit, self.pagination_offset, $scope.items).then(function(data) {
+                        loadMilestone(data.results);
+                    });
+                }
+            }
+
+            function loadProject() {
                 $scope.backlog = {
-                    rest_base_route : 'projects',
-                    rest_route_id   : self.project_id,
-                    accepted_types  : {
+                    rest_base_route: 'projects',
+                    rest_route_id  : self.project_id,
+                    accepted_types : {
                         toString: function() {
                             return '';
                         }
@@ -175,44 +194,48 @@
 
                 fetchProjectBacklogAcceptedTypes(self.project_id);
                 fetchProjectSubmilestoneType(self.project_id);
+            }
 
-            } else {
-                MilestoneService.defineAllowedBacklogItemTypes(milestone);
-                MilestoneService.augmentMilestone(milestone, self.pagination_limit, self.pagination_offset, $scope.items);
-
+            function loadMilestone(milestone) {
                 $scope.current_milestone = milestone;
                 $scope.submilestone_type = milestone.sub_milestone_type;
                 $scope.backlog           = {
-                    rest_base_route     : 'milestones',
-                    rest_route_id       : self.milestone_id,
-                    accepted_types      : milestone.backlog_accepted_types,
-                    user_can_move_cards : milestone.has_user_priority_change_permission
+                    rest_base_route    : 'milestones',
+                    rest_route_id      : self.milestone_id,
+                    accepted_types     : milestone.backlog_accepted_types,
+                    user_can_move_cards: milestone.has_user_priority_change_permission
                 };
+            }
+
+            function fetchProjectSubmilestoneType(project_id) {
+                return ProjectService.getProject(project_id).then(function(response) {
+                    $scope.submilestone_type = response.data.additional_informations.agiledashboard.root_planning.milestone_tracker;
+                });
+            }
+
+            function fetchProjectBacklogAcceptedTypes(project_id) {
+                return ProjectService.getProjectBacklog(project_id).then(function(data) {
+                    $scope.backlog.accepted_types      = data.allowed_backlog_item_types;
+                    $scope.backlog.user_can_move_cards = data.has_user_priority_change_permission;
+                });
             }
         }
 
-        function fetchProjectSubmilestoneType(project_id) {
-            return ProjectService.getProject(project_id).then(function(response) {
-                $scope.submilestone_type = response.data.additional_informations.agiledashboard.root_planning.milestone_tracker;
-            });
-        }
-
-        function fetchProjectBacklogAcceptedTypes(project_id) {
-            return ProjectService.getProjectBacklog(project_id).then(function(data) {
-                $scope.backlog.accepted_types      = data.allowed_backlog_item_types;
-                $scope.backlog.user_can_move_cards = data.has_user_priority_change_permission;
-            });
-        }
 
         function loadInitialBacklogItems(initial_backlog_items) {
-            _.forEach(initial_backlog_items.backlog_items_representations, function(backlog_item) {
-                BacklogItemFactory.augment(backlog_item);
-            });
+            if (initial_backlog_items) {
+                _.forEach(initial_backlog_items.backlog_items_representations, function(backlog_item) {
+                    BacklogItemFactory.augment(backlog_item);
+                });
 
-            $scope.appendBacklogItems(initial_backlog_items.backlog_items_representations);
+                $scope.appendBacklogItems(initial_backlog_items.backlog_items_representations);
 
-            self.backlog_pagination_offset    = self.pagination_limit;
-            $scope.backlog_items.fully_loaded = self.backlog_pagination_offset >= initial_backlog_items.total_size;
+                self.backlog_pagination_offset    = self.pagination_limit;
+                $scope.backlog_items.fully_loaded = self.backlog_pagination_offset >= initial_backlog_items.total_size;
+
+            } else {
+                displayBacklogItems();
+            }
         }
 
         function displayBacklogItems() {
@@ -282,18 +305,24 @@
             $scope.backlog_items.filtered_content = $filter('InPropertiesFilter')($scope.backlog_items.content, $scope.filter_terms);
         }
 
+
         function loadInitialMilestones(initial_milestones) {
-            _.forEach(initial_milestones.milestones_representations, function(milestone) {
-                MilestoneService.augmentMilestone(milestone, self.pagination_limit, self.pagination_offset, $scope.items);
-            });
+            if (initial_milestones) {
+                _.forEach(initial_milestones.milestones_representations, function(milestone) {
+                    MilestoneService.augmentMilestone(milestone, self.pagination_limit, self.pagination_offset, $scope.items);
+                });
 
-            $scope.milestones      = $scope.milestones.concat(initial_milestones.milestones_representations);
-            self.pagination_offset = self.pagination_limit;
+                $scope.milestones      = $scope.milestones.concat(initial_milestones.milestones_representations);
+                self.pagination_offset = self.pagination_limit;
 
-            if (self.pagination_offset < initial_milestones.total_size) {
-                displayMilestones();
+                if (self.pagination_offset < initial_milestones.total_size) {
+                    displayMilestones();
+                } else {
+                    $scope.loading_milestones = false;
+                }
+
             } else {
-                $scope.loading_milestones = false;
+                displayMilestones();
             }
         }
 
@@ -332,6 +361,7 @@
         function generateMilestoneLinkUrl(milestone, pane) {
             return '?group_id=' + self.project_id + '&planning_id=' + milestone.planning.id + '&action=show&aid=' + milestone.id + '&pane=' + pane;
         }
+
 
         function showCreateNewModal($event, item_type, backlog) {
             $event.preventDefault();
