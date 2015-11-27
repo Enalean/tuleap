@@ -1,3 +1,6 @@
+Version 1.312 - Tuleap 8.9
+    * story #8380: preload is deactivated by default + fix submilestones order
+
 Version 1.311 - Tuleap 8.9
     * story #8380: fix broken filter
 
