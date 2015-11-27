@@ -23,7 +23,7 @@ if ( !is_readable($xmlFile) ) {
 
 // FILE PROCESSING
 try {
-    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance))
+    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()))
         ->createFromXMLFile($group_id, $xmlFile);
     if ( $GLOBALS['Response']->feedbackHasErrors() ) {
         echo $GLOBALS['Response']->getRawFeedback();
