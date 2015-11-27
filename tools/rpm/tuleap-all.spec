@@ -17,13 +17,11 @@ Requires: @@PKG_NAME@@-core-mailman
 Requires: @@PKG_NAME@@-core-subversion
 Requires: @@PKG_NAME@@-plugin-forumml
 Requires: @@PKG_NAME@@-plugin-git
-Requires: @@PKG_NAME@@-plugin-docmanwatermark
 Requires: @@PKG_NAME@@-plugin-ldap
-Requires: @@PKG_NAME@@-plugin-im
 Requires: @@PKG_NAME@@-plugin-hudson
-Requires: @@PKG_NAME@@-plugin-webdav
 Requires: @@PKG_NAME@@-plugin-tracker
 Requires: @@PKG_NAME@@-plugin-graphontrackers
+Requires: @@PKG_NAME@@-plugin-agiledashboard
 Requires: @@PKG_NAME@@-theme-flamingparrot
 Requires: @@PKG_NAME@@-customization-default
 
