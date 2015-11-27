@@ -29,6 +29,7 @@ Version 8.9 (Not released yet)
 	* request #8615: Add new entries in Makefile for docker dev enviroment
 	* Can run makefile with sudo
 	* request #8614: Project license removal
+	* request #8609: Update install: remove IM and add agiledashboard
 
 	== Bug fix ==
 	* request #8334: PhpWiki notifications can leak data
