@@ -3,9 +3,17 @@
         .module('planning')
         .config(PlanningConfig);
 
-    PlanningConfig.$inject = ['$animateProvider'];
+    PlanningConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$animateProvider'];
 
-    function PlanningConfig($animateProvider) {
+    function PlanningConfig($stateProvider, $urlRouterProvider, $animateProvider) {
+        $urlRouterProvider.otherwise('/planning');
+
         $animateProvider.classNameFilter(/do-animate/);
+
+        $stateProvider.state('planning', {
+            url: "/planning",
+            controller: 'PlanningCtrl',
+            templateUrl: "planning.tpl.html"
+        });
     }
 })();
