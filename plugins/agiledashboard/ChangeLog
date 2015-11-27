@@ -1,3 +1,6 @@
+Version 1.310 - Tuleap 8.9
+    * request #8619: Modal not showing-up on Planning v2 when transitions exist but are not used
+
 Version 1.309 - Tuleap 8.9
     * story #8380: preload planning v2 (milestones and backlog items)
 
