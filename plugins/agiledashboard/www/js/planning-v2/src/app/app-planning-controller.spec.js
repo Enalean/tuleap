@@ -1,7 +1,51 @@
 describe("PlanningCtrl", function() {
     var $scope, $filter, $q, PlanningCtrl, BacklogItemService, BacklogItemFactory, ProjectService, MilestoneService,
-        TuleapArtifactModalService, NewTuleapArtifactModalService,
+        SharedPropertiesService, TuleapArtifactModalService, NewTuleapArtifactModalService,
         UserPreferencesService, deferred, second_deferred;
+
+    var milestone = {
+            id: 592,
+            resources: {
+                backlog: {
+                    accept: {
+                        trackers: [
+                            { id: 99, label: 'story'}
+                        ]
+                    }
+                },
+                content: {
+                    accept: {
+                        trackers: [
+                            { id: 99, label: 'story'}
+                        ]
+                    }
+                }
+            }
+        },
+        initial_milestones = [{
+            resources: {
+                backlog: {
+                    accept: {
+                        trackers: [
+                            { id: 98, label: 'task'}
+                        ]
+                    }
+                },
+                content: {
+                    accept: {
+                        trackers: [
+                            { id: 98, label: 'task'}
+                        ]
+                    }
+                }
+            }
+        }],
+        initial_backlog_items = {
+            backlog_items_representations: [
+                { id: 7 }
+            ],
+            total_size: 104
+        };
 
     beforeEach(function() {
         module('planning');
@@ -10,6 +54,23 @@ describe("PlanningCtrl", function() {
             $scope = $rootScope.$new();
             $q = _$q_;
             $filter = jasmine.createSpy("$filter");
+
+            SharedPropertiesService = jasmine.createSpyObj("SharedPropertiesService", [
+                "getUserId",
+                "getMilestoneId",
+                "getProjectId",
+                "getMilestone",
+                "getInitialMilestones",
+                "getInitialBacklogItems",
+                "getViewMode",
+                "getUseAngularNewModal"
+            ]);
+            SharedPropertiesService.getUserId.and.returnValue(102);
+            SharedPropertiesService.getProjectId.and.returnValue(736);
+            SharedPropertiesService.getMilestoneId.and.returnValue(592);
+            SharedPropertiesService.getUseAngularNewModal.and.returnValue(true);
+            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
+            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
 
             BacklogItemService = jasmine.createSpyObj("BacklogItemService", [
                 "addToMilestone",
@@ -68,6 +129,7 @@ describe("PlanningCtrl", function() {
                 $scope: $scope,
                 $filter: $filter,
                 $q: $q,
+                SharedPropertiesService: SharedPropertiesService,
                 BacklogItemService: BacklogItemService,
                 BacklogItemFactory: BacklogItemFactory,
                 MilestoneService: MilestoneService,
@@ -76,13 +138,30 @@ describe("PlanningCtrl", function() {
                 TuleapArtifactModalService: TuleapArtifactModalService,
                 UserPreferencesService: UserPreferencesService
             });
-
-            $scope.init(102, 736, 592, 'en', true, 'compact-view', {}, { backlog_items_representations: [ {id: 7} ], total_size: 104 }, {});
         });
         deferred = $q.defer();
         second_deferred = $q.defer();
 
         installPromiseMatchers();
+    });
+
+    describe('Load injected', function() {
+        beforeEach(function() {
+            spyOn(PlanningCtrl, 'loadInitialBacklogItems').and.callThrough();
+            spyOn(PlanningCtrl, 'loadInitialMilestones').and.callThrough();
+            spyOn($scope, 'appendBacklogItems');
+        });
+
+        it('backlog items', inject(function() {
+            PlanningCtrl.init();
+            expect(PlanningCtrl.loadInitialBacklogItems).toHaveBeenCalledWith(initial_backlog_items);
+            expect($scope.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
+        }));
+
+        it('milestones', inject(function() {
+            PlanningCtrl.init();
+            expect(PlanningCtrl.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
+        }));
     });
 
     describe("displayBacklogItems() -", function() {
@@ -320,6 +399,7 @@ describe("PlanningCtrl", function() {
 
         it("Given that we use the 'old' modal and given an event, an item_type object and a project backlog object, when I show the new artifact modal, then the event's default action will be prevented and the TuleapArtifactModal Service will be called with a callback", function() {
             PlanningCtrl.use_angular_new_modal = false;
+            SharedPropertiesService.getMilestone.and.returnValue(milestone);
 
             fakeItemType = { id: 97 };
             fakeBacklog = { rest_route_id: 504 };
@@ -332,6 +412,7 @@ describe("PlanningCtrl", function() {
 
         it("Given that we use the 'new' modal and given an event, an item_type object and a project backlog object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
             fakeItemType = { id: 50 };
+            SharedPropertiesService.getMilestone.and.returnValue(undefined);
 
             $scope.showCreateNewModal(fakeEvent, fakeItemType, fakeBacklog);
 

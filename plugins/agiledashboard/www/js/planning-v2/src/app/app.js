@@ -3,6 +3,7 @@
         'ui.router',
         'ui.tree',
         'templates-app',
+        'shared-properties',
         'gettext',
         'angularMoment',
         'ngSanitize',

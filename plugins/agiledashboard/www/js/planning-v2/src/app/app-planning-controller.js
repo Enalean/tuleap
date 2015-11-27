@@ -9,6 +9,7 @@
         '$window',
         '$q',
         'gettextCatalog',
+        'SharedPropertiesService',
         'BacklogItemService',
         'BacklogItemFactory',
         'MilestoneService',
@@ -27,6 +28,7 @@
         $window,
         $q,
         gettextCatalog,
+        SharedPropertiesService,
         BacklogItemService,
         BacklogItemFactory,
         MilestoneService,
@@ -41,6 +43,7 @@
         var self = this;
 
         _.extend(self, {
+            init                           : init,
             loadInitialBacklogItems        : loadInitialBacklogItems,
             loadInitialMilestones          : loadInitialMilestones,
             isMilestoneContext             : isMilestoneContext,
@@ -72,7 +75,6 @@
             submilestone_type    : null,
             use_angular_new_modal: true,
 
-            init                                  : init,
             canBeAddedToBacklogItemChildren       : canBeAddedToBacklogItemChildren,
             appendBacklogItems                    : appendBacklogItems,
             canShowBacklogItem                    : canShowBacklogItem,
@@ -118,27 +120,23 @@
             dropped: dropped
         };
 
-        function init(user_id, project_id, milestone_id, lang, use_angular_new_modal, view_mode, milestone, initial_backlog_items, initial_milestones) {
-            self.user_id                   = user_id;
-            self.project_id                = project_id;
-            self.milestone_id              = parseInt(milestone_id, 10);
-            self.use_angular_new_modal     = use_angular_new_modal;
+        self.init();
+
+        function init() {
+            self.user_id                   = SharedPropertiesService.getUserId();
+            self.project_id                = SharedPropertiesService.getProjectId();
+            self.milestone_id              = parseInt(SharedPropertiesService.getMilestoneId(), 10);
+            self.use_angular_new_modal     = SharedPropertiesService.getUseAngularNewModal();
             self.pagination_limit          = 50;
             self.pagination_offset         = 0;
             self.backlog_pagination_offset = 0;
 
-            $scope.use_angular_new_modal = use_angular_new_modal;
+            $scope.use_angular_new_modal   = self.use_angular_new_modal;
 
-            initLocale(lang);
-            initViewModes(view_mode);
-            loadBacklog(milestone);
-            self.loadInitialBacklogItems(initial_backlog_items);
-            self.loadInitialMilestones(initial_milestones);
-        }
-
-        function initLocale(lang) {
-            gettextCatalog.setCurrentLanguage(lang);
-            $window.moment.locale(lang);
+            initViewModes(SharedPropertiesService.getViewMode());
+            loadBacklog(SharedPropertiesService.getMilestone());
+            self.loadInitialBacklogItems(SharedPropertiesService.getInitialBacklogItems());
+            self.loadInitialMilestones(SharedPropertiesService.getInitialMilestones());
         }
 
         function initViewModes(view_mode) {
