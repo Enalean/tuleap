@@ -1,3 +1,6 @@
+Version 5.754 - Tuleap 8.9
+    * Fix request #8636 No longer tracker template at install
+
 Version 5.753 - Tuleap 8.9
     * story #8528 create nonexistant user account at import time
 
