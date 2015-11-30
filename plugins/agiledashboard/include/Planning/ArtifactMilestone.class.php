@@ -267,7 +267,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             return null;
         }
 
-        if (! $this->duration) {
+        if ($this->duration <= 0) {
             return null;
         }
 

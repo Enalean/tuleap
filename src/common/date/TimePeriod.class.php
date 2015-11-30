@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,32 +25,62 @@
 /**
  * A time period that has a start date and a duration
  */
-interface TimePeriod {
+abstract class TimePeriod {
+    /**
+     * @var int The time period start date, as a Unix timestamp.
+     */
+    private $start_date;
+
+    /**
+     * @var int The time period duration, in days.
+     */
+    private $duration;
+
+    public function __construct($start_date, $duration) {
+        $this->start_date = $start_date;
+        $this->duration   = $duration;
+    }
 
     /**
      * @return int
      */
-    function getStartDate();
+    public function getStartDate() {
+        return $this->start_date;
+    }
 
     /**
      * @return int
      */
-    function getDuration();
+    public function getDuration() {
+        return $this->duration;
+    }
 
     /**
      * @return int
      */
-    function getEndDate();
+    public function getEndDate() {
+        $last_offset = end($this->getDayOffsets());
+        return strtotime("+$last_offset days", $this->getStartDate());
+    }
 
     /**
      * @return array of string
      */
-    function getHumanReadableDates();
+    public function getHumanReadableDates() {
+        $dates = array();
+
+        foreach($this->getDayOffsets() as $day_offset) {
+            $day     = strtotime("+$day_offset days", $this->getStartDate());
+            $dates[] = date('D d', $day);
+        }
+
+        return $dates;
+    }
 
     /**
      * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
-    function getDayOffsets();
+    public abstract function getDayOffsets();
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,78 +18,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TimePeriod.class.php';
 
-class TimePeriodWithoutWeekEnd  implements TimePeriod {
-    /**
-     * @var int The time period start date, as a Unix timestamp.
-     */
-    private $start_date;
-
-    /**
-     * @var int The time period duration, in days.
-     */
-    private $duration;
-
-    public function __construct($start_date, $duration) {
-        $this->start_date = $start_date;
-        $this->duration   = $duration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStartDate() {
-        return $this->start_date;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration() {
-        return $this->duration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEndDate() {
-        $last_offset = end($this->getDayOffsets());
-        return strtotime("+$last_offset days", $this->start_date);
-    }
-
-    /**
-     * @return array of string
-     */
-    public function getHumanReadableDates() {
-        $dates = array();
-        $day_offset = 0;
-        while (count($dates)-1 != $this->duration) {
-            $day = $this->getNextDay($day_offset, $this->start_date);
-            $day_offset++;
-            if ( $this->isNotWeekendDay($day)) {
-                $dates[] = date('D d', $day);
-            }
-        }
-        return $dates;
-    }
-
+class TimePeriodWithoutWeekEnd  extends TimePeriod {
     /**
      * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
     public function getDayOffsets() {
+        if ($this->getDuration() <= 0) {
+            return $this->getDayOffsetsWithInconsistentDuration();
+        } else {
+            return $this->getDayOffsetsWithConsistentDuration();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getDayOffsetsWithConsistentDuration() {
         $day_offsets_excluding_we = array();
         $day_offset = 0;
-        while (count($day_offsets_excluding_we)-1 != $this->duration) {
-            $day = $this->getNextDay($day_offset, $this->start_date);
+        while (count($day_offsets_excluding_we)-1 != $this->getDuration()) {
+            $day = $this->getNextDay($day_offset, $this->getStartDate());
             if ( $this->isNotWeekendDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;
             }
             $day_offset++;
-       }
-       return $day_offsets_excluding_we;
+        }
+        return $day_offsets_excluding_we;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDayOffsetsWithInconsistentDuration() {
+        $day_offset = 0;
+        $day        = $this->getNextDay($day_offset, $this->getStartDate());
+        while (! $this->isNotWeekendDay($day)) {
+            $day_offset++;
+            $day = $this->getNextDay($day_offset, $this->getStartDate());
+        }
+
+        return array($day_offset);
     }
 
     private function getNextDay($next_day_number, $date) {
@@ -140,11 +111,11 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
      * @return int
      */
     public function getNumberOfDaysSinceStart() {
-        if ($this->isToday($this->start_date) || $this->start_date > $this->getTodayTimestamp()) {
+        if ($this->isToday($this->getStartDate()) || $this->getStartDate() > $this->getTodayTimestamp()) {
             return 0;
         }
 
-        return $this->getNumberOfDaysWithoutWeekEnd($this->start_date, $this->getTodayTimestamp());
+        return $this->getNumberOfDaysWithoutWeekEnd($this->getStartDate(), $this->getTodayTimestamp());
     }
 
     private function isToday($day) {
@@ -172,8 +143,8 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
      * @return boolean
      */
     public function isTodayWithinTimePeriod() {
-        if ($this->start_date <= $this->getTodayTimestamp() &&
-            $this->getNumberOfDaysSinceStart() <= $this->duration
+        if ($this->getStartDate() <= $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() <= $this->getDuration()
         ) {
             return true;
         }
@@ -182,21 +153,10 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
     }
 
     public function isTodayBeforeTimePeriod() {
-        if ($this->start_date > $this->getTodayTimestamp()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function isTodayAfterTimePeriod() {
-        if ($this->start_date < $this->getTodayTimestamp() &&
-            $this->getNumberOfDaysSinceStart() > $this->getDuration()) {
+        if ($this->getStartDate() > $this->getTodayTimestamp()) {
             return true;
         }
 
         return false;
     }
 }
-
-?>

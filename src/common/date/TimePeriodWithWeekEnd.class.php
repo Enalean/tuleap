@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,71 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TimePeriod.class.php';
-
 /**
  * A time period, starting at a given date, and with a given duration.
  */
-class TimePeriodWithWeekEnd implements TimePeriod {
-
-    /**
-     * @var int The time period start date, as a Unix timestamp.
-     */
-    private $start_date;
-
-    /**
-     * @var int The time period duration, in days.
-     */
-    private $duration;
-
-    public function __construct($start_date, $duration) {
-        $this->start_date = $start_date;
-        $this->duration   = $duration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStartDate() {
-        return $this->start_date;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEndDate() {
-        return strtotime("+{$this->duration} days", $this->start_date);
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration() {
-        return $this->duration;
-    }
-
-    /**
-     * @return array of string
-     */
-    public function getHumanReadableDates() {
-        $dates = array();
-
-        foreach($this->getDayOffsets() as $day_offset) {
-            $day     = strtotime("+$day_offset days", $this->start_date);
-            $dates[] = date('D d', $day);
-        }
-
-        return $dates;
-    }
-
+class TimePeriodWithWeekEnd extends TimePeriod {
     /**
      * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
     public function getDayOffsets() {
-        return range(0, $this->duration);
+        if ($this->getDuration() < 0) {
+            return array(0);
+        } else {
+            return range(0, $this->getDuration());
+        }
     }
 }
-
-?>
