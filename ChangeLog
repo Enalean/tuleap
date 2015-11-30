@@ -43,14 +43,14 @@ Version 8.9 (Not released yet)
 	== Plugins ==
 	* mediawiki: 0.101
 	* git: 4.96
-	* tracker: 5.754
+	* tracker: 5.755
 	* agiledashboard: 1.312
 	* tests: 5.31
 	* docman: 2.26.90
 	* userlog: 1.6
 
     == Themes ==
-	* FlamingParrot: 1.113
+	* FlamingParrot: 1.114
 
 Version 8.8 (Friday, November 6th 2015)
 
