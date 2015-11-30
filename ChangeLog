@@ -1,3 +1,8 @@
+Version 8.8-6 (Monday, November 30th 2015)
+	== Bug Fix ==
+	* request #8626: Mediawiki: can no longer access to url with CamelCase unix_name
+	* request #8627: Site admin browsing of user list is broken when restricted to a project
+
 Version 8.8-5 (Wednesday, November 25th 2015)
 	== Bug Fix ==
 	* Revert "request #8614: Project license removal"
