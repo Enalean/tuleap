@@ -424,7 +424,8 @@ class AgileDashboardPlugin extends Plugin {
             Tracker_FormElementFactory::instance(),
             $this->getTrackerFactory(),
             $this->getStatusCounter(),
-            new PlanningPermissionsManager()
+            new PlanningPermissionsManager(),
+            new AgileDashboard_Milestone_MilestoneDao()
         );
     }
 

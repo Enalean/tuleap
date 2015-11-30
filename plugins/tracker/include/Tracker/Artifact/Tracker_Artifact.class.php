@@ -1563,24 +1563,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * Get artifacts linked to the current artifact if they belongs to the hierarchy
-     *
-     * @param PFUser $user The user who should see the artifacts
-     *
-     * @return Array of Tracker_Artifact
-     */
-    public function getHierarchyLinkedArtifacts(PFUser $user) {
-        $allowed_trackers = $this->getAllowedChildrenTypes();
-        $artifact_links   = $this->getLinkedArtifacts($user);
-        foreach ($artifact_links as $key => $artifact) {
-            if ( ! in_array($artifact->getTracker(), $allowed_trackers)) {
-                unset($artifact_links[$key]);
-            }
-        }
-        return $artifact_links;
-    }
-
-    /**
      * @return Tracker[]
      */
     public function getAllowedChildrenTypes() {

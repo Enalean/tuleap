@@ -36,6 +36,7 @@ use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use EventManager;
+use AgileDashboard_Milestone_MilestoneDao;
 
 /**
  * Wrapper for milestone related REST methods
@@ -80,7 +81,8 @@ class ProjectMilestonesResource {
             $this->tracker_form_element_factory,
             $this->tracker_factory,
             $this->status_counter,
-            new PlanningPermissionsManager()
+            new PlanningPermissionsManager(),
+            new AgileDashboard_Milestone_MilestoneDao()
         );
 
         $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(

@@ -23,6 +23,8 @@
  */
 class Planning_MilestoneFactory {
 
+    private static $DEFAULT_ORDER = 'asc';
+
     /**
      * @var PlanningFactory
      */
@@ -56,6 +58,11 @@ class Planning_MilestoneFactory {
     private $planning_permissions_manager;
 
     /**
+     * @var AgileDashboard_Milestone_MilestoneDao
+     */
+    private $milestone_dao;
+
+    /**
      * Instanciates a new milestone factory.
      *
      * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
@@ -68,7 +75,8 @@ class Planning_MilestoneFactory {
         Tracker_FormElementFactory $formelement_factory,
         TrackerFactory $tracker_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
-        PlanningPermissionsManager $planning_permissions_manager
+        PlanningPermissionsManager $planning_permissions_manager,
+        AgileDashboard_Milestone_MilestoneDao $milestone_dao
     ) {
 
         $this->planning_factory             = $planning_factory;
@@ -77,6 +85,7 @@ class Planning_MilestoneFactory {
         $this->tracker_factory              = $tracker_factory;
         $this->status_counter               = $status_counter;
         $this->planning_permissions_manager = $planning_permissions_manager;
+        $this->milestone_dao                = $milestone_dao;
     }
 
     /**
@@ -354,20 +363,57 @@ class Planning_MilestoneFactory {
         $sub_milestones     = array();
 
         if ($milestone_artifact) {
-            foreach($this->getSubMilestonesArtifacts($user, $milestone_artifact) as $sub_milestone_artifact) {
-                $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
+            $sub_milestone_artifacts = $this->milestone_dao->searchSubMilestones($milestone_artifact->getId());
+            $sub_milestones          = $this->convertDarToArrayOfMilestones($user, $milestone, $sub_milestone_artifacts);
+        }
 
-                if ($planning) {
-                    $sub_milestone = new Planning_ArtifactMilestone(
-                        $milestone->getProject(),
-                        $planning,
-                        $sub_milestone_artifact
-                    );
-                    $this->addMilestoneAncestors($user, $sub_milestone);
-                    $this->updateMilestoneContextualInfo($user, $sub_milestone);
-                    $sub_milestones[] = $sub_milestone;
-                }
+        return $sub_milestones;
+    }
+
+    public function getPaginatedSubMilestones(PFUser $user, Planning_Milestone $milestone, $limit, $offset, $order) {
+        $milestone_artifact = $milestone->getArtifact();
+        $sub_milestones     = array();
+        $total_size         = 0;
+
+        if ($milestone_artifact) {
+            $sub_milestone_artifacts = $this->milestone_dao->searchPaginatedSubMilestones(
+                $milestone_artifact->getId(),
+                $limit,
+                $offset,
+                $order
+            );
+
+            $total_size     = $this->milestone_dao->foundRows();
+            $sub_milestones = $this->convertDarToArrayOfMilestones($user, $milestone, $sub_milestone_artifacts);
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestones($sub_milestones, $total_size);
+    }
+
+    private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, DataAccessResult $sub_milestone_artifacts) {
+        $sub_milestones          = array();
+        $sub_milestone_artifacts = $sub_milestone_artifacts->instanciateWith(
+            array($this->artifact_factory, 'getInstanceFromRow')
+        );
+
+        foreach ($sub_milestone_artifacts as $sub_milestone_artifact) {
+            if (! $sub_milestone_artifact->userCanView($user)) {
+                continue;
             }
+
+            $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
+            if (! $planning) {
+                continue;
+            }
+
+            $sub_milestone = new Planning_ArtifactMilestone(
+                $milestone->getProject(),
+                $planning,
+                $sub_milestone_artifact
+            );
+            $this->addMilestoneAncestors($user, $sub_milestone);
+            $this->updateMilestoneContextualInfo($user, $sub_milestone);
+            $sub_milestones[] = $sub_milestone;
         }
 
         return $sub_milestones;
@@ -407,18 +453,6 @@ class Planning_MilestoneFactory {
         }
 
         return $milestones;
-    }
-
-    /**
-     * Retrieves the sub-milestones of a given parent milestone artifact.
-     *
-     * @param PFUser             $user
-     * @param Tracker_Artifact $milestone_artifact
-     *
-     * @return array of Tracker_Artifact
-     */
-    private function getSubMilestonesArtifacts(PFUser $user, Tracker_Artifact $milestone_artifact) {
-        return array_values($milestone_artifact->getHierarchyLinkedArtifacts($user));
     }
 
     /**

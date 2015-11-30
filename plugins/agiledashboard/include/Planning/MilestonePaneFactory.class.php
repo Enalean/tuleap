@@ -217,7 +217,13 @@ class Planning_MilestonePaneFactory {
             return null;
         }
 
-        return $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user, self::PRELOAD_PAGINATION_ORDER);
+        return $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations(
+            $milestone,
+            $user,
+            self::PRELOAD_PAGINATION_LIMIT,
+            self::PRELOAD_PAGINATION_OFFSET,
+            self::PRELOAD_PAGINATION_ORDER
+        );
     }
 
     /**

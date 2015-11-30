@@ -142,7 +142,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
                 new Tracker_ArtifactDao(),
                 $artifact_factory
             ),
-            new PlanningPermissionsManager()
+            new PlanningPermissionsManager(),
+            new AgileDashboard_Milestone_MilestoneDao()
         );
 
         return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);
