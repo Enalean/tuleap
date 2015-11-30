@@ -50,7 +50,7 @@ if ($request->exist('wsdl')) {
     $projectManager   = ProjectManager::instance();
     $soapLimitFactory = new SOAP_RequestLimitatorFactory();
     
-    $projectCreator       = new ProjectCreator($projectManager, ReferenceManager::instance());
+    $projectCreator       = new ProjectCreator($projectManager);
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);
     $limitator            = $soapLimitFactory->getLimitator();

@@ -44,18 +44,13 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 /**
  * Manage creation of a new project in the forge.
  *
- * For now, mainly a wrapper for createProject method
+ * For now, mainly a wrapper for create_project method
  */
 class ProjectCreator {
     /**
      * @var ProjectManager
      */
     private $projectManager;
-
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
 
     /**
      * @var Rule_ProjectName
@@ -67,8 +62,7 @@ class ProjectCreator {
      */
     var $ruleFullName;
 
-    public function __construct(ProjectManager $projectManager, ReferenceManager $reference_manager) {
-        $this->reference_manager = $reference_manager;
+    public function __construct(ProjectManager $projectManager) {
         $this->ruleShortName  = new Rule_ProjectName();
         $this->ruleFullName   = new Rule_ProjectFullName();
         $this->projectManager = $projectManager;
@@ -88,7 +82,7 @@ class ProjectCreator {
             throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
         }
 
-        $id = $this->createProject($data);
+        $id = $this->create_project($data);
         if ($id) {
             return $this->projectManager->getProject($id);
         }
@@ -122,14 +116,8 @@ class ProjectCreator {
         return $this->build($data);
     }
 
-    private function fakeGroupIdIntoHTTPParams($group_id){
-        $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
-        $request = HTTPRequest::instance();
-        $request->params['group_id'] = $_REQUEST['group_id'];
-    }
-
     /**
-     * createProject
+     * create_project
      *
      * Create a new project
      *
@@ -155,78 +143,7 @@ class ProjectCreator {
      *
      * @param  data
      */
-    protected function createProject($data) {
-        $admin_user = UserManager::instance()->getCurrentUser();
-
-        $group_id = $this->createGroupEntry($data);
-        if ($group_id === false) {
-            return;
-        }
-
-        $this->setCategories($data, $group_id);
-        $this->initFileModule($group_id);
-        $this->setProjectAdmin($group_id, $admin_user);
-
-        // Instanciate all services from the project template that are 'active'
-        $group = $this->projectManager->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            exit_no_group();
-        }
-
-        $this->fakeGroupIdIntoHTTPParams($group_id);
-
-        $template_id    = $group->getTemplate();
-        $template_group = $this->projectManager->getProject($template_id);
-        if (!$template_group || !is_object($template_group) || $template_group->isError()) {
-          exit_no_group();
-        }
-
-        $this->activateServicesFromTemplate($group_id, $template_group, $data);
-        $this->setMessageToRequesterFromTemplate($group_id, $template_id);
-        $this->initForumModuleFromTemplate($group_id, $template_id);
-        $this->initCVSModuleFromTemplate($group_id, $template_id);
-        $this->initSVNModuleFromTemplate($group_id, $template_id);
-
-        // Activate other system references not associated with any service
-        $this->reference_manager->addSystemReferencesWithoutService($template_id, $group_id);
-
-        //Copy ugroups
-        $ugroup_mapping = array();
-        ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
-
-        $this->initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping);
-
-        list($tracker_mapping, $report_mapping) =
-            $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
-        $this->initWikiModuleFromTemplate($group_id, $template_id);
-        $this->initLayoutFromTemplate($group_id, $template_id);
-
-        //Create project specific references if template is not default site template
-        if (!$template_group->isSystem()) {
-            $this->reference_manager->addProjectReferences($template_id,$group_id);
-        }
-
-        $this->copyEmailOptionsFromTemplate($group_id, $template_id);
-
-        // Raise an event for plugin configuration
-        $em = EventManager::instance();
-        $em->processEvent('register_project_creation', array(
-            'reportMapping'  => $report_mapping, // Trackers v3
-            'trackerMapping' => $tracker_mapping, // Trackers v3
-            'ugroupsMapping' => $ugroup_mapping,
-            'group_id'       => $group_id,
-            'template_id'    => $template_id
-        ));
-
-        $this->autoActivateProject($group);
-
-        return $group_id;
-    }
-
-    /**
-     * @return int, the group id created
-     */
-    private function createGroupEntry($data){
+    protected function create_project($data) {
         srand((double)microtime()*1000000);
         $random_num=rand(0,1000000);
 
@@ -240,6 +157,9 @@ class ProjectCreator {
         } else {
           $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
         }
+
+        //Verify if the approbation of the new project is automatic or not
+        $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
         if (isset($data['project']['is_public'])) {
             $access = ($data['project']['is_public']) ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
@@ -267,30 +187,30 @@ class ProjectCreator {
 
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','upd_fail',array($GLOBALS['sys_email_admin'],db_error())));
-            return false;
-        } else {
-            $group_id = db_insertid($result);
-            return $group_id;
+            return;
         }
-    }
 
-    // insert descriptions
-    // insert trove categories
-    private function setCategories($data, $group_id) {
+        $group_id = db_insertid($result);
+
+        // insert descriptions
         $descfieldsinfos = getProjectsDescFieldsInfos();
 
-        for($i=0;$i<sizeof($descfieldsinfos);$i++){
-            if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]) && ($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]!='')){
-                $sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]))."')";
-                $result=db_query($sql);
+                for($i=0;$i<sizeof($descfieldsinfos);$i++){
+                        if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]) && ($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]!='')){
+                                $sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]))."')";
+                                $result=db_query($sql);
 
-                if (!$result) {
-                    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-                    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_desc_fail',array($host,db_error())));
+
+                        if (!$result) {
+                        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+                        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_desc_fail',array($host,db_error())));
+                        }
+                        }
                 }
-            }
-        }
 
+
+
+        // insert trove categories
         if (isset($data['project']['trove'])) {
             foreach($data['project']['trove'] as $root => $values) {
                 foreach($values as $value) {
@@ -299,22 +219,19 @@ class ProjectCreator {
                 }
             }
         }
-    }
 
-    // define a module
-    private function initFileModule($group_id){
-        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->projectManager->getProject($group_id)->getUnixName()."')");
+        // define a module
+        $project_manager = ProjectManager::instance();
+        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
-            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_file_fail',array($host,db_error())));
+                list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+                exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_file_fail',array($host,db_error())));
         }
-    }
 
-    // make the current user a project admin as well as admin
-    // on all Tuleap services
-    private function setProjectAdmin($group_id, PFUser $user) {
+        // make the current user a project admin as well as admin
+        // on all Codendi services
         $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
-            . $user->getId() . ","
+            . user_getid() . ","
             . $group_id . ","
             . "'A'," // admin flags
             . "2," // bug flags
@@ -332,13 +249,32 @@ class ProjectCreator {
         }
 
         // clear the user data to take into account this new group.
+        $user = UserManager::instance()->getCurrentUser();
         $user->clearGroupData();
-    }
 
-    // Activate the same services on $group_id than those activated on
-    // $template_group
-    private function activateServicesFromTemplate($group_id, Group $template_group, $data) {
-        $template_id = $template_group->getID();
+        // Instanciate all services from the project template that are 'active'
+        $group = $project_manager->getProject($group_id);
+        if (!$group || !is_object($group)) {
+            exit_no_group();
+        }
+        //set up the group_id
+        $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
+        $request =& HTTPRequest::instance();
+        $request->params['group_id'] = $_REQUEST['group_id'];
+
+        $template_id = $group->getTemplate();
+
+        $template_group = $project_manager->getProject($template_id);
+        if (!$template_group || !is_object($template_group) || $template_group->isError()) {
+          exit_no_group();
+        }
+
+        $system_template = ($template_group->getStatus() == 's' || $template_group->getStatus() == 'S');
+
+
+        if (!$system_template) {
+          $template_name = $template_group->getUnixName();
+        }
 
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
@@ -352,17 +288,14 @@ class ProjectCreator {
                }
             }
 
-            if(isset($data['project']['services'][$arr['service_id']]['server_id']) &&
-                $data['project']['services'][$arr['service_id']]['server_id'])
-            {
-                $server_id = $data['project']['services'][$arr['service_id']]['server_id'];
-            } else {
-                $server_id = 'null';
-            }
-
+            $server_id =
+                isset($data['project']['services'][$arr['service_id']]['server_id']) &&
+                $data['project']['services'][$arr['service_id']]['server_id'] ?
+                $data['project']['services'][$arr['service_id']]['server_id'] :
+                'null';
             if (!service_create_service($arr, $group_id, array(
-                'system' => $template_group->isSystem(),
-                'name'   => $template_group->isSystem() ? '' : $template_group->getUnixName(),
+                'system' => $system_template,
+                'name'   => $system_template ? '' : $template_name,
                 'id'     => $template_id,
                 'is_used'   => $is_used,
                 'server_id' => $server_id,
@@ -370,35 +303,29 @@ class ProjectCreator {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
             }
         }
-    }
-
-    //Add the import of the message to requester from the parent project if defined
-    private function setMessageToRequesterFromTemplate($group_id, $template_id) {
-        $dar = $this->projectManager->getMessageToRequesterForAccessProject($template_id);
+        //Add the import of the message to requester from the parent project if defined
+        $dar = $project_manager->getMessageToRequesterForAccessProject($template_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            $result = $this->projectManager->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
+            $result = $project_manager->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
         } else {
-            $result = $this->projectManager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
+            $result = $project_manager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
         }
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
         }
-    }
 
-    private function initForumModuleFromTemplate($group_id, $template_id) {
+
+        //Copy forums from template project
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $fid = forum_create_forum($group_id,$arr['forum_name'],$arr['is_public'],1,
                       $arr['description'], $need_feedback = false);
-            if ($fid != -1) {
-                forum_add_monitor($fid, user_getid());
-            }
+            if ($fid != -1) forum_add_monitor($fid, user_getid());
         }
-    }
 
-    private function initCVSModuleFromTemplate($group_id, $template_id) {
+        //copy cvs infos
         $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
@@ -413,9 +340,8 @@ class ProjectCreator {
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_cvs_infos'));
         }
-    }
 
-    private function initSVNModuleFromTemplate($group_id, $template_id) {
+        //copy svn infos
         $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
 
         $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
@@ -442,9 +368,15 @@ class ProjectCreator {
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_infos'));
         }
-    }
 
-    private function initFRSModuleFromTemplate($group_id, $template_id, $ugroup_mapping) {
+        // Activate other system references not associated with any service
+        $reference_manager =& ReferenceManager::instance();
+        $reference_manager->addSystemReferencesWithoutService($template_id,$group_id);
+
+        //Copy ugroups
+        $ugroup_mapping = array();
+        ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
+
         $sql_ugroup_mapping = ' ugroup_id ';
         if (is_array($ugroup_mapping) && count($ugroup_mapping)) {
             $sql_ugroup_mapping = ' CASE ugroup_id ';
@@ -477,11 +409,12 @@ class ProjectCreator {
                 }
             }
         }
-    }
 
-    // Generic Trackers Creation
-    private function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping) {
-        $group_id = $group->getID();
+        //Set up some mailing lists
+        //will be done at some point. needs to communicate with geocrawler
+        // TBD
+
+        // Generic Trackers Creation
         $tracker_mapping = array();
         $report_mapping  = array();
         if (TrackerV3::instance()->available()) {
@@ -492,7 +425,7 @@ class ProjectCreator {
             while ($arr_template = db_fetch_array($res)) {
                 $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
                 $report_mapping_for_this_tracker = array();
-                $new_at_id = $atf->create($group_id,$template_group->getID(),$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping_for_this_tracker);
+                $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping_for_this_tracker);
                 if ( !$new_at_id ) {
                     $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
                 } else {
@@ -517,15 +450,12 @@ class ProjectCreator {
                                          ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
                                          '1', // is_used
                                          $group_id);
-                    $result = $this->reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
+                    $result = $reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
                }
             }
         }
-        return array($tracker_mapping, $report_mapping);
-    }
 
-    // Clone wiki from the template
-    private function initWikiModuleFromTemplate($group_id, $template_id) {
+        // Clone wiki from the template
         $clone = new WikiCloner($template_id, $group_id);
 
         // check if the template project has a wiki initialised
@@ -533,16 +463,18 @@ class ProjectCreator {
             //clone wiki.
             $clone->CloneWiki();
         }
-    }
 
-    //Create the summary page
-    private function initLayoutFromTemplate($group_id, $template_id){
+        //Create the summary page
         $lm = new WidgetLayoutManager();
         $lm->createDefaultLayoutForProject($group_id, $template_id);
-    }
 
-    // Copy Truncated email option
-    private function copyEmailOptionsFromTemplate($group_id, $template_id) {
+        //Create project specific references if template is not default site template
+        if (!$system_template) {
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->addProjectReferences($template_id,$group_id);
+        }
+
+        // Copy Truncated email option
         $sql = "UPDATE groups AS g1
                 JOIN groups AS g2
                   ON g2.group_id = ".db_ei($template_id)."
@@ -553,17 +485,23 @@ class ProjectCreator {
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_truncated_emails'));
         }
-    }
 
-    //Verify if the approbation of the new project is automatic or not
-    private function autoActivateProject($group){
-        $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
+        // Raise an event for plugin configuration
+        $em =& EventManager::instance();
+        $em->processEvent('register_project_creation', array(
+            'reportMapping'  => $report_mapping, // Trackers v3
+            'trackerMapping' => $tracker_mapping, // Trackers v3
+            'ugroupsMapping' => $ugroup_mapping,
+            'group_id'       => $group_id,
+            'template_id'    => $template_id
+        ));
 
         if ($auto_approval == PROJECT_APPROVAL_AUTO) {
-            $this->projectManager->activate($group);
+            $project_manager->activate($group);
         }
-    }
 
+        return $group_id;
+    }
 }
 
 ?>
