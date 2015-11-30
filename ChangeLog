@@ -22,6 +22,7 @@ Version 8.9 (Not released yet)
 
         * story #8572: import a new project with its metadata
             * Refactoring create_project -> ProjectCreator
+            * Split ProjectCreator::create_project
 
 	== Development ==
 	* request #8519: Add the possibility to build the packages and install a fresh instance
