@@ -125,6 +125,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         echo '<script type="text/javascript" src="/scripts/jscrollpane/jquery.mousewheel.js"></script>';
         echo '<script type="text/javascript" src="/scripts/jscrollpane/jquery.jscrollpane.min.js"></script>';
         echo '<script type="text/javascript" src="/scripts/tuleap/listFilter.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/codendi/Tooltip.js"></script>';
     }
 
     protected function displayCommonStylesheetElements($params) {
