@@ -18,19 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-Mock::generate('Tracker_Report_Criteria');
+require_once 'common/TreeNode/TreeNode.class.php';
 
-class Tracker_CrossSearch_SemanticTitleReportFieldTest extends TuleapTestCase {
-    public function itDisplaysTheCurrentTitleValue() {
-        $semantic_value_factory = new MockTracker_CrossSearch_SemanticValueFactory();
-        $field                  = new Tracker_CrossSearch_SemanticTitleReportField('Foo', $semantic_value_factory);
-        $criteria               = new MockTracker_Report_Criteria();
-        $output                 = $field->fetchCriteria($criteria);
-        
-        $this->assertPattern('/<input [^>]* value="Foo"/', $output);
+/**
+ * A TreeNode that holds an Tracker_Artifact
+ */
+class ArtifactNode extends TreeNode {
+
+    public function __construct(Tracker_Artifact $artifact, array $data = null) {
+        parent::__construct($data, $artifact->getId());
+        $this->setObject($artifact);
     }
+
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getArtifact() {
+        return $this->getObject();
+    }
+
 }
 
 ?>

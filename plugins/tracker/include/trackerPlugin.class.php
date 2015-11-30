@@ -206,7 +206,6 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
                 '/plugins/tracker/scripts/TrackerTriggers.js',
                 '/plugins/tracker/scripts/SubmissionKeeper.js',
-                '/plugins/tracker/scripts/TrackerSearchTreeView.js',
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
                 '/plugins/tracker/scripts/TrackerRichTextEditor.js',
                 '/plugins/tracker/scripts/artifactChildren.js',

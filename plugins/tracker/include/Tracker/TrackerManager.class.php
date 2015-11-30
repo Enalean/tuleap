@@ -179,10 +179,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
-//                            case 'cross-search':
-//                                $controller = $this->getCrossSearchController($request);
-//                                $controller->search($user);
-//                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -191,20 +187,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 }
             }
         }
-
-
-    }
-
-    /**
-     * @return Tracker_CrossSearch_SearchController
-     */
-    protected function getCrossSearchController(Codendi_Request $request) {
-        return new Tracker_CrossSearch_SearchController(
-            $request,
-            ProjectManager::instance(),
-            $GLOBALS['Response'],
-            $this->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser())
-        );
     }
 
     public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params) {
@@ -969,59 +951,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
         }
         return $delete_status;
-    }
-
-    public function getCrossSearch(array $art_link_column_field_ids) {
-        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getArtifactFactory());
-        $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
-        $dao                  = new Tracker_CrossSearch_SearchDao();
-        $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
-        return $search;
-    }
-
-    public function getCrossSearchViewBuilder($group_id, PFUser $user) {
-        $form_element_factory    = Tracker_FormElementFactory::instance();
-        $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
-        $art_link_field_ids      = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
-        $criteria_builder        = $this->getCriteriaBuilder($user, $planning_trackers);
-
-        return new Tracker_CrossSearch_SearchViewBuilder(
-            $form_element_factory,
-            $this->getTrackerFactory(),
-            $this->getCrossSearch($art_link_field_ids),
-            $criteria_builder
-        );
-    }
-
-    /**
-     * Return the 'Planning' tracker (tracker we should be able to use artifacts to perform search.
-     *
-     * This method hard code dependency with agile dashboard and planning stuff.
-     * It should be renamed later on when planning definition is clearly defined.
-     *
-     * @param Integer $group_id
-     *
-     * @return Array of Integer
-     */
-    private function getPlanningTrackers($group_id, PFUser $user) {
-        $trackers = array();
-        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
-        if (class_exists('PlanningFactory')) {
-            $planning_factory = new PlanningFactory(new PlanningDao(), $this->getTrackerFactory(), Tracker_FormElementFactory::instance());
-            $trackers = $planning_factory->getPlanningTrackers($group_id, $user);
-        }
-        return $trackers;
-    }
-
-    public function getCriteriaBuilder($user, $trackers) {
-        $artifact_factory        = Tracker_ArtifactFactory::instance();
-        $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
-        $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
-        $tracker_factory         = TrackerFactory::instance();
-        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory, $tracker_factory);
-
-        return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
-
     }
 
     /**

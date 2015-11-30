@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ArtifactNode.class.php';
-
 /**
  * Loads planning milestones from the persistence layer.
  */
@@ -197,7 +195,7 @@ class Planning_MilestoneFactory {
      * @param Project $project
      * @param Integer $planning_id
      * @param Integer $artifact_id
-     * 
+     *
      * @return Planning_Milestone
      * @throws Planning_NoPlanningsException
      */
@@ -609,7 +607,7 @@ class Planning_MilestoneFactory {
      * @return Planning_Milestone
      */
     public function getLastMilestoneCreated(PFUser $user, $planning_id) {
-        
+
         $planning  = $this->planning_factory->getPlanning($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {
