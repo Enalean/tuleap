@@ -1,4 +1,4 @@
-#!/usr/share/tuleap/src/utils/php-launcher.sh
+#!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2015. All Rights Reserved.
@@ -19,11 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$source_openfire_auth_provider      = '/usr/share/tuleap/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar';
+$source_openfire_auth_provider      = '/usr/share/codendi/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar';
 $destination_openfire_auth_provider = '/opt/openfire/lib/codendi_auth.jar';
 if (copy($source_openfire_auth_provider, $destination_openfire_auth_provider)) {
-    exec('chmod 644 ' . $destination_openfire_auth_provider);
-    exec('chown codendiadm:codendiadm ' . $destination_openfire_auth_provider);
+    chmod($destination_openfire_auth_provider, 644);
+    chown($destination_openfire_auth_provider, 'codendiadm');
+    chgrp($destination_openfire_auth_provider, 'codendiadm');
     print('The authentication provider have been successfully redeployed.');
     print('You can now restart Openfire with: # service openfire restart');
 } else {
