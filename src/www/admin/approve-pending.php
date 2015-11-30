@@ -105,6 +105,7 @@ if (db_numrows($res_grp) < 1) {
         // Get project type label
         $template =& TemplateSingleton::instance(); 
         echo $Language->getText('admin_groupedit','group_type'); ?>: <?php echo $template->getLabel($row_grp['type']); ?></B>
+        <BR><B><?php echo $Language->getText('admin_groupedit','license'); ?>: <?php echo $row_grp['license']; ?></B>
         <BR><B><?php echo $Language->getText('admin_groupedit','home_box'); ?>: <?php print $row_grp['unix_box']; ?></B>
         <BR><B><?php echo $Language->getText('admin_groupedit','http_domain'); ?>: <?php print $row_grp['http_domain']; ?></B>
     
@@ -132,6 +133,9 @@ if (db_numrows($res_grp) < 1) {
     
  
     	$currentproject->displayProjectsDescFieldsValue();
+    	
+      
+        print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
 
         $template_group = ProjectManager::instance()->getProject($row_grp['built_from_template']);
         print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';

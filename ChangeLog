@@ -1,3 +1,7 @@
+Version 8.8-5 (Wednesday, November 25th 2015)
+	== Bug Fix ==
+	* Revert "request #8614: Project license removal"
+
 Version 8.8-4 (Wednesday, November 25th 2015)
 	== Bug Fix ==
 	* request #8614: Project license removal

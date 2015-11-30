@@ -86,6 +86,28 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase {
         $this->assertEqual($project_values['project'][Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"], $text_content);
     }
 
+    public function testGetProjectValuesUsesCustomLicenseIfTypeIsOther() {
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => 'other',
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => 'do not copy',
+        );
+        $creation_request = $this->aCreationRequest($request_data);
+
+        $values = $creation_request->getProjectValues();
+        $this->assertEqual($values['project'][Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE], 'do not copy');
+    }
+
+    public function testGetProjectValuesIgnoresCustomLicenseIfTypeIsNotOther() {
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => 'artistic',
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => 'do not copy',
+        );
+        $creation_request = $this->aCreationRequest($request_data);
+
+        $values = $creation_request->getProjectValues();
+        $this->assertNull($values['project'][Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE]);
+    }
+
     public function itForcesTheProjectToNotBeATest() {
         $request_data     = array('whatever');
         $creation_request = $this->aCreationRequest($request_data);

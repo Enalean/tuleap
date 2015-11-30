@@ -35,6 +35,8 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     const UNIX_NAME         = 'form_unix_name';
     const IS_PUBLIC         = 'is_public';
     const TEMPLATE_ID       = 'built_from_template';
+    const LICENSE_TYPE      = 'form_license';
+    const CUSTOM_LICENSE    = 'form_license_other';
     const SHORT_DESCRIPTION = 'form_short_description';
     const TOS_APPROVAL      = 'form_terms_of_services_approval';
     const PROJECT_DESCRIPTION_PREFIX = 'form_';
@@ -43,6 +45,8 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     public $unix_name_label                = self::UNIX_NAME;
     public $is_public_label                = self::IS_PUBLIC;
     public $template_id_label              = self::TEMPLATE_ID;
+    public $license_type_label             = self::LICENSE_TYPE;
+    public $custom_license_label           = self::CUSTOM_LICENSE;
     public $short_description_label        = self::SHORT_DESCRIPTION;
     public $term_of_service_approval_label = self::TOS_APPROVAL;
 
@@ -50,6 +54,11 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @var Project_CustomDescription_CustomDescriptionPresenter[]
      */
     private $required_custom_description_presenters;
+
+    /**
+     * @var array
+     */
+    private $available_licenses;
 
     /**
      * @var PFUser
@@ -68,10 +77,12 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
+        array $available_licenses,
         array $required_custom_descriptions,
         ProjectManager $project_manager
     ) {
         $this->creation_request                       = $creation_request;
+        $this->available_licenses                     = $available_licenses;
         $this->project_manager                        = $project_manager;
         $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
     }
@@ -140,6 +151,34 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     public function isPublic() {
         return $this->creation_request->isPublic();
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getLicenseType() {
+        return $this->creation_request->getLicenseType();
+    }
+
+    public function getAvailableLicenses() {
+        $licenses = array();
+        foreach ($this->available_licenses as $license_type => $license_description) {
+            $licenses[] = array(
+                'license_type'        => $license_type,
+                'license_description' => $license_description,
+                'isSelected'          => ($license_type == $this->getLicenseType())
+            );
+        }
+        return $licenses;
+    }
+
+    /**
+     *
+     * @return text
+     */
+    public function getCustomLicense() {
+        return $this->creation_request->getCustomLicense();
     }
 
     /**
@@ -220,6 +259,14 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     public function getDescriptionContainerPrivateLabel() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_private_label');
+    }
+
+    public function getDescriptionContainerProjectLicense() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_license');
+    }
+
+    public function getDescriptionContainerProjectLicenseHelp() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_license_help');
     }
 
     public function getChooseTemplateContainerTitle() {
