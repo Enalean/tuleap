@@ -12,21 +12,6 @@ plugin_tracker	admin_tracker_template	Configuration of predefined tracker templa
 plugin_tracker_homenav	list	Trackers List
 plugin_tracker_homenav	search	Cross Trackers Search
 
-plugin_tracker_crosssearch	title	Cross Trackers Search
-
-plugin_tracker_crosssearch	semantic_title_label	Title (Semantic)
-plugin_tracker_crosssearch	semantic_status_label	Status (Semantic)
-plugin_tracker_crosssearch	semantic_status_any	Any
-plugin_tracker_crosssearch	semantic_status_open	Open
-plugin_tracker_crosssearch	semantic_status_closed	Closed
-
-plugin_tracker_crosssearch	included_trackers_title	List of trackers included into the search:
-plugin_tracker_crosssearch	included_trackers_not_found	No relevant tracker found
-
-plugin_tracker_crosssearch	no_matching_artifact	No artifact matches the query
-
-plugin_tracker_crosssearch	please_select_criterion	Please select at least one criterion to filter on
-
 plugin_tracker	submit_no_anonymous	You should be logged in to submit artifacts
 plugin_tracker	submit_at_least_one_field	You can't submit an artifact because you do not have the right to submit all required fields
 

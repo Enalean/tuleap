@@ -11,20 +11,6 @@ plugin_tracker	admin_tracker_template	Configuration des modèles d'outils de sui
 plugin_tracker_homenav	list	Liste des outils de suivi
 plugin_tracker_homenav	search	Recherche
 
-plugin_tracker_crosssearch	title	Recherche
-
-plugin_tracker_crosssearch	semantic_title_label	Titre (Sémantique)
-plugin_tracker_crosssearch	semantic_status_label	État (Sémantique)
-plugin_tracker_crosssearch	semantic_status_any	Tous
-plugin_tracker_crosssearch	semantic_status_open	Ouvert
-plugin_tracker_crosssearch	semantic_status_closed	Fermé
-
-plugin_tracker_crosssearch	included_trackers_title	Liste des outils de suivi inclus dans la recherche :
-plugin_tracker_crosssearch	included_trackers_not_found	Aucun outil de suivi ne correspond.
-
-plugin_tracker_crosssearch	no_matching_artifact	Aucun artefact ne correspond à la recherche
-
-plugin_tracker_crosssearch	please_select_criterion	Vous devez selectionner au moins un critère de recherche
 
 plugin_tracker	submit_no_anonymous	Vous devez être identifié pour créer des artefacts
 plugin_tracker	submit_at_least_one_field	Vous ne pouvez pas soumettre d'artefacts car vous devez avoir le droit de soumettre tous les champs requis.

@@ -31,9 +31,6 @@ Mock::generate('Planning');
 Mock::generatePartial('Planning_Controller', 'MockPlanning_Controller', array('renderToString'));
 Mock::generate('ProjectManager');
 Mock::generate('Project');
-Mock::generate('Tracker_CrossSearch_Search');
-Mock::generate('Tracker_CrossSearch_SearchContentView');
-Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
 abstract class Planning_Controller_BaseTest extends TuleapTestCase {
 

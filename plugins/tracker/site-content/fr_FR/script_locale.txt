@@ -37,10 +37,6 @@ codendi.locales['tracker_artifact_link'] = {
 codendi.locales['tracker_template'] = {
     no_template: 'Pas de patron' //same as plugin_tracker_include_type - tmpl_src_no_trk
 };
-codendi.locales['tracker_crosssearch'] = {
-    expand_all: 'Déplier tout',
-    collapse_all: 'Replier tout'
-};
 codendi.locales['tracker_hierarchy'] = {
     no_child_artifacts: 'Cet artefact n\'as pas encore d\'enfants',
     title_column_name: 'Titre',
