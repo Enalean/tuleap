@@ -1,3 +1,6 @@
+Version 5.756 - Tuleap 8.9
+    * request #8641: Tracker CrossSearch code is not anymore used
+
 Version 5.755 - Tuleap 8.9
     * request #8527: Tool tip information on new modal not displayed
 
