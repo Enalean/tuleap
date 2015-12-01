@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 8.9
+    * request #8639: PHPWiki plugin does not purge correctly FRS documents
+
 Version 0.9 - Tuleap 8.9
     * story #7883: PHPWiki plugin can be accessed via the REST API
 

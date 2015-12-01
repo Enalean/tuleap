@@ -41,6 +41,7 @@ Version 8.9 (Not released yet)
 	* request #8613: Wrong preselection of theme for new user
 	* request #8627: Site admin browsing of user list is broken when restricted to a project
 	* request #8635: Prevent project 100 status from being updated
+	* request #8639: PHPWiki plugin does not purge correctly FRS documents
 
 	== Plugins ==
 	* mediawiki: 0.101
@@ -51,7 +52,7 @@ Version 8.9 (Not released yet)
 	* docman: 2.26.90
 	* userlog: 1.6
 	* IM: 1.5.34
-	* phpwiki: 0.9
+	* phpwiki: 0.10
 
     == Themes ==
 	* FlamingParrot: 1.114
