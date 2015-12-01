@@ -42,12 +42,13 @@ Version 8.9 (Not released yet)
 	* request #8627: Site admin browsing of user list is broken when restricted to a project
 	* request #8635: Prevent project 100 status from being updated
 	* request #8639: PHPWiki plugin does not purge correctly FRS documents
+	* request #8638: Infinite loop when an user set a negative duration for a burndown
 
 	== Plugins ==
 	* mediawiki: 0.101
 	* git: 4.96
-	* tracker: 5.757
-	* agiledashboard: 1.315
+	* tracker: 5.758
+	* agiledashboard: 1.316
 	* tests: 5.31
 	* docman: 2.26.90
 	* userlog: 1.6

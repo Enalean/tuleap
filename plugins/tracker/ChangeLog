@@ -1,3 +1,6 @@
+Version 5.758 - Tuleap 8.9
+    * request #8638: Infinite loop when an user set a negative duration for a burndown
+
 Version 5.757 - Tuleap 8.9
     * story #8380: Missing pagination in /milestones/:id/milestones
 
