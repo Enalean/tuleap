@@ -52,6 +52,12 @@ class phpwikiPlugin extends Plugin {
         $this->addHook('phpwiki_redirection');
 
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
+
+        $this->addHook(Event::REST_PROJECT_GET_PHPWIKI);
+        $this->addHook(Event::REST_PROJECT_OPTIONS_PHPWIKI);
+        $this->addHook(EVENT::REST_RESOURCES);
+        $this->addHook(EVENT::REST_PROJECT_RESOURCES);
+
     }
 
     private function isDocmanPluginActivated() {
@@ -218,5 +224,64 @@ class phpwikiPlugin extends Plugin {
         if ($project->usesService($this->getServiceShortname())) {
             $params['services'][] = $GLOBALS['Language']->getText('plugin_phpwiki', 'service_lbl_key');
         }
+    }
+
+    public function rest_project_get_phpwiki($params) {
+        $user    = $params['user'];
+        $project = $params['project'];
+
+        if (! $this->userCanAccessPhpWikiService($user, $project)) {
+            $class_exception = 'Luracast\Restler\RestException';
+            throw new $class_exception(403, 'You are not allowed to access the PHPWiki plugin');
+        }
+
+        if ($project->usesService($this->getServiceShortname())) {
+            $class            = 'Tuleap\PhpWiki\REST\v1\ProjectResource';
+            $project_resource = new $class($this->getPaginatedPHPWikiPagesFactory());
+            $project          = $params['project'];
+
+            $params['result'] = $project_resource->getPhpWikiPlugin(
+                $user,
+                $project->getID(),
+                $params['limit'],
+                $params['offset'],
+                $params['pagename']
+            );
+        }
+    }
+
+    public function rest_project_options_phpwiki($params) {
+        $params['activated'] = true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function userCanAccessPhpWikiService(PFUser $user, Project $project) {
+        $wiki = new PHPWiki($project->getID());
+        return $wiki->isAutorized($user->getId());
+    }
+
+    /**
+     * @return PaginatedPHPWikiPagesFactory
+     */
+    private function getPaginatedPHPWikiPagesFactory() {
+        return new PaginatedPHPWikiPagesFactory(new PHPWikiDao());
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources($params) {
+        $injector = new PHPWikiPlugin_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function rest_project_resources(array $params) {
+        $injector = new PHPWikiPlugin_REST_ResourcesInjector();
+        $injector->declarePhpWikiPluginResource($params['resources'], $params['project']);
     }
 }

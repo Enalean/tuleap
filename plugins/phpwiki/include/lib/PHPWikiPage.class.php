@@ -60,6 +60,7 @@ class PHPWikiPage {
             //Given number is the WikiPage id from wiki_page table
             $this->id = (int) $id;
             $this->initFromDb();
+            $this->wrapper = new PHPWikiPageWrapper($this->gid);
           }
           else {
             //Given number is group_id from wiki_page table
