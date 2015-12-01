@@ -173,9 +173,9 @@ class phpwikiPlugin extends Plugin {
         return $search_page;
     }
 
-    public function purgeFiles($time) {
+    public function purgeFiles($params) {
         $wiki_attachment = new PHPWikiAttachment();
-        $wiki_attachment->purgeAttachments($time);
+        $wiki_attachment->purgeAttachments($params['time']);
     }
 
     public function getWikiPage($params) {

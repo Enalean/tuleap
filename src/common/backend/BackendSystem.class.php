@@ -427,7 +427,6 @@ class BackendSystem extends Backend {
         
         $frs = $this->getFRSFileFactory();
         $status =  $frs->moveFiles($time, $this);
-
         // {{{ /!\ WARNING HACK /!\
         // We keep the good old purge mecanism for at least one release to clean
         // the previously deleted files
@@ -438,8 +437,8 @@ class BackendSystem extends Backend {
         // }}} /!\ WARNING HACK /!\
 
         //Manage the purge of wiki attachments
-        $wiki = $this->getWikiAttachment();
-        $status = $status & $wiki->purgeAttachments($time);
+        $wiki   = $this->getWikiAttachment();
+        $status = $status && $wiki->purgeAttachments($time);
 
         $em = EventManager::instance();
         $em->processEvent('backend_system_purge_files', array('time' => $time));
