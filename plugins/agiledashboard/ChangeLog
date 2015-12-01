@@ -1,3 +1,6 @@
+Version 1.317 - Tuleap 8.9
+    * request #8517: Stories created under Sprint Milestone on V2 Planning are not linked to their Release
+
 Version 1.316 - Tuleap 8.9
     * request #8638: Infinite loop when an user set a negative duration for a burndown
 
