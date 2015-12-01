@@ -50,12 +50,16 @@ if ($request->existAndNonEmpty('Rename')) {
 
 if ($request->existAndNonEmpty('Update')) {
 
-    $form_status  = $request->getValidated('form_status', 'string', $group->getStatus());
+    $form_status = $group->getStatus();
+
+    if ($group->getGroupId() != Project::ADMIN_PROJECT_ID) {
+        $form_status  = $request->getValidated('form_status', 'string', $group->getStatus());
+    }
     $form_public  = $request->getValidated('form_public', 'string', $group->isPublic());
     $group_type   = $request->getValidated('group_type', 'string', $group->getType());
     $form_domain  = $request->getValidated('form_domain', 'string', $group->getHTTPDomain());
     $form_box     = $request->getValidated('form_box', 'string', $group->getUnixBox());
-    if ($group->getStatus() != $form_status) {
+    if ($group->getStatus() != $form_status && $group->getGroupId() != Project::ADMIN_PROJECT_ID) {
         group_add_history('status', $Language->getText('admin_groupedit', 'status_' . $group->getStatus()) . " :: " . $Language->getText('admin_groupedit', 'status_' . $form_status), $group_id);
     }
     if ($group->getType() != $group_type) {
@@ -117,7 +121,11 @@ echo $template->showTypeBox('group_type',$group->getType());
 
 ?>
 
-<B><?php echo $Language->getText('global','status'); ?></B>
+<B>
+<?php if ($group->getGroupId() != Project::ADMIN_PROJECT_ID){
+            echo $Language->getText('global','status');
+?>
+</B>
 <?php
 //Disable the possibilty to switch from deleted status to an active one
 ?>
@@ -133,7 +141,9 @@ echo $template->showTypeBox('group_type',$group->getType());
 <OPTION <?php if ($group->getStatus() == "D") print "selected "; ?> value="D">
 <?php echo $Language->getText('admin_groupedit', 'status_D'); ?></OPTION>
 </SELECT>
-
+<?php
+}
+?>
 <a href="/project/admin/editgroupinfo.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('admin_groupedit', 'manage_access'); ?></a>
 
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
