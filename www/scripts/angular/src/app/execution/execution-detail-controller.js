@@ -14,8 +14,7 @@
         'SocketService',
         'ArtifactLinksGraphService',
         'ArtifactLinksGraphModalLoading',
-        'NewTuleapArtifactModalService',
-        'TuleapArtifactModalLoading'
+        'NewTuleapArtifactModalService'
     ];
 
     function ExecutionDetailCtrl(
@@ -29,8 +28,7 @@
         SocketService,
         ArtifactLinksGraphService,
         ArtifactLinksGraphModalLoading,
-        NewTuleapArtifactModalService,
-        TuleapArtifactModalLoading
+        NewTuleapArtifactModalService
     ) {
         var execution_id = +$state.params.execid,
             campaign_id  = +$state.params.id;
@@ -50,7 +48,7 @@
         $scope.showArtifactLinksGraphModal        = showArtifactLinksGraphModal;
         $scope.showEditArtifactModal              = showEditArtifactModal;
         $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
-        $scope.edit_artifact_modal_loading        = TuleapArtifactModalLoading.loading;
+        $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
 
         viewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
 
@@ -92,8 +90,6 @@
                     callback
                 );
             });
-
-            TuleapArtifactModalLoading.loading.is_loading = true;
         }
 
         function viewTestExecution(execution_id, user) {

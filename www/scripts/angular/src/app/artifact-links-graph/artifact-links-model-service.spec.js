@@ -17,7 +17,7 @@ describe('ArtifactLinksModelService', function() {
     });
 
     it("Given an artifact structure, when I transform data then an object with nodes, links, errors and title will be return", function() {
-        gettextCatalog.getString.andReturn('aString');
+        gettextCatalog.getString.and.returnValue('aString');
 
         var artifact = {
             "links": [
@@ -121,7 +121,7 @@ describe('ArtifactLinksModelService', function() {
     });
 
     it("Given an artifact structure without links, when I transform data then an object with nodes, links, errors and title will be return", function() {
-        gettextCatalog.getString.andReturn('aString');
+        gettextCatalog.getString.and.returnValue('aString');
 
         var artifact = {
             "links": [],

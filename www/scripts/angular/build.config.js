@@ -89,6 +89,7 @@ module.exports = {
       'vendor/angular-cookies/angular-cookies.min.js',
       'vendor/d3/d3.min.js',
       'vendor/ng-scrollbar/dist/ng-scrollbar.min.js',
+      'vendor/angular-base64-upload/dist/angular-base64-upload.js',
       'vendor/angular-ckeditor/angular-ckeditor.js',
       'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'vendor/angular-filter/dist/angular-filter.min.js',

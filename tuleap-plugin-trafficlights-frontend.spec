@@ -31,6 +31,7 @@ Test and tracability plugin
 cd www/scripts/angular
 sed -i -e "s%tuleap_dir: .*%tuleap_dir: '/tuleap',%" build.config.js
 scl enable nodejs010 "npm install"
+scl enable nodejs010 "bower install --allow-root --config.interactive=false"
 scl enable nodejs010 "grunt"
 
 #
