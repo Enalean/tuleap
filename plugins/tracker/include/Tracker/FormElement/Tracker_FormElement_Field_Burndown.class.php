@@ -234,8 +234,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @param Tracker_Artifact $artifact
      * @param PFUser $user
-     * @param type $start_date
-     * @param type $duration
+     * @param int $start_date
+     * @param int $duration
      *
      * @return Tracker_Chart_Data_Burndown
      */
@@ -597,7 +597,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $field    = $this->getBurndownDurationField($artifact, $user);
         $duration = $artifact->getValue($field)->getValue();
 
-        if (! $duration) {
+        if ($duration <= 0) {
             throw new Tracker_FormElement_Field_BurndownException($GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning'));
         }
 

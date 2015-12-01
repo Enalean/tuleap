@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -274,4 +274,64 @@ class TimePeriodWithoutWeekEnd_getNumberOfRemainingDaysTest extends TuleapTestCa
     }
 
 }
-?>
+
+class TimePeriodWithoutWeekEnd_itDealsWithDuration extends TuleapTestCase {
+    private $week_day_timestamp;
+    private $following_week_day_timestamp;
+
+    public function __construct() {
+        $week_day                           = new DateTime('2016-02-01');
+        $this->week_day_timestamp           = $week_day->getTimestamp();
+        $following_week_day                 = new DateTime('2016-02-02');
+        $this->following_week_day_timestamp = $following_week_day->getTimestamp();
+    }
+
+    public function itProcessesNegativeDuration() {
+        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, -2);
+        $this->assertEqual($time_period->getEndDate(), $this->week_day_timestamp);
+    }
+
+    public function itProcessesNullDuration() {
+        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, 0);
+        $this->assertEqual($time_period->getEndDate(), $this->week_day_timestamp);
+    }
+
+    public function itProcessesNullDurationWithAWeekEnd() {
+        $week_end_day  = new DateTime('2016-02-06');
+        $next_week_day = new DateTime('2016-02-08');
+        $time_period   = new TimePeriodWithoutWeekEnd($week_end_day->getTimestamp(), 0);
+        $this->assertEqual($time_period->getEndDate(), $next_week_day->getTimestamp());
+    }
+
+    public function itProcessesPositiveDuration() {
+        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, 1);
+        $this->assertEqual($time_period->getEndDate(), $this->following_week_day_timestamp);
+    }
+}
+
+class TimePeriodWithWeekEnd_itDealsWithDuration extends TuleapTestCase {
+    private $day_timestamp;
+    private $following_day_timestamp;
+
+    public function __construct() {
+        $week_day                      = new DateTime('2016-02-01');
+        $this->day_timestamp           = $week_day->getTimestamp();
+        $following_day                 = new DateTime('2016-02-02');
+        $this->following_day_timestamp = $following_day->getTimestamp();
+    }
+
+    public function itProcessesNegativeDuration() {
+        $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, -2);
+        $this->assertEqual($time_period->getEndDate(), $this->day_timestamp);
+    }
+
+    public function itProcessesNullDuration() {
+        $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, 0);
+        $this->assertEqual($time_period->getEndDate(), $this->day_timestamp);
+    }
+
+    public function itProcessesPositiveDuration() {
+        $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, 1);
+        $this->assertEqual($time_period->getEndDate(), $this->following_day_timestamp);
+    }
+}
