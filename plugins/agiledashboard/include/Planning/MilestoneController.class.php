@@ -70,10 +70,23 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
     public function show() {
         $this->generateBareMilestone();
+        $this->redirectToCorrectPane();
         return $this->renderToString(
             'show',
             $this->getMilestonePresenter()
         );
+    }
+
+    private function redirectToCorrectPane() {
+        $current_pane_identifier = $this->getActivePaneIdentifier();
+        if ($current_pane_identifier !== $this->request->get('pane')) {
+            $this->request->set('pane', $current_pane_identifier);
+            $this->redirect($this->request->params);
+        }
+    }
+
+    private function getActivePaneIdentifier() {
+        return $this->pane_factory->getActivePane($this->milestone)->getIdentifier();
     }
 
     public function getHeaderOptions() {
@@ -82,7 +95,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
         return array(
             Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
-                $this->pane_factory->getActivePane($this->milestone)->getIdentifier()
+                $this->getActivePaneIdentifier()
             )
         );
     }

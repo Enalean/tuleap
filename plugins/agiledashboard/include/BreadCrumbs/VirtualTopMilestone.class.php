@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,10 +30,9 @@ class BreadCrumb_VirtualTopMilestone implements BreadCrumb_BreadCrumbGenerator {
     }
 
     public function getCrumbs() {
-        $hp             = Codendi_HTMLPurifier::instance();
         $url_top_parameters = array(
             'action'   => 'show-top',
-            'pane'     => 'topblcontent',
+            'pane'     => 'topplanning-v2',
             'group_id' => (int) $this->project->getGroupId()
         );
         return array(

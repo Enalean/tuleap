@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -44,7 +44,7 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $item_trackers        = $backlog_strategy->getItemTrackers();
         $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf(
             $milestone,
-            AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER
+            AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningV2PaneInfo::IDENTIFIER
         );
 
         return new AgileDashboard_Milestone_Pane_Content_TopContentPresenter(
