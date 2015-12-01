@@ -203,31 +203,23 @@ module.exports = function (grunt) {
         },
 
         /**
-         * `recess` handles our LESS compilation and uglification automatically.
+         * `less` handles our LESS compilation and uglification automatically.
          * Only our `main.less` file is included in compilation; all other files
          * must be imported from this file.
          */
-        recess: {
+        less: {
             build: {
                 src: ['<%= app_files.less %>'],
                 dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
                 options: {
-                    compile: true,
-                    compress: false,
-                    noUnderscores: false,
-                    noIDs: false,
-                    zeroUnits: false
+                    compress: false
                 }
             },
             compile: {
-                src: ['<%= recess.build.dest %>'],
-                dest: '<%= recess.build.dest %>',
+                src: ['<%= less.build.dest %>'],
+                dest: '<%= less.build.dest %>',
                 options: {
-                    compile: true,
-                    compress: true,
-                    noUnderscores: false,
-                    noIDs: false,
-                    zeroUnits: false
+                    compress: true
                 }
             }
         },
@@ -395,7 +387,7 @@ module.exports = function (grunt) {
              */
             less: {
                 files: ['src/**/*.less'],
-                tasks: ['recess:build', 'copy:compile_assets']
+                tasks: ['less:build', 'copy:compile_assets']
             },
 
             /**
@@ -460,7 +452,7 @@ module.exports = function (grunt) {
         'nggettext_extract',
         'html2js',
         'jshint',
-        'recess:build',
+        'less:build',
         'copy:build_assets',
         'copy:build_appmodules',
         'copy:build_appjs',
@@ -477,7 +469,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('compile', [
         'nggettext_compile',
-        'recess:compile',
+        'less:compile',
         'copy:compile_assets',
         'ngAnnotate',
         'concat',
