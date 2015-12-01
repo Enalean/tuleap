@@ -1,3 +1,6 @@
+Version 1.315 - Tuleap 8.9
+    * story #8380: Missing pagination in /milestones/:id/milestones
+
 Version 1.314 - Tuleap 8.9
     * story #8382: Planning V2 is now Planning
 

@@ -1,3 +1,6 @@
+Version 5.757 - Tuleap 8.9
+    * story #8380: Missing pagination in /milestones/:id/milestones
+
 Version 5.756 - Tuleap 8.9
     * request #8641: Tracker CrossSearch code is not anymore used
 
