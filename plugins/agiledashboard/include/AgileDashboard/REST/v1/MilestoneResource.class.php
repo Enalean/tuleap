@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
-use Tuleap\REST\TokenAuthentication;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
@@ -50,6 +49,7 @@ use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use AgileDashboard_Milestone_MilestoneDao;
+use MilestoneParentLinker;
 
 /**
  * Wrapper for milestone related REST methods
@@ -87,6 +87,9 @@ class MilestoneResource extends AuthenticatedResource {
 
     /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
     private $milestone_representation_builder;
+
+    /** @var MilestoneParentLinker */
+    private $milestone_parent_linker;
 
     public function __construct() {
         $planning_factory               = PlanningFactory::build();
@@ -153,6 +156,11 @@ class MilestoneResource extends AuthenticatedResource {
             $this->milestone_factory,
             $this->backlog_strategy_factory,
             $this->event_manager
+        );
+
+        $this->milestone_parent_linker = new MilestoneParentLinker(
+            $this->milestone_factory,
+            $this->backlog_strategy_factory
         );
     }
 
@@ -467,6 +475,7 @@ class MilestoneResource extends AuthenticatedResource {
                 if (count($to_add)) {
                     $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($user, $milestone, array(), $to_add);
                     $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $to_add, array());
+                    $this->linkToMilestoneParent($milestone, $user, $to_add);
                 }
                 $this->resources_patcher->commit();
             }
@@ -702,6 +711,14 @@ class MilestoneResource extends AuthenticatedResource {
             return array_diff($ids_to_validate, $to_add);
         } else {
             return $ids_to_validate;
+        }
+    }
+
+    private function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, array $to_add) {
+        foreach ($to_add as $artifact_id_to_add) {
+            $artifact_added = $this->tracker_artifact_factory->getArtifactById($artifact_id_to_add);
+
+            $this->milestone_parent_linker->linkToMilestoneParent($milestone, $user, $artifact_added);
         }
     }
 

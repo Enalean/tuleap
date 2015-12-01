@@ -158,7 +158,7 @@ class Planning_MilestoneFactory {
         if (! $artifact->userCanView($user)) {
             throw new MilestonePermissionDeniedException();
         }
-        return $this->getBareMilestoneByArtifact($user, $artifact);;
+        return $this->getBareMilestoneByArtifact($user, $artifact);
     }
 
     /**
