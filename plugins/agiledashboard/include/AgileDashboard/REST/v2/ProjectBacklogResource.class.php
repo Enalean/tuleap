@@ -35,6 +35,7 @@ use \Tracker_ArtifactDao;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\Header;
 use \PlanningPermissionsManager;
+use AgileDashboard_Milestone_MilestoneDao;
 
 /**
  * Wrapper for backlog related REST methods
@@ -74,7 +75,8 @@ class ProjectBacklogResource {
             Tracker_FormElementFactory::instance(),
             TrackerFactory::instance(),
             $status_counter,
-            $this->planning_permissions_manager
+            $this->planning_permissions_manager,
+            new AgileDashboard_Milestone_MilestoneDao()
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(

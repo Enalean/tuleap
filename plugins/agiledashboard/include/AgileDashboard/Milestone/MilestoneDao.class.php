@@ -20,6 +20,59 @@
 
 class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
+    public function searchPaginatedSubMilestones($milestone_artifact_id, $limit, $offset, $order) {
+        $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
+
+        $limit_statement = '';
+        if ($limit > 0) {
+            $limit  = $this->da->escapeInt($limit);
+            $offset = $this->da->escapeInt($offset);
+
+            $limit_statement = "LIMIT $offset, $limit";
+        }
+
+        if (strtolower($order) !== 'asc') {
+            $order = 'desc';
+        }
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
+                FROM tracker_artifact AS parent
+                    INNER JOIN tracker_field AS f ON (
+                        parent.tracker_id = f.tracker_id
+                        AND parent.id = $milestone_artifact_id
+                        AND f.formElement_type = 'art_link'
+                    )
+                    INNER JOIN tracker_changeset_value AS cv ON (
+                        cv.field_id = f.id
+                        AND cv.changeset_id = parent.last_changeset_id
+                    )
+                    INNER JOIN tracker_changeset_value_artifactlink AS cva ON (
+                        cva.changeset_value_id = cv.id
+                    )
+                    INNER JOIN tracker_artifact AS submilestones ON (
+                        submilestones.id = cva.artifact_id
+                    )
+                    INNER JOIN plugin_agiledashboard_planning AS planning ON (
+                        planning.planning_tracker_id = submilestones.tracker_id
+                    )
+                    INNER JOIN tracker_hierarchy AS hierarchy ON (
+                        hierarchy.parent_id = parent.tracker_id
+                        AND hierarchy.child_id = submilestones.tracker_id
+                    )
+                ORDER BY submilestones.id $order
+                $limit_statement";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchSubMilestones($milestone_artifact_id) {
+        $limit  = null;
+        $offset = null;
+        $order  = 'asc';
+
+        return $this->searchPaginatedSubMilestones($milestone_artifact_id, $limit, $offset, $order);
+    }
+
     public function getAllMilestoneByTrackers(array $list_of_trackers_ids) {
         $select_fragments = $this->getSelectFragments($list_of_trackers_ids);
         $from_fragments   = $this->getFromFragments($list_of_trackers_ids);

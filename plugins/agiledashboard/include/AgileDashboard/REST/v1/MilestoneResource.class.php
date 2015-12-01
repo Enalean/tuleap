@@ -49,6 +49,7 @@ use Tracker_Artifact_PriorityHistoryDao;
 use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use AgileDashboard_Milestone_MilestoneDao;
 
 /**
  * Wrapper for milestone related REST methods
@@ -103,7 +104,8 @@ class MilestoneResource extends AuthenticatedResource {
             $tracker_form_element_factory,
             TrackerFactory::instance(),
             $status_counter,
-            new PlanningPermissionsManager()
+            new PlanningPermissionsManager(),
+            new AgileDashboard_Milestone_MilestoneDao()
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
@@ -285,7 +287,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @url GET {id}/milestones
      * @access hybrid
      *
-     * @param int    $id Id of the milestone
+     * @param int    $id     Id of the milestone
+     * @param int    $limit  Number of elements displayed per page {@from path}
+     * @param int    $offset Position of the first element to display {@from path}
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
      * @return Array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
@@ -293,19 +297,17 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    public function getMilestones($id, $order = 'asc') {
+    public function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
         $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        $paginated_milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user, $limit, $offset, $order);
+
         $this->sendAllowHeaderForSubmilestones();
+        $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());
 
-        $event_manager     = $this->event_manager;
-        $milestone_factory = $this->milestone_factory;
-        $strategy_factory  = $this->backlog_strategy_factory;
-
-        $milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user, $order)->getMilestonesRepresentations();
-
-        return $milestones_representations;
+        return $paginated_milestones_representations->getMilestonesRepresentations();
     }
 
     /**
