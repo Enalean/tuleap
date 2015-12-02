@@ -258,7 +258,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      * @return void
      */
      public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
-         if ($this->getFieldId()) {
+         if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
              $child = $root->addChild('semantic');
              $child->addAttribute('type', $this->getShortName());
              $child->addChild('shortname', $this->getShortName());
