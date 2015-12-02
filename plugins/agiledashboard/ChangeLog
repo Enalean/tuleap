@@ -1,3 +1,6 @@
+Version 1.320 - Tuleap 8.9
+    * request #8645: Kanban is not resized
+
 Version 1.319 - Tuleap 8.9
     * story #8380: Inline css dependencies
 
