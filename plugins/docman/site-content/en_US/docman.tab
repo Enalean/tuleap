@@ -720,7 +720,7 @@ plugin_docman	report_del_notadmin	Only admin can delete Project wide reports.
 plugin_docman	report_del_notfound	Report not found. Cancel deletion.
 plugin_docman	report_del_notowner	You can not delete report you do not own. Cancel deletion.
 plugin_docman	report_del_success	Report successfully deleted
-plugin_docman	report_err_notfound	The report you want to clone doesn't exists.
+plugin_docman	report_err_notfound	The report you want to clone doesn't exist.
 plugin_docman	report_err_clone_iorp	You can only clone 'Project' wide reports or your 'Personal' reports.
 plugin_docman	report_filters_options	Search criteria:
 plugin_docman	report_image_not_readable	An image is associated to this report but you don't have the permission to see it.
