@@ -79,7 +79,8 @@
             >
                 <li ui-tree-node
                     ng-repeat="backlog_item in backlog_items.filtered_content"
-                    ng-include="'backlog-item/backlog-item-in-backlog.tpl.html'"
+                    ng-include="'backlog-item/backlog-item.tpl.html'"
+                    onload="user_can_move_cards=backlog.user_can_move_cards"
                     data-type="{{ backlog_item.trackerId }}"
                     data-accept="{{ backlog_item.accepted_types.toString() }}"
                     class="backlog-item parent"
@@ -198,7 +199,8 @@
                                 class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
                                 data-accept="{{ backlog_item.accepted_types.toString() }}"
                                 data-type="{{ backlog_item.trackerId }}"
-                                ng-include="'backlog-item/backlog-item-in-submilestone.tpl.html'"
+                                ng-include="'backlog-item/backlog-item.tpl.html'"
+                                onload="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
                                 ng-if="canShowBacklogItem(backlog_item)"
                                 ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
                                 collapsed="true"

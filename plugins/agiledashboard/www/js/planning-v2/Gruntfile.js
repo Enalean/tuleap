@@ -481,7 +481,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('soft-compile', [
         'nggettext_compile',
-        'recess:compile',
+        'less:compile',
         'copy:compile_assets',
         'concat'
     ]);
