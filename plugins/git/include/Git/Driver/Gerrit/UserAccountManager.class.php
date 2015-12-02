@@ -93,23 +93,15 @@ class Git_Driver_Gerrit_UserAccountManager {
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
         foreach($remote_servers as $remote_server) {
-            try {
-                $this->removeKeys($remote_server, $keys_to_add, $gerrit_user);
-                $this->removeKeys($remote_server, $keys_to_remove, $gerrit_user);
-            } catch (Git_Driver_Gerrit_Exception $e) {
-                $errors[] = $e->getTraceAsString();
-            }
+            $errors += $this->removeKeys($remote_server, $keys_to_add, $gerrit_user);
+            $errors += $this->removeKeys($remote_server, $keys_to_remove, $gerrit_user);
         }
         //double foreach to workaround gerrit bug
         foreach($remote_servers as $remote_server) {
-            try {
-                $this->addKeys($remote_server, $keys_to_add, $gerrit_user);
-            } catch (Git_Driver_Gerrit_Exception $e) {
-                $errors[] = $e->getTraceAsString();
-            }
+            $errors += $this->addKeys($remote_server, $keys_to_add, $gerrit_user);
         }
-        
-        if ($errors) {
+
+        if (count($errors) > 0) {
             $message = implode(PHP_EOL, $errors);
             throw new Git_UserSynchronisationException($message);
         }
@@ -138,15 +130,11 @@ class Git_Driver_Gerrit_UserAccountManager {
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
         
         foreach($remote_servers as $remote_server) {
-           try { 
-                $this->removeKeys($remote_server, $user_keys, $gerrit_user);
-                $this->addKeys($remote_server, $user_keys, $gerrit_user);
-            } catch (Git_Driver_Gerrit_Exception $e) {
-                $errors[] = $e->getTraceAsString();
-            }
+            $errors += $this->removeKeys($remote_server, $user_keys, $gerrit_user);
+            $errors += $this->addKeys($remote_server, $user_keys, $gerrit_user);
         }
 
-        if ($errors) {
+        if (count($errors) > 0) {
             $message = implode(PHP_EOL, $errors);
             throw new Git_UserSynchronisationException($message);
         }
@@ -157,12 +145,19 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param Git_RemoteServer_GerritServer $remote_server
      * @param array $keys
      * @param Git_Driver_Gerrit_User $gerrit_user
-     * @throws Git_Driver_Gerrit_Exception
+     *
+     * @return string[] List of errors
      */
     private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user) {
+        $errors = array();
         foreach($keys as $key) {
-            $this->gerrit_driver_factory->getDriver($remote_server)->addSSHKeyToAccount($remote_server, $gerrit_user, $key);
+            try {
+                $this->gerrit_driver_factory->getDriver($remote_server)->addSSHKeyToAccount($remote_server, $gerrit_user, $key);
+            } catch (Git_Driver_Gerrit_Exception $exception) {
+                $errors[] = $exception->getMessage();
+            }
         }
+        return $errors;
     }
 
     /**
@@ -170,12 +165,19 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param Git_RemoteServer_GerritServer $remote_server
      * @param array $keys
      * @param Git_Driver_Gerrit_User $gerrit_user
-     * @throws Git_Driver_Gerrit_Exception
+     *
+     * @return string[] List of errors
      */
     private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user) {
+        $errors = array();
         foreach($keys as $key) {
-            $this->gerrit_driver_factory->getDriver($remote_server)->removeSSHKeyFromAccount($remote_server, $gerrit_user, $key);
+            try {
+                $this->gerrit_driver_factory->getDriver($remote_server)->removeSSHKeyFromAccount($remote_server, $gerrit_user, $key);
+            } catch (Git_Driver_Gerrit_Exception $exception) {
+                $errors[] = $exception->getMessage();
+            }
         }
+        return $errors;
     }
 
     /**
