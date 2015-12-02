@@ -1308,9 +1308,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return bool true if the value is considered ok
      */
     public function isValid(Tracker_Artifact $artifact, $value) {
-        $this->has_errors = $this->isPossibleValue($value) && $this->validate($artifact, $value);
+        $this->has_errors = ! ($this->isPossibleValue($value) && $this->validate($artifact, $value));
 
-        return $this->has_errors;
+        return ! $this->has_errors;
     }
 
     /**
