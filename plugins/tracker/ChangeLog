@@ -1,3 +1,6 @@
+Version 5.759 - Tuleap 8.9
+    * request #8642: Export fails when semantic reference a non existant field
+
 Version 5.758 - Tuleap 8.9
     * request #8638: Infinite loop when an user set a negative duration for a burndown
 
