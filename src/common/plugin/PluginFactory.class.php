@@ -178,6 +178,10 @@ class PluginFactory {
         );
     }
 
+    public function getAllPossiblePluginsDir() {
+        return array_merge($this->getOfficialPluginPaths(), array($GLOBALS['sys_custompluginsroot']));
+    }
+
     private function tryPluginPaths(array $potential_paths, $file_name) {
         foreach($potential_paths as $path) {
             $full_path = $path.'/'.$file_name;
@@ -282,7 +286,7 @@ class PluginFactory {
     
     function getNotYetInstalledPlugins() {
         $col     = array();
-        $paths   = array($this->_getCustomPluginsRoot(), $this->_getOfficialPluginsRoot());
+        $paths   = $this->getOfficialPluginPaths();
         $exclude = array('.', '..', 'CVS', '.svn');
         foreach($paths as $path) {
             $dir = openDir($path);
