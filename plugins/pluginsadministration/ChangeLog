@@ -1,3 +1,6 @@
+Version 1.14 - Tuleap 8.10
+    * Allow to install external plugins
+
 Version 1.13 - Tuleap 8.8
     * request #8521: ForgeUpgrade skip ALL pending buckets when installing a new plugin
 
