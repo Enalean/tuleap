@@ -88,38 +88,6 @@ class CrossReference extends Error {
                $crossref->getRefSourceType() == $this->getRefTargetType();
     }
     
-	/** DB functions */
-	function createDbCrossRef() {
-		
-		$sql='INSERT INTO cross_references (created_at, user_id,'.
-		'source_type,source_keyword,source_id,source_gid,target_type,target_keyword, target_id,' .
-		' target_gid) VALUES ';
-		
-		$sql .= "(". (time()) .",". db_ei($this->userId) .", '". db_es($this->insertSourceType) ."', '".
-				 db_es($this->sourceKey) ."' ,'".db_es($this->refSourceId) ."' ,". db_ei($this->refSourceGid) .", '". db_es($this->insertTargetType) ."', '".
-	 			db_es($this->targetKey) ."' ,'".db_es($this->refTargetId) ."', ".db_ei($this->refTargetGid) . ")";
-    	$res = db_query($sql);
-      	if ($res) {
-			return true;
-      	} else {
-			return false;
-      	}
-	
-	}
-
-    function existInDb(){
-    	
-    	$sql="SELECT * from cross_references WHERE source_id='". db_es($this->refSourceId)."'" .
-    		" AND target_id='". db_es($this->refTargetId)."' AND source_gid='". db_ei($this->refSourceGid)."' ".
-    		"AND target_gid='". db_ei($this->refTargetGid)."' AND source_type='". db_es($this->insertSourceType) ."' AND target_type='". db_es($this->insertTargetType) ."'";
-    	$res = db_query($sql);
-    	if (!$res || db_numrows($res) < 1) {
-    		return false;
-    	}else{
-    		return true;
-    	}
-    }
-    
     function computeUrls(){
     	$group_param = '';
 		if ($this->refTargetGid!=100) { $group_param="&group_id=".$this->refTargetGid;}
@@ -129,18 +97,4 @@ class CrossReference extends Error {
         $this->sourceUrl=get_server_url()."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
 	
     }    
-    
-    function deleteCrossReference(){
-        $sql = "DELETE FROM cross_references 
-		        WHERE ((target_gid=" . db_ei($this->refTargetGid) . " AND target_id='" . db_ei($this->refTargetId) . "' AND target_type='" . db_es($this->refTargetType) . "' )
-				     AND (source_gid=" . db_ei($this->refSourceGid) . " AND source_id='" . db_ei($this->refSourceId) . "' AND source_type='" . db_es($this->refSourceType) . "' ))
-                     OR ((target_gid=" . db_ei($this->refSourceGid) . " AND target_id='" . db_ei($this->refSourceId) . "' AND target_type='" . db_es($this->refSourceType) . "' )
-				     AND (source_gid=" . db_ei($this->refTargetGid) . " AND source_id='" . db_ei($this->refTargetId)  . "' AND source_type='" . db_es($this->refTargetType) . "' ))";
-        $res = db_query($sql);
-        if ($res) {
-            return true;
-      	} else {
-            return false;
-      	}
-    }
 }

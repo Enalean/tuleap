@@ -53,5 +53,66 @@ class CrossReferenceDao extends DataAccessObject {
                    OR (target_type = $nature AND target_id = $id AND target_gid = $group_id)";
         return $this->update($sql);
     }
+
+    public function createDbCrossRef($cross_ref) {
+
+        $sql="INSERT INTO {$this->table_name}
+              (created_at,user_id,source_type,source_keyword,source_id,
+               source_gid,target_type,target_keyword, target_id,target_gid)
+              VALUES ( ".
+                (time()) .",".
+                $this->da->quoteSmart((int) $cross_ref->userId) .", ".
+                $this->da->quoteSmart((string) $cross_ref->insertSourceType) .", ".
+                $this->da->quoteSmart((string) $cross_ref->sourceKey) ." ,".
+                $this->da->quoteSmart((string) $cross_ref->refSourceId) ." ,".
+                $this->da->quoteSmart((int) $cross_ref->refSourceGid) .", ".
+                $this->da->quoteSmart((string) $cross_ref->insertTargetType) .", ".
+                $this->da->quoteSmart((string) $cross_ref->targetKey) ." ,".
+                $this->da->quoteSmart((string) $cross_ref->refTargetId) .", ".
+                $this->da->quoteSmart((int) $cross_ref->refTargetGid) .")";
+
+        $res = $this->da->query($sql);
+        return (bool) ($res && !$res->isError());
+    }
+
+    public function existInDb($cross_ref){
+        $sql= "SELECT * from {$this->table_name} WHERE ".
+              "source_id='". db_es($cross_ref->refSourceId)."' AND " .
+              "target_id='". db_es($cross_ref->refTargetId)."' AND ".
+              "source_gid='". db_ei($cross_ref->refSourceGid)."' AND ".
+              "target_gid='". db_ei($cross_ref->refTargetGid)."' AND ".
+              "source_type='". db_es($cross_ref->insertSourceType) ."' AND ".
+              "target_type='". db_es($cross_ref->insertTargetType) ."'";
+        $res = $this->da->query($sql);
+        return (bool) ($res && !$res->isError() && $res->rowCount() >= 1);
+    }
+
+    public function deleteCrossReference($cross_ref){
+        $sql = "DELETE FROM {$this->table_name} WHERE
+                ( ( target_gid=" . db_ei($cross_ref->refTargetGid) . " AND
+                    target_id='" . db_ei($cross_ref->refTargetId) . "' AND
+                    target_type='" . db_es($cross_ref->refTargetType) . "'
+                  )
+                  AND
+                  ( source_gid=" . db_ei($cross_ref->refSourceGid) . " AND
+                    source_id='" . db_ei($cross_ref->refSourceId) . "' AND
+                    source_type='" . db_es($cross_ref->refSourceType) . "'
+                  )
+                )
+                OR
+                ( ( target_gid=" . db_ei($cross_ref->refSourceGid) . " AND
+                    target_id='" . db_ei($cross_ref->refSourceId) . "' AND
+                    target_type='" . db_es($cross_ref->refSourceType) . "'
+                  )
+                  AND
+                  ( source_gid=" . db_ei($cross_ref->refTargetGid) . " AND
+                    source_id='" . db_ei($cross_ref->refTargetId)  . "' AND
+                    source_type='" . db_es($cross_ref->refTargetType) . "'
+                  )
+                )";
+        $res = $this->da->query($sql);
+        return (bool) $res;
+    }
+
 }
 ?>
