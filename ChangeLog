@@ -1,4 +1,4 @@
-Version 8.9 (Not released yet)
+Version 8.9 (Thursday, December 3rd 2015)
 
 	== Enhancement ==
 	* request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
