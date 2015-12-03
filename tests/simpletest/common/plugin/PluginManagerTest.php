@@ -126,6 +126,10 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->expectOnce('createPlugin', array('New_Plugin'));
         $plugin_factory->setReturnReference('createPlugin', $plugin);
 
+        stub($plugin_factory)->getAllPossiblePluginsDir()->returns(array(
+            dirname(__FILE__).'/test'
+        ));
+
         $forgeupgrade_config = mock('ForgeUpgradeConfig');
         expect($forgeupgrade_config)->addPath($GLOBALS['sys_pluginsroot'].'New_Plugin')->once();
         expect($forgeupgrade_config)->recordOnlyPath($GLOBALS['sys_pluginsroot'].'New_Plugin')->once();

@@ -121,11 +121,16 @@ class PluginsAdministrationViews extends Views {
     }
 
     private function displayInstallReadme($name) {
-        $readme_file    = $this->plugin_manager->getInstallReadme($name);
-        $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
+        $readme_content = $this->getFormattedReadme($name);
         if ($readme_content) {
             echo $readme_content;
         }
+    }
+
+    private function getFormattedReadme($name) {
+        $readme_file    = $this->plugin_manager->getInstallReadme($name);
+        $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
+        return $readme_content;
     }
 
     private function displayConfirmationInstallForm($name) {
@@ -294,11 +299,10 @@ class PluginsAdministrationViews extends Views {
 
                 $output .= $plugin->getAdministrationOptions();
 
-                $readme_file    = $plugin->getReadme();
-                $readme_content = $plugin_manager->fetchFormattedReadme($readme_file);
-                if ($readme_content) {
+                $readme = $this->getFormattedReadme($plugin->getName());
+                if ($readme) {
                     $output .= '<h3>Readme</h3>';
-                    $output .= $readme_content;
+                    $output .= $readme;
                 }
 
                 $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';

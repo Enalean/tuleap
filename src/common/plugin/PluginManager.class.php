@@ -208,7 +208,13 @@ class PluginManager {
     }
 
     function getInstallReadme($name) {
-        return $GLOBALS['sys_pluginsroot'] .'/'. $name .'/README';
+        foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
+            $path = $dir.'/'.$name;
+            if (file_exists($path.'/README.mkd') || file_exists($path.'/README')) {
+                return $path.'/README';
+            }
+        }
+        return false;
     }
 
     /**
@@ -310,18 +316,18 @@ class PluginManager {
 
     function _executeSqlStatements($file, $name) {
         $db_corrupted = false;
-        $path_found   = false;
         $path_to_file = '/'.$name.'/db/'.$file.'.sql';
-        $possible_file_names = array(   $GLOBALS['sys_pluginsroot'].$path_to_file,
-                                        $GLOBALS['sys_custompluginsroot'].$path_to_file);
-        while(!$path_found && (list(,$sql_filename) = each($possible_file_names))) {
+
+        foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
+            $sql_filename = $dir.$path_to_file;
             if (file_exists($sql_filename)) {
-                $dbtables = new DBTablesDAO(CodendiDataAccess::instance());
+                $dbtables = new DBTablesDAO();
                 if (!$dbtables->updateFromFile($sql_filename)) {
                     $db_corrupted = true;
                 }
             }
         }
+
         return $db_corrupted;
     }
 
