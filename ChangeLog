@@ -2,6 +2,7 @@ Version 8.10 (Not released yet)
 
 	== Development ==
 	* Allow to install external plugins
+	* task #8567: Move DB access to CrossReferenceDao
 
     == Plugins ==
 	* docman: 2.26.91
