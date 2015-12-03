@@ -3,6 +3,9 @@ Version 8.10 (Not released yet)
 	== Development ==
 	* Allow to install external plugins
 
+    == Plugins ==
+	* docman: 2.26.91
+
 Version 8.9 (Thursday, December 3rd 2015)
 
 	== Enhancement ==

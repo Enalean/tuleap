@@ -1,3 +1,6 @@
+Version 2.26.91 - Tuleap 8.10
+    * request #8648: fix typo in error message
+
 Version 2.26.90 - Tuleap 8.9
     * request #8599: Manage exception and add logging for docman export
 
