@@ -7,7 +7,7 @@ You need to add the following instructions at the end of your sudoers configurat
 
     Defaults:gitolite !requiretty
     Defaults:gitolite !env_reset
-    gitolite ALL= (codendiadm) SETENV: NOPASSWD: /usr/share/codendi/plugins/git/hooks/post-receive.php
+    gitolite ALL= (codendiadm) SETENV: NOPASSWD: /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/git/hooks/post-receive.php*
 
 === User friendly URLs ===
 
