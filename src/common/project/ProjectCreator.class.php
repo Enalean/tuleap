@@ -77,14 +77,15 @@ class ProjectCreator {
     /**
      * Build a new project
      *
-     * @param Array $data project data
+     * @param ProjectCreationData $data project data
      * @return Project created
      */
-    public function build($data){
-        if (!$this->ruleShortName->isValid($data['project']['form_unix_name'])) {
+    public function build(ProjectCreationData $data) {
+        if (!$this->ruleShortName->isValid($data->getUnixName())) {
             throw new Project_InvalidShortName_Exception($this->ruleShortName->getErrorMessage());
         }
-        if (!$this->ruleFullName->isValid($data['project']['form_full_name'])) {
+
+        if (!$this->ruleFullName->isValid($data->getFullName())) {
             throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
         }
 
@@ -109,17 +110,18 @@ class ProjectCreator {
      * $data['project']['services'][$arr['service_id']]['is_used'];
      * $data['project']['services'][$arr['service_id']]['server_id'];
      *
-     * @param String $shortName
-     * @param String $publicName
+     * @param String $shortName, the unix name
+     * @param String $publicName, the full name
      * @param Array $data
      *
      * @return Project
      */
-    public function create($shortName, $publicName, $data) {
-        $data['project']['form_unix_name'] = $shortName;
-        $data['project']['form_full_name'] = $publicName;
+    public function create($shortName, $publicName, array $data) {
+        $creationData = ProjectCreationData::buildFromFormArray($data);
 
-        return $this->build($data);
+        $creationData->setUnixName($shortName);
+        $creationData->setFullName($publicName);
+        return $this->build($creationData);
     }
 
     private function fakeGroupIdIntoHTTPParams($group_id){
@@ -153,9 +155,9 @@ class ProjectCreator {
      * - Copy Truncated email option
      * - Raise an event for plugin configuration
      *
-     * @param  data
+     * @param  data ProjectCreationData
      */
-    protected function createProject($data) {
+    protected function createProject(ProjectCreationData $data) {
         $admin_user = UserManager::instance()->getCurrentUser();
 
         $group_id = $this->createGroupEntry($data);
@@ -238,30 +240,32 @@ class ProjectCreator {
         if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
           $http_domain=$GLOBALS['sys_default_domain'];
         } else {
-          $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
+          $http_domain=$data->getUnixName().'.'.$GLOBALS['sys_default_domain'];
         }
 
-        if (isset($data['project']['is_public'])) {
-            $access = ($data['project']['is_public']) ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
-        } else {
-            $access = ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
-        }
+        $access = $data->getAccess();
 
         // make group entry
         $insert_data = array(
-            'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_full_name'])) ."'",
+            'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data->getFullName())) ."'",
             'access'              => "'".$access."'",
-            'unix_group_name'     => "'". db_es($data['project']['form_unix_name']) ."'",
+            'unix_group_name'     => "'". db_es($data->getUnixName()) ."'",
             'http_domain'         => "'". db_es($http_domain) ."'",
             'status'              => "'P'",
             'unix_box'            => "'shell1'",
             'cvs_box'             => "'cvs1'",
-            'short_description'   => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_short_description'])) ."'",
+            'short_description'   => "'". htmlspecialchars(mysql_real_escape_string($data->getShortDescription())) ."'",
             'register_time'       => time(),
             'rand_hash'           => "'". md5($random_num) ."'",
-            'built_from_template' => db_ei($data['project']['built_from_template']),
-            'type'                => ($data['project']['is_test'] ? 3 : 1),
+            'built_from_template' => db_ei($data->getTemplateId()),
+            'type'                => ($data->isTest() ? 3 : 1)
         );
+        if ($data->getLicense()) {
+            $insert_data['license'] = "'" . mysql_real_escape_string($data->getLicense()) . "'";
+            if ($data->getLicenseOther()) {
+                $insert_data['license_other'] = "'" . mysql_real_escape_string($data->getLicenseOther()) . "'";
+            }
+        }
         $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
         $result=db_query($sql);
 
@@ -280,8 +284,9 @@ class ProjectCreator {
         $descfieldsinfos = getProjectsDescFieldsInfos();
 
         for($i=0;$i<sizeof($descfieldsinfos);$i++){
-            if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]) && ($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]!='')){
-                $sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]))."')";
+            $desc_id_val = $data->getField($descfieldsinfos[$i]["group_desc_id"]);
+            if($desc_id_val !== null && $desc_id_val != ''){
+                $sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($desc_id_val))."')";
                 $result=db_query($sql);
 
                 if (!$result) {
@@ -291,12 +296,10 @@ class ProjectCreator {
             }
         }
 
-        if (isset($data['project']['trove'])) {
-            foreach($data['project']['trove'] as $root => $values) {
-                foreach($values as $value) {
-                    db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
-                             ."group_id,trove_cat_root) VALUES (". db_ei($value) .",". time() .",". db_ei($group_id) .",". db_ei($root) .")");
-                }
+        foreach($data->getTroveData() as $root => $values) {
+            foreach($values as $value) {
+                db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
+                         ."group_id,trove_cat_root) VALUES (". db_ei($value) .",". time() .",". db_ei($group_id) .",". db_ei($root) .")");
             }
         }
     }
@@ -343,8 +346,9 @@ class ProjectCreator {
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
-            if (isset($data['project']['services'][$arr['service_id']]['is_used'])) {
-                 $is_used = $data['project']['services'][$arr['service_id']]['is_used'];
+            $service_info = $data->getServiceInfo($arr['service_id']);
+            if (isset($service_info['is_used'])) {
+                 $is_used = $service_info['is_used'];
             } else {
                $is_used = '0';
                if ($arr['short_name'] == 'admin' || $arr['short_name'] == 'summary') {
@@ -352,10 +356,8 @@ class ProjectCreator {
                }
             }
 
-            if(isset($data['project']['services'][$arr['service_id']]['server_id']) &&
-                $data['project']['services'][$arr['service_id']]['server_id'])
-            {
-                $server_id = $data['project']['services'][$arr['service_id']]['server_id'];
+            if(isset($service_info['server_id']) && $service_info['server_id']) {
+                $server_id = $service_info['server_id'];
             } else {
                 $server_id = 'null';
             }
