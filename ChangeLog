@@ -4,6 +4,7 @@ Version 8.10 (Not released yet)
 	* Allow to install external plugins
 	* task #8567: Move DB access to CrossReferenceDao
 	* task #8594: Move SQL access from ReferenceManager to DAO
+        * story #8572: Transform untyped $data to object in ProjectCreator
 
     == Plugins ==
 	* docman: 2.26.91
