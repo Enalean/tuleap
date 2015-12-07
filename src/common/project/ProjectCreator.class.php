@@ -44,7 +44,7 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 /**
  * Manage creation of a new project in the forge.
  *
- * For now, mainly a wrapper for create_project method
+ * For now, mainly a wrapper for createProject method
  */
 class ProjectCreator {
 
@@ -138,7 +138,7 @@ class ProjectCreator {
     }
 
     /**
-     * create_project
+     * createProject
      *
      * Create a new project
      *
