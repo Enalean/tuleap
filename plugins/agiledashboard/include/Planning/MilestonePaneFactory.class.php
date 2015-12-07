@@ -152,9 +152,16 @@ class Planning_MilestonePaneFactory {
     }
 
     private function buildDefaultPane(Planning_Milestone $milestone) {
-        $pane_info = $this->list_of_default_pane_info[$milestone->getArtifactId()];
-        $pane_info->setActive(true);
-        $this->active_pane[$milestone->getArtifactId()] = $this->getPlanningV2Pane($pane_info, $milestone);
+        if (! isset($this->list_of_default_pane_info[$milestone->getArtifactId()])) {
+            $pane_info                                                    = $this->pane_info_factory->getContentPaneInfo($milestone);
+            $this->active_pane[$milestone->getArtifactId()]               = $this->getContentPane($pane_info, $milestone);
+            $this->list_of_default_pane_info[$milestone->getArtifactId()] = $pane_info;
+        } else {
+            $pane_info = $this->list_of_default_pane_info[$milestone->getArtifactId()];
+            $pane_info->setActive(true);
+            $this->active_pane[$milestone->getArtifactId()] = $this->getPlanningV2Pane($pane_info, $milestone);
+        }
+
     }
 
     private function getPlanningPaneInfo(Planning_Milestone $milestone) {
