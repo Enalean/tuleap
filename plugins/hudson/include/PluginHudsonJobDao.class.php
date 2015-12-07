@@ -1,23 +1,23 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/dao/include/DataAccessObject.class.php');
 
 /**
  *  Data Access Object for PluginHudsonJob 
@@ -88,31 +88,56 @@ class PluginHudsonJobDao extends DataAccessObject {
     * create a row in the table plugin_hudson_job 
     * @return inserted job id if there is no error
     */
-    function createHudsonJob($group_id, $hudson_job_url, $job_name, $use_svn_trigger = false, $use_cvs_trigger = false, $token = null) {
-        $sql = sprintf("INSERT INTO plugin_hudson_job (group_id, job_url, name, use_svn_trigger, use_cvs_trigger, token) VALUES (%s, %s, %s, %s, %s, %s)",
-                $this->da->quoteSmart($group_id),
-                $this->da->quoteSmart($hudson_job_url),
-                $this->da->quoteSmart($job_name),
-                ($use_svn_trigger?1:0),
-                ($use_cvs_trigger?1:0),
-                (($token !== null)?$this->da->quoteSmart($token):$this->da->quoteSmart(''))
-                );
-        if ($this->update($sql)) {
-            return $this->da->lastInsertId();
-        }
-        return false;
+    public function createHudsonJob(
+            $project_id,
+            $hudson_job_url,
+            $job_name,
+            $use_svn_trigger = false,
+            $use_cvs_trigger = false,
+            $token = null,
+            $svn_paths
+    ) {
+        $project_id      = $this->da->quoteSmart($project_id);
+        $hudson_job_url  = $this->da->quoteSmart($hudson_job_url);
+        $job_name        = $this->da->quoteSmart($job_name);
+        $use_svn_trigger = $this->da->escapeInt($use_svn_trigger);
+        $use_cvs_trigger = $this->da->escapeInt($use_cvs_trigger);
+        $token           = ($token !== null)? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
+        $svn_paths       = $this->da->quoteSmart($svn_paths);
+
+        $sql = "INSERT INTO plugin_hudson_job (group_id, job_url, name, use_svn_trigger, use_cvs_trigger, token, svn_paths)
+                VALUES ($project_id, $hudson_job_url, $job_name, $use_svn_trigger, $use_cvs_trigger, $token, $svn_paths)";
+
+        return $this->updateAndGetLastId($sql);
     }
     
-    function updateHudsonJob($job_id, $hudson_job_url, $job_name, $use_svn_trigger = false, $use_cvs_trigger = false, $token = null) {
-        $sql = sprintf("UPDATE plugin_hudson_job SET job_url = %s, name = %s, use_svn_trigger = %s, use_cvs_trigger = %s, token = %s WHERE job_id = %s",
-           		$this->da->quoteSmart($hudson_job_url),
-           		$this->da->quoteSmart($job_name),
-           		($use_svn_trigger?1:0),
-                ($use_cvs_trigger?1:0),
-                (($token !== null)?$this->da->quoteSmart($token):$this->da->quoteSmart('')),
-                $this->da->quoteSmart($job_id));
-        $updated = $this->update($sql);
-        return $updated;
+    public function updateHudsonJob(
+        $job_id,
+        $hudson_job_url,
+        $job_name,
+        $use_svn_trigger = false,
+        $use_cvs_trigger = false,
+        $token = null,
+        $svn_paths
+    ) {
+        $job_id          = $this->da->quoteSmart($job_id);
+        $hudson_job_url  = $this->da->quoteSmart($hudson_job_url);
+        $job_name        = $this->da->quoteSmart($job_name);
+        $use_svn_trigger = $this->da->escapeInt($use_svn_trigger);
+        $use_cvs_trigger = $this->da->escapeInt($use_cvs_trigger);
+        $token           = ($token !== null)? $this->da->quoteSmart($token) : $this->da->quoteSmart('');
+        $svn_paths       = $this->da->quoteSmart($svn_paths);
+
+        $sql = "UPDATE plugin_hudson_job
+                SET job_url = $hudson_job_url,
+                name = $job_name,
+                use_svn_trigger = $use_svn_trigger,
+                use_cvs_trigger = $use_cvs_trigger,
+                token = $token,
+                svn_paths = $svn_paths
+                WHERE job_id = $job_id";
+
+        return $this->update($sql);
     }
 
     function deleteHudsonJob($job_id) {
@@ -148,7 +173,4 @@ class PluginHudsonJobDao extends DataAccessObject {
                   ".$condition;
         return $this->retrieve($sql);
     }
-
 }
-
-?>
