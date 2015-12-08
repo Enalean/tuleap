@@ -64,7 +64,8 @@ class hudsonPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
-            echo '<script type="text/javascript" src="hudson_tab.js"></script>'."\n";
+            echo '<script type="text/javascript" src="js/hudson_tab.js"></script>'."\n";
+            echo '<script type="text/javascript" src="js/form.js"></script>'."\n";
         }
     }
     

@@ -7,6 +7,7 @@ CREATE TABLE plugin_hudson_job (
   use_svn_trigger tinyint(4) NOT NULL default 0 ,
   use_cvs_trigger tinyint(4) NOT NULL default 0 ,
   token varchar(128) NOT NULL ,
+  svn_paths TEXT NOT NULL,
   INDEX idx_group_id(group_id)
 );
 
