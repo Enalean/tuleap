@@ -12,6 +12,7 @@ Version 8.10 (Not released yet)
 	* docman: 2.26.91
 	* tracker: 5.761
 	* git: 4.97
+	* hudson: 1.21
 
     == Themes ==
 	* FlamingParrot: 1.115
