@@ -1,3 +1,6 @@
+Version 5.761 - Tuleap 8.10
+    * request #8650: Errors feedback is not relevant
+
 Version 5.760 - Tuleap 8.10
     * request #8535: It should be possible to validate import XML externaly
 
