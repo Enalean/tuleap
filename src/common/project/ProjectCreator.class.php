@@ -260,12 +260,6 @@ class ProjectCreator {
             'built_from_template' => db_ei($data->getTemplateId()),
             'type'                => ($data->isTest() ? 3 : 1)
         );
-        if ($data->getLicense()) {
-            $insert_data['license'] = "'" . mysql_real_escape_string($data->getLicense()) . "'";
-            if ($data->getLicenseOther()) {
-                $insert_data['license_other'] = "'" . mysql_real_escape_string($data->getLicenseOther()) . "'";
-            }
-        }
         $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
         $result=db_query($sql);
 
