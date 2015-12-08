@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,11 +35,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @var Planning_Milestone
      */
     private $milestone;
-
-    /**
-     * @var bool
-     */
-    private $enable_qr_code;
 
     /**
      * @var Cardwall_OnTop_Config
@@ -77,16 +72,14 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private $planning_factory;
 
     public function __construct(
-            Cardwall_PaneInfo $info,
-            Planning_Milestone $milestone,
-            $enable_qr_code,
-            Cardwall_OnTop_Config $config,
-            PFUser $user,
-            Planning_MilestoneFactory $milestone_factory
+        Cardwall_PaneInfo $info,
+        Planning_Milestone $milestone,
+        Cardwall_OnTop_Config $config,
+        PFUser $user,
+        Planning_MilestoneFactory $milestone_factory
     ) {
         $this->info                         = $info;
         $this->milestone                    = $milestone;
-        $this->enable_qr_code               = $enable_qr_code;
         $this->config                       = $config;
         $this->user                         = $user;
         $this->milestone_factory            = $milestone_factory;
@@ -150,7 +143,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         return new Cardwall_PaneContentPresenter(
             $board,
-            $this->getQrCode(),
             $redirect_parameter,
             $this->getSwitchDisplayAvatarsURL(),
             $display_preferences->shouldDisplayAvatars(),
@@ -236,16 +228,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         );
     }
 
-    /**
-     * @return Cardwall_QrCode
-     */
-    private function getQrCode() {
-        if ($this->enable_qr_code) {
-            return new Cardwall_QrCode($_SERVER['REQUEST_URI'] .'&pv=2');
-        }
-        return false;
-    }
-
     private function getSwitchDisplayAvatarsURL() {
         if ($this->user->isAnonymous()) {
             return false;
@@ -269,4 +251,3 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return $switch_display_username_url;
     }
 }
-?>

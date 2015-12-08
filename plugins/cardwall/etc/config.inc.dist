@@ -1,9 +1,0 @@
-<?php
-
-// Enable/Disable display of a QR code to provide a quick access for mobile
-// devices.
-// It relies on Google QR code generator so, on intranet you might want to 
-// disable it.
-$display_qr_code = true;
-
-?>

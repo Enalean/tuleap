@@ -322,7 +322,6 @@ class cardwallPlugin extends Plugin {
             return new Cardwall_Pane(
                 $info,
                 $milestone,
-                $this->getPluginInfo()->getPropVal('display_qr_code'),
                 $config,
                 $user,
                 $milestone_factory
