@@ -139,6 +139,14 @@ msgstr ""
 "\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">l’outil de "
 "suivi</a>."
 
+#: src/app/kanban-item/kanban-item.tpl.html
+msgid "Move to bottom"
+msgstr "Déplacer en bas"
+
+#: src/app/kanban-item/kanban-item.tpl.html
+msgid "Move to top"
+msgstr "Déplacer en haut"
+
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"

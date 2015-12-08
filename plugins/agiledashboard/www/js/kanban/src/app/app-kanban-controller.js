@@ -49,6 +49,7 @@
             columns: kanban.columns
         };
         self.backlog = _.extend(kanban.backlog, {
+            id: 'backlog',
             content: [],
             filtered_content: [],
             loading_items: true,
@@ -58,6 +59,7 @@
             is_small_width: false
         });
         self.archive = _.extend(kanban.archive, {
+            id: 'archive',
             content: [],
             filtered_content: [],
             loading_items: true,
@@ -104,6 +106,8 @@
         self.showEditModal                = showEditModal;
         self.moveItemAtTheEnd             = moveItemAtTheEnd;
         self.switchViewMode               = switchViewMode;
+        self.moveKanbanItemToTop          = moveKanbanItemToTop;
+        self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
 
         initViewMode();
         loadColumns();
@@ -244,7 +248,9 @@
                 } else {
                     KanbanService
                         .moveInBacklog(kanban.id, dropped_item.id, compared_to)
-                        .then(null, reload);
+                        .then(function() {
+                            updateItemColumn(dropped_item, 'backlog');
+                        }, reload);
                 }
             }
 
@@ -256,12 +262,10 @@
                 } else {
                     KanbanService
                         .moveInArchive(kanban.id, dropped_item.id, compared_to)
-                        .then(
-                            function () {
-                                updateTimeInfo('archive', dropped_item);
-                            },
-                            reload
-                    );
+                        .then(function () {
+                            updateItemColumn(dropped_item, 'archive');
+                            updateTimeInfo('archive', dropped_item);
+                        }, reload);
                 }
             }
 
@@ -273,12 +277,10 @@
                 } else {
                     KanbanService
                         .moveInColumn(kanban.id, column_id, dropped_item.id, compared_to)
-                        .then(
-                            function () {
-                                updateTimeInfo(column_id, dropped_item);
-                            },
-                            reload
-                    );
+                        .then(function () {
+                            updateItemColumn(dropped_item, column_id);
+                            updateTimeInfo(column_id, dropped_item);
+                        }, reload);
                 }
             }
 
@@ -586,23 +588,17 @@
             return previous_column !== new_column;
         }
 
-        /**
-         * Move item in column at index. Removes the item from
-         * its previous column.
-         * @param  {Object} item      The kanban item to move
-         * @param  {int}    column_id The destination column's id
-         * @return {Promise}          A promise that will be resolved when the item has been moved.
-         */
         function moveItemAtTheEnd(item, column_id) {
             var previous_column          = getColumn(item.in_column),
                 new_column               = getColumn(column_id),
                 previous_index_in_column = getItemIndex(item);
-            item.updating                = true;
+                compared_to              = getComparedToBeLastItemOfColumn(new_column);
 
-            var promise = moveItemInBackend(item, column_id).then(function() {
+            item.updating = true;
+
+            var promise = moveItemInBackend(item, column_id, compared_to).then(function() {
                 item.updating  = false;
-                // Update in the view
-                item.in_column = column_id;
+                updateItemColumn(item, column_id);
                 previous_column.content.splice(previous_index_in_column, 1);
                 new_column.content.push(item);
             }, reload);
@@ -610,30 +606,40 @@
             return promise;
         }
 
-        function moveItemInBackend(item, column_id) {
-            var promise,
-                new_column  = getColumn(column_id),
-                compared_to = getComparedToForLastItemOfColumn(new_column);
+        function moveItemInBackend(item, column_id, compared_to) {
+            var promise;
+
             if (column_id === 'archive') {
-                promise = KanbanService
-                    .moveInArchive(kanban.id, item.id, compared_to);
+                promise = KanbanService.moveInArchive(kanban.id, item.id, compared_to);
             } else if (column_id === 'backlog') {
-                promise = KanbanService
-                    .moveInBacklog(kanban.id, item.id, compared_to);
+                promise = KanbanService.moveInBacklog(kanban.id, item.id, compared_to);
             } else if (column_id) {
-                promise = KanbanService
-                    .moveInColumn(kanban.id, column_id, item.id, compared_to);
+                promise = KanbanService.moveInColumn(kanban.id, column_id, item.id, compared_to);
             }
 
             return promise;
         }
 
-        function getComparedToForLastItemOfColumn(column) {
+        function getComparedToBeFirstItemOfColumn(column) {
             if (column.content.length === 0) {
                 return null;
             }
 
-            var last_item = column.content[column.content.length - 1];
+            var first_item  = column.content[0];
+            var compared_to = {
+                direction: 'before',
+                item_id: first_item.id
+            };
+
+            return compared_to;
+        }
+
+        function getComparedToBeLastItemOfColumn(column) {
+            if (column.content.length === 0) {
+                return null;
+            }
+
+            var last_item   = column.content[column.content.length - 1];
             var compared_to = {
                 direction: 'after',
                 item_id: last_item.id
@@ -656,7 +662,7 @@
 
         function getBoardColumn(id) {
             return _.find(self.board.columns, function(column) {
-                return column.id === id;
+                return column.id === parseInt(id, 10);
             });
         }
 
@@ -726,15 +732,39 @@
             dropped_item.timeinfo[column_id] = new Date();
         }
 
-        function removeItemInColumn(item_id, column) {
-            var column_remove = getColumn(column);
+        function removeItemInColumn(item_id, column_id) {
+            var column_remove = getColumn(column_id);
             _.remove(column_remove.content, {
                 id: item_id
             });
         }
 
-        function updateItemColumn(item, column) {
-            item.in_column = column;
+        function updateItemColumn(item, column_id) {
+            item.in_column = column_id;
+        }
+
+        function moveKanbanItemToTop(item) {
+            var column      = getColumn(item.in_column),
+                compared_to = getComparedToBeFirstItemOfColumn(column);
+
+            removeItemInColumn(item.id, column.id);
+            column.content.unshift(item);
+
+            moveItemInBackend(item, column.id, compared_to).then(function() {
+                // Nothing to do
+            }, reload);
+        }
+
+        function moveKanbanItemToBottom(item) {
+            var column      = getColumn(item.in_column),
+                compared_to = getComparedToBeLastItemOfColumn(column);
+
+            removeItemInColumn(item.id, column.id);
+            column.content.push(item);
+
+            moveItemInBackend(item, column.id, compared_to).then(function() {
+                // Nothing to do
+            }, reload);
         }
 
         function listenNodeJSServer() {
