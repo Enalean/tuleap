@@ -14,7 +14,7 @@
     <ul class="nav nav-list">
         {{#sidebar}}
             <li {{#enabled}}class="active"{{/enabled}}>
-                <a id="{{ id }}" href="{{{ link }}}" title="{{{ name }}}"><i class="{{ icon }}"></i> {{{ label }}}</a>
+                <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}"><i class="{{ icon }}"></i> {{{ label }}}</a>
             </li>
         {{/sidebar}}
     </ul>
