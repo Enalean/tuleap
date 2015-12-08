@@ -1,3 +1,6 @@
+Version 4.97 - Tuleap 8.10
+    * request #8661: Git post receive hook do not rely on a shebang anymore
+
 Version 4.96 - Tuleap 8.9
     * request #8590: Properly generate absolute server URL when behind a reverse proxy
 
