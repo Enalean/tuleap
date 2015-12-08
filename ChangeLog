@@ -6,9 +6,11 @@ Version 8.10 (Not released yet)
 	* task #8594: Move SQL access from ReferenceManager to DAO
         * story #8572: Transform untyped $data to object in ProjectCreator
 	* story #8672 Accessibility: services on the left menu
+	* request #8535: It should be possible to validate import XML externaly
 
     == Plugins ==
 	* docman: 2.26.91
+	* tracker: 5.760
 
     == Themes ==
 	* FlamingParrot: 1.115
