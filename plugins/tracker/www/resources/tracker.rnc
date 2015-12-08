@@ -1,7 +1,7 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
-include "tracker-definition.rnc"
+grammar {
+    include "tracker-definition.rnc"
 
-start = element tracker {
-    tracker
+    start = element tracker { tracker }
 }

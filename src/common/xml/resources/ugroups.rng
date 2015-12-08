@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <include href="ugroups-definition.rng"/>
   <start>
     <element name="ugroups">
-      <oneOrMore>
-        <element name="ugroup">
-          <attribute name="name">
-            <ref name="ugroup_name"/>
-          </attribute>
-          <attribute name="description">
-            <data type="string"/>
-          </attribute>
-          <element name="members">
-            <zeroOrMore>
-              <element name="member">
-                <ref name="user_content"/>
-              </element>
-            </zeroOrMore>
-          </element>
-        </element>
-      </oneOrMore>
+      <ref name="ugroups"/>
     </element>
   </start>
-  <define name="user_content">
-    <attribute name="format">
-      <choice>
-        <value>username</value>
-        <value>ldap</value>
-        <value>id</value>
-      </choice>
-    </attribute>
-    <data type="string"/>
-  </define>
-  <define name="ugroup_name">
-    <data type="string">
-      <param name="pattern">[a-zA-Z0-9_\-]+</param>
-    </data>
-  </define>
 </grammar>

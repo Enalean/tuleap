@@ -44,6 +44,10 @@ AUTOLOAD_EXCLUDES=mediawiki|tests|template
 default:
 	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'less-dev' 'api_test' 'api_test_group'"
 
+#
+# Utilities
+#
+
 doc:
 	$(MAKE) -C documentation all
 
@@ -68,7 +72,7 @@ autoload-with-userid:
 		done;
 
 autoload-docker:
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --autoload
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --autoload
 
 autoload-dev:
 	@tools/utils/autoload.sh
@@ -80,7 +84,44 @@ less-dev:
 	@tools/utils/less.sh watch `pwd`
 
 less-docker:
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --less
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --less
+
+## RNG generation
+
+rnc2rng-docker: clean-rng
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --rnc2rng
+
+rnc2rng: src/common/xml/resources/project/project.rng \
+	 src/common/xml/resources/users.rng  \
+	 src/common/xml/resources/svn.rng \
+	 src/common/xml/resources/ugroups.rng \
+	 plugins/tracker/www/resources/tracker.rng \
+	 plugins/tracker/www/resources/trackers.rng \
+	 plugins/tracker/www/resources/artifacts.rng \
+	 plugins/agiledashboard/www/resources/xml_project_agiledashboard.rng \
+	 plugins/cardwall/www/resources/xml_project_cardwall.rng
+
+src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/www/resources/tracker-definition.rnc src/common/xml/resources/ugroups-definition.rnc src/common/xml/resources/svn-definition.rnc
+
+src/common/xml/resources/svn.rng: src/common/xml/resources/svn.rnc src/common/xml/resources/svn-definition.rnc
+
+src/common/xml/resources/ugroups.rng: src/common/xml/resources/ugroups.rnc src/common/xml/resources/ugroups-definition.rnc
+
+plugins/tracker/www/resources/trackers.rng: plugins/tracker/www/resources/trackers.rnc plugins/tracker/www/resources/tracker-definition.rnc plugins/tracker/www/resources/artifact-definition.rnc plugins/tracker/www/resources/triggers.rnc
+
+plugins/tracker/www/resources/tracker.rng: plugins/tracker/www/resources/tracker.rnc plugins/tracker/www/resources/tracker-definition.rng
+
+plugins/tracker/www/resources/artifacts.rng: plugins/tracker/www/resources/artifacts.rnc plugins/tracker/www/resources/artifact-definition.rng
+
+%.rng: %.rnc
+	trang -I rnc -O rng $< $@
+
+clean-rng:
+	find . -type f -name "*.rng" | xargs rm -f
+
+#
+# Tests and all
+#
 
 composer_update:
 	cp tests/rest/bin/composer.json .

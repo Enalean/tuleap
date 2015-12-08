@@ -36,11 +36,11 @@ class XML_ParseException extends Exception {
     }
 
     public function getErrors() {
-        $errors = array();
-        foreach ($this->errors as $error) {
-            $errors[] = $error.' in '.$this->indented_xml[$error->getLine()-1].'';
-        }
-        return $errors;
+        return $this->errors;
+    }
+
+    public function getSourceXMLForError(XML_ParseError $error) {
+        return $this->indented_xml[$error->getLine()-1];
     }
 
     public function getIndentedXml() {

@@ -1,13 +1,7 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
-include "tracker-definition.rnc"
-include "triggers.rnc"
+grammar {
+    include "tracker-definition.rnc"
 
-start = element trackers {
-    element tracker {
-        tracker
-    }*,
-    element triggers {
-        triggers
-    }?
+    start = element trackers { trackers }
 }

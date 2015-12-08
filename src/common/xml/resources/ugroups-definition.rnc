@@ -1,0 +1,17 @@
+ugroups =
+    element ugroup { ugroup }+
+
+ugroup =
+    attribute name { ugroup_name },
+    attribute description { xsd:string },
+    element members {
+        element member {
+            user_content
+        }*
+    }
+
+user_content =
+    attribute format { "username" | "ldap" | "id" },
+    xsd:string
+
+ugroup_name = xsd:string { pattern = "[a-zA-Z0-9_\-]+" }

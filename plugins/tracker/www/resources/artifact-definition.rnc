@@ -1,8 +1,13 @@
+artifacts =
+    element artifact {
+        artifact
+    }*
+
 artifact =
     attribute id { xsd:int },
     attribute tracker_id { xsd:int }?,
     element changeset {
-        element submitted_by { user_content },
+        element submitted_by { tracker_user_content },
         element submitted_on { date_content },
         element comments     { comments },
         element field_change { field_content }*
@@ -20,7 +25,7 @@ artifact =
         element comment { comment_content }*
 
     comment_content =
-        element submitted_by { user_content },
+        element submitted_by { tracker_user_content },
         element submitted_on { date_content },
         element body { text_content }
 
@@ -32,7 +37,7 @@ artifact =
         attribute format { "ISO8601" },
         xsd:string
 
-    user_content =
+    tracker_user_content =
         (
             (
                 attribute format { "username" | "ldap" | "id" | "email" }
@@ -112,7 +117,7 @@ artifact =
         (
             empty_value
             | element value  {
-                user_content
+                tracker_user_content
             }*
         )
 
@@ -133,7 +138,7 @@ artifact =
     field_open_list_user =
         attribute type { "open_list" },
         attribute bind { "users" },
-        element value { open_list_content | user_content }*
+        element value { open_list_content | tracker_user_content }*
 
     field_open_list_ugroup =
         attribute type { "open_list" },
