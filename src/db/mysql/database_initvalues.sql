@@ -66,12 +66,13 @@ INSERT INTO user SET \
         user_id = 101, \
         user_name = 'admin', \
         email = 'codendi-admin@_DOMAIN_NAME_', \
-        user_pw = '6f3cac6213ffceee27cc85414f458caa', \
+        password = 'SITEADMIN_PASSWORD', \
+        user_pw = '', \
         realname = 'Site Administrator', \
         register_purpose = NULL, \
         status = 'A', \
         shell = '/bin/false', \
-        unix_pw = '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', \
+        unix_pw = 'SITEADMIN_UNIX_PASSWORD', \
         unix_status = 'A', \
         unix_uid = 1, \
         unix_box = 'shell1', \
