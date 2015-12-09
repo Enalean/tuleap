@@ -5,10 +5,8 @@ angular
 KanbanItemService.$inject = ['Restangular', 'SharedPropertiesService'];
 
 function KanbanItemService(Restangular, SharedPropertiesService) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
-        RestangularConfigurer.setDefaultHeaders({"X-Client-UUID": SharedPropertiesService.getUUID()});
+    _.extend(Restangular.configuration.defaultHeaders, {
+        'X-Client-UUID': SharedPropertiesService.getUUID()
     });
 
     return {
@@ -18,7 +16,7 @@ function KanbanItemService(Restangular, SharedPropertiesService) {
     };
 
     function createItem(kanban_id, column_id, label) {
-        return rest.one('kanban_items').post('', {
+        return Restangular.one('kanban_items').post('', {
             label: label,
             kanban_id: kanban_id,
             column_id: column_id
@@ -26,14 +24,14 @@ function KanbanItemService(Restangular, SharedPropertiesService) {
     }
 
     function createItemInBacklog(kanban_id, label) {
-        return rest.one('kanban_items').post('', {
+        return Restangular.one('kanban_items').post('', {
             label: label,
             kanban_id: kanban_id
         });
     }
 
     function getItem(item_id) {
-        return rest.one('kanban_items', item_id)
+        return Restangular.one('kanban_items', item_id)
             .get().then(function(response) {
                 return response.data;
             });
