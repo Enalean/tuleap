@@ -556,6 +556,8 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
+# Remove the new SVN plugin
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}

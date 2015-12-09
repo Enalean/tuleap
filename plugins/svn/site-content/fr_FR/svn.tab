@@ -1,0 +1,5 @@
+plugin_svn	descriptor_description	Un gestionnaire de dépots SVN. Supporte la gestion de plusieurs dépôts simultanément.
+plugin_svn	descriptor_name	SVN avec dépôt multiple
+
+plugin_svn	service_lbl_key	SVN
+plugin_svn	service_desc_key	Module SVN de gestion de dépôts SVN multiple
