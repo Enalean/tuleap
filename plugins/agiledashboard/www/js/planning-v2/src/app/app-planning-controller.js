@@ -85,10 +85,11 @@
             submilestone_type    : null,
             use_angular_new_modal: true,
 
-            canBeAddedToBacklogItemChildren       : canBeAddedToBacklogItemChildren,
             appendBacklogItems                    : appendBacklogItems,
+            canBeAddedToBacklogItemChildren       : canBeAddedToBacklogItemChildren,
             canShowBacklogItem                    : canShowBacklogItem,
             displayBacklogItems                   : displayBacklogItems,
+            displayClosedMilestones               : displayClosedMilestones,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
             fetchAllBacklogItems                  : fetchAllBacklogItems,
@@ -96,24 +97,23 @@
             fetchBacklogItems                     : fetchBacklogItems,
             filterBacklog                         : filterBacklog,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
+            getClosedMilestones                   : getClosedMilestones,
             getInitialEffortMessage               : getInitialEffortMessage,
+            getOpenMilestones                     : getOpenMilestones,
             refreshBacklogItem                    : refreshBacklogItem,
             refreshSubmilestone                   : refreshSubmilestone,
             showAddChildModal                     : showAddChildModal,
             showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
             showAddSubmilestoneModal              : showAddSubmilestoneModal,
-            showEditSubmilestoneModal             : showEditSubmilestoneModal,
             showChildren                          : showChildren,
             showCreateNewModal                    : showCreateNewModal,
             showEditModal                         : showEditModal,
-            switchViewMode                        : switchViewMode,
-            toggle                                : toggle,
+            showEditSubmilestoneModal             : showEditSubmilestoneModal,
             switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode,
-            getOpenMilestones                     : getOpenMilestones,
-            getClosedMilestones                   : getClosedMilestones,
-            displayClosedMilestones               : displayClosedMilestones,
-            thereIsOpenMilestonesLoaded           : thereIsOpenMilestonesLoaded,
+            switchViewMode                        : switchViewMode,
             thereIsClosedMilestonesLoaded         : thereIsClosedMilestonesLoaded,
+            thereIsOpenMilestonesLoaded           : thereIsOpenMilestonesLoaded,
+            toggle                                : toggle,
             cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
             cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
             cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
@@ -511,7 +511,7 @@
         function showEditSubmilestoneModal($event, submilestone) {
             var when_left_mouse_click = 1;
 
-            if($event.which === when_left_mouse_click) {
+            if ($event.which === when_left_mouse_click) {
                 $event.preventDefault();
 
                 NewTuleapArtifactModalService.showEdition(
@@ -559,7 +559,7 @@
 
         function showAddItemToSubMilestoneModal(item_type, parent_item) {
             var compared_to;
-            if (!_.isEmpty(parent_item.content)) {
+            if (! _.isEmpty(parent_item.content)) {
                 compared_to = {
                     direction: "before",
                     item_id  : parent_item.content[0].id
@@ -595,7 +595,7 @@
                 });
             };
 
-            if($event.which === when_left_mouse_click) {
+            if ($event.which === when_left_mouse_click) {
                 $event.preventDefault();
 
                 NewTuleapArtifactModalService.showEdition(
@@ -740,7 +740,7 @@
             return true;
         }
 
-        function isItemDroppable(sourceNodeScope, destNodesScope, destIndex) {
+        function isItemDroppable(sourceNodeScope, destNodesScope) {
             if (typeof destNodesScope.$element.attr === 'undefined' || destNodesScope.$element.attr('data-nodrag') === 'true') {
                 return;
             }
@@ -795,7 +795,7 @@
             removeFromDestinationIfNeeded();
 
             function saveChange() {
-                switch(true) {
+                switch (true) {
                     case movedInTheSameList():
                         if (source_list_element.hasClass('backlog')) {
                             DroppedService
@@ -839,8 +839,8 @@
                                 backlog_item_id_dest
                             )
                             .then(function() {
-                                refreshBacklogItem(backlog_item_id_source);
-                                refreshBacklogItem(backlog_item_id_dest);
+                                $scope.refreshBacklogItem(backlog_item_id_source);
+                                $scope.refreshBacklogItem(backlog_item_id_dest);
 
                             }, catchError);
                         break;
@@ -918,7 +918,6 @@
                 if (event.dest.nodesScope.collapsed &&
                     event.dest.nodesScope.$nodeScope.$modelValue.has_children &&
                     ! event.dest.nodesScope.$nodeScope.$modelValue.children.loaded) {
-
                     event.dest.nodesScope.childNodes()[0].remove();
                 }
             }
