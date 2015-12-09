@@ -65,6 +65,7 @@
                             </div>
                         </form>
                     </div>
+
                     <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
                         <button class="btn btn-small btn-link" ng-if="column.user_can_edit_label" ng-click="edit_modal.turnColumnToEditMode(column)"  ng-disabled="edit_modal.processing()">
                             <i class="icon-edit"></i> <span translate>Edit</span>
@@ -76,13 +77,17 @@
                             <span translate>Remove</span>
                         </button>
                     </div>
+
+                    <div data-nodrag="true" ng-if="column.confirm_delete"></div>
                     <div data-nodrag="true" ng-if="column.confirm_delete" class="cancel-deletion">
-                        <button class="btn btn-small" ng-if="column.confirm_delete" ng-click="edit_modal.cancelRemoveColumn(column)"  ng-disabled="edit_modal.processing()">
-                            <span translate>Cancel</span>
-                        </button>
-                        <button class="btn btn-small btn-danger" ng-if="column.user_can_remove_column" ng-click="edit_modal.removeColumn(column)"  ng-disabled="edit_modal.processing()">
-                            <span translate>Confirm deletion</span>
-                        </button>
+                        <div>
+                            <button class="btn btn-small" ng-if="column.confirm_delete" ng-click="edit_modal.cancelRemoveColumn(column)"  ng-disabled="edit_modal.processing()">
+                                <span translate>Cancel</span>
+                            </button>
+                            <button class="btn btn-small btn-danger" ng-if="column.user_can_remove_column" ng-click="edit_modal.removeColumn(column)"  ng-disabled="edit_modal.processing()">
+                                <span translate>Confirm deletion</span>
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li ng-if="edit_modal.kanban.user_can_add_columns" class="add-column">
