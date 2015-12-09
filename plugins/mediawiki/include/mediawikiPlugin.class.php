@@ -44,7 +44,6 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook("role_has_permission");
             $this->_addHook("role_get_setting");
             $this->_addHook("list_roles_by_permission");
-            $this->_addHook("project_admin_plugins"); // to show up in the admin page for group
             $this->_addHook("clone_project_from_template") ;
             $this->_addHook('group_delete');
             $this->_addHook('cssfile');
@@ -566,14 +565,6 @@ class MediaWikiPlugin extends Plugin {
                 }
                 break ;
             }
-        } elseif ($hookname == "project_admin_plugins") {
-            $group_id = $params['group_id'];
-            $group = group_get_object($group_id);
-            if ($group->usesPlugin($this->name))
-                echo util_make_link(
-                    "/plugins/mediawiki/plugin_admin.php?group_id=" .
-                    $group->getID(), _("MediaWiki Plugin admin")) .
-                    "<br />";
         } elseif ($hookname == "clone_project_from_template") {
             $template = $params['template'] ;
             $project = $params['project'] ;

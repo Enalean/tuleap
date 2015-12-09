@@ -38,19 +38,16 @@ class Rule_FRSFileNameTest extends UnitTestCase {
         
         // start
         $this->assertFalse($r->isValid($c.'tototutu'), $c." is not allowed");
-        $this->assertFalse(util_is_valid_filename($c.'tototutu'));
 
         // middle
         $this->assertFalse($r->isValid('toto'.$c.'tutu'), $c." is not allowed");
-        $this->assertFalse(util_is_valid_filename('toto'.$c.'tutu'));
 
         // end
         $this->assertFalse($r->isValid('tototutu'.$c), $c." is not allowed");
-        $this->assertFalse(util_is_valid_filename('tototutu'.$c));
     }
 
     function testNameContainsInvalidCharacterAnywhere() {
-        $str = "[]`!#\"$%^,&*();=|[{}<>?/]";
+        $str = "[]`!\"$%^,&*();=|[{}<>?/]";
         for($i = 0; $i < strlen($str); $i++) {
             $this->_testStringWithChar($str[$i]);
         }
@@ -59,26 +56,20 @@ class Rule_FRSFileNameTest extends UnitTestCase {
     function testNameContainsSpecialCharAtBeginning() {
         $r = new Rule_FRSFileName();
         $this->assertTrue($r->isValid('toto@tutu'));
-        $this->assertTrue(util_is_valid_filename('toto@tutu'));
 
         $this->assertTrue($r->isValid('toto~tutu'));
-        $this->assertTrue(util_is_valid_filename('toto~tutu'));
 
         $this->assertFalse($r->isValid('@toto'));
-        $this->assertFalse(util_is_valid_filename('@toto'));
 
         $this->assertFalse($r->isValid('~toto'));
-        $this->assertFalse(util_is_valid_filename('~toto'));
     }
 
     function testNameContainsDot() {
         $r = new Rule_FRSFileName();
 
         $this->assertFalse($r->isValid('../coin'));
-        $this->assertFalse(util_is_valid_filename('../coin'));
 
         $this->assertFalse($r->isValid('zata/../toto'));
-        $this->assertFalse(util_is_valid_filename('zata/../toto'));
     }
 
 }
