@@ -30,7 +30,8 @@ Mock::generatePartial(
         'getUserManager',
         'getTracker',
         'getComment',
-        'getTrackerPluginConfig'
+        'getTrackerPluginConfig',
+        'isNotificationAssignedToEnabled'
     )
 );
 
@@ -263,6 +264,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
 
         $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
         $current_changeset->setReturnValue('getId', 66);
+        $current_changeset->setReturnValue('isNotificationAssignedToEnabled', false);
         $current_changeset->setReturnReference('getValueDao', $dao);
         $current_changeset->setReturnReference('getFormElementFactory', $fact);
         $current_changeset->setReturnReference('getArtifact', $artifact);
@@ -414,6 +416,7 @@ BODY;
                 'getUserFromRecipientName',
                 'getRecipientFactory',
                 'getTrackerPluginConfig',
+                'isNotificationAssignedToEnabled'
             )
         );
         $changeset->setReturnValue('getUserHelper', $uh);
@@ -421,6 +424,7 @@ BODY;
         $changeset->setReturnValue('getArtifact', $a);
         $changeset->setReturnValue('getLanguageFactory', $languageFactory);
         $changeset->setReturnValue('getRecipientFactory', $this->recipient_factory);
+        $changeset->setReturnValue('isNotificationAssignedToEnabled', false);
 
         return $changeset;
     }

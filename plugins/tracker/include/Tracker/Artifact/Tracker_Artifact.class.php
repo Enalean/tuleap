@@ -538,6 +538,29 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * @return PFUser[]
+     */
+    public function getAssignedTo(PFUser $user) {
+        $assigned_to_field = Tracker_Semantic_Contributor::load($this->getTracker())->getField();
+        if ($assigned_to_field && $assigned_to_field->userCanRead($user)) {
+            $field_value = $this->getLastChangeset()->getValue($assigned_to_field);
+            if ($field_value) {
+                $user_manager   = $this->getUserManager();
+                $user_ids       = $field_value->getValue();
+                $assigned_users = array();
+                foreach($user_ids as $user_id) {
+                    if ($user_id != 100) {
+                        $assigned_user    = $user_manager->getUserById($user_id);
+                        $assigned_users[] = $assigned_user;
+                    }
+                }
+                return $assigned_users;
+            }
+        }
+        return array();
+    }
+
+    /**
      * @param string $title
      */
     public function setTitle($title) {
