@@ -665,7 +665,7 @@ class ReferenceManager {
                 $res = $dao->searchByKeywordAndGroupId($key, $source_gid);
                 if ($key_array = $res->getRow()) {
 
-                    $target_type = $key_array['nature'];
+                    $target_type = $reference->getNature();
                     $target_id   = $value;
                     $target_key  = $key;
                     $target_gid  = $reference->getGroupId();
