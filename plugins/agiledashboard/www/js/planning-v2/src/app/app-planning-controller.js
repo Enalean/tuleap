@@ -504,8 +504,16 @@
             NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
         }
 
-        function showEditModal($event, backlog_item) {
+        function showEditModal($event, backlog_item, milestone) {
             var when_left_mouse_click = 1;
+
+            var callback = function(item_id) {
+                return $scope.refreshBacklogItem(item_id).then(function() {
+                    if (milestone) {
+                        MilestoneService.updateInitialEffort(milestone);
+                    }
+                });
+            };
 
             if($event.which === when_left_mouse_click) {
                 $event.preventDefault();
@@ -514,7 +522,7 @@
                     self.user_id,
                     backlog_item.artifact.tracker.id,
                     backlog_item.artifact.id,
-                    $scope.refreshBacklogItem
+                    callback
                 );
             }
         }
@@ -549,7 +557,9 @@
         function prependItemToSubmilestone(child_item_id, parent_item) {
             return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
                 $scope.items[child_item_id] = data.backlog_item;
+
                 parent_item.content.unshift(data.backlog_item);
+                MilestoneService.updateInitialEffort(parent_item);
             });
         }
 
@@ -594,6 +604,7 @@
                 $scope.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
                 $scope.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
                 $scope.items[backlog_item_id].updating       = false;
+                $scope.items[backlog_item_id].status         = data.backlog_item.status;
             });
         }
 

@@ -13,18 +13,19 @@
             ng-show="! collapsed"
             ng-class="{ hidden: collapsed }"
             data-backlog-item-id="{{ backlog_item.id }}"
-            data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
+            data-nodrag="{{ ! user_can_move_cards }}"
         >
             <li ui-tree-node
                 data-type="{{ backlog_item.trackerId }}"
                 ng-repeat="backlog_item in backlog_item.children.data"
                 class="backlog-item child"
                 ng-if="canShowBacklogItem(backlog_item)"
-                ng-class="{ undraggable: ! milestone.has_user_priority_change_permission }"
-                data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
+                ng-class="{ undraggable: ! user_can_move_cards }"
+                data-nodrag="{{ ! user_can_move_cards }}"
             >
                 <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                    ng-include="'backlog-item/backlog-item-details.tpl.html'">
+                    ng-include="'backlog-item/backlog-item-details.tpl.html'"
+                >
                 </div>
             </li>
         </ul>

@@ -19,7 +19,7 @@
     </a>
     <ul class="dropdown-menu">
         <li>
-            <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item)">
+            <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item, current_milestone)">
                 <i class="icon-edit"></i> <span translate>Edit this item</span>
             </a>
         </li>
@@ -32,7 +32,7 @@
     </ul>
 </div>
 <div ng-if="backlog_item.accept.trackers.length === 0" class="id" data-nodrag="true">
-    <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item)">
+    <a href="/plugins/tracker/?aid={{ backlog_item.id }}" ng-click="showEditModal($event, backlog_item, current_milestone)">
         <span ng-bind-html="backlog_item.short_type + ' #' + backlog_item.id | lowercase | tuleapHighlight:filter_terms"></span>
         <b class="caret"></b>
     </a>

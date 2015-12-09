@@ -96,7 +96,8 @@ describe("PlanningCtrl", function() {
                 "removeAddReorderToBacklog",
                 "defineAllowedBacklogItemTypes",
                 "augmentMilestone",
-                "getSubMilestones"
+                "getSubMilestones",
+                "updateInitialEffort"
             ]);
             _(MilestoneService).map('and').invoke('returnValue', $q.defer().promise);
 
@@ -707,7 +708,7 @@ describe("PlanningCtrl", function() {
                     }
                 }
             };
-            spyOn($scope, "refreshBacklogItem");
+            spyOn($scope, "refreshBacklogItem").and.returnValue(deferred.promise);
 
             $scope.showEditModal(fakeEvent, fakeItem);
 
@@ -767,6 +768,7 @@ describe("PlanningCtrl", function() {
     describe("showAddItemToSubMilestoneModal() -", function() {
         var fakeItemType, fakeArtifact, fakeSubmilestone;
         beforeEach(function() {
+            MilestoneService.updateInitialEffort.and.callThrough();
             BacklogItemService.getBacklogItem.and.returnValue(deferred.promise);
             NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
                 callback(7488);
