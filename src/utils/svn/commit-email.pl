@@ -375,6 +375,8 @@ if ($debug) {
 my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos, 
                                      '-r', $rev);
 
+my @unchanged_dirschanged = @dirschanged;
+
 # Retrive emails watching a given path that appears in the list of changed directories
 
 my @svn_events_mailing_lists = ();
@@ -722,8 +724,7 @@ if (&isGroupSvnTracked) {
 }
 
 # Trigger Continuous Integration build if needed.
-&trigger_hudson_builds($group_id, 'svn');
-
+&trigger_hudson_builds($group_id, 'svn', @unchanged_dirschanged);
 
 exit 0;
 
