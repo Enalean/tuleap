@@ -826,14 +826,10 @@ extends Rule {
     }
 }
 
-/**
- * Check that given value is a valid file name for FRS
- * @see src/www/include/utils.php#util_is_valid_filename
- */
 class Rule_FRSFileName
 extends Rule {
     function isValid($val) {
-        if (preg_match("/[]`!#\"$%^,&*();=|[{}<>?\/]/", $val)) {
+        if (preg_match("/[]`!\"$%^,&*();=|[{}<>?\/]/", $val)) {
             return false;
         }
         if (strpos($val, '@') === 0) { // Starts with at sign

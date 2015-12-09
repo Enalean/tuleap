@@ -942,25 +942,6 @@ function util_user_finder($ident, $strict=true) {
     return '';
 }
 
-
-/**
- * @deprecated
- * @see src/common/valid/Rule.class.php#Rule_FRSFileName
- */
-function util_is_valid_filename ($file) {
-    if (ereg("[]`!#\"$%^,&*();=|[{}<>?/]",$file)) {
-        return false;
-    } 
-    if (ereg("^@|^~",$file)) { // Starts with at sign
-        return false;
-    } 
-    if (strstr($file,'..')) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
 // this function get the css file for the theme
 // Requirement: $sys_user_theme is already
 // set (done by theme.php in pre.php)
