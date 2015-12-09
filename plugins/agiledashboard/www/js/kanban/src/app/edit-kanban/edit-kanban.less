@@ -48,6 +48,7 @@
                 margin: 0;
 
                 > li {
+                    position: relative;
                     display: table-row;
                     background: none;
 
@@ -56,14 +57,17 @@
                         position: relative;
 
                         &.cancel-deletion {
-                            position: absolute;
-                            left: 0;
-                            width: 100%;
+                            > div {
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                width: 400px;
 
-                            .btn-small {
-                                position: relative;
-                                float: right;
-                                top: 2px;
+                                .btn-small {
+                                    position: relative;
+                                    float: right;
+                                    top: 2px;
+                                }
                             }
                         }
                     }
