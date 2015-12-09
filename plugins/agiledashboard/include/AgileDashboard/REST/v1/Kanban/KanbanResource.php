@@ -60,6 +60,7 @@ use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tuleap\RealTime\NodeJSClient;
+use Tracker_Workflow_GlobalRulesViolationException;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -732,6 +733,10 @@ class KanbanResource extends AuthenticatedResource {
                 $this->resources_patcher->commit();
             } catch (Tracker_NoChangeException $exception) {
                 $this->resources_patcher->rollback();
+                throw new RestException(400, $exception->getMessage());
+            } catch (Tracker_Workflow_GlobalRulesViolationException $exception) {
+                $this->resources_patcher->rollback();
+                throw new RestException(400, $exception->getMessage());
             } catch (Exception $exception) {
                 $this->resources_patcher->rollback();
                 throw new RestException(500, $exception->getMessage());
