@@ -63,8 +63,16 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         return $milestone_representation;
     }
 
-    public function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user, $limit, $offset, $order) {
-        $sub_milestones = $this->milestone_factory->getPaginatedSubMilestones($user, $milestone, $limit, $offset, $order);
+    public function getPaginatedSubMilestonesRepresentations(
+        Planning_Milestone $milestone,
+        PFUser $user,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
+        $sub_milestones = $this->milestone_factory
+            ->getPaginatedSubMilestones($user, $milestone, $criterion, $limit, $offset, $order);
 
         $submilestones_representations = array();
         foreach($sub_milestones->getMilestones() as $submilestone) {
@@ -77,35 +85,29 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         );
     }
 
-    public function getPaginatedTopMilestonesRepresentations(Project $project, PFUser $user, $limit, $offset, $order) {
-        $all_top_milestones = $this->getTopMilestones($user, $project);
+    public function getPaginatedTopMilestonesRepresentations(
+        Project $project,
+        PFUser $user,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
+        $sub_milestones = $this->milestone_factory
+            ->getPaginatedTopMilestones($user, $project, $criterion, $limit, $offset, $order);
 
-        if ($order === 'desc') {
-            $all_top_milestones = array_reverse($all_top_milestones);
+        $submilestones_representations = array();
+        foreach($sub_milestones->getMilestones() as $submilestone) {
+            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user);
         }
 
-        $top_milestones                 = array_slice($all_top_milestones, $offset, $limit);
-        $top_milestones_representations = array();
-
-        foreach($top_milestones as $top_milestone) {
-            $top_milestones_representations[] = $this->getMilestoneRepresentation($top_milestone, $user);
-        }
-
-        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations($top_milestones_representations, count($all_top_milestones));
+        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
+            $submilestones_representations,
+            $sub_milestones->getTotalSize()
+        );
     }
 
     private function getBacklogTrackers(Planning_Milestone $milestone) {
         return $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
-    }
-
-    private function getTopMilestones(PFUser $user, Project $project) {
-        $top_milestones = array();
-        $milestones     = $this->milestone_factory->getSubMilestones($user, $this->milestone_factory->getVirtualTopMilestone($user, $project));
-
-        foreach ($milestones as $milestone) {
-            $top_milestones[] = $milestone;
-        }
-
-        return $top_milestones;
     }
 }

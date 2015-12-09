@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -222,6 +222,7 @@ class Planning_VirtualTopMilestonePaneFactory {
         return $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations(
             $project,
             $user,
+            new Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen(),
             self::PRELOAD_PAGINATION_LIMIT,
             self::PRELOAD_PAGINATION_OFFSET,
             self::PRELOAD_PAGINATION_ORDER

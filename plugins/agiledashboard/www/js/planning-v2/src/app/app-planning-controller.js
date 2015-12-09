@@ -43,12 +43,17 @@
         var self = this;
 
         _.extend(self, {
-            init                           : init,
-            loadBacklog                    : loadBacklog,
-            loadInitialBacklogItems        : loadInitialBacklogItems,
-            loadInitialMilestones          : loadInitialMilestones,
-            isMilestoneContext             : isMilestoneContext,
-            canBeAddedToBacklogItemChildren: canBeAddedToBacklogItemChildren
+            init                            : init,
+            loadBacklog                     : loadBacklog,
+            loadInitialBacklogItems         : loadInitialBacklogItems,
+            loadInitialMilestones           : loadInitialMilestones,
+            isMilestoneContext              : isMilestoneContext,
+            canBeAddedToBacklogItemChildren : canBeAddedToBacklogItemChildren,
+            BACKLOG_ITEMS_PAGINATION        : { limit: 50, offset: 0 },
+            BACKLOG_ITEM_CHILDREN_PAGINATION: { limit: 50, offset: 0 },
+            OPEN_MILESTONES_PAGINATION      : { limit: 50, offset: 0 },
+            CLOSED_MILESTONES_PAGINATION    : { limit: 50, offset: 0 },
+            MILESTONE_CONTENT_PAGINATION    : { limit: 50, offset: 0 }
         });
 
         _.extend($scope, {
@@ -68,9 +73,13 @@
             current_milestone    : {},
             filter_terms         : '',
             items                : {},
-            loading_milestones   : true,
             loading_modal        : TuleapArtifactModalLoading.loading,
-            milestones           : [],
+            milestones           : {
+                content                       : [],
+                loading                       : false,
+                open_milestones_fully_loaded  : false,
+                closed_milestones_fully_loaded: false
+            },
             rest_error           : '',
             rest_error_occured   : false,
             submilestone_type    : null,
@@ -79,14 +88,6 @@
             canBeAddedToBacklogItemChildren       : canBeAddedToBacklogItemChildren,
             appendBacklogItems                    : appendBacklogItems,
             canShowBacklogItem                    : canShowBacklogItem,
-            cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
-            cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
-            cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
-            cardFieldIsList                       : CardFieldsService.cardFieldIsList,
-            cardFieldIsPermissions                : CardFieldsService.cardFieldIsPermissions,
-            cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
-            cardFieldIsText                       : CardFieldsService.cardFieldIsText,
-            cardFieldIsUser                       : CardFieldsService.cardFieldIsUser,
             displayBacklogItems                   : displayBacklogItems,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
@@ -95,12 +96,6 @@
             fetchBacklogItems                     : fetchBacklogItems,
             filterBacklog                         : filterBacklog,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
-            getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
-            getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
-            getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
-            getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
-            getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
-            getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
             getInitialEffortMessage               : getInitialEffortMessage,
             refreshBacklogItem                    : refreshBacklogItem,
             refreshSubmilestone                   : refreshSubmilestone,
@@ -113,7 +108,26 @@
             showEditModal                         : showEditModal,
             switchViewMode                        : switchViewMode,
             toggle                                : toggle,
-            switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode
+            switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode,
+            getOpenMilestones                     : getOpenMilestones,
+            getClosedMilestones                   : getClosedMilestones,
+            displayClosedMilestones               : displayClosedMilestones,
+            thereIsOpenMilestonesLoaded           : thereIsOpenMilestonesLoaded,
+            thereIsClosedMilestonesLoaded         : thereIsClosedMilestonesLoaded,
+            cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
+            cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
+            cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
+            cardFieldIsList                       : CardFieldsService.cardFieldIsList,
+            cardFieldIsPermissions                : CardFieldsService.cardFieldIsPermissions,
+            cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
+            cardFieldIsText                       : CardFieldsService.cardFieldIsText,
+            cardFieldIsUser                       : CardFieldsService.cardFieldIsUser,
+            getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
+            getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
+            getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
+            getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
+            getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
+            getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue
         });
 
         $scope.treeOptions = {
@@ -128,10 +142,6 @@
             self.project_id                = SharedPropertiesService.getProjectId();
             self.milestone_id              = parseInt(SharedPropertiesService.getMilestoneId(), 10);
             self.use_angular_new_modal     = SharedPropertiesService.getUseAngularNewModal();
-            self.pagination_limit          = 50;
-            self.pagination_offset         = 0;
-            self.backlog_pagination_offset = 0;
-
             $scope.use_angular_new_modal   = self.use_angular_new_modal;
 
             initViewModes(SharedPropertiesService.getViewMode());
@@ -170,12 +180,12 @@
             } else {
                 if (initial_milestone) {
                     MilestoneService.defineAllowedBacklogItemTypes(initial_milestone);
-                    MilestoneService.augmentMilestone(initial_milestone, self.pagination_limit, self.pagination_offset, $scope.items);
+                    MilestoneService.augmentMilestone(initial_milestone, self.MILESTONE_CONTENT_PAGINATION.limit, self.MILESTONE_CONTENT_PAGINATION.offset, $scope.items);
 
                     loadMilestone(initial_milestone);
 
                 } else {
-                    MilestoneService.getMilestone(self.milestone_id, self.pagination_limit, self.pagination_offset, $scope.items).then(function(data) {
+                    MilestoneService.getMilestone(self.milestone_id, self.MILESTONE_CONTENT_PAGINATION.limit, self.MILESTONE_CONTENT_PAGINATION.offset, $scope.items).then(function(data) {
                         loadMilestone(data.results);
                     });
                 }
@@ -230,8 +240,8 @@
 
                 $scope.appendBacklogItems(initial_backlog_items.backlog_items_representations);
 
-                self.backlog_pagination_offset    = self.pagination_limit;
-                $scope.backlog_items.fully_loaded = self.backlog_pagination_offset >= initial_backlog_items.total_size;
+                self.BACKLOG_ITEMS_PAGINATION.offset = self.BACKLOG_ITEMS_PAGINATION.limit;
+                $scope.backlog_items.fully_loaded = self.BACKLOG_ITEMS_PAGINATION.offset >= initial_backlog_items.total_size;
 
             } else {
                 displayBacklogItems();
@@ -243,9 +253,9 @@
                 return $q.when();
             }
 
-            return $scope.fetchBacklogItems(self.pagination_limit, self.backlog_pagination_offset).then(function(total) {
-                self.backlog_pagination_offset   += self.pagination_limit;
-                $scope.backlog_items.fully_loaded = self.backlog_pagination_offset >= total;
+            return $scope.fetchBacklogItems(self.BACKLOG_ITEMS_PAGINATION.limit, self.BACKLOG_ITEMS_PAGINATION.offset).then(function(total) {
+                self.BACKLOG_ITEMS_PAGINATION.offset += self.BACKLOG_ITEMS_PAGINATION.limit;
+                $scope.backlog_items.fully_loaded     = self.BACKLOG_ITEMS_PAGINATION.offset >= total;
             });
         }
 
@@ -295,7 +305,7 @@
         }
 
         function filterBacklog() {
-            $scope.fetchAllBacklogItems(self.pagination_limit, self.backlog_pagination_offset)
+            $scope.fetchAllBacklogItems(self.BACKLOG_ITEMS_PAGINATION.limit, self.BACKLOG_ITEMS_PAGINATION.offset)
                 ['finally'](function() {
                     applyFilter();
                 });
@@ -309,53 +319,123 @@
         function loadInitialMilestones(initial_milestones) {
             if (initial_milestones) {
                 _.forEach(initial_milestones.milestones_representations, function(milestone) {
-                    MilestoneService.augmentMilestone(milestone, self.pagination_limit, self.pagination_offset, $scope.items);
+                    MilestoneService.augmentMilestone(milestone, self.MILESTONE_CONTENT_PAGINATION.limit, self.MILESTONE_CONTENT_PAGINATION.offset, $scope.items);
                 });
 
-                $scope.milestones      = $scope.milestones.concat(initial_milestones.milestones_representations);
-                self.pagination_offset = self.pagination_limit;
+                $scope.milestones.content              = initial_milestones.milestones_representations;
+                self.OPEN_MILESTONES_PAGINATION.offset = self.OPEN_MILESTONES_PAGINATION.limit;
 
-                if (self.pagination_offset < initial_milestones.total_size) {
-                    displayMilestones();
+                if (self.OPEN_MILESTONES_PAGINATION.offset < initial_milestones.total_size) {
+                    displayOpenMilestones();
                 } else {
-                    $scope.loading_milestones = false;
+                    $scope.milestones.loading = false;
                 }
 
             } else {
-                displayMilestones();
+                displayOpenMilestones();
             }
         }
 
-        function displayMilestones() {
+        function displayOpenMilestones() {
             if (! self.isMilestoneContext()) {
-                fetchMilestones(self.project_id, self.pagination_limit, self.pagination_offset);
+                fetchOpenMilestones(self.project_id, self.OPEN_MILESTONES_PAGINATION.limit, self.OPEN_MILESTONES_PAGINATION.offset);
             } else {
-                fetchSubMilestones(self.milestone_id, self.pagination_limit, self.pagination_offset);
+                fetchOpenSubMilestones(self.milestone_id, self.OPEN_MILESTONES_PAGINATION.limit, self.OPEN_MILESTONES_PAGINATION.offset);
             }
         }
 
-        function fetchMilestones(project_id, limit, offset) {
-            return MilestoneService.getMilestones(project_id, limit, offset, $scope.items).then(function(data) {
-                $scope.milestones = $scope.milestones.concat(data.results);
+        function displayClosedMilestones() {
+            $scope.milestones.loading = true;
+
+            if (! self.isMilestoneContext()) {
+                fetchClosedMilestones(self.project_id, self.CLOSED_MILESTONES_PAGINATION.limit, self.CLOSED_MILESTONES_PAGINATION.offset);
+            } else {
+                fetchClosedSubMilestones(self.milestone_id, self.CLOSED_MILESTONES_PAGINATION.limit, self.CLOSED_MILESTONES_PAGINATION.offset);
+            }
+        }
+
+        function fetchOpenMilestones(project_id, limit, offset) {
+            $scope.milestones.loading = true;
+
+            return MilestoneService.getOpenMilestones(project_id, limit, offset, $scope.items).then(function(data) {
+                var milestones            = [].concat($scope.milestones.content).concat(data.results);
+                $scope.milestones.content = _.sortBy(milestones, 'id').reverse();
 
                 if ((offset + limit) < data.total) {
-                    fetchMilestones(project_id, limit, offset + limit);
+                    fetchOpenMilestones(project_id, limit, offset + limit);
                 } else {
-                    $scope.loading_milestones = false;
+                    $scope.milestones.loading                      = false;
+                    $scope.milestones.open_milestones_fully_loaded = true;
                 }
             });
         }
 
-        function fetchSubMilestones(milestone_id, limit, offset) {
-            return MilestoneService.getSubMilestones(milestone_id, limit, offset, $scope.items).then(function(data) {
-                $scope.milestones = $scope.milestones.concat(data.results);
+        function fetchOpenSubMilestones(milestone_id, limit, offset) {
+            $scope.milestones.loading = true;
+
+            return MilestoneService.getOpenSubMilestones(milestone_id, limit, offset, $scope.items).then(function(data) {
+                var milestones            = [].concat($scope.milestones.content).concat(data.results);
+                $scope.milestones.content = _.sortBy(milestones, 'id').reverse();
 
                 if ((offset + limit) < data.total) {
-                    fetchSubMilestones(milestone_id, limit, offset + limit);
+                    fetchOpenSubMilestones(milestone_id, limit, offset + limit);
                 } else {
-                    $scope.loading_milestones = false;
+                    $scope.milestones.loading                      = false;
+                    $scope.milestones.open_milestones_fully_loaded = true;
                 }
             });
+        }
+
+        function fetchClosedMilestones(project_id, limit, offset) {
+            $scope.milestones.loading = true;
+
+            return MilestoneService.getClosedMilestones(project_id, limit, offset, $scope.items).then(function(data) {
+                var milestones            = [].concat($scope.milestones.content).concat(data.results);
+                $scope.milestones.content = _.sortBy(milestones, 'id').reverse();
+
+                if ((offset + limit) < data.total) {
+                    fetchClosedMilestones(project_id, limit, offset + limit);
+                } else {
+                    $scope.milestones.loading                        = false;
+                    $scope.milestones.closed_milestones_fully_loaded = true;
+                }
+            });
+        }
+
+        function fetchClosedSubMilestones(milestone_id, limit, offset) {
+            $scope.milestones.loading = true;
+
+            return MilestoneService.getClosedSubMilestones(milestone_id, limit, offset, $scope.items).then(function(data) {
+                var milestones            = [].concat($scope.milestones.content).concat(data.results);
+                $scope.milestones.content = _.sortBy(milestones, 'id').reverse();
+
+                if ((offset + limit) < data.total) {
+                    fetchClosedSubMilestones(milestone_id, limit, offset + limit);
+                } else {
+                    $scope.milestones.loading                        = false;
+                    $scope.milestones.closed_milestones_fully_loaded = true;
+                }
+            });
+        }
+
+        function getOpenMilestones() {
+            return $filter('filter')($scope.milestones.content, {semantic_status: 'open'});
+        }
+
+        function getClosedMilestones() {
+            return $filter('filter')($scope.milestones.content, {semantic_status: 'closed'});
+        }
+
+        function thereIsOpenMilestonesLoaded() {
+            var open_milestones = getOpenMilestones();
+
+            return open_milestones.length > 0;
+        }
+
+        function thereIsClosedMilestonesLoaded() {
+            var closed_milestones = getClosedMilestones();
+
+            return closed_milestones.length > 0;
         }
 
         function generateMilestoneLinkUrl(milestone, pane) {
@@ -452,7 +532,7 @@
 
                 } else {
                     var submilestone_ids = [];
-                    _.forEach($scope.milestones, function(milestone) {
+                    _.forEach($scope.milestones.content, function(milestone) {
                         submilestone_ids.push(milestone.id);
                     });
 
@@ -472,8 +552,8 @@
         }
 
         function prependSubmilestoneToSubmilestoneList(submilestone_id) {
-            return MilestoneService.getMilestone(submilestone_id, self.pagination_limit, self.pagination_offset, $scope.items).then(function(data) {
-                $scope.milestones.unshift(data.results);
+            return MilestoneService.getMilestone(submilestone_id, self.MILESTONE_CONTENT_PAGINATION.limit, self.MILESTONE_CONTENT_PAGINATION.offset, $scope.items).then(function(data) {
+                $scope.milestones.content.unshift(data.results);
             });
         }
 
@@ -581,7 +661,7 @@
         }
 
         function refreshSubmilestone(submilestone_id) {
-            var submilestone = _.find($scope.milestones, { 'id': submilestone_id });
+            var submilestone = _.find($scope.milestones.content, { 'id': submilestone_id });
 
             submilestone.updating = true;
 
@@ -632,7 +712,7 @@
 
             if (backlog_item.has_children && ! backlog_item.children.loaded) {
                 backlog_item.loading = true;
-                fetchBacklogItemChildren(backlog_item, self.pagination_limit, self.pagination_offset);
+                fetchBacklogItemChildren(backlog_item, self.BACKLOG_ITEM_CHILDREN_PAGINATION.limit, self.BACKLOG_ITEM_CHILDREN_PAGINATION.offset);
             }
         }
 
@@ -688,11 +768,11 @@
         }
 
         function hideUserCantPrioritizeForMilestones() {
-            if ($scope.milestones.length === 0) {
+            if ($scope.milestones.content.length === 0) {
                 return true;
             }
 
-            return $scope.milestones[0].has_user_priority_change_permission;
+            return $scope.milestones.content[0].has_user_priority_change_permission;
         }
 
         function displayUserCantPrioritizeForMilestones() {
@@ -816,13 +896,13 @@
 
             function updateSubmilestonesInitialEffort() {
                 if (source_list_element.hasClass('submilestone')) {
-                    MilestoneService.updateInitialEffort(_.find($scope.milestones, function(milestone) {
+                    MilestoneService.updateInitialEffort(_.find($scope.milestones.content, function(milestone) {
                         return milestone.id == source_list_element.attr('data-submilestone-id');
                     }));
                 }
 
                 if (dest_list_element.hasClass('submilestone')) {
-                    MilestoneService.updateInitialEffort(_.find($scope.milestones, function(milestone) {
+                    MilestoneService.updateInitialEffort(_.find($scope.milestones.content, function(milestone) {
                         return milestone.id == dest_list_element.attr('data-submilestone-id');
                     }));
                 }

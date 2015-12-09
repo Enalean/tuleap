@@ -34,7 +34,7 @@ abstract class Rule {
      */
     public function __construct() {
     }
-    
+
     /**
      * Check if $val is a valid not.
      *
@@ -250,12 +250,12 @@ extends Rule {
  */
 class Rule_Regexp extends Rule {
     protected $pattern;
-    
+
     public function __construct($pattern) {
         parent::__construct();
         $this->pattern = $pattern;
     }
-    
+
     function isValid($val) {
         return preg_match($this->pattern, $val);
     }
@@ -328,9 +328,9 @@ extends Rule {
 
     /**
      * Test if value is a name on underlying OS.
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function isSystemName($val) {
@@ -343,10 +343,10 @@ extends Rule {
     }
 
     /**
-     * Test is the value is Codendi username 
-     * 
+     * Test is the value is Codendi username
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function isAlreadyUserName($val) {
@@ -360,9 +360,9 @@ extends Rule {
 
     /**
      * Test if the value is a project name
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function isAlreadyProjectName($val) {
@@ -376,9 +376,9 @@ extends Rule {
 
     /**
      * Test if the value contains spaces
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function noSpaces($val) {
@@ -391,9 +391,9 @@ extends Rule {
 
     /**
      * Needs to check the name start by a char
-     * 
+     *
      * @param String $val
-     * 
+     *
      * @return Boolean
      */
     public function atLeastOneChar($val) {
@@ -406,9 +406,9 @@ extends Rule {
 
     /**
      * Test if the name contains illegal chars
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function containsIllegalChars($val) {
@@ -421,9 +421,9 @@ extends Rule {
 
     /**
      * Test if the name is already reserved
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function isReservedName($val) {
@@ -461,9 +461,9 @@ extends Rule {
 
     /**
      * Test if the name corresponds to a CVS user account
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function isCvsAccount($val) {
@@ -476,9 +476,9 @@ extends Rule {
 
     /**
      * Test minimal length of name
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function lessThanMin($val) {
@@ -491,10 +491,10 @@ extends Rule {
 
     /**
      * Test maximal length of name
-     * 
+     *
      * @param String  $val Value to test
      * @param Integer $max maximal length (default = 30)
-     * 
+     *
      * @return Boolean
      */
     public function greaterThanMax($val, $max = 30) {
@@ -507,7 +507,7 @@ extends Rule {
     /**
      * Prevent from renaming two users on the same name
      * before that the rename is performed by the system
-     * 
+     *
      * @param String $val
      */
     public function getPendingUserRename($val) {
@@ -520,13 +520,13 @@ extends Rule {
     }
     /**
      * Test if name is valid
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     public function isValid($val) {
-        return $this->noSpaces($val) 
+        return $this->noSpaces($val)
             && $this->atLeastOneChar($val)
             && !$this->isReservedName($val)
             && !$this->isCvsAccount($val)
@@ -550,11 +550,11 @@ extends Rule {
 
     /**
      * Returns error message when the username already exists
-     * 
+     *
      * Dedicate a method to be able to override it in descendent classes
-     * 
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     protected function _getErrorExists() {
@@ -563,11 +563,11 @@ extends Rule {
 
     /**
      * Returns error message when name contains a space
-     * 
+     *
      * Dedicate a method to be able to override it in descendent classes
-     *  
+     *
      * @param String $val Value to test
-     * 
+     *
      * @return Boolean
      */
     protected function _getErrorNoSpaces() {
@@ -600,7 +600,7 @@ extends Rule {
     protected function _getBackend($type='') {
         return Backend::instance($type);
     }
-    
+
     /**
      * Wrapper
      *
@@ -642,7 +642,7 @@ extends Rule_UserName {
      * @return Boolean
      */
     public function isNameAvailable($val) {
-        
+
         $backendSVN = $this->_getBackend('SVN');
         if (!$backendSVN->isNameAvailable($val)){
             $this->error = $GLOBALS['Language']->getText('include_account','used_by_svn');
@@ -664,22 +664,22 @@ extends Rule_UserName {
                         array('new_name'  => $val,
                               'result'     => &$result,
                               'error' => &$error)
-                         
+
                             );
                     if ($result == false){
                         $this->error = $error;
                         return false;
                     }
-                } 
+                }
             }
         }
         return true;
     }
-    
+
     /**
      * Prevent from renaming two projects on the same name
      * before that the rename is performed by the system
-     * 
+     *
      * @param String $val
      */
     public function getPendingProjectRename($val) {
@@ -690,11 +690,11 @@ extends Rule_UserName {
         }
         return true;
     }
-    
-    
+
+
      /**
      * Wrapper for event manager
-     * 
+     *
      * @return EventManager
      */
     protected function getEventManager() {
@@ -708,7 +708,7 @@ extends Rule_UserName {
      * @return Boolean
      */
     public function isValid($val) {
-        return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val) 
+        return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val)
                    && $this->getPendingProjectRename($val);
     }
 

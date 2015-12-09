@@ -112,10 +112,16 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     }
 
     public function isOpen(Tracker_Artifact $artifact) {
-        if ($this->getNormalizedStatusLabel($artifact) == self::CLOSED) {
+        if (! $this->getField()) {
+            return true;
+        }
+
+        $status = $artifact->getStatus();
+        if (! $status) {
             return false;
         }
-        return true;
+
+        return in_array($status, $this->getOpenLabels());
     }
 
     /**
@@ -125,16 +131,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @return string
      */
     public function getNormalizedStatusLabel(Tracker_Artifact $artifact) {
-        $status = $artifact->getStatus();
-        if (! $status) {
-            return '';
+        if ($this->isOpen($artifact)) {
+            return self::OPEN;
         }
 
-        $key = self::CLOSED;
-        if (in_array($artifact->getStatus(), $this->getOpenLabels())) {
-            $key = self::OPEN;
-        }
-        return $key;
+        return self::CLOSED;
     }
 
     /**

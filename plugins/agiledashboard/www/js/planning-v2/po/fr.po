@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-11-02 16:53+0100\n"
+"PO-Revision-Date: 2015-12-11 15:00+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -32,7 +32,7 @@ msgstr "Ajouter un(e) {{ backlog.accepted_types.content[0].label }}"
 msgid "Add a {{ submilestone_type.label }}"
 msgstr "Ajouter un(e) {{ submilestone_type.label }}"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html src/app/planning.tpl.html
 msgid "Add a new item"
 msgstr "Ajouter un nouvel élément"
 
@@ -44,23 +44,27 @@ msgstr "Ajouter un élément"
 msgid "All items have been loaded."
 msgstr "Tous les éléments ont été chargés."
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Burndown"
 msgstr "Burndown"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Capacity:"
 msgstr "Capacité:"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Cardwall"
 msgstr "Cardwall"
+
+#: src/app/planning.tpl.html
+msgid "Closed milestones are below"
+msgstr "Les jalons fermés sont en dessous"
 
 #: src/app/planning.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Content"
 msgstr "Contenu"
 
@@ -68,7 +72,7 @@ msgstr "Contenu"
 msgid "Detailed view"
 msgstr "Vue détaillée"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Edit"
 msgstr "Éditer"
 
@@ -81,22 +85,26 @@ msgid "Filter..."
 msgstr "Filtrer..."
 
 #: src/app/planning.tpl.html
-msgid "Hide closed items"
-msgstr "Cacher les éléments fermés"
+msgid "Hide closed backlog items"
+msgstr "Cacher les éléments du backlog fermés"
 
 #: src/app/backlog-item/backlog-item-details.tpl.html
 msgid "Initial effort"
 msgstr "Effort estimé"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Initial effort:"
 msgstr "Effort estimé:"
+
+#: src/app/planning.tpl.html
+msgid "Load closed milestones"
+msgstr "Charger les jalons fermés"
 
 #: src/app/planning.tpl.html
 msgid "Milestones"
 msgstr "Jalons"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "N/A"
 msgstr "N/A"
 
@@ -104,7 +112,7 @@ msgstr "N/A"
 msgid "No initial effort defined"
 msgstr "Aucun effort n’a été estimé"
 
-#: src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Planning"
 msgstr "Planification"
 
@@ -115,8 +123,16 @@ msgstr[0] "pt"
 msgstr[1] "pts"
 
 #: src/app/planning.tpl.html
-msgid "Show closed items"
-msgstr "Afficher les éléments fermés"
+msgid "Show closed backlog items"
+msgstr "Afficher les éléments du backlog fermés"
+
+#: src/app/planning.tpl.html
+msgid "There is no closed milestones"
+msgstr "Aucun jalon fermé"
+
+#: src/app/planning.tpl.html
+msgid "There is no open milestones"
+msgstr "Aucun jalon ouvert"
 
 #: src/app/planning.tpl.html
 msgid "To be planned"
@@ -125,6 +141,12 @@ msgstr "A planifier"
 #: src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
+
+#~ msgid "Hide closed items"
+#~ msgstr "Cacher les éléments fermés"
+
+#~ msgid "Show closed items"
+#~ msgstr "Afficher les éléments fermés"
 
 #~ msgid "Hide \"Closed\" Items"
 #~ msgstr "Cacher les éléments \"fermés\""

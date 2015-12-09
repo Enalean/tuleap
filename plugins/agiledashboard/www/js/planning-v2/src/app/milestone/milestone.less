@@ -1,4 +1,53 @@
 div.milestones {
+    .no-open-milestones, .no-closed-milestones {
+        padding: 60px 0 0;
+        text-align: center;
+        font-size: 0.9em;
+        color: #CCCCCC;
+    }
+
+    .no-open-milestones {
+        margin: 60px 0 40px;
+        background: url('current-milestones.png') no-repeat center top;
+    }
+
+    .no-closed-milestones {
+        margin: 90px 0 40px;
+        background: url('done-milestones.png') no-repeat center top;
+    }
+
+    #load-closed-milestone {
+        display: block;
+        width: 50%;
+        margin: 50px auto;
+        padding: 7px;
+    }
+
+    .milestones-separator {
+        position: relative;
+        top: 20px;
+        margin: 0px 0 50px;
+        text-align: center;
+        font-size: 0.9em;
+        opacity: 0.25;
+
+        > span {
+            padding: 10px;
+            background: #FCFCFC;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            border-bottom: 1px solid #AAAAAA;
+        }
+    }
+
     > fieldset.milestone {
         padding: 0 0 1px;
         margin-bottom: 20px;

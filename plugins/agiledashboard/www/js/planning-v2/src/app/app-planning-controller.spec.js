@@ -91,12 +91,12 @@ describe("PlanningCtrl", function() {
                 "addReorderToContent",
                 "addToContent",
                 "getMilestone",
-                "getMilestones",
+                "getOpenMilestones",
+                "getOpenSubMilestones",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog",
                 "defineAllowedBacklogItemTypes",
                 "augmentMilestone",
-                "getSubMilestones",
                 "updateInitialEffort"
             ]);
             _(MilestoneService).map('and').invoke('returnValue', $q.defer().promise);
@@ -868,7 +868,7 @@ describe("PlanningCtrl", function() {
 
     describe("refreshSubmilestone() -", function() {
         it("Given an existing submilestone, when I refresh it, it gets the submilestone from the server and publishes it to the scope", function() {
-            $scope.milestones = [
+            $scope.milestones.content = [
                 { id: 9040 }
             ];
             MilestoneService.getMilestone.and.returnValue(deferred.promise);
@@ -878,13 +878,13 @@ describe("PlanningCtrl", function() {
             deferred.resolve({
                 results: { id: 9040 }
             });
-            expect($scope.milestones).toEqual([
+            expect($scope.milestones.content).toEqual([
                 jasmine.objectContaining({ id: 9040, updating: true })
             ]);
             $scope.$apply();
 
             expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
-            expect($scope.milestones).toEqual([
+            expect($scope.milestones.content).toEqual([
                 jasmine.objectContaining({ id: 9040, updating: false })
             ]);
         });

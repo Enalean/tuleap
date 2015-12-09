@@ -50,6 +50,8 @@ use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use AgileDashboard_Milestone_MilestoneDao;
 use MilestoneParentLinker;
+use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
+use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 
 /**
  * Wrapper for milestone related REST methods
@@ -90,6 +92,9 @@ class MilestoneResource extends AuthenticatedResource {
 
     /** @var MilestoneParentLinker */
     private $milestone_parent_linker;
+
+    /** @var QueryToCriterionConverter */
+    private $query_to_criterion_converter;
 
     public function __construct() {
         $planning_factory               = PlanningFactory::build();
@@ -162,6 +167,8 @@ class MilestoneResource extends AuthenticatedResource {
             $this->milestone_factory,
             $this->backlog_strategy_factory
         );
+
+        $this->query_to_criterion_converter = new QueryToCriterionConverter();
     }
 
     /**
@@ -292,10 +299,17 @@ class MilestoneResource extends AuthenticatedResource {
      * Get the sub-milestones of a given milestone.
      * A sub-milestone is a decomposition of a milestone (for instance a Release has Sprints as submilestones)
      *
+     * <p>
+     * $query parameter is optional, by default we return all milestones. If
+     * query={"status":"open"} then only open milestones are returned and if
+     * query={"status":"closed"} then only closed milestones are returned.
+     * </p>
+     *
      * @url GET {id}/milestones
      * @access hybrid
      *
      * @param int    $id     Id of the milestone
+     * @param string $query  JSON object of search criteria properties {@from path}
      * @param int    $limit  Number of elements displayed per page {@from path}
      * @param int    $offset Position of the first element to display {@from path}
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
@@ -305,12 +319,19 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    public function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
+    public function getMilestones($id, $query = '', $limit = 10, $offset = 0, $order = 'asc') {
         $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
-        $paginated_milestones_representations = $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations($milestone, $user, $limit, $offset, $order);
+        try {
+            $criterion = $this->query_to_criterion_converter->convert($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $paginated_milestones_representations = $this->milestone_representation_builder
+            ->getPaginatedSubMilestonesRepresentations($milestone, $user, $criterion, $limit, $offset, $order);
 
         $this->sendAllowHeaderForSubmilestones();
         $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());

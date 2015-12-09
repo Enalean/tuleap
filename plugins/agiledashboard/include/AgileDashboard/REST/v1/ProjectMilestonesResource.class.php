@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,8 @@ use \PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use EventManager;
 use AgileDashboard_Milestone_MilestoneDao;
+use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
+use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 
 /**
  * Wrapper for milestone related REST methods
@@ -64,6 +66,9 @@ class ProjectMilestonesResource {
 
     /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
     private $milestone_representation_builder;
+
+    /** @var QueryToCriterionConverter */
+    private $query_to_criterion_converter;
 
     public function __construct() {
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
@@ -96,18 +101,27 @@ class ProjectMilestonesResource {
             $backlog_strategy_factory,
             EventManager::instance()
         );
+
+        $this->query_to_criterion_converter = new QueryToCriterionConverter();
     }
 
     /**
      * Get the top milestones of a given project
      */
-    public function get(PFUser $user, $project, $limit, $offset, $order) {
+    public function get(PFUser $user, $project, $query, $limit, $offset, $order) {
 
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $paginated_top_milestones_representations = $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations($project, $user, $limit, $offset, $order);
+        try {
+            $criterion = $this->query_to_criterion_converter->convert($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $paginated_top_milestones_representations = $this->milestone_representation_builder
+            ->getPaginatedTopMilestonesRepresentations($project, $user, $criterion, $limit, $offset, $order);
 
         $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, $paginated_top_milestones_representations->getTotalSize());
