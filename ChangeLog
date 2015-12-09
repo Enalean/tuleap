@@ -7,6 +7,7 @@ Version 8.10 (Not released yet)
         * story #8572: Transform untyped $data to object in ProjectCreator
 	* story #8672 Accessibility: services on the left menu
 	* request #8535: It should be possible to validate import XML externaly
+	* request #7779: Lock icon in sidebar is misleading
 
 	== Bug fix ==
 	* request #8688: Old email displayed in confirmation message after updating my email address
@@ -19,7 +20,7 @@ Version 8.10 (Not released yet)
 	* agiledashboard: 1.323
 
     == Themes ==
-	* FlamingParrot: 1.115
+	* FlamingParrot: 1.116
 
 Version 8.9 (Thursday, December 3rd 2015)
 
