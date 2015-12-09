@@ -6,10 +6,8 @@
     KanbanService.$inject = ['Restangular', '$q', 'SharedPropertiesService'];
 
     function KanbanService(Restangular, $q, SharedPropertiesService) {
-        var rest = Restangular.withConfig(function(RestangularConfigurer) {
-            RestangularConfigurer.setFullResponse(true);
-            RestangularConfigurer.setBaseUrl('/api/v1');
-            RestangularConfigurer.setDefaultHeaders({"X-Client-UUID": SharedPropertiesService.getUUID()});
+        _.extend(Restangular.configuration.defaultHeaders, {
+            'X-Client-UUID': SharedPropertiesService.getUUID()
         });
 
         return {
@@ -41,7 +39,7 @@
         function getKanban(id) {
             var data = $q.defer();
 
-            rest
+            Restangular
                 .one('kanban', id)
                 .get()
                 .then(function (response) {
@@ -54,7 +52,7 @@
         function getBacklog(id, limit, offset) {
             var data = $q.defer();
 
-            rest
+            Restangular
                 .one('kanban', id)
                 .one('backlog')
                 .get({
@@ -76,7 +74,7 @@
         function getArchive(id, limit, offset) {
             var data = $q.defer();
 
-            rest
+            Restangular
                 .one('kanban', id)
                 .one('archive')
                 .get({
@@ -98,7 +96,7 @@
         function getItems(id, column_id, limit, offset) {
             var data = $q.defer();
 
-            rest
+            Restangular
                 .one('kanban', id)
                 .one('items')
                 .get({
@@ -119,7 +117,7 @@
         }
 
         function reorderColumn(kanban_id, column_id, dropped_item_id, compared_to) {
-            return rest.one('kanban', kanban_id)
+            return Restangular.one('kanban', kanban_id)
                 .all('items')
                 .patch({
                     order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
@@ -129,7 +127,7 @@
         }
 
         function reorderBacklog(kanban_id, dropped_item_id, compared_to) {
-            return rest.one('kanban', kanban_id)
+            return Restangular.one('kanban', kanban_id)
                 .all('backlog')
                 .patch({
                     order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
@@ -137,7 +135,7 @@
         }
 
         function reorderArchive(kanban_id, dropped_item_id, compared_to) {
-            return rest.one('kanban', kanban_id)
+            return Restangular.one('kanban', kanban_id)
                 .all('archive')
                 .patch({
                     order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
@@ -154,7 +152,7 @@
                 patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
             }
 
-            return rest.one('kanban', kanban_id)
+            return Restangular.one('kanban', kanban_id)
                 .all('backlog')
                 .patch(patch_arguments);
         }
@@ -169,7 +167,7 @@
                 patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
             }
 
-            return rest.one('kanban', kanban_id)
+            return Restangular.one('kanban', kanban_id)
                 .all('archive')
                 .patch(patch_arguments);
         }
@@ -184,7 +182,7 @@
                 patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
             }
 
-            return rest.one('kanban', kanban_id)
+            return Restangular.one('kanban', kanban_id)
                 .all('items')
                 .patch(
                     patch_arguments,
@@ -203,17 +201,17 @@
         }
 
         function updateKanbanLabel(kanban_id, kanban_label) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 label: kanban_label
             });
         }
 
         function deleteKanban(kanban_id) {
-            return rest.one('kanban', kanban_id).remove();
+            return Restangular.one('kanban', kanban_id).remove();
         }
 
         function expandColumn(kanban_id, column_id) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 collapse_column: {
                     column_id: column_id,
                     value: false
@@ -222,7 +220,7 @@
         }
 
         function collapseColumn(kanban_id, column_id) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 collapse_column: {
                     column_id: column_id,
                     value: true
@@ -231,35 +229,35 @@
         }
 
         function expandBacklog(kanban_id) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 collapse_backlog: false
             });
         }
 
         function collapseBacklog(kanban_id) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 collapse_backlog: true
             });
         }
 
         function expandArchive(kanban_id) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 collapse_archive: false
             });
         }
 
         function collapseArchive(kanban_id) {
-            return rest.one('kanban', kanban_id).patch({
+            return Restangular.one('kanban', kanban_id).patch({
                 collapse_archive: true
             });
         }
 
         function getColumn(column_id) {
-            return rest.one('kanban_columns', column_id).get();
+            return Restangular.one('kanban_columns', column_id).get();
         }
 
         function addColumn(kanban_id, column_label) {
-            return rest
+            return Restangular
                 .one('kanban', kanban_id)
                 .post('columns', {
                     label: column_label
@@ -267,14 +265,14 @@
         }
 
         function reorderColumns(kanban_id, sorted_columns_ids) {
-            return rest
+            return Restangular
                 .one('kanban', kanban_id)
                 .all('columns')
                 .customPUT(sorted_columns_ids);
         }
 
         function removeColumn(kanban_id, column_id) {
-            return rest
+            return Restangular
                 .one('kanban_columns', column_id)
                 .remove({
                     kanban_id: kanban_id
@@ -282,7 +280,7 @@
         }
 
         function editColumn(kanban_id, column) {
-            return rest
+            return Restangular
                 .one('kanban_columns', column.id)
                 .patch({
                     label    : column.label,
