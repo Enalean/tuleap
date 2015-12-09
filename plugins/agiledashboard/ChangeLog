@@ -1,3 +1,6 @@
+Version 1.321 - Tuleap 8.10
+    * request #8685: Kanban handles exception on global rules
+
 Version 1.320 - Tuleap 8.9
     * request #8645: Kanban is not resized
 
