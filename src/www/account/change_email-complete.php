@@ -1,10 +1,22 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/* SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');    
 
@@ -37,7 +49,7 @@ $HTML->header(array('title'=>$Language->getText('account_change_email-complete',
 ?>
 <p><b><?php echo $Language->getText('account_change_email-complete', 'title'); ?></b>
 <P><?php echo $Language->getText('account_change_email-complete', 'message',
-			     array(  $hp->purify($user->getRealname(), CODENDI_PURIFIER_CONVERT_HTML) , $user->getEmailNew(),
+			     array(  $hp->purify($user->getRealname(), CODENDI_PURIFIER_CONVERT_HTML) , $user->getEmail(),
 				    $GLOBALS['sys_name'], $user->getUsername())); ?>
 
 <P><A href="/">[ <?php echo $Language->getText('global', 'back_home'); ?> ]</A>
