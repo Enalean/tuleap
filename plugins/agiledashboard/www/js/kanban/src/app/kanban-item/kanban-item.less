@@ -29,6 +29,43 @@
         }
     }
 
+    > .moves {
+        opacity: 0;
+        transition: opacity 100ms ease-in-out;
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        margin: -22px 0 0 0;
+        z-index: 1000;
+
+        > .icon-stack {
+            display: block;
+            font-size: 11px;
+            cursor: pointer;
+
+            > .icon-stack-base {
+                color: #999;
+                transition: color 100ms ease-in-out;
+            }
+
+            &:hover > .icon-stack-base {
+                color: fade(#999, 80%);
+                transition: color 100ms ease-in-out;
+            }
+
+            &:first-child {
+                margin: 0 0 2px;
+            }
+        }
+    }
+
+    &:hover {
+        > .moves {
+            opacity: 1;
+            transition: opacity 100ms 500ms ease-in-out;
+        }
+    }
+
     > div.type-border {
         position: absolute;
         top: 0;
@@ -190,8 +227,39 @@ ul.kanban-items.compact-view > li > .kanban-item {
         top: 8px;
     }
 
+    &:hover {
+        > .icon-time {
+            right: 15px;
+            transition: right 100ms 500ms ease-in-out;
+        }
+    }
+
     ul.extra_card_fields {
         display: none;
+    }
+}
+
+ul.kanban-items > li {
+    &:first-child {
+        .moves > .icon-stack:first-child {
+            visibility: hidden;
+        }
+    }
+
+    &:last-child {
+        .moves > .icon-stack:last-child {
+            visibility: hidden;
+        }
+    }
+
+    &:only-child > .kanban-item:hover {
+        > .icon-time {
+            right: 5px;
+        }
+
+        > .moves {
+            display: none;
+        }
     }
 }
 

@@ -4,28 +4,40 @@
 >
     <div class="type-border"></div>
 
+    <div data-nodrag="true" class="moves">
+        <span class="icon-stack" title="{{ 'Move to top' | translate }}" aria-label="{{ 'Move to top' | translate }}" role="button" ng-click="kanban.moveKanbanItemToTop(item)">
+            <i class="icon-circle icon-stack-base"></i>
+            <i class="icon-chevron-up icon-light"></i>
+        </span>
+        <span class="icon-stack" title="{{ 'Move to bottom' | translate }}" aria-label="{{ 'Move to bottom' | translate }}" role="button" ng-click="kanban.moveKanbanItemToBottom(item)">
+            <i class="icon-circle icon-stack-base"></i>
+            <i class="icon-chevron-down icon-light"></i>
+        </span>
+    </div>
+
     <i ng-if="column" class="icon-time"
         tooltip-html-unsafe="{{ kanban.getTimeInfo(column, item) }}"
         tooltip-trigger
         tooltip-animation="true"
+        tooltip-popup-delay="750"
         tooltip-append-to-body="true"
         tooltip-class="timeinfo"
         tooltip-placement="top"></i>
-
     <i ng-if="item.timeinfo.archive" class="icon-time"
         tooltip-html-unsafe="{{ kanban.getTimeInfoInArchive(item) }}"
         tooltip-trigger
         tooltip-animation="true"
+        tooltip-popup-delay="750"
         tooltip-append-to-body="true"
         tooltip-class="timeinfo"
         tooltip-placement="left"></i>
 
-    <a
-        data-nodrag="true"
+    <a data-nodrag="true"
         href="/plugins/tracker/?aid={{ item.id }}"
         ng-click="kanban.showEditModal($event, item)"
         class="kanban-item-link"
-    ><span ng-show="kanban.current_view_class === kanban.detailed_view_key">{{ item.item_name }}</span> #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
+    >
+        <span ng-show="kanban.current_view_class === kanban.detailed_view_key">{{ item.item_name }}</span> #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
     </a>
 
     <div class="kanban-item-label" ng-bind-html="kanban.getCardFieldTextValue(item.label) | highlight:kanban.filter_terms"></div>

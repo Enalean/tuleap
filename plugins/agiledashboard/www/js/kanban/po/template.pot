@@ -116,6 +116,14 @@ msgstr ""
 msgid "More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
 msgstr ""
 
+#: src/app/kanban-item/kanban-item.tpl.html
+msgid "Move to bottom"
+msgstr ""
+
+#: src/app/kanban-item/kanban-item.tpl.html
+msgid "Move to top"
+msgstr ""
+
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr ""
