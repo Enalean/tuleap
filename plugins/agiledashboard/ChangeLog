@@ -1,3 +1,6 @@
+Version 1.322 - Tuleap 8.10
+    * request #8666: Confirm column deletion in kanban is not aligned in firefox
+
 Version 1.321 - Tuleap 8.10
     * request #8685: Kanban handles exception on global rules
 
