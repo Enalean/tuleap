@@ -38,7 +38,7 @@ class GitPlugin extends Plugin {
      * @var Git_UserAccountManager
      */
     private $user_account_manager;
-    
+
     /**
      * Service short_name as it appears in 'service' table
      *
@@ -135,6 +135,8 @@ class GitPlugin extends Plugin {
         $this->addHook(EVENT::REST_PROJECT_GET_GIT);
         $this->addHook(EVENT::REST_PROJECT_OPTIONS_GIT);
 
+        $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+
         // Gerrit user suspension
         if (defined('LDAP_DAILY_SYNCHRO_UPDATE_USER')) {
             $this->addHook(LDAP_DAILY_SYNCHRO_UPDATE_USER);
@@ -194,7 +196,7 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
         }
     }
-    
+
     public function javascript($params) {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
@@ -539,7 +541,7 @@ class GitPlugin extends Plugin {
 
     /**
      * Hook to choose the color of the plugin in the graph
-     * 
+     *
      * @param array $params
      */
     function plugin_statistics_color($params) {
@@ -812,6 +814,9 @@ class GitPlugin extends Plugin {
             $this->getLogger(),
             $this->getGitSystemEventManager(),
             $this->getGitRepositoryUrlManager(),
+            $this->getGitDao(),
+            new Git_Mirror_MirrorDao,
+            $this,
             null,
             null,
             null,
@@ -946,7 +951,7 @@ class GitPlugin extends Plugin {
 
     /**
      * Add log access for git pushs
-     * 
+     *
      * @param Array $params parameters of the event
      *
      * @return Void
@@ -1566,5 +1571,23 @@ class GitPlugin extends Plugin {
             $params['services'][] = $GLOBALS['Language']->getText('plugin_git', 'service_lbl_key');
         }
     }
-}
 
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function importXmlProject($params) {
+        $importer = new GitXmlImporter(
+            $params['logger'],
+            $this->getRepositoryManager(),
+            $this->getRepositoryFactory(),
+            $this->getBackendGitolite(),
+            $this->getGitSystemEventManager(),
+            PermissionsManager::instance()
+        );
+
+        $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
+    }
+}

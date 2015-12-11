@@ -20,7 +20,7 @@
  *
  * Rename project in gitolite configuration
  */
- 
+
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 require_once dirname(__FILE__).'/../include/GitRepositoryUrlManager.class.php';
@@ -36,7 +36,10 @@ $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 $driver      = new Git_GitoliteDriver(
     $git_plugin->getLogger(),
     $git_plugin->getGitSystemEventManager(),
-    $url_manager
+    $url_manager,
+    new GitDao(),
+    new Git_Mirror_MirrorDao(),
+    PluginManager::instance()->getPluginByName('git')
 );
 if ($driver->renameProject($argv[1], $argv[2])) {
     echo "Rename done!\n";
@@ -45,5 +48,3 @@ if ($driver->renameProject($argv[1], $argv[2])) {
     echo "*** ERROR: Fail to rename project ".$argv[1]." into ".$argv[2]." gitolite repositories".PHP_EOL;
     exit(1);
 }
-
-?>
