@@ -1,3 +1,12 @@
+Version 8.9-2 (Friday, December 11th 2015)
+	== Bug Fix ==
+	* request #8692: Value of "PerTracker" field not displayed in html notifications
+	* request #8663: Click on "leaf" milestone in breadcrumb lead to fatal error
+	* request #8689: Cross references on artifacts are not properly saved in DB when references are defined for tracker v3
+	* request #8666: Confirm column deletion in kanban is not aligned in firefox
+	* request #8661: Git post receive hook do not rely on a shebang anymore
+	* request #8634: Unable to delete any Kanban
+
 Version 8.9 (Thursday, December 3rd 2015)
 
 	== Enhancement ==
