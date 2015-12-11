@@ -750,9 +750,7 @@
             removeItemInColumn(item.id, column.id);
             column.content.unshift(item);
 
-            moveItemInBackend(item, column.id, compared_to).then(function() {
-                // Nothing to do
-            }, reload);
+            reorderColumnAfterMoveToTopOrBottom(column, item, compared_to);
         }
 
         function moveKanbanItemToBottom(item) {
@@ -762,9 +760,26 @@
             removeItemInColumn(item.id, column.id);
             column.content.push(item);
 
-            moveItemInBackend(item, column.id, compared_to).then(function() {
-                // Nothing to do
-            }, reload);
+            reorderColumnAfterMoveToTopOrBottom(column, item, compared_to);
+        }
+
+        function reorderColumnAfterMoveToTopOrBottom(column, item, compared_to) {
+            switch (column.id) {
+                case 'archive':
+                    KanbanService
+                        .reorderArchive(kanban.id, item.id, compared_to)
+                        .then(null, reload);
+                    break;
+                case 'backlog':
+                    KanbanService
+                        .reorderBacklog(kanban.id, item.id, compared_to)
+                        .then(null, reload);
+                    break;
+                default:
+                    KanbanService
+                        .reorderColumn(kanban.id, column.id, item.id, compared_to)
+                        .then(null, reload);
+            }
         }
 
         function listenNodeJSServer() {
