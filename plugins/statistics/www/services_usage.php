@@ -37,6 +37,8 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
     header('Location: '.get_server_url());
 }
 
+set_time_limit(180);
+
 $request = HTTPRequest::instance();
 
 $error = false;
