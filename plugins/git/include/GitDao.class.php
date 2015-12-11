@@ -78,7 +78,7 @@ class GitDao extends DataAccessObject {
                 ' WHERE '.self::REPOSITORY_ID.'='.$id.
                     ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
         $rs    = $this->retrieve($query);
-        if( !empty($rs) && $rs->rowCount() == 1 ) {
+        if( !empty($rs) && $rs->rowCount() == 1 ) {            
             return true;
         }
         return false;
@@ -98,18 +98,18 @@ class GitDao extends DataAccessObject {
     public function save(GitRepository $repository) {
         $id          = (int)$repository->getId();
 
-        $name        = $repository->getName();
+        $name        = $repository->getName(); 
         $mailPrefix  = $repository->getMailPrefix();
         $parentId    = 0;
         $scope       = $repository->getScope();
         $namespace   = $repository->getNamespace();
-
+        
         try {
             $parent   = $repository->getParent();
             if ( !empty($parent) ) {
                 $parentId = $parent->getId();
             }
-        } catch (GitDaoException $e) {
+        } catch (GitDaoException $e) {            
         }
         $projectId      = $repository->getProjectId();
         $description    = $repository->getDescription();
@@ -130,9 +130,9 @@ class GitDao extends DataAccessObject {
         $scope          = $this->da->quoteSmart($scope);
         $namespace      = $this->da->quoteSmart($namespace);
         $backup_path    = $this->da->quoteSmart($repository->getBackupPath());
-
+        
         $insert         = false;
-        if ( $this->exists($id) ) {
+        if ( $this->exists($id) ) {            
             $query = 'UPDATE '.$this->getTable().
                      ' SET '.self::REPOSITORY_DESCRIPTION.'='.$description.','.
                             self::REPOSITORY_IS_INITIALIZED.'='.$isInitialized.','.
@@ -169,7 +169,7 @@ class GitDao extends DataAccessObject {
                                                         "'".$creationDate."',".
                                                         $creationUserId.",".
                                                         $isInitialized.','.
-                                                        $access.','.
+                                                        $access.','.                    
                                                         $this->da->quoteSmart($backendType).','.
                                                         $scope.','.
                                                         $namespace.
@@ -193,7 +193,7 @@ class GitDao extends DataAccessObject {
         if ( empty($id) || empty($projectId) ) {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_delete_params') );
         }
-        $deletionDate = $repository->getDeletionDate();
+        $deletionDate = $repository->getDeletionDate();        
         $projectName  = $repository->getProject()->getUnixName();
         $backup_path  = str_replace('/', '_', $repository->getFullName());
         $backup_path  .= '_'.strtotime($deletionDate);
@@ -271,7 +271,7 @@ class GitDao extends DataAccessObject {
     }
 
     /**
-     *
+     * 
      * @return DataAccessResult
      */
     public function getActiveRepositoryPathsWithRemoteServersForAllProjects() {
@@ -301,7 +301,7 @@ class GitDao extends DataAccessObject {
     public function getAllGitoliteRespositories($projectId) {
         $projectId     = $this->da->escapeInt($projectId);
         $type_gitolite = $this->da->quoteSmart(self::BACKEND_GITOLITE);
-
+        
         $sql = "SELECT * FROM $this->tableName
                 WHERE ". self::FK_PROJECT_ID ." = $projectId
                   AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
@@ -323,7 +323,7 @@ class GitDao extends DataAccessObject {
      * @param GitRepository $repository
      * @return <type>
      */
-    public function getProjectRepository($repository) {
+    public function getProjectRepository($repository) {        
         $projectId      = $repository->getProjectId();
         $repositoryPath = $repository->getPathWithoutLazyLoading();
         if ( empty($projectId) || empty($repositoryPath)  )  {
@@ -334,7 +334,7 @@ class GitDao extends DataAccessObject {
             throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
             return false;
         }
-        $result         = $rs->getRow();
+        $result         = $rs->getRow();        
         if ( empty($result) ) {
             throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
             return false;
@@ -342,8 +342,8 @@ class GitDao extends DataAccessObject {
         $this->hydrateRepositoryObject($repository, $result);
         return true;
     }
-
-
+    
+    
     public function searchProjectRepositoryByPath($projectId, $repositoryPath) {
 
         $projectId      = $this->da->escapeInt($projectId);
@@ -434,10 +434,10 @@ class GitDao extends DataAccessObject {
         $this->hydrateRepositoryObject($repository, $result);
         return true;
     }
-
+    
     /**
      * @param Intger $id
-     *
+     * 
      * @return DataAccessResult
      */
     public function searchProjectRepositoryById($id) {
@@ -457,7 +457,7 @@ class GitDao extends DataAccessObject {
                  ' AND '.self::REPOSITORY_DELETION_DATE." != '0000-00-00 00:00:00'";
         return $this->retrieve($query);
     }
-
+    
     /**
      * Retrieve Git repository data given its name and its group name.
      *
@@ -487,7 +487,7 @@ class GitDao extends DataAccessObject {
         $repository->setParentId($result[self::REPOSITORY_PARENT]);
         $project = ProjectManager::instance()->getProject($result[self::FK_PROJECT_ID]);
         $repository->setProject($project);
-        $repository->setCreationDate($result[self::REPOSITORY_CREATION_DATE]);
+        $repository->setCreationDate($result[self::REPOSITORY_CREATION_DATE]);        
         $user    = UserManager::instance()->getUserById($result[self::REPOSITORY_CREATION_USER_ID]);
         $repository->setCreator($user);
         $repository->setIsInitialized($result[self::REPOSITORY_IS_INITIALIZED]);
@@ -551,12 +551,12 @@ class GitDao extends DataAccessObject {
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }
-
+    
     /**
-     *
+     * 
      * @param int $repository_id
      * @param int $remote_server_id
-     *
+     * 
      * @return Boolean
      */
     public function switchToGerrit($repository_id, $remote_server_id) {

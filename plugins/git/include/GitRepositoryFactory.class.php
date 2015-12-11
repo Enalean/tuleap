@@ -24,17 +24,17 @@ class GitRepositoryFactory {
      * @var GitDao
      */
     private $dao;
-
+    
     /**
-     * @var ProjectManager
+     * @var ProjectManager 
      */
     private $projectManager;
-
+    
     public function __construct(GitDao $dao, ProjectManager $projectManager) {
         $this->dao            = $dao;
         $this->projectManager = $projectManager;
     }
-
+    
     /**
      * Get a project repository by its id
      *
@@ -147,13 +147,13 @@ class GitRepositoryFactory {
         $dar = $this->dao->searchProjectRepositoryByPath($project_id, $path);
         return $this->getRepositoryFromDar($dar);
     }
-
+    
     /**
      * Return the repository given it's full path on the file system (from /)
-     *
+     * 
      * @param String $full_path
-     *
-     * @return GitRepository
+     * 
+     * @return GitRepository 
      */
     public function getFromFullPath($full_path) {
         $repo = $this->getByRepositoryRootMatch('gitolite/repositories', $full_path);
@@ -233,10 +233,10 @@ class GitRepositoryFactory {
 
     /**
      * Attempt to get repository if path match given base directory
-     *
+     * 
      * @param type $base_dir A top level directory that can contains repo
      * @param type $path     Full repository path
-     *
+     * 
      * @return GitRepository
      */
     private function getByRepositoryRootMatch($base_dir, $path) {
@@ -246,12 +246,12 @@ class GitRepositoryFactory {
         }
         return null;
     }
-
+    
     /**
      *
      * @param String $projectName
      * @param String $path
-     *
+     * 
      * @return GitRepository
      */
     public function getByProjectNameAndPath($projectName, $path) {
@@ -264,7 +264,7 @@ class GitRepositoryFactory {
 
     /**
      * @param DataAccessResult $dar
-     * @return GitRepository
+     * @return GitRepository 
      */
     private function getRepositoryFromDar(DataAccessResult $dar) {
         if ($dar->rowCount() == 1) {
@@ -281,6 +281,8 @@ class GitRepositoryFactory {
 
     /**
      * Get the list of all repositories of a project
+     *
+     * @param Project $project
      *
      * @return GitRepository[]
      */
@@ -324,19 +326,5 @@ class GitRepositoryFactory {
 
     public function hasGitShellRepositories() {
         return $this->dao->hasGitShellRepositories();
-    }
-
-    /**
-     * Returns a default-value-filled repository
-     * @return GitRepository
-     */
-    public function buildRepository(Project $project, $repository_name, PFUser $creator, Git_Backend_Interface $backend, $description = GitRepository::DEFAULT_DESCRIPTION) {
-        $repository = new GitRepository();
-        $repository->setBackend($backend);
-        $repository->setDescription($description);
-        $repository->setCreator($creator);
-        $repository->setProject($project);
-        $repository->setName($repository_name);
-        return $repository;
     }
 }

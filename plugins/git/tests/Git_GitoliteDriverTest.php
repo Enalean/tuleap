@@ -78,9 +78,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->logger,
             $this->git_system_event_manager,
             $this->url_manager,
-            mock('GitDao'),
-            mock('Git_Mirror_MirrorDao'),
-            mock('GitPlugin'),
             $this->gitExec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
@@ -96,9 +93,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->logger,
             $this->git_system_event_manager,
             $this->url_manager,
-            mock('GitDao'),
-            mock('Git_Mirror_MirrorDao'),
-            mock('GitPlugin'),
             $this->another_git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
@@ -212,7 +206,7 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         $groupInfo = posix_getgrgid($rootStats[5]);
         return $groupInfo['name'];
     }
-
+    
     protected function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group) {
         $namespaceInfoFile = $repoPath.'/tuleap_namespace';
         $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
@@ -220,7 +214,7 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         $this->assertEqual($group, $this->_getFileGroupName($namespaceInfoFile));
 
     }
-
+    
     protected function assertWritableByGroup($new_root_dir, $group) {
         $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
         $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
@@ -229,7 +223,7 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         $rootStats = stat($new_root_dir);
         $this->assertPattern('/.*770$/', decoct($rootStats[2]));
     }
-
+    
     public function assertRepoIsClonedWithHooks($new_root_dir) {
         $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
         $new_repo_HEAD = $new_root_dir . '/HEAD';
@@ -260,29 +254,29 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         }
 
     }
-
+    
     public function testForkShouldNotCloneOnExistingRepositories() {
         $name = 'tulip';
         $new_ns = 'repos/new/repo/';
         $old_ns = 'repos/';
         $old_root_dir = $this->repoDir .'/'. $old_ns . $name .'.git';
         $new_root_dir = $this->repoDir .'/'. $new_ns . $name .'.git';
-
+        
         mkdir($old_root_dir, 0770, true);
         exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
-
+        
         mkdir($new_root_dir, 0770, true);
         exec('GIT_DIR='. $new_root_dir .' git --bare init --shared=group');
-
+        
         $this->assertFalse($this->driver->fork($name, $old_ns, $new_ns));
     }
-
-
+    
+    
     // JM: Dont understant this test, should it be in _Fork or the miscallaneous part?
     public function itIsInitializedEvenIfThereIsNoMaster() {
         $this->assertTrue($this->driver->isInitialized($this->_fixDir.'/headless.git'));
     }
-
+    
     public function itIsNotInitializedldIfThereIsNoValidDirectory() {
         $this->assertFalse($this->driver->isInitialized($this->_fixDir));
     }

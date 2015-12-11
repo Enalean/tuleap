@@ -81,3 +81,5 @@ class Git_PostReceiveMailDao extends DataAccessObject {
     }
 
 }
+
+?>

@@ -187,8 +187,13 @@ class GitActions extends PluginActions {
 
         try {
             $creator = UserManager::instance()->getCurrentUser();
-            $project = ProjectManager::instance()->getProject($projectId);
-            $repository = $this->factory->buildRepository($project, $repositoryName, $creator, $this->backend_gitolite);
+
+            $repository = new GitRepository();
+            $repository->setBackend($this->backend_gitolite);
+            $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
+            $repository->setCreator($creator);
+            $repository->setProject(ProjectManager::instance()->getProject($projectId));
+            $repository->setName($repositoryName);
 
             $this->manager->create($repository, $this->backend_gitolite);
 

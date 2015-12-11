@@ -65,14 +65,6 @@ class PluginManager {
         return self::$instance;
     }
 
-    public static function setInstance(PluginManager $plugin_manager) {
-        self::$instance = $plugin_manager;
-    }
-
-    public static function clearInstance() {
-        self::$instance = null;
-    }
-
     public function loadPlugins() {
         foreach ($this->getHooksCache() as $plugin) {
             $this->loadPluginFiles($plugin['path']);

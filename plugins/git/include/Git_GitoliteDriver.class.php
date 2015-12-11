@@ -25,7 +25,7 @@ require_once 'PathJoinUtil.php';
  * This class manage the interaction between Tuleap and Gitolite
  * Warning: as gitolite "interface" is made through a git repository
  * we need to execute git commands. Those commands are very sensitive
- * to the environement (especially the current working directory).
+ * to the environement (especially the current working directory). 
  * So this class expect to work in Tuleap's Gitolite admin directory
  * all the time (chdir in constructor/setAdminPath) and change back to
  * the previous location after push.
@@ -79,9 +79,6 @@ class Git_GitoliteDriver {
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
 
-    /** @var GitDao */
-    private $git_dao;
-
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
@@ -95,16 +92,13 @@ class Git_GitoliteDriver {
     /**
      * Constructor
      *
-     * @param string $adminPath The path to admin folder of gitolite.
+     * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
     public function __construct(
         Logger $logger,
         Git_SystemEventManager $git_system_event_manager,
         Git_GitRepositoryUrlManager $url_manager,
-        GitDao $git_dao,
-        Git_Mirror_MirrorDao $git_mirror_dao,
-        GitPlugin $git_plugin,
         Git_Exec $gitExec                        = null,
         GitRepositoryFactory $repository_factory = null,
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
@@ -112,7 +106,6 @@ class Git_GitoliteDriver {
         ProjectManager $project_manager = null,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper = null
     ) {
-        $this->git_dao = $git_dao;
         $this->logger                   = $logger;
         $this->git_system_event_manager = $git_system_event_manager;
         $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
@@ -125,31 +118,21 @@ class Git_GitoliteDriver {
 
         $this->project_manager        = $project_manager ? $project_manager : ProjectManager::instance();
         $this->url_manager            = $url_manager;
-
-        if(empty($mirror_data_mapper)) {
-            $this->mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
-                $git_mirror_dao,
-                UserManager::instance(),
-                new GitRepositoryFactory(
-                    $this->getDao(),
-                    ProjectManager::instance()
-                ),
-                $this->project_manager,
-                $this->git_system_event_manager,
-                new Git_Gitolite_GitoliteRCReader()
-            );
-        } else {
-            $this->mirror_data_mapper = $mirror_data_mapper;
-        }
-
-        if(empty($permissions_serializer)) {
-            $this->permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-                $this->mirror_data_mapper,
-                $git_plugin->getEtcTemplatesPath()
-            );
-        } else {
-            $this->permissions_serializer = $permissions_serializer;
-        }
+        $this->mirror_data_mapper     = $mirror_data_mapper ? $mirror_data_mapper : new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao,
+            UserManager::instance(),
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
+            ),
+            $this->project_manager,
+            $this->git_system_event_manager,
+            new Git_Gitolite_GitoliteRCReader()
+        );
+        $this->permissions_serializer = $permissions_serializer ? $permissions_serializer : new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_data_mapper,
+            PluginManager::instance()->getPluginByName('git')->getEtcTemplatesPath()
+        );
 
         $this->project_serializer = new Git_Gitolite_ProjectSerializer(
             $this->logger,
@@ -175,17 +158,17 @@ class Git_GitoliteDriver {
      *
      * @return string
      */
-    public function getAdminPath() {
-        return $this->adminPath;
+    public function getAdminPath() { 
+        return $this->adminPath; 
     }
-
+    
     /**
      * Get repositories path
      *
      * @return string
      */
     public function getRepositoriesPath() {
-        return realpath($this->adminPath .'/../repositories');
+        return realpath($this->adminPath .'/../repositories'); 
     }
 
     public function setAdminPath($adminPath) {
@@ -270,7 +253,7 @@ class Git_GitoliteDriver {
 
     /**
      * Rename a project
-     *
+     * 
      * This method is intended to be called by a "codendiadm" owned process while general
      * rename process is owned by "root" (system-event) so there is dedicated script
      * (see bin/gl-rename-project.php) and more details in Git_Backend_Gitolite::glRenameProject.
@@ -301,7 +284,7 @@ class Git_GitoliteDriver {
 
         return $ok;
     }
-
+    
     public function delete($path) {
         if ( empty($path) || !is_writable($path) ) {
            throw new GitDriverErrorException('Empty path or permission denied '.$path);
@@ -315,7 +298,7 @@ class Git_GitoliteDriver {
         $this->logger->debug('Removing physically the repository: done');
         return true;
     }
-
+    
     public function fork($repo, $old_ns, $new_ns) {
         $source = unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) .'.git';
         $target = unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) .'.git';
@@ -323,15 +306,15 @@ class Git_GitoliteDriver {
             $asGroupGitolite = 'sg - gitolite -c ';
             $cmd = 'umask 0007; '.$asGroupGitolite.' "git clone --bare '. $source .' '. $target.'"';
             $clone_result = $this->executeShellCommand($cmd);
-
+            
             $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
             $copyHooks .= $asGroupGitolite.' "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
             $this->executeShellCommand($copyHooks);
-
+            
             $saveNamespace = 'cd '.$this->getRepositoriesPath().'; ';
             $saveNamespace .= $asGroupGitolite.' "echo -n '.$new_ns.' > '.$target.'/tuleap_namespace"';
             $this->executeShellCommand($saveNamespace);
-
+            
             return $clone_result;
         }
         return false;
@@ -485,7 +468,7 @@ class Git_GitoliteDriver {
      * @return GitDao
      */
     protected function getDao() {
-        return $this->git_dao;
+        return new GitDao();
     }
 
     public function dumpAllMirroredRepositories() {
