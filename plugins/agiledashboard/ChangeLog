@@ -1,3 +1,6 @@
+Version 1.326 - Tuleap 8.10
+    * request #8634: Unable to delete any Kanban
+
 Version 1.325 - Tuleap 8.10
     * request #8663: Click on leaf milestone in breadcrumb lead to fatal error
 
