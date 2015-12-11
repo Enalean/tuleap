@@ -29,7 +29,7 @@ Mock::generate('DataAccessResult');
 Mock::generate('Git_PostReceiveMailManager');
 
 abstract class Git_GitoliteTestCase extends TuleapTestCase {
-    
+
     /** @var Git_GitoliteDriver */
     protected $driver;
     /** @var UserManager */
@@ -64,7 +64,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $this->sys_data_dir  = $tmpDir;
         $this->_glAdmDir     = $tmpDir.'/gitolite/admin';
         $this->repoDir       = $tmpDir.'/repositories';
-        
+
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
@@ -80,7 +80,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $this->permissions_manager = PermissionsManager::instance();
         $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
         stub($this->gitExec)->push()->returns(true);
-        
+
         $this->user_manager = mock('UserManager');
         $this->dumper = new Git_Gitolite_SSHKeyDumper($this->_glAdmDir, $this->gitExec);
 
@@ -105,6 +105,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             $this->logger,
             $this->git_system_event_manager,
             $this->url_manager,
+            mock('GitDao'),
+            mock('Git_Mirror_MirrorDao'),
+            mock('GitPlugin'),
             $this->gitExec,
             $this->repository_factory,
             $this->gitolite_permissions_serializer,
@@ -113,7 +116,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             $this->mirror_data_mapper
         );
     }
-    
+
     public function tearDown() {
         parent::tearDown();
         chdir($this->cwd);
@@ -122,7 +125,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         unset($GLOBALS['sys_https_host']);
         PermissionsManager::clearInstance();
     }
-    
+
     public function assertEmptyGitStatus() {
         $cwd = getcwd();
         chdir($this->_glAdmDir);

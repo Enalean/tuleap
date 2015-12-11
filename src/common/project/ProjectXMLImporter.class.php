@@ -129,6 +129,7 @@ class ProjectXMLImporter {
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(
+                'logger'          => $this->logger,
                 'project'         => $project,
                 'xml_content'     => $xml_element,
                 'extraction_path' => $extraction_path,
