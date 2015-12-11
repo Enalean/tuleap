@@ -13,6 +13,9 @@ Version 8.10 (Not released yet)
 	* request #8688: Old email displayed in confirmation message after updating my email address
 	* request #8689 Cross references on artifacts are not properly saved in DB
 
+	== Enhancement ==
+	* story #8572: Add project creation using XML
+
     == Plugins ==
 	* docman: 2.26.91
 	* tracker: 5.762
