@@ -24,6 +24,7 @@ use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\REST\v1\OrderRepresentationBase;
+use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\ResourcesInjector;
@@ -306,6 +307,7 @@ class ProjectResource extends AuthenticatedResource {
      * @access hybrid
      *
      * @param int    $id     Id of the project
+     * @param string $fields Set of fields to return in the result {@choice all,slim}
      * @param string $query  JSON object of search criteria properties {@from path}
      * @param int    $limit  Number of elements displayed per page {@from path}
      * @param int    $offset Position of the first element to display {@from path}
@@ -313,13 +315,20 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\REST\v1\MilestoneRepresentationBase}
      */
-    public function getMilestones($id, $query = '', $limit = 10, $offset = 0, $order = 'asc') {
+    public function getMilestones(
+        $id,
+        $fields = MilestoneRepresentationBase::ALL_FIELDS,
+        $query = '',
+        $limit = 10,
+        $offset = 0,
+        $order = 'asc'
+    ) {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
         try {
-            $milestones = $this->milestones($id, $query, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
+            $milestones = $this->milestones($id, $fields, $query, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
         } catch (\Planning_NoPlanningsException $e) {
             $milestones = array();
         }
@@ -339,20 +348,21 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForProject();
     }
 
-    private function milestones($id, $query, $limit, $offset, $order, $event) {
+    private function milestones($id, $representation_type, $query, $limit, $offset, $order, $event) {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
         EventManager::instance()->processEvent(
             $event,
             array(
-                'version' => 'v1',
-                'project' => $project,
-                'query'   => $query,
-                'limit'   => $limit,
-                'offset'  => $offset,
-                'order'   => $order,
-                'result'  => &$result,
+                'version'             => 'v1',
+                'project'             => $project,
+                'representation_type' => $representation_type,
+                'query'               => $query,
+                'limit'               => $limit,
+                'offset'              => $offset,
+                'order'               => $order,
+                'result'              => &$result,
             )
         );
 

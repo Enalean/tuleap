@@ -25,7 +25,9 @@ use Tuleap\Tracker\REST\TrackerRepresentation;
  */
 class MilestoneRepresentationBase {
 
-    const ROUTE = 'milestones';
+    const ROUTE      = 'milestones';
+    const ALL_FIELDS = 'all';
+    const SLIM       = 'slim';
 
     /**
      * @var int

@@ -705,12 +705,14 @@ class Event {
      * Event raised to get top milestones from a project with REST
      *
      * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'order'   => string
-     *     'result'  => array
+     *     'version'             => String
+     *     'query'               => String
+     *     'representation_type' => String
+     *     'project'             => Project
+     *     'limit'               => int
+     *     'offset'              => int
+     *     'order'               => string
+     *     'result'              => array
      */
     const REST_GET_PROJECT_MILESTONES = 'rest_get_project_milestones';
 

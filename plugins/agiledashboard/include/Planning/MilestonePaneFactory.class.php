@@ -27,10 +27,12 @@ class Planning_MilestonePaneFactory {
      * If PRELOAD_ENABLED is set to true, planning v2 data will be injected to the view.
      * If it's set to false, data will be asynchronously fetched via REST calls.
      */
-    const PRELOAD_ENABLED           = false;
-    const PRELOAD_PAGINATION_LIMIT  = 50;
-    const PRELOAD_PAGINATION_OFFSET = 0;
-    const PRELOAD_PAGINATION_ORDER  = 'desc';
+    const PRELOAD_ENABLED              = false;
+    const PRELOAD_PAGINATION_LIMIT     = 50;
+    const PRELOAD_PAGINATION_OFFSET    = 0;
+    const PRELOAD_PAGINATION_ORDER     = 'desc';
+    const PRELOAD_SUBMILESTONES_FIELDS = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::SLIM;
+    const PRELOAD_MILESTONE_FIELDS     = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::ALL_FIELDS;
 
     /** @var AgileDashboard_PaneInfo[] */
     private $list_of_pane_info = array();
@@ -196,7 +198,11 @@ class Planning_MilestonePaneFactory {
             return null;
         }
 
-        return $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
+        return $this->milestone_representation_builder->getMilestoneRepresentation(
+            $milestone,
+            $user,
+            self::PRELOAD_MILESTONE_FIELDS
+        );
     }
 
     private function getPaginatedBacklogItemsRepresentationsForMilestone(Planning_Milestone $milestone, PFUser $user) {
@@ -220,6 +226,7 @@ class Planning_MilestonePaneFactory {
         return $this->milestone_representation_builder->getPaginatedSubMilestonesRepresentations(
             $milestone,
             $user,
+            self::PRELOAD_SUBMILESTONES_FIELDS,
             new Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen(),
             self::PRELOAD_PAGINATION_LIMIT,
             self::PRELOAD_PAGINATION_OFFSET,

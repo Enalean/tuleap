@@ -28,7 +28,7 @@ describe("MilestoneService", function() {
 
     describe("getOpenMilestones() -", function() {
         it("Given a project id, a limit of 50 items and an offset of 0, when I get the project's open milestones, then a promise will be resolved with an object containing the milestones and the X-PAGINATION-SIZE header as the total number of items", function() {
-            mockBackend.expectGET('/api/v1/projects/12/milestones?limit=50&offset=0&order=desc&query=%7B%22status%22:%22open%22%7D').respond([
+            mockBackend.expectGET('/api/v1/projects/12/milestones?fields=slim&limit=50&offset=0&order=desc&query=%7B%22status%22:%22open%22%7D').respond([
                 {
                     id: 911,
                     resources: {

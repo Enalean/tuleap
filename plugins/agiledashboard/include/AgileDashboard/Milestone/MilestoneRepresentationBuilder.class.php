@@ -41,13 +41,19 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         $this->event_manager            = $event_manager;
     }
 
-    public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user) {
+    public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type) {
+        $status_count = array();
+        if ($representation_type === MilestoneRepresentation::ALL_FIELDS) {
+            $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
+        }
+
         $milestone_representation = new MilestoneRepresentation();
         $milestone_representation->build(
             $milestone,
-            $this->milestone_factory->getMilestoneStatusCount($user, $milestone),
+            $status_count,
             $this->getBacklogTrackers($milestone),
-            $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
+            $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
+            $representation_type
         );
 
         $this->event_manager->processEvent(
@@ -66,6 +72,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
     public function getPaginatedSubMilestonesRepresentations(
         Planning_Milestone $milestone,
         PFUser $user,
+        $representation_type,
         Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
         $limit,
         $offset,
@@ -76,7 +83,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
 
         $submilestones_representations = array();
         foreach($sub_milestones->getMilestones() as $submilestone) {
-            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user);
+            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
         }
 
         return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
@@ -88,6 +95,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
     public function getPaginatedTopMilestonesRepresentations(
         Project $project,
         PFUser $user,
+        $representation_type,
         Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
         $limit,
         $offset,
@@ -98,7 +106,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
 
         $submilestones_representations = array();
         foreach($sub_milestones->getMilestones() as $submilestone) {
-            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user);
+            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
         }
 
         return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(

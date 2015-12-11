@@ -52,6 +52,7 @@ use AgileDashboard_Milestone_MilestoneDao;
 use MilestoneParentLinker;
 use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
+use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 
 /**
  * Wrapper for milestone related REST methods
@@ -262,7 +263,11 @@ class MilestoneResource extends AuthenticatedResource {
         $this->sendAllowHeadersForMilestone($milestone);
 
 
-        $milestone_representation = $this->milestone_representation_builder->getMilestoneRepresentation($milestone, $user);
+        $milestone_representation = $this->milestone_representation_builder->getMilestoneRepresentation(
+            $milestone,
+            $user,
+            MilestoneRepresentation::ALL_FIELDS
+        );
 
         return $milestone_representation;
     }
@@ -309,6 +314,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @access hybrid
      *
      * @param int    $id     Id of the milestone
+     * @param string $fields Set of fields to return in the result {@choice all,slim}
      * @param string $query  JSON object of search criteria properties {@from path}
      * @param int    $limit  Number of elements displayed per page {@from path}
      * @param int    $offset Position of the first element to display {@from path}
@@ -319,7 +325,14 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    public function getMilestones($id, $query = '', $limit = 10, $offset = 0, $order = 'asc') {
+    public function getMilestones(
+        $id,
+        $fields = MilestoneRepresentation::ALL_FIELDS,
+        $query = '',
+        $limit = 10,
+        $offset = 0,
+        $order = 'asc'
+    ) {
         $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
@@ -331,7 +344,7 @@ class MilestoneResource extends AuthenticatedResource {
         }
 
         $paginated_milestones_representations = $this->milestone_representation_builder
-            ->getPaginatedSubMilestonesRepresentations($milestone, $user, $criterion, $limit, $offset, $order);
+            ->getPaginatedSubMilestonesRepresentations($milestone, $user, $fields, $criterion, $limit, $offset, $order);
 
         $this->sendAllowHeaderForSubmilestones();
         $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());
