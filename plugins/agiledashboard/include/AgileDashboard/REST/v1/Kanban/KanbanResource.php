@@ -733,7 +733,6 @@ class KanbanResource extends AuthenticatedResource {
                 $this->resources_patcher->commit();
             } catch (Tracker_NoChangeException $exception) {
                 $this->resources_patcher->rollback();
-                throw new RestException(400, $exception->getMessage());
             } catch (Tracker_Workflow_GlobalRulesViolationException $exception) {
                 $this->resources_patcher->rollback();
                 throw new RestException(400, $exception->getMessage());
