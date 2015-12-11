@@ -3,12 +3,15 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 grammar {
     include "../ugroups-definition.rnc"
     include "../svn-definition.rnc"
+    include "../project-definition.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
 
     start =
         element project {
-            element ugroups { ugroups }?,
-            element trackers { trackers }*,
+            project_attributes &
+            project_tags &
+            element ugroups { ugroups }? &
+            element trackers { trackers }* &
             element svn { svn }?
         }
 }

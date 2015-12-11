@@ -52,7 +52,7 @@ class ProjectXMLImport_XMLImportZipArchiveTest extends TuleapTestCase {
         }
 
         $this->archive = new ProjectXMLImporter_XMLImportZipArchive(
-            $this->project,
+            $this->project->getID(),
             $this->zip,
             $this->tmp_dir
         );

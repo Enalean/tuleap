@@ -44,9 +44,15 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 /**
  * Manage creation of a new project in the forge.
  *
- * For now, mainly a wrapper for create_project method
+ * For now, mainly a wrapper for createProject method
  */
 class ProjectCreator {
+
+    /**
+     * @var bool true to bypass manual activation
+     */
+    private $force_activation;
+
     /**
      * @var ProjectManager
      */
@@ -67,7 +73,8 @@ class ProjectCreator {
      */
     var $ruleFullName;
 
-    public function __construct(ProjectManager $projectManager, ReferenceManager $reference_manager) {
+    public function __construct(ProjectManager $projectManager, ReferenceManager $reference_manager, $force_activation = false) {
+        $this->force_activation  = $force_activation;
         $this->reference_manager = $reference_manager;
         $this->ruleShortName  = new Rule_ProjectName();
         $this->ruleFullName   = new Rule_ProjectFullName();
@@ -131,7 +138,7 @@ class ProjectCreator {
     }
 
     /**
-     * create_project
+     * createProject
      *
      * Create a new project
      *
@@ -260,12 +267,6 @@ class ProjectCreator {
             'built_from_template' => db_ei($data->getTemplateId()),
             'type'                => ($data->isTest() ? 3 : 1)
         );
-        if ($data->getLicense()) {
-            $insert_data['license'] = "'" . mysql_real_escape_string($data->getLicense()) . "'";
-            if ($data->getLicenseOther()) {
-                $insert_data['license_other'] = "'" . mysql_real_escape_string($data->getLicenseOther()) . "'";
-            }
-        }
         $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
         $result=db_query($sql);
 
@@ -561,7 +562,7 @@ class ProjectCreator {
     private function autoActivateProject($group){
         $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
-        if ($auto_approval == PROJECT_APPROVAL_AUTO) {
+        if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
             $this->projectManager->activate($group);
         }
     }

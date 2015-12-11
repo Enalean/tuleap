@@ -1,0 +1,17 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+project_attributes =
+    attribute unix-name { xsd:string { pattern = "[a-zA-Z0-9_\-]+" } },
+    attribute full-name { xsd:string },
+    attribute description { xsd:string },
+    attribute access { xsd:string { pattern = "(public|private)" } }
+
+project_tags =
+    element long-description { xsd:string } &
+    element services {
+        element service {
+            attribute shortname { xsd:string },
+            attribute enabled { xsd:boolean }
+        }*
+    }
+

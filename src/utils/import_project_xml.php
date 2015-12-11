@@ -59,7 +59,7 @@ if (isset($arguments['h'])) {
 }
 
 if (! isset($arguments['p'])) {
-    usage();
+    $project_id = null;
 } else {
     $project_id = (int)$arguments['p'];
 }
@@ -123,6 +123,7 @@ try {
         $user_finder,
         new ProjectXMLImporterLogger()
     );
+
     $xml_importer->importFromArchive($project_id, $archive);
 
     $archive->close();

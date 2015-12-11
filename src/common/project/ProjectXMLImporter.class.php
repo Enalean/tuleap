@@ -55,14 +55,18 @@ class ProjectXMLImporter {
         $this->ugroup_manager  = $ugroup_manager;
         $this->user_finder     = $user_finder;
         $this->logger          = $logger;
+
+        $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance(), true);
+    }
+
+    public function importNewFromArchive(ZipArchive $archive) {
+        return $this->importFromArchive(basename($archive->filename), $archive);
     }
 
     public function importFromArchive($project_id, ZipArchive $archive) {
         $this->logger->info('Start importing from archive ' . $archive->filename);
 
-        $project         = $this->getProject($project_id);
-        $project_archive = $this->getProjectZipArchive($project, $archive);
-
+        $project_archive = $this->getProjectZipArchive($archive, $project_id);
         $xml_content = $project_archive->getXML();
 
         if (! $xml_content) {
@@ -72,7 +76,7 @@ class ProjectXMLImporter {
 
         $project_archive->extractFiles();
 
-        $this->importContent($project, $xml_content, $project_archive->getExtractionPath());
+        $this->importContent($project_id, $xml_content, $project_archive->getExtractionPath());
 
         return $project_archive->cleanUp();
     }
@@ -80,28 +84,41 @@ class ProjectXMLImporter {
     /**
      * @return ProjectXMLImporter_XMLImportZipArchive
      */
-    private function getProjectZipArchive(Project $project, ZipArchive $archive) {
-        return new ProjectXMLImporter_XMLImportZipArchive($project, $archive, ForgeConfig::get('tmp_dir'));
+    private function getProjectZipArchive(ZipArchive $archive, $project_identifier) {
+        return new ProjectXMLImporter_XMLImportZipArchive($project_identifier, $archive, ForgeConfig::get('tmp_dir'));
     }
 
     public function import($project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
         $xml_contents    = file_get_contents($xml_file_path, 'r');
-        $project         = $this->getProject($project_id);
         $extraction_path = '';
 
-        return $this->importContent($project, $xml_contents, $extraction_path);
+        return $this->importContent($project_id, $xml_contents, $extraction_path);
     }
 
-    private function importContent(Project $project, $xml_contents, $extraction_path) {
-        $project_id = $project->getID();
+    private function createProject(SimpleXMLElement $xml) {
+        $data = ProjectCreationData::buildFromXML($xml,
+            100,
+            $this->xml_validator,
+            ServiceManager::instance(),
+            $project_manager = $this->project_manager);
+        return $this->project_creator->build($data);
+    }
 
-        $this->logger->info("Importing project in project $project_id");
-
+    private function importContent($project_id, $xml_contents, $extraction_path) {
         $this->checkFileIsValidXML($xml_contents);
 
         $xml_element = simplexml_load_string($xml_contents);
+
+        if(empty($project_id)){
+            $project = $this->createProject($xml_element);
+            $project_id = $project->getID();
+        } else {
+            $project = $this->getProject($project_id);
+        }
+
+        $this->logger->info("Importing project in project $project_id");
 
         $this->importUgroups($project, $xml_element);
 

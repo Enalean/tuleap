@@ -26,10 +26,14 @@ class ProjectXMLImporter_XMLImportZipArchive extends XMLImportZipArchive {
     const RESOURCE_NAME        = 'project';
     const PROJECT_XML_FILENAME = "project.xml";
 
-    public function __construct(Project $project, ZipArchive $zip, $extraction_path){
+    /**
+     * @param $project_identifier a unique identifier for the project to import
+     * (used in creating the temporary path)
+     */
+    public function __construct($project_identifier, ZipArchive $zip, $extraction_path){
         parent::__construct($zip);
 
-        $this->extraction_path = $this->tempdir($extraction_path, $project->getID());
+        $this->extraction_path = $this->tempdir($extraction_path, $project_identifier);
     }
 
     /**
@@ -46,7 +50,7 @@ class ProjectXMLImporter_XMLImportZipArchive extends XMLImportZipArchive {
      *
      * @return string Path to the new directory
      */
-    protected function tempdir($tmp_dir, $project_id) {
-        return parent::tempdir($tmp_dir, self::RESOURCE_NAME, $project_id);
+    protected function tempdir($tmp_dir, $project_identifier) {
+        return parent::tempdir($tmp_dir, self::RESOURCE_NAME, $project_identifier);
     }
 }
