@@ -20,6 +20,7 @@ require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Formatter_Cvs.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Formatter_Svn.class.php';
+require_once('www/project/export/project_export_utils.php');
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -76,7 +77,7 @@ if (!$error && $request->exist('export')) {
     $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
     echo $statsCvs->getStats();
     $em = EventManager::instance();
-    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
+    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, get_csv_separator(), $groupId);
     $em->processEvent('statistics_collector', $params);
     exit;
 } else {

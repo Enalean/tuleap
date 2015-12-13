@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `refname` TEXT NULL,
   `operation_type` varchar(64) NULL,
   `refname_type` varchar(64) NULL,
-   INDEX `idx_repository_user`(`repository_id`, `user_id`));
+   INDEX `idx_repository_user`(`repository_id`, `user_id`),
+   INDEX `idx_push_date`(`push_date`));
 
 CREATE TABLE IF NOT EXISTS `plugin_git_ci` (
 `job_id` INT(11) UNSIGNED NOT NULL,

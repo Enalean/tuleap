@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -16,50 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('www/project/export/project_export_utils.php');
-
 /**
  * Render statistics in csv format
  */
 class Statistics_Formatter {
 
     private $separator;
-    protected $content;
     public $startDate;
     public $endDate;
     public $groupId = null;
+    private $csv_handle;
 
-    /**
-     * Constructor of the class
-     *
-     * @param String  $startDate Period start date
-     * @param String  $endDate   Period end date
-     * @param Integer $groupId   Project Id
-     *
-     * @return void
-     */
-    function __construct($startDate, $endDate, $groupId = null) {
-        $this->separator = get_csv_separator();
-        $this->content   = '';
-        $this->startDate = $startDate;
-        $this->endDate   = $endDate;
-        $this->groupId   = $groupId;
+    public function __construct($startDate, $endDate, $separator, $groupId = null) {
+        $this->separator  = $separator;
+        $this->csv_handle = fopen('php://memory', 'w+');
+        $this->startDate  = $startDate;
+        $this->endDate    = $endDate;
+        $this->groupId    = $groupId;
         $this->addEmptyLine();
     }
 
     /**
      * Add a line to the content
      *
-     * @param Array $line Array containing the elements of a csv line
+     * @param array $line Array containing the elements of a csv line
      *
      * @return void
      */
-    function addLine($line) {
-        foreach ($line as $element) {
-            $this->content .= tocsv($element, $this->separator).$this->separator;
-        }
-        $this->content = substr($this->content, 0, -1);
-        $this->addEmptyLine();
+    public function addLine($line) {
+        fputcsv($this->csv_handle, $line, $this->separator);
     }
 
     /**
@@ -69,7 +55,7 @@ class Statistics_Formatter {
      *
      * @return void
      */
-    function addHeader($title) {
+    public function addHeader($title) {
         $this->addLine(array($title));
     }
 
@@ -78,8 +64,8 @@ class Statistics_Formatter {
      *
      * @return void
      */
-    function addEmptyLine() {
-        $this->content .= "\n";
+    public function addEmptyLine() {
+        fwrite($this->csv_handle, "\n");
     }
 
     /**
@@ -87,8 +73,8 @@ class Statistics_Formatter {
      *
      * @return void
      */
-    function clearContent() {
-        $this->content = '';
+    public function clearContent() {
+        ftruncate($this->csv_handle, 0);
     }
 
     /**
@@ -96,10 +82,8 @@ class Statistics_Formatter {
      *
      * @return String
      */
-    function getCsvContent() {
-        return $this->content;
+    public function getCsvContent() {
+        rewind($this->csv_handle);
+        return stream_get_contents($this->csv_handle);
     }
-
 }
-
-?>
