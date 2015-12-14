@@ -118,6 +118,15 @@ class OngoingIntelligentStub {
         return $this;
     }
 
+    public function atLeastOnce($message = '%s') {
+        if (empty($this->arguments)) {
+            $this->mock->expectAtLeastOnce($this->method, false, $message);
+        } else {
+            $this->mock->expectAtLeastOnce($this->method, $this->arguments, $message);
+        }
+        return $this;
+    }
+
     public function never() {
         $this->mock->expectNever($this->method);
         return $this;

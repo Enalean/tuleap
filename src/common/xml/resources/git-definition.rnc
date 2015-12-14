@@ -1,0 +1,8 @@
+git = element repository {
+    attribute bundle-path { xsd:string } &
+    attribute name { xsd:string } &
+    attribute description { xsd:string }? &
+    element read  { element ugroup-id { xsd:integer }* }? &
+    element write { element ugroup-id { xsd:integer }* }? &
+    element wplus { element ugroup-id { xsd:integer }* }?
+}*

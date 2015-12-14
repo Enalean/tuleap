@@ -50,6 +50,11 @@ class GitRepositoryManager {
     private $backup_directory;
 
     /**
+     * @var System_Command
+     */
+    private $system_command;
+
+    /**
      * @param GitRepositoryFactory $repository_factory
      * @param Git_SystemEventManager   $git_system_event_manager
      * @param backup_directory
@@ -59,6 +64,7 @@ class GitRepositoryManager {
         $this->git_system_event_manager = $git_system_event_manager;
         $this->dao                      = $dao;
         $this->backup_directory         = $backup_directory;
+        $this->system_command           = new System_Command();
     }
 
     /**
@@ -87,6 +93,20 @@ class GitRepositoryManager {
         $this->assertRepositoryNameNotAlreadyUsed($repository);
         $id = $this->dao->save($repository);
         $repository->setId($id);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+    }
+
+    public function createFromBundle(GitRepository $repository, GitRepositoryCreator $creator, $bundle_path) {
+        if (!$creator->isNameValid($repository->getName())) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+        }
+        $this->assertRepositoryNameNotAlreadyUsed($repository);
+        $id = $this->dao->save($repository);
+        $repository->setId($id);
+        $bundle_path_arg = escapeshellarg($bundle_path);
+        $repository_full_path_arg = escapeshellarg($repository->getFullPath());
+        $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh $bundle_path_arg $repository_full_path_arg");
+
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 

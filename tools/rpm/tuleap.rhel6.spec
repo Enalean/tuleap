@@ -570,13 +570,16 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
-%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
 %{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
 
 # plugin-git-gitolite3
 %{__install} plugins/git/bin/gitolite3-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
+
+#codendiadm > gitolite sudo
+%{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
+%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 
 # Plugin archivedeleteditems
 %{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -1040,6 +1043,7 @@ fi
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 
 %files plugin-git-gitolite3
@@ -1057,6 +1061,7 @@ fi
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 %attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_git
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 
 %files plugin-docmanwatermark
@@ -1188,6 +1193,9 @@ fi
 #%config
 
 %changelog
+* Fri Dec 04 2015 Adrien HAMRAOUI <adrien.hamraoui@sogilis.com> -
+- Add gitolite sudoer file installation.
+
 * Mon Oct 11 2010 Manuel VACELET <manuel.vacelet@st.com> -
 - Package plugins that matters (solve dependencies install issues).
 

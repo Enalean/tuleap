@@ -129,6 +129,7 @@ class ProjectXMLImporter {
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(
+                'logger'          => $this->logger,
                 'project'         => $project,
                 'xml_content'     => $xml_element,
                 'extraction_path' => $extraction_path,
@@ -219,6 +220,7 @@ class ProjectXMLImporter {
 
     private function checkFileIsValidXML($file_contents) {
         libxml_use_internal_errors(true);
+        libxml_clear_errors();
         $xml = new DOMDocument();
         $xml->loadXML($file_contents);
         $errors = libxml_get_errors();
