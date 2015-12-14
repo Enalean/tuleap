@@ -1,3 +1,6 @@
+Version 1.22 - Tuleap 8.10
+    * story #8671 trigger CI build on svn paths (Define SVN paths to trigger Jenkins job)
+
 Version 1.21 - Tuleap 8.10
     * story #8671: Add default star operator
 
