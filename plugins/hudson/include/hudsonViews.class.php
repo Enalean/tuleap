@@ -230,7 +230,20 @@ class hudsonViews extends Views {
                 $em->processEvent('collect_ci_triggers', $params);
 
                 $button = $GLOBALS['Language']->getText('plugin_hudson','form_editjob_button');
-                $this->displayForm($project, $services, 'edit', 'update', $button, $job_id, $row['job_url'], $row['name'], $row['use_svn_trigger'], $row['use_cvs_trigger'], $row['token']);
+                $this->displayForm(
+                    $project,
+                    $services,
+                    'edit',
+                    'update',
+                    $button,
+                    $job_id,
+                    $row['job_url'],
+                    $row['name'],
+                    $row['use_svn_trigger'],
+                    $row['use_cvs_trigger'],
+                    $row['token'],
+                    $row['svn_paths']
+                );
             }
         }
     }
@@ -369,12 +382,25 @@ class hudsonViews extends Views {
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
         echo ' '.$this->_getHelp('hudson-service', true);
         echo '<div id="hudson_add_job">';
-        $this->displayForm($project, $services, 'add', 'add', 'Add job', null, null, null, null, null, null);
+        $this->displayForm($project, $services, 'add', 'add', 'Add job', null, null, null, null, null, null, '');
         echo '</div>';
         echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
 
-    private function displayForm($project, $services, $add_or_edit, $action, $button, $job_id, $job_url, $name, $use_svn_trigger, $use_cvs_trigger, $token) {
+    private function displayForm(
+        $project,
+        $services,
+        $add_or_edit,
+        $action,
+        $button,
+        $job_id,
+        $job_url,
+        $name,
+        $use_svn_trigger,
+        $use_cvs_trigger,
+        $token,
+        $svn_paths
+    ) {
         echo '  <form class="form-horizontal">
                     <input type="hidden" name="group_id" value="'.$project->getId().'" />
                     <input type="hidden" name="job_id" value="'. $job_id .'" />
@@ -400,6 +426,8 @@ class hudsonViews extends Views {
                         <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger').'</label>
                             <div class="controls">';
             if ($project->usesSVN()) {
+                $purifier = Codendi_HTMLPurifier::instance();
+
                 $checked = '';
                 if ($use_svn_trigger) {
                     $checked = ' checked="checked" ';
@@ -408,7 +436,13 @@ class hudsonViews extends Views {
                         <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" '. $checked .'/>
                         '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn') .'
                       </label>
-                      <textarea name="hudson_svn_paths" id="hudson_svn_paths" readonly>*</textarea>
+                      <div id="hudson_svn_paths">
+                        <textarea
+                          name="hudson_svn_paths"
+                          placeholder="'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_placeholder') .'"
+                        >'. $purifier->purify($svn_paths) .'</textarea>
+                        <span class="help-block">'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_helper') .'</span>
+                      </div>
                     ';
             }
             if ($project->usesCVS()) {
