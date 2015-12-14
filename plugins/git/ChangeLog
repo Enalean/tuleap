@@ -1,3 +1,6 @@
+Version 4.98 - Tuleap 8.10
+    * story #8569: Import git repositories
+
 Version 4.97 - Tuleap 8.10
     * request #8661: Git post receive hook do not rely on a shebang anymore
 
