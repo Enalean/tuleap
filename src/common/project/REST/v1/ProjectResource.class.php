@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -296,23 +296,30 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the top milestones of a given project
      *
+     * <p>
+     * $query parameter is optional, by default we return all milestones. If
+     * query={"status":"open"} then only open milestones are returned and if
+     * query={"status":"closed"} then only closed milestones are returned.
+     * </p>
+     *
      * @url GET {id}/milestones
      * @access hybrid
      *
      * @param int    $id     Id of the project
+     * @param string $query  JSON object of search criteria properties {@from path}
      * @param int    $limit  Number of elements displayed per page {@from path}
      * @param int    $offset Position of the first element to display {@from path}
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
      * @return array {@type Tuleap\REST\v1\MilestoneRepresentationBase}
      */
-    public function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
+    public function getMilestones($id, $query = '', $limit = 10, $offset = 0, $order = 'asc') {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
         try {
-        $milestones = $this->milestones($id, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
+            $milestones = $this->milestones($id, $query, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
         } catch (\Planning_NoPlanningsException $e) {
             $milestones = array();
         }
@@ -332,7 +339,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForProject();
     }
 
-    private function milestones($id, $limit, $offset, $order, $event) {
+    private function milestones($id, $query, $limit, $offset, $order, $event) {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
@@ -341,6 +348,7 @@ class ProjectResource extends AuthenticatedResource {
             array(
                 'version' => 'v1',
                 'project' => $project,
+                'query'   => $query,
                 'limit'   => $limit,
                 'offset'  => $offset,
                 'order'   => $order,

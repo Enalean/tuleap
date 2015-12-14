@@ -2,6 +2,7 @@
 <div class="alert alert-error" ng-if="rest_error_occured" ng-bind-html="rest_error"></div>
 
 <div class="tuleap-modal-loading" ng-if="loading_modal.is_loading"></div>
+
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: backlog_items.loading }">
         <div class="planning-header">
@@ -109,111 +110,55 @@
                     <i class="icon-plus"></i> <span translate>Add a {{ submilestone_type.label }}</span>
                 </button>
 
-                <div ng-if="milestones.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
-                    <button type="button" class="btn btn-small" ng-class="{active: current_closed_view_class === show_closed_view_key}" ng-click="switchClosedMilestoneItemsViewMode(show_closed_view_key)" title="{{ 'Show closed items' | translate }}"><i class="icon-eye-open"></i> <span translate>Show closed items</span></button>
-                    <button type="button" class="btn btn-small" ng-class="{active: current_closed_view_class === hide_closed_view_key}" ng-click="switchClosedMilestoneItemsViewMode(hide_closed_view_key)" title="{{ 'Hide closed items' | translate }}"><i class="icon-eye-close"></i> <span translate>Hide closed items</span></button>
+                <div ng-if="milestones.content.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
+                    <button type="button" class="btn btn-small" ng-class="{active: current_closed_view_class === show_closed_view_key}" ng-click="switchClosedMilestoneItemsViewMode(show_closed_view_key)" title="{{ 'Show closed backlog items' | translate }}"><i class="icon-eye-open"></i> <span translate>Show closed backlog items</span></button>
+                    <button type="button" class="btn btn-small" ng-class="{active: current_closed_view_class === hide_closed_view_key}" ng-click="switchClosedMilestoneItemsViewMode(hide_closed_view_key)" title="{{ 'Hide closed backlog items' | translate }}"><i class="icon-eye-close"></i> <span translate>Hide closed backlog items</span></button>
                 </div>
 
                 <div class="clearfix"></div>
             </div>
+
             <div translate class="alert alert-warning" ng-if="displayUserCantPrioritizeForMilestones()">
                 You are not allowed to rank on this planning
             </div>
-            <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }">
-                <legend ng-click="toggle($event, milestone)">
-                    {{ milestone.label }}
-                    <div
-                        ng-if="use_angular_new_modal && ! milestone.collapsed && milestone.has_user_priority_change_permission"
-                        class="btn-group dropdown do-animate"
-                    >
-                        <span class="dropdown-toggle btn btn-mini" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
-                            <i class="icon-plus"></i> <span translate>Add a new item</span>
-                            <b class="caret"></b>
-                        </span>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li ng-repeat="accepted_type in milestone.content_accepted_types.content">
-                                <a href="#" class="create-item-link" ng-click="showAddItemToSubMilestoneModal(accepted_type, milestone)">{{ accepted_type.label }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
-                    <span class="date" ng-if="milestone.start_date || milestone.end_date">
-                        {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
-                        {{ milestone.end_date | amDateFormat:'ll' }}
-                    </span>
-                    <div style="clear: both"></div>
 
-
-                </legend>
-
-                <div class="content" ng-if="! milestone.collapsed" ng-class="{ loading_content: milestone.loadingContent }">
-                    <div class="info">
-                        <span class="capacity" translate>Capacity:</span>
-                        <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span>
-                        <span class="capacity-value" ng-if="! milestone.capacity" translate>N/A</span>
-
-                        <span class="initial-effort" translate>Initial effort:</span>
-                        <span class="initial-effort-value" ng-if="milestone.initialEffort" ng-class="{ higher: milestone.initialEffort > milestone.capacity }">{{ milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestone.initialEffort" translate>N/A</span>
-
-                        <ul>
-                            <li>
-                                <a href="/plugins/tracker/?aid={{ milestone.id }}" ng-click="showEditSubmilestoneModal($event, milestone)" title="{{ 'Edit' | translate }}">
-                                    <i class="icon-edit"></i> <span translate>Edit</span>
-                                </a>
-                            </li>
-                            <li ng-if="! milestone.sub_milestone_type">
-                                <a href="{{ generateMilestoneLinkUrl(milestone, 'blcontent') }}" title="{{ 'Content' | translate }}">
-                                    <i class="icon-list-ul"></i> <span translate>Content</span>
-                                </a>
-                            </li>
-                            <li ng-if="milestone.resources.milestones.accept.trackers.length > 0">
-                                <a href="{{ generateMilestoneLinkUrl(milestone, 'planning-v2') }}" title="{{ 'Planning' | translate }}">
-                                    <i class="icon-signin"></i> <span translate>Planning</span>
-                                </a>
-                            </li>
-                            <li ng-if="milestone.resources.burndown">
-                                <a href="{{ generateMilestoneLinkUrl(milestone, 'burndown') }}" title="{{ 'Burndown' | translate }}">
-                                    <i class="icon-bar-chart"></i> <span translate>Burndown</span>
-                                </a>
-                            </li>
-                            <li ng-if="milestone.resources.cardwall">
-                                <a href="{{ generateMilestoneLinkUrl(milestone, 'cardwall') }}" title="{{ 'Cardwall' | translate }}">
-                                    <i class="icon-table"></i> <span translate>Cardwall</span>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div style="clear: both"></div>
-                    </div>
-
-                    <div ui-tree="treeOptions">
-                        <ul ui-tree-nodes
-                            ng-model="milestone.content"
-                            class="backlog-items submilestone {{ current_view_class }}"
-                            data-accept="{{ milestone.content_accepted_types.toString() }}"
-                            data-submilestone-id="{{ milestone.id }}"
-                            data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
-                        >
-                            <li ui-tree-node
-                                ng-repeat="backlog_item in milestone.content"
-                                class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                                data-accept="{{ backlog_item.accepted_types.toString() }}"
-                                data-type="{{ backlog_item.trackerId }}"
-                                ng-include="'backlog-item/backlog-item.tpl.html'"
-                                onload="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
-                                ng-if="canShowBacklogItem(backlog_item)"
-                                ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
-                                collapsed="true"
-                                data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
-                            >
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="loading" ng-if="milestone.loadingContent"></div>
-                </div>
+            <div class="no-open-milestones" ng-if="! thereIsOpenMilestonesLoaded() && milestones.open_milestones_fully_loaded" translate>
+                There is no open milestones
+            </div>
+            <fieldset
+                ng-repeat="milestone in getOpenMilestones() track by $index"
+                class="milestone"
+                ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
+                ng-include="'milestone/milestone.tpl.html'"
+            >
             </fieldset>
+
+
+            <div ng-if="thereIsClosedMilestonesLoaded() || (! thereIsClosedMilestonesLoaded() && milestones.closed_milestones_fully_loaded)" class="milestones-separator">
+                <span translate>Closed milestones are below</span>
+            </div>
+            <button id="load-closed-milestone"
+                ng-if="! thereIsClosedMilestonesLoaded() && ! milestones.loading && ! milestones.closed_milestones_fully_loaded"
+                class="btn btn-link btn-small"
+                ng-click="displayClosedMilestones()"
+                translate
+            >
+                Load closed milestones
+            </button>
+            <div class="no-closed-milestones" ng-if="! thereIsClosedMilestonesLoaded() && milestones.closed_milestones_fully_loaded" translate>
+                There is no closed milestones
+            </div>
+            <fieldset
+                ng-if="thereIsClosedMilestonesLoaded()"
+                ng-repeat="milestone in getClosedMilestones() track by $index"
+                class="milestone"
+                ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
+                ng-include="'milestone/milestone.tpl.html'"
+            >
+            </fieldset>
+
+            <div class="loading" ng-if="milestones.loading"></div>
         </div>
-        <div class="loading" ng-if="loading_milestones"></div>
     </div>
 
     <div class="clearfix"></div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -370,7 +370,14 @@ class Planning_MilestoneFactory {
         return $sub_milestones;
     }
 
-    public function getPaginatedSubMilestones(PFUser $user, Planning_Milestone $milestone, $limit, $offset, $order) {
+    public function getPaginatedSubMilestones(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
         $milestone_artifact = $milestone->getArtifact();
         $sub_milestones     = array();
         $total_size         = 0;
@@ -378,6 +385,7 @@ class Planning_MilestoneFactory {
         if ($milestone_artifact) {
             $sub_milestone_artifacts = $this->milestone_dao->searchPaginatedSubMilestones(
                 $milestone_artifact->getId(),
+                $criterion,
                 $limit,
                 $offset,
                 $order
@@ -388,6 +396,37 @@ class Planning_MilestoneFactory {
         }
 
         return new AgileDashboard_Milestone_PaginatedMilestones($sub_milestones, $total_size);
+    }
+
+    public function getPaginatedTopMilestones(
+        PFUser $user,
+        Project $project,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
+        $top_milestones = array();
+        $total_size     = 0;
+
+        $virtual_milestone = $this->getVirtualTopMilestone($user, $project);
+        $root_planning = $this->planning_factory->getRootPlanning($user, $virtual_milestone->getProject()->getID());
+        $milestone_planning_tracker_id = $virtual_milestone->getPlanning()->getPlanningTrackerId();
+
+        if ($milestone_planning_tracker_id) {
+            $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
+                $milestone_planning_tracker_id,
+                $criterion,
+                $limit,
+                $offset,
+                $order
+            );
+
+            $total_size     = $this->milestone_dao->foundRows();
+            $top_milestones = $this->convertDarToArrayOfMilestones($user, $virtual_milestone, $top_milestone_artifacts);
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestones($top_milestones, $total_size);
     }
 
     private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, DataAccessResult $sub_milestone_artifacts) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,13 @@
 
 class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
-    public function searchPaginatedSubMilestones($milestone_artifact_id, $limit, $offset, $order) {
+    public function searchPaginatedSubMilestones(
+        $milestone_artifact_id,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
 
         $limit_statement = '';
@@ -34,6 +40,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         if (strtolower($order) !== 'asc') {
             $order = 'desc';
         }
+
+        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
                 FROM tracker_artifact AS parent
@@ -59,18 +67,103 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
                         hierarchy.parent_id = parent.tracker_id
                         AND hierarchy.child_id = submilestones.tracker_id
                     )
+                    $from_status_statement
+
+                WHERE 1
+                  AND $where_status_statement
+
                 ORDER BY submilestones.id $order
                 $limit_statement";
 
         return $this->retrieve($sql);
     }
 
-    public function searchSubMilestones($milestone_artifact_id) {
-        $limit  = null;
-        $offset = null;
-        $order  = 'asc';
+    public function searchPaginatedTopMilestones(
+        $milestone_tracker_id,
+        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        $limit,
+        $offset,
+        $order
+    ) {
+        $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
 
-        return $this->searchPaginatedSubMilestones($milestone_artifact_id, $limit, $offset, $order);
+        $limit_statement = '';
+        if ($limit > 0) {
+            $limit  = $this->da->escapeInt($limit);
+            $offset = $this->da->escapeInt($offset);
+
+            $limit_statement = "LIMIT $offset, $limit";
+        }
+
+        if (strtolower($order) !== 'asc') {
+            $order = 'desc';
+        }
+
+        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
+                FROM tracker_artifact AS submilestones
+                    $from_status_statement
+
+                WHERE submilestones.tracker_id = $milestone_tracker_id
+                  AND $where_status_statement
+
+                ORDER BY submilestones.id $order
+                $limit_statement";
+
+        return $this->retrieve($sql);
+    }
+
+    private function getStatusStatements(Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion) {
+        $from_status_statement  = "";
+        $where_status_statement = "1";
+        if ($criterion->shouldRetrieveOpenMilestones() && $criterion->shouldRetrieveClosedMilestones()) {
+            // search all milestones.
+            // no need to filter
+        } else {
+            if ($criterion->shouldRetrieveOpenMilestones()) {
+                $from_status_statement = "
+                    INNER JOIN tracker_changeset AS C ON (submilestones.last_changeset_id = C.id)
+                    LEFT JOIN (
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (submilestones.tracker_id = SS.tracker_id AND C.id = CV3.changeset_id)";
+                $where_status_statement = "(
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )";
+            }
+            if ($criterion->shouldRetrieveClosedMilestones()) {
+                $from_status_statement = "
+                    INNER JOIN (
+                       SELECT DISTINCT tracker_id
+                       FROM tracker_semantic_status
+                    ) AS R ON (R.tracker_id = submilestones.tracker_id)
+                    INNER JOIN tracker_changeset_value AS cvs ON(
+                        submilestones.last_changeset_id = cvs.changeset_id
+                    )
+                    INNER JOIN tracker_changeset_value_list AS cvl ON(cvl.changeset_value_id = cvs.id)
+                    LEFT JOIN tracker_semantic_status AS open_values ON (
+                        cvl.bindvalue_id = open_values.open_value_id
+                        AND open_values.tracker_id = submilestones.tracker_id
+                        AND cvs.field_id = open_values.field_id
+                    )";
+                $where_status_statement = "open_values.open_value_id IS NULL";
+            }
+        }
+
+        return array($from_status_statement, $where_status_statement);
+    }
+
+    public function searchSubMilestones($milestone_artifact_id) {
+        $limit     = null;
+        $offset    = null;
+        $order     = 'asc';
+        $criterion = new Tuleap\AgileDashboard\Milestone\Criterion\StatusAll();
+
+        return $this->searchPaginatedSubMilestones($milestone_artifact_id, $criterion, $limit, $offset, $order);
     }
 
     public function getAllMilestoneByTrackers(array $list_of_trackers_ids) {

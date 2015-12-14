@@ -634,6 +634,7 @@ class AgileDashboardPlugin extends Plugin {
         $params['result'] = $milestone_resource->get(
             $user,
             $params['project'],
+            $params['query'],
             $params['limit'],
             $params['offset'],
             $params['order']
