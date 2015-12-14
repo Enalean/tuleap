@@ -1,3 +1,6 @@
+Version 1.53 - Tuleap 8.10
+    * request #8684: Remove QRCode in the cardwall (This avoid HTTPS mixed content error on a AgileDashboard Cardwall and dependency to an external and deprecated API)
+
 Version 1.52 - Tuleap 8.3
     * story #8090: Export and import artifacts
 
