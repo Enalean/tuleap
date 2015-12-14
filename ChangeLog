@@ -8,6 +8,7 @@ Version 8.10 (Not released yet)
 	* story #8672 Accessibility: services on the left menu
 	* request #8535: It should be possible to validate import XML externaly
 	* request #7779: Lock icon in sidebar is misleading
+	* story #8658: Do not show closed milestones by default
 
 	== Bug fix ==
 	* request #8688: Old email displayed in confirmation message after updating my email address
@@ -18,10 +19,10 @@ Version 8.10 (Not released yet)
 
     == Plugins ==
 	* docman: 2.26.91
-	* tracker: 5.762
+	* tracker: 5.763
 	* git: 4.97
 	* hudson: 1.22
-	* agiledashboard: 1.327
+	* agiledashboard: 1.328
 	* cardwall: 1.53
 
     == Themes ==

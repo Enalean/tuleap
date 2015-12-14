@@ -1,3 +1,6 @@
+Version 1.328 - Tuleap 8.10
+    * story #8658: Do not show closed milestones by default
+
 Version 1.327 - Tuleap 8.10
     * request #8695: Move to top|bottom in kanban raises 400 error
 

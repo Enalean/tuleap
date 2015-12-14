@@ -1,3 +1,6 @@
+Version 5.763 - Tuleap 8.10
+    * story #8658: Do not show closed milestones by default
+
 Version 5.762 - Tuleap 8.10
     * request #8692: Value of PerTracker field not displayed in html notifications
 
