@@ -648,6 +648,24 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     /**
+     * @return ConfigNotificationAssignedTo
+     */
+    private function getTrackerConfigNotificationAssignedTo() {
+        return new ConfigNotificationAssignedTo(
+            new ConfigNotificationAssignedToDao()
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isNotificationAssignedToEnabled() {
+        $config_notification_assignedto = $this->getTrackerConfigNotificationAssignedTo();
+        $project                        = $this->getTracker()->getProject();
+        return $config_notification_assignedto->isAssignedToSubjectEnabled($project->getID());
+    }
+
+    /**
      * notify people
      *
      * @return void
@@ -667,7 +685,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $messages = array();
 
             $config = $this->getTrackerPluginConfig();
-            if ($config->isTokenBasedEmailgatewayEnabled()) {
+            if ($config->isTokenBasedEmailgatewayEnabled() || $this->isNotificationAssignedToEnabled()) {
                 $messages = $this->buildAMessagePerRecipient($recipients, $is_update);
             } else {
                 $messages = $this->buildOneMessageForMultipleRecipients($recipients, $is_update);
@@ -800,11 +818,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         $htmlBody = '';
         if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
-            $htmlBody  .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
+            $htmlBody .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
+            $htmlBody .= $this->getHTMLAssignedToFilter($user);
         }
 
-        $txtBody   = $this->getBodyText($is_update, $user, $lang, $ignore_perms);
-        $subject   = $this->getSubject($user, $ignore_perms);
+        $txtBody  = $this->getBodyText($is_update, $user, $lang, $ignore_perms);
+        $txtBody .= $this->getTextAssignedToFilter($user);
+        $subject  = $this->getSubject($user, $ignore_perms);
 
         $message = array();
 
@@ -917,6 +937,43 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $filter .= '=PROJECT=' . $project_name . '<br>';
         $filter .= '=TRACKER=' . $tracker_name . '<br>';
         $filter .= '</div>';
+
+        return $filter;
+    }
+
+    /**
+     * @return string
+     */
+    private function getTextAssignedToFilter(PFUser $recipient) {
+        $filter = '';
+
+        if ($this->isNotificationAssignedToEnabled()) {
+            $users = $this->getArtifact()->getAssignedTo($recipient);
+            foreach ($users as $user) {
+                $filter .= PHP_EOL . '=ASSIGNED_TO=' . $user->getUserName();
+            }
+            if ($filter !== '') {
+                $filter .= PHP_EOL;
+            }
+        }
+
+        return $filter;
+    }
+
+    /**
+     * @return string
+     */
+    private function getHTMLAssignedToFilter(PFUser $recipient) {
+        $filter = '';
+
+        if ($this->isNotificationAssignedToEnabled()) {
+            $filter = '<div style="display: none !important;">';
+            $users = $this->getArtifact()->getAssignedTo($recipient);
+            foreach ($users as $user) {
+                $filter .= '=ASSIGNED_TO=' . $user->getUserName() . '<br>';
+            }
+            $filter .= '</div>';
+        }
 
         return $filter;
     }
@@ -1171,15 +1228,26 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * Get the subject for notification
      *
-     * @param string $recipient The recipient who will receive the notification
-     *
      * @return string
      */
-    public function getSubject($recipient, $ignore_perms=false) {
-        //TODO check permission on title
-        $s = '';
-        $s .= '['. $this->getArtifact()->getTracker()->getItemName() .' #'. $this->getArtifact()->getId() .'] '.$this->getArtifact()->fetchMailTitle($recipient, 'text' ,$ignore_perms);
-        return $s;
+    public function getSubject(PFUser $recipient, $ignore_perms=false) {
+        $subject  = '['. $this->getArtifact()->getTracker()->getItemName() .' #'. $this->getArtifact()->getId() .'] ';
+        $subject .= $this->getSubjectAssignedTo($recipient);
+        $subject .= $this->getArtifact()->fetchMailTitle($recipient, 'text' ,$ignore_perms);
+        return $subject;
+    }
+
+    /**
+     * @return string
+     */
+    private function getSubjectAssignedTo(PFUser $recipient) {
+        if ($this->isNotificationAssignedToEnabled()) {
+            $users = $this->getArtifact()->getAssignedTo($recipient);
+            if (in_array($recipient, $users, true)) {
+                return '[Assigned to me] ';
+            }
+        }
+        return '';
     }
 
     /**
