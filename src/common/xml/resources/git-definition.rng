@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="git">
+    <zeroOrMore>
+      <element name="repository">
+        <interleave>
+          <attribute name="bundle-path">
+            <data type="string"/>
+          </attribute>
+          <attribute name="name">
+            <data type="string"/>
+          </attribute>
+          <optional>
+            <attribute name="description">
+              <data type="string"/>
+            </attribute>
+          </optional>
+          <optional>
+            <element name="read">
+              <zeroOrMore>
+                <element name="ugroup-id">
+                  <data type="integer"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="write">
+              <zeroOrMore>
+                <element name="ugroup-id">
+                  <data type="integer"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="wplus">
+              <zeroOrMore>
+                <element name="ugroup-id">
+                  <data type="integer"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+        </interleave>
+      </element>
+    </zeroOrMore>
+  </define>
+</grammar>

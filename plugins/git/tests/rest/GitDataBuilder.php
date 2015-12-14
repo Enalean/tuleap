@@ -95,7 +95,10 @@ class GitDataBuilder extends REST_TestDataBuilder {
                 $git_system_event_manager,
                 new Git_GitRepositoryUrlManager(
                     new GitPlugin(-1)
-                )
+                ),
+                new GitDao(),
+                new Git_Mirror_MirrorDao(),
+                new GitPlugin(-1)
             ),
             $logger
         );
