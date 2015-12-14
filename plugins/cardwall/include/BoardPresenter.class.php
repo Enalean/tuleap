@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,23 +46,16 @@ abstract class Cardwall_BoardPresenter {
     public $has_swimline_header = true;
 
     /**
-     * @var Cardwall_QrCode
-     */
-    public $qrcode;
-
-    /**
      * @var string
      */
     public $nifty = '';
 
     /**
-     * @param Cardwall_Board  $board              The board
-     * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
-     * @param string          $redirect_parameter the redirect paramter to add to various url
+     * @param Cardwall_Board $board The board
+     * @param string         $redirect_parameter the redirect paramter to add to various url
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter) {
-        $this->board           = $board;
-        $this->qrcode          = $qrcode;
+    public function __construct(Cardwall_Board $board, $redirect_parameter) {
+        $this->board                       = $board;
         $this->planning_redirect_parameter = $redirect_parameter;
     }
 
@@ -73,4 +66,3 @@ abstract class Cardwall_BoardPresenter {
         return round(100 / (count($this->board->columns) + ($this->has_swimline_header ? 1 : 0)));
     }
 }
-?>

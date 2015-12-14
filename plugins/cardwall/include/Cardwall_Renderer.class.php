@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -150,24 +150,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $board         = $board_builder->getBoard($artifact_ids, $columns, $mapping_collection);
         }
 
-        return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
-    }
-
-    /**
-     * @return Cardwall_QrCode
-     */
-    private function getQrCode() {
-        if ($this->enable_qr_code) {
-            return new Cardwall_QrCode(TRACKER_BASE_URL .'/?'. http_build_query(
-                    array(
-                        'report'   => $this->report->id,
-                        'renderer' => $this->id,
-                        'pv'       => 2,
-                    )
-                )
-            );
-        }
-        return false;
+        return new Cardwall_RendererPresenter($board, $redirect_parameter, $field, $form);
     }
     
     /*----- Implements below some abstract methods ----*/

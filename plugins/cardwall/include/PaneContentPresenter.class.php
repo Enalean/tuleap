@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,22 +55,24 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     public $progress_presenter;
 
     /**
-     * @param Cardwall_Board     $board              The board
-     * @param Cardwall_QrCode    $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
-     * @param string             $redirect_parameter the redirect paramter to add to various url
-     * @param Planning           $planning           The concerned planning
-     * @param Planning_Milestone $milestone          The milestone
+     * @param Cardwall_Board                   $board The board
+     * @param string                           $redirect_parameter the redirect paramter to add to various url
+     * @param string                           $switch_display_username_url
+     * @param boolean                          $is_display_avatar_selected
+     * @param Planning                         $planning The concerned planning
+     * @param Planning_Milestone               $milestone The milestone
+     * @param Cardwall_EffortProgressPresenter $progress_presenter
      */
     public function __construct(
         Cardwall_Board $board,
-        $qrcode, $redirect_parameter,
+        $redirect_parameter,
         $switch_display_username_url,
         $is_display_avatar_selected,
         Planning $planning,
         Planning_Milestone $milestone,
         Cardwall_EffortProgressPresenter $progress_presenter
     ) {
-        parent::__construct($board, $qrcode, $redirect_parameter);
+        parent::__construct($board, $redirect_parameter);
         $this->nifty                        = '';
         $this->swimline_title               = $GLOBALS['Language']->getText('plugin_cardwall', 'swimline_title');
         $this->has_swimline_header          = true;
@@ -153,5 +155,3 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         return max($this->milestone->getDaysUntilEnd(), 0);
     }
 }
-
-?>

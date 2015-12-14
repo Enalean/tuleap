@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,14 +47,13 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
     public $is_display_avatar_selected = "";
 
     /**
-     * @param Cardwall_Board                      $board              The board
-     * @param Cardwall_QrCode                     $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
-     * @param string                              $redirect_parameter the redirect paramter to add to various url
-     * @param Tracker_FormElement_Field_Selectbox $field              field used for columns. false if no qrcode (thus no typehinting)
-     * @param Cardwall_Form                       $field              form to choose the column. false if no form (in widget) (thus no typehinting)
+     * @param Cardwall_Board $board The board
+     * @param string $redirect_parameter the redirect paramter to add to various url
+     * @param Tracker_FormElement_Field_Selectbox $field form to choose the column. false if no form (in widget) (thus no typehinting)
+     * @param $form
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $field, $form) {
-        parent::__construct($board, $qrcode, $redirect_parameter);
+    public function __construct(Cardwall_Board $board, $redirect_parameter, $field, $form) {
+        parent::__construct($board, $redirect_parameter);
         $hp                        = Codendi_HTMLPurifier::instance();
         $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         $this->swimline_title      = '';
@@ -67,4 +66,3 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
         $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $field_label);
     }
 }
-?>
