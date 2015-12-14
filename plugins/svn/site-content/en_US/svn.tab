@@ -1,0 +1,5 @@
+plugin_svn	descriptor_description	SVN repository manager. Supports multiple repositories for the same project.
+plugin_svn	descriptor_name	SVN with multiple repositories
+
+plugin_svn	service_lbl_key	SVN
+plugin_svn	service_desc_key	SVN plugin to manage multiple SVN repositories
