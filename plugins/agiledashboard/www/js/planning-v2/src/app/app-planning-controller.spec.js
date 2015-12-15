@@ -1,7 +1,7 @@
 describe("PlanningCtrl", function() {
     var $scope, $filter, $q, PlanningCtrl, BacklogItemService, BacklogItemFactory, ProjectService, MilestoneService,
         SharedPropertiesService, TuleapArtifactModalService, NewTuleapArtifactModalService,
-        UserPreferencesService, deferred, second_deferred;
+        UserPreferencesService, DroppedService, deferred, second_deferred;
 
     var milestone = {
             id: 592,
@@ -9,14 +9,14 @@ describe("PlanningCtrl", function() {
                 backlog: {
                     accept: {
                         trackers: [
-                            { id: 99, label: 'story'}
+                            { id: 99, label: 'story' }
                         ]
                     }
                 },
                 content: {
                     accept: {
                         trackers: [
-                            { id: 99, label: 'story'}
+                            { id: 99, label: 'story' }
                         ]
                     }
                 }
@@ -27,14 +27,14 @@ describe("PlanningCtrl", function() {
                 backlog: {
                     accept: {
                         trackers: [
-                            { id: 98, label: 'task'}
+                            { id: 98, label: 'task' }
                         ]
                     }
                 },
                 content: {
                     accept: {
                         trackers: [
-                            { id: 98, label: 'task'}
+                            { id: 98, label: 'task' }
                         ]
                     }
                 }
@@ -51,86 +51,113 @@ describe("PlanningCtrl", function() {
         module('planning');
         module('shared-properties');
 
-        inject(function($controller, $rootScope, _$q_, _SharedPropertiesService_) {
+        inject(function(
+            $controller,
+            $rootScope,
+            _$q_,
+            _BacklogItemFactory_,
+            _BacklogItemService_,
+            _DroppedService_,
+            _MilestoneService_,
+            _NewTuleapArtifactModalService_,
+            _ProjectService_,
+            _SharedPropertiesService_,
+            _TuleapArtifactModalService_,
+            _UserPreferencesService_
+        ) {
             $scope = $rootScope.$new();
             $q = _$q_;
-            $filter = jasmine.createSpy("$filter");
-            SharedPropertiesService = _SharedPropertiesService_;
 
+            SharedPropertiesService = _SharedPropertiesService_;
             spyOn(SharedPropertiesService, 'getUserId').and.returnValue(102);
             spyOn(SharedPropertiesService, 'getProjectId').and.returnValue(736);
             spyOn(SharedPropertiesService, 'getMilestoneId').and.returnValue(592);
             spyOn(SharedPropertiesService, 'getUseAngularNewModal').and.returnValue(true);
             spyOn(SharedPropertiesService, 'getMilestone').and.returnValue(undefined);
-            spyOn(SharedPropertiesService, 'getInitialMilestones').and.returnValue(initial_milestones);
+            spyOn(SharedPropertiesService, 'getInitialMilestones');
             spyOn(SharedPropertiesService, 'getInitialBacklogItems').and.returnValue(initial_backlog_items);
+            spyOn(SharedPropertiesService, 'getViewMode');
 
-            BacklogItemService = jasmine.createSpyObj("BacklogItemService", [
-                "addToMilestone",
+            var returnPromise = function(method) {
+                var self = this;
+                spyOn(self, method).and.returnValue($q.defer().promise);
+            };
+
+            BacklogItemService = _BacklogItemService_;
+            _([
                 "getBacklogItemChildren",
                 "getMilestoneBacklogItems",
                 "getProjectBacklogItems",
                 "getBacklogItem",
                 "removeAddBacklogItemChildren"
-            ]);
-            _(BacklogItemService).map('and').invoke('returnValue', $q.defer().promise);
+            ]).forEach(returnPromise, BacklogItemService);
 
-            BacklogItemFactory = jasmine.createSpyObj("BacklogItemFactory", [
-                "augment"
-            ]);
+            BacklogItemFactory = _BacklogItemFactory_;
+            spyOn(BacklogItemFactory, "augment");
 
-            ProjectService = jasmine.createSpyObj("ProjectService", [
+            ProjectService = _ProjectService_;
+            _([
                 "getProjectBacklog",
                 "getProject",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
-            ]);
-            _(ProjectService).map('and').invoke('returnValue', $q.defer().promise);
+            ]).forEach(returnPromise, ProjectService);
 
-            MilestoneService = jasmine.createSpyObj("MilestoneService", [
+            MilestoneService = _MilestoneService_;
+            _([
                 "addReorderToContent",
                 "addToContent",
+                "augmentMilestone",
+                "defineAllowedBacklogItemTypes",
+                "getClosedMilestones",
+                "getClosedSubMilestones",
                 "getMilestone",
                 "getOpenMilestones",
                 "getOpenSubMilestones",
-                "removeAddToBacklog",
+                "putSubMilestones",
                 "removeAddReorderToBacklog",
-                "defineAllowedBacklogItemTypes",
-                "augmentMilestone",
+                "removeAddToBacklog",
                 "updateInitialEffort"
-            ]);
-            _(MilestoneService).map('and').invoke('returnValue', $q.defer().promise);
+            ]).forEach(returnPromise, MilestoneService);
 
-            TuleapArtifactModalService = jasmine.createSpyObj("TuleapArtifactModalService", [
-                "showCreateItemForm"
-            ]);
+            TuleapArtifactModalService = _TuleapArtifactModalService_;
+            spyOn(TuleapArtifactModalService, "showCreateItemForm");
 
-            NewTuleapArtifactModalService = jasmine.createSpyObj("NewTuleapArtifactModalService", [
-                "showCreation",
-                "showEdition"
-            ]);
+            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+            spyOn(NewTuleapArtifactModalService, "showCreation");
+            spyOn(NewTuleapArtifactModalService, "showEdition");
 
-            UserPreferencesService = jasmine.createSpyObj("UserPreferencesService", [
-                "setPreference"
-            ]);
-            _(UserPreferencesService).map('and').invoke('returnValue', $q.defer().promise);
+            UserPreferencesService = _UserPreferencesService_;
+            spyOn(UserPreferencesService, 'setPreference').and.returnValue($q.defer().promise);
 
-            $filter.and.callFake(function() {
+            DroppedService = _DroppedService_;
+            _([
+                "moveFromBacklogToSubmilestone",
+                "moveFromChildrenToChildren",
+                "moveFromSubmilestoneToBacklog",
+                "moveFromSubmilestoneToSubmilestone",
+                "reorderBacklog",
+                "reorderBacklogItemChildren",
+                "reorderSubmilestone"
+            ]).forEach(returnPromise, DroppedService);
+
+            $filter = jasmine.createSpy("$filter").and.callFake(function() {
                 return function() {};
             });
 
             PlanningCtrl = $controller('PlanningCtrl', {
-                $scope: $scope,
-                $filter: $filter,
-                $q: $q,
-                SharedPropertiesService: SharedPropertiesService,
-                BacklogItemService: BacklogItemService,
-                BacklogItemFactory: BacklogItemFactory,
-                MilestoneService: MilestoneService,
+                $filter                      : $filter,
+                $q                           : $q,
+                $scope                       : $scope,
+                BacklogItemFactory           : BacklogItemFactory,
+                BacklogItemService           : BacklogItemService,
+                DroppedService               : DroppedService,
+                MilestoneService             : MilestoneService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
-                ProjectService: ProjectService,
-                TuleapArtifactModalService: TuleapArtifactModalService,
-                UserPreferencesService: UserPreferencesService
+                ProjectService               : ProjectService,
+                SharedPropertiesService      : SharedPropertiesService,
+                TuleapArtifactModalService   : TuleapArtifactModalService,
+                UserPreferencesService       : UserPreferencesService
             });
         });
         deferred = $q.defer();
@@ -139,33 +166,187 @@ describe("PlanningCtrl", function() {
         installPromiseMatchers();
     });
 
-    describe('Load injected', function() {
+    describe("init() -", function() {
         beforeEach(function() {
-            SharedPropertiesService.getMilestone.and.returnValue(milestone);
-            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
-            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
-
-            spyOn(PlanningCtrl, 'loadBacklog').and.callThrough();
-            spyOn(PlanningCtrl, 'loadInitialBacklogItems').and.callThrough();
-            spyOn(PlanningCtrl, 'loadInitialMilestones').and.callThrough();
             spyOn($scope, 'appendBacklogItems');
         });
 
-        it('milestone', inject(function() {
+        describe("Given we were in a Project context (Top backlog)", function() {
+            beforeEach(function() {
+                SharedPropertiesService.getMilestoneId.and.stub();
+            });
+
+            it(", when I load the controller, then the project's backlog will be retrieved and the scope updated", function() {
+                var project_request         = $q.defer();
+                var project_backlog_request = $q.defer();
+                ProjectService.getProject.and.returnValue(project_request.promise);
+                ProjectService.getProjectBacklog.and.returnValue(project_backlog_request.promise);
+
+                PlanningCtrl.init();
+                project_request.resolve({
+                    data: {
+                        additional_informations: {
+                            agiledashboard: {
+                                root_planning: {
+                                    milestone_tracker: {
+                                        id: 218,
+                                        label: "Releases"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                project_backlog_request.resolve({
+                    allowed_backlog_item_types: {
+                        content: [{
+                            id: 5,
+                            label: "Epic"
+                        }]
+                    },
+                    has_user_priority_change_permission: false
+                });
+                $scope.$apply();
+
+                expect($scope.backlog.rest_base_route).toEqual('projects');
+                expect($scope.backlog.rest_route_id).toEqual(736);
+                expect(ProjectService.getProject).toHaveBeenCalledWith(736);
+                expect($scope.submilestone_type).toEqual({
+                    id: 218,
+                    label: "Releases"
+                });
+                expect(ProjectService.getProjectBacklog).toHaveBeenCalledWith(736);
+                expect($scope.backlog.accepted_types).toEqual({
+                    content: [{
+                        id: 5,
+                        label: "Epic"
+                    }]
+                });
+                expect($scope.backlog.user_can_move_cards).toEqual(false);
+            });
+
+            it("and given that no milestone was injected, when I load the controller, then the milestones will be retrieved and the scope updated", function() {
+                SharedPropertiesService.getInitialMilestones.and.stub();
+                var milestone_request = $q.defer();
+                MilestoneService.getOpenMilestones.and.returnValue(milestone_request.promise);
+
+                PlanningCtrl.init();
+                milestone_request.resolve({
+                    results: [
+                        {
+                            id: 184,
+                            label: "Release v1.0"
+                        }
+                    ],
+                    total: 1
+                });
+                expect($scope.milestones.loading).toBeTruthy();
+                $scope.$apply();
+
+
+                expect(MilestoneService.getOpenMilestones).toHaveBeenCalledWith(736, 50, 0, jasmine.any(Object));
+                expect($scope.milestones.loading).toBeFalsy();
+                expect($scope.milestones.content).toEqual([
+                    {
+                        id: 184,
+                        label: "Release v1.0"
+                    }
+                ]);
+            });
+        });
+
+        describe("Given we were in a Milestone context", function() {
+            beforeEach(function() {
+                SharedPropertiesService.getMilestoneId.and.returnValue(592);
+            });
+
+            it("and given that no milestone was injected, when I load the controller, then the submilestones will be retrieved and the scope updated", function() {
+                SharedPropertiesService.getInitialMilestones.and.stub();
+                var submilestone_request = $q.defer();
+                MilestoneService.getOpenSubMilestones.and.returnValue(submilestone_request.promise);
+
+                PlanningCtrl.init();
+                submilestone_request.resolve({
+                    results: [
+                        {
+                            id: 249,
+                            label: "Sprint 2015-38"
+                        }
+                    ],
+                    total: 1
+                });
+                expect($scope.milestones.loading).toBeTruthy();
+                $scope.$apply();
+
+                expect(MilestoneService.getOpenSubMilestones).toHaveBeenCalledWith(592, 50, 0, jasmine.any(Object));
+                expect($scope.milestones.loading).toBeFalsy();
+                expect($scope.milestones.content).toEqual([
+                {
+                    id: 249,
+                    label: "Sprint 2015-38"
+                }
+                ]);
+            });
+        });
+
+        it("Load injected milestone", inject(function() {
+            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
+            SharedPropertiesService.getMilestone.and.returnValue(milestone);
+            spyOn(PlanningCtrl, 'loadBacklog').and.callThrough();
+
             PlanningCtrl.init();
+
             expect(PlanningCtrl.loadBacklog).toHaveBeenCalledWith(milestone);
         }));
 
-        it('backlog items', inject(function() {
+
+        it("Load injected backlog items", inject(function() {
+            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
+            spyOn(PlanningCtrl, 'loadInitialBacklogItems').and.callThrough();
+
             PlanningCtrl.init();
+
             expect(PlanningCtrl.loadInitialBacklogItems).toHaveBeenCalledWith(initial_backlog_items);
             expect($scope.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
         }));
 
-        it('milestones', inject(function() {
+        it("Load injected milestones", inject(function() {
+            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
+            spyOn(PlanningCtrl, 'loadInitialMilestones').and.callThrough();
+
             PlanningCtrl.init();
+
             expect(PlanningCtrl.loadInitialMilestones).toHaveBeenCalledWith(initial_milestones);
         }));
+
+        it("Load injected view mode", function() {
+            SharedPropertiesService.getViewMode.and.returnValue('detailed-view');
+
+            PlanningCtrl.init();
+
+            expect($scope.current_view_class).toEqual('detailed-view');
+        });
+    });
+
+    describe("switchViewMode() -", function() {
+        it("Given a view mode, when I switch to this view mode, then the scope will be updated and this mode will be saved as my user preference", function() {
+            $scope.switchViewMode('detailed-view');
+
+            expect($scope.current_view_class).toEqual('detailed-view');
+            expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
+                102,
+                'agiledashboard_planning_item_view_mode_736',
+                'detailed-view'
+            );
+        });
+    });
+
+    describe("switchClosedMilestoneItemsViewMode() -", function() {
+        it("Given a view mode, when I switch closed milestones' view mode, then the scope will be updated", function() {
+            $scope.switchClosedMilestoneItemsViewMode('show-closed-view');
+
+            expect($scope.current_closed_view_class).toEqual('show-closed-view');
+        });
     });
 
     describe("displayBacklogItems() -", function() {
@@ -201,6 +382,63 @@ describe("PlanningCtrl", function() {
 
             expect($scope.fetchBacklogItems).not.toHaveBeenCalled();
             expect(promise).toBeResolved();
+        });
+    });
+
+    describe("displayClosedMilestones() -", function() {
+        var milestone_request;
+        beforeEach(function() {
+            milestone_request = $q.defer();
+            spyOn(PlanningCtrl, "isMilestoneContext");
+            $scope.milestones.content = [
+                { id: 747 }
+            ];
+        });
+
+        it("Given that we were in a project's context, when I display closed milestones, then MilestoneService will be called and the scope will be updated with the closed milestones in reverse order", function() {
+            PlanningCtrl.isMilestoneContext.and.returnValue(false);
+            MilestoneService.getClosedMilestones.and.returnValue(milestone_request.promise);
+
+            $scope.displayClosedMilestones();
+            expect($scope.milestones.loading).toBeTruthy();
+            milestone_request.resolve({
+                results: [
+                    { id: 108 },
+                    { id: 982 }
+                ],
+                total: 2
+            });
+            $scope.$apply();
+
+            expect($scope.milestones.loading).toBeFalsy();
+            expect($scope.milestones.content).toEqual([
+                { id: 982 },
+                { id: 747 },
+                { id: 108 }
+            ]);
+        });
+
+        it("Given that we were in a milestone's context, when I display closed milestones, then MilestoneService will be called and the scope will be updated with the closed milestones in reverse order", function() {
+            PlanningCtrl.isMilestoneContext.and.returnValue(true);
+            MilestoneService.getClosedSubMilestones.and.returnValue(milestone_request.promise);
+
+            $scope.displayClosedMilestones();
+            expect($scope.milestones.loading).toBeTruthy();
+            milestone_request.resolve({
+                results: [
+                    { id: 316 },
+                    { id: 960 }
+                ],
+                total: 2
+            });
+            $scope.$apply();
+
+            expect($scope.milestones.loading).toBeFalsy();
+            expect($scope.milestones.content).toEqual([
+                { id: 960 },
+                { id: 747 },
+                { id: 316 }
+            ]);
         });
     });
 
@@ -256,7 +494,7 @@ describe("PlanningCtrl", function() {
             spyOn($scope, "appendBacklogItems");
         });
 
-        it("Given that we are in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
+        it("Given that we were in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
             spyOn(PlanningCtrl, "isMilestoneContext").and.returnValue(false);
             BacklogItemService.getProjectBacklogItems.and.returnValue(deferred.promise);
 
@@ -275,7 +513,7 @@ describe("PlanningCtrl", function() {
             expect(promise).toBeResolvedWith(34);
         });
 
-        it("Given that we are in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
+        it("Given that we were in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
             BacklogItemService.getMilestoneBacklogItems.and.returnValue(deferred.promise);
 
             var promise = $scope.fetchBacklogItems(60, 25);
@@ -340,6 +578,182 @@ describe("PlanningCtrl", function() {
         });
     });
 
+    describe("thereIsOpenMilestonesLoaded() -", function() {
+        it("Given that open milestones have previously been loaded, when I check if open milestones have been loaded, then it will return true", function() {
+            $filter.and.returnValue(function() {
+                return [
+                    {
+                        id: 9,
+                        semantic_status: 'open'
+                    }
+                ];
+            });
+
+            var result = $scope.thereIsOpenMilestonesLoaded();
+
+            expect(result).toBeTruthy();
+        });
+
+        it("Given that open milestones have never been loaded, when I check if open milestones have been loaded, then it will return false", function() {
+            $filter.and.returnValue(function() { return []; });
+
+            var result = $scope.thereIsOpenMilestonesLoaded();
+
+            expect(result).toBeFalsy();
+        });
+    });
+
+    describe("thereIsClosedMilestonesLoaded() -", function() {
+        it("Given that closed milestones have previously been loaded, when I check if closed milestones have been loaded, then it will return true", function() {
+            $filter.and.returnValue(function() {
+                return [
+                    {
+                        id: 36,
+                        semantic_status: 'closed'
+                    }
+                ];
+            });
+
+            var result = $scope.thereIsClosedMilestonesLoaded();
+
+            expect(result).toBeTruthy();
+        });
+
+        it("Given that closed milestones have never been loaded, when I check if closed milestones have been loaded, then it will return false", function() {
+            $filter.and.returnValue(function() { return []; });
+
+            var result = $scope.thereIsClosedMilestonesLoaded();
+
+            expect(result).toBeFalsy();
+        });
+    });
+
+    describe("toggle() -", function() {
+        var event, milestone;
+        describe("Given an event with a target that was not a create-item-link and a milestone object", function() {
+            beforeEach(function() {
+                event = {
+                    target: {
+                        classList: {
+                            contains: function() {
+                                return false;
+                            }
+                        }
+                    }
+                };
+            });
+
+            it("that was already loaded and collapsed, when I toggle a milestone, then it will be un-collapsed", function() {
+                milestone = {
+                    collapsed: true,
+                    alreadyLoaded: true
+                };
+
+                $scope.toggle(event, milestone);
+
+                expect(milestone.collapsed).toBeFalsy();
+            });
+
+            it("that was already loaded and was not collapsed, when I toggle a milestone, then it will be collapsed", function() {
+                milestone = {
+                    collapsed: false,
+                    alreadyLoaded: true
+                };
+
+                $scope.toggle(event, milestone);
+
+                expect(milestone.collapsed).toBeTruthy();
+            });
+
+            it("that was not already loaded, when I toggle a milestone, then its content will be loaded", function() {
+                milestone = {
+                    content: [],
+                    getContent: jasmine.createSpy("getContent")
+                };
+
+                $scope.toggle(event, milestone);
+
+                expect(milestone.getContent).toHaveBeenCalled();
+            });
+        });
+
+        it("Given an event with a create-item-link target and a collapsed milestone, when I toggle a milestone, then it will stay collapsed", function() {
+            event = {
+                target: {
+                    parentNode: {
+                        getElementsByClassName: function() {
+                            return [
+                                {
+                                    fakeElement: ''
+                                }
+                            ];
+                        }
+                    }
+                }
+            };
+
+            milestone = {
+                collapsed: true,
+                alreadyLoaded: true
+            };
+
+            $scope.toggle(event, milestone);
+
+            expect(milestone.collapsed).toBeTruthy();
+        });
+    });
+
+    describe("showChildren() -", function() {
+        var fake_scope, backlog_item;
+
+        beforeEach(function() {
+            fake_scope = jasmine.createSpyObj("scope", ["toggle"]);
+        });
+
+        describe("Given a scope and a backlog item", function() {
+            it("with children that were not already loaded, when I show its children, then the scope will be toggled and the item's children will be loaded", function() {
+                backlog_item = {
+                    id: 352,
+                    has_children: true,
+                    children: {
+                        loaded: false
+                    }
+                };
+
+                $scope.showChildren(fake_scope, backlog_item);
+
+                expect(fake_scope.toggle).toHaveBeenCalled();
+                expect(BacklogItemService.getBacklogItemChildren).toHaveBeenCalledWith(352, 50, 0);
+            });
+
+            it("with no children, when I show its children, then the scope will be toggled and BacklogItemService won't be called", function() {
+                backlog_item = {
+                    has_children: false
+                };
+
+                $scope.showChildren(fake_scope, backlog_item);
+
+                expect(fake_scope.toggle).toHaveBeenCalled();
+                expect(BacklogItemService.getBacklogItemChildren).not.toHaveBeenCalled();
+            });
+
+            it("with children that were already loaded, when I show its children, then the scope will be toggled and BacklogItemService won't be called", function() {
+                backlog_item = {
+                    has_children: true,
+                    children: {
+                        loaded: true
+                    }
+                };
+
+                $scope.showChildren(fake_scope, backlog_item);
+
+                expect(fake_scope.toggle).toHaveBeenCalled();
+                expect(BacklogItemService.getBacklogItemChildren).not.toHaveBeenCalled();
+            });
+        });
+
+    });
+
     describe("fetchBacklogItemChildren() -", function() {
         beforeEach(function() {
             BacklogItemService.getBacklogItemChildren.and.returnValue(deferred.promise);
@@ -372,8 +786,24 @@ describe("PlanningCtrl", function() {
         });
     });
 
+    describe("generateMilestoneLinkUrl() -", function() {
+        it("Given a milestone and a pane, when I generate a Milestone link URL, then a correct URL will be generated", function() {
+            var milestone = {
+                id: 71,
+                planning: {
+                    id: 207
+                }
+            };
+            var pane = 'burndown';
+
+            var result = $scope.generateMilestoneLinkUrl(milestone, pane);
+
+            expect(result).toEqual("?group_id=736&planning_id=207&action=show&aid=71&pane=burndown");
+        });
+    });
+
     describe("displayUserCantPrioritizeForBacklog() -", function() {
-        it("Given that the user cannot move cards in the backlog and the backlog is empty, when I display whether the user can prioritize the backlog, then it will return false", function() {
+        it("Given that the user cannot move cards in the backlog and the backlog is empty, when I check, then it will return false", function() {
             $scope.backlog.user_can_move_cards = false;
             $scope.backlog_items.content = [];
 
@@ -382,13 +812,77 @@ describe("PlanningCtrl", function() {
             expect(result).toBeFalsy();
         });
 
-        it("Given that the user cannot move cards in the backlog and the backlog is not empty, when I display whether the user can prioritize the backlog, then it will return true", function() {
+        it("Given that the user cannot move cards in the backlog and the backlog is not empty, when I check, then it will return true", function() {
             $scope.backlog.user_can_move_cards = false;
             $scope.backlog_items.content = [
                 { id: 448 }
             ];
 
             var result = $scope.displayUserCantPrioritizeForBacklog();
+
+            expect(result).toBeTruthy();
+        });
+    });
+
+    describe("displayUserCantPrioritizeForMilestones() -", function() {
+        it("Given that there were no milestones, when I check whether the user cannot prioritize items in milestones, then it will return false", function() {
+            $scope.milestones.content = [];
+
+            var result = $scope.displayUserCantPrioritizeForMilestones();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given that the user can prioritize items in milestones, when I check, then it will return true", function() {
+            $scope.milestones.content = [
+                {
+                    has_user_priority_change_permission: true
+                }
+            ];
+
+            var result = $scope.displayUserCantPrioritizeForMilestones();
+
+            expect(result).toBeFalsy();
+        });
+    });
+
+    describe("canShowBacklogItem() -", function() {
+        it("Given an open backlog item, when I check whether we can show it, then it will return true", function() {
+            var backlog_item = {
+                isOpen: function() { return true; }
+            };
+
+            var result = $scope.canShowBacklogItem(backlog_item);
+
+            expect(result).toBeTruthy();
+        });
+
+        it("Given a closed backlog item, and we are displaying closed items, when I check whether we can show it, then it will return true", function() {
+            var backlog_item = {
+                isOpen: function() { return false; }
+            };
+            $scope.current_closed_view_class = 'show-closed-view';
+
+            var result = $scope.canShowBacklogItem(backlog_item);
+
+            expect(result).toBeTruthy();
+        });
+
+        it("Given a closed backlog item, and we are not displaying closed items, when I check whether we can show it, then it will return false", function() {
+            var backlog_item = {
+                isOpen: function() { return false; }
+            };
+            $scope.current_closed_view_class = 'hide-closed-view';
+
+            var result = $scope.canShowBacklogItem(backlog_item);
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given an item that didn't have an isOpen() method, when I check whether we can show it, then it will return true", function() {
+            var backlog_item = { isOpen: undefined };
+
+            var result = $scope.canShowBacklogItem(backlog_item);
 
             expect(result).toBeTruthy();
         });
@@ -641,9 +1135,9 @@ describe("PlanningCtrl", function() {
                 children    : {
                     loaded: true,
                     data: [
-                        { id: 1 },
-                        { id: 2 },
-                        { id: 3 }
+                        { id: 1 },
+                        { id: 2 },
+                        { id: 3 }
                     ]
                 }
             };
@@ -660,9 +1154,9 @@ describe("PlanningCtrl", function() {
                 children    : {
                     loaded: true,
                     data: [
-                        { id: 1 },
-                        { id: 2 },
-                        { id: 8 }
+                        { id: 1 },
+                        { id: 2 },
+                        { id: 8 }
                     ]
                 }
             };
@@ -690,17 +1184,12 @@ describe("PlanningCtrl", function() {
     });
 
     describe("showEditModal() -", function() {
-        var fakeEvent, fakeItem;
+        var fakeEvent, item, get_request;
         beforeEach(function() {
-            fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
-                callback(8541);
-            });
-        });
-
-        it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
+            get_request = $q.defer();
+            fakeEvent   = jasmine.createSpyObj("Click event", ["preventDefault"]);
             fakeEvent.which = 1;
-            fakeItem = {
+            item = {
                 artifact: {
                     id: 651,
                     tracker: {
@@ -708,9 +1197,14 @@ describe("PlanningCtrl", function() {
                     }
                 }
             };
-            spyOn($scope, "refreshBacklogItem").and.returnValue(deferred.promise);
+            NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
+                callback(8541);
+            });
+            spyOn($scope, "refreshBacklogItem").and.returnValue(get_request.promise);
+        });
 
-            $scope.showEditModal(fakeEvent, fakeItem);
+        it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
+            $scope.showEditModal(fakeEvent, item);
 
             expect(fakeEvent.preventDefault).toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(102, 30, 651, jasmine.any(Function));
@@ -720,10 +1214,25 @@ describe("PlanningCtrl", function() {
         it("Given a middle click event and an item to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function() {
             fakeEvent.which = 2;
 
-            $scope.showEditModal(fakeEvent, fakeItem);
+            $scope.showEditModal(fakeEvent, item);
 
             expect(fakeEvent.preventDefault).not.toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
+        });
+
+        describe("callback -", function() {
+            it("Given a milestone, when the artifact modal calls its callback, then the milestone's initial effort will be updated", function() {
+                var milestone = {
+                    id: 38,
+                    label: "Release v1.0"
+                };
+
+                $scope.showEditModal(fakeEvent, item, milestone);
+                get_request.resolve();
+                $scope.$apply();
+
+                expect(MilestoneService.updateInitialEffort).toHaveBeenCalledWith(milestone);
+            });
         });
     });
 
@@ -762,6 +1271,95 @@ describe("PlanningCtrl", function() {
 
             expect(fakeEvent.preventDefault).not.toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("showAddSubmilestoneModal() -", function() {
+        var fakeEvent, submilestone_type;
+        beforeEach(function() {
+            submilestone_type = { id: 82 };
+            fakeEvent = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
+                callback(1668);
+            });
+        });
+
+        it("Given any click event and a submilestone_type object, when I show the artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
+            $scope.showAddSubmilestoneModal(fakeEvent, submilestone_type);
+
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(82, undefined, jasmine.any(Function));
+        });
+
+        describe("callback -", function() {
+            var get_request;
+            beforeEach(function() {
+                get_request = $q.defer();
+                MilestoneService.getMilestone.and.returnValue(get_request.promise);
+            });
+
+            it("Given that we were in a milestone context, when the artifact modal calls its callback, then the MilestoneService will be called and the scope will be updated", function() {
+                var put_request = $q.defer();
+                MilestoneService.putSubMilestones.and.returnValue(put_request.promise);
+                $scope.backlog.rest_route_id = 736;
+                $scope.milestones.content = [
+                    {
+                        id: 3118,
+                        label: "Sprint 2015-38"
+                    }
+                ];
+
+                $scope.showAddSubmilestoneModal(fakeEvent, submilestone_type);
+                put_request.resolve();
+                get_request.resolve({
+                    results: {
+                        id: 1668,
+                        label: "Sprint 2015-20"
+                    }
+                });
+                $scope.$apply();
+
+                expect(MilestoneService.putSubMilestones).toHaveBeenCalledWith(736, [3118, 1668]);
+                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
+                expect($scope.milestones.content).toEqual([
+                    {
+                        id: 1668,
+                        label: "Sprint 2015-20"
+                    }, {
+                        id: 3118,
+                        label: "Sprint 2015-38"
+                    }
+                ]);
+            });
+
+            it("Given that we were in a project context (Top Backlog), when the artifact modal calls its callback, then the MilestoneService will be called and the scope will be updated", function() {
+                spyOn(PlanningCtrl, "isMilestoneContext").and.returnValue(false);
+                $scope.milestones.content = [
+                    {
+                        id: 3118,
+                        label: "Sprint 2015-38"
+                    }
+                ];
+
+                $scope.showAddSubmilestoneModal(fakeEvent, submilestone_type);
+                get_request.resolve({
+                    results: {
+                        id: 1668,
+                        label: "Sprint 2015-20"
+                    }
+                });
+                $scope.$apply();
+
+                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
+                expect($scope.milestones.content).toEqual([
+                    {
+                        id: 1668,
+                        label: "Sprint 2015-20"
+                    }, {
+                        id: 3118,
+                        label: "Sprint 2015-38"
+                    }
+                ]);
+            });
         });
     });
 
@@ -835,7 +1433,6 @@ describe("PlanningCtrl", function() {
                 ]);
             });
         });
-
     });
 
     describe("refreshBacklogItem() -", function() {
@@ -887,6 +1484,325 @@ describe("PlanningCtrl", function() {
             expect($scope.milestones.content).toEqual([
                 jasmine.objectContaining({ id: 9040, updating: false })
             ]);
+        });
+    });
+
+    describe("isItemDroppable() -", function() {
+        var sourceNodeScope, destNodeScope;
+        beforeEach(function() {
+            sourceNodeScope = {
+                $element: {
+                    attr: function() {
+                        return 'trackerId2';
+                    }
+                }
+            };
+            destNodeScope = {
+                $element: {
+                    attr: function() {
+                        return 'trackerId10|trackerId2';
+                    }
+                }
+            };
+        });
+
+        describe("Given a source element and a destination element", function() {
+            it("and given the source element's type was in the destination's accepted types, when I check whether the source element is droppable then it will return true", function() {
+                var result = $scope.treeOptions.accept(sourceNodeScope, destNodeScope);
+
+                expect(result).toBeTruthy();
+            });
+
+            it("and given the source element's type wasn't in the destination's accepted types, when I check whether the source element is droppable, then it will return false", function() {
+                destNodeScope.$element.attr = function() {
+                    return 'trackerId10';
+                };
+
+                var result = $scope.treeOptions.accept(sourceNodeScope, destNodeScope);
+
+                expect(result).toBeFalsy();
+            });
+
+            it("and given the destination had a 'data-nodrag' attribute set to true, when I check whether the source element is droppable, then it will return undefined", function() {
+                destNodeScope.$element.attr = function(attr_name) {
+                    if (attr_name === 'data-nodrag')  {
+                        return 'true';
+                    }
+                };
+
+                var result = $scope.treeOptions.accept(sourceNodeScope, destNodeScope);
+
+                expect(result).toBeUndefined();
+            });
+        });
+    });
+
+    describe("dropped() -", function() {
+        describe("Given an event containing a source list element, a destination list element and a dropped item's id,", function() {
+            var event, compared_to, move_request, dropped_item_id;
+            beforeEach(function() {
+                dropped_item_id = 48;
+                event = {
+                    source: {
+                        nodesScope: {
+                            $id: 32,
+                            $element: {
+                                hasClass: function() {}
+                            }
+                        },
+                        nodeScope: {
+                            $modelValue: {
+                                id: dropped_item_id
+                            }
+                        }
+                    },
+                    dest: {
+                        index: 0,
+                        nodesScope: {
+                            $id: 20,
+                            $element: {
+                                hasClass: function() {}
+                            },
+                            $modelValue: [
+                                { id: dropped_item_id },
+                                { id: 53 }
+                            ]
+                        }
+                    }
+                };
+                compared_to = {
+                    direction: 'before',
+                    item_id: 53
+                };
+
+                move_request = $q.defer();
+            });
+
+            describe("reorder an item in the same list - ", function() {
+                var reorder_request;
+                beforeEach(function() {
+                    reorder_request = $q.defer();
+                    event.source.nodesScope.$id = event.dest.nodesScope.$id;
+                });
+
+                it("when I reorder an item in the backlog, then the item will be reordered using DroppedService", function() {
+                    function hasClass(name) {
+                        return (name === 'backlog');
+                    }
+
+                    event.source.nodesScope.$element.hasClass = hasClass;
+                    event.dest.nodesScope.$element.hasClass   = hasClass;
+                    DroppedService.reorderBacklog.and.returnValue(reorder_request.promise);
+
+                    $scope.treeOptions.dropped(event);
+                    reorder_request.resolve();
+                    $scope.$apply();
+
+                    expect(DroppedService.reorderBacklog).toHaveBeenCalledWith(dropped_item_id, compared_to, jasmine.any(Object));
+                });
+
+                it("when I reorder an item in a submilestone (e.g. Sprint), then the item will be reordered using DroppedService", function() {
+                    function hasClass(name) {
+                        return (name === 'submilestone');
+                    }
+
+                    event.source.nodesScope.$element.hasClass = hasClass;
+                    event.dest.nodesScope.$element.hasClass   = hasClass;
+                    event.dest.nodesScope.$element.attr = function() { return 34; };
+                    DroppedService.reorderSubmilestone.and.returnValue(reorder_request.promise);
+
+                    $scope.treeOptions.dropped(event);
+                    reorder_request.resolve();
+                    $scope.$apply();
+
+                    expect(DroppedService.reorderSubmilestone).toHaveBeenCalledWith(dropped_item_id, compared_to, 34);
+                });
+
+                it("when I reorder children of an item (e.g. User stories in an Epic), then the children will be reordered using DroppedService", function() {
+                    function hasClass(name) {
+                        return (name === 'backlog-item-children');
+                    }
+                    event.source.nodesScope.$element.hasClass = hasClass;
+                    event.dest.nodesScope.$element.hasClass   = hasClass;
+                    event.dest.nodesScope.$element.attr = function() { return 67; };
+                    DroppedService.reorderBacklogItemChildren.and.returnValue(reorder_request.promise);
+
+                    $scope.treeOptions.dropped(event);
+                    reorder_request.resolve();
+                    $scope.$apply();
+
+                    expect(DroppedService.reorderBacklogItemChildren).toHaveBeenCalledWith(dropped_item_id, compared_to, 67);
+                });
+            });
+
+            it("when I move an item from the backlog to a submilestone (e.g. to a Sprint), then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function() {
+                event.source.nodesScope.$element.hasClass = function(name) {
+                    return (name === 'backlog');
+                };
+                event.dest.nodesScope.$element.hasClass = function(name) {
+                    return (name === 'submilestone');
+                };
+                event.dest.nodesScope.$element.attr = function() { return 80; };
+                DroppedService.moveFromBacklogToSubmilestone.and.returnValue(move_request.promise);
+                $scope.backlog_items.content = [
+                    { id: 17 },
+                    { id: dropped_item_id }
+                ];
+                var destination_milestone = { id: 80 };
+                $scope.milestones.content = [
+                    destination_milestone
+                ];
+
+                $scope.treeOptions.dropped(event);
+                move_request.resolve();
+                $scope.$apply();
+
+                expect(DroppedService.moveFromBacklogToSubmilestone).toHaveBeenCalledWith(dropped_item_id, compared_to, 80);
+                expect($scope.backlog_items.content).toEqual([
+                    { id: 17 }
+                ]);
+                expect(MilestoneService.updateInitialEffort).toHaveBeenCalledWith(destination_milestone);
+            });
+
+            describe("when I move a child from an item to another (e.g. move a User story from an Epic to another Epic),", function() {
+                beforeEach(function() {
+                    event.source.nodesScope.$element.hasClass = function(name) {
+                        return (name === 'backlog-item-children');
+                    };
+                    event.dest.nodesScope.$element.hasClass = function(name) {
+                        return (name === 'backlog-item-children');
+                    };
+                    event.source.nodesScope.$element.attr = function() { return 54; };
+                    event.dest.nodesScope.$element.attr   = function() { return 21; };
+                    $scope.items[54] = { updating: false };
+                    $scope.items[21] = { updating: false };
+                    DroppedService.moveFromChildrenToChildren.and.returnValue(move_request.promise);
+                });
+
+                it("then the item will be moved using DroppedService and the source parent will be collapsed", function() {
+                    spyOn($scope, 'refreshBacklogItem');
+
+                    $scope.treeOptions.dropped(event);
+
+                    expect($scope.items[54].updating).toBeTruthy();
+                    expect($scope.items[21].updating).toBeTruthy();
+                    move_request.resolve();
+                    $scope.$apply();
+
+                    expect(DroppedService.moveFromChildrenToChildren).toHaveBeenCalledWith(dropped_item_id, compared_to, 54, 21);
+                    expect($scope.refreshBacklogItem).toHaveBeenCalledWith(54);
+                    expect($scope.refreshBacklogItem).toHaveBeenCalledWith(21);
+                });
+
+                it("then the source parent will be collapsed", function() {
+                    event.sourceParent = {
+                        hasChild: function() { return false; },
+                        collapse: jasmine.createSpy("collapse")
+                    };
+
+                    $scope.treeOptions.dropped(event);
+
+                    expect(event.sourceParent.collapse).toHaveBeenCalled();
+                });
+
+                it("and given that the destination parent was collapsed, then the child will be removed from it", function() {
+                    var spy_remove = jasmine.createSpy("remove");
+                    _.extend(event.dest.nodesScope, {
+                        collapsed: true,
+                        childNodes: function() {
+                            return [
+                                {
+                                    remove: spy_remove
+                                }
+                            ];
+                        },
+                        $nodeScope: {
+                            $modelValue: {
+                                has_children: true,
+                                children: {
+                                    loaded: false
+                                }
+                            }
+                        }
+                    });
+
+                    $scope.treeOptions.dropped(event);
+
+                    expect(spy_remove).toHaveBeenCalled();
+                });
+            });
+
+            it("when I move an item from a submilestone to the backlog (e.g. from a Sprint), then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function() {
+                event.source.nodesScope.$element.hasClass = function(name) {
+                    return (name === 'submilestone');
+                };
+                event.dest.nodesScope.$element.hasClass = function(name) {
+                    return (name === 'backlog');
+                };
+                event.source.nodesScope.$element.attr = function() { return 33; };
+                DroppedService.moveFromSubmilestoneToBacklog.and.returnValue(move_request.promise);
+                var source_milestone = { id: 33 };
+                $scope.milestones.content = [
+                    source_milestone
+                ];
+
+                $scope.treeOptions.dropped(event);
+                move_request.resolve();
+                $scope.$apply();
+
+                expect(DroppedService.moveFromSubmilestoneToBacklog).toHaveBeenCalledWith(dropped_item_id, compared_to, 33, jasmine.any(Object));
+                expect(MilestoneService.updateInitialEffort).toHaveBeenCalledWith(source_milestone);
+            });
+
+            it("when I move an item from a submilestone to another submilestone (e.g. from Sprint 1 to Sprint 2), then the item will be moved using DroppedService and both submilestones' initial effort will be updated", function() {
+                function hasClass(name) {
+                    return (name === 'submilestone');
+                }
+                event.source.nodesScope.$element.hasClass = hasClass;
+                event.dest.nodesScope.$element.hasClass   = hasClass;
+                event.source.nodesScope.$element.attr = function() { return 56; };
+                event.dest.nodesScope.$element.attr   = function() { return 74; };
+                DroppedService.moveFromSubmilestoneToSubmilestone.and.returnValue(move_request.promise);
+                var source_milestone      = { id: 56 };
+                var destination_milestone = { id: 74 };
+                $scope.milestones.content = [
+                    source_milestone,
+                    destination_milestone
+                ];
+
+                $scope.treeOptions.dropped(event);
+                move_request.resolve();
+                $scope.$apply();
+
+                expect(DroppedService.moveFromSubmilestoneToSubmilestone).toHaveBeenCalledWith(dropped_item_id, compared_to, 56, 74);
+                expect(MilestoneService.updateInitialEffort).toHaveBeenCalledWith(source_milestone);
+                expect(MilestoneService.updateInitialEffort).toHaveBeenCalledWith(destination_milestone);
+            });
+
+            it("and given the server was unreachable, when I move an item, then the scope will be updated with the error message", function() {
+                function hasClass(name) {
+                    return (name === 'submilestone');
+                }
+                event.source.nodesScope.$element.hasClass = hasClass;
+                event.dest.nodesScope.$element.hasClass   = hasClass;
+                event.source.nodesScope.$element.attr = function() { return 32; };
+                event.dest.nodesScope.$element.attr   = function() { return 77; };
+                DroppedService.moveFromSubmilestoneToSubmilestone.and.returnValue(move_request.promise);
+
+                $scope.treeOptions.dropped(event);
+                move_request.reject({
+                    data: {
+                        error: {
+                            code: 404,
+                            message: 'Not Found'
+                        }
+                    }
+                });
+                $scope.$apply();
+
+                expect($scope.rest_error_occured).toBeTruthy();
+                expect($scope.rest_error).toEqual('404 Not Found');
+            });
         });
     });
 });
