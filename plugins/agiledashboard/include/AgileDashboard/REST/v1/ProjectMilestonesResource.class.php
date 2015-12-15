@@ -108,7 +108,7 @@ class ProjectMilestonesResource {
     /**
      * Get the top milestones of a given project
      */
-    public function get(PFUser $user, $project, $query, $limit, $offset, $order) {
+    public function get(PFUser $user, $project, $representation_type, $query, $limit, $offset, $order) {
 
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
@@ -121,7 +121,7 @@ class ProjectMilestonesResource {
         }
 
         $paginated_top_milestones_representations = $this->milestone_representation_builder
-            ->getPaginatedTopMilestonesRepresentations($project, $user, $criterion, $limit, $offset, $order);
+            ->getPaginatedTopMilestonesRepresentations($project, $user, $representation_type, $criterion, $limit, $offset, $order);
 
         $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, $paginated_top_milestones_representations->getTotalSize());

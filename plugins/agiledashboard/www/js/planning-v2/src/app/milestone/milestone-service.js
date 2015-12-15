@@ -78,7 +78,8 @@
                     order : order,
                     query : {
                         status: status
-                    }
+                    },
+                    fields: 'slim'
                 })
                 .then(function(response) {
                     _.forEach(response.data, function(milestone) {

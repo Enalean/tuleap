@@ -260,7 +260,10 @@ class ProjectTest extends RestBase {
     }
 
     public function testGETmilestones() {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones'));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones')
+        );
 
         $milestones = $response->json();
         $this->assertCount(1, $milestones);
@@ -273,8 +276,28 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('uri', $release_milestone['artifact']);
         $this->assertRegExp('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
 
+        $this->assertArrayHasKey('open', $release_milestone['status_count']);
+        $this->assertArrayHasKey('closed', $release_milestone['status_count']);
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
+
+    public function testGETmilestonesDoesNotContainStatusCountInSlimRepresentation() {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones?fields=slim')
+        );
+
+        $milestones = $response->json();
+        $this->assertCount(1, $milestones);
+
+        $release_milestone = $milestones[0];
+        $this->assertEquals($release_milestone['label'], "Release 1.0");
+        $this->assertEquals($release_milestone['status_count'], null);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
 
     public function testOPTIONSmilestones() {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones'));

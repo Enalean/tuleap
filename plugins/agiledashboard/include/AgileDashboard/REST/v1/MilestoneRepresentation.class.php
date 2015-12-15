@@ -35,7 +35,13 @@ use Tuleap\Tracker\REST\TrackerRepresentation;
  */
 class MilestoneRepresentation extends MilestoneRepresentationBase {
 
-    public function build(Planning_Milestone $milestone, array $status_count, array $backlog_trackers, $has_user_priority_change_permission) {
+    public function build(
+        Planning_Milestone $milestone,
+        array $status_count,
+        array $backlog_trackers,
+        $has_user_priority_change_permission,
+        $representation_type
+    ) {
         $this->id                   = JsonCast::toInt($milestone->getArtifactId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
         $this->label                = $milestone->getArtifactTitle();
@@ -59,20 +65,26 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->start_date = null;
         if ($milestone->getStartDate()) {
             $this->start_date              = JsonCast::toDate($milestone->getStartDate());
-            $this->number_days_since_start = JsonCast::toInt($milestone->getDaysSinceStart());
+            if ($representation_type === self::ALL_FIELDS) {
+                $this->number_days_since_start = JsonCast::toInt($milestone->getDaysSinceStart());
+            }
         }
 
         $this->end_date = null;
         if ($milestone->getEndDate()) {
             $this->end_date              = JsonCast::toDate($milestone->getEndDate());
-            $this->number_days_until_end = JsonCast::toInt($milestone->getDaysUntilEnd());
+            if ($representation_type === self::ALL_FIELDS) {
+                $this->number_days_until_end = JsonCast::toInt($milestone->getDaysUntilEnd());
+            }
         }
 
-        $this->parent = null;
-        $parent       = $milestone->getParent();
-        if ($parent) {
-            $this->parent = new MilestoneParentReference();
-            $this->parent->build($parent);
+        if ($representation_type === self::ALL_FIELDS) {
+            $this->parent = null;
+            $parent       = $milestone->getParent();
+            if ($parent) {
+                $this->parent = new MilestoneParentReference();
+                $this->parent->build($parent);
+            }
         }
 
         $this->has_user_priority_change_permission = $has_user_priority_change_permission;
@@ -81,7 +93,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
         $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
         $this->last_modified_date = JsonCast::toDate($milestone->getLastModifiedDate());
-        if($status_count) {
+        if ($representation_type === self::ALL_FIELDS && $status_count) {
             $this->status_count = $status_count;
         }
 
