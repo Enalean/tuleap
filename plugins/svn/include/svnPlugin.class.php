@@ -50,7 +50,8 @@ class SvnPlugin extends Plugin {
     private function getRouter() {
         return new Tuleap\Svn\SvnRouter(
             array(
-                $this->getExplorerController()
+                $this->getExplorerController(),
+                $this->getCodeBrowserController()
             )
         );
     }
@@ -69,5 +70,8 @@ class SvnPlugin extends Plugin {
 
     private function getExplorerController() {
         return new Tuleap\Svn\Explorer\ExplorerController();
+    }
+    private function getCodeBrowserController() {
+        return new Tuleap\Svn\CodeBrowser\CodeBrowserController();
     }
 }

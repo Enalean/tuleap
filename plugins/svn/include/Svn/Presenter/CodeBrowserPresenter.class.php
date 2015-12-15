@@ -23,17 +23,17 @@ namespace Tuleap\Svn\Presenter;
 
 use Project;
 
-class ExplorerPresenter {
+class CodeBrowserPresenter {
 
-    public $group_id;
+    private $group_id;
+
     public $project_name;
-    public $svn_root;
+    public $viewvc_html;
 
-    public function __construct(Project $project) {
+    public function __construct(Project $project, $viewvc_html) {
         $this->group_id     = $project->getID();
         $this->project_name = $project->getPublicName();
-        // TODO: the SVN root will be dynamic eventually.
-        $this->svn_root     = $project->getUnixNameMixedCase();
+        $this->viewvc_html  = $viewvc_html;
     }
 
 }

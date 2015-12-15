@@ -1,0 +1,21 @@
+<section class="plugin-svn-wrapper">
+    <h2>Welcome to the new SVN module</h2>
+    <h3>Create a new SVN repository</h3>
+    <p>
+        <form
+            name="svn-repo-creator" class="form-inline" method="POST"
+            action="/plugins/svn/?group_id={{group_id}}&controller=explorer&action=createRepo">
+            <label for="repo_name">New repository name</label>
+            <input type="text" name="repo_name" value="" required />
+            <input type="submit" name="repo_add" value="Create" class="btn btn-primary" />
+        </form>
+    </p>
+    <h3>TODO: Available repositories</h3>
+    <p>
+        TODO: add a table here with links leading to the viewvc instance
+    </p>
+
+    <a href="?group_id={{group_id}}&controller=code-browser&action=index&roottype=svn&root={{svn_root}}">
+        test d'accès au REPO créé par l'ancien module SVN
+    </a>
+</section>

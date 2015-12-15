@@ -44,14 +44,14 @@ class ServiceSvn extends Service {
     public function displayHeader(HTTPRequest $request, $title) {
         $toolbar = array();
         if ($this->userIsAdmin($request)) {
-            $toolbar[] = array(
+            /*$toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
                 'url'   => SVN_BASE_URL .'/?'. http_build_query(array(
                     'group_id'   => $request->get('group_id'),
                     'controller' => 'admin',
                     'action'     => 'index',
                 ))
-            );
+            );*/
         }
 
         $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_svn', 'service_lbl_key');
