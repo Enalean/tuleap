@@ -743,7 +743,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $user = $this->getUserFromRecipientName($recipient);
 
             if (! $user->isAnonymous()) {
-            $headers = array_filter(array($this->getCustomReplyToHeader()));
+                $headers    = array_filter(array($this->getCustomReplyToHeader()));
                 $message_id = $this->getMessageId($user);
 
                 $messages[$message_id]               = $this->getMessageContent($user, $is_update, $check_perms);
@@ -753,10 +753,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $messages[$message_id]['recipients'] = array($user->getEmail());
 
             } else {
+                $headers = array($this->getAnonymousHeaders());
+
                 $messages[$anonymous_mail]               = $this->getMessageContent($user, $is_update, $check_perms);
                 $messages[$anonymous_mail]['from']       = $this->getDefaultEmailSenderAddress();
                 $messages[$anonymous_mail]['message-id'] = null;
-                $messages[$anonymous_mail]['headers']    = array();
+                $messages[$anonymous_mail]['headers']    = $headers;
                 $messages[$anonymous_mail]['recipients'] = array($user->getEmail());
 
                 $anonymous_mail += 1;
@@ -764,6 +766,16 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
 
         return $messages;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAnonymousHeaders() {
+        return array(
+            "name" => "Reply-to",
+            "value" => ForgeConfig::get('sys_noreply')
+        );
     }
 
     private function getDefaultEmailSenderAddress() {
