@@ -213,7 +213,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite, gitphp-tuleap >= 0.2.5-9
+Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, %{php_base}-markdown, gitolite, gitphp-tuleap >= 0.2.5-9
 %if %{php_base} == php
 Requires: geshi
 %else
