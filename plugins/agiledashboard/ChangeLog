@@ -1,3 +1,6 @@
+Version 1.329 - Tuleap 8.10
+    * story #8658: Returns slim milestones in REST API
+
 Version 1.328 - Tuleap 8.10
     * story #8658: Do not show closed milestones by default
 
