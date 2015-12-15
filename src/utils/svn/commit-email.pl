@@ -641,7 +641,8 @@ foreach my $project (@project_settings_list)
       }
 
     my @head;
-    push(@head, "To: $userlist\n");
+    push(@head, "To:\n");
+    push(@head, "Bcc: $userlist\n");
     push(@head, "From: $mail_from\n");
     push(@head, "Subject: $subject\n");
     push(@head, "Reply-to: $reply_to\n") if $reply_to;
