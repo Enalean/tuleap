@@ -41,7 +41,7 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
                     AND field_id = $field_id";
         return $this->retrieve($sql);
     }
-    
+
     public function save($changeset_id, $field_id, $has_changed) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id = $this->da->escapeInt($field_id);

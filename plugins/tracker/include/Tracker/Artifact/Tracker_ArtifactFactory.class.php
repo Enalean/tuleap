@@ -394,6 +394,19 @@ class Tracker_ArtifactFactory {
     }
 
     /**
+     * @return boolean
+     */
+    public function hasChildren(Tracker_Artifact $artifact) {
+        $children_count = $this->getDao()->getChildrenCount(array($artifact->getId()));
+        return $children_count[$artifact->getId()] > 0;
+    }
+
+    public function getChildrenCount(array $artifact_ids) {
+        return $this->getDao()->getChildrenCount($artifact_ids);
+    }
+
+
+    /**
      * Return children of all given artifacts.
      *
      * @param PFUser $user

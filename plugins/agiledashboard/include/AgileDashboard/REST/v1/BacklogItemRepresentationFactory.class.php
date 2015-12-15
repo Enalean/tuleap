@@ -39,7 +39,7 @@ class BacklogItemRepresentationFactory {
 
         foreach($card_fields_semantic->getFields() as $field) {
             if ($field->userCanRead($current_user)) {
-                $card_fields[] = $field->getFullRESTValue($current_user, $backlog_item->getArtifact()->getLastChangeset());
+                $card_fields[] = $field->getFullRESTValue($current_user, $backlog_item->getArtifact()->getLastChangesetWithFieldValue($field));
             }
         }
 
