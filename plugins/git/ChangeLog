@@ -1,3 +1,6 @@
+Version 4.99 - Tuleap 8.10
+    * LDAP Daily Sync is suspending gerrit users while they still active
+
 Version 4.98 - Tuleap 8.10
     * story #8569: Import git repositories
 
