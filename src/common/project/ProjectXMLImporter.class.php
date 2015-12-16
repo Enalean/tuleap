@@ -63,7 +63,7 @@ class ProjectXMLImporter {
         return $this->importFromArchive(basename($archive->filename), $archive);
     }
 
-    public function importFromArchive($project_id, ZipArchive $archive) {
+    public function importFromArchive($project_id, ZipArchive $archive, $project_name_override = null) {
         $this->logger->info('Start importing from archive ' . $archive->filename);
 
         $project_archive = $this->getProjectZipArchive($archive, $project_id);
@@ -76,7 +76,7 @@ class ProjectXMLImporter {
 
         $project_archive->extractFiles();
 
-        $this->importContent($project_id, $xml_content, $project_archive->getExtractionPath());
+        $this->importContent($project_id, $xml_content, $project_archive->getExtractionPath(), $project_name_override);
 
         return $project_archive->cleanUp();
     }
@@ -88,13 +88,13 @@ class ProjectXMLImporter {
         return new ProjectXMLImporter_XMLImportZipArchive($project_identifier, $archive, ForgeConfig::get('tmp_dir'));
     }
 
-    public function import($project_id, $xml_file_path) {
+    public function import($project_id, $xml_file_path, $project_name_override = null) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
         $xml_contents    = file_get_contents($xml_file_path, 'r');
         $extraction_path = '';
 
-        return $this->importContent($project_id, $xml_contents, $extraction_path);
+        return $this->importContent($project_id, $xml_contents, $extraction_path, $project_name_override);
     }
 
     private function createProject(SimpleXMLElement $xml) {
@@ -106,10 +106,14 @@ class ProjectXMLImporter {
         return $this->project_creator->build($data);
     }
 
-    private function importContent($project_id, $xml_contents, $extraction_path) {
+    private function importContent($project_id, $xml_contents, $extraction_path, $project_name_override) {
         $this->checkFileIsValidXML($xml_contents);
 
         $xml_element = simplexml_load_string($xml_contents);
+
+        if(!empty($project_name_override)) {
+            $xml_element['unix-name'] = $project_name_override;
+        }
 
         if(empty($project_id)){
             $project = $this->createProject($xml_element);

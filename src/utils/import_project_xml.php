@@ -30,6 +30,7 @@ if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
 
 $usage_options  = '';
 $usage_options .= 'p:'; // give me a project
+$usage_options .= 'n:'; // give me a project name override
 $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'm:'; // give me the path of the user mapping file
@@ -43,6 +44,7 @@ Usage: $argv[0] -p project_id -u user_name -i path_to_archive -m path_to_mapping
 Import a project structure
 
   -p <project_id> The id of the project to import the archive
+  -n <name>       Override project name (when -p is not specified)
   -u <user_name>  The user used to import
   -i <path>       The path of the archive of the exported XML + data
   -m <path>       The path of the user mapping file
@@ -62,6 +64,12 @@ if (! isset($arguments['p'])) {
     $project_id = null;
 } else {
     $project_id = (int)$arguments['p'];
+}
+
+if (! isset($arguments['n'])) {
+    $project_name_override = null;
+} else {
+    $project_name_override = (string)$arguments['n'];
 }
 
 if (! isset($arguments['u'])) {
@@ -124,7 +132,7 @@ try {
         new ProjectXMLImporterLogger()
     );
 
-    $xml_importer->importFromArchive($project_id, $archive);
+    $xml_importer->importFromArchive($project_id, $archive, $project_name_override);
 
     $archive->close();
 
