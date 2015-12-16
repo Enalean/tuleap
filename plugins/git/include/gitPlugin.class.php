@@ -1554,13 +1554,14 @@ class GitPlugin extends Plugin {
      * @param PFUser user
      */
     public function ldap_daily_synchro_update_user(PFUser $user) {
-        //get gerrit servers
-        $factory = $this->getGerritServerFactory();
-        $gerrit_servers = $factory->getServers();
-        $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory ($this->getLogger());
-        foreach($gerrit_servers as $server) {
-            $gerritDriver = $gerritDriverFactory->getDriver($server);
-            $gerritDriver->setUserAccountInactive($server, $user);
+        if ($user->getStatus() == PFUser::STATUS_SUSPENDED) { 
+            $factory = $this->getGerritServerFactory();
+            $gerrit_servers = $factory->getServers();
+            $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory ($this->getLogger());
+            foreach($gerrit_servers as $server) {
+                $gerritDriver = $gerritDriverFactory->getDriver($server);
+                $gerritDriver->setUserAccountInactive($server, $user);
+            }
         }
     }
 
