@@ -22,11 +22,11 @@
 require_once 'www/include/help.php';
 
 class hudsonViews extends Views {
-    
+
     function hudsonViews(&$controler, $view=null) {
         $this->View($controler, $view);
     }
-    
+
     function header() {
         $request =& HTTPRequest::instance();
         $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $request->get('group_id'), 'toptab' => 'hudson'));
@@ -50,7 +50,7 @@ class hudsonViews extends Views {
     function footer() {
         $GLOBALS['HTML']->footer(array());
     }
-    
+
     // {{{ Views
     function projectOverview() {
         $request  = HTTPRequest::instance();
@@ -92,7 +92,7 @@ class hudsonViews extends Views {
         $this->_display_iframe();
         $this->_hide_iframe();
     }
-    
+
     function job_details() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
@@ -118,7 +118,7 @@ class hudsonViews extends Views {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
-    
+
     function last_build() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
@@ -133,7 +133,7 @@ class hudsonViews extends Views {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
-    
+
     function build_number() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
@@ -158,7 +158,7 @@ class hudsonViews extends Views {
                 $dar = null;
             }
         }
-        
+
         if ($dar && $dar->valid()) {
             $row = $dar->current();
             $crossref_fact= new CrossReferenceFactory($row['name'].'/'.$build_id, 'hudson_build', $group_id);
@@ -172,13 +172,13 @@ class hudsonViews extends Views {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
-    
+
     function last_test_result() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
-        
+
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
@@ -188,13 +188,13 @@ class hudsonViews extends Views {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
-    
+
     function test_trend() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
-        
+
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
@@ -204,25 +204,25 @@ class hudsonViews extends Views {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
-    
+
     function editJob() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isMember($group_id, 'A')) {
-            
+
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
-            
+
             $em      = EventManager::instance();
             $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             $dar = $job_dao->searchByJobID($job_id);
             if ($dar->valid()) {
                 $row = $dar->current();
-                
+
                 echo '<a href="/plugins/hudson/?group_id='.$group_id.'">'.$GLOBALS['Language']->getText('plugin_hudson','back_to_jobs').'</a>';
-                
+
                 echo '<h3>'.$GLOBALS['Language']->getText('plugin_hudson','editjob_title').'</h3>';
 
                 $services = array();
@@ -248,19 +248,19 @@ class hudsonViews extends Views {
         }
     }
     // }}}
-    
+
     function _display_jobs_table($group_id, $services) {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByGroupID($group_id);
-        
+
         if ($dar && $dar->valid()) {
 
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
-            
+
             echo '<table id="jobs_table" class="table table-bordered table-striped">';
             echo ' <thead><tr>';
             echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
@@ -289,10 +289,10 @@ class hudsonViews extends Views {
                 $job_id = $row['job_id'];
 
                 echo ' <tr>';
-                
+
                 try {
                     $job = new HudsonJob($row['job_url']);
-                    
+
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
                     echo '<td>';
                     echo '<img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /> ';
@@ -309,7 +309,7 @@ class hudsonViews extends Views {
                         echo '  <td>&nbsp;</td>';
                     }
                     echo '  <td align="center"><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name'])).'" title="'.$GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name'])).'"></a></td>';
-                    
+
                     if ($project->usesSVN()) {
                         if ($row['use_svn_trigger'] == 1) {
                             echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
@@ -343,12 +343,12 @@ class hudsonViews extends Views {
                     }
                     echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$e->getMessage().'</span></td>';
                 }
-                
+
                 if ($user->isMember($request->get('group_id'), 'A')) {
                     echo '  <td>';
                     // edit job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$GLOBALS['HTML']->getimage('ic/edit.png', 
+                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$GLOBALS['HTML']->getimage('ic/edit.png',
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'),
                                                                   'title' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'))).'</a>';
                     echo '   </span>';
@@ -356,28 +356,28 @@ class hudsonViews extends Views {
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$job_id.'" onclick="return confirm(';
                     echo "'" . $GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName())) . "'";
-                    echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png', 
+                    echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png',
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'),
                                                                   'title' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'))).'</a>';
                     echo '   </span>';
                     echo '  </td>';
                 }
-                
+
                 echo ' </tr>';
-                
+
                 $dar->next();
                 $cpt++;
             }
-            echo '</table>';   
+            echo '</table>';
         } else {
             echo '<p>'.$GLOBALS['Language']->getText('plugin_hudson','no_jobs_linked').'</p>';
         }
     }
-    
+
     function _display_add_job_form($group_id, $services) {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
-        
+
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
         echo ' '.$this->_getHelp('hudson-service', true);
@@ -437,11 +437,13 @@ class hudsonViews extends Views {
                         '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn') .'
                       </label>
                       <div id="hudson_svn_paths">
+                        <label for="hudson_svn_paths_textarea">'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_label') .'</label>
                         <textarea
+                          id="hudson_svn_paths_textarea"
                           name="hudson_svn_paths"
                           placeholder="'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_placeholder') .'"
                         >'. $purifier->purify($svn_paths) .'</textarea>
-                        <span class="help-block">'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_helper') .'</span>
+                        <p class="help">'. $GLOBALS['Language']->getText('plugin_hudson','svn_paths_helper') .'</p>
                       </div>
                     ';
             }
