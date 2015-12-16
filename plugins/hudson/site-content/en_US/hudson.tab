@@ -39,8 +39,9 @@ plugin_hudson	form_job_use_cvs_trigger	Trigger a build after CVS commits:
 plugin_hudson	form_job_scm_svn	SVN
 plugin_hudson	form_job_scm_cvs	CVS
 plugin_hudson	alt_svn_trigger	SVN commit will trigger a build
-plugin_hudson	svn_paths_helper	Keep it empty to trigger the whole SVN repository.
-plugin_hudson	svn_paths_placeholder	One path per line ...
+plugin_hudson	svn_paths_helper	If empty, every commits will trigger a build.
+plugin_hudson	svn_paths_label	Only when commit occurs on following paths:
+plugin_hudson	svn_paths_placeholder	One path per line...
 plugin_hudson	alt_cvs_trigger	CVS commit will trigger a build
 plugin_hudson	form_job_with_token	with (optional) token:
 plugin_hudson	wrong_job_url	Wrong Job URL: $1
