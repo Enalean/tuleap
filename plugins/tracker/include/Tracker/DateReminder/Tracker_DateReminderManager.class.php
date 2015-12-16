@@ -50,18 +50,24 @@ class Tracker_DateReminderManager {
      */
     public function process() {
         $logger = new BackendLogger();
-        $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
-        $reminders      = $remiderFactory->getTrackerReminders(false);
-        foreach ($reminders as $reminder) {
-            $logger->debug("[TDR] Processing reminder on ".$reminder->getField()->getName()." (id: ".$reminder->getId().")");
-            $artifacts = $this->getArtifactsByreminder($reminder);
-            if (count($artifacts) == 0) {
-                $logger->debug("[TDR] No artifact match");
+        if ($this->tracker->stop_notification==0) {
+            $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
+            $reminders      = $remiderFactory->getTrackerReminders(false);
+            foreach ($reminders as $reminder) {
+                $logger->debug("[TDR] Processing reminder on ".$reminder->getField()->getName()." (id: ".$reminder->getId().")");
+                $artifacts = $this->getArtifactsByreminder($reminder);
+
+                if (count($artifacts) == 0) {
+                    $logger->debug("[TDR] No artifact match");
+                }
+                foreach ($artifacts as $artifact) {
+                    $logger->debug("[TDR] Artifact #".$artifact->getId()." match");
+                    $this->sendReminderNotification($reminder, $artifact);
+                }
             }
-            foreach ($artifacts as $artifact) {
-                $logger->debug("[TDR] Artifact #".$artifact->getId()." match");
-                $this->sendReminderNotification($reminder, $artifact);
-            }
+        }
+        else {
+            $logger->info("[TDR] Notifications are suspended");
         }
     }
 
@@ -121,6 +127,7 @@ class Tracker_DateReminderManager {
      */
     protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact) {
         $tracker    = $this->getTracker();
+
         // 1. Get the recipients list
         $recipients = $reminder->getRecipients($artifact);
 
@@ -139,7 +146,6 @@ class Tracker_DateReminderManager {
             $this->sendReminder($artifact, $m['recipients'], $m['headers'], $m['subject'], $m['htmlBody'], $m['txtBody']);
         }
     }
-
     /**
      * Build the reminder messages
      *
