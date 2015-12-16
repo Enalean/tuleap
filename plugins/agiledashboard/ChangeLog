@@ -1,3 +1,6 @@
+Version 1.331 - Tuleap 8.10
+    * request #8612 Kanban real time Tuleap generate JWT and client subscribe on NodeJS server with this JWT
+
 Version 1.330 - Tuleap 8.10
     * story #8659: have efficient drag'n drop
 
