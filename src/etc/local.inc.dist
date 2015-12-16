@@ -115,6 +115,12 @@ $sys_cookie_prefix = "TULEAP";
 // Data sent are distributed for all clients who listening appropriate event
 $nodejs_server = '';
 
+// The private key sharing between tuleap server and nodejs server.
+// To protect data sending between servers.
+// We need to have the same private key on nodejs server in "config.json" file
+// You can generate a random key with the terminal command "head -c 32 /dev/urandom | base64" and put on tuleap and nodejs servers.
+$nodejs_server_jwt_private_key = '';
+
 // The id of the server.
 // If the server belong to a distributed architecture, make sure that all servers have a different server_id.
 // Otherwise, use '0'.

@@ -58,6 +58,8 @@ Requires: %{php_base}-pecl-apc
 Requires: curl
 Requires: %{php_base}-zendframework
 Requires: %{php_base}-markdown
+Requires: php-jwt
+
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv
 # Automatic perl dependencies

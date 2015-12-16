@@ -14,6 +14,8 @@
         'ngAnimate',
         'ngScrollbar',
         'tuleap.artifact-modal',
-        'uuid-generator'
+        'uuid-generator',
+        'jwt',
+        'angular-locker'
     ]);
 })();
