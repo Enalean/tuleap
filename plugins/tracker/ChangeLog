@@ -1,3 +1,6 @@
+Version 5.765 - Tuleap 8.10
+    * request #8681 Stopping the operation of Date Reminder in TV5 when email notification is suspended (Contrib STMicroelectronics)
+
 Version 5.764 - Tuleap 8.10
     * story #8669: Add assigned
 
