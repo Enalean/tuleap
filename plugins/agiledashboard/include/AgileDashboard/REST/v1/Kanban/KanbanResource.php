@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,6 +63,8 @@ use Tuleap\RealTime\NodeJSClient;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
+use Tuleap\RealTime\MessageDataPresenter;
+use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -1028,23 +1030,18 @@ class KanbanResource extends AuthenticatedResource {
 
     private function sendMessageForEachArtifact(PFUser $current_user, AgileDashboard_Kanban $kanban, array $artifact_ids, array $data) {
         foreach($artifact_ids as $artifact_id) {
-            $artifact          = $this->artifact_factory->getArtifactById($artifact_id);
-            $rights            = array(
-                'tracker'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
-                'artifact' => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact)
+            $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+            $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $message  = new MessageDataPresenter(
+                $current_user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban_item:move',
+                $data
             );
-            $this->sendMessage($current_user, $kanban, $data, $rights);
-        }
-    }
 
-    private function sendMessage(PFUser $current_user, AgileDashboard_Kanban $kanban, array $data, $rights) {
-        $this->node_js_client->sendMessage(
-            $current_user->getId(),
-            $_SERVER[self::HTTP_CLIENT_UUID],
-            $kanban->getId(),
-            $rights,
-            'kanban_item:move',
-            $data
-        );
+            $this->node_js_client->sendMessage($message);
+        }
     }
 }

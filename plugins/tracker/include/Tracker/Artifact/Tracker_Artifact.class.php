@@ -165,7 +165,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         if (! isset($this->can_view_cache[$user->getId()])) {
-            if ($this->getTracker()->userIsAdmin() || $user->isSuperUser()) {
+            if ($this->getTracker()->userIsAdmin($user) || $user->isSuperUser()) {
                 $this->setUserCanView($user, true);
             } else {
                 $permission_checker = new Tracker_Permission_PermissionChecker($um, $project_manager);

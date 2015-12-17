@@ -910,7 +910,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
 
         $permission = new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
-        $user       = UserManager::instance()->getCurrentUser();
         $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
