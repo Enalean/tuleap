@@ -8,7 +8,7 @@
     <div ng-show="! collapsed" class="children">
         <ul ui-tree-nodes
             ng-model="backlog_item.children.data"
-            class="backlog-item-children {{ current_view_class }}"
+            class="backlog-item-children {{ planning.current_view_class }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
             ng-show="! collapsed"
             ng-class="{ hidden: collapsed }"
@@ -19,7 +19,7 @@
                 data-type="{{ backlog_item.trackerId }}"
                 ng-repeat="backlog_item in backlog_item.children.data"
                 class="backlog-item child"
-                ng-if="canShowBacklogItem(backlog_item)"
+                ng-if="planning.canShowBacklogItem(backlog_item)"
                 ng-class="{ undraggable: ! user_can_move_cards }"
                 data-nodrag="{{ ! user_can_move_cards }}"
             >
@@ -33,5 +33,5 @@
         <div class="loading" ng-if="backlog_item.loading"></div>
     </div>
 
-    <div ng-class="{'show-children-close': ! collapsed}" class="show-children-handle" ng-click="showChildren(this, backlog_item)"></div>
+    <div ng-class="{'show-children-close': ! collapsed}" class="show-children-handle" ng-click="planning.showChildren(this, backlog_item)"></div>
 </div>

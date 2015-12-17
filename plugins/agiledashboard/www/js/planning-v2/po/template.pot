@@ -8,22 +8,22 @@ msgstr ""
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
 
-#: src/app/milestone/milestone.tpl.html
-#: src/app/planning.tpl.html
-msgid "Add a new item"
-msgstr ""
-
 #: src/app/backlog-item/backlog-item-details.tpl.html
 #: src/app/planning.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "Add a {{ backlog.accepted_types.content[0].label }}"
+msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "Add a {{ submilestone_type.label }}"
+msgid "Add a {{ planning.submilestone_type.label }}"
+msgstr ""
+
+#: src/app/milestone/milestone.tpl.html
+#: src/app/planning.tpl.html
+msgid "Add a new item"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -106,16 +106,22 @@ msgstr ""
 msgid "Planning"
 msgstr ""
 
+#: src/app/app-planning-controller.js
+msgid "pt"
+msgid_plural "pts"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/app/planning.tpl.html
 msgid "Show closed backlog items"
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "There is no closed milestones"
+msgid "There are no closed milestones"
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "There is no open milestones"
+msgid "There are no open milestones"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -125,9 +131,3 @@ msgstr ""
 #: src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr ""
-
-#: src/app/app-planning-controller.js
-msgid "pt"
-msgid_plural "pts"
-msgstr[0] ""
-msgstr[1] ""
