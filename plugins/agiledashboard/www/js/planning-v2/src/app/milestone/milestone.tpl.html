@@ -1,4 +1,4 @@
-<legend ng-click="planning.toggleMilestone($event, milestone)">
+<legend ng-click="milestoneController.toggleMilestone($event, milestone)">
     {{ milestone.label }}
     <div
         ng-if="planning.use_angular_new_modal && ! milestone.collapsed && milestone.has_user_priority_change_permission"
@@ -75,13 +75,14 @@
                 class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
                 data-accept="{{ backlog_item.accepted_types.toString() }}"
                 data-type="{{ backlog_item.trackerId }}"
-                ng-include="'backlog-item/backlog-item.tpl.html'"
-                onload="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
                 ng-if="planning.canShowBacklogItem(backlog_item)"
                 ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
                 collapsed="true"
                 data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
             >
+                <backlog-item
+                    ng-init="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
+                ></backlog-item>
             </li>
         </ul>
     </div>

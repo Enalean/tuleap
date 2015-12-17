@@ -1,5 +1,5 @@
-<div class="alert alert-error" ng-if="planning.rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
-<div class="alert alert-error" ng-if="planning.rest_error_occured" ng-bind-html="planning.rest_error"></div>
+<div class="alert alert-error" ng-if="planning.getRestError().rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
+<div class="alert alert-error" ng-if="planning.getRestError().rest_error_occured" ng-bind-html="planning.getRestError().rest_error"></div>
 
 <div class="tuleap-modal-loading" ng-if="planning.loading_modal.is_loading"></div>
 
@@ -83,38 +83,7 @@
 
             <div class="clearfix"></div>
         </div>
-
-        <div class="alert alert-warning" ng-if="planning.displayUserCantPrioritizeForBacklog()" translate>
-            You are not allowed to rank on this planning
-        </div>
-
-        <div ui-tree="planning.treeOptions"
-            infinite-scroll
-            scroll-callback="planning.displayBacklogItems()"
-            scroll-threshold="100"
-        >
-            <ul ui-tree-nodes
-                ng-model="planning.backlog_items.filtered_content"
-                class="backlog-items backlog {{ planning.current_view_class }}"
-                data-accept="{{ planning.backlog.accepted_types.toString() }}"
-                data-nodrag="{{ ! planning.backlog.user_can_move_cards }}"
-            >
-                <li ui-tree-node
-                    ng-repeat="backlog_item in planning.backlog_items.filtered_content"
-                    ng-include="'backlog-item/backlog-item.tpl.html'"
-                    onload="user_can_move_cards=planning.backlog.user_can_move_cards"
-                    data-type="{{ backlog_item.trackerId }}"
-                    data-accept="{{ backlog_item.accepted_types.toString() }}"
-                    class="backlog-item parent"
-                    ng-class="{ updating: backlog_item.updating, undraggable: ! planning.backlog.user_can_move_cards }"
-                    collapsed="true"
-                    data-nodrag="{{ ! planning.backlog.user_can_move_cards }}"
-                >
-                </li>
-            </ul>
-        </div>
-        <div ng-if="planning.backlog_items.fully_loaded && planning.backlog_items.content.length > 0" class="fully-loaded" translate>All items have been loaded.</div>
-        <div ng-if="planning.backlog_items.loading" class="loading"></div>
+        <backlog></backlog>
     </div>
 
     <div id="divider"></div>
@@ -124,11 +93,11 @@
             <div class="planning-header">
                 <h2 translate>Milestones</h2>
 
-                <button ng-if="planning.use_angular_new_modal && planning.submilestone_type  && planning.backlog.user_can_move_cards"
+                <button ng-if="planning.use_angular_new_modal && planning.backlog.submilestone_type  && planning.backlog.user_can_move_cards"
                     class="btn btn-small"
-                    ng-click="planning.showAddSubmilestoneModal($event, planning.submilestone_type)"
+                    ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"
                 >
-                    <i class="icon-plus"></i> <span translate>Add a {{ planning.submilestone_type.label }}</span>
+                    <i class="icon-plus"></i> <span translate>Add a {{ planning.backlog.submilestone_type.label }}</span>
                 </button>
 
                 <div ng-if="planning.milestones.content.length > 0" class="btn-group view-switcher" data-toggle="buttons-radio">
@@ -166,8 +135,8 @@
                 ng-repeat="milestone in planning.getOpenMilestones() track by $index"
                 class="milestone"
                 ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
-                ng-include="'milestone/milestone.tpl.html'"
             >
+                <milestone></milestone>
             </fieldset>
 
 
@@ -190,8 +159,8 @@
                 ng-repeat="milestone in planning.getClosedMilestones() track by $index"
                 class="milestone"
                 ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
-                ng-include="'milestone/milestone.tpl.html'"
             >
+                <milestone></milestone>
             </fieldset>
 
             <div class="loading" ng-if="planning.milestones.loading"></div>

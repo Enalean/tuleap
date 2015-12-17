@@ -1,5 +1,4 @@
-(function () {
-    angular.module('backlog-item', [
-        'restangular'
-    ]);
-})();
+angular.module('backlog-item', [
+    'restangular',
+    'tuleap.artifact-modal',
+]);

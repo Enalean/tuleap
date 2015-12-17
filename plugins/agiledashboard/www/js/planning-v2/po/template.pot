@@ -18,7 +18,7 @@ msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "Add a {{ planning.submilestone_type.label }}"
+msgid "Add a {{ planning.backlog.submilestone_type.label }}"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Add an item"
 msgstr ""
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "All items have been loaded."
 msgstr ""
 
@@ -128,6 +128,7 @@ msgstr ""
 msgid "To be planned"
 msgstr ""
 
+#: src/app/backlog/backlog.tpl.html
 #: src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr ""

@@ -1,10 +1,13 @@
 <div ui-tree-handle
     class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-    ng-include="'backlog-item/backlog-item-details.tpl.html'"
 >
+    <backlog-item-details></backlog-item-details>
 </div>
 
-<div class="show-children" ng-class="{ hidden: (backlog_item.children.data.length === 0 && (! backlog_item.has_children || backlog_item.children.loaded)) }">
+<div
+    class="show-children"
+    ng-class="{ hidden: (backlog_item.children.data.length === 0 && (! backlog_item.has_children || backlog_item.children.loaded)) }"
+>
     <div ng-show="! collapsed" class="children">
         <ul ui-tree-nodes
             ng-model="backlog_item.children.data"
@@ -23,9 +26,8 @@
                 ng-class="{ undraggable: ! user_can_move_cards }"
                 data-nodrag="{{ ! user_can_move_cards }}"
             >
-                <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                    ng-include="'backlog-item/backlog-item-details.tpl.html'"
-                >
+                <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}">
+                    <backlog-item-details></backlog-item-details>
                 </div>
             </li>
         </ul>
@@ -33,5 +35,9 @@
         <div class="loading" ng-if="backlog_item.loading"></div>
     </div>
 
-    <div ng-class="{'show-children-close': ! collapsed}" class="show-children-handle" ng-click="planning.showChildren(this, backlog_item)"></div>
+    <div
+        ng-class="{'show-children-close': ! collapsed}"
+        class="show-children-handle"
+        ng-click="backlogItemController.toggleChildrenDisplayed(this, backlog_item)"
+    ></div>
 </div>

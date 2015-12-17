@@ -1,21 +1,18 @@
-(function () {
-    angular.module('planning', [
-        'ui.router',
-        'ui.tree',
-        'templates-app',
-        'shared-properties',
-        'gettext',
-        'angularMoment',
-        'ngSanitize',
-        'ngAnimate',
-        'backlog-item',
-        'milestone',
-        'project',
-        'user-preferences',
-        'infinite-scroll',
-        'tuleap-artifact-modal',
-        'tuleap.artifact-modal',
-        'inproperties.filter',
-        'highlight.filter'
-    ]);
-})();
+angular.module('planning', [
+    'ui.router',
+    'ui.tree',
+    'templates-app',
+    'shared-properties',
+    'gettext',
+    'angularMoment',
+    'ngSanitize',
+    'ngAnimate',
+    'backlog',
+    'milestone',
+    'project',
+    'user-preferences',
+    'tuleap-artifact-modal',
+    'tuleap.artifact-modal',
+    'inproperties.filter',
+    'highlight.filter'
+]);

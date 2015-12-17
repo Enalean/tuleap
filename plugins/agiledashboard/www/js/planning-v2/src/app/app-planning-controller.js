@@ -8,6 +8,7 @@
         '$q',
         'gettextCatalog',
         'SharedPropertiesService',
+        'BacklogService',
         'BacklogItemService',
         'BacklogItemFactory',
         'MilestoneService',
@@ -17,7 +18,10 @@
         'TuleapArtifactModalService',
         'NewTuleapArtifactModalService',
         'TuleapArtifactModalLoading',
-        'UserPreferencesService'
+        'UserPreferencesService',
+        'RestErrorService',
+        'BacklogItemCollectionService',
+        'MilestoneCollectionService'
     ];
 
     function PlanningCtrl(
@@ -25,6 +29,7 @@
         $q,
         gettextCatalog,
         SharedPropertiesService,
+        BacklogService,
         BacklogItemService,
         BacklogItemFactory,
         MilestoneService,
@@ -34,51 +39,34 @@
         TuleapArtifactModalService,
         NewTuleapArtifactModalService,
         TuleapArtifactModalLoading,
-        UserPreferencesService
+        UserPreferencesService,
+        RestErrorService,
+        BacklogItemCollectionService,
+        MilestoneCollectionService
     ) {
         var self = this;
 
         _.extend(self, {
-            current_milestone: {},
-            submilestone_type: {},
-            filter_terms     : '',
-            backlog: {
-                user_can_move_cards: false
-            },
-            backlog_items: {
-                content         : [],
-                filtered_content: [],
-                loading         : false,
-                fully_loaded    : false
-            },
-            milestones: {
-                content                       : [],
-                loading                       : false,
-                open_milestones_fully_loaded  : false,
-                closed_milestones_fully_loaded: false
-            },
-            treeOptions: {
-                accept : isItemDroppable,
-                dropped: dropped
-            },
-            items                : {},
+            filter_terms : '',
+            backlog      : BacklogService.backlog,
+            backlog_items: BacklogService.items,
+            items        : BacklogItemCollectionService.items,
+            milestones   : MilestoneCollectionService.milestones,
             compact_view_key     : 'compact-view',
             detailed_view_key    : 'detailed-view',
             show_closed_view_key : 'show-closed-view',
             hide_closed_view_key : 'hide-closed-view',
             loading_modal        : TuleapArtifactModalLoading.loading,
-            rest_error           : '',
-            rest_error_occured   : false,
             use_angular_new_modal: true,
-            appendBacklogItems                    : appendBacklogItems,
-            canBeAddedToBacklogItemChildren       : canBeAddedToBacklogItemChildren,
+            treeOptions: {
+                accept : isItemDroppable,
+                dropped: dropped
+            },
             canShowBacklogItem                    : canShowBacklogItem,
             displayBacklogItems                   : displayBacklogItems,
             displayClosedMilestones               : displayClosedMilestones,
-            displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
             fetchAllBacklogItems                  : fetchAllBacklogItems,
-            fetchBacklogItemChildren              : fetchBacklogItemChildren,
             fetchBacklogItems                     : fetchBacklogItems,
             filterBacklog                         : filterBacklog,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
@@ -90,36 +78,19 @@
             loadBacklog                           : loadBacklog,
             loadInitialBacklogItems               : loadInitialBacklogItems,
             loadInitialMilestones                 : loadInitialMilestones,
-            refreshBacklogItem                    : refreshBacklogItem,
             refreshSubmilestone                   : refreshSubmilestone,
             showAddBacklogItemModal               : showAddBacklogItemModal,
-            showAddChildModal                     : showAddChildModal,
             showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
             showAddSubmilestoneModal              : showAddSubmilestoneModal,
-            showChildren                          : showChildren,
             showEditModal                         : showEditModal,
             showEditSubmilestoneModal             : showEditSubmilestoneModal,
             switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode,
             switchViewMode                        : switchViewMode,
             thereAreClosedMilestonesLoaded        : thereAreClosedMilestonesLoaded,
             thereAreOpenMilestonesLoaded          : thereAreOpenMilestonesLoaded,
-            toggleMilestone                       : toggleMilestone,
-            cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
-            cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
-            cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
-            cardFieldIsList                       : CardFieldsService.cardFieldIsList,
-            cardFieldIsPermissions                : CardFieldsService.cardFieldIsPermissions,
-            cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
-            cardFieldIsText                       : CardFieldsService.cardFieldIsText,
-            cardFieldIsUser                       : CardFieldsService.cardFieldIsUser,
-            getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
-            getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
-            getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
-            getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
-            getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
-            getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
+            getRestError                          : RestErrorService.getError,
+            refreshBacklogItem                    : BacklogItemCollectionService.refreshBacklogItem,
             BACKLOG_ITEMS_PAGINATION        : { limit: 50, offset: 0 },
-            BACKLOG_ITEM_CHILDREN_PAGINATION: { limit: 50, offset: 0 },
             OPEN_MILESTONES_PAGINATION      : { limit: 50, offset: 0 },
             CLOSED_MILESTONES_PAGINATION    : { limit: 50, offset: 0 },
             MILESTONE_CONTENT_PAGINATION    : { limit: 50, offset: 0 }
@@ -161,14 +132,13 @@
             self.current_closed_view_class = view_mode;
         }
 
-
         function isMilestoneContext() {
             return ! isNaN(self.milestone_id);
         }
 
         function loadBacklog(initial_milestone) {
             if (! self.isMilestoneContext()) {
-                loadProject();
+                BacklogService.loadProjectBacklog(self.project_id);
 
             } else {
                 if (initial_milestone) {
@@ -180,8 +150,7 @@
                         self.items
                     );
 
-                    loadMilestone(initial_milestone);
-
+                    BacklogService.loadMilestoneBacklog(initial_milestone);
                 } else {
                     MilestoneService.getMilestone(
                         self.milestone_id,
@@ -189,59 +158,15 @@
                         self.MILESTONE_CONTENT_PAGINATION.offset,
                         self.items
                     ).then(function(data) {
-                        loadMilestone(data.results);
+                        BacklogService.loadMilestoneBacklog(data.results);
                     });
                 }
             }
-
-            function loadProject() {
-                self.backlog = {
-                    rest_base_route: 'projects',
-                    rest_route_id  : self.project_id,
-                    accepted_types : {
-                        toString: function() {
-                            return '';
-                        }
-                    }
-                };
-
-                fetchProjectBacklogAcceptedTypes(self.project_id);
-                fetchProjectSubmilestoneType(self.project_id);
-            }
-
-            function loadMilestone(milestone) {
-                self.current_milestone = milestone;
-                self.submilestone_type = milestone.sub_milestone_type;
-                self.backlog           = {
-                    rest_base_route    : 'milestones',
-                    rest_route_id      : self.milestone_id,
-                    accepted_types     : milestone.backlog_accepted_types,
-                    user_can_move_cards: milestone.has_user_priority_change_permission
-                };
-            }
-
-            function fetchProjectSubmilestoneType(project_id) {
-                return ProjectService.getProject(project_id).then(function(response) {
-                    self.submilestone_type = response.data.additional_informations.agiledashboard.root_planning.milestone_tracker;
-                });
-            }
-
-            function fetchProjectBacklogAcceptedTypes(project_id) {
-                return ProjectService.getProjectBacklog(project_id).then(function(data) {
-                    self.backlog.accepted_types      = data.allowed_backlog_item_types;
-                    self.backlog.user_can_move_cards = data.has_user_priority_change_permission;
-                });
-            }
         }
-
 
         function loadInitialBacklogItems(initial_backlog_items) {
             if (initial_backlog_items) {
-                _.forEach(initial_backlog_items.backlog_items_representations, function(backlog_item) {
-                    BacklogItemFactory.augment(backlog_item);
-                });
-
-                self.appendBacklogItems(initial_backlog_items.backlog_items_representations);
+                appendBacklogItems(initial_backlog_items.backlog_items_representations);
 
                 self.BACKLOG_ITEMS_PAGINATION.offset = self.BACKLOG_ITEMS_PAGINATION.limit;
                 self.backlog_items.fully_loaded      = self.BACKLOG_ITEMS_PAGINATION.offset >= initial_backlog_items.total_size;
@@ -278,7 +203,7 @@
 
             return promise.then(function(data) {
                 var items = data.results;
-                self.appendBacklogItems(items);
+                appendBacklogItems(items);
 
                 return data.total;
             });
@@ -286,9 +211,8 @@
 
         function appendBacklogItems(items) {
             _.extend(self.items, _.indexBy(items, 'id'));
-            self.backlog_items.content = self.backlog_items.content.concat(items);
-            self.backlog_items.loading = false;
-            applyFilter();
+            BacklogService.appendBacklogItems(items);
+            BacklogService.filterItems(self.filter_terms);
         }
 
         function fetchAllBacklogItems(limit, offset) {
@@ -309,14 +233,9 @@
         function filterBacklog() {
             self.fetchAllBacklogItems(self.BACKLOG_ITEMS_PAGINATION.limit, self.BACKLOG_ITEMS_PAGINATION.offset)
                 ['finally'](function() {
-                    applyFilter();
+                    BacklogService.filterItems(self.filter_terms);
                 });
         }
-
-        function applyFilter() {
-            self.backlog_items.filtered_content = $filter('InPropertiesFilter')(self.backlog_items.content, self.filter_terms);
-        }
-
 
         function loadInitialMilestones(initial_milestones) {
             if (initial_milestones) {
@@ -499,22 +418,6 @@
             }
         }
 
-        function showAddChildModal($event, item_type, parent_item) {
-            $event.preventDefault();
-
-            var callback = function(item_id) {
-                var promise = BacklogItemService.removeAddBacklogItemChildren(undefined, parent_item.id, item_id);
-
-                promise.then(function() {
-                    return appendItemToBacklogItem(item_id, parent_item);
-                });
-
-                return promise;
-            };
-
-            NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
-        }
-
         function showEditSubmilestoneModal($event, submilestone) {
             var when_left_mouse_click = 1;
 
@@ -600,7 +503,7 @@
             var when_left_mouse_click = 1;
 
             var callback = function(item_id) {
-                return self.refreshBacklogItem(item_id).then(function() {
+                return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function() {
                     if (milestone) {
                         MilestoneService.updateInitialEffort(milestone);
                     }
@@ -619,33 +522,6 @@
             }
         }
 
-        function appendItemToBacklogItem(child_item_id, parent_item) {
-            return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
-                self.items[child_item_id] = data.backlog_item;
-                self.refreshBacklogItem(parent_item.id);
-
-                if (canBeAddedToBacklogItemChildren(child_item_id, parent_item)) {
-                    parent_item.children.data.push(self.items[child_item_id]);
-                }
-            });
-        }
-
-        function canBeAddedToBacklogItemChildren(child_item_id, parent_item) {
-            if (! parent_item.has_children) {
-                return true;
-            }
-
-            if (parent_item.has_children && parent_item.children.loaded) {
-                var child_already_in_children = _.find(parent_item.children.data, { id: child_item_id });
-
-                if (child_already_in_children === undefined) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         function prependItemToSubmilestone(child_item_id, parent_item) {
             return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
                 self.items[child_item_id] = data.backlog_item;
@@ -660,7 +536,7 @@
                 var new_item = data.backlog_item;
                 self.items[backlog_item_id] = new_item;
                 self.backlog_items.content.unshift(new_item);
-                self.backlog_items.filtered_content = self.backlog_items.content;
+                self.backlog_items.filtered_content.unshift(new_item);
             });
         }
 
@@ -685,62 +561,6 @@
                 submilestone.start_date      = data.results.start_date;
                 submilestone.end_date        = data.results.end_date;
                 submilestone.updating        = false;
-            });
-        }
-
-        function refreshBacklogItem(backlog_item_id) {
-            self.items[backlog_item_id].updating = true;
-
-            return BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
-                self.items[backlog_item_id].label          = data.backlog_item.label;
-                self.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
-                self.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
-                self.items[backlog_item_id].updating       = false;
-                self.items[backlog_item_id].status         = data.backlog_item.status;
-            });
-        }
-
-        function toggleMilestone($event, milestone) {
-            if (! milestone.alreadyLoaded && milestone.content.length === 0) {
-                milestone.getContent();
-            }
-
-            var target                = $event.target;
-            var is_a_create_item_link = false;
-
-            if (target.classList) {
-                is_a_create_item_link = target.classList.contains('create-item-link');
-            } else {
-                is_a_create_item_link = target.parentNode.getElementsByClassName("create-item-link")[0] !== undefined;
-            }
-
-            if (! is_a_create_item_link) {
-                return milestone.collapsed = ! milestone.collapsed;
-            }
-        }
-
-        function showChildren(scope, backlog_item) {
-            scope.toggle();
-
-            if (backlog_item.has_children && ! backlog_item.children.loaded) {
-                backlog_item.loading = true;
-                fetchBacklogItemChildren(backlog_item, self.BACKLOG_ITEM_CHILDREN_PAGINATION.limit, self.BACKLOG_ITEM_CHILDREN_PAGINATION.offset);
-            }
-        }
-
-        function fetchBacklogItemChildren(backlog_item, limit, offset) {
-            return BacklogItemService.getBacklogItemChildren(backlog_item.id, limit, offset).then(function(data) {
-                angular.forEach(data.results, function(child) {
-                    self.items[child.id] = child;
-                    backlog_item.children.data.push(child);
-                });
-
-                if ((offset + limit) < data.total) {
-                    fetchBacklogItemChildren(backlog_item, limit, offset + limit);
-                } else {
-                    backlog_item.loading         = false;
-                    backlog_item.children.loaded = true;
-                }
             });
         }
 
@@ -811,18 +631,15 @@
                     case movedInTheSameList():
                         if (source_list_element.hasClass('backlog')) {
                             DroppedService
-                                .reorderBacklog(dropped_item_id, compared_to, self.backlog)
-                                .then(function() {}, catchError);
+                                .reorderBacklog(dropped_item_id, compared_to, self.backlog);
 
                         } else if (source_list_element.hasClass('submilestone')) {
                             DroppedService
-                                .reorderSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10))
-                                .then(function() {}, catchError);
+                                .reorderSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10));
 
                         } else if (source_list_element.hasClass('backlog-item-children')) {
                             DroppedService
-                                .reorderBacklogItemChildren(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-backlog-item-id'), 10))
-                                .then(function() {}, catchError);
+                                .reorderBacklogItemChildren(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-backlog-item-id'), 10));
                         }
                         break;
 
@@ -833,7 +650,7 @@
                                 _.remove(self.backlog_items.content, function(item) {
                                     return item.id === dropped_item_id;
                                 });
-                            }, catchError);
+                            });
                         break;
 
                     case movedFromChildrenToChildren():
@@ -853,8 +670,7 @@
                             .then(function() {
                                 self.refreshBacklogItem(backlog_item_id_source);
                                 self.refreshBacklogItem(backlog_item_id_dest);
-
-                            }, catchError);
+                            });
                         break;
 
                     case movedFromSubmilestoneToBacklog():
@@ -864,8 +680,7 @@
                                 compared_to,
                                 parseInt(source_list_element.attr('data-submilestone-id'), 10),
                                 self.backlog
-                            )
-                            .then(function() {}, catchError);
+                            );
                         break;
 
                     case movedFromOneSubmilestoneToAnother():
@@ -875,14 +690,8 @@
                                 compared_to,
                                 parseInt(source_list_element.attr('data-submilestone-id'), 10),
                                 parseInt(dest_list_element.attr('data-submilestone-id'), 10)
-                            )
-                            .then(function() {}, catchError);
+                            );
                         break;
-                }
-
-                function catchError(data) {
-                    self.rest_error_occured = true;
-                    self.rest_error         = data.data.error.code + ' ' + data.data.error.message;
                 }
 
                 function movedInTheSameList() {
