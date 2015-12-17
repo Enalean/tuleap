@@ -577,6 +577,7 @@ EOF
 GRANT SELECT ON $PROJECT_NAME.user to dbauthuser@'$mysql_httpd_host' identified by '$dbauth_passwd';
 GRANT SELECT ON $PROJECT_NAME.groups to dbauthuser@'$mysql_httpd_host';
 GRANT SELECT ON $PROJECT_NAME.user_group to dbauthuser@'$mysql_httpd_host';
+GRANT SELECT,UPDATE ON $PROJECT_NAME.svn_token to dbauthuser@'$mysql_httpd_host';
 FLUSH PRIVILEGES;
 EOF
     fi
