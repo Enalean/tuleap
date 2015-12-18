@@ -22,6 +22,10 @@ Installation
    located at /etc/tuleap/plugins/ldap/etc/OpenLDAP.inc and /etc/tuleap/plugins/ldap/etc/ActiveDirectory.inc
 4. Enable ldap plugin in Plugin Administration
 5. Switch "$sys_auth_type" variable in /etc/tuleap/conf/local.inc to "ldap".
+6. If you want to authenticate SVN users with tokens or with modperl you also
+need to grant more right to the MySQL user dbauthuser:
+    GRANT SELECT ON plugin_ldap_user TO dbauthuser;
+    FLUSH PRIVILEGES;
 
 Customization
 -------------

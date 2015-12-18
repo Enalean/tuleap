@@ -31,14 +31,16 @@ class SVN_Apache_Auth_Factory {
      * @return SVN_Apache
      */
     public function get($projectInfo) {
-        $svnApacheAuth = null;
+        $requested_authentication_method = ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY);
+        $svnApacheAuth                   = null;
         $params = array(
             'svn_apache_auth' => &$svnApacheAuth,
-            'project_info' => $projectInfo,
+            'svn_conf_auth'   => $requested_authentication_method,
+            'project_info'    => $projectInfo,
         );
         $this->getEventManager()->processEvent(Event::SVN_APACHE_AUTH, $params);
         if (!$svnApacheAuth) {
-            switch (ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY)) {
+            switch ($requested_authentication_method) {
                 case SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL:
                     $svnApacheAuth = new SVN_Apache_ModPerl($projectInfo);
                     break;
