@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Export\ArchiveInterface;
+
 class Tracker_XML_Exporter_ArtifactAttachmentExporter {
 
-    const DATA_DIR    = 'data';
     const FILE_PREFIX = 'Artifact';
 
     /**
@@ -32,7 +33,7 @@ class Tracker_XML_Exporter_ArtifactAttachmentExporter {
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function exportAttachmentsInArchive(Tracker_Artifact $artifact, ZipArchive $archive) {
+    public function exportAttachmentsInArchive(Tracker_Artifact $artifact, ArchiveInterface $archive) {
         $file_fields    = $this->form_element_factory->getUsedFileFields($artifact->getTracker());
         $last_changeset = $artifact->getLastChangeset();
 
@@ -49,17 +50,18 @@ class Tracker_XML_Exporter_ArtifactAttachmentExporter {
         }
     }
 
-    private function addFilesIntoArchive(Tracker_Artifact_ChangesetValue_File $value, ZipArchive $archive) {
-        $archive->addEmptyDir(self::DATA_DIR);
+    private function addFilesIntoArchive(Tracker_Artifact_ChangesetValue_File $value, ArchiveInterface $archive) {
+        $archive->addEmptyDir(ArchiveInterface::DATA_DIR);
 
         foreach ($value->getFiles() as $file_info) {
+            $path_in_archive = ArchiveInterface::DATA_DIR . DIRECTORY_SEPARATOR . self::FILE_PREFIX . $file_info->getId();
             if (file_exists($file_info->getPath())) {
                 $archive->addFile(
-                    $file_info->getPath(),
-                    self::DATA_DIR . DIRECTORY_SEPARATOR . self::FILE_PREFIX . $file_info->getId()
+                    $path_in_archive,
+                    $file_info->getPath()
                 );
             } else {
-                $archive->addFromString(self::DATA_DIR . DIRECTORY_SEPARATOR . self::FILE_PREFIX . $file_info->getId(), $file_info->getPath());
+                $archive->addFromString($path_in_archive, $file_info->getPath());
             }
         }
     }

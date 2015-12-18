@@ -21,6 +21,8 @@
 
 require_once 'pre.php';
 
+use Tuleap\Project\XML\Import;
+
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
@@ -111,11 +113,13 @@ try {
         throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($username)));
     }
 
-    $archive = new ZipArchive();
-    if ($archive->open($archive_path) !== true) {
-        $console->error("Unable to open archive $archive_path");
-        exit(1);
+    if (is_dir($archive_path)) {
+        $archive = new Import\DirectoryArchive($archive_path);
+    } else {
+        $archive = new Import\ZipArchive($archive_path, ForgeConfig::get('tmp_dir'));
     }
+
+    $archive->extractFiles();
 
     $collection_from_archive = $builder->buildFromArchive($archive);
     $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
@@ -132,9 +136,13 @@ try {
         new ProjectXMLImporterLogger()
     );
 
-    $xml_importer->importFromArchive($project_id, $archive, $project_name_override);
+     if (empty($project_id)) {
+        $xml_importer->importNewFromArchive($archive, $project_name_override);
+     } else {
+        $xml_importer->importFromArchive($project_id, $archive);
+     }
 
-    $archive->close();
+    $archive->cleanUp();
 
     exit(0);
 } catch (XML_ParseException $exception) {
@@ -142,6 +150,6 @@ try {
         $console->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
     }
 } catch (Exception $exception) {
-    $console->error($exception->getMessage());
+    $console->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
 }
 exit(1);

@@ -21,6 +21,8 @@
 
 require_once 'pre.php';
 
+use Tuleap\Project\XML\Export;
+
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
@@ -37,6 +39,10 @@ $usage_options .= 'f';  // should we force the export
 $usage_options .= 'h';  // should we display the usage
 $usage_options .= 'x';  // should we display the XML content
 
+$long_options = array(
+    'dir',
+);
+
 function usage() {
     global $argv;
 
@@ -51,6 +57,7 @@ Dump a project structure to XML format
   -o <path>       The full path where the archive (project in XML + data) will be created (example: /tmp/archive.zip)
   -f              Force the export (for example if there are too many artifacts). Use at your own risks.
   -x              Display the XML content
+  --dir           Generate a Directory archive (default is zip archive)
   -h              Display this help
 
 
@@ -58,7 +65,7 @@ EOT;
     exit(1);
 }
 
-$arguments = getopt($usage_options);
+$arguments = getopt($usage_options, $long_options);
 
 if (isset($arguments['h'])) {
     usage();
@@ -94,7 +101,6 @@ if (isset($arguments['t'])) {
 
 $options['force'] = isset($arguments['f']);
 
-
 $project = ProjectManager::instance()->getProject($project_id);
 if ($project && ! $project->isError() && ! $project->isDeleted()) {
     try {
@@ -109,10 +115,10 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
             new ProjectXMLExporterLogger()
         );
 
-        $archive  = new ZipArchive();
-        if ($archive->open($output, ZipArchive::CREATE) !== true) {
-            echo '*** ERROR: Cannot create archive: '.$archive_path;
-            exit(1);
+        if (isset ($arguments['dir'])) {
+            $archive = new Export\DirectoryArchive($output);
+        } else {
+            $archive = new Export\ZipArchive($output);
         }
 
         $xml_security = new XML_Security();
@@ -129,21 +135,14 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
             echo $users_xml_content;
         }
 
-        if (! $archive->addFromString('project.xml', $xml_content)) {
-            fwrite(STDERR, "Unable to add project.xml into archive." . PHP_EOL);
-        }
+        $archive->addFromString(Export\ArchiveInterface::PROJECT_FILE, $xml_content);
+        $archive->addFromString(Export\ArchiveInterface::USER_FILE, $users_xml_content);
 
-        if (! $archive->addFromString('users.xml', $users_xml_content)) {
-            fwrite(STDERR, "Unable to add users.xml into archive." . PHP_EOL);
-        }
         $xml_security->disableExternalLoadOfEntities();
 
-        if (! $archive->close()) {
-            fwrite(STDERR, "Unable to close ZipArchive." . PHP_EOL);
-            fwrite(STDERR, "Archive error: " . $archive->getStatusString() . PHP_EOL);
-        } else {
-            fwrite(STDOUT, "Archive $output created." . PHP_EOL);
-        }
+        $archive->close();
+
+        fwrite(STDOUT, "Archive $output created." . PHP_EOL);
 
         exit(0);
     } catch (XML_ParseException $exception) {
@@ -160,4 +159,34 @@ if ($project && ! $project->isError() && ! $project->isDeleted()) {
 } else {
     echo "*** ERROR: Invalid project_id\n";
     exit(1);
+}
+
+class ProjectXMLExport_Archive extends ZipArchive {
+
+    private $archive_path;
+
+    public function open($filename, $flags = null) {
+        $this->archive_path = $filename;
+        return mkdir($filename, 0700, true);
+    }
+
+    public function close() {
+        return true;
+    }
+
+    public function addEmptyDir($dirname) {
+        if (!is_dir($this->archive_path.DIRECTORY_SEPARATOR.$dirname)) {
+            return mkdir($this->archive_path.DIRECTORY_SEPARATOR.$dirname, 0700);
+        }
+        return true;
+    }
+
+    public function addFile($filename, $localname = null, $start = 0, $length = 0) {
+        return copy($filename, $this->archive_path.DIRECTORY_SEPARATOR.$localname);
+    }
+
+    public function addFromString($localname, $contents) {
+        file_put_contents($this->archive_path.DIRECTORY_SEPARATOR.$localname, $contents);
+        return true;
+    }
 }

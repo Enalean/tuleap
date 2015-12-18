@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ProjectXMLImport_XMLImportZipArchiveTest extends TuleapTestCase {
+namespace Tuleap\Project\XML\Import;
+
+class ZipArchiveTest extends \TuleapTestCase {
 
     /** @var Project */
     private $project;
@@ -26,7 +28,7 @@ class ProjectXMLImport_XMLImportZipArchiveTest extends TuleapTestCase {
     /** @var int */
     private $project_id;
 
-    /** @var ZipArchive */
+    /** @var \ZipArchive */
     private $zip;
 
     /** @var string */
@@ -44,37 +46,28 @@ class ProjectXMLImport_XMLImportZipArchiveTest extends TuleapTestCase {
         $this->fixtures_dir = dirname(__FILE__) .'/_fixtures';
 
         $this->project_id   = getmypid();
-        $this->project      = stub('Project')->getID()->returns($this->project_id);
 
-        $this->zip = new ZipArchive();
-        if ($this->zip->open($this->fixtures_dir .'/archive.zip') !== true) {
-            $this->fail('unable to open fixture archive.zip');
-        }
-
-        $this->archive = new ProjectXMLImporter_XMLImportZipArchive(
-            $this->project->getID(),
-            $this->zip,
+        $this->archive = new ZipArchive(
+            $this->fixtures_dir .'/archive.zip',
             $this->tmp_dir
         );
     }
 
     public function tearDown() {
-        $this->zip->close();
         $this->archive->cleanUp();
-        //`rm -rf $this->tmp_dir/import_project_*`;
         parent::tearDown();
     }
 
     public function itGivesTheXMLFile() {
         $expected = file_get_contents($this->fixtures_dir .'/project.xml');
-        $this->assertEqual($expected, $this->archive->getXML());
+        $this->assertEqual($expected, $this->archive->getProjectXML());
     }
 
     public function itExtractAttachmentsIntoARandomTemporaryDirectory() {
         $extraction_path = $this->archive->getExtractionPath();
         $this->assertTrue(is_dir($extraction_path));
 
-        $expected_prefix = $this->tmp_dir .'/import_project_'. $this->project_id .'_';
+        $expected_prefix = $this->tmp_dir .'/import_project_';
         $this->assertPattern('%'. $expected_prefix .'\w+%', $extraction_path);
 
         $this->archive->extractFiles();

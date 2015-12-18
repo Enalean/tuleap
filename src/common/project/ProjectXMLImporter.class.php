@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Import\ArchiveInterface;
+
 /**
  * This class import a project from a xml content
  */
@@ -59,42 +61,18 @@ class ProjectXMLImporter {
         $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance(), true);
     }
 
-    public function importNewFromArchive(ZipArchive $archive) {
-        return $this->importFromArchive(basename($archive->filename), $archive);
-    }
+    public function importNewFromArchive(ArchiveInterface $archive, $project_name_override = null) {
+        $this->logger->info('Start importing new project from archive ' . $archive->getExtractionPath());
 
-    public function importFromArchive($project_id, ZipArchive $archive, $project_name_override = null) {
-        $this->logger->info('Start importing from archive ' . $archive->filename);
+        $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $project_archive = $this->getProjectZipArchive($archive, $project_id);
-        $xml_content = $project_archive->getXML();
-
-        if (! $xml_content) {
-            $this->logger->error('No content available in archive for file ' . ProjectXMLImporter_XMLImportZipArchive::PROJECT_XML_FILENAME);
-            return;
+        if (!empty($project_name_override)) {
+            $xml_element['unix-name'] = $project_name_override;
         }
 
-        $project_archive->extractFiles();
+        $project = $this->createProject($xml_element);
 
-        $this->importContent($project_id, $xml_content, $project_archive->getExtractionPath(), $project_name_override);
-
-        return $project_archive->cleanUp();
-    }
-
-    /**
-     * @return ProjectXMLImporter_XMLImportZipArchive
-     */
-    private function getProjectZipArchive(ZipArchive $archive, $project_identifier) {
-        return new ProjectXMLImporter_XMLImportZipArchive($project_identifier, $archive, ForgeConfig::get('tmp_dir'));
-    }
-
-    public function import($project_id, $xml_file_path, $project_name_override = null) {
-        $this->logger->info('Start importing from file ' . $xml_file_path);
-
-        $xml_contents    = file_get_contents($xml_file_path, 'r');
-        $extraction_path = '';
-
-        return $this->importContent($project_id, $xml_contents, $extraction_path, $project_name_override);
+        $this->importContent($project, $xml_element, $archive->getExtractionPath());
     }
 
     private function createProject(SimpleXMLElement $xml) {
@@ -102,27 +80,34 @@ class ProjectXMLImporter {
             100,
             $this->xml_validator,
             ServiceManager::instance(),
-            $project_manager = $this->project_manager);
+            $this->project_manager);
         return $this->project_creator->build($data);
     }
 
-    private function importContent($project_id, $xml_contents, $extraction_path, $project_name_override) {
-        $this->checkFileIsValidXML($xml_contents);
+    public function importFromArchive($project_id, ArchiveInterface $archive) {
+        $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
-        $xml_element = simplexml_load_string($xml_contents);
+        $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        if(!empty($project_name_override)) {
-            $xml_element['unix-name'] = $project_name_override;
-        }
+        $project = $this->getProject($project_id);
 
-        if(empty($project_id)){
-            $project = $this->createProject($xml_element);
-            $project_id = $project->getID();
-        } else {
-            $project = $this->getProject($project_id);
-        }
+        $this->importContent($project, $xml_element, $archive->getExtractionPath());
+    }
 
-        $this->logger->info("Importing project in project $project_id");
+    public function import($project_id, $xml_file_path) {
+        $this->logger->info('Start importing from file ' . $xml_file_path);
+
+        $xml_contents    = file_get_contents($xml_file_path, 'r');
+        $xml_element     = $this->getSimpleXMLElementFromString($xml_contents);
+        $extraction_path = '';
+
+        $project = $this->getProject($project_id);
+
+        return $this->importContent($project, $xml_element, $extraction_path);
+    }
+
+    private function importContent(Project $project, SimpleXMLElement $xml_element, $extraction_path) {
+        $this->logger->info("Importing project in project ".$project->getUnixName());
 
         $this->importUgroups($project, $xml_element);
 
@@ -141,7 +126,7 @@ class ProjectXMLImporter {
             )
         );
 
-        $this->logger->info("Finish importing project in project $project_id");
+        $this->logger->info("Finish importing project in project ".$project->getUnixName());
     }
 
     private function importUgroups(Project $project, SimpleXMLElement $xml_element) {
@@ -220,6 +205,22 @@ class ProjectXMLImporter {
         }
 
         return $ugroup_members;
+    }
+
+    private function getProjectXMLFromArchive(ArchiveInterface $archive) {
+        $xml_contents = $archive->getProjectXML();
+
+        if (! $xml_contents) {
+            throw new RuntimeException('No content available in archive for file ' . ArchiveInterface::PROJECT_FILE);
+        }
+
+        return $this->getSimpleXMLElementFromString($xml_contents);
+    }
+
+    private function getSimpleXMLElementFromString($file_contents) {
+        $this->checkFileIsValidXML($file_contents);
+
+        return simplexml_load_string($file_contents);
     }
 
     private function checkFileIsValidXML($file_contents) {

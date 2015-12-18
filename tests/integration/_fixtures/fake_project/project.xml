@@ -12,15 +12,5 @@
         <service shortname="svn" enabled="true" />
         <service shortname="cvs" enabled="false" />
     </services>
-    <!--
-    <git>
-        <repository bundle_path="data/git/stable.bundle" name="stable4231"/>
-    </git>
-    -->
-    <!--
-    <svn dump-file="data/svn.dump">
-        <access-file>TOTO access file</access-file> 
-    </svn>
-    -->
-</project>
 
+</project>

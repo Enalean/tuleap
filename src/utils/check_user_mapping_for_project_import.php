@@ -21,6 +21,8 @@
 
 require_once 'pre.php';
 
+use Tuleap\Project\XML\Import;
+
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
@@ -93,17 +95,15 @@ try {
         throw new RuntimeException("User $username must be site administrator");
     }
 
-    $archive = new ZipArchive();
-    if ($archive->open($archive_path) !== true) {
-        $console->error("Unable to open archive ".$archive_path);
-        exit(1);
+    if (is_dir($archive_path)) {
+        $archive = new Import\DirectoryArchive($archive_path);
+    } else {
+        $archive = new Import\ZipArchive($archive_path, ForgeConfig::get('tmp_dir'));
     }
 
     $collection_from_archive = $builder->buildFromArchive($archive);
     $transformer->transform($collection_from_archive, $mapping_path);
     $console->info('Everything is awesome! ♪♫');
-
-    $archive->close();
 
     exit(0);
 } catch (XML_ParseException $exception) {

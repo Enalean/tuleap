@@ -983,10 +983,13 @@ class Tracker_FormElementFactory {
             'original_field_id'=> null,
         );
         $curElem = $this->getInstanceFromRow($row);
-        $curElem->setTracker($tracker);
-        $xmlMapping[(string)$xml['ID']] = $curElem;
-        $curElem->continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
-        return $curElem;
+        if ($curElem) {
+            $curElem->setTracker($tracker);
+            $xmlMapping[(string)$xml['ID']] = $curElem;
+            $curElem->continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
+            return $curElem;
+        }
+        throw new Tracker_Exception("Unable to instanciate FormElement ".(string)$att['type']." named ".(string)$xml->name." ID: ".(string)$att['ID']);
     }
 
     protected function getDao() {

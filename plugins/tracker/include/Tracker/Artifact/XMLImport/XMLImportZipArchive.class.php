@@ -21,15 +21,40 @@
 /**
  * I am responsible of reading the content of a zip archive to import artifacts history
  */
-class Tracker_Artifact_XMLImport_XMLImportZipArchive extends XMLImportZipArchive {
+class Tracker_Artifact_XMLImport_XMLImportZipArchive {
 
     const RESOURCE_NAME          = 'tv5';
     const ARTIFACTS_XML_FILENAME = "artifacts.xml";
 
-    public function __construct(Tracker $tracker, ZipArchive $zip, $extraction_path){
-        parent::__construct($zip);
+    /** @var ZipArchive */
+    private $zip;
 
-        $this->extraction_path = $this->tempdir($extraction_path, $tracker->getId());
+    /** @var string */
+    private $extraction_path;
+
+
+    public function __construct(Tracker $tracker, ZipArchive $zip, $extraction_path){
+        $this->zip = $zip;
+
+        $this->extraction_path = $this->tempdir($extraction_path, self::RESOURCE_NAME, $tracker->getId());
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtractionPath() {
+        return $this->extraction_path;
+    }
+
+    /**
+     * @return bool
+     */
+    public function extractFiles() {
+        return $this->zip->extractTo($this->extraction_path);
+    }
+
+    public function cleanUp() {
+        exec("rm -rf $this->extraction_path");
     }
 
     /**
@@ -46,7 +71,9 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchive extends XMLImportZipArchive
      *
      * @return string Path to the new directory
      */
-    protected function tempdir($tmp_dir, $tracker_id) {
-        return parent::tempdir($tmp_dir, self::RESOURCE_NAME, $tracker_id);
+    private function tempdir($tmp_dir, $resource_name, $id) {
+        $template = 'import_'. $resource_name .'_'. $id .'_XXXXXX';
+
+        return trim(`mktemp -d -p $tmp_dir $template`);
     }
 }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Export\ArchiveInterface;
+
 /**
  * This class export a project to xml format
  */
@@ -86,7 +88,7 @@ class ProjectXMLExporter {
         SimpleXMLElement $into_xml,
         array $options,
         PFUser $user,
-        ZipArchive $archive
+        ArchiveInterface $archive
     ) {
         $this->logger->info("Export plugins");
 
@@ -105,7 +107,7 @@ class ProjectXMLExporter {
         );
     }
 
-    public function export(Project $project, array $options, PFUser $user, ZipArchive $archive) {
+    public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive) {
         $this->logger->info("Start exporting project " . $project->getPublicName());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
