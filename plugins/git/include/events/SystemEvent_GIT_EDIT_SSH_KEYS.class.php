@@ -82,7 +82,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
             $this->updateGerrit($user);
             $this->done();
         } catch (Git_UserSynchronisationException $e) {
-            $this->warning('Unable to propagate ssh keys on gerrit for user: ' . $user->getUnixName());
+            $this->warning('Unable to propagate ssh keys on gerrit for user: ' . $user->getUnixName().': '.$e->getMessage());
         }
     }
 
