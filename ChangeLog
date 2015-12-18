@@ -20,7 +20,7 @@ Version 8.10 (Not released yet)
     == Plugins ==
 	* docman: 2.26.91
 	* tracker: 5.765
-	* git: 4.99
+	* git: 4.100
 	* hudson: 1.23
 	* agiledashboard: 1.332
 	* cardwall: 1.53
