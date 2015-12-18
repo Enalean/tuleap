@@ -1,3 +1,6 @@
+Version 5.766 - Tuleap 8.10
+    * request #8617: allow to export & import with directory
+
 Version 5.765 - Tuleap 8.10
     * request #8681 Stopping the operation of Date Reminder in TV5 when email notification is suspended (Contrib STMicroelectronics)
 
