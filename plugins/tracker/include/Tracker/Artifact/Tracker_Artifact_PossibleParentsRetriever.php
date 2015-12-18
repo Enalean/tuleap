@@ -42,6 +42,7 @@ class Tracker_Artifact_PossibleParentsRetriever {
             )
         );
 
+        $paginated_possible_parents = null;
         if (! $possible_parents) {
             $label = $GLOBALS['Language']->getText(
                 'plugin_tracker_artifact',
@@ -49,14 +50,16 @@ class Tracker_Artifact_PossibleParentsRetriever {
                 array($parent_tracker->getName())
             );
 
-            $possible_parents = $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
+            $paginated_possible_parents = $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
                 $user,
                 $parent_tracker->getId(),
                 $limit,
                 $offset
             );
+        } else {
+            $paginated_possible_parents = new Tracker_Artifact_PaginatedArtifacts($possible_parents, count($possible_parents));
         }
 
-        return array($label, $possible_parents, $display_selector);
+        return array($label, $paginated_possible_parents, $display_selector);
     }
 }
