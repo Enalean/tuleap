@@ -13,6 +13,7 @@
         $stateProvider.state('planning', {
             url: "/planning",
             controller: 'PlanningCtrl',
+            controllerAs: 'planning',
             templateUrl: "planning.tpl.html"
         });
     }

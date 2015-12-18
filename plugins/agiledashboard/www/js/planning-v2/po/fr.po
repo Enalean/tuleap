@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-12-11 15:00+0100\n"
+"PO-Revision-Date: 2015-12-18 10:10+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -20,17 +20,18 @@ msgstr ""
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 
-#: src/app/backlog-item/backlog-item-details.tpl.html src/app/planning.tpl.html
+#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/planning.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr "Ajouter un(e) {{ accepted_type.label }}"
 
 #: src/app/planning.tpl.html
-msgid "Add a {{ backlog.accepted_types.content[0].label }}"
-msgstr "Ajouter un(e) {{ backlog.accepted_types.content[0].label }}"
+msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
+msgstr "Ajouter un(e) {{ planning.backlog.accepted_types.content[0].label }}"
 
 #: src/app/planning.tpl.html
-msgid "Add a {{ submilestone_type.label }}"
-msgstr "Ajouter un(e) {{ submilestone_type.label }}"
+msgid "Add a {{ planning.submilestone_type.label }}"
+msgstr "Ajouter un(e) {{ planning.submilestone_type.label }}"
 
 #: src/app/milestone/milestone.tpl.html src/app/planning.tpl.html
 msgid "Add a new item"
@@ -127,11 +128,11 @@ msgid "Show closed backlog items"
 msgstr "Afficher les éléments du backlog fermés"
 
 #: src/app/planning.tpl.html
-msgid "There is no closed milestones"
+msgid "There are no closed milestones"
 msgstr "Aucun jalon fermé"
 
 #: src/app/planning.tpl.html
-msgid "There is no open milestones"
+msgid "There are no open milestones"
 msgstr "Aucun jalon ouvert"
 
 #: src/app/planning.tpl.html
@@ -141,17 +142,3 @@ msgstr "A planifier"
 #: src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
-
-#~ msgid "Hide closed items"
-#~ msgstr "Cacher les éléments fermés"
-
-#~ msgid "Show closed items"
-#~ msgstr "Afficher les éléments fermés"
-
-#~ msgid "Hide \"Closed\" Items"
-#~ msgstr "Cacher les éléments \"fermés\""
-
-#~ msgid "{{ backlog_item.initial_effort }} pt"
-#~ msgid_plural "{{ backlog_item.initial_effort }} pts"
-#~ msgstr[0] "{{ backlog_item.initial_effort }} pt"
-#~ msgstr[1] "{{ backlog_item.initial_effort }} pts"
