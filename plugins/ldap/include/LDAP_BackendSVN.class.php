@@ -92,14 +92,17 @@ class LDAP_BackendSVN extends BackendSVN {
     function getSVNAccessUserGroupMembers(Project $project) {
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {
-            $conf = "";
-            $ugroup_dao = $this->getUGroupDao();
-            $dar = $ugroup_dao->searchByGroupId($project->getId());
+            $conf            = "";
+            $ugroup_dao      = $this->getUGroupDao();
+            $dar             = $ugroup_dao->searchByGroupId($project->getId());
+            $project_members = $project->getMembers();
             foreach ($dar as $row) {
                 $ugroup = $this->getUGroupFromRow($row);
                 $members = array();
                 foreach ($ugroup->getMembers() as $user) {
-                    $members[] = $user->getId();
+                    if ($project->isPublic() || in_array($user, $project_members)) {
+                        $members[] = $user->getId();
+                    }
                 }
                 if ($ugroup->getName() && count($members) > 0) {
                     $conf .= $this->getSVNGroupDef($ugroup->getName(), $members);

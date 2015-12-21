@@ -376,15 +376,23 @@ class BackendSVN extends Backend {
      *
      * @return String
      */
-    function getSVNAccessUserGroupMembers($project) {
-        $conf = "";
-        $ugroup_dao = $this->getUGroupDao();
-        $dar = $ugroup_dao->searchByGroupId($project->getId());
+    function getSVNAccessUserGroupMembers(Project $project) {
+        $conf            = "";
+        $ugroup_dao      = $this->getUGroupDao();
+        $dar             = $ugroup_dao->searchByGroupId($project->getId());
+        $project_members = $project->getMembers();
         foreach ($dar as $row) {
-            $ugroup = $this->getUGroupFromRow($row);
+            $ugroup          = $this->getUGroupFromRow($row);
+            $ugroup_members  = $ugroup->getMembers();
+            $valid_members   = array();
+            foreach ($ugroup_members as $ugroup_member) {
+                if ($project->isPublic() || in_array($ugroup_member, $project_members)) {
+                    $valid_members[] = $ugroup_member->getUserName();
+                }
+            }
             // User names must be in lowercase
-            $members_list = strtolower(implode(", ", $ugroup->getMembersUserName()));
-            if ($ugroup->getName() && $members_list) {
+            if ($ugroup->getName() && count($valid_members) > 0) {
+                $members_list = strtolower(implode(", ", $valid_members));
                 $conf .= $ugroup->getName()." = ".$members_list."\n";
             }
         }
