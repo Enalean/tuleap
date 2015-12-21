@@ -565,8 +565,10 @@ EOF
         $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < database_structure.sql   # create the DB
         cp database_initvalues.sql /tmp/database_initvalues.sql
 	if [ ! -z "$siteadmin_password" ]; then
-	    admin_md5_pwd=$(echo -n $siteadmin_password | md5sum | cut -d' ' -f1)
-	    substitute '/tmp/database_initvalues.sql' '6f3cac6213ffceee27cc85414f458caa' "$admin_md5_pwd"
+	    admin_password_db=$("$PHP" "$INSTALL_DIR"/tools/utils/password_hasher.php -p "$siteadmin_password")
+	    sed -i "s@SITEADMIN_PASSWORD@$admin_password_db@" /tmp/database_initvalues.sql
+	    admin_password_unix_db=$("$PHP" "$INSTALL_DIR"/tools/utils/password_hasher.php -p "$siteadmin_password" -u)
+	    sed -i "s@SITEADMIN_UNIX_PASSWORD@$admin_password_unix_db@" /tmp/database_initvalues.sql
 	fi
         substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
         $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.

@@ -28,9 +28,6 @@ class UserTest extends SOAPBase {
     public function setUp() {
         parent::setUp();
 
-        $this->login    = SOAP_TestDataBuilder::ADMIN_USER_NAME;
-        $this->password = SOAP_TestDataBuilder::ADMIN_USER_PASS;
-
         $_SERVER['SERVER_NAME'] = $this->server_name;
         $_SERVER['SERVER_PORT'] = $this->server_port;
         $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
