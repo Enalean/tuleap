@@ -164,6 +164,17 @@ class ProjectManager {
     }
 
     /**
+     * @return Project[]
+     */
+    public function getAllPrivateProjects() {
+        $private_projects = array();
+        foreach ($this->_getDao()->searchByPublicStatus(false) as $row) {
+            $private_projects[] = $this->getAndCacheProject($row);
+        }
+        return $private_projects;
+    }
+
+    /**
      * Look for project with name like given one
      *
      * @param String  $name
