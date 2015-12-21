@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -106,6 +106,18 @@ if (!$error && $request->exist('export')) {
         $csv_exporter->buildDatas(
             $custom_description_value_dao->getAllDescriptionValues($custom_description->getId()),
             $custom_description->getLabel()
+        );
+    }
+
+    //Trove Cats
+    $trove_cat_dao         = new TroveCatDao();
+    $trove_cat_factory     = new TroveCatFactory($trove_cat_dao);
+    $mandatories_trove_cat = $trove_cat_factory->getMandatoryParentCategoriesUnderRoot();
+
+    foreach ($mandatories_trove_cat as $trove_cat) {
+        $csv_exporter->buildDatas(
+            $trove_cat_dao->getMandatoryCategorySelectForAllProject($trove_cat->getId()),
+            $trove_cat->getFullname()
         );
     }
 

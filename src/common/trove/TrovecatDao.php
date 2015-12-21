@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrovecatDao extends DataAccessObject {
+class TroveCatDao extends DataAccessObject {
 
     public function getMandatoryParentCategoriesUnderRoot() {
         $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);
@@ -43,4 +43,18 @@ class TrovecatDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getMandatoryCategorySelectForAllProject($parent_category_id) {
+        $parent_category_id = $this->da->escapeInt($parent_category_id);
+
+        $sql = "SELECT groups.group_id, trove_cat.fullname AS result
+                FROM groups
+                    LEFT JOIN trove_group_link ON (
+                        trove_group_link.group_id = groups.group_id
+                        AND trove_group_link.trove_cat_root = $parent_category_id
+                    )
+                    LEFT JOIN trove_cat ON (trove_cat.trove_cat_id = trove_group_link.trove_cat_id)
+                GROUP BY groups.group_id";
+
+        return $this->retrieve($sql);
+    }
 }
