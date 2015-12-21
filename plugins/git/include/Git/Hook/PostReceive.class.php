@@ -28,6 +28,7 @@
  */
 class Git_Hook_PostReceive {
     const DEFAULT_MAIL_SUBJECT = 'Git notification';
+    const DEFAULT_FROM         = 'git';
 
     /** @var Git_Hook_LogAnalyzer */
     private $log_analyzer;
@@ -100,15 +101,27 @@ class Git_Hook_PostReceive {
         $mail_raw_output = array();
         exec('/usr/share/codendi/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .
             escapeshellarg($newrev) . ' ' . escapeshellarg($refname), $mail_raw_output);
+
         $subject       = isset($mail_raw_output[0]) ? $mail_raw_output[0] : self::DEFAULT_MAIL_SUBJECT;
         $mail_enhancer = new MailEnhancer();
         $this->addAdditionalMailHeaders($mail_enhancer, $mail_raw_output);
+        $this->setFrom($mail_enhancer);
+
         $body          = $this->createMailBody($mail_raw_output);
-
         $access_link   = $repository->getDiffLink($this->repository_url_manager, $newrev);
-
         $notification  = new Notification($repository->getNotifiedMails(), $subject, '', $body, $access_link, 'Git');
+
         return $mail_builder->buildAndSendEmail($repository->getProject(), $notification, $mail_enhancer);
+    }
+
+    private function setFrom(MailEnhancer $mail_enhancer) {
+        $email_domain = ForgeConfig::get('sys_default_mail_domain');
+
+        if (! $email_domain) {
+            $email_domain = ForgeConfig::get('sys_default_domain');
+        }
+
+        $mail_enhancer->addHeader('From', self::DEFAULT_FROM . '@' . $email_domain);
     }
 
     private function addAdditionalMailHeaders(MailEnhancer $mail_enhancer, $mail_raw_output) {
