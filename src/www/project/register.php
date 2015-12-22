@@ -31,7 +31,7 @@ $request = HTTPRequest::instance();
 $router = new Project_OneStepCreation_OneStepCreationRouter(
     ProjectManager::instance(),
     new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao()),
-    new TroveCatFactory(new TrovecatDao())
+    new TroveCatFactory(new TroveCatDao())
 );
 
 $router->route($request);

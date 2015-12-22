@@ -25,7 +25,7 @@ class TroveCatFactory {
      */
     private $dao;
 
-    public function __construct(TrovecatDao $dao) {
+    public function __construct(TroveCatDao $dao) {
         $this->dao = $dao;
     }
 
