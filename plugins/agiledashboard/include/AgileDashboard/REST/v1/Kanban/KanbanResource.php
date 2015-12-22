@@ -397,6 +397,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
      * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
      *
+     * @throws 403
      */
     protected function patchBacklog($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
         $current_user = UserManager::instance()->getCurrentUser();
@@ -496,6 +497,10 @@ class KanbanResource extends AuthenticatedResource {
             $artifact        = $this->artifact_factory->getArtifactById($artifact_id);
             $status_field    = $this->getStatusField($kanban, $user);
 
+            if (! $artifact->userCanView($user)) {
+                throw new RestException(403, 'You cannot access this kanban item.');
+            }
+
             $fields_data = array(
                 $status_field->getId() => $column_id
             );
@@ -583,6 +588,8 @@ class KanbanResource extends AuthenticatedResource {
      * @param int                                                    $id    Id of the Kanban
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
      * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
+     *
+     * @throws 403
      */
     protected function patchArchive($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
         $current_user = UserManager::instance()->getCurrentUser();
@@ -720,6 +727,8 @@ class KanbanResource extends AuthenticatedResource {
      * @param int                                                    $column_id Id of the column the item belongs to {@from query}
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the items {@from body}
      * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to the column {@from body}
+     *
+     * @throws 403
      */
     protected function patchItems(
         $id,

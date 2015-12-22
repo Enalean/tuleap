@@ -79,5 +79,16 @@ class Tracker_PermDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchAccessPermissionsByFieldId($field_id) {
+        $field_id = $this->da->escapeInt($field_id);
+
+        $sql="SELECT *
+              FROM permissions
+              WHERE permission_type LIKE 'PLUGIN_TRACKER_FIELD%'
+                    AND object_id='$field_id'
+              ORDER BY ugroup_id";
+        return $this->retrieve($sql);
+    }
+
 }
 ?>

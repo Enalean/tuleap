@@ -125,7 +125,7 @@ class KanbanItemsResource extends AuthenticatedResource {
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
-        $this->node_js_client     = new NodeJSClient();
+        $this->node_js_client         = new NodeJSClient();
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
@@ -194,14 +194,21 @@ class KanbanItemsResource extends AuthenticatedResource {
         $item_representation = $this->buildItemRepresentation($artifact);
 
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
+            $item      = $item_representation;
+            array_push($item->card_fields, $artifact->getTracker()->getTitleField());
+            array_push($item->card_fields, $artifact->getTracker()->getStatusField());
+            $data = array(
+                'artifact' => $item
+            );
             $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
             $message  = new MessageDataPresenter(
                 $current_user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
-                $item->kanban_id,
+                $kanban_id,
                 $rights,
                 'kanban_item:create',
-                $item_representation
+                $data
             );
 
             $this->node_js_client->sendMessage($message);
@@ -259,7 +266,33 @@ class KanbanItemsResource extends AuthenticatedResource {
             throw new RestException(403, 'You cannot access this kanban item.');
         }
 
-        return $this->buildItemRepresentation($artifact);
+        $item_representation = $this->buildItemRepresentation($artifact);
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $index           = $this->kanban_item_manager->getIndexOfKanbanItem($artifact, $item_representation->in_column);
+            $kanban_id       = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
+            $current_user_id = $current_user->getId();
+            $item            = $item_representation;
+            array_push($item->card_fields, $artifact->getTracker()->getTitleField());
+            array_push($item->card_fields, $artifact->getTracker()->getStatusField());
+            $data = array(
+                'artifact' => $item,
+                'index'    => $index
+            );
+            $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $message  = new MessageDataPresenter(
+                $current_user_id,
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban_id,
+                $rights,
+                'kanban_item:edit',
+                $data
+            );
+
+            $this->node_js_client->sendMessage($message);
+        }
+
+        return $item_representation;
     }
 
     private function buildItemRepresentation(Tracker_Artifact $artifact) {

@@ -57,4 +57,38 @@ class AgileDashboard_KanbanItemManager {
 
         return (int) $row['bindvalue_id'];
     }
+
+    public function getKanbanItemIndexInBacklog(Tracker_Artifact $artifact) {
+        $column_item_ids = array();
+        foreach ($this->item_dao->getKanbanBacklogItemIds($artifact->getTrackerId()) as $row) {
+            array_push($column_item_ids, $row['id']);
+        }
+        return array_search($artifact->getId(), $column_item_ids);
+    }
+
+    public function getKanbanItemIndexInArchive(Tracker_Artifact $artifact) {
+        $column_item_ids = array();
+        foreach ($this->item_dao->getKanbanArchiveItemIds($artifact->getTrackerId()) as $row) {
+            array_push($column_item_ids, $row['id']);
+        }
+        return array_search($artifact->getId(), $column_item_ids);
+    }
+
+    public function getKanbanItemIndexInColumn(Tracker_Artifact $artifact, $column) {
+        $column_item_ids = array();
+        foreach ($this->item_dao->getItemsInColumn($artifact->getTrackerId(), $column) as $row) {
+            array_push($column_item_ids, $row['id']);
+        }
+        return array_search($artifact->getId(), $column_item_ids);
+    }
+
+    public function getIndexOfKanbanItem(Tracker_Artifact $artifact, $column) {
+        if($column === 'backlog') {
+            return $this->getKanbanItemIndexInBacklog($artifact);
+        } else if($column === 'archive') {
+            return $this->getKanbanItemIndexInArchive($artifact);
+        } else {
+            return $this->getKanbanItemIndexInColumn($artifact, $column);
+        }
+    }
 }
