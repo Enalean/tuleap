@@ -20,11 +20,11 @@
 
 class GitXmlImporter {
 
-    const READ_TAG  = 'READ';
-    const WRITE_TAG = 'WRITE';
-    const WPLUS_TAG = 'WPLUS';
+    const READ_TAG  = 'read';
+    const WRITE_TAG = 'write';
+    const WPLUS_TAG = 'wplus';
 
-    const UGROUPID = 'ugroup-id';
+    const UGROUP_TAG = 'ugroup';
 
     /**
      * @var Logger
@@ -62,6 +62,11 @@ class GitXmlImporter {
     private $xml_validator;
 
     /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+
+    /**
      * @var System_Command
      */
     private $system_command;
@@ -72,7 +77,8 @@ class GitXmlImporter {
         GitRepositoryFactory   $repository_factory,
         Git_Backend_Gitolite   $gitolite_backend,
         Git_SystemEventManager $system_event_manager,
-        PermissionsManager $permissions_manager)
+        PermissionsManager $permissions_manager,
+        UGroupManager $ugroup_manager)
     {
         $this->logger = new WrapperLogger($logger, "GitXmlImporter");
         $this->permission_manager = $permissions_manager;
@@ -80,6 +86,7 @@ class GitXmlImporter {
         $this->repository_factory = $repository_factory;
         $this->gitolite_backend = $gitolite_backend;
         $this->system_event_manager = $system_event_manager;
+        $this->ugroup_manager = $ugroup_manager;
         $this->xml_validator = new XML_RNGValidator();
         $this->system_command = new System_Command();
     }
@@ -147,14 +154,27 @@ class GitXmlImporter {
     }
 
     private function importPermission(Project $project, SimpleXMLElement $permission_xmlnode, $permission_type, GitRepository $repository) {
-        $ugroup_ids = array();
-        foreach($permission_xmlnode->children() as $group) {
-            if($group->getName() === self::UGROUPID) {
-                array_push($ugroup_ids, (string)$group);
-            }
-        }
+        $ugroup_ids = $this->getUgroupIdsForPermissions($project, $permission_xmlnode);
+
         if(!empty($ugroup_ids)) {
             $this->permission_manager->savePermissions($project, $repository->getId(), $permission_type, $ugroup_ids);
         }
+    }
+
+    private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode) {
+        $ugroup_ids = array();
+        foreach($permission_xmlnode->children() as $ugroup) {
+            if($ugroup->getName() === self::UGROUP_TAG) {
+                $ugroup_name = (string)$ugroup;
+                $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+                if($ugroup === null) {
+                    $this->logger->error("Could not find any ugroup named $ugroup_name");
+                    throw new GitXmlImporterUGroupNotFoundException($ugroup_name);
+                }
+
+                array_push($ugroup_ids, $ugroup->getId());
+            }
+        }
+        return $ugroup_ids;
     }
 }

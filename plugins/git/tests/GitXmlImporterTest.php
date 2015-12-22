@@ -44,6 +44,8 @@ class GitXmlImporterTest extends TuleapTestCase {
     private $permission_dao;
     private $old_cwd;
     private $system_command;
+    private $ugroup_manager;
+    private $ugroup_dao;
 
     public function setUp() {
         $this->old_cwd = getcwd();
@@ -77,12 +79,15 @@ class GitXmlImporterTest extends TuleapTestCase {
         $plugin_manager = new PluginManager($plugin_factory, EventManager::instance(), new SiteCache($this->logger), new ForgeUpgradeConfig(new System_Command()));
         PluginManager::setInstance($plugin_manager);
 
+        $this->ugroup_dao = mock('UGroupDao');
+        $this->ugroup_manager = new UGroupManager($this->ugroup_dao, mock('EventManager'));
+
         $this->permission_dao = mock('PermissionsDAO');
         $permissions_manager  = new PermissionsManager($this->permission_dao);
         $git_mirror_dao = mock('Git_Mirror_MirrorDao');
         $git_gitolite_driver = new Git_GitoliteDriver($this->logger, $this->git_systemeventmanager, mock('Git_GitRepositoryUrlManager'), $this->git_dao, $git_mirror_dao, $this->git_plugin);
         $gitolite = new Git_Backend_Gitolite($git_gitolite_driver, $this->logger);
-        $this->importer = new GitXmlImporter($this->logger, $this->git_manager, $this->git_factory, $gitolite, $this->git_systemeventmanager, $permissions_manager);
+        $this->importer = new GitXmlImporter($this->logger, $this->git_manager, $this->git_factory, $gitolite, $this->git_systemeventmanager, $permissions_manager, $this->ugroup_manager);
         $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
 
         $userManager = mock('UserManager');
@@ -152,7 +157,7 @@ XML;
         $this->assertEqual(1, intval($nb_commit_stable2));
     }
 
-    public function itShouldImportPermissions() {
+    public function itShouldImportStaticUgroups() {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -161,21 +166,24 @@ XML;
                 <git>
                     <repository bundle-path="stable.bundle" name="stable">
                         <read>
-                            <ugroup-id>1</ugroup-id>
+                            <ugroup>project_members</ugroup>
                         </read>
                         <write>
-                            <ugroup-id>2</ugroup-id>
+                            <ugroup>project_members</ugroup>
                         </write>
                         <wplus>
-                            <ugroup-id>4</ugroup-id>
+                            <ugroup>project_admins</ugroup>
                         </wplus>
                     </repository>
                 </git>
             </project>
 XML;
-        stub($this->permission_dao)->addPermission(Git::PERM_READ,  '*', 1)->at(0);
-        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*', 2)->at(1);
-        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*', '4')->at(2);
+        $result = mock('DataAccessResult');
+        stub($result)->getRow()->returns(false);
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
+        stub($this->permission_dao)->addPermission(Git::PERM_READ,  '*',  3)->at(0);
+        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*',  3)->at(1);
+        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*',  4)->at(2);
         $this->import(new SimpleXMLElement($xml));
     }
 
@@ -185,16 +193,16 @@ XML;
                 <git>
                     <repository bundle-path="stable.bundle" name="stable">
                         <stuff>
-                            <ugroup-id>4</ugroup-id>
+                            <ugroup>project_members</ugroup>
                         </stuff>
                         <read>
-                            <stuff>4</stuff>
+                            <stuff>project_members</stuff>
                         </read>
                         <write>
-                            <stuff>4</stuff>
+                            <stuff>project_members</stuff>
                         </write>
                         <wplus>
-                            <stuff>4</stuff>
+                            <stuff>project_members</stuff>
                         </wplus>
                     </repository>
                 </git>

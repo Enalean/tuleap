@@ -18,8 +18,8 @@
           <optional>
             <element name="read">
               <zeroOrMore>
-                <element name="ugroup-id">
-                  <data type="integer"/>
+                <element name="ugroup">
+                  <data type="string"/>
                 </element>
               </zeroOrMore>
             </element>
@@ -27,8 +27,8 @@
           <optional>
             <element name="write">
               <zeroOrMore>
-                <element name="ugroup-id">
-                  <data type="integer"/>
+                <element name="ugroup">
+                  <data type="string"/>
                 </element>
               </zeroOrMore>
             </element>
@@ -36,8 +36,8 @@
           <optional>
             <element name="wplus">
               <zeroOrMore>
-                <element name="ugroup-id">
-                  <data type="integer"/>
+                <element name="ugroup">
+                  <data type="string"/>
                 </element>
               </zeroOrMore>
             </element>
