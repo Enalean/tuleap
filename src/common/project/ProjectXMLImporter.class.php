@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once "account.php";
+
 /**
  * This class import a project from a xml content
  */
@@ -146,31 +148,43 @@ class ProjectXMLImporter {
         if ($xml_element->ugroups) {
             $this->logger->info("Some ugroups are defined in the XML");
 
-            $ugroup_in_xml = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
+            list($ugroups_in_xml, $project_members) = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
 
-            foreach ($ugroup_in_xml as $ugroup) {
-                $this->logger->debug("Creating empty ugroup " . $ugroup['name']);
-                $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
-                    $project->getID(),
-                    $ugroup['name'],
-                    $ugroup['description']
-                );
+            foreach($project_members as $user) {
+                $this->addUser($project, $user);
+            }
 
-                if (empty($ugroup['users'])) {
-                    $this->logger->debug("No user to add in ugroup " . $ugroup['name']);
-                } else {
-                    $this->logger->debug("Adding users to ugroup " . $ugroup['name']);
+            foreach ($ugroups_in_xml as $ugroup_def) {
+                $ugroup = $this->ugroup_manager->getDynamicUGoupByName($project, $ugroup_def['name']);
+
+                if(empty($ugroup)) {
+                    $this->logger->debug("Creating empty ugroup " . $ugroup_def['name']);
+                    $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
+                        $project->getID(),
+                        $ugroup_def['name'],
+                        $ugroup_def['description']
+                    );
+                    $ugroup = $this->ugroup_manager->getById($new_ugroup_id);
                 }
 
-                foreach ($ugroup['users'] as $user) {
-                    $this->logger->debug("Adding user " . $user->getUserName());
-                    $this->ugroup_manager->addUserToUgroup(
-                        $project->getID(),
-                        $new_ugroup_id,
-                        $user->getId()
-                    );
+                if (empty($ugroup_def['users'])) {
+                    $this->logger->debug("No user to add in ugroup " . $ugroup_def['name']);
+                } else {
+                    $this->logger->debug("Adding users to ugroup " . $ugroup_def['name']);
+                }
+
+                foreach ($ugroup_def['users'] as $user) {
+                    $this->logger->debug("Adding user " . $user->getUserName() . " to " . $ugroup_def['name']);
+                    $ugroup->addUser($user);
                 }
             }
+        }
+    }
+
+    private function addUser(Project $project, PFUser $user) {
+        $this->logger->info("Add user {$user->getUserName()} to project.");
+        if(!account_add_user_obj_to_group($project->getID(), $user)) {
+            throw new UserNotAddedAsProjectMemberException($GLOBALS['Response']->getRawFeedback());
         }
     }
 
@@ -181,6 +195,7 @@ class ProjectXMLImporter {
      */
     private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element_ugroups) {
         $ugroups = array();
+        $project_members = array();
 
         $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($xml_element_ugroups, $rng_path);
@@ -190,17 +205,24 @@ class ProjectXMLImporter {
             $ugroup_name        = (string) $ugroup['name'];
             $ugroup_description = (string) $ugroup['description'];
 
-            if ($this->ugroup_manager->getUGroupByName($project, $ugroup_name)) {
+            $dynamic_ugroup_id = $this->ugroup_manager->getDynamicUGoupIdByName($ugroup_name);
+            if ($this->ugroup_manager->getUGroupByName($project, $ugroup_name) && empty($dynamic_ugroup_id)) {
                 $this->logger->debug("Ugroup $ugroup_name already exists in project -> skipped");
                 continue;
             }
 
-            $ugroups[$ugroup_name]['name']        = $ugroup_name;
-            $ugroups[$ugroup_name]['description'] = $ugroup_description;
-            $ugroups[$ugroup_name]['users']       = $this->getListOfUgroupMember($ugroup);
+            $users = $this->getListOfUgroupMember($ugroup);
+
+            if($dynamic_ugroup_id == ProjectUGroup::PROJECT_MEMBERS) {
+                $project_members = $users;
+            } else {
+                $ugroups[$ugroup_name]['name']        = $ugroup_name;
+                $ugroups[$ugroup_name]['description'] = $ugroup_description;
+                $ugroups[$ugroup_name]['users']       = $users;
+            }
         }
 
-        return $ugroups;
+        return array($ugroups, $project_members);
     }
 
     /**
