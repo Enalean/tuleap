@@ -17,6 +17,7 @@ Version 8.10 (Not released yet)
 
 	== Enhancement ==
 	* story #8572: Add project creation using XML
+	* request #8474: Git plugin has a missing dependency to php-markdown
 
     == Plugins ==
 	* docman: 2.26.91
