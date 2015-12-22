@@ -1,3 +1,6 @@
+Version 4.101 - Tuleap 8.10
+    * request #8716: 'git' sender has been modified to 'codendiadm@tuleap-host' instead of 'git@tuleap-host'
+
 Version 4.100 - Tuleap 8.10
     * request #8652: SSH keys not properly deployed on gerrit when an error occur
 
