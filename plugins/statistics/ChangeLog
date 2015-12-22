@@ -1,3 +1,6 @@
+Version 0.54 - Tuleap 8.10
+    * story #8712: see the project mandatory trove cats in the service usage statistics
+
 Version 0.53 - Tuleap 8.8
     * request #8453: Optimize the CSV exportation in statistics plugin
 
