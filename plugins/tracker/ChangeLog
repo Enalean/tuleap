@@ -1,3 +1,6 @@
+Version 5.768 - Tuleap 8.10
+    * request #8719: Project export: Tracker's attachment not exported
+
 Version 5.767 - Tuleap 8.10
     * request #8680: Notifications sent to external emails should come from 'noreply'
 
