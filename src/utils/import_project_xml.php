@@ -97,15 +97,15 @@ $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
 
 $transformer = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager);
+$console     = new Log_ConsoleLogger();
 $logger      = new ProjectXMLImporterLogger();
+$broker_log  = new BrokerLogger(array($logger, $console));
 $builder     = new User\XML\Import\UsersToBeImportedCollectionBuilder(
     $user_manager,
-    $logger,
+    $broker_log,
     $security,
     $xml_validator
 );
-
-$console = new Log_ConsoleLogger();
 
 try {
     $user = $user_manager->forceLogin($username);
@@ -123,9 +123,9 @@ try {
 
     $collection_from_archive = $builder->buildFromArchive($archive);
     $users_collection        = $transformer->transform($collection_from_archive, $mapping_path);
-    $users_collection->process($user_manager, $console);
+    $users_collection->process($user_manager, $broker_log);
 
-    $user_finder = new User\XML\Import\Mapping($user_manager, $users_collection, $logger);
+    $user_finder = new User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
 
     $xml_importer  = new ProjectXMLImporter(
         EventManager::instance(),
@@ -133,7 +133,7 @@ try {
         $xml_validator,
         new UGroupManager(),
         $user_finder,
-        new ProjectXMLImporterLogger()
+        $broker_log
     );
 
      if (empty($project_id)) {
@@ -147,9 +147,9 @@ try {
     exit(0);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
-        $console->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
+        $broker_log->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
     }
 } catch (Exception $exception) {
-    $console->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
+    $broker_log->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
 }
 exit(1);
