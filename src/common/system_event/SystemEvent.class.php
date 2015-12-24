@@ -64,6 +64,7 @@ abstract class SystemEvent {
     const TYPE_ROOT_DAILY            = "ROOT_DAILY";
     const TYPE_COMPUTE_MD5SUM        = "COMPUTE_MD5SUM";
     const TYPE_SVN_UPDATE_HOOKS      = "SVN_UPDATE_HOOKS";
+    const TYPE_SVN_AUTHORIZE_TOKENS  = "SVN_AUTHORIZE_TOKENS";
     const TYPE_MOVE_FRS_FILE         = "MOVE_FRS_FILE";
     const TYPE_UPDATE_ALIASES        = "UPDATE_ALIASES";
 
@@ -443,5 +444,3 @@ End Date:     {$this->getEndDate()}
         }
     }
 }
-
-?>

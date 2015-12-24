@@ -38,6 +38,8 @@ admin_main	configure_svc	Configuration of predefined services
 admin_main	header_ref	Reference administration
 admin_main	configure_ref	Configuration of predefined references
 admin_main	header_tracker	Trackers administration
+admin_main	header_svn	Subversion administration
+admin_main	svn_token_config	Project configuration for tokens
 admin_main	tracker_remove	Pending trackers removal
 admin_main	tracker_template	Configuration of predefined tracker v3 templates
 admin_main	header_stat	Statistics

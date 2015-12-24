@@ -167,3 +167,22 @@ svn_viewvc	bad_roottype	roottype invalide
 
 
 svn_widget	svnstats	Statistiques Svn
+
+svn_tokens	allowed_project_back_link_title	Retour à l'adminsitration globale
+svn_tokens	allowed_project_title	Jetons de connexion pour SVN
+svn_tokens	allowed_project_information	Cette section permet de définir les projets où les utilisateurs pourront utiliser leur jeton de connexion pour SVN.
+svn_tokens	allowed_project_list	Liste des projets utilisant les jetons de connexion pour SVN :
+svn_tokens	allowed_project_list_allow_placeholder	Nom du projet
+svn_tokens	allowed_project_list_allow_project	Autoriser
+svn_tokens	allowed_project_list_filter_placeholder	Filtrer sur l'ID d'un projet ou le nom
+svn_tokens	allowed_project_list_id	ID
+svn_tokens	allowed_project_list_name	Nom
+svn_tokens	allowed_project_list_empty	Aucun projet n'autorise les jetons de connexion pour SVN.
+svn_tokens	allowed_project_allow_project	Les projets soumis autoriseront les jetons de connextion SVN dans un instant (consultez les Evénements Système)
+svn_tokens	allowed_project_update_project_list_error	Une erreur s'est produite lors de l'autorisation.
+svn_tokens	allowed_project_revoke_title	Attention
+svn_tokens	allowed_project_revoke_description	Vous êtes sur le point de supprimer l'autorisation aux jetons de connexion SVN pour les projects sélectionnés. Êtes-vous sûr de vouloir faire celà ?
+svn_tokens	allowed_project_revoke_yes	Oui, supprimer l'autorisation
+svn_tokens	allowed_project_revoke_no	Non
+svn_tokens	allowed_project_revoke_projects	Submitted projects will not be able to use SVN tokens
+svn_tokens	allowed_project_list_revoke_projects	Supprimer l'autorisation aux projets sélectionnés

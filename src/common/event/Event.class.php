@@ -566,6 +566,17 @@ class Event {
     const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 
     /**
+     * Event raised when admin define project to authorize SVN tokens
+     *
+     * Paramters:
+     *     'group_id' => The id of the project
+     *
+     * Expected results:
+     *     Void
+     */
+    const SVN_AUTHORIZE_TOKENS = 'svn_authorize_tokens';
+
+    /**
      * Event raised when a project has a new parent
      *
      * Parameters:

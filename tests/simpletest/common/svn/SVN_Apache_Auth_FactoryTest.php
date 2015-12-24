@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
- * 
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -19,66 +19,77 @@
 
 require_once 'common/svn/SVN_Apache_Auth_Factory.class.php';
 
-Mock::generate('EventManager');
-
-class SVN_Apache_ModStuff extends SVN_Apache {
-    function getProjectAuthentication($row) {
-    }
+class SVN_Apache_ModFromPlugin extends SVN_Apache {
+    protected function getProjectAuthentication($row) {}
 }
 
-class SVN_Apache_Auth_FactoryTestEventManager extends EventManager {
-    function processEvent($event, $params) {
-        $params['svn_apache_auth'] = new SVN_Apache_ModStuff($params['project_info']);
-    }
-}
+class SVN_Apache_Auth_FactoryTest extends TuleapTestCase {
 
-class SVN_Apache_Auth_FactoryTest extends UnitTestCase {
-    
-    function setUp() {
+    private $event_manager;
+    private $project_manager;
+    private $token_manager;
+    private $factory;
+    private $project;
+    private $mod_from_plugin;
+
+    public function setUp() {
         ForgeConfig::store();
+
+        $this->event_manager   = mock('EventManager');
+        $this->project_manager = mock('ProjectManager');
+        $this->token_manager   = mock('SVN_TokenUsageManager');
+
+        $this->factory = partial_mock(
+            'SVN_Apache_Auth_Factory',
+            array('getModFromPlugins'),
+            array($this->project_manager, $this->event_manager, $this->token_manager)
+        );
+
+        $this->project         = mock('Project');
+        $this->mod_from_plugin = new SVN_Apache_ModFromPlugin($this->project);
     }
-    
-    function tearDown() {
+
+    public function tearDown() {
         ForgeConfig::restore();
     }
-    
-    private function GivenAAuthFactoryWithoutAnyPlugin() {
-        $factory = TestHelper::getPartialMock('SVN_Apache_Auth_Factory', array('getEventManager'));
-        $factory->setReturnValue('getEventManager', new MockEventManager());
-        return $factory;
-    }
-    
-    function testFactoryShouldReturnModMysqlByDefault() {
+
+    public function itReturnsModMysqlByDefault() {
         $projectInfo = array();
-        $factory     = $this->GivenAAuthFactoryWithoutAnyPlugin();
-        $this->assertIsA($factory->get($projectInfo), 'SVN_Apache_ModMysql');
+
+        $this->assertIsA($this->factory->get($projectInfo), 'SVN_Apache_ModMysql');
     }
-    
-    function testFactoryShouldReturnModPerlIfPlatformConfiguredWithModPerl() {
+
+    public function itReturnsModPerlIfPlatformConfiguredWithModPerl() {
         $projectInfo = array();
+
         ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
-        $factory = $this->GivenAAuthFactoryWithoutAnyPlugin();
-        $this->assertIsA($factory->get($projectInfo), 'SVN_Apache_ModPerl');
+
+        $this->assertIsA($this->factory->get($projectInfo), 'SVN_Apache_ModPerl');
     }
-    
-    private function GivenAAuthFactoryWithStuffPlugin() {
-        $factory = TestHelper::getPartialMock('SVN_Apache_Auth_Factory', array('getEventManager'));
-        $factory->setReturnValue('getEventManager', new SVN_Apache_Auth_FactoryTestEventManager());
-        return $factory;
-    }
-    
-    function testFactoryShouldReturnModStuffIfStuffAuthIsConfiguredForThisProject() {
+
+    public function itReturnModPluginIfPluginAuthIsConfiguredForThisProject() {
         $projectInfo = array();
-        $factory     = $this->GivenAAuthFactoryWithStuffPlugin();
-        $this->assertIsA($factory->get($projectInfo), 'SVN_Apache_ModStuff');
+
+        stub($this->factory)->getModFromPlugins()->returns($this->mod_from_plugin);
+
+        $this->assertIsA($this->factory->get($projectInfo), 'SVN_Apache_ModFromPlugin');
     }
-    
-    function testFactoryShouldReturnModStuffIfStuffAuthIsConfiguredForThisProjectAndDefaultConfigIsModPerl() {
+
+    public function itReturnModPluginIfPlugiAuthIsConfiguredForThisProjectAndDefaultConfigIsModPerl() {
         $projectInfo = array();
+
         ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
-        $factory     = $this->GivenAAuthFactoryWithStuffPlugin();
-        $this->assertIsA($factory->get($projectInfo), 'SVN_Apache_ModStuff');
+        stub($this->factory)->getModFromPlugins()->returns($this->mod_from_plugin);
+
+        $this->assertIsA($this->factory->get($projectInfo), 'SVN_Apache_ModFromPlugin');
+    }
+
+    public function itReturnsModPerlIfProjectIsAuthorizedToUseTokens() {
+        $projectInfo = array();
+
+        stub($this->project_manager)->getProjectFromDbRow($projectInfo)->returns($this->project);
+        stub($this->token_manager)->isProjectAuthorizingTokens($this->project)->returns(true);
+
+        $this->assertIsA($this->factory->get($projectInfo), 'SVN_Apache_ModPerl');
     }
 }
-
-?>

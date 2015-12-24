@@ -30,6 +30,8 @@ admin_main	configure_svc	Configuration des services prédéfinis
 admin_main	header_ref	Administration des références
 admin_main	configure_ref	Configuration des références systèmes
 admin_main	header_tracker	Administration des outils de suivi
+admin_main	header_svn	Administration de Subversion
+admin_main	svn_token_config	Configuration des projets concernant les jetons de connexion
 admin_main	tracker_remove	Nettoyage des outils de suivi en attente
 admin_main	tracker_template	Configuration des modèles d'outils de suivi v3
 admin_main	header_stat	Statistiques
