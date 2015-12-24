@@ -12,6 +12,7 @@ Version 8.10 (Not released yet)
 	* story #8658: Do not show closed milestones by default
 	* story #8712: see the project mandatory trove cats in the service usage statistics
 	* story #8618: An user can be authenticated from a token for all SVN operations
+	* story #8608: User can manage his own svn tokens
 
 	== Bug fix ==
 	* request #8688: Old email displayed in confirmation message after updating my email address
@@ -32,7 +33,7 @@ Version 8.10 (Not released yet)
 	* statistics: 0.54
 
     == Themes ==
-	* FlamingParrot: 1.116
+	* FlamingParrot: 1.117
 
 Version 8.9 (Thursday, December 3rd 2015)
 
