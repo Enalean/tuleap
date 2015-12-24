@@ -40,15 +40,42 @@ h3.account-title {
     margin-top: 15px;
 }
 
-#account-shell {
-    > div {
-        margin-bottom: 10px;
+#account-shell .ssh-keys-table,
+#account-svn-tokens .svn-tokens-table {
+    width: 100%;
+
+    > tbody > tr > td {
+        &:first-child {
+            width: 20px;
+            text-align: center;
+
+            > input {
+                margin: 0;
+            }
+        }
+
+        &.empty-table {
+            text-align: center;
+            padding: 20px;
+            color: #999999;
+        }
     }
 }
 
-#user-ssh-keys-action {
-    > a {
-        margin-right: 15px;
+.svn-generated-token {
+    font-weight: bold;
+}
+
+#svn-tokens-generate-modal {
+    .modal-body {
+        > p {
+            margin: 0 0 20px;
+        }
+
+        > textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
     }
 }
 
@@ -152,11 +179,6 @@ i.help-button {
     vertical-align: middle;
     color: #C2C2C2;
     text-decoration: none
-}
-
-.ssh-keys-table {
-    width: 100%;
-    max-width: 900px;
 }
 
 .select-user-preferences {

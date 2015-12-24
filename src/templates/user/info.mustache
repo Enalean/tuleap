@@ -1,0 +1,42 @@
+<div id="account-user-info">
+    <div class="first-user-info">
+    {{# has_avatar }}
+        <div class="user-personnal-info" id="user-avatar">
+            <a href="/account/change_avatar.php">{{{ avatar }}}</a>
+        </div>
+    {{/ has_avatar }}
+        <div class="user-personnal-info">
+            <span class="user-real-name">{{ real_name }}</span>
+            {{# can_change_real_name }}<a href="change_realname.php" class="btn btn-small">{{ change_real_name }}</a>{{/ can_change_real_name }}
+            {{# can_change_password }}<a href="change_pw.php" class="btn btn-small">{{ change_password }}</a>{{/ can_change_password }}
+            <span class="user-username">{{ user_username }}</span>
+        </div>
+    </div>
+
+    <div style="clear:both"></div>
+
+    <table class="user-info-table">
+        <tr>
+            <td class="user-info-label table-label">{{ user_id_label }}</td>
+            <td>{{ user_id_value }}</td>
+        </tr>
+        <tr>
+            <td class="user-info-label table-label">{{ user_email_label }}</td>
+            <td>{{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn btn-small">{{ change_email }}</a>{{/ can_change_email }}</td>
+        </tr>
+        <tr>
+            <td class="user-info-label table-label">{{ member_since_label }}</td>
+            <td>{{member_since_value }}</td>
+        </tr>
+        <tr>
+            <td class="user-info-label table-label">{{ timezone_label }}</td>
+            <td>{{ timezone_value }} <a href="change_timezone.php" class="btn btn-small">{{ change_timezone }}</a></td>
+        </tr>
+        {{# extra_user_info }}
+        <tr>
+            <td class="user-info-label table-label">{{ label }}</td>
+            <td>{{{ value }}} {{# can_change }}{{{ change }}}{{/ can_change }}</td>
+        </tr>
+        {{/ extra_user_info }}
+    </table>
+</div>

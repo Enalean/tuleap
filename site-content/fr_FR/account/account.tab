@@ -28,6 +28,26 @@ account_options	shell_box	Serveur Shell
 account_options	shell_shared_keys	Clés SSH partagées :
 account_options	shell_add_keys	Ajouter des Clés
 account_options	shell_delete_ssh_keys	Supprimer les clefs sélectionnées
+account_options	ssh_keys_no_key	Aucune clé SSH
+account_options	svn_tokens_title	Jetons SVN
+account_options	svn_tokens_help	Les jetons SVN sont utilisables en remplacement de votre mot de passe uniquement sur les projets définis par l'administrateur.
+account_options	svn_tokens_no_token	Aucun jeton SVN
+account_options	svn_token_generated_date	Généré le
+account_options	svn_token_last_usage	Dernière fois utilisé le
+account_options	svn_token_last_ip	Dernière fois utilisé par
+account_options	svn_token_comment	Commentaire
+account_options	generate_svn_token_button	Générer un jeton SVN
+account_options	generated_svn_token	Le jeton généré est
+account_options	delete_svn_tokens_button	Supprimer les jetons SVN sélectionnés
+account_options	generate_svn_token_modal_title	Générer un jeton SVN
+account_options	generate_svn_token_modal_button_help	Un jeton sera généré à la soumission de ce formulaire. Le commentaire est facultatif mais il pourra vous aider à gérer vos jetons par la suite.
+account_options	generate_svn_token_modal_button_comment_label	Commentaire du jeton
+account_options	generate_svn_token_modal_button_comment_placeholder	Mon commentaire qui me permettra de ne pas oublier l'utilité de ce token...
+account_options	generate_svn_token_modal_button	Générer
+account_options	generate_svn_token_success	Le jeton SVN a été créé avec succès.
+account_options	generate_svn_token_error	Une erreur est survenue lors de la création du jeton SVN.
+account_options	delete_svn_tokens_success	Les jetons SVN ont été supprimés avec succès.
+account_options	delete_svn_tokens_error	Une erreur est survenue lors de la suppression des jetons SVN.
 account_options	remember_me	"Souviens-toi de moi" <u><span style="color:#666">($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</span></u>
 account_options	csv_separator	Séparateur CSV :
 account_options	comma	virgule

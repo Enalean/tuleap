@@ -36,6 +36,26 @@ account_options	shell_box	Shell Box
 account_options	shell_shared_keys	SSH Shared Keys:
 account_options	shell_add_keys	Add Keys
 account_options	shell_delete_ssh_keys	Delete selected keys
+account_options	ssh_keys_no_key	No SSH key
+account_options	svn_tokens_title	SVN tokens
+account_options	svn_tokens_help	You can use SVN tokens as a replacement for your password on projects selected by the administrator.
+account_options	svn_tokens_no_token	No SVN token
+account_options	svn_token_generated_date	Generated on
+account_options	svn_token_last_usage	Last used on
+account_options	svn_token_last_ip	Last used by
+account_options	svn_token_comment	Comment
+account_options	generate_svn_token_button	Generate an SVN token
+account_options	generated_svn_token	The generated token is
+account_options	delete_svn_tokens_button	Delete selected SVN tokens
+account_options	generate_svn_token_modal_title	Generate an SVN token
+account_options	generate_svn_token_modal_button_help	A token will be automatically generated at the form submission. The comment is not required but it can help you to manage your tokens.
+account_options	generate_svn_token_modal_button_comment_label	Token comment
+account_options	generate_svn_token_modal_button_comment_placeholder	My comment so I won't forget the purpose of this token...
+account_options	generate_svn_token_modal_button	Generate
+account_options	generate_svn_token_success	An SVN token has been successfully generated.
+account_options	generate_svn_token_error	An error occured during the SVN token generation.
+account_options	delete_svn_tokens_success	SVN tokens have been successfully deleted.
+account_options	delete_svn_tokens_error	An error occured during the SVN token deletion.
 account_options	remember_me	"Remember me" <span style="color:#666">($1 remembers your login/password. If you change this preference make sure to logout and login again)</span>
 account_options	csv_separator	CSV separator:
 account_options	comma	comma

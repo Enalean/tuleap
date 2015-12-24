@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,14 +23,22 @@
         popover_is_displayed = false;
 
     $(document).ready(function(){
-        var $delete_button = $('#button-delete-keys');
-        var $checkboxs     = $('input[type="checkbox"][name="ssh_key_selected[]"]');
+        var ssh_keys_delete_button   = $('#button-delete-keys'),
+            svn_tokens_delete_button = $('#button-delete-svn-tokens'),
+            ssk_keys_checkboxes      = $('input[type="checkbox"][name="ssh_key_selected[]"]');
+            svn_tokens_checkboxes    = $('input[type="checkbox"][name="svn-tokens-selected[]"]');
 
         updateHeightValue();
-        modifyDeleteKeysButtonStatus($delete_button);
 
-        $checkboxs.change(function() {
-            modifyDeleteKeysButtonStatus($delete_button);
+        changeDeleteButtonStatusDependingCheckboxesStatus(ssh_keys_delete_button, ssk_keys_checkboxes);
+        changeDeleteButtonStatusDependingCheckboxesStatus(svn_tokens_delete_button, svn_tokens_checkboxes);
+
+        ssk_keys_checkboxes.change(function() {
+            changeDeleteButtonStatusDependingCheckboxesStatus(ssh_keys_delete_button, ssk_keys_checkboxes);
+        });
+
+        svn_tokens_checkboxes.change(function() {
+            changeDeleteButtonStatusDependingCheckboxesStatus(svn_tokens_delete_button, svn_tokens_checkboxes);
         });
 
         $('[data-ssh_key_value]').one('click', displayFullSSHKey);
@@ -58,16 +66,24 @@
         $('#account-preferences').height(new_height);
     };
 
-    function modifyDeleteKeysButtonStatus($delete_button) {
+    function changeDeleteButtonStatusDependingCheckboxesStatus(button, checkboxes) {
+        var at_least_one_checkbox_is_checked = false;
+
+        checkboxes.each(function() {
+            if ($(this)[0].checked) {
+                at_least_one_checkbox_is_checked = true;
+                return;
+            }
+        });
+
         var nb_checked = $('input[type="checkbox"][name="ssh_key_selected[]"]:checked').length;
 
-        if (nb_checked === 0) {
-            $delete_button.attr('disabled', true);
-            return;
+        if (at_least_one_checkbox_is_checked) {
+            button.removeAttr('disabled');
+        } else {
+            button.attr('disabled', true);
         }
-
-        $delete_button.removeAttr('disabled');
-    };
+    }
 
     function initThemeVariantSelection() {
         if ($('.select-user-preferences[name="user_theme"]').length > 0) {

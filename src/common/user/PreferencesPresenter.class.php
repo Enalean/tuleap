@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,9 @@ class User_PreferencesPresenter {
 
     private $ssh_keys_extra_html;
 
+    /** @var SVN_TokenPresenter[] */
+    public $svn_tokens;
+
     public $csrf_input_html;
 
     /** @var array */
@@ -59,6 +62,9 @@ class User_PreferencesPresenter {
     /** @var array */
     public $all_csv_dateformat;
 
+    /** @var string */
+    public $last_svn_token;
+
     public function __construct(
         PFUser $user,
         $can_change_real_name,
@@ -67,6 +73,7 @@ class User_PreferencesPresenter {
         array $extra_user_info,
         array $user_access,
         $ssh_keys_extra_html,
+        $svn_tokens,
         $third_party_html,
         $csrf_input_html,
         array $tracker_formats,
@@ -75,7 +82,8 @@ class User_PreferencesPresenter {
         array $user_helper_preferences,
         array $plugins_prefs,
         array $all_csv_separator,
-        array $all_csv_dateformat
+        array $all_csv_dateformat,
+        $last_svn_token
     ) {
         $this->user = $user;
         $this->can_change_real_name    = $can_change_real_name;
@@ -84,6 +92,7 @@ class User_PreferencesPresenter {
         $this->extra_user_info         = $extra_user_info;
         $this->user_access             = $user_access;
         $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
+        $this->svn_tokens              = $svn_tokens;
         $this->third_party_html        = $third_party_html;
         $this->csrf_input_html         = $csrf_input_html;
         $this->tracker_formats         = $tracker_formats;
@@ -93,6 +102,11 @@ class User_PreferencesPresenter {
         $this->plugins_prefs           = $plugins_prefs;
         $this->all_csv_separator       = $all_csv_separator;
         $this->all_csv_dateformat      = $all_csv_dateformat;
+        $this->last_svn_token          = $last_svn_token;
+    }
+
+    public function generated_svn_token() {
+        return $GLOBALS['Language']->getText('account_options', 'generated_svn_token');
     }
 
     public function has_avatar() {
@@ -268,6 +282,72 @@ class User_PreferencesPresenter {
     public function has_ssh_key() {
         return $this->ssh_keys_count() > 0;
     }
+
+    public function ssh_keys_no_key() {
+        return $GLOBALS['Language']->getText('account_options', 'ssh_keys_no_key');
+    }
+
+    public function has_svn_tokens() {
+        return count($this->svn_tokens) > 0;
+    }
+
+    public function svn_tokens_title() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_tokens_title');
+    }
+
+    public function svn_tokens_help() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_tokens_help');
+    }
+
+    public function svn_tokens_no_token() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_tokens_no_token');
+    }
+
+    public function svn_token_generated_date() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_token_generated_date');
+    }
+
+    public function svn_token_last_usage() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_token_last_usage');
+    }
+
+    public function svn_token_last_ip() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_token_last_ip');
+    }
+
+    public function svn_token_comment() {
+        return $GLOBALS['Language']->getText('account_options', 'svn_token_comment');
+    }
+
+    public function generate_svn_token_button() {
+        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_button');
+    }
+
+    public function delete_svn_tokens_button() {
+        return $GLOBALS['Language']->getText('account_options', 'delete_svn_tokens_button');
+    }
+
+    public function generate_svn_token_modal_title() {
+        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_title');
+    }
+
+    public function generate_svn_token_modal_button() {
+        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button');
+    }
+
+    public function generate_svn_token_modal_button_comment_label() {
+        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_comment_label');
+    }
+
+    public function generate_svn_token_modal_button_comment_placeholder() {
+        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_comment_placeholder');
+    }
+
+    public function generate_svn_token_modal_button_help() {
+        return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_help');
+    }
+
+
 
     /* PREFERENCES */
 

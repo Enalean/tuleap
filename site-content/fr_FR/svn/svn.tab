@@ -55,6 +55,10 @@ svn_admin_immutable_tags	select_tag	Veuillez sélectionner un tag dans l'arbores
 svn_admin_immutable_tags	tree_empty_state	Votre dépôt SVN n'est pas impacté par les tags immutable car la configuration actuelle est vide ou ne correspond pas à l'arborescence du dépôt.
 svn_admin_immutable_tags	sooo_fat	Votre dépôt contient trop de dossiers (plus que $1), nous ne pouvons pas afficher la prévisualisation de la configuration pour des raisons de performances.
 
+svn_tokens	default_comment	Jeton généré le $1
+svn_tokens	default_last_used_on	Jamais
+svn_tokens	default_last_used_by	-
+
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php
