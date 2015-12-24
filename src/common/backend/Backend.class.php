@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Backend\FileExtensionFilterIterator;
 
 /**
  * Base class to work on Codendi backend
@@ -344,11 +345,12 @@ class Backend {
      * @param mixed  $uid    A user name or number.
      * @param mixed  $gid    A group name or number.
      */
-    public function recurseChownChgrp($mypath, $uid, $gid) {
+    public function recurseChownChgrp($mypath, $uid, $gid, array $file_extension_filter)
+    {
         $this->chown($mypath, $uid);
         $this->chgrp($mypath, $gid);
         try {
-            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            $iterator = $this->getRecurseDirectoryIterator($mypath, $file_extension_filter);
             foreach ($iterator as $filename => $file_information) {
                 $this->chown($file_information->getPathname(), $uid);
                 $this->chgrp($file_information->getPathname(), $gid);
@@ -364,30 +366,13 @@ class Backend {
      * @param string $mypath Path to the file (or directory)
      * @param mixed  $gid    A group name (or number??).
      */
-    public function recurseChgrp($mypath, $gid) {
+    public function recurseChgrp($mypath, $gid, array $file_extension_filter)
+    {
         $this->chgrp($mypath, $gid);
         try {
-            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            $iterator = $this->getRecurseDirectoryIterator($mypath, $file_extension_filter);
             foreach ($iterator as $filename => $file_information) {
                 $this->chgrp($file_information->getPathname(), $gid);
-            }
-        }  catch (Exception $ex) {
-            $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
-        }
-    }
-
-    /**
-     * Recursive chmod (only) function.
-     *
-     * @param string $mypath Path to the file (or directory)
-     * @param mixed  $mode    A user name (or number??).
-     */
-    public function recurseChmod($mypath, $mode) {
-        $this->chmod($mypath, $mode);
-        try {
-            $iterator = $this->getRecurseDirectoryIterator($mypath);
-            foreach ($iterator as $filename => $file_information) {
-                $this->chmod($file_information->getPathname(), $mode);
             }
         }  catch (Exception $ex) {
             $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
@@ -399,9 +384,11 @@ class Backend {
      *
      * @param string $mypath Path to the directory
      */
-    public function recurseDeleteInDir($mypath) {
+    public function recurseDeleteInDir($mypath)
+    {
         try {
-            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            $no_filter_file_extension = array();
+            $iterator = $this->getRecurseDirectoryIterator($mypath, $no_filter_file_extension);
             foreach ($iterator as $filename => $file_information) {
                 if ($file_information->isDir()) {
                     rmdir($file_information->getPathname());
@@ -417,11 +404,15 @@ class Backend {
     /**
      * @return RecursiveIteratorIterator
      */
-    private function getRecurseDirectoryIterator($path) {
+    private function getRecurseDirectoryIterator($path, array $file_extension_filter)
+    {
         return new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                $path,
-                \FilesystemIterator::SKIP_DOTS
+            new FileExtensionFilterIterator(
+                new \RecursiveDirectoryIterator(
+                    $path,
+                    \FilesystemIterator::SKIP_DOTS
+                ),
+                $file_extension_filter
             ),
             \RecursiveIteratorIterator::CHILD_FIRST
         );

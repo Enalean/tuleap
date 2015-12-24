@@ -63,16 +63,74 @@ class SiteCache {
         PluginManager::instance()->invalidateCache();
     }
 
+    public function restoreCacheDirectories() {
+        $this->restoreRootCacheDirectory();
+
+        $combined_cache_directory = $GLOBALS['HTML']->getCombinedDirectory();
+        $this->recreateDirectory($combined_cache_directory);
+
+        $language_cache_directory = $GLOBALS['Language']->getCacheDirectory();
+        $this->recreateDirectory($language_cache_directory);
+    }
+
+    public function restoreRootCacheDirectory()
+    {
+        $cache_directory = ForgeConfig::get('codendi_cache_dir');
+        $this->recreateDirectory($cache_directory);
+    }
+
+    private function recreateDirectory($directory) {
+        if (! is_dir($directory)) {
+            $this->logger->info('Recreating ' . $directory);
+            mkdir($directory, 0755, true);
+        }
+    }
+
     /**
      * Some files might have been generated as root but should be owned by codendiadm
      */
     public function restoreOwnership() {
         $backend = Backend::instance();
-        $this->logger->debug("Restore ownership to ".$GLOBALS['Language']->getCacheDirectory());
-        $backend->recurseChownChgrp($GLOBALS['Language']->getCacheDirectory(), ForgeConfig::get('sys_http_user'), ForgeConfig::get('sys_http_user'));
 
-        $plugin_manager = PluginManager::instance();
-        $this->logger->debug("Restore ownership to ".$plugin_manager->getCacheFile());
-        $backend->changeOwnerGroupMode($plugin_manager->getCacheFile(), ForgeConfig::get('sys_http_user'), ForgeConfig::get('sys_http_user'), 0600);
+        $cache_directory = ForgeConfig::get('codendi_cache_dir');
+        if ($cache_directory === false || $cache_directory === '') {
+            $this->logger->error('codendi_cache_dir parameter is invalid, please check your configuration');
+            return;
+        }
+        $this->logger->info('Restore ownership to ' . $cache_directory);
+        $backend->changeOwnerGroupMode(
+            $cache_directory,
+            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::get('sys_http_user'),
+            0750
+        );
+
+        $combined_cache_directory = $GLOBALS['HTML']->getCombinedDirectory();
+        $this->logger->info('Restore ownership to ' . $combined_cache_directory);
+        $backend->recurseChownChgrp(
+            $combined_cache_directory,
+            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::get('sys_http_user'),
+            array('js')
+        );
+
+        $language_cache_directory = $GLOBALS['Language']->getCacheDirectory();
+        $this->logger->info('Restore ownership to ' . $language_cache_directory);
+        $backend->recurseChownChgrp(
+            $language_cache_directory,
+            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::get('sys_http_user'),
+            array('php')
+        );
+
+        $plugin_manager    = PluginManager::instance();
+        $plugin_cache_file = $plugin_manager->getCacheFile();
+        $this->logger->info('Restore ownership to ' . $plugin_cache_file);
+        $backend->changeOwnerGroupMode(
+            $plugin_cache_file,
+            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::get('sys_http_user'),
+            0600
+        );
     }
 }

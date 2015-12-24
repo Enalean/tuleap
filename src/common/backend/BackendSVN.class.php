@@ -155,8 +155,9 @@ class BackendSVN extends Backend {
             }
             system($GLOBALS['svnadmin_cmd']." create ".escapeshellarg($system_path)." --fs-type fsfs");
 
-            $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
-            $this->recurseChownChgrp($system_path, $this->getHTTPUser(), $unix_group_name);
+            $unix_group_name = $project->getUnixNameMixedCase(); // May contain upper-case letters
+            $no_filter_file_extension = array();
+            $this->recurseChownChgrp($system_path, $this->getHTTPUser(), $unix_group_name, $no_filter_file_extension);
             system("chmod g+rw ".escapeshellarg($system_path));
         }
 
@@ -704,7 +705,8 @@ class BackendSVN extends Backend {
         }
         if ($need_owner_update) {
             $this->log("Restoring ownership on SVN dir: $svnroot", Backend::LOG_INFO);
-            $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $unix_group_name);
+            $no_filter_file_extension = array();
+            $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $unix_group_name, $no_filter_file_extension);
             $this->chown($svnroot, $this->getHTTPUser());
             $this->chgrp($svnroot, $unix_group_name);
             system("chmod g+rw $svnroot");

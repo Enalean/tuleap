@@ -108,7 +108,8 @@ class MediaWikiXMLImporter
         $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID();
         $owner = ForgeConfig::get('sys_http_user');
         if ($owner) {
-            $this->backend->recurseChownChgrp($mediawiki_storage_path, $owner, $owner);
+            $no_filter_file_extension = array();
+            $this->backend->recurseChownChgrp($mediawiki_storage_path, $owner, $owner, $no_filter_file_extension);
         } else {
             $this->logger->error("Could not get sys_http_user, permission problems may occur on $mediawiki_storage_path");
         }
