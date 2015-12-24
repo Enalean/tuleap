@@ -1,3 +1,6 @@
+Version 3.88 - Tuleap 8.10
+    * request #8717: Improper user groups authorization verification for SVN ressources
+
 Version 3.87 - Tuleap 8.7
     * request #8444: User account created from LDAP does not use generated password
 
