@@ -356,7 +356,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $possible_parents_getr = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory());
         $html     = '';
         $html    .= '<p>';
-        list($label, $possible_parents, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent_tracker, $user, 0, 0);
+        list($label, $paginated_possible_parents, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent_tracker, $user, 0, 0);
+        $possible_parents = $paginated_possible_parents->getArtifacts();
         if ($display_selector) {
             $html .= '<label>';
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $purifier->purify($parent_tracker->getItemName()));
@@ -365,10 +366,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             if ($can_create) {
                 $html .= '<option value="'.self::CREATE_NEW_PARENT_VALUE.'">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
             }
-            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents->getArtifacts());
+            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents);
             $html .= '</select>';
             $html .= '</label>';
-        } elseif ($possible_parents->getArtifacts()) {
+        } elseif (count($possible_parents) > 0) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_will_have_as_parent', array($possible_parents[0]->fetchDirectLinkToArtifactWithTitle()));
         }
         $html .= '</p>';
