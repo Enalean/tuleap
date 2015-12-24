@@ -92,6 +92,11 @@ if (! isset($arguments['m'])) {
     $mapping_path = $arguments['m'];
 }
 
+if(empty($project_id) && posix_geteuid() != 0) {
+    fwrite(STDERR, 'Need superuser powers to be able to create a project. Try importing in an existing project using -p.'.PHP_EOL);
+    exit(1);
+}
+
 $user_manager  = UserManager::instance();
 $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
@@ -137,7 +142,9 @@ try {
     );
 
      if (empty($project_id)) {
-        $xml_importer->importNewFromArchive($archive, $project_name_override);
+        $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
+        $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
+        $xml_importer->importNewFromArchive($archive, $system_event_runner, $project_name_override);
      } else {
         $xml_importer->importFromArchive($project_id, $archive);
      }

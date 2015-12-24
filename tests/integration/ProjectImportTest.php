@@ -19,10 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/project/ProjectXMLImporter.class.php';
 require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
+
+class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner {
+}
 
 class ProjectImportTest extends TuleapDbTestCase {
 
@@ -44,9 +46,12 @@ class ProjectImportTest extends TuleapDbTestCase {
         $GLOBALS['sys_default_domain'] = '';
         $GLOBALS['sys_cookie_prefix'] = '';
         $GLOBALS['sys_force_ssl'] = 0;
+        ForgeConfig::store();
+        ForgeConfig::set('tuleap_dir', __DIR__.'/../../');
     }
 
     public function tearDown() {
+        ForgeConfig::restore();
         $this->mysqli->query('DELETE FROM groups WHERE unix_group_name = "short-name"');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
@@ -70,10 +75,11 @@ class ProjectImportTest extends TuleapDbTestCase {
             new XMLImportHelper($user_manager),
             new Log_ConsoleLogger()
         );
+        $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
 
         $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__.'/_fixtures/fake_project');
 
-        $importer->importNewFromArchive($archive);
+        $importer->importNewFromArchive($archive, $system_event_runner);
 
         // Reset Project Manager (and its cache)
         ProjectManager::clearInstance();
@@ -85,5 +91,7 @@ class ProjectImportTest extends TuleapDbTestCase {
         $this->assertEqual($project->getDescription(), '123 Soleil');
         $this->assertEqual($project->usesSVN(), true);
         $this->assertEqual($project->usesCVS(), false);
+        $system_event_runner->expectCallCount('runSystemEvents', 1);
+        $system_event_runner->expectCallCount('checkPermissions', 1);
     }
 }

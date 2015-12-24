@@ -61,7 +61,10 @@ class ProjectXMLImporter {
         $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance(), true);
     }
 
-    public function importNewFromArchive(ArchiveInterface $archive, $project_name_override = null) {
+    public function importNewFromArchive(ArchiveInterface $archive,
+        Tuleap\Project\SystemEventRunner $event_runner,
+        $project_name_override = null)
+    {
         $this->logger->info('Start importing new project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
@@ -70,18 +73,29 @@ class ProjectXMLImporter {
             $xml_element['unix-name'] = $project_name_override;
         }
 
-        $project = $this->createProject($xml_element);
+        $project = $this->createProject($xml_element, $event_runner);
 
         $this->importContent($project, $xml_element, $archive->getExtractionPath());
     }
 
-    private function createProject(SimpleXMLElement $xml) {
+    private function createProject(SimpleXMLElement $xml,
+        Tuleap\Project\SystemEventRunner $event_runner)
+    {
+        $event_runner->checkPermissions();
+
+        $this->logger->info("Create project {$xml['unix-name']}");
         $data = ProjectCreationData::buildFromXML($xml,
             100,
             $this->xml_validator,
             ServiceManager::instance(),
             $this->project_manager);
-        return $this->project_creator->build($data);
+        $project = $this->project_creator->build($data);
+
+        $this->logger->info("Execute system events to finish creation of project {$project->getID()}, this can take a while...");
+        $event_runner->runSystemEvents();
+        $this->logger->info("System events success");
+
+        return $project;
     }
 
     public function importFromArchive($project_id, ArchiveInterface $archive) {
