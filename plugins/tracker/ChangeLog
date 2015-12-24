@@ -1,3 +1,6 @@
+Version 5.769 - Tuleap 8.10
+    * Fix request #8714: Can't create a new artifact from artifact_link field
+
 Version 5.768 - Tuleap 8.10
     * request #8719: Project export: Tracker's attachment not exported
 
