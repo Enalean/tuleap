@@ -1448,6 +1448,17 @@ CREATE TABLE svn_repositories (
   UNIQUE uniq_repository_idx (repository)
 );
 
+CREATE TABLE svn_token (
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  generated_date INT(11) UNSIGNED NOT NULL,
+  last_usage INT(11) UNSIGNED,
+  last_ip VARCHAR(45),
+  comment TEXT,
+  INDEX idx_user_id (user_id)
+);
+
 #
 # snippet category table
 #
