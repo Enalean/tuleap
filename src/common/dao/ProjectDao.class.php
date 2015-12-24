@@ -291,7 +291,7 @@ class ProjectDao extends DataAccessObject {
             $access_clause = 'access = '.$this->da->quoteSmart(Project::ACCESS_PRIVATE);
         }
 
-        $sql = "SELECT group_id
+        $sql = "SELECT *
                 FROM $this->table_name
                 WHERE $access_clause
                 AND status = 'A'";

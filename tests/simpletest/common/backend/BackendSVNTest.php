@@ -123,6 +123,14 @@ class BackendSVNTest extends TuleapTestCase {
 
 
     function testCreateProjectSVN() {
+        $user1   = mock('PFUser');
+        $user1->setReturnValue('getUserName', 'user1');
+        $user2   = mock('PFUser');
+        $user2->setReturnValue('getUserName', 'user2');
+        $user3   = mock('PFUser');
+        $user3->setReturnValue('getUserName', 'user3');
+        $user4   = mock('PFUser');
+        $user4->setReturnValue('getUserName', 'user4');
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
         $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
@@ -140,6 +148,7 @@ class BackendSVNTest extends TuleapTestCase {
                                      "user_name"=> "user3",
                                      "user_id"  => "3"));
         $project->setReturnValue('getMembersUserNames',$proj_members);
+        $project->setReturnValue('getMembers', array($user1, $user2, $user3));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -156,12 +165,16 @@ class BackendSVNTest extends TuleapTestCase {
         $ugdao->setReturnValue('searchByGroupId',$ugroups);
 
         $ugroup = new MockProjectUGroup($this);
-        $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
-        $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
-        $ugroup->setReturnValueAt(0,'getName',"QA");
-        $ugroup->setReturnValueAt(1,'getName',"QA");
-        $ugroup->setReturnValueAt(2,'getName',"customers");
-        $ugroup->setReturnValueAt(3,'getName',"customers");
+        $ugroup->setReturnValueAt(0,'getMembersUserName', array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(0,'getMembers', array($user1, $user2, $user3));
+        $ugroup->setReturnValueAt(1,'getMembersUserName', array('user1', 'user4'));
+        $ugroup->setReturnValueAt(1,'getMembers', array($user1, $user4));
+        $ugroup->setReturnValueAt(2,'getMembers', array($user1, $user4));
+        $ugroup->setReturnValue('getMembers', array($user1, $user4));
+        $ugroup->setReturnValueAt(0,'getName', "QA");
+        $ugroup->setReturnValueAt(1,'getName', "QA");
+        $ugroup->setReturnValueAt(2,'getName', "customers");
+        $ugroup->setReturnValueAt(3,'getName', "customers");
 
 
         $backend = new BackendSVNTestVersion($this);
@@ -181,6 +194,16 @@ class BackendSVNTest extends TuleapTestCase {
     }
 
     function testUpdateSVNAccess() {
+        $user1   = mock('PFUser');
+        $user1->setReturnValue('getUserName', 'user1');
+        $user2   = mock('PFUser');
+        $user2->setReturnValue('getUserName', 'user2');
+        $user3   = mock('PFUser');
+        $user3->setReturnValue('getUserName', 'user3');
+        $user4   = mock('PFUser');
+        $user4->setReturnValue('getUserName', 'user4');
+        $user5   = mock('PFUser');
+        $user5->setReturnValue('getUserName', 'user5');
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
         $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
@@ -198,6 +221,7 @@ class BackendSVNTest extends TuleapTestCase {
                                      "user_name"=> "user3",
                                      "user_id"  => "3"));
         $project->setReturnValue('getMembersUserNames',$proj_members);
+        $project->setReturnValue('getMembers', array($user1, $user2, $user3));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -214,12 +238,18 @@ class BackendSVNTest extends TuleapTestCase {
         $ugdao->setReturnValue('searchByGroupId',$ugroups);
 
         $ugroup = new MockProjectUGroup($this);
-        $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
-        $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
-        $ugroup->setReturnValueAt(2,'getMembersUserName',array('user1', 'user2', 'user3'));
-        $ugroup->setReturnValueAt(3,'getMembersUserName',array('user1', 'user4'));
-        $ugroup->setReturnValueAt(4,'getMembersUserName',array('user1', 'user2', 'user3'));
-        $ugroup->setReturnValueAt(5,'getMembersUserName',array('user1', 'user4', 'user5'));
+        $ugroup->setReturnValueAt(0,'getMembersUserName', array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(0,'getMembers', array($user1, $user2, $user3));
+        $ugroup->setReturnValueAt(1,'getMembersUserName', array('user1', 'user4'));
+        $ugroup->setReturnValueAt(1,'getMembers', array($user1, $user4));
+        $ugroup->setReturnValueAt(2,'getMembersUserName', array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(2,'getMembers', array($user1, $user2, $user3));
+        $ugroup->setReturnValueAt(3,'getMembersUserName', array('user1', 'user4'));
+        $ugroup->setReturnValueAt(3,'getMembers', array($user1, $user4));
+        $ugroup->setReturnValueAt(4,'getMembersUserName', array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(4,'getMembers', array($user1, $user2, $user3));
+        $ugroup->setReturnValueAt(5,'getMembersUserName', array('user1', 'user4', 'user5'));
+        $ugroup->setReturnValueAt(5,'getMembers', array($user1, $user4, $user5));
         $ugroup->setReturnValueAt(0,'getName',"QA");
         $ugroup->setReturnValueAt(1,'getName',"QA");
         $ugroup->setReturnValueAt(4,'getName',"QA");
@@ -250,10 +280,6 @@ class BackendSVNTest extends TuleapTestCase {
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should exist");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"),"SVN access file (.new) should be created");
         $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"),"SVN access file (.old) should not be created");
-        // Update with modification
-        $this->assertEqual($backend->updateSVNAccess(142),True);
-        $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"),"SVN access file (.new) should be removed");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"),"SVN access file (.old) should be created");
 
         // Cleanup
         $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
@@ -456,4 +482,73 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         $backend->updateHooks($this->project);
     }
 }
-?>
+
+class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
+
+    public function itAddsProjectMembers() {
+        $backend = new BackendSVNAccessTestVersion($this);
+        $project = new MockProject($this);
+        $project->setReturnValue('getMembersUserNames', array(
+            array('user_name' => 'user1'),
+            array('user_name' => 'user2')
+        ));
+
+        $project_members_line = $backend->getSVNAccessProjectMembers($project);
+
+        $this->assertEqual($project_members_line, "members = user1, user2\n");
+    }
+
+    public function itAddUserGroupMembers() {
+        $backend = new BackendSVNTestVersion($this);
+
+        $user1   = mock('PFUser');
+        $user1->setReturnValue('getUserName', 'user1');
+        $user2   = mock('PFUser');
+        $user2->setReturnValue('getUserName', 'user2');
+        $project = new MockProject($this);
+        $project->setReturnValue('getMembers', array($user2));
+        $project->setReturnValue('isPublic', true);
+        $usergroup_dao = new MockUGroupDao();
+        $usergroup_dao->setReturnValue('searchByGroupId', array(
+            array (
+                'name' => 'Perms'
+            )
+        ));
+        $backend->setReturnValue('getUGroupDao', $usergroup_dao);
+        $ugroup = new MockProjectUGroup($this);
+        $ugroup->setReturnValue('getMembers', array($user1, $user2));
+        $ugroup->setReturnValue('getName', 'Perms');
+        $backend->setReturnValue('getUGroupFromRow', $ugroup);
+
+        $ugroup_members_line = $backend->getSVNAccessUserGroupMembers($project);
+
+        $this->assertEqual($ugroup_members_line, "Perms = user1, user2\n\n");
+    }
+
+    public function itverifiesUserGroupMembersAreProjectMembersWhenProjectIsPrivate() {
+        $backend = new BackendSVNTestVersion($this);
+
+        $user1   = mock('PFUser');
+        $user1->setReturnValue('getUserName', 'user1');
+        $user2   = mock('PFUser');
+        $user2->setReturnValue('getUserName', 'user2');
+        $project = new MockProject($this);
+        $project->setReturnValue('getMembers', array($user2));
+        $project->setReturnValue('isPublic', false);
+        $usergroup_dao = new MockUGroupDao();
+        $usergroup_dao->setReturnValue('searchByGroupId', array(
+            array (
+                'name' => 'Perms'
+            )
+        ));
+        $backend->setReturnValue('getUGroupDao', $usergroup_dao);
+        $ugroup = new MockProjectUGroup($this);
+        $ugroup->setReturnValue('getMembers', array($user1, $user2));
+        $ugroup->setReturnValue('getName', 'Perms');
+        $backend->setReturnValue('getUGroupFromRow', $ugroup);
+
+        $ugroup_members_line = $backend->getSVNAccessUserGroupMembers($project);
+
+        $this->assertEqual($ugroup_members_line, "Perms = user2\n\n");
+    }
+}
