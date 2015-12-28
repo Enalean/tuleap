@@ -22,6 +22,7 @@ Version 8.10 (Not released yet)
 
 	== Enhancement ==
 	* story #8572: Add project creation using XML
+            * Import dynamic ugroups for projects
 	* request #8474: Git plugin has a missing dependency to php-markdown
 	* request #8548: Email notification for SVN sent with everybody in cc
 
