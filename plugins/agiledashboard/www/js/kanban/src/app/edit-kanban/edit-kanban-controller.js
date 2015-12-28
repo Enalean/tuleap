@@ -3,26 +3,23 @@ angular
     .controller('EditKanbanCtrl', EditKanbanCtrl);
 
 EditKanbanCtrl.$inject = [
-    '$scope',
-    '$window',
     '$modalInstance',
     'KanbanService',
     'kanban',
-    'augmentColumn',
+    'addColumnToKanban',
+    'removeColumnToKanban',
     'updateKanbanName',
-    'SharedPropertiesService',
-    'gettextCatalog'
+    'deleteThisKanban'
 ];
 
-function EditKanbanCtrl($scope,
-    $window,
+function EditKanbanCtrl(
     $modalInstance,
     KanbanService,
     kanban,
-    augmentColumn,
+    addColumnToKanban,
+    removeColumnToKanban,
     updateKanbanName,
-    SharedPropertiesService,
-    gettextCatalog
+    deleteThisKanban
 ) {
     var self = this;
 
@@ -66,8 +63,7 @@ function EditKanbanCtrl($scope,
         self.saving = true;
         KanbanService.updateKanbanLabel(kanban.id, kanban.label).then(function () {
             self.saving = false;
-            updateKanbanName(kanban);
-
+            updateKanbanName(kanban.label);
         }, function (response) {
             $modalInstance.dismiss(response);
         });
@@ -82,12 +78,7 @@ function EditKanbanCtrl($scope,
             self.deleting = true;
 
             KanbanService.deleteKanban(kanban.id).then(function () {
-                var message = gettextCatalog.getString(
-                    'Kanban {{ label }} successfuly deleted',
-                    { label: kanban.label }
-                );
-                $window.sessionStorage.setItem('tuleap_feedback', message);
-                $window.location.href = '/plugins/agiledashboard/?group_id=' + SharedPropertiesService.getProjectId();
+                deleteThisKanban();
             }, function (response) {
                 $modalInstance.dismiss(response);
             });
@@ -115,18 +106,11 @@ function EditKanbanCtrl($scope,
             self.saving_new_column = true;
 
             KanbanService.addColumn(kanban.id, self.new_column_label).then(function(column_representation) {
-                var new_column = column_representation.data;
-
-                augmentColumn(new_column);
-                new_column.is_defered    = false;
-                new_column.loading_items = false;
-
-                kanban.columns.push(new_column);
+                addColumnToKanban(column_representation.data);
 
                 self.adding_column     = false;
                 self.saving_new_column = false;
                 self.new_column_label  = '';
-
             }, function (response) {
                 $modalInstance.dismiss(response);
             });
@@ -137,7 +121,7 @@ function EditKanbanCtrl($scope,
         }
     }
 
-    function columnDropped(event) {
+    function columnDropped() {
         var sorted_columns_ids = [];
 
         _.forEach(kanban.columns, function(column) {
@@ -154,7 +138,7 @@ function EditKanbanCtrl($scope,
     function editColumn(column) {
         self.saving_column = true;
 
-        KanbanService.editColumn(kanban.id, column).then(function(data) {
+        KanbanService.editColumn(kanban.id, column).then(function() {
             self.saving_column    = false;
             column.editing        = false;
             column.original_label = column.label;
@@ -177,9 +161,7 @@ function EditKanbanCtrl($scope,
     function removeColumn(column_to_remove) {
         if (column_to_remove.confirm_delete) {
             KanbanService.removeColumn(kanban.id, column_to_remove.id).then(function() {
-                _.remove(kanban.columns, function(column) {
-                    return column.id === column_to_remove.id;
-                });
+                removeColumnToKanban(column_to_remove.id);
 
             }, function(response) {
                 $modalInstance.dismiss(response);

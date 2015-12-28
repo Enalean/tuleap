@@ -32,7 +32,9 @@ function WipPopover($timeout) {
                                 scope.column.wip_in_edit = true;
 
                                 $timeout(function() {
-                                    angular.element('#wip-limit-input-' + clicked_column_id)[0].focus();
+                                    if(angular.element('#wip-limit-input-' + clicked_column_id)[0]) {
+                                        angular.element('#wip-limit-input-' + clicked_column_id)[0].focus();
+                                    }
                                 });
                             });
                         }

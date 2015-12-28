@@ -104,7 +104,7 @@ msgstr ""
 msgid "General configuration"
 msgstr ""
 
-#: src/app/edit-kanban/edit-kanban-controller.js
+#: src/app/app-kanban-controller.js
 msgid "Kanban {{ label }} successfuly deleted"
 msgstr ""
 

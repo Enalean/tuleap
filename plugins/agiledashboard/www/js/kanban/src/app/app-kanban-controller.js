@@ -3,6 +3,7 @@ angular
     .controller('KanbanCtrl', KanbanCtrl);
 
 KanbanCtrl.$inject = [
+    '$window',
     '$scope',
     '$filter',
     '$modal',
@@ -20,6 +21,7 @@ KanbanCtrl.$inject = [
 ];
 
 function KanbanCtrl(
+    $window,
     $scope,
     $filter,
     $modal,
@@ -356,25 +358,25 @@ function KanbanCtrl(
             templateUrl: 'edit-kanban/edit-kanban.tpl.html',
             controller: 'EditKanbanCtrl as edit_modal',
             resolve: {
-                kanban: function () {
+                kanban: function() {
                     return kanban;
                 },
-                augmentColumn: function () {
-                    return augmentColumn;
+                addColumnToKanban: function() {
+                    return addColumn;
                 },
-                updateKanbanName: function () {
+                removeColumnToKanban: function() {
+                    return removeColumn;
+                },
+                updateKanbanName: function() {
                     return updateKanbanName;
+                },
+                deleteThisKanban: function() {
+                    return deleteKanban;
                 }
             }
-        }).result.then(
-            updateKanbanName,
+        }).result.catch(
             reloadIfSomethingIsWrong
         );
-
-        function updateKanbanName(new_kanban) {
-            kanban.label = new_kanban.label;
-            self.label = kanban.label;
-        }
 
         function reloadIfSomethingIsWrong(reason) {
             if (reason && reason.status) {
@@ -386,6 +388,11 @@ function KanbanCtrl(
                 reload(reason);
             }
         }
+    }
+
+    function updateKanbanName(label) {
+        kanban.label = label;
+        self.label   = kanban.label;
     }
 
     function loadColumns() {
@@ -858,6 +865,35 @@ function KanbanCtrl(
         }
     }
 
+    function addColumn(new_column) {
+        augmentColumn(new_column);
+        new_column.is_defered    = false;
+        new_column.loading_items = false;
+
+        kanban.columns.push(new_column);
+    }
+
+    function removeColumn(column_id) {
+        var column_to_remove = getColumn(column_id);
+
+        if(column_to_remove) {
+            _.remove(kanban.columns, function(column) {
+                return column.id === column_to_remove.id;
+            });
+        }
+    }
+
+    function deleteKanban() {
+        var message = gettextCatalog.getString(
+            'Kanban {{ label }} successfuly deleted',
+            { label: kanban.label }
+        );
+        $window.sessionStorage.setItem('tuleap_feedback', message);
+        $window.location.href = '/plugins/agiledashboard/?group_id=' + SharedPropertiesService.getProjectId();
+    }
+
+
+
     function addItemByIndex(data) {
         var column = getColumn(data.artifact.in_column);
         if (_.has(data, 'index')) {
@@ -875,6 +911,11 @@ function KanbanCtrl(
                 listenKanbanItemMove(SocketFactory);
                 listenKanbanItemEdit(SocketFactory);
                 listenKanbanItemDelete(SocketFactory);
+                listenKanbanColumnCreate(SocketFactory);
+                listenKanbanColumnMove(SocketFactory);
+                listenKanbanColumnEdit(SocketFactory);
+                listenKanbanColumnDelete(SocketFactory);
+                listenKanban(SocketFactory);
             });
         }
     }
@@ -980,14 +1021,14 @@ function KanbanCtrl(
             var item = findItemInColumnById(data.artifact.id);
             if (item) {
                 _.extend(data.artifact, {
-                    updating: false,
+                    updating    : false,
                     is_collapsed: item.is_collapsed
                 });
                 moveItemByIndex(item, data);
                 updateItem(item, data.artifact);
             } else {
                 _.extend(data.artifact, {
-                    updating: false,
+                    updating    : false,
                     is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
                 });
                 data.artifact.timeinfo = {};
@@ -1005,6 +1046,91 @@ function KanbanCtrl(
             if (item) {
                 removeItemInColumn(item.id, item.in_column);
             }
+        });
+    }
+
+    function listenKanbanColumnCreate(SocketFactory) {
+        /**
+         * Data received looks like:
+         * {
+         *      color: null
+         *      id: 15343
+         *      label: "test"
+         *      limit: null
+         *      limit_input: null
+         *      user_can_add_in_place: true
+         *      user_can_edit_label: true
+         *      user_can_remove_column: true
+         *      wip_in_edit: false
+         *
+         *      ...
+         * }
+         */
+        SocketFactory.on('kanban_column:create', function (data) {
+            addColumn(data);
+        });
+    }
+
+    function listenKanbanColumnMove(SocketFactory) {
+        /**
+         * Data received looks like:
+         * [15333, 15334, 15335, 15338]
+         */
+        SocketFactory.on('kanban_column:move', function (data) {
+            var sorted_columns = [];
+
+            _.forEach(data, function(column_id) {
+                var column = getColumn(column_id);
+                sorted_columns.push(column);
+            });
+
+            kanban.columns     = sorted_columns;
+            self.board.columns = sorted_columns;
+        });
+    }
+
+    function listenKanbanColumnEdit(SocketFactory) {
+        /**
+         * Data received looks like:
+         * {
+         *      id: 15343,
+         *      label: "test",
+         *      wip_limit: 0
+         * }
+         */
+        SocketFactory.on('kanban_column:edit', function (data) {
+            var column = getColumn(data.id);
+
+            if(column) {
+                column.label     = data.label;
+                column.limit     = data.wip_limit;
+                column.wip_limit = data.wip_limit;
+            }
+        });
+    }
+
+    function listenKanbanColumnDelete(SocketFactory) {
+        /**
+         * Data received looks like: 15233
+         */
+        SocketFactory.on('kanban_column:delete', function (data) {
+            removeColumn(data);
+        });
+    }
+
+    function listenKanban(SocketFactory) {
+        /**
+         * Data received looks like: "New Kanban Name"
+         */
+        SocketFactory.on('kanban:edit', function (data) {
+            updateKanbanName(data);
+        });
+
+        /**
+         * No data received
+         */
+        SocketFactory.on('kanban:delete', function () {
+            deleteKanban();
         });
     }
 }
