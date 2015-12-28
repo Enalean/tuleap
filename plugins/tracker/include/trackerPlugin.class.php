@@ -981,6 +981,10 @@ class trackerPlugin extends Plugin {
         $user       = $params['user'];
         $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
 
+        if (! $tracker) {
+            throw new Exception ('Tracker ID does not exist');
+        }
+
         if ($tracker->getGroupId() != $project->getID()) {
             throw new Exception ('Tracker ID does not belong to project ID');
         }
