@@ -1,3 +1,6 @@
+Version 5.770 - Tuleap 8.10
+    * request #8728: Export project TV5: Catch error if tracker id does not exist
+
 Version 5.769 - Tuleap 8.10
     * Fix request #8714: Can't create a new artifact from artifact_link field
 
