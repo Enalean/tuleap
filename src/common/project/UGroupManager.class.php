@@ -113,17 +113,27 @@ class UGroupManager {
         if (! $row && in_array($this->getUnormalisedName($name), User_ForgeUGroup::$names)) {
             $row = $this->getDao()->searchByGroupIdAndName(100, $this->getUnormalisedName($name))->getRow();
         }
-        if (! $row && $ugroup_id = array_search($name, ProjectUGroup::$normalized_names)) {
-            return new ProjectUGroup(array(
-                'ugroup_id' => $ugroup_id,
-                'name'      => $name,
-                'group_id'  => $project->getID()
-            ));
+        if (! $row && $ugroup = $this->getDynamicUGoupByName($project, $name)) {
+            return $ugroup;
         }
         if ($row) {
             return new ProjectUGroup($row);
         }
         return null;
+    }
+
+    public function getDynamicUGoupIdByName($name) {
+        return array_search($name, ProjectUGroup::$normalized_names);
+    }
+
+    public function getDynamicUGoupByName(Project $project, $name) {
+        $ugroup_id = $this->getDynamicUGoupIdByName($name);
+        if(empty($ugroup_id)) { return null; }
+        return new ProjectUGroup(array(
+            'ugroup_id' => $ugroup_id,
+            'name'      => $name,
+            'group_id'  => $project->getID()
+        ));
     }
 
     private function getUnormalisedName($name) {

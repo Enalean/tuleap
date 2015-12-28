@@ -116,15 +116,21 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByIdentifier('user_04')->returns($user_04);
 
         $this->ugroup_manager->expectCallCount('createEmptyUgroup', 3);
-        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug01','descr01')->at(0);
-        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug02','descr02')->at(1);
-        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug03','descr03')->at(2);
+        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug01','descr01')->at(0)->returns(555);
+        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug02','descr02')->at(1)->returns(556);
+        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug03','descr03')->at(2)->returns(557);
 
-        $this->ugroup_manager->expectCallCount('addUserToUgroup', 4);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 101)->at(0);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 102)->at(1);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 104)->at(2);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 103)->at(3);
+        $ug01 = mock('ProjectUGroup');
+        $ug02 = mock('ProjectUGroup');
+        $ug03 = mock('ProjectUGroup');
+
+        stub($this->ugroup_manager)->getById(555)->returns($ug01);
+        stub($this->ugroup_manager)->getById(556)->returns($ug02);
+        stub($this->ugroup_manager)->getById(557)->returns($ug03);
+
+        $ug01->expectCallCount('addUser', 3);
+        $ug02->expectCallCount('addUser', 1);
+        $ug03->expectCallCount('addUser', 0);
 
         $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
     }
@@ -144,13 +150,19 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByIdentifier('user_04')->returns($user_04);
 
         $this->ugroup_manager->expectCallCount('createEmptyUgroup', 2);
-        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug01','descr01')->at(0);
-        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug03','descr03')->at(1);
+        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug01','descr01')->at(0)->returns(555);
+        expect($this->ugroup_manager)->createEmptyUgroup(122,'ug03','descr03')->at(1)->returns(557);
+        $ug01 = mock('ProjectUGroup');
+        $ug02 = mock('ProjectUGroup');
+        $ug03 = mock('ProjectUGroup');
 
-        $this->ugroup_manager->expectCallCount('addUserToUgroup', 3);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 101)->at(0);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 102)->at(1);
-        expect($this->ugroup_manager)->addUserToUgroup(122, '*', 104)->at(2);
+        stub($this->ugroup_manager)->getById(555)->returns($ug01);
+        stub($this->ugroup_manager)->getById(556)->returns($ug02);
+        stub($this->ugroup_manager)->getById(557)->returns($ug03);
+
+        $ug01->expectCallCount('addUser', 3);
+        $ug02->expectCallCount('addUser', 0);
+        $ug03->expectCallCount('addUser', 0);
 
         $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
     }
