@@ -5,7 +5,7 @@ Version 8.10 (Not released yet)
 	* Project Import: log to console and to file at the same time
 	* task #8567: Move DB access to CrossReferenceDao
 	* task #8594: Move SQL access from ReferenceManager to DAO
-        * story #8572: Transform untyped $data to object in ProjectCreator
+		* story #8572: Transform untyped $data to object in ProjectCreator
 	* story #8672 Accessibility: services on the left menu
 	* request #8535: It should be possible to validate import XML externaly
 	* request #7779: Lock icon in sidebar is misleading
@@ -23,8 +23,9 @@ Version 8.10 (Not released yet)
 	== Enhancement ==
 	* story #8572: Add project creation using XML
 	* request #8474: Git plugin has a missing dependency to php-markdown
+	* request #8548: Email notification for SVN sent with everybody in cc
 
-    == Plugins ==
+	== Plugins ==
 	* docman: 2.26.91
 	* tracker: 5.769
 	* git: 4.101
