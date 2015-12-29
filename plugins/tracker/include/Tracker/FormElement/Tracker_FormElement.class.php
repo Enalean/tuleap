@@ -1021,6 +1021,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         );
     }
 
+    private $user_can_read = array();
+
     /**
      * return true if user has Read or Update permission on this field
      *
@@ -1033,8 +1035,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $user = $this->getCurrentUser();
         }
 
-        return $this->userHasPermission(self::PERMISSION_READ, $user)
-              || $this->userHasPermission(self::PERMISSION_UPDATE, $user);
+        if (! isset($this->user_can_read[$user->getId()])) {
+            $this->user_can_read[$user->getId()] = $this->userHasPermission(self::PERMISSION_READ, $user)
+                || $this->userHasPermission(self::PERMISSION_UPDATE, $user);
+        }
+        return $this->user_can_read[$user->getId()];
     }
 
     /**

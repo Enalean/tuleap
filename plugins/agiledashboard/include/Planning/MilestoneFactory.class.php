@@ -358,6 +358,21 @@ class Planning_MilestoneFactory {
         }
     }
 
+    /**
+     * Retrieve the sub-milestones of the given milestone.
+     *
+     * @param Planning_Milestone $milestone
+     *
+     * @return Planning_Milestone[]
+     */
+    public function getSubMilestoneIds(PFUser $user, Planning_Milestone $milestone) {
+        if ($milestone instanceof Planning_VirtualTopMilestone) {
+            return $this->getTopSubMilestoneIds($user, $milestone);
+        } else {
+            return $this->getRegularSubMilestoneIds($user, $milestone);
+        }
+    }
+
     private function getRegularSubMilestones(PFUser $user, Planning_Milestone $milestone) {
         $milestone_artifact = $milestone->getArtifact();
         $sub_milestones     = array();
@@ -368,6 +383,20 @@ class Planning_MilestoneFactory {
         }
 
         return $sub_milestones;
+    }
+
+    private function getRegularSubMilestoneIds(PFUser $user, Planning_Milestone $milestone) {
+        $milestone_artifact = $milestone->getArtifact();
+        $sub_milestones_ids = array();
+
+        if ($milestone_artifact) {
+            $sub_milestone_artifacts = $this->milestone_dao->searchSubMilestones($milestone_artifact->getId());
+            foreach($sub_milestone_artifacts as $artifact_row) {
+                $sub_milestones_ids[] = $artifact_row['id'];
+            }
+        }
+
+        return $sub_milestones_ids;
     }
 
     public function getPaginatedSubMilestones(
@@ -468,30 +497,47 @@ class Planning_MilestoneFactory {
      */
     private function getTopSubMilestones(PFUser $user, Planning_VirtualTopMilestone $top_milestone) {
         $milestones = array();
-        if (! $top_milestone->getPlanning()) {
-            return $milestones;
-        }
 
         $root_planning = $this->planning_factory->getRootPlanning($user, $top_milestone->getProject()->getID());
-        $milestone_planning_tracker_id = $top_milestone->getPlanning()->getPlanningTrackerId();
-        $artifacts = $this->artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
 
-        if ($milestone_planning_tracker_id) {
-            foreach($artifacts as $artifact) {
-                if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
-                    $milestone = new Planning_ArtifactMilestone(
-                        $top_milestone->getProject(),
-                        $root_planning,
-                        $artifact
-                    );
-                    $this->addMilestoneAncestors($user, $milestone);
-                    $this->updateMilestoneContextualInfo($user, $milestone);
-                    $milestones[] = $milestone;
-                }
+        foreach($this->getTopSubMilestoneArtifacts($user, $top_milestone) as $artifact) {
+            if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
+                $milestone = new Planning_ArtifactMilestone(
+                    $top_milestone->getProject(),
+                    $root_planning,
+                    $artifact
+                );
+                $this->addMilestoneAncestors($user, $milestone);
+                $this->updateMilestoneContextualInfo($user, $milestone);
+                $milestones[] = $milestone;
             }
         }
 
         return $milestones;
+    }
+
+    private function getTopSubMilestoneIds(PFUser $user, Planning_VirtualTopMilestone $top_milestone) {
+        $milestone_ids = array();
+
+        foreach($this->getTopSubMilestoneArtifacts($user, $top_milestone) as $artifact) {
+            $milestone_ids[] = $artifact->getId();
+        }
+
+        return $milestone_ids;
+    }
+
+    private function getTopSubMilestoneArtifacts(PFUser $user, Planning_VirtualTopMilestone $top_milestone) {
+        $artifacts = array();
+        if (! $top_milestone->getPlanning()) {
+            return $artifacts;
+        }
+
+        $milestone_planning_tracker_id = $top_milestone->getPlanning()->getPlanningTrackerId();
+        if (! $milestone_planning_tracker_id) {
+            return $artifacts;
+        }
+
+        return $this->artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
     }
 
     /**

@@ -44,7 +44,7 @@ class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
         $this->kanban                = new AgileDashboard_Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $this->column_dao,
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao'),
             $this->kanban_actions_checker
         );
 

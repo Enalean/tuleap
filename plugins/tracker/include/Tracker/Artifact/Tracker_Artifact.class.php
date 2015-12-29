@@ -885,7 +885,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ($this->getChildrenForUser($current_user) as $child) {
             $tracker      = $child->getTracker();
             $semantics    = Tracker_Semantic_Status::load($tracker);
-            $has_children = $child->hasChildren();
 
             $presenters[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
         }
@@ -893,7 +892,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function hasChildren() {
-        return count($this->getArtifactFactory()->getChildren($this)) > 0;
+        return $this->getArtifactFactory()->hasChildren($this);
     }
 
     /**
@@ -1156,12 +1155,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset
      */
     public function getLastChangeset() {
-        $changesets = $this->getChangesets();
-        $last_changeset = end($changesets);
-        if ($last_changeset) {
-            return $last_changeset;
+        if ($this->changesets === null) {
+            return $this->getChangesetFactory()->getLastChangeset($this);
+        } else {
+            $changesets = $this->getChangesets();
+            return end($changesets);
         }
-        return null;
+    }
+
+    /**
+     * @return Tracker_Artifact_Changeset|null
+     */
+    public function getLastChangesetWithFieldValue(Tracker_FormElement_Field $field) {
+        return $this->getChangesetFactory()->getLastChangesetWithFieldValue($this, $field);
     }
 
     /**

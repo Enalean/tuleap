@@ -67,11 +67,23 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      * @return Tracker_Artifact_ChangesetValue, or null if not found
      */
     public function getValue(Tracker_FormElement_Field $field) {
-        $values = $this->getValues();
-        if (isset($values[$field->getId()])) {
-            return $values[$field->getId()];
+        if (! isset($this->values[$field->getId()])) {
+            $this->values[$field->getId()] = $this->getChangesetValueFromDB($field);
+        }
+        return $this->values[$field->getId()];
+    }
+
+    private function getChangesetValueFromDB(Tracker_FormElement_Field $field) {
+        $dar = $this->getValueDao()->searchByFieldId($this->id, $field->getId());
+        if ($dar && count($dar)) {
+            $row = $dar->getRow();
+            return $field->getChangesetValue($this, $row['id'], $row['has_changed']);
         }
         return null;
+    }
+
+    public function setFieldValue(Tracker_FormElement_Field $field, Tracker_Artifact_ChangesetValue $value = null) {
+        $this->values[$field->getId()] = $value;
     }
 
     /**

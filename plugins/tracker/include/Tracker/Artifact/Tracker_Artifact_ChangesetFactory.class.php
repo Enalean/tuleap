@@ -46,6 +46,32 @@ class Tracker_Artifact_ChangesetFactory {
     }
 
     /**
+     * @return \Tracker_Artifact_Changeset|null
+     */
+    public function getLastChangeset(Tracker_Artifact $artifact) {
+        $row = $this->dao->searchLastChangesetByArtifactId($artifact->getId())->getRow();
+        if ($row) {
+            return $this->getChangesetFromRow($artifact, $row);
+        }
+        return null;
+    }
+
+    /**
+     * @return \Tracker_Artifact_Changeset|null
+     */
+    public function getLastChangesetWithFieldValue(Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
+        $dar = $this->dao->searchLastChangesetAndValueForArtifactField($artifact->getId(), $field->getId());
+        if ($dar) {
+            $row       = $dar->getRow();
+            $changeset = $this->getChangesetFromRow($artifact, $row);
+            $value     = $field->getChangesetValue($changeset, $row['value_id'], $row['has_changed']);
+            $changeset->setFieldValue($field, $value);
+            return $changeset;
+        }
+        return null;
+    }
+
+    /**
      * Return all the changesets of an artifact
      *
      * @param Tracker_Artifact $artifact

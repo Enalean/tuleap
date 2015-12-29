@@ -56,6 +56,9 @@ class AgileDashboard_BacklogItemPresenter implements
     /** @var Tracker_Artifact */
     private $parent;
 
+    /** @var boolean */
+    private $has_children = null;
+
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
         $this->id               = $artifact->getId();
         $this->title            = $artifact->getTitle();
@@ -149,7 +152,14 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->color;
     }
 
+    public function setHasChildren($has_children) {
+        $this->has_children = $has_children;
+    }
+
     public function hasChildren() {
-        return $this->artifact->hasChildren();
+        if ($this->has_children === null) {
+            return $this->artifact->hasChildren();
+        }
+        return $this->has_children;
     }
 }

@@ -41,7 +41,28 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                   AND id = $changeset_id";
         return $this->retrieve($sql);
     }
-    
+
+    public function searchLastChangesetByArtifactId($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "SELECT c.* FROM tracker_changeset c
+                JOIN tracker_artifact AS a on (a.last_changeset_id = c.id)
+                WHERE a.id = $artifact_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchLastChangesetAndValueForArtifactField($artifact_id, $field_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $field_id = $this->da->escapeInt($field_id);
+        $sql = "SELECT cs.id AS id, cs.submitted_by, cs.submitted_on, cs.email, cv.id AS value_id, cv.has_changed
+                FROM tracker_artifact        AS a
+                JOIN tracker_changeset       AS cs ON (cs.id = a.last_changeset_id)
+                JOIN tracker_changeset_value AS cv ON (cv.changeset_id = a.last_changeset_id)
+                WHERE a.id = $artifact_id
+                    AND field_id = $field_id";
+        return $this->retrieve($sql);
+    }
+
     public function create($artifact_id, $submitted_by, $email, $submitted_on) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $submitted_by = $this->da->escapeInt($submitted_by);
