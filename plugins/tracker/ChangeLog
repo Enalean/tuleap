@@ -1,3 +1,6 @@
+Version 5.771 - Tuleap 8.10
+    * request #8706: Reduce backlog load time
+
 Version 5.770 - Tuleap 8.10
     * request #8728: Export project TV5: Catch error if tracker id does not exist
 
