@@ -35,8 +35,16 @@ use Apache2::Const qw(:common :override :cmd_how);
 use APR::Pool ();
 use APR::Table ();
 use DBI qw(:sql_types);
+use Net::LDAP;
+use Net::LDAP::Util qw(escape_filter_value);
 
 my @directives = (
+    {
+        name         => 'TuleapCacheCredsMax',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+        errmsg       => 'TuleapCacheCredsMax must be decimal number',
+    },
     {
         name         => 'TuleapDSN',
         req_override => OR_AUTHCFG,
@@ -59,13 +67,42 @@ my @directives = (
         args_how     => TAKE1,
     },
     {
-        name         => 'TuleapCacheCredsMax',
+        name         => 'TuleapLdapServers',
         req_override => OR_AUTHCFG,
         args_how     => TAKE1,
-        errmsg       => 'TuleapCacheCredsMax must be decimal number',
+    },
+    {
+        name         => 'TuleapLdapDN',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+    },
+    {
+        name         => 'TuleapLdapUid',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+    },
+    {
+        name         => 'TuleapLdapBindDN',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
+    },
+    {
+        name         => 'TuleapLdapBindPassword',
+        req_override => OR_AUTHCFG,
+        args_how     => TAKE1,
     },
 );
 
+sub TuleapCacheCredsMax {
+    my ($self, $parms, $arg) = @_;
+    if ($arg) {
+        $self->{TuleapCachePool}       = APR::Pool->new;
+        $self->{TuleapCacheCreds}      = APR::Table::make($self->{TuleapCachePool}, $arg);
+        $self->{TuleapCacheCredsCount} = 0;
+        $self->{TuleapCacheCredsMax}   = $arg;
+    }
+    return;
+}
 sub TuleapDSN {
     my ($self, $parms, $arg) = @_;
     $self->{TuleapDSN} = $arg;
@@ -86,14 +123,29 @@ sub TuleapGroupId {
     $self->{TuleapGroupId} = $arg;
     return;
 }
-sub TuleapCacheCredsMax {
+sub TuleapLdapServers {
     my ($self, $parms, $arg) = @_;
-    if ($arg) {
-        $self->{TuleapCachePool}       = APR::Pool->new;
-        $self->{TuleapCacheCreds}      = APR::Table::make($self->{TuleapCachePool}, $arg);
-        $self->{TuleapCacheCredsCount} = 0;
-        $self->{TuleapCacheCredsMax}   = $arg;
-    }
+    $self->{TuleapLdapServers} = $arg;
+    return;
+}
+sub TuleapLdapDN {
+    my ($self, $parms, $arg) = @_;
+    $self->{TuleapLdapDN} = $arg;
+    return;
+}
+sub TuleapLdapUid {
+    my ($self, $parms, $arg) = @_;
+    $self->{TuleapLdapUid} = $arg;
+    return;
+}
+sub TuleapLdapBindDN {
+    my ($self, $parms, $arg) = @_;
+    $self->{TuleapLdapBindDN} = $arg;
+    return;
+}
+sub TuleapLdapBindPassword {
+    my ($self, $parms, $arg) = @_;
+    $self->{TuleapLdapBindPassword} = $arg;
     return;
 }
 
@@ -133,11 +185,25 @@ sub is_user_allowed {
 
     my $dbh = DBI->connect($cfg->{TuleapDSN}, $cfg->{TuleapDbUser}, $cfg->{TuleapDbPass}, { AutoCommit => 0 });
 
-    my ($token_id, $hashed_user_secret) = get_user_token($dbh, $project_id, $username, $user_secret);
+    my $tuleap_username = $username;
+    if ($cfg->{TuleapLdapServers}) {
+        $tuleap_username = get_tuleap_username_from_ldap_uid($dbh, $username);
+    }
 
+    if (! $tuleap_username || ! can_user_access_project($dbh, $project_id, $tuleap_username)) {
+        $dbh->disconnect();
+        return 0;
+    }
+
+
+    my ($token_id, $hashed_user_secret) = get_user_token($dbh, $tuleap_username, $user_secret);
 
     if (! $token_id) {
-        $hashed_user_secret = get_user_secret_database($dbh, $project_id, $username, $user_secret);
+        if ($cfg->{TuleapLdapServers}) {
+            $hashed_user_secret = get_user_secret_ldap($cfg, $username, $user_secret);
+        } else {
+            $hashed_user_secret = get_user_secret_database($dbh, $tuleap_username, $user_secret);
+        }
     }
 
     my $is_allowed = 0;
@@ -153,7 +219,6 @@ sub is_user_allowed {
     }
 
     $dbh->disconnect();
-    undef $dbh;
 
     return $is_allowed;
 }
@@ -188,25 +253,17 @@ sub add_user_to_cache {
 }
 
 sub get_user_token {
-    my ($dbh, $project_id, $username, $user_secret) = @_;
+    my ($dbh, $username, $user_secret) = @_;
 
     my $query = << 'EOF';
     SELECT id, token
     FROM svn_token
     JOIN user ON user.user_id=svn_token.user_id
-    WHERE user.status='A' AND user_name=?
-    UNION ALL
-    SELECT id, token
-    FROM svn_token
-    JOIN user ON user.user_id=svn_token.user_id
-    JOIN user_group ON user_group.user_id=user.user_id
-    WHERE user.status='R' AND user_name=? AND user_group.group_id=?;
+    WHERE user_name=?;
 EOF
 
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);
-    $statement->bind_param(2, $username, SQL_VARCHAR);
-    $statement->bind_param(3, $project_id, SQL_INTEGER);
     $statement->execute();
 
     my $token_id     = 0;
@@ -241,31 +298,50 @@ sub update_user_token_usage {
     return;
 }
 
-sub get_user_secret_database {
-    my ($dbh, $project_id, $username, $user_secret) = @_;
+sub can_user_access_project {
+    my ($dbh, $project_id, $username) = @_;
 
     my $query = << 'EOF';
-    SELECT unix_pw
+    SELECT NULL
     FROM user
     WHERE user.status='A' AND user_name=?
     UNION ALL
-    SELECT unix_pw
+    SELECT NULL
     FROM user
     JOIN user_group ON user_group.user_id=user.user_id
     WHERE user.status='R' AND user_name=? AND user_group.group_id=?;
 EOF
+
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);
     $statement->bind_param(2, $username, SQL_VARCHAR);
     $statement->bind_param(3, $project_id, SQL_INTEGER);
     $statement->execute();
 
-    my $hashed_user_secret = 0;
-    while (my ($row_secret) = $statement->fetchrow_array()) {
-        if (compare_string_constant_time(crypt($user_secret, $row_secret), $row_secret)) {
-            $hashed_user_secret = $row_secret;
-            last;
-        }
+    my $can_access = defined($statement->fetchrow_hashref());
+
+    $statement->finish();
+    undef $statement;
+
+    return $can_access;
+}
+
+sub get_user_secret_database {
+    my ($dbh, $username, $user_secret) = @_;
+
+    my $query = << 'EOF';
+    SELECT unix_pw
+    FROM user
+    WHERE user_name=?;
+EOF
+    my $statement = $dbh->prepare($query);
+    $statement->bind_param(1, $username, SQL_VARCHAR);
+    $statement->execute();
+
+    my $hashed_user_secret;
+    my ($row_secret)       = $statement->fetchrow_array();
+    if (compare_string_constant_time(crypt($user_secret, $row_secret), $row_secret)) {
+        $hashed_user_secret = $row_secret;
     }
 
     $statement->finish();
@@ -274,14 +350,109 @@ EOF
     return $hashed_user_secret;
 }
 
+sub get_tuleap_username_from_ldap_uid {
+    my($dbh, $username) = @_;
+
+    my $query = << 'EOF';
+    SELECT user_name
+    FROM user
+    JOIN plugin_ldap_user ON plugin_ldap_user.user_id=user.user_id
+    WHERE ldap_uid=?;
+EOF
+    my $statement = $dbh->prepare($query);
+    $statement->bind_param(1, $username, SQL_VARCHAR);
+    $statement->execute();
+
+    my ($tuleap_username) = $statement->fetchrow_array();
+
+    $statement->finish();
+    undef $statement;
+
+    return $tuleap_username;
+}
+
+sub get_user_secret_ldap {
+    my ($cfg, $username, $user_secret) = @_;
+
+    my $ldap = connect_and_bind_ldap($cfg);
+
+    if (! defined($ldap)) {
+        return;
+    }
+
+    my $user_dn = get_user_dn($cfg, $ldap, $username);
+    if (!defined($user_dn)) {
+        return;
+    }
+    my $mesg = $ldap->bind($user_dn, password => $user_secret);
+    $ldap->unbind();
+
+    if (! $mesg->code()) {
+        return hash_user_secret($user_secret);
+    }
+    return;
+}
+
+sub hash_user_secret {
+    my ($user_secret)     = @_;
+    my @possible_alphabet = ('A' .. 'Z', 'a' .. 'z', '0' .. '9', '/', '.');
+    my $salt;
+    $salt                .= $possible_alphabet[rand @possible_alphabet] for 0 .. 15;
+    return crypt($user_secret, '$6$rounds=5000$' . $salt . '$');
+}
+
+sub connect_and_bind_ldap {
+    my ($cfg) = @_;
+
+    my @servers = split(m/[,]/xms, $cfg->{TuleapLdapServers});
+    foreach my $server (@servers) {
+        my $ldap = Net::LDAP->new($server, onerror => undef);
+
+        if (defined($ldap) && ldap_bind($cfg, $ldap)) {
+            return $ldap;
+        }
+    }
+
+    return;
+}
+
+sub ldap_bind() {
+    my ($cfg, $ldap) = @_;
+    if ($cfg->{TuleapLdapBindDN}) {
+        return $ldap->bind($cfg->{TuleapLdapBindDN}, password => $cfg->{TuleapLdapBindPassword});
+    }
+    return $ldap->bind();
+}
+
+sub get_user_dn() {
+    my ($cfg, $ldap, $username) = @_;
+
+    my $mesg = $ldap->search(
+        base   => $cfg->{TuleapLdapDN},
+        filter => $cfg->{TuleapLdapUid} . q/=/ . escape_filter_value($username),
+        scope  => 'sub'
+    );
+
+    if (! defined($mesg)) {
+        return;
+    }
+
+    my $entry = $mesg->shift_entry();
+    if ($entry) {
+        return $entry->dn();
+    }
+
+    return;
+}
+
 sub compare_string_constant_time {
     my ($string1, $string2) = @_;
     if (length($string1) != length($string2)) {
         return 0;
     }
     my $result = 0;
-    for (my $index = 0; $index < length($string1); $index++) {
-        $result |= ord(substr($string1, $index, 1)) ^ ord(substr($string2, $index, 1));
+    for (0..length($string1)) {
+        $result |= ord(substr($string1, $_, 1)) ^ ord(substr($string2, $_, 1));
     }
     return $result == 0;
 }

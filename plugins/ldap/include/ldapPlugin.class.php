@@ -839,7 +839,11 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $ldapProjectManager = new LDAP_ProjectManager();
             if ($ldapProjectManager->hasSVNLDAPAuth($params['project_info']['group_id'])) {
-                $params['svn_apache_auth'] = new LDAP_SVN_Apache($this->getLdap(), $params['project_info']);
+                if ($params['svn_conf_auth'] === SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL) {
+                    $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl($this->getLdap(), $params['project_info']);
+                } else {
+                    $params['svn_apache_auth'] = new LDAP_SVN_Apache($this->getLdap(), $params['project_info']);
+                }
             }
         }
     }
