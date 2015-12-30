@@ -178,7 +178,8 @@ svn_tokens	allowed_project_list_filter_placeholder	Filtrer sur l'ID d'un projet 
 svn_tokens	allowed_project_list_id	ID
 svn_tokens	allowed_project_list_name	Nom
 svn_tokens	allowed_project_list_empty	Aucun projet n'autorise les jetons de connexion pour SVN.
-svn_tokens	allowed_project_allow_project	Les projets soumis autoriseront les jetons de connextion SVN dans un instant (consultez les Evénements Système)
+svn_tokens	allowed_project_allow_project	Les projets soumis autoriseront les jetons de connexion SVN dans un instant (consultez les Evénements Système)
+svn_tokens	allowed_project_revoke_project	Les projets soumis n'autoriseront plus les jetons de connexion SVN dans un instant (consultez les Evénements Système)
 svn_tokens	allowed_project_update_project_list_error	Une erreur s'est produite lors de l'autorisation.
 svn_tokens	allowed_project_revoke_title	Attention
 svn_tokens	allowed_project_revoke_description	Vous êtes sur le point de supprimer l'autorisation aux jetons de connexion SVN pour les projects sélectionnés. Êtes-vous sûr de vouloir faire celà ?

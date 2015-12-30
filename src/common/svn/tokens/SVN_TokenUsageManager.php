@@ -66,4 +66,8 @@ class SVN_TokenUsageManager {
         return $projects;
     }
 
+    public function removeProjectsAuthorizationForTokens(array $project_ids) {
+        return $this->dao->removeProjectsAuthorizationForTokens($project_ids);
+    }
+
 }

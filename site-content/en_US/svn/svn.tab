@@ -185,7 +185,8 @@ svn_tokens	allowed_project_list_filter_placeholder	Filter on project ID or name
 svn_tokens	allowed_project_list_id	ID
 svn_tokens	allowed_project_list_name	Nom
 svn_tokens	allowed_project_list_empty	Currently, there are no projects that allows SVN tokens.
-svn_tokens	allowed_project_allow_project	Submitted project will allow SVN tokens (check System Events).
+svn_tokens	allowed_project_allow_project	Submitted projects will allow SVN tokens (check System Events).
+svn_tokens	allowed_project_revoke_project	Submitted projects will not allow anymore SVN tokens (check System Events).
 svn_tokens	allowed_project_update_project_list_error	Something went wrong during the authorization.
 svn_tokens	allowed_project_revoke_title	Warning
 svn_tokens	allowed_project_revoke_description	You are about to revoke SVN tokens authorization to one or several projects. Are you sure you want to do this?

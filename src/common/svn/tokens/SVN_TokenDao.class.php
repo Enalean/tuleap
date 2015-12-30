@@ -80,4 +80,13 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function removeProjectsAuthorizationForTokens(array $project_ids) {
+        $project_ids = $this->da->escapeIntImplode($project_ids);
+
+        $sql = "DELETE FROM svn_token_usage
+                WHERE project_id IN ($project_ids)";
+
+        return $this->update($sql);
+    }
+
 }
