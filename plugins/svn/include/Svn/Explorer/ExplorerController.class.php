@@ -48,9 +48,33 @@ class ExplorerController {
         $service->renderInPage(
             $request,
             'Welcome',
-            'index',
+            'explorer/index',
             new ExplorerPresenter($project)
         );
+    }
+
+    public function createRepo(ServiceSvn $service, HTTPRequest $request) {
+        if (!$request->isPost()) {
+            // TODO: redirect to the index controller
+            // The URLRedirect classes doesn't seem to work here.
+            // How am I supposed to redirect a user to the same controller but to
+            // another method ?
+            die;
+        }
+
+        $repo_name = $request->get("repo_name");
+
+        if ($repo_name === "") {
+            // TODO: redirect to the index controller
+            // The URLRedirect classes doesn't seem to work here.
+            // How am I supposed to redirect a user to the same controller but to
+            // another method ?
+            die;
+        }
+
+        // TODO: send a system event in Tuleap to create a folder with the $repo_name variable
+        // TODO: need to take a deeper look at how the proftpd plugin works here
+        echo $repo_name;
     }
 
 }
