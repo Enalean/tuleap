@@ -54,6 +54,24 @@ class ProjectXMLExporter {
         $this->logger            = $logger;
     }
 
+    private function exportProjectInfo(Project $project, SimpleXMLElement $project_node) {
+        $access_value = $project->isPublic() ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+
+        $project_node->addAttribute('unix-name', $project->getUnixName());
+        $project_node->addAttribute('full-name', $project->getPublicName());
+        $project_node->addAttribute('description', $project->getDescription());
+        $project_node->addAttribute('access', $access_value);
+
+        $project_node->addChild('long-description', '');
+
+        $services_node = $project_node->addChild('services');
+        foreach ($project->getServices() as $service) {
+            $service_node = $services_node->addChild('service');
+            $service_node->addAttribute('shortname', $service->getShortName());
+            $service_node->addAttribute('enabled', $service->isUsed());
+        }
+    }
+
     private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml) {
         $this->logger->debug("Exporting project's static ugroups");
 
@@ -112,6 +130,8 @@ class ProjectXMLExporter {
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
+
+        $this->exportProjectInfo($project, $xml_element);
         $this->exportProjectUgroups($project, $xml_element);
         $this->exportPlugins($project, $xml_element, $options, $user, $archive);
 
