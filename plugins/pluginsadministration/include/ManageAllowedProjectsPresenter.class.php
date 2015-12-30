@@ -37,6 +37,7 @@ class PluginsAdministration_ManageAllowedProjectsPresenter {
      */
     public $is_resource_restricted;
 
+    public $allow_all_enabled = true;
 
     public function __construct(
         Plugin $plugin,

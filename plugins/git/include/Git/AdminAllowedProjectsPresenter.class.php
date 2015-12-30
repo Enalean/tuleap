@@ -37,6 +37,8 @@ class Git_AdminMAllowedProjectsPresenter {
      */
     public $is_resource_restricted;
 
+    public $allow_all_enabled = true;
+
     public function __construct(
         Git_Mirror_Mirror $mirror,
         array $allowed_projects,

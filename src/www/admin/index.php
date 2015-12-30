@@ -229,6 +229,15 @@ if (count($additional_tracker_entries) > 0) {
     </li>';
 }
 
+$svn_links = '';
+if (ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY) !== SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL) {
+    $svn_links = '<li>'.$Language->getText('admin_main', 'header_svn').':
+        <ul>
+            <li><a href="/admin/svn/svn_tokens.php?action=index">'.$Language->getText('admin_main', 'svn_token_config').'</a></li>
+        </ul>
+    </li>';
+}
+
 $wConf->setContent('
 <ul>
   <li><a href="/admin/forgeaccess.php">'. $Language->getText('admin_main', 'configure_access_controls') .'</a></li>
@@ -243,6 +252,7 @@ $wConf->setContent('
   </li>
   '. $tracker_links .'
   '. $trov_conf .'
+  '. $svn_links .'
 </ul>');
 
 // Site utils

@@ -15,6 +15,7 @@
 
 <h1>{{ resource_allowed_project_title }}</h1>
 
+{{# allow_all_enabled }}
 <form id="allowed-projects-all-form" action="{{ restricted_resource_action }}" method="POST">
     {{{ restricted_resource_action_csrf }}}
 
@@ -24,6 +25,7 @@
 
     <input type="submit" id="allowed-projects-all-allowed-state" class="btn btn-primary" value="{{ resource_allowed_project_allow_all_submit }}">
 </form>
+{{/ allow_all_enabled }}
 
 {{# is_resource_restricted }}
 <div id="allowed-projects-list">

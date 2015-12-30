@@ -1,21 +1,20 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * 
- * This file is a part of Codendi.
- * 
- * Codendi is free software; you can redistribute it and/or modify
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * Codendi is distributed in the hope that it will be useful,
+ *
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -27,57 +26,73 @@ Mock::generate('ServiceDao');
 Mock::generate('LDAP');
 Mock::generate('LDAP_ProjectManager');
 
-class LDAP_BackendSVNTestEventManager extends EventManager {
-    function processEvent($event, $params) {
-        $ldap = new MockLDAP();
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.tuleap.com', array('server'));
-        $ldap->setReturnValue('getLDAPParam', 'dc=tuleap,dc=com', array('dn'));
-        
-        $params['svn_apache_auth'] = new LDAP_SVN_Apache($ldap, $params['project_info']);
-    }
-}
+class LDAP_BackendSVNTest extends TuleapTestCase {
 
-class LDAP_BackendSVNTest extends UnitTestCase {
-
-    function setUp() {
+    public function setUp() {
         $GLOBALS['svn_prefix'] = '/svnroot';
         $GLOBALS['sys_name']   = 'Platform';
     }
-    
-    function tearDown() {
+
+    public function tearDown() {
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['sys_name']);
     }
-    
+
     private function GivenAFullApacheConf() {
         $backend  = TestHelper::getPartialMock('LDAP_BackendSVN', array('_getServiceDao', 'getLdap', 'getLDAPProjectManager', 'getSVNApacheAuthFactory'));
-        $dar      = TestHelper::arrayToDar(array('unix_group_name' => 'gpig',
-                                                 'group_name'      => 'Guinea Pig',
-                                                 'group_id'        => 101),
-                                           array('unix_group_name' => 'garden',
-                                                 'group_name'      => 'The Garden Project',
-                                                 'group_id'        => 102));
-        
+
+        $project_array_01 = array(
+            'unix_group_name' => 'gpig',
+            'group_name'      => 'Guinea Pig',
+            'group_id'        => 101
+        );
+
+        $project_array_02 = array(
+            'unix_group_name' => 'garden',
+            'group_name'      => 'The Garden Project',
+            'group_id'        => 102
+        );
+
+        $dar = TestHelper::arrayToDar(
+            $project_array_01,
+            $project_array_02
+        );
+
         $dao = new MockServiceDao();
         $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
         $backend->setReturnValue('_getServiceDao', $dao);
-        
-        $factory = TestHelper::getPartialMock('SVN_Apache_Auth_Factory', array('getEventManager'));
-        $factory->setReturnValue('getEventManager', new LDAP_BackendSVNTestEventManager());
+
+        $ldap = mock('LDAP');
+        stub($ldap)->getLDAPParam('server')->returns('ldap://ldap.tuleap.com');
+	stub($ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
+
+        $project_manager = mock('ProjectManager');
+        $event_manager   = mock('EventManager');
+        $token_manager   = mock('SVN_TokenUsageManager');
+
+        $factory = partial_mock(
+            'SVN_Apache_Auth_Factory',
+            array('getModFromPlugins'),
+            array($project_manager, $event_manager, $token_manager)
+        );
+
+        $factory->setReturnValueAt(0, 'getModFromPlugins', new LDAP_SVN_Apache($ldap, $project_array_01));
+        $factory->setReturnValueAt(1, 'getModFromPlugins', new LDAP_SVN_Apache($ldap, $project_array_02));
+
         $backend->setReturnValue('getSVNApacheAuthFactory', $factory);
-        
+
         return $backend->getApacheConf();
     }
-    
-    function testFullConfShouldWrapEveryThing() {
+
+    public function testFullConfShouldWrapEveryThing() {
         $conf = $this->GivenAFullApacheConf();
         //echo '<pre>'.htmlentities($conf).'</pre>';
-        
+
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
         $this->assertPattern('/AuthLDAPUrl/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
-    
+
     private function ThenThereAreTwoLocationDefinedGpigAndGarden($conf) {
         $matches = array();
         preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);
@@ -85,4 +100,3 @@ class LDAP_BackendSVNTest extends UnitTestCase {
         $this->assertEqual($matches[1][1], 'garden');
     }
 }
-?>

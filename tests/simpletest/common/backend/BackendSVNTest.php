@@ -39,16 +39,6 @@ Mock::generate('ServiceDao');
 require_once('common/svn/SVNAccessFile.class.php');
 Mock::generate('SVNAccessFile');
 Mock::generate('EventManager');
-Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManager', 
-                                                                   'getProjectManager',
-                                                                   'getUGroupDao',
-                                                                   'getUGroupFromRow',
-                                                                   '_getServiceDao',
-                                                                   'chown',
-                                                                   'chgrp',
-                                                                   'chmod',
-                                                                   '_getSVNAccessFile'
-                                                                   ));
 
 Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('updateSVNAccess',
                                                                          'repositoryExists',
@@ -69,6 +59,25 @@ class BackendSVNTest extends TuleapTestCase {
         ForgeConfig::store();
         ForgeConfig::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
         mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
+
+        $this->project_manager = mock('ProjectManager');
+        $this->token_manager   = mock('SVN_TokenUsageManager');
+
+        $this->backend = partial_mock(
+            'BackendSVN',
+            array(
+                'getUserManager',
+                'getProjectManager',
+                'getUGroupDao',
+                'getUGroupFromRow',
+                '_getServiceDao',
+                'chown',
+                'chgrp',
+                'chmod',
+                '_getSVNAccessFile',
+                'getSVNTokenManager'
+            )
+        );
     }
 
 
@@ -101,8 +110,7 @@ class BackendSVNTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-        $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('getProjectManager', $pm);
+        $this->backend->setReturnValue('getProjectManager', $pm);
 
         $projdir=$GLOBALS['svn_prefix']."/TestProj";
 
@@ -110,12 +118,12 @@ class BackendSVNTest extends TuleapTestCase {
         mkdir($projdir);
         mkdir($projdir."/db");
         
-        $this->assertEqual($backend->archiveProjectSVN(142),True);
+        $this->assertEqual($this->backend->archiveProjectSVN(142),True);
         $this->assertFalse(is_dir($projdir),"Project SVN repository should be deleted");
         $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/TestProj-svn.tgz"),"SVN Archive should be created");
 
         // Check that a wrong project id does not raise an error
-        $this->assertEqual($backend->archiveProjectSVN(99999),False);
+        $this->assertEqual($this->backend->archiveProjectSVN(99999),False);
 
         // Cleanup
         unlink(ForgeConfig::get('sys_project_backup_path') ."/TestProj-svn.tgz");
@@ -176,20 +184,18 @@ class BackendSVNTest extends TuleapTestCase {
         $ugroup->setReturnValueAt(2,'getName', "customers");
         $ugroup->setReturnValueAt(3,'getName', "customers");
 
+        $this->backend->setReturnValue('getProjectManager', $pm);
+        $this->backend->setReturnValue('getUGroupFromRow', $ugroup);
+        $this->backend->setReturnValue('getUGroupDao', $ugdao);
 
-        $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('getProjectManager', $pm);
-        $backend->setReturnValue('getUGroupFromRow', $ugroup);
-        $backend->setReturnValue('getUGroupDao', $ugdao);
-
-        $this->assertEqual($backend->createProjectSVN(142),True);
+        $this->assertEqual($this->backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj/hooks"),"hooks dir should be created");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/hooks/post-commit"),"post-commit file should be created");
 
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
+        $this->backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
         rmdir($GLOBALS['svn_prefix']."/TestProj");
     }
 
@@ -263,33 +269,30 @@ class BackendSVNTest extends TuleapTestCase {
         $ugroup->setReturnValueAt(10,'getName',"customers");
         $ugroup->setReturnValueAt(11,'getName',"customers");
 
+        $this->backend->setReturnValue('getProjectManager', $pm);
+        $this->backend->setReturnValue('getUGroupFromRow', $ugroup);
+        $this->backend->setReturnValue('getUGroupDao', $ugdao);
 
-        $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('getProjectManager', $pm);
-        $backend->setReturnValue('getUGroupFromRow', $ugroup);
-        $backend->setReturnValue('getUGroupDao', $ugdao);
-
-        $this->assertEqual($backend->createProjectSVN(142),True);
+        $this->assertEqual($this->backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should be created");
 
         $saf = new MockSVNAccessFile();
-        $backend->setReturnValue('_getSVNAccessFile', $saf);
+        $this->backend->setReturnValue('_getSVNAccessFile', $saf);
         // Update without modification
-        $this->assertEqual($backend->updateSVNAccess(142),True);
+        $this->assertEqual($this->backend->updateSVNAccess(142),True);
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should exist");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"),"SVN access file (.new) should be created");
         $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"),"SVN access file (.old) should not be created");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
+        $this->backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
         rmdir($GLOBALS['svn_prefix']."/TestProj");
     }
 
 
     function testGenerateSVNApacheConf() {
-        $backend = new BackendSVNTestVersion($this);
-        $service_dao = new MockServiceDao($this);
+        $service_dao   = new MockServiceDao($this);
         $active_groups = array("0" =>
                               array (
                                      "group_id"=> "101",
@@ -307,9 +310,11 @@ class BackendSVNTest extends TuleapTestCase {
                                      "unix_group_name" => "gpig3"));
 
         $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',$active_groups);
-        $backend->setReturnReference('_getServiceDao', $service_dao);
+        $this->backend->setReturnReference('_getServiceDao', $service_dao);
+        $this->backend->setReturnReference('getSVNTokenManager', $this->token_manager);
+        $this->backend->setReturnReference('getProjectManager', $this->project_manager);
 
-        $this->assertEqual($backend->generateSVNApacheConf(),True);
+        $this->assertEqual($this->backend->generateSVNApacheConf(),True);
         $svnroots=file_get_contents($GLOBALS['svn_root_file']);
         $this->assertFalse($svnroots === false);
         $this->assertPattern("/gpig2/",$svnroots,"Project name not found in SVN root");
@@ -320,41 +325,40 @@ class BackendSVNTest extends TuleapTestCase {
     }
     
     public function testSetSVNPrivacy_private() {
-        $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0770));
-        
+        $this->backend->setReturnValue('chmod', true);
+        $this->backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0770));
+        $this->backend->setReturnReference('getSVNTokenManager', $this->token_manager);
+        $this->backend->setReturnReference('getProjectManager', $this->project_manager);
+
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'toto');
         $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/toto');
         
-        $this->assertTrue($backend->setSVNPrivacy($project, true));
+        $this->assertTrue($this->backend->setSVNPrivacy($project, true));
     }
     
     public function testsetSVNPrivacy_public() {
-        $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0775));
+        $this->backend->setReturnValue('chmod', true);
+        $this->backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0775));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'toto');
         $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/toto');
         
-        $this->assertTrue($backend->setSVNPrivacy($project, false));
+        $this->assertTrue($this->backend->setSVNPrivacy($project, false));
     }
     
     public function testSetSVNPrivacy_no_repository() {
         $path_that_doesnt_exist = md5(uniqid(rand(), true));
         
-        $backend = new BackendSVNTestVersion($this);
-        $backend->expectNever('chmod');
+        $this->backend->expectNever('chmod');
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', $path_that_doesnt_exist);
         $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/'.$path_that_doesnt_exist);
         
-        $this->assertFalse($backend->setSVNPrivacy($project, true));
-        $this->assertFalse($backend->setSVNPrivacy($project, false));
+        $this->assertFalse($this->backend->setSVNPrivacy($project, true));
+        $this->assertFalse($this->backend->setSVNPrivacy($project, false));
     }
     
     public function testRenameSVNRepository() {
@@ -371,18 +375,16 @@ class BackendSVNTest extends TuleapTestCase {
         $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId', array());
 
-        $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('getProjectManager', $pm);
-        $backend->setReturnValue('getUGroupDao', $ugdao);
-
-        $backend->createProjectSVN(142);
+        $this->backend->setReturnValue('getProjectManager', $pm);
+        $this->backend->setReturnValue('getUGroupDao', $ugdao);
+        $this->backend->createProjectSVN(142);
         
-        $this->assertEqual($backend->renameSVNRepository($project, "foobar"), true);
+        $this->assertEqual($this->backend->renameSVNRepository($project, "foobar"), true);
         
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/foobar"),"SVN dir should be renamed");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/foobar");
+        $this->backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/foobar");
         rmdir($GLOBALS['svn_prefix']."/foobar");
     }
     
@@ -485,6 +487,30 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
 
 class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+
+        $project_manager = mock('ProjectManager');
+        $event_manager   = mock('EventManager');
+        $token_manager   = mock('SVN_TokenUsageManager');
+
+        $this->backend = partial_mock(
+            'BackendSVN',
+            array(
+                'getUserManager',
+                'getProjectManager',
+                'getUGroupDao',
+                'getUGroupFromRow',
+                '_getServiceDao',
+                'chown',
+                'chgrp',
+                'chmod',
+                '_getSVNAccessFile',
+                'getSVNTokenManager'
+            )
+        );
+    }
+
     public function itAddsProjectMembers() {
         $backend = new BackendSVNAccessTestVersion($this);
         $project = new MockProject($this);
@@ -499,8 +525,6 @@ class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
     }
 
     public function itAddUserGroupMembers() {
-        $backend = new BackendSVNTestVersion($this);
-
         $user1   = mock('PFUser');
         $user1->setReturnValue('getUserName', 'user1');
         $user2   = mock('PFUser');
@@ -514,20 +538,18 @@ class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
                 'name' => 'Perms'
             )
         ));
-        $backend->setReturnValue('getUGroupDao', $usergroup_dao);
+        $this->backend->setReturnValue('getUGroupDao', $usergroup_dao);
         $ugroup = new MockProjectUGroup($this);
         $ugroup->setReturnValue('getMembers', array($user1, $user2));
         $ugroup->setReturnValue('getName', 'Perms');
-        $backend->setReturnValue('getUGroupFromRow', $ugroup);
+        $this->backend->setReturnValue('getUGroupFromRow', $ugroup);
 
-        $ugroup_members_line = $backend->getSVNAccessUserGroupMembers($project);
+        $ugroup_members_line = $this->backend->getSVNAccessUserGroupMembers($project);
 
         $this->assertEqual($ugroup_members_line, "Perms = user1, user2\n\n");
     }
 
     public function itverifiesUserGroupMembersAreProjectMembersWhenProjectIsPrivate() {
-        $backend = new BackendSVNTestVersion($this);
-
         $user1   = mock('PFUser');
         $user1->setReturnValue('getUserName', 'user1');
         $user2   = mock('PFUser');
@@ -541,13 +563,13 @@ class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
                 'name' => 'Perms'
             )
         ));
-        $backend->setReturnValue('getUGroupDao', $usergroup_dao);
+        $this->backend->setReturnValue('getUGroupDao', $usergroup_dao);
         $ugroup = new MockProjectUGroup($this);
         $ugroup->setReturnValue('getMembers', array($user1, $user2));
         $ugroup->setReturnValue('getName', 'Perms');
-        $backend->setReturnValue('getUGroupFromRow', $ugroup);
+        $this->backend->setReturnValue('getUGroupFromRow', $ugroup);
 
-        $ugroup_members_line = $backend->getSVNAccessUserGroupMembers($project);
+        $ugroup_members_line = $this->backend->getSVNAccessUserGroupMembers($project);
 
         $this->assertEqual($ugroup_members_line, "Perms = user2\n\n");
     }

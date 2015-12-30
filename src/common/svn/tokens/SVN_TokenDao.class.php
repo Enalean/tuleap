@@ -54,4 +54,30 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function isProjectAuthorizingTokens($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT *
+                FROM svn_token_usage
+                WHERE project_id = $project_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function setProjectAuthorizesTokens($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "INSERT INTO svn_token_usage (project_id)
+                VALUES ($project_id)";
+
+        return $this->update($sql);
+    }
+
+    public function getProjectsAuthorizingTokens() {
+        $sql = "SELECT *
+                FROM svn_token_usage";
+
+        return $this->retrieve($sql);
+    }
+
 }
