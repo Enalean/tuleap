@@ -1,3 +1,6 @@
+Version 1.334 - Tuleap 8.10
+    * Separate planning-controller into directives
+
 Version 1.333 - Tuleap 8.10
     * request #8706: Reduce backlog load time
 
