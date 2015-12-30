@@ -55,6 +55,10 @@ class SVN_AccessFile_Presenter {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'def_policy', $GLOBALS['sys_name']);
     }
 
+    public function permissions_warning() {
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'permissions_warning');
+    }
+
     public function default_formatted_content() {
         return str_replace("\n", "<br>", $this->default_content);
     }
