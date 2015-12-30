@@ -1,3 +1,6 @@
+Version 4.102 - Tuleap 8.10
+    * story #8608: Define projects that can use SVN tokens
+
 Version 4.101 - Tuleap 8.10
     * request #8716: 'git' sender has been modified to 'codendiadm@tuleap-host' instead of 'git@tuleap-host'
 

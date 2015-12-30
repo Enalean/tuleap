@@ -1,3 +1,6 @@
+Version 3.90 - Tuleap 8.10
+    * story #8608: Define projects that can use SVN tokens
+
 Version 3.89 - Tuleap 8.10
     * story #8618: SVN authentication with mod_perl is able to fallback to LDAP
 

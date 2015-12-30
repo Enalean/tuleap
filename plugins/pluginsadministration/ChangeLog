@@ -1,3 +1,6 @@
+Version 1.15 - Tuleap 8.10
+    * story #8608: Define projects that can use SVN tokens
+
 Version 1.14 - Tuleap 8.10
     * Allow to install external plugins
 
