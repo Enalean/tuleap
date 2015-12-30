@@ -1,5 +1,5 @@
-(function () {
-    angular.module('milestone', [
-        'restangular'
-    ]);
-})();
+angular.module('milestone', [
+    'restangular',
+    'backlog-item',
+    'planning'
+]);

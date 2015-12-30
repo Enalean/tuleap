@@ -55,7 +55,7 @@ div.milestones {
         border-radius: 3px;
         box-shadow: inset 1px 0 #E9E9E9, inset 0px -1px #E9E9E9, inset -1px 0 #E9E9E9;
 
-        > legend {
+        legend {
             padding: 0 10px 0 30px;
             margin-bottom: 0;
             font-size: 1.2em;
@@ -117,7 +117,7 @@ div.milestones {
             }
         }
 
-        > div.content {
+        div.content {
             padding: 0 1px;
 
             > div.info {
@@ -191,12 +191,11 @@ div.milestones {
                 margin: 12px 10px;
 
                 > li.closed {
-                    > div {
+                    > backlog-item > div {
                         background-color: #F8F8F8;
                         color: #999;
                     }
-
-                    &.angular-ui-tree-appending-child > div.backlog-item-details {
+                    &.angular-ui-tree-appending-child > backlog-item > div.backlog-item-details {
                         background: rgba(88, 179, 89, 0.12);
                     }
                 }
@@ -206,7 +205,7 @@ div.milestones {
         &.collapsed {
             box-shadow: none;
 
-            > legend {
+            legend {
                 border-bottom: 1px solid #E9E9E9;
                 border-bottom-left-radius: 3px;
                 border-bottom-right-radius: 3px;
@@ -218,7 +217,7 @@ div.milestones {
                 }
             }
 
-            > div.content {
+            div.content {
                 overflow: hidden;
                 padding: 0;
                 height: 0;
@@ -229,7 +228,7 @@ div.milestones {
             }
         }
 
-        &.updating > legend {
+        &.updating legend {
             background: #FFF url('loader-mini.gif') no-repeat 10px center;
         }
     }

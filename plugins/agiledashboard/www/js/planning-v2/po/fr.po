@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-12-18 10:10+0100\n"
+"PO-Revision-Date: 2015-12-21 14:52+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -30,8 +30,8 @@ msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
 msgstr "Ajouter un(e) {{ planning.backlog.accepted_types.content[0].label }}"
 
 #: src/app/planning.tpl.html
-msgid "Add a {{ planning.submilestone_type.label }}"
-msgstr "Ajouter un(e) {{ planning.submilestone_type.label }}"
+msgid "Add a {{ planning.backlog.submilestone_type.label }}"
+msgstr "Ajouter un(e) {{ planning.backlog.submilestone_type.label }}"
 
 #: src/app/milestone/milestone.tpl.html src/app/planning.tpl.html
 msgid "Add a new item"
@@ -41,7 +41,7 @@ msgstr "Ajouter un nouvel élément"
 msgid "Add an item"
 msgstr "Ajouter un élément"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "All items have been loaded."
 msgstr "Tous les éléments ont été chargés."
 
@@ -139,6 +139,6 @@ msgstr "Aucun jalon ouvert"
 msgid "To be planned"
 msgstr "A planifier"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
