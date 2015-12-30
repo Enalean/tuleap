@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
- * 
+ * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -52,7 +52,7 @@ abstract class SVN_Apache {
         $conf = '';
         $conf .= "<Location /svnroot/".$this->project['unix_group_name'].">\n";
         $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$this->project['unix_group_name']."\n";
+        $conf .= "    SVNPath ". ForgeConfig::get('svn_prefix') ."/".$this->project['unix_group_name']."\n";
         $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
         $conf .= $this->getProjectAuthorization($this->project);
         $conf .= $this->getProjectAuthentication($this->project);
@@ -92,7 +92,7 @@ abstract class SVN_Apache {
      * @return String 
      */
     protected function getProjectAuthorization($row) {
-        $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
+        $conf = "    AuthzSVNAccessFile ". ForgeConfig::get('svn_prefix') ."/".$row['unix_group_name']."/.SVNAccessFile\n";
         return $conf;
     }
     
@@ -107,5 +107,3 @@ abstract class SVN_Apache {
         return strtr($str, "\"", "'");
     }
 }
-
-?>
