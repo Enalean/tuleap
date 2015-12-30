@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2015. All rights reserved.
  * 
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -50,13 +50,29 @@ class SystemEventProcessorMutex {
     }
 
     public function execute() {
-        $process = $this->runnable->getProcess();
-        $this->checkCurrentUserProcessOwner();
+        $process = $this->getProcess();
         if (! $this->process_manager->isAlreadyRunning($process)) {
-            $this->process_manager->createPidFile($process);
-            $this->runnable->execute($process->getQueue());
-            $this->process_manager->deletePidFile($process);
+            $this->executeWithPidFile($process);
         }
+    }
+
+    public function waitAndExecute() {
+        $process = $this->getProcess();
+        while ($this->process_manager->isAlreadyRunning($process)) {
+            sleep(1);
+        }
+        $this->executeWithPidFile($process);
+    }
+
+    private function getProcess() {
+        $this->checkCurrentUserProcessOwner();
+        return $this->runnable->getProcess();
+    }
+
+    private function executeWithPidFile(SystemEventProcess $process) {
+        $this->process_manager->createPidFile($process);
+        $this->runnable->execute($process->getQueue());
+        $this->process_manager->deletePidFile($process);
     }
 
     protected function checkCurrentUserProcessOwner() {
