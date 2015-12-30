@@ -1,43 +1,35 @@
 ul.backlog-items, ul.backlog-item-children {
     margin: 0;
-
-    &.compact-view {
-        > li.backlog-item {
-            margin: 5px 0;
-
-            .backlog-item-details {
-                a.id {
-                }
-
-                span.summary {
-                }
-
-                span.parent {
-                    display: inline;
-                    float: right;
-                    text-align: right;
-                    color: #4DB3D0;
-                }
-
-                ul.extra_card_fields {
-                    display: none;
-                }
-
-                &:after {
-                    content: ".";
-                    visibility: hidden;
-                    display: block;
-                    height: 0;
-                    clear: both;
-                }
-            }
-        }
-    }
 }
 
 li.backlog-item {
     list-style-type: none;
     position: relative;
+
+    &.compact-view {
+        margin: 5px 0;
+
+        .backlog-item-details {
+            span.parent {
+                display: inline;
+                float: right;
+                text-align: right;
+                color: #4DB3D0;
+            }
+
+            ul.extra_card_fields {
+                display: none;
+            }
+
+            &:after {
+                content: ".";
+                visibility: hidden;
+                display: block;
+                height: 0;
+                clear: both;
+            }
+        }
+    }
 
     > backlog-item > .show-children {
         margin: 0 auto;
@@ -268,14 +260,28 @@ li.backlog-item {
         }
     }
 
-    &.undraggable > backlog-item-details > .backlog-item-details {
-        cursor: default;
+    &.undraggable > backlog-item .backlog-item-details {
+        cursor: auto;
     }
 
-    &.updating > backlog-item-details > .backlog-item-details {
+    &.updating > backlog-item > .backlog-item-details {
         background-image: url('loader-mini.gif');
         background-repeat: no-repeat;
         background-position: right 5px bottom 5px;
+    }
+}
+
+ul.backlog-items, ul.backlog-item-children {
+    backlog-item.appending-child {
+        > div.backlog-item-details {
+            border: 1px solid #58B359;
+            box-shadow: inset 0 0 0 1px #58B359;
+            background: rgba(88, 179, 89, 0.12);
+
+            > backlog-item-details > div.type-border {
+                background-color: #58B359;
+            }
+        }
     }
 }
 
@@ -286,51 +292,8 @@ div.milestones > fieldset.milestone > div.content {
     }
 }
 
-.angular-ui-tree-empty {
-    background: transparent url('milestone-empty.png') no-repeat center center;
-    margin: 0 0 10px;
-    border: none;
-}
-.angular-ui-tree-nodes .angular-ui-tree-nodes {
-    padding: 0;
-}
-.angular-ui-tree-placeholder {
-    background: #58B359;
-    max-height: 3px;
-    min-height: 3px;
-    margin: 10px;
-
-    &:only-child {
-        background: transparent url('milestone-empty.png') no-repeat center center;
-        box-shadow: inset 0 0 0 2px #58B359;
-        max-height: 100px;
-        min-height: 100px;
-        border-radius: 2px;
-        margin: 0;
-    }
-}
-
-ul.backlog-items, ul.backlog-item-children {
-    > li.backlog-item.angular-ui-tree-appending-child {
-        opacity: 1;
-
-        backlog-item > div.backlog-item-details {
-            border: 1px solid #58B359;
-            box-shadow: inset 0 0 0 1px #58B359;
-            background: rgba(88, 179, 89, 0.12);
-
-            > div.type-border {
-                background-color: #58B359;
-            }
-        }
-    }
-}
-
 ul.backlog-item-children {
     span.initial-effort-placeholder {
         display: none;
     }
-}
-.angular-ui-tree-drag {
-    opacity: 1;
 }

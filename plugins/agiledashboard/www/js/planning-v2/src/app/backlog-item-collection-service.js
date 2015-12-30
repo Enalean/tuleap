@@ -25,6 +25,10 @@ function BacklogItemCollectionService(
             self.items[backlog_item_id].updating       = false;
             self.items[backlog_item_id].status         = data.backlog_item.status;
             self.items[backlog_item_id].has_children   = data.backlog_item.has_children;
+
+            if (! data.backlog_item.has_children) {
+                self.items[backlog_item_id].children.collapsed = true;
+            }
         });
     }
 }

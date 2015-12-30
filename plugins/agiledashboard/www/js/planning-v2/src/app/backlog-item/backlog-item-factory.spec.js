@@ -31,8 +31,9 @@ describe('BacklogItemFactory', function() {
 
         it('adds children properties', function() {
             var expected = {
-                 "data"   : [],
-                 "loaded" : false
+                 "data"     : [],
+                 "loaded"   : false,
+                 "collapsed": true
             };
 
             expect(item.children).toEqual(expected);

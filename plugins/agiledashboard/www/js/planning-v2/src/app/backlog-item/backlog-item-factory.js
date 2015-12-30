@@ -11,10 +11,11 @@
         };
 
         function augment(backlogItem) {
-            backlogItem.updating        = false;
-            backlogItem.children        = {};
-            backlogItem.children.data   = [];
-            backlogItem.children.loaded = false;
+            backlogItem.updating           = false;
+            backlogItem.children           = {};
+            backlogItem.children.data      = [];
+            backlogItem.children.loaded    = false;
+            backlogItem.children.collapsed = true;
 
             backlogItem.isOpen = function() {
                 return backlogItem.status === 'Open';
