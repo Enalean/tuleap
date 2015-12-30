@@ -14,6 +14,7 @@ Version 8.10 (Not released yet)
 	* story #8618: An user can be authenticated from a token for all SVN operations
 	* story #8618: SVN authentication with mod_perl is able to fallback to LDAP
 	* request #8733: Import of SVN repository doesnt work when doing project creation
+	* request #8736: Add an explicit message concerning possible information leak
 
 	== Bug fix ==
 	* request #8688: Old email displayed in confirmation message after updating my email address
