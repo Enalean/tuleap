@@ -32,6 +32,7 @@ Version 8.10 (Not released yet)
 	* story #8608: Access Subversion with username/token instead of username/password
 		* User can manage his own svn tokens
 		* Define projects that can use SVN tokens
+		* Site admin can revoke project using SVN tokens
 
 	== Plugins ==
 	* docman: 2.26.91
