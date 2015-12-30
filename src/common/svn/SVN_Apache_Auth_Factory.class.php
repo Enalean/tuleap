@@ -79,7 +79,7 @@ class SVN_Apache_Auth_Factory {
         return $svnApacheAuth;
     }
 
-    protected function getModFromPlugins(array $project_info, $requested_authentication_method) {
+    private function getModFromPlugins(array $project_info, $requested_authentication_method) {
         $svn_apache_auth = null;
 
         $params = array(

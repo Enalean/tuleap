@@ -18,6 +18,14 @@
  *
  */
 
+class SVN_Apache_SvnrootConfTestEventManager extends EventManager {
+    public function processEvent($event_name, $params) {
+        $project_row = array();
+
+        $params['svn_apache_auth'] = null;
+    }
+}
+
 require_once 'common/svn/SVN_Apache_SvnrootConf.class.php';
 
 mock::generate('EventManager');
@@ -56,16 +64,10 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
                                 'group_id'        => 102));
 
         $project_manager = mock('ProjectManager');
-        $event_manager   = mock('EventManager');
+        $event_manager   = new SVN_Apache_SvnrootConfTestEventManager();
         $token_manager   = mock('SVN_TokenUsageManager');
 
-        $factory = partial_mock(
-            'SVN_Apache_Auth_Factory',
-            array('getModFromPlugins'),
-            array($project_manager, $event_manager, $token_manager)
-        );
-
-        $factory->setReturnValue('getModFromPlugins', null);
+        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager);
 
         return new SVN_Apache_SvnrootConf($factory, $projects);
     }
