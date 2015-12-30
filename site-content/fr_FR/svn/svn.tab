@@ -20,6 +20,7 @@ svn_admin_access_control	last_version	Vous utilisez la dernière version (# $1)
 svn_admin_access_control	previous_version	Vous utilisez une version antérieure (# $1)
 svn_admin_access_control	saved_on	enregistré le
 svn_admin_access_control	select_version	Choisissez une version
+svn_admin_access_control	permissions_warning	Il est conseillé de toujours utiliser un groupe d'utilisateurs Tuleap pour définir des permissions. Attribuer des permissions à un groupe d'utilisateurs défini manuellement ou à un utilisateur spécifique peut amener à des problèmes de sécurité.
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/general_settings.php
