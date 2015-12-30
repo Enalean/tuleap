@@ -577,6 +577,14 @@ class Event {
     const SVN_AUTHORIZE_TOKENS = 'svn_authorize_tokens';
 
     /**
+     * Event raised when admin revoke project authorization for SVN tokens
+     *
+     * Expected results:
+     *     Void
+     */
+    const SVN_REVOKE_TOKENS = 'svn_revoke_tokens';
+
+    /**
      * Event raised when a project has a new parent
      *
      * Parameters:

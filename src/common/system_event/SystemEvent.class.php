@@ -65,6 +65,7 @@ abstract class SystemEvent {
     const TYPE_COMPUTE_MD5SUM        = "COMPUTE_MD5SUM";
     const TYPE_SVN_UPDATE_HOOKS      = "SVN_UPDATE_HOOKS";
     const TYPE_SVN_AUTHORIZE_TOKENS  = "SVN_AUTHORIZE_TOKENS";
+    const TYPE_SVN_REVOKE_TOKENS     = "SVN_REVOKE_TOKENS";
     const TYPE_MOVE_FRS_FILE         = "MOVE_FRS_FILE";
     const TYPE_UPDATE_ALIASES        = "UPDATE_ALIASES";
 

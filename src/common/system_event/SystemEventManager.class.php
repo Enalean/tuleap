@@ -43,6 +43,7 @@ class SystemEventManager {
             Event::COMPUTE_MD5SUM,
             Event::SVN_UPDATE_HOOKS,
             Event::SVN_AUTHORIZE_TOKENS,
+            Event::SVN_REVOKE_TOKENS,
             Event::UPDATE_ALIASES,
             'approve_pending_project',
             'project_is_deleted',
@@ -261,6 +262,14 @@ class SystemEventManager {
             );
             break;
 
+        case Event::SVN_REVOKE_TOKENS:
+            $this->createEvent(
+                SystemEvent::TYPE_SVN_REVOKE_TOKENS,
+                $params['project_ids'],
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            break;
+
         case Event::UPDATE_ALIASES:
             $this->createEvent(SystemEvent::TYPE_UPDATE_ALIASES, '', SystemEvent::PRIORITY_HIGH);
             break;
@@ -361,6 +370,7 @@ class SystemEventManager {
 
         case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
         case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
+        case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
             $klass = 'SystemEvent_'. $row['type'];
             $klass_params = array(Backend::instance(Backend::SVN));
             break;

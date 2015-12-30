@@ -77,7 +77,31 @@ class SVN_Admin_Controller {
             $this->allowSVNTokensForProject($project_to_add);
         }
 
+        $project_ids_to_remove = $request->get('project-ids-to-revoke');
+        if ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
+            $this->revokeProjectsAuthorization($project_ids_to_remove);
+        }
+
         $GLOBALS['Response']->redirect('/admin/svn/svn_tokens.php?action=index');
+    }
+
+    private function revokeProjectsAuthorization(array $project_ids_to_remove) {
+        if (count($project_ids_to_remove) > 0 &&
+            $this->token_manager->removeProjectsAuthorizationForTokens($project_ids_to_remove)
+        ){
+            $this->event_manager->processEvent(
+                Event::SVN_REVOKE_TOKENS,
+                array('project_ids' => implode(',', $project_ids_to_remove))
+            );
+
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('svn_tokens', 'allowed_project_revoke_project')
+            );
+
+        } else {
+            $this->sendUpdateProjectListError();
+        }
     }
 
     private function allowSVNTokensForProject($project_to_migrate) {
@@ -88,7 +112,8 @@ class SVN_Admin_Controller {
             $this->token_manager->setProjectAuthorizesTokens($project);
 
             $this->event_manager->processEvent(
-                Event::SVN_AUTHORIZE_TOKENS, array('group_id' => $project->getID())
+                Event::SVN_AUTHORIZE_TOKENS,
+                array('group_id' => $project->getID())
             );
 
             $GLOBALS['Response']->addFeedback(
