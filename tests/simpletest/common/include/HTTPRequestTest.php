@@ -364,7 +364,25 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
         $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText('*', 'ie9_compatibility_deprecated')->once();
+        expect($GLOBALS['Language'])->getText('*', 'ie_compatibility_deprecated')->once();
+
+        $browser->getDeprecatedMessage();
+    }
+
+    public function testIE10CompatibilityModeIsDeprected() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)';
+        $browser = $this->request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText('*', 'ie_compatibility_deprecated')->once();
+
+        $browser->getDeprecatedMessage();
+    }
+
+    public function testIE11CompatibilityModeIsDeprected() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
+        $browser = $this->request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText('*', 'ie_compatibility_deprecated')->once();
 
         $browser->getDeprecatedMessage();
     }
