@@ -1,3 +1,6 @@
+Version 3.89 - Tuleap 8.10
+    * story #8618: SVN authentication with mod_perl is able to fallback to LDAP
+
 Version 3.88 - Tuleap 8.10
     * request #8717: Improper user groups authorization verification for SVN ressources
 
