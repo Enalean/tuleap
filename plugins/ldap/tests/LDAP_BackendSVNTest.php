@@ -26,6 +26,14 @@ Mock::generate('ServiceDao');
 Mock::generate('LDAP');
 Mock::generate('LDAP_ProjectManager');
 
+class LDAP_BackendSVNTestEventManager extends EventManager {
+    public function processEvent($event_name, $params) {
+        $ldap = mock('LDAP');
+
+        $params['svn_apache_auth'] = new LDAP_SVN_Apache($ldap, $params['project_info']);
+    }
+}
+
 class LDAP_BackendSVNTest extends TuleapTestCase {
 
     public function setUp() {
@@ -67,17 +75,10 @@ class LDAP_BackendSVNTest extends TuleapTestCase {
 	stub($ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
 
         $project_manager = mock('ProjectManager');
-        $event_manager   = mock('EventManager');
+        $event_manager   = new LDAP_BackendSVNTestEventManager();
         $token_manager   = mock('SVN_TokenUsageManager');
 
-        $factory = partial_mock(
-            'SVN_Apache_Auth_Factory',
-            array('getModFromPlugins'),
-            array($project_manager, $event_manager, $token_manager)
-        );
-
-        $factory->setReturnValueAt(0, 'getModFromPlugins', new LDAP_SVN_Apache($ldap, $project_array_01));
-        $factory->setReturnValueAt(1, 'getModFromPlugins', new LDAP_SVN_Apache($ldap, $project_array_02));
+        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager);
 
         $backend->setReturnValue('getSVNApacheAuthFactory', $factory);
 
