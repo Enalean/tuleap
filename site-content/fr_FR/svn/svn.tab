@@ -188,3 +188,14 @@ svn_tokens	allowed_project_revoke_yes	Oui, supprimer l'autorisation
 svn_tokens	allowed_project_revoke_no	Non
 svn_tokens	allowed_project_revoke_projects	Submitted projects will not be able to use SVN tokens
 svn_tokens	allowed_project_list_revoke_projects	Supprimer l'autorisation aux projets sélectionnés
+
+svn_intro	title	Accès Subversion
+svn_intro	default_username	nom_utilisateur
+svn_intro	username_helper	Dans la commande ci-dessous, veuillez substituer nom_utilisateur avec la valeur appropriée.
+svn_intro	username_helper_lowercase	Attention à bien utiliser votre nom d'utilisateur en minuscules.
+svn_intro	command_intro	Vous trouverez ci-dessous la commande type pour créer une copie de travail (checkout) du code source de ce projet.
+svn_intro	password	Donnez votre mot passe quand il vous est demandé.
+svn_intro	ldap_password	Donnez votre mot passe LDAP quand il vous est demandé.
+svn_intro	token	Vous pouvez également utiliser un de vos jetons de connexion SVN.
+svn_intro	more_info	Plus d'information sur l'utilisation de Subversion
+svn_intro	warning_ldap	<strong>IMPORTANT:</strong> l'accès à ce dépôt Subversion <strong>nécessite un compte LDAP valide</strong>.

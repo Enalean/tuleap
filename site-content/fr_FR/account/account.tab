@@ -33,8 +33,8 @@ account_options	svn_tokens_title	Jetons SVN
 account_options	svn_tokens_help	Les jetons SVN sont utilisables en remplacement de votre mot de passe uniquement sur les projets définis par l'administrateur.
 account_options	svn_tokens_no_token	Aucun jeton SVN
 account_options	svn_token_generated_date	Généré le
-account_options	svn_token_last_usage	Dernière fois utilisé le
-account_options	svn_token_last_ip	Dernière fois utilisé par
+account_options	svn_token_last_usage	Utilisé pour la dernière fois le
+account_options	svn_token_last_ip	Utilisé pour la dernière fois par
 account_options	svn_token_comment	Commentaire
 account_options	generate_svn_token_button	Générer un jeton SVN
 account_options	generated_svn_token	Le jeton généré est

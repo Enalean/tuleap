@@ -95,7 +95,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
 
         // Svn intro
-        $this->_addHook('svn_intro', 'svn_intro', false);
+        $this->addHook(Event::SVN_INTRO);
         $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
 
         // Search as you type user
@@ -666,21 +666,19 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Replace the default svn message.
-     *
-     * $params['svn_intro_in_plugin'] OUT: set it to true if output sth here
-     * $params['user_id']
-     * $params['group_id']
-     * $params['svn_url']
+     * @see Event::SVN_INTRO
      */
-    function svn_intro($params) {
-        $svnProjectManager = new LDAP_ProjectManager();
-        if($GLOBALS['sys_auth_type'] == 'ldap' && isset($params['group_id']) && $svnProjectManager->hasSVNLDAPAuth($params['group_id'])) {
-            $svn_url = $params['svn_url'];
-            $ldapUm = $this->getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
-            require($GLOBALS['Language']->getContent('svn_intro', null, 'ldap'));
+    public function svn_intro($params) {
+        $ldap_project_manager = new LDAP_ProjectManager();
+
+        if (ForgeConfig::get('sys_auth_type') === 'ldap' &&
+           isset($params['group_id']) &&
+           $ldap_project_manager->hasSVNLDAPAuth($params['group_id'])
+        ) {
             $params['svn_intro_in_plugin'] = true;
+            $params['svn_intro_info']      = $this->getLdapUserManager()->getLdapFromUserId(
+                $params['user_id']
+            );
         }
     }
 
