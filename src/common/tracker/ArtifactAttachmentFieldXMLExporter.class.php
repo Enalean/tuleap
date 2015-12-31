@@ -35,12 +35,13 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
         $new_attachment = $this->extractFirstDifference($row['old_value'], $row['new_value']);
         if ($new_attachment) {
             $dar = $this->dao->searchFile($artifact_id, $new_attachment, $row['mod_by'], $row['date']);
-            if ($dar && $dar->rowCount() == 1) {
-                $row_file = $dar->current();
+            if ($dar && $dar->rowCount() > 0) {
                 $field_node = $this->node_helper->createElement('field_change');
                 $field_node->setAttribute('field_name', 'attachment');
                 $field_node->setAttribute('type', self::TV5_TYPE);
-                $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
+                foreach ($dar as $row_file) {
+                    $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
+                }
                 $this->appendPreviousAttachements($field_node, $artifact_id, $row['date'], $row['old_value']);
                 $changeset_node->appendChild($field_node);
             } else {
