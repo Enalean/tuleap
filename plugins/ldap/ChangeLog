@@ -1,3 +1,6 @@
+Version 3.92 - Tuleap 8.10
+    * request #8732: LDAP write does not properly create LDAP account from a new Tuleap account
+
 Version 3.91 - Tuleap 8.10
     * story #8608: Remove some technical debt
 
