@@ -34,6 +34,7 @@ Version 8.10 (Not released yet)
 		* Define projects that can use SVN tokens
 		* Site admin can revoke project using SVN tokens
 		* Remove some technical debt
+		* SVN service homepage display a specific message if svn tokens are allowed
 	* request #8739: Remove PHP 5.1 support
 
 	== Plugins ==
@@ -44,13 +45,13 @@ Version 8.10 (Not released yet)
 	* agiledashboard: 1.336
 	* cardwall: 1.53
 	* statistics: 0.55
-	* ldap: 3.92
+	* ldap: 3.93
 	* pluginsadministration: 1.15
 	* svn: 0.2
 	* tests: 5.32
 
     == Themes ==
-	* FlamingParrot: 1.117
+	* FlamingParrot: 1.118
 
 Version 8.9 (Thursday, December 3rd 2015)
 

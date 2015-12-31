@@ -1,3 +1,6 @@
+Version 1.118 - Tuleap 8.10
+    * story #8608: SVN service homepage display a specific message if svn tokens are allowed
+
 Version 1.117 - Tuleap 8.10
     * story #8608: User can manage his own svn tokens
 
