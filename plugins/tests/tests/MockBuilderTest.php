@@ -166,4 +166,18 @@ class SomeException extends Exception {
 class AnotherException extends Exception {
 
 }
-?>
+
+require_once 'SomeClassWithNamespace.php';
+class MockBuilder_WithNamespacesTest extends TuleapTestCase {
+
+    public function itCanBuildTheMockIfThereIsANamespace() {
+        $classname_to_mock = 'Tuleap\Test\SomeClassWithNamespace';
+
+        $mock = mock($classname_to_mock);
+        stub($mock)->someMethod()->returns("a precise result");
+
+        $this->assertEqual(get_class($mock), 'MockTuleap_Test_SomeClassWithNamespace');
+        $this->assertIsA($mock, $classname_to_mock);
+        $this->assertEqual("a precise result", $mock->someMethod());
+    }
+}

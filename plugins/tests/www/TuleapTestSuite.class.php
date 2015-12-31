@@ -52,13 +52,8 @@ class FilterTestCase extends FilterIterator {
         return (strpos($file->getPathname(), '/_') === false &&
                $this->isNotATestsRestDirectory($file->getPathname()) &&
                $this->isNotATestsSoapDirectory($file->getPathname()) &&
-               (preg_match('/Test.php$/', $file->getFilename()) || ($this->phpVersionIsGreaterOrEqualThanPhp53() && preg_match('/TestPHP53.php$/', $file->getFilename())))
+               (preg_match('/Test.php$/', $file->getFilename()))
         );
-    }
-
-
-    private function phpVersionIsGreaterOrEqualThanPhp53() {
-        return version_compare(phpversion(), '5.3', '>=');
     }
 
     private function isNotATestsRestDirectory($pathName) {

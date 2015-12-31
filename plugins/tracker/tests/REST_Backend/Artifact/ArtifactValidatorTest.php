@@ -30,10 +30,6 @@ class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase {
     private $validator;
     private $tracker;
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function setUp() {
         parent::setUp();
 

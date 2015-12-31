@@ -20,7 +20,7 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class TrackerRestBuilderTestPHP53 extends TuleapTestCase {
+class TrackerRestBuilderTest extends TuleapTestCase {
 
     private $formelement_factory;
     private $builder;

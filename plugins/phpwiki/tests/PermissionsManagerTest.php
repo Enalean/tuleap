@@ -20,7 +20,7 @@
 require_once(dirname(__FILE__) . '/../include/lib/PHPWikiPage.class.php');
 require_once(dirname(__FILE__).'/../include/PermissionsManager.class.php');
 
-class PHPWiki_PermissionsManagerTestPHP53 extends TuleapTestCase {
+class PHPWiki_PermissionsManagerTest extends TuleapTestCase {
 
     /** @var Wiki_PermissionsManager */
     private $wiki_permissions_manager;
@@ -34,17 +34,13 @@ class PHPWiki_PermissionsManagerTestPHP53 extends TuleapTestCase {
     /** @var PHPWikiPage */
     private $wiki_page;
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function setUp() {
         parent::setUp();
 
         $this->project   = stub('Project')->getUnixName()->returns('perceval');
         stub($this->project)->getId()->returns(200);
 
-        $this->wiki_page = stub('WikiPage')->getId()->returns(101);
+        $this->wiki_page = stub('PHPWikiPage')->getId()->returns(101);
         stub($this->wiki_page)->getGid()->returns(200);
 
         $literalizer              = new UGroupLiteralizer();

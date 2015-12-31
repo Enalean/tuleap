@@ -20,14 +20,10 @@
  */
 require_once 'bootstrap.php';
 
-class GitMarkdownFileTestPHP53 extends TuleapTestCase {
+class GitMarkdownFileTest extends TuleapTestCase {
 
     private $git_exec;
     private $git_markdown_file;
-
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
 
     public function setUp() {
         parent::setUp();

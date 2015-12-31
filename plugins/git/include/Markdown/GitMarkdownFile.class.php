@@ -37,7 +37,7 @@ class GitMarkdownFile {
      */
     public function getReadmeFileContent($node, $commit_sha1) {
         $readme_file = $this->getReadmeFile($node, $commit_sha1);
-        if ($readme_file && version_compare(phpversion(), '5.3', '>=')){
+        if ($readme_file){
             return $this->getFormatedMarkdown($readme_file, $commit_sha1);
         }
 

@@ -26,15 +26,12 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $list_of_servers;
 
-    public $can_use_gerrit_2_8;
-
     public $btn_submit;
 
     public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_gerrits) {
         parent::__construct($title, $csrf);
 
         $this->list_of_servers    = $list_of_gerrits;
-        $this->can_use_gerrit_2_8 = server_is_php_version_equal_or_greater_than_53();
         $this->btn_submit         = $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 }
