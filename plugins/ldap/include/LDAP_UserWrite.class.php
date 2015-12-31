@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,12 +57,17 @@ class LDAP_UserWrite {
      * @var UserDao
      */
     private $user_dao;
+    /**
+     * @var LDAP_UserDao
+     */
+    private $ldap_user_dao;
 
-    public function __construct(LDAP $ldap, UserManager $user_manager, UserDao $dao, Logger $logger) {
-        $this->ldap         = $ldap;
-        $this->user_manager = $user_manager;
-        $this->user_dao     = $dao;
-        $this->logger       = new WrapperLogger($logger, 'UserWrite');
+    public function __construct(LDAP $ldap, UserManager $user_manager, UserDao $dao, LDAP_UserDao $ldap_user_dao, Logger $logger) {
+        $this->ldap          = $ldap;
+        $this->user_manager  = $user_manager;
+        $this->user_dao      = $dao;
+        $this->ldap_user_dao = $ldap_user_dao;
+        $this->logger        = new WrapperLogger($logger, 'UserWrite');
     }
 
     public function updateWithPreviousUser(PFUser $old_user, PFUser $new_user) {
@@ -122,6 +127,7 @@ class LDAP_UserWrite {
         if ($user->getPassword() != '') {
             $this->ldap->add($this->getUserDN($user), $this->getLDAPInfo($user));
             $this->updateUserLdapId($user);
+            $this->ldap_user_dao->createLdapUser($user->getId(), $_SERVER['REQUEST_TIME'], $this->getUserLdapId($user));
         } else {
             $this->logger->debug('No password for user '.$user->getUnixName().' '.$user->getId().' skip LDAP account creation');
         }
