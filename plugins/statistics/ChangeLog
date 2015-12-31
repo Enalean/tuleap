@@ -1,3 +1,6 @@
+Version 0.55 - Tuleap 8.10
+    * request #8739: Remove PHP 5.1 support
+
 Version 0.54 - Tuleap 8.10
     * story #8712: see the project mandatory trove cats in the service usage statistics
 

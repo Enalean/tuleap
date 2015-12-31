@@ -1,3 +1,6 @@
+Version 1.336 - Tuleap 8.10
+    * request #8739: Remove PHP 5.1 support
+
 Version 1.335 - Tuleap 8.10
     * request #8738: Error when backlog is empty
 

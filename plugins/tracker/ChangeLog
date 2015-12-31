@@ -1,3 +1,6 @@
+Version 5.772 - Tuleap 8.10
+    * request #8739: Remove PHP 5.1 support
+
 Version 5.771 - Tuleap 8.10
     * request #8706: Reduce backlog load time
 
