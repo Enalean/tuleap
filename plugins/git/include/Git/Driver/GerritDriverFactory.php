@@ -39,8 +39,7 @@ class Git_Driver_Gerrit_GerritDriverFactory {
      * @return Git_Driver_Gerrit
      */
     public function getDriver(Git_RemoteServer_GerritServer $server) {
-        include_once 'server.php';
-        if (server_is_php_version_equal_or_greater_than_53() && $server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS) {
+        if ($server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS) {
             include_once '/usr/share/php-guzzle/guzzle.phar';
             $class = 'Guzzle\Http\Client';
             return new Git_Driver_GerritREST(

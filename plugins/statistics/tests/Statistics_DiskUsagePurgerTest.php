@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__).'/../include/autoload.php';
 
-class Statistics_DiskDataPurgerTestPHP53 extends TuleapDbTestCase {
+class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
 
     /** @var Statistics_DiskUsageDao */
     private $disk_usage_dao;
@@ -38,10 +38,6 @@ class Statistics_DiskDataPurgerTestPHP53 extends TuleapDbTestCase {
 
         $this->disk_usage_dao   = new Statistics_DiskUsageDao(CodendiDataAccess::instance());
         $this->disk_data_purger = new Statistics_DiskUsagePurger($this->disk_usage_dao);
-    }
-
-    public function skip() {
-        $this->skipIfNotPhp53();
     }
 
     public function itReturnsFirstDayOfEachMonthsBetweenTwoDates() {

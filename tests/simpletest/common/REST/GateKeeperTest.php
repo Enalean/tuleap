@@ -19,13 +19,9 @@
 
 use Tuleap\REST\GateKeeper;
 
-abstract class GateKeeperTestPHP53  extends TuleapTestCase {
+abstract class GateKeeperTest  extends TuleapTestCase {
     protected $user;
     protected $anonymous;
-
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
 
     public function setUp() {
         parent::setUp();
@@ -43,7 +39,7 @@ abstract class GateKeeperTestPHP53  extends TuleapTestCase {
     }
 }
 
-class GateKeeper_TokenAndHTTPS_TestPHP53  extends GateKeeperTestPHP53 {
+class GateKeeper_TokenAndHTTPS_Test  extends GateKeeperTest {
 
     public function setUp() {
         parent::setUp();
@@ -81,7 +77,7 @@ class GateKeeper_TokenAndHTTPS_TestPHP53  extends GateKeeperTestPHP53 {
     }
 }
 
-class GateKeeper_CSRF_TestPHP53 extends GateKeeperTestPHP53 {
+class GateKeeper_CSRF_Test extends GateKeeperTest {
 
     public function itLetPassWhenReferMatchesHost() {
         $_SERVER['HTTP_REFERER'] = 'http://example.com/bla';

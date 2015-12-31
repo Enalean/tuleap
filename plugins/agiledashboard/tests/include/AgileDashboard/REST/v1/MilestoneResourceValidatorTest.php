@@ -34,10 +34,6 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
     /** @var MilestoneResourceValidator */
     private $milestone_resource_validator;
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function setUp() {
         parent::setUp();
 
@@ -142,10 +138,6 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
     private $user;
     private $artifact;
     private $milestone;
-
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
 
     public function setUp() {
         parent::setUp();

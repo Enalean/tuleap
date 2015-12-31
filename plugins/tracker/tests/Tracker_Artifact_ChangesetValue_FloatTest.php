@@ -108,10 +108,6 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
 
 class Tracker_Artifact_ChangesetValue_Float_RESTTest extends TuleapTestCase {
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function itReturnsTheRESTValue() {
         $field = stub('Tracker_FormElement_Field_Float')->getName()->returns('field_float');
         $user  = aUser()->withId(101)->build();

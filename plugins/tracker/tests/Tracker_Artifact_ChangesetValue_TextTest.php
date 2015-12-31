@@ -130,10 +130,6 @@ class Tracker_Artifact_ChangesetValue_Text_getContentAsTextTest extends TuleapTe
 
 class Tracker_Artifact_ChangesetValue_Text_RESTTest extends TuleapTestCase {
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function itReturnsTheRESTValue() {
         $field = stub('Tracker_FormElement_Field_Text')->getName()->returns('field_text');
         $user  = aUser()->withId(101)->build();

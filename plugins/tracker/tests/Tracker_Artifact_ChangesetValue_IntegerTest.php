@@ -86,10 +86,6 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
 
 class Tracker_Artifact_ChangesetValue_Integer_RESTTest extends TuleapTestCase {
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function itReturnsTheRESTValue() {
         $field = stub('Tracker_FormElement_Field_Integer')->getName()->returns('field_int');
         $user  = aUser()->withId(101)->build();

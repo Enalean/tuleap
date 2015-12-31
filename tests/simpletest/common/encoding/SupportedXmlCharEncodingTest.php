@@ -21,7 +21,7 @@
 
 require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
 
-class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTestPHP53  extends TuleapTestCase {
+class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends TuleapTestCase {
 
     public function itStripsVerticalSpaces() {
         $bad_text = 'blockingment visiblesLe guidage de';
@@ -69,5 +69,32 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTestPHP53  extends
 
          $this->assertEqual($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
      }
+
+    public function itReplacesBadCharacters() {
+        $bad_chars =  array(
+            "\x01" => ' ',
+            "\x02" => ' ',
+            "\x03" => ' ',
+            "\x04" => ' ',
+            "\x05" => ' ',
+            "\x06" => ' ',
+            "\x07" => ' ',
+            "\x08" => ' ',
+            "\x0b" => ' ',
+            "\x0c" => ' ',
+            "\x0e" => ' ',
+            "\x0f" => ' ',
+            "\x11" => ' ',
+            "’"    => '&rsquo;',
+        );
+
+        foreach ($bad_chars as $bad_char => $replace) {
+            $string   = htmlentities($bad_char, ENT_IGNORE, 'UTF-8');
+            $bad_text = html_entity_decode($string, ENT_IGNORE, 'ISO-8859-1');
+            $returned = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($bad_text);
+
+            $this->assertEqual($returned, $replace);
+        }
+    }
 }
 ?>

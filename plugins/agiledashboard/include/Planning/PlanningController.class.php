@@ -102,34 +102,10 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     public function index() {
-        if (! server_is_php_version_equal_or_greater_than_53()) {
-            return $this->showPHP51Home();
-        } else {
-            return $this->showPHP53Home();
-        }
+        return $this->showHome();
     }
 
-    private function showPHP51Home() {
-        try {
-            $plannings = $this->getPlanningsShortAccess($this->group_id);
-        } catch (Planning_InvalidConfigurationException $exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $plannings = array();
-        }
-
-        if (empty($plannings)) {
-            return $this->showEmptyHome();
-        }
-
-        $presenter = new Planning_Presenter_PHP51HomePresenter(
-            $plannings,
-            $this->plugin_theme_path,
-            $this->group_id
-        );
-        return $this->renderToString('home_php51', $presenter);
-    }
-
-    private function showPHP53Home() {
+    private function showHome() {
         $user = $this->request->getCurrentUser();
 
         $plannings = $this->planning_factory->getNonLastLevelPlannings(

@@ -22,10 +22,6 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends TuleapTestCase {
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function setUp() {
         parent::setUp();
         $project        = stub('Project')->getId()->returns(1478);
@@ -63,10 +59,6 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
 }
 
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends TuleapTestCase {
-
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
 
     public function setUp() {
         parent::setUp();
@@ -181,10 +173,6 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends TuleapTestCase {
     /** @var Tracker_Artifact */
     private $artifact;
-
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
 
     public function setUp() {
         parent::setUp();

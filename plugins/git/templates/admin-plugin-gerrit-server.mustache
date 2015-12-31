@@ -76,7 +76,6 @@
                                     />
                                     2.5
                                 </label>
-                                {{# can_use_gerrit_2_8 }}
                                 <label class="radio">
                                     <input type="radio"
                                            name="gerrit_servers[{{ id }}][gerrit_version]"
@@ -86,10 +85,8 @@
                                     />
                                     2.8+
                                 </label>
-                                {{/ can_use_gerrit_2_8 }}
                             </td>
                         </tr>
-                        {{# can_use_gerrit_2_8 }}
                         <tr>
                             <td> <label> HTTP password: </label> </td>
                             <td>
@@ -99,7 +96,6 @@
                                 />
                             </td>
                         </tr>
-                        {{/ can_use_gerrit_2_8 }}
                         {{# id }}
                         <tr>
                             {{# is_used }}

@@ -30,10 +30,6 @@ class OrderValidatorTest extends TuleapTestCase {
     /** @var OrderValidator */
     private $order_validator;
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function setUp() {
         parent::setUp();
 

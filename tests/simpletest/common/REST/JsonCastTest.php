@@ -21,10 +21,6 @@ use Tuleap\REST\JsonCast;
 
 class Rest_JsonCastTest extends TuleapTestCase {
 
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function itDoesNotReturnNullIfValueIsInt() {
         $value = 85;
         $this->assertEqual(JsonCast::toInt($value), 85);

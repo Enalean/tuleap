@@ -28,11 +28,6 @@ class Rest_TokenManagerTest extends TuleapTestCase {
     /** @var  Rest_TokenFactory */
     private $token_factory;
 
-
-    public function skip() {
-        $this->skipIfNotPhp53();
-    }
-
     public function setUp() {
         parent::setUp();
 

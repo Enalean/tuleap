@@ -8,21 +8,17 @@
 //
 //
 
-//various server utilities.
-require_once('server.php');
 
-if (version_compare(phpversion(), '5.1.6', '<')) {
-    die('Tuleap must be run on a PHP 5.1.6 (or greater) engine');
+if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '7', '>=')) {
+    die('Tuleap must be run on a PHP 5.3 (or greater) engine.  PHP 7 is not yet supported.');
 }
 
 
 require_once('common/autoload_libs.php');
 require_once('common/autoload.php');
 
-if (server_is_php_version_equal_or_greater_than_53() == true) {
-    if (!ini_get('date.timezone')) {
-        date_default_timezone_set('Europe/Paris');
-    }
+if (!ini_get('date.timezone')) {
+    date_default_timezone_set('Europe/Paris');
 }
 
 // Defines all of the settings first (hosts, databases, etc.)
@@ -206,11 +202,7 @@ if(!IS_SCRIPT) {
 
 */
 if ($current_user->isLoggedIn()) {
-    if (server_is_php_version_equal_or_greater_than_53() == true) {
-        date_default_timezone_set($current_user->getTimezone());
-    } else {
-        putenv('TZ='.$current_user->getTimezone());
-    }
+    date_default_timezone_set($current_user->getTimezone());
 
     if (! $cookie_manager->isCookie(CookieManager::USER_TOKEN) ) {
         $user_manager->setUserTokenCookie($current_user);

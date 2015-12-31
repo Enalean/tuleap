@@ -42,15 +42,7 @@ class Statistics_DiskUsagePurger {
         $this->disk_usage_dao = $disk_usage_dao;
     }
 
-    private function checkPHPVersion() {
-        if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-            throw new Statistics_PHPVersionException();
-        }
-    }
-
     public function purge($from_date) {
-        $this->checkPHPVersion();
-
         $this->disk_usage_dao->startTransaction();
         echo "Gathering stats to purge..." . PHP_EOL;
 

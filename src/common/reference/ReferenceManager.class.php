@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('server.php');
 /**
  * Reference Manager
  * Performs all operations on references, including DB access (through ReferenceDAO)
@@ -529,10 +528,6 @@ class ReferenceManager {
      * parameter ENT_IGNORE only exists for php > 5.3.0
      */
     private function convertToUTF8($string) {
-        if (! server_is_php_version_equal_or_greater_than_53()) {
-            return $string;;
-        }
-
         $encoding = mb_detect_encoding($string, implode(',', $this->php_supported_encoding_types));
         $string   = htmlentities($string, ENT_IGNORE, $encoding);
 
