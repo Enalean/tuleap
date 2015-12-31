@@ -192,7 +192,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
 
         $parents    = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
         $semantics  = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);
-        $children   = $this->artifact_factory->getChildrenCount($backlog_item_ids);
+
+        if (empty($backlog_item_ids)) {
+            $children = 0;
+        } else {
+            $children = $this->artifact_factory->getChildrenCount($backlog_item_ids);
+        }
 
         $collection = $this->backlog_item_builder->getCollection();
         foreach ($artifacts as $artifact) {
