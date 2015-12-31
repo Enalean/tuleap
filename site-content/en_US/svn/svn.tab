@@ -195,3 +195,14 @@ svn_tokens	allowed_project_revoke_yes	Yes, revoke authorization
 svn_tokens	allowed_project_revoke_no	No
 svn_tokens	allowed_project_revoke_projects	Les projets soumis n'auront plus l'autorisation d'utiliser les jetons de connexion SVN
 svn_tokens	allowed_project_list_revoke_projects	Revoke authorization to selected
+
+svn_intro	title	Subversion Access
+svn_intro	default_username	username
+svn_intro	username_helper	In the command below substitute username with the proper value.
+svn_intro	username_helper_lowercase	Note: Please type your username in lower case.
+svn_intro	command_intro	Below is a typical command you would use to checkout the source code of this project.
+svn_intro	password	Enter your site password when prompted.
+svn_intro	ldap_password	Enter your LDAP password when prompted.
+svn_intro	token	You can also use one of your SVN tokens.
+svn_intro	more_info	More on how to use Subversion
+svn_intro	warning_ldap	<strong>WARNING:</strong> This subversion repository rely on LDAP authentication. You need a <strong>valid LDAP login</strong> to use it.

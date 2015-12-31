@@ -585,6 +585,18 @@ class Event {
     const SVN_REVOKE_TOKENS = 'svn_revoke_tokens';
 
     /**
+     * Event raised to see if additional info must be displayed in SVN homepage
+     *
+     * Paramters:
+     *     'group_id'            => The id of the project
+     *     'user_id'             => The id of the user
+     *     'svn_intro_in_plugin' => boolean
+     *     'svn_intro_info'      => mixed
+     *
+     */
+    const SVN_INTRO = 'svn_intro';
+
+    /**
      * Event raised when a project has a new parent
      *
      * Parameters:
