@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -79,7 +79,8 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
             $changeset->getComment()->exportToXML($comments_node, $this->user_xml_exporter);
         }
 
-        $changeset_values = $changeset->getValues();
+        $changeset_values = array_filter($changeset->getValues());
+
         if ($changeset_values !== null) {
             $this->values_exporter->exportChangedFields(
                 $artifact_xml,
