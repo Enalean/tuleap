@@ -1,3 +1,19 @@
+Version 8.9-3 (Monday, January 4th 2016)
+	== Bug Fix ==
+	* request #8652: SSH keys not properly deployed on gerrit when an error occur
+	* request #8716: After upgrade 8.6-8.9, 'git' sender is now 'codendiadm@tuleap-host' instead of 'git@tuleap-host'
+	* request #8680: Notifications sent to external emails should come from 'noreply'
+	* request #8719: Project export: Tracker's attachment not exported
+	* request #8714: Can't create a new artifact from artifact_link field
+	* request #8717: Improper user groups authorization verification for SVN ressources
+	* request #8548: Email notification for SVN sent with everybody in cc
+	* request #8728: Export project TV5: Catch error if tracker id does not exist
+	* request #8715: SVN authentication with modmysql does not work with a database located on another server than Tuleap
+	* request #8736: Add an explicit message concerning possible information leak
+	* request #8732: LDAP write does not properly create LDAP account from a new Tuleap account
+	* request #8726: Cache directories are reconstructed when Tuleap start
+	* request #8740: TV3 to TV5 files not migrated if submitted time +- 2s
+
 Version 8.9-2 (Friday, December 11th 2015)
 	== Bug Fix ==
 	* request #8692: Value of "PerTracker" field not displayed in html notifications
