@@ -1,3 +1,6 @@
+Version 5.773 - Tuleap 8.10
+    * request #8309: Use placeholder params in create tracker form
+
 Version 5.772 - Tuleap 8.10
     * request #8739: Remove PHP 5.1 support
 
