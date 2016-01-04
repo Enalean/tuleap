@@ -17,6 +17,7 @@
  */
 
 require_once 'Statistics_Formatter.class.php';
+require_once('www/project/export/project_export_utils.php');
 
 /**
  * SCM statistics for SVN or CVS
@@ -38,7 +39,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
      */
     function __construct($scm, $startDate, $endDate, $groupId = null) {
         $this->scm = $scm;
-        parent::__construct($startDate, $endDate, $groupId);
+        parent::__construct($startDate, $endDate, get_csv_separator(), $groupId);
     }
 
     /**
@@ -179,7 +180,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
         $this->addLine($userStats['user']);
         $this->addLine($userStats['commits']);
 
-        return $this->content;
+        return $this->getCsvContent();
     }
 
 }

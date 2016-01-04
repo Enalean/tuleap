@@ -21,6 +21,8 @@ CREATE TABLE plugin_docman_item (
   KEY parent_id (parent_id),
   KEY rank (rank),
   KEY search (group_id, delete_date, obsolescence_date),
+  KEY idx_create_date (create_date),
+  KEY idx_delete_date (delete_date),
   FULLTEXT fltxt_title (title),
   FULLTEXT fltxt_description (description),
   FULLTEXT fltxt (title, description)

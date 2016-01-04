@@ -544,7 +544,8 @@ CREATE TABLE groups (
   KEY idx_groups_status (status),
   KEY idx_groups_access (access),
   KEY idx_groups_unix (unix_group_name),
-  KEY idx_groups_type (type)
+  KEY idx_groups_type (type),
+  KEY idx_groups_register_time (register_time)
 );
 
 CREATE TABLE svn_accessfile_history (
@@ -1429,6 +1430,7 @@ CREATE TABLE svn_commits (
   KEY revision (revision),
   KEY idx_search (group_id, whoid, id),
   KEY idx_repositoryid_date (repositoryid, date),
+  INDEX idx_date (date),
   FULLTEXT (description)
 ) ENGINe=MyISAM;
 

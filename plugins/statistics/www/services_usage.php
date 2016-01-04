@@ -24,6 +24,7 @@ require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.ph
 require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
+require_once('www/project/export/project_export_utils.php');
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -82,7 +83,7 @@ if (!$error && $request->exist('export')) {
     echo "End date : $endDate \n\n";
 
     $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
-    $csv_exporter = new Statistics_Services_UsageFormatter(new Statistics_Formatter($startDate, $endDate));
+    $csv_exporter = new Statistics_Services_UsageFormatter(new Statistics_Formatter($startDate, $endDate, get_csv_separator()));
 
     //Project admin
     $csv_exporter->buildDatas($dao->getIdsOfActiveProjectsBeforeEndDate(), "Project ID");
