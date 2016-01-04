@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -100,9 +100,22 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
     public function itExportsAnonUser() {
         expect($this->user_xml_exporter)->exportUserByMail()->once();
 
-        $changeset = mock('Tracker_Artifact_Changeset');
+        $changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array());
         stub($changeset)->getSubmittedBy()->returns(null);
         stub($changeset)->getEmail()->returns('veloc@dino.com');
+        $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
+    }
+
+    public function itRemovesNullValuesInChangesetValues() {
+        $value = mock('Tracker_Artifact_ChangesetValue');
+
+        expect($this->values_exporter)->exportChangedFields('*', '*', '*', array(101 => $value))->once();
+
+        $changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array(
+            101 => $value,
+            102 => null
+        ));
+
         $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }
 }
