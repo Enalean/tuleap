@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright 2011-2015 (c) Enalean
+// Copyright 2011-2016 (c) Enalean
 // Copyright 1999-2000 (c) The SourceForge Crew
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
@@ -13,9 +13,8 @@ if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '
     die('Tuleap must be run on a PHP 5.3 (or greater) engine.  PHP 7 is not yet supported.');
 }
 
-
-require_once('common/autoload_libs.php');
 require_once('common/autoload.php');
+require_once('common/autoload_libs.php');
 
 if (!ini_get('date.timezone')) {
     date_default_timezone_set('Europe/Paris');

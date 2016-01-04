@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,46 +45,28 @@ function autoload_zend($className) {
 }
 spl_autoload_register('autoload_zend');
 
+function get_markdown_path() {
+    $potential_paths = array(
+        '/usr/share/php-markdown',
+        '/usr/share/php', // php55 from remi repo has a different php path
+    );
 
-function autoload_markdown($class) {
-    static $classes = null;
-    if ($classes === null) {
-        $classes = array(
-            'michelf\\markdown'          => 'Markdown.php',
-            'michelf\\markdownextra'     => 'MarkdownExtra.php',
-            'michelf\\markdowninterface' => 'MarkdownInterface.php',
-        );
-    }
-    $cn = strtolower($class);
-    if (isset($classes[$cn])) {
-        $potential_paths = array(
-            ForgeConfig::get('markdown_path'),
-            '/usr/share/php-markdown',
-            '/usr/share/php', // php55 from remi repo has a different php path
-        );
-        foreach ($potential_paths as $path) {
-            if (is_dir($path)) {
-                require $path . '/Michelf/' . $classes[$cn];
-                break;
-            }
+    foreach($potential_paths as $path) {
+        $path .= '/Michelf/';
+        if (is_dir($path)) {
+            return $path;
         }
     }
 }
-spl_autoload_register('autoload_markdown');
 
-function autoload_jwt($class) {
-    static $classes = null;
-    if ($classes === null) {
-        $classes = array(
-            'firebase\\jwt\\jwt'                       => 'JWT.php',
-            'firebase\\jwt\\beforevalidexception'      => 'BeforeValidException.php',
-            'firebase\\jwt\\signatureinvalidexception' => 'SignatureInvalidException.php',
-            'firebase\\jwt\\expiredexception'          => 'ExpiredException.php'
-        );
-    }
-    $cn = strtolower($class);
-    if (isset($classes[$cn])) {
-        require '/usr/share/php-jwt/' . $classes[$cn];
-    }
-}
-spl_autoload_register('autoload_jwt');
+require_once('/usr/share/php/Zend/Loader/StandardAutoloader.php');
+$loader = new Zend\Loader\StandardAutoloader(
+    array(
+        'autoregister_zf' => true,
+        'namespaces' => array(
+            'Firebase\JWT' => '/usr/share/php-jwt/',
+            'Michelf'      => get_markdown_path()
+        )
+    )
+);
+$loader->register();
