@@ -119,16 +119,20 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      * @return Tracker_Artifact_ChangesetValue[] or empty array if not found
      */
     public function getValues() {
-        if (!$this->values) {
-            $this->values = array();
-            $factory = $this->getFormElementFactory();
-            foreach ($this->getValueDao()->searchById($this->id) as $row) {
-                if ($field = $factory->getFieldById($row['field_id'])) {
-                    $this->values[$field->getId()] = $field->getChangesetValue($this, $row['id'], $row['has_changed']);
-                }
-            }
+        if (! $this->values) {
+            $this->forceFetchAllValues();
         }
         return $this->values;
+    }
+
+    public function forceFetchAllValues() {
+        $this->values = array();
+        $factory = $this->getFormElementFactory();
+        foreach ($this->getValueDao()->searchById($this->id) as $row) {
+            if ($field = $factory->getFieldById($row['field_id'])) {
+                $this->values[$field->getId()] = $field->getChangesetValue($this, $row['id'], $row['has_changed']);
+            }
+        }
     }
 
     /**
@@ -685,13 +689,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function notify() {
         $tracker = $this->getTracker();
         if ( ! $tracker->isNotificationStopped()) {
-            $factory = $this->getFormElementFactory();
+            $logger = $this->getLogger();
+            $logger->debug('Start notification');
+
+            $this->getArtifact()->forceFetchAllChangesets();
 
             // 0. Is update
             $is_update = ! $this->getArtifact()->isFirstChangeset($this);
 
             // 1. Get the recipients list
             $recipients = $this->getRecipients($is_update);
+            $logger->debug('Recipients '.implode(', ', array_keys($recipients)));
 
             // 2. Compute the body of the message + headers
             $messages = array();
@@ -705,6 +713,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
             // 3. Send the notification
             foreach ($messages as $message) {
+                $logger->debug('Notify '.implode(', ', $message['recipients']));
                 $this->sendNotification(
                     $message['recipients'],
                     $message['headers'],
@@ -715,7 +724,18 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                     $message['message-id']
                 );
             }
+            $logger->debug('End notification');
         }
+    }
+
+    protected function getLogger() {
+        return new WrapperLogger(
+            new TruncateLevelLogger(
+                new BackendLogger(),
+                ForgeConfig::get('sys_logger_level')
+            ),
+            'art #'.$this->getArtifact()->getId().' - cs #'.$this->getId()
+        );
     }
 
     public function buildOneMessageForMultipleRecipients(array $recipients, $is_update) {
@@ -1060,6 +1080,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         // 1 Get from the fields
         $recipients = array();
+        $this->forceFetchAllValues();
         foreach ($this->getValues() as $field_id => $current_changeset_value) {
             if ($field = $factory->getFieldById($field_id)) {
                 if ($field->isNotificationsSupported() && $field->hasNotifications() && ($r = $field->getRecipients($current_changeset_value))) {

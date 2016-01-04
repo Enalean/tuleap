@@ -262,7 +262,22 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
 
         $config = mock('TrackerPluginConfig');
 
-        $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
+        $current_changeset = partial_mock(
+            'Tracker_Artifact_Changeset',
+            array(
+                'getId',
+                'getValueDao',
+                'getFormElementFactory',
+                'getArtifact',
+                'sendNotification',
+                'getUserManager',
+                'getTracker',
+                'getComment',
+                'getTrackerPluginConfig',
+                'isNotificationAssignedToEnabled',
+                'getLogger',
+            )
+        );
         $current_changeset->setReturnValue('getId', 66);
         $current_changeset->setReturnValue('isNotificationAssignedToEnabled', false);
         $current_changeset->setReturnReference('getValueDao', $dao);
@@ -272,6 +287,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $current_changeset->setReturnReference('getTracker', $tracker);
         $current_changeset->setReturnReference('getComment', $comment);
         $current_changeset->setReturnReference('getTrackerPluginConfig', $config);
+        $current_changeset->setReturnReference('getLogger', mock('Logger'));
 
         $expected_body = <<<BODY
 story #666
