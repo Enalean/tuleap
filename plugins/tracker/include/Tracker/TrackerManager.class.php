@@ -415,7 +415,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
         echo '</select>';
 
-        echo '<br/>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_desc').'<br /><input type="text" name="tracker_new_prjname" id="tracker_new_prjname" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_hint').'" />';
+        echo '<br/>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_desc').'<br /><input type="text" name="tracker_new_prjname" id="tracker_new_prjname" placeholder="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_hint').'" />';
 
         echo '</td>';
 
