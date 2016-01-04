@@ -1554,7 +1554,7 @@ class GitPlugin extends Plugin {
      * @param PFUser user
      */
     public function ldap_daily_synchro_update_user(PFUser $user) {
-        if ($user->getStatus() == PFUser::STATUS_SUSPENDED) { 
+        if ($user->getStatus() == PFUser::STATUS_SUSPENDED) {
             $factory = $this->getGerritServerFactory();
             $gerrit_servers = $factory->getServers();
             $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory ($this->getLogger());
@@ -1586,7 +1586,8 @@ class GitPlugin extends Plugin {
             $this->getRepositoryFactory(),
             $this->getBackendGitolite(),
             $this->getGitSystemEventManager(),
-            PermissionsManager::instance()
+            PermissionsManager::instance(),
+            $this->getUGroupManager()
         );
 
         $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
