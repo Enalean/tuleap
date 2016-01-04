@@ -39,6 +39,13 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             $user_xml_exporter,
             mock('ProjectXMLExporterLogger')
         );
+
+        $this->options = array(
+            'tracker_id' => 10
+        );
+
+        $this->archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
+        $this->user    = mock('PFUser');
     }
 
     public function tearDown() {
@@ -69,19 +76,14 @@ class ProjectXMLExporterTest extends TuleapTestCase {
             $project_ugroup_members3,
         ));
 
+        stub($this->project)->getServices()->returns(array());
+
         expect($this->event_manager)->processEvent(
             Event::EXPORT_XML_PROJECT,
             '*'
         )->once();
 
-        $options = array(
-            'tracker_id' => 10
-        );
-
-        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
-
-        $user      = mock('PFUser');
-        $xml       = $this->xml_exporter->export($this->project, $options, $user, $archive);
+        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive);
         $xml_objet = simplexml_load_string($xml);
 
         $this->assertNotNull($xml_objet->ugroups);
@@ -109,5 +111,39 @@ class ProjectXMLExporterTest extends TuleapTestCase {
         $this->assertEqual((string)$xml_objet->ugroups->ugroup[2]['description'], 'descr03');
         $this->assertNotNull($xml_objet->ugroups->ugroup[2]->members);
         $this->assertNull($xml_objet->ugroups->ugroup[2]->members->member[0]);
+    }
+
+    public function itExportsProjectInfo() {
+        $data_01 = array(
+            'is_used'    => true,
+            'short_name' => 's01'
+        );
+
+        $data_02 = array(
+            'is_used'    => false,
+            'short_name' => 's02'
+        );
+
+        $service_01 = new Service($this->project, $data_01);
+        $service_02 = new Service($this->project, $data_02);
+
+        stub($this->project)->getUnixName()->returns('myproject');
+        stub($this->project)->getDescription()->returns('my short desc');
+        stub($this->project)->getServices()->returns(array($service_01, $service_02));
+        stub($this->project)->isPublic()->returns(true);
+
+        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive);
+        $xml_objet = simplexml_load_string($xml);
+
+        $this->assertEqual((string)$xml_objet['unix-name'], 'myproject');
+        $this->assertEqual((string)$xml_objet['full-name'], 'Project01');
+        $this->assertEqual((string)$xml_objet['description'], 'my short desc');
+        $this->assertEqual((string)$xml_objet['access'], 'public');
+
+        $this->assertNotNull($xml_objet->services);
+        $this->assertEqual((string)$xml_objet->services->service[0]['enabled'], '1');
+        $this->assertEqual((string)$xml_objet->services->service[0]['shortname'], 's01');
+        $this->assertEqual((string)$xml_objet->services->service[1]['enabled'], '');
+        $this->assertEqual((string)$xml_objet->services->service[1]['shortname'], 's02');
     }
 }
