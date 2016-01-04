@@ -1,3 +1,6 @@
+Version 5.775 - Tuleap 8.10
+    * request #8746 Project XML export fails if changeset value cannot be retrieved
+
 Version 5.774 - Tuleap 8.10
     * request #8742 Email notifications doesn't contain fields change
 
