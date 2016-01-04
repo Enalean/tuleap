@@ -36,6 +36,7 @@ Version 8.10 (Not released yet)
 		* Remove some technical debt
 		* SVN service homepage display a specific message if svn tokens are allowed
 	* request #8739: Remove PHP 5.1 support
+        * Bump copyright date
 
 	== Plugins ==
 	* docman: 2.26.91
