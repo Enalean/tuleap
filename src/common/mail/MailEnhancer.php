@@ -96,7 +96,7 @@ class MailEnhancer {
         }
 
         if ($this->getMessageId()) {
-            $mail->getMail()->setMessageId($this->getMessageId());
+            $mail->setMessageId($this->getMessageId());
         }
     }
 }

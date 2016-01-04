@@ -184,11 +184,6 @@ include_menu	add_project	Nouveau projet
 include_menu	join_community	Rejoindre la communauté Tuleap
 #
 #-----------------------------------------------
-# Script: SF/www/include/pre.php
-#
-include_pre	zend_path_not_set	Le chemin de la librairie zend n'est pas défini.Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
-#
-#-----------------------------------------------
 # Script: SF/www/include/project.php
 #
 include_project	services_not_found	Services introuvable pour ce groupe

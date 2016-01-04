@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,20 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once('common/user/User.class.php');
-Mock::generate('PFUser');
-require_once('common/mail/Codendi_Mail.class.php');
-Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array('getMail'));
-Mock::generate('Tuleap_Template_Mail');
-class FakeZend_Mail {
-    function setBodyHtml() { }
-}
-
 class Codendi_MailTest extends TuleapTestCase {
 
-    function testCleanupMailFormat() {
-        $mail = new Codendi_MailTestVersion();
+    public function testCleanupMailFormat()
+    {
+        $mail = new Codendi_Mail();
         $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
         $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('Tuleap <john.doe@example.com>'));
         $this->assertEqual(array('"Tuleap" john.doe@example.com', ''), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com'));
@@ -40,55 +31,33 @@ class Codendi_MailTest extends TuleapTestCase {
         $this->assertEqual(array('"Tuleap" john.doe@example.com>', ''), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com>'));
     }
     
-    function testTemplateLookAndFeel() {
+    public function testTemplateLookAndFeel()
+    {
         $body = 'body';
-        
-        $tpl = new MockTuleap_Template_Mail();
+
+        $tpl = mock('Tuleap_Template_Mail');
         $tpl->expectOnce('set', array('body', $body));
         $tpl->expectOnce('fetch');
         
-        $zm = new FakeZend_Mail();
-        
-        $mail = new Codendi_MailTestVersion();
+
+        $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate($tpl);
-        $mail->setReturnValue('getMail', $zm);
-        
+
         $mail->setBodyHtml($body);
     }
     
-    function testDiscardTemplateLookAndFeel() {
+    public function testDiscardTemplateLookAndFeel()
+    {
         $body = 'body';
         
-        $tpl = new MockTuleap_Template_Mail();
+        $tpl = mock('Tuleap_Template_Mail');
         $tpl->expectNever('set', array('body', $body));
         $tpl->expectNever('fetch');
         
-        $zm = new FakeZend_Mail();
-        
-        $mail = new Codendi_MailTestVersion();
+
+        $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate($tpl);
-        $mail->setReturnValue('getMail', $zm);
-        
-        $mail->setBodyHtml($body, Codendi_MailTestVersion::DISCARD_COMMON_LOOK_AND_FEEL);
-    }
 
-    public function itAddsAttachments() {
-        $mail = new Codendi_Mail();
-        $mail->addInlineAttachment('dataInline', 'text/plain', 'attachmentInline');
-        $mail->addAttachment('data', 'text/plain', 'attachment');
-
-        $this->assertEqual($mail->getMail()->getPartCount(), 2);
-    }
-
-    public function itDoesNotSetEmptyAddress() {
-        $mail = new Codendi_Mail();
-
-
-    }
-    public function itHasAppropriateTypeForAttachment() {
-        $mail = new Codendi_Mail();
-        $mail->addInlineAttachment('data', 'text/plain', 'attachment');
-
-        $this->assertEqual($mail->getMail()->getType(), 'multipart/related');
+        $mail->setBodyHtml($body, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
     }
 }
