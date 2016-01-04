@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,8 +67,12 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
         }
 
         $this->redirectToCorrectPane();
+        $template = 'show-top';
+        if (ForgeConfig::get('sys_showdeprecatedplanningv1')) {
+            $template = 'show-top-deprecated';
+        }
         return $this->renderToString(
-            'show-top',
+            $template,
             $this->getTopMilestonePresenter()
         );
     }
