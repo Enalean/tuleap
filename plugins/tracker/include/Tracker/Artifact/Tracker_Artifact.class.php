@@ -1216,9 +1216,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getChangesets() {
         if ($this->changesets === null) {
-            $this->changesets = $this->getChangesetFactory()->getChangesetsForArtifact($this);
+            $this->forceFetchAllChangesets();
         }
         return $this->changesets;
+    }
+
+    public function forceFetchAllChangesets() {
+        $this->changesets = $this->getChangesetFactory()->getChangesetsForArtifact($this);
     }
 
     /**
