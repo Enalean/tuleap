@@ -1,3 +1,6 @@
+Version 5.774 - Tuleap 8.10
+    * request #8742 Email notifications doesn't contain fields change
+
 Version 5.773 - Tuleap 8.10
     * request #8309: Use placeholder params in create tracker form
 
