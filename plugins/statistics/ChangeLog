@@ -1,3 +1,6 @@
+Version 0.56 - Tuleap 8.10
+    * request #8696: Optimize transformation of statistics export to CSV
+
 Version 0.55 - Tuleap 8.10
     * request #8739: Remove PHP 5.1 support
 

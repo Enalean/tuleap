@@ -1,3 +1,6 @@
+Version 4.105 - Tuleap 8.10
+    * request #8696: Optimize transformation of statistics export to CSV
+
 Version 4.104 - Tuleap 8.10
     * story #8569: Git repositories, permissions import
 

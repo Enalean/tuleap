@@ -41,13 +41,13 @@ Version 8.10 (Not released yet)
         * request #8735 Project exported in XML via export_project_xml is no more compatible with project.rng
 
 	== Plugins ==
-	* docman: 2.26.91
+	* docman: 2.26.92
 	* tracker: 5.774
-	* git: 4.104
+	* git: 4.105
 	* hudson: 1.23
 	* agiledashboard: 1.336
 	* cardwall: 1.53
-	* statistics: 0.55
+	* statistics: 0.56
 	* ldap: 3.93
 	* pluginsadministration: 1.15
 	* svn: 0.2
