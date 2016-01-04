@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -122,6 +122,9 @@ class Planning_MilestonePaneFactory {
 
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
 
+        if (ForgeConfig::get('sys_showdeprecatedplanningv1')) {
+            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
+        }
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningV2PaneInfo($milestone);
 
         $this->buildAdditionnalPanes($milestone);
