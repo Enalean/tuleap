@@ -1,3 +1,7 @@
+Versuib 8.9-4 (Tuesday, January 5th 2016)
+        == Bug fix ==
+        * Revert request #8726: Cache directories are reconstructed when Tuleap start
+
 Version 8.9-3 (Monday, January 4th 2016)
 	== Bug Fix ==
 	* request #8652: SSH keys not properly deployed on gerrit when an error occur
