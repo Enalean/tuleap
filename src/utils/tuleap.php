@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tuleap_short_options = 'hvcr';
-$tuleap_long_options  = array('help', 'version', 'clear-caches', 'restore-caches');
+$tuleap_short_options = 'hvc';
+$tuleap_long_options  = array('help', 'version', 'clear-caches');
 
 $command = '';
 
@@ -46,11 +46,6 @@ foreach ($options as $option => $value) {
         case 'clear-caches':
             $command = 'clear-caches';
             break;
-
-        case 'r':
-        case 'restore-caches':
-            $command = 'restore-caches';
-            break;
     }
 }
 
@@ -65,12 +60,6 @@ switch ($command) {
     case 'clear-caches':
         $site_cache = new SiteCache(new Log_ConsoleLogger());
         $site_cache->invalidatePluginBasedCaches();
-        break;
-
-    case 'restore-caches':
-        $site_cache = new SiteCache(new Log_ConsoleLogger());
-        $site_cache->restoreCacheDirectories();
-        $site_cache->restoreOwnership();
         break;
 
     case 'version':
@@ -89,10 +78,9 @@ Tuleap administration command line
 
 Options:
 
-    -h, --help              Print usage
-    -v, --version           Tuleap version
+    -h, --help          Print usage
+    -v, --version       Tuleap version
     -c, --clear-caches      Clear caches
-    -r, --restore-caches    Recreate cache directories if needed
 
 EOT;
 }

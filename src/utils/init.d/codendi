@@ -5,7 +5,6 @@
 # This file is a copy/modify/paste of mailman equivalent. Thanks to
 # them!
 #
-# Copyright (c) Enalean, 2015. All Rights Reserved.
 # Copyright (C) 2001-2003 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
@@ -71,10 +70,8 @@ start()
         RETVAL=$?
         return $RETVAL
     fi
-    echo "Restore application cache directories:"
-    /usr/bin/tuleap -r
     echo "Invalidate application caches:"
-    /usr/bin/tuleap -c
+    /usr/bin/tuleap --clear-caches
     echo -n "Starting $prog: "
     InstallCron
     echo "[OK]"
