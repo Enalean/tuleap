@@ -1,23 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- * 
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -29,7 +28,8 @@ class Backend {
     const LOG_INFO    = "info";
     const LOG_WARNING = "warn";
     const LOG_ERROR   = "error";
-    
+    const LOG_DEBUG   = "debug";
+
     const SVN         = 'SVN';
     const CVS         = 'CVS';
     const MAILINGLIST = 'MailingList';
@@ -337,120 +337,94 @@ class Backend {
     }
 
 
-    /** 
     /**
      * Recursive chown/chgrp function.
-     * From comment at http://us2.php.net/manual/en/function.chown.php#40159
-     * 
+     *
      * @param string $mypath Path to the file (or directory)
      * @param mixed  $uid    A user name or number.
      * @param mixed  $gid    A group name or number.
-     *
-     * @return void
      */
     public function recurseChownChgrp($mypath, $uid, $gid) {
         $this->chown($mypath, $uid);
         $this->chgrp($mypath, $gid);
-        $d = opendir($mypath);
-        while (($file = readdir($d)) !== false) {
-            if ($file != "." && $file != "..") {
-                
-                $typepath = $mypath . "/" . $file ;
-
-                //print $typepath. " : " . filetype ($typepath). "\n" ;
-                if (filetype($typepath) == 'dir') {
-                    $this->recurseChownChgrp($typepath, $uid, $gid);
-                } else {
-                    $this->chown($typepath, $uid);
-                    $this->chgrp($typepath, $gid);
-                }
+        try {
+            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            foreach ($iterator as $filename => $file_information) {
+                $this->chown($file_information->getPathname(), $uid);
+                $this->chgrp($file_information->getPathname(), $gid);
             }
+        }  catch (Exception $ex) {
+            $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
-        closedir($d);
     }
 
-    /** 
     /**
      * Recursive chgrp (only) function.
-     * 
+     *
      * @param string $mypath Path to the file (or directory)
      * @param mixed  $gid    A group name (or number??).
-     *
-     * @return void
      */
     public function recurseChgrp($mypath, $gid) {
         $this->chgrp($mypath, $gid);
-        $d = opendir($mypath);
-        while (($file = readdir($d)) !== false) {
-            if ($file != "." && $file != "..") {
-                
-                $typepath = $mypath . "/" . $file ;
-
-                //print $typepath. " : " . filetype ($typepath). "\n" ;
-                if (filetype($typepath) == 'dir') {
-                    $this->recurseChgrp($typepath, $gid);
-                } else {
-                    $this->chgrp($typepath, $gid);
-                }
+        try {
+            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            foreach ($iterator as $filename => $file_information) {
+                $this->chgrp($file_information->getPathname(), $gid);
             }
+        }  catch (Exception $ex) {
+            $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
-        closedir($d);
     }
 
-    /**
     /**
      * Recursive chmod (only) function.
      *
      * @param string $mypath Path to the file (or directory)
-     * @param mixed  $uid    A user name (or number??).
-     *
-     * @return void
+     * @param mixed  $mode    A user name (or number??).
      */
     public function recurseChmod($mypath, $mode) {
         $this->chmod($mypath, $mode);
-        $d = opendir($mypath);
-        while (($file = readdir($d)) !== false) {
-            if ($file != "." && $file != "..") {
-                $typepath = $mypath . "/" . $file ;
-                if (filetype($typepath) == 'dir') {
-                    $this->recurseChmod($typepath, $mode);
-                } else {
-                    $this->chmod($typepath, $mode);
-                }
+        try {
+            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            foreach ($iterator as $filename => $file_information) {
+                $this->chmod($file_information->getPathname(), $mode);
             }
+        }  catch (Exception $ex) {
+            $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
-        closedir($d);
     }
 
     /**
-     * Recursive chmod function.
-     * see: http://us2.php.net/manual/en/function.rmdir.php#87385
      * Note: the function will empty everything in the given directory but won't remove the directory itself
-     * 
-     * @param string $mypath Path to the directory
      *
-     * @return void
+     * @param string $mypath Path to the directory
      */
     public function recurseDeleteInDir($mypath) {
-        $mypath = rtrim($mypath, '/');
-        $d      = opendir($mypath);
-        if (! $d) {
-            return;
-        }
-        while (($file = readdir($d)) !== false) {
-            if ($file != "." && $file != "..") {
-                
-                $typepath = $mypath . "/" . $file ;
-
-                if ( is_dir($typepath) ) {
-                    $this->recurseDeleteInDir($typepath);
-                    rmdir($typepath);
+        try {
+            $iterator = $this->getRecurseDirectoryIterator($mypath);
+            foreach ($iterator as $filename => $file_information) {
+                if ($file_information->isDir()) {
+                    rmdir($file_information->getPathname());
                 } else {
-                    unlink($typepath);
+                    unlink($file_information->getPathname());
                 }
             }
+        }  catch (Exception $ex) {
+            $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
-        closedir($d);
+    }
+
+    /**
+     * @return RecursiveIteratorIterator
+     */
+    private function getRecurseDirectoryIterator($path) {
+        return new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $path,
+                \FilesystemIterator::SKIP_DOTS
+            ),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
     }
 
     /**
