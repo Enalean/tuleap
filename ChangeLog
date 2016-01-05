@@ -23,7 +23,6 @@ Version 8.10 (Not released yet)
 	* request #8717: Improper user groups authorization verification for SVN ressources
 	* request #8711: Bad Error message with IE, when compatibility view is activated
 	* request #8715: SVN authentication with modmysql does not work with a database located on another server than Tuleap
-        * request #8726 Tuleap does not restart properly when cache directories are missing
 
 	== Enhancement ==
 	* story #8572: Add project creation using XML
