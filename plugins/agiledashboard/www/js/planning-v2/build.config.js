@@ -78,7 +78,6 @@ module.exports = {
             'vendor/moment/locale/en-gb.js',
             'vendor/moment/locale/fr.js',
             'vendor/angular-moment/angular-moment.min.js',
-            'vendor/angular-ui-tree/dist/angular-ui-tree.min.js',
             'vendor/tuleap-artifact-modal/dist/tuleap-artifact-modal.min.js',
             'vendor/angular-sanitize/angular-sanitize.min.js',
             'vendor/angular-animate/angular-animate.min.js',
@@ -88,14 +87,15 @@ module.exports = {
             'vendor/angular-filter/dist/angular-filter.min.js',
             'vendor/angular-ui-select/dist/select.js',
             'vendor/ng-scrollbar/dist/ng-scrollbar.js',
-            'vendor/artifact-modal/dist/tuleap-artifact-modal.js'
+            'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
+            'vendor/dragular/dist/dragular.min.js'
         ],
         css: [
-            'vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
             'vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
             'vendor/angular-ui-select/dist/select.css',
             'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
-            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css'
+            'vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css',
+            'vendor/dragular/dist/dragular.min.css'
         ],
         assets: [
             'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',

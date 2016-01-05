@@ -1,5 +1,5 @@
 @import (inline) "../assets/animate.min.css";
-@import (inline) "vendor/angular-ui-tree/dist/angular-ui-tree.min.css";
+@import (inline) "vendor/dragular/dist/dragular.min.css";
 @import (inline) "vendor/artifact-modal/dist/assets/tuleap-artifact-modal.css";
 @import (inline) "vendor/angular-bootstrap-datetimepicker/src/css/datetimepicker.css";
 @import (inline) "vendor/angular-ui-select/dist/select.css";
@@ -7,6 +7,7 @@
 @import "../../../../../src/www/themes/common/css/utils/colors.less";
 
 @import "../app/backlog-item/backlog-item.less";
+@import "../app/backlog/backlog.less";
 @import "../app/milestone/milestone.less";
 
 #planning-app {
@@ -14,10 +15,6 @@
         background: url('loader.gif') no-repeat center center;
         min-height: 26px;
         margin: 20px 0 10px;
-    }
-
-    .loading_content .angular-ui-tree-empty {
-        display: none;
     }
 
     .fully-loaded {

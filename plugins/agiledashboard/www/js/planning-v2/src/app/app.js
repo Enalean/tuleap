@@ -1,6 +1,5 @@
 angular.module('planning', [
     'ui.router',
-    'ui.tree',
     'templates-app',
     'shared-properties',
     'gettext',

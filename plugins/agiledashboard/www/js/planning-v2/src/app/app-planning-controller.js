@@ -58,10 +58,6 @@
             hide_closed_view_key : 'hide-closed-view',
             loading_modal        : TuleapArtifactModalLoading.loading,
             use_angular_new_modal: true,
-            treeOptions: {
-                accept : isItemDroppable,
-                dropped: dropped
-            },
             canShowBacklogItem                    : canShowBacklogItem,
             displayBacklogItems                   : displayBacklogItems,
             displayClosedMilestones               : displayClosedMilestones,
@@ -89,7 +85,6 @@
             thereAreClosedMilestonesLoaded        : thereAreClosedMilestonesLoaded,
             thereAreOpenMilestonesLoaded          : thereAreOpenMilestonesLoaded,
             getRestError                          : RestErrorService.getError,
-            refreshBacklogItem                    : BacklogItemCollectionService.refreshBacklogItem,
             BACKLOG_ITEMS_PAGINATION        : { limit: 50, offset: 0 },
             OPEN_MILESTONES_PAGINATION      : { limit: 50, offset: 0 },
             CLOSED_MILESTONES_PAGINATION    : { limit: 50, offset: 0 },
@@ -572,33 +567,6 @@
             return true;
         }
 
-        function isItemDroppable(sourceNodeScope, destNodesScope) {
-            if (typeof destNodesScope.$element.attr === 'undefined' || destNodesScope.$element.attr('data-nodrag') === 'true') {
-                return;
-            }
-
-            var accepted     = destNodesScope.$element.attr('data-accept').split('|');
-            var type         = sourceNodeScope.$element.attr('data-type');
-            var is_droppable = false;
-
-            for (var i = 0; i < accepted.length; i++) {
-                if (accepted[i] === type) {
-                    is_droppable = true;
-                    continue;
-                }
-            }
-
-            return is_droppable;
-        }
-
-        function hideUserCantPrioritizeForBacklog() {
-            return self.backlog.user_can_move_cards || self.backlog_items.content.length === 0;
-        }
-
-        function displayUserCantPrioritizeForBacklog() {
-            return ! hideUserCantPrioritizeForBacklog();
-        }
-
         function hideUserCantPrioritizeForMilestones() {
             if (self.milestones.content.length === 0) {
                 return true;
@@ -613,135 +581,6 @@
 
         function getInitialEffortMessage(initial_effort) {
             return gettextCatalog.getPlural(initial_effort, "pt", "pts");
-        }
-
-        function dropped(event) {
-            var source_list_element = event.source.nodesScope.$element,
-                dest_list_element   = event.dest.nodesScope.$element,
-                dropped_item_id     = event.source.nodeScope.$modelValue.id,
-                compared_to         = DroppedService.defineComparedTo(event.dest.nodesScope.$modelValue, event.dest.index);
-
-            saveChange();
-            updateSubmilestonesInitialEffort();
-            collapseSourceParentIfNeeded();
-            removeFromDestinationIfNeeded();
-
-            function saveChange() {
-                switch (true) {
-                    case movedInTheSameList():
-                        if (source_list_element.hasClass('backlog')) {
-                            DroppedService
-                                .reorderBacklog(dropped_item_id, compared_to, self.backlog);
-
-                        } else if (source_list_element.hasClass('submilestone')) {
-                            DroppedService
-                                .reorderSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10));
-
-                        } else if (source_list_element.hasClass('backlog-item-children')) {
-                            DroppedService
-                                .reorderBacklogItemChildren(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-backlog-item-id'), 10));
-                        }
-                        break;
-
-                    case movedFromBacklogToSubmilestone():
-                        DroppedService
-                            .moveFromBacklogToSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10))
-                            .then(function() {
-                                _.remove(self.backlog_items.content, function(item) {
-                                    return item.id === dropped_item_id;
-                                });
-                            });
-                        break;
-
-                    case movedFromChildrenToChildren():
-                        var backlog_item_id_source = parseInt(source_list_element.attr('data-backlog-item-id'), 10),
-                            backlog_item_id_dest   = parseInt(dest_list_element.attr('data-backlog-item-id'), 10);
-
-                        self.items[backlog_item_id_source].updating = true;
-                        self.items[backlog_item_id_dest].updating   = true;
-
-                        DroppedService
-                            .moveFromChildrenToChildren(
-                                dropped_item_id,
-                                compared_to,
-                                backlog_item_id_source,
-                                backlog_item_id_dest
-                            )
-                            .then(function() {
-                                self.refreshBacklogItem(backlog_item_id_source);
-                                self.refreshBacklogItem(backlog_item_id_dest);
-                            });
-                        break;
-
-                    case movedFromSubmilestoneToBacklog():
-                        DroppedService
-                            .moveFromSubmilestoneToBacklog(
-                                dropped_item_id,
-                                compared_to,
-                                parseInt(source_list_element.attr('data-submilestone-id'), 10),
-                                self.backlog
-                            );
-                        break;
-
-                    case movedFromOneSubmilestoneToAnother():
-                        DroppedService
-                            .moveFromSubmilestoneToSubmilestone(
-                                dropped_item_id,
-                                compared_to,
-                                parseInt(source_list_element.attr('data-submilestone-id'), 10),
-                                parseInt(dest_list_element.attr('data-submilestone-id'), 10)
-                            );
-                        break;
-                }
-
-                function movedInTheSameList() {
-                    return event.source.nodesScope.$id === event.dest.nodesScope.$id;
-                }
-
-                function movedFromBacklogToSubmilestone() {
-                    return source_list_element.hasClass('backlog') && dest_list_element.hasClass('submilestone');
-                }
-
-                function movedFromChildrenToChildren() {
-                    return source_list_element.hasClass('backlog-item-children') && dest_list_element.hasClass('backlog-item-children');
-                }
-
-                function movedFromSubmilestoneToBacklog() {
-                    return source_list_element.hasClass('submilestone') && dest_list_element.hasClass('backlog');
-                }
-
-                function movedFromOneSubmilestoneToAnother() {
-                    return source_list_element.hasClass('submilestone') && dest_list_element.hasClass('submilestone');
-                }
-            }
-
-            function updateSubmilestonesInitialEffort() {
-                if (source_list_element.hasClass('submilestone')) {
-                    MilestoneService.updateInitialEffort(_.find(self.milestones.content, function(milestone) {
-                        return milestone.id == source_list_element.attr('data-submilestone-id');
-                    }));
-                }
-
-                if (dest_list_element.hasClass('submilestone')) {
-                    MilestoneService.updateInitialEffort(_.find(self.milestones.content, function(milestone) {
-                        return milestone.id == dest_list_element.attr('data-submilestone-id');
-                    }));
-                }
-            }
-
-            function collapseSourceParentIfNeeded() {
-                if (event.sourceParent && ! event.sourceParent.hasChild()) {
-                    event.sourceParent.collapse();
-                }
-            }
-
-            function removeFromDestinationIfNeeded() {
-                if (event.dest.nodesScope.collapsed &&
-                    event.dest.nodesScope.$nodeScope.$modelValue.has_children &&
-                    ! event.dest.nodesScope.$nodeScope.$modelValue.children.loaded) {
-                    event.dest.nodesScope.childNodes()[0].remove();
-                }
-            }
         }
     }
 })();

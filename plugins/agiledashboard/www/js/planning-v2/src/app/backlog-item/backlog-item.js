@@ -1,4 +1,5 @@
 angular.module('backlog-item', [
     'restangular',
-    'tuleap.artifact-modal',
+    'dragularModule',
+    'tuleap.artifact-modal'
 ]);

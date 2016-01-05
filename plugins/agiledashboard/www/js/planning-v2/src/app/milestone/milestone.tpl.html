@@ -62,30 +62,28 @@
         <div style="clear: both"></div>
     </div>
 
-    <div ui-tree="planning.treeOptions">
-        <ul ui-tree-nodes
-            ng-model="milestone.content"
-            class="backlog-items submilestone {{ planning.current_view_class }}"
-            data-accept="{{ milestone.content_accepted_types.toString() }}"
-            data-submilestone-id="{{ milestone.id }}"
+    <ul dragular="milestoneController.dragularOptions(milestone.content)"
+        class="backlog-items submilestone"
+        ng-class="{ 'empty-milestone': milestoneController.isMilestoneLoadedAndEmpty(milestone) }"
+        data-accept="{{ milestone.content_accepted_types.toString() }}"
+        data-submilestone-id="{{ milestone.id }}"
+        data-nodrop="{{ ! milestone.has_user_priority_change_permission }}"
+    >
+        <li ng-repeat="backlog_item in milestone.content"
+            class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }} {{ planning.current_view_class }}"
+            data-accept="{{ backlog_item.accepted_types.toString() }}"
+            data-type="{{ backlog_item.trackerId }}"
+            ng-show="planning.canShowBacklogItem(backlog_item)"
+            ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
+            collapsed="true"
             data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
+            data-item-id="{{ backlog_item.id }}"
         >
-            <li ui-tree-node
-                ng-repeat="backlog_item in milestone.content"
-                class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                data-accept="{{ backlog_item.accepted_types.toString() }}"
-                data-type="{{ backlog_item.trackerId }}"
-                ng-if="planning.canShowBacklogItem(backlog_item)"
-                ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
-                collapsed="true"
-                data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
-            >
-                <backlog-item
-                    ng-init="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
-                ></backlog-item>
-            </li>
-        </ul>
-    </div>
+            <backlog-item
+                ng-init="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
+            ></backlog-item>
+        </li>
+    </ul>
 
     <div class="loading" ng-if="milestone.loadingContent"></div>
 </div>

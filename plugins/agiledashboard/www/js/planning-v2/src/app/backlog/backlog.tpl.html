@@ -2,32 +2,28 @@
     You are not allowed to rank on this planning
 </div>
 
-<div ui-tree="planning.treeOptions"
-    infinite-scroll
+<div infinite-scroll
     scroll-callback="planning.displayBacklogItems()"
     scroll-threshold="100"
 >
-    <ul ui-tree-nodes
-        ng-model="planning.backlog_items.filtered_content"
-        class="backlog-items backlog {{ planning.current_view_class }}"
+    <ul dragular="backlog.dragularOptions()"
+        class="backlog-items backlog"
+        ng-class="{ 'empty-backlog': backlog.isBacklogLoadedAndEmpty() }"
         data-accept="{{ backlog.details.accepted_types.toString() }}"
-        data-nodrag="{{ ! backlog.details.user_can_move_cards }}"
+        data-nodrop="{{ ! backlog.details.user_can_move_cards }}"
     >
-        <li ui-tree-node
-            ng-repeat="backlog_item in backlog.items.filtered_content"
+        <li ng-repeat="backlog_item in backlog.items.filtered_content"
             data-type="{{ backlog_item.trackerId }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
-            class="backlog-item parent"
+            class="backlog-item parent {{ planning.current_view_class }}"
             ng-class="{ updating: backlog_item.updating, undraggable: ! backlog.details.user_can_move_cards }"
             collapsed="true"
             data-nodrag="{{ ! backlog.details.user_can_move_cards }}"
+            data-item-id="{{ backlog_item.id }}"
         >
             <backlog-item ng-init="user_can_move_cards=backlog.details.user_can_move_cards"></backlog-item>
         </li>
     </ul>
 </div>
-<div ng-if="backlog.items.fully_loaded && backlog.items.content.length > 0"
-    class="fully-loaded"
-    translate
->All items have been loaded.</div>
+<div ng-if="backlog.items.fully_loaded && backlog.items.content.length > 0" class="fully-loaded" translate>All items have been loaded.</div>
 <div ng-if="backlog.items.loading" class="loading"></div>
