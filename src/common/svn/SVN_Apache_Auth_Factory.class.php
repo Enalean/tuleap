@@ -49,14 +49,19 @@ class SVN_Apache_Auth_Factory {
      * @return SVN_Apache
      */
     public function get($projectInfo) {
+        $project                         = $this->project_manager->getProjectFromDbRow($projectInfo);
         $requested_authentication_method = ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY);
+        $project_authorizes_tokens       = $this->token_manager->isProjectAuthorizingTokens($project);
 
-        $svn_apache_auth = $this->getModFromPlugins($projectInfo, $requested_authentication_method);
+        $svn_apache_auth = $this->getModFromPlugins(
+            $projectInfo,
+            $requested_authentication_method,
+            $project_authorizes_tokens
+        );
 
         if (! $svn_apache_auth) {
-            $project = $this->project_manager->getProjectFromDbRow($projectInfo);
 
-            if ($this->token_manager->isProjectAuthorizingTokens($project)) {
+            if ($project_authorizes_tokens) {
                 $svn_apache_auth = new SVN_Apache_ModPerl($projectInfo);
             } else {
                 $svn_apache_auth = $this->getModFromLocalIncFile($projectInfo, $requested_authentication_method);
@@ -79,13 +84,14 @@ class SVN_Apache_Auth_Factory {
         return $svnApacheAuth;
     }
 
-    private function getModFromPlugins(array $project_info, $requested_authentication_method) {
+    private function getModFromPlugins(array $project_info, $requested_authentication_method, $project_authorizes_tokens) {
         $svn_apache_auth = null;
 
         $params = array(
-            'svn_apache_auth' => &$svn_apache_auth,
-            'svn_conf_auth'   => $requested_authentication_method,
-            'project_info'    => $project_info,
+            'svn_apache_auth'           => &$svn_apache_auth,
+            'svn_conf_auth'             => $requested_authentication_method,
+            'project_authorizes_tokens' => $project_authorizes_tokens,
+            'project_info'              => $project_info,
         );
 
         $this->event_manager->processEvent(Event::SVN_APACHE_AUTH, $params);

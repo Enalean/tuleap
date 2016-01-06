@@ -394,11 +394,10 @@ class Event {
      * generation of project svn apache authentication
      * 
      * Parameters:
-     *     'project_info'    => A row of Projects DB table
-     *     'svn_conf_auth'   => Requested authentication method in conf file
-     * 
-     * Expected result:
-     *     'svn_apache_auth' => SVN_Apache_Auth, object to generate the conf if relevant
+     *     'project_info'              => A row of Projects DB table
+     *     'project_authorizes_tokens' => Define if project authorizes tokens
+     *     'svn_conf_auth'             => Requested authentication method in conf file
+     *     'svn_apache_auth'           => SVN_Apache_Auth, object to generate the conf if relevant
      */
     const SVN_APACHE_AUTH = 'svn_apache_auth';
     
