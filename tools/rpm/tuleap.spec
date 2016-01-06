@@ -73,6 +73,7 @@ Requires: %{php_base}-pecl-apc
 Requires: curl
 Requires: %{php_base}-zendframework = 1.8.1
 Requires: php-jwt
+Requires: tuleap-core-subversion
 
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv, perl-LDAP
@@ -133,7 +134,7 @@ Summary: Subversion component for Tuleap
 Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}, subversion, mod_dav_svn, subversion-perl, highlight
+Requires: %{PKG_NAME}, subversion, mod_dav_svn, subversion-perl, highlight, tuleap-core-subversion-modperl
 %if %{PKG_NAME} == codendi_st
 Requires: viewvc
 # = 1.0.7-2.codendi
@@ -150,7 +151,7 @@ Summary: Subversion with mod_perl authentication
 Group: Development/Tools
 Version: 1.0
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}-core-subversion, mod_perl
+Requires: mod_perl
 %description core-subversion-modperl
 Provides authentication for Subversion component based on mod_perl rather than
 mod_mysql.
