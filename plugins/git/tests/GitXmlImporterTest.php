@@ -64,6 +64,7 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         $this->git_dao = new MyMockGitDao();
         $plugin_dao = mock('PluginDao');
+        ProjectManager::clearInstance();
         $this->project_manager = ProjectManager::instance();
 
         $this->logger = mock('Logger');
