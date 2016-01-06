@@ -43,6 +43,18 @@ class TroveCatDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getCategoryChildrenToDisplayDuringProjectCreation($trove_cat_id) {
+        $trove_cat_id = $this->da->escapeInt($trove_cat_id);
+
+        $sql = "SELECT trove_cat_id, shortname, fullname
+                FROM trove_cat
+                WHERE parent = $trove_cat_id
+                AND display_during_project_creation = 1";
+
+
+        return $this->retrieve($sql);
+    }
+
     public function getMandatoryCategorySelectForAllProject($parent_category_id) {
         $parent_category_id = $this->da->escapeInt($parent_category_id);
 

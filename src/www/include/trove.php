@@ -119,8 +119,8 @@ function trove_getallroots() {
 	return $CATROOTS;
 }
 
-// return boolean true when project is categorized 
-function trove_project_categorized($group_id) { 
+// return boolean true when project is categorized
+function trove_project_categorized($group_id) {
     $res_trovecat = db_query('SELECT NULL '
         .'FROM trove_cat,trove_group_link '
         .'WHERE trove_cat.trove_cat_id=trove_group_link.trove_cat_id '

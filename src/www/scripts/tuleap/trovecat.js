@@ -34,16 +34,27 @@
 
     function updateCheckboxDisabledProperty(trove_cat_parent_selectbox) {
         var trove_cat_parent_selected,
-            mandatory_checkbox;
+            mandatory_checkbox,
+            display_during_creation_checkbox,
+            top_level_ids;
 
-        trove_cat_parent_selected = trove_cat_parent_selectbox.val();
-        mandatory_checkbox        = $('input[name=form_mandatory]');
+        trove_cat_parent_selected               = trove_cat_parent_selectbox.val();
+        mandatory_checkbox                      = $('input[name=form_mandatory]');
+        display_during_creation_checkbox        = $('input[name=form_display]');
+        top_level_ids                           = JSON.parse($('form[name=form_trove_cat_edit]').attr('data-top-level-ids'));
 
         if (trove_cat_parent_selected === '0') {
             mandatory_checkbox.prop('disabled', false);
         } else {
             mandatory_checkbox.prop('disabled', true);
             mandatory_checkbox.attr('checked', false);
+        }
+
+        if (top_level_ids.find(function(id) { return id==trove_cat_parent_selected; })) {
+            display_during_creation_checkbox.prop('disabled', false);
+        } else {
+            display_during_creation_checkbox.prop('disabled', true);
+            display_during_creation_checkbox.attr('checked', false);
         }
     }
 })(window.jQuery);
