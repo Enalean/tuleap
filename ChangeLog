@@ -25,6 +25,7 @@ Version 8.10 (Not released yet)
 	* request #8715: SVN authentication with modmysql does not work with a database located on another server than Tuleap
 	* request #8758: Add missing SVN modperl dependency
 	* request #8751: The subversion page display an error if user is not LDAP when SVN uses LDAP auth
+        * request #8753: Package for JWT library should have a standardized name on CentOS 5 PHP 5.3
 
 	== Enhancement ==
 	* story #8572: Add project creation using XML
