@@ -64,7 +64,7 @@ class SVN_IntroPresenter {
     public function svn_user_username() {
         if ($this->user->isLoggedIn() && ! $this->uses_ldap_info) {
             return $this->user->getName();
-        } elseif ($this->user->isLoggedIn() && $this->uses_ldap_info) {
+        } elseif ($this->user->isLoggedIn() && $this->uses_ldap_info && $this->ldap_row) {
             return strtolower($this->ldap_row->getLogin());
         } else {
             return $GLOBALS['Language']->getText('svn_intro', 'default_username');
