@@ -1,3 +1,6 @@
+Version 0.11 - Tuleap 8.10
+	* request #8739: Remove PHP 5.1 support
+
 Version 0.10 - Tuleap 8.9
     * request #8639: PHPWiki plugin does not purge correctly FRS documents
 

@@ -54,6 +54,7 @@ Version 8.10 (Not released yet)
 	* pluginsadministration: 1.15
 	* svn: 0.2
 	* tests: 5.32
+	* phpwiki: 0.11
 
     == Themes ==
 	* FlamingParrot: 1.118
