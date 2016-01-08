@@ -1,4 +1,7 @@
 Version 8.11 ()
+	== Development ==
+	* "make start" now works on OSX
+
 	== Plugins ==
 	* git: 4.106
 
