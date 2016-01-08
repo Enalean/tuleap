@@ -334,7 +334,7 @@ class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XML
     public function itCreatesTheCommentsWithUpdates() {
         expect($this->new_changeset_creator)->create('*', '*', 'Some text', '*', '*', '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
 
-        expect($this->changeset)->updateComment(
+        expect($this->changeset)->updateCommentWithoutNotification(
             '<p>Some text</p>',
             $this->john_doe,
             Tracker_Artifact_Changeset_Comment::HTML_COMMENT,
