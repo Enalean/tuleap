@@ -253,7 +253,7 @@ class Tracker_Artifact_XMLImport {
         if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 1) {
             $all_comments = $xml_changeset->comments->comment;
             for ($i = 1; $i < count($all_comments); ++$i) {
-                $changeset->updateComment(
+                $changeset->updateCommentWithoutNotification(
                     (string)$all_comments[$i]->body,
                     $this->getSubmittedBy($all_comments[$i]),
                     (string)$all_comments[$i]->body['format'],
