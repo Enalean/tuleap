@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -104,15 +104,13 @@ class GitViews_ShowRepo_Content {
     }
 
     public function display() {
-        $html  = '';
-        $html .= '<div id="plugin_git_reference" class="plugin_git_repo_type_'. $this->repository->getBackendType() .'">';
-        $html .= $this->getHeader();
-        if ($this->repository->isMigratedToGerrit()) {
-            $html .= $this->getRemoteRepositoryInfo();
-        }
-        $html .= $this->getCloneUrl();
-        $html .= '</div>';
-        $html .= $this->getOnlineEditDiv();
+        $this->displayHeader();
+        $this->displayContent();
+    }
+
+    private function displayContent() {
+        $html = '';
+
         if ($this->repository->isCreated()) {
             $html .= $this->gitphp_viewer->getContent();
         } else {
@@ -121,6 +119,22 @@ class GitViews_ShowRepo_Content {
         if ($this->isATreePage()) {
           $html .= $this->getMarkdownFilesDiv();
         }
+
+        echo $html;
+    }
+
+    private function displayHeader() {
+        $html  = '';
+        $html .= '<div id="plugin_git_reference" class="plugin_git_repo_type_'. $this->repository->getBackendType() .'">';
+        $html .= $this->getHeader();
+
+        if ($this->repository->isMigratedToGerrit()) {
+            $html .= $this->getRemoteRepositoryInfo();
+        }
+
+        $html .= $this->getCloneUrl();
+        $html .= '</div>';
+        $html .= $this->getOnlineEditDiv();
 
         echo $html;
     }
