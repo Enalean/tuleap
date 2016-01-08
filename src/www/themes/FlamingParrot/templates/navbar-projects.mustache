@@ -1,0 +1,37 @@
+<li class="dropdown projects-nav {{# is_active }}active{{/ is_active }}">
+    {{# display_only_trovemap }}
+        <a href="/softwaremap/">{{ menu_projects_text }}</a>
+    {{/ display_only_trovemap }}
+    {{# display_dropdown }}
+        <a id="navbar-{{ id }}" href="#" class="dropdown-toggle" data-toggle="dropdown">
+            {{ label }}
+            <b class="caret"></b>
+        </a>
+        <ul id="dropdown-{{ id }}" class="dropdown-menu">
+            {{# is_trove_cat_enabled }}
+                <li>
+                    <a href="/softwaremap/">{{ browse_projects_text }}</a>
+                </li>
+            {{/ is_trove_cat_enabled }}
+
+            {{# is_project_registration_enabled }}
+                <li>
+                    <a href="/project/register.php">{{ register_new_proj }}</a>
+                </li>
+            {{/ is_project_registration_enabled }}
+
+            {{# has_projects }}
+                <li class="divider"></li>
+                <li>
+                    <input type="text" id="filter-projects" placeholder="{{ filter_project }}" />
+                </li>
+
+                {{# projects }}
+                    <li class="project">
+                        <a href="{{ project_uri }}">{{ project_name }}</a>
+                    </li>
+                {{/ projects }}
+            {{/ has_projects }}
+        </ul>
+    {{/ display_dropdown }}
+</li>

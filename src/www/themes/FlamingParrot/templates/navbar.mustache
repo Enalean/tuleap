@@ -4,29 +4,17 @@
     <div class="navbar-inner">
         <div class="container-fluid">
             <ul class="nav">
-                {{# user_is_logged_in }}
-                <li class={{ nav_my_class }}>
-                    <a id="navbar-my" href="/my/">
-                        {{ menu_my_personnal_page_text }}
-                    </a>
-                </li>
-                {{/ user_is_logged_in }}
-
-                {{> navbar-project }}
-
-                {{# there_are_extra_tabs }}
-                    {{> navbar-extra-tabs }}
-                {{/ there_are_extra_tabs }}
-
-                {{> navbar-help }}
-
-                {{# user_is_admin }}
-                    <li class={{ nav_admin_class }}>
-                        <a href="/admin/">
-                            Admin
-                        </a>
-                    </li>
-                {{/ user_is_admin }}
+                {{# navbar_items }}
+                    {{# is_projects }}
+                        {{> navbar-projects }}
+                    {{/ is_projects }}
+                    {{# is_link }}
+                        {{> navbar-item-link }}
+                    {{/ is_link }}
+                    {{# is_dropdown }}
+                        {{> navbar-item-dropdown }}
+                    {{/ is_dropdown }}
+                {{/ navbar_items }}
             </ul>
             {{> navbar-user-navigation }}
         </div>
