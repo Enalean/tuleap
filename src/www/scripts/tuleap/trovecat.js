@@ -21,9 +21,13 @@
     $(document).ready(function(){
         var trove_cat_parent_selectbox;
 
+        if ($('form[name=form_trove_cat_edit]').length === 0) {
+            return;
+        }
+
         trove_cat_parent_selectbox = $('select[name=form_parent]');
 
-        if (trove_cat_parent_selectbox !== undefined) {
+        if (trove_cat_parent_selectbox.length !== 0) {
             updateCheckboxDisabledProperty(trove_cat_parent_selectbox);
 
             trove_cat_parent_selectbox.change(function() {
@@ -58,4 +62,3 @@
         }
     }
 })(window.jQuery);
-
