@@ -1,9 +1,12 @@
-Version 8.11 ()
+Version 8.11 (Not released yet)
 	== Enhancement ==
 	* story #8698: choose the values to be displayed at project creation from trove cats
 
 	== Development ==
 	* "make start" now works on OSX
+
+	== Bug fix ==
+	* request #8769: SVN paths in CI not displayed due to js error
 
 	== Plugins ==
 	* git: 4.106
