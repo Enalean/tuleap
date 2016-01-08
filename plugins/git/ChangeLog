@@ -1,3 +1,6 @@
+Version 4.107 - Tuleap 8.11
+    * request #8772: A Gitphp fatal error must not hide Git header
+
 Version 4.106 - Tuleap 8.11
     * No need to deploy gl-delete-test-repository.sh in prod
 

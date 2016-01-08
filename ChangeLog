@@ -9,7 +9,7 @@ Version 8.11 (Not released yet)
 	* request #8769: SVN paths in CI not displayed due to js error
 
 	== Plugins ==
-	* git: 4.106
+	* git: 4.107
 
 Version 8.10 (Thursday, January 7th 2016)
 
