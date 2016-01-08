@@ -81,7 +81,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
         $this->creation_request                       = $creation_request;
         $this->project_manager                        = $project_manager;
         $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
-        $this->trove_cats                             = $trove_cats;
+        $this->trove_cats                             = array_values($trove_cats);
     }
 
     public function hasTroveCats() {

@@ -37,18 +37,42 @@ class TroveCatFactory {
         $trove_cats = array();
 
         foreach ($results as $row) {
-            $trove_cat_id = $row['trove_cat_id'];
-            $trove_cat    = $this->getInstanceFromRow($row);
-
-            foreach($this->dao->getCategoryChildren($trove_cat_id) as $row_child) {
-                $child = $this->getInstanceFromRow($row_child);
-                $trove_cat->addChildren($child);
-            }
-
-            $trove_cats[] = $trove_cat;
+            $trove_cat = $this->getTroveCatWithChildrens($row);
+            $trove_cats[$trove_cat->getId()] = $trove_cat;
         }
 
         return $trove_cats;
+    }
+
+    /**
+     * @return TroveCat[]
+     */
+    public function getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren() {
+        $results    = $this->dao->getMandatoryParentCategoriesUnderRoot();
+        $trove_cats = array();
+
+        foreach ($results as $row) {
+            $trove_cat = $this->getTroveCatWithChildrens($row);
+            if (count($trove_cat->getChildren()) > 0) {
+                $trove_cats[$trove_cat->getId()] = $trove_cat;
+            }
+        }
+
+        return $trove_cats;
+    }
+
+    /**
+     * @return TroveCat
+     */
+    private function getTroveCatWithChildrens(array $row) {
+        $trove_cat_id = $row['trove_cat_id'];
+        $trove_cat    = $this->getInstanceFromRow($row);
+
+        foreach($this->dao->getCategoryChildrenToDisplayDuringProjectCreation($trove_cat_id) as $row_child) {
+            $child = $this->getInstanceFromRow($row_child);
+            $trove_cat->addChildren($child);
+        }
+        return $trove_cat;
     }
 
     /**
@@ -61,5 +85,4 @@ class TroveCatFactory {
            $row['fullname']
         );
     }
-
 }

@@ -56,7 +56,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         parent::__construct('project', $request);
         $this->project_manager              = $project_manager;
         $this->required_custom_descriptions = $custom_description_factory->getRequiredCustomDescriptions();
-        $this->trove_cats                   = $trove_cat_factory->getMandatoryParentCategoriesUnderRoot();
+        $this->trove_cats                   = $trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren();
 
         $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
 
