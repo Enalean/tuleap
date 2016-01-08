@@ -7,10 +7,6 @@ TULEAP_INCLUDE_PATH=$(CURDIR)/src/www/include:$(CURDIR)/src:/usr/share/codendi/s
 PHP_INCLUDE_PATH=/usr/share/php:/usr/share/pear:$(TULEAP_INCLUDE_PATH):/usr/share/jpgraph:.
 PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d memory_limit=256M -d display_errors=On
 
-SUDO=
-DOCKER=$(SUDO) docker
-DOCKER_COMPOSE=$(SUDO) docker-compose
-
 DOCKER_REST_TESTS_IMAGE=enalean/tuleap-test-rest
 DOCKER_REST_TESTS_IMGINIT=$(DOCKER_REST_TESTS_IMAGE)-init
 
@@ -32,6 +28,17 @@ PHPUNIT_OPTIONS=--color
 TULEAP_LOCAL_INC=/etc/codendi/conf/integration_tests.inc
 COMPOSER=$(CURDIR)/composer.phar
 endif
+
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+DOCKER_COMPOSE_FILE=-f docker-compose.yml -f docker-compose-mac.yml
+else
+DOCKER_COMPOSE_FILE=-f docker-compose.yml
+endif
+
+SUDO=
+DOCKER=$(SUDO) docker
+DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
 
 # Export
 export TULEAP_LOCAL_INC
@@ -220,9 +227,9 @@ rest_docker_snap_run:
 #
 
 .env:
-	@MYSQL_ROOT_PASSWORD=`cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1` && echo "MYSQL_ROOT_PASSWORD=$$MYSQL_ROOT_PASSWORD" > .env
-	@LDAP_ROOT_PASSWORD=`cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1` && echo "LDAP_ROOT_PASSWORD=$$LDAP_ROOT_PASSWORD" >> .env
-	@LDAP_MANAGER_PASSWORD=`cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1` && echo "LDAP_MANAGER_PASSWORD=$$LDAP_MANAGER_PASSWORD" >> .env
+	@MYSQL_ROOT_PASSWORD=`head -c 32 /dev/urandom | base64` && echo "MYSQL_ROOT_PASSWORD=$$MYSQL_ROOT_PASSWORD" > .env
+	@LDAP_ROOT_PASSWORD=`head -c 32 /dev/urandom | base64` && echo "LDAP_ROOT_PASSWORD=$$LDAP_ROOT_PASSWORD" >> .env
+	@LDAP_MANAGER_PASSWORD=`head -c 32 /dev/urandom | base64` && echo "LDAP_MANAGER_PASSWORD=$$LDAP_MANAGER_PASSWORD" >> .env
 	@echo VIRTUAL_HOST=tuleap_web_1.tuleap-aio-dev.docker >> .env
 
 dev-setup: .env
