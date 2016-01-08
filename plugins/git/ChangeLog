@@ -1,3 +1,6 @@
+Version 4.106 - Tuleap 8.11
+    * No need to deploy gl-delete-test-repository.sh in prod
+
 Version 4.105 - Tuleap 8.10
     * request #8696: Optimize transformation of statistics export to CSV
 
