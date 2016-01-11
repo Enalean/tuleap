@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,9 +50,8 @@ class MailBuilderTest extends TuleapTestCase {
 
         $this->mail_enhancer = mock('MailEnhancer');
 
-        $this->builder = partial_mock('MailBuilder', array('getMailSender'), array($template_factory));
-        $codendi_mail  = stub('Codendi_Mail')->send()->returns(true);
-        stub($this->builder)->getMailSender()->returns($codendi_mail);
+        $this->builder       = partial_mock('MailBuilder', array('getMailSender'), array($template_factory));
+        $this->codendi_mail  = mock('Codendi_Mail');
 
         $emails            = array('a@example.com', 'b@example.com');
         $subject           = 'This is an awesome subject';
@@ -85,6 +84,8 @@ class MailBuilderTest extends TuleapTestCase {
 
     public function itBuildsAndSendsATruncatedEmailIfProjectUsesTruncatedEmail() {
         $project = stub('Project')->getTruncatedEmailsUsage()->returns(true);
+        stub($this->codendi_mail)->send()->returns(true);
+        stub($this->builder)->getMailSender()->returns($this->codendi_mail);
 
         $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
@@ -96,6 +97,8 @@ class MailBuilderTest extends TuleapTestCase {
 
     public function itBuildsAndSendsAClassicEmailIfProjectDoesNotUseTruncatedEmail() {
         $project = stub('Project')->getTruncatedEmailsUsage()->returns(false);
+        stub($this->codendi_mail)->send()->returns(true);
+        stub($this->builder)->getMailSender()->returns($this->codendi_mail);
 
         $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
@@ -103,5 +106,26 @@ class MailBuilderTest extends TuleapTestCase {
         expect($this->mail_enhancer)->enhanceMail()->count(2);
 
         $this->assertTrue($sent);
+    }
+
+    public function itDoesNotStopIfAMailIsNotSent() {
+        $project        = stub('Project')->getTruncatedEmailsUsage()->returns(false);
+        $codendi_mail_2 = stub('Codendi_Mail')->send()->returns(true);
+        stub($this->codendi_mail)->send()->returns(false);
+
+        stub($this->builder)->getMailSender()->returnsAt(0, $this->codendi_mail);
+        stub($this->builder)->getMailSender()->returnsAt(1, $codendi_mail_2);
+
+        $this->builder->expectCallCount('getMailSender', 2);
+        $this->codendi_mail->expectCallCount('send', 1);
+        $codendi_mail_2->expectCallCount('send', 1);
+
+        $sent = $this->builder->buildAndSendEmail(
+            $project,
+            $this->notification,
+            $this->mail_enhancer
+        );
+
+        $this->assertFalse($sent);
     }
 }

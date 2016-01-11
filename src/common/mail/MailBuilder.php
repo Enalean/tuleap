@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,9 +43,8 @@ class MailBuilder {
         $sent_status = true;
         foreach ($notification->getEmails() as $email) {
             $mail = $this->buildEmail($project, $notification, $mail_enhancer, $email);
-            $sent_status = $sent_status && $mail->send();
+            $sent_status = $mail->send() && $sent_status;
         }
-
         return $sent_status;
     }
 
