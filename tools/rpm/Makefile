@@ -6,7 +6,6 @@ SHELL=/bin/bash
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 
 CORE_MAILMAN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/CORE_MAILMAN_VERSION)
-CORE_SUBVERSION_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/CORE_SUBVERSION_VERSION)
 CORE_CVS_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/CORE_CVS_VERSION)
 CORE_REST_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/api/VERSION)
 
@@ -150,7 +149,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
 		sed -e 's/@@CORE_MAILMAN_VERSION@@/$(CORE_MAILMAN_VERSION)/g' |\
-		sed -e 's/@@CORE_SUBVERSION_VERSION@@/$(CORE_SUBVERSION_VERSION)/g' |\
 		sed -e 's/@@CORE_CVS_VERSION@@/$(CORE_CVS_VERSION)/g' |\
 		sed -e 's/@@CORE_REST_VERSION@@/$(CORE_REST_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FORUMML_VERSION@@/$(PLUGIN_FORUMML_VERSION)/g' |\
