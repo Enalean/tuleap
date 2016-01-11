@@ -110,7 +110,7 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                 WHERE artifact_id = $artifact_id
                   AND filename = $filename
                   AND submitted_by = $submitted_by
-                  AND adddate between $date-2 and $date+2";
+                  AND adddate between $date-3 and $date+3";
         return $this->retrieve($sql);
     }
 
