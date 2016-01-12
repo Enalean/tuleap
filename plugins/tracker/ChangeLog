@@ -1,3 +1,6 @@
+Version 5.776 - Tuleap 8.11
+    * request #8770: TV3 to TV5: comment only changeset send unwanted notification
+
 Version 5.775 - Tuleap 8.10
     * request #8746 Project XML export fails if changeset value cannot be retrieved
 
