@@ -438,10 +438,24 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      * @return void
      */
     public function updateComment($body, $user, $comment_format, $timestamp) {
+        if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)) {
+            $this->notify();
+        }
+    }
+
+    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp) {
         if ($this->userCanEdit($user)) {
-            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $timestamp, $this->getComment()->id, $comment_format);
+            $commentUpdated = $this->getCommentDao()->createNewVersion(
+                $this->id,
+                $body,
+                $user->getId(),
+                $timestamp,
+                $this->getComment()->id,
+                $comment_format
+            );
 
             unset($this->latest_comment);
+
             if ($commentUpdated) {
                 $reference_manager = $this->getReferenceManager();
                 $reference_manager->extractCrossRef(
@@ -457,11 +471,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                                 'artifact'     => $this->getArtifact(),
                                 'changeset_id' => $this->getId(),
                                 'text'         => $body);
-                EventManager::instance()->processEvent('tracker_followup_event_update', $params);
-                $this->notify();
-            }
 
+                EventManager::instance()->processEvent('tracker_followup_event_update', $params);
+
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**
