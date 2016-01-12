@@ -108,6 +108,10 @@ msgstr "Éditer ce Kanban"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+#: src/app/kanban-item/kanban-item.tpl.html
+msgid "Expand/collapse the card"
+msgstr "Afficher/cacher les détails de la carte"
+
 #: src/app/kanban.tpl.html
 msgid "Filter..."
 msgstr "Filtrer..."

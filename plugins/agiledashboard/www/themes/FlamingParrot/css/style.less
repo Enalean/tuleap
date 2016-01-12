@@ -8,6 +8,9 @@ body {
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-orange.png') no-repeat center 100px;
         }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 45%);
+        }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-orange.png') no-repeat center 20px;
         }
@@ -19,6 +22,9 @@ body {
         .definitions;
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 55%);
         }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
@@ -32,6 +38,9 @@ body {
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
         }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 47%);
+        }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
         }
@@ -43,6 +52,9 @@ body {
         .definitions;
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 52%);
         }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
@@ -56,6 +68,9 @@ body {
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
         }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 50%);
+        }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
         }
@@ -67,6 +82,9 @@ body {
         .definitions;
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 52%);
         }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
@@ -80,6 +98,9 @@ body {
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-darkorange.png') no-repeat center 100px;
         }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 45%);
+        }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-dark-orange.png') no-repeat center 20px;
         }
@@ -91,6 +112,9 @@ body {
         .definitions;
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 55%);
         }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
@@ -104,6 +128,9 @@ body {
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
         }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 47%);
+        }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
         }
@@ -115,6 +142,9 @@ body {
         .definitions;
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 52%);
         }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
@@ -128,6 +158,9 @@ body {
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
         }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 50%);
+        }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
         }
@@ -139,6 +172,9 @@ body {
         .definitions;
         #kanban-board .angular-ui-tree-placeholder:only-child {
             background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+                background-color: lighten(@main, 52%);
         }
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
@@ -171,7 +207,11 @@ body {
     }
 
     #kanban-board {
-        .kanban-item > .moves > .icon-stack:hover > .icon-stack-base {
+        .kanban-item > .kanban-item-content > .moves > .icon-stack:hover > .icon-stack-base {
+            color: @main;
+        }
+
+        .kanban-item > .kanban-item-expand-collapse:hover > i {
             color: @main;
         }
 

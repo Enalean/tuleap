@@ -5,30 +5,34 @@
 
     function SharedPropertiesService() {
         var property = {
-            user_id      : undefined,
-            kanban       : undefined,
-            view_mode    : undefined,
-            user_is_admin: false,
-            project_id   : undefined,
-            nodejs_server: undefined,
-            uuid         : undefined
+            detailed_view_key : 'detailed-view',
+            compact_view_key  : 'compact-view',
+            user_id           : undefined,
+            kanban            : undefined,
+            view_mode         : undefined,
+            user_is_admin     : false,
+            project_id        : undefined,
+            nodejs_server     : undefined,
+            uuid              : undefined
         };
 
         return {
-            getUserId            : getUserId,
-            setUserId            : setUserId,
-            getViewMode          : getViewMode,
-            setViewMode          : setViewMode,
-            getKanban            : getKanban,
-            setKanban            : setKanban,
-            getUserIsAdmin       : getUserIsAdmin,
-            setUserIsAdmin       : setUserIsAdmin,
-            setProjectId         : setProjectId,
-            getProjectId         : getProjectId,
-            getNodeServerAddress : getNodeServerAddress,
-            setNodeServerAddress : setNodeServerAddress,
-            getUUID              : getUUID,
-            setUUID              : setUUID
+            getUserId                   : getUserId,
+            setUserId                   : setUserId,
+            doesUserPrefersCompactCards : doesUserPrefersCompactCards,
+            setUserPrefersCompactCards  : setUserPrefersCompactCards,
+            getViewMode                 : getViewMode,
+            setViewMode                 : setViewMode,
+            getKanban                   : getKanban,
+            setKanban                   : setKanban,
+            getUserIsAdmin              : getUserIsAdmin,
+            setUserIsAdmin              : setUserIsAdmin,
+            setProjectId                : setProjectId,
+            getProjectId                : getProjectId,
+            getNodeServerAddress        : getNodeServerAddress,
+            setNodeServerAddress        : setNodeServerAddress,
+            getUUID                     : getUUID,
+            setUUID                     : setUUID
         };
 
         function getUserId() {
@@ -39,12 +43,20 @@
             property.user_id = user_id;
         }
 
-        function getViewMode() {
-            return property.view_mode;
+        function doesUserPrefersCompactCards() {
+            return property.view_mode !== property.detailed_view_key;
+        }
+
+        function setUserPrefersCompactCards(is_collapsed) {
+            return property.view_mode = is_collapsed ? property.compact_view_key : property.detailed_view_key;
         }
 
         function setViewMode(view_mode) {
             property.view_mode = view_mode;
+        }
+
+        function getViewMode() {
+            return property.view_mode;
         }
 
         function getKanban() {

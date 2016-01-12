@@ -69,8 +69,7 @@
             is_small_width: false
         });
 
-        self.detailed_view_key            = 'detailed-view';
-        self.compact_view_key             = 'compact-view';
+        self.user_prefers_collapsed_cards = true;
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
         self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
@@ -100,12 +99,13 @@
         self.toggleBacklog                = toggleBacklog;
         self.expandArchive                = expandArchive;
         self.toggleArchive                = toggleArchive;
+        self.setIsCollapsed               = setIsCollapsed;
         self.filter_terms                 = '';
         self.treeFilter                   = filterCards;
         self.loading_modal                = TuleapArtifactModalLoading.loading;
         self.showEditModal                = showEditModal;
         self.moveItemAtTheEnd             = moveItemAtTheEnd;
-        self.switchViewMode               = switchViewMode;
+        self.toggleCollapsedMode          = toggleCollapsedMode;
         self.moveKanbanItemToTop          = moveKanbanItemToTop;
         self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
 
@@ -121,17 +121,34 @@
         };
 
         function initViewMode() {
-            self.current_view_class = self.compact_view_key;
+            self.user_prefers_collapsed_cards = SharedPropertiesService.doesUserPrefersCompactCards();
+        }
 
-            if (SharedPropertiesService.getViewMode()) {
-                self.current_view_class = SharedPropertiesService.getViewMode();
+        function toggleCollapsedMode() {
+            self.user_prefers_collapsed_cards = ! self.user_prefers_collapsed_cards;
+
+            SharedPropertiesService.setUserPrefersCompactCards(self.user_prefers_collapsed_cards);
+            UserPreferencesService.setPreference(
+                user_id,
+                'agiledashboard_kanban_item_view_mode_' + kanban.id,
+                SharedPropertiesService.getViewMode()
+            );
+
+            self.backlog.content.forEach(forceIsCollapsed);
+            self.archive.content.forEach(forceIsCollapsed);
+            self.board.columns.forEach(function(column) {
+                column.content.forEach(forceIsCollapsed);
+            });
+
+            $scope.$broadcast('rebuild:kustom-scroll');
+
+            function forceIsCollapsed(item) {
+                setIsCollapsed(item, self.user_prefers_collapsed_cards);
             }
         }
 
-        function switchViewMode(view_mode) {
-            self.current_view_class = view_mode;
-            UserPreferencesService.setPreference(user_id, 'agiledashboard_kanban_item_view_mode_' + kanban.id, view_mode);
-            $scope.$broadcast('rebuild:kustom-scroll');
+        function setIsCollapsed(item, is_collapsed) {
+            item.is_collapsed = is_collapsed;
         }
 
         function filterCards() {
@@ -513,7 +530,8 @@
         function createItemInPlaceInBacklog(label) {
             var item = {
                 label: label,
-                updating: true
+                updating: true,
+                is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
             };
 
             self.backlog.content.push(item);
@@ -530,7 +548,8 @@
         function createItemInPlace(label, column) {
             var item = {
                 label: label,
-                updating: true
+                updating: true,
+                is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
             };
 
             column.content.push(item);
@@ -811,7 +830,8 @@
                      */
                     SocketFactory.on('kanban_item:create', function (data) {
                         _.extend(data, {
-                            updating: false
+                            updating: false,
+                            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
                         });
 
                         var column = getColumn(data.in_column);
