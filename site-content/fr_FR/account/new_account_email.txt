@@ -25,7 +25,7 @@ $section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit 
 
 $section_after_login = " et le mot de passe : ";
 
-$section_after_password = ". \nPensez à changer votre mot de passe après votre première connexion sur le site.";
+$section_after_password = "\nPensez à changer votre mot de passe après votre première connexion sur le site.";
 
 $thanks = "Merci !";
 

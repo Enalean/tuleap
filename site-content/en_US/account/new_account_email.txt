@@ -24,7 +24,7 @@ $section_three = "** IMPORTANT REMARKS **\n\nWhile your Web account is available
 
 $section_after_login = " and the password: ";
 
-$section_after_password = ". \nPlease change your password after your first connection to the web site.";
+$section_after_password = "\nPlease change your password after your first connection to the web site.";
 
 $thanks = "Thanks!";
 
