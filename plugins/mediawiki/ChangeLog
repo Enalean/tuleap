@@ -1,3 +1,6 @@
+Version 0.102 - Tuleap 8.11
+    * request #8678: Cannot create files with a # character in the name
+
 Version 0.101 - Tuleap 8.9
     * request #8626: Mediawiki: can no longer access to url with CamelCase unix_name
 

@@ -1,3 +1,6 @@
+Version 1.9.14 - Tuleap 8.11
+    * request #8678: Cannot create files with a # character in the name
+
 Version 1.9.13 - Tuleap 8.7
     * request #8476: Unable to write file in Webdav
 
