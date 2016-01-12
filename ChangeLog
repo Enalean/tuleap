@@ -10,6 +10,7 @@ Version 8.11 (Not released yet)
 	* request #8769: SVN paths in CI not displayed due to js error
 	* request #8775: Increment Subversion packages versions
 	* request #8678: Cannot create files with a '#' character in the name
+	* request #8761: Mail issue on services having truncated emails options
 
 	== Plugins ==
 	* git: 4.107
@@ -17,7 +18,7 @@ Version 8.11 (Not released yet)
 	* mediawiki: 0.102
 	* webdav: 1.9.14
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.119
 
 Version 8.10 (Thursday, January 7th 2016)
