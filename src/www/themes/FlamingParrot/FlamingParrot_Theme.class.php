@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,13 @@ require_once 'HomepagePresenter.php';
 require_once 'FooterPresenter.class.php';
 require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
+require_once 'NavBarItemPresentersCollection.php';
+require_once 'NavBarItemPresentersCollectionBuilder.php';
+require_once 'NavBarItemPresenter.php';
+require_once 'NavBarItemProjectsPresenter.php';
+require_once 'NavBarItemLinkPresenter.php';
+require_once 'NavBarItemDropdownPresenter.php';
+require_once 'NavBarItemDropdownSectionPresenter.php';
 require_once 'SearchFormPresenter.class.php';
 require_once 'FlamingParrot_CSSFilesProvider.class.php';
 require_once 'keyboard_navigation/KeyboardNavigationModalPresenter.class.php';
@@ -235,6 +242,13 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $project_manager       = ProjectManager::instance();
         $projects              = $project_manager->getActiveProjectsForUser($current_user);
         $projects_presenters   = $this->getPresentersForProjects($projects);
+        $navbar_items_builder  = new FlamingParrot_NavBarItemPresentersCollectionBuilder(
+            $current_user,
+            $_SERVER['REQUEST_URI'],
+            $selected_top_tab,
+            $this->getExtraTabs(),
+            $projects_presenters
+        );
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
@@ -244,10 +258,9 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
                 HTTPRequest::instance(),
                 $params['title'],
                 $search_form_presenter,
-                $projects_presenters,
                 $this->displayNewAccount(),
                 $this->getMOTD(),
-                $this->getExtraTabs()
+                $navbar_items_builder->buildNavBarItemPresentersCollection()
             )
         );
 
@@ -278,7 +291,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
             array_unshift($additional_tabs, array(
                 'link'      => '/snippet/',
-                'title'     => $GLOBALS['Language']->getText('menu','code_snippet'),
+                'title'     => $GLOBALS['Language']->getText('include_menu','code_snippets'),
                 'selected'  => $selected,
                 )
             );

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012, 2013, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class Event {
-    
+
     /**
      * Periodical system check event.
-     * 
+     *
      * No Parameters.
      * No expected results
      */
@@ -30,17 +30,17 @@ class Event {
 
     /**
      * The user has just changed his ssh authorized keys.
-     * 
+     *
      * Parameters:
      *  'user' => User
-     * 
+     *
      * No expected results
      */
     const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
     /**
      * Dump all ssh keys.
-     * 
+     *
      * No parameters
      * No expected results
      */
@@ -57,10 +57,10 @@ class Event {
 
     /**
      * The user has just changed his email address.
-     * 
+     *
      * Parameters:
      *  'user_id' => User ID
-     * 
+     *
      * No expected results
      */
     const USER_EMAIL_CHANGED = 'user_email_changed';
@@ -85,67 +85,67 @@ class Event {
     const USER_MANAGER_UPDATE_DB = 'user_manager_update_db';
 
     /**
-     * We are retrieving an instance of Backend. 
+     * We are retrieving an instance of Backend.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'Backend'
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
     const BACKEND_FACTORY_GET_BACKEND = 'backend_factory_get_backend';
-    
+
     /**
-     * We are retrieving an instance of BackendSystem. 
+     * We are retrieving an instance of BackendSystem.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'system'
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
     const BACKEND_FACTORY_GET_SYSTEM = 'backend_factory_get_system';
-    
+
     /**
-     * We are retrieving an instance of BackendAliases. 
+     * We are retrieving an instance of BackendAliases.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'Aliases'
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
     const BACKEND_FACTORY_GET_ALIASES = 'backend_factory_get_aliases';
-    
+
     /**
-     * We are retrieving an instance of BackendMailingList. 
+     * We are retrieving an instance of BackendMailingList.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'MailingList'
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
     const BACKEND_FACTORY_GET_MAILINGLIST = 'backend_factory_get_mailinglist';
-    
+
     /**
-     * We are retrieving an instance of BackendCVS. 
+     * We are retrieving an instance of BackendCVS.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'CVS'
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
     const BACKEND_FACTORY_GET_CVS = 'backend_factory_get_cvs';
-    
+
     /**
-     * We are retrieving an instance of BackendSVN. 
+     * We are retrieving an instance of BackendSVN.
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'SVN'
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
     const BACKEND_FACTORY_GET_SVN = 'backend_factory_get_svn';
-    
+
     /**
      * Use this prefix to override plugin's backend.
      * eg: If docman uses its backend the event:
-     *   BACKEND_FACTORY_GET_PREFIX . 'plugin_docman' 
+     *   BACKEND_FACTORY_GET_PREFIX . 'plugin_docman'
      * will be launch to allow overriding.
      *
      * /!\ Please use this syntax only for non-core backends.
      * /!\ For core backends, use BACKEND_FACTORY_GET_SYSTEM & co
-     * 
+     *
      * Listeners can override the backend by providing a subclass.
      *
      * Parameters:
      * 'base' => null
-     * 
+     *
      * A backend class name in the 'base' parameter if needed.
      * The subclass must inherit from the wanted backend.
      */
@@ -183,10 +183,10 @@ class Event {
 
      /**
       * Allow to define specific references natures provided by a plugin
-      * 
+      *
       * Parameters:
       *   'natures' => array of references natures
-      * 
+      *
       * Expected result:
       *   A new nature added into $params['nature']
       *   array('keyword' => 'awsome', label => 'Really kick ass')
@@ -266,7 +266,7 @@ class Event {
     const USER_MANAGER_GET_USER_INSTANCE = 'user_manager_get_user_instance';
 
     const COMPUTE_MD5SUM = 'compute_md5sum';
-    
+
     /**
      * Get the additionnal types of system events for default queue
      *
@@ -302,44 +302,44 @@ class Event {
      * Display javascript snippets in the page footer (just before </body>)
      *
      * No Parameters.
-     * 
+     *
      * Expected result:
      *   Javascript snippets are directly output to the browser
      */
     const JAVASCRIPT_FOOTER = 'javascript_footer';
-    
+
     /**
      * Get an instance of service object corresponding to $row
-     * 
+     *
      * Parameters:
      *  'classnames' => array of Service child class names indexed by service short name
-     *  
+     *
      * Example (in tracker plugin):
-     * $params['classnames']['plugin_tracker'] = 'ServiceTracker'; 
+     * $params['classnames']['plugin_tracker'] = 'ServiceTracker';
      */
     const SERVICE_CLASSNAMES = 'service_classnames';
-    
+
     /**
      * Get combined scripts
-     * 
+     *
      * Parameters:
      *   'scripts' => array of scripts to combined
-     *   
+     *
      * Examples:
      * $params['scripts'][] = '/path/to/script.js';
      */
     const COMBINED_SCRIPTS = 'combined_scripts';
-    
+
     /**
      * Display javascript snippets in the page header (<head>)
      *
      * No Parameters.
-     * 
+     *
      * Expected result:
      *   Javascript snippets are directly output to the browser
      */
     const JAVASCRIPT = 'javascript';
-    
+
     /**
      * Manage the toggle of an element
      *
@@ -351,7 +351,7 @@ class Event {
      *  'done' => set to true if the element has been toggled
      */
     const TOGGLE = 'toggle';
-    
+
     /**
      * Display stuff in the widget public_areas (displays entries for the project services)
      *
@@ -362,7 +362,7 @@ class Event {
      *   'areas'   => array of string(html)
      */
     const SERVICE_PUBLIC_AREAS = 'service_public_areas';
-    
+
     /**
      * Let display a sparkline next to a cross reference
      *
@@ -376,14 +376,14 @@ class Event {
      *   'sparkline' => The url to the sparkline image
      */
     const AJAX_REFERENCE_SPARKLINE = 'ajax_reference_sparkline';
-    
+
     /**
      * Say if we can display a [remove] button on a given wiki page
-     *  
+     *
      * Parameters:
      *   'group_id'  => The project id
      *   'wiki_page' => The wiki page
-     *   
+     *
      * Expected result:
      *   'display_remove_button' => boolean, true if ok false otherwise
      */
@@ -392,7 +392,7 @@ class Event {
     /**
      * Allow to replace the default SVN_Apache_Auth object to be used for
      * generation of project svn apache authentication
-     * 
+     *
      * Parameters:
      *     'project_info'              => A row of Projects DB table
      *     'project_authorizes_tokens' => Define if project authorizes tokens
@@ -400,7 +400,7 @@ class Event {
      *     'svn_apache_auth'           => SVN_Apache_Auth, object to generate the conf if relevant
      */
     const SVN_APACHE_AUTH = 'svn_apache_auth';
-    
+
     /**
      * Extends doc to soap types.
      *
@@ -1053,4 +1053,14 @@ class Event {
      *     'services' => array
      */
     const SERVICES_TRUNCATED_EMAILS = 'services_truncated_emails';
+
+    /**
+     * Allow plugins to insert links in the builded navbar
+     *
+     * Parameters:
+     *   'items'            => FlamingParrot_NavBarItemPresentersCollection
+     *   'selected_top_tab' => (string) current tab, to know if added item can be flaged as active
+     *   'request_uri'      => (string)
+     */
+    const NAVBAR_ITEMS = 'navbar_items';
 }
