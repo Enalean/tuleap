@@ -64,20 +64,7 @@ class WebDAVUtils {
 
     }
 
-    /**
-     * Retuns if the filename is valid or not
-     *
-     * @param String $name
-     *
-     * @return Boolean
-     */
-    function isValidFileName($name) {
-
-        return util_is_valid_filename($name);
-
-    }
-
-    /**
+   /**
      * Replaces '/', '%' and '|' by their respective ASCII code
      *
      * @param String $name
