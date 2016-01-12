@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,28 +11,26 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\Svn;
 
 use HTTPRequest;
+use \Tuleap\Svn\Explorer\ExplorerController;
+use \Tuleap\Svn\Repository\RepositoryManager;
+use \Tuleap\Svn\Dao;
+use Valid_WhiteList;
 
 class SvnRouter {
 
-    const DEFAULT_CONTROLLER = 'explorer';
     const DEFAULT_ACTION = 'index';
 
-    private $controllers = array();
-
-    public function __construct(array $controllers) {
-        foreach ($controllers as $controller) {
-            $this->controllers[$controller->getName()] = $controller;
-        }
+    public function __construct() {
     }
 
     /**
@@ -41,17 +39,20 @@ class SvnRouter {
      * @return void
      */
     public function route(HTTPRequest $request) {
-        if (! $request->get('controller') || ! $request->get('action')) {
+        if ( ! $request->get('action')) {
             $this->useDefaultRoute($request);
             return;
         }
 
-        $controller = $this->getControllerFromRequest($request);
-        $action     = $request->get('action');
-        if ($this->doesActionExist($controller, $action)) {
-            $controller->$action($this->getService($request), $request);
-        } else {
-            $this->useDefaultRoute($request);
+        $action = $request->get('action');
+        switch ($action) {
+            case "createRepo":
+                $controller = new ExplorerController(new RepositoryManager(new Dao()));
+                $controller->$action($this->getService($request), $request);
+                break;
+            default:
+                $this->useDefaultRoute($request);
+                break;
         }
     }
 
@@ -60,28 +61,8 @@ class SvnRouter {
      */
     private function useDefaultRoute(HTTPRequest $request) {
         $action = self::DEFAULT_ACTION;
-        $this->controllers[self::DEFAULT_CONTROLLER]->$action(
-            $this->getService($request), $request
-        );
-    }
-
-    /**
-     * @param HTTPRequest $request
-     * @return controller
-     */
-    private function getControllerFromRequest(HTTPRequest $request) {
-        if (isset($this->controllers[$request->get('controller')])) {
-            return $this->controllers[$request->get('controller')];
-        } else {
-            return $this->controllers[self::DEFAULT_CONTROLLER];
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function doesActionExist($controller, $action) {
-        return method_exists($controller, $action);
+        $controller = new ExplorerController(new RepositoryManager(new Dao()));
+        $controller->$action( $this->getService($request), $request );
     }
 
     /**
