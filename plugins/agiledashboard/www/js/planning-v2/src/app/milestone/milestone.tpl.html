@@ -1,7 +1,7 @@
-<legend ng-click="milestoneController.toggleMilestone($event, milestone)">
-    {{ milestone.label }}
+<legend ng-click="milestoneController.toggleMilestone($event)">
+    {{ milestoneController.milestone.label }}
     <div
-        ng-if="planning.use_angular_new_modal && ! milestone.collapsed && milestone.has_user_priority_change_permission"
+        ng-if="planning.use_angular_new_modal && ! milestoneController.milestone.collapsed && milestoneController.milestone.has_user_priority_change_permission"
         class="btn-group dropdown do-animate"
     >
         <span class="dropdown-toggle btn btn-mini" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
@@ -9,51 +9,51 @@
             <b class="caret"></b>
         </span>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <li ng-repeat="accepted_type in milestone.content_accepted_types.content">
-                <a href="#" class="create-item-link" ng-click="planning.showAddItemToSubMilestoneModal(accepted_type, milestone)">{{ accepted_type.label }}</a>
+            <li ng-repeat="accepted_type in milestoneController.milestone.content_accepted_types.content">
+                <a href="#" class="create-item-link" ng-click="planning.showAddItemToSubMilestoneModal(accepted_type, milestoneController.milestone)">{{ accepted_type.label }}</a>
             </li>
         </ul>
     </div>
-    <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
-    <span class="date" ng-if="milestone.start_date || milestone.end_date">
-        {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
-        {{ milestone.end_date | amDateFormat:'ll' }}
+    <span class="label status {{ milestoneController.milestone.semantic_status }}">{{ milestoneController.milestone.status_value }}</span>
+    <span class="date" ng-if="milestoneController.milestone.start_date || milestoneController.milestone.end_date">
+        {{ milestoneController.milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
+        {{ milestoneController.milestone.end_date | amDateFormat:'ll' }}
     </span>
     <div style="clear: both"></div>
 </legend>
 
-<div class="content" ng-if="! milestone.collapsed" ng-class="{ loading_content: milestone.loadingContent }">
+<div class="content" ng-if="! milestoneController.milestone.collapsed" ng-class="{ loading_content: milestoneController.milestone.loadingContent }">
     <div class="info">
         <span class="capacity" translate>Capacity:</span>
-        <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span>
-        <span class="capacity-value" ng-if="! milestone.capacity" translate>N/A</span>
+        <span class="capacity-value" ng-if="milestoneController.milestone.capacity">{{ milestoneController.milestone.capacity }}</span>
+        <span class="capacity-value" ng-if="! milestoneController.milestone.capacity" translate>N/A</span>
 
         <span class="initial-effort" translate>Initial effort:</span>
-        <span class="initial-effort-value" ng-if="milestone.initialEffort" ng-class="{ higher: milestone.initialEffort > milestone.capacity }">{{ milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestone.initialEffort" translate>N/A</span>
+        <span class="initial-effort-value" ng-if="milestoneController.milestone.initialEffort" ng-class="{ higher: milestoneController.milestone.initialEffort > milestoneController.milestone.capacity }">{{ milestoneController.milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestoneController.milestone.initialEffort" translate>N/A</span>
 
         <ul>
             <li>
-                <a href="/plugins/tracker/?aid={{ milestone.id }}" ng-click="planning.showEditSubmilestoneModal($event, milestone)" title="{{ 'Edit' | translate }}">
+                <a href="/plugins/tracker/?aid={{ milestoneController.milestone.id }}" ng-click="planning.showEditSubmilestoneModal($event, milestoneController.milestone)" title="{{ 'Edit' | translate }}">
                     <i class="icon-edit"></i> <span translate>Edit</span>
                 </a>
             </li>
-            <li ng-if="! milestone.sub_milestone_type">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestone, 'blcontent') }}" title="{{ 'Content' | translate }}">
+            <li ng-if="! milestoneController.milestone.sub_milestone_type">
+                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'blcontent') }}" title="{{ 'Content' | translate }}">
                     <i class="icon-list-ul"></i> <span translate>Content</span>
                 </a>
             </li>
-            <li ng-if="milestone.resources.milestones.accept.trackers.length > 0">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestone, 'planning-v2') }}" title="{{ 'Planning' | translate }}">
+            <li ng-if="milestoneController.milestone.resources.milestones.accept.trackers.length > 0">
+                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'planning-v2') }}" title="{{ 'Planning' | translate }}">
                     <i class="icon-signin"></i> <span translate>Planning</span>
                 </a>
             </li>
-            <li ng-if="milestone.resources.burndown">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestone, 'burndown') }}" title="{{ 'Burndown' | translate }}">
+            <li ng-if="milestoneController.milestone.resources.burndown">
+                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'burndown') }}" title="{{ 'Burndown' | translate }}">
                     <i class="icon-bar-chart"></i> <span translate>Burndown</span>
                 </a>
             </li>
-            <li ng-if="milestone.resources.cardwall">
-                <a href="{{ planning.generateMilestoneLinkUrl(milestone, 'cardwall') }}" title="{{ 'Cardwall' | translate }}">
+            <li ng-if="milestoneController.milestone.resources.cardwall">
+                <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'cardwall') }}" title="{{ 'Cardwall' | translate }}">
                     <i class="icon-table"></i> <span translate>Cardwall</span>
                 </a>
             </li>
@@ -62,28 +62,29 @@
         <div style="clear: both"></div>
     </div>
 
-    <ul dragular="milestoneController.dragularOptions(milestone.content)"
-        class="backlog-items submilestone"
-        ng-class="{ 'empty-milestone': milestoneController.isMilestoneLoadedAndEmpty(milestone) }"
-        data-accept="{{ milestone.content_accepted_types.toString() }}"
-        data-submilestone-id="{{ milestone.id }}"
-        data-nodrop="{{ ! milestone.has_user_priority_change_permission }}"
+    <ul class="backlog-items submilestone"
+        ng-class="{ 'empty-milestone': milestoneController.isMilestoneLoadedAndEmpty() }"
+        data-accept="{{ milestoneController.milestone.content_accepted_types.toString() }}"
+        data-submilestone-id="{{ milestoneController.milestone.id }}"
+        data-nodrop="{{ ! milestoneController.milestone.has_user_priority_change_permission }}"
     >
-        <li ng-repeat="backlog_item in milestone.content"
-            class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }} {{ planning.current_view_class }}"
+        <li ng-repeat="backlog_item in milestoneController.milestone.content"
+            class="backlog-item parent in-milestone {{ backlog_item.status | lowercase }} {{ backlog_item.color }} {{ planning.current_view_class }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
             data-type="{{ backlog_item.trackerId }}"
             ng-show="planning.canShowBacklogItem(backlog_item)"
-            ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
+            ng-class="{ updating: backlog_item.updating, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking, undraggable: ! milestoneController.milestone.has_user_priority_change_permission }"
             collapsed="true"
-            data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
+            data-nodrag="{{ ! milestoneController.milestone.has_user_priority_change_permission }}"
             data-item-id="{{ backlog_item.id }}"
+            backlog-item-index="$index"
+            backlog-item-select="backlog_item"
         >
             <backlog-item
-                ng-init="user_can_move_cards=milestone.has_user_priority_change_permission;current_milestone=milestone"
+                ng-init="user_can_move_cards=milestoneController.milestone.has_user_priority_change_permission;current_milestone=milestoneController.milestone"
             ></backlog-item>
         </li>
     </ul>
 
-    <div class="loading" ng-if="milestone.loadingContent"></div>
+    <div class="loading" ng-if="milestoneController.milestone.loadingContent"></div>
 </div>

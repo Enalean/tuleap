@@ -2,7 +2,7 @@ describe("PlanningCtrl", function() {
     var $scope, $filter, $q, PlanningCtrl, BacklogItemService, BacklogService, ProjectService,
         MilestoneService, SharedPropertiesService, TuleapArtifactModalService,
         NewTuleapArtifactModalService, UserPreferencesService, DroppedService,
-        BacklogItemCollectionService, MilestoneCollectionService;
+        BacklogItemCollectionService, MilestoneCollectionService, BacklogItemSelectedService;
 
     var milestone = {
             id: 592,
@@ -67,10 +67,11 @@ describe("PlanningCtrl", function() {
             _TuleapArtifactModalService_,
             _UserPreferencesService_,
             _BacklogItemCollectionService_,
-            _MilestoneCollectionService_
+            _MilestoneCollectionService_,
+            _BacklogItemSelectedService_
         ) {
             $scope = $rootScope.$new();
-            $q = _$q_;
+            $q     = _$q_;
 
             SharedPropertiesService = _SharedPropertiesService_;
             spyOn(SharedPropertiesService, 'getUserId').and.returnValue(102);
@@ -157,6 +158,8 @@ describe("PlanningCtrl", function() {
                 return function() {};
             });
 
+            BacklogItemSelectedService = _BacklogItemSelectedService_;
+
             PlanningCtrl = $controller('PlanningCtrl', {
                 $filter                      : $filter,
                 $q                           : $q,
@@ -169,7 +172,8 @@ describe("PlanningCtrl", function() {
                 SharedPropertiesService      : SharedPropertiesService,
                 TuleapArtifactModalService   : TuleapArtifactModalService,
                 UserPreferencesService       : UserPreferencesService,
-                BacklogItemCollectionService : BacklogItemCollectionService
+                BacklogItemCollectionService : BacklogItemCollectionService,
+                BacklogItemSelectedService   : BacklogItemSelectedService
             });
         });
 
@@ -759,7 +763,7 @@ describe("PlanningCtrl", function() {
                     remove_add_reorder_request.resolve();
                     $scope.$apply();
 
-                    expect(ProjectService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 80, 5202, {
+                    expect(ProjectService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 80, [5202], {
                         direction: "before",
                         item_id: 3894
                     });
@@ -803,7 +807,7 @@ describe("PlanningCtrl", function() {
                     remove_add_reorder_request.resolve();
                     $scope.$apply();
 
-                    expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, 5202);
+                    expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, [5202]);
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(PlanningCtrl.backlog_items.content).toEqual([
                         { id: 5202 }
@@ -830,7 +834,7 @@ describe("PlanningCtrl", function() {
                     remove_add_reorder_request.resolve();
                     $scope.$apply();
 
-                    expect(MilestoneService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 26, 5202, {
+                    expect(MilestoneService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 26, [5202], {
                         direction: "before",
                         item_id: 6240
                     });
@@ -851,7 +855,7 @@ describe("PlanningCtrl", function() {
                     remove_add_reorder_request.resolve();
                     $scope.$apply();
 
-                    expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 26, 5202);
+                    expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 26, [5202]);
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(PlanningCtrl.backlog_items.content).toEqual([
                         { id: 5202 }
@@ -1090,7 +1094,7 @@ describe("PlanningCtrl", function() {
                 add_to_content_request.resolve();
                 $scope.$apply();
 
-                expect(MilestoneService.addReorderToContent).toHaveBeenCalledWith(92, 7488, {
+                expect(MilestoneService.addReorderToContent).toHaveBeenCalledWith(92, [7488], {
                     direction: "before",
                     item_id: 9402
                 });
@@ -1109,7 +1113,7 @@ describe("PlanningCtrl", function() {
                 add_to_content_request.resolve();
                 $scope.$apply();
 
-                expect(MilestoneService.addToContent).toHaveBeenCalledWith(92, 7488);
+                expect(MilestoneService.addToContent).toHaveBeenCalledWith(92, [7488]);
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
                 expect(submilestone.content).toEqual([
                     { id: 7488 }

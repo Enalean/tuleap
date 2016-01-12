@@ -1,0 +1,29 @@
+#backlog-items-selected-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    padding: 15px 0 15px 200px;
+    box-sizing: border-box;
+    border-top: 1px solid #E0E0E0;
+    background: rgba(255, 255, 255, 0.95);
+    text-align: center;
+    font-size: 14px;
+
+    &.ng-enter {
+        animation: slideInUp 200ms;
+    }
+
+    &.ng-leave {
+        animation: slideOutDown 200ms;
+    }
+
+    > p:last-child {
+        margin: 0;
+
+        &.focus {
+            animation: pulse ease-in-out 750ms;
+        }
+    }
+}

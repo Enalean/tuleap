@@ -1,0 +1,9 @@
+<div id="backlog-items-selected-bar" ng-if="selected_bar_controller.nb_selected_backlog_items > 0" class="do-animate">
+    <p translate
+        translate-n="selected_bar_controller.nb_selected_backlog_items"
+        translate-plural="{{ selected_bar_controller.nb_selected_backlog_items }} items are selected."
+    >
+        {{ selected_bar_controller.nb_selected_backlog_items }} item is selected.
+    </p>
+    <p translate>Press <span class="label">ESC</span> to cancel the selection, only siblings can be multi-selected.</p>
+</div>

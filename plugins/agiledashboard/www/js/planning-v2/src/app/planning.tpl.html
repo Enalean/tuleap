@@ -132,7 +132,7 @@
                 There are no open milestones
             </div>
             <fieldset
-                ng-repeat="milestone in planning.getOpenMilestones() track by $index"
+                ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
                 class="milestone"
                 ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
             >
@@ -156,7 +156,7 @@
             </div>
             <fieldset
                 ng-if="planning.thereAreClosedMilestonesLoaded()"
-                ng-repeat="milestone in planning.getClosedMilestones() track by $index"
+                ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
                 class="milestone"
                 ng-class="{ collapsed: milestone.collapsed, updating: milestone.updating }"
             >
@@ -169,3 +169,5 @@
 
     <div class="clearfix"></div>
 </div>
+
+<div backlog-item-selected-bar></div>

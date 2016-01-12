@@ -145,11 +145,11 @@
                     milestone.loadingContent = true;
                     milestone.alreadyLoaded  = true;
 
-                    fetchMilestoneContent(milestone, limit, offset);
+                    return fetchMilestoneContent(limit, offset);
                 };
 
-                function fetchMilestoneContent(milestone, limit, offset) {
-                    getContent(milestone.id, limit, offset).then(function(data) {
+                function fetchMilestoneContent(limit, offset) {
+                    return getContent(milestone.id, limit, offset).then(function(data) {
                         angular.forEach(data.results, function(backlog_item, key) {
                             scope_items[backlog_item.id] = backlog_item;
                             milestone.content.push(scope_items[backlog_item.id]);
@@ -159,7 +159,7 @@
                         _.forEach(milestone.content, augmentBacklogItem);
 
                         if (milestone.content.length < data.total) {
-                            fetchMilestoneContent(milestone, limit, offset + limit);
+                            fetchMilestoneContent(limit, offset + limit);
                         } else {
                             milestone.loadingContent = false;
                         }
@@ -214,106 +214,114 @@
             };
         }
 
-        function reorderBacklog(milestone_id, dropped_item_id, compared_to) {
+        function reorderBacklog(milestone_id, dropped_item_ids, compared_to) {
             return rest.one('milestones', milestone_id)
                 .all('backlog')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
+                        ids         : dropped_item_ids,
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     }
                 });
         }
 
-        function removeAddReorderToBacklog(source_milestone_id, dest_milestone_id, dropped_item_id, compared_to) {
+        function removeAddReorderToBacklog(source_milestone_id, dest_milestone_id, dropped_item_ids, compared_to) {
             return rest.one('milestones', dest_milestone_id)
                 .all('backlog')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
+                        ids         : dropped_item_ids,
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
-                    add: [{
-                        id         : dropped_item_id,
-                        remove_from: source_milestone_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return {
+                            id         : dropped_item_id,
+                            remove_from: source_milestone_id
+                        };
+                    })
                 });
         }
 
-        function removeAddToBacklog(source_milestone_id, dest_milestone_id, dropped_item_id) {
+        function removeAddToBacklog(source_milestone_id, dest_milestone_id, dropped_item_ids) {
             return rest.one('milestones', dest_milestone_id)
                 .all('backlog')
                 .patch({
-                    add: [{
-                        id         : dropped_item_id,
-                        remove_from: source_milestone_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return {
+                            id         : dropped_item_id,
+                            remove_from: source_milestone_id
+                        };
+                    })
                 });
         }
 
-        function reorderContent(milestone_id, dropped_item_id, compared_to) {
+        function reorderContent(milestone_id, dropped_item_ids, compared_to) {
             return rest.one('milestones', milestone_id)
                 .all('content')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
+                        ids         : dropped_item_ids,
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     }
                 });
         }
 
-        function addReorderToContent(milestone_id, dropped_item_id, compared_to) {
+        function addReorderToContent(milestone_id, dropped_item_ids, compared_to) {
             return rest.one('milestones', milestone_id)
                 .all('content')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
+                        ids         : dropped_item_ids,
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
-                    add: [{
-                        id: dropped_item_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return { id: dropped_item_id };
+                    })
                 });
         }
 
-        function addToContent(milestone_id, dropped_item_id) {
+        function addToContent(milestone_id, dropped_item_ids) {
             return rest.one('milestones', milestone_id)
                 .all('content')
                 .patch({
-                    add: [{
-                        id: dropped_item_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return { id: dropped_item_id };
+                    })
                 });
         }
 
-        function removeAddReorderToContent(source_milestone_id, dest_milestone_id, dropped_item_id, compared_to) {
+        function removeAddReorderToContent(source_milestone_id, dest_milestone_id, dropped_item_ids, compared_to) {
             return rest.one('milestones', dest_milestone_id)
                 .all('content')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
+                        ids         : dropped_item_ids,
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
-                    add: [{
-                        id         : dropped_item_id,
-                        remove_from: source_milestone_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return {
+                            id         : dropped_item_id,
+                            remove_from: source_milestone_id
+                        };
+                    })
                 });
         }
 
-        function removeAddToContent(source_milestone_id, dest_milestone_id, dropped_item_id) {
+        function removeAddToContent(source_milestone_id, dest_milestone_id, dropped_item_ids) {
             return rest.one('milestones', dest_milestone_id)
                 .all('content')
                 .patch({
-                    add: [{
-                        id         : dropped_item_id,
-                        remove_from: source_milestone_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return {
+                            id         : dropped_item_id,
+                            remove_from: source_milestone_id
+                        };
+                    })
                 });
         }
     }

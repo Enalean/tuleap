@@ -1,22 +1,27 @@
 describe("BacklogController - ", function() {
-    var $q, $scope, BacklogController, BacklogService, DroppedService, MilestoneCollectionService;
+    var $q, $scope, $document, dragularService, BacklogController, BacklogService, DroppedService, MilestoneCollectionService, BacklogItemSelectedService;
 
     beforeEach(function() {
         module('backlog');
 
         inject(function(
             _$q_,
+            _$document_,
             $rootScope,
             $controller,
+            _dragularService_,
             _BacklogService_,
             _DroppedService_,
-            _MilestoneCollectionService_
+            _MilestoneCollectionService_,
+            _BacklogItemSelectedService_
         ) {
-            $q             = _$q_;
-            $scope         = $rootScope.$new();
+            $q              = _$q_;
+            $document       = _$document_;
+            $scope          = $rootScope.$new();
+            dragularService = _dragularService_;
 
             BacklogService = _BacklogService_;
-            spyOn(BacklogService, 'removeItemFromUnfilteredBacklog');
+            spyOn(BacklogService, 'removeBacklogItemsFromBacklog');
 
             DroppedService = _DroppedService_;
             spyOn(DroppedService, 'moveFromBacklogToSubmilestone');
@@ -24,12 +29,19 @@ describe("BacklogController - ", function() {
 
             MilestoneCollectionService = _MilestoneCollectionService_;
             spyOn(MilestoneCollectionService, 'refreshMilestone');
+            spyOn(MilestoneCollectionService, 'removeBacklogItemsFromMilestoneContent');
+            spyOn(MilestoneCollectionService, 'addOrReorderBacklogItemsInMilestoneContent');
+
+            BacklogItemSelectedService = _BacklogItemSelectedService_;
 
             BacklogController = $controller('BacklogController', {
                 $scope                    : $scope,
+                $document                 : $document,
+                dragularService           : dragularService,
                 BacklogService            : BacklogService,
                 DroppedService            : DroppedService,
-                MilestoneCollectionService: MilestoneCollectionService
+                MilestoneCollectionService: MilestoneCollectionService,
+                BacklogItemSelectedService        : BacklogItemSelectedService
             });
         });
     });
@@ -89,14 +101,15 @@ describe("BacklogController - ", function() {
     });
 
     describe("dragularDrop() -", function() {
-        var $dropped_item_element, dropped_item_id, $target_element, $source_element,
+        var $dropped_item_element, dropped_item_ids, dropped_items, $target_element, $source_element,
             source_model, target_model, initial_index, target_index, compared_to,
             move_request;
 
         beforeEach(function() {
-            dropped_item_id       = 78;
+            dropped_item_ids      = [78];
+            dropped_items         = [{id: 78}];
             $dropped_item_element = affix('li');
-            angular.element($dropped_item_element).data('item-id', dropped_item_id);
+            angular.element($dropped_item_element).data('item-id', dropped_item_ids[0]);
             $source_element = affix('ul.backlog');
             initial_index   = 0;
             target_index    = 0;
@@ -113,7 +126,7 @@ describe("BacklogController - ", function() {
                 DroppedService.reorderBacklog.and.returnValue(move_request.promise);
                 $target_element = $source_element;
                 source_model = [
-                    { id: dropped_item_id },
+                    { id: dropped_item_ids[0] },
                     { id: 53 }
                 ];
                 target_model = undefined;
@@ -128,7 +141,7 @@ describe("BacklogController - ", function() {
                     target_index
                 );
 
-                expect(DroppedService.reorderBacklog).toHaveBeenCalledWith(dropped_item_id, compared_to, BacklogService.backlog);
+                expect(DroppedService.reorderBacklog).toHaveBeenCalledWith(dropped_item_ids, compared_to, BacklogService.backlog);
             });
 
             it("when I move an item from the backlog to a submilestone (e.g. to a Sprint), then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function() {
@@ -138,7 +151,7 @@ describe("BacklogController - ", function() {
                 angular.element($target_element).data('submilestone-id', destination_milestone_id);
                 source_model = [];
                 target_model = [
-                    { id: dropped_item_id },
+                    { id: dropped_item_ids[0] },
                     { id: 53 }
                 ];
 
@@ -154,14 +167,14 @@ describe("BacklogController - ", function() {
                 move_request.resolve();
                 $scope.$apply();
 
-                expect(DroppedService.moveFromBacklogToSubmilestone).toHaveBeenCalledWith(dropped_item_id, compared_to, destination_milestone_id);
-                expect(BacklogService.removeItemFromUnfilteredBacklog).toHaveBeenCalledWith(dropped_item_id);
+                expect(DroppedService.moveFromBacklogToSubmilestone).toHaveBeenCalledWith(dropped_item_ids, compared_to, destination_milestone_id);
+                expect(BacklogService.removeBacklogItemsFromBacklog).toHaveBeenCalledWith(dropped_items);
                 expect(MilestoneCollectionService.refreshMilestone).toHaveBeenCalledWith(destination_milestone_id);
             });
         });
     });
 
-    describe("dragularOptions() -", function() {
+    describe("dragularOptionsForBacklog() -", function() {
         describe("accepts() -", function() {
             var $element_to_drop, $target_container_element;
             beforeEach(function() {
@@ -174,7 +187,7 @@ describe("BacklogController - ", function() {
                     angular.element($element_to_drop).data('type', 'trackerId49');
                     angular.element($target_container_element).data('accept', 'trackerId38|trackerId49');
 
-                    var result = BacklogController.dragularOptions().accepts($element_to_drop, $target_container_element);
+                    var result = BacklogController.dragularOptionsForBacklog().accepts($element_to_drop, $target_container_element);
 
                     expect(result).toBeTruthy();
                 });
@@ -183,7 +196,7 @@ describe("BacklogController - ", function() {
                     angular.element($element_to_drop).data('type', 'trackerId49');
                     angular.element($target_container_element).data('accept', 'trackerId38');
 
-                    var result = BacklogController.dragularOptions().accepts($element_to_drop, $target_container_element);
+                    var result = BacklogController.dragularOptionsForBacklog().accepts($element_to_drop, $target_container_element);
 
                     expect(result).toBeFalsy();
                 });
@@ -191,7 +204,7 @@ describe("BacklogController - ", function() {
                 it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function() {
                     angular.element($target_container_element).data('nodrop', true);
 
-                    var result = BacklogController.dragularOptions().accepts($element_to_drop, $target_container_element);
+                    var result = BacklogController.dragularOptionsForBacklog().accepts($element_to_drop, $target_container_element);
 
                     expect(result).toBeFalsy();
                 });
@@ -209,7 +222,7 @@ describe("BacklogController - ", function() {
                 it("and given that the handle has an ancestor with the 'dragular-handle' class and the element didn't have nodrag data, when I check if the element can be dragged, then it will return true", function() {
                     var $handle_element = $element_to_drag.affix('div.dragular-handle').affix('span');
 
-                    var result = BacklogController.dragularOptions().moves(
+                    var result = BacklogController.dragularOptionsForBacklog().moves(
                         $element_to_drag,
                         $container,
                         $handle_element
@@ -221,7 +234,7 @@ describe("BacklogController - ", function() {
                 it("and given that the handle didn't have any ancestor with the 'dragular-handle' class and the element didn't have nodrag data, when I check if the element can be dragged, then it will return false", function() {
                     var $handle_element = $element_to_drag.affix('span');
 
-                    var result = BacklogController.dragularOptions().moves(
+                    var result = BacklogController.dragularOptionsForBacklog().moves(
                         $element_to_drag,
                         $container,
                         $handle_element
@@ -233,7 +246,7 @@ describe("BacklogController - ", function() {
                 it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function() {
                     angular.element($element_to_drag).data('nodrag', true);
 
-                    var result = BacklogController.dragularOptions().moves(
+                    var result = BacklogController.dragularOptionsForBacklog().moves(
                         $element_to_drag,
                         $container,
                         $handle_element

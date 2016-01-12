@@ -5,13 +5,15 @@ angular
 BacklogService.$inject = [
     '$filter',
     'BacklogItemFactory',
-    'ProjectService'
+    'ProjectService',
+    'BacklogItemCollectionService'
 ];
 
 function BacklogService(
     $filter,
     BacklogItemFactory,
-    ProjectService
+    ProjectService,
+    BacklogItemCollectionService
 ) {
     var self = this;
     _.extend(self, {
@@ -33,12 +35,12 @@ function BacklogService(
             loading         : false,
             fully_loaded    : false
         },
-        appendBacklogItems             : appendBacklogItems,
-        filterItems                    : filterItems,
-        insertItemInUnfilteredBacklog  : insertItemInUnfilteredBacklog,
-        loadMilestoneBacklog           : loadMilestoneBacklog,
-        loadProjectBacklog             : loadProjectBacklog,
-        removeItemFromUnfilteredBacklog: removeItemFromUnfilteredBacklog
+        appendBacklogItems               : appendBacklogItems,
+        filterItems                      : filterItems,
+        removeBacklogItemsFromBacklog    : removeBacklogItemsFromBacklog,
+        addOrReorderBacklogItemsInBacklog: addOrReorderBacklogItemsInBacklog,
+        loadMilestoneBacklog             : loadMilestoneBacklog,
+        loadProjectBacklog               : loadProjectBacklog
     });
 
     function appendBacklogItems(items) {
@@ -49,14 +51,14 @@ function BacklogService(
         self.items.loading = false;
     }
 
-    function insertItemInUnfilteredBacklog(item, index) {
-        self.items.content.splice(index, 0, item);
+    function removeBacklogItemsFromBacklog(items) {
+        BacklogItemCollectionService.removeBacklogItemsFromCollection(self.items.content, items);
+        BacklogItemCollectionService.removeBacklogItemsFromCollection(self.items.filtered_content, items);
     }
 
-    function removeItemFromUnfilteredBacklog(item_id) {
-        _.remove(self.items.content, function(item) {
-            return item.id === item_id;
-        });
+    function addOrReorderBacklogItemsInBacklog(items, compared_to) {
+        BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(self.items.content, items, compared_to);
+        BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(self.items.filtered_content, items, compared_to);
     }
 
     function filterItems(filter_terms) {

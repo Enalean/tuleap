@@ -69,18 +69,50 @@ describe("DroppedService -", function() {
     });
 
     describe("defineComparedTo:", function() {
-        var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }];
+        describe("when only one element is dragged, ", function() {
+            var dragged_item  = { id: 4 };
+            var dropped_items = [{ id: 4 }];
 
-        it("should return before the second item", function() {
-            expect(DroppedService.defineComparedTo(item_list, 0)).toEqual({ direction: 'before', item_id: 2 });
+            it("should return before the first item", function() {
+                var item_list = [{ id: 4 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }];
+
+                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'before', item_id: 1 });
+            });
+
+            it("should return after the first item", function() {
+                var item_list = [{ id: 1 }, { id: 4 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }];
+
+                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 1 });
+            });
+
+            it("should return after the last item", function() {
+                var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }, { id: 4 }];
+
+                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 6 });
+            });
         });
 
-        it("should return after the first item", function() {
-            expect(DroppedService.defineComparedTo(item_list, 1)).toEqual({ direction: 'after', item_id: 1 });
-        });
+        describe("when multiple elements are dragged, ", function() {
+            var dragged_item  = { id: 5 };
+            var dropped_items = [{ id: 2 }, { id: 5 }];
 
-        it("should return after the second item", function() {
-            expect(DroppedService.defineComparedTo(item_list, 2)).toEqual({ direction: 'after', item_id: 2 });
+            it("should return before the first item", function() {
+                var item_list = [{ id: 5 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }];
+
+                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'before', item_id: 1 });
+            });
+
+            it("should return after the first item", function() {
+                var item_list = [{ id: 1 }, { id: 5 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }];
+
+                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 1 });
+            });
+
+            it("should return after the last item", function() {
+                var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }, { id: 5 }];
+
+                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 6 });
+            });
         });
     });
 

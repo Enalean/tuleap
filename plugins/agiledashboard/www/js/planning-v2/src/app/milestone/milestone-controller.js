@@ -5,34 +5,47 @@ angular
 
 MilestoneController.$inject = [
     '$scope',
+    '$timeout',
+    '$document',
+    'dragularService',
     'BacklogService',
     'DroppedService',
-    'MilestoneCollectionService'
+    'MilestoneCollectionService',
+    'BacklogItemSelectedService'
 ];
 
 function MilestoneController(
     $scope,
+    $timeout,
+    $document,
+    dragularService,
     BacklogService,
     DroppedService,
-    MilestoneCollectionService
+    MilestoneCollectionService,
+    BacklogItemSelectedService
 ) {
     var self = this;
     _.extend(self, {
-        dragularOptions          : dragularOptions,
-        init                     : init,
-        isMilestoneLoadedAndEmpty: isMilestoneLoadedAndEmpty,
-        toggleMilestone          : toggleMilestone
+        milestone                      : $scope.milestone, //herited from parent scope
+        dragular_instance_for_milestone: undefined,
+        init                           : init,
+        initDragularForMilestone       : initDragularForMilestone,
+        dragularOptionsForMilestone    : dragularOptionsForMilestone,
+        isMilestoneLoadedAndEmpty      : isMilestoneLoadedAndEmpty,
+        toggleMilestone                : toggleMilestone
     });
 
     self.init();
 
     function init() {
+        $scope.$on('dragularcancel', dragularCancel);
         $scope.$on('dragulardrop', dragularDrop);
+        $scope.$on('dragulardrag', dragularDrag);
     }
 
-    function toggleMilestone($event, milestone) {
-        if (! milestone.alreadyLoaded && milestone.content.length === 0) {
-            milestone.getContent();
+    function toggleMilestone($event) {
+        if (! self.milestone.alreadyLoaded && self.milestone.content.length === 0) {
+            self.milestone.getContent();
         }
 
         var target                = $event.target;
@@ -45,13 +58,67 @@ function MilestoneController(
         }
 
         if (! is_a_create_item_link) {
-            return milestone.collapsed = ! milestone.collapsed;
+            self.milestone.collapsed = ! self.milestone.collapsed;
+        }
+
+        if (! self.dragular_instance_for_milestone) {
+            $timeout(function() {
+                self.initDragularForMilestone();
+            });
         }
     }
 
-    function isMilestoneLoadedAndEmpty(milestone) {
-        return ! milestone.loadingContent &&
-            milestone.content.length === 0;
+    function isMilestoneLoadedAndEmpty() {
+        return ! self.milestone.loadingContent && self.milestone.content.length === 0;
+    }
+
+    function initDragularForMilestone() {
+        self.dragular_instance_for_milestone = dragularService(document.querySelector('ul.submilestone[data-submilestone-id="'+ self.milestone.id +'"]'), self.dragularOptionsForMilestone());
+
+        $document.bind('keyup', function(event) {
+            var esc_key_code = 27;
+
+            if (event.keyCode === esc_key_code) {
+                BacklogItemSelectedService.deselectAllBacklogItems();
+
+                self.dragular_instance_for_milestone.cancel(true);
+
+                $scope.$apply();
+            }
+        });
+    }
+
+    function dragularOptionsForMilestone() {
+        return {
+            containersModel: self.milestone.content,
+            scope          : $scope,
+            revertOnSpill  : true,
+            nameSpace      : 'dragular-list',
+            accepts        : isItemDroppable,
+            moves          : isItemDraggable
+        };
+    }
+
+    function dragularDrag(event, element) {
+        event.stopPropagation();
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
+            BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
+        ) {
+            BacklogItemSelectedService.multipleBacklogItemsAreDragged(element);
+
+        } else {
+            BacklogItemSelectedService.deselectAllBacklogItems();
+        }
+
+        $scope.$apply();
+    }
+
+    function dragularCancel(event, dropped_item_element, source_element) {
+        event.stopPropagation();
+
+        BacklogItemSelectedService.deselectAllBacklogItems();
+        $scope.$apply();
     }
 
     function dragularDrop(
@@ -68,54 +135,78 @@ function MilestoneController(
 
         var source_list_element  = angular.element(source_element),
             target_list_element  = angular.element(target_element),
-            dropped_item_id      = getDroppedItemId(dropped_item_element),
+            dropped_item_ids     = [getDroppedItemId(dropped_item_element)],
             current_milestone_id = getMilestoneId(target_list_element);
 
         if (! target_model) {
             target_model = source_model;
         }
 
-        var compared_to = DroppedService.defineComparedTo(target_model, target_index);
+        var dropped_items = [target_model[target_index]];
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
+            dropped_items    = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
+            dropped_item_ids = _.pluck(dropped_items, 'id');
+        }
+
+        var compared_to = DroppedService.defineComparedTo(target_model, target_model[target_index], dropped_items);
 
         saveChangesInBackend();
 
         function saveChangesInBackend() {
-            var source_milestone_id = getMilestoneId(source_list_element);
+            var dropped_promise,
+                source_milestone_id = getMilestoneId(source_list_element);
 
             switch (true) {
                 case droppedToSameMilestone(source_list_element, target_list_element):
-                    DroppedService.reorderSubmilestone(
-                        dropped_item_id,
+                    MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(current_milestone_id, dropped_items, compared_to);
+
+                    dropped_promise = DroppedService.reorderSubmilestone(
+                        dropped_item_ids,
                         compared_to,
                         current_milestone_id
-                    );
+                    ).then(function() {
+                        BacklogItemSelectedService.deselectAllBacklogItems();
+                    });
                     break;
+
                 case droppedToAnotherMilestone(source_list_element, target_list_element):
                     var target_milestone_id = getMilestoneId(target_list_element);
 
-                    DroppedService.moveFromSubmilestoneToSubmilestone(
-                        dropped_item_id,
+                    MilestoneCollectionService.removeBacklogItemsFromMilestoneContent(source_milestone_id, dropped_items);
+                    MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(target_milestone_id, dropped_items, compared_to);
+
+                    dropped_promise =DroppedService.moveFromSubmilestoneToSubmilestone(
+                        dropped_item_ids,
                         compared_to,
                         source_milestone_id,
                         target_milestone_id
                     ).then(function() {
+                        BacklogItemSelectedService.deselectAllBacklogItems();
                         MilestoneCollectionService.refreshMilestone(source_milestone_id);
                         MilestoneCollectionService.refreshMilestone(target_milestone_id);
                     });
                     break;
+
                 case droppedToBacklog(target_list_element):
-                    DroppedService.moveFromSubmilestoneToBacklog(
-                        dropped_item_id,
+                    MilestoneCollectionService.removeBacklogItemsFromMilestoneContent(source_milestone_id, dropped_items);
+                    BacklogService.addOrReorderBacklogItemsInBacklog(dropped_items, compared_to);
+
+                    dropped_promise = DroppedService.moveFromSubmilestoneToBacklog(
+                        dropped_item_ids,
                         compared_to,
                         source_milestone_id,
                         BacklogService.backlog
                     ).then(function() {
-                        var dropped_backlog_item = target_model[target_index];
-                        BacklogService.insertItemInUnfilteredBacklog(dropped_backlog_item, target_index);
+                        BacklogItemSelectedService.deselectAllBacklogItems();
                         MilestoneCollectionService.refreshMilestone(source_milestone_id);
                     });
                     break;
             }
+
+            dropped_promise.catch(function() {
+                BacklogItemSelectedService.reselectBacklogItems();
+            });
         }
     }
 
@@ -147,17 +238,6 @@ function MilestoneController(
         return angular
             .element(dropped_item)
             .data('item-id');
-    }
-
-    function dragularOptions(items) {
-        return {
-            containersModel: items,
-            scope          : $scope,
-            revertOnSpill  : true,
-            nameSpace      : 'dragular-list',
-            accepts        : isItemDroppable,
-            moves          : isItemDraggable
-        };
     }
 
     function isItemDroppable(element_to_drop, target_container_element) {
