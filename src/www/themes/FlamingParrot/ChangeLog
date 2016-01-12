@@ -1,3 +1,6 @@
+Version 1.119 - Tuleap 8.11
+    * request #8773: Allow plugins to display a link in the navbar
+
 Version 1.118 - Tuleap 8.10
     * story #8608: SVN service homepage display a specific message if svn tokens are allowed
 

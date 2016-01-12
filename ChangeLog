@@ -4,6 +4,7 @@ Version 8.11 (Not released yet)
 
 	== Development ==
 	* "make start" now works on OSX
+	* request #8773: Allow plugins to display a link in the navbar
 
 	== Bug fix ==
 	* request #8769: SVN paths in CI not displayed due to js error
@@ -11,6 +12,9 @@ Version 8.11 (Not released yet)
 
 	== Plugins ==
 	* git: 4.107
+
+    == Themes ==
+	* FlamingParrot: 1.119
 
 Version 8.10 (Thursday, January 7th 2016)
 
