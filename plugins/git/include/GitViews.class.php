@@ -1,8 +1,7 @@
 <?php
-
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +20,6 @@
  */
 
 require_once 'www/project/admin/permissions.php';
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * GitViews
@@ -359,12 +357,12 @@ class GitViews extends PluginViews {
         echo '<br />';
     }
 
-    protected function adminGitAdminsView($is_admin_mass_change_allowed) {
+    protected function adminGitAdminsView($are_mirrors_defined) {
         $params = $this->getData();
 
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
             $this->groupId,
-            $is_admin_mass_change_allowed,
+            $are_mirrors_defined,
             $this->ugroup_manager->getStaticUGroups($this->project),
             $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
         );
@@ -374,20 +372,19 @@ class GitViews extends PluginViews {
         echo $renderer->renderToString('admin', $presenter);
     }
 
-    protected function adminGerritTemplatesView($is_admin_mass_change_allowed) {
+    protected function adminGerritTemplatesView($are_mirrors_defined) {
         $params = $this->getData();
 
-
-        $repository_list = (isset($params['repository_list'])) ? $params['repository_list'] : array();
-        $templates_list  = (isset($params['templates_list'])) ? $params['templates_list'] : array();
-        $parent_templates_list  = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
+        $repository_list       = (isset($params['repository_list'])) ? $params['repository_list'] : array();
+        $templates_list        = (isset($params['templates_list'])) ? $params['templates_list'] : array();
+        $parent_templates_list = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
 
         $presenter = new GitPresenters_AdminGerritTemplatesPresenter(
             $repository_list,
             $templates_list,
             $parent_templates_list,
             $this->groupId,
-            $is_admin_mass_change_allowed,
+            $are_mirrors_defined,
             $params['has_gerrit_servers_set_up']
         );
 
@@ -592,6 +589,32 @@ class GitViews extends PluginViews {
             echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";
         }
     }
-}
 
-?>
+    protected function adminDefaultSettings($are_mirrors_defined) {
+        $mirror_presenters = $this->getMirrorPresentersForGitAdmin();
+
+        $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
+            $this->groupId,
+            $are_mirrors_defined,
+            $mirror_presenters
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
+        echo $renderer->renderToString('admin', $presenter);
+    }
+
+    private function getMirrorPresentersForGitAdmin() {
+        $mirrors            = $this->mirror_data_mapper->fetchAllForProject($this->project);
+        $default_mirror_ids = $this->mirror_data_mapper->getDefaultMirrorIdsForProject($this->project);
+        $mirror_presenters  = array();
+
+        foreach ($mirrors as $mirror) {
+            $is_used = in_array($mirror->id, $default_mirror_ids);
+
+            $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, $is_used);
+        }
+
+        return $mirror_presenters;
+    }
+}

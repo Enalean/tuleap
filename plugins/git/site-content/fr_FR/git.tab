@@ -54,10 +54,13 @@ plugin_git	admin_mail	Notifications
 plugin_git	admin_mirroring	Réplication
 plugin_git	mirroring_title	Réplication
 plugin_git	mirroring_info	Sélectionnez les mirroirs sur lesquels vous souhaitez répliquer le dépôt <b>$1</b>:
+plugin_git	mirroring_default_info	Sélectionnez les mirroirs sur lesquels vous souhaitez répliquer par défaut tout nouveau dépôt :
 plugin_git	mirroring_mirror_name	Nom
 plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Utilisé par ce dépôt ?
+plugin_git	mirroring_mirror_default_used	Utilisé par défaut ?
 plugin_git	mirroring_update_mirroring	Mettre à jour les réplications de ce dépôt
+plugin_git	mirroring_update_default_mirroring	Mettre à jour les réplications par défaut
 plugin_git	mirroring_mirroring_successful	Le dépôt va être répliqué sur les mirroirs sélectionnés dans quelques minutes.
 plugin_git	mirroring_mirroring_successful_plural	Les dépôts vont être répliqués sur les mirroirs sélectionnés dans quelques minutes.
 plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué dans quelques minutes.
@@ -100,6 +103,7 @@ plugin_git	actions_delete_process	Le dépôt '$1' va être supprimé dans quelqu
 plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères, pas de slash au début ou à la fin, le nom ne doit pas finir avec ".git" non plus.
 plugin_git	actions_create_repo_process	Le dépôt va être crée dans quelques secondes
 plugin_git	actions_repo_not_found	Le dépôt n'existe pas
+plugin_git	actions_mirror_ids_not_valid	Le requête contient des données non valides (identifiants de mirroir).
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
 plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
 plugin_git	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le repertoire
@@ -262,6 +266,7 @@ plugin_git	view_admin_title	Administration de Git
 plugin_git	view_admin_tab_gerrit_templates	Modèles Gerrit
 plugin_git	view_admin_tab_git_admins	Administrateurs Git
 plugin_git	view_admin_tab_mass_update	Mise à jour massive des dépôts
+plugin_git	view_admin_tab_default_settings	Paramètres git par défaut
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Modèles
 plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
@@ -370,6 +375,8 @@ plugin_git	mirror_allowed_project_revoke_title	Attention
 plugin_git	mirror_allowed_project_revoke_description	Vous êtes sur le point d'interdire l'accès à ce miroir pour les projects sélectionnés. Celà implique la suppression de la réplication des dépôts des projets sélectionnés. Êtes-vous sûr de vouloir faire celà ?
 plugin_git	mirror_allowed_project_revoke_yes	Oui, interdire l'accès
 plugin_git	mirror_allowed_project_revoke_no	Non
+plugin_git	default_mirros_update_success	Mirroirs par défaut mis à jour.
+plugin_git	default_mirros_update_error	Une erreur est survenue lors de la mise à jour des mirroirs par défaut.
 
 plugin_git	system_event_queue	File d'attente Git
 plugin_git	mirror_system_event_queue	File d'attente Grok Mirror

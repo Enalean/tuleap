@@ -1,0 +1,44 @@
+<h3>{{ mirroring_title }}</h3>
+
+<form action="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}" method="POST">
+    <p>{{{ mirroring_info }}}</p>
+
+    <table class="table table-striped table-bordered mirrors-list">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="name">{{ mirroring_mirror_url }}</th>
+                <th class="used">{{ mirroring_mirror_used }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{# mirror_presenters }}
+            <tr>
+                <td>
+                    <input
+                        type="hidden"
+                        name="selected_mirror_ids[{{ project_id }}][{{ mirror_id }}]"
+                        value="0"
+                        />
+                    <input
+                        type="checkbox"
+                        name="selected_mirror_ids[{{ project_id }}][{{ mirror_id }}]"
+                        value="1"
+                        {{# is_used }}checked{{/ is_used }}
+                        />
+                </td>
+                <td class="name">{{ name }}</td>
+                <td class="used">
+                    {{# is_used }}
+                        <i class="icon-ok"></i>
+                    {{/ is_used }}
+                </td>
+            </tr>
+        {{/ mirror_presenters }}
+        </tbody>
+    </table>
+    </ul>
+
+    <input type="hidden" name="action" value="update_default_mirroring">
+    <input type="submit" class="btn btn-primary" name="mirror" value="{{ mirroring_update_mirroring }}">
+</form>

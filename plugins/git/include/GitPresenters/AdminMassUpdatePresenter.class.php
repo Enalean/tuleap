@@ -46,8 +46,8 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         array $repositories,
         GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter
     ) {
-        $allow_mass_update = true;
-        parent::__construct($project_id, $allow_mass_update);
+        $are_mirrors_defined = true;
+        parent::__construct($project_id, $are_mirrors_defined);
 
         $this->csrf_input          = $csrf->fetchHTMLInput();
         $this->manage_mass_update  = true;

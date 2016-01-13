@@ -23,20 +23,17 @@ abstract class GitPresenters_AdminPresenter {
     public $project_id;
 
     /** @var bool */
-    public $allow_mass_update;
-
-    public $manage_gerrit_templates = false;
-
-    public $manage_git_admins = false;
-
+    public $are_mirrors_defined;
+    public $manage_gerrit_templates                = false;
+    public $manage_git_admins                      = false;
     public $manage_mass_update_select_repositories = false;
+    public $manage_mass_update                     = false;
+    public $manage_default_settings                = false;
 
-    public $manage_mass_update = false;
 
-
-    public function __construct($project_id, $allow_mass_update) {
-        $this->project_id        = $project_id;
-        $this->allow_mass_update = $allow_mass_update;
+    public function __construct($project_id, $are_mirrors_defined) {
+        $this->project_id          = $project_id;
+        $this->are_mirrors_defined = $are_mirrors_defined;
     }
 
     public function git_admin() {
@@ -53,6 +50,10 @@ abstract class GitPresenters_AdminPresenter {
 
     public function tab_mass_update() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_mass_update');
+    }
+
+    public function tab_default_settings() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_settings');
     }
 
     public function manage_mass_update_active() {

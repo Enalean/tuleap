@@ -84,10 +84,32 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         $this->permission_dao = mock('PermissionsDAO');
         $permissions_manager  = new PermissionsManager($this->permission_dao);
-        $git_mirror_dao = mock('Git_Mirror_MirrorDao');
-        $git_gitolite_driver = new Git_GitoliteDriver($this->logger, $this->git_systemeventmanager, mock('Git_GitRepositoryUrlManager'), $this->git_dao, $git_mirror_dao, $this->git_plugin);
-        $gitolite = new Git_Backend_Gitolite($git_gitolite_driver, $this->logger);
-        $this->importer = new GitXmlImporter($this->logger, $this->git_manager, $this->git_factory, $gitolite, $this->git_systemeventmanager, $permissions_manager, $this->ugroup_manager);
+        $git_mirror_dao       = mock('Git_Mirror_MirrorDao');
+        $git_gitolite_driver  = new Git_GitoliteDriver(
+            $this->logger,
+            $this->git_systemeventmanager,
+            mock('Git_GitRepositoryUrlManager'),
+            $this->git_dao, $git_mirror_dao,
+            $this->git_plugin,
+            null,
+            null,
+            null,
+            null,
+            null,
+            mock('Git_Mirror_MirrorDataMapper')
+        );
+
+        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, $this->logger);
+        $this->importer = new GitXmlImporter(
+            $this->logger,
+            $this->git_manager,
+            $this->git_factory,
+            $gitolite,
+            $this->git_systemeventmanager,
+            $permissions_manager,
+            $this->ugroup_manager
+        );
+
         $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
 
         $userManager = mock('UserManager');

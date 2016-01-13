@@ -141,6 +141,12 @@ CREATE TABLE IF NOT EXISTS plugin_git_repository_mirrors (
     PRIMARY KEY (repository_id, mirror_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_git_default_project_mirrors (
+    project_id INT(11) NOT NULL,
+    mirror_id INT(11) unsigned NOT NULL,
+    PRIMARY KEY (project_id, mirror_id)
+);
+
 CREATE TABLE IF NOT EXISTS plugin_git_restricted_mirrors (
     mirror_id INT(11) unsigned PRIMARY KEY
 );

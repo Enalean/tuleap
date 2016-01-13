@@ -54,10 +54,10 @@ class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPre
         $templates_list,
         $parent_templates_list,
         $project_id,
-        $allow_mass_update,
+        $are_mirrors_defined,
         $has_gerrit_servers_set_up
     ) {
-        parent::__construct($project_id, $allow_mass_update);
+        parent::__construct($project_id, $are_mirrors_defined);
 
         $this->manage_gerrit_templates   = true;
         $this->repository_list           = $repository_list;

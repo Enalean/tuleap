@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All rights reserved
+ * Copyright (c) Enalean, 2014-2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -43,13 +43,19 @@ class Git_Mirror_MirrorDataMapper {
     /** @var Git_Gitolite_GitoliteRCReader */
     private $reader;
 
+    /**
+     * @var DefaultProjectMirrorDao
+     */
+    private $default_dao;
+
     public function __construct(
         Git_Mirror_MirrorDao $dao,
         UserManager $user_manager,
         GitRepositoryFactory $repository_factory,
         ProjectManager $project_manager,
         Git_SystemEventManager $git_system_event_manager,
-        Git_Gitolite_GitoliteRCReader $reader
+        Git_Gitolite_GitoliteRCReader $reader,
+        DefaultProjectMirrorDao $default_dao
     ) {
         $this->dao                      = $dao;
         $this->user_manager             = $user_manager;
@@ -57,6 +63,7 @@ class Git_Mirror_MirrorDataMapper {
         $this->project_manager          = $project_manager;
         $this->git_system_event_manager = $git_system_event_manager;
         $this->reader                   = $reader;
+        $this->default_dao              = $default_dao;
     }
 
     /**
@@ -260,6 +267,22 @@ class Git_Mirror_MirrorDataMapper {
             return $this->dao->mirrorRepositoryTo($repository_id, $selected_mirror_ids);
         }
         return true;
+    }
+
+    public function removeAllDefaultMirrorsToProject(Project $project) {
+        return $this->default_dao->removeAllToProject($project->getID());
+    }
+
+    public function addDefaultMirrorsToProject(Project $project, array $selected_mirror_ids) {
+        if ($selected_mirror_ids) {
+            return $this->default_dao->addDefaultMirrorsToProject($project->getID(), $selected_mirror_ids);
+        }
+
+        return true;
+    }
+
+    public function getDefaultMirrorIdsForProject(Project $project) {
+        return $this->default_dao->getDefaultMirrorIdsForProject($project->getID());
     }
 
     /**

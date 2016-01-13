@@ -32,8 +32,8 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
 
 
     public function __construct(CSRFSynchronizerToken $csrf, $project_id, array $repositories) {
-        $allow_mass_update = true;
-        parent::__construct($project_id, $allow_mass_update);
+        $are_mirrors_defined = true;
+        parent::__construct($project_id, $are_mirrors_defined);
 
         $this->csrf_input                             = $csrf->fetchHTMLInput();
         $this->manage_mass_update_select_repositories = true;

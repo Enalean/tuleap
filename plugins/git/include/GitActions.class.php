@@ -980,12 +980,7 @@ class GitActions extends PluginActions {
                 continue;
             }
 
-            $mirror_ids = array();
-            foreach ($selected_mirror_ids[$repository->getId()] as $mirror_id => $should_be_mirrored) {
-                if ($should_be_mirrored) {
-                    $mirror_ids[] = $mirror_id;
-                }
-            }
+            $mirror_ids = $this->getSelectedMirrorIdsFromRequest($selected_mirror_ids, $repository->getId());
 
             if (! $this->areThereAnyChanges($repository, $mirror_ids, $current_mirror_ids_per_repository)) {
                 continue;
@@ -1011,6 +1006,23 @@ class GitActions extends PluginActions {
         } else {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
         }
+    }
+
+    /**
+     * @param array $selected_mirror_ids
+     * @param int   $request_key The request_key can be either project_id (default mirror) or repository_id (repository's mirror)
+     *
+     * @return array
+     */
+    private function getSelectedMirrorIdsFromRequest(array $selected_mirror_ids, $request_key) {
+        $mirror_ids = array();
+        foreach ($selected_mirror_ids[$request_key] as $mirror_id => $should_be_mirrored) {
+            if ($should_be_mirrored) {
+                $mirror_ids[] = $mirror_id;
+            }
+        }
+
+        return $mirror_ids;
     }
 
     private function updateRepositoryMirrors(GitRepository $repository, $mirror_ids) {
@@ -1066,5 +1078,28 @@ class GitActions extends PluginActions {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'restore_event_created').' : '.$repository->getName());
         }
         $GLOBALS['Response']->redirect($url);
+    }
+
+    public function updateDefaultMirroring(Project $project, array $selected_mirror_ids) {
+        $mirror_ids = $this->getSelectedMirrorIdsFromRequest($selected_mirror_ids, $project->getID());
+
+        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
+            && $this->mirror_data_mapper->removeAllDefaultMirrorsToProject($project)
+            && $this->mirror_data_mapper->addDefaultMirrorsToProject($project, $mirror_ids)
+        ) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_git', 'default_mirros_update_success')
+            );
+
+            return true;
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('plugin_git', 'default_mirros_update_error')
+        );
+
+        return false;
     }
 }

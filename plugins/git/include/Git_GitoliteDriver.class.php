@@ -136,7 +136,8 @@ class Git_GitoliteDriver {
                 ),
                 $this->project_manager,
                 $this->git_system_event_manager,
-                new Git_Gitolite_GitoliteRCReader()
+                new Git_Gitolite_GitoliteRCReader(),
+                new DefaultProjectMirrorDao()
             );
         } else {
             $this->mirror_data_mapper = $mirror_data_mapper;
