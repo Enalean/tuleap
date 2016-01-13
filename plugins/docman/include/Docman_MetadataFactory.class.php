@@ -654,11 +654,6 @@ class Docman_MetadataFactory {
                     $metadataMapping['love'][$srcId] = $dstId;
                 }
             }
-
-            $event_manager = $this->_getEventManager();
-            $event_manager->processEvent('plugin_docman_after_metadata_clone', array('srcProjectId'    => $this->groupId,
-                                     'targetProjectId' => $dstGroupId,
-                                     'md'              => $md));
         }
     }
 

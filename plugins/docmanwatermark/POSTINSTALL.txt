@@ -1,9 +1,0 @@
-To finish installation, please follow those last steps:
-
-1. Check dependencies
-  a. Install/configure zend framework
-
-2. Configure docmanwatermark
-   a. Go to properties of plugin docmanwatermark and configure the plugin
-   OR
-   b. Edit docmanwatermark.inc in your custom directory (typically /etc/codex/plugins/docmanwatermark/etc)

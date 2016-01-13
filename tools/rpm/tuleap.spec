@@ -231,21 +231,6 @@ Provides: tuleap-plugin-git = %{version}
 Integration of git distributed software configuration management tool together
 with Tuleap
 
-%package plugin-docmanwatermark
-Summary: Tuleap plugin for PDF watermarking
-Group: Development/Tools
-Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
-%if %{PKG_NAME} == codendi_st
-Provides: codendi-plugin-docmanwatermark = %{version}
-%else
-Provides: tuleap-plugin-docmanwatermark = %{version}
-%endif
-%description plugin-docmanwatermark
-PDF Watermark plugin. Provide the possibility to add a customizable banner to
-PDF file uploaded in Docman
-
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
@@ -1051,10 +1036,6 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
-
-%files plugin-docmanwatermark
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/docmanwatermark
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)
