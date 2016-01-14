@@ -20,31 +20,30 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use \Tuleap\REST\ProjectAuthorization;
-use \Luracast\Restler\RestException;
-use \Tracker_Artifact_Attachment_TemporaryFile                    as TemporaryFile;
-use \Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
-use \Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
-use \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation          as FileInfoRepresentation;
-use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
-use \Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
-use \Tracker_Artifact_Attachment_TemporaryFileTooBigException     as TemporaryFileTooBigException;
-use \Tracker_Artifact_Attachment_ChunkTooBigException             as ChunkTooBigException;
-use \Tracker_Artifact_Attachment_InvalidPathException             as InvalidPathException;
-use \Tracker_Artifact_Attachment_MaxFilesException                as MaxFilesException;
-use \Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
-use \Tracker_Artifact_Attachment_InvalidOffsetException           as InvalidOffsetException;
-use \Tracker_FileInfo_InvalidFileInfoException                    as InvalidFileInfoException;
-use \Tracker_FileInfo_UnauthorisedException                       as UnauthorisedException;
-use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
-use \Tuleap\REST\Header;
-use \UserManager;
-use \PFUser;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \Tracker_FileInfoFactory;
-use \Tracker_FileInfoDao;
-use \Tracker_URLVerification;
+use Tuleap\REST\ProjectAuthorization;
+use Luracast\Restler\RestException;
+use Tracker_Artifact_Attachment_TemporaryFile                    as TemporaryFile;
+use Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
+use Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
+use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation          as FileInfoRepresentation;
+use Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
+use Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
+use Tracker_Artifact_Attachment_ChunkTooBigException             as ChunkTooBigException;
+use Tracker_Artifact_Attachment_InvalidPathException             as InvalidPathException;
+use Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
+use Tracker_Artifact_Attachment_InvalidOffsetException           as InvalidOffsetException;
+use Tracker_FileInfo_InvalidFileInfoException                    as InvalidFileInfoException;
+use Tracker_FileInfo_UnauthorisedException                       as UnauthorisedException;
+use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
+use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
+use Tuleap\REST\Header;
+use UserManager;
+use PFUser;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use Tracker_FileInfoFactory;
+use Tracker_FileInfoDao;
+use Tracker_URLVerification;
 
 class ArtifactTemporaryFilesResource {
 
@@ -101,6 +100,7 @@ class ArtifactTemporaryFilesResource {
             $files_representations[] = $this->buildFileRepresentation($file);
         }
 
+        $this->sendAllowHeadersForArtifactFiles();
         return $files_representations;
     }
 
@@ -160,6 +160,13 @@ class ArtifactTemporaryFilesResource {
      *
      * Call this method to create a new file. To add new chunks, use PUT on /artifact_temporary_files/:id
      *
+     * <p>Limitations:</p>
+     * <pre>
+     * * Size of each chunk cannot exceed 1MB<br>
+     * * Total size of temporary files cannot exceed a given quota. Default is 64MB, but it depends on the settings of <br>
+     * &nbsp; your platform. See X-QUOTA and X-DISK-USAGE custom headers to know the quota and your usage.
+     * </pre>
+     *
      * @url POST
      * @param string $name          Name of the file {@from body}
      * @param string $mimetype      Mime-Type of the file {@from body}
@@ -170,30 +177,27 @@ class ArtifactTemporaryFilesResource {
      * @throws 500 406 403
      */
     protected function post($name, $mimetype, $content, $description = null) {
-        $this->sendAllowHeadersForArtifactFiles();
-
         try {
             $this->file_manager->validateChunkSize($content);
 
             $file         = $this->file_manager->save($name, $description, $mimetype);
             $chunk_offset = 1;
             $append       = $this->file_manager->appendChunk($content, $file, $chunk_offset);
-
         } catch (CannotCreateException $e) {
             throw new RestException(500);
         } catch (ChunkTooBigException $e) {
-            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . FileManager::getMaximumChunkSize());
-        } catch (TemporaryFileTooBigException $e) {
-            throw new RestException(406, "Temporary file's content exceeds maximum size of " . FileManager::getMaximumTemporaryFileSize());
+            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
         } catch (InvalidPathException $e) {
             throw new RestException(500, $e->getMessage());
-        } catch (MaxFilesException $e) {
-            throw new RestException(403, 'Maximum number of temporary files reached: ' . FileManager::TEMP_FILE_NB_MAX);
+        } catch (QuotaExceededException $e) {
+            throw new RestException(406, 'You exceeded your quota. Please remove existing temporary files before continuing.');
         }
 
         if (! $append) {
             throw new RestException(500);
         }
+
+        $this->sendAllowHeadersForArtifactFiles();
 
         return $this->buildFileRepresentation($file);
     }
@@ -222,24 +226,23 @@ class ArtifactTemporaryFilesResource {
      * @throws 406
      */
     protected function putId($id, $content, $offset) {
-        $this->sendAllowHeadersForArtifactFilesId();
         $this->checkFileIsTemporary($id);
 
         $file = $this->getFile($id);
 
         try {
             $this->file_manager->validateChunkSize($content);
-            $this->file_manager->validateTemporaryFileSize($file, $content);
-
             $this->file_manager->appendChunk($content, $file, $offset);
 
         } catch (ChunkTooBigException $e) {
-            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . FileManager::getMaximumChunkSize());
-        } catch (TemporaryFileTooBigException $e) {
-            throw new RestException(406, "Temporary file's content exceeds maximum size of " . FileManager::getMaximumTemporaryFileSize());
+            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
         } catch (InvalidOffsetException $e) {
             throw new RestException(406, 'Invalid offset received. Expected: '. ($file->getCurrentChunkOffset() +1));
+        } catch (QuotaExceededException $e) {
+            throw new RestException(406, 'You exceeded your quota. Please remove existing temporary files before continuing.');
         }
+
+        $this->sendAllowHeadersForArtifactFilesId();
 
         return $this->buildFileRepresentation($file);
     }
@@ -343,17 +346,22 @@ class ArtifactTemporaryFilesResource {
 
     private function sendAllowHeadersForArtifactFiles() {
         Header::allowOptionsGetPost();
-        Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
+        $this->sendSizeHeaders();
     }
-
 
     private function sendAllowHeadersForArtifactFilesId() {
         Header::allowOptionsGetPutDelete();
-        Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
+        $this->sendSizeHeaders();
+    }
+
+    private function sendSizeHeaders() {
+        Header::sendQuotaHeader($this->file_manager->getQuota());
+        Header::sendDiskUsage($this->file_manager->getDiskUsage());
+        Header::sendMaxFileChunkSizeHeaders($this->file_manager->getMaximumChunkSize());
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
-        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumChunkSize());
+        Header::sendPaginationHeaders($limit, $offset, $size, $this->file_manager->getMaximumChunkSize());
     }
 
     /**

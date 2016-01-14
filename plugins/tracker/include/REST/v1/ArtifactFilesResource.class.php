@@ -129,7 +129,7 @@ class ArtifactFilesResource {
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
-        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumChunkSize());
+        Header::sendPaginationHeaders($limit, $offset, $size, $this->file_manager->getMaximumChunkSize());
     }
 
     /**

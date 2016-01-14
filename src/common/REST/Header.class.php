@@ -40,6 +40,8 @@ class Header {
     const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
     const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
 
+    const X_QUOTA                     = 'X-QUOTA';
+    const X_DISK_USAGE                = 'X-DISK-USAGE';
     const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
     public static function lastModified($timestamp) {
@@ -149,6 +151,14 @@ class Header {
 
     public static function sendMaxFileChunkSizeHeaders($size) {
         self::sendHeader(self::X_UPLOAD_MAX_FILE_CHUNKSIZE, $size);
+    }
+
+    public function sendQuotaHeader($quota) {
+        self::sendHeader(self::X_QUOTA, $quota);
+    }
+
+    public function sendDiskUsage($disk_usage) {
+        self::sendHeader(self::X_DISK_USAGE, $disk_usage);
     }
 
     private static function sendHeader($name, $value) {
