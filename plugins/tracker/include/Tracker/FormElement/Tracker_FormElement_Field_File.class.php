@@ -813,7 +813,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager(
                     $this->getCurrentUser(),
                     $this->getTemporaryFileManagerDao(),
-                    $this->getFileInfoFactory()
+                    $this->getFileInfoFactory(),
+                    new System_Command()
                 );
 
                 if (isset($file_info['id'])) {
@@ -910,7 +911,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager(
                 $this->getCurrentUser(),
                 $this->getTemporaryFileManagerDao(),
-                $this->getFileInfoFactory()
+                $this->getFileInfoFactory(),
+                new System_Command()
             );
 
             if (!$temporary->exists($filename)) {
@@ -1067,7 +1069,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return new Tracker_Artifact_Attachment_TemporaryFileManager(
             UserManager::instance()->getCurrentUser(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
-            $this->getTrackerFileInfoFactory()
+            $this->getTrackerFileInfoFactory(),
+            new System_Command()
         );
     }
 

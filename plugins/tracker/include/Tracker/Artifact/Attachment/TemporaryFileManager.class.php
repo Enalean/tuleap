@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 — 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
+
 /**
  * Manage temporary uploaded files
  */
 class Tracker_Artifact_Attachment_TemporaryFileManager {
 
     const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
-    const TEMP_FILE_NB_MAX = 5;
 
     /**
      * @var PFUser
@@ -41,14 +42,21 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      */
     private $file_info_factory;
 
+    /**
+     * @var System_Command
+     */
+    private $system;
+
     public function __construct(
         PFUser $user,
         Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
-        Tracker_FileInfoFactory $file_info_factory
+        Tracker_FileInfoFactory $file_info_factory,
+        System_Command $system
     ) {
         $this->user              = $user;
         $this->dao               = $dao;
         $this->file_info_factory = $file_info_factory;
+        $this->system            = $system;
     }
 
     /**
@@ -73,23 +81,23 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * Provision a new temporary file for user if possible and return it's UUID
      *
      * @return String
-     * @throws Tracker_Artifact_Attachment_MaxFilesException
      */
-    public function getUniqueFileName() {
-        if ($this->isOverUserTemporaryFileLimit()) {
-            throw new Tracker_Artifact_Attachment_MaxFilesException('Temporary attachment limits: ' . self::TEMP_FILE_NB_MAX . ' files max.');
-        }
+    private function getUniqueFileName() {
         $prefix = $this->getUserTemporaryFilePrefix();
         $file_path = tempnam(ForgeConfig::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
     }
 
     /**
-     * @return \Tracker_Artifact_Attachment_TemporaryFile
      * @throws Tracker_Artifact_Attachment_CannotCreateException
-     * @throws Tracker_Artifact_Attachment_MaxFilesException
+     * @throws Tuleap\Tracker\Artifact\Attachment\QuotaExceededException
+     *
+     * @return \Tracker_Artifact_Attachment_TemporaryFile
      */
     public function save($name, $description, $mimetype) {
+        $chunk_size = 0;
+        $this->checkThatChunkSizeIsNotOverTheQuota($chunk_size);
+
         $user_id   = $this->user->getId();
         $tempname  = $this->getUniqueFileName();
         $timestamp = $_SERVER['REQUEST_TIME'];
@@ -108,6 +116,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
 
     /**
      * Get chunk of a file
+     *
+     * TO_REFACTOR: This has nothing to do with temporary file. Should be moved in a dedicated object.
      *
      * @param int    $attachment_id
      * @param PFUser $current_user
@@ -175,12 +185,12 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             throw new Tracker_Artifact_Attachment_InvalidOffsetException();
         }
 
-        if ($this->exists($file->getTemporaryName())) {
-            $bytes_written = file_put_contents($this->getPath($file->getTemporaryName()), base64_decode($content), FILE_APPEND);
-
-        } else {
+        if (! $this->exists($file->getTemporaryName())) {
             throw new Tracker_Artifact_Attachment_InvalidPathException('Invalid temporary file path');
         }
+
+        $this->checkThatChunkSizeIsNotOverTheQuota($content);
+        $bytes_written = file_put_contents($this->getPath($file->getTemporaryName()), base64_decode($content), FILE_APPEND);
 
         $size = exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
         $file->setSize($size);
@@ -195,14 +205,35 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         return $this->dao->getUserTemporaryFiles($this->user->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
     }
 
-    private function isOverUserTemporaryFileLimit() {
-        return count($this->getUserTemporaryFiles()) > (self::TEMP_FILE_NB_MAX - 1);
+    /**
+     * @return int
+     */
+    public function getDiskUsage() {
+        $size = 0;
+        foreach (glob($this->getPath('*')) as $file) {
+            $size += (int) implode('', $this->system->exec('stat -c %s ' . escapeshellarg($file)));
+        }
+
+        return $size;
+    }
+
+    /**
+     * @throws Tuleap\Tracker\Artifact\Attachment\QuotaExceededException
+     */
+    public function checkThatChunkSizeIsNotOverTheQuota($content) {
+        $chunk_size = strlen(base64_decode($content));
+        if ($this->getDiskUsage() + $chunk_size > $this->getQuota()) {
+            throw new QuotaExceededException();
+        }
     }
 
     private function getUserTemporaryFilePrefix() {
         return self::TEMP_FILE_PREFIX . $this->user->getId() . '_';
     }
 
+    /**
+     * TO_REFACTOR: This has nothing to do with temporary file. Should be moved in a dedicated object.
+     */
     public function getAttachedFileSize($id) {
         $file_info = $this->file_info_factory->getById($id);
 
@@ -219,35 +250,24 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     public function validateChunkSize($content) {
         $chunk_size = strlen(base64_decode($content));
 
-        if ($chunk_size > self::getMaximumChunkSize()) {
+        if ($chunk_size > $this->getMaximumChunkSize()) {
             throw new Tracker_Artifact_Attachment_ChunkTooBigException();
         }
-    }
 
-    /**
-     * @throws Tracker_Artifact_Attachment_TemporaryFileTooBigException
-     */
-    public function validateTemporaryFileSize($file, $content) {
-        $chunk_size = strlen(base64_decode($content));
-        $file_size  = (int) exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
-        $total_size = $chunk_size + $file_size;
-
-        if ($total_size > self::getMaximumTemporaryFileSize()) {
-            throw new Tracker_Artifact_Attachment_TemporaryFileTooBigException();
-        }
+        $this->checkThatChunkSizeIsNotOverTheQuota($content);
     }
 
     /**
      * Max chunk size : 1 Mo = 1048576 bytes
      */
-    public static function getMaximumChunkSize() {
+    public function getMaximumChunkSize() {
         return 1048576;
     }
 
     /**
      * Max chunk size : 64 Mo = 67108864 bytes
      */
-    public static function getMaximumTemporaryFileSize() {
+    public function getQuota() {
         return ForgeConfig::get('sys_max_size_upload');
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 — 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,7 @@ use \Tracker_ArtifactFactory;
 use \Tracker_FormElementFactory;
 use \Tracker_FileInfoFactory;
 use \Tracker_FileInfoDao;
+use \System_Command;
 
 class ArtifactFilesResource {
 
@@ -57,7 +58,8 @@ class ArtifactFilesResource {
         $this->file_manager = new FileManager(
             $this->user,
             new FileManagerDao(),
-            $fileinfo_factory
+            $fileinfo_factory,
+            new System_Command()
         );
     }
 
@@ -129,7 +131,7 @@ class ArtifactFilesResource {
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
-        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumChunkSize());
+        Header::sendPaginationHeaders($limit, $offset, $size, $this->file_manager->getMaximumChunkSize());
     }
 
     /**

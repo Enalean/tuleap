@@ -25,6 +25,8 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class ArtifactFilesTest extends RestBase {
 
+    private static $DEFAULT_QUOTA = 67108864;
+
     private $first_file;
     private $second_file;
     private $second_chunk = 'with more data';
@@ -72,6 +74,8 @@ class ArtifactFilesTest extends RestBase {
     public function testOptionsArtifactFiles() {
         $response = $this->getResponse($this->client->options('artifact_temporary_files'));
         $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(0, (string) $response->getHeader('X-DISK-USAGE'));
+        $this->assertEquals(self::$DEFAULT_QUOTA, (string) $response->getHeader('X-QUOTA'));
     }
 
     public function testPostArtifactFile() {
@@ -90,6 +94,9 @@ class ArtifactFilesTest extends RestBase {
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file'));
         $this->assertEquals($file_representation['submitted_by'], REST_TestDataBuilder::TEST_USER_1_ID);
+
+        $this->assertEquals(17, (string) $response->getHeader('X-DISK-USAGE'));
+        $this->assertEquals(self::$DEFAULT_QUOTA, (string) $response->getHeader('X-QUOTA'));
 
         return $file_representation['id'];
     }
@@ -178,7 +185,11 @@ class ArtifactFilesTest extends RestBase {
             $this->getResponse($request);
         } catch (Exception $e) {
             $error = true;
-            $this->assertEquals($e->getResponse()->getStatusCode(), 406);
+
+            $response = $e->getResponse();
+            $this->assertEquals($response->getStatusCode(), 406);
+
+            $this->assertArrayHasKey('X-DISK-USAGE', $response->getHeaders());
         }
 
         $this->assertTrue($error);
