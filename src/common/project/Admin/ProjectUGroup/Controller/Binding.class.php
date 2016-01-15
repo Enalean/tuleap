@@ -132,6 +132,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         if ($validSourceUgroup && $projectSource->userIsAdmin()) {
             if ($this->ugroup_binding->addBinding($this->ugroup->getId(), $sourceId)) {
                 $historyDao->groupAddHistory("ugroup_add_binding", $this->ugroup->getId().":".$sourceId, $this->ugroup->getProjectId());
+                $this->launchEditBindingUgroupEvent();
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
@@ -143,6 +144,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         $historyDao        = new ProjectHistoryDao();
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
+            $this->launchEditBindingUgroupEvent();
         }
         $this->redirect();
     }
@@ -174,6 +176,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     private function unlinkLDAPGroup($ldapUserGroupManager) {
         if($ldapUserGroupManager->unbindFromBindLdap()) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
+            $this->launchEditBindingUgroupEvent();
             $this->redirect();
         }
     }
@@ -193,6 +196,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
                 //
                 $ldapUserGroupManager->bindWithLdap($this->bindOption, $this->synchro);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', array($this->request->get('bind_with_group'))));
+                $this->launchEditBindingUgroupEvent();
                 $this->redirect();
 
             } elseif($this->request->exist('cancel')) {
@@ -235,6 +239,14 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         }
         return $bindOption;
     }
-}
 
-?>
+    private function launchEditBindingUgroupEvent() {
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent('project_admin_ugroup_bind_modified',
+            array(
+                'group_id'  => $this->ugroup->getProjectId(),
+                'ugroup_id' => $this->ugroup->getId()
+            )
+        );
+    }
+}

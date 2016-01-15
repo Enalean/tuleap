@@ -1,40 +1,34 @@
 <?php
 /**
+ *  Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- * 
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'common/project/Project.class.php';
-require_once('common/project/UGroupBinding.class.php');
-require_once 'common/system_event/SystemEvent.class.php';
 
 /**
 * System Event classes
-* 
+*
 * UGROUP_MODIFY = one static ugroup of the project has been modified
 */
 class SystemEvent_UGROUP_MODIFY extends SystemEvent {
-    
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
+     *
      * @param bool $with_link true if you want links to entities. The returned 
      * string will be html instead of plain/text
      *
@@ -67,18 +61,28 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             return false;
         }
 
-        if ($project = $this->getProject($group_id)) {
-            // Update SVN access file
+        $is_svn_access_successfuly_updated = $this->processSVNAccessFile($group_id, $ugroup_name, $ugroup_old_name);
+        if (! $is_svn_access_successfuly_updated) {
+            $this->error("Could not update SVN access file ($group_id)");
+            return false;
+        }
+
+        $this->done();
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function processSVNAccessFile($project_id, $ugroup_name, $ugroup_old_name) {
+        if ($project = $this->getProject($project_id)) {
             if ($project->usesSVN()) {
                 $backendSVN = $this->getBackend('SVN');
-                if (!$backendSVN->updateSVNAccess($group_id, $ugroup_name, $ugroup_old_name)) {
-                    $this->error("Could not update SVN access file ($group_id)");
+                if (! $backendSVN->updateSVNAccess($project_id, $ugroup_name, $ugroup_old_name)) {
                     return false;
                 }
             }
         }
-
-        $this->done();
         return true;
     }
 
@@ -91,17 +95,25 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * @return Boolean
      */
     protected function processUgroupBinding($ugroup_id, $group_id) {
-        $ugroupBinding = $this->getUgroupBinding();
+        $ugroupBinding                = $this->getUgroupBinding();
+        $ugroups_successfully_updated = true;
         if (!$ugroupBinding->checkUGroupValidity($group_id, $ugroup_id)) {
             //The user group is removed, we remove all its binding traces
-            return $ugroupBinding->removeAllUGroupsBinding($ugroup_id);
+            $ugroups_successfully_updated = $ugroupBinding->removeAllUGroupsBinding($ugroup_id);
         } else {
             if (count($this->getParametersAsArray()) == 2) {
                 //The user group has been updated (user added / user removed), we update all its bound user groups
-                return $ugroupBinding->updateBindedUGroups($ugroup_id);
+                $ugroups_successfully_updated = $ugroupBinding->updateBindedUGroups($ugroup_id);
             }
-            return true;
         }
+
+        $binded_ugroups = $ugroupBinding->getUGroupsByBindingSource($ugroup_id);
+        foreach ($binded_ugroups as $binded_ugroup_id => $binded_ugroup) {
+            $ugroups_successfully_updated = $this->processSVNAccessFile($binded_ugroup['group_id'], null, null) &&
+                $ugroups_successfully_updated;
+        }
+
+        return $ugroups_successfully_updated;
     }
 
     /**
@@ -117,5 +129,3 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     }
 
 }
-
-?>
