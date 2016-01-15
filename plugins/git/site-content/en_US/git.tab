@@ -337,6 +337,7 @@ plugin_git	admin_mirror_cannot_update	Failed to update mirror
 plugin_git	admin_mirror_no_changes	No changes for mirror
 plugin_git	admin_mirror_updated	Mirror updated!
 plugin_git	admin_mirror_cannot_delete	Failed to delete mirror
+plugin_git	admin_mirror_defalut_cannot_delete	An error occured whiled deleting the mirror in the default mirrors for projects.
 plugin_git	admin_mirror_deleted	Mirror deleted!
 plugin_git	add_mirror	Add a new mirror
 plugin_git	dump_mirrored_repositories_label	Dump mirrored repositories configuration

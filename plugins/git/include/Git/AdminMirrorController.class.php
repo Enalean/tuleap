@@ -343,8 +343,21 @@ class Git_AdminMirrorController {
             $delete = $this->git_mirror_mapper->delete($id);
 
             if (! $delete) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_delete'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_delete')
+                );
+
+                return;
             }
+
+            if (! $this->git_mirror_mapper->deleteFromDefaultMirrors($id)) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_git','admin_mirror_defalut_cannot_delete')
+                );
+            }
+
         } catch (Git_Mirror_MirrorNotFoundException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_delete'));
         }

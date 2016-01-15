@@ -331,6 +331,7 @@ plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le mirroir
 plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le mirroir
 plugin_git	admin_mirror_updated	Miroir modifié !
 plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le mirroir
+plugin_git	admin_mirror_defalut_cannot_delete	Une erreur est apparue lors de la suppression du mirroir en tant que mirroir par défaut.
 plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un nouveau mirroir
 plugin_git	dump_mirrored_repositories_label	Reconstruire la configuration des dépôt mirroirs
