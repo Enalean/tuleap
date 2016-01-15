@@ -171,7 +171,10 @@ class Git_AdminMirrorController {
             }
 
         } else {
-            if ($this->git_mirror_resource_restrictor->setMirrorRestricted($mirror)) {
+            if (
+                $this->git_mirror_resource_restrictor->setMirrorRestricted($mirror) &&
+                $this->git_mirror_mapper->deleteFromDefaultMirrors($mirror->id)
+            ) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_set_restricted'));
                 $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
             }
@@ -222,7 +225,10 @@ class Git_AdminMirrorController {
     }
 
     private function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, $project_ids) {
-        if (count($project_ids) > 0 && $this->git_mirror_resource_restrictor->revokeProjectsFromMirror($mirror, $project_ids)) {
+        if (count($project_ids) > 0 &&
+            $this->git_mirror_resource_restrictor->revokeProjectsFromMirror($mirror, $project_ids) &&
+            $this->git_mirror_mapper->deleteFromDefaultMirrorsInProjects($mirror, $project_ids)
+        ) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_revoke_projects'));
             $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror->id);
         }
