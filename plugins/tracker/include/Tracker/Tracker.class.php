@@ -1163,7 +1163,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null, array $params = array()) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
-            $breadcrumbs = array_merge(array(array('title' => $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML),
+            $breadcrumbs = array_merge(array(array('title' => $this->name,
                             'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id)
                     ),
                     $breadcrumbs);
