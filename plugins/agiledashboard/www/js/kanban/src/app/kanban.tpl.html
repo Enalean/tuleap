@@ -8,8 +8,22 @@
     </button>
 
     <div class="btn-group view-switcher" data-toggle="buttons-radio">
-        <button type="button" class="btn btn-small" ng-class="{active: kanban.current_view_class === kanban.compact_view_key}" ng-click="kanban.switchViewMode(kanban.compact_view_key)" title="{{ 'Compact view' | translate }}"><i class="icon-list"></i> <span translate>Compact view</span></button>
-        <button type="button" class="btn btn-small" ng-class="{active: kanban.current_view_class === kanban.detailed_view_key}" ng-click="kanban.switchViewMode(kanban.detailed_view_key)" title="{{ 'Detailed view' | translate }}"><i class="icon-th-list"></i> <span translate>Detailed view</span></button>
+        <button
+            type="button"
+            class="btn btn-small"
+            ng-class="{active: kanban.user_prefers_collapsed_cards}"
+            ng-click="kanban.toggleCollapsedMode()"
+            title="{{ 'Compact view' | translate }}">
+            <i class="icon-list"></i> <span translate>Compact view</span>
+        </button>
+        <button
+            type="button"
+            class="btn btn-small"
+            ng-class="{active: ! kanban.user_prefers_collapsed_cards}"
+            ng-click="kanban.toggleCollapsedMode()"
+            title="{{ 'Detailed view' | translate }}">
+            <i class="icon-th-list"></i> <span translate>Detailed view</span>
+        </button>
     </div>
 
     <div class="input-search">
@@ -48,11 +62,14 @@
                 <ul ui-tree-nodes
                     ng-model="kanban.backlog.filtered_content"
                     ng-class="{'has-scrollbar': kanban.backlog.is_scrollbar_shown }"
-                    class="kanban-items backlog {{ kanban.current_view_class }}"
+                    class="kanban-items backlog"
                 >
                     <li ui-tree-node
                         ng-repeat="item in kanban.backlog.filtered_content track by $id(item)"
                         ng-include="'kanban-item/kanban-item.tpl.html'"
+                        ui-tree-handle
+                        class="kanban-item {{ item.color }}"
+                        ng-class="{ 'updating': item.updating, 'compact-view': item.is_collapsed }"
                         id="item_{{ item.id }}"></li>
                 </ul>
             </div>
@@ -118,12 +135,15 @@
                 <ul ui-tree-nodes
                     ng-model="column.filtered_content"
                     ng-class="{'has-scrollbar': column.is_scrollbar_shown }"
-                    class="kanban-items column {{ kanban.current_view_class }}"
+                    class="kanban-items column"
                     data-column-id="{{ column.id }}"
                 >
                     <li ui-tree-node
                         ng-repeat="item in column.filtered_content track by $id(item)"
                         ng-include="'kanban-item/kanban-item.tpl.html'"
+                        ui-tree-handle
+                        class="kanban-item {{ item.color }}"
+                        ng-class="{ 'updating': item.updating, 'compact-view': item.is_collapsed }"
                         id="item_{{ item.id }}"></li>
                 </ul>
             </div>
@@ -165,11 +185,14 @@
                 <ul ui-tree-nodes
                     ng-model="kanban.archive.filtered_content"
                     ng-class="{'has-scrollbar': kanban.archive.is_scrollbar_shown }"
-                    class="kanban-items archive {{ kanban.current_view_class }}"
+                    class="kanban-items archive"
                 >
                     <li ui-tree-node
                         ng-repeat="item in kanban.archive.filtered_content track by $id(item)"
                         ng-include="'kanban-item/kanban-item.tpl.html'"
+                        ui-tree-handle
+                        class="kanban-item {{ item.color }}"
+                        ng-class="{ 'updating': item.updating, 'compact-view': item.is_collapsed }"
                         id="item_{{ item.id }}"></li>
                 </ul>
             </div>

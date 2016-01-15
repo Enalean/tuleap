@@ -1,7 +1,4 @@
-<div ui-tree-handle
-    class="kanban-item {{ item.color }}"
-    ng-class="{ 'updating': item.updating }"
->
+<div class="kanban-item-content">
     <div class="type-border"></div>
 
     <div data-nodrag="true" class="moves">
@@ -37,7 +34,7 @@
         ng-click="kanban.showEditModal($event, item)"
         class="kanban-item-link"
     >
-        <span ng-show="kanban.current_view_class === kanban.detailed_view_key">{{ item.item_name }}</span> #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
+        <span class="kanban-item-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span>
     </a>
 
     <div class="kanban-item-label" ng-bind-html="kanban.getCardFieldTextValue(item.label) | highlight:kanban.filter_terms"></div>
@@ -79,4 +76,14 @@
             <!-- Artifact links & Burndown fields are not managed yet -->
         </li>
     </ul>
+</div>
+
+<div data-nodrag="true"
+    class="kanban-item-expand-collapse"
+    style="cursor:pointer;"
+    title="{{ 'Expand/collapse the card' | translate }}"
+    aria-label="{{ 'Expand/collapse the card' | translate }}"
+    role="button"
+    ng-click="kanban.setIsCollapsed(item, ! item.is_collapsed)">
+    <i ng-class="{ 'icon-chevron-down': item.is_collapsed, 'icon-chevron-up': ! item.is_collapsed }"></i>
 </div>

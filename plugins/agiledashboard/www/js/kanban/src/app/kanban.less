@@ -73,9 +73,6 @@
     }
 }
 
-@kanban-column-header-height: 48px;
-@kanban-column-footer-height: 48px;
-
 #kanban-board {
     @fontsizeheader: 14px;
     @wip-reached-color: #F39333;
@@ -530,30 +527,6 @@ ul.kanban-items {
 
     &.has-scrollbar {
         padding: 0 6px 0 0;
-    }
-
-    > li {
-        margin: 0 10px 10px;
-
-        &:first-child {
-            margin-top: @kanban-column-header-height + 10px;
-
-            &.angular-ui-tree-placeholder:only-child {
-                margin-top: 0;
-            }
-
-            &.angular-ui-tree-hidden {
-                display: list-item;
-            }
-
-            &.angular-ui-tree-hidden + li {
-                margin-top: 10px;
-            }
-        }
-
-        &:last-child {
-            margin-bottom: @kanban-column-footer-height + 10px;
-        }
     }
 }
 

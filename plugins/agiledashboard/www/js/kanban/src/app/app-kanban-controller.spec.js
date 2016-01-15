@@ -15,7 +15,7 @@ describe('KanbanCtrl - ', function() {
         SharedPropertiesService = jasmine.createSpyObj('SharedPropertiesService', [
             'getKanban',
             'getUserId',
-            'getViewMode'
+            'doesUserPrefersCompactCards'
         ]);
 
         SharedPropertiesService.getKanban.and.returnValue({

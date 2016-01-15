@@ -61,7 +61,7 @@
                 })
                 .then(function (response) {
                     var result = {
-                        results : response.data.collection,
+                        results : augmentItems(response.data.collection),
                         total   : response.headers('X-PAGINATION-SIZE')
                     };
 
@@ -83,7 +83,7 @@
                 })
                 .then(function (response) {
                     var result = {
-                        results: response.data.collection,
+                        results: augmentItems(response.data.collection),
                         total: response.headers('X-PAGINATION-SIZE')
                     };
 
@@ -106,7 +106,7 @@
                 })
                 .then(function (response) {
                     var result = {
-                        results: response.data.collection,
+                        results: augmentItems(response.data.collection),
                         total: response.headers('X-PAGINATION-SIZE')
                     };
 
@@ -114,6 +114,15 @@
                 });
 
             return data.promise;
+        }
+
+        function augmentItems(collection) {
+            var is_collapsed = SharedPropertiesService.doesUserPrefersCompactCards();
+            collection.forEach(function (item) {
+                item.is_collapsed = is_collapsed;
+            });
+
+            return collection;
         }
 
         function reorderColumn(kanban_id, column_id, dropped_item_id, compared_to) {
