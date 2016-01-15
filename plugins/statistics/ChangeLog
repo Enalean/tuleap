@@ -1,3 +1,6 @@
+Version 0.57 - Tuleap 8.11
+    * request #8696: Work around site statistics generation time
+
 Version 0.56 - Tuleap 8.10
     * request #8696: Optimize transformation of statistics export to CSV
 
