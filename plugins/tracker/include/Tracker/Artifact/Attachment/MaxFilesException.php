@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2014. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -18,6 +18,5 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-namespace Tuleap\Tracker\Artifact\Attachment;
-
-class QuotaExceededException extends \Exception {}
+class Tracker_Artifact_Attachment_MaxFilesException extends Exception {}
+?>

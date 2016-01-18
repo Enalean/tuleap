@@ -24,10 +24,6 @@ require_once dirname(__FILE__) . '/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRequest.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
-// We must include manually MustacheLoader so that if there is a fatal error during the parsing of a file,
-// then we don't need to invoke autoloader and display a cryptic cannot-nest-class-declaration error.
-require_once 'common/templating/mustache/vendor/MustacheLoader.php';
-
 require_once dirname(__FILE__) . '/TestsPluginOrderedSuite.php';
 
 require_once dirname(__FILE__) . '/../include/TestsPluginReporter.class.php';
@@ -52,7 +48,7 @@ class TestsPluginRunner {
         $this->mainSuite = $this->buildSuite($title);
         $this->navigator = $this->getPresenter($this->rootCategory, 'Main', '_all_tests');
         $this->navigator->setTitle($title);
-
+        
         $this->addCoreSuite();
         $this->addAllPluginsSuite();
     }
@@ -61,9 +57,9 @@ class TestsPluginRunner {
         $corePresenter = $this->getPresenter($this->rootCategory.'[core]', 'Core', '_all_core');
         $coreSuite     = $this->buildSuite($corePresenter->title());
         $corePath      =  realpath(dirname(__FILE__) . '/../../../tests/simpletest');
-
+        
         $this->addSuite($coreSuite, $corePresenter, $this->rootCategory.'[core]', $corePath);
-
+        
         $this->navigator->addChild($corePresenter);
         $this->mainSuite->add($coreSuite);
     }
@@ -78,7 +74,7 @@ class TestsPluginRunner {
                 $this->addPluginSuite($file, $allPluginsPresenter, $allPluginsSuite);
             }
         }
-
+        
         $this->mainSuite->add($allPluginsSuite);
         $this->navigator->addChild($allPluginsPresenter);
     }
@@ -103,7 +99,7 @@ class TestsPluginRunner {
             $childPath = $file->getPathname();
             $baseName  = basename($childPath);
             $dirName   = $name . '[' . $baseName . ']';
-
+            
             if ($this->isSuite($file)) {
                 $child = $this->getPresenter($dirName, $baseName, $childPath);
                 $child->setTitle($baseName);
