@@ -1,3 +1,6 @@
+Version 0.4 - Tuleap 8.11
+    * request #8789 : Progressive deployement for svn plugin
+
 Version 0.3 - Tuleap 8.11
     * request #8788 : Create a repository (and list existing ones)
 
