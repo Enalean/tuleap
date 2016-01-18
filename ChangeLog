@@ -19,6 +19,8 @@ Version 8.11 (Not released yet)
 	* webdav: 1.9.14
 	* agiledashboard: 1.339
 	* statistics: 0.57
+	* docman: 2.26.93
+	* docmanwatermark: removed
 
 	== Themes ==
 	* FlamingParrot: 1.119
