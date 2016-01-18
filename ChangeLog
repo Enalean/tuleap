@@ -1,3 +1,12 @@
+Version 8.10-2 (Monday, January 18th 2016)
+	== Bug Fix ==
+	* request #8772: A Gitphp fatal error must note hide Git header
+	* request #8775: Increment Subversion packages versions
+	* request #8770: TV3 to TV5: comment only changeset send unwanted notification
+	* request #8678: Cannot create files with a '#' character in the name
+	* request #8761: Mail issue on services having truncated emails options
+	* request #8696: Service usage stats meet php limit
+
 Version 8.10 (Thursday, January 7th 2016)
 
 	== Development ==
