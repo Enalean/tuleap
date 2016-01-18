@@ -1,3 +1,6 @@
+Version 1.340 - Tuleap 8.11
+    * request #8703 Kanban real time security to NodeJs server diffuse messages
+
 Version 1.339 - Tuleap 8.11
     * story #8637: have details only for one card
 

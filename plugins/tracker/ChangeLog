@@ -1,3 +1,6 @@
+Version 5.778 - Tuleap 8.11
+    * request #8703 Kanban real time security to NodeJs server diffuse messages
+
 Version 5.777 - Tuleap 8.11
     * request #8785 Accents in trackers title
 
