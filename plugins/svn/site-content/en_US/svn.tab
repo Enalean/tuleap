@@ -13,6 +13,7 @@ plugin_svn_manage_repository	no_repositories	No repository found
 plugin_svn_manage_repository	title_list_repositories	Project repositories
 plugin_svn_manage_repository	name_repository_length	The name must start by a letter and have a length of minimum three caracters. Only - _ . specials caracters are allowed.
 plugin_svn_manage_repository	table_head_list_repository	Repository
+plugin_svn_manage_repository	plugin_not_activated	SVN multi-repositories is disabled for the project.
 
 
 plugin_svn	update_error	Unable to update Repository data
