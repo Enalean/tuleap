@@ -13,6 +13,7 @@
             user_is_admin     : false,
             project_id        : undefined,
             nodejs_server     : undefined,
+            nodejs_server_version: undefined,
             uuid              : undefined
         };
 
@@ -32,7 +33,9 @@
             getNodeServerAddress        : getNodeServerAddress,
             setNodeServerAddress        : setNodeServerAddress,
             getUUID                     : getUUID,
-            setUUID                     : setUUID
+            setUUID                     : setUUID,
+            setNodeServerVersion : setNodeServerVersion,
+            getNodeServerVersion : getNodeServerVersion
         };
 
         function getUserId() {
@@ -97,6 +100,14 @@
 
         function getUUID() {
             return property.uuid;
+        }
+
+        function setNodeServerVersion(nodejs_server_version) {
+            property.nodejs_server_version = nodejs_server_version;
+        }
+
+        function getNodeServerVersion() {
+            return property.nodejs_server_version;
         }
     }
 })();

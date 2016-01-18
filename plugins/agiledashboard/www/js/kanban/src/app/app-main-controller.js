@@ -20,6 +20,7 @@
             amMoment.changeLocale(lang);
             var uuid = UUIDGeneratorService.generateUUID();
             SharedPropertiesService.setUUID(uuid);
+            SharedPropertiesService.setNodeServerVersion("0.3");
             SharedPropertiesService.setNodeServerAddress(nodejs_server);
         }
     }

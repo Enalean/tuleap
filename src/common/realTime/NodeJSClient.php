@@ -41,11 +41,12 @@ class NodeJSClient implements Client {
      * @param $sender_user_id  : Id of user
      * @param $sender_uuid     : Uuid to distinguish client with same user id
      * @param $room_id         : Room's id to broadcast message to this room
+     * @param $rights          : To send at clients who have rights
      * @param $cmd             : Broadcast on event command
      * @param $data            : Data broadcasting
      * @throws \Http_ClientException
      */
-    public function sendMessage($sender_user_id, $sender_uuid, $room_id, $cmd, $data) {
+    public function sendMessage($sender_user_id, $sender_uuid, $room_id, $rights, $cmd, $data) {
         if (ForgeConfig::get('nodejs_server') !== '') {
             $http_curl_client = new Http_Client();
 
@@ -58,6 +59,7 @@ class NodeJSClient implements Client {
                     'sender_user_id' => intval($sender_user_id),
                     'sender_uuid'    => $sender_uuid,
                     'room_id'        => $room_id,
+                    'rights'         => $rights,
                     'cmd'            => $cmd,
                     'data'           => $data
                 ))

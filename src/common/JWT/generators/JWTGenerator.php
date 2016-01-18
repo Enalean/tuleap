@@ -20,40 +20,50 @@ namespace Tuleap\JWT\Generators;
 
 use UserManager;
 use Firebase\JWT\JWT;
-use ForgeConfig;
+use UGroupLiteralizer;
 
 class JWTGenerator {
 
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct($user_manager) {
-        $this->user_manager = $user_manager;
+    /** @var UGroupLiteralizer */
+    private $ugroup_literalizer;
+
+    /** @var string */
+    private $private_key;
+
+    public function __construct($private_key, $user_manager, $ugroup_literalizer) {
+        $this->private_key        = $private_key;
+        $this->user_manager       = $user_manager;
+        $this->ugroup_literalizer = $ugroup_literalizer;
     }
 
     /**
      * Generate a json web token
-     *
-     * Generate a json web token for the current user
+     * for the current user
      *
      * @return string
      */
     public function getToken() {
         $current_user = $this->user_manager->getCurrentUser();
         $data = array(
-            'user_id' => intval($current_user->getId())
+            'user_id'     => intval($current_user->getId()),
+            'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user)
         );
 
+        $token = array(
+            'exp' => $this->getExpireDate(),
+            'data'=> $data
+        );
+
+        $encoded = JWT::encode($token, $this->private_key, 'HS512');
+        return $encoded;
+    }
+
+    private function getExpireDate() {
         $issuedAt  = new \DateTime();
         $notBefore = $issuedAt;
-        $expire = $notBefore->modify('+30 minutes')->getTimestamp();
-        $token = array(
-            'exp' => $expire,
-            'data' => $data
-        );
-
-        $jwt = JWT::encode($token, ForgeConfig::get('nodejs_server_jwt_private_key'), 'HS512');
-
-        return $jwt;
+        return $notBefore->modify('+30 minutes')->getTimestamp();
     }
 }

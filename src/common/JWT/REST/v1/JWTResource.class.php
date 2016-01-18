@@ -24,21 +24,25 @@ use Tuleap\REST\Header;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\Generators\JWTGenerator;
 use UserManager;
+use UGroupLiteralizer;
+use ForgeConfig;
 
 class JWTResource {
     /**
-     * Generate a json web token
-     *
-     * Generate a json web token for the current user
+     * To have a json web token
      *
      * @url GET
      *
      * @return Tuleap\JWT\REST\JWTRepresentation
      */
     public function get() {
-        $jwt = new JWTGenerator(UserManager::instance());
-        $encoded = $jwt->getToken();
-        $token = new JWTRepresentation();
+        $jwt_generator = new JWTGenerator(
+            ForgeConfig::get('nodejs_server_jwt_private_key'),
+            UserManager::instance(),
+            new UGroupLiteralizer()
+        );
+        $encoded       = $jwt_generator->getToken();
+        $token         = new JWTRepresentation();
         $token->build(
             $encoded
         );
