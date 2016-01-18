@@ -1,5 +1,5 @@
 Version 0.3 - Tuleap 8.11
-    * story #23760 : Create a repository (and list existing ones)
+    * request #8788 : Create a repository (and list existing ones)
 
 Version 0.2 - Tuleap 8.10
     * Integrating ViewVC in the new SVN plugin
