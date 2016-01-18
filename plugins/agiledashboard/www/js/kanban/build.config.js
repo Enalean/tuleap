@@ -83,6 +83,7 @@ module.exports = {
             'vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             'vendor/angular-animate/angular-animate.min.js',
             'vendor/ng-scrollbar/dist/ng-scrollbar.min.js',
+            'vendor/angular-base64-upload/dist/angular-base64-upload.js',
             'vendor/angular-ckeditor/angular-ckeditor.js',
             'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
             'vendor/angular-filter/dist/angular-filter.min.js',

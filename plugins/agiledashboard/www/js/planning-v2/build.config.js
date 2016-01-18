@@ -48,7 +48,6 @@ module.exports = {
 
         atpl: ['src/app/**/*.tpl.html'],
         ctpl: ['src/common/**/*.tpl.html'],
-
         html: ['src/index.html'],
         less: 'src/less/main.less'
     },
@@ -87,6 +86,7 @@ module.exports = {
             'vendor/angular-filter/dist/angular-filter.min.js',
             'vendor/angular-ui-select/dist/select.js',
             'vendor/ng-scrollbar/dist/ng-scrollbar.js',
+            'vendor/angular-base64-upload/dist/angular-base64-upload.js',
             'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
             'vendor/dragular/dist/dragular.min.js'
         ],
