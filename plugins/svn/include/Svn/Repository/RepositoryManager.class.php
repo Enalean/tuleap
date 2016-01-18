@@ -41,6 +41,11 @@ class RepositoryManager {
         return $repositories;
     }
 
+     public function getById($id_repository, Project $project) {
+        $row = $this->dao->searchByRepositoryIdAndProjectId($id_repository, $project);
+        return $this->instantiateFromRow($row, $project);
+    }
+
     public function create(Repository $repositorysvn) {
         if (! $this->dao->create($repositorysvn)) {
             throw new CannotCreateRepositoryException ($GLOBALS['Language']->getText('plugin_svn','update_error'));

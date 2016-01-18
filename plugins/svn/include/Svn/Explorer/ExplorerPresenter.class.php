@@ -23,7 +23,6 @@ namespace Tuleap\Svn\Explorer;
 
 use CSRFSynchronizerToken;
 use \Tuleap\Svn\Repository\RepositoryManager;
-use \Tuleap\Svn\ServiceSvn;
 
 class ExplorerPresenter {
 
@@ -34,6 +33,11 @@ class ExplorerPresenter {
     public $list_repositories;
     public $label_repository_name;
     public $no_repositories;
+    public $svn_plugin;
+    public $title;
+    public $has_respositories;
+    public $help_repository_name;
+    public $table_head_list_repository;
 
     public function __construct(
         $project,
@@ -41,37 +45,17 @@ class ExplorerPresenter {
         $repository_name,
         RepositoryManager $repository_manager
     ) {
-        $this->group_id                = $project->getID();
-        $this->csrf_input              = $csrf->fetchHTMLInput();
-        $this->repository_name         = $repository_name;
-        $this->list_repositories       = $repository_manager->getRepositoriesInProject($project);
-    }
-
-    public function title() {
-        return $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_add_repository');
-    }
-
-    public function label_repository_name() {
-        return $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
-    }
-
-    public function no_repositories() {
-        return $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
-    }
-
-    public function title_list_repositories() {
-        return $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
-    }
-
-    public function has_respositories() {
-        return count($this->list_repositories) > 0;
-    }
-
-    public function help_repository_name() {
-        return $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
-    }
-
-    public function table_head_list_repository() {
-        return $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
+        $this->group_id                   = $project->getID();
+        $this->csrf_input                 = $csrf->fetchHTMLInput();
+        $this->repository_name            = $repository_name;
+        $this->list_repositories          = $repository_manager->getRepositoriesInProject($project);
+        $this->svn_plugin                 = SVN_BASE_URL;
+        $this->title_list_repositories    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
+        $this->label_repository_name      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
+        $this->no_repositories            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
+        $this->title                      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_add_repository');
+        $this->help_repository_name       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
+        $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
+        $this->has_respositories          = count($this->list_repositories) > 0;
     }
 }

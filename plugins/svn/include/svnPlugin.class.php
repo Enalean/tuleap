@@ -22,6 +22,7 @@ require_once 'constants.php';
 
 use \Tuleap\Svn\Explorer\ExplorerController;
 use \Tuleap\Svn\CodeBrowser\CodeBrowserController;
+use \Tuleap\Svn\Explorer\RepositoryDisplayController;
 use \Tuleap\Svn\SvnRouter;
 use \Tuleap\Svn\Repository\RepositoryManager;
 use \Tuleap\Svn\Dao;
@@ -55,7 +56,8 @@ class SvnPlugin extends Plugin {
         return new SvnRouter(
             array(
                 $this->getExplorerController(),
-                $this->getCodeBrowserController()
+                $this->getCodeBrowserController(),
+                $this->getRepositoryDisplayController()
             )
         );
     }
@@ -83,5 +85,9 @@ class SvnPlugin extends Plugin {
 
     private function getCodeBrowserController() {
         return new CodeBrowserController();
+    }
+
+    private function getRepositoryDisplayController() {
+        return new RepositoryDisplayController(new RepositoryManager(new Dao()));
     }
 }
