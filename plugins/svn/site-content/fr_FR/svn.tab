@@ -13,6 +13,7 @@ plugin_svn_manage_repository	no_repositories	Aucun dépôt trouvé
 plugin_svn_manage_repository	title_list_repositories	Dépôts du projet
 plugin_svn_manage_repository	name_repository_length	Le nom du dépôt doit commencer par une lettre, il doit avoir une longueur minimum de trois caractères. Seuls les caractères spéciaux - _ . sont autorisés.
 plugin_svn_manage_repository	table_head_list_repository	Dépôt
+plugin_svn_manage_repository	plugin_not_activated	Le multi-dépôt SVN est désactivé pour le projet.
 
 
 

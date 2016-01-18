@@ -61,7 +61,12 @@ class SvnPlugin extends Plugin {
     }
 
     public function process(HTTPRequest $request) {
-        $this->getRouter()->route($request);
+        if (! PluginManager::instance()->isPluginAllowedForProject($this, $request->getProject()->getId())) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','plugin_not_activated'));
+            $GLOBALS['Response']->redirect('/projects/'.$request->getProject()->getUnixNameMixedCase().'/');
+        } else {
+            $this->getRouter()->route($request);
+        }
     }
 
     public function service_icon($params) {
