@@ -455,7 +455,6 @@ class Docman_Actions extends Actions {
                     switch ($item_type) {
                         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                            // Warn users about watermarking
                             $this->event_manager->processEvent(
                                 'plugin_docman_after_new_document',
                                 array(
@@ -713,17 +712,6 @@ class Docman_Actions extends Actions {
                 }
 
                 $this->manageLockNewVersion($user, $item, $request);
-
-                // Warn users about watermarking
-                $this->event_manager->processEvent(
-                    'plugin_docman_after_new_version',
-                    array(
-                        'item'     => $item,
-                        'user'     => $user,
-                        'version'  => $new_version,
-                        'docmanControler' => $this->_controler
-                    )
-                );
             } elseif ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
                 $this->updateLink($request, $item, $user);
             }

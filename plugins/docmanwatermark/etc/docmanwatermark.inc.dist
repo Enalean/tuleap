@@ -1,5 +1,0 @@
-<?php
-
-// Where the zend framework is located
-$zend_path = '/usr/share/zend';
-?>

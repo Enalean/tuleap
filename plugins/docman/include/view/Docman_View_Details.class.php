@@ -108,20 +108,6 @@ class Docman_View_Details extends Docman_View_Display {
             $sections['statistics'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionStatistics($params['item'], $params['default_url'], $this->_controller, $token));
         }
-        
-        
-        // Plugins can add their own tabs here.
-        // They just need to create a new class that inherit from Docman_View_ItemDetailsSection
-        // And to do (in the hook):
-        // $params['sections']['myid'] = true;
-        // $params['details']->addSection(new MyClass($params['item'], $params['default_url']));
-        $em = EventManager::instance();
-        $eventParams = array('details'     => $details,
-                             'sections'    => &$sections,
-                             'item'        => $params['item'],
-                             'default_url' => $params['default_url'],
-                             'user'        => $this->_controller->getUser());
-        $em->processEvent('plugin_docman_view_details_after_tabs', $eventParams);
 
         if ($section && isset($sections[$section])) {
             $details->setCurrentSection($section);

@@ -159,7 +159,7 @@ class Docman_Version {
 
     /**
      * Generally invoked before file download, this method will log a version
-     * access event and would launch watermarking process.
+     * access event
      *
      * @param Docman_Item    $item
      * @param PFUser           $user
@@ -173,12 +173,8 @@ class Docman_Version {
                     'item'     => $item,
                     'version'  => $this->getNumber(),
                     'user'     => $user
-                ));
-        $em->processEvent('plugin_docman_file_before_download', array(
-                                             'item'            => $item,
-                                             'user'            => $user,
-                                             'version'         => $this
-        ));
+                )
+        );
     }
 
     /**
