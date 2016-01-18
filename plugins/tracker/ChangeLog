@@ -1,3 +1,6 @@
+Version 5.779 - Tuleap 8.11
+    * Revert 'Use files size as a quota instead of number of files'
+
 Version 5.778 - Tuleap 8.11
     * request #8703 Kanban real time security to NodeJs server diffuse messages
 
