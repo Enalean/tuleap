@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +15,27 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\Svn\Explorer;
 
+use Project;
 use Tuleap\Svn\ServiceSvn;
-use Tuleap\Svn\Presenter\ExplorerPresenter;
-
+use CSRFSynchronizerToken;
+use \Tuleap\Svn\Repository\RuleName;
+use \Tuleap\Svn\Repository\Repository;
+use \Tuleap\Svn\Repository\RepositoryManager;
 use HTTPRequest;
+use \Tuleap\Svn\Repository\CannotCreateRepositoryException;
 
 class ExplorerController {
     const NAME = 'explorer';
 
-    public function __construct() {
+    private $repository_manager;
 
-    }
-
-    public function getName() {
-        return self::NAME;
+    public function __construct(RepositoryManager $repository_manager) {
+        $this->repository_manager = $repository_manager;
     }
 
     public function index(ServiceSvn $service, HTTPRequest $request) {
@@ -44,37 +44,46 @@ class ExplorerController {
 
     private function renderIndex(ServiceSvn $service, HTTPRequest $request) {
         $project = $request->getProject();
+        $token = $this->generateTokenForCeateRepository($request->getProject());
 
         $service->renderInPage(
             $request,
             'Welcome',
             'explorer/index',
-            new ExplorerPresenter($project)
+            new ExplorerPresenter(
+                    $project,
+                    $token,
+                    $request->get('name'),
+                    $this->repository_manager
+                )
         );
     }
 
-    public function createRepo(ServiceSvn $service, HTTPRequest $request) {
-        if (!$request->isPost()) {
-            // TODO: redirect to the index controller
-            // The URLRedirect classes doesn't seem to work here.
-            // How am I supposed to redirect a user to the same controller but to
-            // another method ?
-            die;
-        }
-
-        $repo_name = $request->get("repo_name");
-
-        if ($repo_name === "") {
-            // TODO: redirect to the index controller
-            // The URLRedirect classes doesn't seem to work here.
-            // How am I supposed to redirect a user to the same controller but to
-            // another method ?
-            die;
-        }
-
-        // TODO: send a system event in Tuleap to create a folder with the $repo_name variable
-        // TODO: need to take a deeper look at how the proftpd plugin works here
-        echo $repo_name;
+    private function generateTokenForCeateRepository(Project $project) {
+        return new CSRFSynchronizerToken(SVN_BASE_URL."/?group_id=".$project->getid(). '&action=createRepo');
     }
 
+    public function createRepo(ServiceSvn $service, HTTPRequest $request) {
+        $token = $this->generateTokenForCeateRepository($request->getProject());
+        $token->check();
+
+        $rule = new RuleName();
+        $repo_name = $request->get("repo_name");
+
+        if (! $rule->isValid($repo_name)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','invalid_name'));
+            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+            $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
+        } else {
+            $repository_to_create = new Repository ("", $repo_name, $request->getProject());
+            try {
+                $this->repository_manager->create($repository_to_create);
+                $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository','update_success'));
+                $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
+            } catch (CannotCreateRepositoryException $e) {
+                $GLOBALS['Response']->addFeedback('error', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn','update_error'));
+                $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
+            }
+        }
+    }
 }

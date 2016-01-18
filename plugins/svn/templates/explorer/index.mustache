@@ -1,21 +1,33 @@
 <section class="plugin-svn-wrapper">
-    <h2>Welcome to the new SVN module</h2>
-    <h3>Create a new SVN repository</h3>
+    <h1>{{ title_list_repositories }}</h1>
+    {{^list_repositories}}
+        <h3><p> {{ no_repositories }}</p></h3>
+    {{/list_repositories}}
+    {{#has_respositories}}
+        <p>
+           <table class="table table-striped table-bordered">
+                <thead>
+                    <tr><th>{{ table_head_list_repository }}</th></tr>
+                </thead>
+                <tbody>
+                    {{# list_repositories }}
+                        <tr class="boxitem"><td><a href="#">{{ getName }}</a></td></tr>
+                    {{/ list_repositories }}
+                </tbody>
+            </table>
+        </p>
+    {{/has_respositories}}
+
+    <h2>{{ title }}</h2>
     <p>
         <form
             name="svn-repo-creator" class="form-inline" method="POST"
-            action="/plugins/svn/?group_id={{group_id}}&controller=explorer&action=createRepo">
-            <label for="repo_name">New repository name</label>
-            <input type="text" name="repo_name" value="" required />
+            action="/plugins/svn/?group_id={{group_id}}&action=createRepo">
+            {{{ csrf_input }}}
+            <label for="repo_name" >{{ label_repository_name }}</label>
+            <input type="text" name="repo_name" value="{{ repository_name }}" pattern="[a-zA-Z][A-Za-z1-9-_.]{2,254}" required />
             <input type="submit" name="repo_add" value="Create" class="btn btn-primary" />
+            <p>{{ help_repository_name }}</p>
         </form>
     </p>
-    <h3>TODO: Available repositories</h3>
-    <p>
-        TODO: add a table here with links leading to the viewvc instance
-    </p>
-
-    <a href="?group_id={{group_id}}&controller=code-browser&action=index&roottype=svn&root={{svn_root}}">
-        test d'accès au REPO créé par l'ancien module SVN
-    </a>
 </section>

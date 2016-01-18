@@ -60,6 +60,9 @@ class Service {
         $this->data    = $data;
     }
     
+    public function getProject() {
+        return $this->project;
+    }
     function getGroupId() {
         return $this->data['group_id'];
     }

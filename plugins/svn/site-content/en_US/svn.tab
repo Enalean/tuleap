@@ -3,3 +3,19 @@ plugin_svn	descriptor_name	SVN with multiple repositories
 
 plugin_svn	service_lbl_key	SVN
 plugin_svn	service_desc_key	SVN plugin to manage multiple SVN repositories
+
+plugin_svn_manage_repository	repository_name_required	The repository must have a name
+plugin_svn_manage_repository	invalid_name	The repository name is invalid
+plugin_svn_manage_repository	update_success	Successfully Updated
+plugin_svn_manage_repository	title_add_repository	Add a repository
+plugin_svn_manage_repository	label_name	Name
+plugin_svn_manage_repository	no_repositories	No repository found
+plugin_svn_manage_repository	title_list_repositories	Project repositories
+plugin_svn_manage_repository	name_repository_length	The name must start by a letter and have a length of minimum three caracters. Only - _ . specials caracters are allowed.
+plugin_svn_manage_repository	table_head_list_repository	Repository
+
+
+plugin_svn	update_error	Unable to update Repository data
+plugin_svn	char_err	The repository name must have at least one character
+plugin_svn	illegal_char	The repository name contains illeguall characters
+plugin_svn	repository_spaces	There cannot be any spaces in the repository name
