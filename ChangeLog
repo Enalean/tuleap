@@ -11,6 +11,7 @@ Version 8.11 (Not released yet)
 	* request #8775: Increment Subversion packages versions
 	* request #8678: Cannot create files with a '#' character in the name
 	* request #8761: Mail issue on services having truncated emails options
+	* request #8779: Passwords contain invalid characters for the creation of a new dev instance
 
 	== Plugins ==
 	* git: 4.107
