@@ -1,3 +1,6 @@
+Version 4.109 - Tuleap 8.11
+    * story #8734: have new git repositories automatically mirrored (After mirror deletion, remove it in default mirror)
+
 Version 4.108 - Tuleap 8.11
     * story #8734: have new git repositories automatically mirrored (Define default mirrors per project)
 
