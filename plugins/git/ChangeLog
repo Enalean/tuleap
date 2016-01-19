@@ -1,3 +1,6 @@
+Version 4.108 - Tuleap 8.11
+    * story #8734: have new git repositories automatically mirrored (Define default mirrors per project)
+
 Version 4.107 - Tuleap 8.11
     * request #8772: A Gitphp fatal error must not hide Git header
 

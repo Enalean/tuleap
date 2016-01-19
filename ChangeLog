@@ -14,7 +14,7 @@ Version 8.11 (Not released yet)
 	* request #8779: Passwords contain invalid characters for the creation of a new dev instance
 
 	== Plugins ==
-	* git: 4.107
+	* git: 4.108
 	* tracker: 5.779
 	* mediawiki: 0.102
 	* webdav: 1.9.14
