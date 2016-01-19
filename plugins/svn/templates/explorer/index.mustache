@@ -11,7 +11,7 @@
                 </thead>
                 <tbody>
                     {{# list_repositories }}
-                        <tr class="boxitem"><td><a href="#">{{ getName }}</a></td></tr>
+                        <tr class="boxitem"><td><a href="{{ svn_plugin }}/?group_id={{ group_id }}&action=displayRepo&idRepo={{ getId }}">{{ getName }}</a></td></tr>
                     {{/ list_repositories }}
                 </tbody>
             </table>

@@ -23,19 +23,8 @@ namespace Tuleap\Svn;
 use DataAccessObject;
 use \Tuleap\Svn\Repository\Repository;
 use Project;
-use Exception;
 
 class Dao extends DataAccessObject {
-
-    public function __construct() {
-        parent::__construct();
-        $this->table_name = 'plugin_svn_repositories';
-    }
-
-    public function getTable() {
-        return $this->tableName;
-    }
-
     public function searchByProject(Project $project) {
         $project = $this->da->escapeInt($project->getId());
         $sql = 'SELECT *
@@ -44,9 +33,18 @@ class Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchByRepositoryIdAndProjectId($id, Project $project) {
+        $id = $this->da->escapeInt($id);
+        $project = $this->da->escapeInt($project->getId());
+        $sql = "SELECT *
+                FROM plugin_svn_repositories
+                WHERE id=$id AND project_id=$project";
+        return $this->retrieveFirstRow($sql);
+    }
+
      public function create(Repository $repository) {
-        $name             = $this->da->quoteSmart($repository->getName());
-        $project          = $this->da->escapeInt($repository->getProject()->getId());
+        $name    = $this->da->quoteSmart($repository->getName());
+        $project = $this->da->escapeInt($repository->getProject()->getId());
 
         $query = "INSERT INTO plugin_svn_repositories
             (name,  project_id ) values ($name, $project)";

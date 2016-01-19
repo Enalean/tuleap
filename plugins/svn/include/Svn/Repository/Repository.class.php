@@ -20,6 +20,7 @@
 namespace Tuleap\Svn\Repository;
 
 use Project;
+use ForgeConfig;
 
 class Repository  {
 
@@ -47,5 +48,19 @@ class Repository  {
 
     public function getProject() {
         return $this->project;
+    }
+
+    public function getSvnUrl() {
+        $host = ForgeConfig::get('sys_default_domain');
+        if (ForgeConfig::get('sys_force_ssl')) {
+            $svn_url = 'https://'. $host;
+        } else {
+            $svn_url = 'http://'. $host;
+        }
+        // Domain name must be lowercase (issue with some SVN clients)
+        $svn_url = strtolower($svn_url);
+        $svn_url .= '/svnroot/'. $this->getName();
+
+        return $svn_url;
     }
 }

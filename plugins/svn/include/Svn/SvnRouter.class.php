@@ -22,9 +22,9 @@ namespace Tuleap\Svn;
 
 use HTTPRequest;
 use \Tuleap\Svn\Explorer\ExplorerController;
+use \Tuleap\Svn\Explorer\RepositoryDisplayController;
 use \Tuleap\Svn\Repository\RepositoryManager;
 use \Tuleap\Svn\Dao;
-use Valid_WhiteList;
 
 class SvnRouter {
 
@@ -39,7 +39,7 @@ class SvnRouter {
      * @return void
      */
     public function route(HTTPRequest $request) {
-        if ( ! $request->get('action')) {
+        if (! $request->get('action')) {
             $this->useDefaultRoute($request);
             return;
         }
@@ -48,6 +48,10 @@ class SvnRouter {
         switch ($action) {
             case "createRepo":
                 $controller = new ExplorerController(new RepositoryManager(new Dao()));
+                $controller->$action($this->getService($request), $request);
+                break;
+            case "displayRepo":
+                $controller = new RepositoryDisplayController(new RepositoryManager(new Dao()));
                 $controller->$action($this->getService($request), $request);
                 break;
             default:
