@@ -54,15 +54,20 @@ plugin_git	admin_mail	Notifications
 plugin_git	admin_mirroring	Mirroring
 plugin_git	mirroring_title	Mirroring
 plugin_git	mirroring_info	Select the mirrors where you want to replicate the repository <b>$1</b>:
+plugin_git	mirroring_default_info	Select the mirrors where the new repositories will be replicated by default:
 plugin_git	mirroring_mirror_name	Name
 plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Used by this repository?
+plugin_git	mirroring_mirror_default_used	Used by default?
 plugin_git	mirroring_update_mirroring	Update mirroring of this repository
+plugin_git	mirroring_update_default_mirroring	Update default mirroring
 plugin_git	mirroring_mirroring_successful	The repository will be replicated on the selected mirrors in a few minutes.
 plugin_git	mirroring_mirroring_successful_plural	The repositories will be replicated on the selected mirrors  in a few minutes.
 plugin_git	mirroring_unmirroring_successful	The repository will be completely revoked from mirrors  in a few minutes.
 plugin_git	mirroring_unmirroring_successful_plural	The repositories will be completely removed from mirrors in a few minutes.
 plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the repository is replicated.
+plugin_git	default_mirros_update_success	Default mirrors updated.
+plugin_git	default_mirros_update_error	An error occured while updating default mirrors.
 
 plugin_git	admin_settings	General settings
 plugin_git	gerrit_pane_title	Gerrit
@@ -126,6 +131,7 @@ plugin_git	project_deletion_not_possible	Cannot delete project $1 on Gerrit: $2.
 plugin_git	project_deletion_open_elements	There are open changes for this project.
 
 plugin_git	actions_repo_not_found	The repository does not exist
+plugin_git	actions_mirror_ids_not_valid	This request is not valid (invalid mirror ids).
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup of '$1' will be available in the backup directory
@@ -265,6 +271,7 @@ plugin_git	view_admin_title	Git Administration
 plugin_git	view_admin_tab_gerrit_templates	Gerrit Templates
 plugin_git	view_admin_tab_git_admins	Git administrators
 plugin_git	view_admin_tab_mass_update	Mass update of repositories
+plugin_git	view_admin_tab_default_settings	Default git settings
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Templates
 plugin_git	view_admin_edit_configuration_label	You can edit the template. The <b>%projectname%</b> variable is available; it will be replaced by the project's name during the migration process:

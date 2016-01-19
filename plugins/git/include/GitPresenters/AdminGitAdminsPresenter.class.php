@@ -31,11 +31,11 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
 
     public function __construct(
         $project_id,
-        $allow_mass_update,
+        $are_mirrors_defined,
         $static_ugroups,
         $selected_ugroups
     ) {
-        parent::__construct($project_id, $allow_mass_update);
+        parent::__construct($project_id, $are_mirrors_defined);
 
         $this->manage_git_admins = true;
         $this->static_ugroups    = $static_ugroups;

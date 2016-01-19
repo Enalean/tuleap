@@ -2,7 +2,7 @@
 
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -21,7 +21,6 @@
   */
 
 require_once('common/valid/ValidFactory.class.php');
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * Git
@@ -371,6 +370,7 @@ class Git extends PluginController {
                 'admin',
                 'admin-git-admins',
                 'admin-gerrit-templates',
+                'admin-default-settings',
                 'fetch_git_config',
                 'fetch_git_template',
                 'fork_repositories_permissions',
@@ -380,9 +380,10 @@ class Git extends PluginController {
                 'disconnect_gerrit',
                 'delete_gerrit_project',
                 'update_mirroring',
+                'update_default_mirroring',
                 'restore'
             );
-            if ($this->isAdminMassChangeAllowed()) {
+            if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
             }
         } else {
@@ -572,7 +573,11 @@ class Git extends PluginController {
                     }
                 }
 
-                $this->addView('adminGitAdminsView', array($this->isAdminMassChangeAllowed()));
+                $this->addView(
+                    'adminGitAdminsView',
+                    array($this->areMirrorsEnabledForProject())
+                );
+
                 break;
             case 'admin':
             case 'admin-gerrit-templates':
@@ -598,7 +603,10 @@ class Git extends PluginController {
 
                 if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
-                    $this->addView('adminGerritTemplatesView', array($this->isAdminMassChangeAllowed()));
+                    $this->addView(
+                        'adminGerritTemplatesView',
+                        array($this->areMirrorsEnabledForProject())
+                    );
                 } else {
                     $this->addError($this->getText('controller_access_denied'));
                     $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
@@ -633,6 +641,13 @@ class Git extends PluginController {
                 }
 
                 $this->addView('adminMassUpdateSelectRepositoriesView');
+
+                break;
+            case 'admin-default-settings':
+                $this->addView(
+                    'adminDefaultSettings',
+                    array($this->areMirrorsEnabledForProject())
+                );
 
                 break;
             case 'fetch_git_config':
@@ -775,13 +790,36 @@ class Git extends PluginController {
                     $this->addError($this->getText('actions_repo_not_found'));
                 }
 
-                $this->addAction('updateMirroring', array(
-                    $this->request->getProject(),
-                    array($repository),
-                    $this->request->get('selected_mirror_ids')
-                ));
+                $selected_mirror_ids = $this->request->get('selected_mirror_ids');
+
+                if (is_array($selected_mirror_ids)) {
+                    $this->addAction('updateMirroring', array(
+                        $this->request->getProject(),
+                        array($repository),
+                        $selected_mirror_ids
+                    ));
+                } else {
+                    $this->addError($this->getText('actions_mirror_ids_not_valid'));
+                }
 
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
+                break;
+
+            case 'update_default_mirroring':
+                $project             = $this->request->getProject();
+                $selected_mirror_ids = $this->request->get('selected_mirror_ids');
+
+                if (is_array($selected_mirror_ids)) {
+                    $this->addAction('updateDefaultMirroring', array($project, $selected_mirror_ids));
+                } else {
+                    $this->addError($this->getText('actions_mirror_ids_not_valid'));
+                }
+
+                $this->addView(
+                    'adminDefaultSettings',
+                    array($this->areMirrorsEnabledForProject())
+                );
+
                 break;
             case 'restore':
                 $this->addAction('restoreRepository', array($repoId, $this->groupId));
@@ -1045,7 +1083,7 @@ class Git extends PluginController {
         $logger->logsDaily($params);
     }
 
-    private function isAdminMassChangeAllowed() {
+    private function areMirrorsEnabledForProject() {
         return count($this->mirror_data_mapper->fetchAllForProject($this->project)) > 0;
     }
 }
