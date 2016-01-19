@@ -92,6 +92,7 @@ svn_admin_notification	upd_header_fail	Header update failed.
 svn_admin_notification	email	Subversion Administration - Email Notification
 svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits</H3><p><I>Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>
 svn_admin_notification	star_operator	Please note that you can use the star operator: /folder/to/notify and /folder/*/notify will be notified the same way.
+svn_admin_notification	svn_tracking_comment	To be able to use subversion notification, subversion tracking must be activated.
 svn_admin_notification	mail_to	Mail to
 svn_admin_notification	notification_path	Path
 svn_admin_notification	header	Subject header

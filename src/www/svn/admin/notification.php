@@ -12,6 +12,7 @@
 require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();
+$disabled        = "";
 
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 
@@ -79,14 +80,21 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 
 $hp = Codendi_HTMLPurifier::instance();
 
+$project = $pm->getProject($group_id);
+$svn_mailing_header = $project->getSVNMailingHeader();
+
+// testing SVN tracking
+if (!$project->isSVNTracked()) {
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','svn_tracking_comment'));
+    $disabled = "disabled";
+}
+
 // Display the form
 svn_header_admin(array(
     'title'=> $Language->getText('svn_admin_general_settings','gen_settings'),
     'help' => 'svn.html#subversion-email-notification'
     )
 );
-$project = $pm->getProject($group_id);
-$svn_mailing_header = $project->getSVNMailingHeader();
 
 // Mail header
 echo '
@@ -97,9 +105,9 @@ echo '
            <input type="hidden" name="group_id" value="'.$group_id.'">
            <input type="hidden" name="post_changes" value="subject_header">
            <label>'.$Language->getText('svn_admin_notification','header').'</label>
-           <input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'">
+           <input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'" '.$disabled.'>
            <br/>
-           <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" class="btn">
+           <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" class="btn" '.$disabled.'>
        </form>';
 
 // List of paths & mail addresses (+delete)
@@ -133,14 +141,14 @@ echo '
            <input type="hidden" name="post_changes" value="path_mailing_list">
 
            <label>'.$Language->getText('svn_admin_notification','notification_path').'</label>
-           <input type="text" name="form_path" value="'.$hp->purify($path).'" />
+           <input type="text" name="form_path" value="'.$hp->purify($path).'" '.$disabled.' />
 
            <label>'.$Language->getText('svn_admin_notification','mail_to').'</label>
-           <input type="text" size="50%" name="form_mailing_list" value="'.$hp->purify($svnMailingList).'" />
+           <input type="text" size="50%" name="form_mailing_list" value="'.$hp->purify($svnMailingList).'" '.$disabled.' />
 
            <br />
 
-           <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" class="btn" />
+           <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" class="btn" '.$disabled.' />
        </form>';
 
 svn_footer(array());

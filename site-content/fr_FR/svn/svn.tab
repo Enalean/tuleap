@@ -85,6 +85,7 @@ svn_admin_notification	upd_header_fail	L'entête n'a pas été mise à jour.
 svn_admin_notification	email	Administration de Subversion  - Notification e-mail
 svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée.</I></p>
 svn_admin_notification	star_operator	Vous pouvez utiliser l'opérateur étoile. Les chemins /dossier/a/notifier et /dossier/*/notifier seront tout deux notifiés de la même façon.
+svn_admin_notification	svn_tracking_comment	Pour pouvoir utiliser les notifications SVN, le suivi de Subversion doit être activé.
 svn_admin_notification	mail_to	Envoyer à
 svn_admin_notification	notification_path	Chemin
 svn_admin_notification	header	Entête du sujet
