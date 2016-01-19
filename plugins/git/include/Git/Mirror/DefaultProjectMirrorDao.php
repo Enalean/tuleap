@@ -47,13 +47,22 @@ class DefaultProjectMirrorDao extends DataAccessObject {
     }
 
     public function getDefaultMirrorIdsForProject($project_id) {
-         $project_id = $this->da->escapeInt($project_id);
+        $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT mirror_id AS id
                 FROM plugin_git_default_project_mirrors
                 WHERE project_id = $project_id";
 
         return $this->retrieveIds($sql);
+    }
+
+    public function deleteFromDefaultMirrors($deleted_mirror_id) {
+        $deleted_mirror_id = $this->da->escapeInt($deleted_mirror_id);
+
+        $sql = "DELETE FROM plugin_git_default_project_mirrors
+                WHERE mirror_id = $deleted_mirror_id";
+
+        return $this->update($sql);
     }
 
 }

@@ -333,6 +333,13 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     /**
+     * @return bool
+     */
+    public function deleteFromDefaultMirrors($deleted_mirror_id) {
+        return $this->default_dao->deleteFromDefaultMirrors($deleted_mirror_id);
+    }
+
+    /**
      * @return Git_Mirror_Mirror
      * @throws Git_Mirror_MirrorNotFoundException
      */
