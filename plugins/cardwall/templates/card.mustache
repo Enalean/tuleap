@@ -1,1 +1,9 @@
-../../tracker/templates/card.mustache
+../../tracker/templates/card.mustached" style="background-color: {{getAccentColor}};" data-artifact-id="{{getId}}">
+    <div class="card-container">
+        {{> card-actions}}
+        <a href="#" class="toggle-collapse">+</a>
+        <div class="card-title">{{getTitle}}</div>
+        {{> card-details}}
+    </div>
+</div>
+{{/getCardPresenter}}

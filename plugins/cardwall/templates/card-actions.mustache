@@ -1,1 +1,16 @@
-../../tracker/templates/card-actions.mustache
+../../tracker/templates/card-actions.mustaches">
+    <div class="dropdown" id="card-{{getId}}-actions-menu">
+        <a href="{{getUrl}}" data-target="#card-{{getId}}-actions-menu" class="dropdown-toggle" data-toggle="dropdown">{{getXRef}} <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{getEditUrl}}&{{planning_redirect_parameter}}" class="edit-card" data-artifact-id="{{getArtifactId}}">{{getEditLabel}}</a>
+            </li>
+            {{# allowedChildrenTypes }}
+                <li>
+                    <a href="/plugins/tracker/?tracker={{ getId }}&func=new-artifact-link&id={{ getArtifactId }}&immediate=1&{{ planning_redirect_parameter }}" class="create-item-link" data-tracker-id="{{ getId }}" data-link-id="{{ getArtifactId }}">{{ getAddNewLabel }}</a>
+                </li>
+            {{/ allowedChildrenTypes }}
+        </ul>
+    </div>
+</div>
+{{/getCardPresenter}}
