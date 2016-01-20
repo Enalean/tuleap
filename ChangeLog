@@ -15,7 +15,7 @@ Version 8.11 (Not released yet)
 	* request #8737 Disable SVN notification pane when subversion tracking is off
 
 	== Plugins ==
-	* git: 4.109
+	* git: 4.110
 	* tracker: 5.779
 	* mediawiki: 0.102
 	* webdav: 1.9.14
