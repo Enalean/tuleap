@@ -1063,4 +1063,20 @@ class Event {
      *   'request_uri'      => (string)
      */
     const NAVBAR_ITEMS = 'navbar_items';
+
+    /**
+     * Retrieve sql fragments in ordoer to retrieve all repositories of all projects.
+     *
+     * Sql fragments should be in the form of:
+     *
+     *  SELECT groups.*, service.*, repository_name, auth_mod
+     *  FROM ...
+     *
+     * Where repository_name is "my_project" or "my_project/my_repo"
+     * and auth_mod is modperl, modmysql, ... (see SVN_Apache_SvnrootConf)
+     *
+     * Paramters:
+     *      'sql_fragments' => array
+     */
+    const GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS = 'get_svn_list_repositories_sql_fragments';
 }

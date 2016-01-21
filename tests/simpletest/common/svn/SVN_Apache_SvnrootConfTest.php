@@ -55,13 +55,16 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     /**
      * @return SVN_Apache_SvnrootConf
      */
-    private function GivenSvnrootForTwoGroups() {
-        $projects = array(array('unix_group_name' => 'gpig',
+    private function GivenSvnrootForTwoGroups($authentification_mode) {
+        $projects = array(array('repository_name' => 'gpig',
                                 'group_name'      => 'Guinea Pig',
-                                'group_id'        => 101),
-                          array('unix_group_name' => 'garden',
+                                'group_id'        => 101,
+                                'auth_mod'        => $authentification_mode),
+                          array('repository_name' => 'garden',
                                 'group_name'      => 'The Garden Project',
-                                'group_id'        => 102));
+                                'group_id'        => 102,
+                                'auth_mod'        => $authentification_mode));
+        $repositories = array();
 
         $project_manager = mock('ProjectManager');
         $event_manager   = new SVN_Apache_SvnrootConfTestEventManager();
@@ -69,11 +72,11 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
 
         $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager);
 
-        return new SVN_Apache_SvnrootConf($factory, $projects);
+        return new SVN_Apache_SvnrootConf($factory, $projects, $repositories);
     }
 
     private function GivenAFullApacheConfWithModMysql() {
-        $backend = $this->GivenSvnrootForTwoGroups();
+        $backend = $this->GivenSvnrootForTwoGroups('modmysql');
         return $backend->getFullConf();
     }
 
@@ -100,8 +103,7 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     }
 
     function GivenAFullApacheConfWithModPerl() {
-        ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
-        $svnroot = $this->GivenSvnrootForTwoGroups();
+        $svnroot = $this->GivenSvnrootForTwoGroups('modperl');
         return $svnroot->getFullConf();
     }
 

@@ -41,7 +41,7 @@ class RepositoryManager {
         return $repositories;
     }
 
-     public function getById($id_repository, Project $project) {
+    public function getById($id_repository, Project $project) {
         $row = $this->dao->searchByRepositoryIdAndProjectId($id_repository, $project);
         return $this->instantiateFromRow($row, $project);
     }

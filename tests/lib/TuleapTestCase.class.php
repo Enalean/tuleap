@@ -258,6 +258,9 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function recurseDeleteInDir($mypath) {
         $mypath = rtrim($mypath, '/');
         $d      = opendir($mypath);
+        if (! $d) {
+            return;
+        }
         while (($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
 

@@ -48,10 +48,9 @@ class SVN_Apache_Auth_Factory {
      *
      * @return SVN_Apache
      */
-    public function get($projectInfo) {
-        $project                         = $this->project_manager->getProjectFromDbRow($projectInfo);
-        $requested_authentication_method = ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY);
-        $project_authorizes_tokens       = $this->token_manager->isProjectAuthorizingTokens($project);
+    public function get(array $projectInfo, $requested_authentication_method) {
+        $project                   = $this->project_manager->getProjectFromDbRow($projectInfo);
+        $project_authorizes_tokens = $this->token_manager->isProjectAuthorizingTokens($project);
 
         $svn_apache_auth = $this->getModFromPlugins(
             $projectInfo,

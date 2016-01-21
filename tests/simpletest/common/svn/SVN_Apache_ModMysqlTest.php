@@ -42,7 +42,7 @@ class SVN_Apache_ModMysqlTest extends UnitTestCase {
             'group_name' => 'Guinea Pig',
             'group_id' => 101);
         $apacheConf = new SVN_Apache_ModMysql($project_db_row);
-        return $apacheConf->getConf();
+        return $apacheConf->getConf('GPig');
     }
 
     public function testGetApacheAuthShouldContainsDefaultValues() {

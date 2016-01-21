@@ -18,6 +18,8 @@
 namespace Tuleap\Svn\Repository;
 
 use Rule;
+use Project;
+use Tuleap\Svn\Dao;
 
 /**
  * Check if a project name is valid
@@ -26,18 +28,32 @@ use Rule;
  */
 class RuleName extends Rule {
 
-    /**
-     * Check validity
-     *
-     * @param String $val
-     *
-     * @return Boolean
-     */
+    private $project;
+    private $dao;
+
+    public function __construct(Project $project, Dao $dao) {
+        $this->project = $project;
+        $this->dao     = $dao;
+    }
+
     public function isValid($val) {
-        return preg_match('/^[a-z][a-z1-9-_.]{2,254}\z/i', $val);
+        return preg_match('/^'.PATTERN_REPOSITORY_NAME.'\z/i', $val) &&
+            ! $this->doesNameAlreadyExisting($val);
+    }
+
+    private function doesNameAlreadyExisting($name_repository) {
+        if ($this->dao->doesRepositoryAlreadyExist($name_repository, $this->project)) {
+            $this->error = $this->getErrorRepositoryExists();
+            return true;
+        }
+        return false;
     }
 
     private function getErrorNoSpaces() {
         return $GLOBALS['Language']->getText('plugin_svn', 'repository_spaces');
+    }
+
+    private function getErrorRepositoryExists() {
+        return $GLOBALS['Language']->getText('plugin_svn', 'already_used');
     }
 }

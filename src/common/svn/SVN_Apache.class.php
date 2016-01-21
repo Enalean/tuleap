@@ -48,15 +48,16 @@ abstract class SVN_Apache {
      * 
      * @return String 
      */
-    public function getConf() {
+    public function getConf($svn_dir) {
         $conf = '';
-        $conf .= "<Location /svnroot/".$this->project['unix_group_name'].">\n";
+        $conf .= "<Location /svnroot/".$svn_dir.">\n";
         $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath ". ForgeConfig::get('svn_prefix') ."/".$this->project['unix_group_name']."\n";
+        $conf .= "    SVNPath ". ForgeConfig::get('svn_prefix') ."/".$svn_dir."\n";
         $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getProjectAuthorization($this->project);
+        $conf .= $this->getRepositoryAuthorization($svn_dir);
         $conf .= $this->getProjectAuthentication($this->project);
         $conf .= "</Location>\n\n";
+
         return $conf;
     }
     
@@ -84,15 +85,9 @@ abstract class SVN_Apache {
         return $conf;
     }
     
-    /**
-     * Returns SVN authorization directive
-     * 
-     * @param Array $row Project DB row
-     * 
-     * @return String 
-     */
-    protected function getProjectAuthorization($row) {
-        $conf = "    AuthzSVNAccessFile ". ForgeConfig::get('svn_prefix') ."/".$row['unix_group_name']."/.SVNAccessFile\n";
+
+    protected function getRepositoryAuthorization($svn_dir) {
+        $conf = "    AuthzSVNAccessFile ". ForgeConfig::get('svn_prefix') ."/".$svn_dir."/.SVNAccessFile\n";
         return $conf;
     }
     

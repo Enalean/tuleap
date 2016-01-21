@@ -78,7 +78,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         if ($project = $this->getProject($project_id)) {
             if ($project->usesSVN()) {
                 $backendSVN = $this->getBackend('SVN');
-                if (! $backendSVN->updateSVNAccess($project_id, $ugroup_name, $ugroup_old_name)) {
+                if (! $backendSVN->updateSVNAccess($project_id, $project->getSVNRootPath(), $ugroup_name, $ugroup_old_name)) {
                     return false;
                 }
             }

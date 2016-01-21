@@ -57,5 +57,6 @@ class ExplorerPresenter {
         $this->help_repository_name       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
         $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
         $this->has_respositories          = count($this->list_repositories) > 0;
+        $this->validate_name              = PATTERN_REPOSITORY_NAME;
     }
 }

@@ -20,12 +20,10 @@
 
 require_once 'constants.php';
 
-use \Tuleap\Svn\Explorer\ExplorerController;
-use \Tuleap\Svn\CodeBrowser\CodeBrowserController;
-use \Tuleap\Svn\Explorer\RepositoryDisplayController;
 use \Tuleap\Svn\SvnRouter;
 use \Tuleap\Svn\Repository\RepositoryManager;
 use \Tuleap\Svn\Dao;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 
 /**
  * SVN plugin
@@ -39,6 +37,9 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
+        $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
     }
 
     public function getPluginInfo() {
@@ -52,13 +53,36 @@ class SvnPlugin extends Plugin {
         return self::SERVICE_SHORTNAME;
     }
 
+    public function getTypes() {
+        return array(
+            SystemEvent_SVN_CREATE_REPOSITORY::NAME
+        );
+    }
+
+    public function get_svn_list_repositories_sql_fragments(array $params) {
+        $dao = new Dao();
+        $params['sql_fragments'][] = $dao->getListRepositoriesSqlFragment();
+    }
+
+    public function system_event_get_types_for_default_queue($params) {
+        $params['types'][] = 'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME;
+    }
+
+    public function get_system_event_class($params) {
+        switch($params['type']) {
+            case 'SVN_CREATE_REPOSITORY' :
+                include_once dirname(__FILE__).'/events/SystemEvent_SVN_CREATE_REPOSITORY.class.php';
+                $params['class'] = 'SystemEvent_SVN_CREATE_REPOSITORY';
+                $params['dependencies'] = array(
+                    Backend::instance(Backend::SVN)
+                );
+                break;
+        }
+    }
+
     private function getRouter() {
         return new SvnRouter(
-            array(
-                $this->getExplorerController(),
-                $this->getCodeBrowserController(),
-                $this->getRepositoryDisplayController()
-            )
+              new RepositoryManager(new Dao())
         );
     }
 
@@ -77,17 +101,5 @@ class SvnPlugin extends Plugin {
 
     public function service_classnames(array $params) {
         $params['classnames'][$this->getServiceShortname()] = 'Tuleap\Svn\ServiceSvn';
-    }
-
-    private function getExplorerController() {
-        return new ExplorerController(new RepositoryManager(new Dao()));
-    }
-
-    private function getCodeBrowserController() {
-        return new CodeBrowserController();
-    }
-
-    private function getRepositoryDisplayController() {
-        return new RepositoryDisplayController(new RepositoryManager(new Dao()));
     }
 }

@@ -23,14 +23,15 @@ namespace Tuleap\Svn;
 use HTTPRequest;
 use \Tuleap\Svn\Explorer\ExplorerController;
 use \Tuleap\Svn\Explorer\RepositoryDisplayController;
-use \Tuleap\Svn\Repository\RepositoryManager;
-use \Tuleap\Svn\Dao;
 
 class SvnRouter {
 
     const DEFAULT_ACTION = 'index';
 
-    public function __construct() {
+    private $repository_manager;
+
+    public function __construct($repository_manager) {
+        $this->repository_manager = $repository_manager;
     }
 
     /**
@@ -47,11 +48,11 @@ class SvnRouter {
         $action = $request->get('action');
         switch ($action) {
             case "createRepo":
-                $controller = new ExplorerController(new RepositoryManager(new Dao()));
+                $controller = new ExplorerController($this->repository_manager);
                 $controller->$action($this->getService($request), $request);
                 break;
             case "displayRepo":
-                $controller = new RepositoryDisplayController(new RepositoryManager(new Dao()));
+                $controller = new RepositoryDisplayController($this->repository_manager);
                 $controller->$action($this->getService($request), $request);
                 break;
             default:
@@ -65,7 +66,7 @@ class SvnRouter {
      */
     private function useDefaultRoute(HTTPRequest $request) {
         $action = self::DEFAULT_ACTION;
-        $controller = new ExplorerController(new RepositoryManager(new Dao()));
+        $controller = new ExplorerController($this->repository_manager);
         $controller->$action( $this->getService($request), $request );
     }
 

@@ -434,6 +434,9 @@ class Backend {
     public function recurseDeleteInDir($mypath) {
         $mypath = rtrim($mypath, '/');
         $d      = opendir($mypath);
+        if (! $d) {
+            return;
+        }
         while (($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
                 

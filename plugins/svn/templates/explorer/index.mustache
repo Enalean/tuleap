@@ -25,7 +25,7 @@
             action="/plugins/svn/?group_id={{group_id}}&action=createRepo">
             {{{ csrf_input }}}
             <label for="repo_name" >{{ label_repository_name }}</label>
-            <input type="text" name="repo_name" value="{{ repository_name }}" pattern="[a-zA-Z][A-Za-z1-9-_.]{2,254}" required />
+            <input type="text" name="repo_name" value="{{ repository_name }}" pattern="{{ validate_name }}" required />
             <input type="submit" name="repo_add" value="Create" class="btn btn-primary" />
             <p>{{ help_repository_name }}</p>
         </form>

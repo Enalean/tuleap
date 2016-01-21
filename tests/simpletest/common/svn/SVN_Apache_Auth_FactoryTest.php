@@ -63,7 +63,7 @@ class SVN_Apache_Auth_FactoryTest extends TuleapTestCase {
 
         $this->project         = mock('Project');
         $this->project_info    = array();
-        $this->mod_from_plugin = new SVN_Apache_ModFromPlugin($this->project_info);
+        $this->mod_from_plugin = new SVN_Apache_ModFromPlugin($this->project_info, 'modmysql');
     }
 
     public function tearDown() {
@@ -71,29 +71,28 @@ class SVN_Apache_Auth_FactoryTest extends TuleapTestCase {
     }
 
     public function itReturnsModMysqlByDefault() {
-        $this->assertIsA($this->factory->get($this->project_info), 'SVN_Apache_ModMysql');
+        $this->assertIsA($this->factory->get($this->project_info, 'modmysql'), 'SVN_Apache_ModMysql');
     }
 
     public function itReturnsModPerlIfPlatformConfiguredWithModPerl() {
         ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
-
-        $this->assertIsA($this->factory->get($this->project_info), 'SVN_Apache_ModPerl');
+        $this->assertIsA($this->factory->get($this->project_info, 'modperl'), 'SVN_Apache_ModPerl');
     }
 
     public function itReturnModPluginIfPluginAuthIsConfiguredForThisProject() {
-        $this->assertIsA($this->factory_with_plugin_answer->get($this->project_info), 'SVN_Apache_ModFromPlugin');
+        $this->assertIsA($this->factory_with_plugin_answer->get($this->project_info, 'modmysql'), 'SVN_Apache_ModFromPlugin');
     }
 
     public function itReturnModPluginIfPlugiAuthIsConfiguredForThisProjectAndDefaultConfigIsModPerl() {
         ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
 
-        $this->assertIsA($this->factory_with_plugin_answer->get($this->project_info), 'SVN_Apache_ModFromPlugin');
+        $this->assertIsA($this->factory_with_plugin_answer->get($this->project_info, 'modmysql'), 'SVN_Apache_ModFromPlugin');
     }
 
     public function itReturnsModPerlIfProjectIsAuthorizedToUseTokens() {
         stub($this->project_manager)->getProjectFromDbRow($this->project_info)->returns($this->project);
         stub($this->token_manager)->isProjectAuthorizingTokens($this->project)->returns(true);
 
-        $this->assertIsA($this->factory->get($this->project_info), 'SVN_Apache_ModPerl');
+        $this->assertIsA($this->factory->get($this->project_info, 'modmysql'), 'SVN_Apache_ModPerl');
     }
 }

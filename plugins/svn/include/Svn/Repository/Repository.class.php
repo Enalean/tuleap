@@ -22,7 +22,7 @@ namespace Tuleap\Svn\Repository;
 use Project;
 use ForgeConfig;
 
-class Repository  {
+class Repository {
 
     private $id;
     private $name;
@@ -50,6 +50,10 @@ class Repository  {
         return $this->project;
     }
 
+     public function getPath() {
+        return '/svnroot/'. $this->getProject()->getUnixNameMixedCase().'/'.$this->getName();
+    }
+
     public function getSvnUrl() {
         $host = ForgeConfig::get('sys_default_domain');
         if (ForgeConfig::get('sys_force_ssl')) {
@@ -59,7 +63,7 @@ class Repository  {
         }
         // Domain name must be lowercase (issue with some SVN clients)
         $svn_url = strtolower($svn_url);
-        $svn_url .= '/svnroot/'. $this->getName();
+        $svn_url .= $this->getPath();
 
         return $svn_url;
     }
