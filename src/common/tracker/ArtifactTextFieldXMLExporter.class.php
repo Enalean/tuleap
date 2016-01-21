@@ -36,4 +36,8 @@ class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
     public function getFieldValueIndex() {
         return self::TV3_VALUE_INDEX;
     }
+
+    public function isValueEqual($history_field_value, $field_value) {
+        return $history_field_value == util_unconvert_htmlspecialchars($field_value);
+    }
 }
