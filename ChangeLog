@@ -5,6 +5,7 @@ Version 8.11 (Not released yet)
 	== Development ==
 	* "make start" now works on OSX
 	* request #8773: Allow plugins to display a link in the navbar
+	* request #8585: Group list with filtering form, search by status or names
 
 	== Bug fix ==
 	* request #8769: SVN paths in CI not displayed due to js error
