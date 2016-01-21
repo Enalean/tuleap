@@ -19,7 +19,7 @@ if ( !$offset || $offset < 0 ) {
 }
 $limit = 50;
 
-$group_name_search = "0";
+$group_name_search = "";
 $vGroupNameSearch = new Valid_String('group_name_search');
 if($request->valid($vGroupNameSearch)) {
     if ($request->exist('group_name_search')) {
@@ -27,11 +27,23 @@ if($request->valid($vGroupNameSearch)) {
     }
 }
 
-$status ="";
-$vStatus = new Valid_WhiteList('status', array('I','D'));
-if($request->valid($vStatus)) {
-    if ($request->exist('status')) {
-        $status = $request->get('status');
+$status        = array();
+$anySelect     = "selected";
+if($request->exist('status')) {
+    $status = $request->get('status');
+    if(! is_array($status)) {
+        $status = explode(",", $status);
+    }
+    if(in_array('ANY', $status)) {
+        $status = array();
+    } else {
+        $anySelect = "";
+    }
+}
+
+function getSelectedFromStatus($selected_status, $status) {
+    if(in_array($selected_status, $status)) {
+        return "selected";
     }
 }
 
@@ -47,13 +59,47 @@ $purifier = Codendi_HTMLPurifier::instance();
 site_admin_header(array('title'=>$Language->getText('admin_grouplist','title')));
 
 print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
-if ($group_name_search !="0") {
+if ($group_name_search !="") {
     print "<b>".$Language->getText('admin_grouplist', 'begins_with', array($purifier->purify($group_name_search)))."</b>\n";
 } else {
     print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
 }
 
-
+/*
+ * Add search field
+ */
+$purifier                   = Codendi_HTMLPurifier::instance();
+$group_name_search_purify   = $purifier->purify($group_name_search);
+$search_purify              = $purifier->purify($Language->getText('admin_main', 'search'));
+echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-horizontal">
+       <table>
+        <tr>
+         <td valign=top>
+           <label> <strong>'.$Language->getText("admin_userlist","status").'</strong> </label>
+             <select name="status[]" size=7 multiple="multiple">
+               <option value="ANY" '.$anySelect.'>Any</option>
+               <option value="'.Project::STATUS_ACTIVE.'" '.getSelectedFromStatus(Project::STATUS_ACTIVE, $status).'>'.$Language->getText('admin_groupedit','status_A').'</option>
+               <option value="S" '.getSelectedFromStatus("S", $status).'>'.$Language->getText('admin_groupedit','status_s').'</option>
+               <option value="'.Project::STATUS_INCOMPLETE.'" '.getSelectedFromStatus(Project::STATUS_INCOMPLETE, $status).'>'.$Language->getText('admin_groupedit','status_I').'</option>
+               <option value="'.Project::STATUS_PENDING.'" '.getSelectedFromStatus(Project::STATUS_PENDING, $status).'>'.$Language->getText('admin_groupedit','status_P').'</option>
+               <option value="'.Project::STATUS_HOLDING.'" '.getSelectedFromStatus(Project::STATUS_HOLDING, $status).'>'.$Language->getText('admin_groupedit','status_H').'</option>
+               <option value="D" '.getSelectedFromStatus("D", $status).'>'.$Language->getText('admin_groupedit','status_D').'</option>
+             </select>
+         </td>
+         <td valign=top>
+           <p>
+             <label> <strong>'.$Language->getText('admin_main', 'search_group').'</strong> </label>
+           </p>
+           <input type="text" name="group_name_search" class="project_name_search" placeholder="'.$search_purify.'" value="'.$group_name_search_purify.'" />
+         </td>
+        </tr>
+       </table>
+       <div align="center">
+         <button type="submit" class="btn btn-primary">'.$search_purify.'
+           <i class="icon-search"></i>
+         </button>
+       </div>
+      </form>';
 ?>
 
 <TABLE class="table table-bordered table-striped table-hover">
