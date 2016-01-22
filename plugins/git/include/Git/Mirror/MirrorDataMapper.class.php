@@ -339,6 +339,10 @@ class Git_Mirror_MirrorDataMapper {
         return $this->default_dao->deleteFromDefaultMirrors($deleted_mirror_id);
     }
 
+    public function deleteFromDefaultMirrorsInProjects(Git_Mirror_Mirror $mirror, array $project_ids) {
+        return $this->default_dao->deleteFromDefaultMirrorsInProjects($mirror->id, $project_ids);
+    }
+
     /**
      * @return Git_Mirror_Mirror
      * @throws Git_Mirror_MirrorNotFoundException
