@@ -1,3 +1,6 @@
+Version 4.112 - Tuleap 8.11
+    * story #8734: During project inheritance, we duplicate only mirror that are not restricted by project.
+
 Version 4.111 - Tuleap 8.11
     * story #8734: Take into account project mirror restriction
 
