@@ -296,8 +296,31 @@ class GitViews_ShowRepo_Content {
     private function getWaitingForRepositoryCreationInfo() {
         $html = '<div class="alert alert-info wait_creation">';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
+
+        $default_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+
+        if ($default_mirrors) {
+            $default_mirrors_names = array_map(
+                array($this, 'extractMirrorName'),
+                $default_mirrors
+            );
+
+            $html .= '<br/>';
+            $html .= $GLOBALS['Language']->getText(
+                'plugin_git',
+                'waiting_for_repo_creation_default_mirrors',
+                implode(', ', $default_mirrors_names)
+            );
+        }
+
         $html .= '</div>';
         return $html;
+    }
+
+    private function extractMirrorName(Git_Mirror_Mirror $mirror) {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return $purifier->purify($mirror->name);
     }
 
 }

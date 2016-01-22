@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 require_once 'PathJoinUtil.php';
-require_once 'common/system_event/SystemEventManager.class.php';
-require_once 'common/project/ProjectManager.class.php';
 
 /**
  * This class is responsible of management of several repositories.
@@ -28,6 +26,11 @@ require_once 'common/project/ProjectManager.class.php';
  * It works in close cooperation with GitRepositoryFactory (to instanciate repo)
  */
 class GitRepositoryManager {
+
+    /**
+     * @var GitRepositoryMirrorUpdater
+     */
+    private $mirror_updater;
 
     /**
      * @var GitRepositoryFactory
@@ -59,11 +62,18 @@ class GitRepositoryManager {
      * @param Git_SystemEventManager   $git_system_event_manager
      * @param backup_directory
      */
-    public function __construct(GitRepositoryFactory $repository_factory, Git_SystemEventManager $git_system_event_manager, GitDao $dao, $backup_directory) {
+    public function __construct(
+        GitRepositoryFactory $repository_factory,
+        Git_SystemEventManager $git_system_event_manager,
+        GitDao $dao,
+        $backup_directory,
+        GitRepositoryMirrorUpdater $mirror_updater
+    ) {
         $this->repository_factory       = $repository_factory;
         $this->git_system_event_manager = $git_system_event_manager;
         $this->dao                      = $dao;
         $this->backup_directory         = $backup_directory;
+        $this->mirror_updater           = $mirror_updater;
         $this->system_command           = new System_Command();
     }
 
@@ -80,29 +90,40 @@ class GitRepositoryManager {
         }
     }
 
+    private function initRepository(GitRepository $repository, GitRepositoryCreator $creator) {
+        if (!$creator->isNameValid($repository->getName())) {
+            throw new Exception($GLOBALS['Language']->getText(
+                'plugin_git',
+                'actions_input_format_error',
+                array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)
+            ));
+        }
+
+        $this->assertRepositoryNameNotAlreadyUsed($repository);
+        $id = $this->dao->save($repository);
+
+        $repository->setId($id);
+    }
+
     /**
      * Create a new GitRepository through its backend
      *
      * @param  GitRepository $repository
      * @throws Exception
      */
-    public function create(GitRepository $repository, GitRepositoryCreator $creator) {
-        if (!$creator->isNameValid($repository->getName())) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+    public function create(GitRepository $repository, GitRepositoryCreator $creator, array $mirror_ids) {
+        $this->initRepository($repository, $creator);
+
+        if ($mirror_ids) {
+            $this->mirror_updater->updateRepositoryMirrors($repository, $mirror_ids);
         }
-        $this->assertRepositoryNameNotAlreadyUsed($repository);
-        $id = $this->dao->save($repository);
-        $repository->setId($id);
+
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 
     public function createFromBundle(GitRepository $repository, GitRepositoryCreator $creator, $bundle_path) {
-        if (!$creator->isNameValid($repository->getName())) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-        }
-        $this->assertRepositoryNameNotAlreadyUsed($repository);
-        $id = $this->dao->save($repository);
-        $repository->setId($id);
+        $this->initRepository($repository, $creator);
+
         $bundle_path_arg = escapeshellarg($bundle_path);
         $repository_full_path_arg = escapeshellarg($repository->getFullPath());
         $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh $bundle_path_arg $repository_full_path_arg");

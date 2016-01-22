@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,8 +35,15 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->dao                  = mock('GitDao');
         $this->backup_directory     = "/tmp/";
+        $this->mirror_updater       = mock('GitRepositoryMirrorUpdater');
 
-        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->git_system_event_manager, $this->dao, $this->backup_directory);
+        $this->git_repository_manager = new GitRepositoryManager(
+            $this->repository_factory,
+            $this->git_system_event_manager,
+            $this->dao,
+            $this->backup_directory,
+            $this->mirror_updater
+        );
     }
 
     public function itDeletesNothingWhenThereAreNoRepositories() {
@@ -89,9 +96,16 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         stub($this->project)->getUnixName()->returns($this->project_name);
         $this->dao = mock('GitDao');
         $this->backup_directory = "/tmp/";
+        $this->mirror_updater   = mock('GitRepositoryMirrorUpdater');
 
         $this->factory    = mock('GitRepositoryFactory');
-        $this->manager    = new GitRepositoryManager($this->factory, mock('Git_SystemEventManager'), $this->dao, $this->backup_directory);
+        $this->manager    = new GitRepositoryManager(
+            $this->factory,
+            mock('Git_SystemEventManager'),
+            $this->dao,
+            $this->backup_directory,
+            $this->mirror_updater
+        );
     }
 
     private function aRepoWithPath($path) {
@@ -165,8 +179,9 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         $this->repository = new GitRepository();
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $this->dao                  = mock('GitDao');
-        $this->backup_directory = "/tmp/";
+        $this->dao                      = mock('GitDao');
+        $this->backup_directory         = "/tmp/";
+        $this->mirror_updater           = mock('GitRepositoryMirrorUpdater');
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
@@ -175,7 +190,8 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
                 mock('GitRepositoryFactory'),
                 $this->git_system_event_manager,
                 $this->dao,
-                $this->backup_directory
+                $this->backup_directory,
+                $this->mirror_updater
             )
         );
     }
@@ -185,7 +201,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         stub($this->creator)->isNameValid()->returns(true);
 
         $this->expectException();
-        $this->manager->create($this->repository, $this->creator);
+        $this->manager->create($this->repository, $this->creator, array());
     }
 
     public function itThrowsAnExceptionIfNameIsNotCompliantToBackendStandards() {
@@ -193,7 +209,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         stub($this->creator)->isNameValid()->returns(false);
 
         $this->expectException();
-        $this->manager->create($this->repository, $this->creator);
+        $this->manager->create($this->repository, $this->creator, array());
     }
 
     public function itCreatesOnRepositoryBackendIfEverythingIsClean() {
@@ -201,7 +217,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         stub($this->creator)->isNameValid()->returns(true);
 
         expect($this->dao)->save($this->repository)->once();
-        $this->manager->create($this->repository, $this->creator);
+        $this->manager->create($this->repository, $this->creator, array());
     }
 
     public function itScheduleAnEventToCreateTheRepositoryInGitolite() {
@@ -212,7 +228,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
         expect($this->git_system_event_manager)->queueRepositoryUpdate($this->repository)->once();
 
-        $this->manager->create($this->repository, $this->creator);
+        $this->manager->create($this->repository, $this->creator, array());
     }
 
     public function itSetRepositoryIdOnceSavedInDatabase() {
@@ -221,7 +237,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
         stub($this->dao)->save()->returns(54);
 
-        $this->manager->create($this->repository, $this->creator);
+        $this->manager->create($this->repository, $this->creator, array());
         $this->assertEqual($this->repository->getId(), 54);
     }
 }
@@ -264,7 +280,8 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->project = stub('Project')->getId()->returns(101);
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $this->backup_directory = "/tmp/";
+        $this->backup_directory         = "/tmp/";
+        $this->mirror_updater           = mock('GitRepositoryMirrorUpdater');
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
@@ -273,9 +290,11 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
                 mock('GitRepositoryFactory'),
                 $this->git_system_event_manager,
                 mock('GitDao'),
-                $this->backup_directory
+                $this->backup_directory,
+                $this->mirror_updater
             )
         );
+
         $this->forkPermissions = array();
     }
 
@@ -500,5 +519,3 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }
 }
-
-?>
