@@ -1,3 +1,6 @@
+Version 4.111 - Tuleap 8.11
+    * story #8734: Take into account project mirror restriction
+
 Version 4.110 - Tuleap 8.11
     * Improve robustness of GitXmlImporterTest
 

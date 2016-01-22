@@ -17,7 +17,7 @@ Version 8.11 (Not released yet)
 	* request #8776: TV3 to TV5 files not migrated if submitted time +- 3s
 
 	== Plugins ==
-	* git: 4.110
+	* git: 4.111
 	* tracker: 5.779
 	* mediawiki: 0.102
 	* webdav: 1.9.14
