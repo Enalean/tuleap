@@ -72,6 +72,7 @@ Requires: %{php_base}-markdown
 Requires: %{php_base}-pecl-apc
 Requires: curl
 Requires: %{php_base}-zendframework = 1.8.1
+Requires: %{php_base}-ZendFramework2-Loader
 Requires: %{php_base}-jwt
 Requires: tuleap-core-subversion
 

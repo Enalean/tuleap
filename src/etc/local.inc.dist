@@ -418,11 +418,8 @@ $sys_enable_avatars = 1;
 //User's avatar path
 $sys_avatar_path = $sys_data_dir . "/user/avatar/";
 
-//Zend Framework path
+//Zend Framework 1 path
 $zend_path = "/usr/share/zend";
-
-//Markdown library path
-$markdown_path = "/usr/share/php-markdown";
 
 //Exchange policy URL
 $sys_exchange_policy_url = "/plugins/docman/?group_id=1";

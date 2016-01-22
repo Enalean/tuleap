@@ -36,9 +36,7 @@ class Tracker_Migration_V3 {
      */
     public function createTV5FromTV3(Project $project, $name, $description, $itemname, ArtifactType $tv3) {
         $dao = new Tracker_Migration_V3_Dao();
-        $logger = new Zend_Log();
-        $writer = new Zend_Log_Writer_Stream(ForgeConfig::get('codendi_log').'/'.Tracker_Migration_MigrationManager::LOG_FILE);
-        $logger->addWriter($writer);
+        $logger = new BackendLogger(ForgeConfig::get('codendi_log').'/'.Tracker_Migration_MigrationManager::LOG_FILE);
 
         $log_prefix = '['.uniqid().']';
         $logger->info("$log_prefix Start migration of tracker v3: ".$tv3->getID());
