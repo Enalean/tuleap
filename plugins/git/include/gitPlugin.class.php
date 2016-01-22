@@ -1323,6 +1323,8 @@ class GitPlugin extends Plugin {
                 array(Git::PERM_ADMIN),
                 $params['ugroupsMapping']
         );
+
+        $this->getMirrorDataMapper()->duplicate($params['template_id'], $params['group_id']);
     }
 
     /** @see Event::GET_PROJECTID_FROM_URL */

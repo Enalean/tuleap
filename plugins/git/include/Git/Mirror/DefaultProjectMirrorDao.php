@@ -76,4 +76,22 @@ class DefaultProjectMirrorDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * @return boolean
+     */
+    public function duplicate($template_project_id, $new_project_id) {
+        $template_project_id = $this->da->escapeInt($template_project_id);
+        $new_project_id      = $this->da->escapeInt($new_project_id);
+
+        $sql = "INSERT INTO plugin_git_default_project_mirrors (project_id, mirror_id)
+                SELECT $new_project_id, plugin_git_default_project_mirrors.mirror_id
+                FROM plugin_git_default_project_mirrors
+                    LEFT JOIN plugin_git_restricted_mirrors
+                    ON (plugin_git_default_project_mirrors.mirror_id = plugin_git_restricted_mirrors.mirror_id)
+                WHERE project_id = $template_project_id
+                AND plugin_git_restricted_mirrors.mirror_id IS NULL";
+
+        return $this->update($sql);
+    }
+
 }

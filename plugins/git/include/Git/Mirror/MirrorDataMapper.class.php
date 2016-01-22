@@ -391,4 +391,11 @@ class Git_Mirror_MirrorDataMapper {
             self::MIRROR_OWNER_PREFIX.$mirror_id
         );
     }
+
+    /**
+     * @return boolean
+     */
+    public function duplicate($template_project_id, $new_project_id) {
+        return $this->default_dao->duplicate($template_project_id, $new_project_id);
+    }
 }
