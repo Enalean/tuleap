@@ -1,6 +1,7 @@
 Version 8.11 (Not released yet)
 	== Enhancement ==
 	* story #8698: choose the values to be displayed at project creation from trove cats
+	* story #8630: Move from ZendFramework 1 to ZendFramework 2
 
 	== Development ==
 	* "make start" now works on OSX
@@ -18,7 +19,7 @@ Version 8.11 (Not released yet)
 
 	== Plugins ==
 	* git: 4.112
-	* tracker: 5.779
+	* tracker: 5.780
 	* mediawiki: 0.102
 	* webdav: 1.9.14
 	* agiledashboard: 1.340
