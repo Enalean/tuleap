@@ -70,6 +70,13 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
     protected $marketing_ugroup_id = 115;
     protected $support_ugroup_id   = 114;
 
+    protected $support_ugroup_literalize  = '@ug_114';
+    protected $project_members_literalize = '@_project_members';
+    protected $project_admin_literalize   = '@_project_admin';
+
+    protected $user_submitter;
+    protected $current_user;
+
     protected $support_member_only;
     protected $support_and_project_member;
     protected $user_project_member;
@@ -97,6 +104,9 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
         $this->assignee_retriever = mock('Tracker_Permission_PermissionRetrieveAssignee');
 
         $this->serializer         = new Tracker_Permission_PermissionsSerializer($this->assignee_retriever);
+
+        $this->user_submitter     = stub('PFUser')->getId()->returns('101');
+        $this->current_user       = stub('PFUser')->getId()->returns('165');
     }
 
     private function setUpUsers() {
@@ -136,6 +146,13 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
         $this->assertArtifactUGroupIdsWithoutAdminsEquals(
             $artifact,
             array_merge(array(ProjectUGroup::PROJECT_ADMIN), $expected_values)
+        );
+    }
+
+    protected function assertSubmitterOnlyUGroupIdsEquals(Tracker_Artifact $artifact, $expected_value) {
+        $this->assertEqual(
+            $this->serializer->getLiteralizedUserGroupsSubmitterOnly($artifact),
+            $expected_value
         );
     }
 
@@ -735,6 +752,31 @@ class Tracker_Permission_PermissionSerializer_ArtifactPermissions_Test extends T
         $this->assertArtifactUGroupIdsEquals(
             $this->artifact,
             array()
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_SubmitterOnlyPermission_Test extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+    }
+
+    public function itReturnsSubmitterOnlyUGroupsIds() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(Tracker::PERMISSION_SUBMITTER_ONLY => array($this->support_ugroup_id))
+        );
+
+        stub($this->tracker)->userIsAdmin()->returns(
+            true
+        );
+
+        $this->artifact = $this->anArtifact()
+            ->build();
+
+        $this->assertSubmitterOnlyUGroupIdsEquals(
+            $this->artifact,
+            array($this->support_ugroup_literalize)
         );
     }
 }

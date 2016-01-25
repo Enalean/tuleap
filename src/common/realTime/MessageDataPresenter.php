@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,32 @@
 
 namespace Tuleap\RealTime;
 
-interface Client {
 
+class MessageDataPresenter
+{
+    public $sender_user_id;
+    public $sender_uuid;
+    public $room_id;
     /**
-     * Method to send an Https request when
-     * want to broadcast a message
-     *
-     * @param $message (MessageDataPresenter) : Message to send to Node.js server
-     * @throws \Http_ClientException
+     * @var MessageRightsPresenter
      */
-    public function sendMessage(MessageDataPresenter $message);
+    public $rights;
+    public $cmd;
+    public $data;
+
+    public function __construct(
+        $sender_user_id,
+        $uuid,
+        $room_id,
+        MessageRightsPresenter $rights,
+        $cmd,
+        $data
+    ) {
+        $this->sender_user_id = intval($sender_user_id);
+        $this->sender_uuid    = $uuid;
+        $this->room_id        = $room_id;
+        $this->data           = $data;
+        $this->rights         = $rights;
+        $this->cmd            = $cmd;
+    }
 }

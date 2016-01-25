@@ -109,10 +109,9 @@ $sys_cookie_prefix = "TULEAP";
 //
 
 // The ip address of the node server.
-// For example : $node_server = '192.168.1.13';
+// For example : $node_server = '192.168.1.13:443';
 // Server node support only the protocol https
-// Be careful for the moment when you add a nodeJS server
-// Data sent are distributed for all clients who listening appropriate event
+// Specify the port which the server listens
 $nodejs_server = '';
 
 // The private key sharing between tuleap server and nodejs server.

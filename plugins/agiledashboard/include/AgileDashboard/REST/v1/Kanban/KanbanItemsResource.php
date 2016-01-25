@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
+use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use AgileDashboard_PermissionsManager;
@@ -192,12 +194,8 @@ class KanbanItemsResource extends AuthenticatedResource {
         $item_representation = $this->buildItemRepresentation($artifact);
 
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $rights = array(
-                'tracker'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
-                'artifact' => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact)
-            );
-
-            $this->node_js_client->sendMessage(
+            $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $message  = new MessageDataPresenter(
                 $current_user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
                 $item->kanban_id,
@@ -205,6 +203,8 @@ class KanbanItemsResource extends AuthenticatedResource {
                 'kanban_item:create',
                 $item_representation
             );
+
+            $this->node_js_client->sendMessage($message);
         }
 
         return $item_representation;
