@@ -227,9 +227,9 @@ rest_docker_snap_run:
 #
 
 .env:
-	@MYSQL_ROOT_PASSWORD=$(env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32) && echo "MYSQL_ROOT_PASSWORD=$$MYSQL_ROOT_PASSWORD" > .env
-	@LDAP_ROOT_PASSWORD=$(env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32) && echo "LDAP_ROOT_PASSWORD=$$LDAP_ROOT_PASSWORD" >> .env
-	@LDAP_MANAGER_PASSWORD=$(LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32) && echo "LDAP_MANAGER_PASSWORD=$$LDAP_MANAGER_PASSWORD" >> .env
+	@echo "MYSQL_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" > .env
+	@echo "LDAP_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
+	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo VIRTUAL_HOST=tuleap_web_1.tuleap-aio-dev.docker >> .env
 
 dev-setup: .env
