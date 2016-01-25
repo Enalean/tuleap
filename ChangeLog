@@ -1,3 +1,8 @@
+Version 8.10-3 (Monday, January 25th 2016)
+	== Bug Fix ==
+	* request #8776: TV3 to TV5 files not migrated if submitted time +- 3s
+	* request #8760: Misleading message for public incl. restricted
+
 Version 8.10-2 (Monday, January 18th 2016)
 	== Bug Fix ==
 	* request #8772: A Gitphp fatal error must note hide Git header
