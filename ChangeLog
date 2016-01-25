@@ -17,6 +17,7 @@ Version 8.11 (Not released yet)
 	* request #8737 Disable SVN notification pane when subversion tracking is off
 	* request #8776: TV3 to TV5 files not migrated if submitted time +- 3s
 	* request #8787: SVN access files are not updated when a binded usergroup is modified
+	* request #8796: Tracker v3 to v5 migration: Special characters are modified
 
 	== Plugins ==
 	* git: 4.112
