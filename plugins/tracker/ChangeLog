@@ -1,3 +1,6 @@
+Version 5.781 - Tuleap 8.11
+    * story #8793: broadcast users actions on Kanban (management of specific permissions cases)
+
 Version 5.780 - Tuleap 8.11
     * story #8630: Move from ZendFramework 1 to ZendFramework 2
 

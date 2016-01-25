@@ -20,10 +20,10 @@ Version 8.11 (Not released yet)
 
 	== Plugins ==
 	* git: 4.112
-	* tracker: 5.780
+	* tracker: 5.781
 	* mediawiki: 0.102
 	* webdav: 1.9.14
-	* agiledashboard: 1.340
+	* agiledashboard: 1.341
 	* statistics: 0.57
 	* docman: 2.26.93
 	* docmanwatermark: removed

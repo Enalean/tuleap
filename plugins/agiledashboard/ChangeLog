@@ -1,3 +1,6 @@
+Version 1.341 - Tuleap 8.11
+    * story #8793: broadcast users actions on Kanban (management of specific permissions cases)
+
 Version 1.340 - Tuleap 8.11
     * request #8703 Kanban real time security to NodeJs server diffuse messages
 
