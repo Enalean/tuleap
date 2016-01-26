@@ -60,6 +60,7 @@ class trackerPlugin extends Plugin {
 
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
+        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
@@ -120,6 +121,26 @@ class trackerPlugin extends Plugin {
             $this->pluginInfo = new trackerPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+
+    /**
+     * @see Event::PROCCESS_SYSTEM_CHECK
+     */
+    public function proccess_system_check(array $params) {
+        $file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
+            $this->getUserManager(),
+            new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
+            new Tracker_FileInfoFactory(
+                new Tracker_FileInfoDao(),
+                Tracker_FormElementFactory::instance(),
+                Tracker_ArtifactFactory::instance()
+            ),
+            new System_Command(),
+            ForgeConfig::get('sys_file_deletion_delay')
+        );
+
+        $file_manager->purgeOldTemporaryFiles();
     }
 
     /**
