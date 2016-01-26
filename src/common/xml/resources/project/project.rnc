@@ -5,15 +5,17 @@ grammar {
     include "../svn-definition.rnc"
     include "../project-definition.rnc"
     include "../git-definition.rnc"
+    include "../frs-definition.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
 
     start =
         element project {
             project_attributes &
             project_tags &
-            element ugroups { ugroups }? &
             element trackers { trackers }* &
             element svn { svn }? &
-            element git { git }?
+            element git { git }? &
+            element frs { frs }? &
+            element ugroups { ugroups }?
         }
 }

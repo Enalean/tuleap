@@ -101,6 +101,10 @@ class FRSFile extends Error {
      * @var string $file_location the full path of this FRSFile
      */
     var $file_location;
+    /**
+     * @var Group $group the project this file belong to
+     */
+    private $group;
 
     /**
      *
@@ -397,14 +401,23 @@ class FRSFile extends Error {
      * @return Object{Group} the group the file belongs to
      */
     function getGroup() {
-        $pm = ProjectManager::instance();
-        // retrieve the release the file belongs to
-        $release_id = $this->getReleaseID();
-        $release_fact = new FRSReleaseFactory();
-        $release = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
-        $group_id = $release->getGroupID();
-        $group = $pm->getProject($group_id);
-        return $group;
+	if(empty($this->group)) {
+            $pm = ProjectManager::instance();
+            // retrieve the release the file belongs to
+            $release_id = $this->getReleaseID();
+            $release_fact = FRSReleaseFactory::instance();
+            $release = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
+            $group_id = $release->getGroupID();
+            $this->group = $pm->getProject($group_id);
+	}
+        return $this->group;
+    }
+
+    /**
+     * Set the Group (the project) of this File
+     */
+    function setGroup(Group $group) {
+	$this->group = $group;
     }
 
     /**

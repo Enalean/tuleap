@@ -33,10 +33,25 @@ class FRSReleaseFactory {
     var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
     var $STATUS_DELETED = FRSRelease::STATUS_DELETED;
     var $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
-    
+    private static $instance;
 
-	function FRSReleaseFactory() {
-	}
+    function FRSReleaseFactory() {
+    }
+
+    public static function instance(){
+        if(empty(self::$instance)) {
+            self::$instance = new FRSReleaseFactory();
+        }
+        return self::$instance;
+    }
+
+    public static function setInstance(FRSReleaseFactory $instance){
+        self::$instance = $instance;
+    }
+
+    public static function clearInstance(){
+        self::$instance = null;
+    }
 
 	function  getFRSReleaseFromArray(& $array) {
 		$frs_release = null;
@@ -512,7 +527,10 @@ class FRSReleaseFactory {
      * @return FRSPackageFactory
      */
     function _getFRSPackageFactory() {
-        return new FRSPackageFactory();
+        if(empty($this->package_factory)) {
+            $this->package_factory = new FRSPackageFactory();
+        }
+        return $this->package_factory;
     }
 
     /**
@@ -521,7 +539,10 @@ class FRSReleaseFactory {
      * @return FRSFileFactory
      */
     function _getFRSFileFactory() {
-        return new FRSFileFactory();
+        if(empty($this->file_factory)) {
+            $this->file_factory = new FRSFileFactory();
+        }
+        return $this->file_factory;
     }
 }
 ?>

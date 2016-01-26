@@ -101,7 +101,7 @@ rnc2rng: src/common/xml/resources/project/project.rng \
 	 plugins/agiledashboard/www/resources/xml_project_agiledashboard.rng \
 	 plugins/cardwall/www/resources/xml_project_cardwall.rng
 
-src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/www/resources/tracker-definition.rnc src/common/xml/resources/ugroups-definition.rnc src/common/xml/resources/svn-definition.rnc src/common/xml/resources/project-definition.rnc
+src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/www/resources/tracker-definition.rnc src/common/xml/resources/ugroups-definition.rnc src/common/xml/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/project-definition.rnc
 
 src/common/xml/resources/svn.rng: src/common/xml/resources/svn.rnc src/common/xml/resources/svn-definition.rnc
 

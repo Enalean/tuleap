@@ -333,7 +333,7 @@ class FRSRelease extends Error {
      * @return FRSPackageFactory
      */
     function _getFRSPackageFactory() {
-        return new FRSPackageFactory();
+        return FRSPackageFactory::instance();
     }
 
     /**
@@ -346,4 +346,3 @@ class FRSRelease extends Error {
     }
 }
 
-?>

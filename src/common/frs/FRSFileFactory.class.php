@@ -169,11 +169,11 @@ class FRSFileFactory extends Error {
     /**
      * Determine if there is already a file named $basename in the release and marked to be restored
      * but not yet moved to its original path
-     * 
+     *
      * @param String $basename
      * @param Integer $release_id
      * @param Integer $group_id
-     * 
+     *
      * @return Boolean
      */
     function isSameFileMarkedToBeRestored($basename, $release_id, $group_id) {
@@ -269,7 +269,7 @@ class FRSFileFactory extends Error {
         if ($this->isFileBaseNameExists($file->getFileName(), $rel->getReleaseID(), $rel->getGroupID())) {
             throw new FRSFileExistsException($file);
         }
-        
+
         if ($this->isSameFileMarkedToBeRestored($file->getFileName(), $rel->getReleaseID(), $rel->getGroupID())) {
             throw new FRSFileToBeRestoredException($file);
         }
@@ -289,6 +289,14 @@ class FRSFileFactory extends Error {
 
         $file->setFileSize(PHP_BigFile::getSize($filePath));
         $file->setStatus('A');
+
+        $now = time();
+        if($file->getReleaseTime() === null) {
+            $file->setReleaseTime($now);
+        }
+        if($file->getPostDate() === null) {
+            $file->setPostDate($now);
+        }
 
         if($this->moveFileForge($file)){
             $fileId=$this->create($file->toArray());
@@ -410,9 +418,11 @@ class FRSFileFactory extends Error {
      *
      * @return Object{FRSReleaseFactory} a FRSReleaseFactory Object.
      */
-    function &_getFRSReleaseFactory() {
-        $f = new FRSReleaseFactory();
-        return $f;
+    function _getFRSReleaseFactory() {
+        if(empty($this->release_factory)) {
+            $this->release_factory = new FRSReleaseFactory();
+        }
+        return $this->release_factory;
     }
 
     function _delete($file_id){
@@ -702,7 +712,7 @@ class FRSFileFactory extends Error {
      * Remove empty releases and project directories in staging area
      *
      * @param Backend $backend
-     * 
+     *
      * @return Boolean
      */
     public function cleanStaging($backend) {
@@ -743,7 +753,7 @@ class FRSFileFactory extends Error {
         }
         return true;
     }
-    
+
 
     /**
      * List all files deleted but not already purged
@@ -947,4 +957,3 @@ class FRSFileFactory extends Error {
     }
 }
 
-?>
