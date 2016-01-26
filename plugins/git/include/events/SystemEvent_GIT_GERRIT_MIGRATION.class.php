@@ -43,6 +43,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var MailBuilder */
+    private $mail_builder;
+
     public function process() {
         $repo_id           = (int)$this->getParameter(0);
         $remote_server_id  = (int)$this->getParameter(1);
@@ -50,7 +56,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
         if (! $repository) {
-            $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');
+            $this->error('Unable to find repository, perhaps it was deleted in the mean time?');
             return;
         }
 
@@ -59,25 +65,48 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $gerrit_template_id    = $this->getParameter(2);
             $gerrit_project        = $this->project_creator->createGerritProject($server, $repository, $gerrit_template_id);
             $this->project_creator->removeTemporaryDirectory();
-            $repository->getBackend()->updateRepoConf($repository);
             $this->project_creator->finalizeGerritProjectCreation($server, $repository, $gerrit_template_id);
+            $this->dao->setGerritMigrationSuccess($repository->getId());
+            $repository->setRemoteServerMigrationStatus(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
+            $repository->getBackend()->updateRepoConf($repository);
 
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
         } catch (Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException $e) {
-            $this->logError("gerrit: ", "Gerrit failure: ", $e);
+            $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
         } catch (Git_Driver_Gerrit_Exception $e) {
-            $this->logError("gerrit: ", "Gerrit failure: ", $e);
+            $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
         } catch (Git_Command_Exception $e) {
-            $this->logError("gerrit: ", "Gerrit failure: ", $e);
+            $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
         } catch (Exception $e) {
-            $this->logError("", "An error occured while processing event: ", $e);
+            $this->logError($repository, "", "An error occured while processing event: ", $e);
         }
     }
 
-    private function logError($sysevent_prefix, $log_prefix, Exception $e) {
+    private function logError(GitRepository $repository, $sysevent_prefix, $log_prefix, Exception $e) {
+        $this->dao->setGerritMigrationError($repository->getId());
         $this->error($sysevent_prefix . $e->getMessage());
         $this->logger->error($log_prefix . $this->verbalizeParameters(null), $e);
+        $this->sendErrorNotification($repository);
+    }
+
+    private function sendErrorNotification(GitRepository $repository) {
+        $user = $this->getRequester();
+        if (! $user->isAnonymous()) {
+            $factory = new BaseLanguageFactory();
+            $language = $factory->getBaseLanguage($user->getLocale());
+            $url = get_server_url() . GIT_BASE_URL . '/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'&pane=gerrit';
+
+            $notification = new Notification(
+                array($user->getEmail()),
+                $language->getText('plugin_git', 'delegated_to_gerrit_error_mail_subject', array($repository->getFullName())),
+                $language->getText('plugin_git', 'delegated_to_gerrit_error_mail_body', array($repository->getFullName(), $url)),
+                $language->getText('plugin_git', 'delegated_to_gerrit_error_mail_body', array($repository->getFullName(), $url)),
+                $url,
+                'git'
+            );
+            $this->mail_builder->buildAndSendEmail($repository->getProject(), $notification, new MailEnhancer());
+        }
     }
 
     /**
@@ -88,8 +117,23 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
         $repo_id          = (int)$this->getParameter(0);
         $remote_server_id = (int)$this->getParameter(1);
+
         $txt .= 'repo: '. $this->verbalizeRepoId($repo_id, $with_link) .', remote server: '. $this->verbalizeRemoteServerId($remote_server_id, $with_link).$this->verbalizeAccessRightMigration();
+        $user = $this->getRequester();
+        if (! $user->isAnonymous()) {
+            if ($with_link) {
+                $txt .= ' <a href="/admin/usergroup.php?user_id='.$user->getId().'">'.$user->getRealName().'</a>';
+            } else {
+                $txt .= ' '.$user->getRealName();
+            }
+        }
+
         return $txt;
+    }
+
+    private function getRequester() {
+        $user_id = (int)$this->getParameter(3);
+        return $this->user_manager->getUserById($user_id);
     }
 
     private function verbalizeAccessRightMigration() {
@@ -130,7 +174,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         Git_RemoteServer_GerritServerFactory  $server_factory,
         Logger  $logger,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
-        Git_GitRepositoryUrlManager $url_manager
+        Git_GitRepositoryUrlManager $url_manager,
+        UserManager $user_manager,
+        MailBuilder $mail_builder
     ) {
         $this->dao                = $dao;
         $this->repository_factory = $repository_factory;
@@ -138,7 +184,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         $this->logger             = $logger;
         $this->project_creator    = $project_creator;
         $this->url_manager        = $url_manager;
+        $this->user_manager       = $user_manager;
+        $this->mail_builder       = $mail_builder;
     }
 }
-
-?>

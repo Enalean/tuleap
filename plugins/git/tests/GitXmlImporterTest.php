@@ -52,7 +52,7 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->system_command = new System_Command();
         parent::setUp();
 
-        $this->old_sys_data_dir = $GLOBALS['sys_data_dir'];
+        $this->old_sys_data_dir = isset($GLOBALS['sys_data_dir']) ? $GLOBALS['sys_data_dir'] : null;
         $GLOBALS['sys_data_dir'] = parent::getTmpDir();
         $GLOBALS['tmp_dir'] = dirname(__FILE__) . '/_fixtures/tmp';
         mkdir("${GLOBALS['sys_data_dir']}/gitolite/admin/", 0777, true);
@@ -104,7 +104,7 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->git_plugin,
             null,
             null,
-            null,
+            mock('Git_Gitolite_ConfigPermissionsSerializer'),
             null,
             null,
             mock('Git_Mirror_MirrorDataMapper')
@@ -146,7 +146,9 @@ class GitXmlImporterTest extends TuleapTestCase {
             //ignore errors
         }
         parent::tearDown();
-        $GLOBALS['sys_data_dir'] = $this->old_sys_data_dir;
+        if ($this->old_sys_data_dir !== null) {
+            $GLOBALS['sys_data_dir'] = $this->old_sys_data_dir;
+        }
         ForgeConfig::restore();
         PermissionsManager::clearInstance();
         PluginManager::clearInstance();

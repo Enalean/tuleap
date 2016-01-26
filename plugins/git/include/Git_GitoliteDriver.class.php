@@ -146,6 +146,9 @@ class Git_GitoliteDriver {
         if(empty($permissions_serializer)) {
             $this->permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
                 $this->mirror_data_mapper,
+                new Git_Driver_Gerrit_ProjectCreatorStatus(
+                    new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+                ),
                 $git_plugin->getEtcTemplatesPath()
             );
         } else {

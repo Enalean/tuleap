@@ -51,9 +51,10 @@ class GitDao extends DataAccessObject {
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
 
-    const REMOTE_SERVER_ID              = 'remote_server_id';
-    const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
-    const REMOTE_SERVER_DELETE_DATE     = 'remote_project_deleted_date';
+    const REMOTE_SERVER_ID               = 'remote_server_id';
+    const REMOTE_SERVER_DISCONNECT_DATE  = 'remote_server_disconnect_date';
+    const REMOTE_SERVER_DELETE_DATE      = 'remote_project_deleted_date';
+    const REMOTE_SERVER_MIGRATION_STATUS = 'remote_server_migration_status';
 
     const NOT_DELETED_DATE             = '0000-00-00 00:00:00';
 
@@ -501,6 +502,7 @@ class GitDao extends DataAccessObject {
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
+        $repository->setRemoteServerMigrationStatus($result[self::REMOTE_SERVER_MIGRATION_STATUS]);
         $repository->loadNotifiedMails();
         /* Here just for reviewer test, will be replaced by real DB data in a future changeset*/
         $result[self::ENABLE_ONLINE_EDIT] = false;
@@ -570,10 +572,26 @@ class GitDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function setGerritMigrationError($repository_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_migration_status = 'ERROR'
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+
+    public function setGerritMigrationSuccess($repository_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_migration_status = 'DONE'
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+
     public function disconnectFromGerrit($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $sql = "UPDATE plugin_git
-                SET remote_server_disconnect_date = UNIX_TIMESTAMP()
+                SET remote_server_disconnect_date = UNIX_TIMESTAMP(), remote_server_migration_status = NULL
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }
@@ -584,7 +602,7 @@ class GitDao extends DataAccessObject {
     public function setGerritProjectAsDeleted($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $sql = "UPDATE plugin_git
-                SET remote_project_deleted_date = UNIX_TIMESTAMP()
+                SET remote_project_deleted_date = UNIX_TIMESTAMP(), remote_server_migration_status = NULL
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }

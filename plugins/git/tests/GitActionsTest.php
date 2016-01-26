@@ -685,22 +685,23 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
     public function itDoesNothingWhenGivenServerDoesNotExist() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
-        $this->actions->migrateToGerrit($repo, $this->unexsting_server_id, true);
+        $this->actions->migrateToGerrit($repo, $this->unexsting_server_id, true, mock('PFUser'));
     }
 
     public function itDoesNothingWhenItIsntMigratable() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(false);
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
-        $this->actions->migrateToGerrit($repo, 0, true);
+        $this->actions->migrateToGerrit($repo, 0, true, mock('PFUser'));
     }
 
     public function itCreatesASystemEvent() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $server_id = $this->server_id;
         $repo_id   = 456;
+        $user      = mock('PFUser');
         stub($repo)->getId()->returns($repo_id);
-        expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id, true)->once();
-        $this->actions->migrateToGerrit($repo, $server_id, true);
+        expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id, true, $user)->once();
+        $this->actions->migrateToGerrit($repo, $server_id, true, $user);
     }
 }
 

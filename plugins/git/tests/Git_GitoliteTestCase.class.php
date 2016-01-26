@@ -95,6 +95,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
 
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_data_mapper,
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
             'whatever'
         );
 

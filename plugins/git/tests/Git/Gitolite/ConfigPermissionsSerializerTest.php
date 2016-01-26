@@ -52,6 +52,7 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TuleapTestCase {
 
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
             'whatever'
         );
     }
@@ -144,7 +145,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
     public function setUp() {
         parent::setUp();
         $this->mirror_mapper = mock('Git_Mirror_MirrorDataMapper');
-        $this->serializer    = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
+        $this->serializer    = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), 'whatever');
         $this->project       = stub('Project')->getUnixName()->returns('foo');
         $this->repository    = aGitRepository()->withId(115)->withProject($this->project)->build();
 
@@ -216,7 +217,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
 
     public function itDumpsTheConf() {
         stub($this->mirror_mapper)->fetchAll()->returns(array());
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), 'whatever');
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/default_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
@@ -225,7 +226,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
 
     public function itAllowsOverrideBySiteAdmin() {
         stub($this->mirror_mapper)->fetchAll()->returns(array());
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, dirname(__FILE__).'/_fixtures/etc_templates');
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), dirname(__FILE__).'/_fixtures/etc_templates');
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/override_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
@@ -234,10 +235,144 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
 
     public function __only__itGrantsReadAccessToGitoliteAdminForMirrorUsers() {
         stub($this->mirror_mapper)->fetchAll()->returns(array($this->mirror_1, $this->mirror_2));
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), 'whatever');
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/mirrors_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
         );
+    }
+}
+
+class Git_Gitolite_ConfigPermissionsSerializer_GerritTest extends TuleapTestCase {
+
+    private $serializer;
+    private $repository;
+    private $gerrit_status;
+
+    public function setUp() {
+        parent::setUp();
+
+        $project = mock('Project');
+        stub($project)->getId()->returns(102);
+        stub($project)->getUnixName()->returns('gpig');
+
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getId()->returns(1001);
+        stub($this->repository)->getProject()->returns($project);
+
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+        $this->permissions_manager = PermissionsManager::instance();
+
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_WRITE)->returns(array(ProjectUGroup::PROJECT_MEMBERS));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_WPLUS)->returns(array());
+
+        $this->gerrit_status = mock('Git_Driver_Gerrit_ProjectCreatorStatus');
+
+        $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            $this->gerrit_status,
+            'whatever'
+        );
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itGeneratesTheDefaultConfiguration() {
+        $this->assertEqual(
+            " R   = @site_active @gpig_project_members\n".
+            " RW  = @gpig_project_members\n",
+            $this->serializer->getForRepository($this->repository)
+        );
+    }
+
+    public function itGrantsEverythingToGerritUserAfterMigrationIsDoneWithSuccess() {
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+        stub($this->repository)->getRemoteServerId()->returns(2);
+
+        stub($this->gerrit_status)->getStatus($this->repository)->returns(
+            Git_Driver_Gerrit_ProjectCreatorStatus::DONE
+        );
+
+        $this->assertEqual(
+            " R   = @site_active @gpig_project_members\n".
+            " RW+ = forge__gerrit_2\n",
+            $this->serializer->getForRepository($this->repository)
+        );
+    }
+
+    public function itDoesntGrantAllPermissionsToGerritIfMigrationIsWaitingForExecution() {
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+        stub($this->repository)->getRemoteServerId()->returns(2);
+
+        stub($this->gerrit_status)->getStatus($this->repository)->returns(
+            Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE
+        );
+
+        $this->assertEqual(
+            " R   = @site_active @gpig_project_members\n".
+            " RW  = @gpig_project_members\n",
+            $this->serializer->getForRepository($this->repository)
+        );
+    }
+
+    public function itDoesntGrantAllPermissionsToGerritIfMigrationIsError() {
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+        stub($this->repository)->getRemoteServerId()->returns(2);
+
+        stub($this->gerrit_status)->getStatus($this->repository)->returns(
+            Git_Driver_Gerrit_ProjectCreatorStatus::ERROR
+        );
+
+        $this->assertEqual(
+            " R   = @site_active @gpig_project_members\n".
+            " RW  = @gpig_project_members\n",
+            $this->serializer->getForRepository($this->repository)
+        );
+    }
+}
+
+class Git_Gitolite_ConfigPermissionsSerializer_GerritAndMirrorsTest extends TuleapTestCase {
+
+    private $serializer;
+    private $repository;
+    private $gerrit_status;
+
+    public function setUp() {
+        parent::setUp();
+
+        $project = mock('Project');
+        stub($project)->getId()->returns(102);
+        stub($project)->getUnixName()->returns('gpig');
+
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getId()->returns(1001);
+        stub($this->repository)->getProject()->returns($project);
+
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+        $this->permissions_manager = PermissionsManager::instance();
+
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_WRITE)->returns(array(ProjectUGroup::PROJECT_MEMBERS));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_WPLUS)->returns(array());
+
+        $this->gerrit_status = mock('Git_Driver_Gerrit_ProjectCreatorStatus');
+
+        $user_mirror1        = aUser()->withUserName('git_mirror_1')->build();
+        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'hostname', 'EUR');
+
+        $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            $this->gerrit_status,
+            'whatever'
+        );
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
     }
 }

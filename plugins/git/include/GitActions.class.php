@@ -520,7 +520,10 @@ class GitActions extends PluginActions {
     }
 
     private function displayFeedbacksOnRepoManagement(GitRepository $repository) {
-        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
+        $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
+            new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+        );
+        if ($project_creator_status->getStatus($repository) == Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE) {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
 
@@ -859,12 +862,12 @@ class GitActions extends PluginActions {
      * @param Boolean $migrate_access_right if the acess right will be migrated or not
      * @param int $gerrit_template_id the id of template if any chosen
      */
-    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id) {
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
         if ($repository->canMigrateToGerrit()) {
 
             try {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
-                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id);
+                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id, $user);
 
                 $this->history_dao->groupAddHistory(
                     "git_repo_to_gerrit",

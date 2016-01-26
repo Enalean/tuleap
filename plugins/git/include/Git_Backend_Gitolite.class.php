@@ -187,9 +187,12 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @return bool true if success, false otherwise
      */
     public function savePermissions(GitRepository $repository, $perms) {
+        $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
+            new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+        );
         $ok = true;
         $ok &= $this->savePermission($repository, Git::PERM_READ, $perms);
-        if (! $repository->isMigratedToGerrit()) {
+        if ($project_creator_status->canModifyPermissionsTuleapSide($repository)) {
             if ($ok) {
                 $ok &= $this->savePermission($repository, Git::PERM_WRITE, $perms);
             }

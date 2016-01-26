@@ -124,14 +124,19 @@ class GitViews_ShowRepo_Content {
     }
 
     private function displayHeader() {
+        $gerrit_status = new GitViews_ShowRepo_ContentGerritStatus(
+            $this->driver_factory,
+            $this->gerrit_servers,
+            $this->repository,
+            new Git_Driver_Gerrit_ProjectCreatorStatus(
+                new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+            )
+        );
+
         $html  = '';
         $html .= '<div id="plugin_git_reference" class="plugin_git_repo_type_'. $this->repository->getBackendType() .'">';
         $html .= $this->getHeader();
-
-        if ($this->repository->isMigratedToGerrit()) {
-            $html .= $this->getRemoteRepositoryInfo();
-        }
-
+        $html .= $gerrit_status->getContent();
         $html .= $this->getCloneUrl();
         $html .= '</div>';
         $html .= $this->getOnlineEditDiv();
@@ -276,21 +281,6 @@ class GitViews_ShowRepo_Content {
     private function prependGerritCloneURL(array &$urls, $gerrit_clone_url) {
         $gerrit = array('gerrit' => $gerrit_clone_url);
         $urls = array_merge($gerrit, $urls);
-    }
-
-    private function getRemoteRepositoryInfo() {
-        /** @var $gerrit_server Git_RemoteServer_GerritServer */
-        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
-        $driver         = $this->driver_factory->getDriver($gerrit_server);
-        $gerrit_project = $driver->getGerritProjectName($this->repository);
-        $link           = $gerrit_server->getProjectUrl($gerrit_project);
-
-        $html  = '';
-        $html .= '<div class="alert alert-info gerrit_url">';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'delegated_to_gerrit');
-        $html .= ' <a href="'.$link.'">'.$gerrit_project.'</a>';
-        $html .= '</div>';
-        return $html;
     }
 
     private function getWaitingForRepositoryCreationInfo() {
