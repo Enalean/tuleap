@@ -34,8 +34,24 @@ class FRSPackageFactory {
     var $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
     var $STATUS_DELETED = FRSPackage::STATUS_DELETED;
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
+    private static $instance;
 
     function FRSPackageFactory() {
+    }
+
+    public static function instance(){
+        if(empty(self::$instance)) {
+            self::$instance = new FRSPackageFactory();
+        }
+        return self::$instance;
+    }
+
+    public static function setInstance(FRSPackageFactory $instance){
+        self::$instance = $instance;
+    }
+
+    public static function clearInstance(){
+        self::$instance = null;
     }
 
     function getFRSPackageFromArray(&$array) {

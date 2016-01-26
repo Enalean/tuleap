@@ -201,17 +201,13 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id', 'comment');
+        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id', 'comment', 'release_time', 'post_date');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
                 $values[] = $this->da->quoteSmart($value);
             }
         }
-        $arg[]    = 'release_time';
-        $values[] = $this->da->quoteSmart(time());
-        $arg[]    = 'post_date';
-        $values[] = $this->da->quoteSmart(time());
         if (count($arg)) {
             $sql = 'INSERT INTO frs_file '
                 .'('.implode(', ', $arg).')'

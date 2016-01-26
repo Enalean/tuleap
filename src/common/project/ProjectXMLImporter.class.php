@@ -128,6 +128,15 @@ class ProjectXMLImporter {
         $svn = new SVNXMLImporter($this->logger, $this->xml_validator);
         $svn->import($project, $xml_element, $extraction_path);
 
+        $frs = new FRSXMLImporter($this->logger,
+            $this->xml_validator,
+            new FRSPackageFactory(),
+            new FRSReleaseFactory(),
+            new FRSFileFactory(),
+            $this->user_finder,
+            new UGroupManager());
+        $frs->import($project, $xml_element, $extraction_path);
+
         $this->logger->info("Ask to plugin to import data from XML");
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,

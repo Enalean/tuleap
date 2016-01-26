@@ -28,6 +28,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', a
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums', 'getSrcDir'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryFakeCreation', array('moveFileForge', 'create'));
 
 class FRSFileFactoryTest extends UnitTestCase {
 
@@ -888,6 +889,74 @@ class FRSFileFactoryTest extends UnitTestCase {
         }
     }
 
+    function testCreateFileSetReleaseTime(){
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(1112);
+        $r->setProject($p);
+        
+        $f = new FRSFile();
+        $f->setRelease($r);
+        $f->setGroup($p);
+        $f->setFileName('file_sample');
+
+        $dao = new MockFRSFileDao($this);
+        stub($dao)->searchFileByName()->returnsEmptyDar();
+        $ff = new FRSFileFactoryFakeCreation();
+        $ff->setReturnValue('create', 55);
+        $ff->setReturnValue('moveFileForge', True);
+        $ff->dao = $dao;
+
+        $rf = new MockFRSReleaseFactory($this);
+        $rf->setReturnValue('getFRSReleaseFromDb', $r);
+        $ff->release_factory = $rf;
+
+        $before = time();
+        $ff->createFile($f);
+        $after = time();
+
+        $this->assertTrue($f->getPostDate() >= $before && $f->getPostDate() <= $after);
+        $this->assertTrue($f->getReleaseTime() >= $before && $f->getReleaseTime() <= $after);
+    }
+
+    function testCreateFileDoNotSetReleaseTimeIfAlreadySet(){
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(1113);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setRelease($r);
+        $f->setGroup($p);
+        $f->setFileName('file_sample');
+        $f->setReleaseTime(3125);
+        $f->setPostDate(3125);
+
+        $dao = new MockFRSFileDao($this);
+        stub($dao)->searchFileByName()->returnsEmptyDar();
+        $ff = new FRSFileFactoryFakeCreation();
+        $ff->setReturnValue('create', 55);
+        $ff->setReturnValue('moveFileForge', True);
+        $ff->dao = $dao;
+
+        $rf = new MockFRSReleaseFactory($this);
+        $rf->setReturnValue('getFRSReleaseFromDb', $r);
+        $ff->release_factory = $rf;
+
+        $before = time();
+        $ff->createFile($f);
+        $after = time();
+
+        $this->assertTrue($f->getPostDate() == 3125);
+        $this->assertTrue($f->getReleaseTime() == 3125);
+    }
+
     /**
      * We should not be able to create a file with the same name,
      * if an active one exists.
@@ -1237,4 +1306,3 @@ class FRSFileFactoryTest extends UnitTestCase {
 
 }
 
-?>
