@@ -8,6 +8,7 @@ Version 8.11 (Not released yet)
 	* request #8795: Mac OS X users can setup a new dev environment
 	* request #8773: Allow plugins to display a link in the navbar
 	* request #8585: Group list with filtering form, search by status or names
+	* Use files size as a quota instead of number of files
 
 	== Bug fix ==
 	* request #8769: SVN paths in CI not displayed due to js error
@@ -23,7 +24,7 @@ Version 8.11 (Not released yet)
 
 	== Plugins ==
 	* git: 4.112
-	* tracker: 5.781
+	* tracker: 5.782
 	* mediawiki: 0.102
 	* webdav: 1.9.14
 	* agiledashboard: 1.341
@@ -31,7 +32,7 @@ Version 8.11 (Not released yet)
 	* docman: 2.26.93
 	* docmanwatermark: removed
 	* svn: 0.5
-	* tests: 5.33
+	* tests: 5.34
 
 	== Themes ==
 	* FlamingParrot: 1.119

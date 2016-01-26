@@ -1,3 +1,6 @@
+Version 5.34 - Tuleap 8.11
+    * Use files size as a quota instead of number of files
+
 Version 5.33 - Tuleap 8.11
     * Revert 'Use files size as a quota instead of number of files'
 
