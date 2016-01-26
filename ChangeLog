@@ -2,6 +2,7 @@ Version 8.11 (Not released yet)
 	== Enhancement ==
 	* story #8698: choose the values to be displayed at project creation from trove cats
 	* story #8630: Move from ZendFramework 1 to ZendFramework 2
+        * story #8570: Import Files (FRS)
 
 	== Development ==
 	* request #8795: Mac OS X users can setup a new dev environment
