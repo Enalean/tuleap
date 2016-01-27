@@ -26,9 +26,10 @@ function BacklogController(
         details                      : BacklogService.backlog,
         items                        : BacklogService.items,
         dragular_instance_for_backlog: undefined,
-        dragularOptionsForBacklog    : dragularOptionsForBacklog,
-        displayUserCantPrioritize    : displayUserCantPrioritize,
-        isBacklogLoadedAndEmpty      : isBacklogLoadedAndEmpty
+        canUserMoveCards         : BacklogService.canUserMoveCards,
+        displayUserCantPrioritize: displayUserCantPrioritize,
+        dragularOptionsForBacklog: dragularOptionsForBacklog,
+        isBacklogLoadedAndEmpty  : isBacklogLoadedAndEmpty
     });
 
     initDragular();

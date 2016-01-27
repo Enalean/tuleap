@@ -35,12 +35,13 @@ function BacklogService(
             loading         : false,
             fully_loaded    : false
         },
-        appendBacklogItems               : appendBacklogItems,
-        filterItems                      : filterItems,
-        removeBacklogItemsFromBacklog    : removeBacklogItemsFromBacklog,
         addOrReorderBacklogItemsInBacklog: addOrReorderBacklogItemsInBacklog,
+        appendBacklogItems               : appendBacklogItems,
+        canUserMoveCards                 : canUserMoveCards,
+        filterItems                      : filterItems,
         loadMilestoneBacklog             : loadMilestoneBacklog,
-        loadProjectBacklog               : loadProjectBacklog
+        loadProjectBacklog               : loadProjectBacklog,
+        removeBacklogItemsFromBacklog    : removeBacklogItemsFromBacklog
     });
 
     function appendBacklogItems(items) {
@@ -106,5 +107,9 @@ function BacklogService(
             accepted_types     : milestone.backlog_accepted_types,
             user_can_move_cards: milestone.has_user_priority_change_permission
         });
+    }
+
+    function canUserMoveCards() {
+        return self.backlog.user_can_move_cards;
     }
 }

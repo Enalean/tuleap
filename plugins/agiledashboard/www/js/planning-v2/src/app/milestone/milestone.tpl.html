@@ -1,7 +1,7 @@
 <legend ng-click="milestoneController.toggleMilestone($event)">
     {{ milestoneController.milestone.label }}
     <div
-        ng-if="planning.use_angular_new_modal && ! milestoneController.milestone.collapsed && milestoneController.milestone.has_user_priority_change_permission"
+        ng-if="planning.use_angular_new_modal && ! milestoneController.milestone.collapsed && milestoneController.canUserMoveCards()"
         class="btn-group dropdown do-animate"
     >
         <span class="dropdown-toggle btn btn-mini" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
@@ -66,22 +66,22 @@
         ng-class="{ 'empty-milestone': milestoneController.isMilestoneLoadedAndEmpty() }"
         data-accept="{{ milestoneController.milestone.content_accepted_types.toString() }}"
         data-submilestone-id="{{ milestoneController.milestone.id }}"
-        data-nodrop="{{ ! milestoneController.milestone.has_user_priority_change_permission }}"
+        data-nodrop="{{ ! milestoneController.canUserMoveCards() }}"
     >
         <li ng-repeat="backlog_item in milestoneController.milestone.content"
             class="backlog-item parent in-milestone {{ backlog_item.status | lowercase }} {{ backlog_item.color }} {{ planning.current_view_class }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
             data-type="{{ backlog_item.trackerId }}"
             ng-show="planning.canShowBacklogItem(backlog_item)"
-            ng-class="{ updating: backlog_item.updating, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking, undraggable: ! milestoneController.milestone.has_user_priority_change_permission }"
+            ng-class="{ updating: backlog_item.updating, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking, undraggable: ! milestoneController.canUserMoveCards() }"
             collapsed="true"
-            data-nodrag="{{ ! milestoneController.milestone.has_user_priority_change_permission }}"
+            data-nodrag="{{ ! milestoneController.canUserMoveCards() }}"
             data-item-id="{{ backlog_item.id }}"
             backlog-item-index="$index"
             backlog-item-select="backlog_item"
         >
             <backlog-item
-                ng-init="user_can_move_cards=milestoneController.milestone.has_user_priority_change_permission;current_milestone=milestoneController.milestone"
+                ng-init="canUserMoveCards=milestoneController.canUserMoveCards;current_milestone=milestoneController.milestone"
             ></backlog-item>
         </li>
     </ul>

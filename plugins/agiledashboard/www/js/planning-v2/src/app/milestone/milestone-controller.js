@@ -28,9 +28,10 @@ function MilestoneController(
     _.extend(self, {
         milestone                      : $scope.milestone, //herited from parent scope
         dragular_instance_for_milestone: undefined,
+        canUserMoveCards               : canUserMoveCards,
+        dragularOptionsForMilestone    : dragularOptionsForMilestone,
         init                           : init,
         initDragularForMilestone       : initDragularForMilestone,
-        dragularOptionsForMilestone    : dragularOptionsForMilestone,
         isMilestoneLoadedAndEmpty      : isMilestoneLoadedAndEmpty,
         toggleMilestone                : toggleMilestone
     });
@@ -70,6 +71,10 @@ function MilestoneController(
 
     function isMilestoneLoadedAndEmpty() {
         return ! self.milestone.loadingContent && self.milestone.content.length === 0;
+    }
+
+    function canUserMoveCards() {
+        return self.milestone.has_user_priority_change_permission;
     }
 
     function initDragularForMilestone() {
