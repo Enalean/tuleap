@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -78,7 +78,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $repository->setProject($this->project_manager->getProjectByUnixName(self::PROJECT_TEST_GIT_SHORTNAME));
         $repository->setName('repo01');
 
-        $manager->create($repository, $backend);
+        $manager->create($repository, $backend, array());
 
         return $this;
     }
@@ -111,11 +111,26 @@ class GitDataBuilder extends REST_TestDataBuilder {
         GitRepositoryFactory $repository_factory,
         Git_SystemEventManager $git_system_event_manager
     ) {
+        $mirror_dao         = new Git_Mirror_MirrorDao();
+        $rc_reader          = new Git_Gitolite_GitoliteRCReader();
+        $default_mirror_dao = new DefaultProjectMirrorDao();
+
+        $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
+            $mirror_dao,
+            $this->user_manager,
+            $repository_factory,
+            $this->project_manager,
+            $git_system_event_manager,
+            $rc_reader,
+            $default_mirror_dao
+        );
+
         return new GitRepositoryManager(
             $repository_factory,
             $git_system_event_manager,
             new GitDao(),
-            '/tmp'
+            '/tmp',
+            new GitRepositoryMirrorUpdater($mirror_data_mapper, new ProjectHistoryDao())
         );
     }
 

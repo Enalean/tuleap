@@ -960,6 +960,8 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
+        $history_dao = new ProjectHistoryDao();
+
         return new $action(
             $this,
             $this->git_system_event_manager,
@@ -976,7 +978,8 @@ class Git extends PluginController {
             $this->logger,
             $this->backend_gitolite,
             $this->mirror_data_mapper,
-            new ProjectHistoryDao()
+            $history_dao,
+            new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $history_dao)
         );
     }
 

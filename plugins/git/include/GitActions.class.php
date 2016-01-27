@@ -1,16 +1,16 @@
 <?php
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2011 - 2014. All Rights Reserved.
+  * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
-  * Codendi is free software; you can redistribute it and/or modify
+  * Tuleap is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation; either version 2 of the License, or
   * (at your option) any later version.
   *
-  * Codendi is distributed in the hope that it will be useful,
+  * Tuleap is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   * GNU General Public License for more details.
@@ -27,6 +27,11 @@ require_once('common/layout/Layout.class.php');
  * @author Guillaume Storchi
  */
 class GitActions extends PluginActions {
+
+    /**
+     * @var GitRepositoryMirrorUpdater
+     */
+    private $mirror_updater;
 
     /**
      * @var Git_Backend_Gitolite
@@ -99,6 +104,7 @@ class GitActions extends PluginActions {
      * @param ProjectManager                             $project_manager
      * @param GitPermissionsManager                      $git_permissions_manager
      * @param ProjectHistoryDao                          $history_dao
+     * @param GitRepositoryMirrorUpdater                 $mirror_updater
      */
     public function __construct(
         Git                $controller,
@@ -116,7 +122,8 @@ class GitActions extends PluginActions {
         Logger $logger,
         Git_Backend_Gitolite $backend_gitolite,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
+        GitRepositoryMirrorUpdater $mirror_updater
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager = $system_event_manager;
@@ -134,6 +141,7 @@ class GitActions extends PluginActions {
         $this->backend_gitolite         = $backend_gitolite;
         $this->mirror_data_mapper       = $mirror_data_mapper;
         $this->history_dao              = $history_dao;
+        $this->mirror_updater           = $mirror_updater;
     }
 
     protected function getText($key, $params = array()) {
@@ -181,21 +189,31 @@ class GitActions extends PluginActions {
         );
     }
 
-    public function createReference($projectId, $repositoryName) {
+    public function createReference($project_id, $repository_name) {
         $controller = $this->getController();
-        $projectId  = intval( $projectId );
+        $project_id = intval( $project_id );
 
         try {
             $creator = UserManager::instance()->getCurrentUser();
-            $project = ProjectManager::instance()->getProject($projectId);
-            $repository = $this->factory->buildRepository($project, $repositoryName, $creator, $this->backend_gitolite);
+            $project = ProjectManager::instance()->getProject($project_id);
+            $repository = $this->factory->buildRepository(
+                $project,
+                $repository_name,
+                $creator,
+                $this->backend_gitolite
+            );
 
-            $this->manager->create($repository, $this->backend_gitolite);
+            $default_mirrors = $this->mirror_data_mapper->getDefaultMirrorIdsForProject($project);
+            if (! $default_mirrors) {
+                $default_mirrors = array();
+            }
+
+            $this->manager->create($repository, $this->backend_gitolite, $default_mirrors);
 
             $this->history_dao->groupAddHistory(
                 "git_repo_create",
-                $repositoryName,
-                $projectId
+                $repository_name,
+                $project_id
             );
 
             $this->redirectToRepo($repository);
@@ -203,7 +221,7 @@ class GitActions extends PluginActions {
             $controller->addError($exception->getMessage());
         }
 
-        $controller->redirect('/plugins/git/?action=index&group_id='.$projectId);
+        $controller->redirect('/plugins/git/?action=index&group_id='.$project_id);
         return;
     }
 
@@ -986,10 +1004,12 @@ class GitActions extends PluginActions {
                 continue;
             }
 
-            if (! $this->updateRepositoryMirrors($repository, $mirror_ids)) {
+            if (! $this->mirror_updater->updateRepositoryMirrors($repository, $mirror_ids)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_error'));
                 return;
             }
+
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
         }
 
         $more_than_one_repository = count($repositories) > 1;
@@ -1023,24 +1043,6 @@ class GitActions extends PluginActions {
         }
 
         return $mirror_ids;
-    }
-
-    private function updateRepositoryMirrors(GitRepository $repository, $mirror_ids) {
-        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
-            && $this->mirror_data_mapper->unmirrorRepository($repository->getId())
-            && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $mirror_ids)) {
-
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
-            $this->history_dao->groupAddHistory(
-                "git_repo_mirroring_update",
-                $repository->getName(),
-                $repository->getProjectId()
-            );
-
-            return true;
-        }
-
-        return false;
     }
 
     private function areThereAnyChanges(

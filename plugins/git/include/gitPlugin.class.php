@@ -1186,7 +1186,8 @@ class GitPlugin extends Plugin {
             $this->getRepositoryFactory(),
             $this->getGitSystemEventManager(),
             $this->getGitDao(),
-            $this->getConfigurationParameter('git_backup_dir')
+            $this->getConfigurationParameter('git_backup_dir'),
+            new GitRepositoryMirrorUpdater($this->getMirrorDataMapper(), new ProjectHistoryDao())
         );
     }
 
