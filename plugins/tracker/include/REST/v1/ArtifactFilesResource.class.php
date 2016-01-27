@@ -35,6 +35,7 @@ use \Tracker_FormElementFactory;
 use \Tracker_FileInfoFactory;
 use \Tracker_FileInfoDao;
 use \System_Command;
+use \ForgeConfig;
 
 class ArtifactFilesResource {
 
@@ -56,10 +57,11 @@ class ArtifactFilesResource {
             $artifact_factory
         );
         $this->file_manager = new FileManager(
-            $this->user,
+            UserManager::instance(),
             new FileManagerDao(),
             $fileinfo_factory,
-            new System_Command()
+            new System_Command(),
+            ForgeConfig::get('sys_file_deletion_delay')
         );
     }
 

@@ -64,10 +64,10 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         $sql = "UPDATE tracker_fileinfo_temporary
                     JOIN tracker_fileinfo
                         ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
-                    SET last_modified = '$last_modified',
-                        offset        = '$offset',
-                        filesize      = '$size'
-                WHERE fileinfo_id = '$file_id'";
+                    SET last_modified = $last_modified,
+                        offset        = $offset,
+                        filesize      = $size
+                WHERE fileinfo_id = $file_id";
 
         return $this->update($sql);
     }
@@ -127,5 +127,14 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 
+    public function searchTemporaryFilesOlderThan($timestamp) {
+        $timestamp = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT *
+                FROM tracker_fileinfo_temporary
+                    JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
+                WHERE tracker_fileinfo_temporary.last_modified < $timestamp";
+
+        return $this->retrieve($sql);
+    }
 }
-?>

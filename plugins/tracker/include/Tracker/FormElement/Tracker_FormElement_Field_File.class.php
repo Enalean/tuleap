@@ -806,16 +806,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
 
         //Now save the new submitted files
-        $current_user = UserManager::instance()->getCurrentUser();
+        $current_user = $this->getUserManager()->getCurrentUser();
         $r = new Rule_File();
         foreach ($value as $i => $file_info) {
             if ("$i" != 'delete' && $r->isValid($file_info)) {
-                $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager(
-                    $this->getCurrentUser(),
-                    $this->getTemporaryFileManagerDao(),
-                    $this->getFileInfoFactory(),
-                    new System_Command()
-                );
+                $temporary = $this->getTemporaryFileManager();
 
                 if (isset($file_info['id'])) {
                     $temporary_file = $temporary->getFileByTemporaryName($file_info['id']);
@@ -898,7 +893,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             $file_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION];
     }
 
-    protected function createAttachmentForRest(Tracker_FileInfo $attachment, $file_info) {
+    private function createAttachmentForRest(Tracker_FileInfo $attachment, $file_info) {
         $path = $this->getRootPath();
         if (!is_dir($path .'/thumbnails')) {
             mkdir($path .'/thumbnails', 0777, true);
@@ -908,20 +903,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
 
         if(isset($file_info['id'])) {
             $filename  = $file_info['id'];
-            $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager(
-                $this->getCurrentUser(),
-                $this->getTemporaryFileManagerDao(),
-                $this->getFileInfoFactory(),
-                new System_Command()
-            );
+            $temporary = $this->getTemporaryFileManager();
 
-            if (!$temporary->exists($filename)) {
+            $user = $this->getUserManager()->getUserById($attachment->getSubmittedBy());
+            if (! $temporary->exists($user, $filename)) {
                 $attachment->delete();
                 return false;
             }
 
             $method   = 'rename';
-            $tmp_name = $temporary->getPath($filename);
+            $tmp_name = $temporary->getPath($user, $filename);
 
             $temporary->removeTemporaryFileInDBByTemporaryName($filename);
 
@@ -1047,7 +1038,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
 
         $this->validateDataFromREST($value);
 
-        $file_manager = $this->getFileManager();
+        $file_manager = $this->getTemporaryFileManager();
         return $file_manager->buildFieldDataForREST($value, $artifact);
     }
 
@@ -1065,13 +1056,18 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     /**
      * @return Tracker_Artifact_Attachment_TemporaryFileManager
      */
-    private function getFileManager() {
+    private function getTemporaryFileManager() {
         return new Tracker_Artifact_Attachment_TemporaryFileManager(
-            UserManager::instance()->getCurrentUser(),
+            $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
             $this->getTrackerFileInfoFactory(),
-            new System_Command()
+            new System_Command(),
+            ForgeConfig::get('sys_file_deletion_delay')
         );
+    }
+
+    private function getUserManager() {
+        return UserManager::instance();
     }
 
     private function getTrackerFileInfoFactory() {

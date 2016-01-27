@@ -45,6 +45,7 @@ use Tracker_FileInfoFactory;
 use Tracker_FileInfoDao;
 use Tracker_URLVerification;
 use System_Command;
+use ForgeConfig;
 
 class ArtifactTemporaryFilesResource {
 
@@ -76,10 +77,11 @@ class ArtifactTemporaryFilesResource {
             $this->artifact_factory
         );
         $this->file_manager = new FileManager(
-            $this->user,
+            UserManager::instance(),
             new FileManagerDao(),
             $this->fileinfo_factory,
-            new System_Command()
+            new System_Command(),
+            ForgeConfig::get('sys_file_deletion_delay')
         );
     }
 
@@ -95,7 +97,7 @@ class ArtifactTemporaryFilesResource {
      * @throws 400
      */
     protected function get() {
-        $files                 = $this->file_manager->getUserTemporaryFiles();
+        $files                 = $this->file_manager->getUserTemporaryFiles($this->user);
         $files_representations = array();
 
         foreach ($files as $file) {
@@ -180,9 +182,9 @@ class ArtifactTemporaryFilesResource {
      */
     protected function post($name, $mimetype, $content, $description = null) {
         try {
-            $this->file_manager->validateChunkSize($content);
+            $this->file_manager->validateChunkSize($this->user, $content);
 
-            $file         = $this->file_manager->save($name, $description, $mimetype);
+            $file         = $this->file_manager->save($this->user, $name, $description, $mimetype);
             $chunk_offset = 1;
             $append       = $this->file_manager->appendChunk($content, $file, $chunk_offset);
         } catch (CannotCreateException $e) {
@@ -233,7 +235,7 @@ class ArtifactTemporaryFilesResource {
         $file = $this->getFile($id);
 
         try {
-            $this->file_manager->validateChunkSize($content);
+            $this->file_manager->validateChunkSize($this->user, $content);
             $this->file_manager->appendChunk($content, $file, $offset);
 
         } catch (ChunkTooBigException $e) {
@@ -360,7 +362,7 @@ class ArtifactTemporaryFilesResource {
 
     private function sendSizeHeaders() {
         Header::sendQuotaHeader($this->file_manager->getQuota());
-        Header::sendDiskUsage($this->file_manager->getDiskUsage());
+        Header::sendDiskUsage($this->file_manager->getDiskUsage($this->user));
         Header::sendMaxFileChunkSizeHeaders($this->file_manager->getMaximumChunkSize());
     }
 
