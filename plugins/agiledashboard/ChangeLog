@@ -1,3 +1,6 @@
+Version 1.343 - Tuleap 8.11
+    * request #8807: Sometimes children of backlog items cannot be drag and dropped in planning v2
+
 Version 1.342 - Tuleap 8.11
     * story #6789: Multiselect items in planning view
 
