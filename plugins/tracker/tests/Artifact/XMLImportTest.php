@@ -647,6 +647,85 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->xml_mapping
         );
     }
+
+    public function itKeepsTheOriginalOrderWhenTwoDatesAreEqual() {
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+              <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:51:50+01:00</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>Fourth</value>
+                  </field_change>
+                </changeset>
+               <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>Second</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>Third</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>First</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        expect($this->artifact_creator)->create('*', new FieldDataExpectation(array($this->summary_field_id => 'First')), '*', strtotime('2014-01-15T10:38:06+01:00'), '*')->once();
+
+        expect($this->new_changeset_creator)->create()->count(3);
+        expect($this->new_changeset_creator)->create($this->artifact, new FieldDataExpectation(array($this->summary_field_id => 'Second')), '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*', '*')->at(0);
+        expect($this->new_changeset_creator)->create($this->artifact, new FieldDataExpectation(array($this->summary_field_id => 'Third')), '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*', '*')->at(1);
+        expect($this->new_changeset_creator)->create($this->artifact, new FieldDataExpectation(array($this->summary_field_id => 'Fourth')), '*', '*', strtotime('2014-01-15T11:51:50+01:00'), '*', '*')->at(2);
+
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
+    }
+}
+
+class FieldDataExpectation extends SimpleExpectation {
+
+    private $expected_field_data;
+
+    public function __construct($expected_field_data) {
+        parent::__construct();
+        $this->expected_field_data = $expected_field_data;
+    }
+
+    public function test($compare) {
+        if ($this->expected_field_data == $compare) {
+            return true;
+        }
+        return false;
+    }
+
+    public function testMessage($compare) {
+        return "Expected ".$this->flatten($this->expected_field_data).' got '.$this->flatten($compare);
+    }
+
+    private function flatten($array) {
+        $str_chunks = array();
+        foreach ($array as $key => $value) {
+            $str_chunks[]= "$key => $value";
+        }
+        return 'array('.implode(', ', $str_chunks).')';
+    }
 }
 
 class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_XMLImportBaseTest {
@@ -1657,4 +1736,43 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
         // expect no errors
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
     }
+}
+
+class Tracker_Artifact_XMLImport_BadDateTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2011-11-24T15:51:48TCET</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+    }
+
+    public function itCreatesArtifactAtDate() {
+        expect($this->artifact_creator)->create()->never();
+
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->xml_element,
+            $this->extraction_path,
+            $this->xml_mapping
+        );
+    }
+
 }
