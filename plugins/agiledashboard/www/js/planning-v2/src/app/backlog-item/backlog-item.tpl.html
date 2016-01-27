@@ -9,15 +9,15 @@
     <div ng-show="! backlogItemController.backlog_item.children.collapsed" class="children">
         <ul class="backlog-item-children"
             data-backlog-item-id="{{ backlogItemController.backlog_item.id }}"
-            data-nodrop="{{ ! user_can_move_cards }}"
+            data-nodrop="{{ ! canUserMoveCards() }}"
             data-accept="{{ backlogItemController.backlog_item.accepted_types.toString() }}"
         >
             <li ng-repeat="backlog_item in backlogItemController.backlog_item.children.data"
                 data-type="{{ backlog_item.trackerId }}"
                 class="backlog-item child {{ planning.current_view_class }}"
                 ng-show="planning.canShowBacklogItem(backlog_item)"
-                ng-class="{ undraggable: ! user_can_move_cards, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking }"
-                data-nodrag="{{ ! user_can_move_cards }}"
+                ng-class="{ undraggable: ! canUserMoveCards(), selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking }"
+                data-nodrag="{{ ! canUserMoveCards() }}"
                 data-item-id="{{ backlog_item.id }}"
                 backlog-item-index="$index"
                 backlog-item-select="backlog_item"
