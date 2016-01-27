@@ -36,13 +36,15 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $this->dao                  = mock('GitDao');
         $this->backup_directory     = "/tmp/";
         $this->mirror_updater       = mock('GitRepositoryMirrorUpdater');
+        $this->mirror_data_mapper   = mock('Git_Mirror_MirrorDataMapper');
 
         $this->git_repository_manager = new GitRepositoryManager(
             $this->repository_factory,
             $this->git_system_event_manager,
             $this->dao,
             $this->backup_directory,
-            $this->mirror_updater
+            $this->mirror_updater,
+            $this->mirror_data_mapper
         );
     }
 
@@ -94,9 +96,11 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         $this->project      = mock('Project');
         stub($this->project)->getID()->returns($this->project_id);
         stub($this->project)->getUnixName()->returns($this->project_name);
-        $this->dao = mock('GitDao');
-        $this->backup_directory = "/tmp/";
-        $this->mirror_updater   = mock('GitRepositoryMirrorUpdater');
+
+        $this->dao                = mock('GitDao');
+        $this->backup_directory   = "/tmp/";
+        $this->mirror_updater     = mock('GitRepositoryMirrorUpdater');
+        $this->mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
 
         $this->factory    = mock('GitRepositoryFactory');
         $this->manager    = new GitRepositoryManager(
@@ -104,7 +108,8 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
             mock('Git_SystemEventManager'),
             $this->dao,
             $this->backup_directory,
-            $this->mirror_updater
+            $this->mirror_updater,
+            $this->mirror_data_mapper
         );
     }
 
@@ -182,6 +187,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         $this->dao                      = mock('GitDao');
         $this->backup_directory         = "/tmp/";
         $this->mirror_updater           = mock('GitRepositoryMirrorUpdater');
+        $this->mirror_data_mapper       = mock('Git_Mirror_MirrorDataMapper');
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
@@ -191,7 +197,8 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
                 $this->git_system_event_manager,
                 $this->dao,
                 $this->backup_directory,
-                $this->mirror_updater
+                $this->mirror_updater,
+                $this->mirror_data_mapper
             )
         );
     }
@@ -282,6 +289,9 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->backup_directory         = "/tmp/";
         $this->mirror_updater           = mock('GitRepositoryMirrorUpdater');
+        $this->mirror_data_mapper       = stub('Git_Mirror_MirrorDataMapper')
+            ->fetchAllRepositoryMirrors()
+            ->returns(array());
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
@@ -291,7 +301,8 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
                 $this->git_system_event_manager,
                 mock('GitDao'),
                 $this->backup_directory,
-                $this->mirror_updater
+                $this->mirror_updater,
+                $this->mirror_data_mapper
             )
         );
 

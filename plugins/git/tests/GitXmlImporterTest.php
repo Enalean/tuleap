@@ -73,13 +73,15 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         $this->git_systemeventmanager = mock('Git_SystemEventManager');
         $this->mirror_updater         = mock('GitRepositoryMirrorUpdater');
+        $this->mirror_data_mapper     = mock('Git_Mirror_MirrorDataMapper');
 
         $this->git_manager = new GitRepositoryManager(
             $this->git_factory,
             $this->git_systemeventmanager,
             $this->git_dao,
             parent::getTmpDir(),
-            $this->mirror_updater
+            $this->mirror_updater,
+            $this->mirror_data_mapper
         );
 
         $restricted_plugin_dao = mock('RestrictedPluginDao');
