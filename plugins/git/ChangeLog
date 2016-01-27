@@ -1,3 +1,6 @@
+Version 4.113 - Tuleap 8.11
+    * Mirror new repository on project default mirrors
+
 Version 4.112 - Tuleap 8.11
     * story #8734: During project inheritance, we duplicate only mirror that are not restricted by project.
 
