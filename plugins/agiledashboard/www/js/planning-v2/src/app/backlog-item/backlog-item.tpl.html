@@ -1,26 +1,26 @@
-<div class="dragular-handle backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}">
+<div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }} {{ backlogItemController.backlog_item.color }}">
     <backlog-item-details></backlog-item-details>
 </div>
 
-<div
-    class="show-children"
-    ng-class="{ hidden: (backlog_item.children.data.length === 0 && (! backlog_item.has_children || backlog_item.children.loaded)) }"
+<div class="show-children"
+    ng-class="{ hidden: (backlogItemController.backlog_item.children.data.length === 0 && (! backlogItemController.backlog_item.has_children || backlogItemController.backlog_item.children.loaded)) }"
     data-nodrag="true"
 >
-    <div ng-show="! backlog_item.children.collapsed" class="children">
-        <ul dragular="backlogItemController.dragularOptions(backlog_item.children.data)"
-            class="backlog-item-children"
-            data-backlog-item-id="{{ backlog_item.id }}"
+    <div ng-show="! backlogItemController.backlog_item.children.collapsed" class="children">
+        <ul class="backlog-item-children"
+            data-backlog-item-id="{{ backlogItemController.backlog_item.id }}"
             data-nodrop="{{ ! user_can_move_cards }}"
-            data-accept="{{ backlog_item.accepted_types.toString() }}"
+            data-accept="{{ backlogItemController.backlog_item.accepted_types.toString() }}"
         >
-            <li data-type="{{ backlog_item.trackerId }}"
-                ng-repeat="backlog_item in backlog_item.children.data"
+            <li ng-repeat="backlog_item in backlogItemController.backlog_item.children.data"
+                data-type="{{ backlog_item.trackerId }}"
                 class="backlog-item child {{ planning.current_view_class }}"
                 ng-show="planning.canShowBacklogItem(backlog_item)"
-                ng-class="{ undraggable: ! user_can_move_cards }"
+                ng-class="{ undraggable: ! user_can_move_cards, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking }"
                 data-nodrag="{{ ! user_can_move_cards }}"
                 data-item-id="{{ backlog_item.id }}"
+                backlog-item-index="$index"
+                backlog-item-select="backlog_item"
             >
                 <div class="backlog-item-details dragular-handle-child {{ backlog_item.status | lowercase }} {{ backlog_item.color }}">
                     <backlog-item-details></backlog-item-details>
@@ -28,12 +28,12 @@
             </li>
         </ul>
 
-        <div class="loading" ng-if="backlog_item.loading"></div>
+        <div class="loading" ng-if="backlogItemController.backlog_item.loading"></div>
     </div>
 
     <div
-        ng-class="{'show-children-close': ! backlog_item.children.collapsed}"
+        ng-class="{'show-children-close': ! backlogItemController.backlog_item.children.collapsed}"
         class="show-children-handle"
-        ng-click="backlogItemController.toggleChildrenDisplayed(backlog_item)"
+        ng-click="backlogItemController.toggleChildrenDisplayed()"
     ></div>
 </div>

@@ -62,15 +62,15 @@ describe("BacklogService -", function() {
         });
     });
 
-    describe("insertItemInUnfilteredBacklog() -", function() {
-        it("Given an existing backlog item and an index, when I append it to the unfiltered backlog, then it will be inserted at the given index in the backlog's unfiltered items collection", function() {
+    describe("addOrReorderBacklogItemsInBacklog() -", function() {
+        it("Given an existing backlog item and an index, when I append it to the backlog, then it will be inserted at the given index (after) in the backlog's items collection", function() {
             var initial_backlog = [
                 { id: 18 },
                 { id: 31 }
             ];
             BacklogService.items.content = initial_backlog;
 
-            BacklogService.insertItemInUnfilteredBacklog({ id: 98 }, 1);
+            BacklogService.addOrReorderBacklogItemsInBacklog({ id: 98 }, {item_id: 18, direction: 'after'});
 
             expect(BacklogService.items.content).toEqual([
                 { id: 18 },
@@ -79,40 +79,99 @@ describe("BacklogService -", function() {
             ]);
             expect(BacklogService.items.content).toBe(initial_backlog);
         });
+
+        it("Given an existing backlog item and an index, when I append it to the backlog, then it will be inserted at the given index (after last) in the backlog's items collection", function() {
+            var initial_backlog = [
+                { id: 18 },
+                { id: 31 }
+            ];
+            BacklogService.items.content = initial_backlog;
+
+            BacklogService.addOrReorderBacklogItemsInBacklog({ id: 98 }, {item_id: 31, direction: 'after'});
+
+            expect(BacklogService.items.content).toEqual([
+                { id: 18 },
+                { id: 31 },
+                { id: 98 }
+            ]);
+            expect(BacklogService.items.content).toBe(initial_backlog);
+        });
+
+        it("Given an existing backlog item and an index, when I append it to the backlog, then it will be inserted at the given index (before) in the backlog's items collection", function() {
+            var initial_backlog = [
+                { id: 18 },
+                { id: 31 }
+            ];
+            BacklogService.items.content = initial_backlog;
+
+            BacklogService.addOrReorderBacklogItemsInBacklog({ id: 98 }, {item_id: 31, direction: 'before'});
+
+            expect(BacklogService.items.content).toEqual([
+                { id: 18 },
+                { id: 98 },
+                { id: 31 }
+            ]);
+            expect(BacklogService.items.content).toBe(initial_backlog);
+        });
+
+        it("Given an existing backlog item and an index, when I append it to the backlog, then it will be inserted at the given index (before first) in the backlog's items collection", function() {
+            var initial_backlog = [
+                { id: 18 },
+                { id: 31 }
+            ];
+            BacklogService.items.content = initial_backlog;
+
+            BacklogService.addOrReorderBacklogItemsInBacklog({ id: 98 }, {item_id: 18, direction: 'before'});
+
+            expect(BacklogService.items.content).toEqual([
+                { id: 98 },
+                { id: 18 },
+                { id: 31 }
+            ]);
+            expect(BacklogService.items.content).toBe(initial_backlog);
+        });
     });
 
-    describe("removeItemFromUnfilteredBacklog() -", function() {
-        it("Given an item in the backlog's unfiltered items collection and given this item's id, when I remove it from the unfiltered backlog, then the item will no longer be in the backlog's unfiltered items collection", function() {
+    describe("removeBacklogItemsFromBacklog() -", function() {
+        it("Given an item in the backlog's items collection and given this item's id, when I remove it from the backlog, then the item will no longer be in the backlog's items collection", function() {
             var initial_backlog = [
                 { id: 48 },
                 { id: 92 },
                 { id: 69 }
             ];
-            BacklogService.items.content = initial_backlog;
+            BacklogService.items.content          = initial_backlog;
+            BacklogService.items.filtered_content = initial_backlog;
 
-            BacklogService.removeItemFromUnfilteredBacklog(92);
+            BacklogService.removeBacklogItemsFromBacklog([{ id: 92 }]);
 
             expect(BacklogService.items.content).toEqual([
                 { id: 48 },
                 { id: 69 }
             ]);
-            expect(BacklogService.items.content).toBe(initial_backlog);
+            expect(BacklogService.items.filtered_content).toEqual([
+                { id: 48 },
+                { id: 69 }
+            ]);
         });
 
-        it("Given an item that was not in the backlog's unfiltered items collection, when I remove it, then the the backlog's unfiltered items collection won't change", function() {
+        it("Given an item that was not in the backlog's items collection, when I remove it, then the the backlog's items collection won't change", function() {
             var initial_backlog = [
                 { id: 48 },
                 { id: 69 }
             ];
-            BacklogService.items.content = initial_backlog;
+            BacklogService.items.content          = initial_backlog;
+            BacklogService.items.filtered_content = initial_backlog;
 
-            BacklogService.removeItemFromUnfilteredBacklog(92);
+            BacklogService.removeBacklogItemsFromBacklog([{ id: 92 }]);
 
             expect(BacklogService.items.content).toEqual([
                 { id: 48 },
                 { id: 69 }
             ]);
-            expect(BacklogService.items.content).toBe(initial_backlog);
+            expect(BacklogService.items.filtered_content).toEqual([
+                { id: 48 },
+                { id: 69 }
+            ]);
         });
     });
 

@@ -14,42 +14,46 @@
             removeAddToBacklog       : removeAddToBacklog
         };
 
-        function reorderBacklog(project_id, dropped_item_id, compared_to) {
+        function reorderBacklog(project_id, dropped_item_ids, compared_to) {
             return getRest('v1').one('projects', project_id)
                 .all('backlog')
                 .patch({
                     order: {
-                        ids        : [dropped_item_id],
+                        ids        : dropped_item_ids,
                         direction  : compared_to.direction,
                         compared_to: compared_to.item_id
                     }
                 });
         }
 
-        function removeAddReorderToBacklog(milestone_id, project_id, dropped_item_id, compared_to) {
+        function removeAddReorderToBacklog(milestone_id, project_id, dropped_item_ids, compared_to) {
             return getRest('v1').one('projects', project_id)
                 .all('backlog')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
+                        ids         : dropped_item_ids,
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
-                    add: [{
-                        id         : dropped_item_id,
-                        remove_from: milestone_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return {
+                            id         : dropped_item_id,
+                            remove_from: milestone_id
+                        };
+                    })
                 });
         }
 
-        function removeAddToBacklog(milestone_id, project_id, dropped_item_id) {
+        function removeAddToBacklog(milestone_id, project_id, dropped_item_ids) {
             return getRest('v1').one('projects', project_id)
                 .all('backlog')
                 .patch({
-                    add: [{
-                        id         : dropped_item_id,
-                        remove_from: milestone_id
-                    }]
+                    add: _.map(dropped_item_ids, function(dropped_item_id) {
+                        return {
+                            id         : dropped_item_id,
+                            remove_from: milestone_id
+                        };
+                    })
                 });
         }
 

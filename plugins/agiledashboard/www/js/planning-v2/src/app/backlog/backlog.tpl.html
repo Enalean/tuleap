@@ -6,8 +6,7 @@
     scroll-callback="planning.displayBacklogItems()"
     scroll-threshold="100"
 >
-    <ul dragular="backlog.dragularOptions()"
-        class="backlog-items backlog"
+    <ul class="backlog-items backlog"
         ng-class="{ 'empty-backlog': backlog.isBacklogLoadedAndEmpty() }"
         data-accept="{{ backlog.details.accepted_types.toString() }}"
         data-nodrop="{{ ! backlog.details.user_can_move_cards }}"
@@ -15,11 +14,13 @@
         <li ng-repeat="backlog_item in backlog.items.filtered_content"
             data-type="{{ backlog_item.trackerId }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
-            class="backlog-item parent {{ planning.current_view_class }}"
-            ng-class="{ updating: backlog_item.updating, undraggable: ! backlog.details.user_can_move_cards }"
+            class="backlog-item parent in-backlog {{ planning.current_view_class }}"
+            ng-class="{ updating: backlog_item.updating, selected: backlog_item.selected, multiple: backlog_item.multiple, hidden: backlog_item.hidden, shaking: backlog_item.shaking, undraggable: ! backlog.details.user_can_move_cards }"
             collapsed="true"
             data-nodrag="{{ ! backlog.details.user_can_move_cards }}"
             data-item-id="{{ backlog_item.id }}"
+            backlog-item-index="$index"
+            backlog-item-select="backlog_item"
         >
             <backlog-item ng-init="user_can_move_cards=backlog.details.user_can_move_cards"></backlog-item>
         </li>

@@ -9,6 +9,7 @@
 @import "../app/backlog-item/backlog-item.less";
 @import "../app/backlog/backlog.less";
 @import "../app/milestone/milestone.less";
+@import "../app/backlog-item-selected/backlog-item-selected-bar.less";
 
 #planning-app {
     .loading {
@@ -116,4 +117,8 @@
             background: url('planning-divider.png') no-repeat center 70px;
         }
     }
+}
+
+body.sidebar-collapsed #planning-app #backlog-items-selected-bar {
+    padding-left: 45px;
 }

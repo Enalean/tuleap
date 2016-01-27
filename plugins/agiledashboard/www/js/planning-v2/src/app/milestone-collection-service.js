@@ -3,11 +3,13 @@ angular
     .service('MilestoneCollectionService', MilestoneCollectionService);
 
 MilestoneCollectionService.$inject = [
-    'MilestoneService'
+    'MilestoneService',
+    'BacklogItemCollectionService'
 ];
 
 function MilestoneCollectionService(
-    MilestoneService
+    MilestoneService,
+    BacklogItemCollectionService
 ) {
     var self = this;
     _.extend(self, {
@@ -17,14 +19,33 @@ function MilestoneCollectionService(
             open_milestones_fully_loaded  : false,
             closed_milestones_fully_loaded: false
         },
-        refreshMilestone: refreshMilestone
+        getMilestone                              : getMilestone,
+        refreshMilestone                          : refreshMilestone,
+        removeBacklogItemsFromMilestoneContent    : removeBacklogItemsFromMilestoneContent,
+        addOrReorderBacklogItemsInMilestoneContent: addOrReorderBacklogItemsInMilestoneContent
     });
 
-    function refreshMilestone(milestone_id) {
-        var milestone = _.find(self.milestones.content, function(milestone) {
+    function getMilestone(milestone_id) {
+        return _.find(self.milestones.content, function(milestone) {
             return milestone.id === milestone_id;
         });
+    }
+
+    function refreshMilestone(milestone_id) {
+        var milestone = getMilestone(milestone_id);
 
         MilestoneService.updateInitialEffort(milestone);
+    }
+
+    function removeBacklogItemsFromMilestoneContent(milestone_id, backlog_items) {
+        var milestone = getMilestone(milestone_id);
+
+        BacklogItemCollectionService.removeBacklogItemsFromCollection(milestone.content, backlog_items);
+    }
+
+    function addOrReorderBacklogItemsInMilestoneContent(milestone_id, backlog_items, compared_to) {
+        var milestone = getMilestone(milestone_id);
+
+        BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(milestone.content, backlog_items, compared_to);
     }
 }

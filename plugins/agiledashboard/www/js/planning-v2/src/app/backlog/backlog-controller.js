@@ -4,31 +4,64 @@ angular
 
 BacklogController.$inject = [
     '$scope',
+    '$document',
+    'dragularService',
     'BacklogService',
     'DroppedService',
-    'MilestoneCollectionService'
+    'MilestoneCollectionService',
+    'BacklogItemSelectedService'
 ];
 
 function BacklogController(
     $scope,
+    $document,
+    dragularService,
     BacklogService,
     DroppedService,
-    MilestoneCollectionService
+    MilestoneCollectionService,
+    BacklogItemSelectedService
 ) {
     var self = this;
     _.extend(self, {
-        details: BacklogService.backlog,
-        items  : BacklogService.items,
-        displayUserCantPrioritize: displayUserCantPrioritize,
-        dragularOptions          : dragularOptions,
-        init                     : init,
-        isBacklogLoadedAndEmpty  : isBacklogLoadedAndEmpty
+        details                      : BacklogService.backlog,
+        items                        : BacklogService.items,
+        dragular_instance_for_backlog: undefined,
+        dragularOptionsForBacklog    : dragularOptionsForBacklog,
+        displayUserCantPrioritize    : displayUserCantPrioritize,
+        isBacklogLoadedAndEmpty      : isBacklogLoadedAndEmpty
     });
 
-    self.init();
+    initDragular();
 
-    function init() {
+    function initDragular() {
+        self.dragular_instance_for_backlog = dragularService(document.querySelector('ul.backlog'), self.dragularOptionsForBacklog());
+
         $scope.$on('dragulardrop', dragularDrop);
+        $scope.$on('dragularcancel', dragularCancel);
+        $scope.$on('dragulardrag', dragularDrag);
+
+        $document.bind('keyup', function(event) {
+            var esc_key_code = 27;
+
+            if (event.keyCode === esc_key_code) {
+                BacklogItemSelectedService.deselectAllBacklogItems();
+
+                self.dragular_instance_for_backlog.cancel(true);
+
+                $scope.$apply();
+            }
+        });
+    }
+
+    function dragularOptionsForBacklog() {
+        return {
+            containersModel: self.items.filtered_content,
+            scope          : $scope,
+            revertOnSpill  : true,
+            nameSpace      : 'dragular-list',
+            accepts        : isItemDroppable,
+            moves          : isItemDraggable
+        };
     }
 
     function hideUserCantPrioritize() {
@@ -42,6 +75,28 @@ function BacklogController(
     function isBacklogLoadedAndEmpty() {
         return ! BacklogService.items.loading &&
             BacklogService.items.content.length === 0;
+    }
+
+    function dragularDrag(event, element) {
+        event.stopPropagation();
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
+            BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
+        ) {
+            BacklogItemSelectedService.multipleBacklogItemsAreDragged(element);
+
+        } else {
+            BacklogItemSelectedService.deselectAllBacklogItems();
+        }
+
+        $scope.$apply();
+    }
+
+    function dragularCancel(event, dropped_item_element, source_element) {
+        event.stopPropagation();
+
+        BacklogItemSelectedService.deselectAllBacklogItems();
+        $scope.$apply();
     }
 
     function dragularDrop(
@@ -58,38 +113,58 @@ function BacklogController(
 
         var source_list_element = angular.element(source_element),
             target_list_element = angular.element(target_element),
-            dropped_item_id     = getDroppedItemId(dropped_item_element);
+            dropped_item_ids    = [getDroppedItemId(dropped_item_element)];
 
         if (! target_model) {
             target_model = source_model;
         }
 
-        var compared_to = DroppedService.defineComparedTo(target_model, target_index);
+        var dropped_items = [target_model[target_index]];
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
+            dropped_items    = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
+            dropped_item_ids = _.pluck(dropped_items, 'id');
+        }
+
+        var compared_to = DroppedService.defineComparedTo(target_model, target_model[target_index], dropped_items);
 
         saveChangesInBackend();
 
         function saveChangesInBackend() {
+            var dropped_promise;
+
             switch (true) {
                 case droppedToBacklog(target_list_element):
-                    DroppedService.reorderBacklog(
-                        dropped_item_id,
+                    BacklogService.addOrReorderBacklogItemsInBacklog(dropped_items, compared_to);
+
+                    dropped_promise = DroppedService.reorderBacklog(
+                        dropped_item_ids,
                         compared_to,
                         BacklogService.backlog
                     );
                     break;
+
                 case droppedToMilestone(source_list_element, target_list_element):
                     var target_milestone_id = getMilestoneId(target_list_element);
 
-                    DroppedService.moveFromBacklogToSubmilestone(
-                        dropped_item_id,
+                    BacklogService.removeBacklogItemsFromBacklog(dropped_items);
+                    MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(target_milestone_id, dropped_items, compared_to);
+
+                    dropped_promise = DroppedService.moveFromBacklogToSubmilestone(
+                        dropped_item_ids,
                         compared_to,
                         target_milestone_id
                     ).then(function() {
-                        BacklogService.removeItemFromUnfilteredBacklog(dropped_item_id);
                         MilestoneCollectionService.refreshMilestone(target_milestone_id);
                     });
                     break;
             }
+
+            dropped_promise.then(function() {
+                BacklogItemSelectedService.deselectAllBacklogItems();
+            }).catch(function() {
+                BacklogItemSelectedService.reselectBacklogItems();
+            });
         }
     }
 
@@ -117,17 +192,6 @@ function BacklogController(
         return angular
             .element(dropped_item)
             .data('item-id');
-    }
-
-    function dragularOptions() {
-        return {
-            containersModel: BacklogService.items.filtered_content,
-            scope          : $scope,
-            revertOnSpill  : true,
-            nameSpace      : 'dragular-list',
-            accepts        : isItemDroppable,
-            moves          : isItemDraggable
-        };
     }
 
     function isItemDroppable(element_to_drop, target_container_element) {

@@ -2,5 +2,6 @@ angular.module('milestone', [
     'restangular',
     'dragularModule',
     'backlog-item',
-    'planning'
+    'planning',
+    'backlog-item-selected'
 ]);
