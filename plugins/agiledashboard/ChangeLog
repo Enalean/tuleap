@@ -1,3 +1,6 @@
+Version 1.344 - Tuleap 8.11
+    * request #8809: Compact and detailed buttons are hidden if the backlog is empty
+
 Version 1.343 - Tuleap 8.11
     * request #8807: Sometimes children of backlog items cannot be drag and dropped in planning v2
 
