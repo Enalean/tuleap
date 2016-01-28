@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
+use Tuleap\Tracker\Artifact\Attachment\PaginatedTemporaryFiles;
 
 /**
  * Manage temporary uploaded files
@@ -233,10 +234,12 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * @return Tracker_Artifact_Attachment_TemporaryFile[]
      */
-    public function getUserTemporaryFiles(PFUser $user) {
-        return $this->dao
-            ->getUserTemporaryFiles($user->getId())
+    public function getPaginatedUserTemporaryFiles(PFUser $user, $offset, $limit) {
+        $files = $this->dao
+            ->searchPaginatedUserTemporaryFiles($user->getId(), $offset, $limit)
             ->instanciateWith(array($this, 'getInstanceFromRow'));
+
+        return new PaginatedTemporaryFiles($files, $this->dao->foundRows());
     }
 
     /**

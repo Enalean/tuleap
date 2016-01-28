@@ -49,6 +49,10 @@ use ForgeConfig;
 
 class ArtifactTemporaryFilesResource {
 
+    const PAGINATION_MAX_LIMIT      = 50;
+    const PAGINATION_DEFAULT_LIMIT  = 10;
+    const PAGINATION_DEFAULT_OFFSET = 0;
+
     const DEFAULT_LIMIT = 1048576; // 1Mo
 
     /** @var PFUser */
@@ -93,18 +97,26 @@ class ArtifactTemporaryFilesResource {
      * @url GET
      *
      * @return Array {@type \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation}
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
      *
      * @throws 400
      */
-    protected function get() {
-        $files                 = $this->file_manager->getUserTemporaryFiles($this->user);
+    protected function get($limit  = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET) {
+        if ($limit > self::PAGINATION_MAX_LIMIT) {
+            throw new RestException(400);
+        }
+
+        $paginated_files = $this->file_manager->getPaginatedUserTemporaryFiles($this->user, $offset, $limit);
         $files_representations = array();
 
-        foreach ($files as $file) {
+        foreach ($paginated_files->getFiles() as $file) {
             $files_representations[] = $this->buildFileRepresentation($file);
         }
 
         $this->sendAllowHeadersForArtifactFiles();
+        Header::sendPaginationHeaders($limit, $offset, $paginated_files->getTotalCount(), self::PAGINATION_MAX_LIMIT);
+
         return $files_representations;
     }
 

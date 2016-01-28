@@ -117,12 +117,16 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function getUserTemporaryFiles($user_id) {
+    public function searchPaginatedUserTemporaryFiles($user_id, $offset, $limit) {
         $user_id = $this->da->escapeInt($user_id);
+        $offset  = $this->da->escapeInt($offset);
+        $limit   = $this->da->escapeInt($limit);
 
-        $sql = "SELECT * FROM tracker_fileinfo_temporary
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM tracker_fileinfo_temporary
                   JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
-                WHERE tracker_fileinfo.submitted_by = $user_id";
+                WHERE tracker_fileinfo.submitted_by = $user_id
+                LIMIT $offset, $limit";
 
         return $this->retrieve($sql);
     }
