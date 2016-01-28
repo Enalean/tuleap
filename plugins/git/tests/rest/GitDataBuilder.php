@@ -130,7 +130,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $git_system_event_manager,
             new GitDao(),
             '/tmp',
-            new GitRepositoryMirrorUpdater($mirror_data_mapper, new ProjectHistoryDao())
+            new GitRepositoryMirrorUpdater($mirror_data_mapper, new ProjectHistoryDao()),
+            $mirror_data_mapper
         );
     }
 
