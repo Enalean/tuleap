@@ -192,6 +192,21 @@ if (isset($_SESSION['last_svn_token'])) {
     unset($_SESSION['last_svn_token']);
 }
 
+$user_default_format = user_get_preference('user_edition_default_format');
+
+$default_formats = array(
+    array(
+        'label'    => $Language->getText('account_preferences', 'html_format'),
+        'value'    => 'html',
+        'selected' => ($user_default_format === false || $user_default_format === 'html')
+    ),
+    array(
+        'label'    => $Language->getText('account_preferences', 'text_format'),
+        'value'    => 'text',
+        'selected' => $user_default_format === 'text'
+    )
+);
+
 $presenter = new User_PreferencesPresenter(
     $user,
     $can_change_realname,
@@ -210,7 +225,8 @@ $presenter = new User_PreferencesPresenter(
     $plugins_prefs,
     $all_csv_separator,
     $all_csv_dateformat,
-    $last_svn_token
+    $last_svn_token,
+    $default_formats
 );
 
 $HTML->header(array(

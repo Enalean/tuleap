@@ -54,6 +54,12 @@ function invertFollowups(followupSection) {
 }
 
 document.observe('dom:loaded', function () {
+    var html_by_default = true;
+
+    if ($(document.body).hasClassName("default_format_text")) {
+        html_by_default = false;
+    }
+
     $$('.tracker_statistics').each(function (div) {
         codendi.Tooltips.push(
             new codendi.Tooltip(
@@ -175,16 +181,25 @@ document.observe('dom:loaded', function () {
     });
 
     $$('.tracker_artifact_field  textarea').each(function (element) {
-        var html_id = element.id;
-        var id = html_id.match(/_(\d+)$/)[1];
-        var name = 'artifact['+ id +'][format]';
-        var htmlFormat = false;
+        var html_id     = element.id;
+        var id          = html_id.match(/_(\d+)$/)[1];
+        var name        = 'artifact['+ id +'][format]';
+        var html_format = true;
 
-        if ($('artifact['+id+']_body_format').value == 'html') {
-            htmlFormat = true;
+        if ($('artifact['+id+']_body_format').value == 'text') {
+            html_format = false;
         }
 
-        new tuleap.trackers.textarea.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
+        new tuleap.trackers.textarea.RTE(
+            element,
+            {
+                toggle: true,
+                default_in_html: false,
+                id: id,
+                name: name,
+                htmlFormat: html_format
+            }
+        );
     });
 
     function getTextAreaValueAndHtmlFormat(comment_panel, id) {

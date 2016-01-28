@@ -97,6 +97,11 @@ account_preferences	error_user_csv_dateformat	Verify CSV date format value
 account_preferences	error_username_display	Verify username display value
 account_preferences	error_user_tracker_mailformat	Verify emails format value
 account_preferences	save_preferences	Save preferences
+account_preferences	edition_title	Edition
+account_preferences	default_format_label	Default format:
+account_preferences	default_format_intro	This option allows you to choose the default format for trackers' text fields.
+account_preferences	html_format	HTML
+account_preferences	text_format	Text
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

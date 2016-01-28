@@ -91,6 +91,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     const DEFAULT_CSV_DATEFORMAT = 'month_day_year';
 
+    const EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
+
     /**
      * @var array of allowed separators for CSV export
      */

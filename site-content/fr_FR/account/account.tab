@@ -89,6 +89,11 @@ account_preferences	error_user_csv_dateformat	Vérifiez la valeur de format de d
 account_preferences	error_username_display	Vérifiez la valeur de l'affichage des noms
 account_preferences	error_user_tracker_mailformat	Vérifiez la valeur du format de notification
 account_preferences	save_preferences	Sauvegarder les préférences
+account_preferences	edition_title	Édition
+account_preferences	default_format_label	Format par défaut :
+account_preferences	default_format_intro	Cette option permet de choisir le format par défaut des champs textes dans les outils de suivi.
+account_preferences	html_format	HTML
+account_preferences	text_format	Texte
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php
