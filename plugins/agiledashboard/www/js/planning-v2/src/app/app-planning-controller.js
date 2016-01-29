@@ -106,12 +106,7 @@ function PlanningCtrl(
     function loadInitialMilestones(initial_milestones) {
         if (initial_milestones) {
             _.forEach(initial_milestones.milestones_representations, function(milestone) {
-                MilestoneService.augmentMilestone(
-                    milestone,
-                    MilestoneService.milestone_content_pagination.limit,
-                    MilestoneService.milestone_content_pagination.offset,
-                    self.items
-                );
+                MilestoneService.augmentMilestone(milestone, self.items);
             });
 
             self.milestones.content                                                 = initial_milestones.milestones_representations;
@@ -278,12 +273,7 @@ function PlanningCtrl(
     }
 
     function prependSubmilestoneToSubmilestoneList(submilestone_id) {
-        return MilestoneService.getMilestone(
-            submilestone_id,
-            MilestoneService.milestone_content_pagination.limit,
-            MilestoneService.milestone_content_pagination.offset,
-            self.items
-        ).then(function(data) {
+        return MilestoneService.getMilestone(submilestone_id, self.items).then(function(data) {
             self.milestones.content.unshift(data.results);
         });
     }
