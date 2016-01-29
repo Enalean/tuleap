@@ -1,3 +1,6 @@
+Version 5.784 - Tuleap 8.11
+    * request #8806 artifact history import failure when changetsets with same "submitted_on" date used
+
 Version 5.783 - Tuleap 8.11
     * Purge old temporary attachments
 
