@@ -327,8 +327,10 @@ li.backlog-item {
         }
     }
 
-    &:first-child .backlog-item-details .moves > .icon-stack:first-child,
-    &:last-child .backlog-item-details .moves > .icon-stack:last-child {
+    &:first-child > backlog-item > .backlog-item-details .moves > .icon-stack:first-child,
+    &:first-child > .backlog-item-details .moves > .icon-stack:first-child,
+    &:last-child > backlog-item > .backlog-item-details .moves > .icon-stack:last-child,
+    &:last-child > .backlog-item-details .moves > .icon-stack:last-child {
         visibility: hidden;
     }
 
@@ -449,7 +451,8 @@ ul.backlog-item-children {
     }
 }
 
-#planning-view.multi-selected-backlog-items li.backlog-item:not(.selected) .backlog-item-details {
+#planning-view.multi-selected-backlog-items li.backlog-item:not(.selected) > backlog-item > .backlog-item-details,
+#planning-view.multi-selected-backlog-items li.backlog-item:not(.selected) > .backlog-item-details {
     .moves {
         display: none;
     }

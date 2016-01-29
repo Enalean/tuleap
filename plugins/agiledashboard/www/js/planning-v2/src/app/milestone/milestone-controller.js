@@ -5,6 +5,7 @@ angular
 
 MilestoneController.$inject = [
     '$scope',
+    '$q',
     '$timeout',
     '$document',
     '$filter',
@@ -17,6 +18,7 @@ MilestoneController.$inject = [
 
 function MilestoneController(
     $scope,
+    $q,
     $timeout,
     $document,
     $filter,
@@ -32,7 +34,7 @@ function MilestoneController(
         dragular_instance_for_milestone: undefined,
         canUserMoveCards               : canUserMoveCards,
         dragularOptionsForMilestone    : dragularOptionsForMilestone,
-        get_content_promise            : undefined,
+        get_content_promise            : $q.when(),
         init                           : init,
         initDragularForMilestone       : initDragularForMilestone,
         isMilestoneLoadedAndEmpty      : isMilestoneLoadedAndEmpty,

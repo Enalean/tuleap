@@ -45,11 +45,14 @@ describe("BacklogItemController -", function() {
             DroppedService = _DroppedService_;
             spyOn(DroppedService, "reorderBacklogItemChildren");
             spyOn(DroppedService, "moveFromChildrenToChildren");
+            spyOn(DroppedService, 'defineComparedToBeFirstItem').and.callThrough();
+            spyOn(DroppedService, 'defineComparedToBeLastItem').and.callThrough();
 
             CardFieldsService = _CardFieldsService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             spyOn(BacklogItemCollectionService, 'refreshBacklogItem');
+            spyOn(BacklogItemCollectionService, 'addOrReorderBacklogItemsInCollection');
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             spyOn(NewTuleapArtifactModalService, 'showCreation');
@@ -57,6 +60,8 @@ describe("BacklogItemController -", function() {
             dragularService = _dragularService_;
 
             BacklogItemSelectedService = _BacklogItemSelectedService_;
+            spyOn(BacklogItemSelectedService, 'areThereMultipleSelectedBaklogItems');
+            spyOn(BacklogItemSelectedService, 'getCompactedSelectedBacklogItem');
 
             BacklogItemController = $controller('BacklogItemController', {
                 $scope                       : $scope,
@@ -453,7 +458,6 @@ describe("BacklogItemController -", function() {
 
                 it("and given I can drop into the target element, when I cancel the drop of a child (e.g. a Task) over an item (e.g. a User Story), then the dropped element will be removed from the source element, the child will be removed from the source backlog item's model and prepended to the target backlog item's model, the target backlog item will be marked as having children, the child will be moved using DroppedService and both the source and target items will be refreshed", function() {
                     spyOn(BacklogItemCollectionService, 'removeBacklogItemsFromCollection');
-                    spyOn(BacklogItemCollectionService, 'addOrReorderBacklogItemsInCollection');
 
                     $target_list_element.data('accept', 'trackerId70|trackerId44');
 
@@ -594,7 +598,6 @@ describe("BacklogItemController -", function() {
 
             it("when I move a child (e.g. a Task) from an item (e.g. a User Story) to another, then the child will be moved using DroppedService and both the source and target items will be refreshed", function() {
                 spyOn(BacklogItemCollectionService, 'removeBacklogItemsFromCollection');
-                spyOn(BacklogItemCollectionService, 'addOrReorderBacklogItemsInCollection');
 
                 DroppedService.moveFromChildrenToChildren.and.returnValue(move_request.promise);
                 var target_backlog_item_id = 64;
@@ -732,6 +735,151 @@ describe("BacklogItemController -", function() {
                     expect(result).toBeFalsy();
                 });
             });
+        });
+    });
+
+    describe("reorderBacklogItemChildren() - ", function() {
+        it("reorder backlog item's children", function() {
+            var dropped_request = $q.defer(),
+                backlog_item_id = 8,
+                backlog_items   = [{id: 1}, {id: 2}],
+                compared_to     = {item_id: 3, direction: "before"};
+
+            BacklogItemController.backlog_item = {
+                children: {
+                    data: [
+                        {id: 3},
+                        backlog_items[0],
+                        backlog_items[1]
+                    ]
+                }
+            };
+
+            DroppedService.reorderBacklogItemChildren.and.returnValue(dropped_request.promise);
+
+            BacklogItemController.reorderBacklogItemChildren(backlog_item_id, backlog_items, compared_to);
+            dropped_request.resolve();
+            $scope.$apply();
+
+            expect(BacklogItemCollectionService.addOrReorderBacklogItemsInCollection).toHaveBeenCalledWith(BacklogItemController.backlog_item.children.data, backlog_items, compared_to);
+            expect(DroppedService.reorderBacklogItemChildren).toHaveBeenCalledWith([1, 2], compared_to, backlog_item_id);
+        });
+    });
+
+    describe("moveToTop() -", function() {
+        beforeEach(function() {
+            spyOn(BacklogItemController, 'reorderBacklogItemChildren').and.returnValue($q.defer().promise);
+        });
+
+        it("move one item to the top of the backlog item children list", function() {
+            var moved_backlog_item = { id: 69 };
+
+            BacklogItemController.backlog_item = {
+                id: 1234,
+                children: {
+                    data: [
+                        { id: 50 },
+                        { id: 61 },
+                        moved_backlog_item,
+                        { id: 88 },
+                    ]
+                }
+            };
+
+            BacklogItemController.moveToTop(moved_backlog_item);
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
+            expect(BacklogItemController.reorderBacklogItemChildren).toHaveBeenCalledWith(1234, [moved_backlog_item], { direction: "before", item_id: 50});
+        });
+
+        it("move multiple items to the top of the backlog item children list", function() {
+            var moved_backlog_item     = {id: 50};
+            var selected_backlog_items = [{ id: 50 }, { id: 69 }];
+
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(selected_backlog_items);
+
+            BacklogItemController.backlog_item = {
+                id: 1234,
+                children: {
+                    data: [
+                        selected_backlog_items[0],
+                        { id: 61 },
+                        selected_backlog_items[1],
+                        { id: 88 },
+                    ]
+                }
+            };
+
+            BacklogItemController.moveToTop(moved_backlog_item);
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
+            expect(BacklogItemController.reorderBacklogItemChildren).toHaveBeenCalledWith(1234, selected_backlog_items, { direction: "before", item_id: 61});
+        });
+    });
+
+    describe("moveToBottom() -", function() {
+        var children_promise_request;
+        beforeEach(function() {
+            children_promise_request = $q.defer();
+            BacklogItemController.children_promise = children_promise_request.promise;
+
+            spyOn(BacklogItemController, 'reorderBacklogItemChildren').and.returnValue($q.defer().promise);
+        });
+
+        it("move one item to the bottom of the fully loaded backlog item children list", function() {
+            var moved_backlog_item = { id: 69 };
+
+            BacklogItemController.backlog_item = {
+                id: 1234,
+                children: {
+                    data: [
+                        { id: 50 },
+                        { id: 61 },
+                        moved_backlog_item,
+                        { id: 88 },
+                    ]
+                }
+            };
+
+            BacklogItemController.moveToBottom(moved_backlog_item);
+            children_promise_request.resolve();
+            $scope.$apply();
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
+            expect(BacklogItemController.reorderBacklogItemChildren).toHaveBeenCalledWith(1234, [moved_backlog_item], { direction: "after", item_id: 88});
+        });
+
+        it("move multiple items to the bottom of the not fully loaded backlog item children list", function() {
+            var moved_backlog_item     = {id: 50};
+            var selected_backlog_items = [{ id: 50 }, { id: 69 }];
+
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(selected_backlog_items);
+
+            BacklogItemController.backlog_item = {
+                id: 1234,
+                children: {
+                    data: [
+                        { id: 50 },
+                        { id: 61 },
+                        moved_backlog_item,
+                        { id: 88 },
+                    ]
+                }
+            };
+
+            BacklogItemController.moveToBottom(moved_backlog_item);
+
+            children_promise_request.resolve();
+            $scope.$apply();
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
+            expect(BacklogItemController.reorderBacklogItemChildren).toHaveBeenCalledWith(1234, selected_backlog_items, { direction: "after", item_id: 88});
         });
     });
 });

@@ -4,6 +4,7 @@ angular
 
 BacklogItemController.$inject = [
     '$scope',
+    '$q',
     '$timeout',
     '$document',
     '$element',
@@ -18,6 +19,7 @@ BacklogItemController.$inject = [
 
 function BacklogItemController(
     $scope,
+    $q,
     $timeout,
     $document,
     $element,
@@ -35,6 +37,7 @@ function BacklogItemController(
         backlog_item                               : $scope.backlog_item, //herited from parent scope
         escaping                                   : false,
         dragular_instance_for_backlog_item_children: undefined,
+        children_promise                           : $q.when(),
         canBeAddedToBacklogItemChildren            : canBeAddedToBacklogItemChildren,
         showAddChildModal                          : showAddChildModal,
         toggleChildrenDisplayed                    : toggleChildrenDisplayed,
@@ -43,6 +46,7 @@ function BacklogItemController(
         dragularOptionsForBacklogItemChildren      : dragularOptionsForBacklogItemChildren,
         moveToTop                                  : moveToTop,
         moveToBottom                               : moveToBottom,
+        reorderBacklogItemChildren                 : reorderBacklogItemChildren,
         cardFieldIsCross                           : CardFieldsService.cardFieldIsCross,
         cardFieldIsDate                            : CardFieldsService.cardFieldIsDate,
         cardFieldIsFile                            : CardFieldsService.cardFieldIsFile,
@@ -78,7 +82,7 @@ function BacklogItemController(
         if (! self.backlog_item.children.loaded) {
             self.backlog_item.loading = true;
             emptyArray(self.backlog_item.children.data);
-            fetchBacklogItemChildren(self.backlog_item, self.BACKLOG_ITEM_CHILDREN_PAGINATION.limit, self.BACKLOG_ITEM_CHILDREN_PAGINATION.offset);
+            self.children_promise = fetchBacklogItemChildren(self.backlog_item, self.BACKLOG_ITEM_CHILDREN_PAGINATION.limit, self.BACKLOG_ITEM_CHILDREN_PAGINATION.offset);
         }
 
         self.backlog_item.children.collapsed = ! self.backlog_item.children.collapsed;
@@ -96,10 +100,11 @@ function BacklogItemController(
             });
 
             if ((offset + limit) < data.total) {
-                fetchBacklogItemChildren(backlog_item, limit, offset + limit);
+                return fetchBacklogItemChildren(backlog_item, limit, offset + limit);
             } else {
                 backlog_item.loading         = false;
                 backlog_item.children.loaded = true;
+                return;
             }
         });
     }
@@ -155,11 +160,38 @@ function BacklogItemController(
     }
 
     function moveToTop(backlog_item) {
-        // To be implemented in the next commit
+        var moved_items = [backlog_item],
+            compared_to;
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
+            moved_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
+        }
+
+        compared_to = DroppedService.defineComparedToBeFirstItem(self.backlog_item.children.data, moved_items);
+
+        self.reorderBacklogItemChildren(self.backlog_item.id, moved_items, compared_to);
     }
 
     function moveToBottom(backlog_item) {
-        // To be implemented in the next commit
+        var moved_items = [backlog_item],
+            compared_to;
+
+        if (backlog_item.moving_to) {
+            return;
+        }
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
+            moved_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
+        }
+
+        backlog_item.moving_to = true;
+
+        self.children_promise.then(function() {
+            compared_to            = DroppedService.defineComparedToBeLastItem(self.backlog_item.children.data, moved_items);
+            backlog_item.moving_to = false;
+
+            self.reorderBacklogItemChildren(self.backlog_item.id, moved_items, compared_to);
+        });
     }
 
     function initDragularForBacklogItemChildren() {
@@ -324,37 +356,45 @@ function BacklogItemController(
         BacklogItemSelectedService.deselectAllBacklogItems();
 
         function saveChangesInBackend() {
-            var dropped_promise;
-
             switch (true) {
                 case droppedToSameParentItem(source_list_element, target_list_element):
                     var current_backlog_item_id = getBacklogItemId(target_list_element);
 
-                    BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(self.backlog_item.children.data, dropped_items, compared_to);
-
-                    dropped_promise = DroppedService.reorderBacklogItemChildren(dropped_item_ids, compared_to, current_backlog_item_id);
+                    self.reorderBacklogItemChildren(current_backlog_item_id, dropped_items, compared_to);
                     break;
 
                 case droppedToAnotherParentItem(source_list_element, target_list_element):
                     var source_backlog_item_id = getBacklogItemId(source_list_element),
                         target_backlog_item_id = getBacklogItemId(target_list_element);
 
-                    dropped_promise = dropChildToAnotherParentItem(
+                    dropChildToAnotherParentItem(
                         source_backlog_item_id,
                         target_backlog_item_id,
                         dropped_item_ids,
                         dropped_items,
                         compared_to
-                    );
+                    ).then(function() {
+                        BacklogItemSelectedService.deselectAllBacklogItems();
+                    }).catch(function() {
+                        BacklogItemSelectedService.reselectBacklogItems();
+                    });
                     break;
             }
-
-            dropped_promise.then(function() {
-                BacklogItemSelectedService.deselectAllBacklogItems();
-            }).catch(function() {
-                BacklogItemSelectedService.reselectBacklogItems();
-            });
         }
+    }
+
+    function reorderBacklogItemChildren(backlog_item_id, children, compared_to) {
+        BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(self.backlog_item.children.data, children, compared_to);
+
+        return DroppedService.reorderBacklogItemChildren(
+            _.pluck(children, 'id'),
+            compared_to,
+            backlog_item_id
+        ).then(function() {
+            BacklogItemSelectedService.deselectAllBacklogItems();
+        }).catch(function() {
+            BacklogItemSelectedService.reselectBacklogItems();
+        });
     }
 
     function getListElement(element) {
