@@ -1,3 +1,6 @@
+Version 4.116 - Tuleap 8.11
+    * request #8805: Strength migration to Gerrit
+
 Version 4.115 - Tuleap 8.11
     * Fix request #8810 Widget Git
 
