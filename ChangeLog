@@ -23,7 +23,7 @@ Version 8.11 (Not released yet)
 	* request #8778: Remove ambiguous dot at the end of password
 
 	== Plugins ==
-	* git: 4.114
+	* git: 4.115
 	* tracker: 5.783
 	* mediawiki: 0.102
 	* webdav: 1.9.14
