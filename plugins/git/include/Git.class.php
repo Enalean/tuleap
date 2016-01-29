@@ -744,7 +744,7 @@ class Git extends PluginController {
                         if ($project_exists) {
                             $this->addError($this->getText('gerrit_project_exists'));
                         } else {
-                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id));
+                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id, $user));
                         }
                     } catch (Git_Driver_Gerrit_Exception $e) {
                         $this->addError($this->getText('gerrit_server_down'));

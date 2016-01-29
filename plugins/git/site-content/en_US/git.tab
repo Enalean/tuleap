@@ -80,6 +80,7 @@ plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
 plugin_git	gerrit_past_project_warn	This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server
 plugin_git	gerrit_past_project_delete	Delete gerrit project
 plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already been migrated to the Gerrit project: <a href="$3">$2</a>.
+plugin_git	gerrit_server_migration_error	The migration failed $1, the gerrit repository is probably <strong>corrupted or partially migrated</strong>, do not use it and contact your site administration
 plugin_git	permissions_on_remote_server	You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to $1 <strong>ARE NOT propagated to Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.
 plugin_git	gerrit_migrate_access_right	Migrate to Gerrit the access rights defined in the Git plugin.
@@ -256,8 +257,12 @@ plugin_git	logsdaily_field	Repository name
 plugin_git	logsdaily_title	Git pushes
 
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
+plugin_git	delegated_to_gerrit_error	An error occured while migrating this repository on gerrit $1. <strong>Do not use gerrit repository</strong>, check <a href="$2">gerrit settings</a> and contact site administration.
+plugin_git	delegated_to_gerrit_queue	This repository is in queue for migration to gerrit. Please check back here in a few minutes.
 plugin_git	waiting_for_repo_creation	The repository is in queue for creation. Please check back here in a few minutes
 plugin_git	waiting_for_repo_creation_default_mirrors	The repository will be automatically mirrored on: $1.
+plugin_git	delegated_to_gerrit_error_mail_subject	Migration of $1 to gerrit error
+plugin_git	delegated_to_gerrit_error_mail_body	An error occured while migrating repository $1 on gerrit. Please check <a href="$2">gerrit settings</a> and contact site administration.
 
 plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.
 plugin_git	push_ssh_keys_button_value	Manually push SSH keys

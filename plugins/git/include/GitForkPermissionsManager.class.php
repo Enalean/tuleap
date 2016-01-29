@@ -136,7 +136,7 @@ class GitForkPermissionsManager {
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
-            $this->repository->isMigratedToGerrit() ? true : false,
+            $this->isRWPlusBlocked(),
             'repo_access['.Git::PERM_READ.']',
             'repo_access['.Git::PERM_WRITE.']',
             'repo_access['.Git::PERM_WPLUS.']',
@@ -146,6 +146,13 @@ class GitForkPermissionsManager {
         );
 
         return $renderer->renderToString('access-control', $presenter);
+    }
+
+    private function isRWPlusBlocked() {
+        $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
+            new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+        );
+        return ! $project_creator_status->canModifyPermissionsTuleapSide($this->repository);
     }
 
     private function getOptions(Project $project, $permission) {

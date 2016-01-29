@@ -71,6 +71,7 @@ class GitRepository implements DVCSRepository {
     private $remote_server_disconnect_date;
     private $remote_project_deletion_date;
     private $remote_project_is_deleted;
+    private $remote_server_migration_status;
 
     private $use_online_edit;
 
@@ -865,6 +866,10 @@ class GitRepository implements DVCSRepository {
             $this->remote_project_deletion_date == false);
     }
 
+    public function getMigrationStatus() {
+        return $this->remote_server_migration_status;
+    }
+
     public function wasPreviouslyMigratedButNotDeleted() {
         return (
             $this->remote_server_id &&
@@ -879,6 +884,10 @@ class GitRepository implements DVCSRepository {
 
     public function setRemoteProjectDeletionDate($date) {
         $this->remote_project_deletion_date = $date;
+    }
+
+    public function setRemoteServerMigrationStatus($status) {
+        $this->remote_server_migration_status = $status;
     }
 
     /**

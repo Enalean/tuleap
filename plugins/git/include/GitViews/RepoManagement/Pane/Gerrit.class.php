@@ -211,19 +211,11 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             return $this->getDisconnectFromGerritConfirmationScreen();
         }
 
-        $driver         = $this->getGerritDriverForRepository($this->repository);
-        $gerrit_project = $driver->getGerritProjectName($this->repository);
-        $gerrit_server  = $this->getGerritServerForRepository($this->repository);
-        $link           = $gerrit_server->getProjectAdminUrl($gerrit_project);
-
         $html  = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
-        $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array($this->repository->getName(), $gerrit_project, $link));
-        $html .= '</p>';
-        $html .= '<div class="git_repomanagement_gerrit_more_description">';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description', array($gerrit_project, $gerrit_server->getHost()));
-        $html .= '</div>';
+        $html .= '<fieldset class="gerrit_disconnect">';
+        $html .= '<legend class="gerrit_disconnect">'.$GLOBALS['Language']->getText('plugin_git', 'gerrit_title').'</legend>';
+        $html .= $this->getMessageAccordingToMigrationStatus();
+        $html .= '</fieldset>';
 
         $html .= '<form method="POST" action="'. $_SERVER['REQUEST_URI'] .'">';
         $html .= '<fieldset class="gerrit_disconnect">';
@@ -235,6 +227,45 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '</fieldset>';
         $html .= '</form>';
         return $html;
+    }
+
+    private function getMessageAccordingToMigrationStatus() {
+        $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
+            new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+        );
+        switch ($project_creator_status->getStatus($this->repository)) {
+            case Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE:
+                return '';
+
+            case null:
+            case Git_Driver_Gerrit_ProjectCreatorStatus::DONE:
+                return $this->getMigratedToGerritInfo();
+
+            case Git_Driver_Gerrit_ProjectCreatorStatus::ERROR:
+                return $this->getMigratedToGerritError($project_creator_status);
+        }
+    }
+
+    private function getMigratedToGerritInfo() {
+        $driver         = $this->getGerritDriverForRepository($this->repository);
+        $gerrit_project = $driver->getGerritProjectName($this->repository);
+        $gerrit_server  = $this->getGerritServerForRepository($this->repository);
+        $link           = $gerrit_server->getProjectAdminUrl($gerrit_project);
+
+        $html  = '';
+        $html .= '<p>';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array($this->repository->getName(), $gerrit_project, $link));
+        $html .= '</p>';
+        $html .= '<div class="git_repomanagement_gerrit_more_description">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description', array($gerrit_project, $gerrit_server->getHost()));
+        $html .= '</div>';
+        return $html;
+    }
+
+    private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status) {
+        $date = DateHelper::timeAgoInWords($status->getEventDate($this->repository), false, true);
+        return '<div class="alert alert-error">'.$GLOBALS['Language']->getText('plugin_git', 'gerrit_server_migration_error', array($date)).'</div>'.
+               '<pre class="pre-scrollable">'.$status->getLog($this->repository).'</pre>';
     }
 
     private function getDisconnectFromGerritConfirmationScreen() {
@@ -267,18 +298,17 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
         $driver = $this->driver_factory->getDriver($gerrit_server);
         if ($driver->isDeletePluginEnabled($gerrit_server)) {
-            $html .= '<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_DELETE_GERRIT_PROJECT.'"/>'
+            $html .= '<label class="radio"><input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_DELETE_GERRIT_PROJECT.'"/>'
                 . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_delete')
-                . '<br />';
+                . '</label>';
         }
 
-        $html .='<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_READONLY_GERRIT_PROJECT.'"/>'
+        $html .='<label class="radio"><input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_READONLY_GERRIT_PROJECT.'"/>'
             . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_readonly')
-            . '<br />'
-            . '<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '"/>'
+            . '</label>'
+            . '<label class="radio"><input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '"/>'
             . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_leave')
-            . '<br />'
-            . '<br />';
+            . '</label>';
 
         return $html;
     }

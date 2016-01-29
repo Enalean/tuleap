@@ -128,15 +128,16 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $repository           = stub('GitRepository')->getId()->returns(54);
         $remote_server_id     = 3;
         $migrate_access_right = true;
+        $requester            = stub('PFUser')->getId()->returns(1001);
 
         expect($this->system_event_manager)->createEvent(
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
-            54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . true,
+            54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . true . SystemEvent::PARAMETER_SEPARATOR . 1001,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         )->once();
 
-        $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right);
+        $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right, $requester);
     }
 
     public function itCreatesGerritReplicationKeyUpdateEvent() {
@@ -152,5 +153,3 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueGerritReplicationKeyUpdate($server);
     }
 }
-
-?>

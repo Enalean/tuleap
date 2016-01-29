@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `remote_server_disconnect_date` INT(11) NULL,
   `remote_project_deleted` TINYINT DEFAULT '0',
   `remote_project_deleted_date` INT(11) NULL,
+  `remote_server_migration_status` ENUM("QUEUE", "DONE", "ERROR") NULL,
   PRIMARY KEY  (`repository_id`),
   KEY `project_id` (`project_id`)
 );

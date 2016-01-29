@@ -29,6 +29,7 @@ class ProjectSerializerTest extends TuleapTestCase {
     private $logger;
     private $_fixDir;
     private $permissions_manager;
+    private $gerrit_project_status;
 
     public function setUp() {
         parent::setUp();
@@ -49,8 +50,11 @@ class ProjectSerializerTest extends TuleapTestCase {
         stub($mirror_data_mapper)->fetchAllRepositoryMirrors()->returns(array());
         stub($mirror_data_mapper)->fetchAll()->returns(array());
 
+        $this->gerrit_project_status = mock('Git_Driver_Gerrit_ProjectCreatorStatus');
+
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $mirror_data_mapper,
+            $this->gerrit_project_status,
             'whatever'
         );
 
@@ -260,6 +264,7 @@ class ProjectSerializerTest extends TuleapTestCase {
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 5, 'PLUGIN_GIT_WRITE')->returns(array('3'));
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 5, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
 
+        stub($this->gerrit_project_status)->getStatus()->returns(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);

@@ -271,6 +271,10 @@ class GitPlugin extends Plugin {
                     $this->getLogger(),
                     $this->getProjectCreator(),
                     $this->getGitRepositoryUrlManager(),
+                    UserManager::instance(),
+                    new MailBuilder(
+                        TemplateRendererFactory::build()
+                    ),
                 );
                 break;
             case SystemEvent_GIT_REPO_FORK::NAME:

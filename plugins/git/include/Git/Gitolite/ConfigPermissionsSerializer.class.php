@@ -20,6 +20,7 @@
 
 class Git_Gitolite_ConfigPermissionsSerializer {
 
+
     const TEMPLATES_PATH = 'gitolite';
 
     /**
@@ -32,14 +33,20 @@ class Git_Gitolite_ConfigPermissionsSerializer {
      */
     private $data_mapper;
 
+    /**
+     * @var Git_Driver_Gerrit_ProjectCreatorStatus
+     */
+    private $gerrit_status;
+
     private static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
         Git::PERM_WPLUS => ' RW+'
     );
 
-    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper, $etc_templates_path) {
-        $this->data_mapper       = $data_mapper;
+    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper, Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status, $etc_templates_path) {
+        $this->data_mapper   = $data_mapper;
+        $this->gerrit_status = $gerrit_status;
         $template_dirs = array();
         if (is_dir($etc_templates_path)) {
             $template_dirs[] = $etc_templates_path . '/' . self::TEMPLATES_PATH;
@@ -92,7 +99,7 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         $repo_config = '';
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
         $repo_config .= $this->formatPermission(Git::PERM_READ, $this->getMirrorUserNames($repository));
-        if ($repository->isMigratedToGerrit()) {
+        if ($this->isMigrationToGerritCompletedWithSuccess($repository)) {
             $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
             $key->setGerritHostId($repository->getRemoteServerId());
             $repo_config .= $this->formatPermission(Git::PERM_WPLUS, array($key->getUserName()));
@@ -101,6 +108,11 @@ class Git_Gitolite_ConfigPermissionsSerializer {
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
         }
         return $repo_config;
+    }
+
+    private function isMigrationToGerritCompletedWithSuccess(GitRepository $repository) {
+        return $repository->isMigratedToGerrit() &&
+               $this->gerrit_status->getStatus($repository) === Git_Driver_Gerrit_ProjectCreatorStatus::DONE;
     }
 
     private function formatPermission($permission_type, array $granted) {

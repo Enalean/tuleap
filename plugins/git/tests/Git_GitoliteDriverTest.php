@@ -54,6 +54,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
         $this->another_gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_data_mapper,
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
             'whatever'
         );
 
