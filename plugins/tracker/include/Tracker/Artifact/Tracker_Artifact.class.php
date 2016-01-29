@@ -1197,17 +1197,37 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->getPriorityManager()->getArtifactPriorityHistory($this);
     }
 
-    public function cmpFollowups($a, $b) {
-        return ($a->getFollowUpDate() < $b->getFollowUpDate()) ? -1 : 1;
+    public function getFollowupsContent() {
+        return $this->getSortedBySubmittedOn(
+            array_merge(
+                $this->getChangesets(),
+                $this->getPriorityHistory()
+            )
+        );
     }
 
-    public function getFollowupsContent() {
-        $followups_content = $this->getChangesets();
-        $followups_content = array_merge($followups_content, $this->getPriorityHistory());
+    private function getSortedBySubmittedOn(array $followups_content) {
+        $changeset_array = array();
+        foreach ($followups_content as $changeset) {
+            $timestamp = $changeset->getFollowUpDate();
+            if (! isset($changeset_array[$timestamp])) {
+                $changeset_array[$timestamp] = array($changeset);
+            } else {
+                $changeset_array[$timestamp][] = $changeset;
+            }
+        }
+        ksort($changeset_array, SORT_NUMERIC);
+        return $this->flattenChangesetArray($changeset_array);
+    }
 
-        usort($followups_content, array($this, "cmpFollowups"));
-
-        return $followups_content;
+    private function flattenChangesetArray(array $changesets_per_timestamp) {
+        $changesets = array();
+        foreach ($changesets_per_timestamp as $changeset_per_timestamp) {
+            foreach ($changeset_per_timestamp as $changeset) {
+                $changesets[] = $changeset;
+            }
+        }
+        return $changesets;
     }
 
     /**

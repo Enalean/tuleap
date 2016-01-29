@@ -147,16 +147,16 @@ class Tracker_Artifact_XMLImport {
         SimpleXMLElement $xml_artifact,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
-        $this->logger->push('art #'.(string)$xml_artifact['id']);
+        $this->logger->info('art #'.(string)$xml_artifact['id'].' with '.count($xml_artifact->changeset).' changesets ');
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
             $first_changeset = array_shift($changesets);
             $artifact        = $this->importInitialChangeset($tracker, $first_changeset, $fields_data_builder);
             $this->logger->info("--> new artifact {$artifact->getId()}");
+            $this->logger->debug("changeset to create: ".count($changesets));
             if (count($changesets)) {
                 $this->importRemainingChangesets($artifact, $changesets, $fields_data_builder);
             }
-            $this->logger->pop();
             return $artifact;
         }
     }
@@ -164,10 +164,25 @@ class Tracker_Artifact_XMLImport {
     private function getSortedBySubmittedOn(SimpleXMLElement $changesets) {
         $changeset_array = array();
         foreach ($changesets as $changeset) {
-            $changeset_array[$this->getSubmittedOn($changeset)] = $changeset;
+            $timestamp = $this->getSubmittedOn($changeset);
+            if (! isset($changeset_array[$timestamp])) {
+                $changeset_array[$timestamp] = array($changeset);
+            } else {
+                $changeset_array[$timestamp][] = $changeset;
+            }
         }
         ksort($changeset_array, SORT_NUMERIC);
-        return $changeset_array;
+        return $this->flattenChangesetArray($changeset_array);
+    }
+
+    private function flattenChangesetArray(array $changesets_per_timestamp) {
+        $changesets = array();
+        foreach ($changesets_per_timestamp as $changeset_per_timestamp) {
+            foreach ($changeset_per_timestamp as $changeset) {
+                $changesets[] = $changeset;
+            }
+        }
+        return $changesets;
     }
 
     private function importInitialChangeset(
@@ -211,11 +226,11 @@ class Tracker_Artifact_XMLImport {
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
         $count = 0;
-        $this->logger->push('art #'.$artifact->getId());
+        $this->logger->info('art #'.$artifact->getId());
         foreach($xml_changesets as $xml_changeset) {
             try {
                 $count++;
-                $this->logger->push("changeset $count");
+                $this->logger->debug("changeset $count");
                 $initial_comment_body   = '';
                 $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
                 if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
@@ -237,16 +252,12 @@ class Tracker_Artifact_XMLImport {
                 } else {
                     $this->logger->warn("Impossible to create changeset $count: ".$GLOBALS['Response']->getAndClearRawFeedback());
                 }
-                $this->logger->pop();
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warn("No Change for changeset $count");
-                $this->logger->pop();
             } catch (Exception $exception) {
                 $this->logger->warn("Unexpected error at changeset $count: ".$exception->getMessage());
-                $this->logger->pop();
             }
         }
-        $this->logger->pop();
     }
 
     private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset) {
@@ -268,6 +279,10 @@ class Tracker_Artifact_XMLImport {
     }
 
     private function getSubmittedOn(SimpleXMLElement $xml_changeset) {
-        return strtotime((string)$xml_changeset->submitted_on);
+        $time = strtotime((string)$xml_changeset->submitted_on);
+        if ($time !== false) {
+            return $time;
+        }
+        throw new Tracker_Artifact_Exception_XMLImportException("Invalid date format not ISO8601: ".(string)$xml_changeset->submitted_on);
     }
 }
