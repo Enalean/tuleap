@@ -68,7 +68,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string the text
      */
     public function getText() {
-        return $this->text;
+        return (string) $this->text;
     }
 
     public function getFormat() {

@@ -131,7 +131,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $value = $value ? $value->getValue() : '';
 
-        if (! $value) {
+        if ($value === '') {
             return $this->getNoValueLabel();
         }
 
