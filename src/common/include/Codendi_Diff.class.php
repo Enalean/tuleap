@@ -762,28 +762,38 @@ class Codendi_DiffFormatter
                 $yi += sizeof($edit->fin);
         }
 
-        if (is_array($block))
-            $this->_block($x0, $xi - $x0,
-                          $y0, $yi - $y0,
-                          $block);
+        if (is_array($block)) {
+            $this->_block(
+                $x0, $xi - $x0,
+                $y0, $yi - $y0,
+                $block
+            );
+        }
 
         return $this->_end_diff();
     }
 
     function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
         $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
+
         foreach ($edits as $edit) {
-            if ($edit->type == 'copy')
+            if ($edit->type == 'copy') {
                 $this->_context($edit->orig);
-            elseif ($edit->type == 'add')
+            }
+            elseif ($edit->type == 'add') {
                 $this->_added($edit->fin);
-            elseif ($edit->type == 'delete')
+            }
+            elseif ($edit->type == 'delete') {
                 $this->_deleted($edit->orig);
-            elseif ($edit->type == 'change')
+            }
+            elseif ($edit->type == 'change') {
                 $this->_changed($edit->orig, $edit->fin);
-            else
+            }
+            else {
                 trigger_error("Unknown edit type", E_USER_ERROR);
+            }
         }
+
         $this->_end_block();
     }
 
@@ -814,8 +824,9 @@ class Codendi_DiffFormatter
     }
 
     function _lines($lines, $prefix = ' ') {
-        foreach ($lines as $line)
+        foreach ($lines as $line) {
             echo "$prefix $line\n";
+        }
     }
 
     function _context($lines) {
@@ -1076,8 +1087,9 @@ class Codendi_HWLDF_WordAccumulator {
 
         foreach ($words as $word) {
             // new-line should only come as first char of word.
-            if (!$word)
+            if ($word === '') {
                 continue;
+            }
             if ($word[0] == "\n") {
                 $this->_group .= " ";
                 $this->_flushLine($tag);
@@ -1093,5 +1105,3 @@ class Codendi_HWLDF_WordAccumulator {
         return $this->_lines;
     }
 }
-
-?>
