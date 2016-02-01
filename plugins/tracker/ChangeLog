@@ -1,3 +1,9 @@
+Version 5.787 - Tuleap 8.11
+    * request #8790 string field equal to 0 is interpreted as 'empty'
+
+Version 5.786 - Tuleap 
+    * request #8790 string field equal to 0 is interpreted as 'empty'
+
 Version 5.785 - Tuleap 8.11
     * Paginate artifact temporary files
 
