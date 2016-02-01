@@ -50,12 +50,16 @@ class Repository {
         return $this->project;
     }
 
-    public function getPath() {
+    public function getPublicPath() {
         return '/svnroot/'. $this->getFullName();
     }
 
     public function getFullName() {
-        return $this->getProject()->getUnixNameMixedCase().'/'.$this->getName();
+      return $this->getProject()->getUnixNameMixedCase().'/'.$this->getName();
+    }
+
+    public function getSystemPath() {
+        return ForgeConfig::get('sys_data_dir').'/svn_plugin/'. $this->getProject()->getId().'/'.$this->getName();
     }
 
     public function getSvnUrl() {
@@ -67,7 +71,7 @@ class Repository {
         }
         // Domain name must be lowercase (issue with some SVN clients)
         $svn_url = strtolower($svn_url);
-        $svn_url .= $this->getPath();
+        $svn_url .= $this->getPublicPath();
 
         return $svn_url;
     }

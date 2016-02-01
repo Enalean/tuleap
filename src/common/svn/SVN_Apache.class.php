@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,13 +48,13 @@ abstract class SVN_Apache {
      * 
      * @return String 
      */
-    public function getConf($svn_dir) {
+    public function getConf($public_path, $system_path) {
         $conf = '';
-        $conf .= "<Location /svnroot/".$svn_dir.">\n";
+        $conf .= "<Location $public_path>\n";
         $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath ". ForgeConfig::get('svn_prefix') ."/".$svn_dir."\n";
+        $conf .= "    SVNPath $system_path\n";
         $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getRepositoryAuthorization($svn_dir);
+        $conf .= $this->getRepositoryAuthorization($system_path);
         $conf .= $this->getProjectAuthentication($this->project);
         $conf .= "</Location>\n\n";
 
@@ -87,7 +87,7 @@ abstract class SVN_Apache {
     
 
     protected function getRepositoryAuthorization($svn_dir) {
-        $conf = "    AuthzSVNAccessFile ". ForgeConfig::get('svn_prefix') ."/".$svn_dir."/.SVNAccessFile\n";
+        $conf = "    AuthzSVNAccessFile ".$svn_dir."/.SVNAccessFile\n";
         return $conf;
     }
     

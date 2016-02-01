@@ -37,27 +37,33 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
         unset($GLOBALS['sys_dbauth_user']);
         unset($GLOBALS['sys_dbauth_passwd']);
     }
-    
+
+    private function setConfForGuineaPigProject() {
+        return array('unix_group_name' => 'gpig',
+                     'public_path'     => '/svnroot/gpig',
+                     'system_path'     => '/svnroot/gpig',
+                     'group_name'      => 'Guinea Pig',
+                     'group_id'        => 101);
+    }
+
     /**
      * @return SVN_Apache_ModPerl
      */
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
-        $project_db_row = array('unix_group_name' => 'gpig',
-                                'group_name'      => 'Guinea Pig',
-                                'group_id'        => 101);
-        return new SVN_Apache_ModPerl($project_db_row);
+        return new SVN_Apache_ModPerl($this->setConfForGuineaPigProject());
     }
-    
+
     function testGetSVNApacheConfHeadersShouldInsertModPerl() {
         $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        
+
         $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf->getHeaders());
     }
     
     function testGetApacheAuthShouldContainsDefaultValues() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getConf('Guinea Pig');
-        
+        $project_db_row = $this->setConfForGuineaPigProject();
+        $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
+
         $this->assertPattern('/Require valid-user/', $conf);
         $this->assertPattern('/AuthType Basic/', $conf);
         $this->assertPattern('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);
@@ -65,7 +71,8 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
     
     function testGetApacheAuthShouldSetupPerlAccess() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getConf('Guinea Pig');
+        $project_db_row = $this->setConfForGuineaPigProject();
+        $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
         
         $this->assertPattern('/PerlAccessHandler/', $conf);
         $this->assertPattern('/TuleapDSN/', $conf);
@@ -73,7 +80,8 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
     
     function testGetApacheAuthShouldNotReferenceAuthMysql() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getConf('Guinea Pig');
+        $project_db_row = $this->setConfForGuineaPigProject();
+        $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
         
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
     }

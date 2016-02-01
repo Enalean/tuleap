@@ -85,9 +85,9 @@ class ExplorerController {
             try {
                 $this->repository_manager->create($repository_to_create);
 
-                $repo_event['path']       = $repository_to_create->getPath();
-                $repo_event['project_id'] = $request->getProject()->getId();
-                $repo_event['name']       = $request->getProject()->getUnixNameMixedCase()."/".$repository_to_create->getName();
+                $repo_event['system_path'] = $repository_to_create->getSystemPath();
+                $repo_event['project_id']  = $request->getProject()->getId();
+                $repo_event['name']        = $request->getProject()->getUnixNameMixedCase()."/".$repository_to_create->getName();
                 $this->system_event_manager->createEvent(
                     'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
                     implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),

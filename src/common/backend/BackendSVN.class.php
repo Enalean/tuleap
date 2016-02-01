@@ -95,6 +95,7 @@ class BackendSVN extends Backend {
         return false;
     }
 
+
     public function createRepositorySVN($project_id, $svn_dir) {
         if ($this->createRepository($project_id, $svn_dir)) {
             if ($this->createSVNAccessFile ($project_id, $svn_dir)) {
@@ -106,29 +107,31 @@ class BackendSVN extends Backend {
         return false;
     }
 
-    private function createRepository($group_id, $svn_dir) {
+    private function createRepository($group_id, $system_path) {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
-        if (!is_dir($svn_dir)) {
+
+
+        if (!is_dir($system_path)) {
             // Let's create a SVN repository for this group
-            if (!mkdir($svn_dir, 0775, true)) {
-                $this->log("Can't create project SVN dir: $svn_dir", Backend::LOG_ERROR);
+            if (!mkdir($system_path, 0775, true)) {
+                $this->log("Can't create project SVN dir: $system_path", Backend::LOG_ERROR);
                 return false;
             }
-            system($GLOBALS['svnadmin_cmd']." create $svn_dir --fs-type fsfs");
+            system($GLOBALS['svnadmin_cmd']." create ".escapeshellarg($system_path)." --fs-type fsfs");
 
             $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
-            $this->recurseChownChgrp($svn_dir, $this->getHTTPUser(), $unix_group_name);
-            system("chmod g+rw $svn_dir");
+            $this->recurseChownChgrp($system_path, $this->getHTTPUser(), $unix_group_name);
+            system("chmod g+rw ".escapeshellarg($system_path));
         }
 
         return true;
     }
 
-    private function createSVNAccessFile ($group_id, $svn_dir) {
-        if (!$this->updateSVNAccess($group_id, $svn_dir)) {
+    private function createSVNAccessFile ($group_id, $system_path) {
+        if (!$this->updateSVNAccess($group_id, $system_path)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             return false;
         }
@@ -157,10 +160,10 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    public function updateHooks(Project $project, $svn_dir) {
+    public function updateHooks(Project $project, $system_path) {
         $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
         if ($project->isSVNTracked()) {
-            $filename = "$svn_dir/hooks/post-commit";
+            $filename = "$system_path/hooks/post-commit";
             $update_hook=false;
             if (! is_file($filename)) {
                 // File header
@@ -194,7 +197,7 @@ class BackendSVN extends Backend {
             }
         } else {
             // Make sure that the Codendi blocks are removed
-            $filename = "$svn_dir/hooks/post-commit";
+            $filename = "$system_path/hooks/post-commit";
             $update_hook=false;
             if (is_file($filename)) {
                 $file_array=file($filename);
@@ -206,7 +209,7 @@ class BackendSVN extends Backend {
 
         // Put in place the Codendi svn pre-commit hook
         // if not present (if the file does not exist it is created)
-        $filename = "$svn_dir/hooks/pre-commit";
+        $filename = "$system_path/hooks/pre-commit";
         $update_hook = false;
         if (! is_file($filename)) {
             // File header
@@ -240,12 +243,12 @@ class BackendSVN extends Backend {
 
         if ($project->canChangeSVNLog()) {
             try {
-                $this->enableCommitMessageUpdate($svn_dir);
+                $this->enableCommitMessageUpdate($system_path);
             } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
                 throw $exception;
             }
         } else {
-            $this->disableCommitMessageUpdate($svn_dir);
+            $this->disableCommitMessageUpdate($system_path);
         }
 
         return true;
@@ -269,20 +272,20 @@ class BackendSVN extends Backend {
      *
      * @return boolean true on success or false on failure
      */
-    public function updateSVNAccess($group_id, $svn_dir, $ugroup_name = null, $ugroup_old_name = null) {
+    public function updateSVNAccess($group_id, $system_path, $ugroup_name = null, $ugroup_old_name = null) {
         $project = $this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
 
-        if (! is_dir($svn_dir)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: ".$svn_dir, Backend::LOG_ERROR);
+        if (! is_dir($system_path)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: ".$system_path, Backend::LOG_ERROR);
             return false;
         }
 
         $unix_group_name = $project->getUnixNameMixedCase();
 
-        $svnaccess_file = $svn_dir."/.SVNAccessFile";
+        $svnaccess_file = $system_path."/.SVNAccessFile";
         $svnaccess_file_old = $svnaccess_file.".old";
         $svnaccess_file_new = $svnaccess_file.".new";
         // if you change these block markers also change them in

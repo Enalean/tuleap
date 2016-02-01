@@ -42,6 +42,7 @@ class RepositoryManager {
         foreach ($this->dao->searchByProject($project) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
+
         return $repositories;
     }
 

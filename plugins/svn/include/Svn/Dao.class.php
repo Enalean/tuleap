@@ -24,6 +24,7 @@ use DataAccessObject;
 use \Tuleap\Svn\Repository\Repository;
 use Project;
 use SVN_Apache_SvnrootConf;
+use ForgeConfig;
 
 class Dao extends DataAccessObject {
     public function searchByProject(Project $project) {
@@ -58,9 +59,11 @@ class Dao extends DataAccessObject {
 
     public function getListRepositoriesSqlFragment() {
         $auth_mod = $this->da->quoteSmart(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
+        $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('sys_data_dir'));
 
         $sql = "SELECT groups.*, service.*,
-                CONCAT(unix_group_name, '/', name) AS repository_name,
+                CONCAT('/svnroot/', unix_group_name, '/', name) AS public_path,
+                CONCAT($sys_dir,'/svn_plugin/', groups.group_id, '/', name) AS system_path,
                 $auth_mod AS auth_mod
                 FROM groups, service, plugin_svn_repositories
                 WHERE groups.group_id = service.group_id
