@@ -24,7 +24,7 @@ Version 8.11 (Not released yet)
 
 	== Plugins ==
 	* git: 4.116
-	* tracker: 5.787
+	* tracker: 5.788
 	* mediawiki: 0.103
 	* webdav: 1.9.14
 	* agiledashboard: 1.344
@@ -35,7 +35,7 @@ Version 8.11 (Not released yet)
 	* tests: 5.34
 
 	== Themes ==
-	* FlamingParrot: 1.119
+	* FlamingParrot: 1.120
 
 Version 8.10 (Thursday, January 7th 2016)
 
