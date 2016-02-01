@@ -1,3 +1,10 @@
+Version 8.10-4 (Monday, February 1st 2016)
+	== Bug Fix ==
+	* request #8778: Remove ambiguous dot at the end of password
+	* request #8796: Tracker v3 to v5 migration: Special characters are modified
+	* request #8809: Compact and detailed buttons are hidden if the backlog is empty
+	* request #8810: Widget "Git Last Pushes" not imported from template
+
 Version 8.10-3 (Monday, January 25th 2016)
 	== Bug Fix ==
 	* request #8776: TV3 to TV5 files not migrated if submitted time +- 3s
