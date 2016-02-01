@@ -40,6 +40,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
+        $this->addHook('cssfile');
     }
 
     public function getPluginInfo() {
@@ -82,7 +83,8 @@ class SvnPlugin extends Plugin {
 
     private function getRouter() {
         return new SvnRouter(
-              new RepositoryManager(new Dao())
+              new RepositoryManager(new Dao(), ProjectManager::instance()),
+              ProjectManager::instance()
         );
     }
 
@@ -92,6 +94,12 @@ class SvnPlugin extends Plugin {
             $GLOBALS['Response']->redirect('/projects/'.$request->getProject()->getUnixNameMixedCase().'/');
         } else {
             $this->getRouter()->route($request);
+        }
+    }
+
+    public function cssFile($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="/viewvc-static/styles.css" />';
         }
     }
 

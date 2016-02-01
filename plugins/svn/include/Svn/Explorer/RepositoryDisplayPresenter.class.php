@@ -28,11 +28,13 @@ use HTTPRequest;
 class RepositoryDisplayPresenter {
     private $repository;
     public $repository_name;
+    public $viewvc_html;
 
-    public function __construct(Repository $repository, HTTPRequest $request) {
+    public function __construct(Repository $repository, HTTPRequest $request, $viewvc_html) {
         $this->repository   = $repository;
         $this->help_message = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->help_command = "svn checkout --username ".$request->getCurrentUser()->getName()." ".$this->repository->getSvnUrl();
+        $this->viewvc_html  = $viewvc_html;
     }
 
     public function repository_name() {

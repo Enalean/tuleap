@@ -50,8 +50,12 @@ class Repository {
         return $this->project;
     }
 
-     public function getPath() {
-        return '/svnroot/'. $this->getProject()->getUnixNameMixedCase().'/'.$this->getName();
+    public function getPath() {
+        return '/svnroot/'. $this->getFullName();
+    }
+
+    public function getFullName() {
+        return $this->getProject()->getUnixNameMixedCase().'/'.$this->getName();
     }
 
     public function getSvnUrl() {

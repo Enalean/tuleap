@@ -22,3 +22,4 @@ plugin_svn	illegal_char	The repository name contains illeguall characters
 plugin_svn	repository_spaces	There cannot be any spaces in the repository name
 plugin_svn	repository_not_found	Repository not found.
 plugin_svn	already_used	Repository name is already used in this project.
+plugin_svn	find_error	Repository not found
