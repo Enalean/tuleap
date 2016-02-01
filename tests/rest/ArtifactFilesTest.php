@@ -232,6 +232,8 @@ class ArtifactFilesTest extends RestBase {
         $this->assertEquals($file_id, $json[0]['id']);
         $this->assertEquals($this->first_file['name'], $json[0]['name']);
         $this->assertEquals($this->first_file['description'], $json[0]['description']);
+
+        $this->assertEquals(1, (string) $response->getHeader('X-PAGINATION-SIZE'));
     }
 
     /**
@@ -448,5 +450,9 @@ class ArtifactFilesTest extends RestBase {
 
         $response = $this->getResponse($this->client->delete('artifact_temporary_files/'.$file_representation['id']));
         $this->assertEquals($response->getStatusCode(), 200);
+
+        $request  = $this->client->get('artifact_temporary_files');
+        $response = $this->getResponse($request);
+        $this->assertEquals(0, (string) $response->getHeader('X-PAGINATION-SIZE'));
     }
 }
