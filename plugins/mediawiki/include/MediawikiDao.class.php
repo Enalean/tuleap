@@ -147,11 +147,11 @@ class MediawikiDao extends DataAccessObject {
 
     private function getMediawikiUserId(PFUser $user, Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
-        $user_name     = $this->da->quoteSmart($user->getUnixName());
+        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
 
         $sql = "SELECT user_id
                 FROM $database_name.mwuser
-                WHERE user_name LIKE $user_name";
+                WHERE user_name = $user_name";
 
         $data = $this->retrieve($sql)->getRow();
 
@@ -395,7 +395,7 @@ class MediawikiDao extends DataAccessObject {
     /**
      * Tries to find an existing schema for a project.
      * Checks using, the ID then the shortname then the list table
-     * 
+     *
      * @return string | false
      */
     public function findSchemaForExistingProject(Project $project) {
