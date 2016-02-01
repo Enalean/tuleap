@@ -107,6 +107,23 @@
         </fieldset>
 
         <fieldset>
+            <h3><i class="icon-edit"></i> {{ edition_title }} </h3>
+            <div class="control-group user-account-group">
+                <p>{{ default_format_intro }}</p>
+                <label class="control-label user-account-label">{{ default_format_label }}</label>
+                <div class="controls">
+                    <select name="user_text_default_format" class="select-user-preferences">
+                        {{# default_formats }}
+                        <option {{# selected }} selected="selected" {{/ selected }}
+                            value="{{ value }}"
+                        >{{ label }}</option>
+                        {{/ default_formats }}
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
             <h3><i class="icon-exchange"></i> {{ import_export_title }}</h3>
             <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{{ csv_separator_label }}}</label>

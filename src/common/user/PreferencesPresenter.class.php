@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -65,6 +65,11 @@ class User_PreferencesPresenter {
     /** @var string */
     public $last_svn_token;
 
+    /**
+     * @var array
+     */
+    public $default_formats;
+
     public function __construct(
         PFUser $user,
         $can_change_real_name,
@@ -83,9 +88,10 @@ class User_PreferencesPresenter {
         array $plugins_prefs,
         array $all_csv_separator,
         array $all_csv_dateformat,
-        $last_svn_token
+        $last_svn_token,
+        array $default_formats
     ) {
-        $this->user = $user;
+        $this->user                    = $user;
         $this->can_change_real_name    = $can_change_real_name;
         $this->can_change_email        = $can_change_email;
         $this->can_change_password     = $can_change_password;
@@ -103,6 +109,7 @@ class User_PreferencesPresenter {
         $this->all_csv_separator       = $all_csv_separator;
         $this->all_csv_dateformat      = $all_csv_dateformat;
         $this->last_svn_token          = $last_svn_token;
+        $this->default_formats         = $default_formats;
     }
 
     public function generated_svn_token() {
@@ -467,5 +474,17 @@ class User_PreferencesPresenter {
 
     public function btn_save_keys_label() {
         return $GLOBALS['Language']->getText('account_editsshkeys', 'btn_save_keys');
+    }
+
+    public function edition_title() {
+        return $GLOBALS['Language']->getText('account_preferences', 'edition_title');
+    }
+
+    public function default_format_label() {
+        return $GLOBALS['Language']->getText('account_preferences', 'default_format_label');
+    }
+
+    public function default_format_intro() {
+        return $GLOBALS['Language']->getText('account_preferences', 'default_format_intro');
     }
 }

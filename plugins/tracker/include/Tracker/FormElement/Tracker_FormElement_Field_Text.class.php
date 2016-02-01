@@ -150,6 +150,16 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return ($field === $this);
     }
 
+    private function getDefaultFormatForUser(PFUser $user) {
+        $user_preference = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
+
+        if (! $user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
+        }
+
+        return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+    }
+
     /**
      * Fetch the html code to display the field value in new artifact submission form
      * @param array $submitted_values the values already submitted
@@ -161,10 +171,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
 
+        $user           = $this->getCurrentUser();
+        $default_format = $this->getDefaultFormatForUser($user);
+
         $html .= '<input type="hidden"
                          id="artifact['. $this->id .']_body_format"
                          name="artifact['. $this->id .']_body_format"
-                         value="'.Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT.'" />';
+                         value="'.$hp->purify($default_format).'" />';
 
         $html .= '<textarea id = field_'.$this->id.' class="user-mention"
                             name="artifact['. $this->id .'][content]"
@@ -571,8 +584,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return mixed The default value for this field, or null if no default value defined
      */
     public function getDefaultValue() {
+        $user           = $this->getCurrentUser();
+        $default_format = $this->getDefaultFormatForUser($user);
+
         return array(
-            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'format'  => $default_format,
             'content' => $this->getProperty('default_value'),
         );
     }

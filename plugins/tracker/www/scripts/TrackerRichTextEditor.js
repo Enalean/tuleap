@@ -22,7 +22,7 @@ tuleap.trackers.textarea     = tuleap.trackers.textarea || {};
 tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
     initialize: function ($super, element, options) {
         options = Object.extend({toolbar: 'tuleap'}, options || { });
-        this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
+        this.options = Object.extend({htmlFormat : true, id : 0}, options || { });
         $super(element, options);
         // This div contains comment format selection buttons
         var div = Builder.node('div');
@@ -62,10 +62,14 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
 
         div.appendChild(this.element);
 
-        if (options.htmlFormat == true) {
+        if (this.options.htmlFormat == true) {
             selectbox.selectedIndex = 1;
+            html_option.selected = true;
+            text_option.selected = false;
         } else {
             selectbox.selectedIndex = 0;
+            html_option.selected = false;
+            text_option.selected = true;
         }
 
         if ($('comment_format_html'+this.options.id).selected == true) {
@@ -103,13 +107,35 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
 });
 
 document.observe('dom:loaded', function () {
+    var html_by_default = true;
+
+    if ($(document.body).hasClassName("default_format_text")) {
+        html_by_default = false;
+    }
+
     var newFollowup = $('tracker_followup_comment_new');
     if (newFollowup) {
-        new tuleap.trackers.textarea.RTE(newFollowup, {toggle: true, default_in_html: false, id: 'new', full_width: true});
+        new tuleap.trackers.textarea.RTE(
+            newFollowup,
+            {
+                toggle: true,
+                default_in_html: false,
+                id: 'new', full_width: true,
+                htmlFormat: html_by_default
+            }
+        );
     }
 
     var massChangeFollowup = $('artifact_masschange_followup_comment');
     if (massChangeFollowup) {
-        new tuleap.trackers.textarea.RTE(massChangeFollowup, {toggle: true, default_in_html: false, id: 'mass_change'});
+        new tuleap.trackers.textarea.RTE(
+            massChangeFollowup,
+            {
+                toggle: true,
+                default_in_html: false,
+                id: 'mass_change',
+                htmlFormat: html_by_default
+            }
+        );
     }
 });
