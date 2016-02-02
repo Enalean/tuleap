@@ -1,3 +1,6 @@
+Version 5.789 - Tuleap 8.11
+    * request #8830 TV5: no submit button when I add only a follow up (in html)
+
 Version 5.788 - Tuleap 8.11
     * story #8759 set writing HTML as user preference (Add preference in user account page)
 
