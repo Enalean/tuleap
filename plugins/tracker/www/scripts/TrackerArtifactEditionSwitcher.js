@@ -142,16 +142,22 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var bindSubmissionBarToFollowups = function () {
+        toggleSubmissionBarForCommentInCkeditor();
+
         $('#tracker_followup_comment_new').on('input propertychange', toggleSubmissionBar);
 
         $('#rte_format_selectboxnew').on('change', function() {
-            if (CKEDITOR.instances.tracker_followup_comment_new) {
-                CKEDITOR.instances.tracker_followup_comment_new.on('change', toggleSubmissionBar);
-            }
+            toggleSubmissionBarForCommentInCkeditor();
         });
 
         $('#tracker_artifact_canned_response_sb').on('change', toggleSubmissionBar);
     };
+
+    var toggleSubmissionBarForCommentInCkeditor = function () {
+        if (CKEDITOR.instances.tracker_followup_comment_new) {
+            CKEDITOR.instances.tracker_followup_comment_new.on('change', toggleSubmissionBar);
+        }
+    }
 
     var toggleSubmissionBar = function () {
         if (submissionBarIsAlreadyActive()) {
