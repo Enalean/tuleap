@@ -587,18 +587,15 @@ if ($debug) {
 }
 # Go through each project and see if there are any matches for this
 # project.  If so, send the log out.
-foreach my $project (@project_settings_list)
-  {
+foreach my $project (@project_settings_list) {
     my $match_re = $project->{match_re};
     my $match    = 0;
-    foreach my $path (@dirschanged, @adds, @dels, @mods)
-      {
-        if ($path =~ $match_re)
-          {
+    foreach my $path (@dirschanged, @adds, @dels, @mods) {
+        if ($path =~ $match_re) {
             $match = 1;
             last;
-          }
-      }
+        }
+    }
 
     next unless $match;
 
@@ -643,8 +640,6 @@ foreach my $project (@project_settings_list)
       }
 
     my @head;
-    push(@head, "To:\n");
-    push(@head, "Bcc: $userlist\n");
     push(@head, "From: $mail_from\n");
     push(@head, "Subject: $subject\n");
     push(@head, "Reply-to: $reply_to\n") if $reply_to;
@@ -678,39 +673,40 @@ foreach my $project (@project_settings_list)
     push(@head, "Content-Type: text/plain; charset=UTF-8\n");
     push(@head, "Content-Transfer-Encoding: 8bit\n");
     
-    push(@head, "\n");
+    my @emails_to_notify = split(',', $userlist);
 
-    if ($sendmail =~ /\w/ and @email_addresses)
-      {
-        # Open a pipe to sendmail.
-        my $command = "$sendmail $userlist";
-        if (open(SENDMAIL, "| $command"))
-          {
-            print SENDMAIL @head, @body;
-            close SENDMAIL
-              or warn "$0: error in closing `$command' for writing: $!\n";
-          }
-        else
-          {
-            warn "$0: cannot open `| $command' for writing: $!\n";
-          }
-      }
+    foreach my $email_address (@emails_to_notify) {
 
-    # Dump the output to logfile (if its name is not empty).
-    if ($log_file =~ /\w/)
-      {
-        if (open(LOGFILE, ">> $log_file"))
-          {
-            print LOGFILE @head, @body;
-            close LOGFILE
-              or warn "$0: error in closing `$log_file' for appending: $!\n";
-          }
-        else
-          {
-            warn "$0: cannot open `$log_file' for appending: $!\n";
-          }
-      }
-  }
+        my @head_for_email = @head;
+        push(@head_for_email, "To: $email_address\n");
+        push(@head_for_email, "\n");
+
+        if ($sendmail =~ /\w/ and @email_addresses) {
+            # Open a pipe to sendmail.
+            my $command = "$sendmail $email_address";
+            if (open(SENDMAIL, "| $command")) {
+                print SENDMAIL @head_for_email, @body;
+                close SENDMAIL
+                  or warn "$0: error in closing `$command' for writing: $!\n";
+            }
+            else {
+                warn "$0: cannot open `| $command' for writing: $!\n";
+            }
+        }
+
+        # Dump the output to logfile (if its name is not empty).
+        if ($log_file =~ /\w/) {
+            if (open(LOGFILE, ">> $log_file")) {
+                print LOGFILE @head_for_email, @body;
+                close LOGFILE
+                  or warn "$0: error in closing `$log_file' for appending: $!\n";
+            }
+            else {
+                warn "$0: cannot open `$log_file' for appending: $!\n";
+            }
+        }
+    }
+}
 
 # Now add the Subversion information in the Codendi tracking database
 if (&isGroupSvnTracked) {
