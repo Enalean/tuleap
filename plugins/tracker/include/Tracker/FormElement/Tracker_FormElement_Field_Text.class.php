@@ -88,6 +88,20 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
 
+    public function getExpertFrom($value)
+    {
+        if($this->isUsed()) {
+            $a = 'A_'. $this->id;
+            $b = 'B_'. $this->id;
+            return " INNER JOIN tracker_changeset_value AS $a
+                         ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
+                         INNER JOIN tracker_changeset_value_text AS $b
+                         ON ($b.changeset_value_id = $a.id
+                             AND ". $this->buildMatchExpression("$b.value", $value) ."
+                         ) ";
+        }
+    }
+
     protected function buildMatchExpression($field_name, $criteria_value) {
         $matches = array();
         $expr = parent::buildMatchExpression($field_name, $criteria_value);

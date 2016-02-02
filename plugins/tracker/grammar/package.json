@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "pegjs": "0.8.0",
+    "php-pegjs": "0.8.7"
+  },
+  "scripts": {
+    "build": "node ./generate_parser.js"
+  }
+}

@@ -23,8 +23,12 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\Deprecation\DeprecationRetriever;
-use Tuleap\Tracker\Deprecation\Dao;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldDoesNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldIsNotSupported;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Validator;
 
 /**
  * Tracker_ report.
@@ -60,6 +64,18 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     public $renderers;
     public $criteria;
     public $report_session;
+    /**
+     * @var Parser
+     */
+    private $parser;
+    /**
+     * @var Validator
+     */
+    private $validator;
+    /**
+     * @var OrExpression
+     */
+    private $parsed_expert_query;
 
     /**
      * Constructor
@@ -101,6 +117,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->expert_query        = $expert_query;
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
+
+        $this->parser          = new Parser();
+        $this->validator       = new Validator(Tracker_FormElementFactory::instance());
     }
 
     public function setProjectId($id) {
@@ -264,43 +283,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     protected $matching_ids;
     public function getMatchingIds($request = null, $use_data_from_db = false) {
-        if (!$this->matching_ids) {
-            $user = $this->getCurrentUser();
-            if ($use_data_from_db) {
-                $criteria = $this->getCriteriaFromDb();
-            } else {
-                $criteria = $this->getCriteria();
-            }
-            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), $this->getPermissionsManager(), $this->getTracker(), $user, $criteria);
-
-            $additional_criteria = $this->getAdditionalCriteria();
-            $result              = array();
-            $search_performed    = false;
-            EventManager::instance()->processEvent(
-                TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
-                array(
-                    'request'              => $request,
-                    'result'               => &$result,
-                    'search_performed'     => &$search_performed,
-                    'tracker'              => $this->getTracker(),
-                    'additional_criteria'  => $additional_criteria,
-                    'user'                 => $user,
-                    'form_element_factory' => $this->getFormElementFactory()
-                )
-            );
-            if ($search_performed) {
-                $joiner = new Tracker_Report_ResultJoiner();
-
-                $this->matching_ids = $this->implodeMatchingIds(
-                    $joiner->joinResults(
-                        $this->getLastChangesetIdByArtifactId($this->matching_ids),
-                        $result
-                    )
-                );
-            }
+        if ($this->is_in_expert_mode) {
+            return $this->getMatchingIdsFromExpertQuery();
+        } else {
+            return $this->getMatchingIdsFromCriteria($request, $use_data_from_db);
         }
-
-        return $this->matching_ids;
     }
 
     /**
@@ -348,7 +335,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $matchingIds;
     }
 
-    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, PFUser $user, array $criteria) {
+    private function getMatchingIdsFromCriteriaInDb(array $criteria) {
+        $dao     = $this->getDao();
+        $tracker = $this->getTracker();
+        $user    = $this->getCurrentUser();
         $dump_criteria = array();
         foreach ($criteria as $c) {
             $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
@@ -359,13 +349,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             'query'    => $dump_criteria,
             'trackers' => array($tracker->getId()),
         )));
-
-        $matching_ids = array();
-
-        $group_id             = $tracker->getGroupId();
-        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId());
-        $contributor_field    = $tracker->getContributorField();
-        $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
 
         $additional_from  = array();
         $additional_where = array();
@@ -378,20 +361,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
-        $matching_ids['id']                = '';
-        $matching_ids['last_changeset_id'] = '';
-        $matching_ids_result = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user, $permissions, $contributor_field_id);
-        if ($matching_ids_result) {
-            $matching_ids = $matching_ids_result->getRow();
-            if ($matching_ids) {
-                if (substr($matching_ids['id'], -1) === ',') {
-                    $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
-                }
-                if (substr($matching_ids['last_changeset_id'], -1) === ',') {
-                    $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
-                }
-            }
-        }
+        $matching_ids = $this->getMatchingIdsInDb(
+            $additional_from,
+            $additional_where
+        );
 
         $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $dao->logEnd(__METHOD__, $nb_matching);
@@ -1322,9 +1295,23 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($request->exist('tracker_expert_query_submit')) {
                     $expert_query = $request->get('expert_query');
                     $this->report_session->storeExpertQuery($expert_query);
-                    $this->expert_query = $expert_query;
 
-                    $this->report_session->setHasChanged();
+                    if ($this->expert_query !== $expert_query) {
+                        $this->expert_query = $expert_query;
+                        $this->report_session->setHasChanged();
+                    }
+                }
+                if ($this->is_in_expert_mode && $this->expert_query) {
+                    try {
+                        $parsed_query = $this->parseExpertQuery();
+                        $parsed_query->validate($this->getCurrentUser(), $this->getTracker(), $this->validator);
+                    } catch (SyntaxError $e) {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'parse_expert_query_error'));
+                    } catch (FieldDoesNotExistException $e) {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'validate_expert_query_field_does_not_exist'));
+                    } catch (FieldIsNotSupported $e) {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_report', 'validate_expert_query_field_is_not_supported'));
+                    }
                 }
                 $this->display($layout, $request, $current_user);
                 break;
@@ -1632,5 +1619,129 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $add_renderer .= '</form>';
 
         return $add_renderer;
+    }
+
+    private function parseExpertQuery()
+    {
+        if (! isset($this->parsed_expert_query)) {
+            $this->parsed_expert_query = $this->parser->parse($this->expert_query);
+        }
+
+        return $this->parsed_expert_query;
+    }
+
+    private function getMatchingIdsFromCriteria($request, $use_data_from_db)
+    {
+        if (!$this->matching_ids) {
+            $user = $this->getCurrentUser();
+            if ($use_data_from_db) {
+                $criteria = $this->getCriteriaFromDb();
+            } else {
+                $criteria = $this->getCriteria();
+            }
+            $this->matching_ids = $this->getMatchingIdsFromCriteriaInDb($criteria);
+
+            $additional_criteria = $this->getAdditionalCriteria();
+            $result              = array();
+            $search_performed    = false;
+            EventManager::instance()->processEvent(
+                TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
+                array(
+                    'request'              => $request,
+                    'result'               => &$result,
+                    'search_performed'     => &$search_performed,
+                    'tracker'              => $this->getTracker(),
+                    'additional_criteria'  => $additional_criteria,
+                    'user'                 => $user,
+                    'form_element_factory' => $this->getFormElementFactory()
+                )
+            );
+            if ($search_performed) {
+                $joiner = new Tracker_Report_ResultJoiner();
+
+                $this->matching_ids = $this->implodeMatchingIds(
+                    $joiner->joinResults(
+                        $this->getLastChangesetIdByArtifactId($this->matching_ids),
+                        $result
+                    )
+                );
+            }
+        }
+
+        return $this->matching_ids;
+    }
+
+    private function getMatchingIdsFromExpertQuery()
+    {
+        if (! $this->matching_ids) {
+            $additional_from = array();
+
+            if ($this->expert_query) {
+                try {
+                    $expression = $this->parseExpertQuery();
+
+                    if ($this->canExecuteExpertQuery($expression)) {
+                        $additional_from = array($expression->getFrom($this->getTracker()));
+                    }
+                } catch (SyntaxError $e) {
+                }
+            }
+
+            $this->matching_ids = $this->getMatchingIdsInDb(
+                $additional_from,
+                array()
+            );
+        }
+
+        return $this->matching_ids;
+
+
+    }
+
+    private function getMatchingIdsInDb(
+        $additional_from,
+        $additional_where
+    ) {
+        $matching_ids = array();
+
+        $dao                  = $this->getDao();
+        $tracker              = $this->getTracker();
+        $user                 = $this->getCurrentUser();
+        $group_id             = $tracker->getGroupId();
+        $permissions          = $this->getPermissionsManager()->getPermissionsAndUgroupsByObjectid($tracker->getId());
+        $contributor_field    = $tracker->getContributorField();
+        $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
+        $matching_ids['id']   = '';
+        $matching_ids['last_changeset_id'] = '';
+        $matching_ids_result = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from,
+            $additional_where, $user, $permissions, $contributor_field_id);
+        if ($matching_ids_result) {
+            $matching_ids = $matching_ids_result->getRow();
+            if ($matching_ids) {
+                if (substr($matching_ids['id'], -1) === ',') {
+                    $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+                }
+                if (substr($matching_ids['last_changeset_id'], -1) === ',') {
+                    $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
+                    return $matching_ids;
+                }
+                return $matching_ids;
+            }
+            return $matching_ids;
+        }
+        return $matching_ids;
+    }
+
+    private function canExecuteExpertQuery($parsed_query)
+    {
+        try {
+            $parsed_query->validate($this->getCurrentUser(), $this->getTracker(), $this->validator);
+        } catch (FieldDoesNotExistException $e) {
+            return false;
+        } catch (FieldIsNotSupported $e) {
+            return false;
+        }
+
+        return true;
     }
 }
