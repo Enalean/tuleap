@@ -21,6 +21,7 @@ Version 8.11 (Not released yet)
 	* request #8787: SVN access files are not updated when a binded usergroup is modified
 	* request #8796: Tracker v3 to v5 migration: Special characters are modified
 	* request #8778: Remove ambiguous dot at the end of password
+	* request #8548: Email notification for SVN are sent individually
 
 	== Plugins ==
 	* git: 4.116
