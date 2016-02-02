@@ -154,16 +154,18 @@
                     return getContent(milestone.id, limit, offset).then(function(data) {
                         angular.forEach(data.results, function(backlog_item, key) {
                             scope_items[backlog_item.id] = backlog_item;
+                            augmentBacklogItem(backlog_item);
+
                             milestone.content.push(scope_items[backlog_item.id]);
                         });
 
                         updateInitialEffort(milestone);
-                        _.forEach(milestone.content, augmentBacklogItem);
 
-                        if (milestone.content.length < data.total) {
-                            fetchMilestoneContent(limit, offset + limit);
+                        if ((limit + offset) < data.total) {
+                            return fetchMilestoneContent(limit, offset + limit);
                         } else {
                             milestone.loadingContent = false;
+                            return;
                         }
                     });
                 }

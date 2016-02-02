@@ -33,6 +33,8 @@ describe("MilestoneController -", function() {
             DroppedService = _DroppedService_;
             spyOn(DroppedService, "moveFromSubmilestoneToBacklog");
             spyOn(DroppedService, "moveFromSubmilestoneToSubmilestone");
+            spyOn(DroppedService, 'defineComparedToBeFirstItem').and.callThrough();
+            spyOn(DroppedService, 'defineComparedToBeLastItem').and.callThrough();
             spyOn(DroppedService, "reorderSubmilestone");
 
             MilestoneCollectionService = _MilestoneCollectionService_;
@@ -41,6 +43,8 @@ describe("MilestoneController -", function() {
             spyOn(MilestoneCollectionService, "addOrReorderBacklogItemsInMilestoneContent");
 
             BacklogItemSelectedService = _BacklogItemSelectedService_;
+            spyOn(BacklogItemSelectedService, 'areThereMultipleSelectedBaklogItems');
+            spyOn(BacklogItemSelectedService, 'getCompactedSelectedBacklogItem');
 
             MilestoneController = $controller('MilestoneController', {
                 $scope                    : $scope,
@@ -376,4 +380,140 @@ describe("MilestoneController -", function() {
             });
         });
     });
+
+    describe("reorderMilestoneContent() - ", function() {
+        it("reorder the content of a milestone", function() {
+            var dropped_request = $q.defer(),
+                milestone_id    = 12,
+                backlog_items   = [{id: 1}, {id: 2}],
+                compared_to     = {item_id: 3, direction: "before"};
+
+            DroppedService.reorderSubmilestone.and.returnValue(dropped_request.promise);
+
+            MilestoneController.reorderMilestoneContent(milestone_id, backlog_items, compared_to);
+            dropped_request.resolve();
+            $scope.$apply();
+
+            expect(MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent).toHaveBeenCalledWith(milestone_id, backlog_items, compared_to);
+            expect(DroppedService.reorderSubmilestone).toHaveBeenCalledWith([1, 2], compared_to, milestone_id);
+        });
+    });
+
+    describe("moveToTop() -", function() {
+        beforeEach(function() {
+            spyOn(MilestoneController, 'reorderMilestoneContent').and.returnValue($q.defer().promise);
+        });
+
+        it("move one item to the top of the milestone", function() {
+            var moved_backlog_item = { id: 69 };
+
+            MilestoneController.milestone = {
+                id: 1234,
+                content: [
+                    { id: 50 },
+                    { id: 61 },
+                    moved_backlog_item,
+                    { id: 88 },
+                ]
+            };
+
+            MilestoneController.moveToTop(moved_backlog_item);
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
+            expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(1234, [moved_backlog_item], { direction: "before", item_id: 50});
+        });
+
+        it("move multiple items to the top of the milestone", function() {
+            var moved_backlog_item     = {id: 50};
+            var selected_backlog_items = [{ id: 50 }, { id: 69 }];
+
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(selected_backlog_items);
+
+            MilestoneController.milestone = {
+                id: 1234,
+                content: [
+                    selected_backlog_items[0],
+                    { id: 61 },
+                    selected_backlog_items[1],
+                    { id: 88 },
+                ]
+            };
+
+            MilestoneController.moveToTop(moved_backlog_item);
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
+            expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(1234, selected_backlog_items, { direction: "before", item_id: 61});
+        });
+    });
+
+    describe("moveToBottom() -", function() {
+        var get_content_promise_request;
+        beforeEach(function() {
+            get_content_promise_request = $q.defer();
+            MilestoneController.get_content_promise = get_content_promise_request.promise;
+
+            spyOn(MilestoneController, 'reorderMilestoneContent').and.returnValue($q.defer().promise);
+        });
+
+        it("move one item to the bottom of the fully loaded milestone", function() {
+            var moved_backlog_item = { id: 69 };
+
+            MilestoneController.milestone = {
+                id: 1234,
+                content: [
+                    { id: 50 },
+                    { id: 61 },
+                    moved_backlog_item,
+                    { id: 88 },
+                ],
+                pagination: {
+                    limit: 50,
+                    offset: 0
+                }
+            };
+
+            MilestoneController.moveToBottom(moved_backlog_item);
+            get_content_promise_request.resolve();
+            $scope.$apply();
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
+            expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(1234, [moved_backlog_item], { direction: "after", item_id: 88});
+        });
+
+        it("move multiple items to the bottom of the not fully loaded milestone", function() {
+            var moved_backlog_item     = {id: 50};
+            var selected_backlog_items = [{ id: 50 }, { id: 69 }];
+
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(selected_backlog_items);
+
+            MilestoneController.milestone = {
+                id: 1234,
+                content: [
+                    { id: 50 },
+                    { id: 61 },
+                    moved_backlog_item,
+                    { id: 88 },
+                ],
+                pagination: {
+                    limit: 2,
+                    offset: 0
+                }
+            };
+
+            MilestoneController.moveToBottom(moved_backlog_item);
+
+            get_content_promise_request.resolve();
+            $scope.$apply();
+
+            expect(BacklogItemSelectedService.areThereMultipleSelectedBaklogItems).toHaveBeenCalled();
+            expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
+            expect(MilestoneController.reorderMilestoneContent).toHaveBeenCalledWith(1234, selected_backlog_items, { direction: "after", item_id: 88});
+        });
+    });
+
 });

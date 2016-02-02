@@ -32,12 +32,14 @@ function MilestoneController(
         dragular_instance_for_milestone: undefined,
         canUserMoveCards               : canUserMoveCards,
         dragularOptionsForMilestone    : dragularOptionsForMilestone,
+        get_content_promise            : undefined,
         init                           : init,
         initDragularForMilestone       : initDragularForMilestone,
         isMilestoneLoadedAndEmpty      : isMilestoneLoadedAndEmpty,
         moveToBottom                   : moveToBottom,
         moveToTop                      : moveToTop,
         toggleMilestone                : toggleMilestone,
+        reorderMilestoneContent        : reorderMilestoneContent,
         getMilestoneBacklogItemClasses : getMilestoneBacklogItemClasses
     });
 
@@ -51,7 +53,7 @@ function MilestoneController(
 
     function toggleMilestone($event) {
         if (! self.milestone.alreadyLoaded && self.milestone.content.length === 0) {
-            self.milestone.getContent();
+            self.get_content_promise = self.milestone.getContent();
         }
 
         var target                = $event.target;
@@ -83,11 +85,39 @@ function MilestoneController(
     }
 
     function moveToTop(backlog_item) {
-        // To be implemented in the next commit
+        var moved_items = [backlog_item],
+            compared_to;
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
+            moved_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
+        }
+
+        compared_to = DroppedService.defineComparedToBeFirstItem(self.milestone.content, moved_items);
+
+        self.reorderMilestoneContent(self.milestone.id, moved_items, compared_to);
     }
 
     function moveToBottom(backlog_item) {
-        // To be implemented in the next commit
+        var moved_items = [backlog_item],
+            compared_to;
+
+        if (backlog_item.moving_to) {
+            return;
+        }
+
+        if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
+            moved_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
+        }
+
+        backlog_item.moving_to = true;
+
+        self.get_content_promise.then(function() {
+            compared_to = DroppedService.defineComparedToBeLastItem(self.milestone.content, moved_items);
+
+            backlog_item.moving_to = false;
+
+            self.reorderMilestoneContent(self.milestone.id, moved_items, compared_to);
+        });
     }
 
     function initDragularForMilestone() {
@@ -172,20 +202,11 @@ function MilestoneController(
         saveChangesInBackend();
 
         function saveChangesInBackend() {
-            var dropped_promise,
-                source_milestone_id = getMilestoneId(source_list_element);
+            var source_milestone_id = getMilestoneId(source_list_element);
 
             switch (true) {
                 case droppedToSameMilestone(source_list_element, target_list_element):
-                    MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(current_milestone_id, dropped_items, compared_to);
-
-                    dropped_promise = DroppedService.reorderSubmilestone(
-                        dropped_item_ids,
-                        compared_to,
-                        current_milestone_id
-                    ).then(function() {
-                        BacklogItemSelectedService.deselectAllBacklogItems();
-                    });
+                    self.reorderMilestoneContent(current_milestone_id, dropped_items, compared_to);
                     break;
 
                 case droppedToAnotherMilestone(source_list_element, target_list_element):
@@ -194,7 +215,7 @@ function MilestoneController(
                     MilestoneCollectionService.removeBacklogItemsFromMilestoneContent(source_milestone_id, dropped_items);
                     MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(target_milestone_id, dropped_items, compared_to);
 
-                    dropped_promise =DroppedService.moveFromSubmilestoneToSubmilestone(
+                    DroppedService.moveFromSubmilestoneToSubmilestone(
                         dropped_item_ids,
                         compared_to,
                         source_milestone_id,
@@ -203,6 +224,8 @@ function MilestoneController(
                         BacklogItemSelectedService.deselectAllBacklogItems();
                         MilestoneCollectionService.refreshMilestone(source_milestone_id);
                         MilestoneCollectionService.refreshMilestone(target_milestone_id);
+                    }).catch(function() {
+                        BacklogItemSelectedService.reselectBacklogItems();
                     });
                     break;
 
@@ -210,7 +233,7 @@ function MilestoneController(
                     MilestoneCollectionService.removeBacklogItemsFromMilestoneContent(source_milestone_id, dropped_items);
                     BacklogService.addOrReorderBacklogItemsInBacklog(dropped_items, compared_to);
 
-                    dropped_promise = DroppedService.moveFromSubmilestoneToBacklog(
+                    DroppedService.moveFromSubmilestoneToBacklog(
                         dropped_item_ids,
                         compared_to,
                         source_milestone_id,
@@ -218,14 +241,26 @@ function MilestoneController(
                     ).then(function() {
                         BacklogItemSelectedService.deselectAllBacklogItems();
                         MilestoneCollectionService.refreshMilestone(source_milestone_id);
+                    }).catch(function() {
+                        BacklogItemSelectedService.reselectBacklogItems();
                     });
                     break;
             }
-
-            dropped_promise.catch(function() {
-                BacklogItemSelectedService.reselectBacklogItems();
-            });
         }
+    }
+
+    function reorderMilestoneContent(milestone_id, backlog_items, compared_to) {
+        MilestoneCollectionService.addOrReorderBacklogItemsInMilestoneContent(milestone_id, backlog_items, compared_to);
+
+        return DroppedService.reorderSubmilestone(
+            _.pluck(backlog_items, 'id'),
+            compared_to,
+            milestone_id
+        ).then(function() {
+            BacklogItemSelectedService.deselectAllBacklogItems();
+        }).catch(function() {
+            BacklogItemSelectedService.reselectBacklogItems();
+        });
     }
 
     function droppedToSameMilestone(source_list_element, target_list_element) {

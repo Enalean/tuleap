@@ -65,6 +65,7 @@ describe("BacklogController - ", function() {
             spyOn(BacklogService, 'filterItems');
             spyOn(BacklogService, 'loadProjectBacklog');
             spyOn(BacklogService, 'loadMilestoneBacklog');
+            spyOn(BacklogService, 'addOrReorderBacklogItemsInBacklog');
 
             MilestoneService = _MilestoneService_;
             _([
@@ -665,6 +666,23 @@ describe("BacklogController - ", function() {
                 expect(BacklogService.removeBacklogItemsFromBacklog).toHaveBeenCalledWith(dropped_items);
                 expect(MilestoneCollectionService.refreshMilestone).toHaveBeenCalledWith(destination_milestone_id);
             });
+        });
+    });
+
+    describe("reorderBacklogItems() - ", function() {
+        it("reorder the content of a milestone", function() {
+            var dropped_request = $q.defer(),
+                backlog_items   = [{id: 1}, {id: 2}],
+                compared_to     = {item_id: 3, direction: "before"};
+
+            DroppedService.reorderBacklog.and.returnValue(dropped_request.promise);
+
+            BacklogController.reorderBacklogItems(backlog_items, compared_to);
+            dropped_request.resolve();
+            $scope.$apply();
+
+            expect(BacklogService.addOrReorderBacklogItemsInBacklog).toHaveBeenCalledWith(backlog_items, compared_to);
+            expect(DroppedService.reorderBacklog).toHaveBeenCalledWith([1, 2], compared_to, BacklogService.backlog);
         });
     });
 
