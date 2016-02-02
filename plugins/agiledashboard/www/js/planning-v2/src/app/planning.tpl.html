@@ -1,7 +1,7 @@
 <div class="alert alert-error" ng-if="planning.getRestError().rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
 <div class="alert alert-error" ng-if="planning.getRestError().rest_error_occured" ng-bind-html="planning.getRestError().rest_error"></div>
 
-<div class="tuleap-modal-loading" ng-if="planning.loading_modal.is_loading"></div>
+<div class="tuleap-modal-loading" ng-if="planning.loading_modal.loading"></div>
 
 <div id="planning-view" ng-class="{ 'multi-selected-backlog-items': planning.getNumberOfSelectedBacklogItem() > 0 }">
     <div backlog id="backlog"></div>

@@ -12,7 +12,7 @@
         "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
         "angular-ui-bootstrap-bower": "~0.8.0",
         "ng-scrollbar": "~0.0.7",
-        "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#f48d3c7181ff31a53e20fd0e9c6aca92ea6cd29b",
+        "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#706f9314ec5fd325eec9aa2b24960205a0d7fb80",
         "lodash": "~2.4.0",
         "angular-socket-io": "~0.7.0",
         "socket.io-client": "~1.3.7",

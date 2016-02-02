@@ -128,7 +128,8 @@ module.exports = function(grunt) {
             build_vendorassets: {
                 files: [{
                     src: ['<%= vendor_files.assets %>'],
-                    dest: '<%= build_dir %>/',
+                    dest: '<%= build_dir %>/assets',
+                    flatten: true,
                     cwd: '.',
                     expand: true
                 }]
@@ -140,7 +141,7 @@ module.exports = function(grunt) {
                     cwd: '<%= build_dir %>/assets',
                     expand: true
                 }, {
-                    src: ['<%= vendor_files.css %>', '<%= vendor_files.assets %>'],
+                    src: ['<%= vendor_files.css %>'],
                     dest: '<%= compile_dir %>/',
                     cwd: '.',
                     expand: true
