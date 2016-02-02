@@ -1,3 +1,6 @@
+Version 1.345 - Tuleap 8.11
+    * story #8741: Move to top/bottom in backlog of the planning view
+
 Version 1.344 - Tuleap 8.11
     * request #8809: Compact and detailed buttons are hidden if the backlog is empty
 
