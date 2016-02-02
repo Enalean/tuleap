@@ -1,3 +1,6 @@
+Version 5.790 - Tuleap 8.11
+    * request #8831: Cross references not interpreted in text area in html format
+
 Version 5.789 - Tuleap 8.11
     * request #8830 TV5: no submit button when I add only a follow up (in html)
 
