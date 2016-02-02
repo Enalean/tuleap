@@ -116,13 +116,29 @@ class Tracker_Artifact_Changeset_Comment {
      * @return string the cleaned body to be included in a text/html context
      */
     public function getPurifiedBodyForHTML() {
+        if ($this->bodyFormat === 'html') {
+            return $this->purifyHTMLBody();
+        }
+
         $level = self::$PURIFIER_LEVEL_IN_HTML[$this->bodyFormat];
         return $this->purifyBody($level);
     }
 
     private function purifyBody($level) {
         $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($this->body, $level, $this->changeset->artifact->getTracker()->group_id);
+        return $hp->purify(
+            $this->body,
+            $level,
+            $this->changeset->artifact->getTracker()->group_id
+        );
+    }
+
+    private function purifyHTMLBody() {
+        $hp = Codendi_HTMLPurifier::instance();
+        return $hp->purifyHTMLWithReferences(
+            $this->body,
+            $this->changeset->artifact->getTracker()->group_id
+        );
     }
 
     /**
