@@ -1,3 +1,6 @@
+Version 0.7 - Tuleap 8.11
+    * story #8791 : be able to checkout a SVN repository
+
 Version 0.6 - Tuleap 8.11
     * request #8805: Strength migration to Gerrit
 

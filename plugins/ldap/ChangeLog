@@ -1,3 +1,6 @@
+Version 3.95 - Tuleap 8.11
+    * story #8791 : be able to checkout a SVN repository
+
 Version 3.94 - Tuleap 8.10
     * Handle SVN tokens using LDAP
 
