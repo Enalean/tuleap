@@ -3,88 +3,8 @@
 
 <div class="tuleap-modal-loading" ng-if="planning.loading_modal.is_loading"></div>
 
-<div id="planning-view">
-    <div id="backlog" ng-class="{ loading_content: planning.backlog_items.loading }">
-        <div class="planning-header">
-            <h2 translate>To be planned</h2>
-
-            <div ng-if="! planning.use_angular_new_modal && planning.backlog.user_can_move_cards" class="btn-group dropdown">
-                 <span class="dropdown-toggle btn btn-primary btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                     <i class="icon-plus"></i> <span translate>Add a new item</span>
-                     <b class="caret"></b>
-                 </span>
-                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                     <li ng-repeat="accepted_type in planning.backlog.accepted_types.content">
-                        <a
-                           class="create-item-link"
-                           data-tracker-id="{{ accepted_type.id }}"
-                           data-link-id="milestone_id"
-                           href="submit_ur"
-                           ng-click="planning.showAddBacklogItemModal($event, accepted_type)"
-                        >{{ accepted_type.label }}</a>
-                    </li>
-                </ul>
-            </div>
-            <div ng-if="planning.use_angular_new_modal && planning.backlog.accepted_types.content.length > 1  && planning.backlog.user_can_move_cards" class="btn-group dropdown">
-                <span class="dropdown-toggle btn btn-small" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    <i class="icon-plus"></i> <span translate>Add an item</span>
-                    <b class="caret"></b>
-                </span>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li ng-repeat="accepted_type in planning.backlog.accepted_types.content">
-                        <a
-                            href="#"
-                            class="create-item-link"
-                            ng-click="planning.showAddBacklogItemModal($event, accepted_type)"
-                            translate
-                        >Add a {{ accepted_type.label }}</a>
-                    </li>
-                </ul>
-            </div>
-            <button ng-if="planning.use_angular_new_modal && planning.backlog.accepted_types.content.length === 1 && planning.backlog.user_can_move_cards"
-                class="btn btn-small"
-                ng-click="planning.showAddBacklogItemModal($event, planning.backlog.accepted_types.content[0])"
-            >
-                <i class="icon-plus"></i> <span translate>Add a {{ planning.backlog.accepted_types.content[0].label }}</span>
-            </button>
-
-            <div class="pull-right">
-                <div class="btn-group view-switcher" data-toggle="buttons-radio">
-                    <button
-                        type="button"
-                        class="btn btn-small"
-                        ng-class="{ active: planning.current_view_class === planning.compact_view_key }"
-                        ng-click="planning.switchViewMode(planning.compact_view_key)"
-                        title="{{ 'Compact view' | translate }}"
-                    >
-                        <i class="icon-list"></i> <span translate>Compact view</span>
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-small"
-                        ng-class="{ active: planning.current_view_class === planning.detailed_view_key }"
-                        ng-click="planning.switchViewMode(planning.detailed_view_key)"
-                        title="{{ 'Detailed view' | translate }}"
-                    >
-                        <i class="icon-th-list"></i> <span translate>Detailed view</span>
-                    </button>
-                </div>
-
-                <div class="input-search" ng-show="planning.backlog_items.content.length > 0">
-                    <input
-                        type="search"
-                        class="search input-medium"
-                        placeholder="{{ 'Filter...' | translate }}"
-                        ng-model="planning.filter_terms"
-                        ng-keyup="planning.filterBacklog()"
-                    >
-                </div>
-            </div>
-
-            <div class="clearfix"></div>
-        </div>
-        <backlog></backlog>
-    </div>
+<div id="planning-view" ng-class="{ 'multi-selected-backlog-items': planning.getNumberOfSelectedBacklogItem() > 0 }">
+    <div backlog id="backlog"></div>
 
     <div id="divider"></div>
 
@@ -93,7 +13,7 @@
             <div class="planning-header">
                 <h2 translate>Milestones</h2>
 
-                <button ng-if="planning.use_angular_new_modal && planning.backlog.submilestone_type  && planning.backlog.user_can_move_cards"
+                <button ng-if="planning.backlog.submilestone_type  && planning.backlog.user_can_move_cards"
                     class="btn btn-small"
                     ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"
                 >

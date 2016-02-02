@@ -33,7 +33,8 @@ function BacklogService(
             content         : [],
             filtered_content: [],
             loading         : false,
-            fully_loaded    : false
+            fully_loaded    : false,
+            pagination      : { limit: 50, offset: 0 }
         },
         addOrReorderBacklogItemsInBacklog: addOrReorderBacklogItemsInBacklog,
         appendBacklogItems               : appendBacklogItems,

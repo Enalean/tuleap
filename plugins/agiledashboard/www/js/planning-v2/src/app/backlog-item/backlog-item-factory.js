@@ -16,6 +16,7 @@
             backlog_item.selected           = false;
             backlog_item.hidden             = false;
             backlog_item.multiple           = false;
+            backlog_item.moving_to          = false;
 
             backlog_item.children           = {};
             backlog_item.children.data      = [];

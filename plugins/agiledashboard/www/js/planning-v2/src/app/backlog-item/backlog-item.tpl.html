@@ -1,4 +1,6 @@
-<div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }} {{ backlogItemController.backlog_item.color }}">
+<div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }} {{ backlogItemController.backlog_item.color }}"
+     ng-class="{ 'moving-to': backlogItemController.backlog_item.moving_to }"
+>
     <backlog-item-details></backlog-item-details>
 </div>
 
@@ -22,7 +24,9 @@
                 backlog-item-index="$index"
                 backlog-item-select="backlog_item"
             >
-                <div class="backlog-item-details dragular-handle-child {{ backlog_item.status | lowercase }} {{ backlog_item.color }}">
+                <div class="backlog-item-details dragular-handle-child {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
+                    ng-class="{ 'moving-to': backlog_item.moving_to }"
+                >
                     <backlog-item-details></backlog-item-details>
                 </div>
             </li>

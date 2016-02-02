@@ -12,6 +12,8 @@
         });
 
         return {
+            milestone_content_pagination : { limit: 50, offset: 0 },
+
             getMilestone                 : getMilestone,
             getOpenMilestones            : getOpenMilestones,
             getOpenSubMilestones         : getOpenSubMilestones,

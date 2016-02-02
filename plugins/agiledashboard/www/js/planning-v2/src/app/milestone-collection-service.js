@@ -17,7 +17,9 @@ function MilestoneCollectionService(
             content                       : [],
             loading                       : false,
             open_milestones_fully_loaded  : false,
-            closed_milestones_fully_loaded: false
+            closed_milestones_fully_loaded: false,
+            open_milestones_pagination    : { limit: 50, offset: 0 },
+            closed_milestones_pagination  : { limit: 50, offset: 0 }
         },
         getMilestone                              : getMilestone,
         refreshMilestone                          : refreshMilestone,

@@ -1,4 +1,5 @@
 angular.module('backlog', [
+    'shared-properties',
     'dragularModule',
     'backlog-item',
     'planning',

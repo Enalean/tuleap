@@ -15,12 +15,12 @@ msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
 
 #: src/app/backlog-item/backlog-item-details.tpl.html
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr ""
 
-#: src/app/planning.tpl.html
-msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
+#: src/app/backlog/backlog.tpl.html
+msgid "Add a {{ backlog.details.accepted_types.content[0].label }}"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -28,11 +28,10 @@ msgid "Add a {{ planning.backlog.submilestone_type.label }}"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
-#: src/app/planning.tpl.html
 msgid "Add a new item"
 msgstr ""
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Add an item"
 msgstr ""
 
@@ -56,7 +55,7 @@ msgstr ""
 msgid "Closed milestones are below"
 msgstr ""
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Compact view"
 msgstr ""
 
@@ -64,7 +63,7 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Detailed view"
 msgstr ""
 
@@ -76,7 +75,7 @@ msgstr ""
 msgid "Edit this item"
 msgstr ""
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Filter..."
 msgstr ""
 
@@ -98,6 +97,14 @@ msgstr ""
 
 #: src/app/planning.tpl.html
 msgid "Milestones"
+msgstr ""
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Move to bottom"
+msgstr ""
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Move to top"
 msgstr ""
 
 #: src/app/milestone/milestone.tpl.html
@@ -134,7 +141,7 @@ msgstr ""
 msgid "There are no open milestones"
 msgstr ""
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "To be planned"
 msgstr ""
 

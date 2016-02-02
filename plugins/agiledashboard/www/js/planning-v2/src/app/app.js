@@ -10,7 +10,6 @@ angular.module('planning', [
     'milestone',
     'project',
     'user-preferences',
-    'tuleap-artifact-modal',
     'tuleap.artifact-modal',
     'inproperties.filter',
     'highlight.filter',
