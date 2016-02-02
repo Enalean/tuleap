@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-01-27 15:36+0100\n"
+"PO-Revision-Date: 2016-01-28 17:05+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -32,23 +32,24 @@ msgstr[1] ""
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 
-#: src/app/backlog-item/backlog-item-details.tpl.html src/app/planning.tpl.html
+#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr "Ajouter un(e) {{ accepted_type.label }}"
 
-#: src/app/planning.tpl.html
-msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
-msgstr "Ajouter un(e) {{ planning.backlog.accepted_types.content[0].label }}"
+#: src/app/backlog/backlog.tpl.html
+msgid "Add a {{ backlog.details.accepted_types.content[0].label }}"
+msgstr "Ajouter un(e) {{ backlog.details.accepted_types.content[0].label }}"
 
 #: src/app/planning.tpl.html
 msgid "Add a {{ planning.backlog.submilestone_type.label }}"
 msgstr "Ajouter un(e) {{ planning.backlog.submilestone_type.label }}"
 
-#: src/app/milestone/milestone.tpl.html src/app/planning.tpl.html
+#: src/app/milestone/milestone.tpl.html
 msgid "Add a new item"
 msgstr "Ajouter un nouvel élément"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Add an item"
 msgstr "Ajouter un élément"
 
@@ -72,7 +73,7 @@ msgstr "Cardwall"
 msgid "Closed milestones are below"
 msgstr "Les jalons fermés sont en dessous"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
 
@@ -80,7 +81,7 @@ msgstr "Vue compacte"
 msgid "Content"
 msgstr "Contenu"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Detailed view"
 msgstr "Vue détaillée"
 
@@ -92,7 +93,7 @@ msgstr "Éditer"
 msgid "Edit this item"
 msgstr "Éditer cet élément"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "Filter..."
 msgstr "Filtrer..."
 
@@ -115,6 +116,14 @@ msgstr "Charger les jalons fermés"
 #: src/app/planning.tpl.html
 msgid "Milestones"
 msgstr "Jalons"
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Move to bottom"
+msgstr "Déplacer en bas"
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Move to top"
+msgstr "Déplacer en haut"
 
 #: src/app/milestone/milestone.tpl.html
 msgid "N/A"
@@ -154,13 +163,17 @@ msgstr "Aucun jalon fermé"
 msgid "There are no open milestones"
 msgstr "Aucun jalon ouvert"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog/backlog.tpl.html
 msgid "To be planned"
 msgstr "A planifier"
 
 #: src/app/backlog/backlog.tpl.html src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
+
+#~ msgid "Add a {{ planning.backlog.accepted_types.content[0].label }}"
+#~ msgstr ""
+#~ "Ajouter un(e) {{ planning.backlog.accepted_types.content[0].label }}"
 
 #~ msgid ""
 #~ "{{ selected_bar_controller.selected_backlog_items.length }} item is "

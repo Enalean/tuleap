@@ -206,12 +206,18 @@ body {
         }
     }
 
-    #planning-app #selected-items-help .label {
-        background: @main;
-    }
+    #planning-app {
+        li.backlog-item .backlog-item-details .moves > .icon-stack:hover > .icon-stack-base {
+            color: @main;
+        }
 
-    #planning-app li.backlog-item.gu-transit {
-        background: @main;
+        #backlog-items-selected-bar .label {
+            background: @main;
+        }
+
+        li.backlog-item.gu-transit {
+            background: @main;
+        }
     }
 
     #kanban-board {

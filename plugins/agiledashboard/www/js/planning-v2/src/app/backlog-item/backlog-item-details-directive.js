@@ -7,6 +7,7 @@ function BacklogItemDetails() {
         restrict   : 'E',
         scope      : false,
         replace    : false,
+        controller : 'BacklogItemDetailsController as details_controller',
         templateUrl: 'backlog-item/backlog-item-details.tpl.html'
     };
 }

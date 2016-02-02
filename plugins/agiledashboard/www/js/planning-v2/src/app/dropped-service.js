@@ -20,6 +20,8 @@
     ) {
         return {
             defineComparedTo                  : defineComparedTo,
+            defineComparedToBeFirstItem       : defineComparedToBeFirstItem,
+            defineComparedToBeLastItem        : defineComparedToBeLastItem,
             reorderBacklog                    : reorderBacklog,
             reorderSubmilestone               : reorderSubmilestone,
             reorderBacklogItemChildren        : reorderBacklogItemChildren,
@@ -57,6 +59,42 @@
             compared_to.item_id   = diff_item_list[index - 1].id;
 
             return compared_to;
+        }
+
+        function defineComparedToBeFirstItem(item_list, moved_items) {
+            var diff_item_list = removeAllGivenItemInList(item_list, moved_items);
+
+            if (diff_item_list.length === 0) {
+                return null;
+            }
+
+            return {
+                direction: 'before',
+                item_id: diff_item_list[0].id
+            };
+        }
+
+        function defineComparedToBeLastItem(item_list, moved_items) {
+            var diff_item_list = removeAllGivenItemInList(item_list, moved_items);
+
+            if (diff_item_list.length === 0) {
+                return null;
+            }
+
+            return {
+                direction: 'after',
+                item_id: diff_item_list[diff_item_list.length - 1].id
+            };
+        }
+
+        function removeAllGivenItemInList(list, items) {
+            var list_copy = angular.copy(list);
+
+            _.remove(list_copy, function(item) {
+                return _.some(items, item);
+            });
+
+            return list_copy;
         }
 
         function reorderBacklog(dropped_item_ids, compared_to, backlog) {

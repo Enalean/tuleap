@@ -7,6 +7,7 @@ MilestoneController.$inject = [
     '$scope',
     '$timeout',
     '$document',
+    '$filter',
     'dragularService',
     'BacklogService',
     'DroppedService',
@@ -18,6 +19,7 @@ function MilestoneController(
     $scope,
     $timeout,
     $document,
+    $filter,
     dragularService,
     BacklogService,
     DroppedService,
@@ -33,7 +35,10 @@ function MilestoneController(
         init                           : init,
         initDragularForMilestone       : initDragularForMilestone,
         isMilestoneLoadedAndEmpty      : isMilestoneLoadedAndEmpty,
-        toggleMilestone                : toggleMilestone
+        moveToBottom                   : moveToBottom,
+        moveToTop                      : moveToTop,
+        toggleMilestone                : toggleMilestone,
+        getMilestoneBacklogItemClasses : getMilestoneBacklogItemClasses
     });
 
     self.init();
@@ -75,6 +80,14 @@ function MilestoneController(
 
     function canUserMoveCards() {
         return self.milestone.has_user_priority_change_permission;
+    }
+
+    function moveToTop(backlog_item) {
+        // To be implemented in the next commit
+    }
+
+    function moveToBottom(backlog_item) {
+        // To be implemented in the next commit
     }
 
     function initDragularForMilestone() {
@@ -270,5 +283,23 @@ function MilestoneController(
 
     function preventDrag(element_to_drag) {
         return angular.element(element_to_drag).data('nodrag');
+    }
+
+    function getMilestoneBacklogItemClasses(backlog_item) {
+        var status_lowered = $filter('lowercase')(backlog_item.status),
+            classes        = {
+                updating   : backlog_item.updating,
+                selected   : backlog_item.selected,
+                multiple   : backlog_item.multiple,
+                hidden     : backlog_item.hidden,
+                shaking    : backlog_item.shaking,
+                undraggable: ! self.canUserMoveCards()
+            };
+
+        classes[backlog_item.color]                 = true;
+        classes[$scope.planning.current_view_class] = true;
+        classes[status_lowered]                     = true;
+
+        return classes;
     }
 }

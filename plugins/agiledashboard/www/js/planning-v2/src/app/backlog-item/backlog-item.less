@@ -74,6 +74,42 @@ li.backlog-item {
             box-sizing: border-box;
         }
 
+        .moves {
+            opacity: 0;
+            transition: opacity 100ms ease-in-out;
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            margin: -22px 0 0 0;
+            z-index: 1000;
+
+            > .icon-stack {
+                display: block;
+                font-size: 11px;
+                cursor: pointer;
+
+                > .icon-stack-base {
+                    color: #999;
+                    transition: color 100ms ease-in-out;
+                }
+
+                &:hover > .icon-stack-base {
+                    color: fade(#999, 80%);
+                    transition: color 100ms ease-in-out;
+                }
+
+                &:first-child {
+                    margin: 0 0 2px;
+                }
+
+                .icon-double-angle-up,
+                .icon-double-angle-down {
+                    font-size: 13px;
+                    font-weight: 700;
+                }
+            }
+        }
+
         .type-border {
             position: absolute;
             top: 0;
@@ -177,11 +213,14 @@ li.backlog-item {
         }
 
         .initial-effort-placeholder {
+            position: relative;
+            left: 0;
             float: right;
             min-width: 50px;
             height: 15px;
             text-align: right;
             margin: 0 0 7px 5px;
+            transition: left 100ms ease-in-out;
 
             > .no-initial-effort {
                 width: 28px;
@@ -244,6 +283,23 @@ li.backlog-item {
                 }
             }
         }
+
+        &:hover, &.moving-to {
+            .moves {
+                opacity: 1;
+                transition: opacity 100ms ease-in-out 500ms;
+            }
+
+            .initial-effort-placeholder {
+                position: relative;
+                left: -15px;
+                transition: left 100ms ease-in-out 500ms;
+            }
+        }
+
+        &.moving-to .icon-stack:first-child {
+            visibility: hidden;
+        }
     }
 
     &.compact-view {
@@ -271,12 +327,31 @@ li.backlog-item {
         }
     }
 
-    &:first-child .backlog-item-details {
-        margin: 0;
+    &:first-child .backlog-item-details .moves > .icon-stack:first-child,
+    &:last-child .backlog-item-details .moves > .icon-stack:last-child {
+        visibility: hidden;
     }
 
-    &.undraggable .backlog-item-details {
+    &:only-child .backlog-item-details {
+        .moves {
+            display: none;
+        }
+
+        .initial-effort-placeholder {
+            left: 0;
+        }
+    }
+
+    &.undraggable > backlog-item > .backlog-item-details, &.undraggable > .backlog-item-details {
         cursor: auto;
+
+        .moves {
+            display: none;
+        }
+
+        .initial-effort-placeholder {
+            left: 0;
+        }
     }
 
     &.updating > backlog-item > .backlog-item-details, &.updating > .backlog-item-details {
@@ -371,6 +446,16 @@ div.milestones > fieldset.milestone > div.content {
 ul.backlog-item-children {
     span.initial-effort-placeholder {
         display: none;
+    }
+}
+
+#planning-view.multi-selected-backlog-items li.backlog-item:not(.selected) .backlog-item-details {
+    .moves {
+        display: none;
+    }
+
+    .initial-effort-placeholder {
+        left: 0;
     }
 }
 

@@ -10,14 +10,13 @@
             init: init
         });
 
-        function init(user_id, project_id, milestone_id, lang, use_angular_new_modal, view_mode, milestone, initial_backlog_items, initial_milestones) {
+        function init(user_id, project_id, milestone_id, lang, view_mode, milestone, initial_backlog_items, initial_milestones) {
             SharedPropertiesService.setUserId(user_id);
             SharedPropertiesService.setProjectId(project_id);
             SharedPropertiesService.setMilestoneId(milestone_id);
             SharedPropertiesService.setMilestone(milestone);
             SharedPropertiesService.setInitialBacklogItems(initial_backlog_items);
             SharedPropertiesService.setInitialMilestones(initial_milestones);
-            SharedPropertiesService.setUseAngularNewModal(use_angular_new_modal);
             SharedPropertiesService.setViewMode(view_mode);
 
             initLocale(lang);

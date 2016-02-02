@@ -48,9 +48,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
     /** @var AgileDashboard_Milestone_PaginatedMilestonesRepresentations */
     public $paginated_milestones_representations;
 
-    /** @var string */
-    public $use_angular_new_modal = 'true';
-
     public function __construct(
         PFUser $current_user,
         Project $project,

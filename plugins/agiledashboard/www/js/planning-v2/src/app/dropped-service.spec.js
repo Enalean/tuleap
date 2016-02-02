@@ -68,7 +68,7 @@ describe("DroppedService -", function() {
         };
     });
 
-    describe("defineComparedTo:", function() {
+    describe("defineComparedTo() - ", function() {
         describe("when only one element is dragged, ", function() {
             var dragged_item  = { id: 4 };
             var dropped_items = [{ id: 4 }];
@@ -113,6 +113,52 @@ describe("DroppedService -", function() {
 
                 expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 6 });
             });
+        });
+    });
+
+    describe("defineComparedToBeFirstItem() - ", function() {
+        it("should return before the first item", function() {
+            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var moved_items = [{ id: 2 }, { id: 5 }];
+
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual({ direction: 'before', item_id: 1 });
+        });
+
+        it("should return before the first item not in selection", function() {
+            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var moved_items = [{ id: 1 }, { id: 5 }];
+
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual({ direction: 'before', item_id: 2 });
+        });
+
+        it("should return null if all items are selected", function() {
+            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var moved_items = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual(null);
+        });
+    });
+
+    describe("defineComparedToBeLastItem() - ", function() {
+        it("should return after the last item", function() {
+            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var moved_items = [{ id: 2 }, { id: 5 }];
+
+            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual({ direction: 'after', item_id: 6 });
+        });
+
+        it("should return after the last item not in selection", function() {
+            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var moved_items = [{ id: 4 }, { id: 6 }];
+
+            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual({ direction: 'after', item_id: 5 });
+        });
+
+        it("should return null if all items are selected", function() {
+            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var moved_items = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+
+            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual(null);
         });
     });
 

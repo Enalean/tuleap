@@ -9,7 +9,6 @@
             view_mode            : undefined,
             project_id           : undefined,
             milestone_id         : undefined,
-            use_angular_new_modal: undefined,
             milestone            : undefined,
             initial_backlog_items: undefined,
             initial_milestones   : undefined
@@ -24,8 +23,6 @@
             setProjectId          : setProjectId,
             getMilestoneId        : getMilestoneId,
             setMilestoneId        : setMilestoneId,
-            getUseAngularNewModal : getUseAngularNewModal,
-            setUseAngularNewModal : setUseAngularNewModal,
             getMilestone          : getMilestone,
             setMilestone          : setMilestone,
             getInitialBacklogItems: getInitialBacklogItems,
@@ -64,14 +61,6 @@
 
         function setMilestoneId(milestone_id) {
             property.milestone_id = milestone_id;
-        }
-
-        function getUseAngularNewModal() {
-            return property.use_angular_new_modal;
-        }
-
-        function setUseAngularNewModal(use_angular_new_modal) {
-            property.use_angular_new_modal = use_angular_new_modal;
         }
 
         function getMilestone() {

@@ -41,6 +41,8 @@ function BacklogItemController(
         init                                       : init,
         initDragularForBacklogItemChildren         : initDragularForBacklogItemChildren,
         dragularOptionsForBacklogItemChildren      : dragularOptionsForBacklogItemChildren,
+        moveToTop                                  : moveToTop,
+        moveToBottom                               : moveToBottom,
         cardFieldIsCross                           : CardFieldsService.cardFieldIsCross,
         cardFieldIsDate                            : CardFieldsService.cardFieldIsDate,
         cardFieldIsFile                            : CardFieldsService.cardFieldIsFile,
@@ -150,6 +152,14 @@ function BacklogItemController(
 
     function emptyArray(array) {
         array.length = 0;
+    }
+
+    function moveToTop(backlog_item) {
+        // To be implemented in the next commit
+    }
+
+    function moveToBottom(backlog_item) {
+        // To be implemented in the next commit
     }
 
     function initDragularForBacklogItemChildren() {

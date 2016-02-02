@@ -1,7 +1,7 @@
 describe("PlanningCtrl", function() {
-    var $scope, $filter, $q, PlanningCtrl, BacklogItemService, BacklogService, ProjectService,
-        MilestoneService, SharedPropertiesService, TuleapArtifactModalService,
-        NewTuleapArtifactModalService, UserPreferencesService, DroppedService,
+    var $scope, $filter, $q, PlanningCtrl, BacklogItemService, BacklogService,
+        MilestoneService, SharedPropertiesService,
+        NewTuleapArtifactModalService, UserPreferencesService,
         BacklogItemCollectionService, MilestoneCollectionService, BacklogItemSelectedService;
 
     var milestone = {
@@ -41,13 +41,7 @@ describe("PlanningCtrl", function() {
                     }
                 }
             }
-        }],
-        initial_backlog_items = {
-            backlog_items_representations: [
-                { id: 7 }
-            ],
-            total_size: 104
-        };
+        }];
 
     beforeEach(function() {
         module('planning');
@@ -59,12 +53,9 @@ describe("PlanningCtrl", function() {
             _$q_,
             _BacklogService_,
             _BacklogItemService_,
-            _DroppedService_,
             _MilestoneService_,
             _NewTuleapArtifactModalService_,
-            _ProjectService_,
             _SharedPropertiesService_,
-            _TuleapArtifactModalService_,
             _UserPreferencesService_,
             _BacklogItemCollectionService_,
             _MilestoneCollectionService_,
@@ -77,10 +68,8 @@ describe("PlanningCtrl", function() {
             spyOn(SharedPropertiesService, 'getUserId').and.returnValue(102);
             spyOn(SharedPropertiesService, 'getProjectId').and.returnValue(736);
             spyOn(SharedPropertiesService, 'getMilestoneId').and.returnValue(592);
-            spyOn(SharedPropertiesService, 'getUseAngularNewModal').and.returnValue(true);
             spyOn(SharedPropertiesService, 'getMilestone').and.returnValue(undefined);
             spyOn(SharedPropertiesService, 'getInitialMilestones');
-            spyOn(SharedPropertiesService, 'getInitialBacklogItems').and.returnValue(initial_backlog_items);
             spyOn(SharedPropertiesService, 'getViewMode');
 
             var returnPromise = function(method) {
@@ -96,14 +85,6 @@ describe("PlanningCtrl", function() {
                 "getBacklogItem",
                 "removeAddBacklogItemChildren"
             ]).forEach(returnPromise, BacklogItemService);
-
-            ProjectService = _ProjectService_;
-            _([
-                "getProjectBacklog",
-                "getProject",
-                "removeAddToBacklog",
-                "removeAddReorderToBacklog"
-            ]).forEach(returnPromise, ProjectService);
 
             MilestoneService = _MilestoneService_;
             _([
@@ -122,9 +103,6 @@ describe("PlanningCtrl", function() {
                 "updateInitialEffort"
             ]).forEach(returnPromise, MilestoneService);
 
-            TuleapArtifactModalService = _TuleapArtifactModalService_;
-            spyOn(TuleapArtifactModalService, "showCreateItemForm");
-
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             spyOn(NewTuleapArtifactModalService, "showCreation");
             spyOn(NewTuleapArtifactModalService, "showEdition");
@@ -132,22 +110,7 @@ describe("PlanningCtrl", function() {
             UserPreferencesService = _UserPreferencesService_;
             spyOn(UserPreferencesService, 'setPreference').and.returnValue($q.defer().promise);
 
-            DroppedService = _DroppedService_;
-            _([
-                "moveFromBacklogToSubmilestone",
-                "moveFromChildrenToChildren",
-                "moveFromSubmilestoneToBacklog",
-                "moveFromSubmilestoneToSubmilestone",
-                "reorderBacklog",
-                "reorderBacklogItemChildren",
-                "reorderSubmilestone"
-            ]).forEach(returnPromise, DroppedService);
-
             BacklogService = _BacklogService_;
-            spyOn(BacklogService, 'appendBacklogItems');
-            spyOn(BacklogService, 'filterItems');
-            spyOn(BacklogService, 'loadProjectBacklog');
-            spyOn(BacklogService, 'loadMilestoneBacklog');
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             spyOn(BacklogItemCollectionService, 'refreshBacklogItem');
@@ -165,12 +128,9 @@ describe("PlanningCtrl", function() {
                 $q                           : $q,
                 BacklogService               : BacklogService,
                 BacklogItemService           : BacklogItemService,
-                DroppedService               : DroppedService,
                 MilestoneService             : MilestoneService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
-                ProjectService               : ProjectService,
                 SharedPropertiesService      : SharedPropertiesService,
-                TuleapArtifactModalService   : TuleapArtifactModalService,
                 UserPreferencesService       : UserPreferencesService,
                 BacklogItemCollectionService : BacklogItemCollectionService,
                 BacklogItemSelectedService   : BacklogItemSelectedService
@@ -184,12 +144,6 @@ describe("PlanningCtrl", function() {
         describe("Given we were in a Project context (Top backlog)", function() {
             beforeEach(function() {
                 SharedPropertiesService.getMilestoneId.and.stub();
-            });
-
-            it(", when I load the controller, then the project's backlog will be retrieved and the backlog updated", function() {
-                PlanningCtrl.init();
-
-                expect(BacklogService.loadProjectBacklog).toHaveBeenCalledWith(736);
             });
 
             it("and given that no milestone was injected, when I load the controller, then the milestones will be retrieved", function() {
@@ -258,37 +212,8 @@ describe("PlanningCtrl", function() {
                         label: "Sprint 2015-38"
                     }
                 ]);
-                expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
             });
         });
-
-        it("Load injected milestone", inject(function() {
-            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
-            SharedPropertiesService.getMilestone.and.returnValue(milestone);
-            spyOn(PlanningCtrl, 'loadBacklog').and.callThrough();
-
-            PlanningCtrl.init();
-
-            expect(PlanningCtrl.loadBacklog).toHaveBeenCalledWith(milestone);
-            expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
-        }));
-
-
-        it("Load injected backlog items", inject(function() {
-            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
-            spyOn(PlanningCtrl, 'loadInitialBacklogItems').and.callThrough();
-
-            PlanningCtrl.init();
-
-            expect(PlanningCtrl.loadInitialBacklogItems).toHaveBeenCalledWith(initial_backlog_items);
-            expect(PlanningCtrl.items).toEqual({
-                7: { id: 7 }
-            });
-            expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([
-                { id: 7 }
-            ]);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith('');
-        }));
 
         it("Load injected milestones", inject(function() {
             SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
@@ -328,45 +253,6 @@ describe("PlanningCtrl", function() {
             PlanningCtrl.switchClosedMilestoneItemsViewMode('show-closed-view');
 
             expect(PlanningCtrl.current_closed_view_class).toEqual('show-closed-view');
-        });
-    });
-
-    describe("displayBacklogItems() -", function() {
-        var fetch_backlog_items_request;
-
-        beforeEach(function() {
-            fetch_backlog_items_request = $q.defer();
-            spyOn(PlanningCtrl, "fetchBacklogItems").and.returnValue(fetch_backlog_items_request.promise);
-            PlanningCtrl.backlog_items = {
-                loading: false,
-                fully_loaded: false
-            };
-        });
-
-        it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I display the backlog items, then the REST route will be called and a promise will be resolved", function() {
-            var promise = PlanningCtrl.displayBacklogItems();
-            fetch_backlog_items_request.resolve(86);
-
-            expect(PlanningCtrl.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(promise).toBeResolved();
-        });
-
-        it("Given that we were already loading backlog_items, when I display the backlog items then the REST route won't be called again and a promise will be resolved", function() {
-            PlanningCtrl.backlog_items.loading = true;
-
-            var promise = PlanningCtrl.displayBacklogItems();
-
-            expect(PlanningCtrl.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeResolved();
-        });
-
-        it("Given that all the backlog_items had been loaded, when I display the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
-            PlanningCtrl.backlog_items.fully_loaded = true;
-
-            var promise = PlanningCtrl.displayBacklogItems();
-
-            expect(PlanningCtrl.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeResolved();
         });
     });
 
@@ -424,143 +310,6 @@ describe("PlanningCtrl", function() {
                 { id: 747 },
                 { id: 316 }
             ]);
-        });
-    });
-
-    describe("fetchAllBacklogItems() -", function() {
-        var fetch_backlog_items_request;
-
-        beforeEach(function() {
-            fetch_backlog_items_request = $q.defer();
-            spyOn(PlanningCtrl, "fetchBacklogItems").and.returnValue(fetch_backlog_items_request.promise);
-            PlanningCtrl.backlog_items = {
-                loading: false,
-                fully_loaded: false
-            };
-        });
-
-        it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I fetch all the backlog items, then the REST route will be called and a promise will be resolved", function() {
-            var promise = PlanningCtrl.fetchAllBacklogItems(50, 50);
-            fetch_backlog_items_request.resolve(40);
-
-            expect(PlanningCtrl.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(promise).toBeResolved();
-        });
-
-        it("Given that there were more items than the current offset and limit, when I fetch all the backlog items, then the REST route will be called twice and a promise will be resolved", function() {
-            var promise = PlanningCtrl.fetchAllBacklogItems(50, 50);
-            fetch_backlog_items_request.resolve(134);
-
-            expect(promise).toBeResolved();
-            expect(PlanningCtrl.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(PlanningCtrl.fetchBacklogItems).toHaveBeenCalledWith(50, 100);
-            expect(PlanningCtrl.fetchBacklogItems.calls.count()).toEqual(2);
-        });
-
-        it("Given that we were already loading backlog_items, when I fetch all the backlog items, then the REST route won't be called again and a promise will be rejected", function() {
-            PlanningCtrl.backlog_items.loading = true;
-
-            var promise = PlanningCtrl.fetchAllBacklogItems(50, 50);
-
-            expect(PlanningCtrl.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeRejected();
-        });
-
-        it("Given that all the backlog_items had been loaded, when I fetch all the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
-            PlanningCtrl.backlog_items.fully_loaded = true;
-
-            var promise = PlanningCtrl.fetchAllBacklogItems(50, 50);
-
-            expect(PlanningCtrl.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeRejected();
-        });
-    });
-
-    describe("fetchBacklogItems() -", function() {
-        var get_project_backlog_items_request;
-
-        beforeEach(function() {
-            get_project_backlog_items_request = $q.defer();
-        });
-
-        it("Given that we were in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
-            spyOn(PlanningCtrl, "isMilestoneContext").and.returnValue(false);
-            BacklogItemService.getProjectBacklogItems.and.returnValue(get_project_backlog_items_request.promise);
-
-            var promise = PlanningCtrl.fetchBacklogItems(60, 25);
-            expect(PlanningCtrl.backlog_items.loading).toBeTruthy();
-            get_project_backlog_items_request.resolve({
-                results: [
-                    { id: 734 }
-                ],
-                total: 34
-            });
-
-            expect(promise).toBeResolvedWith(34);
-            expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
-            expect(PlanningCtrl.items).toEqual({
-                7  : { id: 7 },
-                734: { id: 734 }
-            });
-            expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([
-                { id: 734 }
-            ]);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith('');
-        });
-
-        it("Given that we were in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", function() {
-            BacklogItemService.getMilestoneBacklogItems.and.returnValue(get_project_backlog_items_request.promise);
-
-            var promise = PlanningCtrl.fetchBacklogItems(60, 25);
-            expect(PlanningCtrl.backlog_items.loading).toBeTruthy();
-            get_project_backlog_items_request.resolve({
-                results: [
-                    { id: 836 }
-                ],
-                total: 85
-            });
-
-            expect(promise).toBeResolvedWith(85);
-            expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
-            expect(PlanningCtrl.items).toEqual({
-                7  : { id: 7 },
-                836: { id: 836 }
-            });
-            expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([
-                { id: 836 }
-            ]);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith('');
-        });
-    });
-
-    describe("filterBacklog() -", function() {
-        var fetch_all_backlog_items_request;
-
-        beforeEach(function() {
-            fetch_all_backlog_items_request = $q.defer();
-            spyOn(PlanningCtrl, "fetchAllBacklogItems").and.returnValue(fetch_all_backlog_items_request.promise);
-        });
-
-        it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
-            PlanningCtrl.filter_terms = 'flamboyantly';
-
-            PlanningCtrl.filterBacklog();
-            fetch_all_backlog_items_request.resolve(50);
-            $scope.$apply();
-
-            expect(PlanningCtrl.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith('flamboyantly');
-        });
-
-        it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be filtered", function() {
-            PlanningCtrl.filter_terms = 'Jeffersonianism';
-
-            PlanningCtrl.filterBacklog();
-            fetch_all_backlog_items_request.reject(99);
-            $scope.$apply();
-
-            expect(PlanningCtrl.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith('Jeffersonianism');
         });
     });
 
@@ -691,177 +440,6 @@ describe("PlanningCtrl", function() {
             var result = PlanningCtrl.canShowBacklogItem(backlog_item);
 
             expect(result).toBeTruthy();
-        });
-    });
-
-    describe("showAddBacklogItemModal() -", function() {
-        var event, item_type, get_backlog_item_request;
-        beforeEach(function() {
-            get_backlog_item_request = $q.defer();
-            event                    = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            BacklogItemService.getBacklogItem.and.returnValue(get_backlog_item_request.promise);
-        });
-
-        it("Given that we use the 'old' modal and given an event and an item_type object, when I show the new artifact modal, then the event's default action will be prevented and the TuleapArtifactModal Service will be called with a callback", function() {
-            PlanningCtrl.use_angular_new_modal = false;
-            SharedPropertiesService.getMilestone.and.returnValue(milestone);
-
-            item_type = { id: 97 };
-            PlanningCtrl.backlog = { rest_route_id: 504 };
-
-            PlanningCtrl.showAddBacklogItemModal(event, item_type);
-
-            expect(event.preventDefault).toHaveBeenCalled();
-            expect(TuleapArtifactModalService.showCreateItemForm).toHaveBeenCalledWith(97, 504, jasmine.any(Function));
-        });
-
-        it("Given that we use the 'new' modal and given an event and an item_type object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
-            item_type = { id: 50 };
-            SharedPropertiesService.getMilestone.and.returnValue(undefined);
-
-            PlanningCtrl.showAddBacklogItemModal(event, item_type);
-
-            expect(event.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(50, undefined, jasmine.any(Function));
-        });
-
-        describe("callback -", function() {
-            var artifact, remove_add_reorder_request;
-            beforeEach(function() {
-                remove_add_reorder_request = $q.defer();
-                NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
-                    callback(5202);
-                });
-                artifact = {
-                    backlog_item: {
-                        id: 5202
-                    }
-                };
-            });
-
-            describe("Given an item id and given that we were in a project's context,", function() {
-                beforeEach(function() {
-                    PlanningCtrl.backlog = {
-                        rest_route_id: 80,
-                        rest_base_route: "projects"
-                    };
-
-                    spyOn(PlanningCtrl, "isMilestoneContext").and.returnValue(false);
-                    ProjectService.removeAddReorderToBacklog.and.returnValue(remove_add_reorder_request.promise);
-                });
-
-                it("when the new artifact modal calls its callback, then the artifact will be prepended to the backlog using REST, it will be retrieved from the server, and the items and backlog_items collections will be updated", function() {
-                    PlanningCtrl.backlog_items.content = [
-                        { id: 3894 }
-                    ];
-                    PlanningCtrl.backlog_items.filtered_content = [
-                        { id: 3894 }
-                    ];
-
-                    PlanningCtrl.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
-                    $scope.$apply();
-
-                    expect(ProjectService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 80, [5202], {
-                        direction: "before",
-                        item_id: 3894
-                    });
-                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(PlanningCtrl.items[5202]).toEqual({ id: 5202 });
-                    expect(PlanningCtrl.backlog_items.content).toEqual([
-                        { id: 5202 },
-                        { id: 3894 }
-                    ]);
-                    expect(PlanningCtrl.backlog_items.filtered_content).toEqual([
-                        { id: 5202 },
-                        { id: 3894 }
-                    ]);
-                });
-
-                it("and given that the backlog was filtered, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog's content but not its filtered content", function() {
-                    PlanningCtrl.filter_terms = 'needle';
-                    PlanningCtrl.backlog_items.content = [
-                        { id: 7453 }
-                    ];
-                    PlanningCtrl.backlog_items.filtered_content = [];
-
-                    PlanningCtrl.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
-                    $scope.$apply();
-
-                    expect(PlanningCtrl.backlog_items.content).toEqual([
-                        { id: 5202 },
-                        { id: 7453 }
-                    ]);
-                    expect(PlanningCtrl.backlog_items.filtered_content).toEqual([]);
-                });
-
-                it("and given that the backlog_items collection was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", function() {
-                    PlanningCtrl.backlog_items.content = [];
-                    ProjectService.removeAddToBacklog.and.returnValue(remove_add_reorder_request.promise);
-
-                    PlanningCtrl.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
-                    $scope.$apply();
-
-                    expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, [5202]);
-                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(PlanningCtrl.backlog_items.content).toEqual([
-                        { id: 5202 }
-                    ]);
-                });
-            });
-
-            describe("Given an item id and given we were in a milestone's context", function() {
-                beforeEach(function() {
-                    PlanningCtrl.backlog = {
-                        rest_route_id: 26,
-                        rest_base_route: "milestones"
-                    };
-                });
-
-                it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, and the items and backlog_items collections will be updated", function() {
-                    PlanningCtrl.backlog_items.content = [
-                        { id: 6240 }
-                    ];
-                    MilestoneService.removeAddReorderToBacklog.and.returnValue(remove_add_reorder_request.promise);
-
-                    PlanningCtrl.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
-                    $scope.$apply();
-
-                    expect(MilestoneService.removeAddReorderToBacklog).toHaveBeenCalledWith(undefined, 26, [5202], {
-                        direction: "before",
-                        item_id: 6240
-                    });
-                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(PlanningCtrl.items[5202]).toEqual({ id: 5202 });
-                    expect(PlanningCtrl.backlog_items.content).toEqual([
-                        { id: 5202 },
-                        { id: 6240 }
-                    ]);
-                });
-
-                it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", function() {
-                    PlanningCtrl.backlog_items.content = [];
-                    MilestoneService.removeAddToBacklog.and.returnValue(remove_add_reorder_request.promise);
-
-                    PlanningCtrl.showAddBacklogItemModal(event, item_type);
-                    get_backlog_item_request.resolve(artifact);
-                    remove_add_reorder_request.resolve();
-                    $scope.$apply();
-
-                    expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 26, [5202]);
-                    expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(PlanningCtrl.backlog_items.content).toEqual([
-                        { id: 5202 }
-                    ]);
-                });
-            });
         });
     });
 

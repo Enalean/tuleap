@@ -4,9 +4,8 @@ angular
 
 function Backlog() {
     return {
-        restrict        : 'E',
+        restrict        : 'A',
         scope           : false,
-        replace         : false,
         templateUrl     : 'backlog/backlog.tpl.html',
         controller      : 'BacklogController as backlog',
         bindToController: true
