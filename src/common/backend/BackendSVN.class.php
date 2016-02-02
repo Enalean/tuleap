@@ -56,6 +56,13 @@ class BackendSVN extends Backend {
         return new ServiceDao(CodendiDataAccess::instance());
     }
 
+    /**
+      * Protected for testing purpose
+      */
+    protected function getSvnDao() {
+        return new SVN_DAO();
+    }
+
     
     /**
      * Wrapper for Config
@@ -76,13 +83,21 @@ class BackendSVN extends Backend {
      */
     public function createProjectSVN($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
+        return $this->createRepository($group_id, $project->getSVNRootPath());
+    }
+
+    public function createRepositorySVN($project_id, $svn_dir) {
+        return $this->createRepository($project_id, $svn_dir);
+    }
+
+    private function createRepository($group_id, $svn_dir) {
+        $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
-        $svn_dir = $project->getSVNRootPath();
         if (!is_dir($svn_dir)) {
             // Let's create a SVN repository for this group
-            if (!mkdir($svn_dir)) {
+            if (!mkdir($svn_dir, 0775, true)) {
                 $this->log("Can't create project SVN dir: $svn_dir", Backend::LOG_ERROR);
                 return false;
             }
@@ -92,17 +107,16 @@ class BackendSVN extends Backend {
             $this->recurseChownChgrp($svn_dir, $this->getHTTPUser(), $unix_group_name);
             system("chmod g+rw $svn_dir");
         }
-
-
         // Put in place the svn post-commit hook for email notification
-        if (!$this->updateHooks($project)) {
+        if (!$this->updateHooks($project, $svn_dir)) {
             return false;
         }
-
-        if (!$this->updateSVNAccess($group_id)) {
+        if (!$this->updateSVNAccess($group_id, $svn_dir)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             return false;
         }
+
+        $this->setSVNApacheConfNeedUpdate();
 
         return true;
     }
@@ -116,7 +130,6 @@ class BackendSVN extends Backend {
         return is_dir($project->getSVNRootPath());
     }
 
-
     /**
      * Put in place the svn post-commit hook for email notification
      * if not present (if the file does not exist it is created)
@@ -125,10 +138,8 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    public function updateHooks(Project $project) {
+    public function updateHooks(Project $project, $svn_dir) {
         $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
-        $svn_dir=$project->getSVNRootPath();
-
         if ($project->isSVNTracked()) {
             $filename = "$svn_dir/hooks/post-commit";
             $update_hook=false;
@@ -226,7 +237,7 @@ class BackendSVN extends Backend {
      *
      * @return SVNAccessFile
      */
-    function _getSVNAccessFile() {
+    protected function _getSVNAccessFile() {
         return new SVNAccessFile();
     }
 
@@ -239,16 +250,17 @@ class BackendSVN extends Backend {
      *
      * @return boolean true on success or false on failure
      */
-    public function updateSVNAccess($group_id, $ugroup_name = null, $ugroup_old_name = null) {
+    public function updateSVNAccess($group_id, $svn_dir, $ugroup_name = null, $ugroup_old_name = null) {
         $project = $this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
-        if (! $this->repositoryExists($project)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: ".$project->getSVNRootPath(), Backend::LOG_ERROR);
+
+        if (! is_dir($svn_dir)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: ".$svn_dir, Backend::LOG_ERROR);
             return false;
         }
-        $svn_dir = $project->getSVNRootPath();
+
         $unix_group_name = $project->getUnixNameMixedCase();
 
         $svnaccess_file = $svn_dir."/.SVNAccessFile";
@@ -260,11 +272,9 @@ class BackendSVN extends Backend {
         $default_block_end="# END CODENDI DEFAULT SETTINGS\n";
         $custom_perms='';
         $public_svn = 1; // TODO
-        
         $defaultBlock = '';
         $defaultBlock .= $this->getSVNAccessGroups($project);
         $defaultBlock .= $this->getSVNAccessRootPathDef($project);
-        
         // Retrieve custom permissions, if any
         if (is_file("$svnaccess_file")) {
             $svnaccess_array = file($svnaccess_file);
@@ -305,7 +315,7 @@ class BackendSVN extends Backend {
         $this->chown($svnaccess_file, $this->getHTTPUser());
         $this->chgrp($svnaccess_file, $unix_group_name);
         chmod("$svnaccess_file", 0775);
-        
+
         return true;
     }
 
@@ -326,9 +336,9 @@ class BackendSVN extends Backend {
         }
         
         $svnaccess_file = $project->getSVNRootPath()."/.SVNAccessFile";
-        
+
         if (!is_file($svnaccess_file)) {
-            return $this->updateSVNAccess($group_id);
+            return $this->updateSVNAccess($group_id, $project->getSVNRootPath());
         }
         return true;
     }
@@ -449,7 +459,7 @@ class BackendSVN extends Backend {
      */
     public function updateProjectSVNAccessFile(Project $project) {
         if ($this->repositoryExists($project)) {
-            return $this->updateSVNAccess($project->getID());
+            return $this->updateSVNAccess($project->getID(), $project->getSVNRootPath());
         }
         return true;
     }
@@ -472,7 +482,6 @@ class BackendSVN extends Backend {
         return $this->SVNApacheConfNeedUpdate;
     }
 
-
     /**
      * Add Subversion DAV definition for all projects in a dedicated Apache 
      * configuration file
@@ -483,8 +492,8 @@ class BackendSVN extends Backend {
         $svn_root_file = $GLOBALS['svn_root_file'];
         $svn_root_file_old = $svn_root_file.".old";
         $svn_root_file_new = $svn_root_file.".new";
-        
         $conf = $this->getApacheConf();
+
         if (file_put_contents($svn_root_file_new, $conf) !== strlen($conf)) {
             $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
             return false;
@@ -495,13 +504,19 @@ class BackendSVN extends Backend {
         chmod("$svn_root_file_new", 0640);
 
         // Backup existing file and install new one
+
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
-    function getApacheConf() {
-        $projects = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
-        $factory  = $this->getSVNApacheAuthFactory();
-        $conf = new SVN_Apache_SvnrootConf($factory, $projects);
+    /**
+     * public for testing purpose
+     */
+    public function getApacheConf() {
+        $list_repositories = $this->getSvnDao()->searchSvnRepositories();
+        $factory           = $this->getSVNApacheAuthFactory();
+
+        $conf = new SVN_Apache_SvnrootConf($factory, $list_repositories);
+
         return $conf->getFullConf();
     }
     

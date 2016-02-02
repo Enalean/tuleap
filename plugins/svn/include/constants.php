@@ -20,3 +20,4 @@
 
  define('SVN_BASE_URL', '/plugins/svn');
  define('SVN_BASE_DIR', dirname(__FILE__));
+ define ('PATTERN_REPOSITORY_NAME', '[a-zA-Z][A-Za-z0-9-_.]{2,254}');

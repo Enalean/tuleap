@@ -22,20 +22,26 @@ namespace Tuleap\Svn\Explorer;
 
 use Project;
 use Tuleap\Svn\ServiceSvn;
+use Tuleap\Svn\Dao;
 use CSRFSynchronizerToken;
 use \Tuleap\Svn\Repository\RuleName;
 use \Tuleap\Svn\Repository\Repository;
 use \Tuleap\Svn\Repository\RepositoryManager;
 use HTTPRequest;
 use \Tuleap\Svn\Repository\CannotCreateRepositoryException;
+use SystemEventManager;
+use SystemEvent;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 
 class ExplorerController {
     const NAME = 'explorer';
 
     private $repository_manager;
+    private $system_event_manager;
 
     public function __construct(RepositoryManager $repository_manager) {
-        $this->repository_manager = $repository_manager;
+        $this->repository_manager   = $repository_manager;
+        $this->system_event_manager = SystemEventManager::instance();
     }
 
     public function index(ServiceSvn $service, HTTPRequest $request) {
@@ -67,7 +73,7 @@ class ExplorerController {
         $token = $this->generateTokenForCeateRepository($request->getProject());
         $token->check();
 
-        $rule = new RuleName();
+        $rule = new RuleName($request->getProject(), new DAO());
         $repo_name = $request->get("repo_name");
 
         if (! $rule->isValid($repo_name)) {
@@ -78,6 +84,15 @@ class ExplorerController {
             $repository_to_create = new Repository ("", $repo_name, $request->getProject());
             try {
                 $this->repository_manager->create($repository_to_create);
+
+                $repo_event['path']       = $repository_to_create->getPath();
+                $repo_event['project_id'] = $request->getProject()->getId();
+                $repo_event['name']       = $request->getProject()->getUnixNameMixedCase()."/".$repository_to_create->getName();
+                $this->system_event_manager->createEvent(
+                    'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
+                    implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
+                    SystemEvent::PRIORITY_HIGH);
+
                 $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository','update_success'));
                 $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
             } catch (CannotCreateRepositoryException $e) {

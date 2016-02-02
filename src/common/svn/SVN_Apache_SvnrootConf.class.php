@@ -55,10 +55,11 @@ class SVN_Apache_SvnrootConf {
     public function getFullConf() {
         $conf = '';
         foreach ($this->projects as $row) {
-            $auth = $this->authFactory->get($row);
+            $auth = $this->authFactory->get($row, $row['auth_mod']);
             $this->collectApacheConfHeaders($auth);
-            $conf .= $auth->getConf();
+            $conf .= $auth->getConf($row['repository_name']);
         }
+
         return $this->getApacheConfHeaders().$conf;
     }
     

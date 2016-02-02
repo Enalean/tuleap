@@ -47,32 +47,37 @@ class LDAP_BackendSVNTest extends TuleapTestCase {
     }
 
     private function GivenAFullApacheConf() {
-        $backend  = TestHelper::getPartialMock('LDAP_BackendSVN', array('_getServiceDao', 'getLdap', 'getLDAPProjectManager', 'getSVNApacheAuthFactory'));
+        $backend  = TestHelper::getPartialMock(
+            'LDAP_BackendSVN',
+            array(
+                'getLdap',
+                'getLDAPProjectManager',
+                'getSVNApacheAuthFactory',
+                'getSvnDao'
+            )
+        );
 
         $project_array_01 = array(
-            'unix_group_name' => 'gpig',
+            'repository_name' => 'gpig',
             'group_name'      => 'Guinea Pig',
-            'group_id'        => 101
+            'group_id'        => 101,
+            'auth_mod'        => 'modmysql'
         );
 
         $project_array_02 = array(
-            'unix_group_name' => 'garden',
+            'repository_name' => 'garden',
             'group_name'      => 'The Garden Project',
-            'group_id'        => 102
+            'group_id'        => 102,
+            'auth_mod'        => 'modmysql'
         );
 
-        $dar = TestHelper::arrayToDar(
-            $project_array_01,
-            $project_array_02
-        );
-
-        $dao = new MockServiceDao();
-        $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
-        $backend->setReturnValue('_getServiceDao', $dao);
+        $svn_dao = mock('SVN_DAO');
+        stub($svn_dao)->searchSvnRepositories()->returnsDar($project_array_01, $project_array_02);
+        stub($backend)->getsvnDao()->returns($svn_dao);
 
         $ldap = mock('LDAP');
         stub($ldap)->getLDAPParam('server')->returns('ldap://ldap.tuleap.com');
-	stub($ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
+        stub($ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
 
         $project_manager = mock('ProjectManager');
         $event_manager   = new LDAP_BackendSVNTestEventManager();

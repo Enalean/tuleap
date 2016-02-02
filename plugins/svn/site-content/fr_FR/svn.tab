@@ -20,5 +20,6 @@ plugin_svn_manage_repository	plugin_not_activated	Le multi-dépôt SVN est désa
 plugin_svn	update_error	Impossible d'enregistrer les données du dépôt
 plugin_svn	char_err	Le nom du dépôt doit contenir au moins un caractère
 plugin_svn	illegal_char	Le nom de dépôt contient des caractères invalides
-plugin_svn	repository_spaces	Le nom du dépôt ne doit pas conetnir d'espaces
+plugin_svn	repository_spaces	Le nom du dépôt ne doit pas contenir d'espaces
 plugin_svn	repository_not_found	Dépôt non trouvé
+plugin_svn	already_used	Le nom du dépôt existe déjà dans le projet.

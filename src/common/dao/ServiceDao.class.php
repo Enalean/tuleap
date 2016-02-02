@@ -38,7 +38,8 @@ class ServiceDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchActiveUnixGroupByUsedService($service_short_name) {
-        $sql = sprintf("SELECT * FROM groups, service WHERE groups.group_id=service.group_id AND service.short_name=%s AND service.is_used='1' AND groups.status='A'",
+        $sql = sprintf("SELECT * FROM groups, service
+                WHERE groups.group_id=service.group_id AND service.short_name=%s AND service.is_used='1' AND groups.status='A'",
                 $this->da->quoteSmart($service_short_name));
         return $this->retrieve($sql);
     }

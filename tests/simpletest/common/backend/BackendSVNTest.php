@@ -48,17 +48,24 @@ Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('update
 
 class BackendSVNTest extends TuleapTestCase {
 
+    private $tmp_dir;
+
     function setUp() {
-        $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
-        $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
+        $this->tmp_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
+
+        $GLOBALS['svn_prefix']                = $this->tmp_dir . '/svnroot';
+        $GLOBALS['tmp_dir']                   = $this->tmp_dir . '/tmp';
         $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
         $GLOBALS['sys_dbname']                = 'db';
         $GLOBALS['sys_name']                  = 'MyForge';
         $GLOBALS['sys_dbauth_user']           = 'dbauth_user';
         $GLOBALS['sys_dbauth_passwd']         = 'dbauth_passwd';
+        $GLOBALS['svnadmin_cmd']              = '/usr/bin/svnadmin --config-dir '. dirname(__FILE__) . '/_fixtures/.subversion';
         ForgeConfig::store();
-        ForgeConfig::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
+        ForgeConfig::set('sys_project_backup_path', $this->tmp_dir .'/backup');
         mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
+        mkdir($GLOBALS['tmp_dir'], 0777, true);
+        mkdir(ForgeConfig::get('sys_project_backup_path'), 0777, true);
 
         $this->project_manager = mock('ProjectManager');
         $this->token_manager   = mock('SVN_TokenUsageManager');
@@ -70,7 +77,7 @@ class BackendSVNTest extends TuleapTestCase {
                 'getProjectManager',
                 'getUGroupDao',
                 'getUGroupFromRow',
-                '_getServiceDao',
+                'getSvnDao',
                 'chown',
                 'chgrp',
                 'chmod',
@@ -84,9 +91,7 @@ class BackendSVNTest extends TuleapTestCase {
     function tearDown() {
         //clear the cache between each tests
         Backend::clearInstances();
-        $this->recurseDeleteInDir($GLOBALS['svn_prefix'] . '/toto/hooks');
-        rmdir($GLOBALS['svn_prefix'] . '/toto/hooks');
-        rmdir($GLOBALS['svn_prefix'] . '/toto');
+        exec('rm -rf '. escapeshellarg($this->tmp_dir));
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['svn_root_file']);
@@ -193,8 +198,7 @@ class BackendSVNTest extends TuleapTestCase {
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj/hooks"),"hooks dir should be created");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/hooks/post-commit"),"post-commit file should be created");
 
-
-        // Cleanup
+        //Cleanup
         $this->backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
         rmdir($GLOBALS['svn_prefix']."/TestProj");
     }
@@ -280,7 +284,7 @@ class BackendSVNTest extends TuleapTestCase {
         $saf = new MockSVNAccessFile();
         $this->backend->setReturnValue('_getSVNAccessFile', $saf);
         // Update without modification
-        $this->assertEqual($this->backend->updateSVNAccess(142),True);
+        $this->assertEqual($this->backend->updateSVNAccess(142, $GLOBALS['svn_prefix'].'/TestProj'),True);
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should exist");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"),"SVN access file (.new) should be created");
         $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"),"SVN access file (.old) should not be created");
@@ -292,30 +296,33 @@ class BackendSVNTest extends TuleapTestCase {
 
 
     function testGenerateSVNApacheConf() {
-        $service_dao   = new MockServiceDao($this);
-        $active_groups = array("0" =>
-                              array (
-                                     "group_id"=> "101",
-                                     "group_name"  => "Guinea Pig",
-                                     "unix_group_name" => "gpig"),
-                               "1" =>
-                              array (
-                                     "group_id"=> "102",
-                                     "group_name"  => "Guinea Pig is \"back\"",
-                                     "unix_group_name" => "gpig2"),
-                               "2" =>
-                              array (
-                                     "group_id"=> "103",
-                                     "group_name"  => "Guinea Pig is 'angry'",
-                                     "unix_group_name" => "gpig3"));
-
-        $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',$active_groups);
-        $this->backend->setReturnReference('_getServiceDao', $service_dao);
+        $svn_dao = stub('SVN_DAO')->searchSvnRepositories()->returnsDar(
+            array (
+                "group_id"        => "101",
+                "group_name"      => "Guinea Pig",
+                "repository_name" => "gpig",
+                "auth_mod"        => "modmysql"
+            ),
+            array (
+                "group_id"        => "102",
+                "group_name"      => "Guinea Pig is \"back\"",
+                "repository_name" => "gpig2",
+                "auth_mod"        => "modmysql"
+            ),
+            array (
+                "group_id"        => "103",
+                "group_name"      => "Guinea Pig is 'angry'",
+                "repository_name" => "gpig3",
+                "auth_mod"        => "modmysql"
+            )
+        );
+        $this->backend->setReturnReference('getSvnDao', $svn_dao);
         $this->backend->setReturnReference('getSVNTokenManager', $this->token_manager);
         $this->backend->setReturnReference('getProjectManager', $this->project_manager);
 
         $this->assertEqual($this->backend->generateSVNApacheConf(),True);
         $svnroots=file_get_contents($GLOBALS['svn_root_file']);
+
         $this->assertFalse($svnroots === false);
         $this->assertPattern("/gpig2/",$svnroots,"Project name not found in SVN root");
         $this->assertPattern("/AuthName \"Subversion Authorization \(Guinea Pig is 'back'\)\"/",$svnroots,"Group name double quotes in realm");
@@ -438,7 +445,8 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->svn_prefix = dirname(__FILE__) . '/_fixtures/svnroot';
+        $this->tmp_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
+        $this->svn_prefix = $this->tmp_dir. '/svnroot';
         mkdir($this->svn_prefix . '/toto/hooks', 0777, true);
         ForgeConfig::store();
         $this->bin_dir = dirname(__FILE__) . '/_fixtures';
@@ -449,8 +457,7 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
     }
 
     public function tearDown() {
-        $this->recurseDeleteInDir($this->svn_prefix . '/toto');
-        rmdir($this->svn_prefix . '/toto');
+        exec('rm -rf '. escapeshellarg($this->tmp_dir));
         unset($this->svn_prefix);
         ForgeConfig::restore();
         parent::tearDown();
@@ -467,7 +474,7 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         expect($backend)->log()->once();
 
         $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
-        $backend->updateHooks($this->project);
+        $backend->updateHooks($this->project, $this->svn_prefix.'/toto');
     }
 
     public function testDoesntThrowAnExceptionIfTheHookIsALinkToOurImplementation() {
@@ -481,7 +488,7 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         stub($this->project)->canChangeSVNLog()->returns(true);
         expect($backend)->log()->never();
 
-        $backend->updateHooks($this->project);
+        $backend->updateHooks($this->project, $this->svn_prefix.'/toto');
     }
 }
 
@@ -501,7 +508,6 @@ class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
                 'getProjectManager',
                 'getUGroupDao',
                 'getUGroupFromRow',
-                '_getServiceDao',
                 'chown',
                 'chgrp',
                 'chmod',

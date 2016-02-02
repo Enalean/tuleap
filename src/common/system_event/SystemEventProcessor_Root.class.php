@@ -91,6 +91,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
             // Need to refresh apache (graceful)
             system('/sbin/service httpd graceful');
         }
+
         // Update system user and group caches once everything else is processed
         if ($this->backend_system->getNeedRefreshUserCache()) {
             $this->backend_system->refreshUserCache();

@@ -56,7 +56,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
     
     function testGetApacheAuthShouldContainsDefaultValues() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getConf();
+        $conf = $mod->getConf('Guinea Pig');
         
         $this->assertPattern('/Require valid-user/', $conf);
         $this->assertPattern('/AuthType Basic/', $conf);
@@ -65,7 +65,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
     
     function testGetApacheAuthShouldSetupPerlAccess() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getConf();
+        $conf = $mod->getConf('Guinea Pig');
         
         $this->assertPattern('/PerlAccessHandler/', $conf);
         $this->assertPattern('/TuleapDSN/', $conf);
@@ -73,7 +73,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
     
     function testGetApacheAuthShouldNotReferenceAuthMysql() {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getConf();
+        $conf = $mod->getConf('Guinea Pig');
         
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
     }
