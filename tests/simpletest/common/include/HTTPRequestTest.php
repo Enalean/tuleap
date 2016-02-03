@@ -337,15 +337,15 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
     /** @var PFUser */
     private $user;
 
-    private $msg_ie7_deprecated        = 'ie7 warning message';
-    private $msg_ie7_deprecated_button = 'disable ie7 warning';
+    private $msg_ie_deprecated        = 'ie warning message';
+    private $msg_ie_deprecated_button = 'disable ie warning';
 
     public function setUp() {
         parent::setUp();
         $this->preserveServer('HTTP_USER_AGENT');
 
-        $this->setText($this->msg_ie7_deprecated, array('*', 'ie7_deprecated'));
-        $this->setText($this->msg_ie7_deprecated_button, array('*', 'ie7_deprecated_button'));
+        $this->setText($this->msg_ie_deprecated, array('*', 'ie_deprecated'));
+        $this->setText($this->msg_ie_deprecated_button, array('*', 'ie_deprecated_button'));
 
         $this->user   = mock('PFUser');
         $user_manager = stub('UserManager')->getCurrentUser()->returns($this->user);
@@ -364,36 +364,28 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
         $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText('*', 'ie_compatibility_deprecated')->once();
-
-        $browser->getDeprecatedMessage();
+        $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
     public function testIE10CompatibilityModeIsDeprected() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)';
         $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText('*', 'ie_compatibility_deprecated')->once();
-
-        $browser->getDeprecatedMessage();
+        $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
     public function testIE11CompatibilityModeIsDeprected() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
         $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText('*', 'ie_compatibility_deprecated')->once();
-
-        $browser->getDeprecatedMessage();
+        $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testIE9IsUnfortunatlyNotDeprecated() {
+    public function testIE9IsDeprecated() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)';
         $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText()->never();
-
-        $browser->getDeprecatedMessage();
+        $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
     public function testFirefoxIsNotDeprecated() {
@@ -405,11 +397,18 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $browser->getDeprecatedMessage();
     }
 
+    public function testIE8IsDeprecated() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; GTB7.4; InfoPath.2; SV1; .NET CLR 3.3.69573; WOW64; en-US)';
+        $browser = $this->request->getBrowser();
+
+        $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
+    }
+
     public function testIE7IsDeprecated() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
 
-        $this->assertPattern("/$this->msg_ie7_deprecated/", $browser->getDeprecatedMessage());
+        $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
     public function testIE7IsDeprecatedButUserChoseToNotDisplayTheWarning() {
@@ -418,7 +417,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
 
-        $this->assertNoPattern("/$this->msg_ie7_deprecated/", $browser->getDeprecatedMessage());
+        $this->assertNoPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
     public function itDisplaysOkButtonToDisableIE7Warning() {
@@ -427,7 +426,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
 
-        $this->assertPattern("/$this->msg_ie7_deprecated_button/", $browser->getDeprecatedMessage());
+        $this->assertPattern('/disable ie warning/', $browser->getDeprecatedMessage());
     }
 
     public function itDoesNotDisplayOkButtonForAnonymousUser() {
@@ -436,14 +435,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
 
-        $this->assertNoPattern("/$this->msg_ie7_deprecated_button/", $browser->getDeprecatedMessage());
-    }
-
-    public function testBrowserIsIE8() {
-        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; GTB7.4; InfoPath.2; SV1; .NET CLR 3.3.69573; WOW64; en-US)';
-        $browser = $this->request->getBrowser();
-
-        $this->assertIsA($browser, 'BrowserIE8');
+        $this->assertNoPattern('/disable ie warning/', $browser->getDeprecatedMessage());
     }
 }
 
