@@ -10,7 +10,7 @@
         "restangular": "~1.4.0",
         "angular-moment": "~0.8.0",
         "tuleap-artifact-modal": "http://gerrit.tuleap.net/angular-artifact-modal.git",
-        "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#d6a7c3f351da14bb379e61f60e198ea951cf89fb",
+        "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#c3d2d8a60f3eabbf02d71deaf9260fa12c738c73",
         "lodash": "~2.4.0",
         "dragular": "3.4.0"
     },
