@@ -142,7 +142,7 @@ var codendi = codendi || { };
         var hrefs = Object.keys(sparkline_hrefs);
 
         if (hrefs.length) {
-            $.post(
+            $.get(
                 '/sparklines.php', {
                     'sparklines[]': hrefs
                 }
