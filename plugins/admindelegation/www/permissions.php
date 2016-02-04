@@ -131,7 +131,7 @@ echo $GLOBALS['Language']->getText('plugin_admindelegation','permissions_grant')
 echo html_build_select_box_from_arrays(AdminDelegation_Service::getAllServices(), AdminDelegation_Service::getAllLabels(), 'service', 100, true);
 echo '&nbsp;'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_to_user').'&nbsp;';
 echo '<input type="hidden" name="func" value="grant_user_service" />';
-echo '<input type="text" name="user_to_grant" value="'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_autocomplete').'" id="granted_user" />';
+echo '<input type="text" name="user_to_grant" placeholder="'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_autocomplete').'" id="granted_user" />';
 echo '&nbsp;';
 echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_apply').'"/>';
 echo '</form>';
