@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -809,8 +809,11 @@ class GitPlugin extends Plugin {
         $system_check = new Git_SystemCheck(
             $gitgc,
             $gitolite_driver,
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            new PluginConfigChecker($params['logger']),
+            $this
         );
+
         $system_check->process();
     }
 

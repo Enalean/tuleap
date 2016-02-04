@@ -20,6 +20,7 @@
 
 class BackendLogger implements Logger {
     const FILENAME = 'codendi_syslog';
+
     private $filepath;
 
     public function __construct($filename = null) {
@@ -72,4 +73,3 @@ class BackendLogger implements Logger {
 
     }
 }
-?>
