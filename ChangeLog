@@ -1,3 +1,8 @@
+Version 8.12 (Not yet released)
+
+    == Plugins ==
+	* admindelegation: 2.11
+
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==
 	* story #8698: choose the values to be displayed at project creation from trove cats

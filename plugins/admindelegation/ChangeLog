@@ -1,3 +1,6 @@
+Version 2.11 - Tuleap 8.12
+    * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)
+
 Version 2.10 - Tuleap 8.6
     * request #8363: Update service load mecanism
 
