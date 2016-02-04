@@ -76,7 +76,7 @@ while (<LOGFILE>) {
 		$filepath =~ m/^\/([^\/]+)\//;
 		$basedir = $1;
 
-		if ( $basedir ne "mirrors" && $basedir ne "pub" && $basedir ne "debian" ) {
+		if ( $basedir ne "mirrors" && $basedir ne "pub" ) {
 
 			$filepath =~ m/\/([^\/]+)$/;
 			$filename = $1;

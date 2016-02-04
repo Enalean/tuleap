@@ -1,5 +1,0 @@
-plugins/git usr/share/tuleap/plugins/
-plugins/git/bin/sudo/gl-membership.pl usr/lib/tuleap/bin
-plugins/git/bin/sudo/git-post-receive.pl usr/lib/tuleap/bin
-plugins/git/etc/sudoers.d/tuleap-plugin-git etc/sudoers.d
-plugins/git/etc/ssh.config var/lib/tuleap/git-ssh

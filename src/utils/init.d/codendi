@@ -24,7 +24,6 @@
 # Copy this file to /etc/init.d/ (or /etc/rc.d/init.d/ depending on
 # your system) and activate it as such:
 #
-# On Debian, type "update-rc.d codendi defaults"
 # On RedHat, and derivatives, install with "chkconfig --add codendi"
 
 

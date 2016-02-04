@@ -21,14 +21,8 @@ CHMOD='/bin/chmod'
 SERVICE='/sbin/service'
 OPENSSL='/usr/bin/openssl'
 TAR='/bin/tar'
-
-if [ -e /etc/debian_version ]; then
-    KEYDIR="/etc/ssl/private"
-    CERTDIR="/etc/ssl/certs"
-else
-    KEYDIR="/etc/pki/tls/private"
-    CERTDIR="/etc/pki/tls/certs"
-fi
+KEYDIR="/etc/pki/tls/private"
+CERTDIR="/etc/pki/tls/certs"
 
 mkdir -p $KEYDIR $CERTDIR
 

@@ -1,10 +1,11 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, Tuleap 2011-2015
+# Copyright (c) Enalean, Tuleap 2011-2016
 # Copyright (c) STMicroelectronics, Codex 2009,2010
 # Copyright (c) Xerox Corporation, Codendi 2001-2009.
 #
-# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+# This file is licensed under the GNU General Public License version 2.
+# See the file COPYING.
 #
 #      Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 #
@@ -12,7 +13,8 @@
 # In order to keep a log of the installation, you may run the script with:
 # ./setup.sh 2>&1 | tee /root/tuleap_install.log
 
-TODO_FILE=/root/todo_tuleap.txt
+TODO_FILE='/root/todo_tuleap.txt'
+RH_RELEASE='/etc/redhat-release'
 
 todo() {
     # $1: message to log in the todo file
@@ -45,45 +47,39 @@ recoverable_error() {
     fi
 }
 
-if [ -e /etc/debian_version ]; then
-    INSTALL_PROFILE="debian"
-    PROJECT_NAME="tuleap"
-    PROJECT_ADMIN="www-data"
-    TULEAP_CACHE_DIR="/var/cache/tuleap"
-    NAMED_SERVICE="bind9"
-    MYSQLD_SERVICE="mysql"
-    SSHD_SERVICE="ssh"
-    CROND_SERVICE="cron"
-    HTTPD_SERVICE="apache2"
-    generate_ssl_certificate="y"
-else
-    lsb_release=$(which lsb_release)
-    if [ ! -x $lsb_release ]; then
-	die "lsb_release is missing, please install it first (yum install redhat-lsb)"
-    fi
-    if lsb_release -s -i | grep -q -i -P '(centos|redhatenterprise)'; then
-	RH_VERSION=$(lsb_release -s -r)
-	RH_MAJOR_VERSION=$(echo $RH_VERSION | cut -d'.' -f1)
-	RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'.' -f2)
-    fi
-
-    INSTALL_PROFILE="rhel"
-
-    if [ $RH_MAJOR_VERSION = "6" ]; then
-	PROJECT_NAME="tuleap"
-    
+# rh version
+if [ -e "${RH_RELEASE}" ]
+then
+    /bin/grep -i -q centos ${RH_RELEASE}
+    if [ "${?}" -eq 0 ]
+    then
+        RH_VERSION=($(awk '{print $1, $3}' ${RH_RELEASE}))
     else
-	PROJECT_NAME="codendi"
+        RH_VERSION=($(awk '{print $1$2, $7}' ${RH_RELEASE}))
     fi
-    PROJECT_ADMIN="codendiadm"
-    TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
-    NAMED_SERVICE="named"
-    MYSQLD_SERVICE="mysqld"
-    SSHD_SERVICE="sshd"
-    CROND_SERVICE="crond"
-    HTTPD_SERVICE="httpd"
-    generate_ssl_certificate="n"
+
+    RH_MAJOR_VERSION=$(echo ${RH_VERSION[1]: 0:1})
+    RH_MINOR_VERSION=$(echo ${RH_VERSION[1]: 2:1})
+
+else
+    echo -e "\033[31mSorry, Tuleap is running only on RedHat/CentOS.\033[0m"
+    exit 1
 fi
+
+if [ $RH_MAJOR_VERSION = "6" ]; then
+    PROJECT_NAME="tuleap"
+else
+    PROJECT_NAME="codendi"
+fi
+
+PROJECT_ADMIN="codendiadm"
+TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
+NAMED_SERVICE="named"
+MYSQLD_SERVICE="mysqld"
+SSHD_SERVICE="sshd"
+CROND_SERVICE="crond"
+HTTPD_SERVICE="httpd"
+generate_ssl_certificate="n"
 
 export INSTALL_DIR="/usr/share/$PROJECT_NAME"
 
@@ -117,7 +113,7 @@ INSTALL='/usr/bin/install'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t:s0";
-if [ "$INSTALL_PROFILE" = "rhel" -a "$RH_MAJOR_VERSION" = "5" ]; then
+if [ "$RH_MAJOR_VERSION" = "5" ]; then
     SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
 fi
 SELINUX_ENABLED=1
@@ -135,13 +131,9 @@ else
 	fi
 fi
 
-
-CMD_LIST="GROUPADD GROUPDEL USERADD USERDEL USERMOD MV CP LN LS RM \
-MKDIR CHOWN CHGRP CHMOD FIND TOUCH CAT GREP PERL PHP INSTALL"
-
-if [ "$INSTALL_PROFILE" = "rhel" ]; then
-    CMD_LIST="$CMD_LIST RPM CHKCONFIG SERVICE"
-fi
+CMD_LIST=('GROUPADD' 'GROUPDEL' 'USERADD' 'USERDEL' 'USERMOD' 'MV' 'CP' 'LN'
+'LS' 'RM' 'MKDIR' 'CHOWN' 'CHGRP' 'CHMOD' 'FIND' 'TOUCH' 'CAT' 'GREP' 'PERL'
+'PHP' 'INSTALL' 'RPM' 'CHKCONFIG' 'SERVICE')
 
 # Functions
 create_group_withid() {
@@ -189,11 +181,7 @@ generate_passwd() {
 
 has_package() {
     local pkg=$1
-    if [ "$INSTALL_PROFILE" = "debian" ]; then
-	dpkg -s $pkg 2>/dev/null | grep -q "Status: install ok installed"
-    else
-	$RPM -q $pkg >/dev/null 2>&1
-    fi
+    $RPM -q $pkg >/dev/null 2>&1
 }
 
 input_password() {
@@ -248,11 +236,7 @@ control_service() {
 
 enable_service() {
     local service="$1"
-    if [ "$INSTALL_PROFILE" = "rhel" ]; then
 	$CHKCONFIG $service on
-    else
-	: # On Debian, services are enabled by default
-    fi
 }
 
 ##############################################
@@ -342,15 +326,9 @@ EOF
 # Bind DNS server configuration
 #
 setup_bind() {
-    if [ "$INSTALL_PROFILE" = "rhel" ]; then
 	ZONE_DIR="/var/named/chroot/var/named"
 	NAMED_GID="named"
 	ETC_DIR="/var/named/chroot/etc"
-    else
-	ZONE_DIR="/etc/bind"
-	NAMED_GID="bind"
-	ETC_DIR="/etc/bind"
-    fi
     if [ -f $ZONE_DIR/$PROJECT_NAME.zone ]; then
         $CP -af $ZONE_DIR/$PROJECT_NAME.zone $ZONE_DIR/$PROJECT_NAME.zone.orig
     fi
@@ -473,10 +451,6 @@ EOF
 # Mysql configuration
 #
 setup_mysql_cnf() {
-    if [ "$INSTALL_PROFILE" = "debian" ]; then
-	return # This configuration is RHEL specific
-    fi
-
     echo "Creating MySQL conf file..."
     local template_file
     if [ "$RH_MAJOR_VERSION" = "5" ]; then
@@ -611,7 +585,7 @@ test_mysql_host() {
 #
 # Apache setup
 #
-setup_apache_rhel() {
+setup_apache() {
     # Move away useless Apache configuration files
     # before installing our own config files.
     echo "Renaming existing Apache configuration files..."
@@ -683,63 +657,6 @@ setup_apache_rhel() {
 
     $CHOWN root:root /etc/logrotate.d/httpd
     $CHMOD 644 /etc/logrotate.d/httpd
-}
-
-setup_apache_debian() {
-    # Enabled by subversion.conf on RHEL setup
-    a2enmod dav
-    a2enmod dav_svn
-    a2enmod authz_svn
-    # Enabled by ssl.conf on RHEL setup
-    a2enmod ssl
-    # Enabled by php.conf on RHEL setup
-    a2enmod php5
-    # Enabled by auth_mysql.conf on RHEL setup
-    a2enmod auth_mysql
-    # Required by codendi_aliases.conf
-    a2enmod rewrite
-    a2enmod proxy
-    a2enmod proxy_http
-    # Listed in http.conf on RHEL setup
-    # XXX: Find out which ones are really required
-    a2enmod alias
-    a2enmod autoindex
-    a2enmod negotiation
-    a2enmod mime
-    a2enmod deflate
-    a2enmod vhost_alias
-
-    install_dist_conf /etc/apache2/sites-available/tuleap
-    mkdir -p /etc/apache2/tuleap
-    install_dist_conf /etc/apache2/tuleap/codendi_aliases.conf
-    install_dist_conf /etc/apache2/tuleap/php.conf
-    install_dist_conf /etc/apache2/tuleap/auth_mysql.conf
-    install_dist_conf /etc/apache2/conf.d/tuleap-plugins/ckeditor.conf
-    install_dist_conf /etc/apache2/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
-
-    # Subversion / apache specific
-    touch /etc/apache2/tuleap/svnroot.conf
-    substitute '/etc/tuleap/conf/local.inc' '/etc/httpd/conf.d/codendi_svnroot.conf' '/etc/apache2/tuleap/svnroot.conf'
-    substitute '/etc/tuleap/conf/local.inc' 'logs/svn_log' '${APACHE_LOG_DIR}/tuleap_svn.log'
-    substitute '/etc/tuleap/conf/local.inc' 'modmysql' 'modperl'
-
-
-    substitute "/etc/apache2/tuleap/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain"
-    substitute '/etc/apache2/sites-available/tuleap' '%sys_default_domain%' "$sys_default_domain"
-    if [ -f '/etc/apache2/conf.d/munin.conf' ]; then
-	substitute '/etc/apache2/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-    fi
-
-    a2ensite tuleap
-    a2dissite default
-}
-
-setup_apache() {
-    if [ "$INSTALL_PROFILE" = "debian" ]; then
-	setup_apache_debian
-    else
-	setup_apache_rhel
-    fi
 }
 
 ###############################################################################
@@ -983,7 +900,7 @@ fi
 ##############################################
 # Check that all command line tools we need are available
 #
-for cmd in `echo ${CMD_LIST}`
+for cmd in ${CMD_LIST[@]}
 do
     [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
 done
@@ -992,34 +909,28 @@ done
 ##############################################
 # Check release
 #
-if [ "$INSTALL_PROFILE" = "rhel" ]; then
-    if [ "$RH_MAJOR_VERSION" = "5" ]; then
-	RH_UPDATE="6"
-    else
-	RH_UPDATE="3"
-    fi
+if [ "$RH_MAJOR_VERSION" = "5" ]; then
+    RH_UPDATE="6"
+else
+    RH_UPDATE="3"
+fi
 
-    if [ "x$RH_MINOR_VERSION" != x ] && [ "$RH_MINOR_VERSION" -ge "$RH_UPDATE" ]; then
-	echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
-    else
-	cat <<-EOF
-	This machine is not running RedHat Enterprise Linux or CentOS ${RH_RELEASE}.${RH_UPDATE}
-	You should consider to upgrade your system before going any further (yum upgrade).
-	EOF
-	read -p "Continue? [y|n]: " yn
-	if [ "$yn" = "n" ]; then
-	    echo "Bye now!"
-	    exit 1
-	fi
+if [ "x$RH_MINOR_VERSION" != x ] && [ "$RH_MINOR_VERSION" -ge "$RH_UPDATE" ]; then
+    echo "Good! You are running ${RH_VERSION[@]}"
+else
+    echo "This machine is not running RedHat Enterprise Linux or CentOS ${RH_RELEASE}.${RH_UPDATE}"
+    echo "You should consider to upgrade your system before going any further (yum upgrade)."
+    read -p "Continue? [y|n]: " yn
+    if [ "$yn" = "n" ]; then
+        echo "Bye now!"
+        exit 1
     fi
 fi
 
 # Check if IM plugin is installed (works only on rhel).
 enable_plugin_im="false"
-if [ "$INSTALL_PROFILE" = "rhel" ]; then
-    if rpm -q openfire >/dev/null; then
-	enable_plugin_im="true"
-    fi
+if rpm -q openfire >/dev/null; then
+    enable_plugin_im="true"
 fi
 
 enable_plugin_tracker="false"
@@ -1143,15 +1054,11 @@ else
     dbauth_passwd=$(input_password "DB Authentication user")
 fi
 
-if [ "$INSTALL_PROFILE" = "rhel" ]; then
-    # Update codendiadm user password
-    echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
-    build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
-    if [ $SELINUX_ENABLED == 1 ]; then
-	$CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
-    fi
-else
-    : # The debian profile uses www-data which is a pre-existing system account
+# Update codendiadm user password
+echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
+build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
+if [ $SELINUX_ENABLED == 1 ]; then
+$CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
 fi
 
 # Build file structure
@@ -1224,11 +1131,9 @@ if [ $SELINUX_ENABLED == 1 ]; then
     $CHCON -h $SELINUX_CONTEXT /svnroot
     $CHCON -h $SELINUX_CONTEXT /cvsroot
 
-    if [ $INSTALL_PROFILE = "rhel" ]; then
 	if [ "$RH_MAJOR_VERSION" = "6" ]; then
-            # request #3468 - SELinux forbids apache to send emails
+        # request #3468 - SELinux forbids apache to send emails
 	    setsebool -P httpd_can_sendmail 1
-	fi
     fi
 fi
 
@@ -1480,7 +1385,7 @@ fi
 
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
-if [ $INSTALL_PROFILE = "rhel" -a "z$RH_MAJOR_VERSION" = "z5" ]; then
+if [ "z$RH_MAJOR_VERSION" = "z5" ]; then
     forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist
 else
     forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
