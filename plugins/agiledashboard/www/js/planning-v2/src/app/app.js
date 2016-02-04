@@ -13,5 +13,6 @@ angular.module('planning', [
     'tuleap.artifact-modal',
     'inproperties.filter',
     'highlight.filter',
-    'backlog-item-selected'
+    'backlog-item-selected',
+    'edit-item'
 ]);

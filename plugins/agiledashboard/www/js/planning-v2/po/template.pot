@@ -4,15 +4,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
+msgid "{{ selected_bar_controller.nb_selected_backlog_items }} item is selected."
+msgid_plural "{{ selected_bar_controller.nb_selected_backlog_items }} items are selected."
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
 
-#: src/app/milestone/milestone.tpl.html
-msgid "Add a new item"
-msgstr ""
-
-#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 #: src/app/backlog/backlog.tpl.html
 msgid "Add a {{ accepted_type.label }}"
 msgstr ""
@@ -23,6 +25,10 @@ msgstr ""
 
 #: src/app/planning.tpl.html
 msgid "Add a {{ planning.backlog.submilestone_type.label }}"
+msgstr ""
+
+#: src/app/milestone/milestone.tpl.html
+msgid "Add a new item"
 msgstr ""
 
 #: src/app/backlog/backlog.tpl.html
@@ -65,7 +71,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Edit this item"
 msgstr ""
 
@@ -77,7 +83,7 @@ msgstr ""
 msgid "Hide closed backlog items"
 msgstr ""
 
-#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Initial effort"
 msgstr ""
 
@@ -93,11 +99,11 @@ msgstr ""
 msgid "Milestones"
 msgstr ""
 
-#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Move to bottom"
 msgstr ""
 
-#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Move to top"
 msgstr ""
 
@@ -105,7 +111,7 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: src/app/backlog-item/backlog-item-details.tpl.html
+#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "No initial effort defined"
 msgstr ""
 
@@ -116,6 +122,12 @@ msgstr ""
 #: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
 msgid "Press <span class=\"label\">ESC</span> to cancel the selection, only siblings can be multi-selected."
 msgstr ""
+
+#: src/app/backlog-item/backlog-item-details/backlog-item-details-controller.js
+msgid "pt"
+msgid_plural "pts"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/app/planning.tpl.html
 msgid "Show closed backlog items"
@@ -137,15 +149,3 @@ msgstr ""
 #: src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr ""
-
-#: src/app/app-planning-controller.js
-msgid "pt"
-msgid_plural "pts"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
-msgid "{{ selected_bar_controller.nb_selected_backlog_items }} item is selected."
-msgid_plural "{{ selected_bar_controller.nb_selected_backlog_items }} items are selected."
-msgstr[0] ""
-msgstr[1] ""

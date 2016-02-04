@@ -24,6 +24,8 @@ module.exports = {
             'src/**/*.js',
             '!src/**/*.spec.js',
             '!src/**/*-service.js',
+            '!src/**/*-value.js',
+            '!src/**/*-constant.js',
             '!src/**/*-controller.js',
             '!src/**/*-config.js',
             '!src/**/*-directive.js',
@@ -33,6 +35,8 @@ module.exports = {
         ],
         js: [
             'src/**/*-service.js',
+            'src/**/*-value.js',
+            'src/**/*-constant.js',
             'src/**/*-controller.js',
             'src/**/*-config.js',
             'src/**/*-directive.js',

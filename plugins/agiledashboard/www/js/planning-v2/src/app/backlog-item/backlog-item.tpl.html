@@ -1,8 +1,10 @@
 <div class="dragular-handle backlog-item-details {{ backlogItemController.backlog_item.status | lowercase }} {{ backlogItemController.backlog_item.color }}"
-     ng-class="{ 'moving-to': backlogItemController.backlog_item.moving_to }"
->
-    <backlog-item-details></backlog-item-details>
-</div>
+    ng-class="{ 'moving-to': backlogItemController.backlog_item.moving_to }"
+    backlog-item-details="backlogItemController.backlog_item"
+    move-to-top="backlogItemController.moveToTopInParent(backlogItemController.backlog_item)"
+    move-to-bottom="backlogItemController.moveToBottomInParent(backlogItemController.backlog_item)"
+    current-milestone="current_milestone"
+></div>
 
 <div class="show-children"
     ng-class="{ hidden: (backlogItemController.backlog_item.children.data.length === 0 && (! backlogItemController.backlog_item.has_children || backlogItemController.backlog_item.children.loaded)) }"
@@ -26,9 +28,10 @@
             >
                 <div class="backlog-item-details dragular-handle-child {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
                     ng-class="{ 'moving-to': backlog_item.moving_to }"
-                >
-                    <backlog-item-details></backlog-item-details>
-                </div>
+                    backlog-item-details="backlog_item"
+                    move-to-top="backlogItemController.moveToTop(backlog_item)"
+                    move-to-bottom="backlogItemController.moveToBottom(backlog_item)"
+                ></div>
             </li>
         </ul>
 

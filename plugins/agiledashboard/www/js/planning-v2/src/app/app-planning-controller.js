@@ -4,7 +4,6 @@ angular
 
 PlanningCtrl.$inject = [
     '$filter',
-    'gettextCatalog',
     'SharedPropertiesService',
     'BacklogService',
     'BacklogItemService',
@@ -14,12 +13,12 @@ PlanningCtrl.$inject = [
     'RestErrorService',
     'BacklogItemCollectionService',
     'MilestoneCollectionService',
-    'BacklogItemSelectedService'
+    'BacklogItemSelectedService',
+    'EditItemService'
 ];
 
 function PlanningCtrl(
     $filter,
-    gettextCatalog,
     SharedPropertiesService,
     BacklogService,
     BacklogItemService,
@@ -29,7 +28,8 @@ function PlanningCtrl(
     RestErrorService,
     BacklogItemCollectionService,
     MilestoneCollectionService,
-    BacklogItemSelectedService
+    BacklogItemSelectedService,
+    EditItemService
 ) {
     var self = this;
 
@@ -48,7 +48,6 @@ function PlanningCtrl(
         displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
         generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
         getClosedMilestones                   : getClosedMilestones,
-        getInitialEffortMessage               : getInitialEffortMessage,
         getOpenMilestones                     : getOpenMilestones,
         init                                  : init,
         isMilestoneContext                    : isMilestoneContext,
@@ -56,7 +55,7 @@ function PlanningCtrl(
         refreshSubmilestone                   : refreshSubmilestone,
         showAddItemToSubMilestoneModal        : showAddItemToSubMilestoneModal,
         showAddSubmilestoneModal              : showAddSubmilestoneModal,
-        showEditModal                         : showEditModal,
+        showEditModal                         : EditItemService.showEditModal,
         showEditSubmilestoneModal             : showEditSubmilestoneModal,
         switchClosedMilestoneItemsViewMode    : switchClosedMilestoneItemsViewMode,
         switchViewMode                        : switchViewMode,
@@ -305,29 +304,6 @@ function PlanningCtrl(
         NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
     }
 
-    function showEditModal($event, backlog_item, milestone) {
-        var when_left_mouse_click = 1;
-
-        var callback = function(item_id) {
-            return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function() {
-                if (milestone) {
-                    MilestoneService.updateInitialEffort(milestone);
-                }
-            });
-        };
-
-        if ($event.which === when_left_mouse_click) {
-            $event.preventDefault();
-
-            NewTuleapArtifactModalService.showEdition(
-                self.user_id,
-                backlog_item.artifact.tracker.id,
-                backlog_item.artifact.id,
-                callback
-            );
-        }
-    }
-
     function prependItemToSubmilestone(child_item_id, parent_item) {
         return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
             self.items[child_item_id] = data.backlog_item;
@@ -371,10 +347,6 @@ function PlanningCtrl(
 
     function displayUserCantPrioritizeForMilestones() {
         return ! hideUserCantPrioritizeForMilestones();
-    }
-
-    function getInitialEffortMessage(initial_effort) {
-        return gettextCatalog.getPlural(initial_effort, "pt", "pts");
     }
 
 }

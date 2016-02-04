@@ -5,5 +5,6 @@ angular.module('backlog', [
     'planning',
     'project',
     'infinite-scroll',
-    'backlog-item-selected'
+    'backlog-item-selected',
+    'backlog-filterterms'
 ]);
