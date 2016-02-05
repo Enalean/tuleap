@@ -26,6 +26,11 @@ class SVNPathsUpdater {
         $transformed_content = array();
         foreach ($submitted_content_lines as $line) {
             $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
             $line = '/' . trim($line, '/') . '/';
 
             $transformed_content[] = $line;
