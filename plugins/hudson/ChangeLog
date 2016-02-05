@@ -1,3 +1,6 @@
+Version 1.24 - Tuleap 8.12
+    * request #8843 Countinous integration SVN path is //
+
 Version 1.23 - Tuleap 8.10
     * story #8671: trigger CI build on svn paths
 
