@@ -69,4 +69,22 @@ EOS;
         $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
     }
 
+    public function itDoesNotTranformEmptyContent() {
+        $updater = new SVNPathsUpdater();
+
+        $submitted_content = '';
+        $expected_content  = '';
+
+        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+    }
+
+    public function itTranformsSpacesOnlyContentAsEmptyContent() {
+        $updater = new SVNPathsUpdater();
+
+        $submitted_content = '            ';
+        $expected_content  = '';
+
+        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+    }
+
 }
