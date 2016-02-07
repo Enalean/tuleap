@@ -25,29 +25,37 @@ var packageJson = require('./package.json');
 /**
  * Configuration
  */
+require('console-stamp')(console, 'HH:MM:ss.l');
+
 var Config = require('./config/config');
 var config = new Config();
 config.init();
 
-var PORT_CLIENT   = config.conf.get('port');
-var PRIVATE_KEY   = config.conf.get('nodejs_server_jwt_private_key');
-var TSL_KEY_PATH  = config.conf.get('full_path_ssl_key');
-var TSL_CERT_PATH = config.conf.get('full_path_ssl_cert');
+const PORT_CLIENT   = config.conf.get('port');
+const PRIVATE_KEY   = config.conf.get('nodejs_server_jwt_private_key');
+const TSL_KEY_PATH  = config.conf.get('full_path_ssl_key');
+const TSL_CERT_PATH = config.conf.get('full_path_ssl_cert');
 
-var fs      = require('fs');
-var options = {
-    key  : fs.readFileSync(TSL_KEY_PATH),
-    cert : fs.readFileSync(TSL_CERT_PATH)
-};
-
-config.dropRootPrivileges();
-
+var fs            = require('fs');
 var bodyParser    = require('body-parser');
 var jsonParser    = bodyParser.json();
 var app           = require('express')();
-var server        = require('https').Server(options, app);
-var io            = require('socket.io')(server);
 var _             = require('lodash');
+
+var server, io;
+try {
+    var options = {
+        key: fs.readFileSync(TSL_KEY_PATH),
+        cert: fs.readFileSync(TSL_CERT_PATH)
+    };
+    server = require('https').Server(options, app);
+    io     = require('socket.io')(server);
+    server.listen(PORT_CLIENT);
+    config.dropRootPrivileges();
+} catch (err) {
+    console.error('Be careful,' + err.message.split(',')[1]);
+    process.exit(1);
+}
 
 /**
  * Load modules
@@ -62,11 +70,6 @@ var Rights = require('./backend/rights');
 var rights = new Rights();
 
 /**
- * Listener
- */
-server.listen(PORT_CLIENT);
-
-/**
  * Connection Websocket
  *
  * To do a subscription we need to have:
@@ -78,14 +81,14 @@ server.listen(PORT_CLIENT);
 io.on('connection', function (socket) {
     socket.auth = false;
 
-    socket.on('subscription', function(data){
+    socket.on('subscription', function (data) {
         if (checkSubscribeCorrect(data)) {
-            if(data.nodejs_server_version === packageJson.version) {
-                var decoded = jwt.decodeToken(data.token, function(err) {
-                    console.log(err);
+            if (data.nodejs_server_version === packageJson.version) {
+                var decoded = jwt.decodeToken(data.token, function (err) {
+                    console.error(err);
                 });
                 if (jwt.isTokenValid(decoded)) {
-                    if (! jwt.isDateExpired(decoded.exp)) {
+                    if (!jwt.isDateExpired(decoded.exp)) {
                         subscribe(socket, data, decoded);
                     } else {
                         socket.emit('error-jwt', 'JWTExpired');
@@ -96,6 +99,8 @@ io.on('connection', function (socket) {
             } else {
                 console.error('Client needs an other Node.js version.');
             }
+        } else {
+            console.error('Subscription details are incorrect.');
         }
 
         if (!socket.auth) {
@@ -104,12 +109,12 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('error', function(message) {
+    socket.on('error', function (message) {
         console.error(message);
     });
 
-    socket.on('disconnect', function() {
-        if(socket.room) {
+    socket.on('disconnect', function () {
+        if (socket.room) {
             rights.remove(socket.room);
             rooms.removeById(socket.room, socket.id);
             console.log('Client (user id:' + socket.username + ') is disconnected.');

@@ -22,7 +22,7 @@ if (typeof define !== 'function') {
 }
 
 define(['lodash'], function (_) {
-    var user = function () {
+    var rooms = function () {
         this.sockets_collection = {};
 
         /**
@@ -176,5 +176,5 @@ define(['lodash'], function (_) {
         };
     };
 
-    return user;
+    return rooms;
 });

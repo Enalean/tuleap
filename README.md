@@ -43,5 +43,5 @@ If you want to start the node.js server with a config file:
 
 ```
 $ docker run --rm -v "$PWD/":/nodeapp --entrypoint=bash -ti -p 4443:4443 enalean/node-dev-simple
-# node server.js --config='etc/node/config.json'
+# node server.js --config='etc/tuleap-realtime/config.json'
 ```

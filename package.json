@@ -6,6 +6,7 @@
   "dependencies": {
     "amdefine": "^1.0.0",
     "body-parser": "1.14.1",
+    "console-stamp": "^0.2.0",
     "convict": "^1.0.2",
     "express": "*",
     "jsonfile": "^2.2.3",

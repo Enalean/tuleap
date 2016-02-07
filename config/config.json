@@ -1,8 +1,8 @@
 {
   "nodejs_server_jwt_private_key": "private_key_to_change",
-  "full_path_ssl_cert": "ssl/cert.pem",
-  "full_path_ssl_key": "ssl/key.pem",
-  "port": 4443,
+  "full_path_ssl_cert": "/etc/pki/tls/tuleap-realtime-cert.pem",
+  "full_path_ssl_key": "/etc/pki/tls/tuleap-realtime-key.pem",
+  "port": 443,
   "process_uid": 1000,
   "process_gid": 1000
 }
