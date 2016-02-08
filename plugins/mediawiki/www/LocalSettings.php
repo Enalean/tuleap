@@ -39,7 +39,7 @@ $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 require_once('common/include/Codendi_Request.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once 'pre.php';
-require_once 'plugins_utils.php';
+require_once __DIR__.'/../../fusionforge_compat/include/include/plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/Group.class.php';
 require_once __DIR__.'/../include/MediawikiFusionForgeProjectNameRetriever.php';
@@ -116,14 +116,12 @@ if ($is_tuleap_mediawiki_123) {
 $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
 $project_dir = forge_get_config('projects_path', 'mediawiki') . "/"
 	. $group->getID() ;
-
 if (! is_dir($project_dir)) {
     $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
     if (! is_dir($project_dir)) {
         exit_error (sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), $group->getPublicName().' : '.$project_dir)) ;
     }
 }
-
 $path = array( $IP, "$IP/includes", "$IP/languages" );
 set_include_path( implode( PATH_SEPARATOR, $path ) . PATH_SEPARATOR . get_include_path() );
 
@@ -495,7 +493,6 @@ if (is_file("$gconfig_dir/ForgeSettings.php")) {
 if (is_file("$project_dir/ProjectSettings.php")) {
     include ("$project_dir/ProjectSettings.php") ;
 }
-
 }
 
 // Add Tuleap Skin

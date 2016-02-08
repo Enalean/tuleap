@@ -92,6 +92,8 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
 
+            $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+
             /**
              * HACK
              */
@@ -602,6 +604,11 @@ class MediaWikiPlugin extends Plugin {
             if ($mediawiki_instantiater) {
                 $mediawiki_instantiater->instantiateFromTemplate($params['ugroupsMapping']);
             }
+        } else if($this->serviceIsUsedInTemplate($params['group_id'])) {
+            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+            if ($mediawiki_instantiater) {
+                $mediawiki_instantiater->instantiate();
+            }
         }
     }
 
@@ -677,7 +684,7 @@ class MediaWikiPlugin extends Plugin {
             return;
         }
 
-        include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
+        include_once dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
         return new MediaWikiInstantiater(
             $project,
@@ -989,6 +996,17 @@ class MediaWikiPlugin extends Plugin {
         require_once 'MediawikiMLEBExtensionDao.php';
 
         return new MediawikiMLEBExtensionDao();
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function importXmlProject($params) {
+        require_once 'MediaWikiXMLImporter.class.php';
+        $importer = new MediaWikiXMLImporter($params['logger'], $this->getDao());
+        $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
     }
 
 }

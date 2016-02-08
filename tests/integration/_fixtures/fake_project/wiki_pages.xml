@@ -1,0 +1,102 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.7/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.7/ http://www.mediawiki.org/xml/export-0.7.xsd" version="0.7" xml:lang="fr">
+  <siteinfo>
+    <sitename>Toto 123 Wiki</sitename>
+    <base>https://tuleap_web_1.tuleap-aio-dev.docker/plugins/mediawiki/wiki/toto12/index.php/Accueil</base>
+    <generator>MediaWiki 1.20.3</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="-2" case="first-letter">Média</namespace>
+      <namespace key="-1" case="first-letter">Spécial</namespace>
+      <namespace key="0" case="first-letter" />
+      <namespace key="1" case="first-letter">Discussion</namespace>
+      <namespace key="2" case="first-letter">Utilisateur</namespace>
+      <namespace key="3" case="first-letter">Discussion utilisateur</namespace>
+      <namespace key="4" case="first-letter">Toto 123 Wiki</namespace>
+      <namespace key="5" case="first-letter">Discussion Toto 123 Wiki</namespace>
+      <namespace key="6" case="first-letter">Fichier</namespace>
+      <namespace key="7" case="first-letter">Discussion fichier</namespace>
+      <namespace key="8" case="first-letter">MediaWiki</namespace>
+      <namespace key="9" case="first-letter">Discussion MediaWiki</namespace>
+      <namespace key="10" case="first-letter">Modèle</namespace>
+      <namespace key="11" case="first-letter">Discussion modèle</namespace>
+      <namespace key="12" case="first-letter">Aide</namespace>
+      <namespace key="13" case="first-letter">Discussion aide</namespace>
+      <namespace key="14" case="first-letter">Catégorie</namespace>
+      <namespace key="15" case="first-letter">Discussion catégorie</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Accueil</title>
+    <ns>0</ns>
+    <id>31</id>
+    <revision>
+      <id>11</id>
+      <timestamp>2016-01-13T08:21:09Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <sha1>0gyznl8vdyjg9trmp3drs34c3d6usq2</sha1>
+      <text xml:space="preserve" bytes="23">bla
+[[page1]]
+
+        </text>
+    </revision>
+    <revision>
+      <id>14</id>
+      <parentid>11</parentid>
+      <timestamp>2016-01-13T08:21:09Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <sha1>bhj316ho7n58nq5ulxdmj14yzt8qb3q</sha1>
+      <text xml:space="preserve" bytes="22">bla version2
+[[page1]]</text>
+    </revision>
+    <revision>
+      <id>16</id>
+      <parentid>14</parentid>
+      <timestamp>2016-01-13T09:11:14Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <sha1>2m481kei0srdq2c00241oyope7jsj72</sha1>
+      <text xml:space="preserve" bytes="49">bla version3
+[[Fichier:Napoleon.jpeg ]]
+[[page1]]</text>
+    </revision>
+  </page>
+  <page>
+    <title>Page1</title>
+    <ns>0</ns>
+    <id>32</id>
+    <revision>
+      <id>12</id>
+      <timestamp>2016-01-13T09:11:14Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <sha1>nxjx5cxbkftdufnjdkl2aiy1e1seyxh</sha1>
+      <text xml:space="preserve" bytes="18">ceci est la page 1</text>
+    </revision>
+  </page>
+  <page>
+    <title>Discussion:Accueil</title>
+    <ns>1</ns>
+    <id>33</id>
+    <revision>
+      <id>13</id>
+      <timestamp>2016-01-13T08:19:07Z</timestamp>
+      <contributor>
+        <username>Admin</username>
+        <id>1</id>
+      </contributor>
+      <comment>Page créée avec « Voilà la discussion »</comment>
+      <sha1>7xtzo59jsxul5j2d399o988j3upd98c</sha1>
+      <text xml:space="preserve" bytes="20">Voilà la discussion</text>
+    </revision>
+  </page>
+</mediawiki>

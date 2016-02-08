@@ -6,6 +6,7 @@ grammar {
     include "../project-definition.rnc"
     include "../git-definition.rnc"
     include "../frs-definition.rnc"
+    include "../mediawiki-definition.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
 
     start =
@@ -16,6 +17,7 @@ grammar {
             element svn { svn }? &
             element git { git }? &
             element frs { frs }? &
+            element mediawiki { mediawiki }? &
             element ugroups { ugroups }?
         }
 }

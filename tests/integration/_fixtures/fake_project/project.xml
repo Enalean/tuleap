@@ -11,6 +11,9 @@
     <services>
         <service shortname="svn" enabled="true" />
         <service shortname="cvs" enabled="false" />
+        <service shortname="plugin_mediawiki" enabled="true" />
+        <service shortname="mediawiki" enabled="true" />
     </services>
 
+    <mediawiki pages-backup="wiki_pages.xml"/>
 </project>

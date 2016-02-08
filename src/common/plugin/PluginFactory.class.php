@@ -40,7 +40,9 @@ class PluginFactory {
 
     /** @var array */
     private $plugin_class_path = array();
-    
+
+    static private $instance;
+
     public function __construct(
         PluginDao $plugin_dao,
         PluginResourceRestrictor $plugin_restrictor
@@ -57,19 +59,25 @@ class PluginFactory {
         $this->name_by_id     = array();
         $this->custom_plugins = array();
     }
-    
+
+    /**
+      * @return PluginFactory
+      */
     public static function instance() {
-        static $_pluginfactory_instance;
-        if (!$_pluginfactory_instance) {
+        if (!self::$instance) {
             $plugin_dao              = new PluginDao(CodendiDataAccess::instance());
             $restricted_plugin_dao   = new RestrictedPluginDao();
             $restrictor              = new PluginResourceRestrictor($restricted_plugin_dao);
 
-            $_pluginfactory_instance = new PluginFactory($plugin_dao, $restrictor);
+            self::$instance = new PluginFactory($plugin_dao, $restrictor);
         }
-        return $_pluginfactory_instance;
+        return self::$instance;
     }
-    
+
+    public static function clearInstance() {
+        self::$instance = null;
+    }
+
     function getPluginById($id) {
         if (!isset($this->retrieved_plugins['by_id'][$id])) {
             $dar = $this->plugin_dao->searchById($id);
@@ -81,7 +89,7 @@ class PluginFactory {
         }
         return $this->retrieved_plugins['by_id'][$id];
     }
-    
+
     function getPluginByName($name) {
         if (!isset($this->retrieved_plugins['by_name'][$name])) {
             $dar = $this->plugin_dao->searchByName($name);
@@ -93,7 +101,7 @@ class PluginFactory {
         }
         return $this->retrieved_plugins['by_name'][$name];
     }
-    
+
     /**
      * create a plugin in the db
      * @return the new plugin or false if there is already the plugin (same name)
@@ -112,7 +120,7 @@ class PluginFactory {
         }
         return $p;
     }
-    
+
     function _getInstancePlugin($id, $row) {
         if (!isset($this->retrieved_plugins['by_id'][$id])) {
             $this->retrieved_plugins['by_id'][$id] = false;
@@ -148,15 +156,13 @@ class PluginFactory {
         $class_name = $name."Plugin";
         $custom     = false;
         $class_path = '';
+        $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
         if (!class_exists($class_name)) {
-            $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
-            //Custom ?
-            if ($this->loadClass($this->_getCustomPluginsRoot().$file_name)) {
-                $custom = true;
-                $class_path = $this->_getCustomPluginsRoot().$file_name;
-            } else {
-                $class_path = $this->tryPluginPaths($this->getOfficialPluginPaths(), $file_name);
-            }
+            $this->loadClass($this->_getCustomPluginsRoot().$file_name);
+        }
+        if (empty($this->plugin_class_path[$name])) {
+            $class_path = $this->getPluginClassPath($file_name);
+            $custom = $this->classIsCustom($file_name);
         }
         if (!class_exists($class_name)) {
             $class_name = false;
@@ -169,6 +175,18 @@ class PluginFactory {
             }
         }
         return array('class' => $class_name, 'custom' => $custom);
+    }
+
+    private function getPluginClassPath($file_name) {
+        if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
+            return $this->_getCustomPluginsRoot().$file_name;
+        } else {
+            return $this->tryPluginPaths($this->getOfficialPluginPaths(), $file_name);
+        }
+    }
+
+    private function classIsCustom($file_name) {
+        return file_exists($this->_getCustomPluginsRoot().$file_name);
     }
 
     private function getOfficialPluginPaths() {
@@ -214,13 +232,13 @@ class PluginFactory {
             return $GLOBALS['sys_pluginsroot'];
         else return null;
     }
-    
+
     function _getCustomPluginsRoot() {
         if (isset($GLOBALS['sys_custompluginsroot']))
             return $GLOBALS['sys_custompluginsroot'];
         else return null;
     }
-    
+
     /**
      * @return array of enabled or disabled plugins depends on parameters
      */
@@ -252,7 +270,7 @@ class PluginFactory {
         while($row = $dar->getRow()) {
             if ($p = $this->_getInstancePlugin($row['id'], $row)) {
                 $all_plugins[] = $p;
-            } 
+            }
         }
         return $all_plugins;
     }
@@ -262,7 +280,7 @@ class PluginFactory {
     function isPluginAvailable($plugin) {
         return isset($this->retrieved_plugins['available'][$plugin->getId()]);
     }
-    
+
     /**
      * available plugin
      */
@@ -283,7 +301,7 @@ class PluginFactory {
             unset($this->retrieved_plugins['available'][$plugin->getId()]);
         }
     }
-    
+
     function getNotYetInstalledPlugins() {
         $col     = array();
         $paths   = $this->getOfficialPluginPaths();
@@ -306,7 +324,7 @@ class PluginFactory {
         $dar = $this->plugin_dao->searchByName($name);
         return ($dar->rowCount() > 0);
     }
-        
+
     function removePlugin($plugin) {
         $id =  $plugin->getId();
         unset($this->retrieved_plugins['by_id'][$id]);
@@ -316,7 +334,7 @@ class PluginFactory {
         unset($this->name_by_id[$id]);
         return $this->plugin_dao->removeById($plugin->getId());
     }
-    
+
     function getNameForPlugin($plugin) {
         $name = '';
         $id = $plugin->getId();
@@ -331,7 +349,7 @@ class PluginFactory {
         }
         return $name;
     }
-    
+
     function pluginIsCustom($plugin) {
         return isset($this->custom_plugins[$plugin->getId()]);
     }

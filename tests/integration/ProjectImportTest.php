@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -24,6 +23,7 @@ require_once 'html.php';
 require_once 'user.php';
 
 class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner {
+
 }
 
 class ProjectImportTest extends TuleapDbTestCase {
@@ -37,6 +37,9 @@ class ProjectImportTest extends TuleapDbTestCase {
 
     public function setUp() {
         parent::setUp();
+        PluginManager::instance()->invalidateCache();
+        PluginFactory::clearInstance();
+        $this->old_globals = $GLOBALS;
         $GLOBALS['feedback'] = '';
         $GLOBALS['svn_prefix'] = '/tmp';
         $GLOBALS['cvs_prefix'] = '/tmp';
@@ -47,7 +50,42 @@ class ProjectImportTest extends TuleapDbTestCase {
         $GLOBALS['sys_cookie_prefix'] = '';
         $GLOBALS['sys_force_ssl'] = 0;
         ForgeConfig::store();
+        $this->old_sys_pluginsroot = $GLOBALS['sys_pluginsroot'];
+        $this->old_sys_custompluginsroot = $GLOBALS['sys_custompluginsroot'];
+        $GLOBALS['sys_pluginsroot'] = dirname(__FILE__) . '/../../plugins/';
+        $GLOBALS['sys_custompluginsroot'] = "/tmp";
         ForgeConfig::set('tuleap_dir', __DIR__.'/../../');
+        ForgeConfig::set('codendi_log', "/tmp/");
+        /**
+         * HACK
+         */
+        require_once dirname(__FILE__).'/../../plugins/fusionforge_compat/include/fusionforge_compatPlugin.class.php';
+        $ff_plugin = new fusionforge_compatPlugin();
+        $ff_plugin->loaded();
+
+        PluginManager::instance()->installAndActivate('mediawiki');
+
+        $plugin = PluginManager::instance()->getPluginByName('mediawiki');
+        EventManager::instance()->addListener(
+            Event::IMPORT_XML_PROJECT,
+            $plugin,
+            'importXmlProject',
+            false
+        );
+        EventManager::instance()->addListener(
+            'register_project_creation',
+            $plugin,
+            'register_project_creation',
+            false
+        );
+        EventManager::instance()->addListener(
+            Event::SERVICES_ALLOWED_FOR_PROJECT,
+            $plugin,
+            'services_allowed_for_project',
+            false
+        );
+
+        putenv('TULEAP_LOCAL_INC='.dirname(__FILE__).'/_fixtures/local.inc');
     }
 
     public function tearDown() {
@@ -61,6 +99,12 @@ class ProjectImportTest extends TuleapDbTestCase {
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_cookie_prefix']);
         unset($GLOBALS['sys_force_ssl']);
+        $GLOBALS['sys_pluginsroot'] = $this->old_sys_pluginsroot;
+        $GLOBALS['sys_custompluginsroot'] = $this->old_sys_custompluginsroot;
+        EventManager::clearInstance();
+        PluginManager::instance()->invalidateCache();
+        PluginFactory::clearInstance();
+        $GLOBALS = $this->old_globals;
         parent::tearDown();
     }
 
@@ -76,7 +120,6 @@ class ProjectImportTest extends TuleapDbTestCase {
             new Log_ConsoleLogger()
         );
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
-
         $archive = new Tuleap\Project\XML\Import\DirectoryArchive(__DIR__.'/_fixtures/fake_project');
 
         $importer->importNewFromArchive($archive, $system_event_runner);
@@ -91,7 +134,13 @@ class ProjectImportTest extends TuleapDbTestCase {
         $this->assertEqual($project->getDescription(), '123 Soleil');
         $this->assertEqual($project->usesSVN(), true);
         $this->assertEqual($project->usesCVS(), false);
+        $this->assertEqual($project->usesService('plugin_mediawiki'), true);
         $system_event_runner->expectCallCount('runSystemEvents', 1);
         $system_event_runner->expectCallCount('checkPermissions', 1);
+
+        //Mediawiki import tests
+        $mediawiki_dao = new MediawikiDao();
+        $nb_pages = $mediawiki_dao->getMediawikiPagesNumberOfAProject($project);
+        $this->assertEqual(3, $nb_pages['result']);
     }
 }

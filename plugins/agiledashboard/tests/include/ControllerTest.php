@@ -82,10 +82,6 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         stub($this->planning_factory)->getPlanningsOutOfRootPlanningHierarchy()->returns(array());
         stub($this->current_user)->useLabFeatures()->returns(false);
 
-        if (!defined('IS_SCRIPT')) {
-            define('IS_SCRIPT', false);
-        }
-
         $this->user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
         UserManager::setInstance($this->user_manager);
     }

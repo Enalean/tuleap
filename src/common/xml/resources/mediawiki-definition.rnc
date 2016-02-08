@@ -1,0 +1,2 @@
+mediawiki =
+    attribute pages-backup { xsd:string }

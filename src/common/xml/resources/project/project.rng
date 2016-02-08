@@ -5,6 +5,7 @@
   <include href="project-definition.rng"/>
   <include href="git-definition.rng"/>
   <include href="frs-definition.rng"/>
+  <include href="mediawiki-definition.rng"/>
   <include href="tracker-definition.rng"/>
   <start>
     <element name="project">
@@ -29,6 +30,11 @@
         <optional>
           <element name="frs">
             <ref name="frs"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="mediawiki">
+            <ref name="mediawiki"/>
           </element>
         </optional>
         <optional>
