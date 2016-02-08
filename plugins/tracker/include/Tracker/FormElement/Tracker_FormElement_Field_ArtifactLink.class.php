@@ -23,6 +23,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     const CREATE_NEW_PARENT_VALUE = -1;
     const NEW_VALUES_KEY          = 'new_values';
+    const NATURE_IS_CHILD         = '_is_child';
 
     /**
      * @var Tracker_ArtifactFactory
@@ -1425,8 +1426,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         foreach ($this->getArtifactIdsToLink($artifact, $value, $previous_changesetvalue) as $artifact_to_be_linked_by_tracker) {
             $tracker = $artifact_to_be_linked_by_tracker['tracker'];
+            $nature  = $this->getNature($this->getTracker(), $tracker);
+
             $dao->create(
                 $changeset_value_id,
+                $nature,
                 $artifact_to_be_linked_by_tracker['ids'],
                 $tracker->getItemName(),
                 $tracker->getGroupId()
@@ -1434,6 +1438,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
 
         return $this->updateCrossReferences($artifact, $value);
+    }
+
+    private function getNature(Tracker $from_tracker, Tracker $to_tracker) {
+        if (in_array($to_tracker, $from_tracker->getChildren())) {
+            return self::NATURE_IS_CHILD;
+        }
+
+        return null;
     }
 
     /** @return array */

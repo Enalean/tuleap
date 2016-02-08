@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -125,12 +125,17 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     }
     
     public function testWeCanDeleteAllChildrenByNOTprovidingAnArrayOfIds() {
-        
-        $this->dao->expectOnce('deleteAllChildren', array($this->tracker_id));
+        $this->dao->expectOnce('deleteAllChildrenWithNature', array($this->tracker_id));
         
         $this->expectRedirectTo($this->redirect_url);
         
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller(
+            $this->request,
+            $this->hierarchical_tracker,
+            $this->factory,
+            $this->dao
+        );
+
         $controller->update();
     }
     

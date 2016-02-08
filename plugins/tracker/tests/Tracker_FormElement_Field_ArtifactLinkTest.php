@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -944,25 +944,33 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
                 'getArtifactFactory',
                 'getArtifactsByArtifactIdList',
                 'getTrackerReferenceManager',
-                'getCurrentUser'
+                'getCurrentUser',
+                'getTracker',
             )
         );
 
         $this->tracker_referencer_manager = mock('Tracker_ReferenceManager');
         stub($this->artifact_link)->getTrackerReferenceManager()->returns($this->tracker_referencer_manager);
 
-        $tracker = stub('Tracker')->getId()->returns(101);
+        $this->tracker       = stub('Tracker')->getId()->returns(102);
+        $this->tracker_child = stub('Tracker')->getId()->returns(101);
+
+        stub($this->tracker)->getChildren()->returns(array($this->tracker_child));
+        stub($this->tracker_child)->getChildren()->returns(array());
 
         $this->some_artifact = mock('Tracker_Artifact');
         stub($this->some_artifact)->getId()->returns(456);
-        stub($this->some_artifact)->gettracker()->returns($tracker);
+        stub($this->some_artifact)->getTracker()->returns($this->tracker_child);
 
         $this->other_artifact = mock('Tracker_Artifact');
         stub($this->other_artifact)->getId()->returns(457);
-        stub($this->other_artifact)->gettracker()->returns($tracker);
+        stub($this->other_artifact)->getTracker()->returns($this->tracker_child);
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->dao              = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
+
         stub($this->artifact_link)->getArtifactFactory()->returns($this->artifact_factory);
+        stub($this->artifact_link)->getValueDao()->returns($this->dao);
 
         $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
         stub($this->previous_changesetvalue)->getArtifactIds()->returns(array(36));
@@ -981,7 +989,6 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
     public function itRemovesACrossReference() {;
         $artifact_to_unlink = $this->some_artifact;
         $artifact           = mock('Tracker_Artifact');
-        $dao                = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
         $changeset_value_id = 56;
         $value = array(
             'new_values' => '',
@@ -990,33 +997,33 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
             )
         );
 
-        stub($this->artifact_link)->getValueDao()->returns(mock('Tracker_FormElement_Field_Value_ArtifactLinkDao'));
+        stub($this->artifact_link)->getTracker()->returns($this->tracker);
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array())->at(0)->returns(array());
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array($artifact_to_unlink));
         
         expect($this->tracker_referencer_manager)->removeBetweenTwoArtifacts()->once();
-        expect($dao)->create()->never();
+        expect($this->dao)->create()->never();
 
         $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
     }
 
     public function itAddsACrossReference() {
-        $artifact_to_link = $this->some_artifact;
-        $artifact = mock('Tracker_Artifact');
+        $artifact_to_link   = $this->some_artifact;
+        $artifact           = stub('Tracker_Artifact')->getTracker()->returns($this->tracker_child);
         $changeset_value_id = 56;
+
         $value = array(
             'new_values' => 36,
             'removed_values' => array()
         );
 
-        $dao = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
-        stub($dao)->create()->returns(true);
-        stub($this->artifact_link)->getValueDao()->returns($dao);
+        stub($this->dao)->create()->returns(true);
+        stub($this->artifact_link)->getTracker()->returns($this->tracker);
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(0)->returns(array($artifact_to_link));
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array());
 
         expect($this->tracker_referencer_manager)->insertBetweenTwoArtifacts()->once();
-        expect($dao)->create()->once();
+        expect($this->dao)->create()->once();
 
         $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
     }
@@ -1024,18 +1031,55 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
     public function itCallsOnlyOneTimeCreateInDBIfAllArtifactsAreInTheSameTracker() {
         $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
         $artifact           = mock('Tracker_Artifact');
-        $dao                = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
         $changeset_value_id = 56;
          $value = array(
             'new_values' => '36,37',
             'removed_values' => array()
         );
 
-        stub($this->artifact_link)->getValueDao()->returns($dao);
+        stub($this->artifact_link)->getTracker()->returns($this->tracker);
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
 
-        expect($dao)->create()->once();
+        expect($this->dao)->create()->once();
+
+        $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
+    }
+
+    public function itUsesArtifactLinkNature() {
+        $artifact           = mock('Tracker_Artifact');
+        $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
+
+        $changeset_value_id = 56;
+        $value = array(
+            'new_values' => '36,37',
+            'removed_values' => array()
+        );
+
+        stub($this->artifact_link)->getTracker()->returns($this->tracker);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
+
+        expect($this->dao)->create('*', '_is_child', '*', '*', '*')->once();
+
+        $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
+    }
+
+    public function itUsesDefaultArtifactLinkNature() {
+        $artifact           = mock('Tracker_Artifact');
+        $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
+
+        $changeset_value_id = 56;
+        $value = array(
+            'new_values' => '36,37',
+            'removed_values' => array()
+        );
+
+        stub($this->artifact_link)->getTracker()->returns($this->tracker_child);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
+
+        expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
 
         $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
     }

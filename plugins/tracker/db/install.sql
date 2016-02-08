@@ -348,6 +348,7 @@ CREATE TABLE tracker_changeset_value_openlist(
 DROP TABLE IF EXISTS tracker_changeset_value_artifactlink;
 CREATE TABLE tracker_changeset_value_artifactlink(
     changeset_value_id INT(11) NOT NULL,
+    nature VARCHAR(255) NULL,
     artifact_id INT(11) NOT NULL,
     keyword VARCHAR(32) NOT NULL,
     group_id INT(11) NOT NULL,
