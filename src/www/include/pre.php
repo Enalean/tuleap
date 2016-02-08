@@ -23,7 +23,6 @@ if (!ini_get('date.timezone')) {
 // Defines all of the settings first (hosts, databases, etc.)
 $locar_inc_finder = new Config_LocalIncFinder();
 $local_inc = $locar_inc_finder->getLocalIncPath();
-
 require($local_inc);
 require($GLOBALS['db_config_file']);
 ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
@@ -43,7 +42,9 @@ if (isset($GLOBALS['jpgraph_dir'])) {
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['jpgraph_dir']);
 }
 
-define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
+if(!defined('TTF_DIR')) {
+    define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
+}
 
 $xml_security = new XML_Security();
 $xml_security->disableExternalLoadOfEntities();
@@ -79,6 +80,7 @@ if (!IS_SCRIPT) {
 while(count($_REQUEST)) {
     array_pop($_REQUEST);
 }
+
 if (!ini_get('variables_order')) {
         $_REQUEST = array_merge($_GET, $_POST);
 } else {
@@ -93,16 +95,14 @@ if (!ini_get('variables_order')) {
             $_REQUEST = $_GET;
         } else {
             if ($g_pos < $p_pos) {
-                $first = '_GET';
-                $second = '_POST';
+                $_REQUEST = array_merge($_GET, $_POST);
             } else {
-                $first = '_POST';
-                $second = '_GET';
+                $_REQUEST = array_merge($_POST, $_GET);
             }
-            $_REQUEST = array_merge($$first, $$second);
         }
     }
 }
+
 //Cast group_id as int.
 foreach(array(
         'group_id',
