@@ -83,11 +83,27 @@ class BackendSVN extends Backend {
      */
     public function createProjectSVN($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
-        return $this->createRepository($group_id, $project->getSVNRootPath());
+        if ($this->createRepository($group_id, $project->getSVNRootPath())) {
+            if ($this->updateHooks($project, $project->getSVNRootPath())) {
+                if ($this->createSVNAccessFile ($group_id, $project->getSVNRootPath())) {
+                    $this->forceUpdateApacheConf();
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function createRepositorySVN($project_id, $svn_dir) {
-        return $this->createRepository($project_id, $svn_dir);
+        if ($this->createRepository($project_id, $svn_dir)) {
+            if ($this->createSVNAccessFile ($project_id, $svn_dir)) {
+                $this->forceUpdateApacheConf();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function createRepository($group_id, $svn_dir) {
@@ -107,21 +123,24 @@ class BackendSVN extends Backend {
             $this->recurseChownChgrp($svn_dir, $this->getHTTPUser(), $unix_group_name);
             system("chmod g+rw $svn_dir");
         }
-        // Put in place the svn post-commit hook for email notification
-        if (!$this->updateHooks($project, $svn_dir)) {
-            return false;
-        }
+
+        return true;
+    }
+
+    private function createSVNAccessFile ($group_id, $svn_dir) {
         if (!$this->updateSVNAccess($group_id, $svn_dir)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             return false;
         }
 
-        $this->setSVNApacheConfNeedUpdate();
-
         return true;
     }
 
-    /**
+    private function forceUpdateApacheConf() {
+        $this->setSVNApacheConfNeedUpdate();
+    }
+
+     /**
      * Check if repository of given project exists
      * @param Project
      * @return true is repository already exists, false otherwise
