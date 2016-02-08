@@ -26,8 +26,8 @@ use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Admin\MailNotificationController;
-use Tuleap\Svn\Admin\AdminController;
-use Tuleap\Svn\AuthFile\AccessFileHistoryManager;
+use Tuleap\Svn\Admin\AccessControl\AccessControlController;
+use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryManager;
 use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailnotificationManager;
 use ProjectManager;
@@ -37,21 +37,33 @@ use Feedback;
 
 class SvnRouter {
 
+    /** @var RepositoryManager */
     private $repository_manager;
+
+    /** @var AccessFileHistoryManager */
+    private $access_file_manager;
+
+    /** @var ProjectManager */
     private $project_manager;
+
+    /** @var MailHeaderManager */
     private $mail_header_manager;
+
+    /** @var MailnotificationManager */
     private $mail_notification_manager;
 
     public function __construct(
-            RepositoryManager $repository_manager,
-            ProjectManager $project_manager,
-            MailHeaderManager $mail_header_manager,
-            MailnotificationManager $mail_notification_manager
-        ) {
+        RepositoryManager $repository_manager,
+        AccessFileHistoryManager $access_file_manager,
+        ProjectManager $project_manager,
+        MailHeaderManager $mail_header_manager,
+        MailnotificationManager $mail_notification_manager
+    ) {
         $this->repository_manager        = $repository_manager;
         $this->project_manager           = $project_manager;
         $this->mail_header_manager       = $mail_header_manager;
         $this->mail_notification_manager = $mail_notification_manager;
+        $this->access_file_manager       = $access_file_manager;
     }
 
     /**
@@ -100,6 +112,16 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
                     $controller->deleteMailingList($request);
+                    break;
+                case "access-control":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
+                    $controller->displayAuthFile($this->getService($request), $request);
+                    break;
+                case "save-access-file":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
+                    $controller->saveAuthFile($this->getService($request), $request);
                     break;
 
                 default:

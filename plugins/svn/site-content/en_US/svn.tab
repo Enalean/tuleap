@@ -36,7 +36,20 @@ plugin_svn_admin_notification	notified_mails	SVN notification list
 plugin_svn_admin_notification	delete	Delete ?
 plugin_svn_admin_notification	delete_error	Unable to delete notification list
 
+plugin_svn_admin	acces_control	SVN Administration - Access Control - Repository $1
+plugin_svn_admin	default_text	The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other $1 users. You can tune or even redefine the access permissions below to suit your needs.
+plugin_svn_admin	permissions_warning	It is recommended to always define permissions on a user group. Applying permissions to a manually defined group or to a specific user could cause security issues.
+plugin_svn_admin	button_new_version_label	Save new version
+plugin_svn_admin	update_success	New file revision successfully created
+plugin_svn_admin	update_fail	Error during new revision file creation
+plugin_svn_admin	file_error	Unable to read file $1
+plugin_svn_admin	write_error	Unable to write into file $1
+plugin_svn_admin	previous_version	You are using a previous version (#$1):
+plugin_svn_admin	last_version	You are using the last version (#$1):
+
 plugin_svn	notifications	Notifications
+plugin_svn	access_control	Access Control
+plugin_svn	update_access_history_file_error	Unable to update Access Control File.
 plugin_svn	update_error	Unable to update Repository data
 plugin_svn	char_err	The repository name must have at least one character
 plugin_svn	illegal_char	The repository name contains illeguall characters

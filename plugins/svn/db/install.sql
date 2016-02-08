@@ -11,23 +11,33 @@ INSERT INTO service(group_id, label, description, short_name, link, is_active, i
                               LIKE 'plugin_svn');
 
 
-CREATE TABLE plugin_svn_repositories (
+CREATE TABLE plugin_svn_repositories(
   id  int(11) unsigned NOT NULL auto_increment,
   name  varchar(255) NOT NULL,
   project_id int(11) NOT NULL,
+  accessfile_id INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY  (id),
   INDEX project_idx (project_id)
 );
 
-CREATE TABLE plugin_svn_mailing_header (
+CREATE TABLE plugin_svn_mailing_header(
   repository_id INT(11) UNSIGNED NOT NULL,
   header varchar(64) NOT NULL,
   PRIMARY KEY (repository_id)
 );
 
-CREATE TABLE plugin_svn_notification (
+CREATE TABLE plugin_svn_notification(
   repository_id INT(11) UNSIGNED NOT NULL,
   mailing_list text,
   svn_path varchar(255) DEFAULT '/',
   PRIMARY KEY (repository_id, svn_path)
+);
+
+CREATE TABLE plugin_svn_accessfile_history(
+    id INT(11) UNSIGNED NOT NULL auto_increment PRIMARY KEY,
+    version_number int(11) NOT NULL,
+    repository_id int(11) NOT NULL,
+    content text NOT NULL,
+    version_date int(11) NOT NULL,
+    INDEX repository_idx (repository_id)
 );

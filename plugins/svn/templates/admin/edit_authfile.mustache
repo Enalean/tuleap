@@ -1,0 +1,32 @@
+<h2>{{ title }}</h2>
+<div class="tabbable tabs-left" id="svn-administration">
+    {{# sections }}
+        <ul class="nav nav-tabs">
+            <li>
+                <a href="{{ notifications_url }}">{{ notifications }}</a>
+            </li>
+            <li class="active">
+                <a href="{{ access_control_url }}">{{ access_control }}</a>
+            </li>
+        </ul>
+    {{/ sections }}
+    <div class="tab-content">
+        <form action="/plugins/svn/?group_id={{ project_id }}&action=save-access-file&repo_id={{ repo_id }}" method="POST">
+            {{{ csrf }}}
+            <input type="hidden" name="project_id" value="{{ project_id }}">
+            <input type="hidden" name="repo_id" value="{{ repo_id }}">
+            <p>{{ default_text }}</p>
+            <p class="feedback_warning"> {{ permissions_warning }} </p>
+            <div id="access-file-container">
+                <div id="current-access-file-container">
+                    <h3>{{ current_version_title }}</h3>
+                    <pre>{{ default_content }}</pre>
+                    <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" name="form_accessfile" id="form_accessfile">{{{ auth_file }}}</textarea>
+                    <p>
+                        <button type="submit" name="submit_new_version" class="btn btn-primary">{{ button_new_version_label }}</button>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -31,10 +31,16 @@ class SectionsPresenter {
 
     public function __construct(Repository $repository) {
         $this->notifications  = $GLOBALS['Language']->getText('plugin_svn', 'notifications');
+        $this->access_control = $GLOBALS['Language']->getText('plugin_svn', 'access_control');
 
         $this->notifications_url = SVN_BASE_URL .'/?'. http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'display-mail-notification',
+            'repo_id'  => $repository->getId()
+        ));
+        $this->access_control_url = SVN_BASE_URL .'/?'. http_build_query(array(
+            'group_id' => $repository->getProject()->getId(),
+            'action'   => 'access-control',
             'repo_id'  => $repository->getId()
         ));
     }

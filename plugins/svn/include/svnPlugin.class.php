@@ -22,6 +22,8 @@ require_once 'constants.php';
 
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryManager;
+use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Admin\MailHeaderManager;
@@ -88,6 +90,7 @@ class SvnPlugin extends Plugin {
     private function getRouter() {
         return new SvnRouter(
               new RepositoryManager(new Dao(), ProjectManager::instance()),
+              new AccessFileHistoryManager(new AccessFileHistoryDao()),
               ProjectManager::instance(),
               new MailHeaderManager(new MailHeaderDao()),
               new MailNotificationManager(new MailNotificationDao())
@@ -106,6 +109,7 @@ class SvnPlugin extends Plugin {
     public function cssFile($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="/viewvc-static/styles.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
 

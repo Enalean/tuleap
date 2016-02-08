@@ -51,10 +51,6 @@ class RuleName extends Rule {
         return false;
     }
 
-    private function getErrorNoSpaces() {
-        return $GLOBALS['Language']->getText('plugin_svn', 'repository_spaces');
-    }
-
     private function getErrorRepositoryExists() {
         return $GLOBALS['Language']->getText('plugin_svn', 'already_used');
     }
