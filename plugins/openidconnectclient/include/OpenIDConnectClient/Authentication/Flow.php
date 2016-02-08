@@ -85,12 +85,18 @@ class Flow extends Basic {
     }
 
     /**
+     * @param Provider $provider
+     * @param $return_to
      * @return string
      */
-    public function getAuthorizationRequestUri(Provider $provider) {
+    public function getAuthorizationRequestUri(Provider $provider, $return_to) {
         $this->setOptions($provider);
         $authorization_request = $this->createAuthorizationRequest();
-        return $this->getAuthorizationDispatcher()->createAuthorizationRequestUri($authorization_request, $provider);
+        return $this->getAuthorizationDispatcher()->createAuthorizationRequestUri(
+            $authorization_request,
+            $provider,
+            $return_to
+        );
     }
 
     /**
@@ -137,6 +143,6 @@ class Flow extends Basic {
 
         $this->getStateManager()->clearState();
 
-        return new FlowResponse($provider, $user_informations);
+        return new FlowResponse($provider, $state->getReturnTo(), $user_informations);
     }
 }

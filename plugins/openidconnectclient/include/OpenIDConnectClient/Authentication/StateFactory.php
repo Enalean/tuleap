@@ -32,7 +32,7 @@ class StateFactory implements StateFactoryInterface {
         $this->key = $random_number_generator->getNumber();
     }
 
-    public function createState($provider_id = null) {
-        return new State($provider_id, $this->key);
+    public function createState($provider_id = null, $return_to = null) {
+        return new State($provider_id, $return_to, $this->key);
     }
 }

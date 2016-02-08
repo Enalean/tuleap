@@ -1224,7 +1224,8 @@ function util_translate_desc_ugroup($desc) {
 function util_return_to($url) {
     $request      = HTTPRequest::instance();
     $url_redirect = new URLRedirect();
-    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url));
+    $return_to    = $request->get('return_to');
+    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url, $return_to));
     exit;
 }
 

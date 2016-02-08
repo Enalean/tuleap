@@ -94,7 +94,7 @@ if ($user === null) {
     $user = $um->getCurrentUser();
 }
 if ($user->isLoggedIn()) {
-    account_redirect_after_login();
+    account_redirect_after_login($_rVar['return_to']);
 }
 
 //

@@ -3,4 +3,6 @@ plugin_openidconnectclient	descriptor_description	Authenticate users with OpenID
 plugin_openidconnectclient	only_https_possible	It is only possible to use the OpenID Connect plugin with HTTPS
 plugin_openidconnectclient	provider_not_found	This OpenID Connect provider has not been found in the platform configuration
 plugin_openidconnectclient	invalid_request	Request seems invalid, please retry
+plugin_openidconnectclient	login_with_openidconnect	Login with OpenID Connect
+plugin_openidconnectclient	connect_with	Connect with
 plugin_openidconnectclient	account_linking_not_yet_possible	It is not possible for now to link an OpenID Connect authentication with an account, you must do it manually in the database. Your identifier is $1

@@ -699,6 +699,14 @@ class Event {
     const SESSION_AFTER_LOGIN = 'session_after_login';
 
     /**
+     * Allow plugin to add another ways to log in
+     *
+     * Parameters:
+     * 'login_additional_connector' => string
+     */
+    const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
+
+    /**
      * Event raised to get plannings from a project with REST
      *
      * Parameters:

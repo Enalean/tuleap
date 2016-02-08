@@ -52,10 +52,8 @@ class URLRedirect {
         $GLOBALS['HTML']->redirect($url);
     }
 
-    public function makeReturnToUrl(HTTPRequest $request, $url) {
+    public function makeReturnToUrl(HTTPRequest $request, $url, $return_to) {
         $urlToken = parse_url($url);
-
-        $finaleUrl = '';
 
         $server_url = '';
         if(array_key_exists('host', $urlToken) && $urlToken['host']) {
@@ -75,15 +73,15 @@ class URLRedirect {
             $finaleUrl .= $urlToken['path'];
         }
 
-        if($request->existAndNonEmpty('return_to')) {
+        if($return_to) {
             $return_to_parameter = 'return_to=';
             /*
              * We do not want redirect to an external website
              * @see https://cwe.mitre.org/data/definitions/601.html
              */
             $url_verifier = new URLVerification();
-            if ($url_verifier->isInternal($request->get('return_to'))) {
-                $return_to_parameter .= urlencode($request->get('return_to'));
+            if ($url_verifier->isInternal($return_to)) {
+                $return_to_parameter .= urlencode($return_to);
             } else {
                 $return_to_parameter .= '/';
             }
@@ -94,7 +92,7 @@ class URLRedirect {
             else {
                 $finaleUrl .= '?'.$return_to_parameter;
             }
-            if (strstr($request->get('return_to'),'pv=2')) {
+            if (strstr($return_to,'pv=2')) {
                 $finaleUrl .= '&pv=2';
             }
         }

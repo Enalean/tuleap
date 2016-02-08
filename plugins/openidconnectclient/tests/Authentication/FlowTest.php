@@ -44,7 +44,7 @@ class FlowTest extends TuleapTestCase {
             $provider_manager
         );
 
-        $request_uri = $flow->getAuthorizationRequestUri($provider);
+        $request_uri = $flow->getAuthorizationRequestUri($provider, 'return_to');
         $this->assertTrue(strpos($request_uri, $authorization_endpoint) === 0);
         $this->assertTrue(strpos($request_uri, $signed_state) !== false);
     }

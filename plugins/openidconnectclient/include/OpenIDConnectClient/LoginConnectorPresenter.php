@@ -20,32 +20,30 @@
 
 namespace Tuleap\OpenIDConnectClient;
 
-use Feedback;
-use ForgeConfig;
-use HTTPRequest;
 
-class Router {
+class LoginConnectorPresenter {
 
-    private $login_controller;
+    private $providers_authorization_request_uri;
 
-    public function __construct(LoginController $login_controller) {
-        $this->login_controller = $login_controller;
+    public function __construct(array $providers_authorization_request_uri) {
+        $this->providers_authorization_request_uri = $providers_authorization_request_uri;
     }
 
-    public function route(HTTPRequest $request) {
-        $this->checkTLSPresence($request);
-
-        $this->login_controller->login($request->get('return_to'));
+    /**
+     * @return string
+     */
+    public function login_title() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'login_with_openidconnect');
     }
 
-    private function checkTLSPresence(HTTPRequest $request) {
-        if(! $request->isSSL()) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'only_https_possible')
-            );
-            $GLOBALS['Response']->redirect('https://' . ForgeConfig::get('sys_https_host') . '/account/login.php');
-        }
+    public function connect_with() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'connect_with');
     }
 
+    /**
+     * @return array
+     */
+    public function providers() {
+        return $this->providers_authorization_request_uri;
+    }
 }

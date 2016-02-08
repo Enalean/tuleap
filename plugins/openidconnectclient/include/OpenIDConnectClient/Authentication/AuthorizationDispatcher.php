@@ -31,9 +31,9 @@ class AuthorizationDispatcher extends Dispatcher {
         $this->setStateManager($state_manager);
     }
 
-    public function createAuthorizationRequestUri(Request $request, Provider $provider) {
+    public function createAuthorizationRequestUri(Request $request, Provider $provider, $return_to) {
         $state_manager = $this->getStateManager();
-        $state         = $state_manager->initState($provider);
+        $state         = $state_manager->initState($provider, $return_to);
         $request->setState($state->getSignedState());
 
         $this->setLastRequest($request);

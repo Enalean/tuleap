@@ -23,6 +23,7 @@ namespace Tuleap\OpenIDConnectClient;
 use BackendLogger;
 use Feedback;
 use ForgeConfig;
+use HTTPRequest;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMapping;
@@ -37,8 +38,6 @@ use UserManager;
 require_once('account.php');
 
 class LoginController {
-    const GITHUB_PROVIDER_ID = 1;
-
     /**
      * @var UserManager
      */
@@ -71,13 +70,8 @@ class LoginController {
         $this->flow                 = $flow;
     }
 
-    public function displayLoginLink() {
-        $provider = $this->getProvider();
-        echo '<a href="'. $this->flow->getAuthorizationRequestUri($provider) .'">Log In</a>';
-    }
-
-    public function login() {
-        $this->checkIfUserAlreadyLogged();
+    public function login($return_to) {
+        $this->checkIfUserAlreadyLogged($return_to);
 
         try {
             $flow_response = $this->flow->process();
@@ -94,7 +88,7 @@ class LoginController {
                 $provider,
                 $user_informations['id']
             );
-            $this->openSession($user_mapping);
+            $this->openSession($user_mapping, $flow_response->getReturnTo());
         } catch (UserMappingNotFoundException $ex) {
             $logger = new BackendLogger('/tmp/openidconnect.log');
             $logger->debug('Your OpenID Connect identifier is ' . $user_informations['id']);
@@ -111,22 +105,14 @@ class LoginController {
 
     }
 
-    /**
-     * @return Provider\Provider
-     * @throws Provider\ProviderNotFoundException
-     */
-    private function getProvider() {
-        return $this->provider_manager->getById(self::GITHUB_PROVIDER_ID);
-    }
-
-    private function checkIfUserAlreadyLogged() {
+    private function checkIfUserAlreadyLogged($return_to) {
         $user = $this->user_manager->getCurrentUser();
         if($user->isLoggedIn()) {
-            \account_redirect_after_login();
+            \account_redirect_after_login($return_to);
         }
     }
 
-    private function openSession(UserMapping $user_mapping) {
+    private function openSession(UserMapping $user_mapping, $return_to) {
         $user = $this->user_manager->getUserById($user_mapping->getUserId());
         try {
             $this->user_manager->openSessionForUser($user);
@@ -137,7 +123,7 @@ class LoginController {
         } catch (SessionNotCreatedException $ex) {
             $this->redirectToLoginPageAfterFailure($ex->getMessage());
         }
-        \account_redirect_after_login();
+        \account_redirect_after_login($return_to);
     }
 
     private function redirectToLoginPageAfterFailure($message) {

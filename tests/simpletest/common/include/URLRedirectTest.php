@@ -43,7 +43,10 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         stub($this->request)->isSSL()->returns(true);
         $GLOBALS['sys_force_ssl'] = 1;
 
-        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
+        $this->assertEqual(
+            '/my/index.php',
+            $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', '')
+        );
     }
 
     public function itRedirectToHttpWhenForceSSLIsOffAndNoStayInSSL() {
@@ -52,7 +55,10 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
         stub($this->request)->get('stay_in_ssl')->returns(0);
 
-        $this->assertEqual('http://example.com/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
+        $this->assertEqual(
+            'http://example.com/my/index.php',
+            $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', '')
+        );
     }
 
     public function itRedirectToHttpWhenForceSSLIsOffAndNoStayInSSL2() {
@@ -61,7 +67,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(false);
         stub($this->request)->get('stay_in_ssl')->returns(false);
 
-        $this->assertEqual('http://example.com/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
+        $this->assertEqual('http://example.com/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', ''));
     }
 
     public function itStayInSSLWhenForceSSLIsOffAndNoStayInSSL() {
@@ -70,7 +76,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
         stub($this->request)->get('stay_in_ssl')->returns(1);
 
-        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
+        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', ''));
     }
 
     public function itStayUnencryptedWhenForceSSLIsOffAndNoStayInSSL() {
@@ -79,21 +85,29 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
         stub($this->request)->get('stay_in_ssl')->returns(0);
 
-        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
+        $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php', ''));
     }
 
     public function itNotRedirectToUntrustedWebsite() {
-        stub($this->request)->existAndNonEmpty('return_to')->returns(true);
-        stub($this->request)->get('return_to')->returns('http://evil.tld/');
-        $this->assertEqual('/my/redirect.php?return_to=/', $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php'));
+        $this->assertEqual(
+            '/my/redirect.php?return_to=/',
+            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'http://evil.example.com/')
+        );
+        $this->assertEqual(
+            '/my/redirect.php?return_to=/',
+            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'https://evil.example.com/')
+        );
     }
 
     public function itNotRedirectToUntrustedCode() {
-        stub($this->request)->existAndNonEmpty('return_to')->returns(true);
-        stub($this->request)->get('return_to')->returns('javascript:alert(1)');
-        $this->assertEqual('/my/redirect.php?return_to=/', $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php'));
-        stub($this->request)->get('return_to')->returns('vbscript:msgbox(1)');
-        $this->assertEqual('/my/redirect.php?return_to=/', $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php'));
+        $this->assertEqual(
+            '/my/redirect.php?return_to=/',
+            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'javascript:alert(1)')
+        );
+        $this->assertEqual(
+            '/my/redirect.php?return_to=/',
+            $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php', 'vbscript:msgbox(1)')
+        );
     }
 
 }

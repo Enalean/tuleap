@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean, 2015. All Rights Reserved.
+// Copyright (c) Enalean, 2015-2016. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -289,30 +289,29 @@ function account_create_mypage($user_id) {
     return $um->accountCreateMyPage($user_id);
 }
 
-function account_redirect_after_login() {
+function account_redirect_after_login($return_to) {
     global $pv;  
 
-    $request = HTTPRequest::instance();
-
     $em = EventManager::instance();
-    $em->processEvent('account_redirect_after_login', array('request' => $request));
+    $em->processEvent('account_redirect_after_login', array('return_to' => &$return_to));
 
-    if($request->existAndNonEmpty('return_to')) {
-        $returnToToken = parse_url($request->get('return_to'));
+    if($return_to) {
+        $returnToToken = parse_url($return_to);
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
-            util_return_to('/my/index.php');
+            $url = '/my/index.php';
         }
         else {
-            util_return_to('/my/redirect.php');
+            $url = '/my/redirect.php';
         }
-    }
-    else {
+    } else {
         if (isset($pv) && $pv == 2) {
-            util_return_to('/my/index.php?pv=2');
-	} else {
-	    util_return_to('/my/index.php');
+            $url = '/my/index.php?pv=2';
+	    } else {
+            $url = '/my/index.php';
         }
     }
-}
 
-?>
+    $url_redirect = new URLRedirect();
+    $request      = HTTPRequest::instance();
+    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url, $return_to));
+}
