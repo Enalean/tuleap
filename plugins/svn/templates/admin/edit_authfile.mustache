@@ -26,6 +26,24 @@
                         <button type="submit" name="submit_new_version" class="btn btn-primary">{{ button_new_version_label }}</button>
                     </p>
                 </div>
+                <div id="old-access-file-container">
+                    <h3>
+                        {{ saved_versions }}
+                        <select name="version_selected" id="version-selected">
+                            <option value="0"> {{ select_version }} </option>
+                            {{# versions }}
+                            <option value="{{ file_id }}">#{{ version }} ({{ saved_on }} {{ date }})</option>
+                            {{/ versions }}
+                        </select>
+                    </h3>
+                    <span id="old-access-file-form">
+                        <pre>{{ default_content }}</pre>
+                        <pre class="empty-version" id="other-version-content"></pre>
+                        <p>
+                            <button type="submit" name="submit_other_version" class="btn">{{ use_version }}</button>
+                        </p>
+                    </span>
+                </div>
             </div>
         </form>
     </div>

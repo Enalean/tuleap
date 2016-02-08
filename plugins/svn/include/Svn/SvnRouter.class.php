@@ -123,6 +123,11 @@ class SvnRouter {
                     $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
                     $controller->saveAuthFile($this->getService($request), $request);
                     break;
+                case "display-archived-version":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
+                    $controller->displayArchivedVersion($request);
+                    break;
 
                 default:
                     $this->useDefaultRoute($request);

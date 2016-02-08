@@ -47,6 +47,10 @@ class AccessFileHistoryManager {
         return $accessFiles;
     }
 
+    public function getById($id, Repository $repository) {
+        return $this->dao->searchById($id, $repository->getId());
+    }
+
     /** return AccessFileHistory */
     public function getCurrentVersion(Repository $repository) {
         $row = $this->dao->searchCurrentVersion($repository->getId());
@@ -77,5 +81,9 @@ class AccessFileHistoryManager {
             $row['content'],
             $row['version_date']
         );
+    }
+
+    public function useAnOldVersion(Repository $repository, $version_id) {
+        return $this->dao->useAnOldVersion($repository->getId(), $version_id);
     }
 }

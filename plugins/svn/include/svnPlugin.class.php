@@ -47,6 +47,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
         $this->addHook('cssfile');
+        $this->addHook('javascript_file');
     }
 
     public function getPluginInfo() {
@@ -112,6 +113,14 @@ class SvnPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
+
+    public function javascript_file() {
+        // Only show the javascript if we're actually in the svn pages.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/svn.js"></script>';
+        }
+    }
+
 
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e804';

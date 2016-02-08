@@ -46,6 +46,10 @@ plugin_svn_admin	file_error	Unable to read file $1
 plugin_svn_admin	write_error	Unable to write into file $1
 plugin_svn_admin	previous_version	You are using a previous version (#$1):
 plugin_svn_admin	last_version	You are using the last version (#$1):
+plugin_svn_admin	select_version	Select a version
+plugin_svn_admin	saved_on	saved on
+plugin_svn_admin	use_version	Use this selected version
+plugin_svn_admin	saved_versions	Saved versions:
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Access Control

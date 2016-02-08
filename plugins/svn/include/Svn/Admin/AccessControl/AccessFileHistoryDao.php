@@ -90,4 +90,30 @@ class AccessFileHistoryDao extends DataAccessObject {
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchById($id, $repository_id) {
+        $id            = $this->da->escapeInt($id);
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "SELECT *
+                FROM plugin_svn_accessfile_history
+                WHERE id = $id
+                  AND repository_id = $repository_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function useAnOldVersion($repository_id, $version_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $version_id    = $this->da->escapeInt($version_id);
+
+        $sql = "UPDATE plugin_svn_repositories AS repository
+                    INNER JOIN plugin_svn_accessfile_history AS accessfile ON (
+                        repository.id = accessfile.repository_id
+                        AND accessfile.id = $version_id
+                    )
+                SET repository.accessfile_id = accessfile.id";
+
+        return $this->update($sql);
+    }
 }

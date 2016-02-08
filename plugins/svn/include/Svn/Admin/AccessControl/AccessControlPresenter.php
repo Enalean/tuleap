@@ -37,6 +37,10 @@ class AccessControlPresenter {
     public $auth_file;
     public $versions;
     public $current_version_title;
+    public $saved_on;
+    public $use_version;
+    public $select_version;
+    public $saved_versions;
 
     public function __construct(
         CSRFSynchronizerToken $token,
@@ -61,6 +65,10 @@ class AccessControlPresenter {
         $this->default_text             = $GLOBALS['Language']->getText('plugin_svn_admin', 'default_text', $GLOBALS['sys_name']);
         $this->permissions_warning      = $GLOBALS['Language']->getText('plugin_svn_admin', 'permissions_warning');
         $this->button_new_version_label = $GLOBALS['Language']->getText('plugin_svn_admin', 'button_new_version_label');
+        $this->select_version           = $GLOBALS['Language']->getText('plugin_svn_admin', 'select_version');
+        $this->saved_on                 = $GLOBALS['Language']->getText('plugin_svn_admin', 'saved_on');
+        $this->use_version              = $GLOBALS['Language']->getText('plugin_svn_admin', 'use_version');
+        $this->saved_versions           = $GLOBALS['Language']->getText('plugin_svn_admin', 'saved_versions');
 
         $this->sections = new SectionsPresenter($repository);
 

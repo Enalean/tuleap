@@ -99,11 +99,34 @@ class AccessControlController {
         );
     }
 
+    public function displayArchivedVersion(HTTPRequest $request) {
+        $id         = $request->get('accessfile_history_id');
+        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+
+        $result = $this->access_file_manager->getById($id, $repository);
+
+        $GLOBALS['Response']->sendJSON(array('content' => $result['content']));
+    }
+
     public function saveAuthFile(ServiceSvn $service, HTTPRequest $request){
         $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
         $this->getToken($repository)->check();
 
-        $this->createANewVersion($service, $request, $repository, $request->get('form_accessfile'));
+        if ($request->exist('submit_other_version')) {
+            $this->useAnOldVersion($service, $request, $repository, $request->get('version_selected'));
+        } else {
+            $this->createANewVersion($service, $request, $repository, $request->get('form_accessfile'));
+        }
+    }
+
+    private function useAnOldVersion(ServiceSvn $service, HTTPRequest $request, Repository $repository, $version_id) {
+        if ($this->access_file_manager->useAnOldVersion($repository, $version_id)) {
+            $current_version = $this->access_file_manager->getCurrentVersion($repository);
+            $this->saveAccessFile($service, $request, $repository, $current_version);
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin','update_fail'));
+        }
+        $GLOBALS['Response']->redirect($this->getUrl($repository));
     }
 
     private function createANewVersion(ServiceSvn $service, HTTPRequest $request, Repository $repository, $content) {
@@ -112,19 +135,22 @@ class AccessControlController {
         $this->saveAccessFile($service, $request, $repository, $history);
     }
 
-    private function createHistory(Repository $repository, $content) {
+    private function cleanContent(Repository $repository, $content) {
         $access_file = new SVNAccessFile();
-        $cleaned_content = trim(
+        return trim(
             $access_file->parseGroupLinesByRepositories($repository->getSystemPath(), $content, true)
         );
+    }
+
+    private function createHistory(Repository $repository, $content) {
+        $id             = 0;
         $version_number = $this->access_file_manager->getLastVersion($repository)->getVersionNumber();
 
-        $id = 0;
         $file_history = new AccessFileHistory(
             $repository,
             $id,
             $version_number + 1,
-            $cleaned_content,
+            $this->cleanContent($repository, $content),
             $_SERVER['REQUEST_TIME']
         );
         $this->access_file_manager->create($file_history);
@@ -146,6 +172,5 @@ class AccessControlController {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin','update_fail'));
             $this->displayAuthFile($service, $request);
         }
-
     }
 }
