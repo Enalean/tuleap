@@ -1,3 +1,6 @@
+Version 0.104 - Tuleap 8.12
+    * Story #8694: MediaWiki Import
+
 Version 0.103 - Tuleap 8.11
     * request #8780: convert username before using it in the sql statement
 
