@@ -18,6 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
+use Tuleap\OpenIDConnectClient\Authentication\Flow;
+use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
+use Tuleap\OpenIDConnectClient\Authentication\StateManager;
+use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
 use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -44,13 +49,6 @@ class openidconnectclientPlugin extends Plugin {
     }
 
     private function loadLibrary() {
-        /*
-         * InoOicClient library store a state object in session.
-         * When the session is first opened in pre.php the library is not yet loaded.
-         * PHP is not able to unserialize the object and you get a __PHP_Incomplete_Class object.
-         * To prevent that, we close the session, load the library and then reopen the session.
-         */
-        session_write_close();
         AutoloaderFactory::factory(
             array(
                 'Zend\Loader\StandardAutoloader' => array(
@@ -60,7 +58,6 @@ class openidconnectclientPlugin extends Plugin {
                 )
             )
         );
-        session_start();
     }
 
     public function process(HTTPRequest $request) {
@@ -69,11 +66,21 @@ class openidconnectclientPlugin extends Plugin {
         $user_manager         = UserManager::instance();
         $provider_manager     = new ProviderManager(new ProviderDao());
         $user_mapping_manager = new UserMappingManager(new UserMappingDao());
+        $state_manager        = new StateManager(
+            new StateStorage(),
+            new StateFactory(new RandomNumberGenerator())
+        );
+        $flow                 = new Flow(
+            $state_manager,
+            new AuthorizationDispatcher($state_manager),
+            $provider_manager
+        );
 
         $login_controller     = new LoginController(
             $user_manager,
             $provider_manager,
-            $user_mapping_manager
+            $user_mapping_manager,
+            $flow
         );
         $router               = new Router($login_controller);
         $router->route($request);

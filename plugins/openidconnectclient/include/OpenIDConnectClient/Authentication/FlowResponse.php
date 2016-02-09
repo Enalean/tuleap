@@ -18,17 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/autoload_libs.php');
-require_once (__DIR__ . '/../include/autoload.php');
+namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Zend\Loader\AutoloaderFactory;
 
-AutoloaderFactory::factory(
-    array(
-        'Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'InoOicClient' => '/usr/share/php/InoOicClient/'
-            )
-        )
-    )
-);
+use Tuleap\OpenIDConnectClient\Provider\Provider;
+
+class FlowResponse {
+
+    /**
+     * @var Provider
+     */
+    private $provider;
+
+    /**
+     * @var array
+     */
+    private $user_informations;
+
+    public function __construct(Provider $provider, array $user_informations) {
+        $this->provider          = $provider;
+        $this->user_informations = $user_informations;
+    }
+
+    /**
+     * @return Provider
+     */
+    public function getProvider() {
+        return $this->provider;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUserInformations() {
+        return $this->user_informations;
+    }
+
+}
