@@ -7,6 +7,8 @@ Version 8.12 (Not yet released)
 	* hudson: 1.24
 	* agiledashboard: 1.351
 	* mediawiki: 0.104
+	* openidconnectclient: 0.2
+	* svn: 0.9
 
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==

@@ -1,3 +1,9 @@
+Version 0.9 - Tuleap 8.12
+    * story #8631: Delegate authentication to GitHub through OpenID Connect
+
+Version 0.8 - Tuleap 
+    * request #8795: Mac OS X users can setup a new dev environment
+
 Version 0.7 - Tuleap 8.11
     * story #8791 : be able to checkout a SVN repository
 
