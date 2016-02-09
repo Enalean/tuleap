@@ -31,21 +31,23 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     const DEFAULT_TEMPLATE_ID = 100;
 
-    const FULL_NAME         = 'form_full_name';
-    const UNIX_NAME         = 'form_unix_name';
-    const IS_PUBLIC         = 'is_public';
-    const TEMPLATE_ID       = 'built_from_template';
-    const SHORT_DESCRIPTION = 'form_short_description';
-    const TOS_APPROVAL      = 'form_terms_of_services_approval';
-    const PROJECT_DESCRIPTION_PREFIX = 'form_';
-    const TROVE_CAT_PREFIX           = 'trove';
+    const FULL_NAME                       = 'form_full_name';
+    const UNIX_NAME                       = 'form_unix_name';
+    const IS_PUBLIC                       = 'is_public';
+    const USER_CAN_CHOOSE_PROJECT_PRIVACY = 'user_can_choose_project_privacy';
+    const TEMPLATE_ID                     = 'built_from_template';
+    const SHORT_DESCRIPTION               = 'form_short_description';
+    const TOS_APPROVAL                    = 'form_terms_of_services_approval';
+    const PROJECT_DESCRIPTION_PREFIX      = 'form_';
+    const TROVE_CAT_PREFIX                = 'trove';
 
-    public $full_name_label                = self::FULL_NAME;
-    public $unix_name_label                = self::UNIX_NAME;
-    public $is_public_label                = self::IS_PUBLIC;
-    public $template_id_label              = self::TEMPLATE_ID;
-    public $short_description_label        = self::SHORT_DESCRIPTION;
-    public $term_of_service_approval_label = self::TOS_APPROVAL;
+    public $full_name_label                        = self::FULL_NAME;
+    public $unix_name_label                        = self::UNIX_NAME;
+    public $user_can_choose_project_privacy_label  = self::USER_CAN_CHOOSE_PROJECT_PRIVACY;
+    public $is_public_label                        = self::IS_PUBLIC;
+    public $template_id_label                      = self::TEMPLATE_ID;
+    public $short_description_label                = self::SHORT_DESCRIPTION;
+    public $term_of_service_approval_label         = self::TOS_APPROVAL;
 
     /**
      * @var Project_CustomDescription_CustomDescriptionPresenter[]
@@ -152,6 +154,14 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     public function isPublic() {
         return $this->creation_request->isPublic();
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function userCanSelectProjectPrivacy() {
+        return $this->creation_request->userCanSelectProjectPrivacy();
     }
 
     /**
