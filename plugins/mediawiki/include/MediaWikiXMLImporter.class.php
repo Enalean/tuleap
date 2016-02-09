@@ -26,13 +26,13 @@ class MediaWikiXMLImporter {
     private $logger;
 
     /**
-     * @var MediawikiDao
+     * @var MediawikiLanguageManager
      */
-    private $dao;
+    private $language_manager;
 
-    public function __construct(Logger $logger, MediawikiDao $dao) {
+    public function __construct(Logger $logger, MediawikiLanguageManager $language_manager) {
         $this->logger = new WrapperLogger($logger, "MediaWikiXMLImporter");
-        $this->dao = $dao;
+        $this->language_manager = $language_manager;
         $this->sys_command = new System_Command();
     }
 
@@ -50,6 +50,11 @@ class MediaWikiXMLImporter {
             $this->logger->debug('No mediawiki node found into xml.');
             return true;
         }
+
+        if($xml_mediawiki['language']) {
+            $this->importLanguage($project, (string) $xml_mediawiki['language']);
+        }
+
         $pages_backup_path = $extraction_path . '/' . $xml_mediawiki['pages-backup'];
         return $this->importPages($project, $pages_backup_path);
     }
@@ -62,5 +67,14 @@ class MediaWikiXMLImporter {
         $command = "$bin_path/mw-maintenance-wrapper.php $project_name importDump.php $backup_path";
         $res = $this->sys_command->exec($command);
         return true;
+    }
+
+    private function importLanguage(Project $project, $language) {
+        $this->logger->info("Set language to $language for {$project->getUnixName()}");
+        try {
+            $this->language_manager->saveLanguageOption($project, $language);
+        } catch (Mediawiki_UnsupportedLanguageException $e) {
+            $this->logger->warn("Could not set up the language for {$project->getUnixName()} mediawiki, $language is not sopported.");
+        }
     }
 }

@@ -138,9 +138,17 @@ class ProjectImportTest extends TuleapDbTestCase {
         $system_event_runner->expectCallCount('runSystemEvents', 1);
         $system_event_runner->expectCallCount('checkPermissions', 1);
 
-        //Mediawiki import tests
+        $this->mediawikiTests($project);
+    }
+
+    private function mediawikiTests(Project $project) {
         $mediawiki_dao = new MediawikiDao();
-        $nb_pages = $mediawiki_dao->getMediawikiPagesNumberOfAProject($project);
-        $this->assertEqual(3, $nb_pages['result']);
+        $mediawikilanguage_dao = new MediawikiLanguageDao();
+
+        $res = $mediawiki_dao->getMediawikiPagesNumberOfAProject($project);
+        $this->assertEqual(3, $res['result']);
+
+        $res = $mediawikilanguage_dao->getUsedLanguageForProject($project->getGroupId());
+        $this->assertEqual('fr_FR', $res['language']);
     }
 }
