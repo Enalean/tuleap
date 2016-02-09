@@ -1,6 +1,8 @@
 Version 8.12 (Not yet released)
+	== Enhancement ==
+	* request #8410: Add the possibility to hide project privacy radio buttons during project creation
 
-    == Plugins ==
+	== Plugins ==
 	* admindelegation: 2.11
 	* hudson: 1.24
 	* agiledashboard: 1.351
