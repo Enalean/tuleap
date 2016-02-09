@@ -547,6 +547,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Remove the new SVN plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn
+# Plugin OpenID Connect is not supported on CentOS 5
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
