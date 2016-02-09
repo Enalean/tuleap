@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    repository_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    creation_date INT(11) NOT NULL,
+    branch_src VARCHAR(255) NOT NULL,
+    sha1_src CHAR(40) NOT NULL,
+    branch_dest VARCHAR(255) NOT NULL,
+    sha1_dest CHAR(40) NOT NULL,
+    status VARCHAR(1) NOT NULL DEFAULT 'R',
+    INDEX idx_pr_user_id(user_id),
+    INDEX idx_pr_repository_id(repository_id)
+);
