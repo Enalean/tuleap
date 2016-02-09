@@ -31,11 +31,6 @@ PLUGIN_BOOMERANG_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/boomerang/VERSIO
 PLUGIN_OPENID_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/openid/VERSION)
 PLUGIN_PROFTPD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/proftpd/VERSION)
 
-THEME_DAWN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Dawn/VERSION)
-THEME_SAVANNAH_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/savannah/VERSION)
-THEME_STTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/STTab/VERSION)
-THEME_CODEXSTN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodexSTN/VERSION)
-THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForge/VERSION)
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 
@@ -173,11 +168,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@PLUGIN_MEDIAWIKI_VERSION@@/$(PLUGIN_MEDIAWIKI_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_OPENID_VERSION@@/$(PLUGIN_OPENID_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_PROFTPD_VERSION@@/$(PLUGIN_PROFTPD_VERSION)/g' |\
-		sed -e 's/@@THEME_DAWN_VERSION@@/$(THEME_DAWN_VERSION)/g' |\
-		sed -e 's/@@THEME_SAVANNAH_VERSION@@/$(THEME_SAVANNAH_VERSION)/g' |\
-		sed -e 's/@@THEME_STTAB_VERSION@@/$(THEME_STTAB_VERSION)/g' |\
-		sed -e 's/@@THEME_CODEXSTN_VERSION@@/$(THEME_CODEXSTN_VERSION)/g' |\
-		sed -e 's/@@THEME_STEERFORGE_VERSION@@/$(THEME_STEERFORGE_VERSION)/g' |\
 		sed -e 's/@@THEME_TULEAP_VERSION@@/$(THEME_TULEAP_VERSION)/g' |\
 		sed -e 's/@@THEME_FLAMINGPARROT_VERSION@@/$(THEME_FLAMINGPARROT_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \

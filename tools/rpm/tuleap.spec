@@ -447,51 +447,6 @@ Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beau
 ## Themes
 #
 
-%package theme-dawn
-Summary: Dawn theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_DAWN_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
-%description theme-dawn
-Dawn theme for Tuleap
-
-%package theme-savannah
-Summary: Savannah theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_SAVANNAH_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
-%description theme-savannah
-Savannah theme for Tuleap
-
-%package theme-sttab
-Summary: STTab theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_STTAB_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
-%description theme-sttab
-STMicroelectronics theme for Tuleap
-
-%package theme-codexstn
-Summary: CodexSTN theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_CODEXSTN_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
-%description theme-codexstn
-ST-Ericsson theme for Tuleap
-
-%package theme-steerforge
-Summary: SteerForge theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_STEERFORGE_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
-%description theme-steerforge
-SteerForge theme for Tuleap
-
 %package theme-tuleap
 Summary: Tuleap theme
 Group: Development/Tools
@@ -507,8 +462,8 @@ Group: Development/Tools
 Version: @@THEME_FLAMINGPARROT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 Requires: tuleap
-Provides: %{PKG_NAME}-theme-experimental
-Obsoletes: %{PKG_NAME}-theme-experimental
+Provides: %{PKG_NAME}-theme-experimental %{PKG_NAME}-theme-steerforge  %{PKG_NAME}-theme-codexstn  %{PKG_NAME}-theme-sttab  %{PKG_NAME}-theme-savannah  %{PKG_NAME}-theme-dawn
+Obsoletes: %{PKG_NAME}-theme-experimental %{PKG_NAME}-theme-steerforge  %{PKG_NAME}-theme-codexstn  %{PKG_NAME}-theme-sttab  %{PKG_NAME}-theme-savannah  %{PKG_NAME}-theme-dawn
 %description theme-flamingparrot
 FlamingParrot, default theme starting Tuleap 7
 
@@ -1133,26 +1088,6 @@ fi
 #
 # Themes
 #
-
-%files theme-dawn
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/Dawn
-
-%files theme-savannah
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/savannah
-
-%files theme-sttab
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/STTab
-
-%files theme-codexstn
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/CodexSTN
-
-%files theme-steerforge
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/SteerForge
 
 %files theme-tuleap
 %defattr(-,%{APP_USER},%{APP_USER},-)
