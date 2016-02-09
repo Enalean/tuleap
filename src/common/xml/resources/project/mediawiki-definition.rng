@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="mediawiki">
-    <attribute name="pages-backup">
-      <data type="string"/>
-    </attribute>
+    <interleave>
+      <attribute name="pages-backup">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="language">
+          <data type="string"/>
+        </attribute>
+      </optional>
+    </interleave>
   </define>
 </grammar>

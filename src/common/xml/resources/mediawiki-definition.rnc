@@ -1,2 +1,3 @@
 mediawiki =
-    attribute pages-backup { xsd:string }
+    attribute pages-backup { xsd:string } &
+    attribute language { xsd:string }?
