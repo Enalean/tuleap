@@ -1,3 +1,6 @@
+Version 1.352 - Tuleap 8.12
+    * request #8828: Pagination for milestone content is not taken into account and is the same as milestones pagination
+
 Version 1.351 - Tuleap 8.12
     * Story #8694: MediaWiki Import
 
