@@ -101,21 +101,11 @@ function BacklogController(
         } else {
             if (initial_milestone) {
                 MilestoneService.defineAllowedBacklogItemTypes(initial_milestone);
-                MilestoneService.augmentMilestone(
-                    initial_milestone,
-                    MilestoneService.milestone_content_pagination.limit,
-                    MilestoneService.milestone_content_pagination.offset,
-                    self.backlog_items
-                );
+                MilestoneService.augmentMilestone(initial_milestone, self.all_backlog_items);
 
                 BacklogService.loadMilestoneBacklog(initial_milestone);
             } else {
-                MilestoneService.getMilestone(
-                    self.milestone_id,
-                    MilestoneService.milestone_content_pagination.limit,
-                    MilestoneService.milestone_content_pagination.offset,
-                    self.backlog_items
-                ).then(function(data) {
+                MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function(data) {
                     BacklogService.loadMilestoneBacklog(data.results);
                 });
             }

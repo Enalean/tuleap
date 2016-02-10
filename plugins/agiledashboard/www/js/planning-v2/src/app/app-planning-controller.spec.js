@@ -579,7 +579,7 @@ describe("PlanningCtrl", function() {
                 $scope.$apply();
 
                 expect(MilestoneService.putSubMilestones).toHaveBeenCalledWith(736, [3118, 1668]);
-                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
+                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, jasmine.any(Object));
                 expect(PlanningCtrl.milestones.content).toEqual([
                     {
                         id: 1668,
@@ -609,7 +609,7 @@ describe("PlanningCtrl", function() {
                 });
                 $scope.$apply();
 
-                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
+                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, jasmine.any(Object));
                 expect(PlanningCtrl.milestones.content).toEqual([
                     {
                         id: 1668,
