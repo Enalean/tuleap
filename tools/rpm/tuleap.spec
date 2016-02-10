@@ -412,15 +412,6 @@ Requires: php53-mediawiki-tuleap  >= 1.20.3-6
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
-%package plugin-openid
-Summary: OpenId consumer plugin
-Group: Development/Tools
-Version: @@PLUGIN_OPENID_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: php53-openid
-%description plugin-openid
-Connect to Tuleap using an OpenId provider
-
 %package plugin-proftpd
 Summary: Proftpd plugin
 Group: Development/Tools
@@ -599,9 +590,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 
-# OpenId
-%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/openid_consumer_store
-
 # Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
 
@@ -612,7 +600,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin mediawiki
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openid
 
 # REST
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
@@ -1070,11 +1057,6 @@ fi
 %dir %{APP_DATA_DIR}/mediawiki/master
 %dir %{APP_DATA_DIR}/mediawiki/projects
 %attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
-
-%files plugin-openid
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/openid
-%{APP_CACHE_DIR}/openid_consumer_store
 
 %files plugin-proftpd
 %defattr(-,%{APP_USER},%{APP_USER},-)
