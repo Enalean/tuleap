@@ -88,6 +88,11 @@ for item in $modified_plugins $modified_themes $modified_api; do
 	    ;;
     esac
 
+    if [ ! -f $path/VERSION ]; then
+	echo "No VERSION found for $path, skip..."
+	continue
+    fi
+
     version=$(get_new_version $path)
     echo "    * $item_name: $version"
     php tools/utils/changelogs/insert_line_in_changelog.php "$item_name" "$version" "$tuleap_version" "$item_type"
