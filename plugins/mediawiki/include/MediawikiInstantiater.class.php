@@ -62,6 +62,9 @@ class MediaWikiInstantiater {
     /** @var MediawikiVersionManager */
     private $version_manager;
 
+    /** @var Backend */
+    private $backend;
+
     /**
      * @param Project|string $project
      * @param MediawikiManager $mediawiki_manager
@@ -89,6 +92,7 @@ class MediaWikiInstantiater {
             new MediawikiSiteAdminResourceRestrictorDao(),
             ProjectManager::instance()
         );
+        $this->backend = Backend::instance();
     }
 
     /**
@@ -215,6 +219,9 @@ class MediaWikiInstantiater {
     private function createDirectory() {
         $this->logger->info('Creating project dir ' . $this->project_name_dir);
         mkdir($this->project_name_dir, 0775, true);
+        $owner = ForgeConfig::get('sys_http_user');
+        $this->backend->chown($this->project_name_dir, $owner);
+        $this->backend->chgrp($this->project_name_dir, $owner);
     }
 
     private function createDatabase($mediawiki_path) {
