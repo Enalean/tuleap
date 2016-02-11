@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,5 +19,12 @@
  */
 
 require_once 'pre.php';
+
+$posix_user = posix_getpwuid(posix_geteuid());
+$sys_user   = $posix_user['name'];
+if ($sys_user !== 'codendiadm' ) {
+    fwrite(STDERR, 'User must be codendiadm'.PHP_EOL);
+    exit(1);
+}
 
 PluginManager::instance()->installAndActivate($argv[1]);

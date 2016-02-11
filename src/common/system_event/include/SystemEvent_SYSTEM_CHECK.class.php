@@ -137,10 +137,12 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             }
         }
 
-        $logger = new BackendLogger();
-        if (is_file($logger->getFilepath())) {
+        $backend_logger = new BackendLogger();
+        $logger         = new SystemCheckLogger($backend_logger, 'system_check');
+
+        if (is_file($backend_logger->getFilepath())) {
             $backendSystem->changeOwnerGroupMode(
-                $logger->getFilepath(),
+                $backend_logger->getFilepath(),
                 ForgeConfig::get('sys_http_user'),
                 ForgeConfig::get('sys_http_user'),
                 0640
@@ -156,7 +158,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             EventManager::instance()->processEvent(
                 Event::PROCCESS_SYSTEM_CHECK,
                 array(
-                    'logger' => $logger
+                    'logger' => $logger,
                 )
             );
         } catch(Exception $exception) {
@@ -165,8 +167,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         }
 
         $this->expireRestTokens(UserManager::instance());
-        
-        $this->done();
+
+        if ($logger->hasWarnings()) {
+            $this->warning($logger->getAllWarnings());
+        } else {
+            $this->done();
+        }
+
         return true;
     }
 
@@ -179,5 +186,3 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
     }
 
 }
-
-?>

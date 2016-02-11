@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,6 +58,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -563,4 +564,16 @@ class cardwallPlugin extends Plugin {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
     }
+
+    public function proccess_system_check($params) {
+        $checker = new PluginConfigChecker($params['logger']);
+
+        $checker->checkFolder($this);
+        $checker->checkIncFile($this->getIncFile());
+    }
+
+    private function getIncFile() {
+        return $this->getPluginEtcRoot() . '/config.inc';
+    }
+
 }

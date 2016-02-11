@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,8 +33,17 @@ class Git_SystemCheckTest extends TuleapTestCase {
         $this->driver               = mock('Git_GitoliteDriver');
         $this->gitgc                = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc');
         $this->system_event_manager = mock('Git_SystemEventManager');
+        $logger                     = mock('Logger');
+        $config_checker             = new PluginConfigChecker($logger);
+        $plugin                     = mock('Plugin');
 
-        $this->system_check = new Git_SystemCheck($this->gitgc, $this->driver, $this->system_event_manager);
+        $this->system_check = new Git_SystemCheck(
+            $this->gitgc,
+            $this->driver,
+            $this->system_event_manager,
+            $config_checker,
+            $plugin
+        );
     }
 
     public function itAsksToCheckAuthorizedKeys() {

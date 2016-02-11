@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,17 +40,20 @@ class Docman_SystemCheckTest extends TuleapTestCase {
         $this->plugin    = stub('Plugin')->getServiceShortname()->returns('docman');
         $this->retriever = mock('Docman_SystemCheckProjectRetriever');
         $logger          = mock('BackendLogger');
+        $config_checker  = new PluginConfigChecker($logger);
         $backend         = BackendSystem::instance();
 
         $this->root_dir_path = dirname(__FILE__).'/_fixtures/';
 
         $plugin_info = stub('DocmanPluginInfo')->getPropertyValueForName('docman_root')->returns($this->root_dir_path);
         stub($this->plugin)->getPluginInfo()->returns($plugin_info);
+        stub($this->plugin)->getPluginEtcRoot()->returns(ForgeConfig::get('codendi_cache_dir'));
 
         $this->system_check = new Docman_SystemCheck(
             $this->plugin,
             $this->retriever,
             $backend,
+            $config_checker,
             $logger
         );
     }

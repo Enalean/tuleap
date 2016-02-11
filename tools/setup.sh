@@ -1495,12 +1495,12 @@ substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT
 echo "Install tuleap plugins"
 
 echo "Install Docman"
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php docman
+su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php docman' -l codendiadm
 
 # Tracker plugin
 if [ "$enable_plugin_tracker" = "true" ]; then
     echo "Install tracker"
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker' -l codendiadm
 
     # Import all templates
     template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
@@ -1512,7 +1512,7 @@ fi
 # GraphOnTrackersv5 plugin
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
     echo "Install Graphontrackersv5"
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php graphontrackersv5
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php graphontrackersv5' -l codendiadm
 fi
 
 # IM plugin
@@ -1529,7 +1529,7 @@ GRANT SELECT ON $PROJECT_NAME.session to 'openfireadm'@'$mysql_httpd_host';
 FLUSH PRIVILEGES;
 EOF
     # Install plugin
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php IM
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php IM' -l codendiadm
 
     # Initialize Jabbex
     build_dir /etc/$PROJECT_NAME/plugins/IM/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
@@ -1547,14 +1547,14 @@ fi
 # Agile Dashboard plugin
 if [ -d "$INSTALL_DIR/plugins/agiledashboard" ]; then
     echo "Install AgileDashboard"
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php cardwall
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php cardwall' -l codendiadm
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard' -l codendiadm
 fi
 
 # Git plugin
 if [ -d "$INSTALL_DIR/plugins/git" ]; then
     echo "Install Git"
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php git
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php git' -l codendiadm
 fi
 
 

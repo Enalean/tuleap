@@ -893,6 +893,7 @@ class DocmanPlugin extends Plugin {
             $this,
             new Docman_SystemCheckProjectRetriever(new Docman_SystemCheckDao()),
             BackendSystem::instance(),
+            new PluginConfigChecker($params['logger']),
             $params['logger']
         );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,22 +34,31 @@ class Docman_SystemCheck {
     /** @var Backend */
     private $backend;
 
-    /** @var BackendLogger */
+    /** @var Logger */
     private $logger;
+
+    /**
+     * @var PluginConfigChecker
+     */
+    private $config_checker;
 
     public function __construct(
         Plugin $docman_plugin,
         Docman_SystemCheckProjectRetriever $retriever,
         Backend $backend,
-        BackendLogger $logger
+        PluginConfigChecker $config_checker,
+        Logger $logger
     ) {
-        $this->retriever     = $retriever;
-        $this->docman_plugin = $docman_plugin;
-        $this->backend       = $backend;
-        $this->logger        = $logger;
+        $this->retriever      = $retriever;
+        $this->docman_plugin  = $docman_plugin;
+        $this->backend        = $backend;
+        $this->config_checker = $config_checker;
+        $this->logger         = $logger;
     }
 
     public function process() {
+        $this->checkIncFolderAndFileOwnership();
+
         foreach ($this->retriever->getActiveProjectUnixNamesThatUseDocman() as $project_unix_name) {
             $folder_path = $this->getDocmanRootPath() . $project_unix_name;
 
@@ -61,6 +70,15 @@ class Docman_SystemCheck {
         }
 
         return true;
+    }
+
+    private function checkIncFolderAndFileOwnership() {
+       $this->config_checker->checkFolder($this->docman_plugin);
+       $this->config_checker->checkIncFile($this->getIncFile());
+    }
+
+    private function getIncFile() {
+        return $this->docman_plugin->getPluginEtcRoot() . '/docman.inc';
     }
 
     /**
