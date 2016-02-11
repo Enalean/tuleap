@@ -78,12 +78,16 @@
                           <data type="dateTime"/>
                         </attribute>
                       </optional>
-                      <attribute name="arch">
-                        <data type="string"/>
-                      </attribute>
-                      <attribute name="filetype">
-                        <data type="string"/>
-                      </attribute>
+                      <optional>
+                        <attribute name="arch">
+                          <data type="string"/>
+                        </attribute>
+                      </optional>
+                      <optional>
+                        <attribute name="filetype">
+                          <data type="string"/>
+                        </attribute>
+                      </optional>
                       <optional>
                         <element name="description">
                           <data type="string"/>

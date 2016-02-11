@@ -24,8 +24,8 @@ frs =
                   attribute name { xsd:string }? &
                   attribute release-time { xsd:dateTime }? &
                   attribute post-date { xsd:dateTime }? &
-                  attribute arch { xsd:string } &
-                  attribute filetype { xsd:string } &
+                  attribute arch { xsd:string }? &
+                  attribute filetype { xsd:string }? &
                   element description { xsd:string }? &
                   element user { user_content }?
             }*
