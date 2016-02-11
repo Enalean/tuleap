@@ -179,14 +179,20 @@ class FRSXMLImporter {
         $date  = strtotime($attrs['post-date']);
         $desc  = "";
 
-        $type_id = $this->getFileTypeDao()->searchTypeId($attrs['filetype']);
-        if(is_null($type_id)) {
-            throw new Exception("Invalid filetype '{$attrs['filetype']}'");
+        $type_id = null;
+        if(isset($attrs['filetype']) && !empty($attrs['filetype'])) {
+            $type_id = $this->getFileTypeDao()->searchTypeId($attrs['filetype']);
+            if(is_null($type_id)) {
+                throw new Exception("Invalid filetype '{$attrs['filetype']}'");
+            }
         }
 
-        $proc_id = $this->getProcessorDao()->searchProcessorId($project->getID(), $attrs['arch']);
-        if(is_null($proc_id)) {
-            throw new Exception("Invalid architecture '{$attrs['arch']}'");
+        $proc_id = null;
+        if(isset($attrs['arch']) && !empty($attrs['arch'])) {
+            $proc_id = $this->getProcessorDao()->searchProcessorId($project->getID(), $attrs['arch']);
+            if(is_null($proc_id)) {
+                throw new Exception("Invalid architecture '{$attrs['arch']}'");
+            }
         }
 
         foreach($xml_file->children() as $elem) {
@@ -211,8 +217,10 @@ class FRSXMLImporter {
         $newFile->setGroup($project);
         $newFile->setRelease($release);
         $newFile->setFileName($name);
-        $newFile->setProcessorID($proc_id);
-        $newFile->setTypeID($type_id);
+        // hardcoded 100 constant. See src/www/include/html.php function
+        // html_build_multiple_select_box_from_array()
+        $newFile->setProcessorID(is_null($proc_id) ? 100 : $proc_id);
+        $newFile->setTypeID(is_null($type_id) ? 100 : $type_id);
         $newFile->setReferenceMd5($md5);
         $newFile->setComputedMd5($md5);
         $newFile->setUserId($user->getId());

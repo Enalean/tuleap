@@ -162,7 +162,7 @@ function frs_show_processor_popup ($group_id, $name='processor_id', $checked_val
 	if (!isset($FRS_PROCESSOR_RES)) {
 		$FRS_PROCESSOR_RES=db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=".db_ei($group_id)." ORDER BY rank");
 	}
-	return html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,$Language->getText('file_file_utils','must_choose_one'),true, '', false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML);
+	return html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,$Language->getText('file_file_utils','must_choose_one'),false, '', false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML);
 }
 
 
