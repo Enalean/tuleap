@@ -1,3 +1,6 @@
+Version 0.107 - Tuleap 8.12
+    * request #8801 Tuleap warns about wrong owernship of plugins installed by default
+
 Version 0.106 - Tuleap 8.12
     * request #8848: Force ownership on mediawiki's data directory
 

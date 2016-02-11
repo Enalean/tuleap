@@ -1,3 +1,6 @@
+Version 5.791 - Tuleap 8.12
+    * request #8801 Tuleap warns about wrong owernship of plugins installed by default
+
 Version 5.790 - Tuleap 8.11
     * request #8831: Cross references not interpreted in text area in html format
 

@@ -1,3 +1,6 @@
+Version 4.117 - Tuleap 8.12
+    * request #8801 Tuleap warns about wrong owernship of plugins installed by default
+
 Version 4.116 - Tuleap 8.11
     * request #8805: Strength migration to Gerrit
 
