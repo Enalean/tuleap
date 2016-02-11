@@ -1,3 +1,6 @@
+Version 1.353 - Tuleap 8.12
+    * request #8727 Kanban real time: edit card
+
 Version 1.352 - Tuleap 8.12
     * request #8828: Pagination for milestone content is not taken into account and is the same as milestones pagination
 
