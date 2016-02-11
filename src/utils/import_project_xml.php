@@ -118,10 +118,11 @@ try {
         throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($username)));
     }
 
-    if (is_dir($archive_path)) {
-        $archive = new Import\DirectoryArchive($archive_path);
+    $absolute_archive_path = realpath($archive_path);
+    if (is_dir($absolute_archive_path)) {
+        $archive = new Import\DirectoryArchive($absolute_archive_path);
     } else {
-        $archive = new Import\ZipArchive($archive_path, ForgeConfig::get('tmp_dir'));
+        $archive = new Import\ZipArchive($absolute_archive_path, ForgeConfig::get('tmp_dir'));
     }
 
     $archive->extractFiles();
