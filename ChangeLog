@@ -14,6 +14,7 @@ Version 8.12 (Not yet released)
 	* docman: 2.26.94
 	* git: 4.117
 	* tracker: 5.791
+	* Plugin OpenId is deleted
 
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==
