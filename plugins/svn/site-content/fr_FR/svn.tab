@@ -23,3 +23,4 @@ plugin_svn	illegal_char	Le nom de dépôt contient des caractères invalides
 plugin_svn	repository_spaces	Le nom du dépôt ne doit pas contenir d'espaces
 plugin_svn	repository_not_found	Dépôt non trouvé
 plugin_svn	already_used	Le nom du dépôt existe déjà dans le projet.
+plugin_svn	find_error	Le dépôt n'a pas été trouvé.

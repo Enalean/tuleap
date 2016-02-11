@@ -26,20 +26,23 @@ use HTTPRequest;
 use Tuleap\Svn\Explorer\RepositoryDisplayPresenter;
 use \Tuleap\Svn\Repository\RepositoryManager;
 use \Tuleap\Svn\Repository\RepositoryNotFoundException;
+use Tuleap\Svn\ViewVCProxy\ViewVCProxy;
+use ProjectManager;
 
 class RepositoryDisplayController {
-    public function __construct(RepositoryManager $repository_manager) {
+    public function __construct(RepositoryManager $repository_manager, ProjectManager $project_manager) {
         $this->repository_manager = $repository_manager;
+        $this->proxy              = new ViewVCProxy($repository_manager, $project_manager);
     }
 
     public function displayRepo(ServiceSvn $service, HTTPRequest $request) {
         try {
-            $repository = $this->repository_manager->getById($request->get('idRepo'), $request->getProject());
+            $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
             $service->renderInPage(
                 $request,
-                'Repository clone',
-                'explorer/repository_clone',
-                new RepositoryDisplayPresenter($repository, $request)
+                $GLOBALS['Language']->getText('plugin_svn','descriptor_name'),
+                'explorer/repository_display',
+                new RepositoryDisplayPresenter($repository, $request, $this->proxy->getContent($request))
             );
         } catch (RepositoryNotFoundException $e) {
             $GLOBALS['Response']->addFeedback('error', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn','repository_not_found'));

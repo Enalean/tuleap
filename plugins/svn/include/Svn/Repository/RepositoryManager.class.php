@@ -24,13 +24,17 @@ use \Tuleap\Svn\Dao;
 use \Tuleap\Svn\Repository\Repository;
 use Project;
 use \Tuleap\Svn\Repository\CannotCreateRepositoryException;
+use \Tuleap\Svn\Repository\CannotFindRepositoryException;
+use ProjectManager;
 
 class RepositoryManager {
 
     private $dao;
+    private $project_manager;
 
-    public function __construct(Dao $dao) {
-        $this->dao = $dao;
+    public function __construct(Dao $dao, ProjectManager $project_manager) {
+        $this->dao             = $dao;
+        $this->project_manager = $project_manager;
     }
 
     public function getRepositoriesInProject(Project $project) {
@@ -39,6 +43,15 @@ class RepositoryManager {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
         return $repositories;
+    }
+
+    public function getRepositoryByName(Project $project, $name) {
+        $row = $this->dao->searchRepositoryByName($project, $name);
+        if ($row) {
+            return $this->instantiateFromRow($row, $project);
+        } else {
+            throw new CannotFindRepositoryException ($GLOBALS['Language']->getText('plugin_svn','find_error'));
+        }
     }
 
     public function getById($id_repository, Project $project) {

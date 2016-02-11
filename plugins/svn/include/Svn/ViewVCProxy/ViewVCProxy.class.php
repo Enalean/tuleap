@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2015-2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,20 @@
 namespace Tuleap\Svn\ViewVCProxy;
 
 use HTTPRequest;
+use Tuleap\Svn\Repository\RepositoryManager;
+use ProjectManager;
+use ForgeConfig;
 
 class ViewVCProxy {
+
+    private $repository_manager;
+    private $project_manager;
+
+    public function __construct(RepositoryManager $repository_manager, ProjectManager $project_manager) {
+        $this->repository_manager = $repository_manager;
+        $this->project_manager    = $project_manager;
+    }
+
     private $office_extensions = array(
         'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
         'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -52,8 +64,8 @@ class ViewVCProxy {
             strpos($request_uri, "view=graphimg") !== false ||
             strpos($request_uri, "annotate=") !== false ||
             strpos($request_uri, "view=redirect_path") !== false ||
-            /* ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson. */
-            strpos($request_uri, "&rev=") !== false ) {
+            // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
+           strpos($request_uri, "&rev=") !== false ) {
             return false;
         }
 
@@ -66,6 +78,18 @@ class ViewVCProxy {
         }
 
         return true;
+    }
+
+    private function buildQueryString(HTTPRequest $request) {
+        $request_uri = $request->getFromServer('REQUEST_URI');
+
+        if(strpos($request_uri,"/?") === false) {
+            return $request->getFromServer('QUERY_STRING');
+        } else {
+            $project = $this->project_manager->getProject($request->get('group_id'));
+            $repository = $this->repository_manager->getById($request->get('repo_id'), $project);
+            return "roottype=svn&root=".$repository->getFullName();
+        }
     }
 
     private function escapeStringFromServer(HTTPRequest $request, $key) {
@@ -101,40 +125,6 @@ class ViewVCProxy {
         }
 
         return $matches[1];
-    }
-
-    private function cleanQueryString(HTTPRequest $request) {
-        $simple_query_string = str_replace(
-            "'", "", $this->escapeStringFromServer($request, 'QUERY_STRING')
-        );
-
-        // turn it into a dictionnary for easier manipulation
-        $exploded_query_string = explode("&", $simple_query_string);
-        $dict_query_string = array();
-
-        foreach($exploded_query_string as $param) {
-            list($key, $value) = explode("=", $param);
-
-            $dict_query_string[$key] = $value;
-        }
-
-        // "view=auto" is not well supported in wrapped mode. See SR 341 on Partners.
-        if (array_key_exists("view", $dict_query_string)) {
-            $dict_query_string["view"] = "markup";
-        }
-
-        // remove the parameters added by the plugin's routing.
-        unset($dict_query_string["action"]);
-        unset($dict_query_string["controller"]);
-        unset($dict_query_string["group_id"]);
-
-        // turn it back into a simple string
-        $query_string = array();
-        foreach($dict_query_string as $key => $value) {
-            $query_string[] = $key."=".$value;
-        }
-
-        return "'".implode("&", $query_string)."'";
     }
 
     private function getViewVcContentType($content_type_line, $path) {
@@ -191,10 +181,13 @@ class ViewVCProxy {
             }
         }
 
+        $project = $this->project_manager->getProject($request->get('group_id'));
+        $repository = $this->repository_manager->getById($request->get('repo_id'), $project);
+
         $command = 'HTTP_COOKIE='.$this->escapeStringFromServer($request, 'HTTP_COOKIE').' '.
             'HTTP_USER_AGENT='.$this->escapeStringFromServer($request, 'HTTP_USER_AGENT').' '.
             'REMOTE_ADDR='.escapeshellarg(HTTPRequest::instance()->getIPAddress()).' '.
-            'QUERY_STRING='.$this->cleanQueryString($request).' '.
+            'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
             'SERVER_SOFTWARE='.$this->escapeStringFromServer($request, 'SERVER_SOFTWARE').' '.
             'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
@@ -204,12 +197,13 @@ class ViewVCProxy {
             'HTTP_HOST='.$this->escapeStringFromServer($request, 'HTTP_HOST').' '.
             'DOCUMENT_ROOT='.$this->escapeStringFromServer($request, 'DOCUMENT_ROOT').' '.
             'CODENDI_LOCAL_INC='.$this->escapeStringFromServer($request, 'CODENDI_LOCAL_INC').' '.
-            '/var/www/cgi-bin/viewvc.cgi 2>&1';
+            'TULEAP_REPO_NAME='.escapeshellarg($repository->getFullName()).' '.
+            'TULEAP_REPO_PATH='.escapeshellarg($repository->getPath()).' '.
+            ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command);
 
         list($headers, $body) = http_split_header_body($content);
-
 
         $content_type_line = strtok($content,"\n\t\r\0\x0B");
         $viewvc_content_type = $this->getViewVcContentType($content_type_line, $path);
@@ -236,20 +230,9 @@ class ViewVCProxy {
                 substr($content, $begin_doc, $length),
                 $request->get('group_id')
             );
-
         } else {
-            if ($viewvc_location) {
-                $redirect = new \URLRedirect();
-                $redirect->makeReturnToUrl($request, $viewvc_location);
-                // TODO: need to test this
-
-                // header('Location: '.$viewvc_location);
-                // exit(1);
-            }
-
-            header('Content-Type:' . $viewvc_content_type.'; charset=utf-8');
-
-            return $body;
+            echo $body;
+            exit();
         }
     }
 }

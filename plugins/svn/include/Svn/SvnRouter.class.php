@@ -23,15 +23,29 @@ namespace Tuleap\Svn;
 use HTTPRequest;
 use \Tuleap\Svn\Explorer\ExplorerController;
 use \Tuleap\Svn\Explorer\RepositoryDisplayController;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RuleName;
+use \Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Admin\AdminController;
+use Tuleap\Svn\AuthFile\AccessFileHistoryManager;
+use ProjectManager;
+use Project;
+use Rule_ProjectName;
 
 class SvnRouter {
 
     const DEFAULT_ACTION = 'index';
 
     private $repository_manager;
+    private $access_file_manager;
+    private $project_manager;
 
-    public function __construct($repository_manager) {
-        $this->repository_manager = $repository_manager;
+    public function __construct(
+            RepositoryManager $repository_manager,
+            ProjectManager $project_manager
+        ) {
+        $this->repository_manager  = $repository_manager;
+        $this->project_manager     = $project_manager;
     }
 
     /**
@@ -40,6 +54,14 @@ class SvnRouter {
      * @return void
      */
     public function route(HTTPRequest $request) {
+
+        try {
+            $this->useAViewVcRoadIfRootValid($request);
+        } catch (CannotFindRepositoryException $e) {
+            $GLOBALS['Response']->addFeedback('info', $request->get('root'). " " .$GLOBALS['Language']->getText('plugin_svn','find_error'));
+            $GLOBALS['Response']->redirect('/');
+        }
+
         if (! $request->get('action')) {
             $this->useDefaultRoute($request);
             return;
@@ -52,13 +74,43 @@ class SvnRouter {
                 $controller->$action($this->getService($request), $request);
                 break;
             case "displayRepo":
-                $controller = new RepositoryDisplayController($this->repository_manager);
+                $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
                 $controller->$action($this->getService($request), $request);
                 break;
             default:
                 $this->useDefaultRoute($request);
                 break;
         }
+    }
+
+    private function useAViewVcRoadIfRootValid(HTTPRequest $request) {
+        if ($request->get('roottype')) {
+            if (preg_match('/^('.Rule_ProjectName::PATTERN_PROJECT_NAME.')\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $request->get('root'), $matches)) {
+                $svn_dir = $matches;
+            } else {
+                throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+            }
+
+            $project = $this->project_manager->getProjectByUnixName($svn_dir[1]);
+            if (! $project instanceof Project) {
+                throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+            }
+
+            $repository = $this->repository_manager->getRepositoryByName($project, $svn_dir[2]);
+            $request->set("group_id", $repository->getProject()->getId());
+            $request->set("repo_id", $repository->getId());
+
+            $this->useViewVcRoute($request);
+            return;
+        }
+    }
+
+    /**
+     * @param HTTPRequest $request
+     */
+    private function useViewVcRoute(HTTPRequest $request) {
+        $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
+        $controller->displayRepo($this->getService($request), $request);
     }
 
     /**

@@ -28,6 +28,8 @@ use Tuleap\Svn\Dao;
  */
 class RuleName extends Rule {
 
+    const PATTERN_REPOSITORY_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
+
     private $project;
     private $dao;
 
@@ -37,7 +39,7 @@ class RuleName extends Rule {
     }
 
     public function isValid($val) {
-        return preg_match('/^'.PATTERN_REPOSITORY_NAME.'\z/i', $val) &&
+        return preg_match('/^'.self::PATTERN_REPOSITORY_NAME.'\z/i', $val) &&
             ! $this->doesNameAlreadyExisting($val);
     }
 

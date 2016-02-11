@@ -619,6 +619,8 @@ extends Rule {
 class Rule_ProjectName
 extends Rule_UserName {
 
+    const PATTERN_PROJECT_NAME    = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
+
     /**
      * Group name cannot contain underscore or dots for DNS reasons.
      *
