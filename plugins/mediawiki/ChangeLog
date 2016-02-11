@@ -1,3 +1,6 @@
+Version 0.106 - Tuleap 8.12
+    * request #8848: Force ownership on mediawiki's data directory
+
 Version 0.105 - Tuleap 8.12
     * request #8847: MediaWiki language import
 
