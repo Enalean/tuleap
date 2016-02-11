@@ -2175,6 +2175,27 @@ EOS;
     }
 
     /**
+     * Retreives the permissions set on a given tracker fields
+     *
+     * @return array
+     */
+    public function getFieldsAuthorizedUgroupsByPermissionType() {
+        $fields             = Tracker_FormElementFactory::instance()->getUsedFields($this);
+        $perm_dao           = new Tracker_PermDao();
+        $authorized_ugroups = array();
+
+        foreach ($fields as $field) {
+            $field_id = $field->getId();
+            if ($dar = $perm_dao->searchAccessPermissionsByFieldId($field_id)) {
+                while ($row = $dar->getRow()) {
+                    $authorized_ugroups[$field_id][$row['permission_type']][] = $row['ugroup_id'];
+                }
+            }
+        }
+        return $authorized_ugroups;
+    }
+
+    /**
      * See if the user's perms are >= 2 or project admin.
      *
      * @param int $user Either the user ID or the User object to test, or current user if false

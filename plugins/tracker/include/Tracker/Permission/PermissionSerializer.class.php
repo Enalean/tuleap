@@ -50,6 +50,18 @@ class Tracker_Permission_PermissionsSerializer {
         );
     }
 
+    public function getLiteralizedUserGroupsThatCanViewTrackerFields(Tracker_Artifact $artifact) {
+        $u_groups_literalize_by_field = array();
+        $u_groups_ids_by_field = $this->getUserGroupsThatCanViewTrackerFields($artifact);
+        foreach ($u_groups_ids_by_field as $key => $u_groups_id) {
+            $u_groups_literalize_by_field[$key] = $this->literalize(
+                $u_groups_id,
+                $artifact->getTracker()->getProject()
+            );
+        }
+        return $u_groups_literalize_by_field;
+    }
+
     private function literalize(array $ugroups_ids, Project $project) {
         $literalizer = new UGroupLiteralizer();
 
@@ -84,6 +96,19 @@ class Tracker_Permission_PermissionsSerializer {
         if (isset($tracker_permissions[Tracker::PERMISSION_SUBMITTER_ONLY])) {
             $authorized_ugroups = $tracker_permissions[Tracker::PERMISSION_SUBMITTER_ONLY];
         }
+        return $authorized_ugroups;
+    }
+
+    private function getUserGroupsThatCanViewTrackerFields($artifact) {
+        $authorized_ugroups = array();
+        $fields_permissions = $artifact->getTracker()->getFieldsAuthorizedUgroupsByPermissionType();
+
+        foreach ($fields_permissions as $key => $field_permissions) {
+            $authorized_ugroups[$key] = array();
+            $this->appendAllUGroups($authorized_ugroups[$key], $field_permissions, Tracker_FormElement::PERMISSION_READ);
+            $this->appendAllUGroups($authorized_ugroups[$key], $field_permissions, Tracker_FormElement::PERMISSION_UPDATE);
+        }
+
         return $authorized_ugroups;
     }
 

@@ -30,6 +30,7 @@ class KanbanArtifactRightsPresenter implements MessageRightsPresenter
     public $submitter_only;
     public $artifact;
     public $tracker;
+    public $field;
 
     public function __construct(
         Tracker_Artifact $artifact,
@@ -41,5 +42,6 @@ class KanbanArtifactRightsPresenter implements MessageRightsPresenter
         $this->submitter_only     = $permission_serializer->getLiteralizedUserGroupsSubmitterOnly($artifact);
         $this->artifact           = $permission_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact);
         $this->tracker            = $permission_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact);
+        $this->field              = $permission_serializer->getLiteralizedUserGroupsThatCanViewTrackerFields($artifact);
     }
 }

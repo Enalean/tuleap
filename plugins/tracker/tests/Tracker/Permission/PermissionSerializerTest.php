@@ -70,6 +70,8 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
     protected $marketing_ugroup_id = 115;
     protected $support_ugroup_id   = 114;
 
+    protected $summary_field_id = 352;
+
     protected $support_ugroup_literalize  = '@ug_114';
     protected $project_members_literalize = '@_project_members';
     protected $project_admin_literalize   = '@_project_admin';
@@ -152,6 +154,13 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
     protected function assertSubmitterOnlyUGroupIdsEquals(Tracker_Artifact $artifact, $expected_value) {
         $this->assertEqual(
             $this->serializer->getLiteralizedUserGroupsSubmitterOnly($artifact),
+            $expected_value
+        );
+    }
+
+    protected function assertFieldsPermissionUGroupIdsEquals(Tracker_Artifact $artifact, array $expected_value) {
+        $this->assertEqual(
+            $this->serializer->getLiteralizedUserGroupsThatCanViewTrackerFields($artifact),
             $expected_value
         );
     }
@@ -777,6 +786,33 @@ class Tracker_Permission_PermissionSerializer_SubmitterOnlyPermission_Test exten
         $this->assertSubmitterOnlyUGroupIdsEquals(
             $this->artifact,
             array($this->support_ugroup_literalize)
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_FieldPermission_Test extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+    }
+
+    public function itReturnsArtifactFieldsPermissionsWithoutPermissionSubmit() {
+        stub($this->tracker)->getFieldsAuthorizedUgroupsByPermissionType()->returns(
+            array($this->summary_field_id =>
+                array(
+                    Tracker_FormElement_Field::PERMISSION_READ   => array($this->support_ugroup_id),
+                    Tracker_FormElement_Field::PERMISSION_SUBMIT => array(ProjectUGroup::PROJECT_ADMIN),
+                    Tracker_FormElement_Field::PERMISSION_UPDATE => array(ProjectUGroup::PROJECT_MEMBERS)
+                )
+            )
+        );
+
+        $this->artifact = $this->anArtifact()
+            ->build();
+
+        $this->assertFieldsPermissionUGroupIdsEquals(
+            $this->artifact,
+            array($this->summary_field_id => array($this->support_ugroup_literalize, $this->project_members_literalize))
         );
     }
 }
