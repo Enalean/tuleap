@@ -5,6 +5,7 @@ Version 8.12 (Not yet released)
 
 	== Bug fix ==
 	* request #8850: FRS filetype and filearch is no longer mandatory
+	* request #8863: Use the absolute path of the archive/directory
 
 	== Plugins ==
 	* admindelegation: 2.11
