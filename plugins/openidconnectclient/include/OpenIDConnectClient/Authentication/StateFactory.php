@@ -18,17 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/autoload_libs.php');
-require_once (__DIR__ . '/../include/autoload.php');
+namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Zend\Loader\AutoloaderFactory;
+use InoOicClient\Oic\Authorization\State\StateFactoryInterface;
+use RandomNumberGenerator;
+use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-AutoloaderFactory::factory(
-    array(
-        'Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'InoOicClient' => '/usr/share/php/InoOicClient/'
-            )
-        )
-    )
-);
+class StateFactory implements StateFactoryInterface {
+
+    private $key;
+
+    public function __construct(RandomNumberGenerator $random_number_generator) {
+        $this->key = $random_number_generator->getNumber();
+    }
+
+    public function createState($provider_id = null) {
+        return new State($provider_id, $this->key);
+    }
+}

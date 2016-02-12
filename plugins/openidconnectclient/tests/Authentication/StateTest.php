@@ -18,17 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/autoload_libs.php');
-require_once (__DIR__ . '/../include/autoload.php');
+use Tuleap\OpenIDConnectClient\Authentication\State;
 
-use Zend\Loader\AutoloaderFactory;
+require_once(__DIR__ . '/../bootstrap.php');
 
-AutoloaderFactory::factory(
-    array(
-        'Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'InoOicClient' => '/usr/share/php/InoOicClient/'
-            )
-        )
-    )
-);
+class StateTest extends TuleapTestCase {
+
+    public function itCreatesStateFromSignedState() {
+        $secret_key  = 'Tuleap';
+        $provider_id = 1234;
+
+        $state        = new State($provider_id, $secret_key);
+        $signed_state = $state->getSignedState();
+
+        $this->assertEqual($state, State::createFromSignature($signed_state, $secret_key));
+    }
+
+}

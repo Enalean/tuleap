@@ -23,8 +23,8 @@ namespace Tuleap\OpenIDConnectClient;
 use BackendLogger;
 use Feedback;
 use ForgeConfig;
+use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
-use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMapping;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
@@ -54,57 +54,56 @@ class LoginController {
      */
     private $user_mapping_manager;
 
+    /**
+     * @var Flow
+     */
+    private $flow;
+
     public function __construct(
         UserManager $user_manager,
         ProviderManager $provider_manager,
-        UserMappingManager $user_mapping_manager
+        UserMappingManager $user_mapping_manager,
+        Flow $flow
     ) {
         $this->user_manager         = $user_manager;
         $this->provider_manager     = $provider_manager;
         $this->user_mapping_manager = $user_mapping_manager;
+        $this->flow                 = $flow;
     }
 
     public function displayLoginLink() {
         $provider = $this->getProvider();
-        $flow     = new Flow($provider);
-        echo '<a href="'. $flow->getAuthorizationRequestUri() .'">Log In</a>';
+        echo '<a href="'. $this->flow->getAuthorizationRequestUri($provider) .'">Log In</a>';
     }
 
     public function login() {
         $this->checkIfUserAlreadyLogged();
 
-        $provider = null;
         try {
-            $provider = $this->getProvider();
-        } catch (ProviderNotFoundException $ex) {
-            $this->redirectToLoginPageAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'provider_not_found')
-            );
-        }
-
-        $flow      = new Flow($provider);
-        $user_info = array();
-
-        try {
-            $user_info = $flow->process();
+            $flow_response = $this->flow->process();
         } catch (Exception $ex) {
             $this->redirectToLoginPageAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
         }
 
+        $provider          = $flow_response->getProvider();
+        $user_informations = $flow_response->getUserInformations();
         try {
-            $user_mapping = $this->user_mapping_manager->getByProviderAndIdentifier($provider, $user_info['id']);
+            $user_mapping = $this->user_mapping_manager->getByProviderAndIdentifier(
+                $provider,
+                $user_informations['id']
+            );
             $this->openSession($user_mapping);
         } catch (UserMappingNotFoundException $ex) {
             $logger = new BackendLogger('/tmp/openidconnect.log');
-            $logger->debug('Your OpenID Connect identifier is ' . $user_info['id']);
+            $logger->debug('Your OpenID Connect identifier is ' . $user_informations['id']);
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
                 $GLOBALS['Language']->getText(
                     'plugin_openidconnectclient',
                     'account_linking_not_yet_possible',
-                    array($user_info['id'])
+                    array($user_informations['id'])
                 )
             );
             $GLOBALS['Response']->redirect('https://' . ForgeConfig::get('sys_https_host'));

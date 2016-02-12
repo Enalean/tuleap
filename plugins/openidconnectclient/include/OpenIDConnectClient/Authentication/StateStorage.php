@@ -18,17 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/autoload_libs.php');
-require_once (__DIR__ . '/../include/autoload.php');
+namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Zend\Loader\AutoloaderFactory;
+use InoOicClient\Oic\Authorization\State\Storage\Session;
 
-AutoloaderFactory::factory(
-    array(
-        'Zend\Loader\StandardAutoloader' => array(
-            'namespaces' => array(
-                'InoOicClient' => '/usr/share/php/InoOicClient/'
-            )
-        )
-    )
-);
+class StateStorage extends Session {
+
+    public function saveState(\InoOicClient\Oic\Authorization\State\State $state) {
+        $this->container->offsetSet(self::VAR_AUTHORIZATION_STATE, $state->getSecretKey());
+    }
+
+    public function clear() {
+        $this->container->offsetUnset(self::VAR_AUTHORIZATION_STATE);
+    }
+}
