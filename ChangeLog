@@ -12,7 +12,7 @@ Version 8.12 (Not yet released)
 	* hudson: 1.24
 	* agiledashboard: 1.353
 	* mediawiki: 0.107
-	* openidconnectclient: 0.2
+	* openidconnectclient: 0.3
 	* svn: 0.11
 	* cardwall: 1.54
 	* docman: 2.26.94
