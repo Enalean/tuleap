@@ -10,7 +10,7 @@ Version 8.12 (Not yet released)
 	== Plugins ==
 	* admindelegation: 2.11
 	* hudson: 1.24
-	* agiledashboard: 1.354
+	* agiledashboard: 1.355
 	* mediawiki: 0.107
 	* openidconnectclient: 0.3
 	* svn: 0.11
