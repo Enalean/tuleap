@@ -1,3 +1,6 @@
+Version 3.96 - Tuleap 8.12
+    * story #8816 have dedicated svnroot for plugin
+
 Version 3.95 - Tuleap 8.11
     * story #8791 : be able to checkout a SVN repository
 

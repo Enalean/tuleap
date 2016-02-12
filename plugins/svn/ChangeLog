@@ -1,3 +1,6 @@
+Version 0.11 - Tuleap 8.12
+    * story #8816 have dedicated svnroot for plugin
+
 Version 0.10 - Tuleap 8.12
     * story #8791 : Show repository tree with ViewVC
 
