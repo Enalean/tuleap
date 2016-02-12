@@ -18,9 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TemplatePluginTest extends TuleapTestCase {
-
-    function testSomething() {
-        $this->pass();
-    }
-}
+define('TEMPLATE_BASE_DIR', realpath(__DIR__.'/..'));

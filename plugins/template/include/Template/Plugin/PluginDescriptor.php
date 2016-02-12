@@ -18,9 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TemplatePluginTest extends TuleapTestCase {
+namespace Tuleap\Template\Plugin;
 
-    function testSomething() {
-        $this->pass();
+class PluginDescriptor extends \PluginDescriptor {
+
+    public function __construct() {
+        parent::__construct(
+            $GLOBALS['Language']->getText('plugin_template', 'descriptor_name'),
+            false,
+            $GLOBALS['Language']->getText('plugin_template', 'descriptor_description')
+        );
+
+        $this->setVersionFromFile(TEMPLATE_BASE_DIR.'/VERSION');
     }
 }
