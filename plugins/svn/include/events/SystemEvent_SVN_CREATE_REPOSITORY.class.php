@@ -37,7 +37,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
     }
 
     public function process() {
-        $path            = $this->getRequiredParameter(0);
+        $system_path     = $this->getRequiredParameter(0);
         $project_id      = (int)$this->getRequiredParameter(1);
         $repository_name = $this->getRequiredParameter(2);
 
@@ -47,7 +47,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
         $backendSystem->flushNscdAndFsCache();
 
         $backendSvn = Backend::instance('SVN');
-        if (! $backendSvn->createRepositorySVN($project_id, $path)) {
+        if (! $backendSvn->createRepositorySVN($project_id, $system_path)) {
             $this->error("Could not create/initialize project SVN repository");
             return false;
         }

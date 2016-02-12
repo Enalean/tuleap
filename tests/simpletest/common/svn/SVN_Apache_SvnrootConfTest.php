@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,10 +57,14 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
      */
     private function GivenSvnrootForTwoGroups($authentification_mode) {
         $projects = array(array('repository_name' => 'gpig',
+                                'public_path'     => '/svnroot/gpig',
+                                'system_path'     => '/svnroot/gpig',
                                 'group_name'      => 'Guinea Pig',
                                 'group_id'        => 101,
                                 'auth_mod'        => $authentification_mode),
                           array('repository_name' => 'garden',
+                                'public_path'     => '/svnroot/garden',
+                                'system_path'     => '/svnroot/garden',
                                 'group_name'      => 'The Garden Project',
                                 'group_id'        => 102,
                                 'auth_mod'        => $authentification_mode));

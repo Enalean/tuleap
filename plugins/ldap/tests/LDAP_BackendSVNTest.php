@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,12 +60,16 @@ class LDAP_BackendSVNTest extends TuleapTestCase {
         $project_array_01 = array(
             'repository_name' => 'gpig',
             'group_name'      => 'Guinea Pig',
+            'public_path'     => '/svnroot/gpig',
+            'system_path'     => '/svnroot/gpig',
             'group_id'        => 101,
             'auth_mod'        => 'modmysql'
         );
 
         $project_array_02 = array(
             'repository_name' => 'garden',
+            'public_path'     => '/svnroot/garden',
+            'system_path'     => '/svnroot/garden',
             'group_name'      => 'The Garden Project',
             'group_id'        => 102,
             'auth_mod'        => 'modmysql'

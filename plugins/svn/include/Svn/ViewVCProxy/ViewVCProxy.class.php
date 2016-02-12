@@ -198,7 +198,7 @@ class ViewVCProxy {
             'DOCUMENT_ROOT='.$this->escapeStringFromServer($request, 'DOCUMENT_ROOT').' '.
             'CODENDI_LOCAL_INC='.$this->escapeStringFromServer($request, 'CODENDI_LOCAL_INC').' '.
             'TULEAP_REPO_NAME='.escapeshellarg($repository->getFullName()).' '.
-            'TULEAP_REPO_PATH='.escapeshellarg($repository->getPath()).' '.
+            'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
             ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command);

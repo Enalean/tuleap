@@ -37,7 +37,6 @@ class SvnRouter {
     const DEFAULT_ACTION = 'index';
 
     private $repository_manager;
-    private $access_file_manager;
     private $project_manager;
 
     public function __construct(

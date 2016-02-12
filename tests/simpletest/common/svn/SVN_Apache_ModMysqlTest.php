@@ -39,10 +39,12 @@ class SVN_Apache_ModMysqlTest extends UnitTestCase {
 
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
         $project_db_row = array('unix_group_name' => 'GPig',
+            "public_path"     => "/svnroot/GPig",
+            "system_path"     => "/svnroot/GPig",
             'group_name' => 'Guinea Pig',
             'group_id' => 101);
         $apacheConf = new SVN_Apache_ModMysql($project_db_row);
-        return $apacheConf->getConf('GPig');
+        return $apacheConf->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
     }
 
     public function testGetApacheAuthShouldContainsDefaultValues() {
