@@ -129,52 +129,6 @@ class Planning_VirtualTopMilestonePaneFactory {
         $this->active_pane[$milestone_artifact_id] = null;
 
         $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningV2PaneInfo($milestone);
-        if (ForgeConfig::get('sys_showdeprecatedplanningv1')) {
-            $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopContentPaneInfo($milestone);
-            $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningPaneInfo($milestone);
-        }
-    }
-
-    /**
-     * @return \AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo
-     */
-    private function getTopContentPaneInfo(Planning_Milestone $milestone) {
-        $top_pane_info = new AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo($milestone, $this->theme_path);
-        $milestone_artifact_id = $this->getMilestoneArtifactId();
-
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER) {
-            $top_pane_info->setActive(true);
-            $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Content_ContentPane(
-                $top_pane_info,
-                $this->getTopContentPresenterBuilder()->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
-            );
-        }
-
-        return $top_pane_info;
-    }
-
-    /**
-     * @return \AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo
-     */
-    private function getTopPlanningPaneInfo(Planning_Milestone $milestone) {
-        $milestone_artifact_id = $this->getMilestoneArtifactId();
-
-        $milestone_tracker = $milestone->getPlanning()->getPlanningTracker();
-        if (! $milestone_tracker) {
-            return;
-        }
-
-        $pane_info = new AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPaneInfo($milestone, $this->theme_path, $milestone_tracker);
-
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPaneInfo::IDENTIFIER) {
-            $pane_info->setActive(true);
-            $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningPane(
-                $pane_info,
-                $this->getTopPlanningPresenterBuilder()->getMilestoneTopPlanningPresenter($this->request->getCurrentUser(), $milestone, $milestone_tracker)
-            );
-        }
-
-        return $pane_info;
     }
 
     /**
@@ -232,13 +186,4 @@ class Planning_VirtualTopMilestonePaneFactory {
             self::PRELOAD_PAGINATION_ORDER
         );
     }
-
-    private function getTopContentPresenterBuilder() {
-        return $this->pane_presenter_builder_factory->getTopContentPresenterBuilder();
-    }
-
-    private function getTopPlanningPresenterBuilder() {
-        return $this->pane_presenter_builder_factory->getTopPlanningPresenterBuilder();
-    }
 }
-?>

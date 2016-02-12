@@ -564,34 +564,6 @@ class Planning_Controller extends MVC2_PluginController {
         return new BreadCrumb_AgileDashboard();
     }
 
-    public function getMoreMilestones() {
-        $offset = $this->request->get('offset', 'uint', 0);
-        $planning = $this->planning_factory->getPlanning($this->request->get('planning_id'));
-        $short_access = $this->planning_shortaccess_factory->getShortAccessForPlanning(
-            $planning,
-            $this->getCurrentUser(),
-            $this->milestone_factory,
-            $this->plugin_theme_path,
-            $offset
-        );
-
-        $this->render('shortaccess-milestones', $short_access);
-    }
-
-    /**
-     *
-     * @param int $projectId
-     * @return Planning_ShortAccess[]
-     */
-    private function getPlanningsShortAccess($projectId) {
-        return $this->planning_shortaccess_factory->getPlanningsShortAccess(
-            $this->getCurrentUser(),
-            $projectId,
-            $this->milestone_factory,
-            $this->plugin_theme_path
-        );
-    }
-
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);

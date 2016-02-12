@@ -501,10 +501,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         return $this->milestone_factory->getSubMilestoneIds($user, $milestone);
     }
 
-    private function extractArtifactId(Planning_Milestone $milestone) {
-        return $milestone->getArtifactId();
-    }
-
     private function filterOutAssignedBacklogItems(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection, PFUser $user) {
         $artifact_ids = $this->getBacklogItemsArtifactIds($collection);
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,14 +36,5 @@
         var filter        = new tuleap.core.listFilter();
 
         filter.init(input_filter, list_selector);
-    });
-
-    $(document).ready(function() {
-        var input_filter      = $('.content-filter.planning-backlog');
-        var list_selector     = '.planning-backlog-content tr';
-        var excluded_selector = '.empty-table-placeholder';
-        var filter            = new tuleap.core.listFilter();
-
-        filter.init(input_filter, list_selector, excluded_selector);
     });
 })(window.jQuery);

@@ -29,8 +29,6 @@ class AgileDashboardPlugin extends Plugin {
 
     const PLUGIN_NAME = 'agiledashboard';
 
-    private $service;
-
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
 
@@ -384,12 +382,8 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
-                $this->getPluginPath().'/js/load-more-milestones.js',
                 $this->getPluginPath().'/js/display-angular-feedback.js',
                 $this->getPluginPath().'/js/MilestoneContent.js',
-                $this->getPluginPath().'/js/planning.js',
-                $this->getPluginPath().'/js/OuterGlow.js',
-                $this->getPluginPath().'/js/expand-collapse.js',
                 $this->getPluginPath().'/js/planning-view.js',
                 $this->getPluginPath().'/js/ContentFilter.js',
                 $this->getPluginPath().'/js/home.js',

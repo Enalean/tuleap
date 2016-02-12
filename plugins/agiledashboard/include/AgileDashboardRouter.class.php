@@ -177,13 +177,6 @@ class AgileDashboardRouter {
             case 'import':
                 $this->executeAction($agile_dashboard_xml_controller, 'import');
                 break;
-            case 'submilestonedata' :
-                $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
-                $this->executeAction($milestone_controller, 'submilestonedata');
-                break;
-            case 'get-more-milestones':
-                $this->executeAction($planning_controller, 'getMoreMilestones');
-                break;
             case 'solve-inconsistencies':
                 $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
                 $this->executeAction($milestone_controller, 'solveInconsistencies');

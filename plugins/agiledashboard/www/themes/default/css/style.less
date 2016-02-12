@@ -1,7 +1,3 @@
-body.agiledashboard_planning {
-    background: #FCFCFC;
-}
-
 body.agiledashboard_homepage .main .content {
     padding: 0;
 }
@@ -325,9 +321,6 @@ body.agiledashboard_homepage .main .content {
     overflow: visible;
 }
 
-.planning-backlog > table {
-    width: 100%;
-}
 .agiledashboard .release_planner {
     border: 1px solid lightgray;
     padding: 0 0.5em;
@@ -383,20 +376,6 @@ body.agiledashboard_homepage .main .content {
     background: white;
 }
 
-.planning-backlog-hover .tracker_report_renderer,
-.planning-droppable-hover {
-    background: #fcfcfc;
-    -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
-    -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
-    box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
-}
-
-.planning-artifact-chooser {
-    padding: 0.5em 1em;
-}
-.planning-artifact-chooser > option {
-}
-
 /* {{{ same as card-actions in tracker style.css */
 .backlog-actions a.dropdown-toggle {
     font-size: 0.9em;
@@ -445,126 +424,40 @@ body.agiledashboard_homepage .main .content {
     color: green;
 }
 
-.card-planning-controls {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    opacity:0.1;
-}
-.card:hover > .card-planning-controls {
-    opacity:0.5;
-}
-.card > .card-planning-controls:hover {
-    opacity:1;
-}
-
-.card-planning-controls > div {
-    padding: 0.5em 0.5em 0em;
-    background: rgba(128, 128, 128, 0.1);
-    -webkit-border-top-left-radius: 1em;
-    -moz-border-radius-topleft: 1em;
-    border-top-left-radius: 1em;
-}
-.card-planning-controls > div > i {
-    cursor: pointer;
-    opacity:0.5;
-}
-.card-planning-controls > div > i:hover {
-    opacity:1;
-}
-
-.ad_index_plannings {
-    list-style: none;
-    margin: 0;
-    padding: 1em;
-    text-align: center;
-}
-.ad_index_planning {
-    margin-right: 1em;
-    text-align: left;
-
-    background: #fcfcfc;
-    min-width: 100px;
-    border:1px solid #ccc;
-    padding: 0.25em 0em;
-    border-radius: 0.5em;
-
-    display: inline-block;
-    zoom: 1;
-    *display: inline;
-    vertical-align: top;
-    position: relative;
-}
-.ad_index_planning > .dropdown {
-    margin: auto 1em;
-}
-.ad_index_planning > ul {
-    list-style: none;
-    margin: auto 0;
-    padding: 0;
-}
-.ad_index_planning > ul > li {
-    clear: both;
-    padding: 0.25em 1em;
-}
-.ad_index_planning > ul > li.active {
-    background: #eee;
-}
-.ad_index_planning > .dropdown > a:hover {
-    text-decoration: none;
-}
-.ad_index_planning > .dropdown > a > h2 {
-    color: #333;
-}
-.ad_index_planning_icons {
-    margin-left:0.5em;
-    float:right;
-}
-
 .release-date-info {
     margin-bottom: 1em;
     font-size: 1.5em;
     color: #999;
 }
 
-#topblcontent table,
-#topplanning table,
 #planning table,
 #blcontent table {
     border-spacing: 0;
 }
 
-#topblcontent table th,
-#topplanning table th,
 #planning table th,
 #blcontent table th {
     white-space: nowrap;
 }
 
-#topblcontent table td.milestone-element-title, #topblcontent table td.submilestone-element-title,
-#topplanning table td.milestone-element-title, #topplanning table td.submilestone-element-title,
 #planning table td.milestone-element-title, #planning table td.submilestone-element-title,
 #blcontent table td.milestone-element-title, #blcontent table td.submilestone-element-title {
     width: 100%;
     white-space: normal;
 }
 
-#topblcontent table td.milestone-element-parent, #topblcontent table td.submilestone-element-parent,
 #blcontent table td.milestone-element-parent, #blcontent table td.submilestone-element-parent {
     min-width: 200px;
     max-width: 200px;
     white-space: normal;
 }
 
-#topplanning table td.milestone-element-parent, #topplanning table td.submilestone-element-parent,
 #planning table td.milestone-element-parent, #planning table td.submilestone-element-parent {
     min-width: 200px;
     max-width: 200px;
     white-space: normal;
 }
 
-#topblcontent table td:first-child,
-#topplanning table td:first-child,
 #planning table td:first-child,
 #blcontent table td:first-child {
     white-space: nowrap;
@@ -572,7 +465,6 @@ body.agiledashboard_homepage .main .content {
     max-width: 60px;
 }
 
-#topblcontent table,
 #blcontent table {
     /*width: auto;*/
     margin-bottom: 40px;
@@ -599,26 +491,6 @@ body.agiledashboard_homepage .main .content {
     border-bottom: 1px solid #dddddd;
 }
 
-.table .agiledashboard-planning-submilestones-addnew,
-.table .agiledashboard-planning-submilestone-header-info {
-    text-align: right;
-    border-left: none;
-    white-space: nowrap;
-}
-
-.table .agiledashboard-planning-submilestone-header > th {
-    cursor: pointer;
-    background-color: #EBEBEB;
-}
-
-.submilestone-data-controls {
-    float: right;
-}
-
-.agiledashboard-planning-submilestone-header > th:first-child {
-    color: #067EC9;
-}
-
 .empty-table-placeholder > td {
     text-align: center;
     font-style: italic;
@@ -639,13 +511,12 @@ body.agiledashboard_homepage .main .content {
     }
 }
 
-.agiledasboard-content-open-items, .agiledasboard-content-inconsistent-items, .agiledasboard-content-closed-items,
-.agiledashboard-planning-backlog, .agiledashboard-planning-submilestones {
+.agiledasboard-content-open-items, .agiledasboard-content-inconsistent-items, .agiledasboard-content-closed-items {
     background: #FFFFFF;
 }
 
 @media screen and (max-width: 1400px) {
-    .agiledashboard-planning-backlog table, table.submilestone-element-rows {
+    table.submilestone-element-rows {
         font-size: 0.9em;
         th:nth-child(5), td:nth-child(5) {
             display: none;
