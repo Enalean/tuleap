@@ -73,7 +73,7 @@ class Tracker_Hierarchy_Controller {
             if ($this->request->exist('children')) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'controller_bad_request'));
             } else {
-                $this->dao->deleteAllChildren($this->tracker->getId());
+                $this->dao->deleteAllChildrenWithNature($this->tracker->getId());
             }
         }
         

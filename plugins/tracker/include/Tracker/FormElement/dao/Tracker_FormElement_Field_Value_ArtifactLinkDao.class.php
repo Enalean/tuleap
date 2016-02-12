@@ -51,18 +51,20 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->retrieve($sql);
     }
     
-    public function create($changeset_value_id, array $artifact_ids, $keyword, $group_id) {
+    public function create($changeset_value_id, $nature, array $artifact_ids, $keyword, $group_id) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
+        $nature             = $nature ? $this->da->quoteSmart($nature) : 'NULL';
         $keyword            = $this->da->quoteSmart($keyword);
         $group_id           = $this->da->escapeInt($group_id);
 
         $sql_values = array();
         foreach ($artifact_ids as $id) {
             $id           = $this->da->escapeInt($id);
-            $sql_values[] = "($changeset_value_id, $id, $keyword, $group_id)";
+            $sql_values[] = "($changeset_value_id, $nature, $id, $keyword, $group_id)";
         }
 
-        $sql = "INSERT INTO tracker_changeset_value_artifactlink (changeset_value_id, artifact_id, keyword, group_id)
+        $sql = "INSERT INTO tracker_changeset_value_artifactlink
+                    (changeset_value_id, nature, artifact_id, keyword, group_id)
                 VALUES". implode(',', $sql_values);
 
         return $this->update($sql);
