@@ -433,6 +433,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Remove the new plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn
+# Remove the Pull Request plugin
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pullrequest
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
