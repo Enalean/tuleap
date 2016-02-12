@@ -1,0 +1,3 @@
+Version 0.2 - Tuleap 8.12
+    * story #8824 have a Pull Request plugin basis and its associated tables in db (Initialize pullrequest plugin)
+
