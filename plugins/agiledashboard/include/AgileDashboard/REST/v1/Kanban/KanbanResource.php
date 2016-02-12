@@ -65,6 +65,7 @@ use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
+use Tuleap\AgileDashboard\KanbanRightsPresenter;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -312,6 +313,21 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addExpandCollapseColumnHit(
                 $this->getProjectIdForKanban($kanban)
             );
+        }
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            $rights = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+            $message = new MessageDataPresenter(
+                $user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban:edit',
+                $label
+            );
+
+            $this->node_js_client->sendMessage($message);
         }
 
         Header::allowOptionsGetPatchDelete();
@@ -837,6 +853,21 @@ class KanbanResource extends AuthenticatedResource {
         $this->kanban_dao->delete($id);
 
         Header::allowOptionsGetPatchDelete();
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+            $message = new MessageDataPresenter(
+                $user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban:delete',
+                null
+            );
+
+            $this->node_js_client->sendMessage($message);
+        }
     }
 
     /**
@@ -919,6 +950,21 @@ class KanbanResource extends AuthenticatedResource {
         $column_representation = new KanbanColumnRepresentation();
         $column_representation->build($new_column, $add_in_place, $user_can_remove_column, $user_can_edit_label);
 
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+            $message = new MessageDataPresenter(
+                $current_user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban_column:create',
+                $column_representation
+            );
+
+            $this->node_js_client->sendMessage($message);
+        }
+
         return $column_representation;
     }
 
@@ -955,6 +1001,21 @@ class KanbanResource extends AuthenticatedResource {
             throw new RestException(400, $exception->getMessage());
         } catch (Kanban_SemanticStatusColumnIdsNotInOpenSemanticException $exception) {
             throw new RestException(400, $exception->getMessage());
+        }
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+            $message = new MessageDataPresenter(
+                $user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban_column:move',
+                $column_ids
+            );
+
+            $this->node_js_client->sendMessage($message);
         }
     }
 

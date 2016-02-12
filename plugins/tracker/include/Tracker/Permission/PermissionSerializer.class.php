@@ -62,6 +62,13 @@ class Tracker_Permission_PermissionsSerializer {
         return $u_groups_literalize_by_field;
     }
 
+    public function getLiteralizedAllUserGroupsThatCanViewTracker(Tracker $tracker) {
+        return $this->literalize(
+            $this->getAllUserGroupsThatCanViewTracker($tracker),
+            $tracker->getProject()
+        );
+    }
+
     private function literalize(array $ugroups_ids, Project $project) {
         $literalizer = new UGroupLiteralizer();
 
@@ -76,6 +83,18 @@ class Tracker_Permission_PermissionsSerializer {
         $this->appendAllUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_ADMIN);
         $this->appendMatchingUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_SUBMITTER, $this->getSubmitterUGroups($artifact));
         $this->appendMatchingUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_ASSIGNEE, $this->getAssigneesUGroups($artifact));
+        return $authorized_ugroups;
+    }
+
+    private function getAllUserGroupsThatCanViewTracker(Tracker $tracker) {
+        $authorized_ugroups  = array(ProjectUGroup::PROJECT_ADMIN);
+        $tracker_permissions = $tracker->getAuthorizedUgroupsByPermissionType();
+
+        $this->appendAllUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_FULL);
+        $this->appendAllUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_ADMIN);
+        $this->appendAllUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_SUBMITTER);
+        $this->appendAllUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_ASSIGNEE);
+        $this->appendAllUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_SUBMITTER_ONLY);
         return $authorized_ugroups;
     }
 

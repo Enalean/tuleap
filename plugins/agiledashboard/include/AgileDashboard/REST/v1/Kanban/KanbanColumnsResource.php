@@ -41,10 +41,16 @@ use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElementFactory;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\RealTime\NodeJSClient;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_Permission_PermissionRetrieveAssignee;
+use Tuleap\RealTime\MessageDataPresenter;
+use Tuleap\AgileDashboard\KanbanRightsPresenter;
 
 class KanbanColumnsResource {
 
     const MAX_LIMIT = 100;
+    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
@@ -86,6 +92,11 @@ class KanbanColumnsResource {
         );
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
+
+        $this->node_js_client         = new NodeJSClient();
+        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
     }
 
     /**
@@ -120,10 +131,9 @@ class KanbanColumnsResource {
     protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
+        $column       = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
 
         try {
-            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
-
             if (isset($updated_column_properties->wip_limit) && ! $this->kanban_column_manager->updateWipLimit($current_user, $kanban, $column, $updated_column_properties->wip_limit)) {
                 throw new RestException(500);
             }
@@ -142,6 +152,26 @@ class KanbanColumnsResource {
         $this->statistics_aggregator->addWIPModificationHit(
             $this->getProjectIdForKanban($kanban)
         );
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+            $data    = array(
+                'id'        => $id,
+                'label'     => $updated_column_properties->label,
+                'wip_limit' => $updated_column_properties->wip_limit
+            );
+            $message = new MessageDataPresenter(
+                $current_user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban_column:edit',
+                $data
+            );
+
+            $this->node_js_client->sendMessage($message);
+        }
     }
 
     /**
@@ -164,13 +194,12 @@ class KanbanColumnsResource {
     protected function delete($id, $kanban_id) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
+        $column       = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
 
         try {
-            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
             if (! $this->kanban_column_manager->deleteColumn($current_user, $kanban, $column)) {
                 throw new RestException(500);
             }
-
         } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (AgileDashboard_UserNotAdminException $exception) {
@@ -179,6 +208,21 @@ class KanbanColumnsResource {
             throw new RestException(404, $exception->getMessage());
         } catch (AgileDashboard_KanbanColumnNotRemovableException $exception) {
             throw new RestException(409, $exception->getMessage());
+        }
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+            $message = new MessageDataPresenter(
+                $current_user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                $kanban->getId(),
+                $rights,
+                'kanban_column:delete',
+                $column->getId()
+            );
+
+            $this->node_js_client->sendMessage($message);
         }
     }
 
@@ -196,9 +240,7 @@ class KanbanColumnsResource {
     }
 
     private function getCurrentUser() {
-        $user = UserManager::instance()->getCurrentUser();
-
-        return $user;
+        return UserManager::instance()->getCurrentUser();
     }
 
     /**

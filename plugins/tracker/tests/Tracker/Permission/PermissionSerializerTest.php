@@ -165,6 +165,13 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
         );
     }
 
+    protected function assertTrackerUGroupsEquals(Tracker $tracker, $expected_value) {
+        $this->assertEqual(
+            $this->serializer->getLiteralizedAllUserGroupsThatCanViewTracker($tracker),
+            $expected_value
+        );
+    }
+
     protected function anArtifact() {
         return new Tracker_Permission_PermissionSerializer_ArtifactBuilder($this->artifact_builder, $this->assignee_retriever, $this->user_not_project_member);
     }
@@ -767,7 +774,8 @@ class Tracker_Permission_PermissionSerializer_ArtifactPermissions_Test extends T
 
 class Tracker_Permission_PermissionSerializer_SubmitterOnlyPermission_Test extends Tracker_Permission_PermissionSerializer {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
     }
 
@@ -813,6 +821,34 @@ class Tracker_Permission_PermissionSerializer_FieldPermission_Test extends Track
         $this->assertFieldsPermissionUGroupIdsEquals(
             $this->artifact,
             array($this->summary_field_id => array($this->support_ugroup_literalize, $this->project_members_literalize))
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_GroupsPermissions_Test extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+    }
+
+    public function itReturnsAllGroupsCanViewTracker() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL           => array(ProjectUGroup::PROJECT_ADMIN),
+                Tracker::PERMISSION_ADMIN          => array(ProjectUGroup::PROJECT_ADMIN),
+                Tracker::PERMISSION_SUBMITTER      => array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::PROJECT_MEMBERS),
+                Tracker::PERMISSION_ASSIGNEE       => array(ProjectUGroup::PROJECT_ADMIN, $this->support_ugroup_id),
+                Tracker::PERMISSION_SUBMITTER_ONLY => array(ProjectUGroup::PROJECT_ADMIN)
+            )
+        );
+
+        $this->assertTrackerUGroupsEquals(
+            $this->tracker,
+            array(
+                $this->project_admin_literalize,
+                $this->project_members_literalize,
+                $this->support_ugroup_literalize
+            )
         );
     }
 }
