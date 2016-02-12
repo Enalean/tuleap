@@ -2,7 +2,7 @@ describe("BacklogItemCollectionService -", function() {
     var $q, $scope, BacklogItemCollectionService, BacklogItemService;
 
     beforeEach(function() {
-        module('backlog', function($provide) {
+        module('backlog-item-collection', function($provide) {
             $provide.decorator('BacklogItemService', function($delegate) {
                 spyOn($delegate, "getBacklogItem");
 

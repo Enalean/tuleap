@@ -11,9 +11,7 @@ BacklogItemController.$inject = [
     'BacklogItemService',
     'dragularService',
     'DroppedService',
-    'CardFieldsService',
     'BacklogItemCollectionService',
-    'NewTuleapArtifactModalService',
     'BacklogItemSelectedService'
 ];
 
@@ -26,9 +24,7 @@ function BacklogItemController(
     BacklogItemService,
     dragularService,
     DroppedService,
-    CardFieldsService,
     BacklogItemCollectionService,
-    NewTuleapArtifactModalService,
     BacklogItemSelectedService
 ) {
     var self = this;
@@ -38,29 +34,15 @@ function BacklogItemController(
         escaping                                   : false,
         dragular_instance_for_backlog_item_children: undefined,
         children_promise                           : $q.when(),
-        canBeAddedToBacklogItemChildren            : canBeAddedToBacklogItemChildren,
-        showAddChildModal                          : showAddChildModal,
         toggleChildrenDisplayed                    : toggleChildrenDisplayed,
         init                                       : init,
         initDragularForBacklogItemChildren         : initDragularForBacklogItemChildren,
         dragularOptionsForBacklogItemChildren      : dragularOptionsForBacklogItemChildren,
-        moveToTop                                  : moveToTop,
         moveToBottom                               : moveToBottom,
-        reorderBacklogItemChildren                 : reorderBacklogItemChildren,
-        cardFieldIsCross                           : CardFieldsService.cardFieldIsCross,
-        cardFieldIsDate                            : CardFieldsService.cardFieldIsDate,
-        cardFieldIsFile                            : CardFieldsService.cardFieldIsFile,
-        cardFieldIsList                            : CardFieldsService.cardFieldIsList,
-        cardFieldIsPermissions                     : CardFieldsService.cardFieldIsPermissions,
-        cardFieldIsSimpleValue                     : CardFieldsService.cardFieldIsSimpleValue,
-        cardFieldIsText                            : CardFieldsService.cardFieldIsText,
-        cardFieldIsUser                            : CardFieldsService.cardFieldIsUser,
-        getCardFieldCrossValue                     : CardFieldsService.getCardFieldCrossValue,
-        getCardFieldFileValue                      : CardFieldsService.getCardFieldFileValue,
-        getCardFieldListValues                     : CardFieldsService.getCardFieldListValues,
-        getCardFieldPermissionsValue               : CardFieldsService.getCardFieldPermissionsValue,
-        getCardFieldTextValue                      : CardFieldsService.getCardFieldTextValue,
-        getCardFieldUserValue                      : CardFieldsService.getCardFieldUserValue
+        moveToBottomInParent                       : moveToBottomInParent,
+        moveToTop                                  : moveToTop,
+        moveToTopInParent                          : moveToTopInParent,
+        reorderBacklogItemChildren                 : reorderBacklogItemChildren
     });
 
     self.init();
@@ -72,6 +54,12 @@ function BacklogItemController(
         $scope.$on('dragularcancel', dragularCancel);
         $scope.$on('dragulardrop', dragularDrop);
         $scope.$on('dragulardrag', dragularDrag);
+
+        if (! self.backlog_item.children.collapsed) {
+            $timeout(function() {
+                self.initDragularForBacklogItemChildren();
+            });
+        }
     }
 
     function toggleChildrenDisplayed() {
@@ -109,54 +97,30 @@ function BacklogItemController(
         });
     }
 
-    function showAddChildModal($event, item_type, parent_item) {
-        $event.preventDefault();
-
-        var callback = function(item_id) {
-            var promise = BacklogItemService.removeAddBacklogItemChildren(undefined, parent_item.id, [item_id]);
-
-            promise.then(function() {
-                return appendItemToBacklogItem(item_id, parent_item);
-            });
-
-            return promise;
-        };
-
-        NewTuleapArtifactModalService.showCreation(item_type.id, parent_item, callback);
-    }
-
-    function appendItemToBacklogItem(child_item_id, parent_item) {
-        return BacklogItemService.getBacklogItem(child_item_id).then(function(data) {
-            BacklogItemCollectionService.items[child_item_id] = data.backlog_item;
-
-            if (canBeAddedToBacklogItemChildren(child_item_id, parent_item)) {
-                parent_item.children.data.push(data.backlog_item);
-                if (! parent_item.has_children) {
-                    parent_item.children.loaded = true;
-                }
-            }
-            BacklogItemCollectionService.refreshBacklogItem(parent_item.id);
-        });
-    }
-
-    function canBeAddedToBacklogItemChildren(child_item_id, parent_item) {
-        if (! parent_item.has_children) {
-            return true;
-        }
-
-        if (parent_item.has_children && parent_item.children.loaded) {
-            var child_already_in_children = _.find(parent_item.children.data, { id: child_item_id });
-
-            if (child_already_in_children === undefined) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     function emptyArray(array) {
         array.length = 0;
+    }
+
+    /**
+     * Crappy method, but we're forced to manually call parent scope method because it's not inherited
+     */
+    function moveToTopInParent(backlog_item) {
+        if ($scope.$parent.milestoneController) {
+            $scope.$parent.milestoneController.moveToTop(backlog_item);
+        } else if ($scope.$parent.backlog) {
+            $scope.$parent.backlog.moveToTop(backlog_item);
+        }
+    }
+
+    /**
+     * Crappy method, but we're forced to manually call parent scope method because it's not inherited
+     */
+    function moveToBottomInParent(backlog_item) {
+        if ($scope.$parent.milestoneController) {
+            $scope.$parent.milestoneController.moveToBottom(backlog_item);
+        } else if ($scope.$parent.backlog) {
+            $scope.$parent.backlog.moveToBottom(backlog_item);
+        }
     }
 
     function moveToTop(backlog_item) {

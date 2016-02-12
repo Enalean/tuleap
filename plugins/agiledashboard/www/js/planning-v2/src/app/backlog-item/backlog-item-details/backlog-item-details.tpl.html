@@ -1,0 +1,118 @@
+<div class="type-border"></div>
+
+<div class="moves">
+    <span
+        class="icon-stack"
+        title="{{ 'Move to top' | translate }}"
+        aria-label="{{ 'Move to top' | translate }}"
+        role="button"
+        ng-click="details.moveToTop()"
+    >
+        <i class="icon-circle icon-stack-base"></i>
+        <i ng-if="! details.backlog_item.selected" class="icon-chevron-up icon-light"></i>
+        <i ng-if="details.backlog_item.selected" class="icon-double-angle-up icon-light"></i>
+    </span>
+    <span
+        class="icon-stack"
+        title="{{ 'Move to bottom' | translate }}"
+        aria-label="{{ 'Move to bottom' | translate }}"
+        role="button"
+        ng-click="details.moveToBottom()"
+    >
+        <i class="icon-circle icon-stack-base"></i>
+        <i ng-if="! details.backlog_item.moving_to && ! details.backlog_item.selected" class="icon-chevron-down icon-light"></i>
+        <i ng-if="! details.backlog_item.moving_to && details.backlog_item.selected" class="icon-double-angle-down icon-light"></i>
+        <i ng-if="details.backlog_item.moving_to" class="icon-spinner icon-light icon-spin"></i>
+    </span>
+</div>
+
+<span class="initial-effort-placeholder">
+    <span ng-if="details.backlog_item.initial_effort"
+        class="initial-effort label"
+        title="{{ 'Initial effort' | translate }}"
+        ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms) + ' ' + details.getInitialEffortMessage(details.backlog_item.initial_effort)"
+    ></span>
+
+    <span ng-if="! details.backlog_item.initial_effort" class="no-initial-effort label" title="{{ 'No initial effort defined' | translate }}">
+        <i class="icon-question"></i>
+    </span>
+</span>
+
+<div ng-if="details.backlog_item.accept.trackers.length > 0" class="dropdown id" data-nodrag="true">
+    <a href="/plugins/tracker/?aid={{ details.backlog_item.id }}" data-toggle="dropdown" data-target="#">
+        <span ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | lowercase | tuleapHighlight:details.backlog_filter.terms"></span>
+        <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a
+                href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
+                ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
+            >
+                <i class="icon-edit"></i> <span translate>Edit this item</span>
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li ng-repeat="accepted_type in details.backlog_item.accept.trackers">
+            <a
+                href="#"
+                ng-click="details.showAddChildModal($event, accepted_type, details.backlog_item)"
+            >
+                <i class="icon-plus"></i> <span translate>Add a {{ accepted_type.label }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div ng-if="details.backlog_item.accept.trackers.length === 0" class="id" data-nodrag="true">
+    <a
+        href="/plugins/tracker/?aid={{ details.backlog_item.id }}"
+        ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
+    >
+        <span ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | lowercase | tuleapHighlight:details.backlog_filter.terms"></span>
+        <b class="caret"></b>
+    </a>
+</div>
+
+<span class="summary" ng-bind-html="details.getCardFieldTextValue(details.backlog_item.label) | tuleapHighlight:details.backlog_filter.terms"></span>
+<span class="parent" ng-bind-html="details.backlog_item.parent.label | tuleapHighlight:details.backlog_filter.terms"></span>
+
+<ul class="extra_card_fields" ng-if="details.backlog_item.card_fields.length > 0">
+    <li
+        ng-repeat="card_field in details.backlog_item.card_fields track by $index"
+        ng-class="{ large: details.cardFieldIsText(card_field.type) && card_field.value }"
+    >
+        <div ng-if="details.cardFieldIsSimpleValue(card_field.type) && card_field.value">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldTextValue(card_field.value) | tuleapHighlight:details.backlog_filter.terms"></span>
+        </div>
+        <div ng-if="details.cardFieldIsList(card_field.type) && card_field.values.length > 0">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldListValues(card_field.values, details.backlog_filter.terms)"></span>
+        </div>
+        <div ng-if="details.cardFieldIsDate(card_field.type) && card_field.value">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span title="{{ card_field.value }}" ng-bind-html="details.getCardFieldDateValue(card_field.value) | tuleapHighlight:details.backlog_filter.terms"></span>
+        </div>
+        <div ng-if="details.cardFieldIsText(card_field.type) && card_field.value">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldTextValue(card_field.value) | tuleapHighlight:details.backlog_filter.terms"></span>
+        </div>
+        <div ng-if="details.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldFileValue(details.backlog_item.id, card_field.field_id, card_field.file_descriptions, details.backlog_filter.terms)"></span>
+        </div>
+        <div ng-if="details.cardFieldIsCross(card_field.type) && card_field.value">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldCrossValue(card_field.value, details.backlog_filter.terms)"></span>
+        </div>
+        <div ng-if="details.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:details.backlog_filter.terms"></span>
+        </div>
+        <div ng-if="details.cardFieldIsUser(card_field.type) && card_field.value">
+            <span class="extra_card_field_title">{{ card_field.label }}: </span>
+            <span ng-bind-html="details.getCardFieldUserValue(card_field.value, details.backlog_filter.terms)"></span>
+        </div>
+        <!-- Artifact links & Burndown fields are not managed yet -->
+    </li>
+</ul>

@@ -16,7 +16,8 @@ BacklogController.$inject = [
     'MilestoneCollectionService',
     'BacklogItemSelectedService',
     'SharedPropertiesService',
-    'NewTuleapArtifactModalService'
+    'NewTuleapArtifactModalService',
+    'BacklogFilterValue'
 ];
 
 function BacklogController(
@@ -33,7 +34,8 @@ function BacklogController(
     MilestoneCollectionService,
     BacklogItemSelectedService,
     SharedPropertiesService,
-    NewTuleapArtifactModalService
+    NewTuleapArtifactModalService,
+    BacklogFilterValue
 ) {
     var self = this;
     _.extend(self, {
@@ -42,7 +44,7 @@ function BacklogController(
         details                      : BacklogService.backlog,
         backlog_items                : BacklogService.items,
         all_backlog_items            : BacklogItemCollectionService.items,
-        filter_terms                 : '',
+        filter                       : BacklogFilterValue,
         dragular_instance_for_backlog: undefined,
         canUserMoveCards             : BacklogService.canUserMoveCards,
         displayBacklogItems          : displayBacklogItems,
@@ -169,15 +171,18 @@ function BacklogController(
     }
 
     function filterBacklog() {
-        self.fetchAllBacklogItems(self.backlog_items.pagination.limit, self.backlog_items.pagination.offset).finally(function() {
-            BacklogService.filterItems(self.filter_terms);
+        self.fetchAllBacklogItems(
+            self.backlog_items.pagination.limit,
+            self.backlog_items.pagination.offset
+        ).finally(function() {
+            BacklogService.filterItems(self.filter.terms);
         });
     }
 
     function appendBacklogItems(items) {
         _.extend(self.all_backlog_items, _.indexBy(items, 'id'));
         BacklogService.appendBacklogItems(items);
-        BacklogService.filterItems(self.filter_terms);
+        BacklogService.filterItems(self.filter.terms);
     }
 
     function prependItemToBacklog(backlog_item_id) {
@@ -229,7 +234,7 @@ function BacklogController(
 
             promise.then(function() {
                 var subpromise;
-                if (self.filter_terms) {
+                if (self.filter.terms) {
                     subpromise = prependItemToFilteredBacklog(item_id);
                 } else {
                     subpromise = prependItemToBacklog(item_id);

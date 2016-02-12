@@ -1,5 +1,5 @@
 angular
-    .module('planning')
+    .module('backlog-item-collection')
     .service('BacklogItemCollectionService', BacklogItemCollectionService);
 
 BacklogItemCollectionService.$inject = [

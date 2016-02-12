@@ -1,6 +1,7 @@
 describe("BacklogController - ", function() {
     var $q, $scope, $document, dragularService, BacklogController, BacklogService, MilestoneService, BacklogItemService, DroppedService,
-        MilestoneCollectionService, BacklogItemSelectedService, BacklogItemCollectionService, ProjectService, SharedPropertiesService, NewTuleapArtifactModalService;
+        MilestoneCollectionService, BacklogItemSelectedService, BacklogItemCollectionService, ProjectService,
+        SharedPropertiesService, NewTuleapArtifactModalService, BacklogFilterValue;
 
     var milestone = {
             id: 592,
@@ -47,7 +48,8 @@ describe("BacklogController - ", function() {
             _MilestoneCollectionService_,
             _BacklogItemSelectedService_,
             _SharedPropertiesService_,
-            _NewTuleapArtifactModalService_
+            _NewTuleapArtifactModalService_,
+            _BacklogFilterValue_
         ) {
             $q              = _$q_;
             $document       = _$document_;
@@ -129,6 +131,9 @@ describe("BacklogController - ", function() {
             spyOn(NewTuleapArtifactModalService, "showCreation");
             spyOn(NewTuleapArtifactModalService, "showEdition");
 
+            BacklogFilterValue       = _BacklogFilterValue_;
+            BacklogFilterValue.terms = '';
+
             BacklogController = $controller('BacklogController', {
                 $q                           : $q,
                 $scope                       : $scope,
@@ -143,7 +148,8 @@ describe("BacklogController - ", function() {
                 MilestoneCollectionService   : MilestoneCollectionService,
                 BacklogItemSelectedService   : BacklogItemSelectedService,
                 SharedPropertiesService      : SharedPropertiesService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService
+                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
+                BacklogFilterValue           : BacklogFilterValue
             });
 
             installPromiseMatchers();
@@ -361,7 +367,7 @@ describe("BacklogController - ", function() {
         });
 
         it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", function() {
-            BacklogController.filter_terms = 'flamboyantly';
+            BacklogController.filter.terms = 'flamboyantly';
 
             BacklogController.filterBacklog();
             fetch_all_backlog_items_request.resolve(50);
@@ -372,7 +378,7 @@ describe("BacklogController - ", function() {
         });
 
         it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be filtered", function() {
-            BacklogController.filter_terms = 'Jeffersonianism';
+            BacklogController.filter.terms = 'Jeffersonianism';
 
             BacklogController.filterBacklog();
             fetch_all_backlog_items_request.reject(99);
@@ -456,7 +462,7 @@ describe("BacklogController - ", function() {
                 });
 
                 it("and given that the backlog was filtered, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog's content but not its filtered content", function() {
-                    BacklogController.filter_terms = 'needle';
+                    BacklogController.filter.terms = 'needle';
                     BacklogController.backlog_items.content = [
                         { id: 7453 }
                     ];

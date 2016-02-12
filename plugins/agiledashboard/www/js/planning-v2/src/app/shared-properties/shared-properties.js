@@ -1,3 +1,1 @@
-(function () {
-    angular.module('shared-properties', []);
-})();
+angular.module('shared-properties', []);

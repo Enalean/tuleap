@@ -1,7 +1,7 @@
 describe("BacklogItemController -", function() {
     var $q, $rootScope, $scope, $compile, $document, $element, BacklogItemController,
         BacklogItemService, BacklogItemSelectedService, CardFieldsService, DroppedService, BacklogItemCollectionService,
-        NewTuleapArtifactModalService, dragularService;
+        dragularService;
 
     beforeEach(function() {
         module('backlog');
@@ -17,8 +17,7 @@ describe("BacklogItemController -", function() {
             _dragularService_,
             _DroppedService_,
             _CardFieldsService_,
-            _BacklogItemCollectionService_,
-            _NewTuleapArtifactModalService_
+            _BacklogItemCollectionService_
         ) {
             $q         = _$q_;
             $rootScope = _$rootScope_;
@@ -54,9 +53,6 @@ describe("BacklogItemController -", function() {
             spyOn(BacklogItemCollectionService, 'refreshBacklogItem');
             spyOn(BacklogItemCollectionService, 'addOrReorderBacklogItemsInCollection');
 
-            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            spyOn(NewTuleapArtifactModalService, 'showCreation');
-
             dragularService = _dragularService_;
 
             BacklogItemSelectedService = _BacklogItemSelectedService_;
@@ -64,16 +60,15 @@ describe("BacklogItemController -", function() {
             spyOn(BacklogItemSelectedService, 'getCompactedSelectedBacklogItem');
 
             BacklogItemController = $controller('BacklogItemController', {
-                $scope                       : $scope,
-                $element                     : $element,
-                $document                    : $document,
-                BacklogItemService           : BacklogItemService,
-                dragularService              : dragularService,
-                DroppedService               : DroppedService,
-                CardFieldsService            : CardFieldsService,
-                BacklogItemCollectionService : BacklogItemCollectionService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
-                BacklogItemSelectedService   : BacklogItemSelectedService
+                $scope                      : $scope,
+                $element                    : $element,
+                $document                   : $document,
+                BacklogItemService          : BacklogItemService,
+                dragularService             : dragularService,
+                DroppedService              : DroppedService,
+                CardFieldsService           : CardFieldsService,
+                BacklogItemCollectionService: BacklogItemCollectionService,
+                BacklogItemSelectedService  : BacklogItemSelectedService
             });
         });
     });
@@ -152,158 +147,6 @@ describe("BacklogItemController -", function() {
                 expect(BacklogItemService.getBacklogItemChildren).not.toHaveBeenCalled();
                 expect(BacklogItemController.backlog_item.children.collapsed).toBeFalsy();
             });
-        });
-    });
-
-    describe("showAddChildModal() -", function() {
-        var event, item_type, parent_item;
-        beforeEach(function() {
-            event       = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            item_type   = { id: 7 };
-            parent_item = {
-                id: 53,
-                has_children: true,
-                children: {
-                    loaded: true,
-                    data: [
-                        { id: 352 }
-                    ]
-                },
-                updating: false
-            };
-            BacklogItemCollectionService.items[53] = parent_item;
-        });
-
-        it("Given an event, an item type and a parent item, when I show the modal to add a child to an item, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", function() {
-            BacklogItemController.showAddChildModal(event, item_type, parent_item);
-
-            expect(event.preventDefault).toHaveBeenCalled();
-            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(7, parent_item, jasmine.any(Function));
-        });
-
-        describe("callback -", function() {
-            var artifact, get_backlog_item_request, remove_add_backlog_item_children_request;
-            beforeEach(function() {
-                get_backlog_item_request                 = $q.defer();
-                remove_add_backlog_item_children_request = $q.defer();
-                NewTuleapArtifactModalService.showCreation.and.callFake(function(a, b, callback) {
-                    callback(207);
-                });
-                BacklogItemService.getBacklogItem.and.returnValue(get_backlog_item_request.promise);
-                artifact = {
-                    backlog_item: {
-                        id: 207
-                    }
-                };
-                BacklogItemService.removeAddBacklogItemChildren.and.returnValue(remove_add_backlog_item_children_request.promise);
-            });
-
-            it("When the new artifact modal calls its callback, then the artifact will be appended to the parent item's children using REST, it will be retrieved from the server, added to the items collection and appended to the parent's children array", function() {
-                BacklogItemController.showAddChildModal(event, item_type, parent_item);
-                get_backlog_item_request.resolve(artifact);
-                remove_add_backlog_item_children_request.resolve();
-                $scope.$apply();
-
-                expect(BacklogItemService.removeAddBacklogItemChildren).toHaveBeenCalledWith(undefined, 53, [207]);
-                expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(207);
-                expect(BacklogItemCollectionService.items[207]).toEqual({ id: 207 });
-                expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(53);
-                expect(parent_item.children.data).toEqual([
-                    { id: 352 },
-                    { id: 207 }
-                ]);
-            });
-
-            it("Given a parent item that did not have children, when the new artifact modal calls its callback, then the artifact will be appended to the parent item's children and the children will be marjed as loaded", function() {
-                parent_item.children = {
-                    loaded: false,
-                    data: []
-                };
-                parent_item.has_children = false;
-
-                BacklogItemController.showAddChildModal(event, item_type, parent_item);
-                get_backlog_item_request.resolve(artifact);
-                remove_add_backlog_item_children_request.resolve();
-                $scope.$apply();
-
-                expect(parent_item.children.data).toEqual([
-                    { id: 207 }
-                ]);
-                expect(parent_item.children.loaded).toBeTruthy();
-            });
-        });
-    });
-
-    describe("canBeAddedToBacklogItemChildren() - ", function() {
-        it("Given a parent with no child, it appends the newly created child", function() {
-            var parent = {
-                has_children: false,
-                children    : {}
-            };
-            var created_item = {
-                id: 8
-            };
-
-            var result = BacklogItemController.canBeAddedToBacklogItemChildren(created_item.id, parent);
-
-            expect(result).toBeTruthy();
-        });
-
-        it("Given a parent with already loaded children, it appends the newly created child if not already present", function() {
-            var parent = {
-                has_children: true,
-                children    : {
-                    loaded: true,
-                    data: [
-                        { id: 1 },
-                        { id: 2 },
-                        { id: 3 }
-                    ]
-                }
-            };
-            var created_item = {
-                id: 8
-            };
-
-            var result = BacklogItemController.canBeAddedToBacklogItemChildren(created_item.id, parent);
-
-            expect(result).toBeTruthy();
-        });
-
-        it("Given a parent with already loaded children, it doesn't append the newly created child if already present", function() {
-            var parent = {
-                has_children: true,
-                children    : {
-                    loaded: true,
-                    data: [
-                        { id: 1 },
-                        { id: 2 },
-                        { id: 8 }
-                    ]
-                }
-            };
-            var created_item = {
-                id: 8
-            };
-
-            var result = BacklogItemController.canBeAddedToBacklogItemChildren(created_item.id, parent);
-
-            expect(result).toBeFalsy();
-        });
-
-        it("Given a parent with not already loaded children, it doesn't append the newly created child", function() {
-            var parent = {
-                has_children: true,
-                children    : {
-                    loaded: false,
-                    children: []
-                }
-            };
-            var created_item = {
-                id: 8
-            };
-
-            expect(BacklogItemController.canBeAddedToBacklogItemChildren(created_item.id, parent)).toBeFalsy();
         });
     });
 
