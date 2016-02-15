@@ -24,13 +24,51 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject {
 
-    public function searchByPullRequestId($pullrequest_id) {
-        $pullrequest_id = $this->da->escapeInt($pullrequest_id);
+    public function searchByPullRequestId($pull_request_id) {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
 
         $sql = "SELECT *
                 FROM plugin_pullrequest_review
-                WHERE id = $pullrequest_id";
+                WHERE id = $pull_request_id";
 
         return $this->retrieve($sql);
+    }
+
+    public function create(
+        $repository_id,
+        $user_id,
+        $creation_date,
+        $branch_src,
+        $sha1_src,
+        $branch_dest,
+        $sha1_dest
+    ) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $user_id       = $this->da->escapeInt($user_id);
+        $creation_date = $this->da->escapeInt($creation_date);
+        $branch_src    = $this->da->quoteSmart($branch_src);
+        $sha1_src      = $this->da->quoteSmart($sha1_src);
+        $branch_dest   = $this->da->quoteSmart($branch_dest);
+        $sha1_dest     = $this->da->quoteSmart($sha1_dest);
+
+        $sql = "INSERT INTO plugin_pullrequest_review (
+                                repository_id,
+                                user_id,
+                                creation_date,
+                                branch_src,
+                                sha1_src,
+                                branch_dest,
+                                sha1_dest
+                            ) VALUES (
+                                $repository_id,
+                                $user_id,
+                                $creation_date,
+                                $branch_src,
+                                $sha1_src,
+                                $branch_dest,
+                                $sha1_dest
+                            )";
+
+        return $this->updateAndGetLastId($sql);
     }
 }

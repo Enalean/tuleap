@@ -20,6 +20,9 @@
 
 namespace Tuleap\PullRequest;
 
+use \GitRepository;
+use \PFUser;
+
 class Factory {
 
     /**
@@ -51,5 +54,46 @@ class Factory {
             $row['sha1_dest'],
             $row['status']
         );
+    }
+
+    /**
+     * @return PullRequest
+     */
+    public function create(
+        GitRepository $git_repository,
+        PFUser $user,
+        $branch_src,
+        $sha1_src,
+        $branch_dest,
+        $sha1_dest
+    ) {
+        $pull_request = new PullRequest(
+            0,
+            $git_repository->getId(),
+            $user->getId(),
+            time(),
+            $branch_src,
+            $sha1_src,
+            $branch_dest,
+            $sha1_dest
+        );
+
+        $new_pull_request_id = $this->dao->create(
+            $pull_request->getRepositoryId(),
+            $pull_request->getUserId(),
+            $pull_request->getCreationDate(),
+            $pull_request->getBranchSrc(),
+            $pull_request->getSha1Src(),
+            $pull_request->getBranchDest(),
+            $pull_request->getSha1Dest()
+        );
+
+        if (! $new_pull_request_id) {
+            throw new PullRequestNotCreatedException();
+        }
+
+        $pull_request->setId($new_pull_request_id);
+
+        return $pull_request;
     }
 }
