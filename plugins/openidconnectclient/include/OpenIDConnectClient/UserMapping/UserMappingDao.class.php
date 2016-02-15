@@ -24,6 +24,16 @@ use DataAccessObject;
 
 class UserMappingDao extends DataAccessObject {
 
+    public function save($user_id, $provider_id, $identifier) {
+        $user_id     = $this->getDa()->escapeInt($user_id);
+        $provider_id = $this->getDa()->escapeInt($provider_id);
+        $identifier  = $this->getDa()->quoteSmart($identifier);
+
+        $sql = "INSERT INTO plugin_openidconnectclient_user_mapping(user_id, provider_id, user_openidconnect_identifier)
+                VALUES($user_id, $provider_id, $identifier)";
+        return $this->update($sql);
+    }
+
     public function getUserId($identifier) {
         $identifier = $this->getDa()->quoteSmart($identifier);
         $sql        = 'SELECT user_id FROM plugin_openidconnectclient_user_mapping WHERE user_openidconnect_identifier = ' . $identifier;

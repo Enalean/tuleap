@@ -13,7 +13,7 @@ function autoload9303a908666dc230966c4209553dec89($class) {
             'sessionnotcreatedexception' => '/SessionNotCreatedException.class.php',
             'user_invalidpasswordexception' => '/InvalidPasswordException.class.php',
             'user_invalidpasswordwithuserexception' => '/InvalidPasswordWithUserException.class.php',
-            'user_logincontroller' => '/LoginController.class.php',
+            'user_logincontroller' => '/Controller.class.php',
             'user_loginexception' => '/LoginException.class.php',
             'user_loginmanager' => '/LoginManager.class.php',
             'user_loginpresenter' => '/LoginPresenter.class.php',

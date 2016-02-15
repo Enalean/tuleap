@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -16,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-DROP TABLE IF EXISTS plugin_openidconnectclient_user_mapping;
-DROP TABLE IF EXISTS plugin_openidconnectclient_provider;
-DROP TABLE IF EXISTS plugin_openidconnectclient_unlinked_account;
+
+namespace Tuleap\OpenIDConnectClient\UserMapping;
+
+
+class UserMappingDataAccessException extends \Exception { }

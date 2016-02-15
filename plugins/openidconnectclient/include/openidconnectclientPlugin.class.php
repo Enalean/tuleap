@@ -18,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
+use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
+use Tuleap\OpenIDConnectClient\AccountLinker;
 use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
-use Tuleap\OpenIDConnectClient\LoginConnectorPresenterBuilder;
-use Tuleap\OpenIDConnectClient\LoginController;
+use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
+use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
@@ -101,7 +104,7 @@ class openidconnectclientPlugin extends Plugin {
 
         $provider_manager                  = new ProviderManager(new ProviderDao());
         $flow                              = $this->getFlow($provider_manager);
-        $login_connector_presenter_builder = new LoginConnectorPresenterBuilder($provider_manager, $flow);
+        $login_connector_presenter_builder = new ConnectorPresenterBuilder($provider_manager, $flow);
         $login_connector_presenter         = $login_connector_presenter_builder->getLoginConnectorPresenter(
             $params['return_to']
         );
@@ -116,18 +119,26 @@ class openidconnectclientPlugin extends Plugin {
         }
         $this->loadLibrary();
 
-        $user_manager         = UserManager::instance();
-        $provider_manager     = new ProviderManager(new ProviderDao());
-        $user_mapping_manager = new UserMappingManager(new UserMappingDao());
-        $flow                 = $this->getFlow($provider_manager);
+        $user_manager             = UserManager::instance();
+        $provider_manager         = new ProviderManager(new ProviderDao());
+        $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
+        $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
+        $flow                     = $this->getFlow($provider_manager);
 
-        $login_controller     = new LoginController(
+        $login_controller          = new Login\Controller(
             $user_manager,
             $provider_manager,
             $user_mapping_manager,
+            $unlinked_account_manager,
             $flow
         );
-        $router               = new Router($login_controller);
+        $account_linker_controller = new AccountLinker\Controller(
+            $user_manager,
+            $provider_manager,
+            $user_mapping_manager,
+            $unlinked_account_manager
+        );
+        $router                    = new Router($login_controller, $account_linker_controller);
         $router->route($request);
     }
 }
