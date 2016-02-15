@@ -20,10 +20,15 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use \Tuleap\PullRequest\PullRequest;
+use Tuleap\Git\REST\v1\GitRepositoryReference;
+use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
+use GitRepository;
 
 class PullRequestRepresentation {
+
+    const ROUTE          = 'pull_requests';
+    const COMMENTS_ROUTE = 'comments';
 
     /**
      * @var int {@type int}
@@ -31,9 +36,14 @@ class PullRequestRepresentation {
     public $id;
 
     /**
-     * @var int {@type int}
+     * @var string {@type string}
      */
-    public $repository_id;
+    public $uri;
+
+    /**
+     * @var int {@type GitRepositoryReference}
+     */
+    public $repository;
 
     /**
      * @var int {@type int}
@@ -70,9 +80,20 @@ class PullRequestRepresentation {
      */
     public $status;
 
-    public function build(PullRequest $pull_request) {
-        $this->id             = JsonCast::toInt($pull_request->getId());
-        $this->repository_id  = JsonCast::toInt($pull_request->getRepositoryId());
+    /**
+     * @var array {@type array}
+     */
+    public $resources;
+
+
+    public function build(PullRequest $pull_request, GitRepository $repository) {
+        $this->id  = JsonCast::toInt($pull_request->getId());
+        $this->uri = self::ROUTE . '/' . $this->id;
+
+        $repository_reference = new GitRepositoryReference();
+        $repository_reference->build($repository);
+        $this->repository = $repository_reference;
+
         $this->user_id        = JsonCast::toInt($pull_request->getUserId());
         $this->creation_date  = JsonCast::toDate($pull_request->getCreationDate());
         $this->branch_src     = $pull_request->getBranchSrc();
@@ -80,5 +101,11 @@ class PullRequestRepresentation {
         $this->branch_dest    = $pull_request->getBranchDest();
         $this->reference_dest = $pull_request->getSha1Dest();
         $this->status         = $pull_request->getStatus();
+
+        $this->resources = array(
+            'comments' => array(
+                'uri' => $this->uri . '/'. self::COMMENTS_ROUTE
+            )
+        );
     }
 }

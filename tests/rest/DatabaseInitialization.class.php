@@ -27,13 +27,27 @@ class DatabaseInitialization extends \DatabaseInitialization {
     public function setUp() {
         $this->mysqli->select_db(ForgeConfig::get('sys_dbname'));
         $this->insertPullRequest();
+        $this->insertPullRequestComments();
     }
 
     private function insertPullRequest() {
         echo "Create PullRequest \n";
 
         $sql = "INSERT INTO plugin_pullrequest_review (repository_id, user_id, creation_date, branch_src, sha1_src, branch_dest, sha1_dest)
-                VALUES (1, 102, UNIX_TIMESTAMP(), 'dev', 'fake_sha1_srcaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'master', 'fake_sha1_destaaaaaaaaaaaaaaaaaaaaaaaaaa')";
+                VALUES (1, 102, UNIX_TIMESTAMP(), 'dev', 'fake_sha1_srcaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'master', 'fake_sha1_destaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+                       (1, 102, UNIX_TIMESTAMP(), 'feature_a', 'fake_sha1_srcbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'master', 'fake_sha1_destbbbbbbbbbbbbbbbbbbbbbbbbbb')";
+
+        $this->mysqli->real_query($sql);
+    }
+
+    private function insertPullRequestComments() {
+        echo "Create PullRequest Comments \n";
+
+        $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, content)
+                VALUES (1, 102, "If the Easter Bunny and the Tooth Fairy had babies would they take your teeth and leave chocolate for you?"),
+                       (1, 102, "This is the last random sentence I will be writing and I am going to stop mid-sent"),
+                       (1, 102, "I am never at home on Sundays."),
+                       (2, 102, "I am never at home on Mondays.")';
 
         $this->mysqli->real_query($sql);
     }
