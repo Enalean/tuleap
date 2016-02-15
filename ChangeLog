@@ -21,6 +21,7 @@ Version 8.12 (Not yet released)
 	* Plugin OpenId is deleted
 	* ldap: 3.97
 	* pullrequest: 0.2
+	* template: 0.2
 
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==
