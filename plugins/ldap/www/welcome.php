@@ -98,7 +98,7 @@ if($request->isPost() && $request->existAndNonEmpty('action')) {
                                $Language->getText('plugin_ldap', 'welcome_error_up_expl', array('')));
         }
     }
-    account_redirect_after_login();
+    account_redirect_after_login($request->get('return_to'));
 }
 else {
     $pv = 0;

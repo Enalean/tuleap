@@ -40,19 +40,23 @@ class StateManager extends Manager {
      * @throws StateMismatchException
      */
     public function validateState($signed_state) {
-        $stored_secret_key = $this->getStorage()->loadState();
+        $stored_state = $this->getStorage()->loadState();
 
-        if($stored_secret_key === null && $signed_state !== null) {
+        if($stored_state === null && $signed_state !== null) {
             throw new InvalidLocalStateException('Invalid stored state hash - empty string');
         }
 
-        if($stored_secret_key !== null && $signed_state === null) {
+        if($stored_state !== null && $signed_state === null) {
             throw new InvalidRemoteStateException("The server did not return a state hash");
         }
 
-        if($stored_secret_key !== null && $signed_state !== null) {
+        if($stored_state !== null && $signed_state !== null) {
             try {
-                return State::createFromSignature($signed_state, $stored_secret_key);
+                return State::createFromSignature(
+                    $signed_state,
+                    $stored_state->getReturnTo(),
+                    $stored_state->getSecretKey()
+                );
             } catch (Exception $ex) {
                 throw new StateMismatchException('Invalid state hash returned from server');
             }
@@ -62,8 +66,8 @@ class StateManager extends Manager {
     /**
      * @return State
      */
-    public function initState(Provider $provider) {
-        $state = $this->getFactory()->createState($provider->getId());
+    public function initState(Provider $provider, $return_to) {
+        $state = $this->getFactory()->createState($provider->getId(), $return_to);
         $this->getStorage()->saveState($state);
 
         return $state;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,22 @@ class User_LoginPresenterBuilder {
 
     /** @return User_LoginPresenter */
     public function build($return_to, $printer_version, $form_loginname) {
+        $additional_connectors = '';
+
+        EventManager::instance()->processEvent(
+            Event::LOGIN_ADDITIONAL_CONNECTOR,
+            array(
+                'return_to'            => $return_to,
+                'additional_connector' => &$additional_connectors
+            )
+        );
+
         $presenter = new User_LoginPresenter(
             $return_to,
             $printer_version,
             $form_loginname,
-            $this->getToggleSSL()
+            $this->getToggleSSL(),
+            $additional_connectors
         );
 
         $authoritative = false;

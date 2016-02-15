@@ -8,7 +8,12 @@
 
 <div class="container login">
     <div class="row-fluid">
+        {{^ additional_connectors }}
         <div class="span12 login-tuleap">
+        {{/ additional_connectors }}
+        {{# additional_connectors }}
+        <div class="span6 login-tuleap">
+        {{/ additional_connectors }}
             <h3>{{account_login_login_with_tuleap}}</h3>
             <form action="/account/login.php" method="post" name="form_login" autocomplete="off">
                 <input type="hidden" name="return_to" value="{{return_to}}">
@@ -48,6 +53,13 @@
                 {{/allow_password_recovery}}
             </form>
         </div>
+
+        {{# additional_connectors }}
+            <div class="span6">
+                {{{ additional_connectors }}}
+            </div>
+        {{/ additional_connectors }}
+
     </div>
 
     <p id="login-footer">

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\OpenIDConnectClient\Authentication\SessionState;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\State;
 
@@ -27,25 +28,49 @@ class StateManagerTest extends TuleapTestCase {
 
     public function itValidatesValidState() {
         $key           = 'Tuleap_key';
+        $return_to     = '/return_to';
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
         $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
-        $state         = new State(1234, $key);
+        $state         = new State(1234, $return_to, $key);
         $signed_state  = $state->getSignedState();
-        $state_storage->setReturnValue('loadState', $key);
+        $stored_state  = new SessionState($key, $return_to);
+        $state_storage->setReturnValue('loadState', $stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
         $state_manager->validateState($signed_state);
     }
 
     public function itDoesNotValidateInvalidState() {
+        $return_to     = '/return_to';
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
         $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
-        $state         = new State(1234, 'key1');
+        $state         = new State(1234, $return_to, 'key1');
         $signed_state  = $state->getSignedState();
-        $state_storage->setReturnValue('loadState', 'key2');
+        $stored_state  = new SessionState('key2', $return_to);
+        $state_storage->setReturnValue('loadState', $stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
         $this->expectException('InoOicClient\Oic\Authorization\State\Exception\StateMismatchException');
         $state_manager->validateState($signed_state);
+    }
+
+    public function itDoesNotTryToValidateInvalidStoredStateHash() {
+        $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
+        $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
+        $state_storage->setReturnValue('loadState', null);
+
+        $state_manager = new StateManager($state_storage, $state_factory);
+        $this->expectException('InoOicClient\Oic\Authorization\State\Exception\InvalidLocalStateException');
+        $state_manager->validateState('signed_state');
+    }
+
+    public function itDoesNotTryToValidateMissingStateHash() {
+        $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
+        $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
+        $state_storage->setReturnValue('loadState', 'stored_state_hash');
+
+        $state_manager = new StateManager($state_storage, $state_factory);
+        $this->expectException('InoOicClient\Oic\Authorization\State\Exception\InvalidRemoteStateException');
+        $state_manager->validateState(null);
     }
 }

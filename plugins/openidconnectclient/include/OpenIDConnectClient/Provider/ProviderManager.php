@@ -44,6 +44,23 @@ class ProviderManager {
     }
 
     /**
+     * @return Provider[]
+     */
+    public function getConfiguredProviders() {
+        $providers = array();
+        $rows      = $this->dao->searchConfiguredProviders();
+        if ($rows === false) {
+            return $providers;
+        }
+
+        foreach ($rows as $row) {
+            $providers[] = $this->instantiateFromRow($row);
+        }
+
+        return $providers;
+    }
+
+    /**
      * @return Provider
      */
     private function instantiateFromRow(array $row) {

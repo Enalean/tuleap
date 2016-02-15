@@ -25,7 +25,11 @@ use InoOicClient\Oic\Authorization\State\Storage\Session;
 class StateStorage extends Session {
 
     public function saveState(\InoOicClient\Oic\Authorization\State\State $state) {
-        $this->container->offsetSet(self::VAR_AUTHORIZATION_STATE, $state->getSecretKey());
+        $stored_state = new SessionState(
+            $state->getSecretKey(),
+            $state->getReturnTo()
+        );
+        $this->container->offsetSet(self::VAR_AUTHORIZATION_STATE, $stored_state);
     }
 
     public function clear() {

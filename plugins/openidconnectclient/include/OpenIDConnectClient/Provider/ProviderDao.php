@@ -29,4 +29,9 @@ class ProviderDao  extends DataAccessObject {
         $sql         = "SELECT * FROM plugin_openidconnectclient_provider WHERE id = $provider_id";
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchConfiguredProviders() {
+        $sql = "SELECT * FROM plugin_openidconnectclient_provider WHERE client_id != '' AND client_secret != ''";
+        return $this->retrieve($sql);
+    }
 }

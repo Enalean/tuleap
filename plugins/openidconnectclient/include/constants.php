@@ -18,21 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\OpenIDConnectClient\Authentication\State;
-
-require_once(__DIR__ . '/../bootstrap.php');
-
-class StateTest extends TuleapTestCase {
-
-    public function itCreatesStateFromSignedState() {
-        $secret_key  = 'Tuleap';
-        $return_to   = '/return_to';
-        $provider_id = 1234;
-
-        $state        = new State($provider_id, $return_to, $secret_key);
-        $signed_state = $state->getSignedState();
-
-        $this->assertEqual($state, State::createFromSignature($signed_state, $return_to, $secret_key));
-    }
-
-}
+define('OPENIDCONNECTCLIENT_BASE_DIR', dirname(__FILE__));
+define('OPENIDCONNECTCLIENT_TEMPLATE_DIR', OPENIDCONNECTCLIENT_BASE_DIR . '/../templates');

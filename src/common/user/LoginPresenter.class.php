@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,12 +24,14 @@ class User_LoginPresenter {
     private $form_loginname;
     private $toggle_ssl;
     private $allow_password_recovery;
+    private $additional_connectors;
 
     public function __construct(
             $return_to,
             $pv,
             $form_loginname,
             $toggle_ssl,
+            $additional_connectors,
             $allow_password_recovery = true
         ) {
         $this->return_to = $return_to;
@@ -37,6 +39,7 @@ class User_LoginPresenter {
         $this->form_loginname = $form_loginname;
         $this->toggle_ssl = $toggle_ssl;
         $this->allow_password_recovery = $allow_password_recovery;
+        $this->additional_connectors = $additional_connectors;
     }
 
     public function getTemplateDir() {
@@ -121,5 +124,9 @@ class User_LoginPresenter {
 
     public function login_intro() {
         return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
+    }
+
+    public function additional_connectors() {
+        return $this->additional_connectors;
     }
 }

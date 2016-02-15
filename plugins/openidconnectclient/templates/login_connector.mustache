@@ -1,0 +1,7 @@
+<div>
+    <h3>{{ login_title }}</h3>
+
+        {{# providers }}
+        <a href="{{ authorization_request_uri }}" class="btn btn-block">{{ connect_with }} {{ name }}</a>
+        {{/providers}}
+</div>

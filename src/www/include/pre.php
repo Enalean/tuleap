@@ -120,15 +120,6 @@ if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
 }
 
-$cookie_manager = new CookieManager();
-if (!IS_SCRIPT) {
-    // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
-    session_cache_limiter(false);
-    session_start();
-    $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
-}
-//}}}
-
 // Create cache directory if needed
 if (!file_exists($GLOBALS['codendi_cache_dir'])) {
       // This directory must be world reachable, but writable only by the web-server
@@ -139,8 +130,12 @@ if (!file_exists($GLOBALS['codendi_cache_dir'])) {
 $system_event_manager = SystemEventManager::instance();
 
 //Load plugins
-$plugin_manager =& PluginManager::instance();
-$plugin_manager->loadPlugins();
+$plugin_manager = PluginManager::instance();
+
+$cookie_manager = new CookieManager();
+
+$loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_manager);
+$loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
 
 $feedback=''; // Initialize global var
 

@@ -23,6 +23,7 @@ use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
+use Tuleap\OpenIDConnectClient\LoginConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -31,11 +32,16 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Zend\Loader\AutoloaderFactory;
 
+require_once('constants.php');
+
 class openidconnectclientPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
 
         $this->setScope(self::SCOPE_SYSTEM);
+
+        $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
+        $this->addHook('anonymous_access_to_script_allowed');
     }
 
     /**
@@ -46,6 +52,10 @@ class openidconnectclientPlugin extends Plugin {
             $this->pluginInfo = new OpenIDConnectClientPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function anonymous_access_to_script_allowed($params) {
+        $params['anonymous_allowed'] = strpos($params['script_name'], $this->getPluginPath()) === 0;
     }
 
     private function loadLibrary() {
@@ -60,21 +70,56 @@ class openidconnectclientPlugin extends Plugin {
         );
     }
 
+    /**
+     * @return Flow
+     */
+    private function getFlow(ProviderManager $provider_manager) {
+        $state_manager = new StateManager(
+            new StateStorage(),
+            new StateFactory(new RandomNumberGenerator())
+        );
+        $flow          = new Flow(
+            $state_manager,
+            new AuthorizationDispatcher($state_manager),
+            $provider_manager
+        );
+        return $flow;
+    }
+
+    /**
+     * @return bool
+     */
+    private function canPluginAuthenticateUser() {
+        return ForgeConfig::get('sys_auth_type') !== 'ldap';
+    }
+
+    public function login_additional_connector(array $params) {
+        if(! $this->canPluginAuthenticateUser()) {
+            return;
+        }
+        $this->loadLibrary();
+
+        $provider_manager                  = new ProviderManager(new ProviderDao());
+        $flow                              = $this->getFlow($provider_manager);
+        $login_connector_presenter_builder = new LoginConnectorPresenterBuilder($provider_manager, $flow);
+        $login_connector_presenter         = $login_connector_presenter_builder->getLoginConnectorPresenter(
+            $params['return_to']
+        );
+
+        $renderer                        = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+        $params['additional_connector'] .= $renderer->renderToString('login_connector', $login_connector_presenter);
+    }
+
     public function process(HTTPRequest $request) {
+        if(! $this->canPluginAuthenticateUser()) {
+            return;
+        }
         $this->loadLibrary();
 
         $user_manager         = UserManager::instance();
         $provider_manager     = new ProviderManager(new ProviderDao());
         $user_mapping_manager = new UserMappingManager(new UserMappingDao());
-        $state_manager        = new StateManager(
-            new StateStorage(),
-            new StateFactory(new RandomNumberGenerator())
-        );
-        $flow                 = new Flow(
-            $state_manager,
-            new AuthorizationDispatcher($state_manager),
-            $provider_manager
-        );
+        $flow                 = $this->getFlow($provider_manager);
 
         $login_controller     = new LoginController(
             $user_manager,
