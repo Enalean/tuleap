@@ -124,6 +124,14 @@ class Controller {
         \account_redirect_after_login($return_to);
     }
 
+    private function redirectToLoginPageAfterFailure($message) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $message
+        );
+        $GLOBALS['Response']->redirect('/account/login.php');
+    }
+
     private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response) {
         $provider          = $flow_response->getProvider();
         $user_informations = $flow_response->getUserInformations();

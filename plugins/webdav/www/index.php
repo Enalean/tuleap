@@ -25,12 +25,6 @@ require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
 $p =& $plugin_manager->getPluginByName('webdav');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
-
-    // Don't accept HTTP session only HTTPS is accepted (disabled for the moment)
-    /*if (!session_issecure()) {
-        header('HTTP/1.1 403 Forbidden: HTTPS required instead of HTTP');
-        die();
-    }*/
     // Executing the WebDAV server
     $p->getServer()->exec();
 } else {

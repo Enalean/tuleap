@@ -403,7 +403,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return $dao->isStandardHomepageUsed();
     }
 
-    public function displayStandardHomepage($display_homepage_news) {
+    public function displayStandardHomepage($display_homepage_news, $is_secure) {
         $dao          = new Admin_Homepage_Dao();
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -419,7 +419,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         }
 
         $login_presenter_builder = new User_LoginPresenterBuilder();
-        $login_presenter         = $login_presenter_builder->buildForHomepage();
+        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure);
 
         $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
 

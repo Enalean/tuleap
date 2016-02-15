@@ -41,7 +41,8 @@ if ($HTML->canDisplayStandardHomepage()) {
     $header_params['body_class'] = array('homepage');
 
     $HTML->header($header_params);
-    $HTML->displayStandardHomepage($display_homepage_news);
+    $request = HTTPRequest::instance();
+    $HTML->displayStandardHomepage($display_homepage_news, $request->isSecure());
 } else {
     $HTML->header($header_params);
 

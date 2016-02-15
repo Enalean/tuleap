@@ -42,7 +42,7 @@ class RouterTest extends TuleapTestCase {
         $login_controller          = mock('Tuleap\OpenIDConnectClient\Login\Controller');
         $account_linker_controller = mock('Tuleap\OpenIDConnectClient\AccountLinker\Controller');
         $request                   = mock('HTTPRequest');
-        $request->setReturnValue('isSSL', false);
+        $request->setReturnValue('isSecure', false);
 
         $GLOBALS['Response']->expectOnce('redirect');
 

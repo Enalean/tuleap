@@ -5,7 +5,7 @@
  * http://sourceforge.net
  *
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1857,7 +1857,8 @@ class Layout extends Response {
 
         <!-- VA Linux Stats Counter -->
         <?php
-        if (!session_issecure()) {
+        $request = HTTPRequest::instance();
+        if (! $request->isSecure()) {
                 print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="'.$Language->getText('include_layout','counter').'"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';

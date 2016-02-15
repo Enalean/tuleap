@@ -109,9 +109,7 @@ class Service {
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return isset($components[1]) && $components[1] ? true : false;
     }
-    function _sessionIsSecure() {
-        return session_issecure();
-    }
+
     function getPublicArea() {
     }
     function isRequestedPageDistributed(&$request) {

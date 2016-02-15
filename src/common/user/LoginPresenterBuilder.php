@@ -21,13 +21,14 @@
 class User_LoginPresenterBuilder {
 
     /** @return User_LoginPresenter */
-    public function build($return_to, $printer_version, $form_loginname) {
+    public function build($return_to, $printer_version, $form_loginname, $is_secure) {
         $additional_connectors = '';
 
         EventManager::instance()->processEvent(
             Event::LOGIN_ADDITIONAL_CONNECTOR,
             array(
                 'return_to'            => $return_to,
+                'is_secure'            => $is_secure,
                 'additional_connector' => &$additional_connectors
             )
         );
@@ -54,12 +55,12 @@ class User_LoginPresenterBuilder {
     }
 
     /** @return User_LoginPresenter */
-    public function buildForHomepage() {
+    public function buildForHomepage($is_secure) {
         $return_to       = '';
         $printer_version = 0;
         $form_loginname  = '';
 
-        return $this->build($return_to, $printer_version, $form_loginname);
+        return $this->build($return_to, $printer_version, $form_loginname, $is_secure);
     }
 
     /**
