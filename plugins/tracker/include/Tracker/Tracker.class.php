@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011, 2012, 2013, 2014, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014, 2015, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -39,6 +39,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const TYPE_FIELD_NAME             = "type";
     const NO_PARENT                   = -1;
     const DEFAULT_COLOR               = 'inca_silver';
+
+    const XML_ID_PREFIX = 'T';
 
     public $id;
     public $group_id;
@@ -2345,6 +2347,10 @@ EOS;
         return $this->exportTrackerToXML($xmlElem, $user_xml_exporter, $xmlMapping, true);
     }
 
+    public function getXMLId() {
+        return self::XML_ID_PREFIX. $this->getId();
+    }
+
     /**
      * Exports the tracker to an XML file.
      *
@@ -2356,7 +2362,7 @@ EOS;
         array &$xmlMapping,
         $project_export_context
     ) {
-        $xmlElem->addAttribute('id', "T". $this->getId());
+        $xmlElem->addAttribute('id', $this->getXMLId());
 
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
 

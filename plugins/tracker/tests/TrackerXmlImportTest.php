@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -177,16 +177,37 @@ class TrackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
-        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker1, $this->group_id, 'name10', 'desc12', 'item11')->returns($this->tracker1);
-        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker2, $this->group_id, 'name20', 'desc22', 'item21')->returns($this->tracker2);
-        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker3, $this->group_id, 'name30', 'desc32', 'item31')->returns($this->tracker3);
+        stub($this->tracker_xml_importer)->createFromXML(
+            $this->xml_tracker1,
+            $this->group_id,
+            'name10',
+            'desc12',
+            'item11'
+        )->returns($this->tracker1);
+
+        stub($this->tracker_xml_importer)->createFromXML(
+            $this->xml_tracker2,
+            $this->group_id,
+            'name20',
+            'desc22',
+            'item21'
+        )->returns($this->tracker2);
+
+        stub($this->tracker_xml_importer)->createFromXML(
+            $this->xml_tracker3,
+            $this->group_id,
+            'name30',
+            'desc32',
+            'item31'
+        )->returns($this->tracker3);
 
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
-                'project_id'  => $this->group_id,
-                'xml_content' => $this->xml_input,
-                'mapping'     => $this->mapping
+                'project_id'    => $this->group_id,
+                'xml_content'   => $this->xml_input,
+                'mapping'       => $this->mapping,
+                'field_mapping' => array()
             )
         )->once();
 

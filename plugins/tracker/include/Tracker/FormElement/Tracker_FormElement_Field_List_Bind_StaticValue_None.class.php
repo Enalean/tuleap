@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012. All rights reserved
+  * Copyright (c) Enalean, 2012 - 2016. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -20,7 +20,8 @@
 
 
 class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue {
-    const VALUE_ID = 100;
+    const VALUE_ID     = 100;
+    const XML_VALUE_ID = "";
 
     /**
      * 
@@ -39,5 +40,8 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
         
         parent::__construct($id, $label, $description, $rank, $is_hidden);
     }
+
+    public function getXMLId() {
+        return self::XML_VALUE_ID;
+    }
 }
-?>

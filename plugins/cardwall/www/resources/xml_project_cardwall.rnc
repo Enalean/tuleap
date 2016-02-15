@@ -11,11 +11,28 @@ grammar {
 
                 element columns {
                     element column {
-                        attribute label { xsd:string }
+                        attribute id { xsd:string }?,
+                        attribute label { xsd:string },
+                        attribute bg_red { xsd:int }?,
+                        attribute bg_green { xsd:int }?,
+                        attribute bg_blue { xsd:int }?
+                    }*
+                }?,
+
+                element mappings {
+                    element mapping {
+                        attribute tracker_id { xsd:string },
+                        attribute field_id { xsd:string },
+
+                        element values {
+                            element value {
+                                attribute value_id { xsd:string },
+                                attribute column_id { xsd:string }
+                            }*
+                        }?
                     }*
                 }?
             }*
-
         }
     }
 }

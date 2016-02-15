@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -129,6 +129,7 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
 
     public function itDumpsNoColumnsWhenNoColumnsDefined() {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array()));
+        stub($this->cardwall_config)->getMappings()->returns(array());
 
         $this->xml_exporter->export($this->root);
         $this->assertEqual(count($this->root->cardwall->trackers->tracker->children()), 0);
@@ -136,14 +137,53 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
 
     public function itDumpsColumnsAsDefined() {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
-            new Cardwall_Column(112, "Todo", "red", "green", "blue"),
-            new Cardwall_Column(113, "On going", "axelle", "red", "est raide")
+            new Cardwall_Column(112, "Todo", "red", "", ""),
+            new Cardwall_Column(113, "On going", "rgb(255,255,255)", "")
         )));
+
+
+        stub($this->cardwall_config)->getMappings()->returns(array());
 
         $this->xml_exporter->export($this->root);
         $column_xml = $this->root->cardwall->trackers->tracker->columns->column;
+
         $this->assertCount($column_xml, 2);
     }
-}
 
-?>
+    public function itDumpsColumnsAsDefinedWithMappings() {
+        stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
+            new Cardwall_Column(112, "Todo", "red", "", ""),
+            new Cardwall_Column(113, "On going", "rgb(255,255,255)", "")
+        )));
+
+        $tracker = stub('Tracker')->getXMLId()->returns('T200');
+        $field   = stub('Tracker_FormElement_Field_List')->getXMLId()->returns('F201');
+
+        $value_mapping = mock('Cardwall_OnTop_Config_ValueMapping');
+        stub($value_mapping)->getXMLValueId()->returns('V304');
+        stub($value_mapping)->getColumnId()->returns(4);
+
+        $mapping = mock('Cardwall_OnTop_Config_TrackerMappingFreestyle');
+        stub($mapping)->getTracker()->returns($tracker);
+        stub($mapping)->getField()->returns($field);
+        stub($mapping)->getValueMappings()->returns(array($value_mapping));
+        stub($mapping)->isCustom()->returns(true);
+
+        stub($this->cardwall_config)->getMappings()->returns(array($mapping));
+
+        $this->xml_exporter->export($this->root);
+
+        $column_xml = $this->root->cardwall->trackers->tracker->columns->column;
+        $this->assertCount($column_xml, 2);
+
+        $mapping_xml = $this->root->cardwall->trackers->tracker->mappings->mapping;
+        $this->assertCount($mapping_xml, 1);
+        $this->assertEqual($mapping_xml['tracker_id'], ('T200'));
+        $this->assertEqual($mapping_xml['field_id'], ('F201'));
+
+        $mapping_values_xml = $this->root->cardwall->trackers->tracker->mappings->mapping->values->value;
+        $this->assertCount($mapping_values_xml, 1);
+        $this->assertEqual($mapping_values_xml['value_id'], ('V304'));
+        $this->assertEqual($mapping_values_xml['column_id'], ('C4'));
+    }
+}
