@@ -129,6 +129,7 @@ class TestDataBuilder {
         $GLOBALS['grpdir_prefix'] = '/tmp';
         $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
+        $GLOBALS['codendi_bin_prefix'] = '/tmp';
     }
 
     protected function unsetGlobalsForProjectCreation() {
@@ -137,6 +138,7 @@ class TestDataBuilder {
         unset($GLOBALS['grpdir_prefix']);
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_anon_dir_prefix']);
+        unset($GLOBALS['codendi_bin_prefix']);
     }
 
     /**
