@@ -270,7 +270,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * @return bool true if there are differences
      */
     public function hasChanges($previous_changesetvalue, $new_value) {
-        return $previous_changesetvalue->getText() != $new_value;
+        return $previous_changesetvalue->getText() !== (string) $new_value;
     }
 
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
