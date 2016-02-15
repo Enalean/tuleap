@@ -28,7 +28,7 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group PullRequest
  */
-class PullRequestTest extends RestBase {
+class PullRequestsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -44,20 +44,20 @@ class PullRequestTest extends RestBase {
         );
     }
 
-    public function testGetPullRequest() {
-        $response  = $this->getResponse($this->client->get('pull_request/1'));
+    public function testGetPullRequests() {
+        $response  = $this->getResponse($this->client->get('pull_requests/1'));
 
         $pull_request = $response->json();
 
         $this->assertEquals(1, $pull_request['id']);
         $this->assertEquals(102, $pull_request['user_id']);
-        $this->assertEquals(1, $pull_request['repository_id']);
+        $this->assertEquals(1, $pull_request['repository']['id']);
         $this->assertEquals('dev', $pull_request['branch_src']);
         $this->assertEquals('master', $pull_request['branch_dest']);
     }
 
     public function testOPTIONS() {
-        $response = $this->getResponse($this->client->options('pull_request/'));
+        $response = $this->getResponse($this->client->options('pull_requests/'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
@@ -66,7 +66,7 @@ class PullRequestTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testGetPullRequestThrows403IfUserCantSeeGitRepository() {
-        $response = $this->getResponseForNonMember($this->client->get('pull_request/1'));
+        $response = $this->getResponseForNonMember($this->client->get('pull_requests/1'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }

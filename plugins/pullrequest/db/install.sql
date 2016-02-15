@@ -11,3 +11,11 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
     INDEX idx_pr_user_id(user_id),
     INDEX idx_pr_repository_id(repository_id)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    pull_request_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    content TEXT,
+    INDEX idx_pr_pull_request_id(pull_request_id)
+);

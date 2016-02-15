@@ -18,15 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST;
+namespace Tuleap\PullRequest\REST\v1;
 
-use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
+class CommentPOSTRepresentation {
 
-/**
- * Inject resource into restler
- */
-class ResourcesInjector {
-    public function populate(\Luracast\Restler\Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
-    }
+    /**
+     * @var string {@type string}
+     */
+    public $content;
+
 }

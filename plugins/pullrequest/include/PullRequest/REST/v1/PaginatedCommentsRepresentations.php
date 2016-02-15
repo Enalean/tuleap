@@ -18,15 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST;
+namespace Tuleap\PullRequest\REST\v1;
 
-use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
+class PaginatedCommentsRepresentations {
 
-/**
- * Inject resource into restler
- */
-class ResourcesInjector {
-    public function populate(\Luracast\Restler\Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
+    /** @var array */
+    public $comments_representations;
+
+    /** @var int */
+    public $total_size;
+
+
+    public function __construct(array $comments_representations, $total_size) {
+        $this->comments_representations = $comments_representations;
+        $this->total_size               = $total_size;
     }
+
+    public function getCommentsRepresentations() {
+        return $this->comments_representations;
+    }
+
+    public function getTotalSize() {
+        return $this->total_size;
+    }
+
 }
