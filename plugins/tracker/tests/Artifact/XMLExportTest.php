@@ -80,7 +80,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
                 'getSubmittedOn',
                 'getValues',
                 'getArtifact',
-                'getComment'
+                'getComment',
+                'getValueDao'
             )
         );
 
@@ -92,7 +93,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
                 'getSubmittedOn',
                 'getValues',
                 'getArtifact',
-                'getComment'
+                'getComment',
+                'getValueDao'
             )
         );
 
@@ -104,7 +106,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
                 'getSubmittedOn',
                 'getValues',
                 'getArtifact',
-                'getComment'
+                'getComment',
+                'getValueDao'
             )
         );
 
@@ -116,25 +119,34 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
                 'getSubmittedOn',
                 'getValues',
                 'getArtifact',
-                'getComment'
+                'getComment',
+                'getValueDao'
             )
         );
+
+        $value_dao = mock("Tracker_Artifact_Changeset_ValueDao");
+        stub($value_dao)->searchById()->returns(array());
 
         stub($changeset_01)->getSubmittedBy()->returns(101);
         stub($changeset_01)->getSubmittedOn()->returns($timestamp_01);
         stub($changeset_01)->getValues()->returns(array($value_01, $value_02));
+        stub($changeset_01)->getValueDao()->returns($value_dao);
 
         stub($changeset_02)->getSubmittedBy()->returns(101);
         stub($changeset_02)->getSubmittedOn()->returns($timestamp_02);
         stub($changeset_02)->getValues()->returns(array($value_03, $value_04));
+        stub($changeset_02)->getValueDao()->returns($value_dao);
 
         stub($changeset_03)->getSubmittedBy()->returns(101);
         stub($changeset_03)->getSubmittedOn()->returns($timestamp_03);
         stub($changeset_03)->getValues()->returns(array($value_05, $value_06));
+        stub($changeset_03)->getValueDao()->returns($value_dao);
 
         stub($changeset_04)->getSubmittedBy()->returns(102);
         stub($changeset_04)->getSubmittedOn()->returns($timestamp_04);
         stub($changeset_04)->getValues()->returns(array($value_07));
+        stub($changeset_04)->getValueDao()->returns($value_dao);
+
 
         $artifact_01 = anArtifact()->withTracker($tracker)->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
         $artifact_02 = anArtifact()->withTracker($tracker)->withId(102)->withChangesets(array($changeset_03, $changeset_04))->build();

@@ -79,6 +79,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter {
             $changeset->getComment()->exportToXML($comments_node, $this->user_xml_exporter);
         }
 
+        $changeset->forceFetchAllValues();
         $changeset_values = array_filter($changeset->getValues());
 
         if ($changeset_values !== null) {
