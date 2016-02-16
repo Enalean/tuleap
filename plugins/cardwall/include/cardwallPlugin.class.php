@@ -58,7 +58,6 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
-            $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -566,13 +565,6 @@ class cardwallPlugin extends Plugin {
     public function agiledashboard_event_rest_resources($params) {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
-    }
-
-    public function proccess_system_check($params) {
-        $checker = new PluginConfigChecker($params['logger']);
-
-        $checker->checkFolder($this);
-        $checker->checkIncFile($this->getIncFile());
     }
 
     private function getIncFile() {

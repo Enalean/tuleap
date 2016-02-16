@@ -141,14 +141,6 @@ class trackerPlugin extends Plugin {
         );
 
         $file_manager->purgeOldTemporaryFiles();
-
-        $this->checkPluginConfiguration($params['logger']);
-    }
-
-    private function checkPluginConfiguration(Logger $logger) {
-        $checker = new PluginConfigChecker($logger);
-
-        $checker->checkFolder($this);
     }
 
     /**
