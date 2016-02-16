@@ -48,6 +48,15 @@ class MailNotificationManager {
         return $mail_notification;
     }
 
+    public function getByPath(Repository $repository, $path) {
+        $mail_notification = array();
+        foreach ($this->dao->searchByPath($repository->getId(), $path) as $row) {
+            $mail_notification[] = $this->instantiateFromRow($row, $repository);
+        }
+
+        return $mail_notification;
+    }
+
     public function instantiateFromRow(array $row, Repository $repository) {
         return new MailNotification(
             $repository,

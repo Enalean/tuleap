@@ -25,6 +25,7 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Admin\MailHeaderManager;
@@ -33,7 +34,7 @@ use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
-use Tuleap\Svn\Admin\MailNotificationController;
+use Tuleap\Svn\Admin\AdminController;
 use Tuleap\Svn\AccessControl\AccessControlController;
 
 /**
@@ -129,7 +130,6 @@ class SvnPlugin extends Plugin {
 
         $accessfile_dao     = new AccessFileHistoryDao();
         $accessfile_factory = new AccessFileHistoryFactory($accessfile_dao);
-
         return new SvnRouter(
             $repository_manager,
             new AccessControlController(
@@ -137,10 +137,15 @@ class SvnPlugin extends Plugin {
                 $accessfile_factory,
                 new AccessFileHistoryCreator($accessfile_dao, $accessfile_factory)
             ),
-            new MailNotificationController(
+            new AdminController(
                 new MailHeaderManager(new MailHeaderDao()),
                 $repository_manager,
-                new MailNotificationManager(new MailNotificationDao())
+                new MailNotificationManager(
+                    new MailNotificationDao(
+                        CodendiDataAccess::instance(),
+                        new RepositoryRegexpBuilder()
+                    )
+                )
             ),
             new ExplorerController(
                 $repository_manager
@@ -150,14 +155,5 @@ class SvnPlugin extends Plugin {
                 ProjectManager::instance()
             )
         );
-    }
-
-    private function getRepositoryManager() {
-        return new RepositoryManager(new Dao(), ProjectManager::instance());
-    }
-
-    /** @return BackendSVN */
-    private function getBackendSVN() {
-        return Backend::instance('SVN');
     }
 }

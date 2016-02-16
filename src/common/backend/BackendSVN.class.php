@@ -1,8 +1,9 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +17,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- * 
  */
 
 require_once('www/svn/svn_utils.php');
@@ -63,7 +62,6 @@ class BackendSVN extends Backend {
         return new SVN_DAO();
     }
 
-    
     /**
      * Wrapper for Config
      * 
@@ -72,7 +70,7 @@ class BackendSVN extends Backend {
     protected function getConfig($var) {
         return ForgeConfig::get($var);
     }
-    
+
     /**
      * Create project SVN repository
      * If the directory already exists, nothing is done.
@@ -84,7 +82,14 @@ class BackendSVN extends Backend {
     public function createProjectSVN($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
         if ($this->createRepository($group_id, $project->getSVNRootPath())) {
-            if ($this->updateHooks($project, $project->getSVNRootPath())) {
+            if ($this->updateHooks(
+                    $project,
+                    $project->getSVNRootPath(),
+                    ForgeConfig::get('codendi_bin_prefix'),
+                    'commit-email.pl',
+                    "",
+                    "codendi_svn_pre_commit.php")
+            ) {
                 if ($this->createSVNAccessFile ($group_id, $project->getSVNRootPath())) {
                     $this->forceUpdateApacheConf();
                     return true;
@@ -95,24 +100,32 @@ class BackendSVN extends Backend {
         return false;
     }
 
-
-    public function createRepositorySVN($project_id, $svn_dir) {
+    public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path) {
         if ($this->createRepository($project_id, $svn_dir)) {
-            if ($this->createSVNAccessFile ($project_id, $svn_dir)) {
-                $this->forceUpdateApacheConf();
-                return true;
+            $project=$this->getProjectManager()->getProject($project_id);
+
+            if ($this->updateHooks(
+                    $project,
+                    $svn_dir,
+                    $hook_commit_path,
+                    'svn_post_commit.php',
+                    ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
+                    'svn_pre_commit.php'
+                )) {
+                if ($this->createSVNAccessFile ($project_id, $svn_dir)) {
+                    $this->forceUpdateApacheConf();
+                    return true;
+                }
             }
         }
 
         return false;
     }
-
     private function createRepository($group_id, $system_path) {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
-
 
         if (!is_dir($system_path)) {
             // Let's create a SVN repository for this group
@@ -160,7 +173,7 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    public function updateHooks(Project $project, $system_path) {
+    public function updateHooks(Project $project, $system_path, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file) {
         $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
         if ($project->isSVNTracked()) {
             $filename = "$system_path/hooks/post-commit";
@@ -189,7 +202,9 @@ class BackendSVN extends Backend {
             if ($update_hook) {
                 $command  ='REPOS="$1"'."\n";
                 $command .='REV="$2"'."\n";
-                $command .=$GLOBALS['codendi_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
+
+                $command .= $post_commit_launcher.' ' . $hook_commit_path .'/'.$post_commit_file.' "$REPOS" "$REV" 2>&1 >/dev/null';
+
                 $this->addBlock($filename, $command);
                 $this->chown($filename, $this->getHTTPUser());
                 $this->chgrp($filename, $unix_group_name);
@@ -234,7 +249,7 @@ class BackendSVN extends Backend {
         if ($update_hook) {
             $command  = 'REPOS="$1"'."\n";
             $command .= 'TXN="$2"'."\n";
-            $command .= $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
+            $command .= $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$hook_commit_path.'/'.$pre_commit_file.' "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
             $this->chown($filename, $this->getHTTPUser());
             $this->chgrp($filename, $unix_group_name);

@@ -58,6 +58,10 @@ class Repository {
       return $this->getProject()->getUnixNameMixedCase().'/'.$this->getName();
     }
 
+    public function getSystemName() {
+      return $this->getProject()->getId().'/'.$this->getName();
+    }
+
     public function getSystemPath() {
         return ForgeConfig::get('sys_data_dir').'/svn_plugin/'. $this->getProject()->getId().'/'.$this->getName();
     }
@@ -67,16 +71,17 @@ class Repository {
     }
 
     public function getSvnUrl() {
-        $host = ForgeConfig::get('sys_default_domain');
+        return $this->getSvnDomain().$this->getPublicPath();
+    }
+
+    public function getSvnDomain() {
+      $host = ForgeConfig::get('sys_default_domain');
         if (ForgeConfig::get('sys_force_ssl')) {
             $svn_url = 'https://'. $host;
         } else {
             $svn_url = 'http://'. $host;
         }
         // Domain name must be lowercase (issue with some SVN clients)
-        $svn_url = strtolower($svn_url);
-        $svn_url .= $this->getPublicPath();
-
-        return $svn_url;
+        return strtolower($svn_url);
     }
 }
