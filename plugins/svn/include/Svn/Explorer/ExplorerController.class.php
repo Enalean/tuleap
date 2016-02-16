@@ -69,7 +69,7 @@ class ExplorerController {
         return new CSRFSynchronizerToken(SVN_BASE_URL."/?group_id=".$project->getid(). '&action=createRepo');
     }
 
-    public function createRepo(ServiceSvn $service, HTTPRequest $request) {
+    public function createRepository(ServiceSvn $service, HTTPRequest $request) {
         $token = $this->generateTokenForCeateRepository($request->getProject());
         $token->check();
 

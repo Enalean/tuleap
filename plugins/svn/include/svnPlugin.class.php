@@ -20,10 +20,14 @@
 
 require_once 'constants.php';
 
-use \Tuleap\Svn\SvnRouter;
-use \Tuleap\Svn\Repository\RepositoryManager;
-use \Tuleap\Svn\Dao;
+use Tuleap\Svn\SvnRouter;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
+use Tuleap\Svn\Admin\MailHeaderManager;
+use Tuleap\Svn\Admin\MailHeaderDao;
+use Tuleap\Svn\Admin\MailNotificationDao;
+use Tuleap\Svn\Admin\MailNotificationManager;
 
 /**
  * SVN plugin
@@ -84,7 +88,9 @@ class SvnPlugin extends Plugin {
     private function getRouter() {
         return new SvnRouter(
               new RepositoryManager(new Dao(), ProjectManager::instance()),
-              ProjectManager::instance()
+              ProjectManager::instance(),
+              new MailHeaderManager(new MailHeaderDao()),
+              new MailNotificationManager(new MailNotificationDao())
         );
     }
 

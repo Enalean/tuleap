@@ -20,12 +20,14 @@
 
 namespace Tuleap\Svn\Repository;
 
-use \Tuleap\Svn\Dao;
-use \Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Dao;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RuleName;
 use Project;
-use \Tuleap\Svn\Repository\CannotCreateRepositoryException;
-use \Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use ProjectManager;
+use Rule_ProjectName;
 
 class RepositoryManager {
 
@@ -64,6 +66,19 @@ class RepositoryManager {
         if (! $this->dao->create($repositorysvn)) {
             throw new CannotCreateRepositoryException ($GLOBALS['Language']->getText('plugin_svn','update_error'));
         }
+    }
+
+    public function getRepositoryAndProjectFromPublicPath($path) {
+         if (! preg_match('/^('.Rule_ProjectName::PATTERN_PROJECT_NAME.')\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
+            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+        }
+
+        $project = $this->project_manager->getProjectByUnixName($matches[1]);
+        if (! $project instanceof Project) {
+            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+        }
+
+        return $this->getRepositoryByName($project, $matches[2]);
     }
 
     public function instantiateFromRow(array $row, Project $project) {

@@ -11,7 +11,7 @@
                 </thead>
                 <tbody>
                     {{# list_repositories }}
-                        <tr class="boxitem"><td><a href="{{ svn_plugin }}/?group_id={{ group_id }}&action=displayRepo&repo_id={{ getId }}">{{ getName }}</a></td></tr>
+                        <tr class="boxitem"><td><a href="{{ svn_plugin }}/?group_id={{ group_id }}&action=display-repository&repo_id={{ getId }}">{{ getName }}</a></td></tr>
                     {{/ list_repositories }}
                 </tbody>
             </table>
@@ -22,7 +22,7 @@
     <p>
         <form
             name="svn-repo-creator" class="form-inline" method="POST"
-            action="/plugins/svn/?group_id={{group_id}}&action=createRepo">
+            action="/plugins/svn/?group_id={{group_id}}&action=create-repository">
             {{{ csrf_input }}}
             <label for="repo_name" >{{ label_repository_name }}</label>
             <input type="text" name="repo_name" value="{{ repository_name }}" pattern="{{ validate_name }}" required />
