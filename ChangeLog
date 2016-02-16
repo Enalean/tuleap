@@ -14,10 +14,10 @@ Version 8.12 (Not yet released)
 	* mediawiki: 0.107
 	* openidconnectclient: 0.5
 	* svn: 0.12
-	* cardwall: 1.55
+	* cardwall: 1.56
 	* docman: 2.26.94
 	* git: 4.117
-	* tracker: 5.796
+	* tracker: 5.797
 	* Plugin OpenId is deleted
 	* ldap: 3.97
 	* pullrequest: 0.2

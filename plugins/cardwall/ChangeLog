@@ -1,3 +1,6 @@
+Version 1.56 - Tuleap 8.12
+    * request #8866 /etc/tuleap/plugins//cardwall/etc/config.inc does not exist
+
 Version 1.55 - Tuleap 8.12
     * request #8867: Export and import cardwall custom mappings
 
