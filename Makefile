@@ -252,7 +252,7 @@ dev-clear-cache:
 start-dns:
 	@$(DOCKER) stop dnsdock || true
 	@$(DOCKER) rm dnsdock || true
-	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
+	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.0.1:53:53/udp tonistiigi/dnsdock
 
 start-rp:
 	@echo "Start reverse proxy"
