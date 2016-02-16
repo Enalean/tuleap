@@ -1,3 +1,6 @@
+Version 1.357 - Tuleap 8.12
+    * request #8809 Compact and detailed buttons are hidden if the backlog is empty
+
 Version 1.356 - Tuleap 8.12
     * request #8867: Export and import cardwall custom mappings
 
