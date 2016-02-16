@@ -35,7 +35,7 @@ class RepositoryDisplayController {
         $this->proxy              = new ViewVCProxy($repository_manager, $project_manager);
     }
 
-    public function displayRepo(ServiceSvn $service, HTTPRequest $request) {
+    public function displayRepository(ServiceSvn $service, HTTPRequest $request) {
         try {
             $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
             $service->renderInPage(
@@ -45,7 +45,7 @@ class RepositoryDisplayController {
                 new RepositoryDisplayPresenter($repository, $request, $this->proxy->getContent($request))
             );
         } catch (RepositoryNotFoundException $e) {
-            $GLOBALS['Response']->addFeedback('error', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn','repository_not_found'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn','repository_not_found'));
             $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
         }
     }

@@ -15,7 +15,26 @@ plugin_svn_manage_repository	name_repository_length	Le nom du dépôt doit comme
 plugin_svn_manage_repository	table_head_list_repository	Dépôt
 plugin_svn_manage_repository	plugin_not_activated	Le multi-dépôt SVN est désactivé pour le projet.
 
-
+plugin_svn_admin	admin_notification	Administration SVN - Notifications.
+plugin_svn_admin_notification	title	Administration de Subversion - Notification e-mail
+plugin_svn_admin_notification	notification_subtitle	Notification e-mail des commits
+plugin_svn_admin_notification	comment	Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée. Vous pouvez utiliser l'opérateur étoile. Les chemins /dossier/a/notifier et /dossier/*/notifier seront tout deux notifiés de la même façon.
+plugin_svn_admin_notification	label_subject_header	Entête du sujet
+plugin_svn_admin_notification	disabled	disabled
+plugin_svn_admin_notification	submit	Valider
+plugin_svn_admin_notification	label_path	Chemin
+plugin_svn_admin_notification	label_mail_to	Envoyer à
+plugin_svn_admin_notification	upd_header_success	Entête mise à jour avec succès
+plugin_svn_admin_notification	upd_header_fail	L'entête n'a pas été mise à jour.
+plugin_svn_admin_notification	upd_email_success	Notification e-mail mise à jour avec succès
+plugin_svn_admin_notification	upd_email_fail	Le champ "Envoyer à" contient une adresse invalide.
+plugin_svn_admin_notification	upd_email_error	Impossible de sauvegarder la notification
+plugin_svn_admin_notification	upd_email_bad_adr	Adresses invalides "$1"
+plugin_svn_admin_notification	available_notifications	Notifications disponibles
+plugin_svn_admin_notification	monitored_path	Chemins SVN surveillés
+plugin_svn_admin_notification	notified_mails	Liste des mails notifiés
+plugin_svn_admin_notification	delete	Supprimer ?
+plugin_svn_admin_notification	delete_error	Impossible de supprimer la liste des mails notifiés
 
 plugin_svn	update_error	Impossible d'enregistrer les données du dépôt
 plugin_svn	char_err	Le nom du dépôt doit contenir au moins un caractère

@@ -15,6 +15,26 @@ plugin_svn_manage_repository	name_repository_length	The name must start by a let
 plugin_svn_manage_repository	table_head_list_repository	Repository
 plugin_svn_manage_repository	plugin_not_activated	SVN multi-repositories is disabled for the project.
 
+plugin_svn_admin	admin_notification	SVN Administration - Notification.
+plugin_svn_admin_notification	title	Subversion Administration - Email Notification
+plugin_svn_admin_notification	notification_subtitle	E-Mail notification on Commits
+plugin_svn_admin_notification	comment	Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified. Please note that you can use the star operator: /folder/to/notify and /folder/*/notify will be notified the same way.
+plugin_svn_admin_notification	label_subject_header	Subject header
+plugin_svn_admin_notification	disabled	disabled
+plugin_svn_admin_notification	submit	Submit
+plugin_svn_admin_notification	label_path	Path
+plugin_svn_admin_notification	label_mail_to	Mail to
+plugin_svn_admin_notification	upd_header_success	Header updated successfully
+plugin_svn_admin_notification	upd_header_fail	Header update failed.
+plugin_svn_admin_notification	upd_email_success	Email Notification updated successfully
+plugin_svn_admin_notification	upd_email_fail	"Mail to" contains an invalid email address.
+plugin_svn_admin_notification	upd_email_error	Unable to save Notification
+plugin_svn_admin_notification	upd_email_bad_adr	Invalid email addresses "$1"
+plugin_svn_admin_notification	available_notifications	Available notifications
+plugin_svn_admin_notification	monitored_path	SVN monitored path
+plugin_svn_admin_notification	notified_mails	SVN notification list
+plugin_svn_admin_notification	delete	Delete ?
+plugin_svn_admin_notification	delete_error	Unable to delete notification list
 
 plugin_svn	update_error	Unable to update Repository data
 plugin_svn	char_err	The repository name must have at least one character

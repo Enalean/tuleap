@@ -15,6 +15,19 @@ CREATE TABLE plugin_svn_repositories (
   id  int(11) unsigned NOT NULL auto_increment,
   name  varchar(255) NOT NULL,
   project_id int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY  (id),
   INDEX project_idx (project_id)
+);
+
+CREATE TABLE plugin_svn_mailing_header (
+  repository_id INT(11) UNSIGNED NOT NULL,
+  header varchar(64) NOT NULL,
+  PRIMARY KEY (repository_id)
+);
+
+CREATE TABLE plugin_svn_notification (
+  repository_id INT(11) UNSIGNED NOT NULL,
+  mailing_list text,
+  svn_path varchar(255) DEFAULT '/',
+  PRIMARY KEY (repository_id, svn_path)
 );

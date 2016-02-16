@@ -21,7 +21,7 @@
 namespace Tuleap\Svn;
 
 use DataAccessObject;
-use \Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\Repository;
 use Project;
 use SVN_Apache_SvnrootConf;
 use ForgeConfig;
@@ -37,7 +37,7 @@ class Dao extends DataAccessObject {
     }
 
     public function searchByRepositoryIdAndProjectId($id, Project $project) {
-        $id = $this->da->escapeInt($id);
+        $id         = $this->da->escapeInt($id);
         $project_id = $this->da->escapeInt($project->getId());
         $sql = "SELECT *
                 FROM plugin_svn_repositories
@@ -97,5 +97,4 @@ class Dao extends DataAccessObject {
 
         return $this->updateAndGetLastId($query);
     }
-
 }
