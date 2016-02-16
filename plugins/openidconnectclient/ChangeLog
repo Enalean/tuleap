@@ -1,2 +1,5 @@
+Version 0.5 - Tuleap 8.12
+    * story #8631: A user can link an existing Tuleap account to an OpenID Provider
+
 Version 0.4 - Tuleap 8.12
     * story #8631: Add login buttons on the login page
