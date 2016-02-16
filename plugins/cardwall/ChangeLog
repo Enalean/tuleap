@@ -1,3 +1,6 @@
+Version 1.55 - Tuleap 8.12
+    * request #8867: Export and import cardwall custom mappings
+
 Version 1.54 - Tuleap 8.12
     * request #8801 Tuleap warns about wrong owernship of plugins installed by default
 

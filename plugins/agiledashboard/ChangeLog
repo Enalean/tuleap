@@ -1,3 +1,6 @@
+Version 1.356 - Tuleap 8.12
+    * request #8867: Export and import cardwall custom mappings
+
 Version 1.355 - Tuleap 8.12
     * request #8864: Move BacklogItemDetails directive to isolate scope
 
