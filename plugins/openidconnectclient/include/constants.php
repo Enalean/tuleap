@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+define('OPENIDCONNECTCLIENT_BASE_URL', '/plugins/openidconnectclient');
 define('OPENIDCONNECTCLIENT_BASE_DIR', dirname(__FILE__));
 define('OPENIDCONNECTCLIENT_TEMPLATE_DIR', OPENIDCONNECTCLIENT_BASE_DIR . '/../templates');

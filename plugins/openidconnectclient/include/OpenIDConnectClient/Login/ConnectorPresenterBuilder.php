@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\OpenIDConnectClient;
+namespace Tuleap\OpenIDConnectClient\Login;
 
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
-class LoginConnectorPresenterBuilder {
+class ConnectorPresenterBuilder {
     /**
      * @var ProviderManager
      */
@@ -39,7 +39,7 @@ class LoginConnectorPresenterBuilder {
     }
 
     /**
-     * @return LoginConnectorPresenter
+     * @return ConnectorPresenter
      */
     public function getLoginConnectorPresenter($return_to) {
         $providers                           = $this->provider_manager->getConfiguredProviders();
@@ -51,6 +51,6 @@ class LoginConnectorPresenterBuilder {
             );
         }
 
-        return new LoginConnectorPresenter($providers_authorization_request_uri);
+        return new ConnectorPresenter($providers_authorization_request_uri);
     }
 }

@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\OpenIDConnectClient;
+namespace Tuleap\OpenIDConnectClient\Login;
 
 
-class LoginConnectorPresenter {
+class ConnectorPresenter {
 
     private $providers_authorization_request_uri;
 

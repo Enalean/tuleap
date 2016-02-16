@@ -35,6 +35,18 @@ class UserMappingManager {
 
     /**
      * @return UserMapping
+     * @throws UserMappingDataAccessException
+     */
+    public function create($user_id, $provider_id, $identifier) {
+        $is_saved = $this->dao->save($user_id, $provider_id, $identifier);
+        if (! $is_saved) {
+            throw new UserMappingDataAccessException();
+        }
+        return new UserMapping($user_id, $provider_id, $identifier);
+    }
+
+    /**
+     * @return UserMapping
      * @throws UserMappingNotFoundException
      */
     public function getByProviderAndIdentifier(Provider $provider, $identifier) {

@@ -18,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\OpenIDConnectClient;
+namespace Tuleap\OpenIDConnectClient\Login;
 
 use BackendLogger;
 use Feedback;
 use ForgeConfig;
 use HTTPRequest;
+use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDataAccessException;
+use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
+use Tuleap\OpenIDConnectClient\Authentication\FlowResponse;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMapping;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
@@ -35,9 +38,7 @@ use SessionNotCreatedException;
 use UserNotActiveException;
 use UserManager;
 
-require_once('account.php');
-
-class LoginController {
+class Controller {
     /**
      * @var UserManager
      */
@@ -54,6 +55,11 @@ class LoginController {
     private $user_mapping_manager;
 
     /**
+     * @var UnlinkedAccountManager
+     */
+    private $unlinked_account_manager;
+
+    /**
      * @var Flow
      */
     private $flow;
@@ -62,15 +68,18 @@ class LoginController {
         UserManager $user_manager,
         ProviderManager $provider_manager,
         UserMappingManager $user_mapping_manager,
+        UnlinkedAccountManager $unlinked_account_manager,
         Flow $flow
     ) {
-        $this->user_manager         = $user_manager;
-        $this->provider_manager     = $provider_manager;
-        $this->user_mapping_manager = $user_mapping_manager;
-        $this->flow                 = $flow;
+        $this->user_manager             = $user_manager;
+        $this->provider_manager         = $provider_manager;
+        $this->user_mapping_manager     = $user_mapping_manager;
+        $this->unlinked_account_manager = $unlinked_account_manager;
+        $this->flow                     = $flow;
     }
 
     public function login($return_to) {
+        require_once('account.php');
         $this->checkIfUserAlreadyLogged($return_to);
 
         try {
@@ -90,19 +99,8 @@ class LoginController {
             );
             $this->openSession($user_mapping, $flow_response->getReturnTo());
         } catch (UserMappingNotFoundException $ex) {
-            $logger = new BackendLogger('/tmp/openidconnect.log');
-            $logger->debug('Your OpenID Connect identifier is ' . $user_informations['id']);
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText(
-                    'plugin_openidconnectclient',
-                    'account_linking_not_yet_possible',
-                    array($user_informations['id'])
-                )
-            );
-            $GLOBALS['Response']->redirect('https://' . ForgeConfig::get('sys_https_host'));
+            $this->redirectToLinkAnUnknowAccount($flow_response);
         }
-
     }
 
     private function checkIfUserAlreadyLogged($return_to) {
@@ -126,11 +124,24 @@ class LoginController {
         \account_redirect_after_login($return_to);
     }
 
-    private function redirectToLoginPageAfterFailure($message) {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            $message
+    private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response) {
+        $provider          = $flow_response->getProvider();
+        $user_informations = $flow_response->getUserInformations();
+        try {
+            $unlinked_account  = $this->unlinked_account_manager->create($provider->getId(), $user_informations['id']);
+        } catch (UnlinkedAccountDataAccessException $ex) {
+            $this->redirectToLoginPageAfterFailure(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+            );
+        }
+        $GLOBALS['Response']->redirect(
+            OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query(
+                array(
+                    'action'    => 'link',
+                    'link_id'   => $unlinked_account->getId(),
+                    'return_to' => $flow_response->getReturnTo()
+                )
+            )
         );
-        $GLOBALS['Response']->redirect('https://' . ForgeConfig::get('sys_https_host') . '/account/login.php');
     }
 }
