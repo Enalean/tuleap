@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ class Cardwall_OnTop_Config_TrackerMappingFreestyle extends Cardwall_OnTop_Confi
     public function accept($visitor) {
         return $visitor->visitTrackerMappingFreestyle($this);
     }
-}
 
-?>
+    public function isCustom() {
+        return true;
+    }
+}

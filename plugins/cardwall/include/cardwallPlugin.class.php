@@ -424,8 +424,11 @@ class cardwallPlugin extends Plugin {
         $cardwall_ontop_import = new CardwallConfigXmlImport(
             $params['project_id'],
             $params['mapping'],
+            $params['field_mapping'],
             new Cardwall_OnTop_Dao,
             new Cardwall_OnTop_ColumnDao,
+            new Cardwall_OnTop_ColumnMappingFieldDao(),
+            new Cardwall_OnTop_ColumnMappingFieldValueDao(),
             EventManager::instance(),
             new XML_RNGValidator()
         );

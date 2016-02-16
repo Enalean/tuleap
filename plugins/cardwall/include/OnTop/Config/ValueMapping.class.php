@@ -39,6 +39,10 @@ class Cardwall_OnTop_Config_ValueMapping {
         return $this->value->getId();
     }
 
+    public function getXMLValueId() {
+        return $this->value->getXMLId();
+    }
+
     public function getValueLabel() {
         return $this->value->getLabel();
     }
@@ -73,4 +77,3 @@ class Cardwall_OnTop_Config_ValueMapping {
         return $artifact_status_label === null && $this->getValueId() == 100;
     }
 }
-?>

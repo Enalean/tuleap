@@ -63,3 +63,8 @@ plugin_cardwall	milestone_open_closed_initial_effort	Nombre total de cartes :
 plugin_cardwall	milestone_open_closed_open_items	cartes ouvertes
 plugin_cardwall	milestone_open_closed_progress_info	Certaines cartes peuvent être cachées
 plugin_cardwall	count_style_helper	Au moins un élément du backlog n'a pas d'effort initial. Plan B: comptage des cartes.
+plugin_cardwall	xml_import_color_error	La valeur de la couleur $1 pour la colonne $2 n'est pas valide.
+plugin_cardwall	xml_import_tracker_error	La valeur du tracker $1 n'est pas valide.
+plugin_cardwall	xml_import_field_error	La valeur du champ $1 n'est pas valide.
+plugin_cardwall	xml_import_column_error	La colonne $1 n'est pas valide.
+plugin_cardwall	xml_import_value_error	La valeur $1 n'est pas valide.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,9 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
         $this->available_fields = $available_fields;
     }
 
+    /**
+     * @return Tracker
+     */
     public function getTracker() {
         return $this->tracker;
     }
@@ -61,6 +64,9 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
         return false;
     }
 
+    /**
+     * @return Tracker_FormElement
+     */
     public abstract function getField();
 
     /**
@@ -73,5 +79,8 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      */
     public abstract function accept($visitor);
 
+    public function isCustom() {
+        return false;
+    }
+
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 class Cardwall_OnTop_ColumnDao extends DataAccessObject {
 
     public function searchColumnsByTrackerId($tracker_id) {
@@ -30,12 +29,27 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function createWithcolor($tracker_id, $label, $red, $green, $blue) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $label      = $this->da->quoteSmart($label);
+        $red        = $this->da->escapeInt($red, CODENDI_DB_NULL);
+        $green      = $this->da->escapeInt($green, CODENDI_DB_NULL);
+        $blue       = $this->da->escapeInt($blue, CODENDI_DB_NULL);
+
+        $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, label, bg_red, bg_green, bg_blue)
+                VALUES ($tracker_id, $label, $red, $green, $blue)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
     public function create($tracker_id, $label) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $label      = $this->da->quoteSmart($label);
+
         $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, label)
                 VALUES ($tracker_id, $label)";
-        return $this->update($sql);
+
+        return $this->updateAndGetLastId($sql);
     }
 
     public function save($tracker_id, $id, $label, $red, $green, $blue) {

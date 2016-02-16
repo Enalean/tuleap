@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,11 +64,70 @@ class CardwallConfigXmlExport {
             if (count($on_top_config->getDashboardColumns()) > 0) {
                 $columns_node = $tracker_node->addChild(CardwallConfigXml::NODE_COLUMNS);
                 foreach ($on_top_config->getDashboardColumns() as $column) {
-                    $column_node = $columns_node->addChild(CardwallConfigXml::NODE_COLUMN);
-                    $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL, $column->getLabel());
+                    $this->exportColumn($columns_node, $column);
+                }
+
+                $mappings_node = $tracker_node->addChild(CardwallConfigXml::NODE_MAPPINGS);
+                foreach ($on_top_config->getMappings() as $mapping) {
+                    $this->exportMapping($mappings_node, $mapping);
                 }
             }
         }
     }
+
+    private function exportMapping(SimpleXMLElement $mappings_node, Cardwall_OnTop_Config_TrackerMapping $mapping) {
+        if (! $mapping->isCustom()) {
+            return;
+        }
+
+        $mapping_node = $mappings_node->addChild(CardwallConfigXml::NODE_MAPPING);
+        $mapping_node->addAttribute('tracker_id', $mapping->getTracker()->getXMLId());
+        $mapping_node->addAttribute('field_id', $mapping->getField()->getXMLId());
+
+        $values_node = $mapping_node->addChild(CardwallConfigXml::NODE_VALUES);
+        foreach ($mapping->getValueMappings() as $value_mapping) {
+            $this->exportValueMapping($values_node, $value_mapping);
+        }
+    }
+
+    private function exportValueMapping(
+        SimpleXMLElement $values_node,
+        Cardwall_OnTop_Config_ValueMapping $value_mapping
+    ) {
+        $value_node = $values_node->addChild(CardwallConfigXml::NODE_VALUE);
+        $value_node->addAttribute('value_id', $value_mapping->getXMLValueId());
+        $value_node->addAttribute('column_id', 'C'.$value_mapping->getColumnId());
+    }
+
+    private function exportColumn(SimpleXMLElement $columns_node, Cardwall_Column $column) {
+        $column_node = $columns_node->addChild(CardwallConfigXml::NODE_COLUMN);
+        $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL, $column->getLabel());
+        $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_ID, 'C'.$column->getId());
+
+        $this->exportColumnColors($column_node, $column);
+    }
+
+    private function exportColumnColors(SimpleXMLElement $column_node, Cardwall_Column $column) {
+        $bg_green = null;
+        $bg_red   = null;
+        $bg_blue  = null;
+
+        $bg_colors = $column->getBgcolor();
+
+        if ($bg_colors) {
+            $regexp  = "/^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/";
+            $matches = array();
+            if (preg_match($regexp, $bg_colors, $matches)) {
+                $bg_red   = $matches[1];
+                $bg_green = $matches[2];
+                $bg_blue  = $matches[3];
+            }
+        }
+
+        if ($bg_red !== null && $bg_green !== null  && $bg_blue !== null ) {
+            $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_BG_RED, $bg_red);
+            $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_BG_GREEN, $bg_green);
+            $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_BG_BLUE, $bg_blue);
+        }
+    }
 }
-?>

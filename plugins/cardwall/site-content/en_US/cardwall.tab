@@ -63,3 +63,8 @@ plugin_cardwall	milestone_open_closed_initial_effort	Total cards:
 plugin_cardwall	milestone_open_closed_open_items	cards open
 plugin_cardwall	milestone_open_closed_progress_info	Some cards might be hidden
 plugin_cardwall	count_style_helper	At least one backlog element has no initial effort. Fallback on open/closed count.
+plugin_cardwall	xml_import_color_error	Provided color value $1 for column $2 is not valid.
+plugin_cardwall	xml_import_tracker_error	Provided tracker value $1 is not valid. Skipping mapping.
+plugin_cardwall	xml_import_field_error	Provided field value $1 is not valid. Skipping mapping.
+plugin_cardwall	xml_import_column_error	Provided column value $1 is not valid. Skipping mapping value.
+plugin_cardwall	xml_import_value_error	Provided value $1 is not valid. Skipping mapping value.
