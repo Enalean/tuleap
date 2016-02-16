@@ -1,3 +1,6 @@
+Version 5.795 - Tuleap 8.12
+    * request #8870 Cannot change string field when it's a number
+
 Version 5.794 - Tuleap 8.12
     * story #5894 update the artifact link data model
 
