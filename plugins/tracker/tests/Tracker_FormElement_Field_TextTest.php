@@ -275,3 +275,40 @@ class Tracker_FormElement_Field_Text_RESTTests extends TuleapTestCase {
         $this->assertEqual($fields_data['format'], 'text');
     }
 }
+
+class Tracker_FormElement_Field_Text_Changes extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->field = aTextField()->build();
+        $this->previous_value = stub('Tracker_Artifact_ChangesetValue_Text')->getText()->returns('1');
+    }
+
+    public function itReturnsTrueIfThereIsAChange() {
+        $new_value = array(
+            'content' => '1.0',
+            'format'  => 'text'
+        );
+
+        $this->assertTrue($this->field->hasChanges($this->previous_value, $new_value));
+    }
+
+    public function itReturnsFalseIfThereIsNoChange() {
+        $new_value = array(
+            'content' => '1',
+            'format'  => 'text'
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->previous_value, $new_value));
+    }
+
+    public function itReturnsFalseIfOnlyTheFormatChanged() {
+        $new_value = array(
+            'content' => '1',
+            'format'  => 'html'
+        );
+
+        $this->assertFalse($this->field->hasChanges($this->previous_value, $new_value));
+    }
+}

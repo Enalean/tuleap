@@ -486,7 +486,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return bool true if there are differences
      */
     public function hasChanges($previous_changesetvalue, $new_value) {
-        return $previous_changesetvalue->getText() != $new_value['content'];
+        return $previous_changesetvalue->getText() !== (string) $new_value['content'];
     }
 
     /**
