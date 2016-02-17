@@ -18,15 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST;
+namespace Tuleap\PullRequest\REST\v1;
 
-use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
+class CommentRepresentation {
 
-/**
- * Inject resource into restler
- */
-class ResourcesInjector {
-    public function populate(\Luracast\Restler\Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
+    /** @var int */
+    public $id;
+
+    /** @var Tuleap\User\REST\MinimalUserRepresentation */
+    public $user;
+
+    /** @var string */
+    public $content;
+
+
+    public function build($id, $user_representation, $content) {
+        $this->id      = $id;
+        $this->user    = $user_representation;
+        $this->content = $content;
     }
+
 }
