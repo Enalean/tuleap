@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest;
+namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 

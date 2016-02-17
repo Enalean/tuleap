@@ -27,10 +27,11 @@ use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
-use Tuleap\PullRequest\PullRequestNotFoundException;
-use Tuleap\PullRequest\PullRequestNotCreatedException;
+use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 use Tuleap\PullRequest\GitExec;
-use Tuleap\PullRequest\UnknownReferenceBranchException;
+use Tuleap\PullRequest\Exception\UnknownBranchNameException;
+use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -90,10 +91,10 @@ class PullRequestsResource extends AuthenticatedResource {
     }
 
     /**
-     * Get PullRequest
+     * Get pull request
      *
-     * Retrieve a given pullrequest. <br/>
-     * User is not able to see a pullrequest in a git repository where he is not able to READ
+     * Retrieve a given pull request. <br/>
+     * User is not able to see a pull request in a git repository where he is not able to READ
      *
      * <pre>
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
@@ -103,12 +104,12 @@ class PullRequestsResource extends AuthenticatedResource {
      *
      * @access protected
      *
-     * @param int $id Pull request Id
+     * @param int $id pull request ID
      *
      * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
      *
      * @throws 403
-     * @throws 404
+     * @throws 404 Pull request does not exist
      */
     protected function get($id) {
         $this->checkAccess();
@@ -123,6 +124,48 @@ class PullRequestsResource extends AuthenticatedResource {
         $pull_request_representation->build($pull_request, $git_repository);
 
         return $pull_request_representation;
+    }
+
+    /**
+     * Get pull request's impacted files
+     *
+     * Get the impacted files for a pull request.<br/>
+     * User is not able to see a pull request in a git repository where he is not able to READ
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url GET {id}/files
+     *
+     * @access protected
+     *
+     * @param int $id pull request ID
+     *
+     * @return array {@type PullRequest\REST\v1\PullRequestFileRepresentation}
+     *
+     * @throws 403
+     * @throws 404 Pull request does not exist
+     */
+    protected function getFiles($id) {
+        $this->checkAccess();
+
+        $user           = $this->user_manager->getCurrentUser();
+        $pull_request   = $this->getPullRequest($id);
+        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $executor       = $this->getExecutor($git_repository);
+
+        $this->checkUserCanReadRepository($user, $git_repository);
+
+        $file_representation_factory = new PullRequestFileRepresentationFactory($executor);
+
+        try {
+            $modified_files = $file_representation_factory->getModifiedFilesRepresentations($pull_request);
+        } catch (UnknownReferenceException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        }
+
+        return $modified_files;
     }
 
     /**
@@ -166,7 +209,7 @@ class PullRequestsResource extends AuthenticatedResource {
 
         $this->checkUserCanReadRepository($user, $git_repository);
 
-        $executor = new GitExec($git_repository->getFullPath(), $git_repository->getFullPath());
+        $executor = $this->getExecutor($git_repository);
 
         try {
             $sha1_src     = $executor->getReferenceBranch($branch_src);
@@ -179,7 +222,7 @@ class PullRequestsResource extends AuthenticatedResource {
                 $branch_dest,
                 $sha1_dest
             );
-        } catch (UnknownReferenceBranchException $exception) {
+        } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestNotCreatedException $exception) {
             throw new RestException(500, $exception->getMessage());
@@ -319,5 +362,12 @@ class PullRequestsResource extends AuthenticatedResource {
         $uri_with_api_version = '/api/v1/' . $uri;
 
         Header::Location($uri_with_api_version);
+    }
+
+    /**
+     * @return GitExec
+     */
+    private function getExecutor(GitRepository $git_repository) {
+        return new GitExec($git_repository->getFullPath(), $git_repository->getFullPath());
     }
 }

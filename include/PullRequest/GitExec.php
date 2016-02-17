@@ -22,6 +22,8 @@ namespace Tuleap\PullRequest;
 
 use Git_Command_Exception;
 use Git_Exec;
+use Tuleap\PullRequest\Exception\UnknownBranchNameException;
+use Tuleap\PullRequest\Exception\UnknownReferenceException;
 
 class GitExec extends Git_Exec {
 
@@ -31,13 +33,28 @@ class GitExec extends Git_Exec {
         try {
             $this->gitCmdWithOutput('show-ref --hash refs/heads/' . escapeshellarg($branch_name), $output);
         } catch (Git_Command_Exception $exception) {
-            throw new UnknownReferenceBranchException($branch_name, 0, $exception);
+            throw new UnknownBranchNameException($branch_name, 0, $exception);
         }
 
         if (count($output) === 1) {
             return $output[0];
         }
 
-        throw new UnknownReferenceBranchException($branch_name);
+        throw new UnknownBranchNameException($branch_name);
+    }
+
+    public function getModifiedFiles($src_reference, $dest_reference) {
+        $output = array();
+
+        try {
+            $this->gitCmdWithOutput(
+                'diff --name-status ' . escapeshellarg($src_reference) . '..' . escapeshellarg($dest_reference),
+                $output
+            );
+        } catch (Git_Command_Exception $exception) {
+            throw new UnknownReferenceException();
+        }
+
+        return $output;
     }
 }
