@@ -1,3 +1,6 @@
+Version 0.3 - Tuleap 8.12
+    * story #8825: GET and POST /pull_requests/:id/comments
+
 Version 0.2 - Tuleap 8.12
     * story #8824 have a Pull Request plugin basis and its associated tables in db (Initialize pullrequest plugin)
 
