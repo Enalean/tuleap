@@ -36,6 +36,7 @@ plugin_svn_admin_notification	notified_mails	Liste des mails notifiés
 plugin_svn_admin_notification	delete	Supprimer ?
 plugin_svn_admin_notification	delete_error	Impossible de supprimer la liste des mails notifiés
 
+plugin_svn	notifications	Notifications
 plugin_svn	update_error	Impossible d'enregistrer les données du dépôt
 plugin_svn	char_err	Le nom du dépôt doit contenir au moins un caractère
 plugin_svn	illegal_char	Le nom de dépôt contient des caractères invalides

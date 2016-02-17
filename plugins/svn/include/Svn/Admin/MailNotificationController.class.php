@@ -57,14 +57,17 @@ class MailNotificationController {
         $mail_header           = $this->mail_header_manager->getByRepository($repository);
         $notifications_details = $this->mail_notification_manager->getByRepository($repository);
 
+        $title = $repository->getName() .' – '. $GLOBALS['Language']->getText('global', 'Administration');
+
         $service->renderInPage(
             $request,
-            $GLOBALS['Language']->getText('plugin_svn_admin','admin_notification'),
+            $title,
             'admin/mail_notification',
             new MailNotificationPresenter(
                 $repository,
                 $request->getProject(),
                 $token,
+                $title,
                 $mail_header,
                 $notifications_details
             )

@@ -36,6 +36,7 @@ plugin_svn_admin_notification	notified_mails	SVN notification list
 plugin_svn_admin_notification	delete	Delete ?
 plugin_svn_admin_notification	delete_error	Unable to delete notification list
 
+plugin_svn	notifications	Notifications
 plugin_svn	update_error	Unable to update Repository data
 plugin_svn	char_err	The repository name must have at least one character
 plugin_svn	illegal_char	The repository name contains illeguall characters
