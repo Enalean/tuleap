@@ -22,6 +22,8 @@ namespace Tuleap\PullRequest;
 
 use \GitRepository;
 use \PFUser;
+use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 
 class Factory {
 
