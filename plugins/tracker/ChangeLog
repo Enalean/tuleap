@@ -1,3 +1,6 @@
+Version 5.799 - Tuleap 8.12
+    * request #8856: tv5->tv5 migration: empty value at migration when field attachment in tracker
+
 Version 5.798 - Tuleap 8.12
     * story #8825: GET and POST /pull_requests/:id/comments
 
