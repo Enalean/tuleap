@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All rights reserved
+ * Copyright (c) Enalean, 2012-2016. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -163,15 +163,9 @@ class HTTPRequest extends Codendi_Request {
     }
 
     /**
-     * Returns true if request is served in HTTPS by current server
-     *
-     * @return boolean
+     * @return bool
      */
-    public function isSSL() {
-        return $this->doWeTerminateSSL();
-    }
-
-    private function doWeTerminateSSL() {
+    private function doWeTerminateWithSecureConnection() {
         return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on');
     }
 
@@ -187,15 +181,13 @@ class HTTPRequest extends Codendi_Request {
     }
 
     /**
-     * isSSL version that take into account reverse proxy
-     *
-     * @return type
+     * @return boolean
      */
-    private function isSSLForEndUser() {
+    public function isSecure() {
         if ($this->reverseProxyForwardsOriginalProtocol()) {
-            return $this->isOriginalProtocolSSL();
+            return $this->isOriginalProtocolSecure();
         }
-        return $this->doWeTerminateSSL();
+        return $this->doWeTerminateWithSecureConnection();
     }
 
     private function reverseProxyForwardsOriginalProtocol() {
@@ -206,13 +198,13 @@ class HTTPRequest extends Codendi_Request {
         return isset($_SERVER[self::HEADER_REMOTE_ADDR]) && isset($this->trusted_proxied[$_SERVER[self::HEADER_REMOTE_ADDR]]);
     }
 
-    private function isOriginalProtocolSSL() {
+    private function isOriginalProtocolSecure() {
         return strtolower($_SERVER[self::HEADER_X_FORWARDED_PROTO]) === 'https';
     }
 
 
     private function getScheme() {
-        if ($this->isSSLForEndUser()) {
+        if ($this->isSecure()) {
             return 'https://';
         } else {
             return 'http://';
@@ -233,7 +225,7 @@ class HTTPRequest extends Codendi_Request {
     public function getServerUrl() {
         if ($this->reverseProxyForwardsOriginalProtocol()) {
             return $this->getScheme().$_SERVER[self::HEADER_HOST];
-        } elseif ($this->isSSLForEndUser() && ForgeConfig::get('sys_https_host')) {
+        } elseif ($this->isSecure() && ForgeConfig::get('sys_https_host')) {
             return $this->getScheme().ForgeConfig::get('sys_https_host');
         } else {
             return $this->getScheme().ForgeConfig::get('sys_default_domain');

@@ -100,6 +100,13 @@ class openidconnectclientPlugin extends Plugin {
         if(! $this->canPluginAuthenticateUser()) {
             return;
         }
+        if(! $params['is_secure']) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'only_https_possible')
+            );
+            return;
+        }
         $this->loadLibrary();
 
         $provider_manager                  = new ProviderManager(new ProviderDao());

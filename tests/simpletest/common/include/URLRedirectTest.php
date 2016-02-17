@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,7 +40,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     }
 
     public function itStayInSSLWhenForceSSLIsOn() {
-        stub($this->request)->isSSL()->returns(true);
+        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 1;
 
         $this->assertEqual(
@@ -50,7 +50,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     }
 
     public function itRedirectToHttpWhenForceSSLIsOffAndNoStayInSSL() {
-        stub($this->request)->isSSL()->returns(true);
+        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 0;
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
         stub($this->request)->get('stay_in_ssl')->returns(0);
@@ -62,7 +62,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     }
 
     public function itRedirectToHttpWhenForceSSLIsOffAndNoStayInSSL2() {
-        stub($this->request)->isSSL()->returns(true);
+        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 0;
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(false);
         stub($this->request)->get('stay_in_ssl')->returns(false);
@@ -71,7 +71,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     }
 
     public function itStayInSSLWhenForceSSLIsOffAndNoStayInSSL() {
-        stub($this->request)->isSSL()->returns(true);
+        stub($this->request)->isSecure()->returns(true);
         $GLOBALS['sys_force_ssl'] = 0;
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
         stub($this->request)->get('stay_in_ssl')->returns(1);
@@ -80,7 +80,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
     }
 
     public function itStayUnencryptedWhenForceSSLIsOffAndNoStayInSSL() {
-        stub($this->request)->isSSL()->returns(false);
+        stub($this->request)->isSecure()->returns(false);
         $GLOBALS['sys_force_ssl'] = 0;
         stub($this->request)->existAndNonEmpty('stay_in_ssl')->returns(true);
         stub($this->request)->get('stay_in_ssl')->returns(0);

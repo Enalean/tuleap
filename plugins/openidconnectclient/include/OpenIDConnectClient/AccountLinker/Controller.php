@@ -132,6 +132,6 @@ class Controller {
             Feedback::ERROR,
             $message
         );
-        $GLOBALS['Response']->redirect('https://' . ForgeConfig::get('sys_https_host') . '/account/login.php');
+        $GLOBALS['Response']->redirect('/account/login.php');
     }
 }

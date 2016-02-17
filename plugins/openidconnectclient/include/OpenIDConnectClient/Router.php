@@ -60,12 +60,12 @@ class Router {
     }
 
     private function checkTLSPresence(HTTPRequest $request) {
-        if(! $request->isSSL()) {
+        if(! $request->isSecure()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'only_https_possible')
             );
-            $GLOBALS['Response']->redirect('https://' . ForgeConfig::get('sys_https_host') . '/account/login.php');
+            $GLOBALS['Response']->redirect('/account/login.php');
         }
     }
 

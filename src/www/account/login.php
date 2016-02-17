@@ -23,7 +23,7 @@ if ($request->get('confirm_hash')) {
 
 $em =& EventManager::instance();
 
-if (!session_issecure() && isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
+if (! $request->isSecure() && isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
     //force use of SSL for login
     util_return_to('https://'.$GLOBALS['sys_https_host'].'/account/login.php');
     exit;
@@ -108,7 +108,12 @@ if($_cVar['pv'] == 2) {
 }
 
 $presenter_builder = new User_LoginPresenterBuilder();
-$presenter = $presenter_builder->build($_rVar['return_to'], $_cVar['pv'], $_rVar['form_loginname']);
+$presenter = $presenter_builder->build(
+    $_rVar['return_to'],
+    $_cVar['pv'],
+    $_rVar['form_loginname'],
+    $request->isSecure()
+);
 
 if($pvMode) {
     $GLOBALS['HTML']->pv_header(array('title'=>$presenter->account_login_page_title()));
