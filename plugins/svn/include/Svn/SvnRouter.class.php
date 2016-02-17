@@ -79,6 +79,7 @@ class SvnRouter {
                 $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
                 $controller->displayRepository($this->getService($request), $request);
                 break;
+            case "settings":
             case "display-mail-notification":
                 $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
                 $controller->displayMailNotification($this->getService($request), $request);
