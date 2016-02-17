@@ -1,5 +1,5 @@
 <section class="plugin-svn-wrapper">
-    <h1>{{ title_list_repositories }}</h1>
+    <h2>{{ title_list_repositories }}</h2>
     {{^list_repositories}}
         <h3><p> {{ no_repositories }}</p></h3>
     {{/list_repositories}}
@@ -18,6 +18,7 @@
         </p>
     {{/has_respositories}}
 
+    {{# is_user_allowed_to_create_repository }}
     <h2>{{ title }}</h2>
     <p>
         <form
@@ -30,4 +31,5 @@
             <p>{{ help_repository_name }}</p>
         </form>
     </p>
+    {{/ is_user_allowed_to_create_repository }}
 </section>

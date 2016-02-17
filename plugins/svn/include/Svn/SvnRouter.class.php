@@ -33,7 +33,7 @@ use Tuleap\Svn\Admin\MailnotificationManager;
 use ProjectManager;
 use Project;
 use ForgeConfig;
-
+use Feedback;
 
 class SvnRouter {
 
@@ -60,63 +60,77 @@ class SvnRouter {
      * @return void
      */
     public function route(HTTPRequest $request) {
+        try {
+            $this->useAViewVcRoadIfRootValid($request);
 
-        $this->useAViewVcRoadIfRootValid($request);
-
-        if (! $request->get('action')) {
-            $this->useDefaultRoute($request);
-            return;
-        }
-
-        $action = $request->get('action');
-
-        switch ($action) {
-            case "create-repository":
-                $controller = new ExplorerController($this->repository_manager);
-                $controller->createRepository($this->getService($request), $request);
-                break;
-            case "display-repository":
-                $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
-                $controller->displayRepository($this->getService($request), $request);
-                break;
-            case "settings":
-            case "display-mail-notification":
-                $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                $controller->displayMailNotification($this->getService($request), $request);
-                break;
-            case "save-mail-header":
-                $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                $controller->saveMailHeader($request);
-                break;
-            case "create-mailing-lists":
-                $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                $controller->createMailingList($request);
-                break;
-            case "delete-mailing-list":
-                $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                $controller->deleteMailingList($request);
-                break;
-            default:
+            if (! $request->get('action')) {
                 $this->useDefaultRoute($request);
-                break;
+                return;
+            }
+
+            $action = $request->get('action');
+
+            switch ($action) {
+                case "create-repository":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new ExplorerController($this->repository_manager);
+                    $controller->createRepository($this->getService($request), $request);
+                    break;
+                case "display-repository":
+                    $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
+                    $controller->displayRepository($this->getService($request), $request);
+                    break;
+                case "settings":
+                case "display-mail-notification":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
+                    $controller->displayMailNotification($this->getService($request), $request);
+                    break;
+                case "save-mail-header":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
+                    $controller->saveMailHeader($request);
+                    break;
+                case "create-mailing-lists":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
+                    $controller->createMailingList($request);
+                    break;
+                case "delete-mailing-list":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
+                    $controller->deleteMailingList($request);
+                    break;
+
+                default:
+                    $this->useDefaultRoute($request);
+                    break;
+            }
+        } catch (CannotFindRepositoryException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn','find_error'));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL .'/?group_id='. $request->get('group_id'));
+        } catch (UserCannotAdministrateRepositoryException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'perm_denied'));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL .'/?group_id='. $request->get('group_id'));
+        }
+    }
+
+    private function checkUserCanAdministrateARepository(HTTPRequest $request) {
+        if (! $request->getProject()->userIsAdmin($request->getCurrentUser())) {
+            throw new UserCannotAdministrateRepositoryException();
         }
     }
 
     private function useAViewVcRoadIfRootValid(HTTPRequest $request) {
-        try {
-            if ($request->get('root')) {
+        if ($request->get('root')) {
 
-                $repository = $this->repository_manager->getRepositoryAndProjectFromPublicPath($request->get('root'));
+            $repository = $this->repository_manager->getRepositoryAndProjectFromPublicPath($request->get('root'));
 
-                $request->set("group_id", $repository->getProject()->getId());
-                $request->set("repo_id", $repository->getId());
+            $request->set("group_id", $repository->getProject()->getId());
+            $request->set("repo_id", $repository->getId());
 
-                $this->useViewVcRoute($request);
-                return;
-            }
-        } catch (CannotFindRepositoryException $e) {
-            $GLOBALS['Response']->addFeedback('info', $request->get('root'). " " .$GLOBALS['Language']->getText('plugin_svn','find_error'));
-            $GLOBALS['Response']->redirect('/');
+            $this->useViewVcRoute($request);
+            return;
         }
     }
 

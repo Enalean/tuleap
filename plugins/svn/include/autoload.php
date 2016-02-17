@@ -33,6 +33,7 @@ function autoload35049967f0d6f5a55d699cb5aea2c5d5($class) {
             'tuleap\\svn\\repository\\rulename' => '/Svn/Repository/RuleName.class.php',
             'tuleap\\svn\\servicesvn' => '/Svn/ServiceSvn.class.php',
             'tuleap\\svn\\svnrouter' => '/Svn/SvnRouter.class.php',
+            'tuleap\\svn\\usercannotadministraterepositoryexception' => '/Svn/UserCannotAdministrateRepositoryException.php',
             'tuleap\\svn\\viewvcproxy\\viewvcproxy' => '/Svn/ViewVCProxy/ViewVCProxy.class.php'
         );
     }

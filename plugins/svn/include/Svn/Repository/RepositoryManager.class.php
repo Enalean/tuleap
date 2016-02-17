@@ -53,12 +53,16 @@ class RepositoryManager {
         if ($row) {
             return $this->instantiateFromRow($row, $project);
         } else {
-            throw new CannotFindRepositoryException ($GLOBALS['Language']->getText('plugin_svn','find_error'));
+            throw new CannotFindRepositoryException();
         }
     }
 
     public function getById($id_repository, Project $project) {
         $row = $this->dao->searchByRepositoryIdAndProjectId($id_repository, $project);
+        if (! $row) {
+            throw new CannotFindRepositoryException();
+        }
+
         return $this->instantiateFromRow($row, $project);
     }
 
@@ -70,12 +74,12 @@ class RepositoryManager {
 
     public function getRepositoryAndProjectFromPublicPath($path) {
          if (! preg_match('/^('.Rule_ProjectName::PATTERN_PROJECT_NAME.')\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+            throw new CannotFindRepositoryException();
         }
 
         $project = $this->project_manager->getProjectByUnixName($matches[1]);
         if (! $project instanceof Project) {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+            throw new CannotFindRepositoryException();
         }
 
         return $this->getRepositoryByName($project, $matches[2]);

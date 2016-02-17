@@ -22,8 +22,10 @@
 namespace Tuleap\Svn\Explorer;
 
 use CSRFSynchronizerToken;
-use \Tuleap\Svn\Repository\RepositoryManager;
-use \Tuleap\Svn\Repository\RuleName;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RuleName;
+use Project;
+use PFUser;
 
 class ExplorerPresenter {
 
@@ -41,7 +43,8 @@ class ExplorerPresenter {
     public $table_head_list_repository;
 
     public function __construct(
-        $project,
+        PFUser $user,
+        Project $project,
         CSRFSynchronizerToken $csrf,
         $repository_name,
         RepositoryManager $repository_manager
@@ -59,5 +62,7 @@ class ExplorerPresenter {
         $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
         $this->has_respositories          = count($this->list_repositories) > 0;
         $this->validate_name              = RuleName::PATTERN_REPOSITORY_NAME;
+
+        $this->is_user_allowed_to_create_repository = $project->userIsAdmin($user);
     }
 }
