@@ -1,0 +1,20 @@
+<div id="account-openid-connect-providers">
+    <h4 class="account-title">{{ title }}</h4>
+
+    <div id="linked-providers">
+        {{# user_mappings }}
+            <form action="{{ form_action }}" class="provider" method="post">
+                <input type="hidden" name="provider_id" value="{{ provider_id }}">
+                <div class="provider-header">
+                    <p class="provider-name"> {{ provider_name }}</p>
+                </div>
+                <div class="provider-content">
+                    <p class="provider-last-login-date">Last login date: {{ last_usage }}</p>
+                    <button type="submit" class="btn btn-small"><i class="icon-unlink"></i> {{ unlink }}</button>
+                </div>
+
+                {{{ csrf_token }}}
+            </form>
+        {{/ user_mappings }}
+    </div>
+</div>

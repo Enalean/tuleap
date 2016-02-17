@@ -97,7 +97,8 @@ class Controller {
         if ($user->isAnonymous()) {
             $this->showIndex($unlinked_account->getId(), $request->get('return_to'));
         } else {
-            $this->linkAccount($user, $provider, $unlinked_account);
+            $request_time = $request->getTime();
+            $this->linkAccount($user, $provider, $unlinked_account, $request_time);
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -112,12 +113,13 @@ class Controller {
         }
     }
 
-    private function linkAccount(PFUser $user, Provider $provider, UnlinkedAccount $unlinked_account) {
+    private function linkAccount(PFUser $user, Provider $provider, UnlinkedAccount $unlinked_account, $request_time) {
         try {
             $this->user_mapping_manager->create(
                 $user->getId(),
                 $provider->getId(),
-                $unlinked_account->getUserIdentifier()
+                $unlinked_account->getUserIdentifier(),
+                $request_time
             );
             $this->unlinked_account_manager->removeById($unlinked_account->getId());
         } catch (Exception $ex) {

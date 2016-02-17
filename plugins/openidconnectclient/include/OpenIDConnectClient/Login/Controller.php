@@ -30,6 +30,7 @@ use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\FlowResponse;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMapping;
+use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDataAccessException;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
 use Exception;
@@ -78,7 +79,7 @@ class Controller {
         $this->flow                     = $flow;
     }
 
-    public function login($return_to) {
+    public function login($return_to, $login_time) {
         require_once('account.php');
         $this->checkIfUserAlreadyLogged($return_to);
 
@@ -97,7 +98,7 @@ class Controller {
                 $provider,
                 $user_informations['id']
             );
-            $this->openSession($user_mapping, $flow_response->getReturnTo());
+            $this->openSession($user_mapping, $flow_response->getReturnTo(), $login_time);
         } catch (UserMappingNotFoundException $ex) {
             $this->redirectToLinkAnUnknowAccount($flow_response);
         }
@@ -110,7 +111,7 @@ class Controller {
         }
     }
 
-    private function openSession(UserMapping $user_mapping, $return_to) {
+    private function openSession(UserMapping $user_mapping, $return_to, $login_time) {
         $user = $this->user_manager->getUserById($user_mapping->getUserId());
         try {
             $this->user_manager->openSessionForUser($user);
@@ -120,6 +121,14 @@ class Controller {
             $this->redirectToLoginPageAfterFailure($ex->getMessage());
         } catch (SessionNotCreatedException $ex) {
             $this->redirectToLoginPageAfterFailure($ex->getMessage());
+        }
+        try {
+            $this->user_mapping_manager->updateLastUsed($user_mapping, $login_time);
+        } catch (UserMappingDataAccessException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+            );
         }
         \account_redirect_after_login($return_to);
     }

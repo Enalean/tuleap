@@ -41,12 +41,13 @@ class RouterTest extends TuleapTestCase {
     public function itOnlyAcceptsHTTPS() {
         $login_controller          = mock('Tuleap\OpenIDConnectClient\Login\Controller');
         $account_linker_controller = mock('Tuleap\OpenIDConnectClient\AccountLinker\Controller');
+        $user_mapping_controller   = mock('Tuleap\OpenIDConnectClient\UserMapping\Controller');
         $request                   = mock('HTTPRequest');
         $request->setReturnValue('isSecure', false);
 
         $GLOBALS['Response']->expectOnce('redirect');
 
-        $router = new Router($login_controller, $account_linker_controller);
+        $router = new Router($login_controller, $account_linker_controller, $user_mapping_controller);
         $router->route($request);
     }
 

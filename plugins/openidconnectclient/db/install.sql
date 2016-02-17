@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_user_mapping (
     user_id INT(11) UNSIGNED NOT NULL,
     provider_id INT(11) UNSIGNED NOT NULL,
     user_openidconnect_identifier TEXT NOT NULL,
+    last_used INT(11) UNSIGNED NOT NULL,
     PRIMARY KEY(user_id, provider_id)
 );
 

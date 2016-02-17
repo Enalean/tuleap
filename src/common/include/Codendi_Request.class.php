@@ -326,5 +326,12 @@ class Codendi_Request {
     public function getJsonDecodedBody() {
         return json_decode(file_get_contents('php://input'));
     }
+
+    /**
+     * @return integer
+     */
+    public function getTime() {
+        return $_SERVER['REQUEST_TIME'];
+    }
 }
 ?>
