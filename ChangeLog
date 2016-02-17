@@ -12,7 +12,7 @@ Version 8.12 (Not yet released)
 	* hudson: 1.24
 	* agiledashboard: 1.357
 	* mediawiki: 0.107
-	* openidconnectclient: 0.5
+	* openidconnectclient: 0.6
 	* svn: 0.12
 	* cardwall: 1.56
 	* docman: 2.26.94
@@ -22,6 +22,10 @@ Version 8.12 (Not yet released)
 	* ldap: 3.97
 	* pullrequest: 0.3
 	* template: 0.2
+	* webdav: 1.9.15
+
+    == Themes ==
+	* FlamingParrot: 1.121
 
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==
