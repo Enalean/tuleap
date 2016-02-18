@@ -236,10 +236,13 @@ if ($request->isPost() && $request->exist('Register')) {
             if ($request->get('form_send_email')){
                 //send an email to the user with th login and password
                 $from      = $GLOBALS['sys_noreply'];
-                $to        = $request->get('form_email');
-                $login     = $hp->purify($request->get('form_loginname'));
-                $password  = $hp->purify($request->get('form_pw'));
-                if (!send_admin_new_user_email($to, $login, $password)) {
+                $is_sent = send_admin_new_user_email(
+                    $request->get('form_email'),
+                    $request->get('form_loginname'),
+                    $request->get('form_pw')
+                );
+
+                if (! $is_sent) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
