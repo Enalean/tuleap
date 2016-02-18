@@ -41,28 +41,9 @@ class ServiceSvn extends Service {
     }
 
     public function displayHeader(HTTPRequest $request, $title) {
-        $toolbar = array();
-        if ($this->userIsAdmin($request) && $request->get('repo_id')) {
-            $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => SVN_BASE_URL .'/?'. http_build_query(array(
-                    'group_id'   => $request->get('group_id'),
-                    'action'     => 'display-mail-notification',
-                    'repo_id'    => $request->get('repo_id')
-                ))
-            );
-        }
-
+        $toolbar     = array();
         $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_svn', 'service_lbl_key');
         $breadcrumbs = array();
         parent::displayHeader($title, $breadcrumbs, $toolbar);
-    }
-
-    /**
-     * @param HTTPRequest $request
-     * @return bool
-     */
-    private function userIsAdmin(HTTPRequest $request) {
-        return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 }

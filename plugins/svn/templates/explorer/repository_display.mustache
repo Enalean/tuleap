@@ -1,10 +1,19 @@
 <h2>{{ repository_name }}</h2>
 
-<div class="input-prepend input-append">
-    <input type="text" class="span6" size='125' value="{{ svn_url }}" />
-</div>
+<p class="form-inline">
+    <input type="text" class="span6" size="125" value="{{ svn_url }}" />
 
-<p> {{ help_message }} </p>
-<div class="svn-intro-command"> <pre>{{ help_command }} </pre></div>
+    {{# is_user_admin }}
+        <a href="{{ settings_url }}" class="btn">
+            <i class="icon-cog"></i>
+            Settings
+        </a>
+    {{/ is_user_admin }}
+</p>
+
+<p>{{ help_message }}</p>
+<div class="svn-intro-command">
+    <pre>{{ help_command }}</pre>
+</div>
 
 {{{ viewvc_html }}}

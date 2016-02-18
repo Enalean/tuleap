@@ -35,6 +35,12 @@ class RepositoryDisplayPresenter {
         $this->help_message = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->help_command = "svn checkout --username ".$request->getCurrentUser()->getName()." ".$this->repository->getSvnUrl();
         $this->viewvc_html  = $viewvc_html;
+        $this->settings_url = SVN_BASE_URL .'/?'. http_build_query(array(
+            'group_id' => $repository->getProject()->getID(),
+            'action'   => 'settings',
+            'repo_id'  => $repository->getId()
+        ));
+        $this->is_user_admin = $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 
     public function repository_name() {

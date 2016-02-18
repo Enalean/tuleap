@@ -57,6 +57,7 @@ class ExplorerController {
             'Welcome',
             'explorer/index',
             new ExplorerPresenter(
+                    $request->getCurrentUser(),
                     $project,
                     $token,
                     $request->get('name'),

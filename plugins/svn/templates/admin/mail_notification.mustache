@@ -1,55 +1,66 @@
-<h2> {{ title }}</h2>
-<h3>{{ notification_subtitle }}</h3>
-<p><i>{{ comment }} </p></i>
-<form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=save-mail-header" method="post">
-    <input type="hidden" name="group_id" value="{{ group_id }}">
-    <input type="hidden" name="repo_id" value="{{ repo_id }}">
-    {{{ csrf_input }}}
-    <label>{{ label_subject_header }}</label>
-    <input type="text" name="form_mailing_header" value="{{ subject_header }}">
-    <br/>
-    <input type="submit" name="submit" value="{{ submit}}" class="btn">
-    <br/>
-</form>
-
-<form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=delete-mailing-list" method="post">
-    {{#hasNotification}}
-        <h3>{{ label_notification_aviable }}</h3>
-        <table>
+<h2>{{ title }}</h2>
+<div class="tabbable tabs-left">
+    {{# sections }}
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="{{ notifications_url }}">{{ notifications }}</a>
+            </li>
+        </ul>
+    {{/ sections }}
+    <div class="tab-content">
+        <h3>{{ notification_subtitle }}</h3>
+        <p><i>{{ comment }} </p></i>
+        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=save-mail-header" method="post">
             <input type="hidden" name="group_id" value="{{ group_id }}">
             <input type="hidden" name="repo_id" value="{{ repo_id }}">
             {{{ csrf_input }}}
-            <thead>
-                <tr>
-                    <th>{{ monitored_path }}</th>
-                    <th>{{ notified_mails }}</th>
-                    <th>{{ delete }}</th>
-                </tr>
-            </thead>
-            {{# list_mails }}
-                <tr>
-                    <td>{{ getPath }}</td>
-                    <td>{{ getMailingList }}</td>
-                    <td><input type="checkbox" value="{{ getPath }}" name="paths_to_delete[]" ></td>
-                </tr>
-            {{/ list_mails }}
-        </table>
-        <br />
-        <input type="submit" value="{{ submit }}" class="btn">
-    {{/hasNotification}}
-</form>
+            <label>{{ label_subject_header }}</label>
+            <input type="text" name="form_mailing_header" value="{{ subject_header }}">
+            <br/>
+            <input type="submit" name="submit" value="{{ submit}}" class="btn">
+            <br/>
+        </form>
 
-<form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=create-mailing-lists" method="post">
-    <input type="hidden" name="group_id" value="{{ group_id }}">
-    <input type="hidden" name="repo_id" value="{{ repo_id }}">
-    {{{ csrf_input }}}
-    <label> {{ label_path }} </label>
-    <input type="text" name="form_path">
+        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=delete-mailing-list" method="post">
+            {{#hasNotification}}
+                <h3>{{ label_notification_aviable }}</h3>
+                <table>
+                    <input type="hidden" name="group_id" value="{{ group_id }}">
+                    <input type="hidden" name="repo_id" value="{{ repo_id }}">
+                    {{{ csrf_input }}}
+                    <thead>
+                        <tr>
+                            <th>{{ monitored_path }}</th>
+                            <th>{{ notified_mails }}</th>
+                            <th>{{ delete }}</th>
+                        </tr>
+                    </thead>
+                    {{# list_mails }}
+                        <tr>
+                            <td>{{ getPath }}</td>
+                            <td>{{ getMailingList }}</td>
+                            <td><input type="checkbox" value="{{ getPath }}" name="paths_to_delete[]" ></td>
+                        </tr>
+                    {{/ list_mails }}
+                </table>
+                <br />
+                <input type="submit" value="{{ submit }}" class="btn">
+            {{/hasNotification}}
+        </form>
 
-    <label> {{ label_mail_to }} </label>
-    <input type="test" size="50%" name="form_mailing_list">
+        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=create-mailing-lists" method="post">
+            <input type="hidden" name="group_id" value="{{ group_id }}">
+            <input type="hidden" name="repo_id" value="{{ repo_id }}">
+            {{{ csrf_input }}}
+            <label> {{ label_path }} </label>
+            <input type="text" name="form_path">
 
-    <br /><br />
+            <label> {{ label_mail_to }} </label>
+            <input type="test" size="50%" name="form_mailing_list">
 
-    <input type="submit" name="submit" value="{{ submit }}" class="btn">
-</form>
+            <br /><br />
+
+            <input type="submit" name="submit" value="{{ submit }}" class="btn">
+        </form>
+    </div>
+</div>

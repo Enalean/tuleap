@@ -20,6 +20,7 @@ function autoload35049967f0d6f5a55d699cb5aea2c5d5($class) {
             'tuleap\\svn\\admin\\mailnotificationmanager' => '/Svn/Admin/MailNotificationManager.class.php',
             'tuleap\\svn\\admin\\mailnotificationpresenter' => '/Svn/Admin/MailNotificationPresenter.class.php',
             'tuleap\\svn\\admin\\mailreceivedfromuserextractor' => '/Svn/Admin/MailReceivedFromUserExtractor.php',
+            'tuleap\\svn\\admin\\sectionspresenter' => '/Svn/Admin/SectionsPresenter.php',
             'tuleap\\svn\\dao' => '/Svn/Dao.class.php',
             'tuleap\\svn\\eventrepository\\systemevent_svn_create_repository' => '/events/SystemEvent_SVN_CREATE_REPOSITORY.class.php',
             'tuleap\\svn\\explorer\\explorercontroller' => '/Svn/Explorer/ExplorerController.class.php',
@@ -33,6 +34,7 @@ function autoload35049967f0d6f5a55d699cb5aea2c5d5($class) {
             'tuleap\\svn\\repository\\rulename' => '/Svn/Repository/RuleName.class.php',
             'tuleap\\svn\\servicesvn' => '/Svn/ServiceSvn.class.php',
             'tuleap\\svn\\svnrouter' => '/Svn/SvnRouter.class.php',
+            'tuleap\\svn\\usercannotadministraterepositoryexception' => '/Svn/UserCannotAdministrateRepositoryException.php',
             'tuleap\\svn\\viewvcproxy\\viewvcproxy' => '/Svn/ViewVCProxy/ViewVCProxy.class.php'
         );
     }

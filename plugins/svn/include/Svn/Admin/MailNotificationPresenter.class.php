@@ -44,19 +44,20 @@ class MailNotificationPresenter {
     public $csrf_input_delete;
 
     public function __construct(
-            Repository $repository,
-            Project $project,
-            $token,
-            $mail_header,
-            $notifications_details
-        ) {
+        Repository $repository,
+        Project $project,
+        CSRFSynchronizerToken $token,
+        $title,
+        $mail_header,
+        $notifications_details
+    ) {
         $this->group_id                   = $project->getId();
         $this->repo_id                    = $repository->getId();
         $this->csrf_input                 = $token->fetchHTMLInput();
         $this->subject_header             = $mail_header->getHeader();
         $this->list_mails                 = $notifications_details;
+        $this->title                      = $title;
 
-        $this->title                      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'title');
         $this->notification_subtitle      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');
         $this->comment                    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'comment');
         $this->label_subject_header       = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_subject_header');
@@ -67,6 +68,8 @@ class MailNotificationPresenter {
         $this->monitored_path             = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'monitored_path');
         $this->notified_mails             = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notified_mails');
         $this->delete                     = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'delete');
+
+        $this->sections = new SectionsPresenter($repository);
     }
 
     public function hasNotification() {
