@@ -41,6 +41,7 @@ use ProjectManager;
 use UserManager;
 use PFUser;
 use GitRepository;
+use Git_Command_Exception;
 use URLVerification;
 use Tuleap\REST\ProjectAuthorization;
 
@@ -166,6 +167,72 @@ class PullRequestsResource extends AuthenticatedResource {
         }
 
         return $modified_files;
+    }
+
+    /**
+     * Get the contents of a given file in a pull request
+     *
+     * Get the contents of a given file for the source branch and the dest branch for a pull request.<br/>
+     * User is not able to see a pull request in a git repository where he is not able to READ
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url GET {id}/file_content
+     *
+     * @access protected
+     *
+     * @param  int $id pull request ID
+     * @param  string $path File path {@from query}
+     *
+     * @return PullRequestFileContentRepresentation {@type Tuleap\PullRequest\REST\v1\PullRequestFileContentRepresentation}
+     *
+     * @throws 403
+     * @throws 404 Pull request does not exist
+     * @throws 404 The file does not exist
+     */
+    protected function getFileContent($id, $path) {
+        $this->checkAccess();
+
+        $user           = $this->user_manager->getCurrentUser();
+        $pull_request   = $this->getPullRequest($id);
+        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+
+        $this->checkUserCanReadRepository($user, $git_repository);
+
+        $executor     = $this->getExecutor($git_repository);
+        $dest_content = $this->getDestinationContent($pull_request, $executor, $path);
+        $src_content  = $this->getSourceContent($pull_request, $executor, $path);
+
+        if ($src_content === null && $dest_content === null) {
+            throw new RestException(404, 'The file does not exist');
+        }
+
+        $file_content_representation = new PullRequestFileContentRepresentation();
+        $file_content_representation->build($dest_content, $src_content);
+
+        return $file_content_representation;
+    }
+
+    private function getSourceContent(PullRequest $pull_request, GitExec $executor, $path) {
+        try {
+            $src_content  = $executor->getFileContent($pull_request->getSha1Src(), $path);
+        } catch (Git_Command_Exception $exception) {
+            $src_content = null;
+        }
+
+        return $src_content;
+    }
+
+    private function getDestinationContent(PullRequest $pull_request, GitExec $executor, $path) {
+        try {
+            $dest_content  = $executor->getFileContent($pull_request->getSha1Dest(), $path);
+        } catch (Git_Command_Exception $exception) {
+            $dest_content = null;
+        }
+
+        return $dest_content;
     }
 
     /**
