@@ -21,7 +21,7 @@ Version 8.12 (Not yet released)
 	* tracker: 5.799
 	* Plugin OpenId is deleted
 	* ldap: 3.97
-	* pullrequest: 0.3
+	* pullrequest: 0.4
 	* template: 0.2
 	* webdav: 1.9.15
 
