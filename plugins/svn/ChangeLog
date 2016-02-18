@@ -1,3 +1,9 @@
+Version 0.13 - Tuleap 8.12
+    * * Introduce tabbed navigation in repository settings
+* Only admins can create/update a repository
+* Replace toolbar by a button
+
+
 Version 0.12 - Tuleap 8.12
     * Administration for SVN notifications rules
 
