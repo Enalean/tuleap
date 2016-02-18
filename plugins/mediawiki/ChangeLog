@@ -1,3 +1,6 @@
+Version 0.108 - Tuleap 8.12
+    * request #8875: TuleapArtLinks MW extension does not point out documentation
+
 Version 0.107 - Tuleap 8.12
     * request #8801 Tuleap warns about wrong owernship of plugins installed by default
 
