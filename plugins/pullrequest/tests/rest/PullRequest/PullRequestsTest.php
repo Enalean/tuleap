@@ -44,6 +44,9 @@ class PullRequestsTest extends RestBase {
         );
     }
 
+    // the POST route requires a major refactoring of REST tests initialization
+    // and thus will be done in a following commit
+
     public function testGetPullRequests() {
         $response  = $this->getResponse($this->client->get('pull_requests/1'));
 
@@ -59,7 +62,7 @@ class PullRequestsTest extends RestBase {
     public function testOPTIONS() {
         $response = $this->getResponse($this->client->options('pull_requests/'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**

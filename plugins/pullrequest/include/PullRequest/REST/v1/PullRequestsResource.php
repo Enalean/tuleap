@@ -28,6 +28,9 @@ use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\PullRequestNotFoundException;
+use Tuleap\PullRequest\PullRequestNotCreatedException;
+use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\UnknownReferenceBranchException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -83,7 +86,7 @@ class PullRequestsResource extends AuthenticatedResource {
      * @url OPTIONS
      */
     public function options() {
-        return Header::allowOptionsGet();
+        return Header::allowOptionsGetPost();
     }
 
     /**
@@ -120,6 +123,74 @@ class PullRequestsResource extends AuthenticatedResource {
         $pull_request_representation->build($pull_request, $git_repository);
 
         return $pull_request_representation;
+    }
+
+    /**
+     * Create PullRequest
+     *
+     * Create a new pullrequest.<br/>
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     * <br/>
+     * Here is an example of a valid POST content:
+     * <pre>
+     * {<br/>
+     * &nbsp;&nbsp;"repository_id": 3,<br/>
+     * &nbsp;&nbsp;"branch_src": "dev",<br/>
+     * &nbsp;&nbsp;"branch_dest": "master"<br/>
+     * }<br/>
+     * </pre>
+     *
+     * @url POST
+     *
+     * @access protected
+     *
+     * @param  PullRequestPOSTRepresentation $content Id of the Git repository, name of the source branch and name of the destination branch
+     * @return PullRequestReference
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @status 201
+     */
+    protected function post(PullRequestPOSTRepresentation $content) {
+        $this->checkAccess();
+
+        $repository_id  = $content->repository_id;
+        $branch_src     = $content->branch_src;
+        $branch_dest    = $content->branch_dest;
+        $user           = $this->user_manager->getCurrentUser();
+        $git_repository = $this->getRepository($repository_id);
+
+        $this->checkUserCanReadRepository($user, $git_repository);
+
+        $executor = new GitExec($git_repository->getFullPath(), $git_repository->getFullPath());
+
+        try {
+            $sha1_src     = $executor->getReferenceBranch($branch_src);
+            $sha1_dest    = $executor->getReferenceBranch($branch_dest);
+            $pull_request = $this->pull_request_factory->create(
+                $git_repository,
+                $user,
+                $branch_src,
+                $sha1_src,
+                $branch_dest,
+                $sha1_dest
+            );
+        } catch (UnknownReferenceBranchException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (PullRequestNotCreatedException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $pull_request_reference = new PullRequestReference();
+        $pull_request_reference->build($pull_request);
+
+        $this->sendLocationHeader($pull_request_reference->uri);
+
+        return $pull_request_reference;
     }
 
     /**
@@ -230,7 +301,7 @@ class PullRequestsResource extends AuthenticatedResource {
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
 
         if (! $repository) {
-            throw new RestException(404, "The git repository where the pull request was generated does not exist");
+            throw new RestException(404, "Git repository not found");
         }
 
         return $repository;
@@ -244,4 +315,9 @@ class PullRequestsResource extends AuthenticatedResource {
         }
     }
 
+    private function sendLocationHeader($uri) {
+        $uri_with_api_version = '/api/v1/' . $uri;
+
+        Header::Location($uri_with_api_version);
+    }
 }

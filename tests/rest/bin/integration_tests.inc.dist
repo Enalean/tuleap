@@ -49,4 +49,6 @@ $sys_custompluginspath = '/custom/plugins';
 $htmlpurifier_dir = '/usr/share/htmlpurifier';
 $jpgraph_dir = '/usr/share/jpgraph';
 
+$sys_logger_level = 'debug';
+
 $DEBUG_MODE = 1;

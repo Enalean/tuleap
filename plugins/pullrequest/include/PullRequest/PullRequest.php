@@ -89,4 +89,8 @@ class PullRequest {
     public function getCreationDate() {
         return $this->creation_date;
     }
+
+    public function setId($id) {
+        $this->id = $id;
+    }
 }
