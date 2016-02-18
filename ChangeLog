@@ -16,7 +16,7 @@ Version 8.12 (Not yet released)
 	* openidconnectclient: 0.6
 	* svn: 0.13
 	* cardwall: 1.56
-	* docman: 2.26.94
+	* docman: 2.26.95
 	* git: 4.118
 	* tracker: 5.799
 	* Plugin OpenId is deleted
@@ -24,6 +24,8 @@ Version 8.12 (Not yet released)
 	* pullrequest: 0.4
 	* template: 0.2
 	* webdav: 1.9.15
+	* forumml: 2.6.23
+	* projectlinks: 2.7
 
     == Themes ==
 	* FlamingParrot: 1.121
