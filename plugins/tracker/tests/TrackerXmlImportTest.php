@@ -300,7 +300,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
 
     public function itImportsArtifacts() {
         stub($this->tracker_xml_importer)->createFromXML()->returns($this->tracker);
-        $this->xml_import->expectCallCount('importFromXML', 1);
+        $this->xml_import->expectCallCount('importBareArtifactsFromXML', 1);
+        $this->xml_import->expectCallCount('importArtifactChangesFromXML', 1);
 
         $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
     }

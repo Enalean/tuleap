@@ -30,6 +30,10 @@ class Tracker_XML_Importer_ArtifactImportedMapping {
         return $this->mapping[$source_id];
     }
 
+    public function containsSource($source_id) {
+        return array_key_exists($source_id, $this->mapping);
+    }
+
     public function getOriginal($target_id) {
         return array_search($target_id, $this->mapping);
     }

@@ -162,24 +162,40 @@ class TrackerXmlImport {
             return;
         }
 
-        $this->xmlFieldsMapping = array();
-        $created_trackers_list  = array();
-
         $this->rng_validator->validate($xml_input->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
 
-        foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker_id => $xml_tracker) {
-            $created_tracker = $this->instanciateTrackerFromXml(
-                $group_id,
-                $xml_tracker_id,
-                $xml_tracker,
-                $extraction_path,
-                $this->user_finder
-            );
+        $this->xmlFieldsMapping   = array();
+        $created_trackers_mapping = array();
+        $created_trackers_objects = array();
+        $artifacts_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
 
-            $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
+        $xml_trackers = $this->getAllXmlTrackers($xml_input);
+
+        foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
+            $tracker_created = $this->instanciateTrackerFromXml($group_id, $xml_tracker);
+
+            $created_trackers_objects[$xml_tracker_id] = $tracker_created;
+            $created_trackers_mapping = array_merge($created_trackers_mapping, array($xml_tracker_id => $tracker_created->getId()));
         }
 
-        $this->importHierarchy($xml_input, $created_trackers_list);
+        $xml_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xmlFieldsMapping);
+
+        $created_artifacts = $this->importBareArtifacts(
+            $xml_trackers,
+            $created_trackers_objects,
+            $extraction_path,
+            $xml_mapping,
+            $artifacts_id_mapping);
+
+        $this->importChangesets(
+            $xml_trackers,
+            $created_trackers_objects,
+            $extraction_path,
+            $xml_mapping,
+            $artifacts_id_mapping,
+            $created_artifacts);
+
+        $this->importHierarchy($xml_input, $created_trackers_mapping);
 
         if (isset($xml_input->trackers->triggers)) {
             $this->trigger_rulesmanager->createFromXML($xml_input->trackers->triggers, $this->xmlFieldsMapping);
@@ -190,12 +206,57 @@ class TrackerXmlImport {
             array(
                 'project_id'    => $group_id,
                 'xml_content'   => $xml_input,
-                'mapping'       => $created_trackers_list,
+                'mapping'       => $created_trackers_mapping,
                 'field_mapping' => $this->xmlFieldsMapping
             )
         );
 
-        return $created_trackers_list;
+        return $created_trackers_mapping;
+    }
+
+    /**
+      * @return array of created artifacts
+      */
+    private function importBareArtifacts(
+        array $xml_trackers,
+        array $created_trackers_objects,
+        $extraction_path,
+        TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
+    ) {
+        $created_artifacts = array();
+        foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
+            if (isset($xml_tracker->artifacts)) {
+                $created_artifacts[$xml_tracker_id] = $this->xml_import->importBareArtifactsFromXML(
+                    $created_trackers_objects[$xml_tracker_id],
+                    $xml_tracker->artifacts,
+                    $extraction_path,
+                    $xml_mapping,
+                    $artifacts_id_mapping);
+            }
+        }
+        return $created_artifacts;
+    }
+
+    private function importChangesets(
+        array $xml_trackers,
+        array $created_trackers_objects,
+        $extraction_path,
+        TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
+        array $created_artifacts
+    ) {
+        foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
+            if (isset($xml_tracker->artifacts)) {
+                $this->xml_import->importArtifactChangesFromXML(
+                    $created_trackers_objects[$xml_tracker_id],
+                    $xml_tracker->artifacts,
+                    $extraction_path,
+                    $xml_mapping,
+                    $artifacts_id_mapping,
+                    $created_artifacts[$xml_tracker_id]);
+            }
+        }
     }
 
     private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list) {
@@ -215,9 +276,7 @@ class TrackerXmlImport {
      */
     private function instanciateTrackerFromXml(
         $group_id,
-        $xml_tracker_id,
-        SimpleXMLElement $xml_tracker,
-        $extraction_path
+        SimpleXMLElement $xml_tracker
     ) {
         $tracker_created = $this->createFromXML(
                $xml_tracker,
@@ -231,26 +290,7 @@ class TrackerXmlImport {
             throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
         }
 
-        $this->importArtifactsInNewlyCreatedTracker($tracker_created, $xml_tracker, $extraction_path);
-
-        return array($xml_tracker_id => $tracker_created->getId());
-    }
-
-    private function importArtifactsInNewlyCreatedTracker(
-        Tracker $tracker,
-        SimpleXMLElement $xml_tracker,
-        $extraction_path
-    ) {
-        if (isset($xml_tracker->artifacts)) {
-            $xml_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xmlFieldsMapping);
-
-            $this->xml_import->importFromXML(
-                $tracker,
-                $xml_tracker->artifacts,
-                $extraction_path,
-                $xml_mapping
-            );
-        }
+        return $tracker_created;
     }
 
     /**
