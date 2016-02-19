@@ -1225,7 +1225,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $art_id_array = explode(',', $new_values);
             foreach ($art_id_array as $artifact_id) {
                 $artifact_id = trim ($artifact_id);
-                if ( ! $r->isValid($artifact_id)) {
+                if ($artifact_id !== "" && ! $r->isValid($artifact_id)) {
                     $is_valid = false;
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_value', array($this->getLabel(), $artifact_id)));
                 }

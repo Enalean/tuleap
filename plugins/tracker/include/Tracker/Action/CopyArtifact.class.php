@@ -26,11 +26,6 @@ class Tracker_Action_CopyArtifact {
     private $artifacts_imported_mapping;
 
     /**
-     * @var Tracker_XML_Importer_ChildrenXMLImporter
-     */
-    private $children_xml_importer;
-
-    /**
      * @var Tracker_XML_Updater_TemporaryFileXMLUpdater
      */
     private $file_updater;
@@ -72,9 +67,9 @@ class Tracker_Action_CopyArtifact {
         Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
         Tracker_XML_Updater_TemporaryFileXMLUpdater $file_updater,
         Tracker_XML_Exporter_ChildrenXMLExporter $children_xml_exporter,
-        Tracker_XML_Importer_ChildrenXMLImporter $children_xml_importer,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
-        Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger
+        Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
+        TrackerFactory $tracker_factory
     ) {
         $this->tracker                    = $tracker;
         $this->artifact_factory           = $artifact_factory;
@@ -83,9 +78,9 @@ class Tracker_Action_CopyArtifact {
         $this->xml_updater                = $xml_updater;
         $this->file_updater               = $file_updater;
         $this->children_xml_exporter      = $children_xml_exporter;
-        $this->children_xml_importer      = $children_xml_importer;
         $this->artifacts_imported_mapping = $artifacts_imported_mapping;
         $this->logger                     = $logger;
+        $this->tracker_factory            = $tracker_factory;
     }
 
     public function process(
@@ -97,7 +92,6 @@ class Tracker_Action_CopyArtifact {
             $this->logsErrorAndRedirectToTracker('plugin_tracker_admin', 'access_denied');
             return;
         }
-
         $from_artifact = $this->artifact_factory->getArtifactByIdUserCanView($current_user, $request->get('from_artifact_id'));
         if (! $from_artifact || $from_artifact->getTracker() !== $this->tracker) {
             $this->logsErrorAndRedirectToTracker('plugin_tracker_include_type', 'error_missing_param');
@@ -130,7 +124,8 @@ class Tracker_Action_CopyArtifact {
         array $submitted_values
     ) {
         $xml_artifacts = $this->getXMLRootNode();
-        $this->xml_exporter->exportSnapshotWithoutComments(
+
+        $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
             $xml_artifacts,
             $from_changeset
         );
@@ -147,33 +142,68 @@ class Tracker_Action_CopyArtifact {
 
         $this->children_xml_exporter->exportChildren($xml_artifacts);
 
-        $extraction_path   = '';
-        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-
-        $artifact = $this->xml_importer->importOneArtifactFromXML(
-            $this->tracker,
-            $xml_artifacts->artifact[0],
-            $extraction_path,
-            $xml_field_mapping
-        );
-
-        if ($artifact) {
-            $this->artifacts_imported_mapping->add($from_changeset->getArtifact()->getId(), $artifact->getId());
-            $this->children_xml_importer->importChildren(
-                $this->artifacts_imported_mapping,
-                $xml_artifacts,
-                $extraction_path,
-                $artifact,
-                $current_user
-            );
-            $this->addSummaryCommentChangeset($artifact, $current_user, $from_changeset);
-            $this->redirectToArtifact($artifact);
-        } else {
+        if(count($xml_artifacts->artifact) < 1) {
             $this->logsErrorAndRedirectToTracker(
                 'plugin_tracker',
                 'error_create_copy',
                 $from_changeset->getArtifact()->getId()
             );
+            return;
+        }
+
+        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
+
+        $no_child = count($xml_artifacts->artifact) == 1;
+        if($no_child) {
+            $this->deleteArtLinksFromXML($xml_artifacts);
+        }
+
+        $new_artifacts = $this->importBareArtifacts($xml_artifacts);
+
+        if($new_artifacts == null) {
+            $this->logsErrorAndRedirectToTracker(
+                'plugin_tracker',
+                'error_create_copy',
+                $from_changeset->getArtifact()->getId()
+            );
+            return;
+        }
+
+        $this->importChangesets($xml_artifacts, $new_artifacts, $xml_field_mapping);
+        $this->addSummaryCommentChangeset($new_artifacts[0], $current_user, $from_changeset);
+        $this->redirectToArtifact($new_artifacts[0]);
+    }
+
+    /**
+     * @return Tracker_Artifact[] or null in case of error
+     */
+    private function importBareArtifacts(SimpleXMLElement $xml_artifacts) {
+        $new_artifacts = array();
+        foreach ($xml_artifacts->children() as $xml_artifact) {
+            $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
+            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact);
+            if(!$artifact) {
+                return null;
+            } else {
+                $new_artifacts[] = $artifact;
+                $this->artifacts_imported_mapping->add((int) $xml_artifact['id'], $artifact->getId());
+            }
+        }
+        return $new_artifacts;
+    }
+
+    private function importChangesets(SimpleXMLElement $xml_artifacts, array $new_artifacts, TrackerXmlFieldsMapping_InSamePlatform $xml_field_mapping) {
+        $extraction_path   = '';
+        foreach (iterator_to_array($xml_artifacts->artifact, false) as $i => $xml_artifact) {
+            $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
+            $tracker->getWorkflow()->disable();
+            $fields_data_builder = $this->xml_importer->createFieldsDataBuilder(
+                $tracker,
+                $xml_artifact,
+                $extraction_path,
+                $xml_field_mapping,
+                $this->artifacts_imported_mapping);
+            $this->xml_importer->importChangesets($new_artifacts[$i], $xml_artifact, $fields_data_builder);
         }
     }
 
@@ -192,7 +222,6 @@ class Tracker_Action_CopyArtifact {
                 $original_artifact->getId()
             )
         );
-
         $artifact->createNewChangeset(
             array(),
             implode("\n",$comment),
@@ -200,6 +229,18 @@ class Tracker_Action_CopyArtifact {
             true,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
         );
+    }
+
+    private function deleteArtLinksFromXML(SimpleXMLElement &$xml_artifacts) {
+        $xml_artifact = $xml_artifacts->artifact[0];
+        foreach ($xml_artifact->changeset as $xml_changeset) {
+            foreach ($xml_changeset->field_change as $xml_field_change) {
+                if($xml_field_change['type'] == 'art_link') {
+                    $dom = dom_import_simplexml($xml_field_change);
+                    $dom->parentNode->removeChild($dom);
+                }
+            }
+        }
     }
 
     private function redirectToTracker() {

@@ -72,9 +72,6 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_XML_Exporter_ChildrenXMLExporter */
     private $children_xml_exporter;
 
-    /** @var Tracker_XML_Importer_ChildrenXMLImporter */
-    private $children_xml_importer;
-
     /** @var Tracker_XML_Importer_ArtifactImportedMapping */
     private $artifacts_imported_mapping;
 
@@ -83,6 +80,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
 
     /** @var Tracker_Artifact */
     private $a_mocked_artifact;
+
+    /** @var TrackerFactory */
+    private $tracker_factory;
 
     public function setUp() {
         parent::setUp();
@@ -105,7 +105,6 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         stub($this->from_artifact)->getChangesetFactory()->returns($changeset_factory);
         stub($this->from_changeset)->getArtifact()->returns($this->from_artifact);
         $this->children_xml_exporter       = mock('Tracker_XML_Exporter_ChildrenXMLExporter');
-        $this->children_xml_importer       = mock('Tracker_XML_Importer_ChildrenXMLImporter');
         $this->artifacts_imported_mapping  = mock('Tracker_XML_Importer_ArtifactImportedMapping');
 
         $backend_logger = mock("BackendLogger");
@@ -124,6 +123,8 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             ->with('artifact',          $this->submitted_values)
             ->build();
 
+        $this->tracker_factory = mock('TrackerFactory');
+
         $this->action = new Tracker_Action_CopyArtifact(
             $this->tracker,
             $this->artifact_factory,
@@ -132,33 +133,45 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->xml_updater,
             $this->file_updater,
             $this->children_xml_exporter,
-            $this->children_xml_importer,
             $this->artifacts_imported_mapping,
-            $this->logger
+            $this->logger,
+            $this->tracker_factory
         );
+
+        $default_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
+        stub($this->xml_exporter)->exportSnapshotWithoutComments()->returns($default_xml);
 
         $this->a_mocked_artifact = mock("Tracker_Artifact");
     }
 
     public function itExportsTheRequiredSnapshotArtifact() {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-
+        stub($this->xml_importer)->importBareArtifact('*', '*')->returns(mock('Tracker_Artifact'));
         expect($this->xml_exporter)->exportSnapshotWithoutComments('*', $this->from_changeset)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itImportTheXMLArtifactWithEmptyExtractionPath() {
-        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-
-        expect($this->xml_importer)->importOneArtifactFromXML($this->tracker, '*', '', '*')->once();
-
-        $this->action->process($this->layout, $this->request, $this->user);
-    }
-
     public function itRedirectsToTheNewArtifact() {
+        $xml_content = <<<XML
+            <artifacts>
+                <artifact id="456" tracker_id="1">
+                    <changeset>
+                        <submitted_by format="id">101</submitted_by>
+                        <submitted_on format="ISO8601">2016-02-15T10:34:38+00:00</submitted_on>
+                    </changeset>
+                </artifact>
+            </artifacts>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+        stub($this->xml_exporter)->exportSnapshotWithoutComments()->returnsAt(0, $xml);
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->new_artifact);
+        stub($this->tracker)->getWorkflow()->returns(mock('Workflow'));
+        stub($this->tracker_factory)->getTrackerById()->returns($this->tracker);
+        stub($this->xml_importer)->importBareArtifact()->returns($this->new_artifact);
+
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+        stub($this->xml_importer)->importBareArtifact()->returns($this->new_artifact);
 
         expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?aid=456')->once();
 
@@ -195,32 +208,6 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->user,
             $_SERVER['REQUEST_TIME']
         )->once();
-
-        $this->action->process($this->layout, $this->request, $this->user);
-    }
-
-    public function itRecursivelyExportsChildrenOfTheCurrentArtifact() {
-        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-
-        expect($this->children_xml_exporter)->exportChildren()->once();
-
-        $this->action->process($this->layout, $this->request, $this->user);
-    }
-
-    public function itImportsChildren() {
-        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->new_artifact);
-
-        expect($this->children_xml_importer)->importChildren('*', '*', '*', $this->new_artifact, $this->user)->once();
-
-        $this->action->process($this->layout, $this->request, $this->user);
-    }
-
-    public function itStacksTheMappingBetweenOldAndNewArtifact() {
-        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->new_artifact);
-
-        expect($this->artifacts_imported_mapping)->add($this->artifact_id, $this->new_artifact_id)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -311,10 +298,79 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     }
 
     public function itCreatesACommentChangesetContainingAllTheErrorRaisedDuringTheMigrationProcess() {
+        $xml_content = <<<XML
+            <artifacts>
+                <artifact id="123" tracker_id="1">
+                    <changeset>
+                        <submitted_by format="id">101</submitted_by>
+                        <submitted_on format="ISO8601">2016-02-15T10:34:38+00:00</submitted_on>
+                    </changeset>
+                </artifact>
+            </artifacts>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+        stub($this->xml_exporter)->exportSnapshotWithoutComments()->returnsAt(0, $xml);
+
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
-        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->a_mocked_artifact);
+        stub($this->tracker)->getWorkflow()->returns(mock('Workflow'));
+        stub($this->tracker_factory)->getTrackerById()->returns($this->tracker);
+        stub($this->xml_importer)->importBareArtifact()->returns($this->a_mocked_artifact);
 
         expect($this->a_mocked_artifact)->createNewChangeset(array(), '*', $this->user, '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itImportsTheArtifactsUsingTheXmlImporter() {
+        $xml_content = <<<XML
+            <artifacts>
+                <artifact id="123" tracker_id="1">
+                    <changeset>
+                        <submitted_by format="id">101</submitted_by>
+                        <submitted_on format="ISO8601">2016-02-15T10:34:38+00:00</submitted_on>
+                    </changeset>
+                </artifact>
+                <artifact id="456" tracker_id="1">
+                    <changeset>
+                        <submitted_by format="id">101</submitted_by>
+                        <submitted_on format="ISO8601">2016-02-15T10:35:38+00:00</submitted_on>
+                    </changeset>
+                </artifact>
+                <artifact id="789" tracker_id="2">
+                    <changeset>
+                        <submitted_by format="id">101</submitted_by>
+                        <submitted_on format="ISO8601">2016-02-15T10:36:38+00:00</submitted_on>
+                    </changeset>
+                </artifact>
+            </artifacts>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+        stub($this->xml_exporter)->exportSnapshotWithoutComments()->returnsAt(0, $xml);
+
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        $tracker1 = aMockTracker()->withId(1)->build();
+        stub($tracker1)->getWorkflow()->returns(mock('Workflow'));
+        $tracker2 = aMockTracker()->withId(2)->build();
+        stub($tracker2)->getWorkflow()->returns(mock('Workflow'));
+        stub($this->tracker_factory)->getTrackerById(1)->returns($tracker1);
+        stub($this->tracker_factory)->getTrackerById(2)->returns($tracker2);
+
+        $artifact123  = aMockArtifact()->withId(123)->withTracker($tracker1)->build();
+        $artifact456  = aMockArtifact()->withId(456)->withTracker($tracker1)->build();
+        $artifact789  = aMockArtifact()->withId(789)->withTracker($tracker2)->build();
+
+        stub($this->xml_importer)->importBareArtifact()->returnsAt(0, $artifact123);
+        stub($this->xml_importer)->importBareArtifact()->returnsAt(1, $artifact456);
+        stub($this->xml_importer)->importBareArtifact()->returnsAt(2, $artifact789);
+
+        $this->xml_importer->expectAt(0, 'importBareArtifact', array($tracker1, $xml->artifact[0]));
+        $this->xml_importer->expectAt(1, 'importBareArtifact', array($tracker1, $xml->artifact[1]));
+        $this->xml_importer->expectAt(2, 'importBareArtifact', array($tracker2, $xml->artifact[2]));
+
+        $this->xml_importer->expectAt(0, 'importChangesets', array($artifact123, $xml->artifact[0], '*'));
+        $this->xml_importer->expectAt(1, 'importChangesets', array($artifact456, $xml->artifact[1], '*'));
+        $this->xml_importer->expectAt(2, 'importChangesets', array($artifact789, $xml->artifact[2], '*'));
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

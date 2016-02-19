@@ -713,14 +713,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         $artifact_factory,
                         $export_children_collector
                     ),
-                    new Tracker_XML_Importer_ChildrenXMLImporter(
-                        $xml_importer,
-                        $this->getTrackerFactory(),
-                        $this->getTrackerArtifactFactory(),
-                        new Tracker_XML_ChildrenCollector()
-                    ),
                     new Tracker_XML_Importer_ArtifactImportedMapping(),
-                    $logger
+                    $logger,
+                    TrackerFactory::instance()
                 );
                 $action->process($layout, $request, $current_user);
                 break;

@@ -47,30 +47,57 @@ class Tracker_ArtifactCreator {
     }
 
     /**
-     * Add an artefact in the tracker
+     * Add an artifact without its first changeset to a tracker
+     * The artifact must be completed by writing its first changeset
      *
      * @return Tracker_Artifact or false if an error occured
      */
-    public function create(
+    public function createBare(Tracker $tracker, PFUser $user, $submitted_on) {
+        $artifact = $this->getBareArtifact($tracker, $user, $submitted_on);
+        $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
+        if(!$success) {
+            return false;
+        }
+        return $artifact;
+    }
+
+    /**
+     * Creates the first changeset for a bare artifact.
+     * @return Tracker_Artifact or false if an error occured
+     */
+    public function createFirstChangeset(
         Tracker $tracker,
+        Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $user,
         $submitted_on,
         $send_notification
     ) {
-        $artifact = $this->getBareArtifact($tracker, $user, $submitted_on);
-
-        if (! $this->fields_validator->validate($artifact, $fields_data)) {
+        if(!$this->fields_validator->validate($artifact, $fields_data)) {
             return;
         }
 
-        $use_artifact_permissions = 0;
-        $id = $this->artifact_dao->create($tracker->id, $user->getId(), $submitted_on ,$use_artifact_permissions);
-        if (! $id) {
-            return;
-        }
+        return $this->createFirstChangesetNoValidation(
+            $tracker,
+            $artifact,
+            $fields_data,
+            $user,
+            $submitted_on,
+            $send_notification);
+    }
 
-        $artifact->setId($id);
+    /**
+     * Creates the first changeset but do not check the fields because we
+     * already have checked them. This function is private
+     */
+    private function createFirstChangesetNoValidation(
+        Tracker $tracker,
+        Tracker_Artifact $artifact,
+        array $fields_data,
+        PFUser $user,
+        $submitted_on,
+        $send_notification
+    ) {
         $changeset_id = $this->changeset_creator->create($artifact, $fields_data, $user, $submitted_on);
         if (! $changeset_id) {
             return;
@@ -89,6 +116,50 @@ class Tracker_ArtifactCreator {
         }
 
         return $artifact;
+    }
+
+    /**
+     * Add an artefact in the tracker
+     *
+     * @return Tracker_Artifact or false if an error occured
+     */
+    public function create(
+        Tracker $tracker,
+        array $fields_data,
+        PFUser $user,
+        $submitted_on,
+        $send_notification
+    ) {
+        $artifact = $this->getBareArtifact($tracker, $user, $submitted_on);
+
+        if(!$this->fields_validator->validate($artifact, $fields_data)) {
+            return false;
+        }
+
+        $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
+
+        return $this->createFirstChangesetNoValidation($tracker, $artifact, $fields_data, $user, $submitted_on, $send_notification);
+    }
+
+    /**
+     * Inserts the artifact into the database and returns it with its id set.
+     * @return true on success or false if an error occured
+     */
+    private function insertArtifact(
+        Tracker $tracker,
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $submitted_on,
+        $use_artifact_permissions
+    ) {
+        $use_artifact_permissions = 0;
+        $id = $this->artifact_dao->create($tracker->id, $user->getId(), $submitted_on, $use_artifact_permissions);
+        if (!$id) {
+            return false;
+        }
+
+        $artifact->setId($id);
+        return true;
     }
 
     private function getBareArtifact(Tracker $tracker, PFUser $user, $submitted_on) {

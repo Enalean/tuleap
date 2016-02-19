@@ -32,6 +32,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     const FIELDTYPE_ATTACHEMENT       = 'file';
     const FIELDTYPE_OPENLIST          = 'open_list';
     const FIELDTYPE_LIST              = 'list';
+    const FIELDTYPE_ARTIFACT_LINK     = 'art_link';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -59,14 +60,14 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         $extraction_path,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
         Logger $logger,
-        TrackerXmlFieldsMapping $xml_fields_mapping
+        TrackerXmlFieldsMapping $xml_fields_mapping,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping
     ) {
         $this->formelement_factory  = $formelement_factory;
         $this->tracker              = $tracker;
         $this->files_importer       = $files_importer;
         $this->extraction_path      = $extraction_path;
         $this->logger               = $logger;
-
         $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
         $this->strategies  = array(
             self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
@@ -88,7 +89,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
                 $static_value_dao,
                 $user_finder,
                 $xml_fields_mapping
-            )
+            ),
+            self::FIELDTYPE_ARTIFACT_LINK => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($artifact_id_mapping, $logger)
         );
     }
 
@@ -132,8 +134,6 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             }
         } catch(Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
             $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
-        } catch(Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException $exception) {
-            return;
         }
     }
 
@@ -157,7 +157,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         $type = (string)$field_change['type'];
 
         if (! isset($this->strategies[$type])) {
-            throw new Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException();
+            throw new Tracker_Artifact_XMLImport_Exception_StrategyDoesNotExistException();
         }
         return $this->strategies[$type]->getFieldData($field, $field_change, $submitted_by);
     }
