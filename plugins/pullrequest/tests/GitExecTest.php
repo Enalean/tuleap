@@ -61,8 +61,32 @@ class GitExecTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfBranchDoesNotExist() {
-        $this->expectException('Tuleap\PullRequest\UnknownReferenceBranchException');
+        $this->expectException('Tuleap\PullRequest\Exception\UnknownBranchNameException');
 
         $sha1 = $this->git_exec->getReferenceBranch('universitylike');
+    }
+
+    public function itReturnsAnArrayOfModifiedFiles() {
+        system("cd $this->fixture_dir && git checkout -b dev 2>&1 >/dev/null");
+        file_put_contents("$this->fixture_dir/toto", "jackassness");
+        $this->git_exec->add("$this->fixture_dir/toto");
+        $this->git_exec->commit("modify toto");
+
+        $sha1_src  = $this->git_exec->getReferenceBranch('dev');
+        $sha1_dest = $this->git_exec->getReferenceBranch('master');
+
+        $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
+
+        $this->assertArrayNotEmpty($files);
+        $this->assertEqual($files[0], 'M	toto');
+    }
+
+    public function itThrowsAnExceptionIfReferenceIsUnknown() {
+        $sha1_src  = 'weeakplbrhmj03pjcjtw5blestib2hy3rgpwxmwt';
+        $sha1_dest = $this->git_exec->getReferenceBranch('master');
+
+        $this->expectException('Tuleap\PullRequest\Exception\UnknownReferenceException');
+
+        $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
     }
 }

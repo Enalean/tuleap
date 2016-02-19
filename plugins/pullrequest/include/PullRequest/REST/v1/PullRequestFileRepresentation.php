@@ -18,12 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest;
+namespace Tuleap\PullRequest\REST\v1;
 
-use Exception;
 
-class PullRequestNotCreatedException extends Exception {
-    public function __construct() {
-        parent::__construct("There was an error while creating the pullrequest");
+class PullRequestFileRepresentation {
+    /**
+     * @var string {@type string}
+     */
+    public $path;
+
+    /**
+     * @var string {@type string}
+     */
+    public $status;
+
+    public function build($path, $status) {
+        $this->path   = $path;
+        $this->status = $status;
     }
 }
