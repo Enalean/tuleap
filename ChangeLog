@@ -4,6 +4,7 @@ Version 8.12 (Not yet released)
 	* request #8849: Purge legacy themes
 
 	== Bug fix ==
+	* request #8879: Characters not properly escaped in mail sent to user
 	* request #8850: FRS filetype and filearch is no longer mandatory
 	* request #8863: Use the absolute path of the archive/directory
 	* request #8748: Tuleap does not properly check if a repertory exist before trying to fix ownership and permissions
