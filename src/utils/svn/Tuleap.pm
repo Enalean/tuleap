@@ -37,6 +37,7 @@ use APR::Table ();
 use DBI qw(:sql_types);
 use Net::LDAP;
 use Net::LDAP::Util qw(escape_filter_value);
+use Digest::SHA qw(sha512);
 
 my @directives = (
     {
@@ -196,31 +197,30 @@ sub is_user_allowed {
     }
 
 
-    my ($token_id, $hashed_user_secret) = get_user_token($dbh, $tuleap_username, $user_secret);
+    my $is_user_authenticated = 0;
+    my $token_id              = get_user_token($dbh, $tuleap_username, $user_secret);
 
-    if (! $token_id) {
+    if ($token_id) {
+        $is_user_authenticated = 1;
+    } else {
         if ($cfg->{TuleapLdapServers}) {
-            $hashed_user_secret = get_user_secret_ldap($cfg, $username, $user_secret);
+            $is_user_authenticated = is_valid_user_ldap($cfg, $username, $user_secret);
         } else {
-            $hashed_user_secret = get_user_secret_database($dbh, $tuleap_username, $user_secret);
+            $is_user_authenticated = is_valid_user_database($dbh, $tuleap_username, $user_secret);
         }
     }
 
-    my $is_allowed = 0;
-
-    if ($hashed_user_secret) {
-        add_user_to_cache($cfg, $username, $hashed_user_secret);
+    if ($is_user_authenticated) {
+        add_user_to_cache($cfg, $username, $user_secret);
 
         if ($token_id) {
             update_user_token_usage($dbh, $token_id, $r->connection->remote_ip());
         }
-
-        $is_allowed = 1;
     }
 
     $dbh->disconnect();
 
-    return $is_allowed;
+    return $is_user_authenticated;
 }
 
 sub is_user_in_cache {
@@ -232,16 +232,18 @@ sub is_user_in_cache {
 
     my $user_secret_in_cache = $cfg->{TuleapCacheCreds}->get($username);
 
-    return (defined $user_secret_in_cache and compare_string_constant_time(crypt($user_secret, $user_secret_in_cache), $user_secret_in_cache));
+    return (defined $user_secret_in_cache and
+        compare_string_constant_time(hash_user_secret($user_secret), $user_secret_in_cache));
 }
 
 sub add_user_to_cache {
-    my ($cfg, $username, $hashed_user_secret) = @_;
+    my ($cfg, $username, $user_secret) = @_;
     if (!$cfg->{TuleapCacheCredsMax}) {
         return 0;
     }
 
     if ($cfg->{TuleapCacheCredsCount} < $cfg->{TuleapCacheCredsMax}) {
+        my $hashed_user_secret = hash_user_secret($user_secret);
         $cfg->{TuleapCacheCreds}->set($username, $hashed_user_secret);
         $cfg->{TuleapCacheCredsCount}++;
     } else {
@@ -279,7 +281,7 @@ EOF
     $statement->finish();
     undef $statement;
 
-    return ($token_id, $token_secret);
+    return $token_id;
 }
 
 sub update_user_token_usage {
@@ -326,7 +328,7 @@ EOF
     return $can_access;
 }
 
-sub get_user_secret_database {
+sub is_valid_user_database {
     my ($dbh, $username, $user_secret) = @_;
 
     my $query = << 'EOF';
@@ -338,16 +340,14 @@ EOF
     $statement->bind_param(1, $username, SQL_VARCHAR);
     $statement->execute();
 
-    my $hashed_user_secret;
-    my ($row_secret)       = $statement->fetchrow_array();
-    if (compare_string_constant_time(crypt($user_secret, $row_secret), $row_secret)) {
-        $hashed_user_secret = $row_secret;
-    }
+    my ($row_secret) = $statement->fetchrow_array();
+
+    my $is_authenticated = compare_string_constant_time(crypt($user_secret, $row_secret), $row_secret);
 
     $statement->finish();
     undef $statement;
 
-    return $hashed_user_secret;
+    return $is_authenticated;
 }
 
 sub get_tuleap_username_from_ldap_uid {
@@ -371,7 +371,7 @@ EOF
     return $tuleap_username;
 }
 
-sub get_user_secret_ldap {
+sub is_valid_user_ldap {
     my ($cfg, $username, $user_secret) = @_;
 
     my $ldap = connect_and_bind_ldap($cfg);
@@ -387,18 +387,12 @@ sub get_user_secret_ldap {
     my $mesg = $ldap->bind($user_dn, password => $user_secret);
     $ldap->unbind();
 
-    if (! $mesg->code()) {
-        return hash_user_secret($user_secret);
-    }
-    return;
+    return ! $mesg->code();
 }
 
 sub hash_user_secret {
     my ($user_secret)     = @_;
-    my @possible_alphabet = ('A' .. 'Z', 'a' .. 'z', '0' .. '9', '/', '.');
-    my $salt;
-    $salt                .= $possible_alphabet[rand @possible_alphabet] for 0 .. 15;
-    return crypt($user_secret, '$6$rounds=5000$' . $salt . '$');
+    return sha512($user_secret);
 }
 
 sub connect_and_bind_ldap {
