@@ -45,6 +45,13 @@ class Factory {
             throw new PullRequestNotFoundException();
         }
 
+        return $this->getInstanceFromRow($row);
+    }
+
+    /**
+     * @return PullRequest
+     */
+    public function getInstanceFromRow(array $row) {
         return new PullRequest(
             $row['id'],
             $row['repository_id'],
