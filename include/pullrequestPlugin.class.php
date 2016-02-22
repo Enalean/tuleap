@@ -29,6 +29,11 @@ class pullrequestPlugin extends Plugin {
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
+
+        if (defined('GIT_BASE_URL')) {
+            $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
+            $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
+        }
     }
 
     public function getServiceShortname() {
@@ -62,5 +67,27 @@ class pullrequestPlugin extends Plugin {
     public function rest_resources(array $params) {
         $injector = new Tuleap\PullRequest\REST\ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see REST_GIT_PULL_REQUEST_ENDPOINTS
+     */
+    public function rest_git_pull_request_endpoints($params) {
+        $params['available'] = true;
+    }
+
+    /**
+     * @see REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY
+     */
+    public function rest_git_pull_request_get_for_repository($params) {
+        $version = $params['version'];
+        $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
+        $repository_resource = new $class;
+
+        $params['result'] = $repository_resource->getPaginatedPullRequests(
+            $params['repository'],
+            $params['limit'],
+            $params['offset']
+        );
     }
 }

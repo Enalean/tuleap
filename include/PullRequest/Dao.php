@@ -71,4 +71,18 @@ class Dao extends DataAccessObject {
 
         return $this->updateAndGetLastId($sql);
     }
+
+    public function getPaginatedPullRequests($repository_id, $limit, $offset) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $limit         = $this->da->escapeInt($limit);
+        $offset        = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM plugin_pullrequest_review
+                WHERE repository_id = $repository_id
+                LIMIT $limit
+                OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
 }
