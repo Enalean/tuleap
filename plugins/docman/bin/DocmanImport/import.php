@@ -21,21 +21,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'pre.php';
 require_once 'XMLDocmanImport.class.php';
 require_once 'XMLDocmanUpdate.class.php';
 require_once 'parameters.php';
 
+$console = new Log_ConsoleLogger();
 $usage = "
-Usage: import.php --url=<Codendi URL> --project=<destination project unix name> --archive=<archive path>
-       import.php --help".PHP_EOL;
+Usage: import.php --url=<Tuleap URL> --project=<destination project unix name> --archive=<archive path>
+       import.php --help";
 
-function help() {
+function help($console) {
     global $usage;
-    
-    echo "Imports a set of Codendi Docman documents to a project
+
+    $console->info("Imports a set of Tuleap Docman documents to a project
 $usage
 Required parameters:
-    --url=<Codendi URL>                     URL of the Codendi home page (ex: http://codendi.mycompany.com:81
+    --url=<Tuleap URL>                     URL of the Tuleap home page (ex: http://tuleap.mycompany.com:81
     --archive=<archive path>                Path of the archive folder that must contain an XML file
     --project=<destination project>         Destination project unix name
 
@@ -49,37 +51,36 @@ Optional parameters:
     --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
     --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. If not defined, the messages will be appended to the item description.
     --auto-retry                            In case of error, retry 5 times before asking the user what to do
-    --log                                   Log output in a file
-    --help                                  Show this help".PHP_EOL.PHP_EOL; 
+    --help                                  Show this help");
     die;
 }
 
 if (getParameter($argv, 'help') || getParameter($argv, 'h')) {
-    help();
+    help($console);
 }
 
 if (($url = getParameter($argv, 'url', true)) === null) {
-    echo "Missing parameter: --url".PHP_EOL;
+    $console->error('Missing parameter: --url');
 }
 
 $folderId = getParameter($argv, 'folder-id', true);
 
 if (($archive = getParameter($argv, 'archive', true)) === null) {
-    echo "Missing parameter: --archive".PHP_EOL;
+    $console->error("Missing parameter: --archive");
 } else if (is_dir($archive)) {
     if (!is_file("$archive/".basename($archive).".xml")) {
-        echo "The archive folder must contain an XML file with the same name".PHP_EOL;   
-        $archive = null; 
+        $console->error("The archive folder must contain an XML file with the same name");
+        $archive = null;
     }
 } else {
-    echo "The archive must be an existing folder".PHP_EOL;
+    $console->error("The archive must be an existing folder");
     $archive = null;
 }
 
 $project = getParameter($argv, 'project');
 $projectId = getParameter($argv, 'project-id');
 if ($project === null && $projectId === null) {
-    echo "One of the following parameters is required: --project, --project-id".PHP_EOL;
+    $console->error("One of the following parameters is required: --project, --project-id");
 }
 
 $force = getParameter($argv, 'force');
@@ -89,20 +90,19 @@ $continue = getParameter($argv, 'continue');
 $path = getParameter($argv, 'path');
 $importMessageMetadata = getParameter($argv, 'import-metadata');
 $autoRetry = getParameter($argv, 'auto-retry');
-$log = getParameter($argv, 'log');
 
 // Path parameter check
 if ($path === null) {
     $path = '/Project Documentation';
 } else {
     if (!preg_match('/^(\/[^\/]+)+$/', $path)) {
-        echo "The path must follow the pattern: /folder/subfolder(/subfolder...)".PHP_EOL;
+        $console->error("The path must follow the pattern: /folder/subfolder(/subfolder...)");
         die;
     }
 }
 
 if ($url === null || ($project === null && $projectId === null) || $archive === null) {
-    echo $usage.PHP_EOL;
+    $console->error($usage);
     die;
 }
 
@@ -124,7 +124,6 @@ if (!isset($password)) {
         $password = fgets(STDIN);
     }
     $password = substr($password, 0, strlen($password)-1);
-    echo PHP_EOL;
 }
 
 $start = microtime(true);
@@ -134,25 +133,41 @@ $wsdl = "$url/soap/codendi.wsdl.php?wsdl";
 
 // Command line (for printing in log file)
 $command = implode(' ', $argv);
+$logger = new BackendLogger();
 
 if ($update || $continue) {
-    // Connect
-    $xmlUpdate = new XMLDocmanUpdate($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log);
-    
+    // Connectecho
+    $xmlUpdate = new XMLDocmanUpdate($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $logger);
+
     // Update
     if ($update) {
-        $xmlUpdate->updatePath($archive, $folderId, $path);
+        try {
+            $xmlUpdate->updatePath($archive, $folderId, $path);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+            exit(1);
+        }
     } else if ($continue) {
-        $xmlUpdate->continuePath($archive, $folderId, $path);
+        try {
+            $xmlUpdate->continuePath($archive, $folderId, $path);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+            exit(1);
+        }
     }
 } else {
     // Connect
-    $xmlImport = new XMLDocmanImport($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log);
-    
-    // Import
-    $xmlImport->importPath($archive, $folderId, $path);
+    $xmlImport = new XMLDocmanImport($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $logger);
+
+    try {
+        // Import
+        $xmlImport->importPath($archive, $folderId, $path);
+    } catch (Exception $e) {
+        $logger->error($e->getMessage());
+        exit(1);
+    }
 }
 
 $end = microtime(true);
-echo "Time elapsed: ".round($end-$start, 1)."s".PHP_EOL;
+$console->info("Time elapsed: ".round($end-$start, 1)."s");
 ?>

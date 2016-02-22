@@ -56,13 +56,18 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         
         $tagCounts = $this->tagCount($mergedTree);
         
-        if (!$this->continue) $this->log(PHP_EOL.$tagCounts['IN_BOTH']." item(s) will be updated".PHP_EOL);
-        $this->log($tagCounts['IN_SECOND']." item(s) will be created".PHP_EOL);
-        if (!$this->continue) $this->log($tagCounts['IN_FIRST']." item(s) will be removed".PHP_EOL);
-        
-        if (!$this->continue) $this->log("Are you sure you want to update the document tree? (y/n) [n] ");
-        else $this->log("Are you sure you want to continue the upload? (y/n) [n] ");
-        
+        if (!$this->continue) {
+            $this->logger->info($tagCounts['IN_BOTH']." item(s) will be updated");
+        }
+        $this->logger->info($tagCounts['IN_SECOND']." item(s) will be created");
+        if (!$this->continue) {
+            $this->logger->info($tagCounts['IN_FIRST']." item(s) will be removed");
+        }
+        if (!$this->continue) {
+            echo "Are you sure you want to update the document tree? (y/n) [n] ";
+        } else {
+            echo "Are you sure you want to continue the upload? (y/n) [n] ";
+        }
         $answer = strtoupper(trim(fgets(STDIN)));
         
         if ($answer == 'Y') {
@@ -150,7 +155,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                             if ($this->checkVersionChecksums($itemId, $node)) {
                                 $this->updateItem($itemId, $node);
                             } else {
-                                $this->log("The local and remote versions doesn't match for item '$title' (#$itemId), it will be deleted and re-created.".PHP_EOL);
+                                $this->logger->info("The local and remote versions doesn't match for item '$title' (#$itemId), it will be deleted and re-created.");
                                 $this->deleteItem($itemId, $title);
                                 $this->recurseOnNode($node, $parentId);
                             }
@@ -205,7 +210,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                 }
                 
                 $msg = "Several items have the title '$title' in the folder '$parentTitle' (server-side). In order to make use of the update function, please assure that all the items have distinct names in each folder.";
-                $this->exitError($msg.PHP_EOL);
+                throw new Exception($msg);
             }
             
             $tree2[$title]['id'] = $itemId;
@@ -241,7 +246,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             if (isset($tree['children'][$childTitle])) {
                 $title = $itemElement->properties->title;
                 $msg = "Several items have the title '$childTitle' in the folder '$title' (in the archive). In order to make use of the update function, please assure that all the items have distinct names in each folder.";
-                $this->exitError($msg.PHP_EOL);
+                throw new Exception($msg);
             }
             $tree['children'][$childTitle] = $children;
         }
@@ -265,11 +270,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Deleting item              '$title'");
+            $this->logger->info("Deleting item '$title'");
 
             try {
                 $this->soap->deleteDocmanItem($this->hash, $this->groupId, $itemId);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = $this->askWhatToDo($e);
             }
@@ -304,7 +309,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
             
-            $this->log("Retrieving version checksums for item #$itemId".PHP_EOL);
+            $this->logger->info("Retrieving version checksums for item #$itemId");
             
             try {
                 $remoteMd5sums = $this->soap->getDocmanFileAllVersionsMD5sum($this->hash, $this->groupId, $itemId);
@@ -433,11 +438,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Updating file              '$title'");
+            $this->logger->info("Updating file '$title'");
 
             try {
                 $this->soap->updateDocmanFile($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = self::askWhatToDo($e);
             }
@@ -465,11 +470,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Updating embedded file     '$title'");
+            $this->logger->info("Updating embedded file '$title'");
 
             try {
                 $this->soap->updateDocmanEmbeddedFile($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = self::askWhatToDo($e);
             }
@@ -497,11 +502,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Updating empty document    '$title'");
+            $this->logger->info("Updating empty document '$title'");
 
             try {
                 $this->soap->updateDocmanEmptyDocument($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = self::askWhatToDo($e);
             }
@@ -529,11 +534,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Updating wiki page         '$title' ($pageName)");
+            $this->logger->info("Updating wiki page '$title' ($pageName)");
 
             try {
                 $this->soap->updateDocmanWikiPage($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $pageName, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = self::askWhatToDo($e);
             }
@@ -561,11 +566,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Updating link              '$title' ($url)");
+            $this->logger->info("Updating link '$title' ($url)");
 
             try {
                 $this->soap->updateDocmanLink($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = self::askWhatToDo($e);
             }
@@ -593,11 +598,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         do {
             $retry = false;
 
-            $this->log("Updating folder            '$title'");
+            $this->logger->info("Updating folder '$title'");
 
             try {
                 $this->soap->updateDocmanFolder($this->hash, $this->groupId, $itemId, $title, $description, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
-                $this->log(" #$itemId".PHP_EOL);
+                $this->logger->info(" #$itemId");
             } catch (Exception $e){
                 $retry = self::askWhatToDo($e);
             }
