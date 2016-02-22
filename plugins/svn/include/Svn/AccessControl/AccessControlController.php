@@ -25,9 +25,7 @@ use Tuleap\Svn\ServiceSvn;
 use HTTPRequest;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
-use SVNAccessFile;
 use CSRFSynchronizerToken;
-use SVN_AccessFile_Writer;
 
 class AccessControlController {
 
@@ -74,19 +72,17 @@ class AccessControlController {
             );
         }
 
-        $current_version        = $this->access_file_factory->getCurrentVersion($repository);
-        $current_version_number = $current_version->getVersionNumber();
+        $current_version_number = $this->access_file_factory->getCurrentVersion($repository)->getVersionNumber();
         $last_version_number    = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
 
         $title = $repository->getName() .' – '. $GLOBALS['Language']->getText('global', 'Administration');
 
+        $accessfile_reader = new AccessFileReader($repository);
         if ($request->exist('form_accessfile')) {
             $content = $request->get('form_accessfile');
         } else {
-            $content = $current_version->getContent();
+            $content = $accessfile_reader->readContentBlock($repository);
         }
-        $accessfile = new SVN_AccessFile_Writer($repository->getSystemPath());
-        $access_file_defaults = $accessfile->read_defaults(true);
 
         $service->renderInPage(
             $request,
@@ -96,7 +92,7 @@ class AccessControlController {
                     $this->getToken($repository),
                     $repository,
                     $title,
-                    $access_file_defaults,
+                    $accessfile_reader->readDefaultBlock($repository),
                     $content,
                     $versions,
                     $current_version_number,

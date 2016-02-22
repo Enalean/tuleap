@@ -52,6 +52,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
+        $this->addHook(Event::UGROUP_RENAME);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
     }
@@ -73,6 +74,21 @@ class SvnPlugin extends Plugin {
         );
     }
 
+    /** @see Event::UGROUP_RENAME */
+    public function ugroup_rename(array $params) {
+        $project = $params['project'];
+        $list_repositories = $this->getRepositoryManager()->getRepositoriesInProject($project);
+        foreach ($list_repositories as $repository) {
+            $this->getBackendSVN()->updateSVNAccessForRepository(
+                $project,
+                $repository->getSystemPath(),
+                $params['new_ugroup_name'],
+                $params['old_ugroup_name'],
+                $repository->getFullName()
+            );
+        }
+    }
+
     public function get_svn_list_repositories_sql_fragments(array $params) {
         $dao = new Dao();
         $params['sql_fragments'][] = $dao->getListRepositoriesSqlFragment();
@@ -88,7 +104,7 @@ class SvnPlugin extends Plugin {
                 include_once dirname(__FILE__).'/events/SystemEvent_SVN_CREATE_REPOSITORY.class.php';
                 $params['class'] = 'SystemEvent_SVN_CREATE_REPOSITORY';
                 $params['dependencies'] = array(
-                    Backend::instance(Backend::SVN)
+                    $this->getBackendSVN()
                 );
                 break;
         }
@@ -126,7 +142,7 @@ class SvnPlugin extends Plugin {
     }
 
     private function getRouter() {
-        $repository_manager = new RepositoryManager(new Dao(), ProjectManager::instance());
+        $repository_manager = $this->getRepositoryManager();
 
         $accessfile_dao     = new AccessFileHistoryDao();
         $accessfile_factory = new AccessFileHistoryFactory($accessfile_dao);
@@ -155,5 +171,14 @@ class SvnPlugin extends Plugin {
                 ProjectManager::instance()
             )
         );
+    }
+
+    private function getRepositoryManager() {
+        return new RepositoryManager(new Dao(), ProjectManager::instance());
+    }
+
+    /** @return BackendSVN */
+    private function getBackendSVN() {
+        return Backend::instance(Backend::SVN);
     }
 }

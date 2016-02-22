@@ -82,7 +82,8 @@ class BackendSVNTest extends TuleapTestCase {
                 'chgrp',
                 'chmod',
                 '_getSVNAccessFile',
-                'getSVNTokenManager'
+                'getSVNTokenManager',
+                'getSVNAccessGroups'
             )
         );
     }
@@ -193,6 +194,9 @@ class BackendSVNTest extends TuleapTestCase {
         $this->backend->setReturnValue('getUGroupFromRow', $ugroup);
         $this->backend->setReturnValue('getUGroupDao', $ugdao);
 
+        $access_file = new SVNAccessFile();
+        $this->backend->setReturnValue('_getSVNAccessFile', $access_file);
+
         $this->assertEqual($this->backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj/hooks"),"hooks dir should be created");
@@ -276,13 +280,15 @@ class BackendSVNTest extends TuleapTestCase {
         $this->backend->setReturnValue('getProjectManager', $pm);
         $this->backend->setReturnValue('getUGroupFromRow', $ugroup);
         $this->backend->setReturnValue('getUGroupDao', $ugdao);
+        $this->backend->setReturnValue('getSVNAccessGroups', "");
+
+        $access_file = new SVNAccessFile();
+        $this->backend->setReturnValue('_getSVNAccessFile', $access_file);
 
         $this->assertEqual($this->backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should be created");
 
-        $saf = new MockSVNAccessFile();
-        $this->backend->setReturnValue('_getSVNAccessFile', $saf);
         // Update without modification
         $this->assertEqual($this->backend->updateSVNAccess(142, $GLOBALS['svn_prefix'].'/TestProj'),True);
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should exist");
@@ -293,7 +299,6 @@ class BackendSVNTest extends TuleapTestCase {
         $this->backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
         rmdir($GLOBALS['svn_prefix']."/TestProj");
     }
-
 
     function testGenerateSVNApacheConf() {
         $svn_dao = stub('SVN_DAO')->searchSvnRepositories()->returnsDar(
@@ -388,10 +393,13 @@ class BackendSVNTest extends TuleapTestCase {
         $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId', array());
 
+        $access_file = new SVNAccessFile();
+        $this->backend->setReturnValue('_getSVNAccessFile', $access_file);
+
         $this->backend->setReturnValue('getProjectManager', $pm);
         $this->backend->setReturnValue('getUGroupDao', $ugdao);
         $this->backend->createProjectSVN(142);
-        
+
         $this->assertEqual($this->backend->renameSVNRepository($project, "foobar"), true);
         
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/foobar"),"SVN dir should be renamed");

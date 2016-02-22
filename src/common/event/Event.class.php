@@ -1088,4 +1088,14 @@ class Event {
      *      'sql_fragments' => array
      */
     const GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS = 'get_svn_list_repositories_sql_fragments';
+
+    /**
+     * When a user group is modified
+     *
+     * Paramters:
+     *   'project'         => Project
+     *   'new_ugroup_name' => String
+     *   'old_ugroup_name' => String
+     */
+    const UGROUP_RENAME = 'ugroup_rename';
 }
