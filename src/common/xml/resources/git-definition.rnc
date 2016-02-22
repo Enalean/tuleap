@@ -5,4 +5,7 @@ git = element repository {
     element read  { element ugroup { xsd:string }* }? &
     element write { element ugroup { xsd:string }* }? &
     element wplus { element ugroup { xsd:string }* }?
-}*
+}* &
+element ugroups-admin {
+    element ugroup { xsd:string }*
+}?

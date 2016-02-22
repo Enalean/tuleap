@@ -28,7 +28,7 @@ class GitXmlImporter {
 
     /**
      * @var Logger
-    */
+     */
     private $logger;
 
     /**
@@ -106,16 +106,26 @@ class GitXmlImporter {
             return true;
         }
 
-        $rng_path = realpath(dirname(__FILE__).'/../../../src/common/xml/resources/git.rng');
-        $this->xml_validator->validate($xml_git, $rng_path);
-        $this->logger->debug("XML tag <git/> is valid");
+        $nb_repo = count($xml_git->repository);
+        $this->logger->debug("Found $nb_repo repository(ies) to import.");
 
-        $this->logger->debug("Found {$xml_git->count()} repository(ies) to import.");
-
-        foreach($xml_git->children() as $repository) {
+        foreach($xml_git->repository as $repository) {
             $this->importRepository($project, $creator, $repository, $extraction_path);
         }
+
+        $this->importAdmins($project, $xml_git->{"ugroups-admin"});
+
         return true;
+    }
+
+    private function importAdmins(Project $project, SimpleXMLElement $admins_xmlnode) {
+        $ugroup_ids = array();
+        if(!empty($admins_xmlnode)) {
+            $this->logger->debug($admins_xmlnode->count() . ' ugroups as admins.');
+            $ugroup_ids = $this->getUgroupIdsForPermissions($project, $admins_xmlnode);
+        }
+        $ugroup_ids = $this->appendProjectAdminUGroup($ugroup_ids);
+        $this->permission_manager->savePermissions($project, $project->getId(), Git::PERM_ADMIN, $ugroup_ids);
     }
 
     private function importRepository(Project $project, PFUser $creator, SimpleXMLElement $repository_xmlnode, $extraction_path) {
@@ -135,17 +145,17 @@ class GitXmlImporter {
         foreach($permission_xmlnodes as $permission_xmlnode) {
             $permission_type = null;
             switch($permission_xmlnode->getName()) {
-                case self::READ_TAG:
-                    $permission_type = Git::PERM_READ;
-                    break;
-                case self::WRITE_TAG:
-                    $permission_type = Git::PERM_WRITE;
-                    break;
-                case self::WPLUS_TAG:
-                    $permission_type = Git::PERM_WPLUS;
-                    break;
-                default:
-                    $this->logger->debug('Unknown node found ' . $permission_xmlnode->getName());
+            case self::READ_TAG:
+                $permission_type = Git::PERM_READ;
+                break;
+            case self::WRITE_TAG:
+                $permission_type = Git::PERM_WRITE;
+                break;
+            case self::WPLUS_TAG:
+                $permission_type = Git::PERM_WPLUS;
+                break;
+            default:
+                $this->logger->debug('Unknown node found ' . $permission_xmlnode->getName());
             }
             if(isset($permission_type)) {
                 $this->importPermission($project, $permission_xmlnode, $permission_type, $repository);
@@ -175,6 +185,15 @@ class GitXmlImporter {
                 array_push($ugroup_ids, $ugroup->getId());
             }
         }
+        return $ugroup_ids;
+    }
+
+    /**
+     * Append the project administrator ugroup id to the given array
+     * @return array
+     */
+    private function appendProjectAdminUGroup(array $ugroup_ids) {
+        $ugroup_ids[] = ProjectUGroup::PROJECT_ADMIN;
         return $ugroup_ids;
     }
 }
