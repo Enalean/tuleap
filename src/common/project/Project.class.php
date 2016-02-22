@@ -68,6 +68,16 @@ class Project extends Group implements PFO_Project {
      */
     const STATUS_HOLDING = 'H';
 
+    /**
+     * The project is deleted
+     */
+    const STATUS_DELETED = 'D';
+
+    /**
+     * The project is system
+     */
+    const STATUS_SYSTEM = 's';
+
     const SITE_NEWS_PROJECT_ID = 46;
     const ADMIN_PROJECT_ID     = 100;
 

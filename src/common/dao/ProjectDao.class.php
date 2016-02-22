@@ -206,6 +206,10 @@ class ProjectDao extends DataAccessObject {
      */
     public function returnAllProjects($offset, $limit, $status=false, $groupName=false) {
         $cond = array();
+        $project_limit = "";
+        if ($limit != 0) {
+            $project_limit .= ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+        }
         if (is_array($status)) {
             if (! empty($status)) {
                 $cond[] = 'status IN ('.$this->da->quoteSmartImplode(',', $status).')';
@@ -231,7 +235,7 @@ class ProjectDao extends DataAccessObject {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *
                 FROM groups '.$stm.'
                 ORDER BY group_name 
-                ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+                ASC '.$project_limit;
 
         return array('projects' => $this->retrieve($sql), 'numrows' => $this->foundRows());
     }

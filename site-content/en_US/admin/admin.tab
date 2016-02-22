@@ -21,6 +21,7 @@ admin_main	header_user	User administration
 admin_main	display_user	Display users beginning with :
 admin_main	search_user	Search (email, user name, real name, user id) :
 admin_main	search	Search
+admin_main	export_csv	Export CSV
 admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) status</a>
 admin_main	validated_user	Validated users <a href="$1"><B>pending email activation</B></a>
 admin_main	need_approval	approval needed
@@ -243,6 +244,7 @@ admin_grouplist	all_categ	All Categories
 admin_grouplist	click	(click to edit)
 admin_grouplist	categ	Categories
 admin_grouplist	members	Members
+admin_grouplist	id_group	Id group
 #
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
