@@ -1,3 +1,6 @@
+Version 1.122 - Tuleap 8.12
+    * story #8631: Add the possibility to remove a link between a user account and an OpenID Connect provider
+
 Version 1.121 - Tuleap 8.12
     * story #8631: Add a warning message when the plugin is not accessed with HTTPS
 

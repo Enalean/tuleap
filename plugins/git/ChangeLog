@@ -1,3 +1,6 @@
+Version 4.119 - Tuleap 8.12
+    * story #8631: Add the possibility to remove a link between a user account and an OpenID Connect provider
+
 Version 4.118 - Tuleap 8.12
     * story #8825: GET and POST /pull_requests/:id/comments
 
