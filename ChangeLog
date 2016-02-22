@@ -1,3 +1,9 @@
+Version 8.11-3 (Monday, February 22nd 2016)
+	== Bug Fix ==
+	* request #8879: Characters not properly escaped in mail sent to user
+	* request #8856: tv5->tv5 migration: empty value at migration when field attachment in tracker
+	* request #8809: Compact and detailed buttons are hidden if the backlog is empty
+
 Version 8.11-2 (Monday, February 15th 2016)
 	== Bug Fix ==
 	* request #8843: Continous integration SVN path is //
