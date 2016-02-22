@@ -22,17 +22,18 @@
 namespace Tuleap\Svn\Explorer;
 
 use Tuleap\Svn\Repository\Repository;
-use Project;
 use HTTPRequest;
 
 class RepositoryDisplayPresenter {
     private $repository;
-    public $repository_name;
     public $viewvc_html;
+    public $repository_not_created;
+    public $is_repository_created;
+    public $help_command;
+    public $help_message;
 
     public function __construct(Repository $repository, HTTPRequest $request, $viewvc_html) {
         $this->repository   = $repository;
-        $this->help_message = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->help_command = "svn checkout --username ".$request->getCurrentUser()->getName()." ".$this->repository->getSvnUrl();
         $this->viewvc_html  = $viewvc_html;
         $this->settings_url = SVN_BASE_URL .'/?'. http_build_query(array(
@@ -40,7 +41,11 @@ class RepositoryDisplayPresenter {
             'action'   => 'settings',
             'repo_id'  => $repository->getId()
         ));
-        $this->is_user_admin = $request->getProject()->userIsAdmin($request->getCurrentUser());
+        $this->is_user_admin         = $request->getProject()->userIsAdmin($request->getCurrentUser());
+        $this->is_repository_created = $repository->isRepositoryCreated();
+
+        $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
+        $this->repository_not_created = $GLOBALS['Language']->getText('plugin_svn', 'repository_not_created');
     }
 
     public function repository_name() {

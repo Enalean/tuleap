@@ -11,9 +11,20 @@
     {{/ is_user_admin }}
 </p>
 
-<p>{{ help_message }}</p>
-<div class="svn-intro-command">
-    <pre>{{ help_command }}</pre>
-</div>
+{{# is_repository_created }}
 
-{{{ viewvc_html }}}
+    <p>{{ help_message }}</p>
+    <div class="svn-intro-command">
+        <pre>{{ help_command }}</pre>
+    </div>
+
+    {{{ viewvc_html }}}
+
+{{/ is_repository_created }}
+{{^ is_repository_created }}
+
+    <div class="alert alert-info">
+        {{ repository_not_created }}
+    </div>
+
+{{/ is_repository_created }}
