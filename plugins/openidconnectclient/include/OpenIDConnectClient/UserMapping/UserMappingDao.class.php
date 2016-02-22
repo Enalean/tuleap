@@ -24,21 +24,34 @@ use DataAccessObject;
 
 class UserMappingDao extends DataAccessObject {
 
-    public function save($user_id, $provider_id, $identifier) {
+    public function save($user_id, $provider_id, $identifier, $last_used) {
         $user_id     = $this->getDa()->escapeInt($user_id);
         $provider_id = $this->getDa()->escapeInt($provider_id);
         $identifier  = $this->getDa()->quoteSmart($identifier);
+        $last_used   = $this->getDa()->escapeInt($last_used);
 
-        $sql = "INSERT INTO plugin_openidconnectclient_user_mapping(user_id, provider_id, user_openidconnect_identifier)
-                VALUES($user_id, $provider_id, $identifier)";
+        $sql = "INSERT INTO plugin_openidconnectclient_user_mapping(user_id, provider_id, user_openidconnect_identifier, last_used)
+                VALUES($user_id, $provider_id, $identifier, $last_used)";
         return $this->update($sql);
     }
 
-    public function getUserId($identifier) {
-        $identifier = $this->getDa()->quoteSmart($identifier);
-        $sql        = 'SELECT user_id FROM plugin_openidconnectclient_user_mapping WHERE user_openidconnect_identifier = ' . $identifier;
-        return $this->retrieve($sql);
+    public function deleteByUserIdAndProviderId($user_id, $provider_id) {
+        $user_id     = $this->getDa()->escapeInt($user_id);
+        $provider_id = $this->getDa()->escapeInt($provider_id);
 
+        $sql = "DELETE FROM plugin_openidconnectclient_user_mapping
+                WHERE user_id = $user_id AND provider_id  = $provider_id";
+        return $this->update($sql);
+    }
+
+    public function updateLastUsed($user_id, $provider_id, $last_used) {
+        $user_id     = $this->getDa()->escapeInt($user_id);
+        $provider_id = $this->getDa()->escapeInt($provider_id);
+        $last_used   = $this->getDa()->escapeInt($last_used);
+
+        $sql = "UPDATE plugin_openidconnectclient_user_mapping SET last_used = $last_used
+                WHERE provider_id = $provider_id AND user_id = $user_id";
+        return $this->update($sql);
     }
 
     public function searchByIdentifierAndProviderId($identifier, $provider_id) {
@@ -48,6 +61,16 @@ class UserMappingDao extends DataAccessObject {
         $sql = "SELECT * FROM plugin_openidconnectclient_user_mapping
                 WHERE user_openidconnect_identifier = $identifier AND provider_id = $provider_id";
         return $this->retrieveFirstRow($sql);
+    }
+
+    public function searchUsageByUserId($user_id) {
+        $user_id = $this->getDa()->escapeInt($user_id);
+
+        $sql = "SELECT mapping.provider_id, provider.name, mapping.user_id, mapping.last_used
+                FROM plugin_openidconnectclient_user_mapping AS mapping
+                JOIN plugin_openidconnectclient_provider AS provider ON provider.id = mapping.provider_id
+                WHERE mapping.user_id = $user_id";
+        return $this->retrieve($sql);
     }
 
 }

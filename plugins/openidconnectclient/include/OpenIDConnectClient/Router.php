@@ -36,18 +36,31 @@ class Router {
      */
     private $account_linker_controller;
 
+    /**
+     * @var UserMapping\Controller
+     */
+    private $user_mapping_controller;
+
     public function __construct(
         Login\Controller $login_controller,
-        AccountLinker\Controller $account_linker_controller
+        AccountLinker\Controller $account_linker_controller,
+        UserMapping\Controller $user_mapping_controller
     ) {
         $this->login_controller          = $login_controller;
         $this->account_linker_controller = $account_linker_controller;
+        $this->user_mapping_controller   = $user_mapping_controller;
     }
 
     public function route(HTTPRequest $request) {
-        $this->checkTLSPresence($request);
+        $action = $request->get('action');
 
-        switch ($request->get('action')) {
+        if ($action === 'remove-user-mapping') {
+            $this->user_mapping_controller->removeMapping($request->get('provider_id'));
+            return;
+        }
+
+        $this->checkTLSPresence($request);
+        switch ($action) {
             case 'link':
                 $this->account_linker_controller->showIndex($request->get('link_id'), $request->get('return_to'));
                 break;
@@ -55,7 +68,7 @@ class Router {
                 $this->account_linker_controller->linkExistingAccount($request);
                 break;
             default:
-                $this->login_controller->login($request->get('return_to'));
+                $this->login_controller->login($request->get('return_to'), $request->getTime());
         }
     }
 

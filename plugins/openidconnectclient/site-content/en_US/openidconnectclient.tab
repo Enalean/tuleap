@@ -10,3 +10,8 @@ plugin_openidconnectclient	link_account	Link a $1 account to OpenID Connect
 plugin_openidconnectclient	link_account_by_login	Login to an existing account to create the link
 plugin_openidconnectclient	successfully_linked	Your account has been successfully linked to $1
 plugin_openidconnectclient	link_page_header	You have successfully been authenticated by $1, the only remaining step is to create a link with a $2 account
+
+plugin_openidconnectclient	title_user_preferences	OpenID Connect providers
+plugin_openidconnectclient	unlink	Unlink
+plugin_openidconnectclient	delete_user_mapping_success	The link with $1 have been removed.
+plugin_openidconnectclient	delete_user_mapping_error	An error occurred while removing the link with $1.

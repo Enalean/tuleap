@@ -33,6 +33,8 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
+use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
+use Tuleap\OpenIDConnectClient\UserMapping;
 use Zend\Loader\AutoloaderFactory;
 
 require_once('constants.php');
@@ -45,6 +47,8 @@ class openidconnectclientPlugin extends Plugin {
 
         $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
         $this->addHook('anonymous_access_to_script_allowed');
+        $this->addHook('cssfile');
+        $this->addHook(Event::MANAGE_THIRD_PARTY_APPS);
     }
 
     /**
@@ -59,6 +63,12 @@ class openidconnectclientPlugin extends Plugin {
 
     public function anonymous_access_to_script_allowed($params) {
         $params['anonymous_allowed'] = strpos($params['script_name'], $this->getPluginPath()) === 0;
+    }
+
+    public function cssfile() {
+        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+        }
     }
 
     private function loadLibrary() {
@@ -120,6 +130,19 @@ class openidconnectclientPlugin extends Plugin {
         $params['additional_connector'] .= $renderer->renderToString('login_connector', $login_connector_presenter);
     }
 
+    public function manage_third_party_apps(array $params) {
+        $user                 = $params['user'];
+        $user_mapping_manager = new UserMappingManager(new UserMappingDao());
+        $user_mappings_usage  = $user_mapping_manager->getUsageByUser($user);
+
+        if (count($user_mappings_usage) > 0) {
+            $renderer        = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+            $csrf_token      = new CSRFSynchronizerToken('openid-connect-user-preferences');
+            $presenter       = new UserPreferencesPresenter($user_mappings_usage, $csrf_token);
+            $params['html'] .= $renderer->renderToString('user_preference', $presenter);
+        }
+    }
+
     public function process(HTTPRequest $request) {
         if(! $this->canPluginAuthenticateUser()) {
             return;
@@ -145,7 +168,15 @@ class openidconnectclientPlugin extends Plugin {
             $user_mapping_manager,
             $unlinked_account_manager
         );
-        $router                    = new Router($login_controller, $account_linker_controller);
+        $user_mapping_controller   = new UserMapping\Controller(
+            $user_manager,
+            $provider_manager,
+            $user_mapping_manager
+        );
+        $router                    = new Router(
+            $login_controller,
+            $account_linker_controller,
+            $user_mapping_controller);
         $router->route($request);
     }
 }

@@ -20,6 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
+use DateTime;
+use PFUser;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class UserMappingManager {
@@ -37,12 +39,12 @@ class UserMappingManager {
      * @return UserMapping
      * @throws UserMappingDataAccessException
      */
-    public function create($user_id, $provider_id, $identifier) {
-        $is_saved = $this->dao->save($user_id, $provider_id, $identifier);
+    public function create($user_id, $provider_id, $identifier, $last_used) {
+        $is_saved  = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
         if (! $is_saved) {
             throw new UserMappingDataAccessException();
         }
-        return new UserMapping($user_id, $provider_id, $identifier);
+        return new UserMapping($user_id, $provider_id, $identifier, $last_used);
     }
 
     /**
@@ -54,17 +56,72 @@ class UserMappingManager {
         if ($row === false) {
             throw new UserMappingNotFoundException();
         }
-        return $this->instantiateFromRow($row);
+        return $this->instantiateUserMappingFromRow($row);
+    }
+
+    /**
+     * @return UserMappingUsage[]
+     */
+    public function getUsageByUser(PFUser $user) {
+        $user_mappings_usage = array();
+        $rows                = $this->dao->searchUsageByUserId($user->getId());
+
+        if ($rows === false) {
+            return $user_mappings_usage;
+        }
+
+        foreach($rows as $row) {
+            $user_mappings_usage[] = $this->instantiateUserMappingUsageFromRow($row);
+        }
+
+        return $user_mappings_usage;
+    }
+
+    /**
+     * @throws UserMappingDataAccessException
+     */
+    public function removeByUserAndProvider(PFUser $user, Provider $provider) {
+        $is_deleted = $this->dao->deleteByUserIdAndProviderId($user->getId(), $provider->getId());
+        if (! $is_deleted) {
+            throw new UserMappingDataAccessException();
+        }
+    }
+
+    /**
+     * @throws UserMappingDataAccessException
+     */
+    public function updateLastUsed(UserMapping $user_mapping, $last_used) {
+        $is_updated = $this->dao->updateLastUsed(
+            $user_mapping->getUserId(),
+            $user_mapping->getProviderId(),
+            $last_used
+        );
+        if (! $is_updated) {
+            throw new UserMappingDataAccessException();
+        }
     }
 
     /**
      * @return UserMapping
      */
-    private function instantiateFromRow(array $row) {
+    private function instantiateUserMappingFromRow(array $row) {
         return new UserMapping(
             $row['user_id'],
             $row['provider_id'],
-            $row['user_openidconnect_identifier']
+            $row['user_openidconnect_identifier'],
+            $row['last_used']
+        );
+    }
+
+    /**
+     * @return UserMappingUsage
+     */
+    private function instantiateUserMappingUsageFromRow(array $row) {
+        return new UserMappingUsage(
+            $row['provider_id'],
+            $row['name'],
+            $row['user_id'],
+            $row['last_used']
         );
     }
 
