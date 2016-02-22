@@ -2,6 +2,7 @@ Version 8.12 (Not yet released)
 	== Enhancement ==
 	* request #8410: Add the possibility to hide project privacy radio buttons during project creation
 	* request #8849: Purge legacy themes
+	* request #8865: Remove Debian alpha support
 
 	== Bug fix ==
 	* request #8879: Characters not properly escaped in mail sent to user
@@ -27,6 +28,9 @@ Version 8.12 (Not yet released)
 	* webdav: 1.9.15
 	* forumml: 2.6.23
 	* projectlinks: 2.7
+	* admssw: 0.5
+	* doaprdf: 0.5
+	* foafprofiles: 0.5
 
     == Themes ==
 	* FlamingParrot: 1.122
