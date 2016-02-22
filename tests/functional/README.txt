@@ -65,7 +65,6 @@ rvm use ruby-1.8.7-head
 
 Running with webkit (faster selenium) 
 ===================
-apt-get install libqt4-dev
 gem install capybara-screenshot
 gem install capybara-webkit
 # Note: you need capybara-webkit-0.8 minimum

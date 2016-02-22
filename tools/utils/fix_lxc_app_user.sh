@@ -39,15 +39,8 @@ fi
 
 newuid=$1
 newgid=$2
-
-if [ -e /etc/debian_version ]; then
-    appuser="www-data"
-    service apache2 stop
-else
-    appuser="codendiadm"
-    service httpd stop
-fi
-
+appuser="codendiadm"
+service httpd stop
 
 olduid=`id -u $appuser`
 oldgid=`id -g $appuser`

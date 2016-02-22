@@ -35,11 +35,7 @@ else
     APP_PATH="/usr/share/codendi"
 fi
 
-if [ -f "/etc/debian_version" ]; then
-    PEAR_PATH="/usr/share/php"
-else
-    PEAR_PATH="/usr/share/pear"
-fi
+PEAR_PATH="/usr/share/pear"
 
 # Include path is only defined in php.conf (and not php.ini).
 # It was also reported that 8MB (default memory limit) is not sufficient in some cases.

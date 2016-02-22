@@ -107,7 +107,7 @@ Summary: Initial setup of the platform
 Group: Development/Tools
 Version: @@VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}, redhat-lsb
+Requires: %{PKG_NAME}
 %description install
 This package contains the setup script for the %{PKG_NAME} platform.
 It is meant to be install at the initial setup of the platform and

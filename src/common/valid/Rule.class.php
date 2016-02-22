@@ -432,7 +432,7 @@ extends Rule {
              '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)'.
              '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)'.
              '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)'.
-             '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)|(debian)'.
+             '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)'.
              '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)'.
              '|(git)|(gitolite)'.
              ')$/i', $val);

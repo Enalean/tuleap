@@ -73,7 +73,6 @@ class Rule_UserNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("shell"));
         $this->assertTrue($r->isReservedName("ftp"));
         $this->assertTrue($r->isReservedName("irc"));
-        $this->assertTrue($r->isReservedName("debian"));
         $this->assertTrue($r->isReservedName("ns"));
         $this->assertTrue($r->isReservedName("download"));
         $this->assertTrue($r->isReservedName("munin"));

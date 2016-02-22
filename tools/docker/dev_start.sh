@@ -8,8 +8,6 @@ ME=$(basename $0)
 JQ=$(which jq)
 if [ ! -x $JQ ]; then
     echo "*** ERROR: $ME requires jq. Something like"
-    echo "  apt-get install jq"
-    echo "  or "
     echo "  yum install jq"
     echo "Should help"
     exit 1
