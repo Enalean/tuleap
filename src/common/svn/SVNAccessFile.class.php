@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2011. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once 'www/svn/svn_utils.php';
 
 /**
  * Manage the edition of .SVNAccessFile
@@ -160,8 +163,16 @@ class SVNAccessFile {
      *
      * @return String
      */
-    public function parseGroupLines($project, $contents, $verbose = false) {
-        $defaultLines = explode("\n", $this->getPlatformBlock($project->getSVNRootPath()));
+    public function parseGroupLines(Project $project, $contents, $verbose = false) {
+       return $this->parseGroup($project->getSVNRootPath(), $contents, $verbose);
+    }
+
+    public function parseGroupLinesByRepositories($svn_dir, $contents, $verbose = false) {
+       return $this->parseGroup($svn_dir, $contents, $verbose);
+    }
+
+    private function parseGroup($svn_dir, $contents, $verbose = false) {
+        $defaultLines = explode("\n", $this->getPlatformBlock($svn_dir));
         $groups = array();
         $currentSection = -1;
         foreach ($defaultLines as $line) {

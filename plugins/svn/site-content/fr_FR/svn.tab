@@ -36,7 +36,20 @@ plugin_svn_admin_notification	notified_mails	Liste des mails notifiés
 plugin_svn_admin_notification	delete	Supprimer ?
 plugin_svn_admin_notification	delete_error	Impossible de supprimer la liste des mails notifiés
 
+plugin_svn_admin	acces_control	Administration SVN - Contrôle d'accès - Dépôt $1
+plugin_svn_admin	default_text	La politique par défaut de $1 est d'autoriser l'accès en lecture et en écriture à tous les membres du projet sur l'ensemble du dépôt et l'accès en lecture seule aux autres utilisateurs de $1. Vous pouvez ajuster ou même redéfinir les permissions d'accès selon vos besoins.
+plugin_svn_admin	permissions_warning	Il est conseillé de toujours utiliser un groupe d'utilisateurs Tuleap pour définir des permissions. Attribuer des permissions à un groupe d'utilisateurs défini manuellement ou à un utilisateur spécifique peut amener à des problèmes de sécurité.
+plugin_svn_admin	button_new_version_label	Créer une nouvelle version
+plugin_svn_admin	update_success	Une nouvelle révision du fichier a été créée avec succès
+plugin_svn_admin	update_fail	Erreur lors de la création de la nouvelle révision
+plugin_svn_admin	file_error	Impossible de lire le fichier $1
+plugin_svn_admin	write_error	Impossible d'écrire dans le fichier $1
+plugin_svn_admin	previous_version	Vous utilisez une version antérieure (#$1) :
+plugin_svn_admin	last_version	Vous utilisez la dernière version (#$1) :
+
 plugin_svn	notifications	Notifications
+plugin_svn	access_control	Contrôle d'accès
+plugin_svn	update_access_history_file_error	Impossible d'enregistrer les nouveaux droits du dépôt.
 plugin_svn	update_error	Impossible d'enregistrer les données du dépôt
 plugin_svn	char_err	Le nom du dépôt doit contenir au moins un caractère
 plugin_svn	illegal_char	Le nom de dépôt contient des caractères invalides
