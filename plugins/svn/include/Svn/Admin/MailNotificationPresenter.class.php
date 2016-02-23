@@ -42,6 +42,7 @@ class MailNotificationPresenter {
     public $csrf_input;
     public $csrf_mailing_list;
     public $csrf_input_delete;
+    public $repository_name;
 
     public function __construct(
         Repository $repository,
@@ -57,6 +58,7 @@ class MailNotificationPresenter {
         $this->subject_header             = $mail_header->getHeader();
         $this->list_mails                 = $notifications_details;
         $this->title                      = $title;
+        $this->repository_name            = $repository->getName();
 
         $this->notification_subtitle      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');
         $this->comment                    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'comment');

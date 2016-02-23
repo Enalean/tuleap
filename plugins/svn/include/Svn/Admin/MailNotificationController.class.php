@@ -57,11 +57,11 @@ class MailNotificationController {
         $mail_header           = $this->mail_header_manager->getByRepository($repository);
         $notifications_details = $this->mail_notification_manager->getByRepository($repository);
 
-        $title = $repository->getName() .' – '. $GLOBALS['Language']->getText('global', 'Administration');
+        $title = $GLOBALS['Language']->getText('global', 'Administration');
 
         $service->renderInPage(
             $request,
-            $title,
+            $repository->getName() .' – '. $title,
             'admin/mail_notification',
             new MailNotificationPresenter(
                 $repository,
