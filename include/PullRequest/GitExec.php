@@ -57,4 +57,27 @@ class GitExec extends Git_Exec {
 
         return $output;
     }
+
+    public function fetch($remote, $branch_name) {
+        $output = array();
+        $remote = escapeshellarg($remote);
+        $branch = escapeshellarg('refs/heads/' . $branch_name);
+
+        return $this->gitCmdWithOutput("fetch $remote $branch", $output);
+    }
+
+    public function fetchNoHistory($remote, $branch_name) {
+        $output = array();
+        $remote = escapeshellarg($remote);
+        $branch = escapeshellarg('refs/heads/' . $branch_name);
+
+        return $this->gitCmdWithOutput("fetch --depth 1 $remote $branch", $output);
+    }
+
+    public function fastForwardMerge($reference) {
+        $output    = array();
+        $reference = escapeshellarg($reference);
+
+        return $this->gitCmdWithOutput('merge --ff-only ' . $reference, $output);
+    }
 }

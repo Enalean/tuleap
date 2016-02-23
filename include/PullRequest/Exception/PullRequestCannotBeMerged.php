@@ -18,4 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PULLREQUEST_BASE_DIR', realpath(__DIR__.'/..'));
+namespace Tuleap\PullRequest\Exception;
+
+use Exception;
+
+class PullRequestCannotBeMerged extends Exception {}

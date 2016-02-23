@@ -29,6 +29,9 @@ class PullRequestRepresentation {
 
     const ROUTE          = 'pull_requests';
     const COMMENTS_ROUTE = 'comments';
+    const STATUS_ABANDON = 'abandon';
+    const STATUS_MERGE   = 'merge';
+    const STATUS_REVIEW  = 'review';
 
     /**
      * @var int {@type int}
@@ -111,9 +114,9 @@ class PullRequestRepresentation {
 
     private function expandStatusName($status_acronym) {
         $status_name = array(
-            STATUS_ABANDONED => 'abandon',
-            STATUS_MERGED    => 'merge',
-            STATUS_REVIEW    => 'review'
+            PullRequest::STATUS_ABANDONED => self::STATUS_ABANDON,
+            PullRequest::STATUS_MERGED    => self::STATUS_MERGE,
+            PullRequest::STATUS_REVIEW    => self::STATUS_REVIEW
         );
 
         return $status_name[$status_acronym];

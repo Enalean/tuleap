@@ -25,6 +25,7 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
@@ -46,11 +47,11 @@ use GitRepository;
 use Git_Command_Exception;
 use URLVerification;
 use Tuleap\REST\ProjectAuthorization;
+use BackendLogger;
 
 class PullRequestsResource extends AuthenticatedResource {
 
-    const MAX_LIMIT      = 50;
-    const STATUS_ABANDON = 'abandon';
+    const MAX_LIMIT = 50;
 
     /** @var GitRepositoryFactory */
     private $git_repository_factory;
@@ -86,9 +87,9 @@ class PullRequestsResource extends AuthenticatedResource {
             $this->comment_factory
         );
 
-        $this->user_manager = UserManager::instance();
-
+        $this->user_manager        = UserManager::instance();
         $this->pull_request_closer = new PullRequestCloser($pull_request_dao);
+        $this->logger              = new BackendLogger();
     }
 
     /**
@@ -117,7 +118,7 @@ class PullRequestsResource extends AuthenticatedResource {
      * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
      *
      * @throws 403
-     * @throws 404 Pull request does not exist
+     * @throws 404 x Pull request does not exist
      */
     protected function get($id) {
         $this->checkAccess();
@@ -154,7 +155,7 @@ class PullRequestsResource extends AuthenticatedResource {
      * @return array {@type PullRequest\REST\v1\PullRequestFileRepresentation}
      *
      * @throws 403
-     * @throws 404 Pull request does not exist
+     * @throws 404 x Pull request does not exist
      */
     protected function getFiles($id) {
         $this->checkAccess();
@@ -198,8 +199,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @return PullRequestFileContentRepresentation {@type Tuleap\PullRequest\REST\v1\PullRequestFileContentRepresentation}
      *
      * @throws 403
-     * @throws 404 Pull request does not exist
-     * @throws 404 The file does not exist
+     * @throws 404 x Pull request does not exist
+     * @throws 404 x The file does not exist
      */
     protected function getFileContent($id, $path) {
         $this->checkAccess();
@@ -317,14 +318,26 @@ class PullRequestsResource extends AuthenticatedResource {
     /**
      * Partial update of a pull request
      *
-     * Merge or abandon a pull request. Abandon is the only supported status yet.<br/>
-     * A pull request that has been abandoned cannot be merged later.
+     * Merge or abandon a pull request.
      *
      * <pre>
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
      * </pre>
+     * <br/>
      *
-     * Here is an example of a valid PUT content to abandon a pull request:
+     * Here is an example of a valid PATCH content to merge a pull request:
+     * <pre>
+     * {<br/>
+     * &nbsp;&nbsp;"status": "merge"<br/>
+     * }<br/>
+     * </pre>
+     * <br/>
+     *
+     * For now, only fast-forward merges are taken into account.
+     * <br/>
+     *
+     * A pull request that has been abandoned cannot be merged later.<br/>
+     * Here is an example of a valid PATCH content to abandon a pull request:
      * <pre>
      * {<br/>
      * &nbsp;&nbsp;"status": "abandon"<br/>
@@ -340,8 +353,9 @@ class PullRequestsResource extends AuthenticatedResource {
      *
      * @throws 400
      * @throws 403
-     * @throws 404 Pull request does not exist
-     * @throws 500 Error while abandoning the pull request
+     * @throws 404 x Pull request does not exist
+     * @throws 500 x Error while abandoning the pull request
+     * @throws 500 x Error while merging the pull request
      */
     protected function patch($id, PullRequestPATCHRepresentation $body) {
         $this->checkAccess();
@@ -354,14 +368,32 @@ class PullRequestsResource extends AuthenticatedResource {
         $this->checkUserCanWriteRepository($user, $git_repository);
 
         $status = $body->status;
-        if ($status === self::STATUS_ABANDON) {
-            try {
-                $this->abandon($pull_request);
-            } catch(PullRequestCannotBeAbandoned $exception) {
-                throw new RestException(400, $exception->getMessage());
-            }
-        } else {
-            throw new RestException(400, 'Cannot deal with provided status. The only supported status is ' . self::STATUS_ABANDON);
+        switch ($status) {
+            case PullRequestRepresentation::STATUS_ABANDON:
+                try {
+                    $this->abandon($pull_request);
+                } catch (PullRequestCannotBeAbandoned $exception) {
+                    throw new RestException(400, $exception->getMessage());
+                }
+                break;
+            case PullRequestRepresentation::STATUS_MERGE:
+                try {
+                    $this->pull_request_closer->fastForwardMerge(
+                        $git_repository,
+                        $pull_request
+                    );
+                } catch (PullRequestCannotBeMerged $exception) {
+                    throw new RestException(400, $exception->getMessage());
+                } catch (Git_Command_Exception $exception) {
+                    $this->logger->error('Error while merging the pull request -> ' . $exception->getMessage());
+                    throw new RestException(500, 'Error while merging the pull request');
+                }
+                break;
+            default:
+                throw new RestException(
+                    400,
+                    'Cannot deal with provided status. Supported statuses are ' . PullRequestRepresentation::STATUS_MERGE . ', '. PullRequestRepresentation::STATUS_ABANDON
+                );
         }
     }
 
