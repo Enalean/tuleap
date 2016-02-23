@@ -9,6 +9,7 @@ Version 8.12 (Not yet released)
 	* request #8850: FRS filetype and filearch is no longer mandatory
 	* request #8863: Use the absolute path of the archive/directory
 	* request #8748: Tuleap does not properly check if a repertory exist before trying to fix ownership and permissions
+	* request #8854: tv3->tv5 migration does not import close_date field value
 
 	== Plugins ==
 	* admindelegation: 2.11
