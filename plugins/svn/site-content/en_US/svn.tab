@@ -57,3 +57,4 @@ plugin_svn	repository_spaces	There cannot be any spaces in the repository name
 plugin_svn	repository_not_found	Repository not found.
 plugin_svn	already_used	Repository name is already used in this project.
 plugin_svn	find_error	Repository not found
+plugin_svn	repository_not_created	The repository is in queue for creation. Please check back here in a few minutes

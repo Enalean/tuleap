@@ -62,6 +62,10 @@ class Repository {
         return ForgeConfig::get('sys_data_dir').'/svn_plugin/'. $this->getProject()->getId().'/'.$this->getName();
     }
 
+    public function isRepositoryCreated() {
+        return is_dir($this->getSystemPath());
+    }
+
     public function getSvnUrl() {
         $host = ForgeConfig::get('sys_default_domain');
         if (ForgeConfig::get('sys_force_ssl')) {
