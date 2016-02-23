@@ -1,3 +1,6 @@
+Version 4.121 - Tuleap 8.12
+    * story #8825: GET /git/:id/pull_requests
+
 Version 4.120 - Tuleap 8.12
     * story #8569: Import git admin at import
 
