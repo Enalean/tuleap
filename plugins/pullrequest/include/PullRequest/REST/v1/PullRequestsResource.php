@@ -21,17 +21,19 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Comment\Comment;
-use Tuleap\PullRequest\Factory as PullRequestFactory;
-use Tuleap\PullRequest\Dao as PullRequestDao;
-use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Comment\Factory as CommentFactory;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
-use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
+use Tuleap\PullRequest\Dao as PullRequestDao;
+use Tuleap\PullRequest\Factory as PullRequestFactory;
+use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -47,7 +49,8 @@ use Tuleap\REST\ProjectAuthorization;
 
 class PullRequestsResource extends AuthenticatedResource {
 
-    const MAX_LIMIT = 50;
+    const MAX_LIMIT      = 50;
+    const STATUS_ABANDON = 'abandon';
 
     /** @var GitRepositoryFactory */
     private $git_repository_factory;
@@ -64,6 +67,8 @@ class PullRequestsResource extends AuthenticatedResource {
     /** @var UserManager */
     private $user_manager;
 
+    /** @var Tuleap\PullRequest\PullRequestCloser */
+    private $pull_request_closer;
 
     public function __construct() {
         $this->git_repository_factory = new GitRepositoryFactory(
@@ -82,13 +87,15 @@ class PullRequestsResource extends AuthenticatedResource {
         );
 
         $this->user_manager = UserManager::instance();
+
+        $this->pull_request_closer = new PullRequestCloser($pull_request_dao);
     }
 
     /**
      * @url OPTIONS
      */
     public function options() {
-        return Header::allowOptionsGetPost();
+        return $this->sendAllowHeadersForPullRequests();
     }
 
     /**
@@ -114,6 +121,7 @@ class PullRequestsResource extends AuthenticatedResource {
      */
     protected function get($id) {
         $this->checkAccess();
+        $this->sendAllowHeadersForPullRequests();
 
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
@@ -150,6 +158,7 @@ class PullRequestsResource extends AuthenticatedResource {
      */
     protected function getFiles($id) {
         $this->checkAccess();
+        $this->sendAllowHeadersForPullRequests();
 
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
@@ -194,6 +203,7 @@ class PullRequestsResource extends AuthenticatedResource {
      */
     protected function getFileContent($id, $path) {
         $this->checkAccess();
+        $this->sendAllowHeadersForPullRequests();
 
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
@@ -267,6 +277,7 @@ class PullRequestsResource extends AuthenticatedResource {
      */
     protected function post(PullRequestPOSTRepresentation $content) {
         $this->checkAccess();
+        $this->sendAllowHeadersForPullRequests();
 
         $repository_id  = $content->repository_id;
         $branch_src     = $content->branch_src;
@@ -304,10 +315,67 @@ class PullRequestsResource extends AuthenticatedResource {
     }
 
     /**
+     * Partial update of a pull request
+     *
+     * Merge or abandon a pull request. Abandon is the only supported status yet.<br/>
+     * A pull request that has been abandoned cannot be merged later.
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * Here is an example of a valid PUT content to abandon a pull request:
+     * <pre>
+     * {<br/>
+     * &nbsp;&nbsp;"status": "abandon"<br/>
+     * }<br/>
+     * </pre>
+     *
+     * @url PATCH {id}
+     *
+     * @access protected
+     *
+     * @param  int $id pull request ID
+     * @param  PullRequestPATCHRepresentation $body new pull request status {@from body}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404 Pull request does not exist
+     * @throws 500 Error while abandoning the pull request
+     */
+    protected function patch($id, PullRequestPATCHRepresentation $body) {
+        $this->checkAccess();
+        $this->sendAllowHeadersForPullRequests();
+
+        $user           = $this->user_manager->getCurrentUser();
+        $pull_request   = $this->getPullRequest($id);
+        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+
+        $this->checkUserCanWriteRepository($user, $git_repository);
+
+        $status = $body->status;
+        if ($status === self::STATUS_ABANDON) {
+            try {
+                $this->abandon($pull_request);
+            } catch(PullRequestCannotBeAbandoned $exception) {
+                throw new RestException(400, $exception->getMessage());
+            }
+        } else {
+            throw new RestException(400, 'Cannot deal with provided status. The only supported status is ' . self::STATUS_ABANDON);
+        }
+    }
+
+    private function abandon(PullRequest $pull_request) {
+        if (! $this->pull_request_closer->abandon($pull_request)) {
+            throw new RestException(500, 'Error while abandoning the pull request');
+        }
+    }
+
+    /**
      * @url OPTIONS {id}/comments
      */
     public function optionsComments() {
-        return Header::allowOptionsGetPost();
+        return $this->sendAllowHeadersForComments();
     }
 
     /**
@@ -334,6 +402,7 @@ class PullRequestsResource extends AuthenticatedResource {
     protected function getComments($id, $limit = 10, $offset = 0, $order = 'asc') {
         $this->checkAccess();
         $this->checkLimit($limit);
+        $this->sendAllowHeadersForComments();
 
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
@@ -373,11 +442,13 @@ class PullRequestsResource extends AuthenticatedResource {
      * @status 201
      */
     protected function postComments($id, CommentPOSTRepresentation $comment_data) {
+        $this->checkAccess();
+        $this->sendAllowHeadersForComments();
+
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
 
-        $this->checkAccess();
         $this->checkUserCanReadRepository($user, $git_repository);
 
         $comment        = new Comment(0, $id, $user->getId(), $comment_data->content);
@@ -425,10 +496,26 @@ class PullRequestsResource extends AuthenticatedResource {
         }
     }
 
+    private function checkUserCanWriteRepository(PFUser $user, GitRepository $repository) {
+        ProjectAuthorization::userCanAccessProject($user, $repository->getProject(), new URLVerification());
+
+        if (! $repository->userCanWrite($user)) {
+            throw new RestException(403, 'User is not able to WRITE the git repository');
+        }
+    }
+
     private function sendLocationHeader($uri) {
         $uri_with_api_version = '/api/v1/' . $uri;
 
         Header::Location($uri_with_api_version);
+    }
+
+    private function sendAllowHeadersForPullRequests() {
+        Header::allowOptionsGetPostPatch();
+    }
+
+    private function sendAllowHeadersForComments() {
+        HEADER::allowOptionsGetPost();
     }
 
     /**

@@ -781,8 +781,13 @@ class GitRepository implements DVCSRepository {
         return $this->getBackend()->userCanRead($user, $this);
     }
 
+    public function userCanWrite(PFUser $user) {
+        return $user->hasPermission(Git::PERM_WRITE, $this->getId(), $this->getProjectId()) ||
+               $user->hasPermission(Git::PERM_WPLUS, $this->getId(), $this->getProjectId());
+    }
+
     public function userCanEditOnline($user) {
-        return $user->hasPermission(Git::PERM_WRITE, $this->getId(), $this->getProjectId()) && $this->use_online_edit;
+        return $this->userCanWrite($user) && $this->use_online_edit;
     }
     /**
      * Test if user can modify repository configuration

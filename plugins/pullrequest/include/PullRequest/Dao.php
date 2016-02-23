@@ -85,4 +85,14 @@ class Dao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function markAsAbandoned($pull_request_id) {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+
+        $sql = "UPDATE plugin_pullrequest_review
+                SET status = 'A'
+                WHERE id = $pull_request_id";
+
+        return $this->update($sql);
+    }
 }
