@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <include href="git-definition.rng"/>
-  <start>
-    <element name="git">
-      <ref name="git"/>
-    </element>
-  </start>
-</grammar>

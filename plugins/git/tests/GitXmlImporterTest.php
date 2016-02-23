@@ -222,36 +222,6 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldValidateXMLFormat() {
-        $xml = <<<XML
-            <project>
-                <git>
-                    <repository bundle-path="stable.bundle" name="stable">
-                        <stuff>
-                            <ugroup>project_members</ugroup>
-                        </stuff>
-                        <read>
-                            <stuff>project_members</stuff>
-                        </read>
-                        <write>
-                            <stuff>project_members</stuff>
-                        </write>
-                        <wplus>
-                            <stuff>project_members</stuff>
-                        </wplus>
-                    </repository>
-                </git>
-            </project>
-XML;
-        $xml_exception_catched = false;
-        try {
-            $this->import(new SimpleXMLElement($xml));
-        } catch(XML_ParseException $e) {
-            $xml_exception_catched = true;
-        }
-        $this->assertTrue($xml_exception_catched);
-    }
-
     public function itShouldUpdateConfViaSystemEvents()  {
         $xml = <<<XML
             <project>
@@ -286,6 +256,39 @@ XML;
 XML;
         $this->import(new SimpleXMLElement($xml));
         $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->git_dao->last_saved_repository->getDescription());
+    }
+
+    public function itShouldAtLeastSetProjectsAdminAsGitAdmins() {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable"/>
+                </git>
+            </project>
+XML;
+        expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 4)->once();
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldImportGitAdmins() {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable"/>
+                    <ugroups-admin>
+                        <ugroup>project_members</ugroup>
+                    </ugroups-admin>
+                </git>
+            </project>
+XML;
+        $result = mock('DataAccessResult');
+        stub($result)->getRow()->returns(false);
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
+
+        expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 3)->at(0);
+        expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 4)->at(1);
+        $this->import(new SimpleXMLElement($xml));
+
     }
 
     private function import($xml) {
