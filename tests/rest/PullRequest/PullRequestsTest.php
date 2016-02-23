@@ -47,7 +47,7 @@ class PullRequestsTest extends RestBase {
     // the POST route requires a major refactoring of REST tests initialization
     // and thus will be done in a following commit
 
-    public function testGetPullRequests() {
+    public function testGetPullRequest() {
         $response  = $this->getResponse($this->client->get('pull_requests/1'));
 
         $pull_request = $response->json();
@@ -62,7 +62,7 @@ class PullRequestsTest extends RestBase {
     public function testOPTIONS() {
         $response = $this->getResponse($this->client->options('pull_requests/'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -72,5 +72,41 @@ class PullRequestsTest extends RestBase {
         $response = $this->getResponseForNonMember($this->client->get('pull_requests/1'));
 
         $this->assertEquals($response->getStatusCode(), 403);
+    }
+
+    public function testPATCHPullRequestToAbandonAPullRequest() {
+        $data = json_encode(array(
+            'status' => 'abandon'
+        ));
+
+        $response = $this->getResponse($this->client->patch(
+            'pull_requests/1',
+            null,
+            $data
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get('pull_requests/1'));
+        $pull_request = $response_get->json();
+
+        $this->assertEquals('abandon', $pull_request['status']);
+    }
+
+     /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPATCHPullRequestThrow400IfStatusIsUnknown() {
+        $data = json_encode(array(
+            'status' => 'whatever'
+        ));
+
+        $response = $this->getResponse($this->client->patch(
+            'pull_requests/1',
+            null,
+            $data
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 }

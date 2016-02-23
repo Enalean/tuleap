@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PULLREQUEST_BASE_DIR', realpath(__DIR__.'/..'));
-define('STATUS_ABANDONED', 'A');
-define('STATUS_MERGED', 'M');
-define('STATUS_REVIEW', 'R');
+namespace Tuleap\PullRequest\Exception;
+
+use Exception;
+
+class PullRequestCannotBeAbandoned extends Exception {}
