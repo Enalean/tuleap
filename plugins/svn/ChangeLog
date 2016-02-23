@@ -1,3 +1,6 @@
+Version 0.16 - Tuleap 8.12
+    * display a warning if the repository is in queue for creation
+
 Version 0.15 - Tuleap 8.12
     * In settings, add a link to go back to repository
 
