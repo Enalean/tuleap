@@ -19,11 +19,11 @@ Version 8.12 (Not yet released)
 	* svn: 0.16
 	* cardwall: 1.56
 	* docman: 2.26.96
-	* git: 4.121
+	* git: 4.122
 	* tracker: 5.800
 	* Plugin OpenId is deleted
 	* ldap: 3.97
-	* pullrequest: 0.7
+	* pullrequest: 0.8
 	* template: 0.2
 	* webdav: 1.9.15
 	* forumml: 2.6.23

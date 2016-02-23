@@ -1,3 +1,6 @@
+Version 4.122 - Tuleap 8.12
+    * story #8825: PATCH pull_requests/:id
+
 Version 4.121 - Tuleap 8.12
     * story #8825: GET /git/:id/pull_requests
 
