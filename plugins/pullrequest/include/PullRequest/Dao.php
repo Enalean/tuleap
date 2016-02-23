@@ -87,10 +87,22 @@ class Dao extends DataAccessObject {
     }
 
     public function markAsAbandoned($pull_request_id) {
-        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $pull_request_id  = $this->da->escapeInt($pull_request_id);
+        $abandoned_status = $this->da->quoteSmart(PullRequest::STATUS_ABANDONED);
 
         $sql = "UPDATE plugin_pullrequest_review
-                SET status = 'A'
+                SET status = $abandoned_status
+                WHERE id = $pull_request_id";
+
+        return $this->update($sql);
+    }
+
+    public function markAsMerged($pull_request_id) {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $merged_status   = $this->da->quoteSmart(PullRequest::STATUS_MERGED);
+
+        $sql = "UPDATE plugin_pullrequest_review
+                SET status = $merged_status
                 WHERE id = $pull_request_id";
 
         return $this->update($sql);

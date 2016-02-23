@@ -22,6 +22,10 @@ namespace Tuleap\PullRequest;
 
 class PullRequest {
 
+    const STATUS_ABANDONED = 'A';
+    const STATUS_MERGED    = 'M';
+    const STATUS_REVIEW    = 'R';
+
     private $id;
     private $repository_id;
     private $user_id;
