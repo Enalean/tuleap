@@ -100,12 +100,22 @@ class PullRequestRepresentation {
         $this->reference_src  = $pull_request->getSha1Src();
         $this->branch_dest    = $pull_request->getBranchDest();
         $this->reference_dest = $pull_request->getSha1Dest();
-        $this->status         = $pull_request->getStatus();
+        $this->status         = $this->expandStatusName($pull_request->getStatus());
 
         $this->resources = array(
             'comments' => array(
                 'uri' => $this->uri . '/'. self::COMMENTS_ROUTE
             )
         );
+    }
+
+    private function expandStatusName($status_acronym) {
+        $status_name = array(
+            'A' => 'abandon',
+            'M' => 'merge',
+            'R' => 'review'
+        );
+
+        return $status_name[$status_acronym];
     }
 }

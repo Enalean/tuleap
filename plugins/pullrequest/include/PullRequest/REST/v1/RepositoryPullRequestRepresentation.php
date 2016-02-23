@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('GIT_BASE_URL', '/plugins/git');
-define('GIT_BASE_DIR', dirname(__FILE__));
-define('GIT_TEMPLATE_DIR', GIT_BASE_DIR . '/../templates');
+namespace Tuleap\PullRequest\REST\v1;
 
-/**
- * Check if platform can use gerrit
- *
- * Parameters:
- *     'platform_can_use_gerrit' => boolean
- */
-define('GIT_EVENT_PLATFORM_CAN_USE_GERRIT', 'git_event_platform_can_use_gerrit');
-define('REST_GIT_PULL_REQUEST_ENDPOINTS', 'rest_git_pull_request_endpoints');
-define('REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY', 'rest_git_pull_request_get_for_repository');
+class RepositoryPullRequestRepresentation {
+
+    /** @var array */
+    public $collection;
+
+    /** @var int */
+    public $total_size;
+
+    public function build(array $collection, $total_size) {
+        $this->total_size = (int) $total_size;
+        $this->collection = $collection;
+    }
+}
