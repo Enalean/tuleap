@@ -111,9 +111,9 @@ class PullRequestRepresentation {
 
     private function expandStatusName($status_acronym) {
         $status_name = array(
-            'A' => 'abandon',
-            'M' => 'merge',
-            'R' => 'review'
+            STATUS_ABANDONED => 'abandon',
+            STATUS_MERGED    => 'merge',
+            STATUS_REVIEW    => 'review'
         );
 
         return $status_name[$status_acronym];

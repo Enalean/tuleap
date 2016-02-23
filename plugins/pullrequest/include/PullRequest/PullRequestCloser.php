@@ -18,7 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PULLREQUEST_BASE_DIR', realpath(__DIR__.'/..'));
-define('STATUS_ABANDONED', 'A');
-define('STATUS_MERGED', 'M');
-define('STATUS_REVIEW', 'R');
+namespace Tuleap\PullRequest;
+
+use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
+
+class PullRequestCloser {
+
+    private $dao;
+
+    public function __construct(Dao $dao) {
+        $this->dao = $dao;
+    }
+
+    public function abandon(PullRequest $pull_request) {
+        $status = $pull_request->getStatus();
+
+        if ($status === STATUS_ABANDONED) {
+            return true;
+        }
+
+        if ($status === STATUS_MERGED) {
+            throw new PullRequestCannotBeAbandoned('This pull request has already been merged, it can no longer be abandoned');
+        }
+
+        return $this->dao->markAsAbandoned($pull_request->getId());
+    }
+}

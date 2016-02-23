@@ -29,6 +29,16 @@ class GitDataBuilder extends REST_TestDataBuilder {
     /** @var SystemEventManager */
     private $system_event_manager;
 
+    /**
+     * @var GitRepositoryFactory
+     */
+    private $repository_factory;
+
+    /**
+     * @var Git_SystemEventManager
+     */
+    private $git_system_event_manager;
+
     public function __construct() {
         parent::__construct();
 
@@ -37,8 +47,32 @@ class GitDataBuilder extends REST_TestDataBuilder {
 
     public function setUp() {
         PluginManager::instance()->installAndActivate('git');
+
+        $this->repository_factory = new GitRepositoryFactory(new GitDao(), $this->project_manager);
+
+        $this->git_system_event_manager = new Git_SystemEventManager(
+            $this->system_event_manager,
+            $this->repository_factory
+        );
+
         $this->generateProject();
-        $this->generateGitRepository();
+
+        $repository = $this->generateGitRepository();
+        $this->changeRepositoryUpdate($repository);
+    }
+
+    private function changeRepositoryUpdate(GitRepository $repository) {
+        echo "Update Git Repository Permissions\n";
+
+        $backend = $this->getGitBackendGitolite($this->git_system_event_manager);
+
+        $permissions = array(
+            'PLUGIN_GIT_READ'  => array('3'),
+            'PLUGIN_GIT_WRITE' => array('4'),
+            'PLUGIN_GIT_WPLUS' => array('4')
+        );
+
+        return $backend->savePermissions($repository, $permissions);
     }
 
     public function generateProject() {
@@ -62,14 +96,11 @@ class GitDataBuilder extends REST_TestDataBuilder {
         return $project;
     }
 
-    public function generateGitRepository() {
+    private function generateGitRepository() {
         echo "Create Git repo\n";
 
-        $repository_factory       = new GitRepositoryFactory(new GitDao(), $this->project_manager);
-        $git_system_event_manager = new Git_SystemEventManager($this->system_event_manager, $repository_factory);
-
-        $manager = $this->getGitRepositoryManager($repository_factory, $git_system_event_manager);
-        $backend = $this->getGitBackendGitolite($git_system_event_manager);
+        $manager = $this->getGitRepositoryManager($this->repository_factory, $this->git_system_event_manager);
+        $backend = $this->getGitBackendGitolite($this->git_system_event_manager);
 
         $repository = new GitRepository();
         $repository->setBackend($backend);
@@ -80,7 +111,7 @@ class GitDataBuilder extends REST_TestDataBuilder {
 
         $manager->create($repository, $backend, array());
 
-        return $this;
+        return $repository;
     }
 
     /**
