@@ -1,3 +1,6 @@
+Version 4.120 - Tuleap 8.12
+    * story #8569: Import git admin at import
+
 Version 4.119 - Tuleap 8.12
     * story #8631: Add the possibility to remove a link between a user account and an OpenID Connect provider
 
