@@ -1,3 +1,6 @@
+Version 0.18 - Tuleap 8.12
+    * story #8813: Refactoring: Admin namespace is not needed
+
 Version 0.17 - Tuleap 8.12
     * story #8813: See/use old version of .SVNAccessFile
 
