@@ -11,21 +11,61 @@
     #access-file-container {
         > #current-access-file-container {
             display: inline-block;
+            margin-right: 10px;
+        }
+
+        > #old-access-file-container {
+            display: inline-block;
+            vertical-align: top;
+
+            > h3 > select {
+                position: relative;
+                top: 3.5px;
+            }
+
+            .empty-version {
+                font-style: italic;
+                color: #BBBBBB;
+                text-align: center;
+            }
+
+            > #old-access-file-form {
+                visibility: hidden;
+            }
+        }
+
+        > #current-access-file-container,
+        > #old-access-file-container > #old-access-file-form {
+            > h3 {
+                height: 42px;
+            }
 
             > pre {
+                border: 1px solid rgba(0, 0, 0, 0.15);
                 border-bottom: 0;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
+                border-radius: 4px 4px 0 0;
                 margin: 0;
                 background: #fcfcfc;
+
+                & + pre {
+                    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+                    border-radius: 0 0 4px 4px;
+                    margin: 0 0 10px;
+                    height: 435px;
+                    width: 440px;
+                    overflow: auto;
+                }
             }
 
             > textarea {
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
+                border-radius: 0 0 4px 4px;
                 font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
                 font-size: 13px;
                 padding: 9.5px;
+                height: 435px;
+                width: 440px;
+                resize: none;
             }
         }
     }

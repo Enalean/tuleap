@@ -41,6 +41,9 @@ class ServiceSvn extends Service {
     }
 
     public function displayHeader(HTTPRequest $request, $title) {
+        $GLOBALS['HTML']->includeJavascriptSnippet(
+            file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
+        );
         $toolbar     = array();
         $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_svn', 'service_lbl_key');
         $breadcrumbs = array();
