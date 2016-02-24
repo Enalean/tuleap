@@ -19,14 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Svn\Admin\AccessControl;
+namespace Tuleap\Svn\AccessControl;
 
 use Tuleap\Svn\ServiceSvn;
 use HTTPRequest;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Admin\AccessControl\AccessFileHistory;
-use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryManager;
+use Tuleap\Svn\AccessControl\AccessFileHistory;
+use Tuleap\Svn\AccessControl\AccessFileHistoryManager;
 use SVNAccessFile;
 use CSRFSynchronizerToken;
 use SVN_AccessFile_Writer;

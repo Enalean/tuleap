@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Svn\Admin\AccessControl;
+namespace Tuleap\Svn\AccessControl;
 
 use Tuleap\Svn\Repository\Repository;
 

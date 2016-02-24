@@ -22,8 +22,8 @@ require_once 'constants.php';
 
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryManager;
-use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryManager;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Admin\MailHeaderManager;
