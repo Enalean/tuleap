@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 8.12
+    * Refactoring: inject controllers in the router
+
 Version 0.18 - Tuleap 8.12
     * story #8813: Refactoring: Admin namespace is not needed
 
