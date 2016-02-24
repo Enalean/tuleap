@@ -2,3 +2,18 @@ plugin_pullrequest	descriptor_description	Code review and pull requests
 plugin_pullrequest	descriptor_name	Pull request
 
 plugin_pullrequest	title	Pull request
+plugin_pullrequest	service_lbl_key	Pull request
+
+plugin_pullrequest	come_back_later	Please come back later
+
+plugin_pullrequest	nb_pull_request_badge	$1 pull request
+plugin_pullrequest	nb_pull_request_badge_plural	$1 pull requests
+
+plugin_pullrequest	new_pull_request_button_title	Create a pull request
+plugin_pullrequest	new_pull_request_modal_title	Create a pull request
+plugin_pullrequest	new_pull_request_modal_from	From
+plugin_pullrequest	new_pull_request_modal_to	To
+plugin_pullrequest	new_pull_request_modal_choose_branch_from	Choose a source branch
+plugin_pullrequest	new_pull_request_modal_choose_branch_to	Choose a destination branch
+plugin_pullrequest	new_pull_request_modal_close	Close
+plugin_pullrequest	new_pull_request_modal_submit	Create

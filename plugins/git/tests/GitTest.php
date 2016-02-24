@@ -31,7 +31,7 @@ class GitTest extends TuleapTestCase  {
 
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
         $usermanager = new MockUserManager();
-        $request     = new HTTPRequest();
+        $request     = aRequest()->with('repo_id', 1)->build();
 
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
         $git->setRequest($request);
@@ -40,7 +40,8 @@ class GitTest extends TuleapTestCase  {
         $git->setPermittedActions(array('del'));
         $git->setGroupId(101);
 
-        $factory = new MockGitRepositoryFactory();
+        $repository = mock('GitRepository');
+        $factory    = stub('GitRepositoryFactory')->getRepositoryById()->returns($repository);
         $git->setFactory($factory);
 
         $git->expectOnce('addAction', array('deleteRepository', '*'));

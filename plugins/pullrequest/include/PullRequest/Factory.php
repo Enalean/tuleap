@@ -48,6 +48,12 @@ class Factory {
         return $this->getInstanceFromRow($row);
     }
 
+    public function countPullRequestOfRepository(GitRepository $repository) {
+        $row = $this->dao->countPullRequestOfRepository($repository->getId())->getRow();
+
+        return (int)$row['nb_pull_requests'];
+    }
+
     /**
      * @return PullRequest
      */

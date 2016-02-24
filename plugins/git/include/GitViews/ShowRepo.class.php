@@ -58,14 +58,14 @@ class GitViews_ShowRepo {
     private $mirror_data_mapper;
 
     public function __construct(
-            GitRepository $repository,
-            Git $controller,
-            Git_GitRepositoryUrlManager $url_manager,
-            Codendi_Request $request,
-            Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-            Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
-            array $gerrit_servers,
-            Git_Mirror_MirrorDataMapper $mirror_data_mapper
+        GitRepository $repository,
+        Git $controller,
+        Git_GitRepositoryUrlManager $url_manager,
+        Codendi_Request $request,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        array $gerrit_servers,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper
     ) {
         $this->repository         = $repository;
         $this->controller         = $controller;
