@@ -63,7 +63,24 @@ class GitViews extends PluginViews {
 
         $this->getToolbar();
 
-        $GLOBALS['HTML']->header(array('title'=>$title, 'group'=>$this->groupId, 'toptab'=>'plugin_git'));
+        $GLOBALS['HTML']->header(array(
+            'title'      => $title,
+            'group'      => $this->groupId,
+            'toptab'     => 'plugin_git',
+            'body_class' => $this->getAdditionalBodyClasses()
+        ));
+    }
+
+    private function getAdditionalBodyClasses() {
+        $classes = array();
+        $params  = array(
+            'request' => $this->request,
+            'classes' => &$classes
+        );
+
+        EventManager::instance()->processEvent(GIT_ADDITIONAL_BODY_CLASSES, $params);
+
+        return $classes;
     }
 
     public function footer() {

@@ -2,3 +2,18 @@ plugin_pullrequest	descriptor_description	Revue de code et demande de fusion
 plugin_pullrequest	descriptor_name	Pull request
 
 plugin_pullrequest	title	Pull request
+plugin_pullrequest	service_lbl_key	Pull request
+
+plugin_pullrequest	come_back_later	Veuillez revenir plus tard.
+
+plugin_pullrequest	nb_pull_request_badge	$1 pull request
+plugin_pullrequest	nb_pull_request_badge_plural	$1 pull requests
+
+plugin_pullrequest	new_pull_request_button_title	Créer une pull request
+plugin_pullrequest	new_pull_request_modal_title	Créer une pull request
+plugin_pullrequest	new_pull_request_modal_from	A partir de
+plugin_pullrequest	new_pull_request_modal_to	Dans
+plugin_pullrequest	new_pull_request_modal_choose_branch_from	Choisissez une branche source
+plugin_pullrequest	new_pull_request_modal_choose_branch_to	Choisissez une branche de destination
+plugin_pullrequest	new_pull_request_modal_close	Annuler
+plugin_pullrequest	new_pull_request_modal_submit	Créer

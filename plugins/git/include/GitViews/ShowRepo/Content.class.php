@@ -88,7 +88,6 @@ class GitViews_ShowRepo_Content {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         array $gerrit_servers,
         $theme_path
-
     ) {
         $this->repository         = $repository;
         $this->gitphp_viewer      = $gitphp_viewer;
@@ -109,6 +108,30 @@ class GitViews_ShowRepo_Content {
     }
 
     private function displayContent() {
+        $additional_view = $this->getAdditionalView();
+
+        if ($additional_view) {
+            echo $additional_view;
+        } else {
+            $this->displayRepositoryContent();
+        }
+    }
+
+    private function getAdditionalView() {
+        $view   = null;
+        $params = array(
+            'repository' => $this->repository,
+            'user'       => $this->request->getCurrentUser(),
+            'request'    => $this->request,
+            'view'       => &$view
+        );
+
+        EventManager::instance()->processEvent(GIT_VIEW, $params);
+
+        return $view;
+    }
+
+    private function displayRepositoryContent() {
         $html = '';
 
         if ($this->repository->isCreated()) {
@@ -117,7 +140,7 @@ class GitViews_ShowRepo_Content {
             $html .= $this->getWaitingForRepositoryCreationInfo();
         }
         if ($this->isATreePage()) {
-          $html .= $this->getMarkdownFilesDiv();
+            $html .= $this->getMarkdownFilesDiv();
         }
 
         echo $html;
@@ -204,15 +227,30 @@ class GitViews_ShowRepo_Content {
         }
 
         // Access type
-        $accessType = $this->getAccessType($access, $this->repository->getBackend() instanceof Git_Backend_Gitolite);
+        $accessType      = $this->getAccessType($access, $this->repository->getBackend() instanceof Git_Backend_Gitolite);
+        $additional_info = $this->getAdditionalHeaderInfo();
+        $index_url       = $this->url_manager->getRepositoryBaseUrl($this->repository);
 
-        $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
+        $html .= '<h1><a class="git-repo-name" href="'.$index_url.'">'.$accessType.$this->repository->getFullName().'</a> ' . $additional_info . '</h1>';
+
         if ( !empty($parent) ) {
             $html .= '<div id="plugin_git_repo_parent">';
             $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent_'. $this->repository->getBackendType(), $parent->getHTMLLink($this->url_manager));
             $html .= '</div>';
         }
         return $html;
+    }
+
+    private function getAdditionalHeaderInfo() {
+        $info   = '';
+        $params = array(
+            'repository' => $this->repository,
+            'info'       => &$info
+        );
+
+        EventManager::instance()->processEvent(GIT_ADDITIONAL_INFO, $params);
+
+        return $info;
     }
 
     /**
@@ -241,7 +279,8 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getCloneUrl() {
-        $mirrors   = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+        $mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+
         $presenter = new RepositoryClonePresenter(
             $this->repository,
             $this->getAccessURLs(),

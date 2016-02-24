@@ -349,7 +349,7 @@ class Git extends PluginController {
         return $this->plugin;
     }
 
-    protected function definePermittedActions($repoId, $user) {
+    protected function definePermittedActions(/* GitRepository */ $repository, $user) {
         if ($this->permissions_manager->userIsGitAdmin($user, $this->projectManager->getProject($this->groupId))) {
             $this->permittedActions = array(
                 'index',
@@ -393,21 +393,35 @@ class Git extends PluginController {
             $this->addPermittedAction('fork_repositories_permissions');
             $this->addPermittedAction('do_fork_repositories');
 
-            if ($repoId !== 0) {
-                $repo = $this->factory->getRepositoryById($repoId);
-                if ($repo && $repo->userCanRead($user)) {
-                    $this->addPermittedAction('view');
-                    $this->addPermittedAction('edit');
-                    $this->addPermittedAction('clone');
-                    if ($repo->belongsTo($user)) {
-                        $this->addPermittedAction('repo_management');
-                        $this->addPermittedAction('mail');
-                        $this->addPermittedAction('del');
-                        $this->addPermittedAction('confirm_deletion');
-                        $this->addPermittedAction('save');
-                    }
+            if ($repository && $repository->userCanRead($user)) {
+                $this->addPermittedAction('view');
+                $this->addPermittedAction('edit');
+                $this->addPermittedAction('clone');
+                if ($repo->belongsTo($user)) {
+                    $this->addPermittedAction('repo_management');
+                    $this->addPermittedAction('mail');
+                    $this->addPermittedAction('del');
+                    $this->addPermittedAction('confirm_deletion');
+                    $this->addPermittedAction('save');
                 }
             }
+        }
+
+        $this->addAdditionalPermittedActions($user, $repository);
+    }
+
+    private function addAdditionalPermittedActions(PFUser $user, /* GitRepository */ $repository) {
+        $permitted_actions = array();
+        $params            = array(
+            'repository'        => $repository,
+            'user'              => $user,
+            'permitted_actions' => &$permitted_actions
+        );
+
+        EventManager::instance()->processEvent(GIT_ADDITIONAL_PERMITTED_ACTIONS, $params);
+
+        foreach ($permitted_actions as $permitted_action) {
+            $this->addPermittedAction($permitted_action);
         }
     }
 
@@ -427,8 +441,14 @@ class Git extends PluginController {
         }
 
         $user = $this->userManager->getCurrentUser();
+
+        $repository = null;
+        if ($repoId !== 0) {
+            $repository = $this->factory->getRepositoryById($repoId);
+        }
+
         //define access permissions
-        $this->definePermittedActions($repoId, $user);
+        $this->definePermittedActions($repository, $user);
 
         //check permissions
         if ( empty($this->permittedActions) || !$this->isAPermittedAction($this->action) ) {
@@ -437,12 +457,12 @@ class Git extends PluginController {
             return;
         }
 
-        $this->_informAboutPendingEvents($repoId);
-        $this->_dispatchActionAndView($this->action, $repoId, $repositoryName, $user);
+        $this->_informAboutPendingEvents($repository);
+        $this->_dispatchActionAndView($this->action, $repository, $repositoryName, $user);
 
     }
 
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -451,7 +471,7 @@ class Git extends PluginController {
                 break;
             #admin
             case 'view':
-                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );
+                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repository->getId()));
                 $this->addView('view');
                 break;
 
@@ -462,12 +482,11 @@ class Git extends PluginController {
                 break;
              #DELETE a repository
             case 'del':
-                $this->addAction( 'deleteRepository', array($this->groupId, $repoId) );
+                $this->addAction( 'deleteRepository', array($this->groupId, $repository->getId()));
                 $this->addView('index');
                 break;
             #EDIT
             case 'edit':
-                $repository = $this->factory->getRepositoryById($repoId);
                 if (empty($repository)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
@@ -507,29 +526,26 @@ class Git extends PluginController {
                 break;
             #repo_management
             case 'repo_management':
-                $repository = $this->factory->getRepositoryById($repoId);
                 if (empty($repository)) {
-                    $this->addError($this->getText('actions_repo_not_found'));
-                    $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    $this->redirectNoRepositoryError();
                     return false;
                 }
                 $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
                 break;
             case 'mail':
-                $this->processRepoManagementNotifications($pane, $repoId, $repositoryName, $user);
+                $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);
                 break;
             #fork
             case 'fork':
-                $this->addAction('repoManagement', array($this->groupId, $repoId));
+                $this->addAction('repoManagement', array($this->groupId, $repository->getId()));
                 $this->addView('forkRepositories');
                 break;
             #confirm_private
             case 'confirm_private':
                 if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $repository = $this->factory->getRepositoryById($repoId);
                     $this->addAction('confirmDeletion', array($this->groupId, $repository));
-                    $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
+                    $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repository->getId()) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
                     $valid = new Valid_Text('repo_desc');
@@ -542,13 +558,13 @@ class Git extends PluginController {
                     if($this->request->valid($valid)) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $this->addAction('confirmPrivate', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
+                    $this->addAction('confirmPrivate', array($this->groupId, $repository->getId(), $repoAccess, $repoDesc) );
                     $this->addView('confirmPrivate');
                 }
                 break;
              #SET TO PRIVATE
             case 'set_private':
-                $this->addAction('setPrivate', array($this->groupId, $repoId));
+                $this->addAction('setPrivate', array($this->groupId, $repository->getId()));
                 $this->addView('view');
                 break;
             case 'fork_repositories':
@@ -621,8 +637,7 @@ class Git extends PluginController {
                     $repositories = $this->getRepositoriesFromIds($this->request->get('repository_ids'));
 
                     if (! $repositories) {
-                        $this->addError($this->getText('actions_repo_not_found'));
-                        $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                        $this->redirectNoRepositoryError();
                     }
                 }
 
@@ -653,7 +668,7 @@ class Git extends PluginController {
             case 'fetch_git_config':
                 $project = $this->projectManager->getProject($this->groupId);
                 $this->setDefaultPageRendering(false);
-                $this->addAction('fetchGitConfig', array($repoId, $user, $project));
+                $this->addAction('fetchGitConfig', array($repository->getId(), $user, $project));
                 break;
             case 'fetch_git_template':
                 $project = $this->projectManager->getProject($this->groupId);
@@ -731,41 +746,38 @@ class Git extends PluginController {
                     break;
                 }
 
-                $repo                  = $this->factory->getRepositoryById($repoId);
                 $remote_server_id      = $this->request->getValidated('remote_server_id', 'uint');
-                $gerrit_template_id    = $this->getValidatedGerritTemplateId($repo);
+                $gerrit_template_id    = $this->getValidatedGerritTemplateId($repository);
 
-                if (empty($repo) || empty($remote_server_id) || empty($gerrit_template_id)) {
+                if (empty($repository) || empty($remote_server_id) || empty($gerrit_template_id)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
                     try {
-                        $project_exists = $this->gerritProjectAlreadyExists($remote_server_id, $repo);
+                        $project_exists = $this->gerritProjectAlreadyExists($remote_server_id, $repository);
                         if ($project_exists) {
                             $this->addError($this->getText('gerrit_project_exists'));
                         } else {
-                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id, $user));
+                            $this->addAction('migrateToGerrit', array($repository, $remote_server_id, $gerrit_template_id, $user));
                         }
                     } catch (Git_Driver_Gerrit_Exception $e) {
                         $this->addError($this->getText('gerrit_server_down'));
                     }
-                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
+                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repository->getId(), $pane));
                 }
                 break;
             case 'disconnect_gerrit':
-                $repo = $this->factory->getRepositoryById($repoId);
-                if (empty($repo)) {
+                if (empty($repository)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
-                    $this->addAction('disconnectFromGerrit', array($repo));
-                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                    $this->addAction('disconnectFromGerrit', array($repository));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
                 }
                 break;
             case 'delete_gerrit_project':
-                $repo                = $this->factory->getRepositoryById($repoId);
-                $server              = $this->gerrit_server_factory->getServerById($repo->getRemoteServerId());
-                $project_gerrit_name = $this->driver_factory->getDriver($server)->getGerritProjectName($repo);
+                $server              = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
+                $project_gerrit_name = $this->driver_factory->getDriver($server)->getGerritProjectName($repository);
 
                 try {
                     $this->driver_factory->getDriver($server)->deleteProject($server, $project_gerrit_name);
@@ -781,11 +793,10 @@ class Git extends PluginController {
                     $this->addError($this->getText('gerrit_server_down'));
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
+                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repository->getId(), $pane));
                 break;
 
             case 'update_mirroring':
-                $repository = $this->factory->getRepositoryById($repoId);
                 if (! $repository) {
                     $this->addError($this->getText('actions_repo_not_found'));
                 }
@@ -822,23 +833,43 @@ class Git extends PluginController {
 
                 break;
             case 'restore':
-                $this->addAction('restoreRepository', array($repoId, $this->groupId));
+                $this->addAction('restoreRepository', array($repository->getId(), $this->groupId));
                 break;
 
             #LIST
             default:
+                $handled = $this->handleAdditionalAction($repository, $action);
 
-                $user_id = null;
-                $valid = new Valid_UInt('user');
-                $valid->required();
-                if($this->request->valid($valid)) {
-                    $user_id = $this->request->get('user');
-                    $this->addData(array('user' => $user_id));
+                if (! $handled) {
+                    $user_id = null;
+                    $valid   = new Valid_UInt('user');
+                    $valid->required();
+
+                    if($this->request->valid($valid)) {
+                        $user_id = $this->request->get('user');
+                        $this->addData(array('user' => $user_id));
+                    }
+
+                    $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
+                    $this->addView('index');
                 }
-                $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
-                $this->addView('index');
+
                 break;
         }
+    }
+
+    private function handleAdditionalAction(/* GitRepository */ $repository, $action) {
+        $handled = false;
+        $params  = array(
+            'git_controller' => $this,
+            'repository'     => $repository,
+            'action'         => $action,
+            'handled'        => &$handled
+        );
+
+        EventManager::instance()->processEvent(GIT_HANDLE_ADDITIONAL_ACTION, $params);
+
+        return $handled;
     }
 
     private function getValidatedGerritTemplateId($repository) {
@@ -924,26 +955,25 @@ class Git extends PluginController {
         $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
     }
 
-    protected function _informAboutPendingEvents($repoId) {
+    protected function _informAboutPendingEvents(/* GitRepository */ $repository) {
         $sem = SystemEventManager::instance();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
             $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
-            $repository = $this->factory->getDeletedRepository($p[1]);
+            $deleted_repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
                 break;
 
             case 'GIT_REPO_DELETE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete', array($repository->getFullName())));
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete', array($deleted_repository->getFullName())));
                 break;
             }
-
         }
 
-        if ($repoId !== 0) {
-            $dar = $sem->_getDao()->searchWithParam('head', $repoId, array('GIT_REPO_ACCESS'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        if ($repository && $repository->getId() !== 0) {
+            $dar = $sem->_getDao()->searchWithParam('head', $repository->getId(), array('GIT_REPO_ACCESS'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
             foreach ($dar as $row) {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_access'));
             }
@@ -1009,6 +1039,11 @@ class Git extends PluginController {
         } else {
             $this->addError($this->getText('must_be_admin_to_create_project_repo'));
         }
+    }
+
+    public function redirectNoRepositoryError() {
+        $this->addError($this->getText('actions_repo_not_found'));
+        $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
     }
 
     protected function checkSynchronizerToken($url) {
