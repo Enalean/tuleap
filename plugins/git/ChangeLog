@@ -1,3 +1,6 @@
+Version 4.123 - Tuleap 8.12
+    * story #8826: Display # of pull requests in git repository header
+
 Version 4.122 - Tuleap 8.12
     * story #8825: PATCH pull_requests/:id
 
