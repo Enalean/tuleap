@@ -30,6 +30,10 @@ use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailHeaderDao;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Explorer\ExplorerController;
+use Tuleap\Svn\Explorer\RepositoryDisplayController;
+use Tuleap\Svn\Admin\MailNotificationController;
+use Tuleap\Svn\AccessControl\AccessControlController;
 
 /**
  * SVN plugin
@@ -89,12 +93,26 @@ class SvnPlugin extends Plugin {
     }
 
     private function getRouter() {
+        $repository_manager = new RepositoryManager(new Dao(), ProjectManager::instance());
+
         return new SvnRouter(
-              new RepositoryManager(new Dao(), ProjectManager::instance()),
-              new AccessFileHistoryManager(new AccessFileHistoryDao()),
-              ProjectManager::instance(),
-              new MailHeaderManager(new MailHeaderDao()),
-              new MailNotificationManager(new MailNotificationDao())
+            $repository_manager,
+            new AccessControlController(
+                $repository_manager,
+                new AccessFileHistoryManager(new AccessFileHistoryDao())
+            ),
+            new MailNotificationController(
+                new MailHeaderManager(new MailHeaderDao()),
+                $repository_manager,
+                new MailNotificationManager(new MailNotificationDao())
+            ),
+            new ExplorerController(
+                $repository_manager
+            ),
+            new RepositoryDisplayController(
+                $repository_manager,
+                ProjectManager::instance()
+            )
         );
     }
 

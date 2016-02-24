@@ -27,43 +27,37 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Admin\MailNotificationController;
 use Tuleap\Svn\AccessControl\AccessControlController;
-use Tuleap\Svn\AccessControl\AccessFileHistoryManager;
-use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Admin\MailnotificationManager;
-use ProjectManager;
-use Project;
-use ForgeConfig;
 use Feedback;
 
 class SvnRouter {
 
+    /** @var RepositoryDisplayController */
+    private $display_controller;
+
+    /** @var ExplorerController */
+    private $explorer_controller;
+
+    /** @var MailNotificationController */
+    private $notification_controller;
+
+    /** @var AccessControlController */
+    private $access_control_controller;
+
     /** @var RepositoryManager */
     private $repository_manager;
 
-    /** @var AccessFileHistoryManager */
-    private $access_file_manager;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var MailHeaderManager */
-    private $mail_header_manager;
-
-    /** @var MailnotificationManager */
-    private $mail_notification_manager;
-
     public function __construct(
         RepositoryManager $repository_manager,
-        AccessFileHistoryManager $access_file_manager,
-        ProjectManager $project_manager,
-        MailHeaderManager $mail_header_manager,
-        MailnotificationManager $mail_notification_manager
+        AccessControlController $access_control_controller,
+        MailNotificationController $notification_controller,
+        ExplorerController $explorer_controller,
+        RepositoryDisplayController $display_controller
     ) {
         $this->repository_manager        = $repository_manager;
-        $this->project_manager           = $project_manager;
-        $this->mail_header_manager       = $mail_header_manager;
-        $this->mail_notification_manager = $mail_notification_manager;
-        $this->access_file_manager       = $access_file_manager;
+        $this->access_control_controller = $access_control_controller;
+        $this->notification_controller   = $notification_controller;
+        $this->explorer_controller       = $explorer_controller;
+        $this->display_controller        = $display_controller;
     }
 
     /**
@@ -85,48 +79,39 @@ class SvnRouter {
             switch ($action) {
                 case "create-repository":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new ExplorerController($this->repository_manager);
-                    $controller->createRepository($this->getService($request), $request);
+                    $this->explorer_controller->createRepository($this->getService($request), $request);
                     break;
                 case "display-repository":
-                    $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
-                    $controller->displayRepository($this->getService($request), $request);
+                    $this->display_controller->displayRepository($this->getService($request), $request);
                     break;
                 case "settings":
                 case "display-mail-notification":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                    $controller->displayMailNotification($this->getService($request), $request);
+                    $this->notification_controller->displayMailNotification($this->getService($request), $request);
                     break;
                 case "save-mail-header":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                    $controller->saveMailHeader($request);
+                    $this->notification_controller->saveMailHeader($request);
                     break;
                 case "create-mailing-lists":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                    $controller->createMailingList($request);
+                    $this->notification_controller->createMailingList($request);
                     break;
                 case "delete-mailing-list":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new MailNotificationController($this->mail_header_manager, $this->repository_manager, $this->mail_notification_manager);
-                    $controller->deleteMailingList($request);
+                    $this->notification_controller->deleteMailingList($request);
                     break;
                 case "access-control":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
-                    $controller->displayAuthFile($this->getService($request), $request);
+                    $this->access_control_controller->displayAuthFile($this->getService($request), $request);
                     break;
                 case "save-access-file":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
-                    $controller->saveAuthFile($this->getService($request), $request);
+                    $this->access_control_controller->saveAuthFile($this->getService($request), $request);
                     break;
                 case "display-archived-version":
                     $this->checkUserCanAdministrateARepository($request);
-                    $controller = new AccessControlController($this->repository_manager, $this->access_file_manager);
-                    $controller->displayArchivedVersion($request);
+                    $this->access_control_controller->displayArchivedVersion($request);
                     break;
 
                 default:
@@ -156,7 +141,7 @@ class SvnRouter {
             $request->set("group_id", $repository->getProject()->getId());
             $request->set("repo_id", $repository->getId());
 
-            $this->useViewVcRoute($request);
+            $this->display_controller->displayRepository($this->getService($request), $request);
             return;
         }
     }
@@ -164,17 +149,8 @@ class SvnRouter {
     /**
      * @param HTTPRequest $request
      */
-    private function useViewVcRoute(HTTPRequest $request) {
-        $controller = new RepositoryDisplayController($this->repository_manager, $this->project_manager);
-        $controller->displayRepository($this->getService($request), $request);
-    }
-
-    /**
-     * @param HTTPRequest $request
-     */
     private function useDefaultRoute(HTTPRequest $request) {
-        $controller = new ExplorerController($this->repository_manager);
-        $controller->index( $this->getService($request), $request );
+        $this->explorer_controller->index($this->getService($request), $request);
     }
 
     /**
