@@ -22,8 +22,8 @@ require_once 'bootstrap.php';
 
 class TrackerXmlImportTestInstance extends TrackerXmlImport {
 
-    public function getInstanceFromXML($xml, $groupId, $name, $description, $itemname) {
-        return parent::getInstanceFromXML($xml, $groupId, $name, $description, $itemname);
+    public function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname) {
+        return parent::getInstanceFromXML($xml, $project, $name, $description, $itemname);
     }
 
     public function getAllXmlTrackers($xml) {
@@ -76,6 +76,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             </project>');
 
         $this->group_id = 145;
+        $this->project = mock('Project');
+        stub($this->project)->getId()->returns($this->group_id);
 
         $this->xml_tracker1 = new SimpleXMLElement(
                  '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
@@ -116,6 +118,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->event_manager   = mock('EventManager');
         $this->hierarchy_dao   = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
         $this->xml_import      = mock('Tracker_Artifact_XMLImport');
+        $this->ugroup_manager  = mock('UGroupManager');
 
         $this->tracker_xml_importer = partial_mock(
             'TrackerXmlImportTestInstance',
@@ -135,7 +138,9 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('XML_RNGValidator'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
                 $this->xml_import,
-                mock('User\XML\Import\IFindUserFromXMLReference')
+                mock('User\XML\Import\IFindUserFromXMLReference'),
+                $this->ugroup_manager,
+                mock('Logger')
             )
         );
 
@@ -156,14 +161,14 @@ class TrackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesAllTrackersAndStoresTrackersHierarchy() {
-        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker1, $this->group_id, 'name10', 'desc12', 'item11')->returns($this->tracker1);
-        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker2, $this->group_id, 'name20', 'desc22', 'item21')->returns($this->tracker2);
-        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker3, $this->group_id, 'name30', 'desc32', 'item31')->returns($this->tracker3);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker1, $this->project, 'name10', 'desc12', 'item11')->returns($this->tracker1);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker2, $this->project, 'name20', 'desc22', 'item21')->returns($this->tracker2);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker3, $this->project, 'name30', 'desc32', 'item31')->returns($this->tracker3);
 
         expect($this->tracker_xml_importer)->createFromXML()->count(3);
         expect($this->hierarchy_dao)->updateChildren(2);
 
-        $result = $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
+        $result = $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
 
         $this->assertEqual($result, $this->mapping);
     }
@@ -173,13 +178,13 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->expectException();
         expect($this->tracker_xml_importer)->createFromXML()->count(1);
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
         stub($this->tracker_xml_importer)->createFromXML(
             $this->xml_tracker1,
-            $this->group_id,
+            $this->project,
             'name10',
             'desc12',
             'item11'
@@ -187,7 +192,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         stub($this->tracker_xml_importer)->createFromXML(
             $this->xml_tracker2,
-            $this->group_id,
+            $this->project,
             'name20',
             'desc22',
             'item21'
@@ -195,7 +200,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         stub($this->tracker_xml_importer)->createFromXML(
             $this->xml_tracker3,
-            $this->group_id,
+            $this->project,
             'name30',
             'desc32',
             'item31'
@@ -213,7 +218,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         expect($this->tracker_xml_importer)->createFromXML()->count(3);
 
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
     }
 
     public function itBuildsTrackersHierarchy() {
@@ -268,12 +273,15 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
             </project>');
 
         $this->group_id = 145;
+        $this->project = mock('Project');
+        stub($this->project)->getId()->returns($this->group_id);
 
         $this->tracker         = mock('Tracker');
         $this->tracker_factory = mock('TrackerFactory');
         $this->event_manager   = mock('EventManager');
         $this->hierarchy_dao   = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
         $this->xml_import      = mock('Tracker_Artifact_XMLImport');
+        $this->ugroup_manager  = mock('UGroupManager');
 
         $this->tracker_xml_importer = partial_mock(
             'TrackerXmlImportTestInstance',
@@ -293,7 +301,9 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
                 mock('XML_RNGValidator'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
                 $this->xml_import,
-                mock('User\XML\Import\IFindUserFromXMLReference')
+                mock('User\XML\Import\IFindUserFromXMLReference'),
+                $this->ugroup_manager,
+                mock('Logger')
             )
         );
     }
@@ -303,7 +313,7 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
         $this->xml_import->expectCallCount('importBareArtifactsFromXML', 1);
         $this->xml_import->expectCallCount('importArtifactChangesFromXML', 1);
 
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
     }
 }
 
@@ -330,11 +340,15 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             mock('XML_RNGValidator'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('Tracker_Artifact_XMLImport'),
-            mock('User\XML\Import\IFindUserFromXMLReference')
+            mock('User\XML\Import\IFindUserFromXMLReference'),
+            mock('UGroupManager'),
+            mock('Logger')
         );
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+        $this->project = mock('Project');
+        stub($this->project)->getId()->returns(0);
     }
 
     public function tearDown() {
@@ -345,7 +359,7 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
 
     public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/TestTracker-1.xml');
-        $tracker = $this->tracker_xml_importer->getInstanceFromXML($xml, 0, '', '', '');
+        $tracker = $this->tracker_xml_importer->getInstanceFromXML($xml, $this->project, '', '', '');
 
         //testing general properties
         $this->assertEqual($tracker->submit_instructions, 'some submit instructions');
@@ -374,6 +388,9 @@ XML;
         $xml->addChild('formElements');
 
         $groupId     = 15;
+        $this->project = mock('Project');
+        stub($this->project)->getId()->returns($groupId);
+
         $name        = 'the tracker';
         $description = 'tracks stuff';
         $itemname    = 'the item';
@@ -394,7 +411,9 @@ XML;
             mock('XML_RNGValidator'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('Tracker_Artifact_XMLImport'),
-            mock('User\XML\Import\IFindUserFromXMLReference')
+            mock('User\XML\Import\IFindUserFromXMLReference'),
+            mock('UGroupManager'),
+            mock('Logger')
         );
 
         //create data passed
@@ -418,7 +437,7 @@ XML;
         //this is where we check the data has been correctly transformed
         stub($rule_factory)->getInstanceFromXML($expected_rules, array(), $tracker)->once();
 
-        $tracker_xml_importer->getInstanceFromXML($xml,$groupId, $name, $description, $itemname);
+        $tracker_xml_importer->getInstanceFromXML($xml, $this->project, $name, $description, $itemname);
     }
 
 }
@@ -607,13 +626,125 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             mock('XML_RNGValidator'),
             $this->trigger_rulesmanager,
             mock('Tracker_Artifact_XMLImport'),
-            mock('User\XML\Import\IFindUserFromXMLReference')
+            mock('User\XML\Import\IFindUserFromXMLReference'),
+            mock('UGroupManager'),
+            mock('Logger')
         );
+        $this->project = mock('Project');
+        stub($this->project)->getId()->returns($this->group_id);
      }
 
     public function itDelegatesToRulesManager() {
         expect($this->trigger_rulesmanager)->createFromXML($this->triggers, $this->xmlFieldMapping)->once();
 
-        $this->tracker_xml_importer->import($this->group_id, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
+    }
+}
+
+class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->old_global = $GLOBALS;
+        $GLOBALS['UGROUPS'] = array();
+        $GLOBALS['UGROUPS']['UGROUP_REGISTERED'] = 3;
+        $GLOBALS['UGROUPS']['UGROUP_PROJECT_MEMBERS'] = 4;
+
+        $this->tracker = aMockTracker()->withId(444)->build();
+        $this->tracker_factory = mock('TrackerFactory');
+
+        $this->field1685 = mock('Tracker_FormElement_Field_Date');
+        $this->xmlFieldMapping = array(
+            'F1685' => $this->field1685,
+            'F1741' => '',
+            'V2060' => '',
+            'V2061' => '',
+            'V2117' => '',
+            'V2118' => '',
+        );
+
+        $this->hierarchy_dao = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
+
+
+        $this->ugroup_manager = mock('UGroupManager');
+
+        $this->tracker_xml_importer = new TrackerXmlImport(
+            $this->tracker_factory,
+            mock('EventManager'),
+            $this->hierarchy_dao,
+            mock('Tracker_CannedResponseFactory'),
+            new Tracker_FormElementFactoryForXMLTests($this->xmlFieldMapping),
+            mock('Tracker_SemanticFactory'),
+            mock('Tracker_RuleFactory'),
+            mock('Tracker_ReportFactory'),
+            mock('WorkflowFactory'),
+            mock('XML_RNGValidator'),
+            mock('Tracker_Workflow_Trigger_RulesManager'),
+            mock('Tracker_Artifact_XMLImport'),
+            mock('User\XML\Import\IFindUserFromXMLReference'),
+            $this->ugroup_manager,
+            mock('Logger')
+        );
+        $this->group_id = 123;
+        $this->project = mock('Project');
+        stub($this->project)->getId()->returns($this->group_id);
+        $this->contributors_ugroup = mock('ProjectUGroup');
+        $this->contributors_ugroup_id = 42;
+        stub($this->contributors_ugroup)->getId()->returns($this->contributors_ugroup_id);
+    }
+
+    public function tearDown(){
+        parent::tearDown();
+        $GLOBALS = $this->old_global;
+    }
+
+    public function itShouldImportPermissions() {
+        $xml = <<<XML
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name>t10</name>
+                        <item_name>t11</item_name>
+                        <description>t12</description>
+                        <formElements>
+                            <formElement type="sb" ID="F1685" rank="4" required="1">
+                                <name>status</name>
+                                <label><![CDATA[Status]]></label>
+                                <bind type="static" is_rank_alpha="0">
+                                    <items>
+                                        <item ID="V2059" label="To be done" is_hidden="0"/>
+                                        <item ID="V2060" label="On going" is_hidden="0"/>
+                                        <item ID="V2061" label="Done" is_hidden="0"/>
+                                        <item ID="V2062" label="Canceled" is_hidden="0"/>
+                                        <item ID="V2063" label="Functional review" is_hidden="0"/>
+                                        <item ID="V2064" label="Code review" is_hidden="0"/>
+                                    </items>
+                                    <default_values>
+                                        <value REF="V2059"/>
+                                    </default_values>
+                                </bind>
+                            </formElement>
+                        </formElements>
+                        <permissions>
+                            <permission scope="tracker" ugroup="Contributors" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                            <permission scope="tracker" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                            <permission scope="field" REF="F1685" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                        </permissions>
+                    </tracker>
+                </trackers>
+            </project>
+XML;
+        $xml_input = new SimpleXMLElement($xml);
+        stub($this->tracker)->testImport()->returns(true);
+        stub($this->tracker_factory)->validMandatoryInfoOnCreate()->returns(true);
+        stub($this->tracker_factory)->getInstanceFromRow()->returns($this->tracker);
+        stub($this->tracker_factory)->saveObject()->returns(444);
+
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Contributors')->returns($this->contributors_ugroup);
+
+        expect($this->tracker)->setCachePermission($this->contributors_ugroup_id, 'PLUGIN_TRACKER_ACCESS_FULL')->at(0);
+        expect($this->tracker)->setCachePermission(3, 'PLUGIN_TRACKER_ACCESS_FULL')->at(1);
+        expect($this->field1685)->setCachePermission(4, 'PLUGIN_TRACKER_FIELD_UPDATE')->once();
+
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
     }
 }
