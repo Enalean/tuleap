@@ -150,9 +150,9 @@ Manage dependencies for Tuleap Subversion integration
 %package core-subversion-modperl
 Summary: Subversion with mod_perl authentication
 Group: Development/Tools
-Version: 1.1
+Version: 1.2
 Release: @@RELEASE@@%{?dist}
-Requires: mod_perl
+Requires: mod_perl perl-Digest-SHA
 %description core-subversion-modperl
 Provides authentication for Subversion component based on mod_perl rather than
 mod_mysql.
