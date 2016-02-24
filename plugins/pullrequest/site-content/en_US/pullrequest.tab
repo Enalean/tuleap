@@ -4,8 +4,6 @@ plugin_pullrequest	descriptor_name	Pull request
 plugin_pullrequest	title	Pull request
 plugin_pullrequest	service_lbl_key	Pull request
 
-plugin_pullrequest	come_back_later	Please come back later
-
 plugin_pullrequest	nb_pull_request_badge	$1 pull request
 plugin_pullrequest	nb_pull_request_badge_plural	$1 pull requests
 

@@ -1,0 +1,43 @@
+@import "files/files.less";
+@import "comments/comments.less";
+
+#pull-request {
+    #pull-request-details-files {
+        display: flex;
+
+        > div {
+            flex: 1 1 auto;
+        }
+
+        #pull-request-details {
+            flex: 0 0 auto;
+            width: 25%;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+    }
+
+    #pull-request-actions {
+        position: fixed;
+        z-index: 999;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 0;
+        box-sizing: border-box;
+        background: rgba(255,255,255,0.95);
+        border-top: 1px solid #E0E0E0;
+        text-align: center;
+
+        > .btn {
+            min-width: 150px;
+        }
+    }
+}
+
+body.sidebar-collapsed #pull-request #pull-request-actions {
+    padding-left: 45px;
+}
+body.sidebar-expanded #pull-request #pull-request-actions {
+    padding-left: 200px;
+}
