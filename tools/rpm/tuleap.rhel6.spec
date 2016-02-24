@@ -184,11 +184,21 @@ Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} >= %{version}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap
 Requires: geshi, php-guzzle, sudo
+Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
 %description plugin-git-gitolite3
 Integration of git distributed software configuration management tool together
 with Tuleap.
 This package is integrated with gitolite v3 (new version)
+
+%package plugin-pullrequest
+Summary: Pull request plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_PULLREQUEST_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap-plugin-git
+%description plugin-pullrequest
+Code review and pull requests inside of Tuleap
 
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
@@ -433,8 +443,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Remove the new plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn
-# Remove the Pull Request plugin
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pullrequest
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1009,6 +1017,10 @@ fi
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
+
+%files plugin-pullrequest
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/pullrequest
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)
