@@ -32,6 +32,7 @@ class pullrequestPlugin extends Plugin {
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
+            $this->addHook('javascript_file');
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_INFO);
@@ -59,7 +60,14 @@ class pullrequestPlugin extends Plugin {
 
     public function cssfile($params) {
         if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/angular/bin/assets/tuleap-pullrequest.css" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+        }
+    }
+
+    public function javascript_file() {
+        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-pullrequest.js"></script>';
         }
     }
 
@@ -167,7 +175,7 @@ class pullrequestPlugin extends Plugin {
 
         if ($request->get('action') === 'pull-requests') {
             $renderer  = $this->getTemplateRenderer();
-            $presenter = new Tuleap\PullRequest\PullRequestPresenter($repository->getId(), $user->getId());
+            $presenter = new Tuleap\PullRequest\PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale());
 
             $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }

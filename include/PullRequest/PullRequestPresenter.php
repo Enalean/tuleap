@@ -28,17 +28,17 @@ class PullRequestPresenter {
     /** @var int */
     public $user_id;
 
+    /** @var string */
+    public $language;
 
-    public function __construct($repository_id, $user_id) {
+
+    public function __construct($repository_id, $user_id, $language) {
         $this->repository_id = $repository_id;
         $this->user_id       = $user_id;
+        $this->language      = $language;
     }
 
     public function getTemplateName() {
         return 'index';
-    }
-
-    public function come_back_later() {
-        return $GLOBALS['Language']->getText('plugin_pullrequest', 'come_back_later');
     }
 }

@@ -1,0 +1,44 @@
+#files {
+    > h3 {
+        margin-bottom: 5px;
+    }
+
+    > ul {
+        margin: 0 0 30px;
+        list-style-type: none;
+
+        > li {
+            margin: 0;
+            position: relative;
+            left: -5px;
+
+            &.loading {
+                height: 16px;
+                background: url('loader-mini.gif') no-repeat center center;
+            }
+
+            a {
+                display: block;
+                padding: 5px;
+                border-radius: 3px;
+
+                &:hover, &:focus {
+                    text-decoration: none;
+                    background: #F4F4F4;
+                }
+
+                .badge {
+                    position: relative;
+                    top: -1px;
+                    width: 12px;
+                    margin: 0 3px 0 0;
+                    text-align: center;
+
+                    &.badge-A { background: #58B359; }
+                    &.badge-M { background: #F5B849; }
+                    &.badge-D { background: #DA5353; }
+                }
+            }
+        }
+    }
+}

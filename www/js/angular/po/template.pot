@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Abandon"
+msgstr ""
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Abandoned"
+msgstr ""
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Already merged"
+msgstr ""
+
+#: src/app/error-modal/error-modal.tpl.html
+msgid "An error occured while doing one of your last actions."
+msgstr ""
+
+#: src/app/pull-request/comments/comments.tpl.html
+msgid "Comment"
+msgstr ""
+
+#: src/app/pull-request/comments/comments.tpl.html
+msgid "Comments"
+msgstr ""
+
+#: src/app/error-modal/error-modal.tpl.html
+msgid "Error details"
+msgstr ""
+
+#: src/app/pull-request/files/files.tpl.html
+msgid "Files"
+msgstr ""
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Merge"
+msgstr ""
+
+#: src/app/pull-request/comments/comments.tpl.html
+msgid "No comment"
+msgstr ""
+
+#: src/app/error-modal/error-modal.tpl.html
+msgid "Oh snap!"
+msgstr ""
+
+#: src/app/error-modal/error-modal.tpl.html
+msgid "OK"
+msgstr ""
+
+#: src/app/pull-requests/pull-requests.tpl.html
+msgid "Pull requests"
+msgstr ""
+
+#: src/app/pull-request/comments/comments.tpl.html
+msgid "Say something…"
+msgstr ""
+
+#: src/app/error-modal/error-modal.tpl.html
+msgid "Show details"
+msgstr ""

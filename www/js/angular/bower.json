@@ -1,0 +1,19 @@
+{
+  "name": "tuleap-pullrequest",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "~1.4.9",
+    "angular-sanitize": "~1.4.9",
+    "angular-gettext": "~1.1.4",
+    "angular-ui-bootstrap-bower": "~0.8.0",
+    "angular-ui-router": "~0.2.15",
+    "ng-lodash": "~0.4.0",
+    "ui-codemirror": "https://github.com/CarlAmbroselli/ui-codemirror.git#8806332869a39f207ecc189edd0ae9e4b325f0d9",
+    "google-diff-match-patch": "~0.1.0",
+    "ui-select": "angular-ui-select#~0.13.2"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.9",
+    "jasmine-promise-matchers": "~2.0.0"
+  }
+}
