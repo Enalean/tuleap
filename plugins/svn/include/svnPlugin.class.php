@@ -22,7 +22,8 @@ require_once 'constants.php';
 
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\AccessControl\AccessFileHistoryManager;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -92,30 +93,6 @@ class SvnPlugin extends Plugin {
         }
     }
 
-    private function getRouter() {
-        $repository_manager = new RepositoryManager(new Dao(), ProjectManager::instance());
-
-        return new SvnRouter(
-            $repository_manager,
-            new AccessControlController(
-                $repository_manager,
-                new AccessFileHistoryManager(new AccessFileHistoryDao())
-            ),
-            new MailNotificationController(
-                new MailHeaderManager(new MailHeaderDao()),
-                $repository_manager,
-                new MailNotificationManager(new MailNotificationDao())
-            ),
-            new ExplorerController(
-                $repository_manager
-            ),
-            new RepositoryDisplayController(
-                $repository_manager,
-                ProjectManager::instance()
-            )
-        );
-    }
-
     public function process(HTTPRequest $request) {
         if (! PluginManager::instance()->isPluginAllowedForProject($this, $request->getProject()->getId())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','plugin_not_activated'));
@@ -139,12 +116,48 @@ class SvnPlugin extends Plugin {
         }
     }
 
-
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e804';
     }
 
     public function service_classnames(array $params) {
         $params['classnames'][$this->getServiceShortname()] = 'Tuleap\Svn\ServiceSvn';
+    }
+
+    private function getRouter() {
+        $repository_manager = new RepositoryManager(new Dao(), ProjectManager::instance());
+
+        $accessfile_dao     = new AccessFileHistoryDao();
+        $accessfile_factory = new AccessFileHistoryFactory($accessfile_dao);
+
+        return new SvnRouter(
+            $repository_manager,
+            new AccessControlController(
+                $repository_manager,
+                $accessfile_factory,
+                new AccessFileHistoryCreator($accessfile_dao, $accessfile_factory)
+            ),
+            new MailNotificationController(
+                new MailHeaderManager(new MailHeaderDao()),
+                $repository_manager,
+                new MailNotificationManager(new MailNotificationDao())
+            ),
+            new ExplorerController(
+                $repository_manager
+            ),
+            new RepositoryDisplayController(
+                $repository_manager,
+                ProjectManager::instance()
+            )
+        );
+    }
+
+    private function getRepositoryManager() {
+        return new RepositoryManager(new Dao(), ProjectManager::instance());
+    }
+
+    /** @return BackendSVN */
+    private function getBackendSVN() {
+        return Backend::instance('SVN');
     }
 }
