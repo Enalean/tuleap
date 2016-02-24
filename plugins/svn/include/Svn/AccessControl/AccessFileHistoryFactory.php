@@ -20,21 +20,17 @@
 
 namespace Tuleap\Svn\AccessControl;
 
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Repository\Repository;
 
-class AccessFileHistoryManager {
+/**
+ * I return instances of AccessFileHistory
+ */
+class AccessFileHistoryFactory {
 
     private $dao;
 
     public function __construct(AccessFileHistoryDao $dao) {
         $this->dao = $dao;
-    }
-
-    public function create(AccessFileHistory $access_file) {
-        if (! $this->dao->create($access_file)) {
-            throw new CannotCreateAccessFileHistoryException($GLOBALS['Language']->getText('plugin_svn','update_access_history_file_error'));
-        }
     }
 
     /** return AccessFileHistory[] */
@@ -47,8 +43,15 @@ class AccessFileHistoryManager {
         return $accessFiles;
     }
 
+    /** return AccessFileHistory */
     public function getById($id, Repository $repository) {
-        return $this->dao->searchById($id, $repository->getId());
+        $row = $this->dao->searchById($id, $repository->getId());
+
+        if (! $row) {
+            throw new AccessFileHistoryNotFoundException();
+        }
+
+        return $this->instantiateFromRowAndRepository($row, $repository);
     }
 
     /** return AccessFileHistory */
@@ -81,9 +84,5 @@ class AccessFileHistoryManager {
             $row['content'],
             $row['version_date']
         );
-    }
-
-    public function useAnOldVersion(Repository $repository, $version_id) {
-        return $this->dao->useAnOldVersion($repository->getId(), $version_id);
     }
 }
