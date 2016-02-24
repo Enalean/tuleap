@@ -30,6 +30,7 @@ plugin_svn_admin_notification	upd_email_success	Email Notification updated succe
 plugin_svn_admin_notification	upd_email_fail	"Mail to" contains an invalid email address.
 plugin_svn_admin_notification	upd_email_error	Unable to save Notification
 plugin_svn_admin_notification	upd_email_bad_adr	Invalid email addresses "$1"
+plugin_svn_admin_notification	update_path_error	The given path is not valid
 plugin_svn_admin_notification	available_notifications	Available notifications
 plugin_svn_admin_notification	monitored_path	SVN monitored path
 plugin_svn_admin_notification	notified_mails	SVN notification list

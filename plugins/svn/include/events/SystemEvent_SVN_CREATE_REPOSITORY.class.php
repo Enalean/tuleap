@@ -47,7 +47,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
         $backendSystem->flushNscdAndFsCache();
 
         $backendSvn = Backend::instance('SVN');
-        if (! $backendSvn->createRepositorySVN($project_id, $system_path)) {
+        if (! $backendSvn->createRepositorySVN($project_id, $system_path, ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/')) {
             $this->error("Could not create/initialize project SVN repository");
             return false;
         }

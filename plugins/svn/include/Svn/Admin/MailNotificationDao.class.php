@@ -20,10 +20,20 @@
 
 namespace Tuleap\Svn\Admin;
 
+
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use DataAccessObject;
 use Project;
 
 class MailNotificationDao extends DataAccessObject {
+
+    private $regexp_builder;
+
+    public function __construct($da, RepositoryRegexpBuilder $regexp_builder) {
+        parent::__construct($da);
+        $this->regexp_builder = $regexp_builder;
+    }
 
     public function searchByRepositoryId($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
@@ -45,7 +55,7 @@ class MailNotificationDao extends DataAccessObject {
     }
 
     public function create(MailNotification $mail_notification) {
-        $mailing_list  = $this->da->quoteSmart($mail_notification->getMailingList());
+        $mailing_list  = $this->da->quoteSmart($mail_notification->getNotifiedMails());
         $path          = $this->da->quoteSmart($mail_notification->getPath());
         $repository_id = $this->da->escapeInt($mail_notification->getRepository()->getId());
 
@@ -55,6 +65,25 @@ class MailNotificationDao extends DataAccessObject {
                     ($repository_id, $mailing_list, $path)";
 
         return $this->update($query);
+    }
+
+    public function searchByPath($repository_id, $path) {
+        $repository_id        = $this->da->escapeInt($repository_id);
+        $sub_paths_expression = '';
+        $pattern_matcher      = $this->regexp_builder->generateRegexpFromPath($path);
+
+        if ($pattern_matcher !== '') {
+            $pattern_matcher      = $this->da->quoteSmart($pattern_matcher);
+            $sub_paths_expression = "OR svn_path RLIKE $pattern_matcher";
+        }
+
+        $query = "SELECT *
+                    FROM plugin_svn_notification
+                    WHERE repository_id = $repository_id
+                    AND (svn_path = '/' $sub_paths_expression)
+                    ";
+
+        return $this->retrieve($query);
     }
 
 }

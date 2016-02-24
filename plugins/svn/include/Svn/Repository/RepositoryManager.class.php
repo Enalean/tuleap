@@ -72,17 +72,31 @@ class RepositoryManager {
         }
     }
 
-    public function getRepositoryAndProjectFromPublicPath($path) {
+    public function getRepositoryFromSystemPath($path) {
+         if (! preg_match('/\/(\d+)\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
+            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+        }
+
+        $project = $this->project_manager->getProject($matches[1]);
+        return $this->getRepositoryIfProjectIsValid($project, $matches[2]);
+    }
+
+    public function getRepositoryFromPublicPath($path) {
          if (! preg_match('/^('.Rule_ProjectName::PATTERN_PROJECT_NAME.')\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
             throw new CannotFindRepositoryException();
         }
 
         $project = $this->project_manager->getProjectByUnixName($matches[1]);
-        if (! $project instanceof Project) {
-            throw new CannotFindRepositoryException();
+
+        return $this->getRepositoryIfProjectIsValid($project, $matches[2]);
+    }
+
+    private function getRepositoryIfProjectIsValid($project, $repository_name) {
+        if (!$project instanceof Project || $project->getID() == null || $project->isError()) {
+            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
         }
 
-        return $this->getRepositoryByName($project, $matches[2]);
+        return $this->getRepositoryByName($project, $repository_name);
     }
 
     public function instantiateFromRow(array $row, Project $project) {

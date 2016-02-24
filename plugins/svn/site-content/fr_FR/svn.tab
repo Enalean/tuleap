@@ -30,6 +30,7 @@ plugin_svn_admin_notification	upd_email_success	Notification e-mail mise à jour
 plugin_svn_admin_notification	upd_email_fail	Le champ "Envoyer à" contient une adresse invalide.
 plugin_svn_admin_notification	upd_email_error	Impossible de sauvegarder la notification
 plugin_svn_admin_notification	upd_email_bad_adr	Adresses invalides "$1"
+plugin_svn_admin_notification	update_path_error	Le chemin n'est pas valide
 plugin_svn_admin_notification	available_notifications	Notifications disponibles
 plugin_svn_admin_notification	monitored_path	Chemins SVN surveillés
 plugin_svn_admin_notification	notified_mails	Liste des mails notifiés

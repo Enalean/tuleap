@@ -24,18 +24,18 @@ use Tuleap\Svn\Repository\Repository;
 
 class MailNotification {
 
-    private $mailing_list;
+    private $notified_mails;
     private $path;
     private $repository;
 
-    public function __construct(Repository $repository, $mailing_list, $path) {
-        $this->repository   = $repository;
-        $this->mailing_list = $mailing_list;
-        $this->path         = $path;
+    public function __construct(Repository $repository, $notified_mails, $path) {
+        $this->repository     = $repository;
+        $this->notified_mails = $notified_mails;
+        $this->path           = $path;
     }
 
-    public function getMailingList() {
-        return $this->mailing_list;
+    public function getNotifiedMails() {
+        return $this->notified_mails;
     }
 
     public function getPath() {

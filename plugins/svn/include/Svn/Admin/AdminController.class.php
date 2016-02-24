@@ -29,7 +29,7 @@ use Valid_String;
 use Valid_Array;
 use CSRFSynchronizerToken;
 
-class MailNotificationController {
+class AdminController {
 
     private $repository_manager;
     private $mail_header_manager;
@@ -113,19 +113,40 @@ class MailNotificationController {
         $valid_mails   = join(', ', $list_mails->getValidAdresses());
         $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
 
-        if(!empty($valid_mails) && !empty($form_path) && $request->valid($valid_path)) {
+        $is_path_valid = $request->valid($valid_path) && $form_path !== '';
+        if (! $is_path_valid) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
+            );
+        }
+        if (! empty($invalid_mails)) {
+            $GLOBALS['Response']->addFeedback(
+                'warning',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_bad_adr', $invalid_mails)
+            );
+        }
+        if (empty($valid_mails)) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_fail')
+            );
+        }
+
+        if(! empty($valid_mails) && $is_path_valid) {
             $mail_notification = new MailNotification($repository, $valid_mails, $form_path);
             try {
                 $this->mail_notification_manager->create($mail_notification);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_email_success'));
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
+                );
             } catch (CannotCreateMailHeaderException $e) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_email_error'));
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+                );
             }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_email_fail'));
-        }
-        if (!empty($invalid_mails)) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_email_bad_adr', $invalid_mails));
         }
 
         $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(

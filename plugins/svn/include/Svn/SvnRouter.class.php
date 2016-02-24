@@ -27,6 +27,13 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Admin\MailNotificationController;
 use Tuleap\Svn\AccessControl\AccessControlController;
+use Tuleap\Svn\Admin\AdminController;
+use Tuleap\Svn\AuthFile\AccessFileHistoryManager;
+use Tuleap\Svn\Admin\MailHeaderManager;
+use Tuleap\Svn\Admin\MailnotificationManager;
+use ProjectManager;
+use Project;
+use ForgeConfig;
 use Feedback;
 
 class SvnRouter {
@@ -38,7 +45,7 @@ class SvnRouter {
     private $explorer_controller;
 
     /** @var MailNotificationController */
-    private $notification_controller;
+    private $admin_controller;
 
     /** @var AccessControlController */
     private $access_control_controller;
@@ -49,13 +56,13 @@ class SvnRouter {
     public function __construct(
         RepositoryManager $repository_manager,
         AccessControlController $access_control_controller,
-        MailNotificationController $notification_controller,
+        AdminController $notification_controller,
         ExplorerController $explorer_controller,
         RepositoryDisplayController $display_controller
     ) {
         $this->repository_manager        = $repository_manager;
         $this->access_control_controller = $access_control_controller;
-        $this->notification_controller   = $notification_controller;
+        $this->admin_controller   = $notification_controller;
         $this->explorer_controller       = $explorer_controller;
         $this->display_controller        = $display_controller;
     }
@@ -87,19 +94,19 @@ class SvnRouter {
                 case "settings":
                 case "display-mail-notification":
                     $this->checkUserCanAdministrateARepository($request);
-                    $this->notification_controller->displayMailNotification($this->getService($request), $request);
+                    $this->admin_controller->displayMailNotification($this->getService($request), $request);
                     break;
                 case "save-mail-header":
                     $this->checkUserCanAdministrateARepository($request);
-                    $this->notification_controller->saveMailHeader($request);
+                    $this->admin_controller->saveMailHeader($request);
                     break;
                 case "create-mailing-lists":
                     $this->checkUserCanAdministrateARepository($request);
-                    $this->notification_controller->createMailingList($request);
+                    $this->admin_controller->createMailingList($request);
                     break;
                 case "delete-mailing-list":
                     $this->checkUserCanAdministrateARepository($request);
-                    $this->notification_controller->deleteMailingList($request);
+                    $this->admin_controller->deleteMailingList($request);
                     break;
                 case "access-control":
                     $this->checkUserCanAdministrateARepository($request);
@@ -127,6 +134,7 @@ class SvnRouter {
         }
     }
 
+
     private function checkUserCanAdministrateARepository(HTTPRequest $request) {
         if (! $request->getProject()->userIsAdmin($request->getCurrentUser())) {
             throw new UserCannotAdministrateRepositoryException();
@@ -135,8 +143,7 @@ class SvnRouter {
 
     private function useAViewVcRoadIfRootValid(HTTPRequest $request) {
         if ($request->get('root')) {
-
-            $repository = $this->repository_manager->getRepositoryAndProjectFromPublicPath($request->get('root'));
+            $repository = $this->repository_manager->getRepositoryFromPublicPath($request->get('root'));
 
             $request->set("group_id", $repository->getProject()->getId());
             $request->set("repo_id", $repository->getId());
