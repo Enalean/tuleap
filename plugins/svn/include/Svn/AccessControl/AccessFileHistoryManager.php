@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Svn\Admin\AccessControl;
+namespace Tuleap\Svn\AccessControl;
 
-use Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Repository\Repository;
 
 class AccessFileHistoryManager {
