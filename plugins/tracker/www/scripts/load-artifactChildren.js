@@ -1,5 +1,5 @@
 /**
-  * Copyright (c) Enalean, 2013. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2016. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -17,16 +17,20 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-document.observe('dom:loaded', function () {
-    
-    $$('.artifact-hierarchy').each(function (container) {
-        var artifact_id = container.getAttribute('data-artifact-id'),
-            hierarchy_viewer =  new tuleap.artifact.HierarchyViewer(
-                codendi.tracker.base_url,
-                container,
-                codendi.locales,
-                codendi.imgroot,
-                artifact_id
-            );
+(function ($) {
+    $(document).ready(function() {
+        var artifact_hierarchy_containers = $('.artifact-hierarchy');
+
+        artifact_hierarchy_containers.each(function (index) {
+            var container        = $(this),
+                artifact_id      = container.data('artifactId'),
+                hierarchy_viewer = new tuleap.artifact.HierarchyViewer(
+                    codendi.tracker.base_url,
+                    container.get(0),
+                    codendi.locales,
+                    codendi.imgroot,
+                    artifact_id
+                );
+        });
     });
-});
+})(jQuery);
