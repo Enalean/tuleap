@@ -406,7 +406,7 @@ class PullRequestsResource extends AuthenticatedResource {
     /**
      * @url OPTIONS {id}/comments
      */
-    public function optionsComments() {
+    public function optionsComments($id) {
         return $this->sendAllowHeadersForComments();
     }
 
