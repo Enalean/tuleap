@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
-tuleap.tracker = tuleap.tracker || { };
+var tuleap      = tuleap || { };
+tuleap.tracker  = tuleap.tracker || { };
+tuleap.textarea = tuleap.textarea || { };
 
 (function ($) {
     tuleap.tracker.artifactModalInPlace = {
@@ -68,9 +69,17 @@ tuleap.tracker = tuleap.tracker || { };
                     htmlFormat = true;
                 }
 
-                new tuleap.trackers.textarea.RTE(
+                new tuleap.textarea.RTE(
                     element,
-                    {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, no_resize : true, resize_enabled : false}
+                    {
+                        toggle: true,
+                        default_in_html: false,
+                        id: id,
+                        name: name,
+                        htmlFormat: htmlFormat,
+                        no_resize : true,
+                        resize_enabled : false
+                    }
                 );
             }
         },

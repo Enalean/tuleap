@@ -1,31 +1,31 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
+* Copyright (c) Enalean, 2016. All Rights Reserved.
 *
 * Originally written by Nicolas Terray, 2008
 *
-* This file is a part of Codendi.
+* This file is a part of Tuleap.
 *
-* Codendi is free software; you can redistribute it and/or modify
+* Tuleap is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
 * (at your option) any later version.
 *
-* Codendi is distributed in the hope that it will be useful,
+* Tuleap is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with Codendi; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*
-*
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var codendi = codendi || { };
-codendi.tracker = codendi.tracker || { };
+var codendi                     = codendi || { };
+codendi.tracker                 = codendi.tracker || { };
+codendi.tracker.artifact        = { };
 
-codendi.tracker.artifact = { };
+var tuleap      = tuleap || {};
+tuleap.textarea = tuleap.textarea || {};
 
 codendi.tracker.artifact.editor = {
     disableWarnOnPageLeave: function() {
@@ -54,12 +54,6 @@ function invertFollowups(followupSection) {
 }
 
 document.observe('dom:loaded', function () {
-    var html_by_default = true;
-
-    if ($(document.body).hasClassName("default_format_text")) {
-        html_by_default = false;
-    }
-
     $$('.tracker_statistics').each(function (div) {
         codendi.Tooltips.push(
             new codendi.Tooltip(
@@ -95,8 +89,6 @@ document.observe('dom:loaded', function () {
 
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
-
-        var comments_inverted = false;
 
         function toggleCheckForCommentOrder() {
             $('invert-order-menu-item').down('i').toggle();
@@ -185,12 +177,13 @@ document.observe('dom:loaded', function () {
         var id          = html_id.match(/_(\d+)$/)[1];
         var name        = 'artifact['+ id +'][format]';
         var html_format = true;
+        var body_format = $('artifact['+id+']_body_format');
 
-        if ($('artifact['+id+']_body_format').value == 'text') {
+        if (body_format === null || body_format.value == 'text') {
             html_format = false;
         }
 
-        new tuleap.trackers.textarea.RTE(
+        new tuleap.textarea.RTE(
             element,
             {
                 toggle: true,
@@ -243,7 +236,7 @@ document.observe('dom:loaded', function () {
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
                     var name = 'comment_format'+id;
-                    new tuleap.trackers.textarea.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, full_width: true });
+                    new tuleap.textarea.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, full_width: true });
 
                     var nb_rows_displayed = 5;
                     var nb_rows_content   = textarea.value.split(/\n/).length;
