@@ -22,7 +22,7 @@ Version 8.12 (Not yet released)
 	* cardwall: 1.56
 	* docman: 2.26.97
 	* git: 4.123
-	* tracker: 5.800
+	* tracker: 5.801
 	* Plugin OpenId is deleted
 	* ldap: 3.97
 	* pullrequest: 0.10

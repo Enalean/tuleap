@@ -1,3 +1,6 @@
+Version 5.801 - Tuleap 8.12
+    * request #8309 Get rid of PrototypeJS - load-artifactChildren.js
+
 Version 5.800 - Tuleap 8.12
     * story #8571 import the trackers: artifact links
 
