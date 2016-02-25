@@ -3,6 +3,7 @@ Version 8.12 (Not yet released)
 	* request #8410: Add the possibility to hide project privacy radio buttons during project creation
 	* request #8849: Purge legacy themes
 	* request #8865: Remove Debian alpha support
+	* request #8309: Get rid of PrototypeJS (system_events.js)
 
 	== Bug fix ==
 	* request #8879: Characters not properly escaped in mail sent to user
@@ -34,7 +35,7 @@ Version 8.12 (Not yet released)
 	* doaprdf: 0.5
 	* foafprofiles: 0.5
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.122
 
 Version 8.11 (Thursday, February 4th 2016)
