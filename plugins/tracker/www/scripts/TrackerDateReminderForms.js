@@ -1,5 +1,8 @@
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +22,26 @@
  * This script display a hidden div that contains new reminder submission button then listen to any
  * reminder creation request and delegate process ot the right function within tracker class.
  */
-var codendi = codendi || { };
-codendi.tracker = codendi.tracker || { };
 
-document.observe('dom:loaded', function() {
-    if ($('tracker_reminder')) {
-        $('tracker_reminder').show();
-        $('add_reminder').observe('click', function (evt) {
-            var url = codendi.tracker.base_url +'?func=display_reminder_form&tracker='+$('add_reminder').value;
-            new Ajax.Updater($('tracker_reminder'), url, {method: 'get'});
-        });
-    }
-});
+(function($, codendi) {
+    $(document).ready(function () {
+
+        var tracker_reminder_element = $('#tracker_reminder');
+
+        if (tracker_reminder_element !== undefined) {
+            tracker_reminder_element.show();
+            $('#add_reminder').click(function () {
+                var add_reminder_value = $(this).val(),
+                    url_value          = codendi.tracker.base_url +'?func=display_reminder_form&tracker='+add_reminder_value;
+
+                $.ajax({
+                    url: url_value,
+                    type: 'get',
+                    success: function(html_form){
+                        tracker_reminder_element.html(html_form);
+                    },
+                });
+            });
+        }
+    });
+})(jQuery, codendi);
