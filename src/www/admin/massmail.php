@@ -12,7 +12,6 @@ require_once('pre.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/MassMail.js');
 
 // get numbers of users for each mailing
@@ -73,7 +72,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 '.stripcslashes($Language->getText('admin_massmail','footer',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_email_admin']))).'
 </TEXTAREA>
 </TD></TR><TR><TD>
-<P class="form-inline"><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
+<P class="form-inline" id="massmail_preview"><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
 '.$Language->getText('admin_massmail','to_preview').'
 <INPUT type="text" id="preview_destination" name="preview_destination" size="50" >
 <SPAN ID="preview_button"></SPAN>
@@ -92,7 +91,15 @@ $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
-            new Codendi_RTE_Send_HTML_MAIL('mail_message');
+            var mail_message_container = $$('#mail_message')[0];
+            var options = {
+                toggle: true,
+                default_in_html: false,
+                htmlFormat : false,
+                id: ''
+            };
+
+            new tuleap.textarea.RTE(mail_message_container, options);
 
             // Building input for the submission of preview adresses 
             var button = Builder.node('input', {'id'      : 'preview_submit',
@@ -108,5 +115,3 @@ document.observe('dom:loaded', function() {
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
 $HTML->footer(array());
-
-?>
