@@ -1,3 +1,6 @@
+Version 0.22 - Tuleap 8.12
+    * story #8822 send mails on svn commit (Display revision details implementation)
+
 Version 0.21 - Tuleap 8.12
     * Post commit hook implementation
 
