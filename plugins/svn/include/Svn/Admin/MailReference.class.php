@@ -35,7 +35,7 @@ class MailReference extends Reference {
             $base_id,
             $keyword,
             $GLOBALS['Language']->getText('project_reference','reference_svn_desc_key'),
-            "/plugins/svn/?action=detail-revision&rev_id=". $revision_id ."&group_id=". $repository->getProject()->getId()."&repo_id=".$repository->getId(),
+            "/plugins/svn/index.php?roottype=svn&view=rev&root=".$repository->getFullName()."&revision=$revision_id",
             $visibility,
             SvnPlugin::SERVICE_SHORTNAME,
             ReferenceManager::REFERENCE_NATURE_SVNREVISION,
