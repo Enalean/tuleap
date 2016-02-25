@@ -28,11 +28,13 @@ class Presenter {
     private $link_id;
     private $return_to;
     private $provider_name;
+    private $link_to_register_page;
 
-    public function __construct($link_id, $return_to, $provider_name) {
-        $this->link_id       = $link_id;
-        $this->return_to     = $return_to;
-        $this->provider_name = $provider_name;
+    public function __construct($link_id, $return_to, $provider_name, $link_to_register_page) {
+        $this->link_id               = $link_id;
+        $this->return_to             = $return_to;
+        $this->provider_name         = $provider_name;
+        $this->link_to_register_page = $link_to_register_page;
     }
 
     public function link_id() {
@@ -80,5 +82,17 @@ class Presenter {
 
     public function action() {
         return OPENIDCONNECTCLIENT_BASE_URL . '/?action=link-existing';
+    }
+
+    public function register_new_account() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'register_new_account');
+    }
+
+    public function register() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'register');
+    }
+
+    public function link_to_register_page() {
+        return $this->link_to_register_page;
     }
 }

@@ -151,14 +151,20 @@ class Controller {
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
             );
         }
+
+        $query_parameters = array(
+            'action'    => 'link',
+            'link_id'   => $unlinked_account->getId(),
+            'return_to' => $flow_response->getReturnTo(),
+        );
+        foreach (array('name', 'nickname', 'email', 'zoneinfo') as $query_parameter) {
+            if (isset($user_informations[$query_parameter])) {
+                $query_parameters[$query_parameter] = $user_informations[$query_parameter];
+            }
+        }
+
         $GLOBALS['Response']->redirect(
-            OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query(
-                array(
-                    'action'    => 'link',
-                    'link_id'   => $unlinked_account->getId(),
-                    'return_to' => $flow_response->getReturnTo()
-                )
-            )
+            OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query($query_parameters)
         );
     }
 }

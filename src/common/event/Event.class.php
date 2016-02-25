@@ -708,6 +708,23 @@ class Event {
     const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
 
     /**
+     * Allow plugin to add fields in the user register form
+     *
+     * Parameters:
+     * 'request' => HTTPRequest (IN)
+     * 'field'   => string      (OUT)
+     */
+    const USER_REGISTER_ADDITIONAL_FIELD = 'user_register_additional_field';
+
+    /**
+     * Allow plugin to deal after user registration
+     *
+     * 'user_id' => int (IN)
+     * 'request' => HTTPRequest (IN)
+     */
+    const AFTER_USER_REGISTRATION = 'after_user_registration';
+
+    /**
      * Event raised to get plannings from a project with REST
      *
      * Parameters:
