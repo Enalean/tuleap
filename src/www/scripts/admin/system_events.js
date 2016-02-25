@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2014. All rights reserved
+ * Copyright (c) Enalean SAS - 2014 - 2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function() {
+(function ($) {
+    $(document).ready(function () {
+        $('.remove_followers').each( function() {
+            var link = $(this);
 
-    $$('.remove_followers').each( function(link) {
-        link.href += '&challenge='+$$('input[name=challenge]')[0].value;
+            link.attr('href', link.attr('href')+'&challenge='+$('input[name=challenge]').val());
 
-        link.observe('click', function() {
-            return confirm(link.getAttribute('data-message'))
-        })
-    })
-});
+            link.click(function() {
+                return confirm(link.data('message'));
+            })
+        });
+    });
+})(jQuery);
