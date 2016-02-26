@@ -82,14 +82,7 @@ class BackendSVN extends Backend {
     public function createProjectSVN($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
         if ($this->createRepository($group_id, $project->getSVNRootPath())) {
-            if ($this->updateHooks(
-                    $project,
-                    $project->getSVNRootPath(),
-                    ForgeConfig::get('codendi_bin_prefix'),
-                    'commit-email.pl',
-                    "",
-                    "codendi_svn_pre_commit.php")
-            ) {
+            if ($this->updateHooksForProjectRepository($project)) {
                 if ($this->createSVNAccessFile ($group_id, $project->getSVNRootPath())) {
                     $this->forceUpdateApacheConf();
                     return true;
@@ -98,6 +91,17 @@ class BackendSVN extends Backend {
         }
 
         return false;
+    }
+
+    public function updateHooksForProjectRepository(Project $project) {
+        return $this->updateHooks(
+            $project,
+            $project->getSVNRootPath(),
+            ForgeConfig::get('codendi_bin_prefix'),
+            'commit-email.pl',
+            "",
+            "codendi_svn_pre_commit.php"
+        );
     }
 
     public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path) {
