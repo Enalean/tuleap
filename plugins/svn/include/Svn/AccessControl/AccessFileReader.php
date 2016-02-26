@@ -51,16 +51,18 @@ class AccessFileReader {
         foreach (file($this->getPath($repository)) as $line) {
             if ($this->isDefaultBlockStarting($line)) {
                 $in_default_block = true;
+                continue;
+            }
+
+            if ($this->isDefaultBlockEnding($line)) {
+                $in_default_block = false;
+                continue;
             }
 
             if ($in_default_block) {
                 $blocks['default'] .= $line;
             } else {
                 $blocks['content'] .= $line;
-            }
-
-            if ($this->isDefaultBlockEnding($line)) {
-                $in_default_block = false;
             }
         }
 
