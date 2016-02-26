@@ -4,6 +4,7 @@ Version 8.12 (Not yet released)
 	* request #8849: Purge legacy themes
 	* request #8865: Remove Debian alpha support
 	* request #8309: Get rid of PrototypeJS (system_events.js)
+	* request #8309: Get rid of PrototypeJS (CreateProject.js)
 
 	== Bug fix ==
 	* request #8879: Characters not properly escaped in mail sent to user
