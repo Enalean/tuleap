@@ -1,3 +1,6 @@
+Version 1.358 - Tuleap 8.12
+    * request #8900: Closed Milestones are 'Unlinked' when a new milestone is added
+
 Version 1.357 - Tuleap 8.12
     * request #8809 Compact and detailed buttons are hidden if the backlog is empty
 
