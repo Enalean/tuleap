@@ -1,3 +1,6 @@
+Version 0.58 - Tuleap 8.12
+    * request #8309: Get rid of PrototypeJS (autocomplete.js)
+
 Version 0.57 - Tuleap 8.11
     * request #8696: Work around site statistics generation time
 
