@@ -22,8 +22,8 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestAlreadyExistsException extends Exception {
+class PullRequestRepositoryMigratedOnGerritException extends Exception {
     public function __construct() {
-        parent::__construct("A pull request with the same source and destination references already exists.");
+        parent::__construct("The repository is migrated on Gerrit. The Pull Request cannot be created.");
     }
 }
