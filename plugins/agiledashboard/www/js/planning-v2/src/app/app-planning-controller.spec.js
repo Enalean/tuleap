@@ -557,38 +557,95 @@ describe("PlanningCtrl", function() {
                 MilestoneService.getMilestone.and.returnValue(get_request.promise);
             });
 
-            it("Given that we were in a milestone context, when the artifact modal calls its callback, then the MilestoneService will be called and the milestones collection will be updated", function() {
-                var put_request = $q.defer();
-                MilestoneService.putSubMilestones.and.returnValue(put_request.promise);
-                PlanningCtrl.backlog.rest_route_id = 736;
-                PlanningCtrl.milestones.content = [
-                    {
-                        id: 3118,
-                        label: "Sprint 2015-38"
-                    }
-                ];
-
-                PlanningCtrl.showAddSubmilestoneModal(event, submilestone_type);
-                put_request.resolve();
-                get_request.resolve({
-                    results: {
-                        id: 1668,
-                        label: "Sprint 2015-20"
-                    }
+            describe("Given that we were in a milestone context", function() {
+                var put_request;
+                beforeEach(function() {
+                    put_request = $q.defer();
+                    MilestoneService.putSubMilestones.and.returnValue(put_request.promise);
                 });
-                $scope.$apply();
 
-                expect(MilestoneService.putSubMilestones).toHaveBeenCalledWith(736, [3118, 1668]);
-                expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
-                expect(PlanningCtrl.milestones.content).toEqual([
-                    {
-                        id: 1668,
-                        label: "Sprint 2015-20"
-                    }, {
-                        id: 3118,
-                        label: "Sprint 2015-38"
-                    }
-                ]);
+                it(", when the artifact modal calls its callback, then the closed milestones will be loaded and the milestones collection will be updated", function() {
+                    var get_closed_milestones_request = $q.defer();
+                    MilestoneService.getClosedSubMilestones.and.returnValue(get_closed_milestones_request.promise);
+                    PlanningCtrl.backlog.rest_route_id = 736;
+                    PlanningCtrl.milestones.content    = [
+                        {
+                            id             : 3118,
+                            label          : "Sprint 2015-38",
+                            semantic_status: "open"
+                        }
+                    ];
+
+                    PlanningCtrl.showAddSubmilestoneModal(event, submilestone_type);
+                    get_closed_milestones_request.resolve({
+                        results: [
+                            {
+                                id             : 9932,
+                                label          : "Sprint 2014-24",
+                                semantic_status: "closed"
+                            }
+                        ]
+                    });
+                    put_request.resolve();
+                    get_request.resolve({
+                        results: {
+                            id             : 1668,
+                            label          : "Sprint 2015-20",
+                            semantic_status: "open"
+                        }
+                    });
+                    $scope.$apply();
+
+                    expect(MilestoneService.getClosedSubMilestones).toHaveBeenCalledWith(736, 50, 0, jasmine.any(Object));
+                    expect(MilestoneService.putSubMilestones).toHaveBeenCalledWith(736, [9932, 3118, 1668]);
+                    expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
+                    expect(PlanningCtrl.milestones.content).toEqual([
+                        {
+                            id             : 1668,
+                            label          : "Sprint 2015-20",
+                            semantic_status: "open"
+                        }, {
+                            id             : 9932,
+                            label          : "Sprint 2014-24",
+                            semantic_status: "closed"
+                        }, {
+                            id             : 3118,
+                            label          : "Sprint 2015-38",
+                            semantic_status: "open"
+                        }
+                    ]);
+                });
+
+                it("and the closed milestones had already been loaded, when the artifact modal calls its callback, then the closed milestones will not be loaded again", function() {
+                    PlanningCtrl.milestones.closed_milestones_fully_loaded = true;
+                    PlanningCtrl.backlog.rest_route_id                     = 902;
+                    PlanningCtrl.milestones.content                        = [
+                        {
+                            id             : 7441,
+                            label          : "Sprint 2015-44",
+                            semantic_status: "open"
+                        }, {
+                            id             : 9307,
+                            label          : "Sprint 2014-18",
+                            semantic_status: "closed"
+                        }
+                    ];
+
+                    PlanningCtrl.showAddSubmilestoneModal(event, submilestone_type);
+                    put_request.resolve();
+                    get_request.resolve({
+                        results: {
+                            id             : 1668,
+                            label          : "Sprint 2015-22",
+                            semantic_status: "open"
+                        }
+                    });
+                    $scope.$apply();
+
+                    expect(MilestoneService.getClosedSubMilestones).not.toHaveBeenCalled();
+                    expect(MilestoneService.putSubMilestones).toHaveBeenCalledWith(902, [7441, 9307, 1668]);
+                    expect(MilestoneService.getMilestone).toHaveBeenCalledWith(1668, 50, 0, jasmine.any(Object));
+                });
             });
 
             it("Given that we were in a project context (Top Backlog), when the artifact modal calls its callback, then the MilestoneService will be called and the milestones collection will be updated", function() {
