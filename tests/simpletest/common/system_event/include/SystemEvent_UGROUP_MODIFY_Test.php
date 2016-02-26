@@ -28,7 +28,6 @@ Mock::generatePartial('SystemEvent_UGROUP_MODIFY',
                             'done',
                             'processUgroupBinding',
                             'error',
-                            'getEventManager',
                             'getParametersAsArray'));
 Mock::generatePartial(
     'SystemEvent_UGROUP_MODIFY',
@@ -133,7 +132,6 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
         $backendSVN->expectOnce('updateSVNAccess');
         $evt->setReturnValue('getBackend', $backendSVN, array('SVN'));
 
-        $evt->expectOnce('getProject');
         $evt->expectOnce('getBackend');
         $evt->expectOnce('done');
         $evt->expectNever('error');
@@ -171,5 +169,69 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
 
         // Launch the event
         $this->assertTrue($evt->process());
+    }
+}
+
+class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase {
+
+    private $system_event;
+    private $project;
+
+    public function setUp() {
+        parent::setUp();
+
+        EventManager::setInstance(mock('EventManager'));
+        ProjectManager::setInstance(mock('ProjectManager'));
+
+        $event_params = array(
+            '1',
+            SystemEvent::TYPE_UGROUP_MODIFY,
+            SystemEvent::OWNER_ROOT,
+            '101::104::Amleth::Hamlet',
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::STATUS_RUNNING,
+            $_SERVER['REQUEST_TIME'],
+            $_SERVER['REQUEST_TIME'],
+            $_SERVER['REQUEST_TIME'],
+            ''
+        );
+
+        $this->system_event= partial_mock(
+            'SystemEvent_UGROUP_MODIFY',
+            array(
+                'getUgroupBinding'
+            ),
+            $event_params
+        );
+
+        $ugroup_binding = mock('UgroupBinding');
+        stub($ugroup_binding)->updateBindedUGroups()->returns(true);
+        stub($ugroup_binding)->removeAllUGroupsBinding()->returns(true);
+        stub($ugroup_binding)->getUGroupsByBindingSource()->returns(array());
+
+        stub($this->system_event)->getUgroupBinding()->returns($ugroup_binding);
+
+        $this->project = mock('Project');
+        stub(ProjectManager::instance())->getProject('101')->returns($this->project);
+    }
+
+    public function tearDown() {
+        EventManager::clearInstance();
+        ProjectManager::clearInstance();
+
+        parent::tearDown();
+    }
+
+    public function itWarnsOthersThatUGroupHasBeenModified() {
+        expect(EventManager::instance())->processEvent(
+            Event::UGROUP_RENAME,
+            array(
+                'project'         => $this->project,
+                'new_ugroup_name' => 'Amleth',
+                'old_ugroup_name' => 'Hamlet'
+            )
+        )->once();
+
+        $this->system_event->process();
     }
 }

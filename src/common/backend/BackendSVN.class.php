@@ -289,6 +289,73 @@ class BackendSVN extends Backend {
      */
     public function updateSVNAccess($group_id, $system_path, $ugroup_name = null, $ugroup_old_name = null) {
         $project = $this->getProjectManager()->getProject($group_id);
+
+        $svn_access_file = $this->_getSVNAccessFile();
+
+        $contents     = $this->getCustomPermission($system_path, $svn_access_file, $project);
+        $custom_perms = $this->getCustomPermissionForProject($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name);
+
+        return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
+    }
+
+    public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir) {
+        $svn_access_file = $this->_getSVNAccessFile();
+
+        $contents     = $this->getCustomPermission($system_path, $svn_access_file, $project);
+        $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
+
+        return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
+    }
+
+    private function getSvnAccessFile($system_path) {
+        return $system_path."/.SVNAccessFile";
+    }
+
+    private function getDefaultBlocEnd() {
+        return "# END CODENDI DEFAULT SETTINGS\n";
+    }
+
+    private function getCustomPermission($system_path, SVNAccessFile $svn_access_file, Project $project) {
+        $contents = '';
+        if (is_file($this->getSvnAccessFile($system_path))) {
+            $svnaccess_array = file($this->getSvnAccessFile($system_path));
+            $configlines = false;
+
+            while ($line = array_shift($svnaccess_array)) {
+                if ($configlines) {
+                    $contents .= $line;
+                }
+                if (strcmp($line, $this->getDefaultBlocEnd()) == 0) {
+                    $configlines=1;
+                }
+            }
+        }
+
+        return $contents;
+    }
+
+    private function getDefaultBlock(Project $project) {
+        $default_block = '';
+        $default_block .= $this->getSVNAccessGroups($project);
+        $default_block .= $this->getSVNAccessRootPathDef($project);
+
+        return $default_block;
+    }
+
+    private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name) {
+        $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
+        $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
+        return $svn_access_file->parseGroupLines($project, $contents);
+    }
+
+    private function getCustomPermissionForRepository($project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir) {
+        $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
+        $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
+
+        return $svn_access_file->parseGroupLinesByRepositories($svn_dir, $contents);
+    }
+
+    private function updateSVNAccessFile($system_path, $custom_perms, Project $project) {
         if (!$project) {
             return false;
         }
@@ -300,43 +367,20 @@ class BackendSVN extends Backend {
 
         $unix_group_name = $project->getUnixNameMixedCase();
 
-        $svnaccess_file = $system_path."/.SVNAccessFile";
-        $svnaccess_file_old = $svnaccess_file.".old";
-        $svnaccess_file_new = $svnaccess_file.".new";
+        $svnaccess_file     = $this->getSvnAccessFile($system_path);
+        $svnaccess_file_old = $this->getSvnAccessFile($system_path).".old";
+        $svnaccess_file_new = $this->getSvnAccessFile($system_path).".new";
         // if you change these block markers also change them in
         // src/www/svn/svn_utils.php
         $default_block_start="# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE\n";
-        $default_block_end="# END CODENDI DEFAULT SETTINGS\n";
-        $custom_perms='';
-        $public_svn = 1; // TODO
-        $defaultBlock = '';
-        $defaultBlock .= $this->getSVNAccessGroups($project);
-        $defaultBlock .= $this->getSVNAccessRootPathDef($project);
-        // Retrieve custom permissions, if any
-        if (is_file("$svnaccess_file")) {
-            $svnaccess_array = file($svnaccess_file);
-            $configlines = false;
-            $contents = '';
-            while ($line = array_shift($svnaccess_array)) {
-                if ($configlines) {
-                    $contents .= $line;
-                }
-                if (strcmp($line, $default_block_end) == 0) { 
-                    $configlines=1;
-                }
-            }
-            $saf = $this->_getSVNAccessFile();
-            $saf->setRenamedGroup($ugroup_name, $ugroup_old_name);
-            $saf->setPlatformBlock($defaultBlock);
-            $custom_perms .= $saf->parseGroupLines($project, $contents);
-        }
 
+        // Retrieve custom permissions, if any
         $fp = fopen($svnaccess_file_new, 'w');
 
         // Codendi specifc
         fwrite($fp, "$default_block_start");
-        fwrite($fp, $defaultBlock);
-        fwrite($fp, "$default_block_end");
+        fwrite($fp, $this->getDefaultBlock($project));
+        fwrite($fp, $this->getDefaultBlocEnd());
 
         // Custom permissions
         if ($custom_perms) {
@@ -353,7 +397,7 @@ class BackendSVN extends Backend {
         $this->chgrp($svnaccess_file, $unix_group_name);
         chmod("$svnaccess_file", 0775);
 
-        return true;
+         return true;
     }
 
     /**

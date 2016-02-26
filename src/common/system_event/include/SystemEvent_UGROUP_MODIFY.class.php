@@ -35,9 +35,20 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * @return string
      */
     public function verbalizeParameters($with_link) {
-        $txt = '';
-        list($group_id, $ugroup_id) = $this->getParametersAsArray();
+        $txt             = '';
+        $ugroup_name     = '';
+        $ugroup_old_name = '';
+        if (count($this->getParametersAsArray()) == 4) {
+            list($group_id, $ugroup_id, $ugroup_name, $ugroup_old_name) = $this->getParametersAsArray();
+        } else {
+            list($group_id, $ugroup_id) = $this->getParametersAsArray();
+        }
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', ugroup: #'. $ugroup_id;
+
+        if ($ugroup_name) {
+            $txt .= ', rename: '. $ugroup_old_name .' => '. $ugroup_name;
+        }
+
         return $txt;
     }
     
@@ -60,12 +71,20 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             $this->error("Could not process binding to this user group ($ugroup_id)");
             return false;
         }
-
         $is_svn_access_successfuly_updated = $this->processSVNAccessFile($group_id, $ugroup_name, $ugroup_old_name);
         if (! $is_svn_access_successfuly_updated) {
             $this->error("Could not update SVN access file ($group_id)");
             return false;
         }
+
+        EventManager::instance()->processEvent(
+            Event::UGROUP_RENAME,
+            array(
+                'project'         => $this->getProject($group_id),
+                'new_ugroup_name' => $ugroup_name,
+                'old_ugroup_name' => $ugroup_old_name
+            )
+        );
 
         $this->done();
         return true;
