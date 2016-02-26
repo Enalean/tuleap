@@ -232,6 +232,20 @@ Provides: tuleap-plugin-git = %{version}
 Integration of git distributed software configuration management tool together
 with Tuleap
 
+%package plugin-pullrequest
+Summary: Pull request plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_PULLREQUEST_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{PKG_NAME}-plugin-git
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-pullrequest = %{version}
+%else
+Provides: tuleap-plugin-pullrequest = %{version}
+%endif
+%description plugin-pullrequest
+Code review and pull requests inside of Tuleap
+
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
@@ -495,8 +509,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn
 # Plugin OpenID Connect is not supported on CentOS 5
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
-# Remove the Pull Request plugin
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pullrequest
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -983,6 +995,10 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
+
+%files plugin-pullrequest
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/pullrequest
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)
