@@ -1094,8 +1094,8 @@ class Event {
      *
      * Paramters:
      *   'project'         => Project
-     *   'new_ugroup_name' => String
-     *   'old_ugroup_name' => String
+     *   'new_ugroup_name' => String|null
+     *   'old_ugroup_name' => String|null
      */
-    const UGROUP_RENAME = 'ugroup_rename';
+    const UGROUP_MODIFY = 'ugroup_modify';
 }
