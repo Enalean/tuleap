@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS, 2013. All rights reserved
+ * Copyright (c) Enalean SAS, 2013 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-
-    (function toggleInformationForTemplates() {
-        var templates = $$('.one_step_project_choose_template > label.radio > input[type=radio]');
+(function ($) {
+    $(document).ready(function () {
+        var templates = $('.one_step_project_choose_template > label.radio > input[type=radio]');
 
         function toggleTemplate(template) {
-            var method = 'hide';
-            if (template.checked) {
-                method = 'show';
+            if (template.prop("checked") === true) {
+                template.parents('label').nextAll().show();
+            } else {
+                template.parents('label').nextAll().hide();
             }
-            template.up('label').nextSiblings().invoke(method);
         }
 
-        function toggleAllTemplates(templates) {
-            templates.map(toggleTemplate);
-        }
-
-        if (templates) {
-            toggleAllTemplates(templates);
-            templates.invoke('observe', 'click', function () {
-                toggleAllTemplates(templates);
+        function toggleAllTemplates() {
+            templates.each(function() {
+                var template = $(this);
+                toggleTemplate(template);
             });
         }
-    })();
-});
+
+        if (templates !== undefined) {
+            toggleAllTemplates();
+            templates.click(function () {
+                toggleAllTemplates();
+            });
+        }
+    });
+})(jQuery);
