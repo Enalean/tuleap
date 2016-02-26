@@ -57,10 +57,10 @@ class AccessFileReaderTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNotContainBlockDelimiters() {
+    public function itDoesNotContainDelimiters() {
         $this->assertNoPattern(
             '/# BEGIN CODENDI DEFAULT SETTINGS/',
-            $this->reader->readContentBlock($this->repository)
+            $this->reader->readDefaultBlock($this->repository)
         );
     }
 }
