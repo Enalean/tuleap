@@ -1,5 +1,8 @@
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,19 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
  
 /**
  * Autocompleting project and user inputs within ProjectQuotaHtml::renderNewCustomQuotaForm() form
  */
 
-document.observe('dom:loaded', function () {
-    if ($('plugin_statistics')) {
-        options              = Array();
-        options['private']   = 1;
-        var prjAutocomplete  = new ProjectAutoCompleter('project', codendi.imgroot, false, options);
-        var userAutocomplete = new UserAutoCompleter('requester', codendi.imgroot);
-        prjAutocomplete.registerOnLoad();
-        userAutocomplete.registerOnLoad();
-    }
-});
+(function ($, codendi) {
+    $(document).ready(function () {
+        var plugin_statistics_element = $('#plugin_statistics'),
+            options = [];
+
+        if (plugin_statistics_element !== null) {
+            options['private'] = 1;
+
+            var prjAutocomplete  = new ProjectAutoCompleter('project', codendi.imgroot, false, options);
+            var userAutocomplete = new UserAutoCompleter('requester', codendi.imgroot);
+
+            prjAutocomplete.registerOnLoad();
+            userAutocomplete.registerOnLoad();
+        }
+    });
+})(jQuery, codendi);
