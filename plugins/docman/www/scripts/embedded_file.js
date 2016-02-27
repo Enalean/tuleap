@@ -23,7 +23,7 @@ var codendi = codendi || { };
             rte              = null,
             options          = null;
 
-        if (embedded_content !== undefined) {
+        if (embedded_content.length > 0) {
             options = {
                 toolbar: 'full',
                 onLoad: $.noop(),
