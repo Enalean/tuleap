@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2013. All rights reserved
+ * Copyright (c) Enalean SAS - 2013 - 2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-document.observe('dom:loaded', function() {
-    $$('.widget_myprojects_editor').each(function(element){
-        var options = {
-            toolbar: 'minimal', //basic | full | minimal
-            onLoad: Prototype.emptyFunction,
-            toggle: false,
-            default_in_html: true
-        };
-        var rte = new codendi.RTE(element.id,options);
-
+(function ($, codendi) {
+    $(document).ready(function(){
+        $('.widget_myprojects_editor').each(function(){
+            var element = $(this),
+                options = {
+                    toolbar: 'minimal',
+                    onLoad: $.noop(),
+                    toggle: false,
+                    default_in_html: true
+                },
+                rte = new codendi.RTE(element.attr('id'),options);
+        });
     });
-});
+})(jQuery, codendi || {});
