@@ -5,6 +5,7 @@ Version 8.12 (Not yet released)
 	* request #8865: Remove Debian alpha support
 	* request #8309: Get rid of PrototypeJS (system_events.js)
 	* request #8309: Get rid of PrototypeJS (CreateProject.js)
+	* request #8309: Get rid of PrototypeJS (massmail_initialize_ckeditor.js)
 	* story #8825: Package the pull request plugin
 
 	== Bug fix ==
