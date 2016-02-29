@@ -161,6 +161,17 @@ Provides: tuleap-plugin-forumml = %{version}
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
 to send mails through the web interface. It can replace the forums.
 
+%package plugin-svn
+Summary: Subversion plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_SVN_VERSION@@
+Release: @@RELEASE@@%{?dist}
+AutoReqProv: no
+Requires: %{PKG_NAME}, subversion, mod_dav_svn, subversion-perl, highlight, tuleap-core-subversion-modperl
+Requires: viewvc-tuleap
+%description plugin-svn
+Integration of Subversion software configuration management tool with Tuleap.
+
 %package plugin-git
 Summary: Git plugin for Tuleap
 Group: Development/Tools
@@ -441,8 +452,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
-# Remove the new plugin
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -541,6 +550,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin archivedeleteditems
 %{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+
+# Plugin svn
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
 
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
@@ -1038,6 +1050,11 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/webdav
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+
+%files plugin-svn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/svn
+%dir %{APP_DATA_DIR}/svn_plugin
 
 %files plugin-tracker
 %defattr(-,%{APP_USER},%{APP_USER},-)
