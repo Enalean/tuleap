@@ -1,3 +1,6 @@
+Version 0.14 - Tuleap 8.12
+    * story #8826: Use common ancestor when displaying a diff
+
 Version 0.13 - Tuleap 8.12
     * story #8826: Create pull requests from a git repository
 
