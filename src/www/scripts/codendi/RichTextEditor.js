@@ -92,6 +92,14 @@ codendi.RTE = Class.create(
 
             this.rte = CKEDITOR.replace(this.element.id, replace_options);
 
+            /*CKEDITOR filters HTML tags
+              So, if your text is like <blabla>, this will not be displayed.
+              To "fix this, we escape the textarea content
+            */
+
+            var escaped_value = tuleap.escaper.html(this.element.value);
+            this.rte.setData(escaped_value);
+
             CKEDITOR.on('dialogDefinition', function (ev) {
                 var tab,
                     dialog     = ev.data.name,
