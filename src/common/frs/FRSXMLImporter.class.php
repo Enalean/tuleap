@@ -58,6 +58,7 @@ class FRSXMLImporter {
         FRSFileFactory $file_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
+        XMLImportHelper $xml_import_helper,
         FRSProcessorDao $processor_dao = null,
         FRSFileTypeDao $filetype_dao = null,
         PermissionsManager $permission_manager = null)
@@ -72,6 +73,7 @@ class FRSXMLImporter {
         $this->processor_dao = $processor_dao;
         $this->permission_manager = $permission_manager;
         $this->ugroup_manager = $ugroup_manager;
+        $this->xml_import_helper = $xml_import_helper;
     }
 
     private function getFileTypeDao(){
@@ -108,9 +110,27 @@ class FRSXMLImporter {
             return true;
         }
 
-        foreach($xml_frs->children() as $xml_pkg) {
+        foreach($xml_frs->package as $xml_pkg) {
             $this->importPackage($project, $xml_pkg, $extraction_path);
         }
+
+        if(isset($xml_frs->administrators)) {
+            foreach($xml_frs->administrators->user as $xml_admin) {
+                $this->importAdministrator($project, $xml_admin);
+            }
+        }
+    }
+
+    private function importAdministrator(Project $project, SimpleXMLElement $xml_admin) {
+        $user = $this->xml_import_helper->getUser($xml_admin);
+        if(!$user->isMember($project->getId())) {
+            $this->logger->warn("User '{$user->getName()}' is not member of the project. Skipping admin import...");
+            return;
+        }
+
+        $this->logger->debug("Setting {$user->getName()} as FRS administrator.");
+        $frs_admin_group = $this->ugroup_manager->getUGroupByName($project, ProjectUGroup::$normalized_names[ProjectUGroup::FILE_MANAGER_ADMIN]);
+        $frs_admin_group->addUser($user);
     }
 
     private function importPackage(Project $project, SimpleXMLElement $xml_pkg, $extraction_path) {

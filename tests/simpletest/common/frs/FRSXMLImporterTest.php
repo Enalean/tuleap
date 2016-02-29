@@ -33,29 +33,30 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory {
 
 }
 
-class FRSXMLImporterTest extends TuleapTestCase {
+
+class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
 
     public function setUp() {
-        $package_factory = new FRSPackageFactoryMock();
-        $release_factory = new FRSReleaseFactory();
-        $file_factory = new FRSXMLImporterTest_FRSFileFactory();
+        $this->package_factory = new FRSPackageFactoryMock();
+        $this->release_factory = new FRSReleaseFactory();
+        $this->file_factory = new FRSXMLImporterTest_FRSFileFactory();
 
         $this->package_dao = mock('FRSPackageDao');
-        $package_factory->dao = $this->package_dao;
-        FRSPackageFactory::setInstance($package_factory);
+        $this->package_factory->dao = $this->package_dao;
+        FRSPackageFactory::setInstance($this->package_factory);
 
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
 
         $this->release_dao = mock('FRSReleaseDao');
-        $release_factory->dao =  $this->release_dao;
-        $release_factory->package_factory = $package_factory;
-        $release_factory->file_factory = $file_factory;
-        FRSReleaseFactory::setInstance($release_factory);
+        $this->release_factory->dao =  $this->release_dao;
+        $this->release_factory->package_factory = $this->package_factory;
+        $this->release_factory->file_factory = $this->file_factory;
+        FRSReleaseFactory::setInstance($this->release_factory);
 
         $this->file_dao = mock('FRSFileDao');
-        $file_factory->dao = $this->file_dao;
-        $file_factory->release_factory = $release_factory;
+        $this->file_factory->dao = $this->file_dao;
+        $this->file_factory->release_factory = $this->release_factory;
 
         $this->processor_dao = mock('FRSProcessorDao');
         $this->filetype_dao = mock('FRSFileTypeDao');
@@ -64,17 +65,20 @@ class FRSXMLImporterTest extends TuleapTestCase {
         $this->user_manager = mock('UserManager');
         UserManager::setInstance($this->user_manager);
 
-	$this->ugroup_dao = mock("UGroupDao");
+        $this->ugroup_dao = mock('UGroupDao');
         stub($this->ugroup_dao)->searchByGroupIdAndName()->returns(new DataAccessResultEmpty());
+
+        $this->xml_import_helper = mock('XMLImportHelper');
 
         $this->frs_importer = new FRSXMLImporter(
             mock('Logger'),
             new XML_RNGValidator(),
-            $package_factory,
-            $release_factory,
-            $file_factory,
+            $this->package_factory,
+            $this->release_factory,
+            $this->file_factory,
             $this->user_finder,
             new UGroupManager($this->ugroup_dao),
+            $this->xml_import_helper,
             $this->processor_dao,
             $this->filetype_dao);
 
@@ -105,6 +109,10 @@ class FRSXMLImporterTest extends TuleapTestCase {
             unset($GLOBALS['ftp_frs_dir_prefix']);
         }
     }
+
+}
+
+class FRSXMLImporterTest extends FRSXMLImporterTest_BootStrap {
 
     public function itShouldImportOnePackageWithDefaultValues() {
         $pm = ProjectManager::instance();
@@ -280,5 +288,80 @@ XML;
             'status_id' => FRSPackage::STATUS_ACTIVE,
             'rank' => 'end',
             'approve_license' => true);
+    }
+}
+
+
+class FRSXMLImporter_Administrators_Test extends FRSXMLImporterTest_BootStrap {
+    public function setUp() {
+        parent::setUp();
+        $this->ugroup_manager = mock('UGroupManager');
+        $this->frs_importer = new FRSXMLImporter(
+            mock('Logger'),
+            new XML_RNGValidator(),
+            $this->package_factory,
+            $this->release_factory,
+            $this->file_factory,
+            $this->user_finder,
+            $this->ugroup_manager,
+            $this->xml_import_helper,
+            $this->processor_dao,
+            $this->filetype_dao);
+    }
+
+    public function itShouldImportAdministrators() {
+        $pm = ProjectManager::instance();
+        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $xml = <<<XML
+        <project>
+            <frs>
+                <administrators>
+                    <user format="username">adrien</user>
+                </administrators>
+            </frs>
+        </project>
+XML;
+        $xml_element = new SimpleXMLElement($xml);
+        $user_id = 42;
+        $user = mock('PFUser');
+        stub($user)->getId()->returns($user_id);
+        stub($user)->isMember(123)->returns(true);
+        stub($this->xml_import_helper)->getUser()->returns($user);
+        $project_ugroup = mock('ProjectUGroup');
+        stub($this->ugroup_manager)->getUGroupByName()->returns($project_ugroup);
+        expect($project_ugroup)->addUser($user)->once();
+        $this->frs_importer->import($project, $xml_element, '');
+    }
+
+    public function itShouldNotImportAdministratorsIfNotMemberOfTheProject() {
+        $pm = ProjectManager::instance();
+        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $xml = <<<XML
+        <project>
+            <frs>
+                <administrators>
+                    <user format="username">adrien</user>
+                    <user format="username">toto</user>
+                </administrators>
+            </frs>
+        </project>
+XML;
+        $xml_element = new SimpleXMLElement($xml);
+        $user_adrien_id = 42;
+        $user_adrien = mock('PFUser');
+        stub($user_adrien)->getId()->returns($user_adrien_id);
+        stub($user_adrien)->isMember(123)->returns(true);
+        stub($this->xml_import_helper)->getUser()->returnsAt(0, $user_adrien);
+
+        $user_toto_id = 1337;
+        $user_toto = mock('PFUser');
+        stub($user_toto)->getId()->returns($user_toto_id);
+        stub($user_toto)->isMember(123)->returns(false);
+        stub($this->xml_import_helper)->getUser()->returnsAt(1, $user_toto);
+
+        $project_ugroup = mock('ProjectUGroup');
+        stub($this->ugroup_manager)->getUGroupByName()->returns($project_ugroup);
+        expect($project_ugroup)->addUser()->once();
+        $this->frs_importer->import($project, $xml_element, '');
     }
 }
