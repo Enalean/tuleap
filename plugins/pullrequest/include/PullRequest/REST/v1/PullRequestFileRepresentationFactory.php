@@ -40,7 +40,7 @@ class PullRequestFileRepresentationFactory {
     public function getModifiedFilesRepresentations(PullRequest $pull_request) {
         $x_files = array();
 
-        $modified_files = $this->executor->getModifiedFiles($pull_request->getSha1Dest(), $pull_request->getSha1Src());
+        $modified_files = $this->executor->getModifiedFiles($pull_request->getSha1Src(), $pull_request->getSha1Dest());
 
         foreach ($modified_files as $file) {
             $impacted_file = preg_split("/[\t]/", $file);
