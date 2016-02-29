@@ -1,0 +1,18 @@
+SVN plugin
+==========
+
+This plugin allows each project to have one or more subversion repositories
+(remember that in the core you are only allowed to have one subversion
+repository per project).
+
+As of today, the plugin is only a subset of the functionalities offered by the
+core, however the ideal goal is to migrate core to plugin in a near future.
+
+Features
+--------
+
+* Multiple repositories per project
+* Integration of viewvc
+* Notifications when a commit is done in a given path
+* Web-based customisation of .SVNAccessFile
+
