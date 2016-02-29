@@ -40,6 +40,7 @@ class GitExecTest extends TuleapTestCase {
         system("cd $this->fixture_dir && git init 2>&1 >/dev/null");
 
         $this->git_exec = new GitExec($this->fixture_dir);
+        $this->git_exec->setLocalCommiter('John Doe', 'john.doe@example.com');
 
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->git_exec->add("$this->fixture_dir/toto");
@@ -79,6 +80,27 @@ class GitExecTest extends TuleapTestCase {
 
         $this->assertArrayNotEmpty($files);
         $this->assertEqual($files[0], 'M	toto');
+    }
+
+    public function itUsesTheCommonAncestorToDoTheDiff() {
+        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && git checkout --quiet master 2>&1 >/dev/null");
+        file_put_contents("$this->fixture_dir/added-file-in-master", "whatever");
+        $this->git_exec->add("$this->fixture_dir/added-file-in-master");
+        $this->git_exec->commit("add file added-file-in-master");
+
+        system("cd $this->fixture_dir && git checkout --quiet dev 2>&1 >/dev/null");
+        file_put_contents("$this->fixture_dir/added-file-in-dev", "jackassness");
+        $this->git_exec->add("$this->fixture_dir/added-file-in-dev");
+        $this->git_exec->commit("add file added-file-in-dev");
+
+        $sha1_src  = $this->git_exec->getReferenceBranch('dev');
+        $sha1_dest = $this->git_exec->getReferenceBranch('master');
+
+        $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
+
+        $this->assertEqual($files[0], 'A	added-file-in-dev');
+
     }
 
     public function itThrowsAnExceptionIfReferenceIsUnknown() {
