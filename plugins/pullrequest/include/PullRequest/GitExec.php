@@ -80,4 +80,10 @@ class GitExec extends Git_Exec {
 
         return $this->gitCmdWithOutput('merge --ff-only ' . $reference, $output);
     }
+
+    public function getAllBranchNames() {
+       $output = array();
+       $this->gitCmdWithOutput("branch | cut -c 3-", $output);
+       return $output;
+    }
 }

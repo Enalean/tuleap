@@ -279,19 +279,33 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getCloneUrl() {
-        $mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+        $mirrors            = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+        $additional_actions = $this->getAdditionalActions();
 
         $presenter = new RepositoryClonePresenter(
             $this->repository,
             $this->getAccessURLs(),
             $mirrors,
             $this->controller->isAPermittedAction('repo_management'),
-            $this->getMasterLocationName()
+            $this->getMasterLocationName(),
+            $additional_actions
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
         return $renderer->renderToString($presenter->getTemplateName(), $presenter);
+    }
+
+    private function getAdditionalActions() {
+        $actions = '';
+        $params  = array(
+            'repository' => $this->repository,
+            'actions'    => &$actions
+        );
+
+        EventManager::instance()->processEvent(GIT_ADDITIONAL_ACTIONS, $params);
+
+        return $actions;
     }
 
     private function getMasterLocationName() {

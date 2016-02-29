@@ -51,6 +51,16 @@ define('GIT_ADDITIONAL_INFO', 'git_additional_info');
  */
 define('GIT_VIEW', 'git_view');
 
+
+/**
+ * Allow a plugin to add additional actions beside the clone bar
+ *
+ * Parameters:
+ *   'repository' => (Input)  GitRepository Git repository
+ *   'actions'    => (Output) String        Rendered template of the actions
+ */
+define('GIT_ADDITIONAL_ACTIONS', 'git_additional_actions');
+
 /**
  * Allow a plugin to append his own classes to the body DOM element in git views
  *

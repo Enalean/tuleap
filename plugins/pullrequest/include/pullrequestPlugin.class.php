@@ -21,6 +21,17 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\PullRequest\Router;
+use Tuleap\PullRequest\PullRequestCreator;
+use Tuleap\PullRequest\REST\ResourcesInjector;
+use Tuleap\PullRequest\PluginInfo;
+use Tuleap\PullRequest\AdditionalInfoPresenter;
+use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\AdditionalActionsPresenter;
+use Tuleap\PullRequest\PullRequestPresenter;
+use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\Dao;
+
 class pullrequestPlugin extends Plugin {
 
     public function __construct($id) {
@@ -36,6 +47,7 @@ class pullrequestPlugin extends Plugin {
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_INFO);
+            $this->addHook(GIT_ADDITIONAL_ACTIONS);
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
             $this->addHook(GIT_HANDLE_ADDITIONAL_ACTION);
@@ -71,12 +83,30 @@ class pullrequestPlugin extends Plugin {
         }
     }
 
+    public function process(Codendi_Request $request) {
+        $user_manager           = UserManager::instance();
+        $git_repository_factory = new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        );
+
+        $pull_request_creator = new PullRequestCreator(
+            $this->getPullRequestFactory(),
+            new Dao(),
+            $git_repository_factory,
+            $user_manager
+        );
+
+        $router = new Router($pull_request_creator, $git_repository_factory, $user_manager);
+        $router->route($request);
+    }
+
     /**
      * @return Tuleap\PullRequest\PluginInfo
      */
     public function getPluginInfo() {
         if (!$this->pluginInfo) {
-            $this->pluginInfo = new Tuleap\PullRequest\PluginInfo($this);
+            $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -85,7 +115,7 @@ class pullrequestPlugin extends Plugin {
      * @see REST_RESOURCES
      */
     public function rest_resources(array $params) {
-        $injector = new Tuleap\PullRequest\REST\ResourcesInjector();
+        $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
@@ -119,9 +149,24 @@ class pullrequestPlugin extends Plugin {
         $nb_pull_requests = $this->getPullRequestFactory()->countPullRequestOfRepository($repository);
 
         $renderer  = $this->getTemplateRenderer();
-        $presenter = new Tuleap\PullRequest\AdditionalInfoPresenter($repository, $nb_pull_requests);
+        $presenter = new AdditionalInfoPresenter($repository, $nb_pull_requests);
 
         $params['info'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+    }
+
+    /**
+     * @see GIT_ADDITIONAL_ACTIONS
+     */
+    public function git_additional_actions($params) {
+        $repository = $params['repository'];
+        $git_exec   = new GitExec($repository->getFullPath(), $repository->getFullPath());
+        $branches   = $git_exec->getAllBranchNames();
+        $csrf       = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
+
+        $renderer  = $this->getTemplateRenderer();
+        $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches);
+
+        $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
     }
 
     /**
@@ -175,14 +220,14 @@ class pullrequestPlugin extends Plugin {
 
         if ($request->get('action') === 'pull-requests') {
             $renderer  = $this->getTemplateRenderer();
-            $presenter = new Tuleap\PullRequest\PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale());
+            $presenter = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale());
 
             $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }
     }
 
     private function getPullRequestFactory() {
-        return new Tuleap\PullRequest\Factory(new Tuleap\PullRequest\Dao());
+        return new Factory(new Dao());
     }
 
     private function getTemplateRenderer() {

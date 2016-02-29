@@ -34,6 +34,18 @@ class Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchByShaOnes($sha1_src, $sha1_dest) {
+        $sha1_src  = $this->da->quoteSmart($sha1_src);
+        $sha1_dest = $this->da->quoteSmart($sha1_dest);
+
+        $sql = "SELECT *
+                FROM plugin_pullrequest_review
+                WHERE sha1_src = $sha1_src
+                  AND sha1_dest = $sha1_dest";
+
+        return $this->retrieve($sql);
+    }
+
     public function countPullRequestOfRepository($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
 
