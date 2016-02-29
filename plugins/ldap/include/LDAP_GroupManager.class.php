@@ -158,14 +158,14 @@ abstract class LDAP_GroupManager
      * @param string $option tells whether it is a complete bind with the ldap group or user wants to preserve
      * @return Boolean
      */
-    protected function syncMembersWithLdap($option)
-    {
+    protected function syncMembersWithLdap($option) {
         $toAdd = $this->getUsersToBeAdded($option);
         if ($toAdd) {
             foreach($toAdd as $userId) {
                 $this->addUserToGroup($this->id, $userId);
             }
         }
+
         if($option == self::BIND_OPTION) {
             $toRemove = $this->getUsersToBeRemoved(self::BIND_OPTION);
             if ($toRemove) {
@@ -174,7 +174,16 @@ abstract class LDAP_GroupManager
                 }
             }
         }
+
+        $this->resetUsersCollections();
+
         return true;
+    }
+
+    private function resetUsersCollections() {
+        $this->usersToAdd       = null;
+        $this->usersToRemove    = null;
+        $this->usersNotImpacted = null;
     }
 
     /**
@@ -214,39 +223,39 @@ abstract class LDAP_GroupManager
      * @param string $option 'bind' or 'preserve_members'.
      * @return Array
      */
-    public function getUsersToBeAdded($option)
-    {
+    public function getUsersToBeAdded($option) {
         if ($this->usersToAdd === null) {
             $this->diffDbAndDirectory($option);
         }
+
         return $this->usersToAdd;
     }
 
     /**
-     * Return the list of user ids that will be added to the group
+     * Return the list of user ids that will be removed to the group
      * 
      * @param string $option 'bind' or 'preserve_members'.
      * @return Array
      */
-    public function getUsersToBeRemoved($option)
-    {
-        if ($this->usersToAdd === null) {
+    public function getUsersToBeRemoved($option) {
+        if ($this->usersToRemove === null) {
             $this->diffDbAndDirectory($option);
         }
+
         return $this->usersToRemove;
     }
 
     /**
-     * Return the list of user ids that will be added to the group
+     * Return the list of user ids that will not be impacted
      * 
      * @param string $option 'bind' or 'preserve_members'.
      * @return Array
      */
-    public function getUsersNotImpacted($option)
-    {
-        if ($this->usersToAdd === null) {
+    public function getUsersNotImpacted($option) {
+        if ($this->usersNotImpacted === null) {
             $this->diffDbAndDirectory($option);
         }
+
         return $this->usersNotImpacted;
     }
 
