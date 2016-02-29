@@ -5,26 +5,29 @@ angular
 PullRequestController.$inject = [
     'lodash',
     'SharedPropertiesService',
+    'PullRequestService',
     'PullRequestRestService'
 ];
 
 function PullRequestController(
     lodash,
     SharedPropertiesService,
+    PullRequestService,
     PullRequestRestService
 ) {
     var self = this;
 
     lodash.extend(self, {
-        pull_request: SharedPropertiesService.getPullRequest(),
-        merge       : merge,
-        abandon     : abandon
+        valid_status_keys: PullRequestService.valid_status_keys,
+        pull_request     : SharedPropertiesService.getPullRequest(),
+        merge            : merge,
+        abandon          : abandon
     });
 
     refreshPullRequest();
 
     function refreshPullRequest() {
-        if (self.pull_request.status === '') {
+        if (! lodash.has(self.pull_request, 'status')) {
             PullRequestRestService.getPullRequest(self.pull_request.id).then(function(pull_request) {
                 self.pull_request = pull_request;
             });
@@ -32,20 +35,10 @@ function PullRequestController(
     }
 
     function merge() {
-        // PullRequestRestService.merge(self.pull_request.id).then(function(response) {
-        //     self.pull_request.status = 'M';
-        //
-        // }).catch(function(response) {
-        //     ErrorModalService.showError(response);
-        // });
+        PullRequestService.merge(self.pull_request);
     }
 
     function abandon() {
-        // PullRequestRestService.abandon(self.pull_request.id).then(function(response) {
-        //     self.pull_request.status = 'A';
-        //
-        // }).catch(function(response) {
-        //     ErrorModalService.showError(response);
-        // });
+        PullRequestService.abandon(self.pull_request);
     }
 }

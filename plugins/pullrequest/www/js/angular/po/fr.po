@@ -17,6 +17,7 @@ msgid "Abandon"
 msgstr "Abandonner"
 
 #: src/app/pull-request/pull-request.tpl.html
+#: src/app/pull-requests/pull-requests.tpl.html
 msgid "Abandoned"
 msgstr "Abandonné"
 
@@ -47,6 +48,10 @@ msgstr "Fichiers"
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Merge"
 msgstr "Intégrer"
+
+#: src/app/pull-requests/pull-requests.tpl.html
+msgid "Merged"
+msgstr "Intégré"
 
 #: src/app/pull-request/comments/comments.tpl.html
 msgid "No comment"

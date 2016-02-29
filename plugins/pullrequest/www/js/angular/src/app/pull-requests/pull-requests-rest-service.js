@@ -4,12 +4,14 @@ angular
 
 PullRequestsRestService.$inject = [
     '$http',
+    '$q',
     'lodash',
     'ErrorModalService'
 ];
 
 function PullRequestsRestService(
     $http,
+    $q,
     lodash,
     ErrorModalService
 ) {
@@ -23,6 +25,7 @@ function PullRequestsRestService(
         return $http.get('/api/v1/git/' + repository_id + '/pull_requests?limit=' + limit + '&offset=' + offset)
             .catch(function(response) {
                 ErrorModalService.showError(response);
+                return $q.reject(response);
             });
     }
 }

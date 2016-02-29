@@ -4,12 +4,14 @@ angular
 
 FileDiffRestService.$inject = [
     '$http',
+    '$q',
     'lodash',
     'ErrorModalService'
 ];
 
 function FileDiffRestService(
     $http,
+    $q,
     lodash,
     ErrorModalService
 ) {
@@ -26,6 +28,7 @@ function FileDiffRestService(
 
             }).catch(function(response) {
                 ErrorModalService.showError(response);
+                return $q.reject(response);
             });
     }
 }

@@ -8,27 +8,27 @@
 </div>
 
 <div id="pull-request-actions">
-    <button ng-if="pull_request.pull_request.status === 'review'"
+    <button ng-if="pull_request.pull_request.status === pull_request.valid_status_keys.review"
             class="btn btn-large btn-primary"
             ng-click="pull_request.merge(pull_request.pull_request.id)"
     >
         <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
     </button>
-    <button ng-if="pull_request.pull_request.status === 'abandon'"
+    <button ng-if="pull_request.pull_request.status === pull_request.valid_status_keys.abandon"
             class="btn btn-large btn-danger"
             disabled
             translate
     >
         Abandoned
     </button>
-    <button ng-if="pull_request.pull_request.status === 'merge'"
+    <button ng-if="pull_request.pull_request.status === pull_request.valid_status_keys.merge"
             class="btn btn-large btn-success"
             disabled
             translate
     >
         Already merged
     </button>
-    <button ng-if="pull_request.pull_request.status === 'review'"
+    <button ng-if="pull_request.pull_request.status === pull_request.valid_status_keys.review"
             class="btn btn-large btn-danger"
             ng-click="pull_request.abandon(pull_request.pull_request.id)"
     >

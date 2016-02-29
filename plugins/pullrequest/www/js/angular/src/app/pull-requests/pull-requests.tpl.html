@@ -8,15 +8,19 @@
     >
         <ui-select-match>
             <span class='id'># {{ $select.selected.id }}</span>
-            <span class='label'>{{ $select.selected.reference_src | limitTo : 7 }}</span> {{ $select.selected.branch_src }}
+            <span class='sha1'>{{ $select.selected.reference_src | limitTo : 7 }}</span> {{ $select.selected.branch_src }}
             <i class='icon-long-arrow-right'></i>
-            <span class='label'>{{ $select.selected.reference_dest | limitTo : 7 }}</span> {{ $select.selected.branch_dest }}
+            <span class='sha1'>{{ $select.selected.reference_dest | limitTo : 7 }}</span> {{ $select.selected.branch_dest }}
+            <span ng-if="$select.selected.status === pull_requests.valid_status_keys.abandon" class='status label' translate>Abandoned</span>
+            <span ng-if="$select.selected.status === pull_requests.valid_status_keys.merge" class='status label label-success' translate>Merged</span>
         </ui-select-match>
         <ui-select-choices repeat="pull_request in (pull_requests.pull_requests | filter: $select.search) track by pull_request.id">
             <span class='id'># {{ pull_request.id }}</span>
-            <span class='label'>{{ pull_request.reference_src | limitTo : 7 }}</span> {{ pull_request.branch_src }}
+            <span class='sha1'>{{ pull_request.reference_src | limitTo : 7 }}</span> {{ pull_request.branch_src }}
             <i class='icon-long-arrow-right'></i>
-            <span class='label'>{{ pull_request.reference_dest | limitTo : 7 }}</span> {{ pull_request.branch_dest }}
+            <span class='sha1'>{{ pull_request.reference_dest | limitTo : 7 }}</span> {{ pull_request.branch_dest }}
+            <span ng-if="pull_request.status === pull_requests.valid_status_keys.abandon" class='status label' translate>Abandoned</span>
+            <span ng-if="pull_request.status === pull_requests.valid_status_keys.merge" class='status label label-success' translate>Merged</span>
         </ui-select-choices>
     </ui-select>
 

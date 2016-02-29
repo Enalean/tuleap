@@ -4,12 +4,14 @@ angular
 
 FilesRestService.$inject = [
     '$http',
+    '$q',
     'lodash',
     'ErrorModalService'
 ];
 
 function FilesRestService(
     $http,
+    $q,
     lodash,
     ErrorModalService
 ) {
@@ -26,6 +28,7 @@ function FilesRestService(
 
             }).catch(function(response) {
                 ErrorModalService.showError(response);
+                return $q.reject(response);
             });
     }
 }
