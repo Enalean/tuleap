@@ -69,6 +69,13 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
                     return false;
                 }
             }
+
+            EventManager::instance()->processEvent(
+                Event::MEMBERSHIP_CREATE,
+                array(
+                    'project' => $project
+                )
+            );
             
             // Need to update system group cache
             Backend::instance('System')->setNeedRefreshGroupCache();
