@@ -3,6 +3,7 @@ angular
     .controller('PlanningCtrl', PlanningCtrl);
 
 PlanningCtrl.$inject = [
+    '$q',
     '$filter',
     'gettextCatalog',
     'SharedPropertiesService',
@@ -18,6 +19,7 @@ PlanningCtrl.$inject = [
 ];
 
 function PlanningCtrl(
+    $q,
     $filter,
     gettextCatalog,
     SharedPropertiesService,
@@ -255,26 +257,46 @@ function PlanningCtrl(
         var callback = function(submilestone_id) {
             if (! self.isMilestoneContext()) {
                 return prependSubmilestoneToSubmilestoneList(submilestone_id);
-
-            } else {
-                var submilestone_ids = [];
-                _.forEach(self.milestones.content, function(milestone) {
-                    submilestone_ids.push(milestone.id);
-                });
-
-                submilestone_ids.push(submilestone_id);
-
-                var promise = MilestoneService.putSubMilestones(self.backlog.rest_route_id, submilestone_ids);
-                promise.then(function() {
-                    return prependSubmilestoneToSubmilestoneList(submilestone_id);
-                });
-
-                return promise;
             }
+
+            var promise = fetchClosedSubMilestonesOnce()
+                .then(function() {
+                    return addSubmilestoneToSubmilestone(submilestone_id);
+                });
+
+            return promise;
         };
 
         var parent_item = (! _.isEmpty(self.current_milestone)) ? self.current_milestone : undefined;
         NewTuleapArtifactModalService.showCreation(submilestone_type.id, parent_item, callback);
+    }
+
+    function fetchClosedSubMilestonesOnce() {
+        if (self.milestones.closed_milestones_fully_loaded) {
+            return $q.when();
+        }
+
+        return fetchClosedSubMilestones(
+            self.backlog.rest_route_id,
+            MilestoneCollectionService.milestones.closed_milestones_pagination.limit,
+            MilestoneCollectionService.milestones.closed_milestones_pagination.offset
+        );
+    }
+
+    function addSubmilestoneToSubmilestone(submilestone_id) {
+        var submilestone_ids = [];
+        _.forEach(self.milestones.content, function(milestone) {
+            submilestone_ids.push(milestone.id);
+        });
+
+        submilestone_ids.push(submilestone_id);
+
+        var promise = MilestoneService.putSubMilestones(self.backlog.rest_route_id, submilestone_ids)
+            .then(function() {
+                return prependSubmilestoneToSubmilestoneList(submilestone_id);
+            });
+
+        return promise;
     }
 
     function prependSubmilestoneToSubmilestoneList(submilestone_id) {
