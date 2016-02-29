@@ -46,6 +46,9 @@ Version 8.12 (Not yet released)
 	== Themes ==
 	* FlamingParrot: 1.122
 
+	== Development ==
+	* request #8910: Remove ed usage in ChangeLog generation
+
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==
 	* story #8698: choose the values to be displayed at project creation from trove cats
