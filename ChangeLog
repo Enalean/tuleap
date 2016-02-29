@@ -9,6 +9,7 @@ Version 8.12 (Not yet released)
 	* story #8825: Package the pull request plugin
 	* story #8813: Handle ugroup binding in .SVNAccessFile
 	* story #8813: Update .SVNAccessFile when user is added to project
+	* story #8813: Packaging of svn plugin
 
 	== Bug fix ==
 	* request #8879: Characters not properly escaped in mail sent to user
@@ -26,7 +27,7 @@ Version 8.12 (Not yet released)
 	* agiledashboard: 1.358
 	* mediawiki: 0.108
 	* openidconnectclient: 0.7
-	* svn: 0.26
+	* svn: 0.27
 	* cardwall: 1.56
 	* docman: 2.26.98
 	* git: 4.124
