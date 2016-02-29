@@ -1,3 +1,6 @@
+Version 0.25 - Tuleap 8.12
+    * story #8813: Handle ugroup binding in .SVNAccessFile
+
 Version 0.24 - Tuleap 8.12
     * Do not display delimiters to end users
 
