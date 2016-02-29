@@ -7,7 +7,8 @@ PullRequestsController.$inject = [
     'lodash',
     '$sce',
     'SharedPropertiesService',
-    'PullRequestsRestService'
+    'PullRequestsRestService',
+    'PullRequestService'
 ];
 
 function PullRequestsController(
@@ -15,11 +16,13 @@ function PullRequestsController(
     lodash,
     $sce,
     SharedPropertiesService,
-    PullRequestsRestService
+    PullRequestsRestService,
+    PullRequestService
 ) {
     var self = this;
 
     lodash.extend(self, {
+        valid_status_keys        : PullRequestService.valid_status_keys,
         repository_id            : SharedPropertiesService.getRepositoryId(),
         pull_requests            : [],
         loading_pull_requests    : true,
