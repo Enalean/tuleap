@@ -8,6 +8,7 @@ Version 8.12 (Not yet released)
 	* request #8309: Get rid of PrototypeJS (massmail_initialize_ckeditor.js)
 	* story #8825: Package the pull request plugin
 	* story #8813: Handle ugroup binding in .SVNAccessFile
+	* story #8813: Update .SVNAccessFile when user is added to project
 
 	== Bug fix ==
 	* request #8879: Characters not properly escaped in mail sent to user
@@ -24,7 +25,7 @@ Version 8.12 (Not yet released)
 	* agiledashboard: 1.358
 	* mediawiki: 0.108
 	* openidconnectclient: 0.7
-	* svn: 0.25
+	* svn: 0.26
 	* cardwall: 1.56
 	* docman: 2.26.98
 	* git: 4.123

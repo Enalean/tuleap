@@ -1,3 +1,6 @@
+Version 0.26 - Tuleap 8.12
+    * story #8813: Update .SVNAccessFile when user is added to project
+
 Version 0.25 - Tuleap 8.12
     * story #8813: Handle ugroup binding in .SVNAccessFile
 
