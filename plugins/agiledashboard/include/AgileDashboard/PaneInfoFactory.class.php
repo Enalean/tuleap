@@ -42,29 +42,8 @@ class AgileDashboard_PaneInfoFactory {
         $this->theme_path                   = $theme_path;
     }
 
-    /** @return AgileDashboard_PaneInfo[] */
-    public function getListOfPaneInfo(Planning_Milestone $milestone) {
-        $panes_info = array(
-            $this->getContentPaneInfo($milestone),
-            $this->getPlanningPaneInfo($milestone),
-        );
-
-        $this->buildAdditionnalPanesInfo($milestone, $panes_info);
-
-        return array_values(array_filter($panes_info));
-    }
-
     public function getContentPaneInfo(Planning_Milestone $milestone) {
         return new AgileDashboard_Milestone_Pane_Content_ContentPaneInfo($milestone, $this->theme_path);
-    }
-
-    public function getPlanningPaneInfo(Planning_Milestone $milestone) {
-        $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
-        if (! $submilestone_tracker) {
-            return;
-        }
-
-        return new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone, $this->theme_path, $submilestone_tracker);
     }
 
     public function getPlanningV2PaneInfo(Planning_Milestone $milestone) {
@@ -75,20 +54,4 @@ class AgileDashboard_PaneInfoFactory {
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo($milestone, $this->theme_path, $submilestone_tracker);
     }
-
-    private function buildAdditionnalPanesInfo(Planning_Milestone $milestone, array &$panes_info) {
-        if (! $milestone->getArtifact()) {
-            return;
-        }
-
-        EventManager::instance()->processEvent(
-            AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE,
-            array(
-                'milestone'      => $milestone,
-                'user'           => $this->user,
-                'pane_info_list' => &$panes_info,
-            )
-        );
-    }
 }
-?>

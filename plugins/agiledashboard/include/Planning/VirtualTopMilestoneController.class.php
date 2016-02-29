@@ -67,12 +67,9 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
         }
 
         $this->redirectToCorrectPane();
-        $template = 'show-top';
-        if (ForgeConfig::get('sys_showdeprecatedplanningv1')) {
-            $template = 'show-top-deprecated';
-        }
+
         return $this->renderToString(
-            $template,
+            'show-top',
             $this->getTopMilestonePresenter()
         );
     }
@@ -126,5 +123,3 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
         );
     }
 }
-
-?>

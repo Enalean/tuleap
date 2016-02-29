@@ -94,7 +94,6 @@ class trackerPlugin extends Plugin {
     public function getHooksAndCallbacks() {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
-            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
             $this->addHook(AGILEDASHBOARD_EXPORT_XML);
 
             // REST Milestones
@@ -284,15 +283,6 @@ class trackerPlugin extends Plugin {
             );
         }
         $params['panes'][] = $pane_info;
-    }
-
-    public function agiledashboard_event_additional_panes_info_on_milestone($params) {
-        $pane_info = $this->getPaneInfo($params['milestone'], $params['user']);
-        if (! $pane_info) {
-            return;
-        }
-
-        $params['pane_info_list'][] = $pane_info;
     }
 
     private function getPaneInfo($milestone, $user) {

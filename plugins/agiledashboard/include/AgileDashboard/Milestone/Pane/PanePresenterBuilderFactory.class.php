@@ -33,22 +33,12 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $row_collection_factory;
 
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory */
-    private $submilestone_presenter_factory;
-
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory,
-        Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory $submilestone_presenter_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory
     ) {
-        $this->strategy_factory               = $strategy_factory;
-        $this->row_collection_factory         = $row_collection_factory;
-        $this->milestone_factory              = $milestone_factory;
-        $this->submilestone_presenter_factory = $submilestone_presenter_factory;
+        $this->strategy_factory       = $strategy_factory;
+        $this->row_collection_factory = $row_collection_factory;
     }
 
     /**
@@ -60,49 +50,4 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
             $this->row_collection_factory
         );
     }
-
-    /**
-     * @return AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder
-     */
-    public function getTopContentPresenterBuilder() {
-        return new AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder(
-            $this->strategy_factory,
-            $this->row_collection_factory
-        );
-    }
-
-    /**
-     * @return AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder
-     */
-    public function getPlanningPresenterBuilder() {
-        return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder(
-            $this->strategy_factory,
-            $this->row_collection_factory,
-            $this->milestone_factory,
-            $this->submilestone_presenter_factory
-        );
-    }
-
-    /**
-     * @return AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder
-     */
-    public function getTopPlanningPresenterBuilder() {
-        return new AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder(
-            $this->strategy_factory,
-            $this->row_collection_factory,
-            $this->milestone_factory,
-            $this->submilestone_presenter_factory
-        );
-    }
-
-    /**
-     * @return AgileDashboard_SubmilestonePresenterBuilder
-     */
-    public function getSubmilestonePresenterBuilder() {
-        return new AgileDashboard_SubmilestonePresenterBuilder(
-            $this->row_collection_factory,
-            $this->strategy_factory
-        );
-    }
 }
-?>

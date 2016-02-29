@@ -41,7 +41,7 @@ class Planning_MilestoneLinkPresenter {
         $planning_id = $this->milestone->getPlanningId();
         $artifact_id = $this->milestone->getArtifactId();
         
-        return "/plugins/agiledashboard/?group_id=$group_id&action=show&planning_id=$planning_id&aid=$artifact_id";
+        return "/plugins/agiledashboard/?group_id=$group_id&action=show&planning_id=$planning_id&aid=$artifact_id&pane=planning-v2";
     }
     
     /**

@@ -38,7 +38,7 @@ class Planning_MilestoneLinkPresenterTest extends TuleapTestCase {
     }
     
     public function itHasAnUriPointingToThePlanningViewOfTheMilestone() {
-        $this->assertEqual($this->presenter->getUri(), '/plugins/agiledashboard/?group_id=456&action=show&planning_id=789&aid=123');
+        $this->assertEqual($this->presenter->getUri(), '/plugins/agiledashboard/?group_id=456&action=show&planning_id=789&aid=123&pane=planning-v2');
     }
     
     public function itHasAnXRefMatchingTheMilestoneUnderlyingArtifact() {

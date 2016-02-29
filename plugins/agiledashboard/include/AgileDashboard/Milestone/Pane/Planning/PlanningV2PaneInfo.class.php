@@ -38,11 +38,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2PaneInfo extends AgileDas
     }
 
     public function getTitle() {
-        $title = $GLOBALS['Language']->getText('plugin_agiledashboard', 'milestone_planning_pane_title', $this->submilestone_tracker->getName());
-        if (ForgeConfig::get('sys_showdeprecatedplanningv1')) {
-            $title .= ' V2';
-        }
-        return $title;
+        return $GLOBALS['Language']->getText(
+            'plugin_agiledashboard',
+            'milestone_planning_pane_title',
+            $this->submilestone_tracker->getName()
+        );
     }
 
     protected function getIcon() {

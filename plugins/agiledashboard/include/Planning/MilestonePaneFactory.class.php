@@ -121,10 +121,6 @@ class Planning_MilestonePaneFactory {
         $this->active_pane[$milestone->getArtifactId()] = null;
 
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
-
-        if (ForgeConfig::get('sys_showdeprecatedplanningv1')) {
-            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
-        }
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningV2PaneInfo($milestone);
 
         $this->buildAdditionnalPanes($milestone);
@@ -167,24 +163,6 @@ class Planning_MilestonePaneFactory {
             $this->active_pane[$milestone->getArtifactId()] = $this->getPlanningV2Pane($pane_info, $milestone);
         }
 
-    }
-
-    private function getPlanningPaneInfo(Planning_Milestone $milestone) {
-        $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
-        if (! $submilestone_tracker) {
-            return;
-        }
-
-        $pane_info = $this->pane_info_factory->getPlanningPaneInfo($milestone);
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER) {
-            $pane_info->setActive(true);
-            $this->active_pane[$milestone->getArtifactId()] = new AgileDashboard_Milestone_Pane_Planning_PlanningPane(
-                $pane_info,
-                $this->getPlanningPresenterBuilder()->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone, $submilestone_tracker)
-            );
-        }
-
-        return $pane_info;
     }
 
     private function getPlanningV2PaneInfo(Planning_Milestone $milestone) {
@@ -291,10 +269,6 @@ class Planning_MilestonePaneFactory {
 
     private function getContentPresenterBuilder() {
         return $this->pane_presenter_builder_factory->getContentPresenterBuilder();
-    }
-
-    private function getPlanningPresenterBuilder() {
-        return $this->pane_presenter_builder_factory->getPlanningPresenterBuilder();
     }
 }
 

@@ -131,11 +131,6 @@ class Planning_MilestoneController extends MVC2_PluginController {
         return new BreadCrumb_NoCrumb();
     }
 
-    public function submilestonedata() {
-        $this->generateBareMilestone();
-        $this->render('submilestone-content', $this->getSubmilestonePresenter());
-    }
-
     public function solveInconsistencies() {
         $milestone_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('aid'));
         $milestone          = $this->milestone_factory->getMilestoneFromArtifact($milestone_artifact);
@@ -168,12 +163,6 @@ class Planning_MilestoneController extends MVC2_PluginController {
             }
         }
         return true;
-    }
-
-    private function getSubmilestonePresenter() {
-        $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
-        
-        return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
     }
 
     private function generateBareMilestone() {

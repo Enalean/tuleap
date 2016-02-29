@@ -52,7 +52,7 @@ class AgileDashboardRouterBuilder {
             $plugin->getThemePath()
         );
 
-        $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory, $pane_info_factory);
+        $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
 
         $pane_factory = $this->getPaneFactory(
             $request,
@@ -143,14 +143,10 @@ class AgileDashboardRouterBuilder {
         );
     }
 
-    private function getPanePresenterBuilderFactory($milestone_factory, $pane_info_factory) {
-        $icon_factory = new AgileDashboard_PaneIconLinkPresenterCollectionFactory($pane_info_factory);
-
+    private function getPanePresenterBuilderFactory($milestone_factory) {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogStrategyFactory(),
-            $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
-            $milestone_factory,
-            new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory($milestone_factory, $icon_factory)
+            $this->getBacklogItemPresenterCollectionFactory($milestone_factory)
         );
     }
 

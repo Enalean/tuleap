@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,9 @@
  */
 
 document.observe('dom:loaded', function () {
-    var milestone_planning = $('planning'),
-        top_milestone_planning = $('topplanning'),
-        milestone_content = $('blcontent'),
-        top_milestone_content = $('topblcontent');
+    var milestone_content = $('blcontent');
 
     if (milestone_content) {
         tuleap.agiledashboard.MilestoneContent(milestone_content);
     }
-
-    if (top_milestone_content) {
-        tuleap.agiledashboard.MilestoneContent(top_milestone_content);
-    }
-
-    if (milestone_planning || top_milestone_planning) {
-        new tuleap.agiledashboard.NewPlanning();
-    }
-
-    $$('.ad_index_load_more_milestones').map(tuleap.agiledashboard.loadMoreMilestones);
-
-    tuleap.agiledashboard.align_short_access_heights.defer();
 });

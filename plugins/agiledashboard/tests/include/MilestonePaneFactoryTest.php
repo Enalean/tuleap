@@ -55,7 +55,6 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
 
         $this->pane_presenter_builder_factory = mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory');
         stub($this->pane_presenter_builder_factory)->getContentPresenterBuilder()->returns(mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'));
-        stub($this->pane_presenter_builder_factory)->getPlanningPresenterBuilder()->returns(mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'));
     }
 
     public function itDisplaysOnlySiblingsMilestones() {
