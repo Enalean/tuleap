@@ -301,7 +301,6 @@ class PluginsAdministrationViews extends Views {
 
                 $readme = $this->getFormattedReadme($plugin->getName());
                 if ($readme) {
-                    $output .= '<h3>Readme</h3>';
                     $output .= $readme;
                 }
 

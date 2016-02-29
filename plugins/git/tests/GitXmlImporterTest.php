@@ -20,6 +20,8 @@
 
 require_once 'bootstrap.php';
 
+use Tuleap\Markdown\ContentInterpretor;
+
 Mock::generate('GitDao', 'MockGitDao');
 
 class MyMockGitDao extends MockGitDao {
@@ -87,7 +89,14 @@ class GitXmlImporterTest extends TuleapTestCase {
         $restricted_plugin_dao = mock('RestrictedPluginDao');
         $plugin_factory = new PluginFactory($plugin_dao, new PluginResourceRestrictor($restricted_plugin_dao));
 
-        $plugin_manager = new PluginManager($plugin_factory, EventManager::instance(), new SiteCache($this->logger), new ForgeUpgradeConfig(new System_Command()));
+        $plugin_manager = new PluginManager(
+            $plugin_factory,
+            EventManager::instance(),
+            new SiteCache($this->logger),
+            new ForgeUpgradeConfig(new System_Command()),
+            new ContentInterpretor()
+        );
+
         PluginManager::setInstance($plugin_manager);
 
         $this->ugroup_dao = mock('UGroupDao');
