@@ -53,6 +53,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
         $this->addHook(Event::UGROUP_MODIFY);
+        $this->addHook(Event::MEMBERSHIP_CREATE);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
     }
@@ -76,14 +77,30 @@ class SvnPlugin extends Plugin {
 
     /** @see Event::UGROUP_MODIFY */
     public function ugroup_modify(array $params) {
-        $project = $params['project'];
+        $project         = $params['project'];
+        $new_ugroup_name = $params['new_ugroup_name'];
+        $old_ugroup_name = $params['old_ugroup_name'];
+
+        $this->updateAllAccessFileOfProject($project, $params['new_ugroup_name'], $params['old_ugroup_name']);
+    }
+
+    /** @see Event::MEMBERSHIP_CREATE */
+    public function membership_create(array $params) {
+        $project         = $params['project'];
+        $new_ugroup_name = null;
+        $old_ugroup_name = null;
+
+        $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
+    }
+
+    private function updateAllAccessFileOfProject(Project $project, $new_ugroup_name, $old_ugroup_name) {
         $list_repositories = $this->getRepositoryManager()->getRepositoriesInProject($project);
         foreach ($list_repositories as $repository) {
             $this->getBackendSVN()->updateSVNAccessForRepository(
                 $project,
                 $repository->getSystemPath(),
-                $params['new_ugroup_name'],
-                $params['old_ugroup_name'],
+                $new_ugroup_name,
+                $old_ugroup_name,
                 $repository->getFullName()
             );
         }

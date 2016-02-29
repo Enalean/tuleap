@@ -1098,4 +1098,12 @@ class Event {
      *   'old_ugroup_name' => String|null
      */
     const UGROUP_MODIFY = 'ugroup_modify';
+
+    /**
+     * When a user is added to a project
+     *
+     * Paramters:
+     *   'project'         => Project
+     */
+    const MEMBERSHIP_CREATE = 'membership_create';
 }
