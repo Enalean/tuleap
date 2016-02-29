@@ -48,7 +48,7 @@ class GitExec extends Git_Exec {
 
         try {
             $this->gitCmdWithOutput(
-                'diff --name-status ' . escapeshellarg($src_reference) . '..' . escapeshellarg($dest_reference),
+                'diff --name-status ' . escapeshellarg($dest_reference) . '...' . escapeshellarg($src_reference),
                 $output
             );
         } catch (Git_Command_Exception $exception) {
