@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Copyright (c) Enalean, 2012, 2013, 2014. All Rights Reserved.
+# Copyright (c) Enalean, 2012, 2013, 2014, 2016. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -30,29 +30,12 @@ default_changelog_message=$1
 tuleap_version=`php -r '$v = explode(".", file_get_contents("VERSION")); echo $v[0] .".". ($v[1]+1);'`
 php tools/utils/changelogs/increment_tuleap_version.php
 
-prepend() {
-    echo "0a\n$1\n.\nw" | ed -s $2
-}
-
 get_new_version() {
     version_file="$1/VERSION"
     major_version=`cat $version_file | sed -r "s|(\.[0-9]+)$||"`
     minor_version=`cat $version_file | sed -r "s|([0-9]+\.)+||"`
     minor_version=`expr 1 + $minor_version`
     echo "$major_version.$minor_version"
-}
-
-register_new_version() {
-    path=$1
-    version=$2
-    message=$3
-    tuleap_version=$4
-
-    echo $version > $path/VERSION
-    touch $path/ChangeLog
-    prepend "" $path/ChangeLog
-    prepend "    * $message" $path/ChangeLog
-    prepend "Version $version - Tuleap $tuleap_version" $path/ChangeLog
 }
 
 search_modified_added_or_deleted_files_in_git_staging_area() {
@@ -95,6 +78,7 @@ for item in $modified_plugins $modified_themes $modified_api; do
 
     version=$(get_new_version $path)
     echo "    * $item_name: $version"
-    php tools/utils/changelogs/insert_line_in_changelog.php "$item_name" "$version" "$tuleap_version" "$item_type"
-    register_new_version "$path" "$version" "$default_changelog_message" "$tuleap_version"
+    php tools/utils/changelogs/insert_line_in_core_changelog.php "$item_name" "$version" "$tuleap_version" "$item_type"
+    echo $version > $path/VERSION
+    php tools/utils/changelogs/insert_lines_in_plugin_changelog.php "$path" "$version" "$default_changelog_message" "$tuleap_version"
 done
