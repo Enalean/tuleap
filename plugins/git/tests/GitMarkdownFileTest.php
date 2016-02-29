@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014, 2015, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
  */
 require_once 'bootstrap.php';
 
+use Tuleap\Markdown\ContentInterpretor;
+
 class GitMarkdownFileTest extends TuleapTestCase {
 
     private $git_exec;
@@ -27,8 +29,10 @@ class GitMarkdownFileTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->git_exec = mock('Git_Exec');
-        $this->git_markdown_file = new GitMarkdownFile($this->git_exec);
+        $this->git_exec      = mock('Git_Exec');
+        $content_interpretor = new ContentInterpretor();
+
+        $this->git_markdown_file = new GitMarkdownFile($this->git_exec, $content_interpretor);
     }
 
     public function testGetMarkdownFilesContent() {
