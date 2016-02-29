@@ -1,3 +1,6 @@
+Version 4.124 - Tuleap 8.12
+    * story #8826: Create pull requests from a git repository
+
 Version 4.123 - Tuleap 8.12
     * story #8826: Display # of pull requests in git repository header
 

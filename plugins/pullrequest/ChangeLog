@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 8.12
+    * story #8826: Create pull requests from a git repository
+
 Version 0.12 - Tuleap 8.12
     * story #8826: Pull request angular app first step
 
