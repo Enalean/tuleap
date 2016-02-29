@@ -130,7 +130,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     $backendSVN->checkSVNAccessPresence($project->getId());
                 }
 
-                $backendSVN->updateHooks($project, $project->getSVNRootPath());
+                $backendSVN->updateHooksForProjectRepository($project);
 
                 // Check ownership/mode/access rights
                 $backendSVN->checkSVNMode($project);
