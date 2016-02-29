@@ -52,7 +52,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
-        $this->addHook(Event::UGROUP_RENAME);
+        $this->addHook(Event::UGROUP_MODIFY);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
     }
@@ -74,8 +74,8 @@ class SvnPlugin extends Plugin {
         );
     }
 
-    /** @see Event::UGROUP_RENAME */
-    public function ugroup_rename(array $params) {
+    /** @see Event::UGROUP_MODIFY */
+    public function ugroup_modify(array $params) {
         $project = $params['project'];
         $list_repositories = $this->getRepositoryManager()->getRepositoriesInProject($project);
         foreach ($list_repositories as $repository) {

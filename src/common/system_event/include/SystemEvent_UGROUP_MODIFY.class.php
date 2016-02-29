@@ -78,7 +78,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         }
 
         EventManager::instance()->processEvent(
-            Event::UGROUP_RENAME,
+            Event::UGROUP_MODIFY,
             array(
                 'project'         => $this->getProject($group_id),
                 'new_ugroup_name' => $ugroup_name,
@@ -108,28 +108,40 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     /**
      * Remove all user group bound to a deleted given ugroup
      *
+     * @protected for testing purpose
+     *
      * @param Integer $ugroup_id Id of the deleted user group
      * @param Integer $group_id  Id of the project
      *
      * @return Boolean
      */
     protected function processUgroupBinding($ugroup_id, $group_id) {
-        $ugroupBinding                = $this->getUgroupBinding();
+        $ugroup_binding               = $this->getUgroupBinding();
         $ugroups_successfully_updated = true;
-        if (!$ugroupBinding->checkUGroupValidity($group_id, $ugroup_id)) {
+        if (!$ugroup_binding->checkUGroupValidity($group_id, $ugroup_id)) {
             //The user group is removed, we remove all its binding traces
-            $ugroups_successfully_updated = $ugroupBinding->removeAllUGroupsBinding($ugroup_id);
+            $ugroups_successfully_updated = $ugroup_binding->removeAllUGroupsBinding($ugroup_id);
         } else {
             if (count($this->getParametersAsArray()) == 2) {
                 //The user group has been updated (user added / user removed), we update all its bound user groups
-                $ugroups_successfully_updated = $ugroupBinding->updateBindedUGroups($ugroup_id);
+                $ugroups_successfully_updated = $ugroup_binding->updateBindedUGroups($ugroup_id);
             }
         }
 
-        $binded_ugroups = $ugroupBinding->getUGroupsByBindingSource($ugroup_id);
-        foreach ($binded_ugroups as $binded_ugroup_id => $binded_ugroup) {
-            $ugroups_successfully_updated = $this->processSVNAccessFile($binded_ugroup['group_id'], null, null) &&
+        $binded_ugroups = $ugroup_binding->getUGroupsByBindingSource($ugroup_id);
+        foreach ($binded_ugroups as $binded_ugroup) {
+            $bound_target_project_id = $binded_ugroup['group_id'];
+            $ugroups_successfully_updated = $this->processSVNAccessFile($bound_target_project_id, null, null) &&
                 $ugroups_successfully_updated;
+
+            EventManager::instance()->processEvent(
+                Event::UGROUP_MODIFY,
+                array(
+                    'project'         => $this->getProject($bound_target_project_id),
+                    'new_ugroup_name' => null,
+                    'old_ugroup_name' => null
+                )
+            );
         }
 
         return $ugroups_successfully_updated;
@@ -138,9 +150,11 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     /**
      * Obtain instance of UGroupBinding
      *
+     * @protected for testing purpose
+     *
      * @return UGroupBinding
      */
-    public function getUgroupBinding() {
+    protected function getUgroupBinding() {
         $ugroupUserDao = new UGroupUserDao();
         $ugroupManager = new UGroupManager(new UGroupDao());
         $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);

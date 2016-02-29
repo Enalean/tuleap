@@ -224,7 +224,7 @@ class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase {
 
     public function itWarnsOthersThatUGroupHasBeenModified() {
         expect(EventManager::instance())->processEvent(
-            Event::UGROUP_RENAME,
+            Event::UGROUP_MODIFY,
             array(
                 'project'         => $this->project,
                 'new_ugroup_name' => 'Amleth',
