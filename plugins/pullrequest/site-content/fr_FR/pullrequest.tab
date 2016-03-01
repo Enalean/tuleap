@@ -23,3 +23,9 @@ plugin_pullrequest	user_cannot_read_repository	Vous n'êtes pas autorisé à lir
 plugin_pullrequest	pull_request_cannot_be_created	Les références source et destination ne peuvent être identiques.
 plugin_pullrequest	pull_request_already_exists	Une pull request existe déjà avec les mêmes références source et destination.
 plugin_pullrequest	repository_migrated_on_gerrit	Le dépôt est migré sur Gerrit.
+
+plugin_pullrequest	git_clone_bar_help_text_title	Comment utiliser les pull requests :
+plugin_pullrequest	git_clone_bar_help_text_intro	Pour le moment, seules les pull requests entre deux branches d'un même dépôt Git sont possibles. Vous pouvez :
+plugin_pullrequest	git_clone_bar_help_text_create_pull_request	Créer une pull request en cliquant sur le bouton
+plugin_pullrequest	git_clone_bar_help_text_view_pull_requests	Voir toutes les pull requests en cliquant sur <span class="badge">$1</span> à côté du nom du dépôt
+plugin_pullrequest	git_clone_bar_help_text_pull_request_actions	En consultant une pull request, la commenter, revoir les fichiers ainsi que l'intégrer ou l'abandonner

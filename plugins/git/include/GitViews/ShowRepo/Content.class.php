@@ -279,8 +279,9 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getCloneUrl() {
-        $mirrors            = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
-        $additional_actions = $this->getAdditionalActions();
+        $mirrors              = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+        $additional_actions   = $this->getAdditionalActions();
+        $additional_help_text = $this->getAdditionalHelpText();
 
         $presenter = new RepositoryClonePresenter(
             $this->repository,
@@ -288,7 +289,8 @@ class GitViews_ShowRepo_Content {
             $mirrors,
             $this->controller->isAPermittedAction('repo_management'),
             $this->getMasterLocationName(),
-            $additional_actions
+            $additional_actions,
+            $additional_help_text
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
@@ -306,6 +308,18 @@ class GitViews_ShowRepo_Content {
         EventManager::instance()->processEvent(GIT_ADDITIONAL_ACTIONS, $params);
 
         return $actions;
+    }
+
+    private function getAdditionalHelpText() {
+        $html   = '';
+        $params = array(
+            'repository' => $this->repository,
+            'html'       => &$html
+        );
+
+        EventManager::instance()->processEvent(GIT_ADDITIONAL_HELP_TEXT, $params);
+
+        return $html;
     }
 
     private function getMasterLocationName() {

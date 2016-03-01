@@ -71,24 +71,23 @@
     {{/ user_is_admin }}
     {{{ additional_actions }}}
     <div>
-        <div id="plugin_git_example" style="display:none">
+        <div id="plugin_git_example" style="display:none" class="alert alert-info">
             <h3>{{ how_to_use_text }}</h3>
             <dl>
                 <dt>{{ clone_text }}</dt>
                 <dd>
                     <pre>
 git clone <span class="plugin_git_example_url">{{ get_default_url }}</span> {{ repository_name }}
-cd {{ repository_name }}
-                    </pre>
+cd {{ repository_name }}</pre>
                 </dd>
                 <dt>{{ add_remote_text }}</dt>
                 <dd>
                     <pre>
 git remote add {{ repository_name }} <span class="plugin_git_example_url">{{ get_default_url }}</span>
 git fetch {{ repository_name }}
-git checkout -b my-local-tracking-branch {{ repository_name }}/master
-                    </pre>
+git checkout -b my-local-tracking-branch {{ repository_name }}/master</pre>
                 </dd>
+                {{{ additional_help_text }}}
             </dl>
         </div>
     </div>

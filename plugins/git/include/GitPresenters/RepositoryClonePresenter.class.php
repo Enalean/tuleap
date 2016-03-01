@@ -41,6 +41,8 @@ class RepositoryClonePresenter {
 
     public $additional_actions;
 
+    public $additional_help_text;
+
     /** @var GitRepository */
     private $repository;
 
@@ -53,7 +55,8 @@ class RepositoryClonePresenter {
         array $mirrors,
         $user_is_admin,
         $master_location_name,
-        $additional_actions
+        $additional_actions,
+        $additional_help_text
     ) {
         $this->repository    = $repository;
         $this->urls          = $urls;
@@ -69,6 +72,7 @@ class RepositoryClonePresenter {
 
         $this->master_location_name = $master_location_name;
         $this->additional_actions   = $additional_actions;
+        $this->additional_help_text = $additional_help_text;
     }
 
     public function getTemplateName() {
