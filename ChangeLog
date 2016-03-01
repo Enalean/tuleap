@@ -46,12 +46,14 @@ Version 8.12 (Not yet released)
 	* foafprofiles: 0.5
 	* statistics: 0.58
 	* pluginsadministration: 1.16
+	* tests: 5.35
 
 	== Themes ==
 	* FlamingParrot: 1.122
 
 	== Development ==
 	* request #8910: Remove ed usage in ChangeLog generation
+	* request #8917: Tests: improve debugging tools
 
 Version 8.11 (Thursday, February 4th 2016)
 	== Enhancement ==
