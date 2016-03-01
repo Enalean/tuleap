@@ -30,5 +30,10 @@ frs =
                   element user { user_content }?
             }*
         }*
-    }*
+    }* &
+    element administrators {
+        element user {
+            user_content
+        }*
+    }?
 

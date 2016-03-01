@@ -134,7 +134,8 @@ class ProjectXMLImporter {
             new FRSReleaseFactory(),
             new FRSFileFactory(),
             $this->user_finder,
-            new UGroupManager());
+            $this->ugroup_manager,
+            new XMLImportHelper(UserManager::instance()));
         $frs->import($project, $xml_element, $extraction_path);
 
         $this->logger->info("Ask to plugin to import data from XML");
