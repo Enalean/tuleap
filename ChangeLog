@@ -10,6 +10,7 @@ Version 8.12 (Not yet released)
 	* story #8813: Handle ugroup binding in .SVNAccessFile
 	* story #8813: Update .SVNAccessFile when user is added to project
 	* story #8813: Packaging of svn plugin
+	* story #8570: Import FRS administrators
 
 	== Bug fix ==
 	* request #8879: Characters not properly escaped in mail sent to user
