@@ -1,31 +1,37 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2015. All rights reserved
+ * Copyright (c) Enalean SAS, 2015 - 2016. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Markdown\ContentInterpretor;
 
 /**
  * PluginManager
  */
 class PluginManager {
 
-
     const PLUGIN_HOOK_CACHE_FILE = 'hooks.json';
+
+    /**
+     * @var ContentInterpretor
+     */
+    private $markdown_content_interpretor;
 
     /** @var EventManager */
     private $event_manager;
@@ -44,13 +50,23 @@ class PluginManager {
 
     var $pluginHookPriorityManager;
 
-    public function __construct(PluginFactory $plugin_factory, EventManager $event_manager, SiteCache $site_cache, ForgeUpgradeConfig $forgeupgrade_config) {
-        $this->plugin_factory      = $plugin_factory;
-        $this->event_manager       = $event_manager;
-        $this->site_cache          = $site_cache;
-        $this->forgeupgrade_config = $forgeupgrade_config;
+    public function __construct(
+        PluginFactory $plugin_factory,
+        EventManager $event_manager,
+        SiteCache $site_cache,
+        ForgeUpgradeConfig $forgeupgrade_config,
+        ContentInterpretor $markdown_content_interpretor
+    ) {
+        $this->plugin_factory               = $plugin_factory;
+        $this->event_manager                = $event_manager;
+        $this->site_cache                   = $site_cache;
+        $this->forgeupgrade_config          = $forgeupgrade_config;
+        $this->markdown_content_interpretor = $markdown_content_interpretor;
     }
 
+    /**
+     * @return PluginManager
+     */
     public static function instance() {
         if (! self::$instance) {
             self::$instance = new PluginManager(
@@ -59,9 +75,11 @@ class PluginManager {
                 new SiteCache(),
                 new ForgeUpgradeConfig(
                     new System_Command()
-                )
+                ),
+                new ContentInterpretor()
             );
         }
+
         return self::$instance;
     }
 
@@ -228,25 +246,17 @@ class PluginManager {
     /**
      * Format the readme file of a plugin
      *
-     * Use markdown formatter if installed and if README.mkd exists
+     * Use markdown formatter if README.mkd exists
      * Otherwise assume text/plain and put it in <pre> tags
      * If README file doesn't exist, return empty string.
      *
-     * For Markdown, the following is needed:
-     * <code>
-     * pear channel-discover pear.michelf.com
-     * pear install michelf/package
-     * </code>
-     *
      * @return string html
      */
-    function fetchFormattedReadme($file) {
+    public function fetchFormattedReadme($file) {
         if (is_file("$file.mkd")) {
             $content = file_get_contents("$file.mkd");
-            if (@include_once "markdown.php") {
-                return Markdown($content);
-            }
-            return $this->getEscapedReadme($content);
+
+            return $this->markdown_content_interpretor->getInterpretedContent($content);
         }
 
         if (is_file("$file.txt")) {
