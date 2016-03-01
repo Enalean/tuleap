@@ -23,19 +23,25 @@ if ( !is_readable($xmlFile) ) {
 
 // FILE PROCESSING
 try {
-    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()))
-        ->createFromXMLFile($group_id, $xmlFile);
-    if ( $GLOBALS['Response']->feedbackHasErrors() ) {
-        echo $GLOBALS['Response']->getRawFeedback();
+    $project = ProjectManager::instance()->getProject($group_id);
+    if ($project && ! $project->isError()) {
+        TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()), new Log_ConsoleLogger())
+            ->createFromXMLFile($project, $xmlFile);
+        if ( $GLOBALS['Response']->feedbackHasErrors() ) {
+            echo $GLOBALS['Response']->getRawFeedback();
+            exit(1);
+        }
+
+        if ( $GLOBALS['Response']->feedbackHasWarningsOrErrors() ) {
+            echo $GLOBALS['Response']->getRawFeedback();
+            exit(2);
+        }
+        echo 'Import succeeded'.PHP_EOL;
+        exit(0);
+    } else {
+        fwrite(STDERR, "invalid project".PHP_EOL);
         exit(1);
     }
-
-    if ( $GLOBALS['Response']->feedbackHasWarningsOrErrors() ) {
-        echo $GLOBALS['Response']->getRawFeedback();
-        exit(2);
-    }
-    echo 'Import succeeded'.PHP_EOL;
-    exit(0);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
         fwrite(STDERR, $parse_error.PHP_EOL);
