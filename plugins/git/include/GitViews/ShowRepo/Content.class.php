@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\ContentInterpretor;
+
 class GitViews_ShowRepo_Content {
 
     const PAGE_TYPE       = 'a';
@@ -175,7 +177,10 @@ class GitViews_ShowRepo_Content {
         $commit_sha1       = $this->getCurrentCommitSha1();
         $node              = $this->getCurrentNode();
         $repository_path   = ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/' . $this->repository->getPath();
-        $git_markdown_file = new GitMarkdownFile(new Git_Exec($repository_path, $repository_path));
+        $git_markdown_file = new GitMarkdownFile(
+            new Git_Exec($repository_path, $repository_path),
+            new ContentInterpretor()
+        );
 
         $readme_file = $git_markdown_file->getReadmeFileContent($node, $commit_sha1);
 

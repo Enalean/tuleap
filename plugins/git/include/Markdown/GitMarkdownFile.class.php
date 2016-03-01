@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,22 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Markdown\ContentInterpretor;
+
 class GitMarkdownFile {
+
+    /**
+     * @var ContentInterpretor
+     */
+    private $markdown_content_interpretor;
 
     /** @var Git_Exec */
     private $git_exec;
 
-    public function __construct(Git_Exec $git_exec) {
-        $this->git_exec = $git_exec;
+    public function __construct(Git_Exec $git_exec, ContentInterpretor $markdown_content_interpretor) {
+        $this->git_exec                     = $git_exec;
+        $this->markdown_content_interpretor = $markdown_content_interpretor;
     }
 
     /**
@@ -46,7 +55,7 @@ class GitMarkdownFile {
 
     private function getFormatedMarkdown($file_name, $commit_sha1) {
         $content         = $this->git_exec->getFileContent($commit_sha1, $file_name);
-        $content_in_form = GitMarkdownFileContentInForm::getMarkdownContentInForm($content);
+        $content_in_form = $this->markdown_content_interpretor->getInterpretedContent($content);
 
         return array(
             'file_name'    => $file_name,
