@@ -184,7 +184,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                             rows="'. $this->getProperty('rows') .'"
                             cols="'. $this->getProperty('cols') .'"
                             '. ($this->isRequired() ? 'required' : '') .'
-                            >';
+                            data-field-default-value="1">';
         $html .= $hp->purify($value['content'], CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
