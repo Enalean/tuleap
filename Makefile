@@ -48,14 +48,17 @@ SIMPLETEST=$(PHP) tests/bin/simpletest $(SIMPLETEST_OPTIONS)
 
 AUTOLOAD_EXCLUDES=mediawiki|tests|template
 
-default:
-	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'less-dev' 'api_test' 'api_test_group'"
+.DEFAULT_GOAL := help
+
+help:
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo "(Other less used targets are available, open Makefile for details)"
 
 #
 # Utilities
 #
 
-doc:
+doc: ## Build CLI documentation
 	$(MAKE) -C documentation all
 
 autoload:
@@ -78,7 +81,7 @@ autoload-with-userid:
 		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php) \
 		done;
 
-autoload-docker:
+autoload-docker: ## Generate autoload files
 	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --autoload
 
 autoload-dev:
@@ -90,12 +93,12 @@ less:
 less-dev:
 	@tools/utils/less.sh watch `pwd`
 
-less-docker:
+less-docker: ## Compile less files into css
 	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --less
 
 ## RNG generation
 
-rnc2rng-docker: clean-rng
+rnc2rng-docker: clean-rng ## Compile rnc file into rng
 	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --rnc2rng
 
 rnc2rng: src/common/xml/resources/project/project.rng \
@@ -232,7 +235,7 @@ rest_docker_snap_run:
 	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo VIRTUAL_HOST=tuleap_web_1.tuleap-aio-dev.docker >> .env
 
-dev-setup: .env
+dev-setup: .env ## Setup environment for Docker Compose (should only be run once)
 	@echo "Create all data containers"
 	@$(DOCKER) inspect tuleap_ldap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_ldap_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_db_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
@@ -240,16 +243,16 @@ dev-setup: .env
 	@$(DOCKER) inspect tuleap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_reverseproxy_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
 
-show-passwords:
+show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
 
-dev-forgeupgrade:
+dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 	@$(DOCKER) exec tuleap_web_1 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
 
-dev-clear-cache:
+dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER) exec tuleap_web_1 /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start-dns:
+start-dns: ## Start dnsdock to be able to reach Docker Compose environment without having to touch /etc/hosts file
 	@$(DOCKER) stop dnsdock || true
 	@$(DOCKER) rm dnsdock || true
 	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
@@ -258,7 +261,7 @@ start-rp:
 	@echo "Start reverse proxy"
 	@$(DOCKER_COMPOSE) up -d rp
 
-start:
+start: ## Start Tuleap Web + LDAP + DB in Docker Compose environment
 	@echo "Start Tuleap Web + LDAP + DB"
 	@$(DOCKER_COMPOSE) up -d web
 	@echo -n "Your instance will be soon available: http://"
