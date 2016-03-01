@@ -113,6 +113,40 @@ class PullRequestCloserTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents("$this->git_repository_dir/preguilt"), "semibarbarous");
     }
 
+    public function itMergesABranchIntoAnotherBranchThatIsNotMaster() {
+        stub($this->dao)->markAsMerged(1)->returns(true);
+
+        file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
+        system("cd $this->git_repository_dir && git checkout -b feature --quiet && git add . && git commit --quiet -m 'Add antiracing'");
+
+        $chat_ouane_dev     = $this->git_exec->getReferenceBranch('dev');
+        $chat_ouane_feature = $this->git_exec->getReferenceBranch('feature');
+
+        $pull_request = new PullRequest(
+            1,
+            73,
+            105,
+            1456309611,
+            'feature',
+            $chat_ouane_feature,
+            'dev',
+            $chat_ouane_dev,
+            'R'
+        );
+
+        $result = $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
+            $pull_request
+        );
+
+        $this->assertTrue($result);
+
+        system("cd $this->git_repository_dir && git checkout dev --quiet");
+
+        $this->assertTrue(is_file("$this->git_repository_dir/antiracing"));
+        $this->assertEqual(file_get_contents("$this->git_repository_dir/antiracing"), "hatlike");
+    }
+
     public function itReturnsTrueIfPullRequestIsAlreadyMerged() {
         $chat_ouane_master = $this->git_exec->getReferenceBranch('master');
         $chat_ouane_dev    = $this->git_exec->getReferenceBranch('dev');

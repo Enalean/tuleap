@@ -76,7 +76,7 @@ class PullRequestCloser {
             $executor->fetchNoHistory($repository_full_path, $pull_request->getBranchDest());
             $executor->fetch($repository_full_path, $pull_request->getBranchSrc());
             $executor->fastForwardMerge($pull_request->getSha1Src());
-            $executor->push(escapeshellarg('file://' . $repository_full_path) . ' ' . escapeshellarg($pull_request->getBranchDest()));
+            $executor->push(escapeshellarg('file://' . $repository_full_path) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
         } catch(Git_Command_Exception $exception) {
             throw new PullRequestCannotBeMerged(
                 'This Pull Request cannot be merged. It seems that the attempted merge is not fast-forward'
