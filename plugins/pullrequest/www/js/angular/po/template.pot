@@ -9,6 +9,7 @@ msgid "Abandon"
 msgstr ""
 
 #: src/app/pull-request/pull-request.tpl.html
+#: src/app/pull-requests/pull-requests.tpl.html
 msgid "Abandoned"
 msgstr ""
 
@@ -38,6 +39,10 @@ msgstr ""
 
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Merge"
+msgstr ""
+
+#: src/app/pull-requests/pull-requests.tpl.html
+msgid "Merged"
 msgstr ""
 
 #: src/app/pull-request/comments/comments.tpl.html

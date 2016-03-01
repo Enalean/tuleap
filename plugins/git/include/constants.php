@@ -90,3 +90,12 @@ define('GIT_ADDITIONAL_PERMITTED_ACTIONS', 'git_additional_permitted_actions');
  *   'handled'        => (Output) Boolean       Has the action been handled?
  */
 define('GIT_HANDLE_ADDITIONAL_ACTION', 'git_handle_additional_action');
+
+/**
+ * Allow a plugin to add additional help text in the clone url bar
+ *
+ * Parameters:
+ *   'repository'=> (Input)  GitRepository Git repository
+ *   'html'      => (Output) String        Help text
+ */
+define('GIT_ADDITIONAL_HELP_TEXT', 'git_additional_help_text');

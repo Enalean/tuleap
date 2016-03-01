@@ -4,12 +4,14 @@ angular
 
 PullRequestRestService.$inject = [
     '$http',
+    '$q',
     'lodash',
     'ErrorModalService'
 ];
 
 function PullRequestRestService(
     $http,
+    $q,
     lodash,
     ErrorModalService
 ) {
@@ -17,8 +19,7 @@ function PullRequestRestService(
 
     lodash.extend(self, {
         getPullRequest: getPullRequest,
-        merge         : merge,
-        abandon       : abandon
+        updateStatus  : updateStatus
     });
 
     function getPullRequest(pull_request_id) {
@@ -28,18 +29,15 @@ function PullRequestRestService(
 
             }).catch(function(response) {
                 ErrorModalService.showError(response);
+                return $q.reject(response);
             });
     }
 
-    function merge(pull_request_id) {
-        // return $http.post({
-        //     url: '/api/v1/pull_requests/' + pull_request_id + '/merge'
-        // });
-    }
-
-    function abandon(pull_request_id) {
-        // return $http.post({
-        //     url: '/api/v1/pull_requests/' + pull_request_id + '/abandon'
-        // });
+    function updateStatus(pull_request_id, status) {
+        return $http.patch('/api/v1/pull_requests/' + pull_request_id, { status: status })
+            .catch(function(response) {
+                ErrorModalService.showError(response);
+                return $q.reject(response);
+            });
     }
 }

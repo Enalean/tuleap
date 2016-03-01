@@ -20,15 +20,44 @@
             padding-right: 25px;
         }
 
+        .id {
+            color: #AAA;
+            margin: 0 5px 0 0;
+        }
+
+        .icon-long-arrow-right {
+            color: #AAA;
+            margin: 0 10px;
+        }
+
+        .sha1 {
+            padding: 2px 4px;
+            border: 1px solid #999;
+            border-radius: 3px;
+            color: #666;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .status {
+            margin: 0 0 0 5px;
+        }
+
         &.ui-select-bootstrap > .ui-select-choices {
             margin-top: -20px;
             width: 800px;
-        }
 
-        .id {
-            display: inline-block;
-            width: 23px;
-            color: #AAA;
+            .ui-select-choices-row.active > a {
+                .id {
+                    color: #DDD;
+                }
+
+                .sha1 {
+                    color: #DDD;
+                    border-color: #DDD;
+                }
+            }
         }
     }
 

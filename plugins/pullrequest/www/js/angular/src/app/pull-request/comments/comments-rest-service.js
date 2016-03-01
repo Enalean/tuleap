@@ -4,12 +4,14 @@ angular
 
 CommentsRestService.$inject = [
     '$http',
+    '$q',
     'lodash',
     'ErrorModalService'
 ];
 
 function CommentsRestService(
     $http,
+    $q,
     lodash,
     ErrorModalService
 ) {
@@ -24,6 +26,7 @@ function CommentsRestService(
         return $http.get('/api/v1/pull_requests/' + pull_request_id + '/comments?limit=' + limit + '&offset=' + offset)
             .catch(function(response) {
                 ErrorModalService.showError(response);
+                return $q.reject(response);
             });
     }
 
@@ -39,6 +42,7 @@ function CommentsRestService(
 
             }).catch(function(response) {
                 ErrorModalService.showError(response);
+                return $q.reject(response);
             });
     }
 }
