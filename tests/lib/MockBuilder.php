@@ -73,6 +73,59 @@ function mock($classname) {
     return new $mockclassname();
 }
 
+class UnimplementedThrower {
+    private $class;
+    private $method;
+
+    public function __construct($class, $method) {
+        $this->class = $class;
+        $this->method = $method;
+    }
+
+    public function act() {
+        throw new Exception("Unimplemented {$this->class}->{$this->method}(...)");
+    }
+}
+
+class SignatureMapWithDefault extends SimpleSignatureMap {
+
+    private $default_action;
+
+    public function __construct($default_action) {
+        parent::SimpleSignatureMap();
+        $this->default_action = $default_action;
+    }
+
+    public function &findFirstAction($parameters) {
+        $slot = $this->_findFirstSlot($parameters);
+        if (isset($slot) && isset($slot['content'])) {
+            return $slot['content'];
+        }
+        return $this->default_action;
+    }
+}
+
+function mock_safe_init($mock) {
+    $class = get_class($mock);
+    $methods = isset($mock->_mocked_methods) ? $mock->_mocked_methods : get_class_methods($class);
+    foreach($methods as $method) {
+        if(!method_exists($mock, $method)) continue;
+        if( (($mm = (array) $mock) && isset($mm['_actions'])) ||
+            (isset($mock->_mock) && ($mm = (array) $mock->_mock) && isset($mm['_actions'])))
+        {
+            $mn = strtolower($method);
+            $mm['_actions']->_always[$mn] = new SignatureMapWithDefault(new UnimplementedThrower($class, $method));
+        } else {
+            @$mock->throwOn($method, new Exception("Unimplemented $class->$method(...)"));
+        }
+    }
+    return $mock;
+}
+
+function safe_mock($classname) {
+    return mock_safe_init(mock($classname));
+}
+
 function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
     if (is_object($classname_or_simpletest_mock)) {
         $mock = $classname_or_simpletest_mock;
@@ -88,6 +141,10 @@ function partial_mock($classname, array $mocked_methods, array $construct_params
         call_user_func_array(array($object, '__construct'), $construct_params);
     }
     return $object;
+}
+
+function safe_partial_mock($classname) {
+    return mock_safe_init(partial_mock($classname));
 }
 
 class OngoingIntelligentStub {
