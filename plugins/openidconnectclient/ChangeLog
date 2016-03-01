@@ -1,3 +1,6 @@
+Version 0.8 - Tuleap 8.12
+    * story #8632: Create an account after an OpenID Connect authentication
+
 Version 0.7 - Tuleap 8.12
     * story #8631: Add the possibility to remove a link between a user account and an OpenID Connect provider
 
