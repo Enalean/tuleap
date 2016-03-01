@@ -108,6 +108,17 @@ abstract class TuleapTestCase extends UnitTestCase {
     }
 
     /**
+     *    Used to invoke the single tests.
+     *    @return SimpleInvoker        Individual test runner.
+     *    @access public
+     */
+    public function createInvoker() {
+        return new TuleapErrorTrappingInvoker(
+            new SimpleExceptionTrappingInvoker(
+                new SimpleInvoker($this)));
+    }
+
+    /**
      *    Tests to see if the method is a test that should
      *    be run, override default by searching methods that starts with 'it'
      *    is a candidate unless it is the constructor.
