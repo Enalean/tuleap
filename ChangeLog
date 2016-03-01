@@ -21,6 +21,7 @@ Version 8.12 (Not yet released)
 	* request #8885: Improve SVN authentication performance with mod_perl
 	* request #8899: Default text values not displayed in CKEditor if in <>
 	* request #8898: Lots of warnings during SYSTEM_CHECK
+	* request #8912: Readme of plugins is not interpreted
 
 	== Plugins ==
 	* admindelegation: 2.11
@@ -31,7 +32,7 @@ Version 8.12 (Not yet released)
 	* svn: 0.27
 	* cardwall: 1.57
 	* docman: 2.26.98
-	* git: 4.125
+	* git: 4.126
 	* tracker: 5.805
 	* Plugin OpenId is deleted
 	* ldap: 3.98
@@ -44,6 +45,7 @@ Version 8.12 (Not yet released)
 	* doaprdf: 0.5
 	* foafprofiles: 0.5
 	* statistics: 0.58
+	* pluginsadministration: 1.16
 
 	== Themes ==
 	* FlamingParrot: 1.122

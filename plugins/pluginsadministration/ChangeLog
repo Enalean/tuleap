@@ -1,3 +1,6 @@
+Version 1.16 - Tuleap 8.12
+    * request #8912: Readme of plugins is not interpreted
+
 Version 1.15 - Tuleap 8.10
     * story #8608: Define projects that can use SVN tokens
 

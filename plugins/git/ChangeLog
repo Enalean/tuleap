@@ -1,3 +1,6 @@
+Version 4.126 - Tuleap 8.12
+    * request #8912: Readme of plugins is not interpreted
+
 Version 4.125 - Tuleap 8.12
     * story #8826: have a beautiful UI for new Pull Requests plugin (give additional help in the git clone bar helper, Merge and abandon pull requests)
 
