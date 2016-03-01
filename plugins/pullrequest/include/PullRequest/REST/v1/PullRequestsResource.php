@@ -26,13 +26,16 @@ use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
-use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
+use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
+use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\REST\AuthenticatedResource;
@@ -71,6 +74,9 @@ class PullRequestsResource extends AuthenticatedResource {
     /** @var Tuleap\PullRequest\PullRequestCloser */
     private $pull_request_closer;
 
+    /** @var Tuleap\PullRequest\PullRequestCreator */
+    private $pull_request_creator;
+
     public function __construct() {
         $this->git_repository_factory = new GitRepositoryFactory(
             new GitDao(),
@@ -87,9 +93,15 @@ class PullRequestsResource extends AuthenticatedResource {
             $this->comment_factory
         );
 
-        $this->user_manager        = UserManager::instance();
-        $this->pull_request_closer = new PullRequestCloser($pull_request_dao);
-        $this->logger              = new BackendLogger();
+        $this->user_manager         = UserManager::instance();
+        $this->pull_request_creator = new PullRequestCreator(
+            $this->pull_request_factory,
+            $pull_request_dao,
+            $this->git_repository_factory,
+            $this->user_manager
+        );
+        $this->pull_request_closer  = new PullRequestCloser($pull_request_dao);
+        $this->logger               = new BackendLogger();
     }
 
     /**
@@ -280,35 +292,39 @@ class PullRequestsResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
+        $user           = $this->user_manager->getCurrentUser();
         $repository_id  = $content->repository_id;
+        $git_repository = $this->getRepository($repository_id);
         $branch_src     = $content->branch_src;
         $branch_dest    = $content->branch_dest;
-        $user           = $this->user_manager->getCurrentUser();
-        $git_repository = $this->getRepository($repository_id);
 
         $this->checkUserCanReadRepository($user, $git_repository);
 
-        $executor = $this->getExecutor($git_repository);
-
         try {
-            $sha1_src     = $executor->getReferenceBranch($branch_src);
-            $sha1_dest    = $executor->getReferenceBranch($branch_dest);
-            $pull_request = $this->pull_request_factory->create(
+            $generated_pull_request = $this->pull_request_creator->generatePullRequest(
                 $git_repository,
-                $user,
                 $branch_src,
-                $sha1_src,
-                $branch_dest,
-                $sha1_dest
+                $branch_dest
             );
         } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (PullRequestNotCreatedException $exception) {
-            throw new RestException(500, $exception->getMessage());
+
+        } catch (PullRequestCannotBeCreatedException $exception) {
+            throw new RestException(400, $exception->getMessage());
+
+        } catch (PullRequestAlreadyExistsException $exception) {
+            throw new RestException(400, $exception->getMessage());
+
+        } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        if (! $generated_pull_request) {
+            throw new RestException(500);
         }
 
         $pull_request_reference = new PullRequestReference();
-        $pull_request_reference->build($pull_request);
+        $pull_request_reference->build($generated_pull_request);
 
         $this->sendLocationHeader($pull_request_reference->uri);
 

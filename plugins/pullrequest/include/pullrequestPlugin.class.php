@@ -145,13 +145,16 @@ class pullrequestPlugin extends Plugin {
      * @see GIT_ADDITIONAL_INFO
      */
     public function git_additional_info($params) {
-        $repository       = $params['repository'];
-        $nb_pull_requests = $this->getPullRequestFactory()->countPullRequestOfRepository($repository);
+        $repository = $params['repository'];
 
-        $renderer  = $this->getTemplateRenderer();
-        $presenter = new AdditionalInfoPresenter($repository, $nb_pull_requests);
+        if (! $repository->isMigratedToGerrit()) {
+            $nb_pull_requests = $this->getPullRequestFactory()->countPullRequestOfRepository($repository);
 
-        $params['info'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+            $renderer  = $this->getTemplateRenderer();
+            $presenter = new AdditionalInfoPresenter($repository, $nb_pull_requests);
+
+            $params['info'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+        }
     }
 
     /**
@@ -159,14 +162,17 @@ class pullrequestPlugin extends Plugin {
      */
     public function git_additional_actions($params) {
         $repository = $params['repository'];
-        $git_exec   = new GitExec($repository->getFullPath(), $repository->getFullPath());
-        $branches   = $git_exec->getAllBranchNames();
-        $csrf       = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
 
-        $renderer  = $this->getTemplateRenderer();
-        $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches);
+        if (! $repository->isMigratedToGerrit()) {
+            $git_exec   = new GitExec($repository->getFullPath(), $repository->getFullPath());
+            $branches   = $git_exec->getAllBranchNames();
+            $csrf       = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
 
-        $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+            $renderer  = $this->getTemplateRenderer();
+            $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches);
+
+            $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+        }
     }
 
     /**
@@ -185,7 +191,7 @@ class pullrequestPlugin extends Plugin {
         $repository = $params['repository'];
         $user       = $params['user'];
 
-        if ($repository && $repository->userCanRead($user)) {
+        if ($repository && $repository->userCanRead($user) && ! $repository->isMigratedToGerrit()) {
             $params['permitted_actions'][] = 'pull-requests';
         }
     }
