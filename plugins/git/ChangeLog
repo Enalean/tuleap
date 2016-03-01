@@ -1,3 +1,6 @@
+Version 4.127 - Tuleap 8.12
+    * request #8913: Persistent XSS via a markdown readme file
+
 Version 4.126 - Tuleap 8.12
     * request #8912: Readme of plugins is not interpreted
 
