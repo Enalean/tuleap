@@ -7,7 +7,7 @@
 
 <div class="container login">
     <div class="row-fluid">
-        <div class="login-tuleap">
+        <div class="login-tuleap span6">
             <h3>{{ link_login_with_tuleap }}</h3>
             <form action="?action=link-existing" method="post" name="form_login" autocomplete="off">
                 <input type="hidden" name="link_id" value="{{ link_id }}">
@@ -33,6 +33,10 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="span6 text-center">
+            <h3>{{ register_new_account }}</h3>
+            <a href="{{ link_to_register_page }}" class="btn">{{ register }}</a>
         </div>
     </div>
 </div>

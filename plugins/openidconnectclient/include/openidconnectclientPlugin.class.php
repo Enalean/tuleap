@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\OpenIDConnectClient\AccountLinker\RegisterPresenter;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\AccountLinker;
@@ -46,6 +47,9 @@ class openidconnectclientPlugin extends Plugin {
         $this->setScope(self::SCOPE_SYSTEM);
 
         $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
+        $this->addHook('before_register');
+        $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD);
+        $this->addHook(Event::AFTER_USER_REGISTRATION);
         $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook('cssfile');
         $this->addHook(Event::MANAGE_THIRD_PARTY_APPS);
@@ -128,6 +132,73 @@ class openidconnectclientPlugin extends Plugin {
 
         $renderer                        = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
         $params['additional_connector'] .= $renderer->renderToString('login_connector', $login_connector_presenter);
+    }
+
+    public function before_register(array $params) {
+        $request = $params['request'];
+        $link_id = $request->get('openidconnect_link_id');
+
+        if ($this->isUserRegistrationWithOpenIDConnectPossible($params['is_registration_confirmation'], $link_id)) {
+            $provider_manager         = new ProviderManager(new ProviderDao());
+            $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
+            try {
+                $unlinked_account     = $unlinked_account_manager->getbyId($link_id);
+                $provider             = $provider_manager->getById($unlinked_account->getProviderId());
+
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText(
+                        'plugin_openidconnectclient',
+                        'info_registration',
+                        array($provider->getName(), ForgeConfig::get('sys_name'))
+                    )
+                );
+            } catch (Exception $ex) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+                );
+                $GLOBALS['Response']->redirect('/account/login.php');
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isUserRegistrationWithOpenIDConnectPossible($is_registration_confirmation, $link_id) {
+        return ! $is_registration_confirmation && $link_id && $this->canPluginAuthenticateUser();
+    }
+
+    public function user_register_additional_field(array $params) {
+        $request = $params['request'];
+        $link_id = $request->get('openidconnect_link_id');
+
+        if ($link_id && $this->canPluginAuthenticateUser()) {
+            $register_presenter       = new RegisterPresenter($link_id);
+            $renderer                 = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+            $params['field']         .= $renderer->renderToString('register_field', $register_presenter);
+        }
+    }
+
+    public function after_user_registration(array $params) {
+        $request = $params['request'];
+        $link_id = $request->get('openidconnect_link_id');
+
+        if ($link_id) {
+            $user_manager             = UserManager::instance();
+            $provider_manager         = new ProviderManager(new ProviderDao());
+            $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
+            $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
+            $account_linker_controler = new AccountLinker\Controller(
+                $user_manager,
+                $provider_manager,
+                $user_mapping_manager,
+                $unlinked_account_manager
+            );
+
+            $account_linker_controler->linkRegisteringAccount($params['user_id'], $link_id, $request->getTime());
+        }
     }
 
     public function manage_third_party_apps(array $params) {

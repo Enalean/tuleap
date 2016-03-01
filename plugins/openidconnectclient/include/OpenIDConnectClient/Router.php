@@ -62,7 +62,7 @@ class Router {
         $this->checkTLSPresence($request);
         switch ($action) {
             case 'link':
-                $this->account_linker_controller->showIndex($request->get('link_id'), $request->get('return_to'));
+                $this->account_linker_controller->showIndex($request);
                 break;
             case 'link-existing':
                 $this->account_linker_controller->linkExistingAccount($request);

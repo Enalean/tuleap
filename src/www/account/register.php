@@ -179,6 +179,15 @@ function display_account_form($register_error, array $errors)	{
     $form_register_purpose          = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
     $form_register_purpose_error    = getFieldError('form_register_purpose', $errors);
 
+    $extra_plugin_field = '';
+    EventManager::instance()->processEvent(
+        Event::USER_REGISTER_ADDITIONAL_FIELD,
+        array(
+            'request' => $request,
+            'field'   => &$extra_plugin_field
+        )
+    );
+
     if ($page == "admin_creation") {
         $prefill = new Account_RegisterAdminPrefillValuesPresenter(
             new Account_RegisterField($form_loginname, $form_loginname_error),
@@ -191,7 +200,7 @@ function display_account_form($register_error, array $errors)	{
             new Account_RegisterField($form_restricted, $form_restricted_error),
             new Account_RegisterField($form_send_email, $form_send_email_error)
         );
-        $presenter = new Account_RegisterByAdminPresenter($prefill);
+        $presenter = new Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
         $template = 'register-admin';
     } else {
         $prefill = new Account_RegisterPrefillValuesPresenter(
@@ -203,7 +212,7 @@ function display_account_form($register_error, array $errors)	{
             new Account_RegisterField($form_mail_site, $form_mail_site_error),
             new Account_RegisterField($timezone, $timezone_error)
         );
-        $presenter = new Account_RegisterByUserPresenter($prefill);
+        $presenter = new Account_RegisterByUserPresenter($prefill, $extra_plugin_field);
         $template = 'register-user';
     }
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
@@ -226,6 +235,14 @@ if ($request->isPost() && $request->exist('Register')) {
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
     $logo_retriever              = new LogoRetriever();
     if ($new_userid = register_valid($mail_confirm_code, $errors)) {
+        EventManager::instance()->processEvent(
+            Event::AFTER_USER_REGISTRATION,
+            array(
+                'request' => $request,
+                'user_id' => $new_userid
+            )
+        );
+
         $confirmation_register   = true;
         $user_name               = user_getname($new_userid);
         $content                 = '';
@@ -318,7 +335,12 @@ if ($request->isPost() && $request->exist('Register')) {
 if($page != 'admin_creation'){
    require_once('common/event/EventManager.class.php');
     $em =& EventManager::instance();
-    $em->processEvent('before_register', array());
+    $em->processEvent('before_register',
+        array(
+            'request'                      => $request,
+            'is_registration_confirmation' => $confirmation_register
+        )
+    );
 }
 
 $body_class = array('register-page');

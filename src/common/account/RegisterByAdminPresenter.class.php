@@ -29,8 +29,8 @@ class Account_RegisterByAdminPresenter extends Account_RegisterPresenter {
     public $form_url = '/admin/register_admin.php?page=admin_creation';
     public $should_display_purpose = true;
 
-    public function __construct(Account_RegisterAdminPrefillValuesPresenter $prefill_values) {
-        parent::__construct($prefill_values);
+    public function __construct(Account_RegisterAdminPrefillValuesPresenter $prefill_values, $extra_plugin_field) {
+        parent::__construct($prefill_values, $extra_plugin_field);
         $this->title                  = $GLOBALS['Language']->getText('account_register', 'title_admin');
         $this->submit                 = $GLOBALS['Language']->getText('account_register', 'btn_activate');
         $this->purpose_directions     = $GLOBALS['Language']->getText('account_register', 'purpose_directions_admin');

@@ -64,7 +64,8 @@ class Controller {
         $this->unlinked_account_manager = $unlinked_account_manager;
     }
 
-    public function showIndex($link_id, $return_to) {
+    public function showIndex(HTTPRequest $request) {
+        $link_id = $request->get('link_id');
         try {
             $unlinked_account = $this->unlinked_account_manager->getbyId($link_id);
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
@@ -73,14 +74,35 @@ class Controller {
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
         }
-        $presenter = new Presenter($link_id, $return_to, $provider->getName());
-        $renderer  = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+        $return_to             = $request->get('return_to');
+        $link_to_register_page = $this->generateLinkToRegisterPage($request);
+        $presenter             = new Presenter($link_id, $return_to, $provider->getName(), $link_to_register_page);
+        $renderer              = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
             array('title' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account'))
         );
         $renderer->renderToPage('linker', $presenter);
         $GLOBALS['HTML']->footer(array());
+    }
+
+    private function generateLinkToRegisterPage(HTTPRequest $request) {
+        $openid_connect_to_register_page = array(
+            'link_id'  => 'openidconnect_link_id',
+            'name'     => 'form_realname',
+            'nickname' => 'form_loginname',
+            'email'    => 'form_email',
+            'zoneinfo' => 'timezone'
+        );
+
+        $query_parameters = array();
+        foreach ($openid_connect_to_register_page as $openid_connect_param => $register_page_param) {
+            if ($request->existAndNonEmpty($openid_connect_param)) {
+                $query_parameters[$register_page_param] = $request->get($openid_connect_param);
+            }
+        }
+
+        return '/account/register.php?' . http_build_query($query_parameters);
     }
 
     public function linkExistingAccount(HTTPRequest $request) {
@@ -111,6 +133,22 @@ class Controller {
             require_once('account.php');
             \account_redirect_after_login($request->get('return_to'));
         }
+    }
+
+    public function linkRegisteringAccount($user_id, $link_id, $request_time) {
+        try {
+            $unlinked_account = $this->unlinked_account_manager->getbyId($link_id);
+            $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
+            $user             = $this->user_manager->getUserById($user_id);
+
+            $this->linkAccount($user, $provider, $unlinked_account, $request_time);
+        } catch (Exception $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
+            );
+        }
+
     }
 
     private function linkAccount(PFUser $user, Provider $provider, UnlinkedAccount $unlinked_account, $request_time) {

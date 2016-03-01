@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,8 +36,9 @@ class Account_RegisterPresenter {
     public $json_password_strategy_keys;
     public $password_strategy_validators;
     public $legal = '';
+    private $extra_plugin_field;
 
-    public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values) {
+    public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field) {
         $this->prefill_values         = $prefill_values;
         $this->login                  = $GLOBALS['Language']->getText('account_register', 'login');
         $this->email                  = $GLOBALS['Language']->getText('account_register', 'email');
@@ -50,8 +51,11 @@ class Account_RegisterPresenter {
         $this->good                   = $GLOBALS['Language']->getText('account_check_pw', 'good');
         $this->bad                    = $GLOBALS['Language']->getText('account_check_pw', 'bad');
         $this->new_password           = $GLOBALS['Language']->getText('account_change_pw', 'new_password');
-        $this->timezone_selector      = new Account_TimezoneSelectorPresenter($this->prefill_values->form_timezone);
+        $this->timezone_selector      = new Account_TimezoneSelectorPresenter(
+            $this->prefill_values->form_timezone->value
+        );
         $this->should_display_purpose = $GLOBALS['sys_user_approval'] == 1;
+        $this->extra_plugin_field     = $extra_plugin_field;
 
         $password_strategy = new PasswordStrategy();
         include($GLOBALS['Language']->getContent('account/password_strategy'));
@@ -63,5 +67,9 @@ class Account_RegisterPresenter {
                 'description' => $v->description()
             );
         }
+    }
+
+    public function extra_plugin_field() {
+        return $this->extra_plugin_field;
     }
 }
