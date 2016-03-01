@@ -1,3 +1,6 @@
+Version 5.805 - Tuleap 8.12
+    * request #8916 Text control shows HtML source code when trying to update text
+
 Version 5.804 - Tuleap 8.12
     * request #8883: Remove Planning v1
 
