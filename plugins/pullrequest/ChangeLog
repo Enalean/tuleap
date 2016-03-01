@@ -1,3 +1,6 @@
+Version 0.16 - Tuleap 8.12
+    * story #8826: have a beautiful UI for new Pull Requests plugin (give additional help in the git clone bar helper, Merge and abandon pull requests)
+
 Version 0.15 - Tuleap 8.12
     * story #8826: no pull requests for repository migrated on gerrit
 
