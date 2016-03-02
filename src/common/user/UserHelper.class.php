@@ -135,13 +135,15 @@ class UserHelper {
      * @return string
      */
     function getUserFilter($by) {
-        $filter = '';
-        $um = $this->_getUserManager();
-        $usersIds = $um->getUserIdsList($by);
+        $filter       = '';
+        $user_manager = $this->_getUserManager();
+        $usersIds     = $user_manager->getUserIdsList($by);
         if (count($usersIds) > 0) {
-            $filter .= ' AND user.user_id IN ('.implode (',', $usersIds).')';
+            $user_ids_escaped = $this->_getUserDao()->getDa()->escapeIntImplode($usersIds);
+            $filter .= ' AND user.user_id IN ('. $user_ids_escaped .')';
         } else {
-            $filter .= ' AND user.user_name LIKE "%'.db_es($by).'%"';
+            $by      = $this->_getUserDao()->getDa()->quoteSmart('%' . $by . '%');
+            $filter .= ' AND user.user_name LIKE ' . $by;
         }
         return $filter;
     }

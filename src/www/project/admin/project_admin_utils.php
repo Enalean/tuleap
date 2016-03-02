@@ -113,38 +113,39 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
  * @return String
  */
 function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
-    $filter = '';
+    $data_access = CodendiDataAccess::instance();
+    $filter      = '';
     if (!empty($by)) {
-        $uh = UserHelper::instance();
-        $filter .= $uh->getUserFilter($by);
+        $user_helper = UserHelper::instance();
+        $filter     .= $user_helper->getUserFilter($by);
     }
     if(!empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate);
-        $filter .= " AND group_history.date > '".$timestamp."'";
+        $filter .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
     }
     if(!empty($endDate)) {
         list($timestamp,) = util_date_to_unixtime($endDate);
         // Add 23:59:59 to timestamp
         $timestamp = $timestamp + 86399;
-        $filter .= " AND group_history.date < '".$timestamp."'";
+        $filter .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
     }
     if(!empty($value)) {
         //all_users need specific treatement
         if(stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
             $value =  'ugroup_anonymous_users_name_key';
         }
-        $filter .= " AND group_history.old_value LIKE '%".$value."%'";
+        $filter .= " AND group_history.old_value LIKE " . $data_access->quoteSmart("%$value%");
     }
     if(!empty($event) && strcmp($event, 'any')) {
         $filter .= " AND ( 0 ";
         if(!empty($subEventsBox)) {
             foreach ($subEventsBox as $key => $value) {
-                $filter .= " OR group_history.field_name LIKE '".$key."%'";
+                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteSmart("$key%");
             }
         } else {
             $subEventsList = get_history_entries();
             foreach ($subEventsList[$event] as $key => $value) {
-                $filter .= " OR group_history.field_name LIKE '".$value."%'";
+                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteSmart("$value%");
             }
         }
         $filter .= " ) ";
