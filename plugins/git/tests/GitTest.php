@@ -63,7 +63,7 @@ class GitTest extends TuleapTestCase  {
         $user->setReturnValue('isMember', true);
         $git->user = $user;
 
-        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
 
     }
 
@@ -80,7 +80,7 @@ class GitTest extends TuleapTestCase  {
         $user->setReturnValue('isMember', false);
         $git->user = $user;
 
-        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
 
     }
 
@@ -97,7 +97,7 @@ class GitTest extends TuleapTestCase  {
         $git->user = $user;
 
         $git->expectOnce('_doDispatchForkCrossProject');
-        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
 
     }
 }

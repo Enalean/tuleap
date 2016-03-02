@@ -34,20 +34,20 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $toProjectId = 100;
         $toProject = new MockProject();
         $toProject->setReturnValue('getId', $toProjectId);
-        
+
         $repo  = new GitRepository();
         $repos = array($repo);
         $repo_ids = '200';
-        
+
         $user = mock('PFUser');
         $user->setReturnValue('isMember', true);
-        
+
         $usermanager = new MockUserManager();
         $usermanager->setReturnValue('getCurrentUser', $user);
-        
+
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
-        
+
         $repositoryFactory = new MockGitRepositoryFactory();
         $repositoryFactory->setReturnValue('getRepositoryById', $repo, array($repo_ids));
 
@@ -75,16 +75,16 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git->expectAt(0, 'addAction', array('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=100', $forkPermissions)));
         $git->expectAt(1, 'addAction', array('getProjectRepositoryList', array($groupId)));
         $git->expectOnce('addView', array('forkRepositories'));
-        
-        $git->_dispatchActionAndView('do_fork_repositories', null, null, $user);
+
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
-    
+
     public function testAddsErrorWhenRepositoriesAreMissing() {
         $group_id = 11;
-        
+
         $invalidRequestError = 'Invalid request';
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_repos', '*'));
-        
+
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
         $git->setGroupId($group_id);
         $git->setFactory(new MockGitRepositoryFactory());
@@ -95,13 +95,13 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
 
         $git->_doDispatchForkCrossProject($request, null);
     }
-    
+
     public function testAddsErrorWhenDestinationProjectIsMissing() {
         $group_id = 11;
-        
+
         $invalidRequestError = 'Invalid request';
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_to_project', '*'));
-        
+
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
         $git->setGroupId($group_id);
         $git->expectOnce('addError', array($invalidRequestError));
@@ -114,32 +114,32 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
 
         $git->_doDispatchForkCrossProject($request, null);
     }
-    
+
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken'));
         $git->throwOn('checkSynchronizerToken', new Exception());
         $this->expectException();
         $git->_doDispatchForkCrossProject(null, null);
     }
-    
+
     function testUserMustBeAdminOfTheDestinationProject() {
         $adminMsg = 'must_be_admin_to_create_project_repo';
         $GLOBALS['Language']->setReturnValue('getText', $adminMsg, array('plugin_git', $adminMsg, '*'));
-        
+
         $user = mock('PFUser');
         $user->setReturnValue('isMember', false, array(666, 'A'));
-        
+
         $request = new Codendi_Request(array(
             'to_project'  => 666,
             'repos'       => array(1),
             'repo_access' => array()
         ));
-        
+
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken', 'addError', 'addAction', 'getText'));
         $git->setGroupId(123);
         $git->expectOnce('addError', array($git->getText($adminMsg)));
         $git->expectNever('addAction');
-        
+
         $git->_doDispatchForkCrossProject($request, $user);
     }
 }

@@ -28,10 +28,10 @@ Mock::generate('GitRepositoryFactory');
 
 
 class Git_ForkRepositories_Test extends TuleapTestCase {
-    
+
     public function testRenders_ForkRepositories_View() {
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
-        
+
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
         $git->setRequest($request);
         $git->expectOnce('addView', array('forkRepositories'));
@@ -43,9 +43,9 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $user->setReturnValue('isMember', true);
         $git->user = $user;
 
-        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
     }
-    
+
     public function testExecutes_ForkRepositories_ActionWithAListOfRepos() {
         $groupId = 101;
         $repo = new GitRepository();
@@ -55,15 +55,15 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $user->setUserName('Ben');
         $path = userRepoPath('Ben', 'toto');
         $forkPermissions = array();
-        
+
         $project = new MockProject();
-        
+
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project, array($groupId));
-        
+
         $factory = new MockGitRepositoryFactory();
         $factory->setReturnValue('getRepositoryById', $repo);
-        
+
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
         $git->setGroupId($groupId);
         $git->setProjectManager($projectManager);
@@ -76,7 +76,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }
-    
+
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken'));
         $git->throwOn('checkSynchronizerToken', new Exception());

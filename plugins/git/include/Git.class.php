@@ -458,11 +458,11 @@ class Git extends PluginController {
         }
 
         $this->_informAboutPendingEvents($repository);
-        $this->_dispatchActionAndView($this->action, $repository, $repositoryName, $user);
 
+        $this->_dispatchActionAndView($this->action, $repository, $repoId, $repositoryName, $user);
     }
 
-    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repositoryName, $user) {
+    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -833,7 +833,7 @@ class Git extends PluginController {
 
                 break;
             case 'restore':
-                $this->addAction('restoreRepository', array($repository->getId(), $this->groupId));
+                $this->addAction('restoreRepository', array($repo_id, $this->groupId));
                 break;
 
             #LIST
