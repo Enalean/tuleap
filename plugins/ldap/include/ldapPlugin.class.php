@@ -85,6 +85,9 @@ class LdapPlugin extends Plugin {
         // Comment if want to allow real name change in LDAP mode
         $this->_addHook('display_change_realname', 'forbidIfLdapAuthAndUserLdap', false);
 
+        // User group
+        $this->addHook('project_admin_ugroup_deletion');
+
         // Site Admin
         $this->_addHook('before_admin_change_pw', 'warnNoPwChange', false);
         $this->_addHook('usergroup_update_form', 'addLdapInput', false);
@@ -664,6 +667,13 @@ class LdapPlugin extends Plugin {
                 $params['allow'] = false;
             }
         }
+    }
+
+    public function project_admin_ugroup_deletion($params) {
+        $ldap_usergroup_manager = new LDAP_UserGroupManager($this->getLdap());
+        $ldap_usergroup_manager->setId($params['ugroup_id']);
+
+        $ldap_usergroup_manager->unbindFromBindLdap();
     }
 
     /**
