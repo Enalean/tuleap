@@ -517,7 +517,7 @@ class Git extends PluginController {
                     if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc, $pane) );
+                    $this->addAction('save', array($this->groupId, $repository->getId(), $repoAccess, $repoDesc, $pane) );
                     $this->addView('view');
                 } else {
                     $this->addError( $this->getText('controller_access_denied') );
