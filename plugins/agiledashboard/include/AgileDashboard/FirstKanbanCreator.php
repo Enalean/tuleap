@@ -104,7 +104,7 @@ class AgileDashboard_FirstKanbanCreator {
     /** @return Tracker */
     private function importTrackerStructure() {
         try {
-            return $this->xml_import->createFromXMLFile($this->project->getID(), $this->template_path);
+            return $this->xml_import->createFromXMLFile($this->project, $this->template_path);
         } catch (Exception $exception) {
             $logger = new BackendLogger();
             $logger->error('Unable to create first kanban for '. $this->project->getId() .': '. $exception->getMessage());

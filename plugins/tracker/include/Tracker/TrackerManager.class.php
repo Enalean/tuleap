@@ -234,7 +234,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                     $user_finder = new XMLImportHelper(UserManager::instance());
                     $new_tracker = TrackerXmlImport::build($user_finder)
                         ->createFromXMLFileWithInfo(
-                            $project->getID(),
+                            $project,
                             $_FILES["tracker_new_xml_file"]["tmp_name"],
                             $name,
                             $description,

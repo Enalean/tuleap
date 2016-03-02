@@ -109,10 +109,12 @@ class TrackerXmlImport {
      */
     public static function build(
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        Logger $logger
+        Logger $logger = null
     ) {
         $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();
+
+        $logger = $logger === null ? new Log_NoopLogger() : $logger;
 
         return new TrackerXmlImport(
             $tracker_factory,
@@ -308,13 +310,13 @@ class TrackerXmlImport {
 
     /**
      *
-     * @param type $group_id
+     * @param Project $project
      * @param type $filepath
      *
      * @throws TrackerFromXmlException
      * @return Tracker
      */
-    public function createFromXMLFile($group_id, $filepath) {
+    public function createFromXMLFile(Project $project, $filepath) {
         $xml_security = new XML_Security();
         $tracker_xml = $xml_security->loadFile($filepath);
         if ($tracker_xml !== false) {
@@ -322,7 +324,7 @@ class TrackerXmlImport {
             $description = $tracker_xml->description;
             $item_name   = $tracker_xml->item_name;
 
-            return $this->createFromXML($tracker_xml, $group_id, $name, $description, $item_name);
+            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
         }
     }
 
@@ -336,7 +338,7 @@ class TrackerXmlImport {
 
     /**
      *
-     * @param type $group_id
+     * @param Project $group_id
      * @param type $filepath
      * @param type $name
      * @param type $description
@@ -345,11 +347,11 @@ class TrackerXmlImport {
      * @throws TrackerFromXmlException
      * @return Tracker
      */
-    public function createFromXMLFileWithInfo($group_id, $filepath, $name, $description, $item_name) {
+    public function createFromXMLFileWithInfo(Project $project, $filepath, $name, $description, $item_name) {
         $xml_security = new XML_Security();
         $tracker_xml  = $xml_security->loadFile($filepath);
         if ($tracker_xml) {
-            return $this->createFromXML($tracker_xml, $group_id, $name, $description, $item_name);
+            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
         }
     }
 
