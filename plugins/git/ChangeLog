@@ -1,3 +1,6 @@
+Version 4.130 - Tuleap 8.12
+    * request #8931: Can't restore a git repository anymore
+
 Version 4.129 - Tuleap 8.12
     * request #8930: Web interface of a Git repository can not be accessed if the user is not a Git admin
 
