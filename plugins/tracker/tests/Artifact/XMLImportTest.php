@@ -388,7 +388,7 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
         expect($this->artifact_creator)->createBare()->once();
         stub($this->artifact_creator)->createBare()->returns(mock('Tracker_Artifact'));
 
-        expect($this->logger)->error()->once();
+        expect($this->logger)->warn()->once();
 
         $this->importer->importFromXMLPublic(
             $this->tracker,

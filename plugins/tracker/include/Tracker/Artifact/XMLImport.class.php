@@ -298,15 +298,13 @@ class Tracker_Artifact_XMLImport {
                 if($count === 0) {
                     $this->logger->debug("initial changeset");
                     $res = $this->importFirstChangeset($artifact, $xml_changeset, $fields_data_builder);
-                    if(!$res) {
+                    if (!$res) {
                         $this->importFakeFirstChangeset($artifact, $xml_changeset);
                     }
                 } else {
                     $this->logger->debug("changeset $count");
                     $this->importRemainingChangeset($artifact, $xml_changeset, $fields_data_builder);
                 }
-            } catch (Tracker_Artifact_Exception_EmptyChangesetException $exception) {
-                 $this->logger->error("Impossible to create artifact, there is no valid data to import for initial changeset: ".$exception->getMessage());
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warn("No Change for changeset $count");
             } catch (Exception $exception) {
@@ -324,7 +322,7 @@ class Tracker_Artifact_XMLImport {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
         $fields_data = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by);
         if (count($fields_data) === 0) {
-            throw new Tracker_Artifact_Exception_EmptyChangesetException();
+            return null;
         }
 
         return $this->artifact_creator->createFirstChangeset(
