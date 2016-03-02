@@ -1,3 +1,6 @@
+Version 4.129 - Tuleap 8.12
+    * request #8930: Web interface of a Git repository can not be accessed if the user is not a Git admin
+
 Version 4.128 - Tuleap 8.12
     * request #8923: Can't update git repository settings anymore
 
