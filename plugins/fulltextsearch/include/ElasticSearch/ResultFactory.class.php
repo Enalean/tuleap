@@ -133,6 +133,8 @@ class ElasticSearch_1_2_ResultFactory {
                 $this->url_verification->userCanAccessProject($user, $project);
             } catch (Project_AccessPrivateException $exception) {
                 continue;
+            } catch(Project_AccessDeletedException $exception) {
+                continue;
             }
 
             switch ($index) {
