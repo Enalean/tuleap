@@ -1,3 +1,6 @@
+Version 5.807 - Tuleap 8.12
+    * request #8932: Migration from tv3 to tv5 is not resilient
+
 Version 5.806 - Tuleap 8.12
     * request #8919 No default tracker templates found
 
