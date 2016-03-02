@@ -26,14 +26,14 @@ Version 8.12 (Not yet released)
 	== Plugins ==
 	* admindelegation: 2.11
 	* hudson: 1.25
-	* agiledashboard: 1.359
+	* agiledashboard: 1.360
 	* mediawiki: 0.108
 	* openidconnectclient: 0.8
 	* svn: 0.27
 	* cardwall: 1.57
 	* docman: 2.26.98
 	* git: 4.128
-	* tracker: 5.805
+	* tracker: 5.806
 	* Plugin OpenId is deleted
 	* ldap: 3.98
 	* pullrequest: 0.17
