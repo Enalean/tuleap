@@ -107,6 +107,16 @@ extends Valid_Text {
 }
 
 /**
+ * Check that value is a possible HTTP URI
+ */
+class Valid_HTTPURI extends Valid_String {
+    public function validate($value) {
+        $this->addRule(new Rule_Regexp('/^(http:\/\/|https:\/\/)/i'));
+        return parent::validate($value);
+    }
+}
+
+/**
  * Check that value is an array.
  */
 class Valid_Array
