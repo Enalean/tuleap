@@ -7,9 +7,10 @@ $GLOBALS['HTML']->includeJavascriptFile('/scripts/codendi/LayoutManager.js');
 $hp = Codendi_HTMLPurifier::instance();
 if (user_isloggedin()) {
     
-    $request =& HTTPRequest::instance();
-    $lm = new WidgetLayoutManager();
-    $vLayoutId = new Valid_UInt('layout_id');
+    $request        = HTTPRequest::instance();
+    $csrk_token     = new CSRFSynchronizerToken('widget_management');
+    $layout_manager = new WidgetLayoutManager();
+    $vLayoutId      = new Valid_UInt('layout_id');
     $vLayoutId->required();
     if ($request->valid($vLayoutId)) {
         $layout_id = $request->get('layout_id');
@@ -26,7 +27,12 @@ if (user_isloggedin()) {
                     
                     $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
                     my_header(array('title'=>$title, 'selected_top_tab' => '/my/'));
-                    $lm->displayAvailableWidgets(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER, $layout_id);
+                    $layout_manager->displayAvailableWidgets(
+                        user_getid(),
+                        WidgetLayoutManager::OWNER_TYPE_USER,
+                        $layout_id,
+                        $csrk_token
+                    );
                     site_footer(array());
                     
                     break;
@@ -39,7 +45,12 @@ if (user_isloggedin()) {
                         if (user_ismember($group_id, 'A') || user_is_super_user()) {
                             $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
                             site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
-                            $lm->displayAvailableWidgets($group_id, WidgetLayoutManager::OWNER_TYPE_GROUP, $layout_id);
+                            $layout_manager->displayAvailableWidgets(
+                                $group_id,
+                                WidgetLayoutManager::OWNER_TYPE_GROUP,
+                                $layout_id,
+                                $csrk_token
+                            );
                             site_footer(array());
                         } else {
                             $GLOBALS['Response']->redirect('/projects/'.$project->getUnixName().'/');

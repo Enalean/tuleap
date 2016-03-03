@@ -3,12 +3,12 @@ require_once('pre.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Widget.class.php');
 
-$request = HTTPRequest::instance();
-
-$lm = new WidgetLayoutManager();
-$good = false;
-$redirect   = '/';
-$owner = $request->get('owner');
+$request        = HTTPRequest::instance();
+$csrf_token     = new CSRFSynchronizerToken('widget_management');
+$layout_manager = new WidgetLayoutManager();
+$good           = false;
+$redirect       = '/';
+$owner          = $request->get('owner');
 
 if ($owner) {
     $owner_id   = (int)substr($owner, 1);
@@ -39,7 +39,7 @@ if ($owner) {
     if ($good) {
         if (!$request->exist('layout_id')) {
             //Search the default one
-            $layout_id = $lm->getDefaultLayoutId($owner_id, $owner_type);
+            $layout_id = $layout_manager->getDefaultLayoutId($owner_id, $owner_type);
         } else {
             $layout_id = (int)$request->get('layout_id');
         }
@@ -53,17 +53,18 @@ if ($owner) {
             switch($request->get('action')) {
                 case 'widget':
                     if ($name && $layout_id) {
+                        $csrf_token->check($redirect, $request);
                         if ($widget = Widget::getInstance($name)) {
                             if ($widget->isAvailable()) {
                                 $action = array_pop(array_keys($param[$name]));
                                 switch($action) {
                                     case 'remove':
                                         $instance_id = (int)$param[$name][$action];
-                                        $lm->removeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id, $widget);
+                                        $layout_manager->removeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id, $widget);
                                         break;
                                     case 'add':
                                     default:
-                                        $lm->addWidget($owner_id, $owner_type, $layout_id, $name, $widget, $request);
+                                        $layout_manager->addWidget($owner_id, $owner_type, $layout_id, $name, $widget, $request);
                                         break;
                                 }
                             }
@@ -72,24 +73,29 @@ if ($owner) {
                     break;
                 case 'minimize':
                     if ($name) {
-                        $lm->mimizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id);
+                        $csrf_token->check($redirect, $request);
+                        $layout_manager->mimizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id);
                     }
                     break;
                 case 'maximize':
                     if ($name) {
-                        $lm->maximizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id);
+                        $csrf_token->check($redirect, $request);
+                        $layout_manager->maximizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id);
                     }
                     break;
                 case 'preferences':
                     if ($name) {
-                        $lm->displayWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
+                        $csrf_token->check($redirect, $request);
+                        $layout_manager->displayWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
                     }
                     break;
                 case 'layout':
-                    $lm->updateLayout($owner_id, $owner_type, $request->get('layout_id'), $request->get('new_layout'));
+                    $csrf_token->check($redirect, $request);
+                    $layout_manager->updateLayout($owner_id, $owner_type, $request->get('layout_id'), $request->get('new_layout'));
                     break;
                 default:
-                    $lm->reorderLayout($owner_id, $owner_type, $layout_id, $request);
+                    $csrf_token->check($redirect, $request);
+                    $layout_manager->reorderLayout($owner_id, $owner_type, $layout_id, $request);
                     break;
             }
         }
@@ -98,4 +104,3 @@ if ($owner) {
 if (!$request->isAjax()) {
     $GLOBALS['Response']->redirect($redirect);
 }
-?>

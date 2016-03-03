@@ -946,6 +946,7 @@ class Layout extends Response {
     }
 
     function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type) {
+        $csrf_token = new CSRFSynchronizerToken('widget_management');
         $element_id = 'widget_'. $widget->id .'-'. $widget->getInstanceId();
 
         if ($is_minimized) {
@@ -958,14 +959,66 @@ class Layout extends Response {
         echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
 
         if (!$readonly) {
-            echo '<div class="widget_titlebar_close"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'" class="icon-remove" title="'. $GLOBALS['Language']->getText('widget', 'close_title') .'"></a></div>';
+            $remove_parameters = array(
+                'owner' => $owner_type.$owner_id,
+                'action' => 'widget',
+                'name['. $widget->id .'][remove]' => $widget->getInstanceId(),
+                'column_id' => $column_id,
+                'layout_id' => $layout_id
+            );
+            echo $this->getWidgetActionButton(
+                'widget_titlebar_close',
+                'icon-remove',
+                $GLOBALS['Language']->getText('widget', 'close_title'),
+                $remove_parameters,
+                $csrf_token
+            );
             if ($is_minimized) {
-                echo '<div class="widget_titlebar_maximize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'" class="icon-caret-up" title="'. $GLOBALS['Language']->getText('widget', 'maximize_title') .'"></a></div>';
+                $maximize_parameters = array(
+                    'owner' => $owner_type.$owner_id,
+                    'action' => 'maximize',
+                    'name['. $widget->id .']' => $widget->getInstanceId(),
+                    'column_id' => $column_id,
+                    'layout_id' => $layout_id
+                );
+                echo $this->getWidgetActionButton(
+                    'widget_titlebar_maximize',
+                    'icon-caret-up',
+                    $GLOBALS['Language']->getText('widget', 'maximize_title'),
+                    $maximize_parameters,
+                    $csrf_token
+                );
             } else {
-                echo '<div class="widget_titlebar_minimize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'" class="icon-caret-down" title="'. $GLOBALS['Language']->getText('widget', 'minimize_title') .'"></a></div>';
+                $minimize_parameters = array(
+                    'owner' => $owner_type.$owner_id,
+                    'action' => 'minimize',
+                    'name['. $widget->id .']' => $widget->getInstanceId(),
+                    'column_id' => $column_id,
+                    'layout_id' => $layout_id
+                );
+                echo $this->getWidgetActionButton(
+                    'widget_titlebar_minimize',
+                    'icon-caret-down',
+                    $GLOBALS['Language']->getText('widget', 'minimize_title'),
+                    $minimize_parameters,
+                    $csrf_token
+                );
             }
             if (strlen($widget->getPreferences($owner_id))) {
-                echo '<div class="widget_titlebar_prefs"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'" title="'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'" class="icon-cog"></a></div>';
+                $preference_parameters = array(
+                    'owner' => $owner_type.$owner_id,
+                    'action' => 'preferences',
+                    'name['. $widget->id .']' => $widget->getInstanceId(),
+                    'column_id' => $column_id,
+                    'layout_id' => $layout_id
+                );
+                echo $this->getWidgetActionButton(
+                    'widget_titlebar_prefs',
+                    'icon-cog',
+                    $GLOBALS['Language']->getText('widget', 'minimize_title'),
+                    $preference_parameters,
+                    $csrf_token
+                );
             }
         }
         if ($widget->hasRss()) {
@@ -978,7 +1031,7 @@ class Layout extends Response {
         }
         echo '<div class="widget_content" style="'. $style .'">';
         if (!$readonly && $display_preferences) {
-            echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id, $owner_id, $owner_type) .'</div>';
+            echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id, $owner_id, $owner_type, $csrf_token) .'</div>';
         }
         if ($widget->isAjax()) {
             echo '<div id="'. $element_id .'-ajax">';
@@ -1006,6 +1059,22 @@ class Layout extends Response {
         }
         echo '</div>';
     }
+
+    /**
+     * @return string
+     */
+    private function getWidgetActionButton($class, $icon, $title, array $action_parameters, CSRFSynchronizerToken $csrf_token) {
+        $purifier       = Codendi_HTMLPurifier::instance();
+        $action_button  = '<div class="' . $purifier->purify($class) . '">';
+        $action         = '/widgets/updatelayout.php?' . http_build_query($action_parameters);
+        $action_button .= '<form method="post" action="' . $purifier->purify($action) . '">';
+        $action_button .= '<button type="submit" class="btn-link ' . $purifier->purify($icon) . '" title="'. $purifier->purify($title) .'"></button>';
+        $action_button .= $csrf_token->fetchHTMLInput();
+        $action_button .= '</form>';
+        $action_button .= '</div>';
+        return $action_button;
+    }
+
     function _getTogglePlusForWidgets() {
         return 'ic/toggle_plus.png';
     }
