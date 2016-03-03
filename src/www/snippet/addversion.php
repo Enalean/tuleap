@@ -45,27 +45,28 @@ if (user_isloggedin()) {
       /*
 		      Create a new snippet entry, then create a new snippet version entry
       */
-      if ($changes && $version && $code) {
-	$snippet_id = (int)$request->get('snippet_id');
-	/*
-			  create the snippet version
-	*/
-	$sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) ".
-	  "VALUES ('" . db_ei($snippet_id) . "','". db_es(htmlspecialchars($changes)) ."','".
-	  db_es(htmlspecialchars($version)) ."','". db_ei(user_getid()) ."','".
-	  time()."','".
-	  ($uploaded_data ? db_es($code) : db_es(htmlspecialchars($code))) ."',".
-	  "'". db_es($uploaded_data_name) ."','" . db_es($uploaded_data_size) ."','". db_es($uploaded_data_type) ."')";
-	
-	$result=db_query($sql);
-	
-	if (!$result) {
-	  $feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','error_insert').' ';
-	  echo db_error();
-	} else {
-	  $feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','add_success').' ';
-	}
-      } else {
+		if ($changes && $version && $code) {
+			$csrf->check();
+			$snippet_id = (int)$request->get('snippet_id');
+			/*
+                      create the snippet version
+            */
+			$sql = "INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) " .
+				"VALUES ('" . db_ei($snippet_id) . "','" . db_es(htmlspecialchars($changes)) . "','" .
+				db_es(htmlspecialchars($version)) . "','" . db_ei(user_getid()) . "','" .
+				time() . "','" .
+				($uploaded_data ? db_es($code) : db_es(htmlspecialchars($code))) . "'," .
+				"'" . db_es($uploaded_data_name) . "','" . db_es($uploaded_data_size) . "','" . db_es($uploaded_data_type) . "')";
+
+			$result = db_query($sql);
+
+			if (!$result) {
+				$feedback .= ' ' . $Language->getText('snippet_add_snippet_to_package', 'error_insert') . ' ';
+				echo db_error();
+			} else {
+				$feedback .= ' ' . $Language->getText('snippet_add_snippet_to_package', 'add_success') . ' ';
+			}
+		} else {
 	exit_error($Language->getText('global','error'),$Language->getText('snippet_add_snippet_to_package','error_fill_all_info'));
       }
       

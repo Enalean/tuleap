@@ -30,6 +30,7 @@ if (user_isloggedin()) {
 	/*
 	  Create a new snippet entry, then create a new snippet version entry
 	*/
+        $csrf->check();
         if ($name && $description && $language != 0 && $category != 0 && $type != 0 && 
             $language != 100 && $category != 100 && $type != 100 && $license != 100 && $version && $code) {
                 $category = (int)$category;
