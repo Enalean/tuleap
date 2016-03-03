@@ -25,7 +25,7 @@
 require_once('common/valid/ValidFactory.class.php');
 Mock::generatePartial('Valid', 'Valid_For_Inheritance', array());
 
-class ValidHelperTest extends UnitTestCase {
+class ValidHelperTest extends TuleapTestCase {
 
     function UnitTestCase($name = 'ValidFactory test') {
         $this->UnitTestCase($name);
@@ -62,6 +62,16 @@ class ValidHelperTest extends UnitTestCase {
         $w = ValidFactory::getInstance('string', $key);
         $this->assertEqual($w->getKey(), $key);
     }
-}
 
-?>
+    public function itValidHTTPURI() {
+        $validator = new Valid_HTTPURI();
+
+        $this->assertTrue($validator->validate('http://example.com/'));
+        $this->assertTrue($validator->validate('HTTP://example.com/'));
+        $this->assertTrue($validator->validate('https://example.com/'));
+        $this->assertTrue($validator->validate('HTTPS://example.com/'));
+        $this->assertFalse($validator->validate('gopher://example.com'));
+        $this->assertFalse($validator->validate('javascript:alert(1);'));
+        $this->assertFalse($validator->validate('Stringhttp://'));
+    }
+}

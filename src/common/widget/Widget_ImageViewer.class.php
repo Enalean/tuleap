@@ -85,8 +85,8 @@ class Widget_ImageViewer extends Widget {
     }
     function create(&$request) {
         $content_id = false;
-        $vUrl = new Valid_String('url');
-        $vUrl->setErrorMessage("Can't add empty image url");
+        $vUrl = new Valid_HTTPURI('url');
+        $vUrl->setErrorMessage($GLOBALS['Language']->getText('widget_imageviewer', 'invalid_url'));
         $vUrl->required();
         if($request->validInArray('image', $vUrl)) {
             $image = $request->get('image');
