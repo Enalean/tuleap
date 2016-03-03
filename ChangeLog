@@ -1,3 +1,7 @@
+Version 8.13 (Not released yet)
+	== Development ==
+	request #8921: Makefile should be self-documented
+
 Version 8.12 (Thursday, March 3rd 2016)
 	== Enhancement ==
 	* request #8410: Add the possibility to hide project privacy radio buttons during project creation
