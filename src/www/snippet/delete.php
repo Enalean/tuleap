@@ -27,7 +27,7 @@ if (user_isloggedin()) {
 		/*
 			Delete an item from a package
 		*/
-
+		$csrf->check();
 		//Check to see if they are the creator of this package_version
 		$result=db_query("SELECT * FROM snippet_package_version ".
 			"WHERE submitted_by='". db_ei(user_getid()) ."' AND ".
@@ -57,7 +57,7 @@ if (user_isloggedin()) {
 		/*
 			Delete a snippet version
 		*/
-
+		$csrf->check();
 		//find this snippet id and make sure the current user created it
 		$result=db_query("SELECT * FROM snippet_version ".
 			"WHERE snippet_version_id='". db_ei($snippet_version_id) ."' AND submitted_by='". db_ei(user_getid()) ."'");
@@ -90,7 +90,7 @@ if (user_isloggedin()) {
 			Delete a package version
 
 		*/
-
+		$csrf->check();
 		//make sure they own this version of the package
 		$result=db_query("SELECT * FROM snippet_package_version ".
 			"WHERE submitted_by='". db_ei(user_getid()) ."' AND ".

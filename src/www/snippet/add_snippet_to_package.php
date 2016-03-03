@@ -151,10 +151,15 @@ if (user_isloggedin()) {
 		for ($i=0; $i<$rows; $i++) {
 			echo '
 			<TR class="'. util_get_alt_row_color($i) .'"><TD ALIGN="center">
-				<A HREF="/snippet/delete.php?type=frompackage&snippet_version_id='.
+				<form method="post" action="/snippet/delete.php?type=frompackage&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
 				'&snippet_package_version_id='.$snippet_package_version_id.
-				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD><TD WIDTH="99%">'.
+				'">
+				<button type="submit" class="btn btn-link">
+				<img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0">
+				</button>
+				'. $csrf->fetchHTMLInput() .'
+				</form></TD><TD WIDTH="99%">'.
 				db_result($result,$i,'name').' '.db_result($result,$i,'version')."</TD></TR>";
 
 			$last_group=db_result($result,$i,'group_id');
