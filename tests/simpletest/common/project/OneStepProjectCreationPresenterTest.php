@@ -31,7 +31,8 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
             $creation_request,
             array(),
             $project_manager,
-            array()
+            array(),
+            ''
         );
     }
 
