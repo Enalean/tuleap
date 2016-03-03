@@ -34,7 +34,7 @@ if ($request->exist('list_of_users')) {
 
 $valid_page = new Valid_WhiteList('page', array(ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED));
 $page = $request->getValidated('page', $valid_page, '');
-
+$csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
         $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
@@ -48,8 +48,8 @@ $expiry_date = 0;
         }
         
         if (($action_select=='activate')) {
-            
-        
+            $csrf_token->check();
+
             $shell="";
             if ($status=='restricted') {
                 $newstatus='R';
@@ -85,6 +85,7 @@ $expiry_date = 0;
         
         
         } else if($action_select=='validate'){
+            $csrf_token->check();
             if($status=='restricted'){
                 $newstatus='W';
             }else{
@@ -112,6 +113,7 @@ $expiry_date = 0;
             }
             
         } else if ($action_select=='delete') {
+            $csrf_token->check();
             db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                      " WHERE user_id IN (".implode(',', $users_array).")");
             $em =& EventManager::instance();
@@ -172,6 +174,7 @@ if (db_numrows($res) < 1) {
             <FORM name="pending_user'.$row['user_id'].'" action="?page='.$page.'" method="POST">';
             echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
             echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
+            echo $csrf_token->fetchHTMLInput();
             ?>
             <BR>
              <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
@@ -200,6 +203,7 @@ if (db_numrows($res) < 1) {
             <FORM name="pending_user'.$row['user_id'].'" action="?page='.$page.'" method="POST">';
             echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
             echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
+            echo $csrf_token->fetchHTMLInput();
             ?>
             <BR>
              <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
@@ -237,6 +241,7 @@ if (db_numrows($res) < 1) {
             }
             echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
             echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", $exp_date);
+            echo $csrf_token->fetchHTMLInput();
             ?>
             <BR>
              <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
@@ -307,7 +312,8 @@ if (db_numrows($res) < 1) {
             echo '<TD>
             <FORM action="?page='.$page.'" method="POST">
             '.$Language->getText('admin_approve_pending_users','activate').'
-            '.$Language->getText('admin_approve_pending_users','all_accounts').' ';
+            '.$Language->getText('admin_approve_pending_users','all_accounts').' '
+            . $csrf_token->fetchHTMLInput();
             if(ForgeConfig::areRestrictedUsersAllowed()) {
                 echo $Language->getText('admin_approve_pending_users','status').'
             <select name="status" size="1">
@@ -327,6 +333,7 @@ if (db_numrows($res) < 1) {
 
         echo '<TD>
             <FORM action="?page='.$page.'" method="POST">
+            ' . $csrf_token->fetchHTMLInput() . '
                 <select name="action_select" size="1">
                 <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
                 <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'        
@@ -346,6 +353,7 @@ if (db_numrows($res) < 1) {
         if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && ! ForgeConfig::areRestrictedUsersAllowed()){
             echo '<TD>
             <FORM action="?page='.$page.'" method="POST">
+            ' . $csrf_token->fetchHTMLInput() . '
                 <select name="action_select" size="1">
                 <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
                 <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'
