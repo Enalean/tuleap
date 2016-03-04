@@ -1,4 +1,7 @@
 Version 8.13 (Not released yet)
+	== Bug Fix ==
+	request #8903: Persistent XSS in the widget image
+
 	== Development ==
 	request #8921: Makefile should be self-documented
 
