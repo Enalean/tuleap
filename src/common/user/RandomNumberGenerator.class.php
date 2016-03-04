@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('/usr/share/php/random_compat/random.php');
+
 class RandomNumberGenerator {
     private $token_size;
 
@@ -34,45 +36,10 @@ class RandomNumberGenerator {
      * @return string Number represented has a hexadecimal string
      */
     public function getNumber() {
-        $token = '';
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $token = bin2hex(openssl_random_pseudo_bytes($this->token_size));
+        try {
+            return bin2hex(random_bytes($this->token_size));
+        } catch (Exception $ex) {
+            die('Could not generate a random number. Is your OS secure?');
         }
-        // Before PHP 5.3.7 mcrypt_create_iv() is bugged
-        // @see https://bugs.php.net/bug.php?id=55169
-        else if (function_exists('mcrypt_create_iv') && version_compare(PHP_VERSION, '5.3.7') >= 0) {
-            $token = bin2hex(mcrypt_create_iv($this->token_size));
-        }
-        else if ($handle = @fopen('/dev/urandom', 'rb')) {
-            $token = bin2hex(fread($handle, $this->token_size));
-            fclose($handle);
-        }
-
-        // In case of a token can not be generated with safe PRNG, we create one
-        // using a non cryptographic PRNG
-        if (!$token) {
-            $token = $this->fallbackRandomGenerator($this->token_size);
-        }
-
-        return $token;
-    }
-
-    /**
-     * This function SHOULD NOT be used unless there is no safe PRNG available
-     *
-     * We implement a simple PRNG, our main goal is to make it random enough
-     * to make it difficult for an attacker to guess the token
-     *
-     * @return string
-     */
-    private function fallbackRandomGenerator($size) {
-        $token = '';
-        $random_state = print_r($_SERVER, true);
-        $random_state .= microtime();
-        for ($i = 0; $i < ceil($size/32); $i++) {
-            $random_state = hash('sha256', $random_state . mt_rand());
-            $token .= $random_state;
-        }
-        return substr($token, 0, $size*2);
     }
 }
