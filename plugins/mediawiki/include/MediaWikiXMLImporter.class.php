@@ -26,6 +26,16 @@ class MediaWikiXMLImporter {
     private $logger;
 
     /**
+     * @var MediawikiManager
+     */
+    private $mediawiki_manager;
+
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+
+    /**
      * @var MediawikiLanguageManager
      */
     private $language_manager;
@@ -40,9 +50,16 @@ class MediaWikiXMLImporter {
      */
     private $backend;
 
-    public function __construct(Logger $logger, MediawikiLanguageManager $language_manager) {
+    public function __construct(
+        Logger $logger,
+        MediawikiManager $mediawiki_manager,
+        MediawikiLanguageManager $language_manager,
+        UGroupManager $ugroup_manager
+    ) {
         $this->logger           = new WrapperLogger($logger, "MediaWikiXMLImporter");
+        $this->mediawiki_manager = $mediawiki_manager;
         $this->language_manager = $language_manager;
+        $this->ugroup_manager    = $ugroup_manager;
         $this->sys_command      = new System_Command();
         $this->backend          = Backend::instance();
     }
@@ -75,6 +92,8 @@ class MediaWikiXMLImporter {
             $files_backup_path = $extraction_path . '/' . $xml_mediawiki['files-folder-backup'];
             $this->importFiles($project, $files_backup_path);
         }
+
+        $this->importRights($project, $xml_mediawiki);
 
         $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID();
         $owner = ForgeConfig::get('sys_http_user');
@@ -114,7 +133,39 @@ class MediaWikiXMLImporter {
 
     }
 
+    private function importRights(Project $project, SimpleXMLElement $xml_mediawiki) {
+        if($xml_mediawiki->{'read-access'}) {
+            $this->logger->info("Importing read access rights for {$project->getUnixName()}");
+            $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_mediawiki->{'read-access'});
+            if(count($ugroups_ids) > 0) {
+                $this->mediawiki_manager->saveReadAccessControl($project, $ugroups_ids);
+            }
+        }
+        if($xml_mediawiki->{'write-access'}) {
+            $this->logger->info("Importing write access rights for {$project->getUnixName()}");
+            $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_mediawiki->{'write-access'});
+            if(count($ugroups_ids) > 0) {
+                $this->mediawiki_manager->saveWriteAccessControl($project, $ugroups_ids);
+            }
+        }
+    }
+
     private function getMaintenanceWrapperPath() {
         return __DIR__ . "/../bin/mw-maintenance-wrapper.php";
     }
+
+    private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode) {
+        $ugroup_ids = array();
+        foreach($permission_xmlnode->ugroup as $ugroup) {
+            $ugroup_name = (string)$ugroup;
+            $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+            if($ugroup === null) {
+                $this->logger->warn("Could not find any ugroup named $ugroup_name, skip it.");
+                continue;
+            }
+            array_push($ugroup_ids, $ugroup->getId());
+        }
+        return $ugroup_ids;
+    }
+
 }

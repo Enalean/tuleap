@@ -15,5 +15,12 @@
         <service shortname="mediawiki" enabled="true" />
     </services>
 
-    <mediawiki pages-backup="wiki_pages.xml" language="fr_FR" files-folder-backup="mediawiki_files"/>
+    <mediawiki pages-backup="wiki_pages.xml" language="fr_FR" files-folder-backup="mediawiki_files">
+        <read-access>
+            <ugroup>project_members</ugroup>
+        </read-access>
+        <write-access>
+            <ugroup>project_admins</ugroup>
+        </write-access>
+    </mediawiki>
 </project>

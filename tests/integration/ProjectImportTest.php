@@ -144,7 +144,9 @@ class ProjectImportTest extends TuleapDbTestCase {
     }
 
     private function mediawikiTests(Project $project) {
-        $mediawiki_dao = new MediawikiDao();
+        $ugroup_manager        = new UGroupManager();
+        $mediawiki_dao         = new MediawikiDao();
+        $mediawiki_manager     = new MediawikiManager($mediawiki_dao);
         $mediawikilanguage_dao = new MediawikiLanguageDao();
 
         $res = $mediawiki_dao->getMediawikiPagesNumberOfAProject($project);
@@ -163,5 +165,13 @@ class ProjectImportTest extends TuleapDbTestCase {
         $this->assertEqual("codendiadm", $owner['name']);
         $group = posix_getgrgid(filegroup($mediawiki_storage_path));
         $this->assertEqual("codendiadm", $group['name']);
+
+        $project_members_id = $ugroup_manager->getUGroupByName($project, 'project_members')->getId();
+        $project_admins_id  = $ugroup_manager->getUGroupByName($project, 'project_admins')->getId();
+
+        $group_ids = $mediawiki_manager->getReadAccessControl($project);
+        $this->assertEqual(array($project_members_id), $group_ids);
+        $group_ids = $mediawiki_manager->getWriteAccessControl($project);
+        $this->assertEqual(array($project_admins_id), $group_ids);
     }
 }
