@@ -49,9 +49,6 @@ class Git_Driver_Gerrit_ProjectCreatorStatus {
             case SystemEvent::STATUS_RUNNING:
                 return self::QUEUE;
 
-            case null:
-                return null;
-
             default:
                 return self::DONE;
         }

@@ -61,6 +61,17 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
 
     // We don't know what project did with their repo until this change
     // So we assume everything is OK.
+    public function itHasStatusDoneWhenSystemEventIsNoLongerPartOfTheDB() {
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+        stub($this->repository)->getMigrationStatus()->returns(null);
+
+        stub($this->dao)->getSystemEventForRepository()->returns(null);
+
+        $this->assertEqual(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
+    }
+
+    // We don't know what project did with their repo until this change
+    // So we assume everything is OK.
     public function itHasStatusDoneWhenOnlySystemEventIsWarningForLegacy() {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(null);
