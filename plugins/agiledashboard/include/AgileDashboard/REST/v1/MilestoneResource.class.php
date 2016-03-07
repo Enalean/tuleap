@@ -232,6 +232,68 @@ class MilestoneResource extends AuthenticatedResource {
     }
 
     /**
+     * Patch children of a given milestone
+     *
+     * Add example:
+     * <pre>
+     * {
+     *    "add": [
+     *       { "id": 34 },
+     *       { "id": 35 }
+     *       ...
+     *    ]
+     * }
+     * </pre>
+     * Will add the submilestones 34 and 35 to the milestone
+     *
+     * @url PATCH {id}/milestones
+     *
+     * @param int   $id  Id of the milestone
+     * @param array $add Submilestones to add in milestone {@from body}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    protected function patchSubmilestones($id, array $add = null) {
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        try {
+            if ($add) {
+                $ids_to_add = array();
+                foreach ($add as $submilestone) {
+                    $ids_to_add[] = $submilestone['id'];
+                }
+
+                $this->milestone_validator->validateSubmilestonesFromBodyContent($ids_to_add, $milestone, $user);
+
+                $this->resources_patcher->startTransaction();
+                $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $ids_to_add, array());
+                $this->resources_patcher->commit();
+            }
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (SubMilestoneAlreadyHasAParentException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (ElementCannotBeSubmilestoneException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (UserCannotReadSubMilestoneException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (SubMilestoneDoesNotExistException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoArtifactLinkFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+            //Do nothing
+        }
+
+        $this->sendAllowHeaderForSubmilestones();
+    }
+
+    /**
      * Get milestone
      *
      * Get the definition of a given the milestone
