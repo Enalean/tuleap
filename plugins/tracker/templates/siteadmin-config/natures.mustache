@@ -1,0 +1,23 @@
+{{# artifact_links_nature }}
+    <legend>{{ title }}</legend>
+    <p>{{ desc }}</p>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{{ shortname }}</th>
+                <th>{{ forward_label }}</th>
+                <th>{{ reverse_label }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# natures }}
+                <tr>
+                    <td>{{ shortname }}</td>
+                    <td>{{ forward_label }}</td>
+                    <td>{{ reverse_label }}</td>
+                </tr>
+            {{/ natures }}
+        </tbody>
+    </table>
+{{/ artifact_links_nature }}

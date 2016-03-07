@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 class TrackerPluginConfigRouter {
 
-    /** @var TrackerPluginConfig */
+    /** @var TrackerPluginConfigController */
     private $controller;
 
     /** @var CSRFSynchronizerToken */

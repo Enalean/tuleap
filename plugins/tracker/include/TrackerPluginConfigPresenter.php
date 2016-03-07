@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
+
 class TrackerPluginConfigPresenter {
+
+    /** @var NatureConfigPresenter */
+    public $artifact_links_nature;
 
     /** @var string */
     public $csrf_token;
@@ -40,10 +45,12 @@ class TrackerPluginConfigPresenter {
         CSRFSynchronizerToken $csrf,
         $title,
         $localinc_path,
-        TrackerPluginConfig $config
+        TrackerPluginConfig $config,
+        NatureConfigPresenter $artifact_links_nature
     ) {
-        $this->title      = $title;
-        $this->csrf_token = $csrf->fetchHTMLInput();
+        $this->title                 = $title;
+        $this->csrf_token            = $csrf->fetchHTMLInput();
+        $this->artifact_links_nature = $artifact_links_nature;
 
         $this->is_insecure_emailgateway_enabled    = $config->isInsecureEmailgatewayEnabled();
         $this->is_token_based_emailgateway_enabled = $config->isTokenBasedEmailgatewayEnabled();

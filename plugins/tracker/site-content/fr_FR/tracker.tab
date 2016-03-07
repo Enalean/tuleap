@@ -1651,3 +1651,11 @@ plugin_tracker_emailgateway	semantic_ok	La sémantique est correctement configur
 plugin_tracker_emailgateway	required_ok	Les champs requis sont correctement configurés
 plugin_tracker_emailgateway	semantic_ko	La sémantique titre et/ou description ne sont pas configurées
 plugin_tracker_emailgateway	required_ko	Les champs autres que titre ou description ne peuvent pas être requis
+
+plugin_tracker_artifact_links_natures	title	Nature de liens entre artefacts
+plugin_tracker_artifact_links_natures	desc	Les liens entre artefacts peuvent être typés en spécifiant pour chaque lien sa nature. La liste des natures possibles est définie ci-dessous :
+plugin_tracker_artifact_links_natures	shortname	Nom court
+plugin_tracker_artifact_links_natures	forward_label	Label
+plugin_tracker_artifact_links_natures	reverse_label	Label inverse
+plugin_tracker_artifact_links_natures	_is_child_forward	Enfant
+plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
