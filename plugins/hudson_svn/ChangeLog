@@ -1,0 +1,3 @@
+Version 0.2 - Tuleap 8.13
+    * story #8823 trigger CI jobs on commit (Create plugin basis)
+
