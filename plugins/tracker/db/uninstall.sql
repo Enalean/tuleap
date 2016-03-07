@@ -82,6 +82,7 @@ DROP TABLE IF EXISTS tracker_workflow_trigger_rule_trg_field_static_value;
 DROP TABLE IF EXISTS tracker_artifact_unsubscribe;
 
 DROP TABLE IF EXISTS plugin_tracker_config;
+DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
 
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 

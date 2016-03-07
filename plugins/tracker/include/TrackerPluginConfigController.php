@@ -19,7 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
+use Tracker\FormElement\Field\ArtifactLink\Nature\UnableToCreateNatureException;
 
 class TrackerPluginConfigController {
 
@@ -34,14 +38,24 @@ class TrackerPluginConfigController {
     /** @var EventManager */
     private $event_manager;
 
+    /** @var NatureCreator */
+    private $nature_creator;
+
+    /** @var NatureFactory */
+    private $nature_factory;
+
     public function __construct(
         TrackerPluginConfig $config,
         Config_LocalIncFinder $localincfinder,
-        EventManager $event_manager
+        EventManager $event_manager,
+        NatureCreator $nature_creator,
+        NatureFactory $nature_factory
     ) {
         $this->config         = $config;
         $this->localincfinder = $localincfinder;
         $this->event_manager  = $event_manager;
+        $this->nature_creator = $nature_creator;
+        $this->nature_factory = $nature_factory;
     }
 
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
@@ -59,18 +73,63 @@ class TrackerPluginConfigController {
                 $title,
                 $this->localincfinder->getLocalIncPath(),
                 $this->config,
-                new NatureConfigPresenter()
+                $this->getNatureConfigPresenter()
             )
         );
         $response->footer($params);
     }
 
     public function update(Codendi_Request $request, Response $response) {
+        if ($request->exist('create-nature')) {
+            $this->createNature($request, $response);
+        } else {
+            $this->updateEmailGatewayMode($request, $response);
+        }
+
+        $response->redirect($_SERVER['REQUEST_URI']);
+    }
+
+    private function createNature(Codendi_Request $request, Response $response) {
+        try {
+            $this->nature_creator->create(
+                $request->get('shortname'),
+                $request->get('forward_label'),
+                $request->get('reverse_label')
+            );
+        } catch (UnableToCreateNatureException $exception) {
+            $response->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'create_error',
+                    $exception->getMessage()
+                )
+            );
+        }
+    }
+
+    private function updateEmailGatewayMode(Codendi_Request $request, Response $response) {
         $emailgateway_mode = $request->get('emailgateway_mode');
         if ($emailgateway_mode && $this->config->setEmailgatewayMode($emailgateway_mode)) {
             $response->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_config', 'successfully_updated'));
         }
         $this->event_manager->processEvent(Event::UPDATE_ALIASES, null);
-        $response->redirect($_SERVER['REQUEST_URI']);
+    }
+
+    /** @return NatureConfigPresenter */
+    private function getNatureConfigPresenter() {
+        $natures = array(
+            new NaturePresenter(
+                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse')
+            )
+        );
+
+        foreach ($this->nature_factory->getAllNatures() as $nature) {
+            $natures[] = $nature;
+        }
+
+        return new NatureConfigPresenter($natures);
     }
 }

@@ -1659,3 +1659,16 @@ plugin_tracker_artifact_links_natures	forward_label	Label
 plugin_tracker_artifact_links_natures	reverse_label	Label inverse
 plugin_tracker_artifact_links_natures	_is_child_forward	Enfant
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
+plugin_tracker_artifact_links_natures	create_new_nature	Créer une nouvelle nature
+plugin_tracker_artifact_links_natures	missing_shortname	nom court manquant
+plugin_tracker_artifact_links_natures	missing_forward_label	label manquant
+plugin_tracker_artifact_links_natures	missing_reverse_label	label inverse manquant
+plugin_tracker_artifact_links_natures	shortname_help	Seuls les lettres et le tiret bas sont autorisés pour le nom court (il doit cependant commencer par une lettre).
+plugin_tracker_artifact_links_natures	create_error	Impossible de créer la nature : $1
+plugin_tracker_artifact_links_natures	create_db_error	erreur lors de la manipulation de la base de données. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
+plugin_tracker_artifact_links_natures	create_same_name_error	une nature avec le nom court $1 existe déjà.
+plugin_tracker_artifact_links_natures	forward_label_help	Ex: pour la nature fixed_in, un bug est fixé dans une release donc le label sera "Fixé dans".
+plugin_tracker_artifact_links_natures	reverse_label_help	Ex: pour la nature fixed_in, un bug est fixé dans une release donc le label inverse sera "Fixé" (la release contient des bugs "Fixés").
+plugin_tracker_artifact_links_natures	shortname_placeholder	Ex: fixed_in
+plugin_tracker_artifact_links_natures	forward_label_placeholder	Ex: Fixé dans
+plugin_tracker_artifact_links_natures	reverse_label_placeholder	Ex: Fixé

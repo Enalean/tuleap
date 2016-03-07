@@ -1655,7 +1655,20 @@ plugin_tracker_emailgateway	required_ko	Other fields than title or description c
 plugin_tracker_artifact_links_natures	title	Artifact Links Nature
 plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a nature for a better semantics between artifacts. Here is the list of allowed natures for this platform:
 plugin_tracker_artifact_links_natures	shortname	Shortname
-plugin_tracker_artifact_links_natures	forward_label	Forward Label
-plugin_tracker_artifact_links_natures	reverse_label	Reverse Label
+plugin_tracker_artifact_links_natures	forward_label	Forward label
+plugin_tracker_artifact_links_natures	reverse_label	Reverse label
 plugin_tracker_artifact_links_natures	_is_child_forward	Child
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
+plugin_tracker_artifact_links_natures	create_new_nature	Create new nature
+plugin_tracker_artifact_links_natures	missing_shortname	missing shortname
+plugin_tracker_artifact_links_natures	missing_forward_label	missing forward label
+plugin_tracker_artifact_links_natures	missing_reverse_label	missing reverse label
+plugin_tracker_artifact_links_natures	shortname_help	Only letters and underscore are allowed for shortname (must start with a letter though).
+plugin_tracker_artifact_links_natures	create_error	Unable to create the requested nature: $1
+plugin_tracker_artifact_links_natures	create_db_error	error while playing with the database.  Help us improve your experience by sending en error report.
+plugin_tracker_artifact_links_natures	create_same_name_error	a nature with $1 as shortname already exists.
+plugin_tracker_artifact_links_natures	forward_label_help	E.g. for the fixed_in nature, a bug will be fixed in a release so the forward label will be "Fixed in".
+plugin_tracker_artifact_links_natures	reverse_label_help	E.g. for the fixed_in nature, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).
+plugin_tracker_artifact_links_natures	shortname_placeholder	E.g. fixed_in
+plugin_tracker_artifact_links_natures	forward_label_placeholder	E.g. Fixed in
+plugin_tracker_artifact_links_natures	reverse_label_placeholder	E.g. Fixed

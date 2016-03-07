@@ -19,6 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+
 require_once('pre.php');
 
 $plugin_manager = PluginManager::instance();
@@ -26,6 +30,8 @@ $plugin = $plugin_manager->getPluginByName('tracker');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $request      = HTTPRequest::instance();
     $current_user = UserManager::instance()->getCurrentUser();
+    $nature_dao   = new NatureDao();
+
     $router = new TrackerPluginConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
         new TrackerPluginConfigController(
@@ -33,7 +39,13 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 new TrackerPluginConfigDao()
             ),
             new Config_LocalIncFinder(),
-            EventManager::instance()
+            EventManager::instance(),
+            new NatureCreator(
+                $nature_dao
+            ),
+            new NatureFactory(
+                $nature_dao
+            )
         )
     );
     $router->process($request, $GLOBALS['HTML'], $current_user);

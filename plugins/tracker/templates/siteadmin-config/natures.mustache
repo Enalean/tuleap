@@ -20,4 +20,11 @@
             {{/ natures }}
         </tbody>
     </table>
+
+    <a class="btn" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal">
+        <i class="icon-plus"></i> {{ create_new_nature }}
+    </a>
+
+    {{> siteadmin-config/natures-modal }}
+
 {{/ artifact_links_nature }}
