@@ -1,3 +1,6 @@
+Version 1.361 - Tuleap 8.13
+    * request #8901: Call PATCH /milestones/:id/milestones instead of PUT
+
 Version 1.360 - Tuleap 8.12
     * request #8919 No default tracker templates found
 
