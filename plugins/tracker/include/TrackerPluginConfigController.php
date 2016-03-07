@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
 
 class TrackerPluginConfigController {
 
@@ -56,7 +58,8 @@ class TrackerPluginConfigController {
                 $csrf,
                 $title,
                 $this->localincfinder->getLocalIncPath(),
-                $this->config
+                $this->config,
+                new NatureConfigPresenter()
             )
         );
         $response->footer($params);
