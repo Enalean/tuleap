@@ -1,0 +1,29 @@
+<div>
+    <label class="checkbox">
+    <input name="hudson_use_plugin_svn_trigger_checkbox" type="hidden" value="0" />
+    <input name="hudson_use_plugin_svn_trigger_checkbox"
+           id="hudson_use_plugin_svn_trigger_checkbox"
+           type="checkbox"
+           value="1"
+           {{# is_checked }} checked="checked" {{/ is_checked }}
+    >
+       {{ label_svn_multirepo }}
+    </label>
+    <div id="hudson_use_plugin_svn_trigger_form">
+        <label for="hudson_use_plugin_svn_trigger"> {{ selectbox_label }} </label>
+        <select id="hudson_use_plugin_svn_trigger" name="hudson_use_plugin_svn_trigger">
+            {{# repositories }}
+            <option value="{{ id }}" {{# is_selected }} selected="selected" {{/ is_selected }}>{{ name }}</option>
+            {{/ repositories }}
+        </select>
+        <div id="hudson_paths">
+            <label for="hudson_svn_trigger_path">{{ svn_paths_label }}</label>
+            <textarea
+              id="hudson_svn_trigger_path"
+              name="hudson_svn_trigger_path"
+              placeholder="{{ svn_paths_placeholder }}"
+            >{{ path }}</textarea>
+            <p class="help">{{ svn_paths_helper }}</p>
+        </div>
+    </div>
+</div>

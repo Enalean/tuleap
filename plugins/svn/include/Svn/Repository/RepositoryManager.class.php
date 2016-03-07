@@ -39,6 +39,9 @@ class RepositoryManager {
         $this->project_manager = $project_manager;
     }
 
+    /**
+     * @return Repository[]
+     */
     public function getRepositoriesInProject(Project $project) {
         $repositories = array();
         foreach ($this->dao->searchByProject($project) as $row) {
@@ -99,6 +102,9 @@ class RepositoryManager {
         return $this->getRepositoryByName($project, $repository_name);
     }
 
+    /**
+     * @return Repository
+     */
     public function instantiateFromRow(array $row, Project $project) {
         return new Repository(
             $row['id'],
