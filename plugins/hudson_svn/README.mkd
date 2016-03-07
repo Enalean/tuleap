@@ -1,0 +1,5 @@
+Hudson Subversion plugin
+=========================
+
+This plugin will allow users to define Jenkins/Hudson job triggered by
+a Subversion repository created by the Subversion plugin
