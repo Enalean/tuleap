@@ -253,12 +253,7 @@ function PlanningCtrl(
                 return prependSubmilestoneToSubmilestoneList(submilestone_id);
             }
 
-            var promise = fetchClosedSubMilestonesOnce()
-                .then(function() {
-                    return addSubmilestoneToSubmilestone(submilestone_id);
-                });
-
-            return promise;
+            return addSubmilestoneToSubmilestone(submilestone_id);
         };
 
         var parent_item = (! _.isEmpty(self.current_milestone)) ? self.current_milestone : undefined;
@@ -278,24 +273,25 @@ function PlanningCtrl(
     }
 
     function addSubmilestoneToSubmilestone(submilestone_id) {
-        var submilestone_ids = [];
-        _.forEach(self.milestones.content, function(milestone) {
-            submilestone_ids.push(milestone.id);
+        return MilestoneService.patchSubMilestones(self.backlog.rest_route_id, [submilestone_id]).then(function() {
+            return prependSubmilestoneToSubmilestoneList(submilestone_id);
         });
-
-        submilestone_ids.push(submilestone_id);
-
-        var promise = MilestoneService.putSubMilestones(self.backlog.rest_route_id, submilestone_ids)
-            .then(function() {
-                return prependSubmilestoneToSubmilestoneList(submilestone_id);
-            });
-
-        return promise;
     }
 
     function prependSubmilestoneToSubmilestoneList(submilestone_id) {
         return MilestoneService.getMilestone(submilestone_id, self.items).then(function(data) {
-            self.milestones.content.unshift(data.results);
+            var milestone = data.results;
+
+            if (milestone.semantic_status === 'closed' &&
+                ! self.thereAreClosedMilestonesLoaded() &&
+                ! self.milestones.loading &&
+                ! self.milestones.closed_milestones_fully_loaded
+            ) {
+                self.displayClosedMilestones();
+
+            } else {
+                self.milestones.content.unshift(data.results);
+            }
         });
     }
 

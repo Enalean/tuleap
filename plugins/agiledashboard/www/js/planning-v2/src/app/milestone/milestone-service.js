@@ -20,6 +20,7 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
         getClosedMilestones          : getClosedMilestones,
         getClosedSubMilestones       : getClosedSubMilestones,
         putSubMilestones             : putSubMilestones,
+        patchSubMilestones           : patchSubMilestones,
         getContent                   : getContent,
         reorderBacklog               : reorderBacklog,
         removeAddReorderToBacklog    : removeAddReorderToBacklog,
@@ -108,6 +109,18 @@ function MilestoneService(Restangular, $q, BacklogItemFactory) {
                },
                'milestones'
             );
+    }
+
+    function patchSubMilestones(milestone_id, submilestone_ids) {
+        return rest.one('milestones', milestone_id)
+            .all('milestones')
+            .patch({
+                add: _.map(submilestone_ids, function(submilestone_id) {
+                    return {
+                        id: submilestone_id
+                    };
+                })
+            });
     }
 
     function getContent(milestone_id, limit, offset) {
