@@ -518,6 +518,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Plugin OpenID Connect is not supported on CentOS 5
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
+# Remove Hudson SVN plugin
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
