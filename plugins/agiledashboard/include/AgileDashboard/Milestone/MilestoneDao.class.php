@@ -137,12 +137,15 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
             }
             if ($criterion->shouldRetrieveClosedMilestones()) {
                 $from_status_statement = "
-                    INNER JOIN (
-                       SELECT DISTINCT tracker_id
-                       FROM tracker_semantic_status
-                    ) AS R ON (R.tracker_id = submilestones.tracker_id)
                     INNER JOIN tracker_changeset_value AS cvs ON(
                         submilestones.last_changeset_id = cvs.changeset_id
+                    )
+                    INNER JOIN (
+                        SELECT DISTINCT tracker_id, field_id
+                        FROM tracker_semantic_status
+                    ) AS R ON (
+                        R.tracker_id   = submilestones.tracker_id
+                        AND R.field_id = cvs.field_id
                     )
                     INNER JOIN tracker_changeset_value_list AS cvl ON(cvl.changeset_value_id = cvs.id)
                     LEFT JOIN tracker_semantic_status AS open_values ON (
