@@ -1,3 +1,6 @@
+Version 4.131 - Tuleap 8.13
+    * request #8941 Migration to gerrit should assume everything is migrated when no system event
+
 Version 4.130 - Tuleap 8.12
     * request #8931: Can't restore a git repository anymore
 
