@@ -194,6 +194,7 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/online_edit.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin.js"></script>';
         }
     }
 
@@ -389,6 +390,13 @@ class GitPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_GIT_DELETE_MIRROR';
                 $params['dependencies'] = array(
                     $this->getGitoliteDriver()
+                );
+                break;
+            case SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME:
+                $params['class'] = 'SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG';
+                $params['dependencies'] = array(
+                    $this->getGitoliteDriver(),
+                    $this->getProjectManager()
                 );
                 break;
             default:

@@ -332,6 +332,7 @@ plugin_git	admin_gerrit_v2_8plus	2.8+
 plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password:
 
+plugin_git	gitolite_config_tab_name	Gitolite configuration
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	mirror_tab_name	Mirrors
 plugin_git	admin_mirror_save_failed	Failed to add new mirror
@@ -426,3 +427,10 @@ plugin_git	exceed_max_input_vars_message	We cannot handle the mass update of all
 
 plugin_git	gerrit_user_suspension_error	Error when suspending ($1) $2 from gerrit server $3, more details : $4
 plugin_git	gerrit_user_suspension_successful	Gerrit: ($1) $2 has been successfully suspended from gerrit server $3
+
+plugin_git	regenerate_config_bad_request	Bad request.
+plugin_git	regenerate_config_project_not_exist	Project does not exist.
+plugin_git	regenerate_config_waiting	Regenerating Gitolite config for project $1. Please wait few minutes.
+
+plugin_git	admin_gitolite_config_title	Administration of Gitolite configuration
+plugin_git	admin_gitolite_config_description	This section allows you to regenerate the Gitolite configuration file of a selected project.

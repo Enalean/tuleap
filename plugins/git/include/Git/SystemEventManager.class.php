@@ -235,6 +235,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueRegenerateGitoliteConfig($project_id) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
+            $project_id,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
@@ -264,6 +273,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
             SystemEvent_GIT_UPDATE_MIRROR::NAME,
             SystemEvent_GIT_DELETE_MIRROR::NAME,
+            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
         );
     }
 

@@ -326,6 +326,7 @@ plugin_git	admin_gerrit_v2_8plus	2.8+
 plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password :
 
+plugin_git	gitolite_config_tab_name	Configuration Gitolite
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	mirror_tab_name	Miroirs
 plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le mirroir
@@ -423,3 +424,10 @@ plugin_git	exceed_max_input_vars_message	Nous ne pouvons pas gérer la mise à j
 
 plugin_git	gerrit_user_suspension_error	Erreur lors de la suspension de ($1) $2 du serveur gerrit $3, plus de détails : $4
 plugin_git	gerrit_user_suspension_successful	Gerrit: ($1) $2 a été suspendu avec succès du serveur gerrit $3
+
+plugin_git	regenerate_config_bad_request	La requête n'est pas valide.
+plugin_git	regenerate_config_project_not_exist	Le projet n'existe pas.
+plugin_git	regenerate_config_waiting	La regénération de la configuration Gitolite pour le projet $1 est en attente. Merci de patienter quelques minutes.
+
+plugin_git	admin_gitolite_config_title	Administration de la configuration Gitolite
+plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
