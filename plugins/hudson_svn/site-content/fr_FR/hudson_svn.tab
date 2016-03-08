@@ -1,2 +1,11 @@
 plugin_hudson_svn	descriptor_description	Intégration continue avec Hudson/Jenkins pour le plugin Subversion
 plugin_hudson_svn	descriptor_name	Intégration Continue pour le plugin Subversion
+
+plugin_hudson_svn	selectbox_label	Déclencher un build après un commit dans le dépôt :
+plugin_hudson_svn	label_svn_multirepo	SVN dépôt multiple
+plugin_hudson_svn	ci_trigger_not_saved	Une erreur est survenue lors de l'ajout du job.
+plugin_hudson_svn	ci_trigger_not_deleted	Une erreur est survenue lors de la suppression du job.
+plugin_hudson_svn	repository_not_found	Le dépôt demandé n'existe pas.
+plugin_hudson_svn	request_not_valid	La requête n'est pas valide.
+
+plugin_hudson_svn	ci_trigger	Evénement Subversion multi dépôts
