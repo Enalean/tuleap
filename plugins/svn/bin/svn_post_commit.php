@@ -50,10 +50,11 @@ try {
         PluginManager::instance(),
         new MailBuilder(TemplateRendererFactory::build()),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
-        UserManager::instance()
+        UserManager::instance(),
+        EventManager::instance()
     );
 
-    $hook->sendMail($repository, $revision, $old_revision);
+    $hook->process($repository, $revision, $old_revision);
 
     exit(0);
 } catch (Exception $exception) {

@@ -37,6 +37,9 @@ class CommitInfoEnhancer {
         $this->commit_info = $commit_info;
     }
 
+    /**
+     * @return CommitInfo
+     */
     public function getCommitInfo() {
         return $this->commit_info;
     }

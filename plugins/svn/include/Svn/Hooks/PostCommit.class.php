@@ -40,8 +40,17 @@ use PluginManager;
 use ForgeConfig;
 use Notification;
 use UserManager;
+use EventManager;
 
 class PostCommit {
+
+     const PROCESS_POST_COMMIT = 'process_post_commit';
+
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     private $reference_manager;
     private $repository_manager;
     private $mail_header_manager;
@@ -59,7 +68,8 @@ class PostCommit {
         PluginManager $plugin_manager,
         MailBuilder $mail_builder,
         CommitInfoEnhancer $commit_info_enhancer,
-        UserManager $user_manager
+        UserManager $user_manager,
+        EventManager $event_manager
     ) {
         $this->reference_manager         = $reference_manager;
         $this->repository_manager        = $repository_manager;
@@ -69,27 +79,47 @@ class PostCommit {
         $this->commit_info_enhancer      = $commit_info_enhancer;
         $this->mail_builder              = $mail_builder;
         $this->user_manager              = $user_manager;
+        $this->event_manager             = $event_manager;
     }
 
-    public function sendMail($repository_path, $new_revision, $old_revision) {
+    public function process($repository_path, $new_revision, $old_revision) {
         $repository = $this->repository_manager->getRepositoryFromSystemPath($repository_path);
+        $this->commit_info_enhancer->enhance($repository, $new_revision);
+
+        $commit_info_enhanced = $this->commit_info_enhancer->getCommitInfo();
+
+        $this->sendMail(
+            $repository,
+            $commit_info_enhanced,
+            $new_revision,
+            $old_revision
+        );
+
+        $params = array(
+            'repository'  => $repository,
+            'commit_info' => $commit_info_enhanced
+        );
+
+        $this->event_manager->processEvent(self::PROCESS_POST_COMMIT, $params);
+    }
+
+    private function sendMail(Repository $repository, CommitInfo $commit_info, $new_revision, $old_revision) {
         $goto_link  = $repository->getSvnDomain() . $this->getGotoLink('rev', $new_revision, $repository);
 
         $mail_enhancer = new MailEnhancer();
 
-        $this->commit_info_enhancer->enhance($repository, $new_revision);
-
         $notified_mail = $this->getNotifiedMails($repository);
         $subject       = $this->getSubject($repository, $new_revision);
-        $committer     = $this->getCommitter($this->commit_info_enhancer->getCommitInfo());
+        $committer     = $this->getCommitter($commit_info);
         $body          = $this->createMailBody(
             $committer,
             $goto_link,
             $repository,
             $new_revision,
             $old_revision,
-            $repository_path
+            $repository->getSystemPath()
         );
+
         $this->setFrom($mail_enhancer, $committer);
 
         $notification = new Notification($notified_mail, $subject, '', $body, $goto_link, 'Svn');
