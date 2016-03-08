@@ -37,10 +37,10 @@ function KanbanCtrl(
     UserPreferencesService,
     SocketFactory
 ) {
-    var self = this,
-        limit = 50,
-        offset = 0,
-        kanban = SharedPropertiesService.getKanban(),
+    var self    = this,
+        limit   = 50,
+        offset  = 0,
+        kanban  = SharedPropertiesService.getKanban(),
         user_id = SharedPropertiesService.getUserId();
 
     self.label = kanban.label;
@@ -48,65 +48,69 @@ function KanbanCtrl(
         columns: kanban.columns
     };
     self.backlog = _.extend(kanban.backlog, {
-        id: 'backlog',
-        content: [],
-        filtered_content: [],
-        loading_items: true,
-        resize_left: '',
-        resize_top: '',
-        resize_width: '',
-        is_small_width: false
+        id                     : 'backlog',
+        content                : [],
+        nb_items_at_kanban_init: 0,
+        filtered_content       : [],
+        loading_items          : true,
+        fully_loaded           : false,
+        resize_left            : '',
+        resize_top             : '',
+        resize_width           : '',
+        is_small_width         : false
     });
     self.archive = _.extend(kanban.archive, {
-        id: 'archive',
-        content: [],
-        filtered_content: [],
-        loading_items: true,
-        resize_left: '',
-        resize_top: '',
-        resize_width: '',
-        is_small_width: false
+        id                     : 'archive',
+        content                : [],
+        nb_items_at_kanban_init: 0,
+        filtered_content       : [],
+        loading_items          : true,
+        fully_loaded           : false,
+        resize_left            : '',
+        resize_top             : '',
+        resize_width           : '',
+        is_small_width         : false
     });
 
     self.user_prefers_collapsed_cards = true;
-    self.cardFieldIsSimpleValue = CardFieldsService.cardFieldIsSimpleValue;
-    self.cardFieldIsList = CardFieldsService.cardFieldIsList;
-    self.cardFieldIsText = CardFieldsService.cardFieldIsText;
-    self.cardFieldIsDate = CardFieldsService.cardFieldIsDate;
-    self.cardFieldIsFile = CardFieldsService.cardFieldIsFile;
-    self.cardFieldIsCross = CardFieldsService.cardFieldIsCross;
-    self.cardFieldIsPermissions = CardFieldsService.cardFieldIsPermissions;
-    self.cardFieldIsUser = CardFieldsService.cardFieldIsUser;
-    self.getCardFieldListValues = CardFieldsService.getCardFieldListValues;
-    self.getCardFieldTextValue = CardFieldsService.getCardFieldTextValue;
-    self.getCardFieldFileValue = CardFieldsService.getCardFieldFileValue;
-    self.getCardFieldCrossValue = CardFieldsService.getCardFieldCrossValue;
+    self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
+    self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
+    self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
+    self.cardFieldIsDate              = CardFieldsService.cardFieldIsDate;
+    self.cardFieldIsFile              = CardFieldsService.cardFieldIsFile;
+    self.cardFieldIsCross             = CardFieldsService.cardFieldIsCross;
+    self.cardFieldIsPermissions       = CardFieldsService.cardFieldIsPermissions;
+    self.cardFieldIsUser              = CardFieldsService.cardFieldIsUser;
+    self.getCardFieldListValues       = CardFieldsService.getCardFieldListValues;
+    self.getCardFieldTextValue        = CardFieldsService.getCardFieldTextValue;
+    self.getCardFieldFileValue        = CardFieldsService.getCardFieldFileValue;
+    self.getCardFieldCrossValue       = CardFieldsService.getCardFieldCrossValue;
     self.getCardFieldPermissionsValue = CardFieldsService.getCardFieldPermissionsValue;
-    self.getCardFieldUserValue = CardFieldsService.getCardFieldUserValue;
-    self.isColumnWipReached = isColumnWipReached;
-    self.setWipLimitForColumn = setWipLimitForColumn;
-    self.userIsAdmin = userIsAdmin;
-    self.getTimeInfo = getTimeInfo;
-    self.getTimeInfoInArchive = getTimeInfoInArchive;
-    self.createItemInPlace = createItemInPlace;
-    self.createItemInPlaceInBacklog = createItemInPlaceInBacklog;
-    self.editKanban = editKanban;
-    self.showEditbutton = showEditbutton;
-    self.expandColumn = expandColumn;
-    self.toggleColumn = toggleColumn;
-    self.expandBacklog = expandBacklog;
-    self.toggleBacklog = toggleBacklog;
-    self.expandArchive = expandArchive;
-    self.toggleArchive = toggleArchive;
-    self.setIsCollapsed = setIsCollapsed;
-    self.filter_terms = '';
-    self.treeFilter = filterCards;
-    self.loading_modal = NewTuleapArtifactModalService.loading;
-    self.showEditModal = showEditModal;
-    self.moveItemAtTheEnd = moveItemAtTheEnd;
-    self.toggleCollapsedMode = toggleCollapsedMode;
-    self.moveKanbanItemToTop = moveKanbanItemToTop;
-    self.moveKanbanItemToBottom = moveKanbanItemToBottom;
+    self.getCardFieldUserValue        = CardFieldsService.getCardFieldUserValue;
+    self.isColumnWipReached           = isColumnWipReached;
+    self.setWipLimitForColumn         = setWipLimitForColumn;
+    self.userIsAdmin                  = userIsAdmin;
+    self.getTimeInfo                  = getTimeInfo;
+    self.getTimeInfoInArchive         = getTimeInfoInArchive;
+    self.createItemInPlace            = createItemInPlace;
+    self.createItemInPlaceInBacklog   = createItemInPlaceInBacklog;
+    self.editKanban                   = editKanban;
+    self.showEditbutton               = showEditbutton;
+    self.expandColumn                 = expandColumn;
+    self.toggleColumn                 = toggleColumn;
+    self.expandBacklog                = expandBacklog;
+    self.toggleBacklog                = toggleBacklog;
+    self.expandArchive                = expandArchive;
+    self.toggleArchive                = toggleArchive;
+    self.setIsCollapsed               = setIsCollapsed;
+    self.filter_terms                 = '';
+    self.treeFilter                   = filterCards;
+    self.loading_modal                = NewTuleapArtifactModalService.loading;
+    self.showEditModal                = showEditModal;
+    self.moveItemAtTheEnd             = moveItemAtTheEnd;
+    self.toggleCollapsedMode          = toggleCollapsedMode;
+    self.moveKanbanItemToTop          = moveKanbanItemToTop;
+    self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
 
     initViewMode();
     loadColumns();
@@ -176,6 +180,10 @@ function KanbanCtrl(
         if (!column.is_open) {
             KanbanService.expandColumn(kanban.id, column.id);
             column.is_open = true;
+
+            if (! column.fully_loaded) {
+                loadColumnContent(column, limit, offset);
+            }
         }
     }
 
@@ -198,6 +206,10 @@ function KanbanCtrl(
         if (!self.backlog.is_open) {
             KanbanService.expandBacklog(kanban.id);
             self.backlog.is_open = true;
+
+            if (! self.backlog.fully_loaded) {
+                loadBacklogContent(limit, offset);
+            }
         }
     }
 
@@ -220,6 +232,10 @@ function KanbanCtrl(
         if (!self.archive.is_open) {
             KanbanService.expandArchive(kanban.id);
             self.archive.is_open = true;
+
+            if (! self.archive.fully_loaded) {
+                loadArchiveContent(limit, offset);
+            }
         }
     }
 
@@ -401,76 +417,100 @@ function KanbanCtrl(
 
             if (column.is_open) {
                 loadColumnContent(column, limit, offset);
+            } else {
+                KanbanService.getColumnContentSize(kanban.id, column.id).then(function(size) {
+                    column.loading_items           = false;
+                    column.nb_items_at_kanban_init = size;
+                });
             }
         });
     }
 
     function augmentColumn(column) {
-        column.content = [];
-        column.filtered_content = column.content;
-        column.loading_items = true;
-        column.resize_left = '';
-        column.resize_top = '';
-        column.resize_width = '';
-        column.wip_in_edit = false;
-        column.limit_input = column.limit;
-        column.saving_wip = false;
-        column.is_small_width = false;
-        column.is_defered = !column.is_open;
-        column.original_label = column.label;
-    }
-
-    function loadDeferedColumns() {
-        if (kanban.columns.every(function (column) {
-                return column.is_defered || !column.loading_items;
-            })) {
-            kanban.columns.forEach(function (column) {
-                if (column.is_defered) {
-                    column.is_defered = false;
-                    loadColumnContent(column, limit, offset);
-                }
-            });
-        }
+        column.content                 = [];
+        column.filtered_content        = column.content;
+        column.loading_items           = true;
+        column.nb_items_at_kanban_init = 0;
+        column.fully_loaded            = false;
+        column.resize_left             = '';
+        column.resize_top              = '';
+        column.resize_width            = '';
+        column.wip_in_edit             = false;
+        column.limit_input             = column.limit;
+        column.saving_wip              = false;
+        column.is_small_width          = false;
+        column.is_defered              = !column.is_open;
+        column.original_label          = column.label;
     }
 
     function loadColumnContent(column, limit, offset) {
+        column.loading_items = true;
+
         return KanbanService.getItems(kanban.id, column.id, limit, offset).then(function (data) {
-            column.content = column.content.concat(data.results);
+            column.content          = column.content.concat(data.results);
             column.filtered_content = column.content;
 
             if (offset + limit < data.total) {
                 loadColumnContent(column, limit, offset + limit);
             } else {
                 column.loading_items = false;
-                loadDeferedColumns();
+                column.fully_loaded  = true;
             }
         });
     }
 
     function loadBacklog(limit, offset) {
+        if (self.backlog.is_open) {
+            loadBacklogContent(limit, offset);
+
+        } else {
+            KanbanService.getBacklogSize(kanban.id).then(function (size) {
+                self.backlog.loading_items           = false;
+                self.backlog.nb_items_at_kanban_init = size;
+            });
+        }
+    }
+
+    function loadBacklogContent(limit, offset) {
+        self.backlog.loading_items = true;
+
         return KanbanService.getBacklog(kanban.id, limit, offset).then(function (data) {
-            self.backlog.content = self.backlog.content.concat(data.results);
+            self.backlog.content          = self.backlog.content.concat(data.results);
             self.backlog.filtered_content = self.backlog.content;
 
             if (offset + limit < data.total) {
-                loadBacklog(limit, offset + limit);
+                loadBacklogContent(limit, offset + limit);
             } else {
                 self.backlog.loading_items = false;
-                loadDeferedColumns();
+                self.backlog.fully_loaded  = true;
             }
         });
     }
 
     function loadArchive(limit, offset) {
+        if (self.archive.is_open) {
+            loadArchiveContent(limit, offset);
+
+        } else {
+            KanbanService.getArchiveSize(kanban.id).then(function (size) {
+                self.archive.loading_items           = false;
+                self.archive.nb_items_at_kanban_init = size;
+            });
+        }
+    }
+
+    function loadArchiveContent(limit, offset) {
+        self.archive.loading_items = true;
+
         return KanbanService.getArchive(kanban.id, limit, offset).then(function (data) {
             self.archive.content = self.archive.content.concat(data.results);
             self.archive.filtered_content = self.archive.content;
 
             if (offset + limit < data.total) {
-                loadArchive(limit, offset + limit);
+                loadArchiveContent(limit, offset + limit);
             } else {
                 self.archive.loading_items = false;
-                loadDeferedColumns();
+                self.archive.fully_loaded  = true;
             }
         });
     }

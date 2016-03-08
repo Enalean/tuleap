@@ -43,7 +43,8 @@
         <div class="column-header" class="backlog"
             ng-style="{width: kanban.backlog.resize_width}"
         >
-            <span class="wip-count" ng-class="{ loading: kanban.backlog.loading_items }">{{ kanban.backlog.content.length }}</span>
+            <span ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded" class="wip-count" ng-class="{ loading: kanban.backlog.loading_items }">{{ kanban.backlog.content.length }}</span>
+            <span ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded" class="wip-count">{{ kanban.backlog.nb_items_at_kanban_init }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle the backlog' | translate }}"
                 ng-click="kanban.toggleBacklog(); $event.stopPropagation();"
@@ -78,7 +79,8 @@
         <div class="column-label">
             <div ng-style="{top: kanban.backlog.resize_top, left: kanban.backlog.resize_left}">
                 {{ kanban.backlog.label }}
-                <span class="count" ng-class="{ loading: kanban.backlog.loading_items }">{{ kanban.backlog.content.length }}</span>
+                <span ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded" class="count" ng-class="{ loading: kanban.backlog.loading_items }">{{ kanban.backlog.content.length }}</span>
+                <span ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded" class="count">{{ kanban.backlog.nb_items_at_kanban_init }}</span>
             </div>
         </div>
     </div>
@@ -106,7 +108,8 @@
                 <span ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
             </span>
             <wip-popover column="column" user-is-admin="kanban.userIsAdmin()" set-wip-limit="kanban.setWipLimitForColumn(column)"></wip-popover>
-            <span class="wip-count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
+            <span ng-if="column.loading_items || column.fully_loaded" class="wip-count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
+            <span ng-if="! column.loading_items && ! column.fully_loaded" class="wip-count">{{ column.nb_items_at_kanban_init }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle this column' | translate }}"
                 ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
@@ -152,7 +155,8 @@
         <div class="column-label">
             <div ng-style="{top: column.resize_top, left: column.resize_left}">
                 {{ column.label }}
-                <span class="count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
+                <span ng-if="column.loading_items || column.fully_loaded" class="count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
+                <span ng-if="! column.loading_items && ! column.fully_loaded" class="count" ng-class="{ loading: column.loading_items }">{{ column.nb_items_at_kanban_init }}</span>
             </div>
         </div>
     </div>
@@ -166,7 +170,8 @@
         <div class="column-header"
             ng-style="{width: kanban.archive.resize_width}"
         >
-            <span class="wip-count" ng-class="{ loading: kanban.archive.loading_items }">{{ kanban.archive.content.length }}</span>
+            <span ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded" class="wip-count" ng-class="{ loading: kanban.archive.loading_items }">{{ kanban.archive.content.length }}</span>
+            <span ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded" class="wip-count">{{ kanban.archive.nb_items_at_kanban_init }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle the archive' | translate }}"
                 ng-click="kanban.toggleArchive(); $event.stopPropagation();"
@@ -200,7 +205,8 @@
         <div class="column-label">
             <div ng-style="{top: kanban.archive.resize_top, left: kanban.archive.resize_left}">
                 {{ kanban.archive.label }}
-                <span class="count" ng-class="{ loading: kanban.archive.loading_items }">{{ kanban.archive.content.length }}</span>
+                <span ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded" class="count" ng-class="{ loading: kanban.archive.loading_items }">{{ kanban.archive.content.length }}</span>
+                <span ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded" class="count">{{ kanban.archive.nb_items_at_kanban_init }}</span>
             </div>
         </div>
     </div>
