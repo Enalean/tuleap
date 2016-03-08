@@ -1,3 +1,6 @@
+Version 1.362 - Tuleap 8.13
+    * request #8943: Closed Milestones are not being displayed
+
 Version 1.361 - Tuleap 8.13
     * request #8901: Call PATCH /milestones/:id/milestones instead of PUT
 

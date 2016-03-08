@@ -6,7 +6,7 @@ Version 8.13 (Not released yet)
 	request #8921: Makefile should be self-documented
 
     == Plugins ==
-	* agiledashboard: 1.361
+	* agiledashboard: 1.362
 	* tracker: 5.808
 	* hudson_svn: 0.2
 	* git: 4.131
