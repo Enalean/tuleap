@@ -40,7 +40,10 @@ class AccessFileHistoryDao extends DataAccessObject {
 
         $id = $this->updateAndGetLastId($sql);
         if (! $id) {
+            $this->rollBack();
+            return null;
         }
+        $access_file->setId($id);
 
         $sql = "UPDATE plugin_svn_repositories
                 SET accessfile_id = $id

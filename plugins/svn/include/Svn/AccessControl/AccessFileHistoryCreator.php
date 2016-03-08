@@ -44,7 +44,7 @@ class AccessFileHistoryCreator {
         $this->access_file_factory = $access_file_factory;
     }
 
-    public function create(Repository $repository, $content) {
+    public function create(Repository $repository, $content, $timestamp) {
         $id             = 0;
         $version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
 
@@ -53,7 +53,7 @@ class AccessFileHistoryCreator {
             $id,
             $version_number + 1,
             $this->cleanContent($repository, $content),
-            $_SERVER['REQUEST_TIME']
+            $timestamp
         );
         if (! $this->dao->create($file_history)) {
             throw new CannotCreateAccessFileHistoryException(
@@ -62,6 +62,7 @@ class AccessFileHistoryCreator {
         }
 
         $this->saveAccessFile($repository, $file_history);
+        return $file_history;
     }
 
     public function useAnOldVersion(Repository $repository, $version_id) {

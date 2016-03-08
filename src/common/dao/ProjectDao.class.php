@@ -508,4 +508,12 @@ class ProjectDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function getProjectMembers($project_id) {
+        return $this->retrieve(
+            "SELECT user.user_id AS user_id, user.user_name AS user_name, user.realname AS realname
+             FROM user_group INNER JOIN user USING(user_id)
+             WHERE user_group.group_id=". $this->da->quoteSmart($project_id) ."
+                 AND user.status IN ('A', 'R')");
+    }
 }

@@ -30,8 +30,6 @@ use \Tuleap\Svn\Repository\RepositoryManager;
 use HTTPRequest;
 use \Tuleap\Svn\Repository\CannotCreateRepositoryException;
 use SystemEventManager;
-use SystemEvent;
-use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 
 class ExplorerController {
     const NAME = 'explorer';
@@ -84,15 +82,7 @@ class ExplorerController {
         } else {
             $repository_to_create = new Repository ("", $repo_name, $request->getProject());
             try {
-                $this->repository_manager->create($repository_to_create);
-
-                $repo_event['system_path'] = $repository_to_create->getSystemPath();
-                $repo_event['project_id']  = $request->getProject()->getId();
-                $repo_event['name']        = $request->getProject()->getUnixNameMixedCase()."/".$repository_to_create->getName();
-                $this->system_event_manager->createEvent(
-                    'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
-                    implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
-                    SystemEvent::PRIORITY_HIGH);
+                $this->repository_manager->create($repository_to_create, $this->system_event_manager);
 
                 $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository','update_success'));
                 $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));

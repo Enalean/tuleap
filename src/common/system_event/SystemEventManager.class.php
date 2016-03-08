@@ -28,9 +28,12 @@
 class SystemEventManager {
     
     var $dao;
+    var $followers_dao;
 
     // Constructor
-    private function __construct() {
+    private function __construct(SystemEventDao $dao = null, SystemEventsFollowersDao $followers_dao = null) {
+        $this->dao = $dao;
+        $this->followers_dao = $followers_dao;
         $this->_getDao();
 
         $event_manager = $this->_getEventManager();
@@ -102,6 +105,10 @@ class SystemEventManager {
         self::$_instance = null;
     }
 
+    public function testInstance(SystemEventDao $dao, SystemEventsFollowersDao $followers_dao) {
+        return new SystemEventManager($dao, $followers_dao);
+    }
+
     function _getEventManager() {
         return EventManager::instance();
     }
@@ -110,7 +117,14 @@ class SystemEventManager {
         if (!$this->dao) {
             $this->dao = new SystemEventDao(CodendiDataAccess::instance());
         }
-        return  $this->dao;
+        return $this->dao;
+    }
+
+    function _getFollowersDao() {
+        if(!$this->followers_dao){
+            $this->followers_dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
+        }
+        return $this->followers_dao;
     }
 
     function _getBackend() {
@@ -284,12 +298,15 @@ class SystemEventManager {
     
     /**
      * Create a new event, store it in the db and send notifications
+     * @return SystemEvent or null
      */
     public function createEvent($type, $parameters, $priority,$owner=SystemEvent::OWNER_ROOT) {
         if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'],$owner)) {
             $sysevent = $this->instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority);
-            $sysevent->notify();
+            $sysevent->notify($this->_getFollowersDao());
+            return $sysevent;
         }
+        return null;
     }
 
     private function instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority) {

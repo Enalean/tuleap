@@ -103,7 +103,7 @@ rnc2rng-docker: clean-rng ## Compile rnc file into rng
 
 rnc2rng: src/common/xml/resources/project/project.rng \
 	 src/common/xml/resources/users.rng  \
-	 src/common/xml/resources/svn.rng \
+	 plugins/svn/resources/svn.rng \
 	 src/common/xml/resources/ugroups.rng \
 	 plugins/tracker/www/resources/tracker.rng \
 	 plugins/tracker/www/resources/trackers.rng \
@@ -111,9 +111,9 @@ rnc2rng: src/common/xml/resources/project/project.rng \
 	 plugins/agiledashboard/www/resources/xml_project_agiledashboard.rng \
 	 plugins/cardwall/www/resources/xml_project_cardwall.rng
 
-src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/www/resources/tracker-definition.rnc src/common/xml/resources/ugroups-definition.rnc src/common/xml/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
+src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/www/resources/tracker-definition.rnc src/common/xml/resources/ugroups-definition.rnc plugins/svn/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
 
-src/common/xml/resources/svn.rng: src/common/xml/resources/svn.rnc src/common/xml/resources/svn-definition.rnc
+plugins/svn/resources/svn.rng: plugins/svn/resources/svn.rnc plugins/svn/resources/svn-definition.rnc
 
 src/common/xml/resources/ugroups.rng: src/common/xml/resources/ugroups.rnc src/common/xml/resources/ugroups-definition.rnc
 

@@ -2,12 +2,12 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 grammar {
     include "../ugroups-definition.rnc"
-    include "../svn-definition.rnc"
     include "../project-definition.rnc"
     include "../git-definition.rnc"
     include "../frs-definition.rnc"
     include "../mediawiki-definition.rnc"
     include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
+    include "../../../../../plugins/svn/resources/svn-definition.rnc"
 
     start =
         element project {

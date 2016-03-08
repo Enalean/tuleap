@@ -54,7 +54,10 @@ function autoload372131bab68caa78922b5ff049dbdc23($class) {
             'tuleap\\svn\\servicesvn' => '/Svn/ServiceSvn.class.php',
             'tuleap\\svn\\svnrouter' => '/Svn/SvnRouter.class.php',
             'tuleap\\svn\\usercannotadministraterepositoryexception' => '/Svn/UserCannotAdministrateRepositoryException.php',
-            'tuleap\\svn\\viewvcproxy\\viewvcproxy' => '/Svn/ViewVCProxy/ViewVCProxy.class.php'
+            'tuleap\\svn\\viewvcproxy\\viewvcproxy' => '/Svn/ViewVCProxy/ViewVCProxy.class.php',
+            'tuleap\\svn\\xmlimporter' => '/Svn/XMLImporter.class.php',
+            'tuleap\\svn\\xmlimporterexception' => '/Svn/XMLImporterException.class.php',
+            'tuleap\\svn\\xmlrepositoryimporter' => '/Svn/XMLRepositoryImporter.class.php'
         );
     }
     $cn = strtolower($class);

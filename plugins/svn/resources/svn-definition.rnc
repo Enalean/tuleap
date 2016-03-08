@@ -1,4 +1,8 @@
-svn =
+svn = element repository {
+
+    # name of the repository
+    attribute name { xsd:string } &
+
     # Path to the svn dump file
     attribute dump-file { xsd:string }? &
 
@@ -10,3 +14,6 @@ svn =
         attribute path { xsd:string },
         attribute emails { xsd:string }
     }*
+
+}*
+

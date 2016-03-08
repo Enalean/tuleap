@@ -37,6 +37,8 @@ use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Admin\AdminController;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Reference\Extractor;
+use Tuleap\Svn\XMLImporter;
+use Tuleap\Svn\Repository\RuleName;
 
 /**
  * SVN plugin
@@ -45,6 +47,21 @@ class SvnPlugin extends Plugin {
 
     const SERVICE_SHORTNAME  = 'plugin_svn';
     const SYSTEM_NATURE_NAME = 'svn_revision';
+
+    /** @var Tuleap\Svn\Repository\RepositoryManager */
+    private $repository_manager;
+
+    /** @var Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao */
+    private $accessfile_dao;
+
+    /** @var Tuleap\Svn\Admin\AccessControl\AccessFileHistoryFactory */
+    private $accessfile_factory;
+
+    /** @var Tuleap\Svn\Admin\AccessControl\AccessFileHistoryCreator */
+    private $accessfile_history_creator;
+
+    /** @var Tuleap\Svn\Admin\MailNotificationManager */
+    private $mail_notification_manager;
 
     public function __construct($id) {
         parent::__construct($id);
@@ -57,6 +74,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
         $this->addHook(Event::UGROUP_MODIFY);
         $this->addHook(Event::MEMBERSHIP_CREATE);
+        $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
 
@@ -132,6 +150,51 @@ class SvnPlugin extends Plugin {
         }
     }
 
+    /** @return Tuleap\Svn\Repository\RepositoryManager */
+    private function getRepositoryManager() {
+        if(empty($this->repository_manager)) {
+            $this->repository_manager =
+                new RepositoryManager(new Dao(), ProjectManager::instance());
+        }
+        return $this->repository_manager;
+    }
+
+    /** @return Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao */
+    private function getAccessFileHistoryDao(){
+        if(empty($this->accessfile_dao)){
+            $this->accessfile_dao = new AccessFileHistoryDao();
+        }
+        return $this->accessfile_dao;
+    }
+
+    /** @return Tuleap\Svn\Admin\AccessControl\AccessFileHistoryFactory */
+    private function getAccessFileHistoryFactory(){
+        if(empty($this->accessfile_factory)){
+            $this->accessfile_factory = new AccessFileHistoryFactory($this->getAccessFileHistoryDao());
+        }
+        return $this->accessfile_factory;
+    }
+
+    /** @return Tuleap\Svn\Admin\AccessControl\AccessFileHistoryCreator */
+    private function getAccessFileHistoryCreator() {
+        if(empty($this->accessfile_history_manager)) {
+            $this->accessfile_history_creator = new AccessFileHistoryCreator(
+                $this->getAccessFileHistoryDao(), $this->getAccessFileHistoryFactory());
+        }
+        return $this->accessfile_history_creator;
+    }
+
+    /** @return Tuleap\Svn\Admin\MailNotificationManager */
+    private function getMailNotificationManager() {
+        if (empty($this->mail_notification_manager)) {
+            $this->mail_notification_manager = new MailNotificationManager(
+                new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())
+            );
+        }
+        return $this->mail_notification_manager;
+    }
+
+
     public function process(HTTPRequest $request) {
         if (! PluginManager::instance()->isPluginAllowedForProject($this, $request->getProject()->getId())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','plugin_not_activated'));
@@ -163,27 +226,44 @@ class SvnPlugin extends Plugin {
         $params['classnames'][$this->getServiceShortname()] = 'Tuleap\Svn\ServiceSvn';
     }
 
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function import_xml_project($params) {
+        $xml = $params['xml_content'];
+        $extraction_path = $params['extraction_path'];
+        $project = $params['project'];
+        $user_finder = $params['user_finder'];
+        $logger = $params['logger'];
+
+        $svn = new XMLImporter($xml, $extraction_path, $user_finder);
+        $svn->import(
+            $logger,
+            $project,
+            $this->getRepositoryManager(),
+            SystemEventManager::instance(),
+            $this->getAccessFileHistoryCreator(),
+            $this->getMailNotificationManager(),
+            new RuleName($project, new Dao())
+        );
+    }
+
     private function getRouter() {
         $repository_manager = $this->getRepositoryManager();
 
-        $accessfile_dao     = new AccessFileHistoryDao();
-        $accessfile_factory = new AccessFileHistoryFactory($accessfile_dao);
         return new SvnRouter(
             $repository_manager,
             new AccessControlController(
                 $repository_manager,
-                $accessfile_factory,
-                new AccessFileHistoryCreator($accessfile_dao, $accessfile_factory)
+                $this->getAccessFileHistoryFactory(),
+                $this->getAccessFileHistoryCreator()
             ),
             new AdminController(
                 new MailHeaderManager(new MailHeaderDao()),
                 $repository_manager,
-                new MailNotificationManager(
-                    new MailNotificationDao(
-                        CodendiDataAccess::instance(),
-                        new RepositoryRegexpBuilder()
-                    )
-                )
+                $this->getMailNotificationManager()
             ),
             new ExplorerController(
                 $repository_manager
@@ -193,10 +273,6 @@ class SvnPlugin extends Plugin {
                 ProjectManager::instance()
             )
         );
-    }
-
-    private function getRepositoryManager() {
-        return new RepositoryManager(new Dao(), ProjectManager::instance());
     }
 
     /** @return BackendSVN */

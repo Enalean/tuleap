@@ -30,13 +30,29 @@ class UGroupManager {
     private $dao;
 
     /**
+     * @var UGroupUserDao
+     */
+    private $ugroup_user_dao;
+
+    /**
      * @var EventManager
      */
     private $event_manager;
 
-    public function __construct(UGroupDao $dao = null, EventManager $event_manager = null) {
-        $this->dao           = $dao;
-        $this->event_manager = $event_manager;
+    public function __construct(UGroupDao $dao = null, EventManager $event_manager = null, UGroupUserDao $ugroup_user_dao = null) {
+        $this->dao             = $dao;
+        $this->event_manager   = $event_manager;
+        $this->ugroup_user_dao = $ugroup_user_dao;
+    }
+
+    /**
+     * @return UGroupUserDao
+     */
+    private function getUGroupUserDao(){
+        if(empty($this->ugroup_user_dao)) {
+            $this->ugroup_user_dao = new UGroupUserDao();
+        }
+        return $this->ugroup_user_dao;
     }
 
     /**
@@ -223,7 +239,7 @@ class UGroupManager {
         }
         $um = UserManager::instance();
         $users   = array();
-        $dao     = new UGroupUserDao();
+        $dao     = $this->getUGroupUserDao();
         $members = $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
         if ($members && !$members->isError()) {
             foreach ($members as $member) {
@@ -240,7 +256,7 @@ class UGroupManager {
      * @return boolean
      */
     public function isDynamicUGroupMember(PFUSer $user, $ugroup_id, $group_id) {
-        $dao = new UGroupUserDao();
+        $dao = $this->getUGroupUserDao();
 
         return $dao->isDynamicUGroupMember($user->getId(), $ugroup_id, $group_id);
     }
