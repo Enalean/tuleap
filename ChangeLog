@@ -1,11 +1,14 @@
 Version 8.13 (Not released yet)
 	== Bug Fix ==
-	request #8903: Persistent XSS in the widget image
+	* request #8903: Persistent XSS in the widget image
 
 	== Development ==
-	request #8921: Makefile should be self-documented
+	* request #8921: Makefile should be self-documented
 
-    == Plugins ==
+	== Security ==
+	* request #8904: CSRF vulnerability in the project registration page
+
+	== Plugins ==
 	* agiledashboard: 1.363
 	* tracker: 5.809
 	* hudson_svn: 0.3
