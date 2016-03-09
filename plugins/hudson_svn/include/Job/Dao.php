@@ -70,4 +70,16 @@ class Dao extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
+    public function getJobByRepositoryId($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "SELECT job.*, hudson.job_url, hudson.token
+                FROM plugin_hudson_svn_job AS job
+                    INNER JOIN plugin_hudson_job AS hudson
+                    ON (job.job_id = hudson.job_id)
+                WHERE job.repository_id = $repository_id";
+
+        return $this->retrieve($sql);
+    }
+
 }

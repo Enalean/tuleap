@@ -23,11 +23,14 @@ require_once 'constants.php';
 
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
 use Tuleap\HudsonSvn\ContinuousIntegrationCollector;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Dao as SvnDao;
 use Tuleap\HudsonSvn\Job\Dao as JobDao;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
+use Tuleap\HudsonSvn\Job\Launcher;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Hooks\PostCommit;
+use Tuleap\Svn\Dao as SvnDao;
+
 
 class hudson_svnPlugin extends Plugin {
 
@@ -35,13 +38,15 @@ class hudson_svnPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        $this->_addHook('cssfile');
-        $this->_addHook('javascript_file');
+        $this->addHook('cssfile');
+        $this->addHook('javascript_file');
 
         $this->_addHook('collect_ci_triggers');
         $this->_addHook('save_ci_triggers');
         $this->_addHook('update_ci_triggers');
         $this->_addHook('delete_ci_triggers');
+
+        $this->addHook(PostCommit::PROCESS_POST_COMMIT);
     }
 
     /**
@@ -149,6 +154,12 @@ class hudson_svnPlugin extends Plugin {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson_svn','ci_trigger_not_deleted'));
             }
         }
+    }
+
+    public function process_post_commit($params) {
+        $launcher = new Launcher($this->getJobFactory(), new BackendLogger('/tmp/svn.log'), new Jenkins_Client(new Http_Client()));
+
+        $launcher->launch($params['repository'], $params['commit_info']);
     }
 
 }

@@ -22,14 +22,18 @@ namespace Tuleap\HudsonSvn\Job;
 
 class Job {
 
+    private $token;
+    private $url;
     private $path;
     private $repository_id;
     private $id;
 
-    public function __construct($id, $repository_id, $path) {
+    public function __construct($id, $repository_id, $path, $url, $token) {
         $this->id            = $id;
         $this->repository_id = $repository_id;
         $this->path          = $path;
+        $this->url           = $url;
+        $this->token         = $token;
     }
 
     public function getId() {
@@ -42,6 +46,14 @@ class Job {
 
     public function getPath() {
         return $this->path;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
+
+    public function getToken() {
+        return $this->token;
     }
 
 }

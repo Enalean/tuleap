@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -11,12 +11,13 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
- define('SVN_BASE_URL', '/plugins/svn');
- define('SVN_BASE_DIR', dirname(__FILE__));
+require_once __DIR__ . '/../include/autoload.php';
+require_once __DIR__ .'/../include/constants.php';
+require_once __DIR__ . '/../../svn/tests/bootstrap.php';

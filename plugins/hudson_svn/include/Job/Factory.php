@@ -20,6 +20,8 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
+use Tuleap\Svn\Repository\Repository;
+
 class Factory {
 
     /**
@@ -44,8 +46,30 @@ class Factory {
         return new Job(
             $row['job_id'],
             $row['repository_id'],
-            $row['path']
+            $row['path'],
+            '',
+            ''
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getJobsByRepository(Repository $repository) {
+        $rows = $this->dao->getJobByRepositoryId($repository->getId());
+        $jobs = array();
+
+        foreach ($rows as $row) {
+            $jobs[] = new Job(
+                $row['job_id'],
+                $row['repository_id'],
+                $row['path'],
+                $row['job_url'],
+                $row['token']
+            );
+        }
+
+        return $jobs;
     }
 
 }
