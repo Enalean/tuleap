@@ -48,8 +48,9 @@ class CrossReferenceFactory {
     function fetchDatas() {
         $sql = "SELECT * 
                 FROM cross_references 
-                WHERE  (target_gid=" . db_ei($this->entity_gid) . " AND target_id='" . db_ei($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
-                     OR (source_gid=" . db_ei($this->entity_gid) ." AND source_id='" . db_ei($this->entity_id) . "' AND source_type='" . db_es($this->entity_type) . "' )";
+                WHERE  (target_gid=" . db_ei($this->entity_gid) . " AND target_id='" . db_es($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
+                     OR (source_gid=" . db_ei($this->entity_gid) ." AND source_id='" . db_es($this->entity_id) . "' AND source_type='" . db_es($this->entity_type) . "' )";
+
         $res = db_query($sql);
         if ($res && db_numrows($res) > 0) {
         
