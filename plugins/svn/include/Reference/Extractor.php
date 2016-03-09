@@ -62,7 +62,7 @@ class Extractor {
     }
 
     private function getRegExp() {
-        return '#^(' . RuleName::PATTERN_REPOSITORY_NAME . ')/([0-9])+$#';
+        return '#^(' . RuleName::PATTERN_REPOSITORY_NAME . ')/([0-9]+)$#';
     }
 
 }
