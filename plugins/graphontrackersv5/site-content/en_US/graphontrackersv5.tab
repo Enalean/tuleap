@@ -198,3 +198,5 @@ plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_day	Day
 plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_week	Week
 plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_month	Month
 plugin_graphontrackersv5_cumulative_flow	error_too_many_points	Please choose a smaller period, or increase the scale
+
+plugin_graphontrackersv5	field_not_found	Unable to find the needed field to build the chart "$1". Please edit the chart and ajust settings.

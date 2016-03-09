@@ -45,5 +45,18 @@ abstract class ChartDataBuilderV5 {
 
         return array($data['red'], $data['green'], $data['blue']);
     }
+
+    protected function getTracker() {
+        return TrackerFactory::instance()->getTrackerById($this->chart->renderer->report->tracker_id);
+    }
+
+    protected function displayNoFieldError() {
+        $error_message = $GLOBALS['Language']->getText(
+            'plugin_graphontrackersv5',
+            'field_not_found',
+            $this->chart->getTitle()
+        );
+        echo "<p class='feedback_error'>$error_message</p>";
+    }
 }
 ?>
