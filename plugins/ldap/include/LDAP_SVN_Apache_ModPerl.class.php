@@ -39,9 +39,9 @@ class LDAP_SVN_Apache_ModPerl extends SVN_Apache_ModPerl {
         $conf       .= '    TuleapLdapServers "' . $server_list . '"' . PHP_EOL;
         $conf       .= '    TuleapLdapDN "' . $ldap_dn . '"' . PHP_EOL;
         $conf       .= '    TuleapLdapUid "' . $ldap_uid . '"' . PHP_EOL;
-        if ($this->ldap->getLDAPParam('bind_dn')) {
+        if ($this->ldap->getLDAPParam('bind_dn') && $this->ldap->getLDAPParam('bind_passwd')) {
             $ldap_bind_dn     = $this->escapeStringForApacheConf($this->ldap->getLDAPParam('bind_dn'));
-            $ldap_bind_passwd = $this->escapeStringForApacheConf($this->ldap->getLDAPParam('bind_dn'));
+            $ldap_bind_passwd = $this->escapeStringForApacheConf($this->ldap->getLDAPParam('bind_passwd'));
             $conf            .= '    TuleapLdapBindDN "' . $ldap_bind_dn . '"' . PHP_EOL;
             $conf            .= '    TuleapLdapBindPassword "' . $ldap_bind_passwd . '"' . PHP_EOL;
         }
