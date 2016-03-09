@@ -35,7 +35,10 @@ describe('KanbanCtrl - ', function() {
             'getBacklog',
             'moveInArchive',
             'moveInBacklog',
-            'moveInColumn'
+            'moveInColumn',
+            'getColumnContentSize',
+            'getArchiveSize',
+            'getBacklogSize'
         ]);
 
         KanbanItemService = jasmine.createSpyObj('KanbanItemService', [
