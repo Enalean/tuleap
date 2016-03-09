@@ -36,12 +36,15 @@ use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Admin\AdminController;
 use Tuleap\Svn\AccessControl\AccessControlController;
+use Tuleap\Svn\Reference\Extractor;
 
 /**
  * SVN plugin
  */
 class SvnPlugin extends Plugin {
-    const SERVICE_SHORTNAME = 'plugin_svn';
+
+    const SERVICE_SHORTNAME  = 'plugin_svn';
+    const SYSTEM_NATURE_NAME = 'svn_revision';
 
     public function __construct($id) {
         parent::__construct($id);
@@ -56,6 +59,8 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::MEMBERSHIP_CREATE);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
+
+        $this->addHook(Event::GET_REFERENCE);
     }
 
     public function getPluginInfo() {
@@ -197,5 +202,37 @@ class SvnPlugin extends Plugin {
     /** @return BackendSVN */
     private function getBackendSVN() {
         return Backend::instance(Backend::SVN);
+    }
+
+    public function get_reference($params) {
+        $keyword = $params['keyword'];
+
+        if ($this->isReferenceASubversionReference($keyword)) {
+            $project = $params['project'];
+            $value   = $params['value'];
+
+            $extractor = $this->getReferenceExtractor();
+            $reference = $extractor->getReference($project, $keyword, $value);
+
+            if ($reference) {
+                $params['reference'] = $reference;
+            }
+        }
+
+    }
+
+    private function getReferenceExtractor() {
+        return new Extractor($this->getRepositoryManager());
+    }
+
+    private function isReferenceASubversionReference($keyword) {
+        $dao    = new ReferenceDao();
+        $result = $dao->searchSystemReferenceByNatureAndKeyword($keyword, self::SYSTEM_NATURE_NAME);
+
+        if (! $result || $result->rowCount() < 1) {
+            return false;
+        }
+
+        return true;
     }
 }
