@@ -22,9 +22,9 @@ namespace Tuleap\HudsonSvn\Job;
 
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Commit\CommitInfo;
-use Logger;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
+use Logger;
 
 class Launcher {
 
@@ -56,18 +56,16 @@ class Launcher {
 
         $jobs = $this->getJobsForRepository($repository);
 
-        $this->logger->info(__METHOD__);
-
         foreach ($jobs as $job) {
             if ($this->doesCommitTriggerjob($commit_info, $job) && !$this->isJobAlreadyLaunched($job)) {
-                $this->logger->info("Add ci Job : " . $job->getId() . " for URL " . $job->getUrl());
+                $this->logger->info("Launching job #id:" . $job->getId() . " triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl());
                 try {
                     $this->ci_client->setToken($job->getToken());
                     $this->ci_client->launchJobBuild($job->getUrl());
 
                     $this->launched_jobs[] = $job->getUrl();
                 } catch(Jenkins_ClientUnableToLaunchBuildException $exception) {
-                    $this->logger->error(__CLASS__.'['.$job->getRepositoryId().'] '.$exception->getMessage());
+                    $this->logger->error("Launching job #id:" . $job->getId() . " triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl()." got error " .$exception->getMessage());
                 }
 
                 continue;
