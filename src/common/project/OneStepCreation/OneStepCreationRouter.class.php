@@ -45,11 +45,13 @@ class Project_OneStepCreation_OneStepCreationRouter {
     }
 
     public function route(Codendi_Request $request) {
+        $csrf_token = new CSRFSynchronizerToken('/project/register.php');
         $controller = new Project_OneStepCreation_OneStepCreationController(
             $request,
             $this->project_manager,
             $this->custom_description_factory,
-            $this->trove_cat_factory
+            $this->trove_cat_factory,
+            $csrf_token
         );
 
         if ($request->get('create_project')) {

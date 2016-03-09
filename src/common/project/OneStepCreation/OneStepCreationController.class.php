@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,14 +44,19 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     /** @var Project_CustomDescription_CustomDescription[] */
     private $required_custom_descriptions;
 
-    /** @var TroveCats[] */
+    /** @var TroveCat[] */
     private $trove_cats;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     public function __construct(
         Codendi_Request $request,
         ProjectManager $project_manager,
         Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
-        TroveCatFactory $trove_cat_factory
+        TroveCatFactory $trove_cat_factory,
+        CSRFSynchronizerToken $csrf_token
     ) {
         parent::__construct('project', $request);
         $this->project_manager              = $project_manager;
@@ -59,13 +64,16 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $this->trove_cats                   = $trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren();
 
         $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
+        $this->csrf_token       = $csrf_token;
 
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
             $this->creation_request,
             $this->required_custom_descriptions,
             $project_manager,
-            $this->trove_cats
+            $this->trove_cats,
+            $csrf_token->fetchHTMLInput()
         );
+
     }
 
     /**
@@ -82,6 +90,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      * Create the project if request is valid
      */
     public function create() {
+        $this->csrf_token->check();
         $this->validate();
         $project = $this->doCreate();
         $this->notifySiteAdmin($project);

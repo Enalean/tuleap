@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2016. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -74,16 +74,23 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     public $trove_cats;
 
+    /**
+     * @var string
+     */
+    private $csrf_token;
+
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
         array $required_custom_descriptions,
         ProjectManager $project_manager,
-        array $trove_cats
+        array $trove_cats,
+        $csrf_token_field
     ) {
         $this->creation_request                       = $creation_request;
         $this->project_manager                        = $project_manager;
         $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
         $this->trove_cats                             = array_values($trove_cats);
+        $this->csrf_token                             = $csrf_token_field;
     }
 
     public function hasTroveCats() {
@@ -343,5 +350,9 @@ class Project_OneStepCreation_OneStepCreationPresenter {
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
         return $templates;
+    }
+
+    public function csrf_token() {
+        return $this->csrf_token;
     }
 }
