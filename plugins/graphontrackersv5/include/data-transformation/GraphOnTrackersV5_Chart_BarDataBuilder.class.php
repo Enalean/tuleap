@@ -38,8 +38,13 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
         $result = array();
         $ff = Tracker_FormElementFactory::instance();
         /** @var Tracker_FormElement_Field_List $af */
-        $af = $ff->getFormElementById($this->chart->getField_base());
-        if ($af && $af->userCanRead()) {
+        $af = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
+        if (! $af) {
+            $this->displayNoFieldError();
+            return $result;
+        }
+
+        if ($af->userCanRead()) {
             $select_group = $from_group = $group_group = $order_group = '';
             if ($this->chart->getField_group()) {
                 $gf = $ff->getFormElementById($this->chart->getField_group());
