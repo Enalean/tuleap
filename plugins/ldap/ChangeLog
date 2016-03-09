@@ -1,3 +1,6 @@
+Version 3.99 - Tuleap 8.13
+    * request #8949: SVN authentication with mod_perl using LDAP fails due to misconfiguration
+
 Version 3.98 - Tuleap 8.12
     * request #8894: Synchronization between LDAP and Tuleap ugroups does not work
 
