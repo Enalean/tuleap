@@ -22,7 +22,7 @@
     <div style="clear: both"></div>
 </legend>
 
-<div class="content" ng-if="! milestoneController.milestone.collapsed" ng-class="{ loading_content: milestoneController.milestone.loadingContent }">
+<div class="content" ng-show="! milestoneController.milestone.collapsed" ng-class="{ loading_content: milestoneController.milestone.loadingContent }">
     <div class="info">
         <span class="capacity" translate>Capacity:</span>
         <span class="capacity-value" ng-if="milestoneController.milestone.capacity">{{ milestoneController.milestone.capacity }}</span>
