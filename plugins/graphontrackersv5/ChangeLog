@@ -1,3 +1,6 @@
+Version 5.19 - Tuleap 8.13
+    * request #8948: Too many messages are displayed for a chart in error
+
 Version 5.18 - Tuleap 8.13
     * request #8947: Graphs on trackers are not resilient to data corruption
 
