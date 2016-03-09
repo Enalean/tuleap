@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/html/HTML_Element_Input_Hidden.class.php');
@@ -30,12 +31,15 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
  * This class must be overriden to provide your own concrete chart (Pie, Bar, ..)
  */
 abstract class GraphOnTrackersV5_Chart {
+
     public $id;
     protected $rank;
     protected $title;
     protected $description;
     protected $width;
     protected $height;
+
+    private $engine = null;
 
     public $renderer;
     private $mustache_renderer;
@@ -302,22 +306,27 @@ abstract class GraphOnTrackersV5_Chart {
      * @return GraphOnTrackersV5_Engine
      */
     protected function getEngineWithData() {
-        //Define the artifacts which must be added to the chart
-        $artifacts = $this->renderer->report->getMatchingIds();
+        if ($this->engine === null) {
+            //Define the artifacts which must be added to the chart
+            $artifacts = $this->renderer->report->getMatchingIds();
 
-        //Get the ChartDataBuilder for this chart
-        $pcdb = $this->getChartDataBuilder($artifacts);
+            //Get the ChartDataBuilder for this chart
+            $pcdb = $this->getChartDataBuilder($artifacts);
 
-        //Get the chart engine
-        $e = $this->getEngine();
+            //Get the chart engine
+            $e = $this->getEngine();
 
-        //prepare the propeties for the chart
-        $pcdb->buildProperties($e);
+            //prepare the propeties for the chart
+            $pcdb->buildProperties($e);
 
-        if ($e->validData()) {
-            return $e;
+            $this->engine = false;
+            if ($e->validData()) {
+                $this->engine = $e;
+            }
+
         }
-        return false;
+
+        return $this->engine;
     }
 
     protected function getTracker() {

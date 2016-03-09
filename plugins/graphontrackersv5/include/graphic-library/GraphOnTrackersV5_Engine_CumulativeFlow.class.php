@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe SAS.
  *
@@ -20,7 +20,6 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('GraphOnTrackersV5_Engine.class.php');
 
 class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
 
@@ -34,12 +33,17 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
 
     const WIDTH_PER_POINT = 100;
     const MARGIN = 200;
-    function validData(){
+
+    public function validData(){
 
         if (($this->hasStart() && $this->hasData()) || $this->hasError()){
             return true;
-        }else{
-            echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))."</p>";
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                'info',
+                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))
+            );
+
             return false;
         }
     }
