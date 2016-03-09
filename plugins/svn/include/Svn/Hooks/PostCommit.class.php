@@ -41,6 +41,7 @@ use ForgeConfig;
 use Notification;
 use UserManager;
 use EventManager;
+use SvnPlugin;
 
 class PostCommit {
 
@@ -87,13 +88,16 @@ class PostCommit {
         $this->commit_info_enhancer->enhance($repository, $new_revision);
 
         $commit_info_enhanced = $this->commit_info_enhancer->getCommitInfo();
+        $committer            = $this->getCommitter($commit_info_enhanced);
 
         $this->sendMail(
             $repository,
-            $commit_info_enhanced,
+            $committer,
             $new_revision,
             $old_revision
         );
+
+        $this->extractReference($repository, $commit_info_enhanced, $committer, $new_revision);
 
         $params = array(
             'repository'  => $repository,
@@ -103,14 +107,31 @@ class PostCommit {
         $this->event_manager->processEvent(self::PROCESS_POST_COMMIT, $params);
     }
 
-    private function sendMail(Repository $repository, CommitInfo $commit_info, $new_revision, $old_revision) {
+    private function extractReference(Repository $repository, CommitInfo $commit_info, PFUser $committer, $new_revision) {
+        $project_id          = $repository->getProject()->getID();
+        $GLOBALS['group_id'] = $project_id;
+
+        $this->reference_manager->extractCrossRef(
+            $commit_info->getCommitMessage(),
+            $repository->getName() .'/'. $new_revision,
+            SvnPlugin::SYSTEM_NATURE_NAME,
+            $project_id,
+            $committer->getId()
+        );
+    }
+
+    private function sendMail(
+        Repository $repository,
+        PFUser $committer,
+        $new_revision,
+        $old_revision
+    ) {
         $goto_link  = $repository->getSvnDomain() . $this->getGotoLink('rev', $new_revision, $repository);
 
         $mail_enhancer = new MailEnhancer();
 
         $notified_mail = $this->getNotifiedMails($repository);
         $subject       = $this->getSubject($repository, $new_revision);
-        $committer     = $this->getCommitter($commit_info);
         $body          = $this->createMailBody(
             $committer,
             $goto_link,
