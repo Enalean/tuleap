@@ -23,6 +23,7 @@ require_once 'constants.php';
 
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
 use Tuleap\HudsonSvn\ContinuousIntegrationCollector;
+use Tuleap\HudsonSvn\SvnBackendLogger;
 use Tuleap\HudsonSvn\Job\Dao as JobDao;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
@@ -157,7 +158,7 @@ class hudson_svnPlugin extends Plugin {
     }
 
     public function process_post_commit($params) {
-        $launcher = new Launcher($this->getJobFactory(), new BackendLogger('/tmp/svn.log'), new Jenkins_Client(new Http_Client()));
+        $launcher = new Launcher($this->getJobFactory(), new SvnBackendLogger(), new Jenkins_Client(new Http_Client()));
 
         $launcher->launch($params['repository'], $params['commit_info']);
     }

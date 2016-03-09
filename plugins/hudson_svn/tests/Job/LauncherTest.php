@@ -20,7 +20,6 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
-use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Commit\CommitInfo;
 use Mock;
@@ -38,7 +37,7 @@ class LauncherTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->logger      = mock('Logger');
+        $this->logger      = mock('Tuleap\HudsonSvn\SvnBackendLogger');
         $this->project     = stub("Project")->getId()->returns(101);
         $this->repository  = new Repository(1, "repository_name", $this->project);
         $this->commit_info = new CommitInfo();
