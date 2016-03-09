@@ -1,3 +1,6 @@
+Version 5.18 - Tuleap 8.13
+    * request #8947: Graphs on trackers are not resilient to data corruption
+
 Version 5.17 - Tuleap 8.8
     * story 8411: modify a public report in Trackers
 
