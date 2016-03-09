@@ -760,6 +760,13 @@ CREATE TABLE plugin_tracker_config (
     PRIMARY KEY idx(name(10))
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
+CREATE TABLE plugin_tracker_artifactlink_natures (
+    shortname     VARCHAR(255) NOT NULL PRIMARY KEY,
+    forward_label VARCHAR(255) NOT NULL,
+    reverse_label VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 CREATE TABLE plugin_tracker_notification_assigned_to (
     project_id INT(11) NOT NULL PRIMARY KEY

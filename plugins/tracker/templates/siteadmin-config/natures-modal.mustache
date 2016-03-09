@@ -1,0 +1,40 @@
+<div id="siteadmin-config-natures-modal"
+    class="modal hide fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="siteadmin-config-natures-modal-title"
+    aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+        <h3 id="siteadmin-config-natures-modal">{{ create_new_nature }}</h3>
+    </div>
+
+    <form action="" method="POST">
+        <div class="modal-body">
+            {{{ csrf_token }}}
+
+            <label>{{ shortname }}</label>
+            <input type="text"
+                name="shortname"
+                title="{{ shortname_help }}"
+                placeholder="{{ shortname_placeholder }}"
+                pattern="{{ shortname_pattern }}"
+                required />
+            <p class="help">{{ shortname_help }}</p>
+
+            <label>{{ forward_label }}</label>
+            <input type="text" name="forward_label" placeholder="{{ forward_label_placeholder }}" required />
+            <p class="help">{{ forward_label_help }}</p>
+
+            <label>{{ reverse_label }}</label>
+            <input type="text" name="reverse_label" placeholder="{{ reverse_label_placeholder }}" required />
+            <p class="help">{{ reverse_label_help }}</p>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
+            <input type="submit" class="btn btn-primary" name="create-nature" value="{{ btn_create }}">
+        </div>
+    </form>
+</div>
