@@ -9,7 +9,7 @@ Version 8.13 (Not released yet)
 	* request #8904: CSRF vulnerability in the project registration page
 
 	== Plugins ==
-	* agiledashboard: 1.363
+	* agiledashboard: 1.364
 	* tracker: 5.809
 	* hudson_svn: 0.3
 	* git: 4.131
