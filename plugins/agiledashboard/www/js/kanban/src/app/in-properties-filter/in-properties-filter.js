@@ -9,7 +9,7 @@ function InPropertiesFilter($filter) {
 
     return function(list, terms) {
         if (! terms || terms === '') {
-            return list;
+            return angular.copy(list);
         }
 
         var properties    = ['id', 'label'],

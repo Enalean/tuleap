@@ -5,8 +5,14 @@ body {
         @import "src/www/themes/FlamingParrot/css/utils/variables-orange.less";
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-orange.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-orange.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 45%);
@@ -20,8 +26,14 @@ body {
         @import "src/www/themes/FlamingParrot/css/utils/variables-blue.less";
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 55%);
@@ -35,8 +47,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-green.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 47%);
@@ -50,8 +68,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-bluegrey.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 52%);
@@ -65,8 +89,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-purple.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 50%);
@@ -80,8 +110,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-red.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 52%);
@@ -95,8 +131,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-darkorange.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-darkorange.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-darkorange.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 45%);
@@ -110,8 +152,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-darkblue.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 55%);
@@ -125,8 +173,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-darkgreen.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 47%);
@@ -140,8 +194,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-darkbluegrey.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 52%);
@@ -155,8 +215,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-darkpurple.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 50%);
@@ -170,8 +236,14 @@ body {
         @import 'src/www/themes/FlamingParrot/css/utils/variables-darkred.less';
 
         .definitions;
-        #kanban-board .angular-ui-tree-placeholder:only-child {
-            background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: fadeout(@main, 90%);
+            }
         }
         #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
                 background-color: lighten(@main, 52%);
