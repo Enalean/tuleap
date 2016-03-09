@@ -36,8 +36,13 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
         $result = array();
         $ff = Tracker_FormElementFactory::instance();
         /** @var Tracker_FormElement_Field_List $af */
-        $af = $ff->getFormElementById($this->chart->getField_base());
-        if ($af && $af->userCanRead()) {
+        $af = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
+        if (! $af) {
+            $this->displayNoFieldError();
+            return $result;
+        }
+
+        if ($af->userCanRead()) {
             $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelectWithDecorator();
             $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ". $af->getQueryFromWithDecorator();
             $where  = " WHERE a.id IN (". $this->artifacts['id'] .")
@@ -54,7 +59,7 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
                 }
             }
         }
+
         return $result;
     }
 }
-?>
