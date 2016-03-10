@@ -7,11 +7,11 @@ plugin_svn	service_desc_key	SVN plugin to manage multiple SVN repositories
 plugin_svn_manage_repository	repository_name_required	The repository must have a name
 plugin_svn_manage_repository	invalid_name	The repository name is invalid
 plugin_svn_manage_repository	update_success	Successfully Updated
-plugin_svn_manage_repository	title_add_repository	Add a repository
-plugin_svn_manage_repository	label_name	Name
+plugin_svn_manage_repository	label_name	Repository name
+plugin_svn_manage_repository	create_repository	Create repository
 plugin_svn_manage_repository	no_repositories	No repository found
-plugin_svn_manage_repository	title_list_repositories	Project repositories
-plugin_svn_manage_repository	name_repository_length	The name must start by a letter and have a length of minimum three caracters. Only - _ . specials caracters are allowed.
+plugin_svn_manage_repository	title_list_repositories	Project SVN repositories
+plugin_svn_manage_repository	name_repository_length	Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed.
 plugin_svn_manage_repository	table_head_list_repository	Repository
 plugin_svn_manage_repository	plugin_not_activated	SVN multi-repositories is disabled for the project.
 

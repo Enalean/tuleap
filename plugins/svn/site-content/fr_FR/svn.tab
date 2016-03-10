@@ -7,10 +7,10 @@ plugin_svn	service_desc_key	Module SVN de gestion de dépôts SVN multiple
 plugin_svn_manage_repository	repository_name_required	Le dépôt doit posséder un nom
 plugin_svn_manage_repository	invalid_name	Le nom du dépôt est invalide
 plugin_svn_manage_repository	update_success	Mis à jour avec succès
-plugin_svn_manage_repository	title_add_repository	Ajouter un dépôt
-plugin_svn_manage_repository	label_name	Nom
+plugin_svn_manage_repository	label_name	Nom du dépôt
+plugin_svn_manage_repository	create_repository	Créer le dépôt
 plugin_svn_manage_repository	no_repositories	Aucun dépôt trouvé
-plugin_svn_manage_repository	title_list_repositories	Dépôts du projet
+plugin_svn_manage_repository	title_list_repositories	Dépôts SVN du projet
 plugin_svn_manage_repository	name_repository_length	Le nom du dépôt doit commencer par une lettre, il doit avoir une longueur minimum de trois caractères. Seuls les caractères spéciaux - _ . sont autorisés.
 plugin_svn_manage_repository	table_head_list_repository	Dépôt
 plugin_svn_manage_repository	plugin_not_activated	Le multi-dépôt SVN est désactivé pour le projet.
@@ -45,12 +45,12 @@ plugin_svn_admin	update_success	Une nouvelle révision du fichier a été créé
 plugin_svn_admin	update_fail	Erreur lors de la création de la nouvelle révision
 plugin_svn_admin	file_error	Impossible de lire le fichier $1
 plugin_svn_admin	write_error	Impossible d'écrire dans le fichier $1
-plugin_svn_admin	previous_version	Vous utilisez une version antérieure (#$1) :
-plugin_svn_admin	last_version	Vous utilisez la dernière version (#$1) :
+plugin_svn_admin	previous_version	Vous utilisez une version antérieure (#$1) :
+plugin_svn_admin	last_version	Vous utilisez la dernière version (#$1) :
 plugin_svn_admin	select_version	Séléctionnez une version
 plugin_svn_admin	saved_on	sauvegardée le
 plugin_svn_admin	use_version	Utiliser cette version sauvegardée
-plugin_svn_admin	saved_versions	Versions sauvegardées :
+plugin_svn_admin	saved_versions	Versions sauvegardées :
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Contrôle d'accès

@@ -53,8 +53,15 @@
         });
     }
 
+    function toggleSvnHelp() {
+        $('#toggle-svn-help').click(function() {
+            $('#svn-repository-help').toggle();
+        });
+    }
+
     $(document).ready(function(){
         initAccessControlsVersionDisplayer();
+        toggleSvnHelp();
     });
 
 })(window.jQuery);

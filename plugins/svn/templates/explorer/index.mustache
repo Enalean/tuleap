@@ -1,35 +1,48 @@
-<section class="plugin-svn-wrapper">
+<div id="svn-homepage">
     <h2>{{ title_list_repositories }}</h2>
-    {{^list_repositories}}
-        <h3><p> {{ no_repositories }}</p></h3>
-    {{/list_repositories}}
-    {{#has_respositories}}
-        <p>
-           <table class="table table-striped table-bordered">
-                <thead>
-                    <tr><th>{{ table_head_list_repository }}</th></tr>
-                </thead>
-                <tbody>
-                    {{# list_repositories }}
-                        <tr class="boxitem"><td><a href="{{ svn_plugin }}/?group_id={{ group_id }}&action=display-repository&repo_id={{ getId }}">{{ getName }}</a></td></tr>
-                    {{/ list_repositories }}
-                </tbody>
-            </table>
-        </p>
-    {{/has_respositories}}
 
     {{# is_user_allowed_to_create_repository }}
-    <h2>{{ title }}</h2>
-    <p>
-        <form
-            name="svn-repo-creator" class="form-inline" method="POST"
-            action="/plugins/svn/?group_id={{group_id}}&action=create-repository">
-            {{{ csrf_input }}}
-            <label for="repo_name" >{{ label_repository_name }}</label>
-            <input type="text" name="repo_name" value="{{ repository_name }}" pattern="{{ validate_name }}" required />
-            <input type="submit" name="repo_add" value="Create" class="btn btn-primary" />
-            <p>{{ help_repository_name }}</p>
-        </form>
-    </p>
+    <form name="svn-repo-creator" class="form-inline" method="post" action="/plugins/svn/?group_id={{group_id}}&action=create-repository">
+        {{{ csrf_input }}}
+
+        <div class="input-append">
+            <input type="text"
+                id="create-repository-field-name"
+                name="repo_name"
+                value="{{ repository_name }}"
+                placeholder="{{ label_repository_name }}"
+                pattern="{{ validate_name }}"
+                required
+            />
+            <input type="submit"
+                name="repo_add"
+                value="{{ create_repository }}"
+                class="btn btn-primary"
+            />
+        </div>
+        <span class="help">{{ help_repository_name }}</span>
+    </form>
     {{/ is_user_allowed_to_create_repository }}
-</section>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>{{ table_head_list_repository }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# list_repositories }}
+                <tr>
+                    <td><a href="{{ svn_plugin }}/?group_id={{ group_id }}&action=display-repository&repo_id={{ getId }}">{{ getName }}</a></td>
+                </tr>
+            {{/ list_repositories }}
+            {{^ list_repositories }}
+                <tr class="empty-table">
+                    <td>
+                        {{ no_repositories }}
+                    </td>
+                </tr>
+            {{/ list_repositories }}
+        </tbody>
+    </table>
+</div>
