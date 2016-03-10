@@ -24,6 +24,9 @@ use HTTPRequest;
 use Tuleap\Svn\Repository\RepositoryManager;
 use ProjectManager;
 use ForgeConfig;
+use CrossReferenceFactory;
+use ReferenceManager;
+use Codendi_HTMLPurifier;
 
 class ViewVCProxy {
 
@@ -165,6 +168,10 @@ class ViewVCProxy {
         return FALSE;
     }
 
+    private function getPurifier() {
+        return Codendi_HTMLPurifier::instance();
+    }
+
     public function getContent(HTTPRequest $request) {
         $parse = $this->displayViewVcHeader($request);
         $headers = "";
@@ -221,9 +228,22 @@ class ViewVCProxy {
             //parse the html doc that we get from viewvc.
             //remove the http header part as well as the html header and
             //html body tags
+            $cross_ref = "";
+            if ($request->get('revision')) {
+                $crossref_fact= new CrossReferenceFactory($repository->getName()."/".$request->get('revision'), ReferenceManager::REFERENCE_NATURE_SVNREVISION, $repository->getProject()->getID());
+                $crossref_fact->fetchDatas();
+                if ($crossref_fact->getNbReferences() > 0) {
+                    $cross_ref .= '<h3> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</h3>';
+                    $cross_ref .= $crossref_fact->getHTMLDisplayCrossRefs();
+                }
+
+                $revision = 'Revision '.$request->get('revision');
+                $content  = str_replace("<h3>".$revision."</h3>", "<h3>".$this->getPurifier()->purify($revision) . "</h3>" . $cross_ref, $content);
+            }
+
             $begin_body = stripos($content, "<body");
-            $begin_doc = strpos($content, ">", $begin_body) + 1;
-            $length = strpos($content, "</body>\n</html>") - $begin_doc;
+            $begin_doc  = strpos($content, ">", $begin_body) + 1;
+            $length     = strpos($content, "</body>\n</html>") - $begin_doc;
 
             // Now insert references, and display
             return util_make_reference_links(
