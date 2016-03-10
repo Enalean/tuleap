@@ -1101,7 +1101,7 @@ class Event {
      * Where repository_name is "my_project" or "my_project/my_repo"
      * and auth_mod is modperl, modmysql, ... (see SVN_Apache_SvnrootConf)
      *
-     * Paramters:
+     * Parameters:
      *      'sql_fragments' => array
      */
     const GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS = 'get_svn_list_repositories_sql_fragments';
@@ -1109,7 +1109,7 @@ class Event {
     /**
      * When a user group is modified
      *
-     * Paramters:
+     * Parameters:
      *   'project'         => Project
      *   'new_ugroup_name' => String|null
      *   'old_ugroup_name' => String|null
@@ -1123,4 +1123,13 @@ class Event {
      *   'project'         => Project
      */
     const MEMBERSHIP_CREATE = 'membership_create';
+
+    /**
+     * Retrieve project_id for an artifact reference
+     *
+     * Parameters:
+     *   artifact_id => int
+     *   reference   => Reference
+     */
+    const SET_ARTIFACT_REFERENCE_GROUP_ID = 'set_artifact_reference_group_id';
 }
