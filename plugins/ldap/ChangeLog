@@ -1,3 +1,6 @@
+Version 3.100 - Tuleap 8.13
+    * request #8918: LDAP directory bindings to a user group are kept after the ugroup removal
+
 Version 3.99 - Tuleap 8.13
     * request #8949: SVN authentication with mod_perl using LDAP fails due to misconfiguration
 
