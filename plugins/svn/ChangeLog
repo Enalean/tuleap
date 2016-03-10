@@ -1,3 +1,6 @@
+Version 0.33 - Tuleap 8.13
+    * story #8817: glossification of svn repositories list & repository view
+
 Version 0.32 - Tuleap 8.13
     * story #8815 Manage cross references between svn revisions & the world
 
