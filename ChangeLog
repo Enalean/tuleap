@@ -7,6 +7,7 @@ Version 8.13 (Not released yet)
 
 	== Security ==
 	* request #8904: CSRF vulnerability in the project registration page
+	* request #8929: SQL injection in the project history search
 
 	== Plugins ==
 	* agiledashboard: 1.364
