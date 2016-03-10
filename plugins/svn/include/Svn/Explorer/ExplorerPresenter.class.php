@@ -37,7 +37,7 @@ class ExplorerPresenter {
     public $label_repository_name;
     public $no_repositories;
     public $svn_plugin;
-    public $title;
+    public $create_repository;
     public $has_respositories;
     public $help_repository_name;
     public $table_head_list_repository;
@@ -57,11 +57,11 @@ class ExplorerPresenter {
         $this->title_list_repositories    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
         $this->label_repository_name      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
         $this->no_repositories            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
-        $this->title                      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_add_repository');
         $this->help_repository_name       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
         $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
         $this->has_respositories          = count($this->list_repositories) > 0;
         $this->validate_name              = RuleName::PATTERN_REPOSITORY_NAME;
+        $this->create_repository          = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'create_repository');
 
         $this->is_user_allowed_to_create_repository = $project->userIsAdmin($user);
     }

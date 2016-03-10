@@ -1,5 +1,42 @@
-#svn-administration {
+#svn-homepage {
+    form {
+        margin: 30px 0 15px;
 
+        > .help {
+            margin: 0 0 0 5px;
+            font-size: 12px;
+        }
+    }
+
+    table {
+        max-width: 960px;
+
+        > thead > tr {
+            background: #E4E4E4;
+
+            > th {
+                vertical-align: top;
+                border-left-color: #D2D2D2;
+                border-bottom: 2px solid #B2B2B2;
+            }
+        }
+
+        > tbody > tr {
+            &:first-child > td {
+                border-top: none;
+            }
+
+            &.empty-table > td {
+                padding: 50px;
+                color: #AAAAAA;
+                text-align: center;
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+#svn-administration {
     > .nav-tabs {
         margin-right: 9px;
     }
