@@ -1,30 +1,38 @@
-<h2>{{ repository_name }}</h2>
+<div id="svn-repository">
+    <h2>{{ repository_name }}</h2>
 
-<p class="form-inline">
-    <input type="text" class="span6" size="125" value="{{ svn_url }}" />
+    <div id="svn-repository-url-bar">
+        <div class="input-prepend input-append">
+            <span class="add-on"><i class="icon-globe"></i></span>
+            <input type="text" value="{{ svn_url }}" />
+            <button id="toggle-svn-help" class="btn"><i class="icon-question-sign"></i></button>
+        </div>
 
-    {{# is_user_admin }}
-        <a href="{{ settings_url }}" class="btn">
-            <i class="icon-cog"></i>
-            Settings
-        </a>
-    {{/ is_user_admin }}
-</p>
-
-{{# is_repository_created }}
-
-    <p>{{ help_message }}</p>
-    <div class="svn-intro-command">
-        <pre>{{ help_command }}</pre>
+        {{# is_user_admin }}
+            <a href="{{ settings_url }}" class="btn">
+                <i class="icon-cog"></i> Settings
+            </a>
+        {{/ is_user_admin }}
     </div>
 
-    {{{ viewvc_html }}}
+    {{# is_repository_created }}
+        <div id="svn-repository-help" class="alert alert-info">
+            <p>{{ help_message }}</p>
 
-{{/ is_repository_created }}
-{{^ is_repository_created }}
+            <div class="svn-intro-command">
+                <pre>{{ help_command }}</pre>
+            </div>
+        </div>
 
-    <div class="alert alert-info">
-        {{ repository_not_created }}
-    </div>
+        <div id="svn-repository-viewvc">
+            <div>
+            {{{ viewvc_html }}}
+        </div>
+    {{/ is_repository_created }}
 
-{{/ is_repository_created }}
+    {{^ is_repository_created }}
+        <div class="alert alert-info">
+            {{ repository_not_created }}
+        </div>
+    {{/ is_repository_created }}
+</div>
