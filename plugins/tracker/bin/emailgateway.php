@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+
 require 'pre.php';
 
 $fd = fopen("php://stdin", "r");
@@ -32,7 +35,7 @@ $logger = new BackendLogger();
 $logger->info("Entering email gateway");
 
 $recipient_factory                 = Tracker_Artifact_MailGateway_RecipientFactory::build();
-$tracker_config                    = new TrackerPluginConfig(new TrackerPluginConfigDao());
+$tracker_config                    = new MailGatewayConfig(new MailGatewayConfigDao());
 $user_manager                      = UserManager::instance();
 $tracker_factory                   = TrackerFactory::instance();
 $artifact_factory                  = Tracker_ArtifactFactory::instance();

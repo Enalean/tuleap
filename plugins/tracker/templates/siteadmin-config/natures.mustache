@@ -1,6 +1,19 @@
-{{# artifact_links_nature }}
-    <legend>{{ title }}</legend>
-    <p>{{ desc }}</p>
+<h2>{{ title }}</h2>
+
+{{# sections }}
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+        </li>
+        <li class="active">
+            <a href="{{ natures_url }}">{{ natures }}</a>
+        </li>
+    </ul>
+{{/ sections }}
+
+<div id="siteadmin-config">
+    <legend>{{ available_natures }}</legend>
+    <p class="muted">{{ desc }}</p>
 
     <table class="table table-bordered table-striped">
         <thead>
@@ -26,5 +39,4 @@
     </a>
 
     {{> siteadmin-config/natures-modal }}
-
-{{/ artifact_links_nature }}
+</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+
 class Tracker_GeneralSettings_Presenter {
 
     /** @var Tracker */
@@ -28,7 +31,7 @@ class Tracker_GeneralSettings_Presenter {
     /** @var Tracker_ColorPresenterCollection */
     private $color_presenter_collection;
 
-    /** @var TrackerPluginConfig */
+    /** @var MailGatewayConfig */
     private $config;
 
     /** @var Tracker_ArtifactByEmailStatus */
@@ -38,7 +41,7 @@ class Tracker_GeneralSettings_Presenter {
         Tracker $tracker,
         $action_url,
         Tracker_ColorPresenterCollection $color_presenter_collection,
-        TrackerPluginConfig $config,
+        MailGatewayConfig $config,
         Tracker_ArtifactByEmailStatus $artifactbyemail_status
     ) {
         $this->tracker                    = $tracker;

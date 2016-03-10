@@ -19,32 +19,55 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TrackerPluginConfigRouter {
+namespace Tuleap\Tracker\Config;
 
-    /** @var TrackerPluginConfigController */
-    private $controller;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
+use CSRFSynchronizerToken;
+use Codendi_Request;
+use Response;
+use PFUser;
+use Feedback;
+
+class ConfigRouter {
+
+    /** @var NatureConfigController */
+    private $nature_controller;
+
+    /** @var MailGatewayConfigController */
+    private $mailgateway_controller;
 
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
-        TrackerPluginConfigController $controller
+        MailGatewayConfigController $mailgateway_controller,
+        NatureConfigController $nature_controller
     ) {
-        $this->csrf       = $csrf;
-        $this->controller = $controller;
+        $this->csrf                   = $csrf;
+        $this->mailgateway_controller = $mailgateway_controller;
+        $this->nature_controller      = $nature_controller;
     }
 
     public function process(Codendi_Request $request, Response $response, PFUser $user) {
         $this->checkUserIsSiteadmin($user, $response);
 
         switch ($request->get('action')) {
-            case 'update':
+            case 'create-nature':
                 $this->csrf->check();
-                $this->controller->update($request, $response);
+                $this->nature_controller->createNature($request, $response);
                 break;
+            case 'natures':
+                $this->nature_controller->index($this->csrf, $response);
+                break;
+            case 'update-emailgateway':
+                $this->csrf->check();
+                $this->mailgateway_controller->update($request, $response);
+                break;
+            case 'emailgateway':
             default:
-                $this->controller->index($this->csrf, $response);
+                $this->mailgateway_controller->index($this->csrf, $response);
         }
 
     }

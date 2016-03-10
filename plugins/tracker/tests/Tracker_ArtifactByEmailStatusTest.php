@@ -27,7 +27,7 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         parent::setUp();
 
         $this->tracker             = mock('Tracker');
-        $this->tracker_plugin_conf = mock('TrackerPluginConfig');
+        $this->tracker_plugin_conf = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
     }
 
     public function itAcceptsArtifactByInsecureEmailWhenSemanticIsDefined() {

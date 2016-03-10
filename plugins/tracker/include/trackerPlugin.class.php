@@ -17,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -885,8 +888,8 @@ class trackerPlugin extends Plugin {
      * @see Event::BACKEND_ALIAS_GET_ALIASES
      */
     public function backend_alias_get_aliases($params) {
-        $config = new TrackerPluginConfig(
-            new TrackerPluginConfigDao()
+        $config = new MailGatewayConfig(
+            new MailGatewayConfigDao()
         );
 
         $src_dir  = ForgeConfig::get('codendi_dir');

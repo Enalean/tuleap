@@ -19,12 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\Artifact\MailGateway;
+
 use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
+use Tuleap\Tracker\Config\SectionsPresenter;
+use CSRFSynchronizerToken;
 
-class TrackerPluginConfigPresenter {
-
-    /** @var NatureConfigPresenter */
-    public $artifact_links_nature;
+class MailGatewayConfigPresenter {
 
     /** @var string */
     public $csrf_token;
@@ -40,17 +41,16 @@ class TrackerPluginConfigPresenter {
 
     /** @var bool */
     public $is_emailgateway_disabled;
+    public $sections;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         $localinc_path,
-        TrackerPluginConfig $config,
-        NatureConfigPresenter $artifact_links_nature
+        MailGatewayConfig $config
     ) {
         $this->title                 = $title;
         $this->csrf_token            = $csrf->fetchHTMLInput();
-        $this->artifact_links_nature = $artifact_links_nature;
 
         $this->is_insecure_emailgateway_enabled    = $config->isInsecureEmailgatewayEnabled();
         $this->is_token_based_emailgateway_enabled = $config->isTokenBasedEmailgatewayEnabled();
@@ -66,6 +66,7 @@ class TrackerPluginConfigPresenter {
         $this->insecure_desc      = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure_desc');
         $this->save_conf          = $GLOBALS['Language']->getText('admin_main', 'save_conf');
 
+        $this->sections = new SectionsPresenter();
 
         $this->is_localinc_obsolete      = $this->isLocalIncObsolete($localinc_path);
         $this->localinc_obsolete_message = $GLOBALS['Language']->getText(

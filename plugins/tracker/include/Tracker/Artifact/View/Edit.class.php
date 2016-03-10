@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
@@ -203,8 +206,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
      * @return Tracker_ArtifactByEmailStatus
      */
     private function canUpdateArtifactByMail() {
-        $config = new TrackerPluginConfig(
-            new TrackerPluginConfigDao()
+        $config = new MailGatewayConfig(
+            new MailGatewayConfigDao()
         );
 
         $status = new Tracker_ArtifactByEmailStatus($config);
