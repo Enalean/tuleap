@@ -79,7 +79,7 @@ class ReferenceManagerTest extends TuleapTestCase {
         $dao = new MockReferenceDao($this);
         $dar = new MockDataAccessResult($this);
 
-        $dao->setReturnReference('searchActiveByGroupID', $dar, array(100));
+        $dao->setReturnReference('searchActiveByGroupID', $dar, array('100'));
         $dar->setReturnValueAt(0, 'getRow', array(
             'id' => 1,
             'keyword' => 'art',
@@ -111,10 +111,13 @@ class ReferenceManagerTest extends TuleapTestCase {
             'is_active' => 1,
         ));
         $dar2->setReturnValueAt(1, 'getRow', false);
-
         //The Reference manager
 
         $this->rm->setReturnReference('_getReferenceDao', $dao);
+        $this->rm->setReturnValueAt(0, 'getGroupIdFromArtifactIdForCallbackFunction', '100');
+        $this->rm->setReturnValueAt(1, 'getGroupIdFromArtifactIdForCallbackFunction', '1');
+        $this->rm->setReturnValueAt(2, 'getGroupIdFromArtifactIdForCallbackFunction', '100');
+
         $this->assertTrue(count($this->rm->extractReferences("art #123", 0)) == 1, "Art is a shared keyword for all projects");
         $this->assertTrue(count($this->rm->extractReferences("arto #123", 0)) == 0, "Should not extract a reference on unknown keyword");
         $this->assertTrue(count($this->rm->extractReferences("art #1:123", 0)) == 1, "Art is a reference for project num 1");
