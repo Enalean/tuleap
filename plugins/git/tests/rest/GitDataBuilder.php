@@ -19,6 +19,9 @@
  */
 
 require_once 'common/autoload.php';
+require_once __DIR__.'/DatabaseInitialization.php';
+
+use Tuleap\Git\REST\DatabaseInitialization;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -39,10 +42,21 @@ class GitDataBuilder extends REST_TestDataBuilder {
      */
     private $git_system_event_manager;
 
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $server_factory;
+
+    /**
+     * @var DatabaseInitialization
+     */
+    private $database_init;
+
     public function __construct() {
         parent::__construct();
 
         $this->system_event_manager = SystemEventManager::instance();
+        $this->database_init        = new DatabaseInitialization();
     }
 
     public function setUp() {
@@ -55,10 +69,56 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $this->repository_factory
         );
 
-        $this->generateProject();
+        $server_dao = new Git_RemoteServer_Dao();
+        $git_dao = new GitDao();
+
+        $this->server_factory = new Git_RemoteServer_GerritServerFactory(
+            $server_dao,
+            $git_dao,
+            $this->git_system_event_manager,
+            $this->project_manager
+        );
+
+        $project = $this->generateProject();
+        $this->activateGitService($project);
 
         $repository = $this->generateGitRepository();
         $this->changeRepositoryUpdate($repository);
+
+        $this->addGerritServers();
+    }
+
+    private function addGerritServers() {
+        echo "Creating Gerrit servers\n";
+
+        $server_01 = new Git_RemoteServer_GerritServer(
+            '1',
+            'localhost',
+            29418,
+            8080,
+            'gerrit-adm',
+            '',
+            '',
+            true,
+            Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
+            ''
+        );
+
+        $server_02 = new Git_RemoteServer_GerritServer(
+            '2',
+            'otherhost',
+            29418,
+            8080,
+            'gerrit-adm',
+            '',
+            '',
+            false,
+            Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            ''
+        );
+
+        $this->server_factory->save($server_01);
+        $this->server_factory->save($server_02);
     }
 
     private function changeRepositoryUpdate(GitRepository $repository) {
@@ -94,6 +154,10 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $this->unsetGlobalsForProjectCreation();
 
         return $project;
+    }
+
+    private function activateGitService(Project $project) {
+        return $this->database_init->activateGitService($project);
     }
 
     private function generateGitRepository() {
