@@ -72,7 +72,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Git_Backend_Gitolite'),
                 mock('Git_Mirror_MirrorDataMapper'),
                 mock('ProjectHistoryDao'),
-                mock('GitRepositoryMirrorUpdater')
+                mock('GitRepositoryMirrorUpdater'),
+                mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler')
             )
         );
     }
@@ -482,7 +483,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater')
+            mock('GitRepositoryMirrorUpdater'),
+            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler')
         );
     }
 
@@ -540,7 +542,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater')
+            mock('GitRepositoryMirrorUpdater'),
+            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler')
         );
     }
 
@@ -673,7 +676,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater')
+            mock('GitRepositoryMirrorUpdater'),
+            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler')
         );
     }
 
@@ -702,67 +706,6 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         stub($repo)->getId()->returns($repo_id);
         expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id, true, $user)->once();
         $this->actions->migrateToGerrit($repo, $server_id, true, $user);
-    }
-}
-
-class GitActions_disconnectFromGerritTest extends TuleapTestCase {
-
-    public function setUp() {
-        parent::setUp();
-
-        $this->backend = mock('Git_Backend_Gitolite');
-        $this->repo    = stub('GitRepository')->getBackend()->returns($this->backend);
-        $this->request = mock('Codendi_Request');
-        $this->system_event_manager = mock('Git_SystemEventManager');
-        $this->controller = mock('Git');
-        $this->driver = mock('Git_Driver_Gerrit');
-        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
-
-        stub($this->controller)->getRequest()->returns($this->request);
-
-        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
-
-
-        $this->actions = new GitActions(
-            $this->controller,
-            $this->system_event_manager,
-            mock('GitRepositoryFactory'),
-            mock('GitRepositoryManager'),
-            $this->gerrit_server_factory,
-            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver),
-            mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator'),
-            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager'),
-            mock('GitPermissionsManager'),
-            $url_manager,
-            mock('Logger'),
-            mock('Git_Backend_Gitolite'),
-            mock('Git_Mirror_MirrorDataMapper'),
-            mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater')
-        );
-    }
-
-    public function itDelegatesToEventManager() {
-        expect($this->backend)->disconnectFromGerrit()->once();
-        expect($this->system_event_manager)->queueRepositoryUpdate($this->repo)->once();
-        $this->actions->disconnectFromGerrit($this->repo);
-    }
-
-    public function itDeletesGerritProjectIfOptionChosen() {
-        stub($this->request)->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT)->returns(true);
-
-        expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->once();
-        $this->actions->disconnectFromGerrit($this->repo);
-    }
-
-    public function itDoesNotDeletesGerritProjectIfOptionNotChosen() {
-        stub($this->request)->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT)->returns(false);
-
-        expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->never();
-        $this->actions->disconnectFromGerrit($this->repo);
     }
 }
 
@@ -827,7 +770,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater')
+            mock('GitRepositoryMirrorUpdater'),
+            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler')
         );
 
     }
@@ -876,4 +820,3 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
 }
-?>

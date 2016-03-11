@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,6 +42,13 @@ use GitDao;
 use ProjectManager;
 use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_Dao;
+use Git_RemoteServer_NotFoundException;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use GitBackendLogger;
+use ProjectHistoryDao;
+use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
+use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 
 include_once('www/project/admin/permissions.php');
 
@@ -49,11 +56,23 @@ class RepositoryResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
 
+    const MIGRATE_PERMISSION_DEFAULT = 'default';
+    const MIGRATE_NO_PERMISSION      = 'none';
+
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
     /** @var RepositoryRepresentationBuilder */
     private $representation_builder;
+
+    /** @var Git_RemoteServer_GerritServerFactory */
+    private $gerrit_server_factory;
+
+    /** @var Git_SystemEventManager */
+    private $git_system_event_manager;
+
+    /** @var GerritMigrationHandler */
+    private $migration_handler;
 
     public function __construct() {
         $git_dao         = new GitDao();
@@ -64,26 +83,33 @@ class RepositoryResource extends AuthenticatedResource {
             $project_manager
         );
 
-        $git_system_event_manager = new Git_SystemEventManager(
+        $this->git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
             $this->repository_factory
         );
 
-        $gerrit_server_factory  = new Git_RemoteServer_GerritServerFactory(
+        $this->gerrit_server_factory  = new Git_RemoteServer_GerritServerFactory(
             new Git_RemoteServer_Dao(),
             $git_dao,
-            $git_system_event_manager,
+            $this->git_system_event_manager,
             $project_manager
         );
 
         $git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $git_system_event_manager
+            $this->git_system_event_manager
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $git_permission_manager,
-            $gerrit_server_factory
+            $this->gerrit_server_factory
+        );
+
+        $this->migration_handler = new MigrationHandler(
+            $this->git_system_event_manager,
+            $this->gerrit_server_factory,
+            new Git_Driver_Gerrit_GerritDriverFactory (new GitBackendLogger()),
+            new ProjectHistoryDao()
         );
     }
 
@@ -170,6 +196,119 @@ class RepositoryResource extends AuthenticatedResource {
         return $result;
     }
 
+    /**
+     * Patch Git repository
+     *
+     * Patch properties of a given Git repository
+     *
+     * <pre>
+     * /!\ This REST route is under construction and subject to changes /!\
+     * </pre>
+     *
+     * <br>
+     * To migrate a repository in Gerrit:
+     * <pre>
+     * {<br>
+     * &nbsp;"migrate_to_gerrit": {<br/>
+     * &nbsp;&nbsp;"server": 1,<br/>
+     * &nbsp;&nbsp;"permissions": "default"<br/>
+     * &nbsp;}<br/>
+     * }
+     * </pre>
+     *
+     * <br>
+     * To disconnect a repository in Gerrit:
+     * <pre>
+     * {<br>
+     * &nbsp;"disconnect_from_gerrit": "read"<br/>
+     * }
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access protected
+     *
+     * @param int    $id    Id of the Git repository
+     * @param GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit {@from body}{@required false}
+     * @param string $disconnect_from_gerrit {@from body}{@required false} {@choice delete,read,noop}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    protected function patchId(
+        $id,
+        GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit = null ,
+        $disconnect_from_gerrit = null
+    ) {
+        $this->checkAccess();
+
+        $user       = $this->getCurrentUser();
+        $repository = $this->getRepository($user, $id);
+
+        if (! $repository->userCanAdmin($user)) {
+            throw new RestException(403, 'User is not allowed to migrate repository');
+        }
+
+        if ($migrate_to_gerrit && $disconnect_from_gerrit) {
+            throw new RestException(403, 'Bad request. You can only migrate or disconnect a Git repository');
+        }
+
+        if ($migrate_to_gerrit) {
+            $this->migrate($repository, $user, $migrate_to_gerrit);
+        }
+
+        if ($disconnect_from_gerrit) {
+            $this->disconnect($repository, $disconnect_from_gerrit);
+        }
+
+
+        $this->sendAllowHeaders();
+    }
+
+    private function disconnect(GitRepository $repository, $disconnect_from_gerrit) {
+        try {
+            $this->migration_handler->disconnect($repository, $disconnect_from_gerrit);
+        } catch (DeletePluginNotInstalledException $e) {
+            throw new RestException(400, 'Gerrit delete plugin not installed.');
+        } catch (RepositoryNotMigratedException $e) {
+            //Do nothing
+        }
+    }
+
+    private function migrate(
+        GitRepository $repository,
+        PFUser $user,
+        GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit
+    ) {
+        if ($repository->isMigratedToGerrit()) {
+            throw new RestException(403, 'Git repository already migrated');
+        }
+
+        $server_id   = $migrate_to_gerrit->server;
+        $permissions = $migrate_to_gerrit->permissions;
+
+        try {
+            $this->gerrit_server_factory->getServerById($server_id);
+        } catch (Git_RemoteServer_NotFoundException $ex) {
+            throw new RestException(400, 'Gerrit server does not exist');
+        }
+
+        if ($permissions !== self::MIGRATE_NO_PERMISSION && $permissions !== self::MIGRATE_PERMISSION_DEFAULT) {
+            throw new RestException(
+                400,
+                'Invalid permission provided. Valid values are ' .
+                self::MIGRATE_NO_PERMISSION. ' or ' . self::MIGRATE_PERMISSION_DEFAULT
+            );
+        }
+
+        return $this->git_system_event_manager->queueMigrateToGerrit(
+            $repository,
+            $server_id,
+            $permissions,
+            $user
+        );
+    }
+
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
     }
@@ -221,7 +360,7 @@ class RepositoryResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeaders() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {

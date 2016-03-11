@@ -60,7 +60,7 @@ class RepositoryTest extends RestBase {
 
     public function testOPTIONS() {
         $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**

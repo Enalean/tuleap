@@ -22,6 +22,8 @@
 
 require_once('common/valid/ValidFactory.class.php');
 
+use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+
 /**
  * Git
  * @author Guillaume Storchi
@@ -1009,7 +1011,13 @@ class Git extends PluginController {
             $this->backend_gitolite,
             $this->mirror_data_mapper,
             $history_dao,
-            new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $history_dao)
+            new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $history_dao),
+            new MigrationHandler(
+                $this->git_system_event_manager,
+                $this->gerrit_server_factory,
+                $this->driver_factory,
+                $history_dao
+            )
         );
     }
 
