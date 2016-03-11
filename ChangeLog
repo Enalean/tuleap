@@ -1,6 +1,6 @@
 Version 8.13 (Not released yet)
 	== Bug Fix ==
-	* request #8903: Persistent XSS in the widget image
+	* request #8952: Art keyword doesn't have right project id
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
@@ -8,10 +8,11 @@ Version 8.13 (Not released yet)
 	== Security ==
 	* request #8904: CSRF vulnerability in the project registration page
 	* request #8929: SQL injection in the project history search
+	* request #8903: Persistent XSS in the widget image
 
 	== Plugins ==
 	* agiledashboard: 1.364
-	* tracker: 5.809
+	* tracker: 5.810
 	* hudson_svn: 0.5
 	* git: 4.131
 	* hudson: 1.26
