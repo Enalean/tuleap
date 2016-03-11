@@ -25,16 +25,27 @@ use PFUser;
 use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
 use GitPermissionsManager;
 use GitRepository;
+use Git_RemoteServer_GerritServerFactory;
+use Git_RemoteServer_NotFoundException;
 
 class RepositoryRepresentationBuilder {
+
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
 
     /**
      * @var GitPermissionsManager
      */
     private $permissions_manger;
 
-    public function __construct(GitPermissionsManager $permissions_manger) {
-        $this->permissions_manger = $permissions_manger;
+    public function __construct(
+        GitPermissionsManager $permissions_manger,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+    ) {
+        $this->permissions_manger    = $permissions_manger;
+        $this->gerrit_server_factory = $gerrit_server_factory;
     }
 
     /**
@@ -46,8 +57,10 @@ class RepositoryRepresentationBuilder {
      * @return GitRepositoryRepresentation
      */
     public function build(PFUser $user, GitRepository $repository, $fields) {
+        $server_representation = $this->getGerritServerRepresentation($repository);
+
         $repository_representation = new GitRepositoryRepresentation();
-        $repository_representation->build($repository);
+        $repository_representation->build($repository, $server_representation);
 
         if ($fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin($user, $repository->getProject())) {
             $permission_representation = new GitRepositoryPermissionRepresentation();
@@ -57,5 +70,25 @@ class RepositoryRepresentationBuilder {
         }
 
         return $repository_representation;
+    }
+
+    /**
+     * @return GerritServerRepresentation | null
+     */
+    private function getGerritServerRepresentation(GitRepository $repository) {
+        $remote_server_id = $repository->getRemoteServerId();
+        if (! $remote_server_id) {
+            return null;
+        }
+
+        try {
+            $server = $this->gerrit_server_factory->getServerById($remote_server_id);
+            $server_representation = new GerritServerRepresentation();
+            $server_representation->build($server);
+
+            return $server_representation;
+        } catch (Git_RemoteServer_NotFoundException $ex) {
+            return null;
+        }
     }
 }

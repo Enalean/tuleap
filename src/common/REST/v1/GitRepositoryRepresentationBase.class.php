@@ -57,4 +57,9 @@ class GitRepositoryRepresentationBase {
      * @var Tuleap\REST\v1\GitRepositoryPermissionRepresentationBase | null
      */
     public $permissions = null;
+
+    /**
+     * @var Tuleap\REST\v1\GerritServerRepresentation | null
+     */
+    public $server = null;
 }
