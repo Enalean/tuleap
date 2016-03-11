@@ -4,6 +4,7 @@ Version 8.13 (Not released yet)
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
+	* request #8914: Refactoring the functions position in the setup script
 
 	== Security ==
 	* request #8904: CSRF vulnerability in the project registration page
