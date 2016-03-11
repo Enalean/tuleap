@@ -13,8 +13,114 @@
 # In order to keep a log of the installation, you may run the script with:
 # ./setup.sh 2>&1 | tee /root/tuleap_install.log
 
-TODO_FILE='/root/todo_tuleap.txt'
+###############################################################################
+#
+# Variables
+#
+###############################################################################
+
+# path to directorie and files
 RH_RELEASE='/etc/redhat-release'
+TODO_FILE='/root/todo_tuleap.txt'
+TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
+
+# services name
+CROND_SERVICE="crond"
+HTTPD_SERVICE="httpd"
+MYSQLD_SERVICE="mysqld"
+NAMED_SERVICE="named"
+PROJECT_ADMIN="codendiadm"
+SSHD_SERVICE="sshd"
+
+# path to command line tools
+CAT='/bin/cat'
+CHCON='/usr/bin/chcon'
+CHGRP='/bin/chgrp'
+CHKCONFIG='/sbin/chkconfig'
+CHMOD='/bin/chmod'
+CHOWN='/bin/chown'
+CP='/bin/cp'
+FIND='/usr/bin/find'
+GREP='/bin/grep'
+GROUPADD='/usr/sbin/groupadd'
+GROUPDEL='/usr/sbin/groupdel'
+INSTALL='/usr/bin/install'
+LN='/bin/ln'
+LS='/bin/ls'
+MKDIR='/bin/mkdir'
+MV='/bin/mv'
+MYSQL='/usr/bin/mysql'
+MYSQLSHOW='/usr/bin/mysqlshow'
+PERL='/usr/bin/perl'
+PHP='/usr/bin/php'
+RM='/bin/rm'
+RPM='/bin/rpm'
+SERVICE='/sbin/service'
+TOUCH='/bin/touch'
+USERADD='/usr/sbin/useradd'
+USERDEL='/usr/sbin/userdel'
+USERMOD='/usr/sbin/usermod'
+
+CMD_LIST=('CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'FIND' 'GREP'
+          'GROUPADD' 'GROUPDEL' 'INSTALL' 'LN' 'LS' 'MKDIR' 'MV' 'MYSQL'
+          'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'TOUCH' 'USERADD'
+          'USERDEL' 'USERMOD')
+
+# default parameters
+generate_ssl_certificate="n"
+SELINUX_ENABLED=1
+SELINUX_CONTEXT="root:object_r:httpd_sys_content_t:s0"
+
+# check if SELinux is enable
+if [ "$RH_MAJOR_VERSION" = "5" ]; then
+    SELINUX_CONTEXT="root:object_r:httpd_sys_content_t"
+fi
+
+if [ -e /etc/selinux/config ]
+then
+	$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
+	if [ $? -eq 0 ] || [ ! -e $CHCON ] ; then
+		# SELinux not installed
+		SELINUX_ENABLED=0
+	fi
+else
+	if [ ! -e $CHCON ] ; then
+		# SELinux not installed
+		SELINUX_ENABLED=0
+	fi
+fi
+
+# check the version of RH/CentOS
+if [ -e "${RH_RELEASE}" ]
+then
+    /bin/grep -i -q centos ${RH_RELEASE}
+    if [ "${?}" -eq 0 ]
+    then
+        RH_VERSION=($(awk '{print $1, $3}' ${RH_RELEASE}))
+    else
+        RH_VERSION=($(awk '{print $1$2, $7}' ${RH_RELEASE}))
+    fi
+
+    RH_MAJOR_VERSION=$(echo ${RH_VERSION[1]: 0:1})
+    RH_MINOR_VERSION=$(echo ${RH_VERSION[1]: 2:1})
+
+else
+    echo -e "\033[31mSorry, Tuleap is running only on RedHat/CentOS.\033[0m"
+    exit 1
+fi
+
+if [ "${RH_MAJOR_VERSION}" = "6" ]; then
+    PROJECT_NAME="tuleap"
+else
+    PROJECT_NAME="codendi"
+fi
+export INSTALL_DIR="/usr/share/$PROJECT_NAME"
+
+###############################################################################
+#
+# Functions
+#
+###############################################################################
 
 todo() {
     # $1: message to log in the todo file
@@ -47,95 +153,6 @@ recoverable_error() {
     fi
 }
 
-# rh version
-if [ -e "${RH_RELEASE}" ]
-then
-    /bin/grep -i -q centos ${RH_RELEASE}
-    if [ "${?}" -eq 0 ]
-    then
-        RH_VERSION=($(awk '{print $1, $3}' ${RH_RELEASE}))
-    else
-        RH_VERSION=($(awk '{print $1$2, $7}' ${RH_RELEASE}))
-    fi
-
-    RH_MAJOR_VERSION=$(echo ${RH_VERSION[1]: 0:1})
-    RH_MINOR_VERSION=$(echo ${RH_VERSION[1]: 2:1})
-
-else
-    echo -e "\033[31mSorry, Tuleap is running only on RedHat/CentOS.\033[0m"
-    exit 1
-fi
-
-if [ $RH_MAJOR_VERSION = "6" ]; then
-    PROJECT_NAME="tuleap"
-else
-    PROJECT_NAME="codendi"
-fi
-
-PROJECT_ADMIN="codendiadm"
-TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
-NAMED_SERVICE="named"
-MYSQLD_SERVICE="mysqld"
-SSHD_SERVICE="sshd"
-CROND_SERVICE="crond"
-HTTPD_SERVICE="httpd"
-generate_ssl_certificate="n"
-
-export INSTALL_DIR="/usr/share/$PROJECT_NAME"
-
-# path to command line tools
-GROUPADD='/usr/sbin/groupadd'
-GROUPDEL='/usr/sbin/groupdel'
-USERADD='/usr/sbin/useradd'
-USERDEL='/usr/sbin/userdel'
-USERMOD='/usr/sbin/usermod'
-MV='/bin/mv'
-CP='/bin/cp'
-LN='/bin/ln'
-LS='/bin/ls'
-RM='/bin/rm'
-MKDIR='/bin/mkdir'
-RPM='/bin/rpm'
-CHOWN='/bin/chown'
-CHGRP='/bin/chgrp'
-CHMOD='/bin/chmod'
-FIND='/usr/bin/find'
-MYSQL='mysql'
-MYSQLSHOW='mysqlshow'
-TOUCH='/bin/touch'
-CAT='/bin/cat'
-GREP='/bin/grep'
-CHKCONFIG='/sbin/chkconfig'
-SERVICE='/sbin/service'
-PERL='/usr/bin/perl'
-PHP='/usr/bin/php'
-INSTALL='/usr/bin/install'
-
-CHCON='/usr/bin/chcon'
-SELINUX_CONTEXT="root:object_r:httpd_sys_content_t:s0";
-if [ "$RH_MAJOR_VERSION" = "5" ]; then
-    SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
-fi
-SELINUX_ENABLED=1
-if [ -e /etc/selinux/config ]
-then
-	$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
-	if [ $? -eq 0 ] || [ ! -e $CHCON ] ; then
-		# SELinux not installed
-		SELINUX_ENABLED=0
-	fi
-else
-	if [ ! -e $CHCON ] ; then
-		# SELinux not installed
-		SELINUX_ENABLED=0
-	fi
-fi
-
-CMD_LIST=('GROUPADD' 'GROUPDEL' 'USERADD' 'USERDEL' 'USERMOD' 'MV' 'CP' 'LN'
-'LS' 'RM' 'MKDIR' 'CHOWN' 'CHGRP' 'CHMOD' 'FIND' 'TOUCH' 'CAT' 'GREP' 'PERL'
-'PHP' 'INSTALL' 'RPM' 'CHKCONFIG' 'SERVICE')
-
-# Functions
 create_group_withid() {
     # $1: groupname, $2: groupid
     $GROUPDEL "$1" 2>/dev/null
