@@ -40,6 +40,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('cssfile',                             'cssFile',                           false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
+        $this->_addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
         $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
@@ -513,6 +514,21 @@ class trackerPlugin extends Plugin {
             $tracker = $artifact->getTracker();
             $params['group_id'] = $tracker->getGroupId();
         }
+    }
+
+    public function set_artifact_reference_group_id($params) {
+        $reference = $params['reference'];
+        if ($this->isDefaultReferenceUrl($reference)) {
+            $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
+            if ($artifact) {
+                $tracker = $artifact->getTracker();
+                $reference->setGroupId($tracker->getGroupId());
+            }
+        }
+    }
+
+    private function isDefaultReferenceUrl(Reference $reference) {
+        return $reference->getLink() === TRACKER_BASE_URL. '/?&aid=$1&group_id=$group_id';
     }
 
     public function build_reference($params) {

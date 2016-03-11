@@ -65,6 +65,14 @@ $event_manager->processEvent(
 if ($ref === null) {
     if ($keyword == ReferenceManager::KEYWORD_ARTIFACT_LONG || $keyword == ReferenceManager::KEYWORD_ARTIFACT_SHORT) {
         $ref = $reference_manager->loadReferenceFromKeyword($keyword, $value);
+
+        $event_manager->processEvent(
+            Event::SET_ARTIFACT_REFERENCE_GROUP_ID,
+            array(
+                'artifact_id' => $value,
+                'reference'   => &$ref
+            )
+        );
     } else {
         $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
     }
