@@ -30,8 +30,42 @@ class ProviderDao  extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
+    public function save(
+        $name,
+        $authorization_endpoint,
+        $token_endpoint,
+        $user_info_endpoint,
+        $client_id,
+        $client_secret
+    ) {
+        $name                   = $this->getDa()->quoteSmart($name);
+        $authorization_endpoint = $this->getDa()->quoteSmart($authorization_endpoint);
+        $token_endpoint         = $this->getDa()->quoteSmart($token_endpoint);
+        $user_info_endpoint     = $this->getDa()->quoteSmart($user_info_endpoint);
+        $client_id              = $this->getDa()->quoteSmart($client_id);
+        $client_secret          = $this->getDa()->quoteSmart($client_secret);
+
+        $sql = "INSERT INTO plugin_openidconnectclient_provider(
+                    name, authorization_endpoint, token_endpoint, user_info_endpoint, client_id, client_secret
+                ) VALUES (
+                    $name, $authorization_endpoint, $token_endpoint, $user_info_endpoint, $client_id, $client_secret
+                );";
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function deleteById($id) {
+        $id  = $this->getDa()->escapeInt($id);
+        $sql = "DELETE FROM plugin_openidconnectclient_provider WHERE id = $id";
+        return $this->update($sql);
+    }
+
     public function searchConfiguredProviders() {
         $sql = "SELECT * FROM plugin_openidconnectclient_provider WHERE client_id != '' AND client_secret != ''";
+        return $this->retrieve($sql);
+    }
+
+    public function searchProviders() {
+        $sql = "SELECT * FROM plugin_openidconnectclient_provider";
         return $this->retrieve($sql);
     }
 }
