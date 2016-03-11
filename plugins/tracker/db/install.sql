@@ -767,6 +767,11 @@ CREATE TABLE plugin_tracker_artifactlink_natures (
     reverse_label VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures_allowed_projects;
+CREATE TABLE plugin_tracker_artifactlink_natures_allowed_projects (
+    project_id int(11) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 CREATE TABLE plugin_tracker_notification_assigned_to (
     project_id INT(11) NOT NULL PRIMARY KEY

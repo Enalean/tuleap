@@ -21,13 +21,6 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-use Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
-use Tracker\FormElement\Field\ArtifactLink\Nature\UnableToCreateNatureException;
-use Tracker_FormElement_Field_ArtifactLink;
-
 use Config_LocalIncFinder;
 use EventManager;
 use CSRFSynchronizerToken;

@@ -1666,10 +1666,26 @@ plugin_tracker_artifact_links_natures	missing_forward_label	missing forward labe
 plugin_tracker_artifact_links_natures	missing_reverse_label	missing reverse label
 plugin_tracker_artifact_links_natures	shortname_help	Only letters and underscore are allowed for shortname (must start with a letter though).
 plugin_tracker_artifact_links_natures	create_error	Unable to create the requested nature: $1
-plugin_tracker_artifact_links_natures	create_db_error	error while playing with the database.  Help us improve your experience by sending en error report.
+plugin_tracker_artifact_links_natures	create_db_error	error while playing with the database.  Help us improve your experience by sending an error report.
 plugin_tracker_artifact_links_natures	create_same_name_error	a nature with $1 as shortname already exists.
 plugin_tracker_artifact_links_natures	forward_label_help	E.g. for the fixed_in nature, a bug will be fixed in a release so the forward label will be "Fixed in".
 plugin_tracker_artifact_links_natures	reverse_label_help	E.g. for the fixed_in nature, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).
 plugin_tracker_artifact_links_natures	shortname_placeholder	E.g. fixed_in
 plugin_tracker_artifact_links_natures	forward_label_placeholder	E.g. Fixed in
 plugin_tracker_artifact_links_natures	reverse_label_placeholder	E.g. Fixed
+plugin_tracker_artifact_links_natures	list_of_allowed_projects	List of projects which can use artifact links natures
+plugin_tracker_artifact_links_natures	list_of_allowed_projects_desc	As the artifact links natures feature is still under heavy development, we recommend to activate it only for a chosen set of projects. Those projects won't be able to use the tracker hierarchy nor the agile dashboard.
+plugin_tracker_artifact_links_natures	allowed_project_list_id	ID
+plugin_tracker_artifact_links_natures	allowed_project_list_name	Name
+plugin_tracker_artifact_links_natures	allowed_project_list_empty	Currently, there are no projects which can use artifact links nature.
+plugin_tracker_artifact_links_natures	allowed_project_list_allow_project	Authorize
+plugin_tracker_artifact_links_natures	allowed_project_list_revoke_projects	Revoke authorization to selected
+plugin_tracker_artifact_links_natures	allowed_project_list_allow_placeholder	Project name
+plugin_tracker_artifact_links_natures	allowed_project_list_filter_placeholder	Filter on project ID or name
+plugin_tracker_artifact_links_natures	allowed_project_revoke_title	Warning
+plugin_tracker_artifact_links_natures	allowed_project_revoke_description	You are about to revoke usage of artifact links nature to one or several projects. Are you sure you want to do this?
+plugin_tracker_artifact_links_natures	allowed_project_revoke_yes	Yes, revoke usage
+plugin_tracker_artifact_links_natures	allowed_project_revoke_no	No
+plugin_tracker_artifact_links_natures	allowed_project_allow_project	Submitted projects will be able to use artifact links natures.
+plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted projects will not be anymore able to use artifact links natures.
+plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Something went wrong during the update. Help us improve your experience by sending an error report.

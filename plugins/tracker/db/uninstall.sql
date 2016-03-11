@@ -83,6 +83,7 @@ DROP TABLE IF EXISTS tracker_artifact_unsubscribe;
 
 DROP TABLE IF EXISTS plugin_tracker_config;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
+DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures_allowed_projects;
 
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 
