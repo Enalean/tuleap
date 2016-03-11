@@ -5,7 +5,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -118,7 +118,7 @@ $presenter = $presenter_builder->build(
 if($pvMode) {
     $GLOBALS['HTML']->pv_header(array('title'=>$presenter->account_login_page_title()));
 } else {
-    $GLOBALS['HTML']->header(array('title'=>$presenter->account_login_page_title()));
+    $GLOBALS['HTML']->header(array('title'=>$presenter->account_login_page_title(), 'body_class' => array('login-page')));
 }
 
 $login_controller->index($presenter);
@@ -126,5 +126,5 @@ $login_controller->index($presenter);
 if ($pvMode) {
     $GLOBALS['HTML']->pv_footer(array());
 } else {
-    $GLOBALS['HTML']->footer(array());
+    $GLOBALS['HTML']->footer(array('without_content' => true));
 }

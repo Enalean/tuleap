@@ -1,77 +1,34 @@
-<h2 id="login-title">{{account_login_page_title}}</h2>
+<div id="login-box">
+    <a id="login-help" href="mailto:{{ help_email }}?Subject={{ help_subject }}">
+        <span>{{ need_help }}</span>
+        <i class="icon-question-sign"></i>
+    </a>
 
-<div class="container">
-    <div class="row-fluid">
-        <div class="span12">{{{ login_intro }}}</div>
-    </div>
-</div>
+    <h1>{{ account_login_login_with_tuleap }}</h1>
 
-<div class="container login">
-    <div class="row-fluid">
-        {{^ additional_connectors }}
-        <div class="span12 login-tuleap">
-        {{/ additional_connectors }}
-        {{# additional_connectors }}
-        <div class="span6 login-tuleap">
-        {{/ additional_connectors }}
-            <h3>{{account_login_login_with_tuleap}}</h3>
-            <form action="/account/login.php" method="post" name="form_login" autocomplete="off">
-                <input type="hidden" name="return_to" value="{{return_to}}">
-                <input type="hidden" name="pv" value="{{pv}}">
-
-                <div class="control-group">
-                    <label class="control-label" for="form_loginname">{{account_login_name}}</label>
-                    <div class="controls">
-                        <input type="text" id="form_loginname" name="form_loginname" value="{{form_loginname}}">
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="form_pw">{{account_login_password}}</label>
-                    <div class="controls">
-                        <input type="password" id="form_pw" name="form_pw" value="">
-                    </div>
-                </div>
-
-                {{#toggle_ssl}}
-                <label>
-                <input type="checkbox" name="stay_in_ssl" value="1" checked="checked" />
-                {{{stay_in_ssl}}}
-                </label>
-                {{/toggle_ssl}}
-
-                <div class="control-group">
-                    <div class="controls">
-                        <input type="submit" name="login" value="{{account_login_login_btn}}" class="btn btn-primary">
-                    </div>
-                </div>
-
-                {{#allow_password_recovery}}
-                <p class="row-fluid">
-                    <a href="lostpw.php">{{account_login_lost_pw}}</a>
-                </p>
-                {{/allow_password_recovery}}
-            </form>
-        </div>
-
-        {{# additional_connectors }}
-            <div class="span6">
-                {{{ additional_connectors }}}
-            </div>
-        {{/ additional_connectors }}
-
+    <div id="login-intro">
+        {{{ login_intro }}}
     </div>
 
-    <p id="login-footer">
-        <span class="highlight"><strong>{{cookies}}</strong></span>
-        <br/><br/>
-        <span>{{{help}}}</span>
-    </p>
+    <form action="/account/login.php" method="post" name="form_login" autocomplete="off">
+        <input type="hidden" name="return_to" value="{{ return_to }}">
+        <input type="hidden" name="pv" value="{{ pv }}">
+
+        <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ account_login_name }}" value="{{ form_loginname }}"  required autofocus>
+        <input type="password" id="form_pw" name="form_pw" placeholder="{{ account_login_password }}" value="" required>
+
+        {{# toggle_ssl }}
+            <label id="login-ssl">
+                <input type="checkbox" name="stay_in_ssl" value="1" checked="checked" /> {{{ stay_in_ssl }}}
+            </label>
+        {{/ toggle_ssl }}
+
+        <button type="submit" name="login" class="btn btn-primary">{{ account_login_login_btn }}</button>
+
+        {{# allow_password_recovery }}
+            <a id="login-lost-password" href="lostpw.php">{{ account_login_lost_pw }}</a>
+        {{/ allow_password_recovery }}
+    </form>
+
+    {{{ additional_connectors }}}
 </div>
-
-
-<script type="text/javascript">
-<!--
-    document.form_login.form_loginname.focus();
-//-->
-</script>

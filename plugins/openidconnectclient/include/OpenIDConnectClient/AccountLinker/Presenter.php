@@ -57,16 +57,16 @@ class Presenter {
         return $GLOBALS['Language']->getText('account_login', 'login_btn');
     }
 
-    public function link_login_with_tuleap() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account_by_login');
-    }
-
     public function link_page_title() {
         return $GLOBALS['Language']->getText(
             'plugin_openidconnectclient',
             'link_account',
             array(ForgeConfig::get('sys_name'))
         );
+    }
+
+    public function link_page_title_to() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account_to');
     }
 
     public function link_page_header() {
@@ -84,8 +84,12 @@ class Presenter {
         return OPENIDCONNECTCLIENT_BASE_URL . '/?action=link-existing';
     }
 
-    public function register_new_account() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'register_new_account');
+    public function or_label() {
+        return $GLOBALS['Language']->getText(
+            'plugin_openidconnectclient',
+            'or_register_label',
+            array(ForgeConfig::get('sys_name'))
+        );
     }
 
     public function register() {

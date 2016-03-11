@@ -32,12 +32,12 @@ class ConnectorPresenter {
     /**
      * @return string
      */
-    public function login_title() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'login_with_openidconnect');
+    public function or_label() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'or_label');
     }
 
-    public function connect_with() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'connect_with');
+    public function are_there_providers() {
+        return count($this->providers_authorization_request_uri) > 0;
     }
 
     /**

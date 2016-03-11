@@ -70,12 +70,16 @@ class User_LoginPresenter {
         return $this->allow_password_recovery;
     }
 
-    public function help() {
-        return $GLOBALS['Language']->getText('account_login', 'help', array(ForgeConfig::get('sys_email_admin'), ForgeConfig::get('sys_name')));
+    public function help_email() {
+        return ForgeConfig::get('sys_email_admin');
     }
 
-    public function cookies() {
-        return $GLOBALS['Language']->getText('account_login', 'cookies');
+    public function need_help() {
+        return $GLOBALS['Language']->getText('account_login', 'need_help');
+    }
+
+    public function help_subject() {
+        return $GLOBALS['Language']->getText('account_login', 'help_subject', array(ForgeConfig::get('sys_name')));
     }
 
     public function stay_in_ssl() {

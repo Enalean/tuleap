@@ -1,3 +1,13 @@
+body.openid-connect-link {
+    background: linear-gradient(#FFFFFF 0%, #F5F5F5 75%);
+    text-align: center;
+}
+
+#login-box > #login-openid-title {
+    margin: 10px 0 30px;
+    font-size: 30px;
+}
+
 #linked-providers > .provider {
     display: inline-block;
     width: 20%;
@@ -110,6 +120,85 @@
                     margin: 0;
                 }
             }
+        }
+    }
+}
+
+#login-openid-providers, #login-openid-register {
+    #login-openid-or {
+        display: block;
+        position: relative;
+        height: 100px;
+        color: #bbbbbb;
+        font-size: 12px;
+
+        > span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0 10px;
+            background: #ffffff;
+            z-index: 2;
+            white-space: nowrap;
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            border-top: 1px solid #f1f1f1;
+            z-index: 1;
+        }
+    }
+
+    #login-openid-register-button {
+        display: block;
+        margin: 0;
+        padding: 15px 5px;
+        font-size: 20px;
+        box-sizing: border-box;
+        line-height: normal;
+    }
+
+    #login-openid-providers-list {
+        > a {
+            display: block;
+            width: 50%;
+            margin: 0 auto 10px;
+            padding: 18px 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            line-height: normal;
+
+            > i {
+                margin: 0 3px 0 0px;
+                font-size: 18px;
+            }
+        }
+
+        > a:first-child:nth-last-child(1) {
+            margin: 0;
+            width: 100%;
+        }
+
+        > a:first-child:nth-last-child(2), > a:first-child:nth-last-child(2) ~ a {
+            display: inline-block;
+            width: 49%;
+
+            &:first-child { margin: 0 1% 0 0; }
+            &:last-child  { margin: 0 0 0 1%; }
+        }
+
+        > a:first-child:nth-last-child(4), > a:first-child:nth-last-child(4) ~ a {
+            display: inline-block;
+            width: 49%;
+
+            &:nth-child(2n+1)   { margin: 0 1% 10px 0; }
+            &:nth-child(2n) { margin: 0 0 10px 1%; }
         }
     }
 }

@@ -196,20 +196,16 @@ account_login	pending_msg	Your account is currently pending your email confirmat
 account_login	validation_msg	Your account has been validated by an administrator, is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
 account_login	need_approval	Your account is currently pending an approval from an administrator. You will be notified by email when your account is validated.
 account_login	resend_btn	Resend Confirmation Email
-account_login	cookies	Cookies must be enabled past this point
-account_login	name	Login Name
+account_login	name	Username
 account_login	password	Password
 account_login	stay_ssl	Stay in HTTPS after login
+account_login	need_help	Can't log in? Send an email to administrators
 account_login	login_btn	Login
-account_login	lost_pw	Lost your password?
+account_login	lost_pw	Ooops, I forgot my password
 account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's your first time on the <b>$1</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the $1 site.
-account_login	login_with_tuleap	Login with $1 credentials
-account_login	login_with_openid	... or directly with
+account_login	login_with_tuleap	Login
 account_login	page_title	$1 login
-account_login	openid_submit	Login
-account_login	pair_openid_title	Account pairing
-account_login	pair_openid	Pair your account with one of these providers:
-account_login	help	If you encounter any problem to login, please send a email to <a href="mailto:$1?Subject=Unable to login under $2">$2 administrators</a>
+account_login	help_subject	Unable to login under $1
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostlogin.php

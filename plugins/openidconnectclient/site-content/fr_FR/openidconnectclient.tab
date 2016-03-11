@@ -4,20 +4,19 @@ plugin_openidconnectclient	only_https_possible	Le plugin OpenID Connect peut seu
 plugin_openidconnectclient	provider_not_found	Ce fournisseur OpenID Connect n'a pas été trouvé dans la configuration de la plateforme
 plugin_openidconnectclient	invalid_request	La requête semble invalide, merci de réessayer
 plugin_openidconnectclient	unexpected_error	Une erreur est survenue, merci de réessayer
-plugin_openidconnectclient	login_with_openidconnect	Se connecter avec OpenID Connect
-plugin_openidconnectclient	connect_with	Se connecter avec
-plugin_openidconnectclient	link_account	Lier un compte $1 à OpenID Connect
-plugin_openidconnectclient	link_account_by_login	Se connecter à un compte existant pour créer le lien
+plugin_openidconnectclient	or_label	ou connectez avec
+plugin_openidconnectclient	link_account	Liez un compte $1
+plugin_openidconnectclient	link_account_to	à OpenID Connect
 plugin_openidconnectclient	successfully_linked	Votre compte a bien été lié à $1
-plugin_openidconnectclient	link_page_header	Vous avez été authentifié avec succès par $1, vous devez maintenant créer un lien avec un compte $2
+plugin_openidconnectclient	link_page_header	Vous avez été authentifié avec succès par $1. Vous devez maintenant créer un lien avec un compte $2 existant ou en créer un nouveau.
 
 plugin_openidconnectclient	title_user_preferences	Fournisseurs OpenID Connect
 plugin_openidconnectclient	unlink	Supprimer le lien
 plugin_openidconnectclient	delete_user_mapping_success	Le lien avec $1 a été supprimé.
 plugin_openidconnectclient	delete_user_mapping_error	Une erreur est survenue lors de la suppression du lien avec $1.
 
-plugin_openidconnectclient	register_new_account	Créer un nouveau compte
-plugin_openidconnectclient	register	S'enregistrer
+plugin_openidconnectclient	register	Créer un nouveau compte $1
+plugin_openidconnectclient	or_register_label	ou
 plugin_openidconnectclient	info_registration	Votre nouveau compte utilisateur sera lié avec $1. Vous devez fournir un mot de passe pour vous authentifier avec les services de $2 (CVS, SVN, Git, FTP…)
 plugin_openidconnectclient	link_registration_error	Une erreur est survenue lors de la création du lien avec le fournisseur OpenID Connect
 
