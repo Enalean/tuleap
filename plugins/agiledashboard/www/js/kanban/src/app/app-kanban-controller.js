@@ -73,6 +73,7 @@ function KanbanCtrl(
     });
 
     self.user_prefers_collapsed_cards = true;
+    self.init                         = init;
     self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
     self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
     self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
@@ -112,16 +113,20 @@ function KanbanCtrl(
     self.moveKanbanItemToTop          = moveKanbanItemToTop;
     self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
 
-    initViewMode();
-    loadColumns();
-    loadBacklog(limit, offset);
-    loadArchive(limit, offset);
-    listenNodeJSServer();
-
     self.treeOptions = {
         dragStart: dragStart,
-        dropped: dropped
+        dropped  : dropped
     };
+
+    function init() {
+        initViewMode();
+        loadColumns();
+        loadBacklog(limit, offset);
+        loadArchive(limit, offset);
+        listenNodeJSServer();
+    }
+
+    self.init();
 
     function initViewMode() {
         self.user_prefers_collapsed_cards = SharedPropertiesService.doesUserPrefersCompactCards();
@@ -143,7 +148,7 @@ function KanbanCtrl(
             column.content.forEach(forceIsCollapsed);
         });
 
-        $scope.$broadcast('rebuild:kustom-scroll');
+        reflowKustomScrollBars();
 
         function forceIsCollapsed(item) {
             setIsCollapsed(item, self.user_prefers_collapsed_cards);
@@ -155,14 +160,30 @@ function KanbanCtrl(
     }
 
     function filterCards() {
-        self.backlog.filtered_content = $filter('InPropertiesFilter')(self.backlog.content, self.filter_terms);
-        self.archive.filtered_content = $filter('InPropertiesFilter')(self.archive.content, self.filter_terms);
+        if (self.backlog.is_open) {
+            filterBacklogCards();
+        }
+        if (self.archive.is_open) {
+            filterArchiveCards();
+        }
 
-        self.board.columns.forEach(function (column) {
-            column.filtered_content = $filter('InPropertiesFilter')(column.content, self.filter_terms);
-        });
+        _(self.board.columns)
+            .filter('is_open')
+            .map(filterColumnCards);
 
         reflowKustomScrollBars();
+    }
+
+    function filterBacklogCards() {
+        self.backlog.filtered_content = $filter('InPropertiesFilter')(self.backlog.content, self.filter_terms);
+    }
+
+    function filterArchiveCards() {
+        self.archive.filtered_content = $filter('InPropertiesFilter')(self.archive.content, self.filter_terms);
+    }
+
+    function filterColumnCards(column) {
+        column.filtered_content = $filter('InPropertiesFilter')(column.content, self.filter_terms);
     }
 
     function reflowKustomScrollBars() {
@@ -171,19 +192,24 @@ function KanbanCtrl(
 
     function collapseColumn(column) {
         if (column.is_open) {
+            emptyArray(column.filtered_content);
             KanbanService.collapseColumn(kanban.id, column.id);
             column.is_open = false;
         }
     }
 
     function expandColumn(column) {
-        if (!column.is_open) {
-            KanbanService.expandColumn(kanban.id, column.id);
-            column.is_open = true;
+        if (column.is_open) {
+            return;
+        }
 
-            if (! column.fully_loaded) {
-                loadColumnContent(column, limit, offset);
-            }
+        KanbanService.expandColumn(kanban.id, column.id);
+        column.is_open = true;
+
+        if (! column.fully_loaded) {
+            loadColumnContent(column, limit, offset);
+        } else {
+            filterColumnCards(column);
         }
     }
 
@@ -197,19 +223,24 @@ function KanbanCtrl(
 
     function collapseBacklog() {
         if (self.backlog.is_open) {
+            emptyArray(self.backlog.filtered_content);
             KanbanService.collapseBacklog(kanban.id);
             self.backlog.is_open = false;
         }
     }
 
     function expandBacklog() {
-        if (!self.backlog.is_open) {
-            KanbanService.expandBacklog(kanban.id);
-            self.backlog.is_open = true;
+        if (self.backlog.is_open) {
+            return;
+        }
 
-            if (! self.backlog.fully_loaded) {
-                loadBacklogContent(limit, offset);
-            }
+        KanbanService.expandBacklog(kanban.id);
+        self.backlog.is_open = true;
+
+        if (! self.backlog.fully_loaded) {
+            loadBacklogContent(limit, offset);
+        } else {
+            filterBacklogCards();
         }
     }
 
@@ -217,25 +248,31 @@ function KanbanCtrl(
         if (self.backlog.is_open) {
             collapseBacklog();
         } else {
+            KanbanService.expandBacklog(kanban.id);
             expandBacklog();
         }
     }
 
     function collapseArchive() {
         if (self.archive.is_open) {
+            emptyArray(self.archive.filtered_content);
             KanbanService.collapseArchive(kanban.id);
             self.archive.is_open = false;
         }
     }
 
     function expandArchive() {
-        if (!self.archive.is_open) {
-            KanbanService.expandArchive(kanban.id);
-            self.archive.is_open = true;
+        if (self.archive.is_open) {
+            return;
+        }
 
-            if (! self.archive.fully_loaded) {
-                loadArchiveContent(limit, offset);
-            }
+        KanbanService.expandArchive(kanban.id);
+        self.archive.is_open = true;
+
+        if (! self.archive.fully_loaded) {
+            loadArchiveContent(limit, offset);
+        } else {
+            filterArchiveCards();
         }
     }
 
@@ -254,94 +291,132 @@ function KanbanCtrl(
     }
 
     function dropped(event) {
-        var dropped_item = event.source.nodeScope.$modelValue,
-            compared_to = defineComparedTo(event.dest.nodesScope.$modelValue, event.dest.index),
+        var dropped_item        = event.source.nodeScope.$modelValue,
+            compared_to         = defineComparedTo(event.dest.nodesScope.$modelValue, event.dest.index),
             source_list_element = event.source.nodesScope.$element,
-            dest_list_element = event.dest.nodesScope.$element;
+            dest_list_element   = event.dest.nodesScope.$element,
+            source_column_id    = getColumnId(source_list_element),
+            dest_column_id      = getColumnId(dest_list_element);
 
-        if (dropped_item.in_column === 'backlog' && !dest_list_element.hasClass('backlog')) {
+        if (dropped_item.in_column === 'backlog' && ! dest_list_element.hasClass('backlog')) {
             updateTimeInfo('kanban', dropped_item);
         }
 
-        if (dest_list_element.hasClass('backlog')) {
-            updateItemColumn(dropped_item, 'backlog');
-            return droppedInBacklog(event, dropped_item, compared_to);
-        } else if (dest_list_element.hasClass('archive')) {
-            updateItemColumn(dropped_item, 'archive');
-            return droppedInArchive(event, dropped_item, compared_to);
-        } else if (dest_list_element.hasClass('column')) {
-            var column_id = dest_list_element.attr('data-column-id');
-            updateItemColumn(dropped_item, parseInt(column_id));
-            return droppedInColumn(event, column_id, dropped_item, compared_to);
+        var promise;
+
+        if (dest_column_id === 'backlog') {
+            updateItemColumn(dropped_item, dest_column_id);
+            promise = droppedInBacklog(event, dropped_item, compared_to);
+        } else if (dest_column_id === 'archive') {
+            updateItemColumn(dropped_item, dest_column_id);
+            promise = droppedInArchive(event, dropped_item, compared_to);
+        } else if (! _.isUndefined(dest_column_id)) {
+            updateItemColumn(dropped_item, dest_column_id);
+            promise = droppedInColumn(event, dest_column_id, dropped_item, compared_to);
         }
 
-        function droppedInBacklog(event, dropped_item, compared_to) {
-            if (isDroppedInSameColumn(event) && compared_to) {
-                KanbanService
-                    .reorderBacklog(kanban.id, dropped_item.id, compared_to)
-                    .then(null, reload);
-            } else {
-                KanbanService
-                    .moveInBacklog(kanban.id, dropped_item.id, compared_to)
-                    .then(function () {
-                        updateItemColumn(dropped_item, 'backlog');
-                    }, reload);
-            }
+        removeItemInColumn(dropped_item.id, source_column_id);
+        appendItemToColumnContent(dropped_item, dest_column_id);
+
+        return promise;
+    }
+
+    function droppedInBacklog(event, dropped_item, compared_to) {
+        var promise;
+
+        if (isDroppedInSameColumn(event) && compared_to) {
+            promise = KanbanService
+                .reorderBacklog(kanban.id, dropped_item.id, compared_to)
+                .then(null, reload);
+        } else {
+            promise = KanbanService
+                .moveInBacklog(kanban.id, dropped_item.id, compared_to)
+                .then(function () {
+                    updateItemColumn(dropped_item, 'backlog');
+                }, reload);
         }
 
-        function droppedInArchive(event, dropped_item, compared_to) {
-            if (isDroppedInSameColumn(event) && compared_to) {
-                KanbanService
-                    .reorderArchive(kanban.id, dropped_item.id, compared_to)
-                    .then(null, reload);
-            } else {
-                KanbanService
-                    .moveInArchive(kanban.id, dropped_item.id, compared_to)
-                    .then(function () {
-                        updateItemColumn(dropped_item, 'archive');
-                        updateTimeInfo('archive', dropped_item);
-                    }, reload);
-            }
+        return promise;
+    }
+
+    function droppedInArchive(event, dropped_item, compared_to) {
+        var promise;
+
+        if (isDroppedInSameColumn(event) && compared_to) {
+            promise = KanbanService
+                .reorderArchive(kanban.id, dropped_item.id, compared_to)
+                .then(null, reload);
+        } else {
+            promise = KanbanService
+                .moveInArchive(kanban.id, dropped_item.id, compared_to)
+                .then(function () {
+                    updateItemColumn(dropped_item, 'archive');
+                    updateTimeInfo('archive', dropped_item);
+                }, reload);
         }
 
-        function droppedInColumn(event, column_id, dropped_item, compared_to) {
-            if (isDroppedInSameColumn(event) && compared_to) {
-                KanbanService
-                    .reorderColumn(kanban.id, column_id, dropped_item.id, compared_to)
-                    .then(null, reload);
-            } else {
-                KanbanService
-                    .moveInColumn(kanban.id, column_id, dropped_item.id, compared_to)
-                    .then(function () {
-                        updateItemColumn(dropped_item, column_id);
-                        updateTimeInfo(column_id, dropped_item);
-                    }, reload);
-            }
+        return promise;
+    }
+
+    function droppedInColumn(event, column_id, dropped_item, compared_to) {
+        var promise;
+
+        if (isDroppedInSameColumn(event) && compared_to) {
+            promise = KanbanService
+                .reorderColumn(kanban.id, column_id, dropped_item.id, compared_to)
+                .then(null, reload);
+        } else {
+            promise = KanbanService
+                .moveInColumn(kanban.id, column_id, dropped_item.id, compared_to)
+                .then(function () {
+                    updateItemColumn(dropped_item, column_id);
+                    updateTimeInfo(column_id, dropped_item);
+                }, reload);
         }
 
-        function isDroppedInSameColumn(event) {
-            return event.source.nodesScope.$id === event.dest.nodesScope.$id;
+        return promise;
+    }
+
+    function isDroppedInSameColumn(event) {
+        return event.source.nodesScope.$id === event.dest.nodesScope.$id;
+    }
+
+    function defineComparedTo(item_list, index) {
+        var compared_to = {};
+
+        if (item_list.length === 1) {
+            return null;
         }
 
-        function defineComparedTo(item_list, index) {
-            var compared_to = {};
-
-            if (item_list.length === 1) {
-                return null;
-            }
-
-            if (index === 0) {
-                compared_to.direction = 'before';
-                compared_to.item_id = item_list[index + 1].id;
-
-                return compared_to;
-            }
-
-            compared_to.direction = 'after';
-            compared_to.item_id = item_list[index - 1].id;
+        if (index === 0) {
+            compared_to.direction = 'before';
+            compared_to.item_id = item_list[index + 1].id;
 
             return compared_to;
         }
+
+        compared_to.direction = 'after';
+        compared_to.item_id = item_list[index - 1].id;
+
+        return compared_to;
+    }
+
+    function appendItemToColumnContent(dropped_item, column_id) {
+        var column = getColumn(column_id);
+
+        if (column.fully_loaded) {
+            column.content.push(dropped_item);
+        } else {
+            column.nb_items_at_kanban_init++;
+        }
+
+        if (! column.is_open) {
+            emptyArray(column.filtered_content);
+        }
+    }
+
+    function emptyArray(array) {
+        array.length = 0;
     }
 
     function reload(response) {
@@ -428,7 +503,7 @@ function KanbanCtrl(
 
     function augmentColumn(column) {
         column.content                 = [];
-        column.filtered_content        = column.content;
+        column.filtered_content        = [];
         column.loading_items           = true;
         column.nb_items_at_kanban_init = 0;
         column.fully_loaded            = false;
@@ -447,8 +522,11 @@ function KanbanCtrl(
         column.loading_items = true;
 
         return KanbanService.getItems(kanban.id, column.id, limit, offset).then(function (data) {
-            column.content          = column.content.concat(data.results);
-            column.filtered_content = column.content;
+            column.content = column.content.concat(data.results);
+
+            if (column.is_open) {
+                filterColumnCards(column);
+            }
 
             if (offset + limit < data.total) {
                 loadColumnContent(column, limit, offset + limit);
@@ -475,8 +553,11 @@ function KanbanCtrl(
         self.backlog.loading_items = true;
 
         return KanbanService.getBacklog(kanban.id, limit, offset).then(function (data) {
-            self.backlog.content          = self.backlog.content.concat(data.results);
-            self.backlog.filtered_content = self.backlog.content;
+            self.backlog.content = self.backlog.content.concat(data.results);
+
+            if (self.backlog.is_open) {
+                filterBacklogCards();
+            }
 
             if (offset + limit < data.total) {
                 loadBacklogContent(limit, offset + limit);
@@ -504,7 +585,10 @@ function KanbanCtrl(
 
         return KanbanService.getArchive(kanban.id, limit, offset).then(function (data) {
             self.archive.content = self.archive.content.concat(data.results);
-            self.archive.filtered_content = self.archive.content;
+
+            if (self.archive.is_open) {
+                filterArchiveCards();
+            }
 
             if (offset + limit < data.total) {
                 loadArchiveContent(limit, offset + limit);
@@ -573,15 +657,16 @@ function KanbanCtrl(
 
     function createItemInPlaceInBacklog(label) {
         var item = {
-            label: label,
-            updating: true,
+            label       : label,
+            updating    : true,
             is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
         };
 
         self.backlog.content.push(item);
+        self.backlog.filtered_content.push(item);
 
-        KanbanItemService.createItemInBacklog(kanban.id, item.label).then(
-            function (response) {
+        KanbanItemService.createItemInBacklog(kanban.id, item.label)
+            .then(function(response) {
                 item.updating = false;
                 _.extend(item, response.data);
             },
@@ -591,15 +676,16 @@ function KanbanCtrl(
 
     function createItemInPlace(label, column) {
         var item = {
-            label: label,
-            updating: true,
+            label       : label,
+            updating    : true,
             is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
         };
 
         column.content.push(item);
+        column.filtered_content.push(item);
 
-        KanbanItemService.createItem(kanban.id, column.id, item.label).then(
-            function (response) {
+        KanbanItemService.createItem(kanban.id, column.id, item.label)
+            .then(function(response) {
                 item.updating = false;
                 _.extend(item, response.data);
             },
@@ -741,6 +827,20 @@ function KanbanCtrl(
         return compared_to;
     }
 
+    function getColumnId(html_element) {
+        var id;
+
+        if (html_element.hasClass('backlog')) {
+            id = 'backlog';
+        } else if (html_element.hasClass('archive')) {
+            id = 'archive';
+        } else if (html_element.hasClass('column')) {
+            id = html_element.attr('data-column-id');
+        }
+
+        return id;
+    }
+
     function getColumn(id) {
         if (id === 'archive') {
             return self.archive;
@@ -754,7 +854,7 @@ function KanbanCtrl(
     }
 
     function getBoardColumn(id) {
-        return _.find(self.board.columns, function (column) {
+        return _.find(self.board.columns, function(column) {
             return column.id === parseInt(id, 10);
         });
     }
