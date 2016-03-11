@@ -542,8 +542,6 @@ function autoloada1a67529272efa4aa35887930b9c77de($class) {
             'svncommitsdao' => '/dao/SvnCommitsDao.class.php',
             'svnnotification' => '/svn/SvnNotification.class.php',
             'svnnotificationdao' => '/dao/SvnNotificationDao.class.php',
-            'svnxmlimporter' => '/svn/SVNXMLImporter.class.php',
-            'svnxmlimporterexception' => '/svn/SVNXMLImporter.class.php',
             'system_alias' => '/System/Alias.class.php',
             'system_command' => '/System/Command.class.php',
             'system_command_commandexception' => '/System/Exception/CommandException.class.php',

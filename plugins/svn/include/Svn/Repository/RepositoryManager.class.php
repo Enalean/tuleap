@@ -28,6 +28,8 @@ use Tuleap\Svn\Repository\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use ProjectManager;
 use Rule_ProjectName;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
+use SystemEvent;
 
 class RepositoryManager {
 
@@ -69,10 +71,23 @@ class RepositoryManager {
         return $this->instantiateFromRow($row, $project);
     }
 
-    public function create(Repository $repositorysvn) {
-        if (! $this->dao->create($repositorysvn)) {
+    /**
+     * @return SystemEvent or null
+     */
+    public function create(Repository $repositorysvn, \SystemEventManager $system_event_manager) {
+        $id = $this->dao->create($repositorysvn);
+        if (! $id) {
             throw new CannotCreateRepositoryException ($GLOBALS['Language']->getText('plugin_svn','update_error'));
         }
+        $repositorysvn->setId($id);
+
+        $repo_event['system_path'] = $repositorysvn->getSystemPath();
+        $repo_event['project_id']  = $repositorysvn->getProject()->getId();
+        $repo_event['name']        = $repositorysvn->getProject()->getUnixNameMixedCase()."/".$repositorysvn->getName();
+        return $system_event_manager->createEvent(
+            'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
+            implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
+            SystemEvent::PRIORITY_HIGH);
     }
 
     public function getRepositoryFromSystemPath($path) {

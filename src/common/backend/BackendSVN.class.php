@@ -36,6 +36,14 @@ class BackendSVN extends Backend {
     protected function getUGroupDao() {
         return new UGroupDao(CodendiDataAccess::instance());
     }
+
+    /**
+     * @return UGroupManager
+     */
+    protected function getUGroupManager() {
+        return new UGroupManager($this->getUGroupDao());
+    }
+
      /**
      * For mocking (unit tests)
      *
@@ -454,7 +462,7 @@ class BackendSVN extends Backend {
     function getSVNAccessProjectMembers($project) {
         $list  = "";
         $first = true;
-        foreach ($project->getMembersUserNames() as $member) {
+        foreach ($project->getMembersUserNames($this->getProjectManager()) as $member) {
             if (!$first) {
                 $list .= ', ';
             }
@@ -475,7 +483,7 @@ class BackendSVN extends Backend {
         $conf            = "";
         $ugroup_dao      = $this->getUGroupDao();
         $dar             = $ugroup_dao->searchByGroupId($project->getId());
-        $project_members = $project->getMembers();
+        $project_members = $project->getMembers($this->getUGroupManager());
         foreach ($dar as $row) {
             $ugroup          = $this->getUGroupFromRow($row);
             $ugroup_members  = $ugroup->getMembers();

@@ -218,21 +218,12 @@ class Group extends Error {
     /**
      * getMembersUserNames - Return an array of user names of group members
      */
-    function getMembersUserNames() {
+    function getMembersUserNames(ProjectManager $pm = null) {
         if (!$this->members_usernames_data_array) {
-            $res=db_query("SELECT user.user_id AS user_id, user.user_name AS user_name, user.realname AS realname 
-                           FROM user_group INNER JOIN user USING(user_id) 
-                           WHERE user_group.group_id='". $this->getGroupId() ."'
-                             AND user.status IN ('A', 'R')");
-            $this->members_usernames_data_array = array();
-            if ($res && db_numrows($res) > 0) {
-                while ($row = db_fetch_array($res)) {
-                    $this->members_usernames_data_array[$row['user_id']] = $row;
-                }
-                db_free_result($res);
-            } else {
-                echo db_error();
+            if(is_null($pm)) {
+                $pm = ProjectManager::instance();
             }
+            $this->members_usernames_data_array = $pm->getProjectMembers($this->getGroupId());
         }
         return $this->members_usernames_data_array;
     }

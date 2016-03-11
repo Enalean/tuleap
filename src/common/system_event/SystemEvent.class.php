@@ -384,8 +384,10 @@ abstract class SystemEvent {
     /**
      * Notify people that listen to the status of the event
      */
-    public function notify() {
-        $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
+    public function notify(SystemEventsFollowersDao $dao = null) {
+        if(is_null($dao)) {
+            $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
+        }
         $listeners = array();
         foreach($dao->searchByType($this->getStatus()) as $row) {
             $listeners = array_merge($listeners, explode(',', $row['emails']));

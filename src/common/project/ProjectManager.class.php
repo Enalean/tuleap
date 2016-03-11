@@ -46,7 +46,8 @@ class ProjectManager {
     /**
      * A private constructor; prevents direct creation of object
      */
-    private function __construct() {
+    private function __construct(ProjectDao $dao = null) {
+        $this->_dao = $dao;
     //    $this->_dao = $this->getDao();
         $this->_cached_projects = array();
     }
@@ -75,6 +76,10 @@ class ProjectManager {
      */
     public static function clearInstance() {
         self::$_instance = null;
+    }
+
+    public static function testInstance(ProjectDao $dao) {
+        return new ProjectManager($dao);
     }
 
     /**
@@ -131,7 +136,12 @@ class ProjectManager {
      * @return Project
      */
     protected function createProjectInstance($group_id_or_row) {
-        return new Project($group_id_or_row);
+        if (is_array($group_id_or_row)) {
+            return new Project($group_id_or_row);
+        } else {
+            $dar = $this->_getDao()->searchById($group_id_or_row);
+            return new Project($dar->getRow());
+        }
     }
 
     /**
@@ -761,6 +771,26 @@ class ProjectManager {
         }
 
         return $this->hierarchy_manager;
+    }
+
+    /**
+     * Fetch the members of a project
+     *
+     * @return array user_id => array (
+     *      user_id => (int),
+     *      user_name => (string),
+     *      realname => (string))
+     */
+    public function getProjectMembers($project_id) {
+        $dar = $this->_getDao()->getProjectMembers($project_id);
+        if(!$dar) return array();
+
+        $result = array();
+        while ($row = $dar->getRow()) {
+            $result[$row['user_id']] = $row;
+        }
+        $dar->freeMemory();
+        return $result;
     }
 }
 

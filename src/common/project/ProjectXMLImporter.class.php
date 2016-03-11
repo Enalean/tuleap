@@ -125,9 +125,6 @@ class ProjectXMLImporter {
 
         $this->importUgroups($project, $xml_element);
 
-        $svn = new SVNXMLImporter($this->logger, $this->xml_validator);
-        $svn->import($project, $xml_element, $extraction_path);
-
         $frs = new FRSXMLImporter($this->logger,
             $this->xml_validator,
             new FRSPackageFactory(),
@@ -150,7 +147,7 @@ class ProjectXMLImporter {
             )
         );
 
-        $this->logger->info("Finish importing project in project ".$project->getUnixName());
+        $this->logger->info("Finish importing project in project ".$project->getUnixName() . " id " . $project->getID());
     }
 
     private function importUgroups(Project $project, SimpleXMLElement $xml_element) {

@@ -118,7 +118,7 @@ class AccessControlController {
             if ($request->exist('submit_other_version')) {
                 $this->access_file_creator->useAnOldVersion($repository, $request->get('version_selected'));
             } else {
-                $this->access_file_creator->create($repository, $request->get('form_accessfile'));
+                $this->access_file_creator->create($repository, $request->get('form_accessfile'), $_SERVER['REQUEST_TIME']);
             }
             $GLOBALS['Response']->redirect($this->getUrl($repository));
         } catch (CannotCreateAccessFileHistoryException $exception) {

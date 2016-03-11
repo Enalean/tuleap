@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <include href="ugroups-definition.rng"/>
-  <include href="svn-definition.rng"/>
   <include href="project-definition.rng"/>
   <include href="git-definition.rng"/>
   <include href="frs-definition.rng"/>
   <include href="mediawiki-definition.rng"/>
   <include href="tracker-definition.rng"/>
+  <include href="svn-definition.rng"/>
   <start>
     <element name="project">
       <interleave>
