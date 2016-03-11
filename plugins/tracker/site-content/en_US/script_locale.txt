@@ -33,7 +33,8 @@ codendi.locales['tracker_artifact_link'] = {
     or: ' or ',
     select: 'Select artifacts to link',
     create: 'Create a new artifact',
-    advanced: 'Advanced functionalities (browse artifacts...) are not available at artifact creation.'
+    advanced: 'Advanced functionalities (browse artifacts...) are not available at artifact creation.',
+    trackers_label: 'Trackers'
 };
 codendi.locales['tracker_template'] = {
     no_template: 'No template found' //same as plugin_tracker_include_type - tmpl_src_no_trk

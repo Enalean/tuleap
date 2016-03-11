@@ -224,12 +224,15 @@ codendi.tracker.artifact.artifactLink = {
                     this.ul = new Element('ul').addClassName('nav nav-tabs tracker-form-element-artifactlink-list-nav');
                 }
             }
+            this.label = new Element('li').update(codendi.getText('tracker_artifact_link', 'trackers_label') + ':');
+            this.label.addClassName('tracker-form-element-artifactlink-list-nav-label');
 
             artifact_link.insert({top: this.ul});
             //foreach tracker panels, fills the navigation list and put behaviors
             artifact_link.select('h2').each(function(obj) {
                 self.loadTab(obj);
             });
+            this.ul.insertBefore(this.label, this.ul.firstChild);
         },
 
         showTrackerPanel: function(event, tracker_panel, element, h2) {
