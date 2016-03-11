@@ -30,7 +30,7 @@ Mock::generatePartial(
         'getUserManager',
         'getTracker',
         'getComment',
-        'getTrackerPluginConfig',
+        'getMailGatewayConfig',
         'isNotificationAssignedToEnabled'
     )
 );
@@ -260,7 +260,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
             ),
         ));
 
-        $config = mock('TrackerPluginConfig');
+        $config = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
 
         $current_changeset = partial_mock(
             'Tracker_Artifact_Changeset',
@@ -273,7 +273,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
                 'getUserManager',
                 'getTracker',
                 'getComment',
-                'getTrackerPluginConfig',
+                'getMailGatewayConfig',
                 'isNotificationAssignedToEnabled',
                 'getLogger',
             )
@@ -286,7 +286,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $current_changeset->setReturnReference('getUserManager', $um);
         $current_changeset->setReturnReference('getTracker', $tracker);
         $current_changeset->setReturnReference('getComment', $comment);
-        $current_changeset->setReturnReference('getTrackerPluginConfig', $config);
+        $current_changeset->setReturnReference('getMailGatewayConfig', $config);
         $current_changeset->setReturnReference('getLogger', mock('Logger'));
 
         $expected_body = <<<BODY
@@ -352,8 +352,8 @@ BODY;
         $changeset = $this->buildChangeSet($user);
         stub($changeset)->getUserFromRecipientName('user01')->returns($user);
 
-        $config = stub('TrackerPluginConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
-        stub($changeset)->getTrackerPluginConfig()->returns($config);
+        $config = stub('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
+        stub($changeset)->getMailGatewayConfig()->returns($config);
 
         $recipients = array(
             'user01' => false
@@ -385,8 +385,8 @@ BODY;
         stub($changeset)->getUserFromRecipientName('user02')->returns($user2);
         stub($changeset)->getUserFromRecipientName('user03')->returns($user3);
 
-        $config = stub('TrackerPluginConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
-        stub($changeset)->getTrackerPluginConfig()->returns($config);
+        $config = stub('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig')->isTokenBasedEmailgatewayEnabled()->returns(true);
+        stub($changeset)->getMailGatewayConfig()->returns($config);
 
         $recipient1 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email1');
         $recipient2 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email2');
@@ -431,7 +431,7 @@ BODY;
                 'getLanguageFactory',
                 'getUserFromRecipientName',
                 'getRecipientFactory',
-                'getTrackerPluginConfig',
+                'getMailGatewayConfig',
                 'isNotificationAssignedToEnabled'
             )
         );

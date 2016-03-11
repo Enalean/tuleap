@@ -19,6 +19,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
 require_once 'common/include/CSRFSynchronizerToken.class.php';
@@ -1426,7 +1429,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $this,
                 TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&func=admin-editoptions',
                 new Tracker_ColorPresenterCollection($this),
-                $this->getTrackerPluginConfig(),
+                $this->getMailGatewayConfig(),
                 $this->getArtifactByMailStatus()
             )
         );
@@ -2046,11 +2049,11 @@ EOS;
     }
 
     /**
-     * @return TrackerPluginConfig
+     * @return MailGatewayConfig
      */
-    private function getTrackerPluginConfig() {
-        return new TrackerPluginConfig(
-            new TrackerPluginConfigDao()
+    private function getMailGatewayConfig() {
+        return new MailGatewayConfig(
+            new MailGatewayConfigDao()
         );
     }
 
@@ -2058,7 +2061,7 @@ EOS;
      * @return Tracker_ArtifactByEmailStatus
      */
     private function getArtifactByMailStatus() {
-        return new Tracker_ArtifactByEmailStatus($this->getTrackerPluginConfig());
+        return new Tracker_ArtifactByEmailStatus($this->getMailGatewayConfig());
     }
 
     /**

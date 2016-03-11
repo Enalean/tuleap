@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+
 class Tracker_Artifact_MailGateway_IncomingMessageFactory {
-    /** @var TrackerPluginConfig */
+    /** @var MailGatewayConfig */
     private $tracker_config;
 
     /** @var Tracker_Artifact_IncomingMessageTokenBuilder */
@@ -29,7 +31,7 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactory {
     private $incoming_message_insecure_builder;
 
     public function __construct(
-        TrackerPluginConfig $tracker_config,
+        MailGatewayConfig $tracker_config,
         Tracker_Artifact_IncomingMessageTokenBuilder $incoming_message_token_builder,
         Tracker_Artifact_IncomingMessageInsecureBuilder $incoming_message_insecure_builder
     ) {

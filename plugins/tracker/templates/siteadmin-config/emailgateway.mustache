@@ -1,7 +1,18 @@
 <h2>{{ title }}</h2>
 
+{{# sections }}
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+        </li>
+        <li>
+            <a href="{{ natures_url }}">{{ natures }}</a>
+        </li>
+    </ul>
+{{/ sections }}
+
 <form method="POST" action="" id="siteadmin-config">
-    <input type="hidden" name="action" value="update" />
+    <input type="hidden" name="action" value="update-emailgateway" />
     {{{ csrf_token }}}
 
     {{# is_localinc_obsolete }}
@@ -10,9 +21,6 @@
     </div>
     {{/ is_localinc_obsolete }}
 
-    {{> siteadmin-config/natures }}
-
-    <legend>{{ email_gateway }}</legend>
     <p>{{ email_gateway_desc }}</p>
 
     <label class="radio">

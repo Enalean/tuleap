@@ -19,9 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Config\ConfigRouter;
 
 require_once('pre.php');
 
@@ -32,14 +37,16 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $current_user = UserManager::instance()->getCurrentUser();
     $nature_dao   = new NatureDao();
 
-    $router = new TrackerPluginConfigRouter(
+    $router = new ConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
-        new TrackerPluginConfigController(
-            new TrackerPluginConfig(
-                new TrackerPluginConfigDao()
+        new MailGatewayConfigController(
+            new MailGatewayConfig(
+                new MailGatewayConfigDao()
             ),
             new Config_LocalIncFinder(),
-            EventManager::instance(),
+            EventManager::instance()
+        ),
+        new NatureConfigController(
             new NatureCreator(
                 $nature_dao
             ),

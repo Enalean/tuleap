@@ -19,7 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TrackerPluginConfigDao extends DataAccessObject {
+namespace Tuleap\Tracker\Artifact\MailGateway;
+
+class MailGatewayConfigDao extends \DataAccessObject {
 
     public function searchEmailgatewayConfiguration() {
         $sql = "SELECT * FROM plugin_tracker_config WHERE name = 'emailgateway_mode'";

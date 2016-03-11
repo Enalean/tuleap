@@ -18,6 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+
 require_once('common/date/DateHelper.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
@@ -674,9 +677,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @protected for testing purpose
      */
-    protected function getTrackerPluginConfig() {
-        return new TrackerPluginConfig(
-            new TrackerPluginConfigDao()
+    protected function getMailGatewayConfig() {
+        return new MailGatewayConfig(
+            new MailGatewayConfigDao()
         );
     }
 
@@ -721,7 +724,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             // 2. Compute the body of the message + headers
             $messages = array();
 
-            $config = $this->getTrackerPluginConfig();
+            $config = $this->getMailGatewayConfig();
             if ($config->isTokenBasedEmailgatewayEnabled() || $this->isNotificationAssignedToEnabled()) {
                 $messages = $this->buildAMessagePerRecipient($recipients, $is_update);
             } else {
@@ -852,7 +855,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     private function getCustomReplyToHeader() {
-        $config         = $this->getTrackerPluginConfig();
+        $config         = $this->getMailGatewayConfig();
         $artifactbymail = new Tracker_ArtifactByEmailStatus($config);
 
         if ($config->isTokenBasedEmailgatewayEnabled()) {

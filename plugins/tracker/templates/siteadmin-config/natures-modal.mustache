@@ -11,6 +11,7 @@
     </div>
 
     <form action="" method="POST">
+        <input type="hidden" name="action" value="create-nature" />
         <div class="modal-body">
             {{{ csrf_token }}}
 
@@ -34,7 +35,7 @@
 
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
-            <input type="submit" class="btn btn-primary" name="create-nature" value="{{ btn_create }}">
+            <input type="submit" class="btn btn-primary" value="{{ btn_create }}">
         </div>
     </form>
 </div>

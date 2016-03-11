@@ -19,19 +19,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TrackerPluginConfig {
+namespace Tuleap\Tracker\Artifact\MailGateway;
+
+class MailGatewayConfig {
 
     private static $DISABLED = 'disabled';
     private static $TOKEN    = 'token';
     private static $INSECURE = 'insecure';
 
-    /** @var TrackerPluginConfigDao */
+    /** @var MailGatewayConfigDao */
     private $dao;
 
     /** @var string */
     private $cache_emailgateway_mode;
 
-    public function __construct(TrackerPluginConfigDao $dao) {
+    public function __construct(MailGatewayConfigDao $dao) {
         $this->dao = $dao;
     }
 

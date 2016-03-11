@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+
 class Tracker_ArtifactByEmailStatus {
 
-    /** @var TrackerPluginConfig */
+    /** @var MailGatewayConfig */
     private $tracker_plugin_config;
 
-    public function __construct(TrackerPluginConfig $tracker_plugin_config) {
+    public function __construct(MailGatewayConfig $tracker_plugin_config) {
         $this->tracker_plugin_config = $tracker_plugin_config;
     }
 

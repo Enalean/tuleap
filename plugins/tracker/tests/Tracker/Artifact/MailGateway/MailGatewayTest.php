@@ -42,7 +42,7 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
         $this->incoming_message_factory = mock('Tracker_Artifact_MailGateway_IncomingMessageFactory');
         $this->artifact_factory         = mock('Tracker_ArtifactFactory');
         $this->parser                   = mock('Tracker_Artifact_MailGateway_Parser');
-        $this->tracker_config           = mock('TrackerPluginConfig');
+        $this->tracker_config           = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
         $this->logger                   = mock('Logger');
         $this->notifier                 = mock('Tracker_Artifact_MailGateway_Notifier');
         $this->incoming_mail_dao        = mock('Tracker_Artifact_Changeset_IncomingMailDao');

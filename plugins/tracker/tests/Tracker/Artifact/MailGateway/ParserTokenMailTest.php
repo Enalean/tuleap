@@ -41,7 +41,7 @@ class Tracker_Artifact_MailGateway_Parser_TokenMail_BaseTest extends TuleapTestC
 
         $this->recipient_factory           = mock('Tracker_Artifact_MailGateway_RecipientFactory');
         $incoming_message_insecure_builder = mock('Tracker_Artifact_IncomingMessageInsecureBuilder');
-        $tracker_config                    = mock('TrackerPluginConfig');
+        $tracker_config                    = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
         $tracker_config->setReturnValue('isTokenBasedEmailgatewayEnabled', true);
 
         $incoming_message_token_builder    = new Tracker_Artifact_IncomingMessageTokenBuilder($this->recipient_factory);

@@ -19,10 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tracker\FormElement\Field\ArtifactLink\Nature;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
+
+use Tuleap\Tracker\Config\SectionsPresenter;
+use CSRFSynchronizerToken;
 
 class NatureConfigPresenter {
 
+    public $csrf_token;
     public $desc;
     public $title;
     public $shortname;
@@ -39,15 +43,17 @@ class NatureConfigPresenter {
     public $create_new_nature;
     public $shortname_pattern;
     public $natures;
+    public $sections;
+    public $available_natures;
 
-    public function __construct(array $natures) {
-        $this->desc          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
-        $this->title         = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
-        $this->shortname     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
-        $this->forward_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
-        $this->reverse_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
-        $this->btn_create    = $GLOBALS['Language']->getText('global', 'btn_create');
-        $this->btn_close     = $GLOBALS['Language']->getText('global', 'btn_close');
+    public function __construct($title, array $natures, CSRFSynchronizerToken $csrf) {
+        $this->desc              = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
+        $this->available_natures = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
+        $this->shortname         = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
+        $this->forward_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
+        $this->reverse_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
+        $this->btn_create        = $GLOBALS['Language']->getText('global', 'btn_create');
+        $this->btn_close         = $GLOBALS['Language']->getText('global', 'btn_close');
 
         $this->shortname_help     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_help');
         $this->forward_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_help');
@@ -60,6 +66,10 @@ class NatureConfigPresenter {
         $this->create_new_nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'create_new_nature');
         $this->shortname_pattern = NatureCreator::SHORTNAME_PATTERN;
 
-        $this->natures = $natures;
+        $this->sections = new SectionsPresenter();
+
+        $this->title      = $title;
+        $this->natures    = $natures;
+        $this->csrf_token = $csrf->fetchHTMLInput();
     }
 }
