@@ -787,9 +787,9 @@ class ReferenceManager {
 
         if ($this->isAnArtifactKeyword($keyword)) {
             $ref_gid = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
+        } else {
+            $ref_gid = $this->getProjectIdForReference($match, $keyword, $value);
         }
-
-        $ref_gid = $this->getProjectIdForReference($match, $keyword, $value);
 
         return $this->getReference($keyword, $value, $ref_gid);
     }
