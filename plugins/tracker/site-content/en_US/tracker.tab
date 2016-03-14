@@ -1171,6 +1171,7 @@ plugin_tracker_formelement_admin	description_placeholder	Enter description…
 plugin_tracker_formelement_admin	lastmodifiedby_label	Last Updated By
 plugin_tracker_formelement_admin	lastmodifiedby_description	The last person to update the artifact
 plugin_tracker_formelement_admin	lastmodifiedby_help	The field is automatically set to the last person who modified the artifact
+plugin_tracker_formelement_admin	assignedto_label	Assigned to
 
 
 plugin_tracker_formelement_property	hint	Hint

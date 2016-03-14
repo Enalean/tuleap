@@ -82,6 +82,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
                                                 'keyword' => 'bug', 
                                                 'group_id' => '102',
                                                 'tracker_id' => '456', 
+                                                'nature' => '',
                                                 'last_changeset_id' => '789'));
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
@@ -809,7 +810,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
     public function itIgnoresAddOfArtifactThatAreAlreadyLinked() {
         stub($this->field)->getChangesetValues()->returns(array(
-            new Tracker_ArtifactLinkInfo(55, '', '', '', '')
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', '')
         ));
 
         $this->assertEqual(
@@ -820,8 +821,8 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
     public function itRemovesAllExistingArtifactLinks() {
         stub($this->field)->getChangesetValues()->returns(array(
-            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
         ));
 
         $this->assertEqual(
@@ -832,9 +833,9 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
     public function itRemovesFirstArtifactLink() {
         stub($this->field)->getChangesetValues()->returns(array(
-            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
         ));
 
         $this->assertEqual(
@@ -845,9 +846,9 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
     public function itRemovesMiddleArtifactLink() {
         stub($this->field)->getChangesetValues()->returns(array(
-            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
         ));
 
         $this->assertEqual(
@@ -858,9 +859,9 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
     public function itRemovesLastArtifactLink() {
         stub($this->field)->getChangesetValues()->returns(array(
-            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
         ));
 
         $this->assertEqual(
@@ -871,9 +872,9 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
     public function itAddsAndRemovesInOneCall() {
         stub($this->field)->getChangesetValues()->returns(array(
-            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
-            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', '', ''),
         ));
 
         $this->assertEqual(
