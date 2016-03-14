@@ -243,6 +243,15 @@ Requires: tuleap
 %description plugin-hudson
 Plugin to install the Tuleap Hudson plugin for continuous integration
 
+%package plugin-hudson-svn
+Summary: Hudson/Jenkins plugin for Tuleap SVN multiple repositories
+Group: Development/Tools
+Version: @@PLUGIN_HUDSON_SVN_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap-plugin-hudson, tuleap-plugin-svn
+%description plugin-hudson-svn
+Hudson/Jenkins plugin for Tuleap SVN multiple repositories
+
 %package plugin-webdav
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
@@ -452,8 +461,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
-# Remove Hudson SVN plugin
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1047,6 +1054,10 @@ fi
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson
+
+%files plugin-hudson-svn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/hudson_svn
 
 %files plugin-webdav
 %defattr(-,%{APP_USER},%{APP_USER},-)

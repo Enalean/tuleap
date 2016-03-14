@@ -47,7 +47,9 @@ class hudson_svnPlugin extends Plugin {
         $this->_addHook('update_ci_triggers');
         $this->_addHook('delete_ci_triggers');
 
-        $this->addHook(PostCommit::PROCESS_POST_COMMIT);
+        if (defined('SVN_BASE_URL')) {
+            $this->addHook(PostCommit::PROCESS_POST_COMMIT);
+        }
     }
 
     /**

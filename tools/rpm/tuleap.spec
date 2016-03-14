@@ -301,6 +301,20 @@ Provides: tuleap-plugin-hudson = %{version}
 %description plugin-hudson
 Plugin to install the Tuleap Hudson plugin for continuous integration
 
+%package plugin-hudson-svn
+Summary: Hudson/Jenkins plugin for Tuleap SVN multiple repositories
+Group: Development/Tools
+Version: @@PLUGIN_HUDSON_SVN_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{PKG_NAME}, %{PKG_NAME}-plugin-hudson, %{PKG_NAME}-plugin-svn
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-hudson-svn = %{version}
+%else
+Provides: tuleap-plugin-hudson-svn = %{version}
+%endif
+%description plugin-hudson-svn
+Hudson/Jenkins plugin for Tuleap SVN multiple repositories
+
 %package plugin-webdav
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
@@ -518,8 +532,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Plugin OpenID Connect is not supported on CentOS 5
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
-# Remove Hudson SVN plugin
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1025,6 +1037,10 @@ fi
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson
+
+%files plugin-hudson-svn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/hudson_svn
 
 %files plugin-webdav
 %defattr(-,%{APP_USER},%{APP_USER},-)
