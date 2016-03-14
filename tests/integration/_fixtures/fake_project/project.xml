@@ -15,5 +15,5 @@
         <service shortname="mediawiki" enabled="true" />
     </services>
 
-    <mediawiki pages-backup="wiki_pages.xml" language="fr_FR"/>
+    <mediawiki pages-backup="wiki_pages.xml" language="fr_FR" files-folder-backup="mediawiki_files"/>
 </project>

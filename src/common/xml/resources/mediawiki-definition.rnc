@@ -1,3 +1,4 @@
 mediawiki =
-    attribute pages-backup { xsd:string } &
+    attribute pages-backup { xsd:string }? &
+    attribute files-folder-backup { xsd:string }? &
     attribute language { xsd:string }?
