@@ -834,12 +834,16 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     private function checkHierarchyCanBeUsed() {
-        $config = new AllowedProjectsConfig(ProjectManager::instance(), new AllowedProjectsDao());
-
-        if ($config->isProjectAllowedToUseNature($this->getProject())) {
+        if ($this->isProjectAllowedToUseNature()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_use_hierarchy'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
         }
+    }
+
+    private function isProjectAllowedToUseNature() {
+        $config = new AllowedProjectsConfig(ProjectManager::instance(), new AllowedProjectsDao());
+
+        return $config->isProjectAllowedToUseNature($this->getProject());
     }
 
     private function getHierarchyController($request) {
@@ -1326,6 +1330,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-delete.png'),
                 ),
         );
+
+        if ($this->isProjectAllowedToUseNature()) {
+            unset($items['hierarchy']);
+        }
 
         return $items;
     }
