@@ -1,4 +1,8 @@
 Version 8.13 (Not released yet)
+	== Enhancement ==
+	* story #8833: show, import and manipulate links
+		- First step to restrict artifact links natures usage
+
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
 
@@ -14,11 +18,11 @@ Version 8.13 (Not released yet)
 
 	== Plugins ==
 	* agiledashboard: 1.365
-	* tracker: 5.810
+	* tracker: 5.811
 	* hudson_svn: 0.5
 	* git: 4.132
 	* hudson: 1.27
-	* svn: 0.34
+	* svn: 0.35
 	* graphontrackersv5: 5.19
 	* ldap: 3.100
 
