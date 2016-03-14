@@ -732,7 +732,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
-
+                    $this->checkHierarchyCanBeUsed();
                     $this->displayAdminItemHeader($layout, 'hierarchy');
                     $this->getHierarchyController($request)->edit();
                     $this->displayFooter($layout);
