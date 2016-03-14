@@ -43,7 +43,7 @@
                     <tr>
                         <td><input type="checkbox" name="project-ids-to-revoke[]" value="{{ getId }}"></td>
                         <td>{{ getId }}</td>
-                        <td>{{ getUnconvertedPublicName }}</td>
+                        <td><a href="/projects/{{ getUnixNameMixedCase }}">{{ getUnconvertedPublicName }}</a></td>
                     </tr>
                     {{/ allowed_projects }}
                 {{/ there_is_no_project }}
