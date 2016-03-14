@@ -46,7 +46,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
             aChangesetValueArtifactLink()
                 ->withArtifactLinks(
                     array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345)
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
                     )
                 )->build()
         );
@@ -56,8 +56,8 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
             aChangesetValueArtifactLink()
                 ->withArtifactLinks(
                     array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345),
-                        456 => new Tracker_ArtifactLinkInfo(456, 'art', 101, 1, 12345)
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
+                        456 => new Tracker_ArtifactLinkInfo(456, 'art', 101, 1, 12345, '')
                     )
                 )->build()
         );
@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
             aChangesetValueArtifactLink()
                 ->withArtifactLinks(
                     array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345)
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
                     )
                 )->build()
         );
@@ -83,7 +83,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
             aChangesetValueArtifactLink()
                 ->withArtifactLinks(
                     array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345)
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
                     )
                 )->build()
         );
@@ -102,7 +102,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
             aChangesetValueArtifactLink()
                 ->withArtifactLinks(
                     array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345)
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
                     )
                 )->build()
         );
@@ -120,7 +120,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
             aChangesetValueArtifactLink()
                 ->withArtifactLinks(
                     array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345)
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
                     )
                 )->build()
         );

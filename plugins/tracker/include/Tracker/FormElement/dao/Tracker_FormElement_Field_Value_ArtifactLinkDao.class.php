@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
     public function searchReverseLinksById($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
-        $sql = "SELECT DISTINCT a.id as artifact_id, a.last_changeset_id, t.group_id, t.item_name as keyword, t.id as tracker_id
+        $sql = "SELECT DISTINCT a.id as artifact_id, a.last_changeset_id, t.group_id, t.item_name as keyword, t.id as tracker_id, artlink.nature as nature
                 FROM tracker_changeset_value_artifactlink AS artlink
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)

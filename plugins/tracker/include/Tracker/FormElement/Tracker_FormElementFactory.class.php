@@ -503,6 +503,14 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
+     * @return array All submitted by formElements used by the tracker
+     */
+    public function getUsedSubmittedByFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('subby'));
+    }
+
+    /**
+     * @param Tracker $tracker
      * @return array All date formElements used by the tracker
      */
     public function getUsedDateFields($tracker) {

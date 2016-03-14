@@ -2,6 +2,7 @@
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Sogilis, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
+
+use Tracker\FormElement\Field\ArtifactLink\Nature;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
@@ -477,6 +480,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
 
+            //build by nature array
+            $by_nature = array();
+            foreach ($artifact_links as $artifact_link) {
+                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
+                    $nature = $artifact_link->getNature();
+                    if(!isset($by_nature[$nature])) {
+                        $by_nature[$nature] = array();
+                    }
+                    $by_nature[$nature][] = $artifact_link;
+                }
+            }
+
             $projects = array();
             $this_project_id = $this->getTracker()->getProject()->getGroupId();
             foreach ($ids as $tracker_id => $matching_ids) {
@@ -537,6 +552,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     }
                     $html .= '</div>';
                 }
+            }
+
+            //by nature
+            foreach($by_nature as $nature => $artifact_links) {
+                if(empty($nature)) {
+                    continue;
+                }
+
+                $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+                $html .= $renderer->renderToString('artifactlink-nature-table', new Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter($artifact_links, $reverse_artifact_links));
             }
         } else {
             $html .= $this->getNoValueLabel();
@@ -1020,7 +1045,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     private function getArtifactLinkInfos($data) {
         $artifact_links = array();
         while ($row = $data->getRow()) {
-            $artifact_links[$row['artifact_id']] = new Tracker_ArtifactLinkInfo($row['artifact_id'], $row['keyword'], $row['group_id'], $row['tracker_id'], $row['last_changeset_id']);
+            $artifact_links[$row['artifact_id']] = new Tracker_ArtifactLinkInfo(
+                $row['artifact_id'],
+                $row['keyword'],
+                $row['group_id'],
+                $row['tracker_id'],
+                $row['last_changeset_id'],
+                $row['nature']
+            );
         }
 
         return $artifact_links;
@@ -1060,7 +1092,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $row['keyword'],
                     $row['group_id'],
                     $row['tracker_id'],
-                    $row['last_changeset_id']
+                    $row['last_changeset_id'],
+                    $row['nature']
                 );
             }
         }
