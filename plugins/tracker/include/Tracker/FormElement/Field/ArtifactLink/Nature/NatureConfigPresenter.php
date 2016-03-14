@@ -45,8 +45,10 @@ class NatureConfigPresenter {
     public $natures;
     public $sections;
     public $available_natures;
+    public $allowed_projects;
+    public $allowed_projects_title;
 
-    public function __construct($title, array $natures, CSRFSynchronizerToken $csrf) {
+    public function __construct($title, array $natures, CSRFSynchronizerToken $csrf, $allowed_projects) {
         $this->desc              = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
         $this->available_natures = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
         $this->shortname         = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
@@ -59,6 +61,8 @@ class NatureConfigPresenter {
         $this->forward_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_help');
         $this->reverse_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_help');
 
+        $this->allowed_projects_title    = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'list_of_allowed_projects');
+        $this->allowed_projects_desc     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'list_of_allowed_projects_desc');
         $this->shortname_placeholder     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_placeholder');
         $this->forward_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_placeholder');
         $this->reverse_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_placeholder');
@@ -68,8 +72,9 @@ class NatureConfigPresenter {
 
         $this->sections = new SectionsPresenter();
 
-        $this->title      = $title;
-        $this->natures    = $natures;
-        $this->csrf_token = $csrf->fetchHTMLInput();
+        $this->title            = $title;
+        $this->natures          = $natures;
+        $this->csrf_token       = $csrf->fetchHTMLInput();
+        $this->allowed_projects = $allowed_projects;
     }
 }

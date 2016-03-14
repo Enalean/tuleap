@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
@@ -33,9 +35,10 @@ require_once('pre.php');
 $plugin_manager = PluginManager::instance();
 $plugin = $plugin_manager->getPluginByName('tracker');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $request      = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
-    $nature_dao   = new NatureDao();
+    $project_manager = ProjectManager::instance();
+    $request         = HTTPRequest::instance();
+    $current_user    = UserManager::instance()->getCurrentUser();
+    $nature_dao      = new NatureDao();
 
     $router = new ConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
@@ -47,6 +50,11 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             EventManager::instance()
         ),
         new NatureConfigController(
+            $project_manager,
+            new AllowedProjectsConfig(
+                $project_manager,
+                new AllowedProjectsDao()
+            ),
             new NatureCreator(
                 $nature_dao
             ),

@@ -13,30 +13,34 @@
 
 <div id="siteadmin-config">
     <legend>{{ available_natures }}</legend>
-    <p class="muted">{{ desc }}</p>
+    <p>{{ desc }}</p>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>{{ shortname }}</th>
-                <th>{{ forward_label }}</th>
-                <th>{{ reverse_label }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{# natures }}
-                <tr>
-                    <td>{{ shortname }}</td>
-                    <td>{{ forward_label }}</td>
-                    <td>{{ reverse_label }}</td>
-                </tr>
-            {{/ natures }}
-        </tbody>
-    </table>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ shortname }}</th>
+                        <th>{{ forward_label }}</th>
+                        <th>{{ reverse_label }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# natures }}
+                        <tr>
+                            <td>{{ shortname }}</td>
+                            <td>{{ forward_label }}</td>
+                            <td>{{ reverse_label }}</td>
+                        </tr>
+                    {{/ natures }}
+                </tbody>
+            </table>
 
     <a class="btn" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal">
         <i class="icon-plus"></i> {{ create_new_nature }}
     </a>
 
     {{> siteadmin-config/natures-modal }}
+
+    <legend class="allowed-projects-for-nature-title">{{ allowed_projects_title }}</legend>
+    <p>{{ allowed_projects_desc }}</p>
+    {{{ allowed_projects }}}
 </div>

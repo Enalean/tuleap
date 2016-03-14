@@ -1,0 +1,66 @@
+<div id="allowed-projects-list">
+    {{# resource_allowed_project_list }}
+        <h2>{{ resource_allowed_project_list }}</h2>
+    {{/ resource_allowed_project_list }}
+
+    <form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
+        <div id="allowed-projects-list-actions">
+            {{{ update_allowed_projects_action_csrf }}}
+
+            <div id="project-to-allow-autocompleter" class="input-append">
+                <input id="project-to-allow" name="project-to-allow" type="text" placeholder="{{ resource_allowed_project_list_allow_placeholder }}">
+                <button type="submit" name="allow-project" class="btn btn-primary" value="1">
+                    <i class="icon-ok-sign icon-white"></i> {{ resource_allowed_project_list_allow_project }}
+                </button>
+            </div>
+
+            <button id="revoke-project" class="btn btn-danger" disabled>
+                <i class="icon-minus-sign icon-white"></i> {{ resource_allowed_project_list_revoke_projects }}
+            </button>
+
+            <div class="input-prepend filter">
+                <span class="add-on">&#xf002;</span>
+                <input type="text" id="filter-projects" placeholder="{{ resource_allowed_project_list_filter_placeholder }}" {{# there_is_no_project }}disabled{{/ there_is_no_project }}>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="checkbox-cell"><input type="checkbox" id="check-all"></th>
+                    <th class="id-cell">{{ resource_allowed_project_list_id }}</th>
+                    <th>{{ resource_allowed_project_list_name }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# there_is_no_project }}
+                <tr>
+                    <td colspan="3" id="empty-project-list">{{ resource_allowed_project_list_empty }}</td>
+                </tr>
+                {{/ there_is_no_project }}
+                {{^ there_is_no_project }}
+                    {{# allowed_projects }}
+                    <tr>
+                        <td><input type="checkbox" name="project-ids-to-revoke[]" value="{{ getId }}"></td>
+                        <td>{{ getId }}</td>
+                        <td>{{ getUnconvertedPublicName }}</td>
+                    </tr>
+                    {{/ allowed_projects }}
+                {{/ there_is_no_project }}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div id="revoke-modal" class="modal hide fade">
+    <div class="modal-header">
+        <h3>{{ resource_allowed_project_revoke_title }}</h3>
+    </div>
+    <div class="modal-body">
+        <p>{{ resource_allowed_project_revoke_description }}</p>
+    </div>
+    <div class="modal-footer">
+        <button id="revoke-confirm" class="btn btn-danger">{{ resource_allowed_project_revoke_yes }}</button>
+        <button data-dismiss="modal" class="btn">{{ resource_allowed_project_revoke_no }}</button>
+    </div>
+</div>
