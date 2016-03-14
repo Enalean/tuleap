@@ -21,6 +21,8 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
@@ -741,7 +743,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy-update':
                 if ($this->userIsAdmin($current_user)) {
-
+                    $this->checkHierarchyCanBeUsed();
                     $this->getHierarchyController($request)->update();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -829,6 +831,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
         }
         return false;
+    }
+
+    private function checkHierarchyCanBeUsed() {
+        $config = new AllowedProjectsConfig(ProjectManager::instance(), new AllowedProjectsDao());
+
+        if ($config->isProjectAllowedToUseNature($this->getProject())) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_use_hierarchy'));
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+        }
     }
 
     private function getHierarchyController($request) {

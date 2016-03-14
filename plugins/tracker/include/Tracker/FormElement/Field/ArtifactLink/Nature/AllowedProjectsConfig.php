@@ -64,4 +64,9 @@ class AllowedProjectsConfig {
 
         return $projects;
     }
+
+    public function isProjectAllowedToUseNature(Project $project) {
+        return $this->dao->hasProjectId($project->getId());
+    }
+
 }

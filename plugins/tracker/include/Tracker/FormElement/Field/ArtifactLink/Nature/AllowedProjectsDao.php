@@ -45,4 +45,15 @@ class AllowedProjectsDao extends \DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function hasProjectId($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT *
+                FROM plugin_tracker_artifactlink_natures_allowed_projects
+                WHERE project_id = $project_id";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
+
 }
