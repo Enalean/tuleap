@@ -2,6 +2,7 @@ Version 8.13 (Not released yet)
 	== Enhancement ==
 	* story #8833: show, import and manipulate links
 		- First step to restrict artifact links natures usage
+		- Display link to project
 
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
