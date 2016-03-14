@@ -59,6 +59,7 @@ RM='/bin/rm'
 RPM='/bin/rpm'
 SERVICE='/sbin/service'
 SESTATUS='/usr/sbin/sestatus'
+TAIL='/usr/bin/tail'
 TOUCH='/bin/touch'
 USERADD='/usr/sbin/useradd'
 USERDEL='/usr/sbin/userdel'
@@ -66,8 +67,8 @@ USERMOD='/usr/sbin/usermod'
 
 CMD_LIST=('AWK' 'CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'DIG' 'FIND'
           'GREP' 'GROUPADD' 'GROUPDEL' 'INSTALL' 'LN' 'LS' 'MKDIR' 'MV' 'MYSQL'
-          'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS' 'TOUCH'
-          'USERADD' 'USERDEL' 'USERMOD')
+          'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS' 'TAIL'
+          'TOUCH' 'USERADD' 'USERDEL' 'USERMOD')
 
 # default parameter
 generate_ssl_certificate="n"
@@ -238,6 +239,15 @@ control_service() {
 enable_service() {
     local service="$1"
 	$CHKCONFIG $service on
+}
+
+dns_check() {
+    if [ -z "${1}" ]
+    then
+        ${DIG} +short . A . AAAA
+    else
+        ${DIG} +short ${1} A ${1} AAAA | ${TAIL} -1
+    fi
 }
 
 ##############################################
@@ -975,47 +985,37 @@ echo
 
 while :
 do
-    # Ask for domain name and other installation parameters
-    if [ -z "$sys_default_domain" ]
+    if [ "${disable_domain_name_check}" = "y" ]
     then
-        read -p "Tuleap domain name: (e.g. mytuleap.example.com): " \
-            sys_default_domain
+        todo "Your domain name is $sys_default_domain"
         sys_fullname=$sys_default_domain
+        break
     fi
-    warning "New feature comming soon!"
-    warning "In the new Tuleap release, setup.sh will check if your domain"
-    warning "name is available. And for your automation or if you are sure,"
-    warning "you can still bypass the check with option:"
-    warning "setup.sh --disable-domain-name-check"
-    sleep 5
-    break
 
-    if [ "${disable_domain_name_check}" = "n" ]
+    if [ -z "$(dns_check ${sys_default_domain})" ]
     then
-        # if ${sys_fullname} is empty, Dig prints the DNS root servers
-        # (dig +short A AAAA)
-        if [ ! -z "${sys_fullname}" ]
+        yn="n"
+        warning "Your domain name is not valid!"
+        read -p "Do you want to continue[y/n]? " yn
+
+        if [ ${yn,,} = "y" ]
         then
-            if [ ! -z "$(${DIG} +short ${sys_fullname} A \
-                ${sys_fullname} AAAA)" ]
-            then
-                todo "Your domain name is ${sys_fullname}"
-                break
-            else
-                warning "Is your domain name valid? (${sys_fullname})"
-                read -p "[y|n] " yn
-                case ${yn^^} in
-                    "Y"|"YES") todo "Your domain name is ${sys_fullname}"
-                        break
-                        ;;
-                    "N"|"NO") sys_default_domain=""
-                        ;;
-                    *) sys_default_domain=""
-                        ;;
-                esac
-            fi
+            todo "Your domain name is $sys_default_domain"
+            sys_fullname=$sys_default_domain
+            break
         fi
     fi
+
+    if [ ! -z "${sys_default_domain}" -a \
+        ! -z "$(dns_check ${sys_default_domain})" ]
+    then
+        todo "Your domain name is $sys_default_domain"
+        sys_fullname=$sys_default_domain
+        break
+    fi
+
+    read -p "Tuleap domain name: (e.g. mytuleap.example.com): " \
+        sys_default_domain
 done
 
 if [ -z "$sys_org_name" ]
