@@ -31,6 +31,7 @@ plugin_hudson	rss_feed	RSS feed of all builds for $1 job
 plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.
 plugin_hudson	addjob_title	Add job
+plugin_hudson	addjob	Submit
 plugin_hudson	form_job_url	Job URL:
 plugin_hudson	form_job_name	Job name:
 plugin_hudson	form_job_use_trigger	Trigger a build after commits:

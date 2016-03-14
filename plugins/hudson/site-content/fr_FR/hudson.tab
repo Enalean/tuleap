@@ -30,7 +30,8 @@ plugin_hudson	rss_feed	Flux RSS de tous les builds du job $1
 
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
-plugin_hudson	addjob_title	Ajouter un job
+plugin_hudson	addjob_title	Soumettre
+plugin_hudson	addjob	Ajouter un job
 plugin_hudson	form_job_url	URL du job :
 plugin_hudson	form_job_name	Nom du job :
 plugin_hudson	form_job_use_trigger	Déclencher un build après un commit :

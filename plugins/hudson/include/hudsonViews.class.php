@@ -379,10 +379,10 @@ class hudsonViews extends Views {
         $project = $project_manager->getProject($group_id);
 
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
-        echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
+        echo '<input class="btn btn-primary" value="'.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'" type="submit" onclick="toggle_addurlform(); return false;">';
         echo ' '.$this->_getHelp('hudson-service', true);
         echo '<div id="hudson_add_job">';
-        $this->displayForm($project, $services, 'add', 'add', 'Add job', null, null, null, null, null, null, '');
+        $this->displayForm($project, $services, 'add', 'add', $GLOBALS['Language']->getText('plugin_hudson','addjob'), null, null, null, null, null, null, '');
         echo '</div>';
         echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
@@ -408,7 +408,7 @@ class hudsonViews extends Views {
                     <div class="control-group">
                         <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>
                         <div class="controls">
-                            <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" value="'. $job_url .'" />
+                            <input id="hudson_job_url" required name="hudson_job_url" type="text" size="64" value="'. $job_url .'" />
                             <span class="help help-inline">'. $GLOBALS['Language']->getText('plugin_hudson','form_joburl_example') .'</span>
                         </div>
                     </div>';
