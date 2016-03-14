@@ -30,10 +30,21 @@ class MediaWikiXMLImporter {
      */
     private $language_manager;
 
+    /**
+     * @var System_Command
+     */
+    private $sys_command;
+
+    /**
+     * @var Backend
+     */
+    private $backend;
+
     public function __construct(Logger $logger, MediawikiLanguageManager $language_manager) {
-        $this->logger = new WrapperLogger($logger, "MediaWikiXMLImporter");
+        $this->logger           = new WrapperLogger($logger, "MediaWikiXMLImporter");
         $this->language_manager = $language_manager;
-        $this->sys_command = new System_Command();
+        $this->sys_command      = new System_Command();
+        $this->backend          = Backend::instance();
     }
 
     /**
@@ -55,17 +66,31 @@ class MediaWikiXMLImporter {
             $this->importLanguage($project, (string) $xml_mediawiki['language']);
         }
 
-        $pages_backup_path = $extraction_path . '/' . $xml_mediawiki['pages-backup'];
-        return $this->importPages($project, $pages_backup_path);
+        if(isset($xml_mediawiki['pages-backup'])) {
+            $pages_backup_path = $extraction_path . '/' . $xml_mediawiki['pages-backup'];
+            $this->importPages($project, $pages_backup_path);
+        }
+
+        if(isset($xml_mediawiki['files-folder-backup'])) {
+            $files_backup_path = $extraction_path . '/' . $xml_mediawiki['files-folder-backup'];
+            $this->importFiles($project, $files_backup_path);
+        }
+
+        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID();
+        $owner = ForgeConfig::get('sys_http_user');
+        if($owner) {
+            $this->backend->recurseChownChgrp($mediawiki_storage_path, $owner, $owner);
+        } else {
+            $this->logger->error("Could not get sys_http_user, permission problems may occur on $mediawiki_storage_path");
+        }
     }
 
     private function importPages(Project $project, $backup_path) {
         $this->logger->info("Importing pages for {$project->getUnixName()}");
-        $bin_path = dirname(__FILE__) . '/../bin';
         $project_name = escapeshellarg($project->getUnixName());
         $backup_path = escapeshellarg($backup_path);
-        $command = "$bin_path/mw-maintenance-wrapper.php $project_name importDump.php $backup_path";
-        $res = $this->sys_command->exec($command);
+        $command = $this->getMaintenanceWrapperPath() . " $project_name importDump.php $backup_path";
+        $this->sys_command->exec($command);
         return true;
     }
 
@@ -76,5 +101,20 @@ class MediaWikiXMLImporter {
         } catch (Mediawiki_UnsupportedLanguageException $e) {
             $this->logger->warn("Could not set up the language for {$project->getUnixName()} mediawiki, $language is not sopported.");
         }
+    }
+
+    private function importFiles(Project $project, $backup_path) {
+        $this->logger->info("Importing files for {$project->getUnixName()}");
+        $project_name = escapeshellarg($project->getUnixName());
+        $backup_path = escapeshellarg($backup_path);
+        $command = $this->getMaintenanceWrapperPath() . " $project_name importImages.php --comment='Tuleap import' $backup_path";
+
+        $this->sys_command->exec($command);
+        return true;
+
+    }
+
+    private function getMaintenanceWrapperPath() {
+        return __DIR__ . "/../bin/mw-maintenance-wrapper.php";
     }
 }

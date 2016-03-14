@@ -2,9 +2,16 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="mediawiki">
     <interleave>
-      <attribute name="pages-backup">
-        <data type="string"/>
-      </attribute>
+      <optional>
+        <attribute name="pages-backup">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="files-folder-backup">
+          <data type="string"/>
+        </attribute>
+      </optional>
       <optional>
         <attribute name="language">
           <data type="string"/>
