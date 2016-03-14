@@ -32,6 +32,8 @@ use Git_RemoteServer_GerritServer;
 use Tuleap\Git\Exceptions\RemoteServerDoesNotExistException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
+use PFUser;
 
 class MigrationHandler {
 
@@ -50,6 +52,21 @@ class MigrationHandler {
         $this->gerrit_server_factory    = $gerrit_server_factory;
         $this->driver_factory           = $driver_factory;
         $this->history_dao              = $history_dao;
+    }
+
+    public function migrate(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
+        if (! $repository->canMigrateToGerrit()) {
+            throw new RepositoryCannotBeMigratedException();
+        }
+
+        $this->gerrit_server_factory->getServerById($remote_server_id);
+        $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id, $user);
+
+        $this->history_dao->groupAddHistory(
+            "git_repo_to_gerrit",
+            $repository->getName(),
+            $repository->getProjectId()
+        );
     }
 
     /**
