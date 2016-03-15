@@ -221,7 +221,7 @@ class RepositoryResource extends AuthenticatedResource {
      * To disconnect a repository in Gerrit:
      * <pre>
      * {<br>
-     * &nbsp;"disconnect_from_gerrit": "read"<br/>
+     * &nbsp;"disconnect_from_gerrit": "read-only"<br/>
      * }
      * </pre>
      *
@@ -230,7 +230,7 @@ class RepositoryResource extends AuthenticatedResource {
      *
      * @param int    $id    Id of the Git repository
      * @param GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit {@from body}{@required false}
-     * @param string $disconnect_from_gerrit {@from body}{@required false} {@choice delete,read,noop}
+     * @param string $disconnect_from_gerrit {@from body}{@required false} {@choice delete,read-only,noop}
      *
      * @throws 400
      * @throws 403

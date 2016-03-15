@@ -22,7 +22,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
     const OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
     const OPTION_DELETE_GERRIT_PROJECT     = 'delete';
-    const OPTION_READONLY_GERRIT_PROJECT   = 'read';
+    const OPTION_READONLY_GERRIT_PROJECT   = 'read-only';
 
     /**
      * @var Git_RemoteServer_GerritServer[]
