@@ -49,6 +49,7 @@ class ProviderManager {
     /**
      * @return Provider
      * @throws ProviderDataAccessException
+     * @throws ProviderMalformedDataException
      */
     public function create(
         $name,
@@ -71,7 +72,7 @@ class ProviderManager {
             throw new ProviderMalformedDataException();
         }
 
-        $id = $this->dao->save(
+        $id = $this->dao->create(
             $name,
             $authorization_endpoint,
             $token_endpoint,
@@ -93,6 +94,39 @@ class ProviderManager {
             $client_id,
             $client_secret
         );
+    }
+
+    /**
+     * @throws ProviderDataAccessException
+     * @throws ProviderMalformedDataException
+     */
+    public function update(Provider $provider) {
+        $is_data_valid = $this->isDataValid(
+            $provider->getName(),
+            $provider->getAuthorizationEndpoint(),
+            $provider->getTokenEndpoint(),
+            $provider->getUserInfoEndpoint(),
+            $provider->getClientId(),
+            $provider->getClientSecret()
+        );
+
+        if (! $is_data_valid) {
+            throw new ProviderMalformedDataException();
+        }
+
+        $is_updated = $this->dao->save(
+            $provider->getId(),
+            $provider->getName(),
+            $provider->getAuthorizationEndpoint(),
+            $provider->getTokenEndpoint(),
+            $provider->getUserInfoEndpoint(),
+            $provider->getClientId(),
+            $provider->getClientSecret()
+        );
+
+        if (! $is_updated) {
+            throw new ProviderDataAccessException();
+        }
     }
 
     /**

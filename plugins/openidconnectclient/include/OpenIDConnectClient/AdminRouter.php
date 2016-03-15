@@ -51,6 +51,9 @@ class AdminRouter {
             case 'create-provider':
                 $this->controller->createProvider($this->csrf_token, $request);
                 break;
+            case 'update-provider':
+                $this->controller->updateProvider($this->csrf_token, $request);
+                break;
             case 'delete-provider':
                 $this->controller->removeProvider($this->csrf_token, $request->get('provider_id'));
                 break;

@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDataAccessException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -89,6 +90,49 @@ class Controller {
             $GLOBALS['Language']->getText(
                 'plugin_openidconnectclient_admin',
                 'add_new_provider_success',
+                array($provider->getName())
+            )
+        );
+        $this->showAdministration($csrf_token);
+    }
+
+    public function updateProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request) {
+        $csrf_token->check();
+
+        $id                     = $request->get('id');
+        $name                   = $request->get('name');
+        $authorization_endpoint = $request->get('authorization_endpoint');
+        $token_endpoint         = $request->get('token_endpoint');
+        $userinfo_endpoint      = $request->get('userinfo_endpoint');
+        $client_id              = $request->get('client_id');
+        $client_secret          = $request->get('client_secret');
+
+        $provider = new Provider(
+            $id,
+            $name,
+            $authorization_endpoint,
+            $token_endpoint,
+            $userinfo_endpoint,
+            $client_id,
+            $client_secret
+        );
+        try {
+            $this->provider_manager->update($provider);
+        } catch (ProviderDataAccessException $ex) {
+            $this->redirectAfterFailure(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'update_provider_error')
+            );
+        } catch (ProviderMalformedDataException $ex) {
+            $this->redirectAfterFailure(
+                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+            );
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText(
+                'plugin_openidconnectclient_admin',
+                'update_provider_success',
                 array($provider->getName())
             )
         );

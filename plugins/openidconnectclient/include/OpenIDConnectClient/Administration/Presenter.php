@@ -72,6 +72,10 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'add_new_provider');
     }
 
+    public function update_provider() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'update_provider');
+    }
+
     public function btn_close() {
         return $GLOBALS['Language']->getText('global', 'btn_close');
     }
@@ -82,6 +86,14 @@ class Presenter {
 
     public function btn_delete() {
         return $GLOBALS['Language']->getText('global', 'btn_delete');
+    }
+
+    public function btn_edit() {
+        return $GLOBALS['Language']->getText('global', 'btn_edit');
+    }
+
+    public function btn_update() {
+        return $GLOBALS['Language']->getText('global', 'btn_update');
     }
 
     public function providers() {

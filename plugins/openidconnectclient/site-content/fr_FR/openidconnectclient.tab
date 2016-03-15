@@ -32,6 +32,9 @@ plugin_openidconnectclient_admin	client_secret	Client secret
 plugin_openidconnectclient_admin	add_new_provider	Ajouter un nouveau fournisseur
 plugin_openidconnectclient_admin	add_new_provider_error	Une erreur est survenue lors de la création du nouveau fournisseur.
 plugin_openidconnectclient_admin	add_new_provider_success	Le nouveau fournisseur $1 a été créé avec succès.
-plugin_openidconnectclient_admin	remove_provider_error	Une erreur est survenue lors de la suppression du fournisseur.
-plugin_openidconnectclient_admin	remove_provider_success	Le fournisseur a été supprimé.
+plugin_openidconnectclient_admin	update_provider	Éditer le fournisseur
+plugin_openidconnectclient_admin	update_provider_error	Une erreur est survenue lors de la mise à jour du fournisseur $1.
+plugin_openidconnectclient_admin	update_provider_success	Le fournisseur $1 a été mis à jour avec succès.
+plugin_openidconnectclient_admin	remove_provider_error	Une erreur est survenue lors de la suppression du fournisseur $1.
+plugin_openidconnectclient_admin	remove_provider_success	Le fournisseur $1 a été supprimé.
 plugin_openidconnectclient_admin	malformed_data_error	Les données que vous avec fournies ne sont pas valides.

@@ -30,7 +30,7 @@ class ProviderDao  extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
-    public function save(
+    public function create(
         $name,
         $authorization_endpoint,
         $token_endpoint,
@@ -51,6 +51,34 @@ class ProviderDao  extends DataAccessObject {
                     $name, $authorization_endpoint, $token_endpoint, $user_info_endpoint, $client_id, $client_secret
                 );";
         return $this->updateAndGetLastId($sql);
+    }
+
+    public function save(
+        $id,
+        $name,
+        $authorization_endpoint,
+        $token_endpoint,
+        $user_info_endpoint,
+        $client_id,
+        $client_secret
+    ) {
+        $id                     = $this->getDa()->escapeInt($id);
+        $name                   = $this->getDa()->quoteSmart($name);
+        $authorization_endpoint = $this->getDa()->quoteSmart($authorization_endpoint);
+        $token_endpoint         = $this->getDa()->quoteSmart($token_endpoint);
+        $user_info_endpoint     = $this->getDa()->quoteSmart($user_info_endpoint);
+        $client_id              = $this->getDa()->quoteSmart($client_id);
+        $client_secret          = $this->getDa()->quoteSmart($client_secret);
+
+        $sql = "UPDATE plugin_openidconnectclient_provider SET
+                  name = $name, authorization_endpoint = $authorization_endpoint,
+                  token_endpoint = $token_endpoint,
+                  user_info_endpoint = $user_info_endpoint,
+                  client_id = $client_id,
+                  client_secret = $client_secret
+                WHERE id = $id";
+
+        return $this->update($sql);
     }
 
     public function deleteById($id) {
