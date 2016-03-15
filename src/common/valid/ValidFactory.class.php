@@ -107,11 +107,21 @@ extends Valid_Text {
 }
 
 /**
- * Check that value is a possible HTTP URI
+ * Check that value is a possible HTTP(S) URI
  */
 class Valid_HTTPURI extends Valid_String {
     public function validate($value) {
         $this->addRule(new Rule_Regexp('/^(http:\/\/|https:\/\/)/i'));
+        return parent::validate($value);
+    }
+}
+
+/**
+ * Check that value is a possible HTTPS URI
+ */
+class Valid_HTTPSURI extends Valid_String {
+    public function validate($value) {
+        $this->addRule(new Rule_Regexp('/^https:\/\//i'));
         return parent::validate($value);
     }
 }

@@ -1,0 +1,43 @@
+<h2>{{ title }}</h2>
+<div id="siteadmin-config">
+    <legend>{{ title_provider_configuration }}</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{{ name }}</th>
+                <th>{{ authorization_endpoint }}</th>
+                <th>{{ token_endpoint }}</th>
+                <th>{{ userinfo_endpoint }}</th>
+                <th>{{ client_id }}</th>
+                <th>{{ client_secret }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{# providers }}
+            <tr>
+                <td>{{ getName }}</td>
+                <td>{{ getAuthorizationEndpoint }}</td>
+                <td>{{ getTokenEndpoint }}</td>
+                <td>{{ getUserInfoEndpoint }}</td>
+                <td>{{ getClientId }}</td>
+                <td>{{ getClientSecret }}</td>
+                <td>
+                    <form method="post">
+                        {{{ csrf_token }}}
+                        <input type="hidden" name="action" value="delete-provider" />
+                        <input type="hidden" name="provider_id" value="{{ getId }}" />
+                        <button type="submit" class="btn-link"><span class="icon-trash"></span> {{ btn_delete }}</button>
+                    </form>
+                </td>
+            </tr>
+        {{/ providers }}
+        </tbody>
+    </table>
+
+    <a class="btn" data-toggle="modal" href="#siteadmin-config-providers-modal">
+        <span class="icon-plus"></span> {{ add_new_provider }}
+    </a>
+
+    {{> administration-providers-modal }}
+</div>

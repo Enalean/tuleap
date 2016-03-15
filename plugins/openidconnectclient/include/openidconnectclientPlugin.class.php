@@ -22,6 +22,7 @@ use Tuleap\OpenIDConnectClient\AccountLinker\RegisterPresenter;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\AccountLinker;
+use Tuleap\OpenIDConnectClient\AdminRouter;
 use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
@@ -36,6 +37,7 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
 use Tuleap\OpenIDConnectClient\UserMapping;
+use Tuleap\OpenIDConnectClient\Administration;
 use Zend\Loader\AutoloaderFactory;
 
 require_once('constants.php');
@@ -53,6 +55,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook('cssfile');
         $this->addHook(Event::MANAGE_THIRD_PARTY_APPS);
+        $this->addHook('site_admin_option_hook');
     }
 
     /**
@@ -214,6 +217,12 @@ class openidconnectclientPlugin extends Plugin {
         }
     }
 
+    public function site_admin_option_hook() {
+        $url         = $this->getPluginPath().'/admin/';
+        $plugin_name = $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name');
+        echo '<li><a href="' . $url . '">' . $plugin_name . '</a></li>';
+    }
+
     public function process(HTTPRequest $request) {
         if(! $this->canPluginAuthenticateUser()) {
             return;
@@ -248,6 +257,15 @@ class openidconnectclientPlugin extends Plugin {
             $login_controller,
             $account_linker_controller,
             $user_mapping_controller);
+        $router->route($request);
+    }
+
+    public function processAdmin(HTTPRequest $request) {
+        $provider_manager = new ProviderManager(new ProviderDao());
+        $controller       = new Administration\Controller($provider_manager);
+        $csrf_token       = new CSRFSynchronizerToken(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
+
+        $router = new AdminRouter($controller, $csrf_token);
         $router->route($request);
     }
 }

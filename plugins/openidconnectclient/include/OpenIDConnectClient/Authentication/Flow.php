@@ -21,6 +21,7 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use InoOicClient\Flow\Basic;
+use InoOicClient\Client\ClientInfo;
 use InoOicClient\Flow\Exception\AuthorizationException;
 use InoOicClient\Flow\Exception\TokenRequestException;
 use InoOicClient\Flow\Exception\UserInfoRequestException;
@@ -144,5 +145,16 @@ class Flow extends Basic {
         $this->getStateManager()->clearState();
 
         return new FlowResponse($provider, $state->getReturnTo(), $user_informations);
+    }
+
+    /**
+     * @return ClientInfo
+     */
+    public function getClientInfo() {
+        if (! $this->clientInfo instanceof ClientInfo) {
+            $this->clientInfo = new ClientInfo();
+        }
+        $this->clientInfo->fromArray($this->options->get(self::OPT_CLIENT_INFO, array()));
+        return $this->clientInfo;
     }
 }

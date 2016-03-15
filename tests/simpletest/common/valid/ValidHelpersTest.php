@@ -63,7 +63,7 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertEqual($w->getKey(), $key);
     }
 
-    public function itValidHTTPURI() {
+    public function itValidatesHTTPURI() {
         $validator = new Valid_HTTPURI();
 
         $this->assertTrue($validator->validate('http://example.com/'));
@@ -73,5 +73,16 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertFalse($validator->validate('gopher://example.com'));
         $this->assertFalse($validator->validate('javascript:alert(1);'));
         $this->assertFalse($validator->validate('Stringhttp://'));
+    }
+
+    public function itValidatesHTTPSURI() {
+        $validator = new Valid_HTTPSURI();
+
+        $this->assertTrue($validator->validate('https://example.com/'));
+        $this->assertTrue($validator->validate('HTTPS://example.com/'));
+        $this->assertFalse($validator->validate('http://example.com/'));
+        $this->assertFalse($validator->validate('gopher://example.com'));
+        $this->assertFalse($validator->validate('javascript:alert(1);'));
+        $this->assertFalse($validator->validate('Stringhttps://'));
     }
 }

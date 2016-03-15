@@ -48,4 +48,33 @@ class FlowTest extends TuleapTestCase {
         $this->assertTrue(strpos($request_uri, $authorization_endpoint) === 0);
         $this->assertTrue(strpos($request_uri, $signed_state) !== false);
     }
+
+    public function itGeneratesValidAuthorizationRequestUriWithMultipleProviders() {
+        $authorization_endpoint  = 'https://endpoint.example.com';
+        $authorization_endpoint2 = 'https://endpoint2.example.com';
+        $signed_state            = 'Tuleap_signed_state';
+
+        $provider_manager = mock('Tuleap\OpenIDConnectClient\Provider\ProviderManager');
+        $provider         = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        $provider->setReturnValue('getAuthorizationEndpoint', $authorization_endpoint);
+        $provider->setReturnValue('getClientId', '1234');
+        $provider2        = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        $provider2->setReturnValue('getAuthorizationEndpoint', $authorization_endpoint2);
+        $provider2->setReturnValue('getClientId', '1234');
+        $state            = mock('Tuleap\OpenIDConnectClient\Authentication\State');
+        $state->setReturnValue('getSignedState', $signed_state);
+        $state_manager    = mock('Tuleap\OpenIDConnectClient\Authentication\StateManager');
+        $state_manager->setReturnValue('initState', $state);
+
+        $flow             = new Flow(
+            $state_manager,
+            new AuthorizationDispatcher($state_manager),
+            $provider_manager
+        );
+
+        $request_uri  = $flow->getAuthorizationRequestUri($provider, 'return_to');
+        $this->assertTrue(strpos($request_uri, $authorization_endpoint) === 0);
+        $request_uri2 = $flow->getAuthorizationRequestUri($provider2, 'return_to');
+        $this->assertTrue(strpos($request_uri2, $authorization_endpoint2) === 0);
+    }
 }
