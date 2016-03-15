@@ -1,10 +1,16 @@
 angular
     .module('kanban')
-    .service('KanbanItemService', KanbanItemService);
+    .service('KanbanItemRestService', KanbanItemRestService);
 
-KanbanItemService.$inject = ['Restangular', 'SharedPropertiesService'];
+KanbanItemRestService.$inject = [
+    'Restangular',
+    'SharedPropertiesService'
+];
 
-function KanbanItemService(Restangular, SharedPropertiesService) {
+function KanbanItemRestService(
+    Restangular,
+    SharedPropertiesService
+) {
     _.extend(Restangular.configuration.defaultHeaders, {
         'X-Client-UUID': SharedPropertiesService.getUUID()
     });

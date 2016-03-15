@@ -1,7 +1,7 @@
 describe('KanbanCtrl - ', function() {
     var $rootScope, $scope, $controller, $q, $filter, inner_filter_spy,
-        KanbanCtrl, SharedPropertiesService, KanbanService,
-        KanbanItemService, NewTuleapArtifactModalService, kanban;
+        KanbanCtrl, SharedPropertiesService, KanbanService, KanbanColumnService,
+        KanbanItemRestService, NewTuleapArtifactModalService, kanban;
 
     function emptyArray(array) {
         array.length = 0;
@@ -14,15 +14,17 @@ describe('KanbanCtrl - ', function() {
             _$controller_,
             _$q_,
             _$rootScope_,
-            _KanbanItemService_,
+            _KanbanItemRestService_,
             _KanbanService_,
             _NewTuleapArtifactModalService_,
-            _SharedPropertiesService_
+            _SharedPropertiesService_,
+            _KanbanColumnService_
         ) {
             $controller                   = _$controller_;
             $q                            = _$q_;
             $rootScope                    = _$rootScope_;
-            KanbanItemService             = _KanbanItemService_;
+            KanbanColumnService           = _KanbanColumnService_;
+            KanbanItemRestService         = _KanbanItemRestService_;
             KanbanService                 = _KanbanService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             SharedPropertiesService       = _SharedPropertiesService_;
@@ -59,7 +61,7 @@ describe('KanbanCtrl - ', function() {
             $filter                      : $filter,
             SharedPropertiesService      : SharedPropertiesService,
             KanbanService                : KanbanService,
-            KanbanItemService            : KanbanItemService,
+            KanbanItemRestService        : KanbanItemRestService,
             NewTuleapArtifactModalService: NewTuleapArtifactModalService
         });
 
@@ -419,10 +421,10 @@ describe('KanbanCtrl - ', function() {
     });
 
     describe("createItemInPlace() -", function() {
-        it("Given a label and a kanban column, when I create a new kanban item, then it will be created using KanbanItemService and will be appended to the given column", function() {
+        it("Given a label and a kanban column, when I create a new kanban item, then it will be created using KanbanItemRestService and will be appended to the given column", function() {
             var create_item_request = $q.defer();
             spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").and.returnValue(true);
-            spyOn(KanbanItemService, "createItem").and.returnValue(create_item_request.promise);
+            spyOn(KanbanItemRestService, "createItem").and.returnValue(create_item_request.promise);
             var column = {
                 id     : 5,
                 content: [
@@ -461,15 +463,15 @@ describe('KanbanCtrl - ', function() {
             $scope.$apply();
 
             expect(column.content[2].updating).toBeFalsy();
-            expect(KanbanItemService.createItem).toHaveBeenCalledWith(kanban.id, column.id, 'photothermic');
+            expect(KanbanItemRestService.createItem).toHaveBeenCalledWith(kanban.id, column.id, 'photothermic');
         });
     });
 
     describe("createItemInPlaceInBacklog() -", function() {
-        it("Given a label, when I create a new kanban item in the backlog, then it will be created using KanbanItemService and will be appended to the backlog", function() {
+        it("Given a label, when I create a new kanban item in the backlog, then it will be created using KanbanItemRestService and will be appended to the backlog", function() {
             var create_item_request = $q.defer();
             spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").and.returnValue(true);
-            spyOn(KanbanItemService, "createItemInBacklog").and.returnValue(create_item_request.promise);
+            spyOn(KanbanItemRestService, "createItemInBacklog").and.returnValue(create_item_request.promise);
             KanbanCtrl.backlog.content = [
                 { id: 91 },
                 { id: 85 }
@@ -505,7 +507,7 @@ describe('KanbanCtrl - ', function() {
             $scope.$apply();
 
             expect(KanbanCtrl.backlog.content[2].updating).toBeFalsy();
-            expect(KanbanItemService.createItemInBacklog).toHaveBeenCalledWith(kanban.id, 'unbeautifully');
+            expect(KanbanItemRestService.createItemInBacklog).toHaveBeenCalledWith(kanban.id, 'unbeautifully');
         });
     });
 
@@ -658,7 +660,7 @@ describe('KanbanCtrl - ', function() {
                     callback();
                 });
                 get_request = $q.defer();
-                spyOn(KanbanItemService, 'getItem').and.returnValue(get_request.promise);
+                spyOn(KanbanItemRestService, 'getItem').and.returnValue(get_request.promise);
                 spyOn(KanbanCtrl, "moveItemAtTheEnd");
 
                 KanbanCtrl.archive = {
@@ -694,7 +696,7 @@ describe('KanbanCtrl - ', function() {
                 get_request.resolve(fake_updated_item);
                 $scope.$apply();
 
-                // It should be called with the object returned by KanbanItemService (the one with color: 'nainsel' )
+                // It should be called with the object returned by KanbanItemRestService (the one with color: 'nainsel' )
                 // but jasmine (at least in version 1.3) seems to only register the object ref and not
                 // make a deep copy of it, so when we update the object later with _.extend, it biases the test...
                 // see https://github.com/jasmine/jasmine/issues/872
@@ -720,41 +722,54 @@ describe('KanbanCtrl - ', function() {
     });
 
     describe("moveItemAtTheEnd() -", function() {
-        it("Given a kanban item in a column and another empty kanban column, when I move the item to the column, then the item will be marked as updating, will be removed from the previous column's content, will be appended to the given column's content, the REST backend will be called to move the item in the new column and a resolved promise will be returned", function() {
-            var deferred = $q.defer();
-            spyOn(KanbanService, 'moveInColumn').and.returnValue(deferred.promise);
-            var item =  {
-                id: 1654,
-                updating: false,
-                in_column: 7249
-            };
-            KanbanCtrl.board.columns = [
-                {
-                    id: 7249,
-                    content: [item]
-                }, {
-                    id: 6030,
-                    content: []
-                }
-            ];
+        beforeEach(function() {
+            spyOn(KanbanColumnService, "moveItem");
+        });
 
-            var promise = KanbanCtrl.moveItemAtTheEnd(item, 6030);
+        it("Given a kanban item in a column and another empty kanban column, when I move the item to the column, then the item will be marked as updating, will be removed from the previous column's content, will be appended to the given column's content, the REST backend will be called to move the item in the new column and a resolved promise will be returned", function() {
+            var move_request = $q.defer();
+            spyOn(KanbanService, 'moveInColumn').and.returnValue(move_request.promise);
+            var item =  {
+                id       : 19,
+                updating : false,
+                in_column: 3
+            };
+            var source_column = {
+                id              : 3,
+                is_open         : true,
+                fully_loaded    : true,
+                content         : [item],
+                filtered_content: [item]
+            };
+            var destination_column = {
+                id              : 6,
+                is_open         : true,
+                fully_loaded    : true,
+                content         : [],
+                filtered_content: []
+            };
+            KanbanCtrl.board.columns = [source_column, destination_column];
+
+            var promise = KanbanCtrl.moveItemAtTheEnd(item, destination_column.id);
 
             expect(item.updating).toBeTruthy();
 
-            deferred.resolve();
+            move_request.resolve();
             $scope.$apply();
 
             expect(item.updating).toBeFalsy();
-            expect(KanbanService.moveInColumn).toHaveBeenCalledWith(38, 6030, 1654, null);
-            var previous_column    = KanbanCtrl.board.columns[0];
-            var destination_column = KanbanCtrl.board.columns[1];
-            expect(previous_column.content).toEqual([]);
-            expect(destination_column.content).toEqual([{
-                id: 1654,
-                updating: false,
-                in_column: 6030
-            }]);
+            expect(KanbanService.moveInColumn).toHaveBeenCalledWith(
+                kanban.id,
+                destination_column.id,
+                item.id,
+                null
+            );
+            expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
+                item,
+                source_column,
+                destination_column,
+                null
+            );
             expect(promise).toBeResolved();
         });
 
@@ -762,56 +777,159 @@ describe('KanbanCtrl - ', function() {
             spyOn(KanbanService, 'moveInBacklog').and.returnValue($q.defer().promise);
             KanbanCtrl.backlog = {
                 content: [{
-                    id: 8515,
+                    id       : 54,
                     in_column: 'backlog'
                 }]
             };
             var item =  {
-                id: 7533,
-                updating: false,
-                in_column: 3765
+                id       : 75,
+                updating : false,
+                in_column: 7
             };
             KanbanCtrl.board.columns = [
                 {
-                    id: 3765,
-                    content : [item]
+                    id     : 7,
+                    content: [item]
                 }
             ];
+            var compared_to = {
+                direction: 'after',
+                item_id  : 54
+            };
 
             KanbanCtrl.moveItemAtTheEnd(item, 'backlog');
 
-            expect(KanbanService.moveInBacklog).toHaveBeenCalledWith(38, 7533, {
-                direction: 'after',
-                item_id: 8515
-            });
+            expect(KanbanService.moveInBacklog).toHaveBeenCalledWith(
+                kanban.id,
+                item.id,
+                compared_to
+            );
         });
 
         it("Given a kanban item in a column and an archive column, when I move the item to the archive, then the archive REST backend will be called", function() {
             spyOn(KanbanService, 'moveInArchive').and.returnValue($q.defer().promise);
             KanbanCtrl.archive = {
                 content: [{
-                    id: 1440,
+                    id       : 44,
                     in_column: 'archive'
                 }]
             };
             var item = {
-                id: 4906,
-                updating: false,
-                in_column: 1944
+                id       : 90,
+                updating : false,
+                in_column: 9
             };
             KanbanCtrl.board.columns = [
                 {
-                    id: 1944,
-                    content : [item]
+                    id     : 9,
+                    content: [item]
                 }
             ];
+            var compared_to = {
+                direction: 'after',
+                item_id  : 44
+            };
 
             KanbanCtrl.moveItemAtTheEnd(item, 'archive');
 
-            expect(KanbanService.moveInArchive).toHaveBeenCalledWith(38, 4906, {
+            expect(KanbanService.moveInArchive).toHaveBeenCalledWith(
+                kanban.id,
+                item.id,
+                compared_to
+            );
+        });
+    });
+
+    describe("moveKanbanItemToTop() -", function() {
+        it("Given an item, when I move it to the top, then it will be moved to the top of its column", function() {
+            spyOn(KanbanService, "reorderColumn").and.returnValue($q.defer().promise);
+            spyOn(KanbanColumnService, "moveItem");
+            var item = {
+                id       : 39,
+                in_column: 9
+            };
+
+            emptyArray(kanban.columns);
+            var column = {
+                id          : 9,
+                is_open     : true,
+                fully_loaded: true,
+                content     : [
+                    { id: 44 },
+                    { id: 45 },
+                    item
+                ],
+                filtered_content: [
+                    { id: 44 },
+                    { id: 45 },
+                    item
+                ]
+            };
+            kanban.columns[0] = column;
+            var compared_to = {
+                direction: 'before',
+                item_id  : 44
+            };
+
+            KanbanCtrl.moveKanbanItemToTop(item);
+
+            expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
+                item,
+                column,
+                column,
+                compared_to
+            );
+            expect(KanbanService.reorderColumn).toHaveBeenCalledWith(
+                kanban.id,
+                column.id,
+                item.id,
+                compared_to
+            );
+        });
+    });
+
+    describe("moveKanbanItemToBottom() -", function() {
+        it("Given an item, when I move it to the bottom, then it will be moved to the bottom of its column", function() {
+            spyOn(KanbanService, "reorderArchive").and.returnValue($q.defer().promise);
+            spyOn(KanbanColumnService, "moveItem");
+            var item = {
+                id       : 74,
+                in_column: 'archive'
+            };
+
+            KanbanCtrl.archive = {
+                id          : 'archive',
+                is_open     : true,
+                fully_loaded: true,
+                content     : [
+                    { id: 23 },
+                    item,
+                    { id: 10 }
+                ],
+                filtered_content: [
+                    { id: 23 },
+                    item,
+                    { id: 10 }
+                ]
+            };
+            var compared_to = {
                 direction: 'after',
-                item_id: 1440
-            });
+                item_id  : 10
+            };
+
+            KanbanCtrl.moveKanbanItemToBottom(item);
+
+            expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
+                item,
+                KanbanCtrl.archive,
+                KanbanCtrl.archive,
+                compared_to
+            );
+            expect(KanbanService.reorderArchive).toHaveBeenCalledWith(
+                kanban.id,
+                item.id,
+                compared_to
+            );
         });
     });
 });
