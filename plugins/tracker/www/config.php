@@ -53,7 +53,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             $project_manager,
             new AllowedProjectsConfig(
                 $project_manager,
-                new AllowedProjectsDao()
+                new AllowedProjectsDao(),
+                new Tracker_Hierarchy_Dao()
             ),
             new NatureCreator(
                 $nature_dao
