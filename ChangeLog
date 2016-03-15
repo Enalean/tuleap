@@ -17,6 +17,7 @@ Version 8.13 (Not released yet)
 	* request #8904: CSRF vulnerability in the project registration page
 	* request #8929: SQL injection in the project history search
 	* request #8903: Persistent XSS in the widget image
+	* request #8934: Use an audited library to generate cryptographically secure pseudo-random numbers
 
 	== Plugins ==
 	* agiledashboard: 1.365
