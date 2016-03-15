@@ -1,0 +1,47 @@
+<div id="siteadmin-config-natures-modal-edit-{{ shortname }}"
+    class="modal hide fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="siteadmin-config-natures-modal-edit-title"
+    aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+        <h3 id="siteadmin-config-natures-modal-edit-title">{{ edit_nature }}</h3>
+    </div>
+
+    <form action="" method="POST">
+        <input type="hidden" name="action" value="edit-nature" />
+        <div class="modal-body">
+            {{{ csrf_token }}}
+
+            <label>{{ shortname_label }}</label>
+            <input type="text"
+                name="shortname"
+                value="{{ shortname }}"
+                readonly />
+            <p class="help">{{ shortname_help }}</p>
+
+            <label>{{ forward_label_label }}</label>
+            <input type="text"
+                name="forward_label"
+                placeholder="{{ forward_label_placeholder }}"
+                value="{{ forward_label }}"
+                required />
+            <p class="help">{{ forward_label_help }}</p>
+
+            <label>{{ reverse_label_label }}</label>
+            <input type="text"
+                name="reverse_label"
+                placeholder="{{ reverse_label_placeholder }}"
+                value="{{ reverse_label }}"
+                required />
+            <p class="help">{{ reverse_label_help }}</p>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
+            <input type="submit" class="btn btn-primary" value="{{ btn_submit }}">
+        </div>
+    </form>
+</div>

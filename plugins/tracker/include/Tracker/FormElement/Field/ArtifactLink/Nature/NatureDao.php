@@ -56,6 +56,18 @@ class NatureDao extends DataAccessObject {
         return true;
     }
 
+    public function edit($shortname, $forward_label, $reverse_label) {
+        $shortname     = $this->da->quoteSmart($shortname);
+        $forward_label = $this->da->quoteSmart($forward_label);
+        $reverse_label = $this->da->quoteSmart($reverse_label);
+
+        $sql = "UPDATE plugin_tracker_artifactlink_natures
+                   SET forward_label = $forward_label, reverse_label = $reverse_label
+                WHERE shortname = $shortname";
+
+        return $this->update($sql);
+    }
+
     public function searchAll() {
         $sql = "SELECT * FROM plugin_tracker_artifactlink_natures ORDER BY shortname ASC";
 

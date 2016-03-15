@@ -18,9 +18,10 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>{{ shortname }}</th>
-                        <th>{{ forward_label }}</th>
-                        <th>{{ reverse_label }}</th>
+                        <th>{{ shortname_label }}</th>
+                        <th>{{ forward_label_label }}</th>
+                        <th>{{ reverse_label_label }}</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,16 +30,28 @@
                             <td>{{ shortname }}</td>
                             <td>{{ forward_label }}</td>
                             <td>{{ reverse_label }}</td>
+                            <td>
+                                {{^ is_system }}
+                                <a class=""
+                                   role="button"
+                                   data-toggle="modal"
+                                   href="#siteadmin-config-natures-modal-edit-{{ shortname }}"
+                                >
+                                    <i class="icon-edit"></i> {{ edit_icon_label }}
+                                </a>
+                                {{> siteadmin-config/natures-modal-edit }}
+                                {{/ is_system }}
+                            </td>
                         </tr>
                     {{/ natures }}
                 </tbody>
             </table>
 
-    <a class="btn" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal">
+    <a class="btn" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal-create">
         <i class="icon-plus"></i> {{ create_new_nature }}
     </a>
 
-    {{> siteadmin-config/natures-modal }}
+    {{> siteadmin-config/natures-modal-create }}
 
     <legend class="allowed-projects-for-nature-title">{{ allowed_projects_title }}</legend>
     <p>{{ allowed_projects_desc }}</p>

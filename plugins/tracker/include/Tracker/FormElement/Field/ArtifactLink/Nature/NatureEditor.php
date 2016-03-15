@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NatureCreator {
+class NatureEditor {
 
     /** @var NatureDao */
     private $dao;
@@ -36,15 +36,14 @@ class NatureCreator {
 
     /**
      * @throws InvalidNatureParameterException
-     * @throws UnableToCreateNatureException
+     * @throws UnableToEditNatureException
      */
-    public function create($shortname, $forward_label, $reverse_label) {
-        $this->validator->checkShortname($shortname);
+    public function edit($shortname, $forward_label, $reverse_label) {
         $this->validator->checkForwardLabel($forward_label);
         $this->validator->checkReverseLabel($reverse_label);
 
-        if (! $this->dao->create($shortname, $forward_label, $reverse_label)) {
-            throw new UnableToCreateNatureException(
+        if (! $this->dao->edit($shortname, $forward_label, $reverse_label)) {
+            throw new UnableToEditNatureException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'db_error')
             );
         }

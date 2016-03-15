@@ -1,13 +1,13 @@
-<div id="siteadmin-config-natures-modal"
+<div id="siteadmin-config-natures-modal-create"
     class="modal hide fade"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="siteadmin-config-natures-modal-title"
+    aria-labelledby="siteadmin-config-natures-modal-create-title"
     aria-hidden="true"
 >
     <div class="modal-header">
         <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-        <h3 id="siteadmin-config-natures-modal">{{ create_new_nature }}</h3>
+        <h3 id="siteadmin-config-natures-modal-create-title">{{ create_new_nature }}</h3>
     </div>
 
     <form action="" method="POST">
@@ -15,7 +15,7 @@
         <div class="modal-body">
             {{{ csrf_token }}}
 
-            <label>{{ shortname }}</label>
+            <label>{{ shortname_label }}</label>
             <input type="text"
                 name="shortname"
                 title="{{ shortname_help }}"
@@ -24,12 +24,18 @@
                 required />
             <p class="help">{{ shortname_help }}</p>
 
-            <label>{{ forward_label }}</label>
-            <input type="text" name="forward_label" placeholder="{{ forward_label_placeholder }}" required />
+            <label>{{ forward_label_label }}</label>
+            <input type="text"
+                name="forward_label"
+                placeholder="{{ forward_label_placeholder }}"
+                required />
             <p class="help">{{ forward_label_help }}</p>
 
-            <label>{{ reverse_label }}</label>
-            <input type="text" name="reverse_label" placeholder="{{ reverse_label_placeholder }}" required />
+            <label>{{ reverse_label_label }}</label>
+            <input type="text"
+                name="reverse_label"
+                placeholder="{{ reverse_label_placeholder }}"
+                required />
             <p class="help">{{ reverse_label_help }}</p>
         </div>
 

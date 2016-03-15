@@ -21,16 +21,17 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NaturePresenter {
+use Tracker_FormElement_Field_ArtifactLink;
 
-    public $reverse_label;
-    public $forward_label;
-    public $shortname;
-    public $is_system = false;
+class NatureIsChildPresenter extends NaturePresenter {
 
-    public function __construct($shortname, $forward_label, $reverse_label) {
-        $this->shortname     = $shortname;
-        $this->forward_label = $forward_label;
-        $this->reverse_label = $reverse_label;
+    public function __construct() {
+        parent::__construct(
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),
+            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse')
+        );
+
+        $this->is_system = true;
     }
 }
