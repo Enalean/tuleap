@@ -1005,7 +1005,7 @@ class MediaWikiPlugin extends Plugin {
      */
     public function importXmlProject($params) {
         require_once 'MediaWikiXMLImporter.class.php';
-        $importer = new MediaWikiXMLImporter($params['logger'], $this->getMediawikiLanguageManager());
+        $importer = new MediaWikiXMLImporter($params['logger'], $this->getMediawikiManager(), $this->getMediawikiLanguageManager(), new UGroupManager());
         $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
     }
 
