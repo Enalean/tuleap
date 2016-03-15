@@ -22,7 +22,7 @@ Version 8.13 (Not released yet)
 	* request #8934: Use an audited library to generate cryptographically secure pseudo-random numbers
 
 	== Plugins ==
-	* agiledashboard: 1.365
+	* agiledashboard: 1.366
 	* tracker: 5.814
 	* hudson_svn: 0.6
 	* git: 4.132
