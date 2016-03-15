@@ -535,6 +535,7 @@ project_admin_servicebar	home_page	Home Page
 project_admin_servicebar	cant_create_s_for_p	ERROR - Can not create service for project $1
 project_admin_servicebar	bad_rank	ERROR - The rank must be superior to $1.
 project_admin_servicebar	not_allowed	Service is not allowed
+project_admin_servicebar	cannot_be_used	Service cannot be used in this project.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/ugroup.php

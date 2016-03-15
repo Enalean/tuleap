@@ -166,7 +166,7 @@ if (($func=='do_create')||($func=='do_update')) {
     if (!$link) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','link_missed'));
     }
-    
+
     $minimal_rank = $project->getMinimalRank();
    
     if ($short_name!='summary'){
@@ -180,6 +180,22 @@ if (($func=='do_create')||($func=='do_update')) {
     
     if (($group_id==100)&&(!$short_name)) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_s'));
+    }
+
+    $is_activable = true;
+    $message      = '';
+
+    $params = array(
+        "project"           => $project,
+        "service_shortname" => $short_name,
+        "is_activable"      => &$is_activable,
+        "message"           => &$message
+    );
+
+    EventManager::instance()->processEvent(Event::SERVICE_IS_ACTIVABLE, $params);
+
+    if ($is_used && ! $is_activable) {
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cannot_be_used'));
     }
 
     if (!$is_active) {

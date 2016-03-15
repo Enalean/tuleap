@@ -1132,4 +1132,15 @@ class Event {
      *   reference   => Reference
      */
     const SET_ARTIFACT_REFERENCE_GROUP_ID = 'set_artifact_reference_group_id';
+
+    /**
+     * Check if service is activable
+     *
+     * Parameters:
+     *   project           => Project
+     *   service_shortname => string
+     *   is_activable      => boolean
+     *   message           => string
+     */
+    const SERVICE_IS_ACTIVABLE = 'service_is_activable';
 }
