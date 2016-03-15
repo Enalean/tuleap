@@ -74,6 +74,7 @@ Requires: curl
 Requires: %{php_base}-zendframework = 1.8.1
 Requires: %{php_base}-ZendFramework2-Loader
 Requires: %{php_base}-jwt
+Requires: %{php_base}-paragonie-random-compat
 Requires: tuleap-core-subversion
 
 # Perl

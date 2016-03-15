@@ -56,7 +56,7 @@ class Group extends Error {
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
             global $Language;
-            $this->Error();
+			parent::__construct();
             if (is_array($param)) {
                 $this->group_id=$param['group_id'];
                 $this->data_array=$param;
