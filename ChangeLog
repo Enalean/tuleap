@@ -5,6 +5,8 @@ Version 8.13 (Not released yet)
 		- Display link to project
 	* story #8823: trigger CI jobs on commit
 		- Packaging of the plugin
+	* story #8887 migrate git to gerrit with REST route
+		- Add server info in GET git/:id
 	* request #8911: stop installation if SELinux is in enforcing mode
 
 	== Bug Fix ==
@@ -25,7 +27,7 @@ Version 8.13 (Not released yet)
 	* agiledashboard: 1.366
 	* tracker: 5.814
 	* hudson_svn: 0.6
-	* git: 4.132
+	* git: 4.133
 	* hudson: 1.27
 	* svn: 0.35
 	* graphontrackersv5: 5.19
