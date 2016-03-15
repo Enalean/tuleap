@@ -1456,7 +1456,10 @@ class GitPlugin extends Plugin {
 
     public function getRESTRepositoryRepresentationBuilder($version) {
         $class  = "Tuleap\\Git\\REST\\".$version."\\RepositoryRepresentationBuilder";
-        return new $class($this->getGitPermissionsManager());
+        return new $class(
+            $this->getGitPermissionsManager(),
+            $this->getGerritServerFactory()
+        );
     }
 
     public function rest_project_get_git($params) {

@@ -55,6 +55,7 @@ class RepositoryTest extends RestBase {
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
         $this->assertEquals($repository['description'], 'Git repository');
+        $this->assertArrayHasKey('server', $repository);
     }
 
     public function testOPTIONS() {

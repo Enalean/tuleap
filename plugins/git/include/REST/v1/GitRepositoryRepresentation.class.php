@@ -27,11 +27,12 @@ use GitRepository;
 
 class GitRepositoryRepresentation extends GitRepositoryRepresentationBase {
 
-    public function build(GitRepository $repository) {
+    public function build(GitRepository $repository, $server_representation) {
         $this->id          = JsonCast::toInt($repository->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->name        = $repository->getName();
         $this->path        = $repository->getPath();
         $this->description = $repository->getDescription();
+        $this->server      = $server_representation;
     }
 }

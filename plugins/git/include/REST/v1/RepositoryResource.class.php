@@ -38,6 +38,10 @@ use SystemEventManager;
 use EventManager;
 use PFUser;
 use GitRepository;
+use GitDao;
+use ProjectManager;
+use Git_RemoteServer_GerritServerFactory;
+use Git_RemoteServer_Dao;
 
 include_once('www/project/admin/permissions.php');
 
@@ -52,18 +56,34 @@ class RepositoryResource extends AuthenticatedResource {
     private $representation_builder;
 
     public function __construct() {
+        $git_dao         = new GitDao();
+        $project_manager = ProjectManager::instance();
+
         $this->repository_factory = new GitRepositoryFactory(
-            new \GitDao(),
-            \ProjectManager::instance()
+            $git_dao,
+            $project_manager
         );
+
+        $git_system_event_manager = new Git_SystemEventManager(
+            SystemEventManager::instance(),
+            $this->repository_factory
+        );
+
+        $gerrit_server_factory  = new Git_RemoteServer_GerritServerFactory(
+            new Git_RemoteServer_Dao(),
+            $git_dao,
+            $git_system_event_manager,
+            $project_manager
+        );
+
+        $git_permission_manager = new GitPermissionsManager(
+            new Git_PermissionsDao(),
+            $git_system_event_manager
+        );
+
         $this->representation_builder = new RepositoryRepresentationBuilder(
-            new GitPermissionsManager(
-                new Git_PermissionsDao(),
-                new Git_SystemEventManager(
-                    SystemEventManager::instance(),
-                    $this->repository_factory
-                )
-            )
+            $git_permission_manager,
+            $gerrit_server_factory
         );
     }
 
