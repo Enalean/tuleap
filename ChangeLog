@@ -3,6 +3,7 @@ Version 8.13 (Not released yet)
 	* story #8833: show, import and manipulate links
 		- First step to restrict artifact links natures usage
 		- Display link to project
+	* request #8911: stop installation if SELinux is in enforcing mode
 
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
@@ -27,6 +28,7 @@ Version 8.13 (Not released yet)
 	* graphontrackersv5: 5.19
 	* ldap: 3.100
 	* mediawiki: 0.109
+	* forumml: 2.6.24
 
 Version 8.12 (Thursday, March 3rd 2016)
 	== Enhancement ==

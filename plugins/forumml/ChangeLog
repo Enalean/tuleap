@@ -1,3 +1,6 @@
+Version 2.6.24 - Tuleap 8.13
+    * request #8911: stop installation if SELinux is in enforcing mode
+
 Version 2.6.23 - Tuleap 8.12
     * request #8849: Purge legacy themes in plugins
 
