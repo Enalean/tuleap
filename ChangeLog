@@ -3,6 +3,8 @@ Version 8.13 (Not released yet)
 	* story #8833: show, import and manipulate links
 		- First step to restrict artifact links natures usage
 		- Display link to project
+	* story #8823: trigger CI jobs on commit
+		- Packaging of the plugin
 	* request #8911: stop installation if SELinux is in enforcing mode
 
 	== Bug Fix ==
@@ -22,7 +24,7 @@ Version 8.13 (Not released yet)
 	== Plugins ==
 	* agiledashboard: 1.365
 	* tracker: 5.812
-	* hudson_svn: 0.5
+	* hudson_svn: 0.6
 	* git: 4.132
 	* hudson: 1.27
 	* svn: 0.35
