@@ -156,16 +156,27 @@ class NatureConfigController {
     private function allowNatureUsageForProject($project_to_migrate, Response $response) {
         $project = $this->project_manager->getProjectFromAutocompleter($project_to_migrate);
 
-        if ($project && ! $project->isError()) {
+        if (! $project || $project->isError()) {
+            $this->sendUpdateProjectListError($response);
+            return;
+        }
 
+        try {
             $this->allowed_projects_config->addProject($project);
 
             $response->addFeedback(
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'allowed_project_allow_project')
             );
-        } else {
-            $this->sendUpdateProjectListError($response);
+        } catch (ProjectIsUsingHierarchyException $exception) {
+            $response->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'project_is_using_hierarchy_exception',
+                    $project->getPublicName()
+                )
+            );
         }
     }
 

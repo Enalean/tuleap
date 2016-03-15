@@ -1690,4 +1690,5 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_no	Non
 plugin_tracker_artifact_links_natures	allowed_project_allow_project	Les projets soumis ont désormais accès aux natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Les projets soumis ne peuvent plus utiliser les natures de liens.
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Une erreur est survenue pendant la mise à jour de la liste des projets. Aidez-nous à améliorer votre expérience en envoyant un rapport d'erreur.
-plugin_tracker_artifact_links_natures	cannot_use_hierarchy	Vous ne pouvez pas utiliser la hiérarchie de trackers puisque le projet utilise les natures de liens entre artéfacts.
+plugin_tracker_artifact_links_natures	cannot_use_hierarchy	Vous ne pouvez pas utiliser la hiérarchie d'outils de suivi puisque le projet utilise les natures de liens entre artéfacts.
+plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car ce projet utilise la hiérarchie d'outils de suivi.

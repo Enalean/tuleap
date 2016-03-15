@@ -286,6 +286,16 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
                 WHERE artlink.artifact_id = $artifact_id";
         return $this->retrieve($sql);
     }
-}
 
-?>
+    public function isProjectUsingTrackerHierarchy($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT NULL
+                FROM tracker_hierarchy
+                    INNER JOIN tracker ON (parent_id = tracker.id OR child_id = tracker.id)
+                WHERE tracker.group_id = $project_id
+                LIMIT 1";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
+}

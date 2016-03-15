@@ -22,8 +22,14 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Project;
 use ProjectManager;
+use Tracker_Hierarchy_Dao;
 
 class AllowedProjectsConfig {
+
+    /**
+     * @var Tracker_Hierarchy_Dao
+     */
+    private $hierachy_dao;
 
     /**
      * @var ProjectManager
@@ -37,13 +43,19 @@ class AllowedProjectsConfig {
 
     public function __construct(
         ProjectManager $project_manager,
-        AllowedProjectsDao $dao
+        AllowedProjectsDao $dao,
+        Tracker_Hierarchy_Dao $hierachy_dao
     ) {
         $this->project_manager = $project_manager;
         $this->dao             = $dao;
+        $this->hierachy_dao    = $hierachy_dao;
     }
 
     public function addProject(Project $project) {
+        if ($this->hierachy_dao->isProjectUsingTrackerHierarchy($project->getId())) {
+            throw new ProjectIsUsingHierarchyException();
+        }
+
         return $this->dao->create($project);
     }
 
