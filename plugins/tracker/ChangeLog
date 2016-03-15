@@ -1,3 +1,6 @@
+Version 5.815 - Tuleap 8.13
+    * Projects using tracker hierarchy cannot use nature
+
 Version 5.814 - Tuleap 8.13
     * Do not display hierarchy menu item
 
