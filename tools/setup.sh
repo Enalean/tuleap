@@ -21,6 +21,7 @@
 
 # path to directorie and files
 RH_RELEASE='/etc/redhat-release'
+SE_FILE='/etc/selinux/config'
 TODO_FILE='/root/todo_tuleap.txt'
 TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
 
@@ -33,8 +34,8 @@ PROJECT_ADMIN="codendiadm"
 SSHD_SERVICE="sshd"
 
 # path to command line tools
+AWK='/bin/awk'
 CAT='/bin/cat'
-CHCON='/usr/bin/chcon'
 CHGRP='/bin/chgrp'
 CHKCONFIG='/sbin/chkconfig'
 CHMOD='/bin/chmod'
@@ -56,65 +57,47 @@ PHP='/usr/bin/php'
 RM='/bin/rm'
 RPM='/bin/rpm'
 SERVICE='/sbin/service'
+SESTATUS='/usr/sbin/sestatus'
 TOUCH='/bin/touch'
 USERADD='/usr/sbin/useradd'
 USERDEL='/usr/sbin/userdel'
 USERMOD='/usr/sbin/usermod'
 
-CMD_LIST=('CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'FIND' 'GREP'
+CMD_LIST=('AWK' 'CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'FIND' 'GREP'
           'GROUPADD' 'GROUPDEL' 'INSTALL' 'LN' 'LS' 'MKDIR' 'MV' 'MYSQL'
-          'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'TOUCH' 'USERADD'
-          'USERDEL' 'USERMOD')
+          'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS' 'TOUCH'
+          'USERADD' 'USERDEL' 'USERMOD')
 
-# default parameters
+# default parameter
 generate_ssl_certificate="n"
-SELINUX_ENABLED=1
-SELINUX_CONTEXT="root:object_r:httpd_sys_content_t:s0"
 
-# check if SELinux is enable
-if [ "$RH_MAJOR_VERSION" = "5" ]; then
-    SELINUX_CONTEXT="root:object_r:httpd_sys_content_t"
-fi
-
-if [ -e /etc/selinux/config ]
-then
-	$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
-	if [ $? -eq 0 ] || [ ! -e $CHCON ] ; then
-		# SELinux not installed
-		SELINUX_ENABLED=0
-	fi
-else
-	if [ ! -e $CHCON ] ; then
-		# SELinux not installed
-		SELINUX_ENABLED=0
-	fi
-fi
+# SELinux mode
+SELINUX_MODE=$(${SESTATUS} | ${AWK} '/mode/ {print $NF}')
 
 # check the version of RH/CentOS
 if [ -e "${RH_RELEASE}" ]
 then
-    /bin/grep -i -q centos ${RH_RELEASE}
+    ${GREP} -i -q centos ${RH_RELEASE}
     if [ "${?}" -eq 0 ]
     then
-        RH_VERSION=($(awk '{print $1, $3}' ${RH_RELEASE}))
+        RH_VERSION=($(${AWK} '{print $1, $3}' ${RH_RELEASE}))
     else
-        RH_VERSION=($(awk '{print $1$2, $7}' ${RH_RELEASE}))
+        RH_VERSION=($(${AWK} '{print $1$2, $7}' ${RH_RELEASE}))
     fi
-
     RH_MAJOR_VERSION=$(echo ${RH_VERSION[1]: 0:1})
     RH_MINOR_VERSION=$(echo ${RH_VERSION[1]: 2:1})
-
 else
     echo -e "\033[31mSorry, Tuleap is running only on RedHat/CentOS.\033[0m"
     exit 1
 fi
 
-if [ "${RH_MAJOR_VERSION}" = "6" ]; then
+if [ "${RH_MAJOR_VERSION}" -eq 6 ]
+then
     PROJECT_NAME="tuleap"
 else
     PROJECT_NAME="codendi"
 fi
-export INSTALL_DIR="/usr/share/$PROJECT_NAME"
+INSTALL_DIR="/usr/share/${PROJECT_NAME}"
 
 ###############################################################################
 #
@@ -337,7 +320,6 @@ EOF
     control_service vsftpd restart
 }
 
-
 ###############################################################################
 #
 # Bind DNS server configuration
@@ -354,13 +336,6 @@ setup_bind() {
     $CHOWN root:$NAMED_GID $ZONE_DIR/$PROJECT_NAME.zone
     if [ -f "$ETC_DIR/named.conf" ]; then
         $CHGRP $NAMED_GID $ETC_DIR/named.conf
-    fi
-
-    if [ $SELINUX_ENABLED ]; then
-        $CHCON -h system_u:object_r:named_zone_t $ZONE_DIR/$PROJECT_NAME.zone
-        if [ -f "$ETC_DIR/named.conf" ]; then
-            $CHCON -h system_u:object_r:named_conf_t $ETC_DIR/named.conf
-        fi
     fi
 
     # replace string patterns in $PROJECT_NAME.zone
@@ -597,7 +572,6 @@ test_mysql_host() {
     echo "[OK]"
 }
 
-
 ###############################################################################
 #
 # Apache setup
@@ -767,15 +741,14 @@ Options:
   --disable-httpd-restart          Do not restart httpd during the setup
   --disable-generate-ssl-certs     Do not generate a new ssl certificate
   --disable-mysql-configuration    Do not modify my.cnf (not recommended)
-  --disable-selinux                Do not set context (when autodetection fails)
 
-  --sys-default-domain=<domain>	   Server Domain name
+  --sys-default-domain=<domain>    Server Domain name
   --sys-org-name=<string>          Your Company short name
   --sys-long-org-name=<string>     Your Company long name
 
   DNS delegation configuration:
   --enable-bind-config             Configure DNS server (only useful if you have subdomain delegation)
-  --enable-subdomains		   Setup subdomain usage (for project home pages)
+  --enable-subdomains              Setup subdomain usage (for project home pages)
   --sys-fullname=<fqdn>            Server fully qualified machine name
   --sys-ip-address=<ip address>    Server IP address
 
@@ -847,18 +820,18 @@ do
 		shift 1 ;;
 	--disable-auto-passwd)
 		auto_passwd="false";shift 1 ;;
-        --enable-bind-config)
+    --enable-bind-config)
 		configure_bind="true";shift 1 ;;
 	--enable-subdomains)
 		disable_subdomains="n"; shift 1 ;;
 	--disable-httpd-restart)
 		restart_httpd="n"; shift 1 ;;
     --disable-generate-ssl-certs)
-                generate_ssl_certificate="n"; shift 1 ;;
+        generate_ssl_certificate="n"; shift 1 ;;
     --disable-mysql-configuration)
         mysql_my_cnf="n"; shift 1 ;;
-	--disable-selinux)
-	    SELINUX_ENABLED=0; shift 1;;
+    --disable-selinux)
+        warning "The disable-selinux is deprecated"; shift 1 ;;
 	--sys-default-domain)
 		sys_default_domain="$2" ; shift 2 ;;
 	--sys-fullname)
@@ -910,11 +883,22 @@ if [ ! -z "$mysql_remote_server" ]; then
     test_mysql_host
 else
     if ! has_package $mysql_package_name; then
-	die "No --mysql-host nor local mysql server installed, exit. Please install '$mysql_package_name' package"
+        die "No --mysql-host nor local mysql server installed, exit. Please install '$mysql_package_name' package"
     fi
 fi
 
-##############################################
+# SELinux status
+if [ "${SELINUX_MODE}" = "enforcing" ]
+then
+    warning "Your SELinux is in ${SELINUX_MODE} mode!"
+    warning "Tuleap does not currently support SELinux in enforcing mode."
+    info "Set your SELinux in permissive mode."
+    info "To achieve this, use setenforce 0 to enter permissive mode."
+    info "Edit the ${SE_FILE} file for a permanent change."
+    exit 1
+fi
+
+#############################################
 # Check that all command line tools we need are available
 #
 for cmd in ${CMD_LIST[@]}
@@ -1074,9 +1058,6 @@ fi
 # Update codendiadm user password
 echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
 build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
-if [ $SELINUX_ENABLED == 1 ]; then
-$CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
-fi
 
 # Build file structure
 
@@ -1135,25 +1116,6 @@ $CHOWN $PROJECT_ADMIN.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
 $CHMOD 750 /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files.work
 build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME/DELETED $PROJECT_ADMIN $PROJECT_ADMIN 750
 
-
-# SELinux specific
-if [ $SELINUX_ENABLED == 1 ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/$PROJECT_NAME
-    $CHCON -R -h $SELINUX_CONTEXT /etc/$PROJECT_NAME
-    $CHCON -R -h $SELINUX_CONTEXT /var/lib/$PROJECT_NAME
-    $CHCON -R -h $SELINUX_CONTEXT /home/groups
-    if [ -d /home/codendiadm ]; then
-	$CHCON -R -h $SELINUX_CONTEXT /home/codendiadm
-    fi
-    $CHCON -h $SELINUX_CONTEXT /svnroot
-    $CHCON -h $SELINUX_CONTEXT /cvsroot
-
-	if [ "$RH_MAJOR_VERSION" = "6" ]; then
-        # request #3468 - SELinux forbids apache to send emails
-	    setsebool -P httpd_can_sendmail 1
-    fi
-fi
-
 ##############################################
 # Install the Tuleap software 
 #
@@ -1181,11 +1143,6 @@ fi
 # $CP $INSTALL_DIR/src/utils/svn/Codendi.pm $codendi_perl_module_dir/Codendi.pm
 # TODO: /etc/httpd/conf.d/perl.conf
 # TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
-
-# Make sure SELinux contexts are valid
-if [ $SELINUX_ENABLED == 1 ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/$PROJECT_NAME
-fi
 
 todo "Customize /etc/$PROJECT_NAME/conf/local.inc and /etc/$PROJECT_NAME/conf/database.inc"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf"
@@ -1386,14 +1343,6 @@ control_service nscd restart
 if [ "$enable_munin" = "true" ]; then
     enable_service munin-node
     control_service munin-node restart
-fi
-
-##############################################
-# Set SELinux contexts and load policies
-#
-if [ $SELINUX_ENABLED == 1 ]; then
-    echo "Set SELinux contexts and load policies"
-    $INSTALL_DIR/src/utils/fix_selinux_contexts.pl
 fi
 
 ##############################################
