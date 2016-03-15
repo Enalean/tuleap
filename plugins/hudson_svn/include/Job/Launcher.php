@@ -57,15 +57,25 @@ class Launcher {
         $jobs = $this->getJobsForRepository($repository);
 
         foreach ($jobs as $job) {
-            if ($this->doesCommitTriggerjob($commit_info, $job) && !$this->isJobAlreadyLaunched($job)) {
-                $this->logger->info("Launching job #id:" . $job->getId() . " triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl());
+            $this->logger->debug("Processing job #" . $job->getId());
+
+            if ($this->doesCommitTriggerjob($commit_info, $job)) {
+                $job_id = $job->getId();
+
+                if ($this->isJobAlreadyLaunched($job)) {
+                    $this->logger->info("Job #$job_id not launched because another job with same URL and parameters already triggered by another job. Skipping.");
+
+                    continue;
+                }
+
+                $this->logger->info("Launching job #$job_id triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl());
                 try {
                     $this->ci_client->setToken($job->getToken());
                     $this->ci_client->launchJobBuild($job->getUrl());
 
                     $this->launched_jobs[] = $job->getUrl();
                 } catch(Jenkins_ClientUnableToLaunchBuildException $exception) {
-                    $this->logger->error("Launching job #id:" . $job->getId() . " triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl()." got error " .$exception->getMessage());
+                    $this->logger->error("Launching job #$job_id triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl()." returns an error " .$exception->getMessage());
                 }
 
                 continue;
