@@ -480,18 +480,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
 
-            //build by nature array
-            $by_nature = array();
-            foreach ($artifact_links as $artifact_link) {
-                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
-                    $nature = $artifact_link->getNature();
-                    if(!isset($by_nature[$nature])) {
-                        $by_nature[$nature] = array();
-                    }
-                    $by_nature[$nature][] = $artifact_link;
-                }
-            }
-
             $projects = array();
             $this_project_id = $this->getTracker()->getProject()->getGroupId();
             foreach ($ids as $tracker_id => $matching_ids) {
@@ -554,14 +542,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
 
-            //by nature
-            foreach($by_nature as $nature => $artifact_links) {
-                if(empty($nature)) {
-                    continue;
-                }
-
-                $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-                $html .= $renderer->renderToString('artifactlink-nature-table', new Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter($artifact_links, $reverse_artifact_links));
+            if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+                $html .= $this->fetchNatureTables($artifact_links, $reverse_artifact_links, $current_user);
             }
         } else {
             $html .= $this->getNoValueLabel();
@@ -573,6 +555,33 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         $html .= '</div>';
 
+        return $html;
+    }
+
+    private function fetchNatureTables(array $artifact_links, $is_reverse_artifact_links, PFUser $current_user) {
+        $by_nature = array();
+        foreach ($artifact_links as $artifact_link) {
+            if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
+                $nature = $artifact_link->getNature();
+                if(!isset($by_nature[$nature])) {
+                    $by_nature[$nature] = array();
+                }
+                $by_nature[$nature][] = $artifact_link;
+            }
+        }
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $html = '';
+        foreach($by_nature as $nature => $artifact_links) {
+            if(empty($nature)) {
+                continue;
+            }
+
+            $html .= $renderer->renderToString(
+                'artifactlink-nature-table',
+                new Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter($artifact_links, $is_reverse_artifact_links)
+            );
+        }
         return $html;
     }
 
