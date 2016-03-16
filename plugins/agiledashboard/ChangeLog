@@ -1,3 +1,6 @@
+Version 1.367 - Tuleap 8.13
+    * story #8833: show, import and manipulate links (Admin can edit ArtifactLink natures)
+
 Version 1.366 - Tuleap 8.13
     * story #8808: Have realtime create, edit and move with closed columns
 
