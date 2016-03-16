@@ -16,7 +16,9 @@ Version 8.13 (Not released yet)
 	== Development ==
 	* request #8921: Makefile should be self-documented
 	* request #8914: Refactoring the functions position in the setup script
-	* story #8815 Manage cross references between svn revisions & the world (Deal with crossproject)
+	* story #8815: Manage cross references between svn revisions & the world (Deal with crossproject)
+	* request #8895: remove TinyMCE
+		- Refactoring of tuleap.textarea.RTE
 
 	== Security ==
 	* request #8904: CSRF vulnerability in the project registration page
@@ -26,7 +28,7 @@ Version 8.13 (Not released yet)
 
 	== Plugins ==
 	* agiledashboard: 1.367
-	* tracker: 5.818
+	* tracker: 5.819
 	* hudson_svn: 0.6
 	* git: 4.133
 	* hudson: 1.27
