@@ -8,6 +8,7 @@ Version 8.13 (Not released yet)
 	* story #8887 migrate git to gerrit with REST route
 		- Add server info in GET git/:id
 	* request #8911: stop installation if SELinux is in enforcing mode
+	* request #8888: Add Export CSV function to the grouplist interface
 
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
