@@ -191,11 +191,12 @@ class NatureConfigController {
         } catch (ProjectIsUsingHierarchyException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'project_is_using_hierarchy_exception',
-                    $project->getPublicName()
-                )
+                $exception->getMessage()
+            );
+        } catch (AnotherServiceBlocksNatureUsageException $exception) {
+            $response->addFeedback(
+                Feedback::ERROR,
+                $exception->getMessage()
             );
         }
     }

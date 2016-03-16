@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -266,3 +266,12 @@ define('ITEM_PRIORITY_CHANGE', 'item_priority_change');
  *  'reference_information' array               (OUT)
  */
 define('TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION', 'tracker_event_complement_reference_information');
+
+/**
+ * Event emitted to check if artifact links natures are blocked by another service
+ *
+ * Parameters:
+ *  'project'      Project (IN)
+ *  'service_name' string (OUT)
+ */
+define ('TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE', 'tracker_event_artifact_link_natures_blocked_by_service');
