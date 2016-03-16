@@ -36,12 +36,12 @@ class Svnlook {
     }
 
     public function getChangedFiles(Repository $repository, $revision) {
-        $command = $this->svnlook.' changed ' . escapeshellarg($repository->getSystemPath()). ' ' . escapeshellarg($revision);
+        $command = $this->svnlook.' changed -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec($command);
     }
 
     public function getChangedDirectories(Repository $repository, $revision) {
-        $command = $this->svnlook.' dirs-changed ' . escapeshellarg($repository->getSystemPath()). ' ' . escapeshellarg($revision);
+        $command = $this->svnlook.' dirs-changed -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec($command);
     }
 
