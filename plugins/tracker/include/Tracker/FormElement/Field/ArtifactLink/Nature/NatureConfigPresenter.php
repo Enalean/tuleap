@@ -49,6 +49,7 @@ class NatureConfigPresenter {
     public $allowed_projects;
     public $allowed_projects_title;
     public $edit_icon_label;
+    public $edit_system_nature_title;
 
     public function __construct($title, array $natures, CSRFSynchronizerToken $csrf, $allowed_projects) {
         $this->desc                = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
@@ -70,10 +71,11 @@ class NatureConfigPresenter {
         $this->forward_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_placeholder');
         $this->reverse_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_placeholder');
 
-        $this->create_new_nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'create_new_nature');
-        $this->edit_nature       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_nature');
-        $this->edit_icon_label   = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_icon_label');
-        $this->shortname_pattern = NatureValidator::SHORTNAME_PATTERN;
+        $this->create_new_nature        = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'create_new_nature');
+        $this->edit_nature              = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_nature');
+        $this->edit_icon_label          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_icon_label');
+        $this->edit_system_nature_title = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_system_nature_title');
+        $this->shortname_pattern        = NatureValidator::SHORTNAME_PATTERN;
 
         $this->sections = new SectionsPresenter();
 

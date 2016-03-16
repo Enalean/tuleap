@@ -31,15 +31,20 @@
                             <td>{{ forward_label }}</td>
                             <td>{{ reverse_label }}</td>
                             <td>
+                                {{# is_system }}
+                                    <span class="muted" title="{{ edit_system_nature_title }}">
+                                        <i class="icon-edit"></i> {{ edit_icon_label }}
+                                    </span>
+                                {{/ is_system }}
                                 {{^ is_system }}
-                                <a class=""
-                                   role="button"
-                                   data-toggle="modal"
-                                   href="#siteadmin-config-natures-modal-edit-{{ shortname }}"
-                                >
-                                    <i class="icon-edit"></i> {{ edit_icon_label }}
-                                </a>
-                                {{> siteadmin-config/natures-modal-edit }}
+                                    <a class=""
+                                       role="button"
+                                       data-toggle="modal"
+                                       href="#siteadmin-config-natures-modal-edit-{{ shortname }}"
+                                    >
+                                        <i class="icon-edit"></i> {{ edit_icon_label }}
+                                    </a>
+                                    {{> siteadmin-config/natures-modal-edit }}
                                 {{/ is_system }}
                             </td>
                         </tr>
