@@ -25,7 +25,6 @@ use CSRFSynchronizerToken;
 use TemplateRendererFactory;
 use Codendi_Request;
 use Response;
-use Tracker_FormElement_Field_ArtifactLink;
 use Feedback;
 use ForgeConfig;
 use ProjectManager;
@@ -46,15 +45,20 @@ class NatureConfigController {
     /** @var NatureFactory */
     private $nature_factory;
 
+    /** @var NatureEditor */
+    private $nature_editor;
+
     public function __construct(
         ProjectManager $project_manager,
         AllowedProjectsConfig $allowed_projects_config,
         NatureCreator $nature_creator,
+        NatureEditor $nature_editor,
         NatureFactory $nature_factory
     ) {
-        $this->project_manager = $project_manager;
-        $this->nature_creator  = $nature_creator;
-        $this->nature_factory  = $nature_factory;
+        $this->project_manager         = $project_manager;
+        $this->nature_creator          = $nature_creator;
+        $this->nature_factory          = $nature_factory;
+        $this->nature_editor           = $nature_editor;
         $this->allowed_projects_config = $allowed_projects_config;
     }
 
@@ -80,12 +84,32 @@ class NatureConfigController {
                 $request->get('forward_label'),
                 $request->get('reverse_label')
             );
-        } catch (UnableToCreateNatureException $exception) {
+        } catch (NatureManagementException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText(
                     'plugin_tracker_artifact_links_natures',
                     'create_error',
+                    $exception->getMessage()
+                )
+            );
+        }
+        $response->redirect(self::$URL);
+    }
+
+    public function editNature(Codendi_Request $request, Response $response) {
+        try {
+            $this->nature_editor->edit(
+                $request->get('shortname'),
+                $request->get('forward_label'),
+                $request->get('reverse_label')
+            );
+        } catch (NatureManagementException $exception) {
+            $response->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'edit_error',
                     $exception->getMessage()
                 )
             );
@@ -114,11 +138,7 @@ class NatureConfigController {
     /** @return NatureConfigPresenter */
     private function getNatureConfigPresenter($title, CSRFSynchronizerToken $csrf) {
         $natures = array(
-            new NaturePresenter(
-                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse')
-            )
+            new NatureIsChildPresenter()
         );
 
         foreach ($this->nature_factory->getAllNatures() as $nature) {

@@ -58,6 +58,10 @@ class ConfigRouter {
                 $this->csrf->check();
                 $this->nature_controller->createNature($request, $response);
                 break;
+            case 'edit-nature':
+                $this->csrf->check();
+                $this->nature_controller->editNature($request, $response);
+                break;
             case 'restrict-natures':
                 $this->csrf->check();
                 if ($request->exist('allow-project')) {

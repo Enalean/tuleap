@@ -21,16 +21,4 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NaturePresenter {
-
-    public $reverse_label;
-    public $forward_label;
-    public $shortname;
-    public $is_system = false;
-
-    public function __construct($shortname, $forward_label, $reverse_label) {
-        $this->shortname     = $shortname;
-        $this->forward_label = $forward_label;
-        $this->reverse_label = $reverse_label;
-    }
-}
+class UnableToEditNatureException extends NatureManagementException {}
