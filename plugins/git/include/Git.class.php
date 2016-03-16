@@ -123,6 +123,11 @@ class Git extends PluginController {
     /** @var Project */
     private $project;
 
+    /**
+     * @var Git_Driver_Gerrit_ProjectCreatorStatus
+     */
+    private $project_creator_status;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -141,7 +146,8 @@ class Git extends PluginController {
         Git_GitRepositoryUrlManager $url_manager,
         Logger $logger,
         Git_Backend_Gitolite $backend_gitolite,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status
     ) {
         parent::__construct($user_manager, $request);
 
@@ -162,6 +168,7 @@ class Git extends PluginController {
         $this->logger                   = $logger;
         $this->backend_gitolite         = $backend_gitolite;
         $this->mirror_data_mapper       = $mirror_data_mapper;
+        $this->project_creator_status   = $project_creator_status;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -1016,7 +1023,8 @@ class Git extends PluginController {
                 $this->git_system_event_manager,
                 $this->gerrit_server_factory,
                 $this->driver_factory,
-                $history_dao
+                $history_dao,
+                $this->project_creator_status
             )
         );
     }

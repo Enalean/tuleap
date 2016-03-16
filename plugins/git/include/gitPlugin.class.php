@@ -1158,6 +1158,12 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), $this->getUGroupManager());
     }
 
+    private function getProjectCreatorStatus() {
+        $dao = new Git_Driver_Gerrit_ProjectCreatorStatusDao();
+
+        return new Git_Driver_Gerrit_ProjectCreatorStatus($dao);
+    }
+
     private function getGitController() {
         return new Git(
             $this,
@@ -1177,7 +1183,8 @@ class GitPlugin extends Plugin {
             $this->getGitRepositoryUrlManager(),
             $this->getLogger(),
             $this->getBackendGitolite(),
-            $this->getMirrorDataMapper()
+            $this->getMirrorDataMapper(),
+            $this->getProjectCreatorStatus()
         );
     }
 
