@@ -13,6 +13,7 @@ admin_main	header_user	Administration des utilisateurs
 admin_main	display_user	Afficher les utilisateurs commençant par :
 admin_main	search_user	Chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
 admin_main	search	Chercher
+admin_main	export_csv	Export CSV
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
 admin_main	validated_user	Utilisateurs validés en <a href="$1"> attente d'activation par e-mail</a>
 admin_main	need_approval	approbation requise
@@ -234,6 +235,7 @@ admin_grouplist	all_categ	Toutes les catégories
 admin_grouplist	click	(cliquer pour éditer)
 admin_grouplist	categ	Catégories
 admin_grouplist	members	Membres
+admin_grouplist	id_group	Identifiant du groupe
 #
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php

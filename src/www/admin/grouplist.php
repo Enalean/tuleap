@@ -46,7 +46,29 @@ function getSelectedFromStatus($selected_status, $status) {
         return "selected";
     }
 }
-
+//EXPORT-CSV
+if ($request->exist('export')) {
+    //Validate group_name_search
+    $group_name_search = "";
+    $valid_group_name_search  = new Valid_String('group_name_search');
+    if($request->valid($valid_group_name_search)) {
+        $group_name_search = $request->get('group_name_search');
+    }
+    //Get status values
+    if ($request->exist('status')) {
+        $status_values = $request->get('status');
+        if (is_array($status_values) && !empty($status_values) && (! in_array('ANY', $status_values)) ) {
+            $status = explode(',', $status_values);
+        }
+    }
+    //export user list in csv format
+    $project_list_exporter = new Admin_ProjectListExporter();
+    $project_list_csv      = $project_list_exporter->exportProjectList($group_name_search, $status);
+    header ('Content-Type: text/csv');
+    header ('Content-Disposition:attachment; filename=project_list.csv');
+    header ('Content-Length:'.strlen($project_list_csv));
+    echo $project_list_csv;
+}
 //return projects matching given parameters
 $res = $dao->returnAllProjects($offset, $limit, $status, $group_name_search);
 if ($res['numrows'] == 1) {
@@ -66,11 +88,15 @@ if ($group_name_search !="") {
 }
 
 /*
- * Add search field
+ * Add search field and Export CSV button
  */
-$purifier                   = Codendi_HTMLPurifier::instance();
+$grp_status = implode(',', $status);
+if ($grp_status == "") {
+    $grp_status = "ANY";
+}
 $group_name_search_purify   = $purifier->purify($group_name_search);
 $search_purify              = $purifier->purify($Language->getText('admin_main', 'search'));
+$export                     = $purifier->purify($Language->getText('admin_main', 'export_csv'));
 echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-horizontal">
        <table>
         <tr>
@@ -79,11 +105,11 @@ echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-hor
              <select name="status[]" size=7 multiple="multiple">
                <option value="ANY" '.$anySelect.'>Any</option>
                <option value="'.Project::STATUS_ACTIVE.'" '.getSelectedFromStatus(Project::STATUS_ACTIVE, $status).'>'.$Language->getText('admin_groupedit','status_A').'</option>
-               <option value="S" '.getSelectedFromStatus("S", $status).'>'.$Language->getText('admin_groupedit','status_s').'</option>
+               <option value="'.Project::STATUS_SYSTEM.'" '.getSelectedFromStatus(Project::STATUS_SYSTEM, $status).'>'.$Language->getText('admin_groupedit','status_s').'</option>
                <option value="'.Project::STATUS_INCOMPLETE.'" '.getSelectedFromStatus(Project::STATUS_INCOMPLETE, $status).'>'.$Language->getText('admin_groupedit','status_I').'</option>
                <option value="'.Project::STATUS_PENDING.'" '.getSelectedFromStatus(Project::STATUS_PENDING, $status).'>'.$Language->getText('admin_groupedit','status_P').'</option>
                <option value="'.Project::STATUS_HOLDING.'" '.getSelectedFromStatus(Project::STATUS_HOLDING, $status).'>'.$Language->getText('admin_groupedit','status_H').'</option>
-               <option value="D" '.getSelectedFromStatus("D", $status).'>'.$Language->getText('admin_groupedit','status_D').'</option>
+               <option value="'.Project::STATUS_DELETED.'" '.getSelectedFromStatus(Project::STATUS_DELETED, $status).'>'.$Language->getText('admin_groupedit','status_D').'</option>
              </select>
          </td>
          <td valign=top>
@@ -100,6 +126,9 @@ echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-hor
          </button>
        </div>
       </form>';
+echo '<form action="grouplist.php?group_name_search='.$group_name_search_purify.'&export&status='.$grp_status.'" method="post">';
+    echo '<input type="submit" class="btn" name="exp-csv" value="'.$export.'">';
+echo '</form>';
 ?>
 
 <TABLE class="table table-bordered table-striped table-hover">
