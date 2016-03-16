@@ -25,6 +25,7 @@
 namespace Tuleap\Svn\Commit;
 use System_Command;
 
+
 use Tuleap\Svn\Repository\Repository;
 
 class Svnlook {
@@ -47,6 +48,11 @@ class Svnlook {
 
     public function getInfo(Repository $repository, $revision) {
         $command = $this->svnlook.' info -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($repository->getSystemPath());
+        return $this->system_commnd->exec($command);
+    }
+
+    public function getTree(Repository $repository) {
+        $command = $this->svnlook.' tree --full-paths '.escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec($command);
     }
 }

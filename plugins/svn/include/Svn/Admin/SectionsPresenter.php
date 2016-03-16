@@ -26,12 +26,15 @@ class SectionsPresenter {
 
     public $notifications;
     public $access_control;
+    public $immutable_tag;
     public $notifications_url;
     public $access_control_url;
+    public $immutable_tag_url;
 
     public function __construct(Repository $repository) {
         $this->notifications  = $GLOBALS['Language']->getText('plugin_svn', 'notifications');
         $this->access_control = $GLOBALS['Language']->getText('plugin_svn', 'access_control');
+        $this->immutable_tag  = $GLOBALS['Language']->getText('plugin_svn', 'immutable_tag');
 
         $this->notifications_url = SVN_BASE_URL .'/?'. http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
@@ -41,6 +44,11 @@ class SectionsPresenter {
         $this->access_control_url = SVN_BASE_URL .'/?'. http_build_query(array(
             'group_id' => $repository->getProject()->getId(),
             'action'   => 'access-control',
+            'repo_id'  => $repository->getId()
+        ));
+        $this->immutable_tag_url = SVN_BASE_URL .'/?'. http_build_query(array(
+            'group_id' => $repository->getProject()->getId(),
+            'action'   => 'display-immutable-tag',
             'repo_id'  => $repository->getId()
         ));
     }

@@ -41,3 +41,9 @@ CREATE TABLE plugin_svn_accessfile_history(
     version_date int(11) NOT NULL,
     INDEX repository_idx (repository_id)
 );
+
+CREATE TABLE plugin_svn_immutable_tag (
+    repository_id INT(11) PRIMARY KEY,
+    paths TEXT NOT NULL,
+    whitelist TEXT NOT NULL
+);

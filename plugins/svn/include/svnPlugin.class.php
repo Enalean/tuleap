@@ -32,13 +32,18 @@ use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailHeaderDao;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Admin\ImmutableTagController;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Admin\AdminController;
+use Tuleap\Svn\Admin\ImmutableTagCreator;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\XMLImporter;
 use Tuleap\Svn\Repository\RuleName;
+use Tuleap\Svn\Commit\Svnlook;
 
 /**
  * SVN plugin
@@ -271,6 +276,12 @@ class SvnPlugin extends Plugin {
             new RepositoryDisplayController(
                 $repository_manager,
                 ProjectManager::instance()
+            ),
+            new ImmutableTagController(
+                $repository_manager,
+                new Svnlook(new System_Command()),
+                new ImmutableTagCreator(new ImmutableTagDao()),
+                new ImmutableTagFactory(new ImmutableTagDao())
             )
         );
     }

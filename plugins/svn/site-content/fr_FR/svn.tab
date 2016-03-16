@@ -54,6 +54,7 @@ plugin_svn_admin	saved_versions	Versions sauvegardées :
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Contrôle d'accès
+plugin_svn	immutable_tag	Tags non modifiables
 plugin_svn	update_access_history_file_error	Impossible d'enregistrer les nouveaux droits du dépôt.
 plugin_svn	update_error	Impossible d'enregistrer les données du dépôt
 plugin_svn	char_err	Le nom du dépôt doit contenir au moins un caractère
@@ -63,3 +64,4 @@ plugin_svn	repository_not_found	Dépôt non trouvé
 plugin_svn	already_used	Le nom du dépôt existe déjà dans le projet.
 plugin_svn	find_error	Le dépôt n'a pas été trouvé.
 plugin_svn	repository_not_created	Le dépôt est en attente de création. Veuillez revenir dans quelques minutes.
+plugin_svn	create_immutable_tag_error	Impossible d'enregistrer les tags non modifiables.
