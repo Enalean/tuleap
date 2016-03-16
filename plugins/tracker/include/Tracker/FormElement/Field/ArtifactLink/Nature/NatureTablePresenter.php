@@ -35,14 +35,10 @@ class NatureTablePresenter {
 
     public $artifact_links;
 
-    public function __construct(array $artifact_links, $is_reverse_artifact_links) {
-        $this->nature = '_is_child';
+    public function __construct(NaturePresenter $nature, array $artifact_links, $is_reverse_artifact_links) {
         $language = $GLOBALS['Language'];
-        if($is_reverse_artifact_links) {
-            $this->nature_label   = $language->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse');
-        } else {
-            $this->nature_label   = $language->getText('plugin_tracker_artifact_links_natures', '_is_child_forward');
-        }
+        $this->nature             = $nature->shortname;
+        $this->nature_label       = $this->fetchTabLabel($nature, $is_reverse_artifact_links);
         $this->id_label           = $language->getText('plugin_tracker_formelement_admin', 'artifactid_label');
         $this->project_label      = $language->getText('plugin_tracker_include_artifact', 'project');
         $this->tracker_label      = 'Tracker';
@@ -58,5 +54,15 @@ class NatureTablePresenter {
             $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
             $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact);
         }
+    }
+
+    private function fetchTabLabel($nature, $is_reverse_artifact_links) {
+        $nature_label = '';
+        if($is_reverse_artifact_links) {
+            $nature_label = $nature->reverse_label;
+        } else {
+            $nature_label = $nature->forward_label;
+        }
+        return $nature_label;
     }
 }
