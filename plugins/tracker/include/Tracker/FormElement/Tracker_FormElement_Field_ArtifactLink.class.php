@@ -21,6 +21,9 @@
 */
 
 use Tracker\FormElement\Field\ArtifactLink\Nature;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
@@ -571,15 +574,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
 
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $nature_factory = new NatureFactory(new NatureDao());
         $html = '';
         foreach($by_nature as $nature => $artifact_links) {
             if(empty($nature)) {
                 continue;
             }
 
+            $nature_presenter = $nature_factory->getFromShortname($nature);
             $html .= $renderer->renderToString(
                 'artifactlink-nature-table',
-                new Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter($artifact_links, $is_reverse_artifact_links)
+                new NatureTablePresenter($nature_presenter, $artifact_links, $is_reverse_artifact_links)
             );
         }
         return $html;

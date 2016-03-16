@@ -74,4 +74,10 @@ class NatureDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getFromShortname($shortname) {
+        $escaped_shortname = db_escape_string($shortname);
+        $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname='$escaped_shortname'";
+        return $this->retrieveFirstRow($sql);
+    }
+
 }

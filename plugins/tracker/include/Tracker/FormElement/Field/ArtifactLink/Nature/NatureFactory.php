@@ -40,6 +40,15 @@ class NatureFactory {
             );
     }
 
+    /** @return NaturePresenter */
+    public function getFromShortname($shortname) {
+        if($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+            return new NatureIsChildPresenter();
+        }
+
+        return $this->instantiateFromRow($this->dao->getFromShortname($shortname));
+    }
+
     public function instantiateFromRow($row) {
         return new NaturePresenter(
             $row['shortname'],
