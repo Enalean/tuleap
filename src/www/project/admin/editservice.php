@@ -128,11 +128,31 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   } else {
     print '<input type="hidden" name="is_active" VALUE="'.$service['is_active'].'">';
   }
-  
+
+  $is_activable = true;
+  $message      = '';
+  $disabled     = '';
+
+  $project = ProjectManager::instance()->getProject($group_id);
+
+  $params = array(
+      "project"           => $project,
+      "service_shortname" => $service['short_name'],
+      "is_activable"      => &$is_activable,
+      "message"           => &$message
+  );
+
+  EventManager::instance()->processEvent(Event::SERVICE_IS_ACTIVABLE, $params);
+
+  if (! $is_activable) {
+      $disabled = 'disabled="disabled"';
+      echo '<p class="alert">'. $message . '</p>';
+  }
+
   echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','display_in_s_bar').'">'.$Language->getText('project_admin_editservice','enabled').':</a> </td><td>';
-  echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ).'>';
-  
+  echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ). $disabled .'>';
+
 echo '</td></tr>';
 if ($service['scope'] == 'project') {
     echo '<tr><td>';
@@ -152,7 +172,7 @@ echo '</td></tr>';
 
 echo '</table>
 
-<P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
+<P><INPUT class="btn btn-primary" type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
 </form>		
 <p><font color="red">*</font>: '.$Language->getText('project_admin_editservice','fields_required').'</p>';
 }
@@ -223,7 +243,7 @@ echo '<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice
 </td></tr>
 </table>
 
-<P><INPUT type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">
+<P><INPUT class="btn btn-primary" type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">
 </form>
 <p><font color="red">*</font>: '.$Language->getText('project_admin_editservice','fields_required').'</p>
 ';
