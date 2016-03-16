@@ -366,7 +366,6 @@ if (!$confirmation_register) {
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
 }
-?>
-<?php
-$HTML->footer(array());
+
+$HTML->footer(array('without_content' => true));
 ?>
