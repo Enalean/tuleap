@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
+
 /**
  * Update the link direction in order to ensure that it is correct resp. the
  * association definition.
@@ -26,13 +28,10 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand imple
     Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {
 
-    /** @var Tracker_Artifact[] */
+    /** @var SourceOfAssociationCollection */
     private $source_of_association;
 
-    /**
-     * @param Tracker_Artifact[] $source_of_association
-     */
-    public function __construct(array $source_of_association) {
+    public function __construct(SourceOfAssociationCollection $source_of_association) {
         $this->source_of_association = $source_of_association;
     }
 
@@ -45,8 +44,6 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand imple
         Tracker_Artifact_Changeset $new_changeset,
         Tracker_Artifact_Changeset $previous_changeset = null
     ) {
-        foreach ($this->source_of_association as $source_artifact) {
-            $source_artifact->linkArtifact($artifact->getId(), $submitter);
-        }
+        $this->source_of_association->linkToArtifact($artifact, $submitter);
     }
 }

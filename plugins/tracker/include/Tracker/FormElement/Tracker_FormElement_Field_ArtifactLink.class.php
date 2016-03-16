@@ -20,10 +20,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Tracker\FormElement\Field\ArtifactLink\Nature;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
@@ -37,9 +39,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     private $artifact_factory;
 
     /**
-     * @var Tracker_Artifact|null
+     * @var SourceOfAssociationCollection | null
+     *
+     * @use getSourceOfAssociationCollection()
      */
-    private $source_of_association = array();
+    private $cache_source_of_association_collection = null;
+
+    /** @return SourceOfAssociationCollection */
+    private function getSourceOfAssociationCollection() {
+        if (! $this->cache_source_of_association_collection) {
+            $this->cache_source_of_association_collection = new SourceOfAssociationCollection();
+        }
+
+        return $this->cache_source_of_association_collection;
+    }
 
     /**
      * Display the html form in the admin ui
@@ -1294,7 +1307,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     /**
      * @return Tracker_ArtifactFactory
      */
-    public function getArtifactFactory() {
+    private function getArtifactFactory() {
         if (!$this->artifact_factory) {
             $this->artifact_factory = Tracker_ArtifactFactory::instance();
         }
@@ -1303,10 +1316,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     public function getTrackerFactory() {
         return TrackerFactory::instance();
-    }
-
-    protected function getTrackerChildrenFromHierarchy(Tracker $tracker) {
-        return $this->getHierarchyFactory()->getChildren($tracker->getId());
     }
 
     /**
@@ -1342,27 +1351,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     private function getUpdateLinkingDirectionCommand() {
-        return new Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand($this->source_of_association);
-    }
-
-    /**
-     * Return true if $artifact_to_check is "parent of" $artifact_reference
-     *
-     * @todo: take planning into account
-     *
-     * When $artifact_to_check is a Release
-     * And  $artifact_reference is a Sprint
-     * And Release -> Sprint (in tracker hierarchy)
-     * Then return True
-     *
-     * @param Tracker_Artifact $artifact_to_check
-     * @param Tracker_Artifact $artifact_reference
-     *
-     * @return Boolean
-     */
-    protected function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
-        $children = $this->getTrackerChildrenFromHierarchy($artifact_to_check->getTracker());
-        return in_array($artifact_reference->getTracker(), $children);
+        return new Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand($this->getSourceOfAssociationCollection());
     }
 
     /**
@@ -1371,92 +1360,53 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @param Tracker_Artifact           $artifact         The artifact
      * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
      * @param int                        $new_changeset_id The id of the new changeset
-     * @param mixed                      $submitted_value  The value submitted by the user
+     * @param mixed                      $value  The value submitted by the user
      * @param boolean $is_submission true if artifact submission, false if artifact update
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, PFUser $submitter, $is_submission = false, $bypass_permissions = false) {
-        $submitted_value = $this->updateLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
-        return parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
-    }
-
-    /**
-     * Verify (and update if needed) that the link between what submitted the user ($submitted_values) and
-     * the current artifact is correct resp. the association definition.
-     *
-     * Given I defined following hierarchy:
-     * Release
-     * `-- Sprint
-     *
-     * If $artifact is a Sprint and I try to link a Release, this method detect
-     * it and update the corresponding Release with a link toward current sprint
-     *
-     * @param Tracker_Artifact           $artifact
-     * @param Tracker_Artifact_Changeset $old_changeset
-     * @param mixed                      $submitted_value
-     * @param PFUser                       $submitter
-     *
-     * @return mixed The submitted value expurged from updated links
-     */
-    protected function updateLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, PFUser $submitter) {
+    public function saveNewChangeset(
+        $artifact,
+        $old_changeset,
+        $new_changeset_id,
+        $value,
+        PFUser $submitter,
+        $is_submission = false,
+        $bypass_permissions = false
+    ) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
-        $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
-        $artifact_id_already_linked = array();
-        foreach ($artifacts as $artifact_to_add) {
-            if ($this->isSourceOfAssociation($artifact_to_add, $artifact)) {
-                $this->source_of_association[] = $artifact_to_add;
-                $artifact_id_already_linked[] = $artifact_to_add->getId();
-            }
-        }
 
-        return $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $value = $this->getNormalizedSubmittedValue($value);
+
+        $saver           = $this->getArtifactLinkValueSaver();
+        $submitted_value = $saver->updateLinkingDirection(
+            $this->getSourceOfAssociationCollection(),
+            $artifact,
+            $value,
+            $previous_changesetvalue
+        );
+
+        return parent::saveNewChangeset(
+            $artifact,
+            $old_changeset,
+            $new_changeset_id,
+            $submitted_value,
+            $submitter,
+            $is_submission,
+            $bypass_permissions
+        );
     }
 
     /**
-     * Remove from user submitted artifact links the artifact ids that where already
-     * linked after the direction checking
-     *
-     * Should be private to the class but almost impossible to test in the context
-     * of saveNewChangeset.
-     *
-     * @param Array $submitted_value
-     * @param Array $artifact_id_already_linked
-     *
-     * @return Array
+     * Sometimes, for example during a post action for a trigger, the workflow pass null as submitted value.
+     * ArtifactLinks don't like very much this null so force it to a decent, empty value.
      */
-    public function removeArtifactsFromSubmittedValue($submitted_value, array $artifact_id_already_linked) {
-        $new_values = explode(',', $submitted_value['new_values']);
-        $new_values = array_map('trim', $new_values);
-        $new_values = array_diff($new_values, $artifact_id_already_linked);
-        $submitted_value['new_values'] = implode(',', $new_values);
-        return $submitted_value;
-    }
-
-    protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
-        $new_values     = (string)$value['new_values'];
-        $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
-        // this array will be the one to save in the new changeset
-        $artifact_ids = array();
-        if ($previous_changesetvalue != null) {
-            $artifact_ids = $previous_changesetvalue->getArtifactIds();
-            // We remove artifact links that user wants to remove
-            if (is_array($removed_values) && ! empty($removed_values)) {
-                $artifact_ids = array_diff($artifact_ids, array_keys($removed_values));
-            }
+    private function getNormalizedSubmittedValue($value) {
+        if (is_null($value)) {
+            $value = array('new_values' => '');
         }
 
-        if (trim($new_values) != '') {
-            $new_artifact_ids = array_diff(explode(',', $new_values), array_keys($removed_values));
-            // We add new links to existing ones
-            foreach ($new_artifact_ids as $new_artifact_id) {
-                if ( ! in_array($new_artifact_id, $artifact_ids)) {
-                    $artifact_ids[] = (int)$new_artifact_id;
-                }
-            }
-        }
-
-        return $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifact_ids);
+        return $value;
     }
 
     /**
@@ -1464,124 +1414,40 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @param Tracker_Artifact                $artifact                The artifact
      * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
+     * @param mixed                           $submitted_value         The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $dao = $this->getValueDao();
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $submitted_value,
+        Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+    ) {
+        $saver = $this->getArtifactLinkValueSaver();
 
-        foreach ($this->getArtifactIdsToLink($artifact, $value, $previous_changesetvalue) as $artifact_to_be_linked_by_tracker) {
-            $tracker = $artifact_to_be_linked_by_tracker['tracker'];
-            $nature  = $this->getNature($this->getTracker(), $tracker);
-
-            $dao->create(
-                $changeset_value_id,
-                $nature,
-                $artifact_to_be_linked_by_tracker['ids'],
-                $tracker->getItemName(),
-                $tracker->getGroupId()
-            );
-        }
-
-        return $this->updateCrossReferences($artifact, $value);
-    }
-
-    private function getNature(Tracker $from_tracker, Tracker $to_tracker) {
-        if (in_array($to_tracker, $from_tracker->getChildren())) {
-            return self::NATURE_IS_CHILD;
-        }
-
-        return null;
-    }
-
-    /** @return array */
-    private function getArtifactIdsToLink(Tracker_Artifact $artifact, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $all_artifacts_to_link = $this->getArtifactsFromChangesetValue(
-            $value,
+        return $saver->saveValue(
+            $this,
+            $this->getCurrentUser(),
+            $artifact,
+            $changeset_value_id,
+            $submitted_value,
             $previous_changesetvalue
         );
-
-        $all_artifact_to_be_linked = array();
-        foreach ($all_artifacts_to_link as $artifact_to_link) {
-            if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
-                $tracker = $artifact_to_link->getTracker();
-
-                if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
-                    $all_artifact_to_be_linked[$tracker->getId()] = array(
-                        'tracker' => $tracker,
-                        'ids'     => array()
-                    );
-                }
-
-                $all_artifact_to_be_linked[$tracker->getId()]['ids'][] = $artifact_to_link->getId();
-            }
-        }
-
-        return $all_artifact_to_be_linked;
     }
 
-    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link) {
-        return ($src_artifact->getId() != $artifact_to_link->getId()) && $artifact_to_link->getTracker();
-    }
-
-    /**
-     * Update cross references of this field
-     *
-     * @param Tracker_Artifact $artifact the artifact that is currently updated
-     * @param array            $values   the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
-     *
-     * @return boolean
-     */
-    protected function updateCrossReferences(Tracker_Artifact $artifact, $values) {
-        $update_ok = true;
-
-        foreach ($this->getAddedArtifactIds($values) as $added_artifact_id) {
-            $update_ok = $update_ok && $this->insertCrossReference($artifact, $added_artifact_id);
-        }
-        foreach ($this->getRemovedArtifactIds($values) as $removed_artifact_id) {
-            $update_ok = $update_ok && $this->removeCrossReference($artifact, $removed_artifact_id);
-        }
-
-        return $update_ok;
-    }
-
-    private function getAddedArtifactIds(array $values) {
-        if (array_key_exists('new_values', $values)) {
-            if (trim($values['new_values']) != '') {
-                return array_map('intval', explode(',', $values['new_values']));
-            }
-        }
-        return array();
-    }
-
-    private function getRemovedArtifactIds(array $values) {
-        if (array_key_exists('removed_values', $values)) {
-            return array_map('intval', array_keys($values['removed_values']));
-        }
-        return array();
-    }
-
-    private function insertCrossReference(Tracker_Artifact $source_artifact, $target_artifact_id) {
-        return $this->getTrackerReferenceManager()->insertBetweenTwoArtifacts(
-            $source_artifact,
-            $this->getArtifactFactory()->getArtifactById($target_artifact_id),
-            $this->getCurrentUser()
-        );
-    }
-
-    private function removeCrossReference(Tracker_Artifact $source_artifact, $target_artifact_id) {
-        return $this->getTrackerReferenceManager()->removeBetweenTwoArtifacts(
-            $source_artifact,
-            $this->getArtifactFactory()->getArtifactById($target_artifact_id),
-            $this->getCurrentUser()
-        );
-    }
-
-    protected function getTrackerReferenceManager() {
-        return new Tracker_ReferenceManager(
-            ReferenceManager::instance(),
-            Tracker_ArtifactFactory::instance()
+    /** @return ArtifactLinkValueSaver */
+    private function getArtifactLinkValueSaver() {
+        return new ArtifactLinkValueSaver(
+            Tracker_ArtifactFactory::instance(),
+            $this->getValueDao(),
+            new Tracker_ReferenceManager(
+                ReferenceManager::instance(),
+                Tracker_ArtifactFactory::instance()
+            ),
+            new SourceOfAssociationDetector(
+                Tracker_HierarchyFactory::instance()
+            )
         );
     }
 
@@ -1603,9 +1469,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $artifacts;
     }
-
-
-
 
     /**
      * Retrieve sliced linked artifacts according to user's permissions
