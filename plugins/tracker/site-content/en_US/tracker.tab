@@ -1696,3 +1696,4 @@ plugin_tracker_artifact_links_natures	allowed_project_revoke_project	Submitted p
 plugin_tracker_artifact_links_natures	allowed_project_update_project_list_error	Something went wrong during the update. Help us improve your experience by sending an error report.
 plugin_tracker_artifact_links_natures	cannot_use_hierarchy	You cannot use hierarchy of trackers since the project use nature of artifact links.
 plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Project "$1" cannot use artifact links natures because it is using trackers hierarchy.
+plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Project "$1" cannot use artifact links natures because $2 blocks its usage.

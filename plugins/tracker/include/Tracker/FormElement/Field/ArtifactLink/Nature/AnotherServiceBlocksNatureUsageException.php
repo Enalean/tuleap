@@ -22,16 +22,15 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Project;
 
-class ProjectIsUsingHierarchyException extends \Exception {
+class AnotherServiceBlocksNatureUsageException extends \Exception {
 
-    public function __construct(Project $project) {
+    public function __construct(Project $project, $service_name) {
         parent::__construct(
             $GLOBALS['Language']->getText(
                 'plugin_tracker_artifact_links_natures',
-                'project_is_using_hierarchy_exception',
-                $project->getPublicName()
+                'another_service_blocks_link_nature',
+                 array($project->getPublicName(), $service_name)
             )
         );
     }
-
 }
