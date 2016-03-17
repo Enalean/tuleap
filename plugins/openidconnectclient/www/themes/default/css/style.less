@@ -3,12 +3,12 @@
     width: 20%;
     min-width: 200px;
     margin: 0 4% 20px 0;
-    border: 1px solid #DDD;
+    border: 1px solid #dddddd;
     border-radius: 3px;
 
     > .provider-header {
-        background: #EEE;
-        border-bottom: 2px solid #333;
+        background: #eeeeee;
+        border-bottom: 2px solid #333333;
         padding: 10px;
 
         > .provider-name {
@@ -23,9 +23,93 @@
         text-align: right;
 
         > .provider-last-login-date {
-            color: #888;
+            color: #888888;
             font-size: 12px;
             text-align: left;
+        }
+    }
+}
+
+#providers-configuration {
+    .modal {
+        .modal-header {
+            border-bottom: 2px solid #888888;
+        }
+
+        .modal-body {
+            max-height: none;
+
+            input {
+                width: 100%;
+                box-sizing: border-box;
+                height: 35px;
+            }
+
+            .provider-name, .provider-user-info-endpoint {
+                margin: 0 0 30px;
+            }
+        }
+    }
+
+    #providers {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 30px 0 0;
+
+        .provider {
+            display: flex;
+            flex-direction: column;
+            width: 370px;
+            margin: 0 30px 30px 0;
+            border: 1px solid #ededed;
+            border-radius: 4px;
+            box-sizing: border-box;
+
+            > h3 {
+                flex: 0 0 auto;
+                margin: 0;
+                padding: 13px 10px;
+                background: #eeeeee;
+                border-bottom: 2px solid #333333;
+                font-size: 16px;
+                line-height: normal;
+            }
+
+            > .provider-endpoint, > .provider-client {
+                flex: 1 1 auto;
+                padding: 10px;
+                border-bottom: 1px solid #ededed;
+
+                > span {
+                    display: block;
+                    font-size: 13px;
+                    word-wrap: break-word;
+
+                    &.provider-label {
+                        margin: 10px 0 0;
+                        color: #888888;
+                        font-size: 11px;
+                        font-weight: 600;
+
+                        &:first-child {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+
+            > .provider-actions {
+                flex: 0 0 auto;
+                background: #f6f6f6;
+                text-align: right;
+                padding: 10px;
+
+                > form {
+                    display: inline-block;
+                    margin: 0;
+                }
+            }
         }
     }
 }

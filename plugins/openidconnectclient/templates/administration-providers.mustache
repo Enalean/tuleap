@@ -1,47 +1,50 @@
 <h2>{{ title }}</h2>
-<div id="siteadmin-config">
+<div id="providers-configuration">
     <legend>{{ title_provider_configuration }}</legend>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>{{ name }}</th>
-                <th>{{ authorization_endpoint }}</th>
-                <th>{{ token_endpoint }}</th>
-                <th>{{ userinfo_endpoint }}</th>
-                <th>{{ client_id }}</th>
-                <th>{{ client_secret }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {{# providers }}
-            <tr>
-                <td>{{ getName }}</td>
-                <td>{{ getAuthorizationEndpoint }}</td>
-                <td>{{ getTokenEndpoint }}</td>
-                <td>{{ getUserInfoEndpoint }}</td>
-                <td>{{ getClientId }}</td>
-                <td>{{ getClientSecret }}</td>
-                <td>
-                    <a role="button" data-toggle="modal" href="#siteadmin-config-providers-modal-update-{{ getId }}">
-                        <span class="icon-edit"></span> {{ btn_edit }}
-                    </a>
-                    {{> administration-providers-modal-update }}
-                    <form method="post">
-                        {{{ csrf_token }}}
-                        <input type="hidden" name="action" value="delete-provider" />
-                        <input type="hidden" name="provider_id" value="{{ getId }}" />
-                        <button type="submit" class="btn-link"><span class="icon-trash"></span> {{ btn_delete }}</button>
-                    </form>
-                </td>
-            </tr>
-        {{/ providers }}
-        </tbody>
-    </table>
 
-    <a class="btn" data-toggle="modal" href="#siteadmin-config-providers-modal-create">
+    <a class="btn btn-primary" data-toggle="modal" href="#siteadmin-config-providers-modal-create">
         <span class="icon-plus"></span> {{ add_new_provider }}
     </a>
-
     {{> administration-providers-modal-create }}
+
+    <div id="providers">
+        {{# providers }}
+        <div class="provider">
+            <h3>{{ getName }}</h3>
+            <div class="provider-endpoint">
+                <span class="provider-label">{{ authorization_endpoint }}</span>
+                <span>{{ getAuthorizationEndpoint }}</span>
+
+                <span class="provider-label">{{ token_endpoint }}</span>
+                <span>{{ getTokenEndpoint }}</span>
+
+                <span class="provider-label">{{ userinfo_endpoint }}</span>
+                <span>{{ getUserInfoEndpoint }}</span>
+            </div>
+            <div class="provider-client">
+                <span class="provider-label">{{ client_id }}</span>
+                <span>{{ getClientId }}</span>
+
+                <span class="provider-label">{{ client_secret }}</span>
+                <span>{{ getClientSecret }}</span>
+            </div>
+            <div class="provider-actions">
+                <a class="btn btn-small" role="button" data-toggle="modal" href="#siteadmin-config-providers-modal-update-{{ getId }}">
+                    <span class="icon-edit"></span> {{ btn_edit }}
+                </a>
+
+                <form method="post">
+                    {{{ csrf_token }}}
+                    <input type="hidden" name="action" value="delete-provider">
+                    <input type="hidden" name="provider_id" value="{{ getId }}">
+                    <button type="submit" class="btn btn-small btn-danger">
+                        <span class="icon-trash"></span> {{ btn_delete }}
+                    </button>
+                </form>
+            </div>
+
+            {{> administration-providers-modal-update }}
+        </div>
+        {{/ providers }}
+    </div>
 </div>

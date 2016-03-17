@@ -76,16 +76,20 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'update_provider');
     }
 
+    public function https_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'https_placeholder');
+    }
+
     public function btn_close() {
         return $GLOBALS['Language']->getText('global', 'btn_close');
     }
 
     public function btn_create() {
-        return $GLOBALS['Language']->getText('global', 'btn_create');
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_create');
     }
 
     public function btn_delete() {
-        return $GLOBALS['Language']->getText('global', 'btn_delete');
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_delete');
     }
 
     public function btn_edit() {
@@ -93,7 +97,7 @@ class Presenter {
     }
 
     public function btn_update() {
-        return $GLOBALS['Language']->getText('global', 'btn_update');
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_update');
     }
 
     public function providers() {

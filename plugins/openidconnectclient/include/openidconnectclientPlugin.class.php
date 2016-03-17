@@ -73,7 +73,7 @@ class openidconnectclientPlugin extends Plugin {
     }
 
     public function cssfile() {
-        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
         }
     }
