@@ -1,3 +1,6 @@
+Version 1.123 - Tuleap 8.13
+    * request #8880: "Comment" field on every page suddenly became locked and unusable
+
 Version 1.122 - Tuleap 8.12
     * story #8631: Add the possibility to remove a link between a user account and an OpenID Connect provider
 

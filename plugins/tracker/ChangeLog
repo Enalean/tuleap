@@ -1,3 +1,6 @@
+Version 5.822 - Tuleap 8.13
+    * request #8880: "Comment" field on every page suddenly became locked and unusable
+
 Version 5.821 - Tuleap 8.13
     * story #8333: Project that uses AgileDashboard cannot use artifact links v2
 

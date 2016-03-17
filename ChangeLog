@@ -12,6 +12,7 @@ Version 8.13 (Not released yet)
 
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
+	* request #8880: "Comment" field on every page suddenly became locked and unusable
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
@@ -28,7 +29,7 @@ Version 8.13 (Not released yet)
 
 	== Plugins ==
 	* agiledashboard: 1.368
-	* tracker: 5.821
+	* tracker: 5.822
 	* hudson_svn: 0.6
 	* git: 4.134
 	* hudson: 1.27
@@ -38,6 +39,9 @@ Version 8.13 (Not released yet)
 	* mediawiki: 0.110
 	* forumml: 2.6.24
 	* openidconnectclient: 0.10
+
+    == Themes ==
+	* FlamingParrot: 1.123
 
 Version 8.12 (Thursday, March 3rd 2016)
 	== Enhancement ==
