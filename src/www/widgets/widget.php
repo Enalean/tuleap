@@ -6,12 +6,12 @@ require_once('common/widget/Widget.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Valid_Widget.class.php');
 
-$lm = new WidgetLayoutManager();
-
-$request =& HTTPRequest::instance();
-$good = false;
-$redirect   = '/';
-$vOwner = new Valid_Widget_Owner('owner');
+$layout_manager = new WidgetLayoutManager();
+$csrk_token     = new CSRFSynchronizerToken('widget_management');
+$request        = HTTPRequest::instance();
+$good           = false;
+$redirect       = '/';
+$vOwner         = new Valid_Widget_Owner('owner');
 $vOwner->required();
 if ($request->valid($vOwner)) {
     $owner = $request->get('owner');
@@ -50,9 +50,10 @@ if ($request->valid($vOwner)) {
                             break;
                         case 'update':
                             if ($layout_id = (int)$request->get('layout_id')) {
+                                $csrk_token->check($redirect, $request);
                                 if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER || user_ismember($group_id, 'A') || user_is_super_user()) {
                                     if ($request->get('cancel') || $widget->updatePreferences($request)) {
-                                        $lm->hideWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
+                                        $layout_manager->hideWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
                                     }
                                 }
                             }

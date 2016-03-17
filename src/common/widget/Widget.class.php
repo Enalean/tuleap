@@ -46,7 +46,7 @@
     function getContent() {
         return '';
     }
-    function getPreferencesForm($layout_id, $owner_id, $owner_type) {
+    function getPreferencesForm($layout_id, $owner_id, $owner_type, CSRFSynchronizerToken $csrf_token) {
         $prefs  = '';
         $prefs .= '<form method="POST" action="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
         $prefs .= '<fieldset><legend>'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</legend>';
@@ -55,6 +55,7 @@
         $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
         $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         $prefs .= '</fieldset>';
+        $prefs .= $csrf_token->fetchHTMLInput();
         $prefs .= '</form>';
         return $prefs;
     }
