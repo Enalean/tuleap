@@ -1,3 +1,9 @@
+Version 1.125 - Tuleap 8.13
+    * request #8905: CSRF vulnerability in the widget management
+
+Version 1.124 - Tuleap 8.13
+    * request #8905: CSRF vulnerability in the widget management
+
 Version 1.123 - Tuleap 8.13
     * request #8880: "Comment" field on every page suddenly became locked and unusable
 
