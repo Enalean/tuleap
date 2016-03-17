@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 8.13
+    * story #8633: Be able to edit an OpenID Connect provider
+
 Version 0.9 - Tuleap 8.13
     * story #8633: Have the possibility to create and delete an OpenID Connect provider
 

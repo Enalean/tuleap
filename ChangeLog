@@ -37,7 +37,7 @@ Version 8.13 (Not released yet)
 	* ldap: 3.100
 	* mediawiki: 0.110
 	* forumml: 2.6.24
-	* openidconnectclient: 0.9
+	* openidconnectclient: 0.10
 
 Version 8.12 (Thursday, March 3rd 2016)
 	== Enhancement ==
