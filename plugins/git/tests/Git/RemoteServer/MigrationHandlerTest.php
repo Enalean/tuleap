@@ -70,7 +70,7 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     public function itThrowsAnExceptionIfRepositoryCannotBeMigrated() {
         $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(false);
         $remote_server_id   = 1;
-        $gerrit_template_id = "no";
+        $gerrit_template_id = "none";
 
         $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException');
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
@@ -81,7 +81,7 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     public function itMigratesRepository() {
         $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $remote_server_id   = 1;
-        $gerrit_template_id = "no";
+        $gerrit_template_id = "none";
 
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->once();
 
@@ -91,7 +91,7 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     public function itDoesNothingWhenServerDoesNotExist() {
         $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $remote_server_id   = 1;
-        $gerrit_template_id = "no";
+        $gerrit_template_id = "none";
 
         stub($this->server_factory)->getServerById()->throws(new Git_RemoteServer_NotFoundException($remote_server_id));
 
@@ -150,7 +150,7 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
         $server            = mock('Git_RemoteServer_GerritServer');
         $driver            = mock('Git_Driver_Gerrit');
-        $disconnect_option = 'read';
+        $disconnect_option = 'read-only';
 
         stub($repository)->getBackend()->returns($backend);
         stub($this->server_factory)->getServerById()->returns($server);
