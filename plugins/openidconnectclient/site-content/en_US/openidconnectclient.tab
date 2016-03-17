@@ -23,12 +23,16 @@ plugin_openidconnectclient	link_registration_error	An error occurred while creat
 
 plugin_openidconnectclient_admin	title	OpenID Connect Client configuration
 plugin_openidconnectclient_admin	title_provider_configuration	OpenID Connect providers
+plugin_openidconnectclient_admin	https_placeholder	https://
 plugin_openidconnectclient_admin	name	Name
 plugin_openidconnectclient_admin	authorization_endpoint	Authorization endpoint
 plugin_openidconnectclient_admin	token_endpoint	Token endpoint
 plugin_openidconnectclient_admin	userinfo_endpoint	User information endpoint
 plugin_openidconnectclient_admin	client_id	Client ID
 plugin_openidconnectclient_admin	client_secret	Client secret
+plugin_openidconnectclient_admin	btn_create	Create the provider
+plugin_openidconnectclient_admin	btn_delete	Remove
+plugin_openidconnectclient_admin	btn_update	Update the provider
 plugin_openidconnectclient_admin	add_new_provider	Add a new provider
 plugin_openidconnectclient_admin	add_new_provider_error	An error occured while adding a new provider.
 plugin_openidconnectclient_admin	add_new_provider_success	The new provider $1 have been successfully created.

@@ -23,12 +23,16 @@ plugin_openidconnectclient	link_registration_error	Une erreur est survenue lors 
 
 plugin_openidconnectclient_admin	title	Configuration d'OpenID Connect Client
 plugin_openidconnectclient_admin	title_provider_configuration	Fournisseurs OpenID Connect
+plugin_openidconnectclient_admin	https_placeholder	https://
 plugin_openidconnectclient_admin	name	Nom
-plugin_openidconnectclient_admin	authorization_endpoint	Authorization endpoint
-plugin_openidconnectclient_admin	token_endpoint	Token endpoint
-plugin_openidconnectclient_admin	userinfo_endpoint	User information endpoint
-plugin_openidconnectclient_admin	client_id	Client ID
-plugin_openidconnectclient_admin	client_secret	Client secret
+plugin_openidconnectclient_admin	authorization_endpoint	Route de gestion de l'autorisation
+plugin_openidconnectclient_admin	token_endpoint	Route de génération du jeton
+plugin_openidconnectclient_admin	userinfo_endpoint	Route des informations utilisateur
+plugin_openidconnectclient_admin	client_id	Id du client
+plugin_openidconnectclient_admin	client_secret	Clé secrète du client
+plugin_openidconnectclient_admin	btn_create	Créer le fournisseur
+plugin_openidconnectclient_admin	btn_delete	Supprimer
+plugin_openidconnectclient_admin	btn_update	Mettre à jour le fournisseur
 plugin_openidconnectclient_admin	add_new_provider	Ajouter un nouveau fournisseur
 plugin_openidconnectclient_admin	add_new_provider_error	Une erreur est survenue lors de la création du nouveau fournisseur.
 plugin_openidconnectclient_admin	add_new_provider_success	Le nouveau fournisseur $1 a été créé avec succès.
