@@ -34,6 +34,11 @@ class CommitInfo {
     private $file_updated;
     private $file_deleted;
     private $directories;
+    private $transaction_path;
+
+    public function setTransactionPath(array $transaction_path) {
+        return $this->transaction_path = $transaction_path;
+    }
 
     public function setCommitMessage($commit_message) {
         return $this->commit_message = $commit_message;
@@ -101,6 +106,10 @@ class CommitInfo {
 
     public function getAllFiles() {
         return $this->getAddedFiles() + $this->getUpdatedFiles() + $this->getDeletedFiles();
+    }
+
+    public function getTransactionPath() {
+        return $this->transaction_path;
     }
 
     public function hasChangedFiles() {

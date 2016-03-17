@@ -22,5 +22,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\Dao;
+use Tuleap\Svn\Hooks\PreCommit;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\ImmutableTagDao;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Commit\CommitInfoEnhancer;
+use Tuleap\Svn\Commit\SVNLook;
+use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\SvnLogger;
 
-exit(0);
+try {
+    require_once 'pre.php';
+
+    $repository_path = $argv[1];
+    $transaction     = $argv[2];
+
+    $hook = new PreCommit(
+        new ImmutableTagFactory(new ImmutableTagDao()),
+        new RepositoryManager(new Dao(), ProjectManager::instance()),
+        new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
+        new SvnLogger()
+    );
+
+    $hook->assertCommitToTagIsAllowed($repository_path, $transaction);
+    exit(0);
+} catch (Exception $exeption) {
+    fwrite (STDERR, $exeption->getMessage());
+    exit(1);
+}
