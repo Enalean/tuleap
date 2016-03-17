@@ -74,13 +74,17 @@ class ImmutableTagController {
         $request->valid(new Valid_String('post_changes'));
         $request->valid(new Valid_String('SUBMIT'));
         if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
-            $vimmutable_tag_path       = new Valid_Text('immutable-tags-path');
+            $vimmutable_tag_path      = new Valid_Text('immutable-tags-path');
+            $vimmutable_tag_whitelist = new Valid_Text('immutable-tags-whitelist');
 
             try {
-                if ($request->valid($vimmutable_tag_path)) {
+                if ($request->valid($vimmutable_tag_path)
+                    && $request->valid($vimmutable_tag_whitelist)
+                ) {
                     $immutable_tags_path      = trim($request->get('immutable-tags-path'));
 
-                    $this->immutable_tag_creator->save($repository, $immutable_tags_path);
+                    $immutable_tags_whitelist = trim($request->get('immutable-tags-whitelist'));
+                    $this->immutable_tag_creator->save($repository, $immutable_tags_path, $immutable_tags_whitelist);
                 }
             } catch (CannotCreateImmuableTagException $exception) {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));

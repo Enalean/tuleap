@@ -45,13 +45,15 @@ class ImmutableTagFactory {
     private function instantiateFromRow(Repository $repository, array $row) {
         return new ImmutableTag(
             $repository,
-            $row['paths']
+            $row['paths'],
+            $row['whitelist']
         );
     }
 
     private function instantiateEmptyImmutableTag($repository) {
         return new ImmutableTag(
                 $repository,
+                "",
                 ""
             );
     }

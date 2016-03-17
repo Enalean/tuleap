@@ -35,7 +35,6 @@ class ImmutableTagPresenter {
     public $immutable_tag_configuration;
     public $path;
     public $immutable_tags_path;
-    public $whitelist;
     public $preview;
     public $exceeds_max_number_of_folders;
     public $sooo_fat;
@@ -51,6 +50,8 @@ class ImmutableTagPresenter {
     public $some_path;
     public $svn_status_style;
     public $repository_id;
+    public $whitelist;
+    public $immutable_tags_whitelist;
 
     public function __construct(
         Repository $repository,
@@ -61,6 +62,7 @@ class ImmutableTagPresenter {
         $this->repository_name                 = $repository->getName();
         $this->project_id                      = $repository->getProject()->getID();
         $this->immutable_tags_path             = $immutable_tags->getPaths();
+        $this->immutable_tags_whitelist        = $immutable_tags->getWhiteList();
 
         $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
         $this->exceeds_max_number_of_folders = count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS;
@@ -73,6 +75,7 @@ class ImmutableTagPresenter {
 
         $this->existing_tree = json_encode($existing_tree);
 
+        $this->whitelist                       = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
         $this->svn_allow_tag_immutable_title   = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'title');
         $this->svn_allow_tag_immutable_comment = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration_description');
         $this->immutable_tag_configuration     = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration');

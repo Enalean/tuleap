@@ -26,10 +26,12 @@ class ImmutableTag {
 
     private $paths;
     private $repository;
+    private $whitelist;
 
-    public function __construct(Repository $repository, $paths) {
+    public function __construct(Repository $repository, $paths, $whitelist) {
         $this->repository = $repository;
         $this->paths      = $paths;
+        $this->whitelist  = $whitelist;
     }
 
     public function getPaths() {
@@ -38,5 +40,9 @@ class ImmutableTag {
 
     public function getRepository(){
         return $this->repository;
+    }
+
+    public function getWhitelist(){
+        return $this->whitelist;
     }
 }
