@@ -84,7 +84,7 @@ if ($request->existAndNonEmpty($requested_variant)) {
 
 $user_edition_default_format = null;
 $requested_default_format    = 'user_text_default_format';
-if ($request->existAndNonEmpty($requested_variant)) {
+if ($request->existAndNonEmpty($requested_default_format)) {
     $user_edition_default_format = $request->get($requested_default_format);
 }
 

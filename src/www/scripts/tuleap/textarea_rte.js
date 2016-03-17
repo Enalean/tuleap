@@ -23,7 +23,7 @@ tuleap.textarea = tuleap.textarea || {};
 tuleap.textarea.RTE = Class.create(codendi.RTE, {
     initialize: function ($super, element, options) {
         options = Object.extend({toolbar: 'tuleap'}, options || { });
-        this.options = Object.extend({htmlFormat : true, id : 0}, options || { });
+        this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
         $super(element, options);
         // This div contains comment format selection buttons
         var div = Builder.node('div');

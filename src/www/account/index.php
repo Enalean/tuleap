@@ -198,12 +198,12 @@ $default_formats = array(
     array(
         'label'    => $Language->getText('account_preferences', 'html_format'),
         'value'    => 'html',
-        'selected' => ($user_default_format === false || $user_default_format === 'html')
+        'selected' => $user_default_format === 'html'
     ),
     array(
         'label'    => $Language->getText('account_preferences', 'text_format'),
         'value'    => 'text',
-        'selected' => $user_default_format === 'text'
+        'selected' => ($user_default_format === false || $user_default_format === 'text')
     )
 );
 

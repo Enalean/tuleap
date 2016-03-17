@@ -22,10 +22,10 @@ var tuleap      = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
 document.observe('dom:loaded', function () {
-    var html_by_default = true;
+    var html_by_default = false;
 
-    if ($(document.body).hasClassName("default_format_text")) {
-        html_by_default = false;
+    if ($(document.body).hasClassName("default_format_html")) {
+        html_by_default = true;
     }
 
     var newFollowup = $('tracker_followup_comment_new');
