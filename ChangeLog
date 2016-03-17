@@ -38,7 +38,7 @@ Version 8.13 (Not released yet)
 	* ldap: 3.100
 	* mediawiki: 0.110
 	* forumml: 2.6.24
-	* openidconnectclient: 0.10
+	* openidconnectclient: 0.11
 
     == Themes ==
 	* FlamingParrot: 1.123
