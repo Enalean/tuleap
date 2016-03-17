@@ -21,6 +21,7 @@
 
 require_once(__DIR__ . '/../bootstrap.php');
 
+use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
 class ProviderManagerTest extends TuleapTestCase {
@@ -28,7 +29,7 @@ class ProviderManagerTest extends TuleapTestCase {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
         $provider_manager = new ProviderManager($provider_dao);
 
-        $provider_dao->expectOnce('save');
+        $provider_dao->expectOnce('create');
 
         $provider_manager->create(
             'Provider',
@@ -40,14 +41,35 @@ class ProviderManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itChecksDataBeforeCreatingAProvider() {
+    public function itUpdatesProvider() {
+        $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
+        $provider_dao->setReturnValue('save', true);
+        $provider_manager = new ProviderManager($provider_dao);
+        $provider         = new Provider(
+            0,
+            'Provider',
+            'https://example.com/auth',
+            'https://example.com/token',
+            'https://example.com/userinfo',
+            'ID',
+            'Secret'
+        );
+
+        $provider_dao->expectOnce('save');
+
+        $provider_manager->update($provider);
+    }
+
+    public function itChecksDataBeforeManipulatingAProvider() {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
         $provider_manager = new ProviderManager($provider_dao);
 
+        $provider_dao->expectNever('create');
         $provider_dao->expectNever('save');
         $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException');
 
-        $provider_manager->create(
+        $provider         = new Provider(
+            0,
             'Provider',
             'Not A URL',
             'Not A URL',
@@ -55,5 +77,15 @@ class ProviderManagerTest extends TuleapTestCase {
             'ID',
             'Secret'
         );
+
+        $provider_manager->create(
+            $provider->getName(),
+            $provider->getAuthorizationEndpoint(),
+            $provider->getTokenEndpoint(),
+            $provider->getUserInfoEndpoint(),
+            $provider->getClientId(),
+            $provider->getClientSecret()
+        );
+        $provider_manager->update($provider);
     }
 }

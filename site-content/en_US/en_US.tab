@@ -48,6 +48,7 @@ global	btn_create	Create
 global	btn_preview	Preview
 global	btn_close	Close
 global	btn_reset	Reset
+global	btn_edit	Edit
 global	save_change	Save your change
 global	reset	reset
 global	delete	Delete

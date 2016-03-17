@@ -23,6 +23,10 @@
                 <td>{{ getClientId }}</td>
                 <td>{{ getClientSecret }}</td>
                 <td>
+                    <a role="button" data-toggle="modal" href="#siteadmin-config-providers-modal-update-{{ getId }}">
+                        <span class="icon-edit"></span> {{ btn_edit }}
+                    </a>
+                    {{> administration-providers-modal-update }}
                     <form method="post">
                         {{{ csrf_token }}}
                         <input type="hidden" name="action" value="delete-provider" />
@@ -35,9 +39,9 @@
         </tbody>
     </table>
 
-    <a class="btn" data-toggle="modal" href="#siteadmin-config-providers-modal">
+    <a class="btn" data-toggle="modal" href="#siteadmin-config-providers-modal-create">
         <span class="icon-plus"></span> {{ add_new_provider }}
     </a>
 
-    {{> administration-providers-modal }}
+    {{> administration-providers-modal-create }}
 </div>
