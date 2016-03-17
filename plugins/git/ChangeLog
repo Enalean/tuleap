@@ -1,3 +1,6 @@
+Version 4.134 - Tuleap 8.13
+    * story #8887: Create PATCH git/:id
+
 Version 4.133 - Tuleap 8.13
     * story #8887: Add server info in GET git/:id
 
