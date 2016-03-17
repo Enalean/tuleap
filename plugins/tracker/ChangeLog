@@ -1,3 +1,6 @@
+Version 5.820 - Tuleap 8.13
+    * Identify system natures in the administration
+
 Version 5.819 - Tuleap 8.13
     * request #8895: Refactoring of tuleap.textarea.RTE
 
