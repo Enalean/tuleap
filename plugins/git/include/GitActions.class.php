@@ -21,6 +21,9 @@
 
 require_once('common/layout/Layout.class.php');
 
+use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent
@@ -90,6 +93,9 @@ class GitActions extends PluginActions {
     /** @var ProjectHistoryDao*/
     private $history_dao;
 
+    /** @var MigrationHandler*/
+    private $migration_handler;
+
     /**
      *
      * @param Git $controller
@@ -105,6 +111,7 @@ class GitActions extends PluginActions {
      * @param GitPermissionsManager                      $git_permissions_manager
      * @param ProjectHistoryDao                          $history_dao
      * @param GitRepositoryMirrorUpdater                 $mirror_updater
+     * @param MigrationHandler                           $migration_handler
      */
     public function __construct(
         Git                $controller,
@@ -123,7 +130,8 @@ class GitActions extends PluginActions {
         Git_Backend_Gitolite $backend_gitolite,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         ProjectHistoryDao $history_dao,
-        GitRepositoryMirrorUpdater $mirror_updater
+        GitRepositoryMirrorUpdater $mirror_updater,
+        MigrationHandler $migration_handler
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager = $system_event_manager;
@@ -142,6 +150,7 @@ class GitActions extends PluginActions {
         $this->mirror_data_mapper       = $mirror_data_mapper;
         $this->history_dao              = $history_dao;
         $this->mirror_updater           = $mirror_updater;
+        $this->migration_handler        = $migration_handler;
     }
 
     protected function getText($key, $params = array()) {
@@ -889,32 +898,13 @@ class GitActions extends PluginActions {
     }
 
     public function disconnectFromGerrit(GitRepository $repository) {
-        $repository->getBackend()->disconnectFromGerrit($repository);
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
-
-        $server = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
-        $driver = $this->driver_factory->getDriver($server);
-
         $disconnect_option = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT);
-
-        if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT) {
-            $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $driver);
-
-            $this->history_dao->groupAddHistory(
-                "git_disconnect_gerrit_delete",
-                $repository->getName(),
-                $repository->getProjectId()
-            );
-        }
-
-        if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_READONLY_GERRIT_PROJECT) {
-            $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $driver);
-
-            $this->history_dao->groupAddHistory(
-                "git_disconnect_gerrit_read_only",
-                $repository->getName(),
-                $repository->getProjectId()
-            );
+        try {
+            $this->migration_handler->disconnect($repository, $disconnect_option);
+        } catch (RepositoryNotMigratedException $e) {
+            return true;
+        } catch (DeletePluginNotInstalledException $e) {
+            return false;
         }
     }
 

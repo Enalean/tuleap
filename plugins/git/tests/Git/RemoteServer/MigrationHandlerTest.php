@@ -1,0 +1,156 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+namespace Tuleap\Git\RemoteServer\Gerrit;
+
+use TuleapTestCase;
+use Git_SystemEventManager;
+
+require_once __DIR__ .'/../../bootstrap.php';
+
+class MigrationHandlerDisconnectTest extends TuleapTestCase {
+
+    /**
+     * @var Git_SystemEventManager
+     */
+    private $git_system_event_manager;
+
+    /**
+     * @var MigrationHandler
+     */
+    private $handler;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
+        $this->server_factory           = mock('Git_RemoteServer_GerritServerFactory');
+        $this->driver_factory           = mock('Git_Driver_Gerrit_GerritDriverFactory');
+        $project_history_dao            = mock('ProjectHistoryDao');
+
+        $this->handler = new MigrationHandler(
+            $this->git_system_event_manager,
+            $this->server_factory,
+            $this->driver_factory,
+            $project_history_dao
+        );
+    }
+
+    public function itThrowsAnExceptionIfRepositoryIsNotMigrated() {
+        $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(false);
+        $disconnect_option = '';
+
+        $this->expectException('Tuleap\Git\Exceptions\RepositoryNotMigratedException');
+
+        $this->handler->disconnect($repository, $disconnect_option);
+    }
+
+    public function itDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist() {
+        $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
+        $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
+        $disconnect_option = '';
+
+        stub($repository)->getBackend()->returns($backend);
+
+        expect($this->git_system_event_manager)->queueRepositoryUpdate()->once();
+        expect($this->git_system_event_manager)->queueRemoteProjectDeletion()->never();
+        expect($this->git_system_event_manager)->queueRemoteProjectReadOnly()->never();
+
+        $this->handler->disconnect($repository, $disconnect_option);
+    }
+
+    public function itDisconnectsWithtEmptyOption() {
+        $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
+        $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
+        $server            = mock('Git_RemoteServer_GerritServer');
+        $driver            = mock('Git_Driver_Gerrit');
+        $disconnect_option = '';
+
+        stub($repository)->getBackend()->returns($backend);
+        stub($this->server_factory)->getServerById()->returns($server);
+        stub($this->driver_factory)->getDriver($server)->returns($driver);
+
+        expect($this->git_system_event_manager)->queueRepositoryUpdate()->once();
+        expect($this->git_system_event_manager)->queueRemoteProjectDeletion()->never();
+        expect($this->git_system_event_manager)->queueRemoteProjectReadOnly()->never();
+
+        $this->handler->disconnect($repository, $disconnect_option);
+    }
+
+    public function itDisconnectsWithtReadOnlyOption() {
+        $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
+        $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
+        $server            = mock('Git_RemoteServer_GerritServer');
+        $driver            = mock('Git_Driver_Gerrit');
+        $disconnect_option = 'read';
+
+        stub($repository)->getBackend()->returns($backend);
+        stub($this->server_factory)->getServerById()->returns($server);
+        stub($this->driver_factory)->getDriver($server)->returns($driver);
+
+        expect($this->git_system_event_manager)->queueRepositoryUpdate()->once();
+        expect($this->git_system_event_manager)->queueRemoteProjectDeletion()->never();
+        expect($this->git_system_event_manager)->queueRemoteProjectReadOnly()->once();
+
+        $this->handler->disconnect($repository, $disconnect_option);
+    }
+
+    public function itDisconnectsWithtDeleteOption() {
+        $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
+        $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
+        $server            = mock('Git_RemoteServer_GerritServer');
+        $driver            = mock('Git_Driver_Gerrit');
+        $disconnect_option = 'delete';
+
+        stub($driver)->isDeletePluginEnabled($server)->returns(true);
+        stub($repository)->getBackend()->returns($backend);
+        stub($this->server_factory)->getServerById()->returns($server);
+        stub($this->driver_factory)->getDriver($server)->returns($driver);
+
+        expect($this->git_system_event_manager)->queueRepositoryUpdate()->once();
+        expect($this->git_system_event_manager)->queueRemoteProjectDeletion()->once();
+        expect($this->git_system_event_manager)->queueRemoteProjectReadOnly()->never();
+
+        $this->handler->disconnect($repository, $disconnect_option);
+    }
+
+    public function itThrowsAnExceptionIfDeletePluginNotInstalled() {
+        $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
+        $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
+        $server            = mock('Git_RemoteServer_GerritServer');
+        $driver            = mock('Git_Driver_Gerrit');
+        $disconnect_option = 'delete';
+
+        stub($driver)->isDeletePluginEnabled($server)->returns(false);
+        stub($repository)->getBackend()->returns($backend);
+        stub($this->server_factory)->getServerById()->returns($server);
+        stub($this->driver_factory)->getDriver($server)->returns($driver);
+
+        expect($this->git_system_event_manager)->queueRepositoryUpdate()->never();
+        expect($this->git_system_event_manager)->queueRemoteProjectDeletion()->never();
+        expect($this->git_system_event_manager)->queueRemoteProjectReadOnly()->never();
+
+        $this->expectException('Tuleap\Git\Exceptions\DeletePluginNotInstalledException');
+
+        $this->handler->disconnect($repository, $disconnect_option);
+    }
+
+}
