@@ -29,34 +29,62 @@ use Git_Driver_Gerrit_GerritDriverFactory;
 use ProjectHistoryDao;
 use Git_Driver_Gerrit;
 use Git_RemoteServer_GerritServer;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Tuleap\Git\Exceptions\RemoteServerDoesNotExistException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
+use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use PFUser;
 
 class MigrationHandler {
 
+    /**
+     * @var Git_SystemEventManager
+     */
     private $git_system_event_manager;
+
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
     private $gerrit_server_factory;
+
+    /**
+     * @var Git_Driver_Gerrit_GerritDriverFactory
+     */
     private $driver_factory;
+
+    /**
+     * @var ProjectHistoryDao
+     */
     private $history_dao;
+
+    /**
+     * @var Git_Driver_Gerrit_ProjectCreatorStatus
+     */
+    private $project_creator_status;
 
     public function __construct(
         Git_SystemEventManager $git_system_event_manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
+        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status
     ) {
         $this->git_system_event_manager = $git_system_event_manager;
         $this->gerrit_server_factory    = $gerrit_server_factory;
         $this->driver_factory           = $driver_factory;
         $this->history_dao              = $history_dao;
+        $this->project_creator_status = $project_creator_status;
     }
 
     public function migrate(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
         if (! $repository->canMigrateToGerrit()) {
             throw new RepositoryCannotBeMigratedException();
+        }
+
+        if ($this->project_creator_status->getStatus($repository) === Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE) {
+            throw new RepositoryAlreadyInQueueForMigrationException();
         }
 
         $this->gerrit_server_factory->getServerById($remote_server_id);

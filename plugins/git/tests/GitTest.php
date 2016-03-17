@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -165,7 +165,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 $url_manager,
                 mock('Logger'),
                 mock('Git_Backend_Gitolite'),
-                mock('Git_Mirror_MirrorDataMapper')
+                mock('Git_Mirror_MirrorDataMapper'),
+                mock('Git_Driver_Gerrit_ProjectCreatorStatus')
             )
         );
         $git->setRequest($request);
@@ -339,5 +340,3 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         return $git;
     }
 }
-
-?>

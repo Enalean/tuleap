@@ -49,12 +49,14 @@ class MigrationHandlerBaseTest extends TuleapTestCase {
         $this->server_factory           = mock('Git_RemoteServer_GerritServerFactory');
         $this->driver_factory           = mock('Git_Driver_Gerrit_GerritDriverFactory');
         $project_history_dao            = mock('ProjectHistoryDao');
+        $this->project_creator_status   = mock('Git_Driver_Gerrit_ProjectCreatorStatus');
 
         $this->handler = new MigrationHandler(
             $this->git_system_event_manager,
             $this->server_factory,
             $this->driver_factory,
-            $project_history_dao
+            $project_history_dao,
+            $this->project_creator_status
         );
     }
 }
@@ -73,6 +75,19 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $gerrit_template_id = "none";
 
         $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+
+    public function itThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration() {
+        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $remote_server_id   = 1;
+        $gerrit_template_id = "none";
+
+        stub($this->project_creator_status)->getStatus()->returns('QUEUE');
+
+        $this->expectException('Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException');
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);

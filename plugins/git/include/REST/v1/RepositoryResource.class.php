@@ -44,11 +44,14 @@ use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_Dao;
 use Git_RemoteServer_NotFoundException;
 use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use GitBackendLogger;
 use ProjectHistoryDao;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
+use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 
 include_once('www/project/admin/permissions.php');
@@ -110,7 +113,8 @@ class RepositoryResource extends AuthenticatedResource {
             $this->git_system_event_manager,
             $this->gerrit_server_factory,
             new Git_Driver_Gerrit_GerritDriverFactory (new GitBackendLogger()),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao())
         );
     }
 
@@ -294,10 +298,12 @@ class RepositoryResource extends AuthenticatedResource {
 
         try {
             return $this->migration_handler->migrate($repository, $server_id, $permissions, $user);
-        } catch (RepositoryCannotBeMigratedException $ex) {
-            throw new RestException(403, $ex->getMessage());
-        } catch (Git_RemoteServer_NotFoundException $ex) {
+        } catch (RepositoryCannotBeMigratedException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (Git_RemoteServer_NotFoundException $exception) {
             throw new RestException(400, 'Gerrit server does not exist');
+        } catch (RepositoryAlreadyInQueueForMigrationException $exception) {
+            //Do nothing
         }
     }
 
