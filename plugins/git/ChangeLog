@@ -1,3 +1,6 @@
+Version 4.137 - Tuleap 8.13
+    * story #8887: Deal with repository in queue for migration
+
 Version 4.136 - Tuleap 8.13
     * story #8887: Rename read option into read-only
 
