@@ -48,6 +48,7 @@ use GitBackendLogger;
 use ProjectHistoryDao;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 
 include_once('www/project/admin/permissions.php');
@@ -280,18 +281,8 @@ class RepositoryResource extends AuthenticatedResource {
         PFUser $user,
         GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit
     ) {
-        if ($repository->isMigratedToGerrit()) {
-            throw new RestException(403, 'Git repository already migrated');
-        }
-
         $server_id   = $migrate_to_gerrit->server;
         $permissions = $migrate_to_gerrit->permissions;
-
-        try {
-            $this->gerrit_server_factory->getServerById($server_id);
-        } catch (Git_RemoteServer_NotFoundException $ex) {
-            throw new RestException(400, 'Gerrit server does not exist');
-        }
 
         if ($permissions !== self::MIGRATE_NO_PERMISSION && $permissions !== self::MIGRATE_PERMISSION_DEFAULT) {
             throw new RestException(
@@ -301,12 +292,13 @@ class RepositoryResource extends AuthenticatedResource {
             );
         }
 
-        return $this->git_system_event_manager->queueMigrateToGerrit(
-            $repository,
-            $server_id,
-            $permissions,
-            $user
-        );
+        try {
+            return $this->migration_handler->migrate($repository, $server_id, $permissions, $user);
+        } catch (RepositoryCannotBeMigratedException $ex) {
+            throw new RestException(403, $ex->getMessage());
+        } catch (Git_RemoteServer_NotFoundException $ex) {
+            throw new RestException(400, 'Gerrit server does not exist');
+        }
     }
 
     private function getCurrentUser() {

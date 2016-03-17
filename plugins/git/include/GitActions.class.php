@@ -864,28 +864,11 @@ class GitActions extends PluginActions {
                              'scope'     => $scope));
     }
 
-    /**
-     *
-     * @param GitRepository $repository
-     * @param int $remote_server_id the id of the server to which we want to migrate
-     * @param Boolean $migrate_access_right if the acess right will be migrated or not
-     * @param int $gerrit_template_id the id of template if any chosen
-     */
     public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
-        if ($repository->canMigrateToGerrit()) {
-
-            try {
-                $this->gerrit_server_factory->getServerById($remote_server_id);
-                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id, $user);
-
-                $this->history_dao->groupAddHistory(
-                    "git_repo_to_gerrit",
-                    $repository->getName(),
-                    $repository->getProjectId()
-                );
-            } catch (Exception $e) {
-                $this->logger->log($e->getMessage(), Feedback::ERROR);
-            }
+        try {
+           $this->migration_handler->migrate($repository, $remote_server_id, $gerrit_template_id, $user);
+        } catch (Exception $e) {
+            $this->logger->log($e->getMessage(), Feedback::ERROR);
         }
     }
 

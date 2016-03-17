@@ -23,20 +23,24 @@ namespace Tuleap\Git\RemoteServer\Gerrit;
 
 use TuleapTestCase;
 use Git_SystemEventManager;
+use Git_RemoteServer_NotFoundException;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class MigrationHandlerDisconnectTest extends TuleapTestCase {
+class MigrationHandlerBaseTest extends TuleapTestCase {
 
     /**
      * @var Git_SystemEventManager
      */
-    private $git_system_event_manager;
+    protected $git_system_event_manager;
 
     /**
      * @var MigrationHandler
      */
-    private $handler;
+    protected $handler;
+
+    protected $server_factory;
+    protected $driver_factory;
 
     public function setUp() {
         parent::setUp();
@@ -53,6 +57,52 @@ class MigrationHandlerDisconnectTest extends TuleapTestCase {
             $project_history_dao
         );
     }
+}
+
+class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user = mock('PFUser');
+    }
+
+    public function itThrowsAnExceptionIfRepositoryCannotBeMigrated() {
+        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(false);
+        $remote_server_id   = 1;
+        $gerrit_template_id = "no";
+
+        $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+
+    public function itMigratesRepository() {
+        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $remote_server_id   = 1;
+        $gerrit_template_id = "no";
+
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->once();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+
+    public function itDoesNothingWhenServerDoesNotExist() {
+        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $remote_server_id   = 1;
+        $gerrit_template_id = "no";
+
+        stub($this->server_factory)->getServerById()->throws(new Git_RemoteServer_NotFoundException($remote_server_id));
+
+        $this->expectException('Git_RemoteServer_NotFoundException');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+}
+
+class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
 
     public function itThrowsAnExceptionIfRepositoryIsNotMigrated() {
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(false);
