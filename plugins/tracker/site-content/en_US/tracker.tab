@@ -1194,6 +1194,9 @@ plugin_tracker_formelement_exception	permission_denied	Permission Denied
 plugin_tracker_formelement_exception	field_must_be_static	Can only share static selectbox fields
 plugin_tracker_formelement_exception	no_value_for_field	Empty
 
+plugin_tracker_formelement_file	attachment_in_error	Attachment #$1 has not been saved:
+plugin_tracker_formelement_file	description_not_provided	you must provide a description for your attachment
+
 plugin_tracker_widget_my	no_artifacts	No artifact found.
 
 plugin_tracker	no_artifacts	No artifact found.

@@ -1194,6 +1194,9 @@ plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
 plugin_tracker_formelement_exception	field_must_be_static	Il n'est pas possible de partager d'autres champs que des boites de sélection statiques
 plugin_tracker_formelement_exception	no_value_for_field	Aucun(e)
 
+plugin_tracker_formelement_file	attachment_in_error	Le fichier joint #$1 n'a pas pu être enregistré :
+plugin_tracker_formelement_file	description_not_provided	vous devez fournir une description pour votre fichier joint
+
 plugin_tracker_widget_my	no_artifacts	Aucun artefact trouvé.
 
 plugin_tracker	no_artifacts	Aucun artefact trouvé.
