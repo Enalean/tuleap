@@ -9,6 +9,7 @@ Version 8.13 (Not released yet)
 		- Add server info in GET git/:id
 	* request #8911: stop installation if SELinux is in enforcing mode
 	* request #8888: Add Export CSV function to the grouplist interface
+	* story #8633: Login page gloss
 
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
@@ -38,10 +39,10 @@ Version 8.13 (Not released yet)
 	* ldap: 3.100
 	* mediawiki: 0.110
 	* forumml: 2.6.24
-	* openidconnectclient: 0.11
+	* openidconnectclient: 0.12
 
     == Themes ==
-	* FlamingParrot: 1.125
+	* FlamingParrot: 1.127
 
 Version 8.12 (Thursday, March 3rd 2016)
 	== Enhancement ==
