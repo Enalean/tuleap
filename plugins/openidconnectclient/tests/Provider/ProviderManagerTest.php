@@ -37,7 +37,9 @@ class ProviderManagerTest extends TuleapTestCase {
             'https://example.com/token',
             'https://example.com/userinfo',
             'ID',
-            'Secret'
+            'Secret',
+            'github',
+            'fiesta_red'
         );
     }
 
@@ -52,7 +54,9 @@ class ProviderManagerTest extends TuleapTestCase {
             'https://example.com/token',
             'https://example.com/userinfo',
             'ID',
-            'Secret'
+            'Secret',
+            'github',
+            'fiesta_red'
         );
 
         $provider_dao->expectOnce('save');
@@ -75,7 +79,9 @@ class ProviderManagerTest extends TuleapTestCase {
             'Not A URL',
             'Not A URL',
             'ID',
-            'Secret'
+            'Secret',
+            'github',
+            'fiesta_red'
         );
 
         $provider_manager->create(
@@ -84,7 +90,9 @@ class ProviderManagerTest extends TuleapTestCase {
             $provider->getTokenEndpoint(),
             $provider->getUserInfoEndpoint(),
             $provider->getClientId(),
-            $provider->getClientSecret()
+            $provider->getClientSecret(),
+            $provider->getIcon(),
+            $provider->getColor()
         );
         $provider_manager->update($provider);
     }

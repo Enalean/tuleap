@@ -23,6 +23,8 @@ use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\AccountLinker;
 use Tuleap\OpenIDConnectClient\AdminRouter;
+use Tuleap\OpenIDConnectClient\Administration\IconPresenterFactory;
+use Tuleap\OpenIDConnectClient\Administration\ColorPresenterFactory;
 use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
@@ -53,6 +55,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD);
         $this->addHook(Event::AFTER_USER_REGISTRATION);
         $this->addHook('anonymous_access_to_script_allowed');
+        $this->addHook('javascript_file');
         $this->addHook('cssfile');
         $this->addHook(Event::MANAGE_THIRD_PARTY_APPS);
         $this->addHook('site_admin_option_hook');
@@ -70,6 +73,12 @@ class openidconnectclientPlugin extends Plugin {
 
     public function anonymous_access_to_script_allowed($params) {
         $params['anonymous_allowed'] = strpos($params['script_name'], $this->getPluginPath()) === 0;
+    }
+
+    public function javascript_file($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/open-id-connect-client.js"></script>';
+        }
     }
 
     public function cssfile() {
@@ -261,9 +270,11 @@ class openidconnectclientPlugin extends Plugin {
     }
 
     public function processAdmin(HTTPRequest $request) {
-        $provider_manager = new ProviderManager(new ProviderDao());
-        $controller       = new Administration\Controller($provider_manager);
-        $csrf_token       = new CSRFSynchronizerToken(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
+        $provider_manager        = new ProviderManager(new ProviderDao());
+        $icon_presenter_factory  = new IconPresenterFactory();
+        $color_presenter_factory = new ColorPresenterFactory();
+        $controller              = new Administration\Controller($provider_manager, $icon_presenter_factory, $color_presenter_factory);
+        $csrf_token              = new CSRFSynchronizerToken(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
 
         $router = new AdminRouter($controller, $csrf_token);
         $router->route($request);

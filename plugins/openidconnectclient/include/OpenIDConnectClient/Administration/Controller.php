@@ -32,28 +32,62 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 
 class Controller {
+
     /**
      * @var ProviderManager
      */
     private $provider_manager;
 
-    public function __construct(ProviderManager $provider_manager) {
-        $this->provider_manager = $provider_manager;
+    /**
+     * @var IconPresenterFactory
+     */
+    private $icon_presenter_factory;
+
+    /**
+     * @var ColorPresenterFactory
+     */
+    private $color_presenter_factory;
+
+
+    public function __construct(
+        ProviderManager $provider_manager,
+        IconPresenterFactory $icon_presenter_factory,
+        ColorPresenterFactory $color_presenter_factory
+    ) {
+        $this->provider_manager        = $provider_manager;
+        $this->icon_presenter_factory  = $icon_presenter_factory;
+        $this->color_presenter_factory = $color_presenter_factory;
     }
 
     public function showAdministration(CSRFSynchronizerToken $csrf_token) {
+        $providers            = $this->provider_manager->getProviders();
+        $providers_presenters = array();
+
+        foreach ($providers as $provider) {
+            $providers_presenters[] = new ProviderPresenter(
+                $provider,
+                $this->icon_presenter_factory->getIconsPresentersForProvider($provider),
+                $this->color_presenter_factory->getColorsPresentersForProvider($provider)
+            );
+        }
+
         $presenter = new Presenter(
-            $this->provider_manager->getProviders(),
+            $providers_presenters,
+            $this->icon_presenter_factory->getIconsPresenters(),
+            $this->color_presenter_factory->getColorsPresenters(),
             $csrf_token->fetchHTMLInput()
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+
         $GLOBALS['HTML']->header(
             array(
                 'title' => $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
                 'selected_top_tab' => 'admin'
             )
         );
+
         $renderer->renderToPage('administration-providers', $presenter);
+
         $GLOBALS['HTML']->footer(array());
     }
 
@@ -66,6 +100,8 @@ class Controller {
         $userinfo_endpoint      = $request->get('userinfo_endpoint');
         $client_id              = $request->get('client_id');
         $client_secret          = $request->get('client_secret');
+        $icon                   = $request->get('icon');
+        $color                  = $request->get('color');
 
         try {
             $provider = $this->provider_manager->create(
@@ -74,7 +110,9 @@ class Controller {
                 $token_endpoint,
                 $userinfo_endpoint,
                 $client_id,
-                $client_secret
+                $client_secret,
+                $icon,
+                $color
             );
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
@@ -106,6 +144,8 @@ class Controller {
         $userinfo_endpoint      = $request->get('userinfo_endpoint');
         $client_id              = $request->get('client_id');
         $client_secret          = $request->get('client_secret');
+        $icon                   = $request->get('icon');
+        $color                  = $request->get('color');
 
         $provider = new Provider(
             $id,
@@ -114,7 +154,9 @@ class Controller {
             $token_endpoint,
             $userinfo_endpoint,
             $client_id,
-            $client_secret
+            $client_secret,
+            $icon,
+            $color
         );
         try {
             $this->provider_manager->update($provider);

@@ -47,6 +47,8 @@ class ConnectorPresenterBuilder {
         foreach($providers as $provider) {
             $providers_authorization_request_uri[] = array(
                 'name'                      => $provider->getName(),
+                'icon'                      => $provider->getIcon(),
+                'color'                     => $provider->getColor(),
                 'authorization_request_uri' => $this->flow->getAuthorizationRequestUri($provider, $return_to)
             );
         }

@@ -36,7 +36,9 @@ class ProviderDao  extends DataAccessObject {
         $token_endpoint,
         $user_info_endpoint,
         $client_id,
-        $client_secret
+        $client_secret,
+        $icon,
+        $color
     ) {
         $name                   = $this->getDa()->quoteSmart($name);
         $authorization_endpoint = $this->getDa()->quoteSmart($authorization_endpoint);
@@ -44,11 +46,13 @@ class ProviderDao  extends DataAccessObject {
         $user_info_endpoint     = $this->getDa()->quoteSmart($user_info_endpoint);
         $client_id              = $this->getDa()->quoteSmart($client_id);
         $client_secret          = $this->getDa()->quoteSmart($client_secret);
+        $icon                   = $this->getDa()->quoteSmart($icon);
+        $color                  = $this->getDa()->quoteSmart($color);
 
         $sql = "INSERT INTO plugin_openidconnectclient_provider(
-                    name, authorization_endpoint, token_endpoint, user_info_endpoint, client_id, client_secret
+                    name, authorization_endpoint, token_endpoint, user_info_endpoint, client_id, client_secret, icon, color
                 ) VALUES (
-                    $name, $authorization_endpoint, $token_endpoint, $user_info_endpoint, $client_id, $client_secret
+                    $name, $authorization_endpoint, $token_endpoint, $user_info_endpoint, $client_id, $client_secret, $icon, $color
                 );";
         return $this->updateAndGetLastId($sql);
     }
@@ -60,7 +64,9 @@ class ProviderDao  extends DataAccessObject {
         $token_endpoint,
         $user_info_endpoint,
         $client_id,
-        $client_secret
+        $client_secret,
+        $icon,
+        $color
     ) {
         $id                     = $this->getDa()->escapeInt($id);
         $name                   = $this->getDa()->quoteSmart($name);
@@ -69,13 +75,17 @@ class ProviderDao  extends DataAccessObject {
         $user_info_endpoint     = $this->getDa()->quoteSmart($user_info_endpoint);
         $client_id              = $this->getDa()->quoteSmart($client_id);
         $client_secret          = $this->getDa()->quoteSmart($client_secret);
+        $icon                   = $this->getDa()->quoteSmart($icon);
+        $color                  = $this->getDa()->quoteSmart($color);
 
         $sql = "UPDATE plugin_openidconnectclient_provider SET
                   name = $name, authorization_endpoint = $authorization_endpoint,
                   token_endpoint = $token_endpoint,
                   user_info_endpoint = $user_info_endpoint,
                   client_id = $client_id,
-                  client_secret = $client_secret
+                  client_secret = $client_secret,
+                  icon = $icon,
+                  color = $color
                 WHERE id = $id";
 
         return $this->update($sql);
