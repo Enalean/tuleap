@@ -24,12 +24,12 @@ use Tuleap\Svn\Repository\Repository;
 use Project;
 use CSRFSynchronizerToken;
 
-class MailNotificationPresenter {
+class MailNotificationPresenter extends BaseAdminPresenter{
 
     public $title;
     public $notification_subtitle;
     public $comment;
-    public $group_id;
+    public $project_id;
     public $label_subject_header;
     public $subject_header;
     public $disabled;
@@ -52,13 +52,15 @@ class MailNotificationPresenter {
         $mail_header,
         $notifications_details
     ) {
-        $this->group_id                   = $project->getId();
-        $this->repo_id                    = $repository->getId();
+        parent::__construct();
+        $this->project_id                 = $project->getId();
+        $this->repository_id              = $repository->getId();
         $this->csrf_input                 = $token->fetchHTMLInput();
         $this->subject_header             = $mail_header->getHeader();
         $this->list_mails                 = $notifications_details;
         $this->title                      = $title;
         $this->repository_name            = $repository->getName();
+        $this->notification_active        = true;
 
         $this->notification_subtitle      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');
         $this->comment                    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'comment');

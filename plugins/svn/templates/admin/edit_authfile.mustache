@@ -1,26 +1,10 @@
-<h2>{{ title }}</h2>
 <div class="tabbable tabs-left" id="svn-administration">
-    {{# sections }}
-        <ul class="nav nav-tabs">
-            <li>
-                <a href="{{ notifications_url }}">{{ notifications }}</a>
-            </li>
-            <li class="active">
-                <a href="{{ access_control_url }}">{{ access_control }}</a>
-            </li>
-            <li>
-                <a href="{{ immutable_tag_url }}">{{ immutable_tag }}</a>
-            </li>
-            <li>
-                <a href="{{ hooks_config_url }}">{{ hooks_config }}</a>
-            </li>
-        </ul>
-    {{/ sections }}
+    {{> admin/section_presenter}}
     <div class="tab-content">
-        <form action="/plugins/svn/?group_id={{ project_id }}&action=save-access-file&repo_id={{ repo_id }}" method="POST">
+        <form action="/plugins/svn/?group_id={{ project_id }}&action=save-access-file&repo_id={{ repository_id }}" method="POST">
             {{{ csrf }}}
             <input type="hidden" name="project_id" value="{{ project_id }}">
-            <input type="hidden" name="repo_id" value="{{ repo_id }}">
+            <input type="hidden" name="repo_id" value="{{ repository_id }}">
             <p>{{ default_text }}</p>
             <p class="feedback_warning"> {{ permissions_warning }} </p>
             <div id="access-file-container">

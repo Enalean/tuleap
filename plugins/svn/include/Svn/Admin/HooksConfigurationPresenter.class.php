@@ -24,9 +24,9 @@ use Tuleap\Svn\Repository\Repository;
 use Project;
 use CSRFSynchronizerToken;
 
-class HooksConfigurationPresenter {
+class HooksConfigurationPresenter extends BaseAdminPresenter {
 
-    public $group_id;
+    public $project_id;
     public $repo_id;
     public $csrf_input;
     public $title;
@@ -45,11 +45,14 @@ class HooksConfigurationPresenter {
         $title,
         $pre_commit_must_contain_reference
     ) {
-        $this->group_id                   = $project->getId();
-        $this->repo_id                    = $repository->getId();
+        parent::__construct();
+
+        $this->project_id                 = $project->getId();
+        $this->repository_id              = $repository->getId();
         $this->csrf_input                 = $token->fetchHTMLInput();
         $this->title                      = $title;
         $this->repository_name            = $repository->getName();
+        $this->commit_rule_active         = true;
         $this->pre_commit_must_contain_reference = $pre_commit_must_contain_reference;
 
         $this->hooks_config_subtitle                   = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'subtitle');

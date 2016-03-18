@@ -23,9 +23,10 @@ namespace Tuleap\Svn\AccessControl;
 
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Admin\SectionsPresenter;
+use Tuleap\Svn\Admin\BaseAdminPresenter;
 use CSRFSynchronizerToken;
 
-class AccessControlPresenter {
+class AccessControlPresenter extends BaseAdminPresenter {
 
     public $title_acces_control;
     public $default_text;
@@ -52,15 +53,19 @@ class AccessControlPresenter {
         $current_version_number,
         $last_version_number
     ) {
+        parent::__construct();
+
         $this->default_content = $default_content;
 
-        $this->csrf                  = $token->fetchHTMLInput();
-        $this->repository            = $repository;
-        $this->project_id            = $repository->getProject()->getId();
-        $this->auth_file             = $auth_file;
-        $this->versions              = $versions;
-        $this->repo_id               = $this->repository->getId();
-        $this->title                 = $title;
+        $this->csrf                     = $token->fetchHTMLInput();
+        $this->repository               = $repository;
+        $this->project_id               = $repository->getProject()->getId();
+        $this->auth_file                = $auth_file;
+        $this->versions                 = $versions;
+        $this->repository_id            = $this->repository->getId();
+        $this->repository_name          = $this->repository->getName();
+        $this->title                    = $title;
+        $this->access_control_active    = true;
 
         $this->default_text             = $GLOBALS['Language']->getText('plugin_svn_admin', 'default_text', $GLOBALS['sys_name']);
         $this->permissions_warning      = $GLOBALS['Language']->getText('plugin_svn_admin', 'permissions_warning');

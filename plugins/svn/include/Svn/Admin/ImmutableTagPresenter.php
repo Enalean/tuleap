@@ -26,7 +26,7 @@ namespace Tuleap\Svn\Admin;
 
 use Tuleap\Svn\Repository\Repository;
 
-class ImmutableTagPresenter {
+class ImmutableTagPresenter extends BaseAdminPresenter {
     const MAX_NUMBER_OF_FOLDERS = 10000;
 
     public $svn_allow_tag_immutable_title;
@@ -58,11 +58,14 @@ class ImmutableTagPresenter {
         ImmutableTag $immutable_tags,
         array $existing_tree
     ) {
+        parent::__construct();
+
         $this->repository_id                   = $repository->getId();
         $this->repository_name                 = $repository->getName();
         $this->project_id                      = $repository->getProject()->getID();
         $this->immutable_tags_path             = $immutable_tags->getPaths();
         $this->immutable_tags_whitelist        = $immutable_tags->getWhiteList();
+        $this->immutable_tag_url_active        = true;
 
         $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
         $this->exceeds_max_number_of_folders = count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS;
@@ -76,7 +79,7 @@ class ImmutableTagPresenter {
         $this->existing_tree = json_encode($existing_tree);
 
         $this->whitelist                       = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
-        $this->svn_allow_tag_immutable_title   = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'title');
+        $this->title                           = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'title');
         $this->svn_allow_tag_immutable_comment = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration_description');
         $this->immutable_tag_configuration     = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration');
         $this->tree                            = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree');
