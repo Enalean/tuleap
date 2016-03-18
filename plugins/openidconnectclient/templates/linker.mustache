@@ -1,42 +1,25 @@
-<div class="container text-center">
-    <div class="row-fluid">
-        <h2 id="login-title">{{ link_page_title }}</h2>
-        <span>{{ link_page_header }}</span>
+<div id="login-box">
+    <h1 id="login-openid-title">{{ link_page_title }}<br>{{ link_page_title_to }}</h1>
+
+    <div id="login-intro">
+        {{ link_page_header }}
     </div>
-</div>
 
-<div class="container login">
-    <div class="row-fluid">
-        <div class="login-tuleap span6">
-            <h3>{{ link_login_with_tuleap }}</h3>
-            <form action="?action=link-existing" method="post" name="form_login" autocomplete="off">
-                <input type="hidden" name="link_id" value="{{ link_id }}">
-                <input type="hidden" name="return_to" value="{{ return_to }}">
+    <form action="?action=link-existing" method="post" name="form_login" autocomplete="off">
+        <input type="hidden" name="link_id" value="{{ link_id }}">
+        <input type="hidden" name="return_to" value="{{ return_to }}">
 
-                <div class="control-group">
-                    <label class="control-label" for="loginname">{{ account_login_name }}</label>
-                    <div class="controls">
-                        <input type="text" id="loginname" name="loginname" autofocus>
-                    </div>
-                </div>
+        <input type="text" id="loginname" name="loginname" placeholder="{{ account_login_name }}" required autofocus>
+        <input type="password" id="password" name="password" placeholder="{{ account_login_password }}" required>
 
-                <div class="control-group">
-                    <label class="control-label" for="password">{{ account_login_password }}</label>
-                    <div class="controls">
-                        <input type="password" id="password" name="password">
-                    </div>
-                </div>
+        <button type="submit" name="login" class="btn btn-primary">{{ account_login_login_btn }}</button>
+    </form>
 
-                <div class="control-group">
-                    <div class="controls">
-                        <input type="submit" name="login" value="{{ account_login_login_btn }}" class="btn btn-primary">
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="span6 text-center">
-            <h3>{{ register_new_account }}</h3>
-            <a href="{{ link_to_register_page }}" class="btn">{{ register }}</a>
-        </div>
+    <div id="login-openid-register">
+        <span id="login-openid-or">
+            <span>{{ or_label }}</span>
+        </span>
+
+        <a id="login-openid-register-button" href="{{ link_to_register_page }}" class="btn">{{ register }}</a>
     </div>
 </div>

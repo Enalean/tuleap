@@ -80,10 +80,10 @@ class Controller {
         $renderer              = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
-            array('title' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account'))
+            array('title' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account'), 'body_class' => array('openid-connect-link'))
         );
         $renderer->renderToPage('linker', $presenter);
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
     private function generateLinkToRegisterPage(HTTPRequest $request) {
