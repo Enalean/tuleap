@@ -1,27 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
-
-class Tracker_ReportFactory extends Error {
-    
+class Tracker_ReportFactory {
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -399,7 +397,6 @@ class Tracker_ReportFactory extends Error {
 	    				  
 			$res_insert = db_query($sql_insert);
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($Language->getText('plugin_tracker_common_reportfactory','ins_err',array($report_array["report_id"],$atid_dest,db_error())));
 				return false;
 			}
 			
@@ -430,7 +427,6 @@ class Tracker_ReportFactory extends Error {
 		    	//echo $sql_insert;
 				$res_insert = db_query($sql_insert);
 				if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-					$this->setError($Language->getText('plugin_tracker_common_reportfactory','f_ind_err',array($report_array["report_id"],$field_array["field_name"],db_error())));
 					return false;
 				}
 			} // while
@@ -512,7 +508,6 @@ class Tracker_ReportFactory extends Error {
 	    $result = db_query($sql);
 	    $rows = db_numrows($result);
 	    if (db_error()) {
-			$this->setError($GLOBALS ['Language']->getText('plugin_tracker_common_factory','db_err').': '.db_error());
 			return false;
 	    } else {
 			while ($arr = db_fetch_array($result)) {
@@ -539,7 +534,4 @@ class Tracker_ReportFactory extends Error {
         }
         return $report_id;
     }
-    
 }
-
-?>

@@ -1,29 +1,29 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
-class ArtifactImport extends Error {
+class ArtifactImport {
 
   /** the tracker we are working on */
   var $ath;
@@ -88,17 +88,21 @@ class ArtifactImport extends Error {
   /** some localization hack */
   var $lbl_list;
   var $dsc_list;
+    /**
+     * @var string
+     */
+    private $error_message = '';
+    /**
+     * @var bool
+     */
+    private $error_state = false;
 
-  /**
+    /**
    *  Constructor.
    *
    *      @return boolean success.
    */
   function ArtifactImport($ath,$art_field_fact,$group) {
-    // Error constructor
-    $this->Error();
-
-
     $this->ath = $ath;
     $this->art_field_fact = $art_field_fact;
     $this->group = $group;
@@ -1253,6 +1257,37 @@ function getUsedFields() {
     return true;
     
   }
+
+    /**
+     * @param $string
+     */
+    public function setError($string) {
+        $this->error_state = true;
+        $this->error_message = $string;
+    }
+
+    public function clearError() {
+        $this->error_state = false;
+        $this->error_message = '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorMessage() {
+        if ($this->error_state) {
+            return $this->error_message;
+        } else {
+            return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isError() {
+        return $this->error_state;
+    }
 
 
 }

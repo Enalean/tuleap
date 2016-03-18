@@ -1,7 +1,6 @@
 <?php
 require_once ('pre.php');
 require_once ('session.php');
-require_once('common/include/Error.class.php');
 require_once('common/frs/FRSPackage.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FRSRelease.class.php');
@@ -892,25 +891,21 @@ function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id)
  */
 function file_to_soap(FRSFile $file) {
     $return = null;
-    if ($file->isError()) {
-        //skip if error
-    } else {
-        // for the moment, no permissions on files
-        $return = array(
-            'file_id'       => $file->getFileID(),
-            'release_id'    => $file->getReleaseID(),
-            'file_name'     => $file->getFileName(),
-            'file_size'     => $file->getFileSize(),
-            'type_id'       => $file->getTypeID(),
-            'processor_id'  => $file->getProcessorID(),
-            'release_time'  => $file->getReleaseTime(),
-            'post_date'     => $file->getPostDate(),
-            'computed_md5'  => $file->getComputedMd5(),
-            'reference_md5' => $file->getReferenceMd5(),
-            'user_id'       => $file->getUserID(),
-            'comment'       => $file->getComment(),
-        );
-    }
+    // for the moment, no permissions on files
+    $return = array(
+        'file_id'       => $file->getFileID(),
+        'release_id'    => $file->getReleaseID(),
+        'file_name'     => $file->getFileName(),
+        'file_size'     => $file->getFileSize(),
+        'type_id'       => $file->getTypeID(),
+        'processor_id'  => $file->getProcessorID(),
+        'release_time'  => $file->getReleaseTime(),
+        'post_date'     => $file->getPostDate(),
+        'computed_md5'  => $file->getComputedMd5(),
+        'reference_md5' => $file->getReferenceMd5(),
+        'user_id'       => $file->getUserID(),
+        'comment'       => $file->getComment(),
+    );
     return $return;
 }
 

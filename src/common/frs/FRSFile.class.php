@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once('common/include/Codendi_HTTP_Download.php');
 
-class FRSFile extends Error {
+class FRSFile {
 
     const EVT_CREATE  = 301;
     const EVT_UPDATE  = 302;
@@ -116,7 +115,7 @@ class FRSFile extends Error {
      * @var FRSRelease $release The release the file belongs to
      */
     protected $release;
-    
+
     function FRSFile($data_array = null) {
         $this->file_id       = null;
         $this->filename     = null;
@@ -588,7 +587,4 @@ class FRSFile extends Error {
         $tooltip .= '</table>';
         return $tooltip;
     }
-    
 }
-
-?>

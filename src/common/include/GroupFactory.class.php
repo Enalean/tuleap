@@ -1,26 +1,29 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/include/Error.class.php');
-//require_once('common/tracker/ArtifactType.class.php');
 
-class GroupFactory extends Error {
+class GroupFactory {
+	/**
+	 * @var bool
+	 */
+	private $error_state = false;
 
 	/**
 	 *  Constructor.
@@ -28,8 +31,6 @@ class GroupFactory extends Error {
 	 *	@return	boolean	success.
 	 */
 	function GroupFactory() {
-            if (isset($GLOBALS['Language']))
-            $this->Error();
             return true;
 	}
 
@@ -49,7 +50,7 @@ class GroupFactory extends Error {
 			}
 		} else {
                     if (isset($GLOBALS['Language']))
-			$this->setError($Language->getText('include_exit','perm_denied'));
+			$this->setError();
                     return false;
 		}
 
@@ -66,7 +67,7 @@ class GroupFactory extends Error {
 
 		if (!$result || $rows < 1) {
                     if (isset($GLOBALS['Language']))
-                        $this->setError($Language->getText('include_common_groupfactory','none_found',db_error()));
+                        $this->setError();
                     return false;
 		}
 		return $result;
@@ -80,7 +81,7 @@ class GroupFactory extends Error {
 	function getMemberGroups() {
                 global $Language;
 		if (!user_isloggedin()) {
-			$this->setError($Language->getText('include_exit','perm_denied'));
+			$this->setError();
 			return false;
 		}
 
@@ -97,7 +98,7 @@ class GroupFactory extends Error {
 		$rows = db_numrows($result);
 
 		if (!$result || $rows < 1) {
-			$this->setError($Language->getText('include_common_groupfactory','none_found',db_error()));
+			$this->setError();
 			return false;
 		}
 		return $result;
@@ -126,6 +127,17 @@ class GroupFactory extends Error {
         }
 	}
 
-}
+	/**
+	 * @internal param $string
+	 */
+	public function setError() {
+		$this->error_state = true;
+	}
 
-?>
+	/**
+	 * @return bool
+	 */
+	public function isError() {
+		return $this->error_state;
+	}
+}

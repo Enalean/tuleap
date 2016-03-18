@@ -1,15 +1,4 @@
 <?php
-
-/* OBSOLETE
-require_once('common/include/Error.class.php');
-require_once(dirname(__FILE__).'/../include/Artifact.class.php');
-
-Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency'));
-
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-*/
-
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 

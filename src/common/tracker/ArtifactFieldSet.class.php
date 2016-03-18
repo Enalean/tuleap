@@ -1,25 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/include/Error.class.php');
 
-class ArtifactFieldSet extends Error {
+class ArtifactFieldSet {
 
     /**
      * The ArtifactType Object
@@ -62,13 +62,11 @@ class ArtifactFieldSet extends Error {
 	 * @var	array of object{ArtifactField} $ArtifactFields
 	 */
     var $ArtifactFields;
-    
+
     /**
      *	ArtifactFieldSet - constructor.
      */
     function ArtifactFieldSet() {
-        // Error constructor
-		$this->Error();
     }
 
     /**
@@ -77,14 +75,11 @@ class ArtifactFieldSet extends Error {
      *  @return boolean	success.
      */
     function fetchData() {
-        global $Language;
-    
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM artifact_field_set 
                 WHERE artifact_field_set_id=". db_ei($this->getID()) ."";
         $res = db_query($sql);
         if (!$res || db_numrows($res) < 1) {
-            $this->setError('ArtifactFieldSet: '.$Language->getText('tracker_common_fieldset','invalid_at'));
             return false;
         }
         // set the attributes of this fieldset
@@ -305,10 +300,7 @@ class ArtifactFieldSet extends Error {
      *  @return true on success, false on failure.
      */
     function update($name, $description, $rank) {
-        global $Language;
-        
         if (!$name || trim($name) == "") {
-            $this->setError('ArtifactType: '.$Language->getText('tracker_common_fieldset','name_requ'));
             return false;
         }
         
@@ -320,14 +312,12 @@ class ArtifactFieldSet extends Error {
 
         $res=db_query($sql);
         if (!$res) {
-            $this->setError('ArtifactFieldSet::Update(): '.db_error());
             return false;
         } else {
             $this->fetchData();
             return true;
         }
     }
-
 }
 
 ?>

@@ -28,7 +28,7 @@ require_once('www/file/file_utils.php');
   $frsff = new FRSFileFactory();
   $file =& $frsff->getFRSFileFromDb($file_id, $group_id);
 
-  if (! $file || $file->isError()) {
+  if (! $file) {
     exit_error($Language->getText('file_download','incorrect_release_id'), $Language->getText('file_download','report_error',$GLOBALS['sys_name']));
   }
 

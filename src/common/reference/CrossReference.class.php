@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  * 
  * 
@@ -9,10 +9,9 @@
  * Stores a Cross Reference as extracted from some user text.
  */
 
-require_once 'common/include/Error.class.php';
 require_once 'utils.php';
 
-class CrossReference extends Error {
+class CrossReference {
     var $id; 
     var $userId;
     var $createdAt;
@@ -30,8 +29,7 @@ class CrossReference extends Error {
     var $targetKey;
     var $insertTargetType;
     var $insertSourceType;
-    
-    
+
     /** 
      * Constructor 
      * 
@@ -96,5 +94,5 @@ class CrossReference extends Error {
 		if ($this->refSourceGid!=100) { $group_param="&group_id=".$this->refSourceGid;}
         $this->sourceUrl=get_server_url()."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
 	
-    }    
+    }
 }

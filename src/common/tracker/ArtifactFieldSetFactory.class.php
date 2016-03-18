@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('common/tracker/ArtifactFieldSet.class.php');
 
@@ -29,7 +30,7 @@ function art_fieldset_factory_cmp_place($fieldset1, $fieldset2) {
     return 0;
 }
 
-class ArtifactFieldSetFactory extends Error {
+class ArtifactFieldSetFactory {
 
     /**
      * The ArtifactType object.
@@ -44,6 +45,14 @@ class ArtifactFieldSetFactory extends Error {
      * @var array of ArtifactFieldSet.
      */
     var $ArtifactFieldSets;
+    /**
+     * @var string
+     */
+    private $error_message = '';
+    /**
+     * @var bool
+     */
+    private $error_state = false;
 
     /**
      *  Constructor.
@@ -52,7 +61,6 @@ class ArtifactFieldSetFactory extends Error {
      *	@return	boolean	success.
      */
     function ArtifactFieldSetFactory($ArtifactType) {
-        $this->Error();
         if ( $ArtifactType ) {
             if ($ArtifactType->isError()) {
                 $this->setError('ArtifactFieldSetFactory:: '.$ArtifactType->getErrorMessage());
@@ -357,6 +365,32 @@ class ArtifactFieldSetFactory extends Error {
         }
         //print_r($fieldset_id_source_dest_array);
         return $fieldset_id_source_dest_array;
+    }
+
+    /**
+     * @param $string
+     */
+    public function setError($string) {
+        $this->error_state = true;
+        $this->error_message = $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorMessage() {
+        if ($this->error_state) {
+            return $this->error_message;
+        } else {
+            return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isError() {
+        return $this->error_state;
     }
 
 }

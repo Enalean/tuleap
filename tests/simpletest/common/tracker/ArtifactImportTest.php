@@ -1,6 +1,5 @@
 <?php
 require_once('database.php');
-require_once('common/include/Error.class.php');
 require_once('www/include/utils.php');
 
 require_once('common/tracker/ArtifactImport.class.php');

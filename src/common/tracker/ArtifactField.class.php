@@ -1,25 +1,23 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/include/Error.class.php');
-  //require_once('www/project/admin/permissions.php');
 
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
@@ -28,7 +26,7 @@ require_once('common/user/UserHelper.class.php');
 //
 // The artifact field object
 //
-class ArtifactField extends Error {
+class ArtifactField {
 
 	// The field id
 	var $field_id;
@@ -92,15 +90,21 @@ class ArtifactField extends Error {
 	var $DATATYPE_INT = 2;
 	var $DATATYPE_FLOAT = 3;
 	var $DATATYPE_DATE = 4;	
-	var $DATATYPE_USER = 5;	
-	
+	var $DATATYPE_USER = 5;
+	/**
+	 * @var string
+	 */
+	private $error_message = '';
+	/**
+	 * @var bool
+	 */
+	private $error_state = false;
+
 	/**
 	 *  Constructor.
 	 *
 	 */
 	function ArtifactField() {
-		// Error constructor
-		$this->Error();
 	}
 	
 	/**
@@ -1751,6 +1755,32 @@ class ArtifactField extends Error {
         if ($this->ugroupsCanUpdate($ugroups,$group_artifact_id)) $perms[] = 'TRACKER_FIELD_UPDATE';
         if ($this->ugroupsCanSubmit($ugroups,$group_artifact_id)) $perms[] = 'TRACKER_FIELD_SUBMIT';
         return $perms;
+	}
+
+	/**
+	 * @param $string
+	 */
+	public function setError($string) {
+		$this->error_state = true;
+		$this->error_message = $string;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getErrorMessage() {
+		if ($this->error_state) {
+			return $this->error_message;
+		} else {
+			return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isError() {
+		return $this->error_state;
 	}
 
 }

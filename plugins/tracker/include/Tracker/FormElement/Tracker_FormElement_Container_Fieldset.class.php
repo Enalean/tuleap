@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
 
 
 class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container {

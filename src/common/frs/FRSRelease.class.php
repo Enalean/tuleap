@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,11 @@
  */
 
 
-require_once('common/include/Error.class.php');
 require_once('common/frs/FRSFileFactory.class.php');
 
 
 
-class FRSRelease extends Error {
+class FRSRelease {
     const PERM_READ        = 'RELEASE_READ';
 
     const STATUS_ACTIVE  = 1;

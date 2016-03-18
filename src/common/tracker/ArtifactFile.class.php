@@ -2,16 +2,16 @@
 /**
  * ArtifactFile.class.php - Class to handle files within an artifact
  *
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
  *
  */
-//require_once('common/include/Error.class.php');
 
 
-class ArtifactFile extends Error {
+class ArtifactFile {
 
     const ROOT_DIRNAME = 'trackerv3';
 
@@ -28,6 +28,14 @@ class ArtifactFile extends Error {
 	 * @var		array	$data_array
 	 */
 	var $data_array;
+	/**
+	 * @var string
+	 */
+	private $error_message = '';
+	/**
+	 * @var bool
+	 */
+	private $error_state = false;
 
 	/**
 	 *  ArtifactFile - constructor.
@@ -38,8 +46,6 @@ class ArtifactFile extends Error {
 	 */
 	function ArtifactFile(&$Artifact, $data=false) {
 	  global $Language;
-
-		$this->Error(); 
 
 		//was Artifact legit?
 		if (!$Artifact || !is_object($Artifact)) {
@@ -330,6 +336,37 @@ class ArtifactFile extends Error {
 	 */
 	function getSubmittedUnixName() {
 		return $this->data_array['user_name'];
+	}
+
+	/**
+	 * @param $string
+	 */
+	public function setError($string) {
+		$this->error_state = true;
+		$this->error_message = $string;
+	}
+
+	public function clearError() {
+		$this->error_state = false;
+		$this->error_message = '';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getErrorMessage() {
+		if ($this->error_state) {
+			return $this->error_message;
+		} else {
+			return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isError() {
+		return $this->error_state;
 	}
 
 }

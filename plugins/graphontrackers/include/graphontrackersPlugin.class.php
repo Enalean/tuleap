@@ -254,7 +254,7 @@ class GraphOnTrackersPlugin extends Plugin {
                                     if ($gr->update()) {
                                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','updated_report'));
                                     } else {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','not_updated_report').': '.$gr->getErrorMessage());
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','not_updated_report'));
                                     }
                                 }
                             }

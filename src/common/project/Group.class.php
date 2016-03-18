@@ -1,13 +1,22 @@
-<?php   
-
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//	      
-// 
-
-
+<?php
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 /*
 
 	Group object by Tim Perdue, August 28, 2000
@@ -32,7 +41,7 @@ function group_get_object_by_name($groupname) {
     return $pm->getProjectByUnixName($groupname);
 }
 
-class Group extends Error {
+class Group {
 
 	//associative array of data from db
 	var $data_array;
@@ -50,13 +59,20 @@ class Group extends Error {
 
 	//whether the user is an admin/super user of this project
 	var $is_admin;
+	/**
+	 * @var string
+	 */
+	private $error_message = '';
+	/**
+	 * @var bool
+	 */
+	private $error_state = false;
 
 	function Group($param) {
             //$param can be:
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
             global $Language;
-			parent::__construct();
             if (is_array($param)) {
                 $this->group_id=$param['group_id'];
                 $this->data_array=$param;
@@ -337,6 +353,32 @@ class Group extends Error {
      private function _getTemplateSingleton() {
          return TemplateSingleton::instance();
      }
+
+	/**
+	 * @param $string
+	 */
+	public function setError($string) {
+		$this->error_state = true;
+		$this->error_message = $string;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getErrorMessage() {
+		if ($this->error_state) {
+			return $this->error_message;
+		} else {
+			return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isError() {
+		return $this->error_state;
+	}
 
 }
 

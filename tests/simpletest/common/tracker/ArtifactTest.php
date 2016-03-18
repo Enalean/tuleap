@@ -1,6 +1,5 @@
 <?php
 
-require_once('common/include/Error.class.php');
 require_once('common/tracker/Artifact.class.php');
 
 Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency', 'addHistory', 'getReferenceManager', 'userCanEditFollowupComment'));
