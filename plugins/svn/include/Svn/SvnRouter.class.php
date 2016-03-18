@@ -31,6 +31,7 @@ use Tuleap\Svn\Admin\AdminController;
 use Tuleap\Svn\AuthFile\AccessFileHistoryManager;
 use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailnotificationManager;
+use Tuleap\Svn\Admin\ImmutableTagController;
 use ProjectManager;
 use Project;
 use ForgeConfig;
@@ -53,18 +54,23 @@ class SvnRouter {
     /** @var RepositoryManager */
     private $repository_manager;
 
+    /** @var ImmutableTagController */
+    private $immutable_tag_controller;
+
     public function __construct(
         RepositoryManager $repository_manager,
         AccessControlController $access_control_controller,
         AdminController $notification_controller,
         ExplorerController $explorer_controller,
-        RepositoryDisplayController $display_controller
+        RepositoryDisplayController $display_controller,
+        ImmutableTagController $immutable_tag_controller
     ) {
         $this->repository_manager        = $repository_manager;
         $this->access_control_controller = $access_control_controller;
-        $this->admin_controller   = $notification_controller;
+        $this->admin_controller          = $notification_controller;
         $this->explorer_controller       = $explorer_controller;
         $this->display_controller        = $display_controller;
+        $this->immutable_tag_controller  = $immutable_tag_controller;
     }
 
     /**
@@ -119,6 +125,14 @@ class SvnRouter {
                 case "display-archived-version":
                     $this->checkUserCanAdministrateARepository($request);
                     $this->access_control_controller->displayArchivedVersion($request);
+                    break;
+                case "display-immutable-tag":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->immutable_tag_controller->displayImmutableTag($this->getService($request), $request);
+                    break;
+                case "save-immutable-tag":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->immutable_tag_controller->saveImmutableTag($this->getService($request), $request);
                     break;
 
                 default:

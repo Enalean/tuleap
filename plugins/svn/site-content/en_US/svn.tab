@@ -54,6 +54,7 @@ plugin_svn_admin	saved_versions	Saved versions:
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Access Control
+plugin_svn	immutable_tag	Immutable Tags
 plugin_svn	update_access_history_file_error	Unable to update Access Control File.
 plugin_svn	update_error	Unable to update Repository data
 plugin_svn	char_err	The repository name must have at least one character
@@ -63,3 +64,4 @@ plugin_svn	repository_not_found	Repository not found.
 plugin_svn	already_used	Repository name is already used in this project.
 plugin_svn	find_error	Repository not found
 plugin_svn	repository_not_created	The repository is in queue for creation. Please check back here in a few minutes
+plugin_svn	create_immutable_tag_error	Unable to save immutable tags.
