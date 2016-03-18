@@ -22,7 +22,8 @@
 
 use Tracker\FormElement\Field\ArtifactLink\Nature;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
@@ -456,7 +457,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                              size="40"
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'"
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
-            $html .= '</span></div>';
+            if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+                $natures        = $this->getNaturePresenterFactory()->getAllNatures();
+                $html          .= $this->getTemplateRenderer()->renderToString(
+                    'artifactlink-nature-selector',
+                    new NatureSelectorPresenter($natures, $name .'[nature]', 'tracker-form-element-artifactlink-new nature-selector')
+                );
+            }
+            $html .= '</span>';
+            $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add"><i class="icon-plus"></i> Add artifacts</a>';
+            $html .= '</div>';
 
             $parent_tracker = $this->getTracker()->getParent();
             $is_submit      = $artifact->getId() == -1;
@@ -573,15 +583,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-        $nature_factory = new NatureFactory(new NatureDao());
+        $renderer = $this->getTemplateRenderer();
+        $nature_presenter_factory = $this->getNaturePresenterFactory();
         $html = '';
         foreach($by_nature as $nature => $artifact_links) {
             if(empty($nature)) {
                 continue;
             }
 
-            $nature_presenter = $nature_factory->getFromShortname($nature);
+            $nature_presenter = $nature_presenter_factory->getFromShortname($nature);
             $html .= $renderer->renderToString(
                 'artifactlink-nature-table',
                 new NatureTablePresenter($nature_presenter, $artifact_links, $is_reverse_artifact_links)
@@ -1680,5 +1690,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitArtifactLink($this);
+    }
+
+    private function getNaturePresenterFactory() {
+        return new NaturePresenterFactory(new NatureDao());
+
+    }
+
+    private function getTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
     }
 }

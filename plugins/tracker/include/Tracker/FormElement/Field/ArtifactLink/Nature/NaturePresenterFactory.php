@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NatureFactory {
+class NaturePresenterFactory {
 
     /**
      * @var NatureDao
@@ -34,10 +34,14 @@ class NatureFactory {
 
     /** @return NaturePresenter[] */
     public function getAllNatures() {
-        return $this->dao->searchAll()
-            ->instanciateWith(
-                array($this, 'instantiateFromRow')
-            );
+        $natures = array(
+            new NatureIsChildPresenter()
+        );
+        foreach ( $this->dao->searchAll() as $row) {
+            $natures[] = $this->instantiateFromRow($row);
+        }
+
+        return $natures;
     }
 
     /** @return NaturePresenter */
