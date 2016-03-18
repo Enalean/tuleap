@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -67,7 +67,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 $nature_dao,
                 $nature_validator
             ),
-            new NatureFactory(
+            new NaturePresenterFactory(
                 $nature_dao
             )
         )

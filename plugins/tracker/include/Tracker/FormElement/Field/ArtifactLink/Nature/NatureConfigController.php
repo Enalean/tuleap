@@ -42,8 +42,8 @@ class NatureConfigController {
     /** @var NatureCreator */
     private $nature_creator;
 
-    /** @var NatureFactory */
-    private $nature_factory;
+    /** @var NaturePresenterFactory */
+    private $nature_presenter_factory;
 
     /** @var NatureEditor */
     private $nature_editor;
@@ -53,11 +53,11 @@ class NatureConfigController {
         AllowedProjectsConfig $allowed_projects_config,
         NatureCreator $nature_creator,
         NatureEditor $nature_editor,
-        NatureFactory $nature_factory
+        NaturePresenterFactory $nature_presenter_factory
     ) {
         $this->project_manager         = $project_manager;
         $this->nature_creator          = $nature_creator;
-        $this->nature_factory          = $nature_factory;
+        $this->nature_presenter_factory          = $nature_presenter_factory;
         $this->nature_editor           = $nature_editor;
         $this->allowed_projects_config = $allowed_projects_config;
     }
@@ -137,14 +137,7 @@ class NatureConfigController {
 
     /** @return NatureConfigPresenter */
     private function getNatureConfigPresenter($title, CSRFSynchronizerToken $csrf) {
-        $natures = array(
-            new NatureIsChildPresenter()
-        );
-
-        foreach ($this->nature_factory->getAllNatures() as $nature) {
-            $natures[] = $nature;
-        }
-
+        $natures = $this->nature_presenter_factory->getAllNatures();
         return new NatureConfigPresenter($title, $natures, $csrf, $this->getAllowedProjects($csrf));
     }
 

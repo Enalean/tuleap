@@ -570,7 +570,6 @@ document.observe('dom:loaded', function () {
 
     // inject the links 'link'
     $$('input.tracker-form-element-artifactlink-new').each(function (input) {
-        input.observe('change', codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks);
         if (location.href.toQueryParams().func == 'new-artifact' || location.href.toQueryParams().func == 'submit-artifact') {
             input.up().insert('<br /><em style="color:#666; font-size: 0.9em;">'+ codendi.locales.tracker_artifact_link.advanced + '<br />'+ input.title +'</em>');
         }
@@ -738,6 +737,7 @@ document.observe('dom:loaded', function () {
         });
     });
     //}}}
+    $$('a.tracker-form-element-artifactlink-add')[0].observe('click', codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks);
     codendi.tracker.artifact.artifactLink.set_checkbox_style_as_cross( $$('.tracker-form-element-artifactlink-list td.tracker_report_table_unlink') );
     codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
 });
