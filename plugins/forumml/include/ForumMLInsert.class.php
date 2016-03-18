@@ -106,14 +106,14 @@ class ForumMLInsert {
 
     function updateParentDate($messageId, $date) {
         if ($messageId != 0) {
-            $sql = 'SELECT id_parent, last_thread_update FROM plugin_forumml_message WHERE id_message = '.$messageId;
+            $sql = 'SELECT id_parent, last_thread_update FROM plugin_forumml_message WHERE id_message = '. db_ei($messageId);
             $dar = db_query($sql);
             if ($dar && !db_error($dar)) {
-                $row = mysql_fetch_array($dar);
+                $row = db_fetch_array($dar);
                 if ($date > $row['last_thread_update']) {
                     $sql = 'UPDATE plugin_forumml_message'.
-                        ' SET last_thread_update = '.$date.
-                        ' WHERE id_message='.$messageId;
+                        ' SET last_thread_update = ' . db_ei($date) .
+                        ' WHERE id_message='. db_ei($messageId);
                     db_query($sql);
                     
                     $this->updateParentDate($row['id_parent'], $date);
