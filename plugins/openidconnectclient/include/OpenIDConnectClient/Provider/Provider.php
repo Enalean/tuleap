@@ -30,6 +30,8 @@ class Provider {
     private $user_info_endpoint;
     private $client_id;
     private $client_secret;
+    private $icon;
+    private $color;
 
 
     public function __construct(
@@ -39,7 +41,9 @@ class Provider {
         $token_endpoint,
         $user_info_endpoint,
         $client_id,
-        $client_secret
+        $client_secret,
+        $icon,
+        $color
     ) {
         $this->id                     = $id;
         $this->name                   = $name;
@@ -48,6 +52,8 @@ class Provider {
         $this->user_info_endpoint     = $user_info_endpoint;
         $this->client_id              = $client_id;
         $this->client_secret          = $client_secret;
+        $this->icon                   = $icon;
+        $this->color                  = $color;
     }
 
     public function getId() {
@@ -76,6 +82,14 @@ class Provider {
 
     public function getClientSecret() {
         return $this->client_secret;
+    }
+
+    public function getIcon() {
+        return $this->icon;
+    }
+
+    public function getColor() {
+        return $this->color;
     }
 
 }

@@ -1,3 +1,5 @@
+@import "src/www/themes/common/css/utils/colors.less";
+
 body.openid-connect-link {
     background: linear-gradient(#FFFFFF 0%, #F5F5F5 75%);
     text-align: center;
@@ -49,6 +51,13 @@ body.openid-connect-link {
         .modal-body {
             max-height: none;
 
+            label, > .preview-label {
+                margin-bottom: 2px;
+                font-weight: 600;
+                font-size: 12px;
+                color: #555;
+            }
+
             input {
                 width: 100%;
                 box-sizing: border-box;
@@ -57,6 +66,30 @@ body.openid-connect-link {
 
             .provider-name, .provider-user-info-endpoint {
                 margin: 0 0 30px;
+            }
+
+            > .preview-label {
+                margin: 30px 0 5px;
+            }
+
+            > .provider-button-preview {
+                text-align: center;
+                padding: 20px;
+                background: #f3f3f3;
+                border: 1px solid #ededed;
+                border-radius: 4px;
+
+                > a {
+                    padding: 20px;
+                    box-sizing: border-box;
+                    font-size: 20px;
+                    line-height: normal;
+
+                    > i {
+                        margin: 0 3px 0 0px;
+                        font-size: 18px;
+                    }
+                }
             }
         }
     }
@@ -70,11 +103,22 @@ body.openid-connect-link {
         .provider {
             display: flex;
             flex-direction: column;
+            position: relative;
             width: 370px;
             margin: 0 30px 30px 0;
             border: 1px solid #ededed;
             border-radius: 4px;
             box-sizing: border-box;
+
+            > .provider-background-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                z-index: -1;
+                font-size: 200px;
+                opacity: 0.03;
+            }
 
             > h3 {
                 flex: 0 0 auto;
@@ -84,6 +128,11 @@ body.openid-connect-link {
                 border-bottom: 2px solid #333333;
                 font-size: 16px;
                 line-height: normal;
+
+                > .provider-icon {
+                    font-size: 16px;
+                    margin: 0 2px 0 0;
+                }
             }
 
             > .provider-endpoint, > .provider-client {
@@ -197,8 +246,146 @@ body.openid-connect-link {
             display: inline-block;
             width: 49%;
 
-            &:nth-child(2n+1)   { margin: 0 1% 10px 0; }
-            &:nth-child(2n) { margin: 0 0 10px 1%; }
+            &:nth-child(2n+1) { margin: 0 1% 10px 0; }
+            &:nth-child(2n)   { margin: 0 0 10px 1%; }
+        }
+    }
+}
+
+a.provider-button {
+    box-shadow: inset 0 20px 40px -10px rgba(255, 255, 255, 0.2);
+    transition: box-shadow 50ms linear;
+
+    &:hover {
+        box-shadow: none;
+        transition: box-shadow 50ms linear;
+    }
+
+    &.inca_silver      { background: @inca_silver; }
+    &.chrome_silver    { background: @chrome_silver; }
+    &.fiesta_red       { background: @fiesta_red; }
+    &.teddy_brown      { background: @teddy_brown; }
+    &.clockwork_orange { background: @clockwork_orange; }
+    &.red_wine         { background: @red_wine; }
+    &.acid_green       { background: @acid_green; }
+    &.army_green       { background: @army_green; }
+    &.sherwood_green   { background: @sherwood_green; }
+    &.ocean_turquoise  { background: @ocean_turquoise; }
+    &.daphne_blue      { background: @daphne_blue; }
+    &.lake_placid_blue { background: @lake_placid_blue; }
+    &.deep_blue        { background: @deep_blue; }
+    &.plum_crazy       { background: @plum_crazy; }
+    &.peggy_pink       { background: @peggy_pink; }
+    &.flamingo_pink    { background: @flamingo_pink; }
+}
+
+.provider-select2-select {
+    display: block;
+
+    .select2-choice {
+        height: 35px;
+        box-sizing: border-box;
+        border: 1px solid #cccccc;
+
+        > div {
+            width: 20px;
+            border-left: 1px solid #cccccc;
+
+            > b {
+                background-position: 2px 4px;
+            }
+        }
+    }
+
+    &.provider-icon-selector .select2-choice {
+        padding: 4px 0;
+        text-align: center;
+
+        > span {
+            margin-right: 20px;
+
+            > i {
+                font-size: 26px;
+            }
+        }
+    }
+
+    &.provider-color-selector .select2-choice {
+        padding: 0;
+        overflow: visible;
+
+        > span {
+            height: 100%;
+            margin-right: 19px;
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+
+            > span {
+                display: block;
+                height: 100%;
+                margin: 0;
+
+                &.inca_silver      { background: @inca_silver; }
+                &.chrome_silver    { background: @chrome_silver; }
+                &.fiesta_red       { background: @fiesta_red; }
+                &.teddy_brown      { background: @teddy_brown; }
+                &.clockwork_orange { background: @clockwork_orange; }
+                &.red_wine         { background: @red_wine; }
+                &.acid_green       { background: @acid_green; }
+                &.army_green       { background: @army_green; }
+                &.sherwood_green   { background: @sherwood_green; }
+                &.ocean_turquoise  { background: @ocean_turquoise; }
+                &.daphne_blue      { background: @daphne_blue; }
+                &.lake_placid_blue { background: @lake_placid_blue; }
+                &.deep_blue        { background: @deep_blue; }
+                &.plum_crazy       { background: @plum_crazy; }
+                &.peggy_pink       { background: @peggy_pink; }
+                &.flamingo_pink    { background: @flamingo_pink; }
+            }
+        }
+    }
+
+    &.select2-dropdown-open .select2-choice > div > b {
+        background-position: -16px 4px;
+    }
+}
+
+.provider-select2-dropdown {
+    > .select2-search {
+        display: none;
+    }
+
+    > ul.select2-results {
+        text-align: center;
+
+        > li:first-child {
+            height: 25px;
+        }
+
+        > li span {
+            display: block;
+            height: 25px;
+
+            &.inca_silver      { background: @inca_silver; }
+            &.chrome_silver    { background: @chrome_silver; }
+            &.fiesta_red       { background: @fiesta_red; }
+            &.teddy_brown      { background: @teddy_brown; }
+            &.clockwork_orange { background: @clockwork_orange; }
+            &.red_wine         { background: @red_wine; }
+            &.acid_green       { background: @acid_green; }
+            &.army_green       { background: @army_green; }
+            &.sherwood_green   { background: @sherwood_green; }
+            &.ocean_turquoise  { background: @ocean_turquoise; }
+            &.daphne_blue      { background: @daphne_blue; }
+            &.lake_placid_blue { background: @lake_placid_blue; }
+            &.deep_blue        { background: @deep_blue; }
+            &.plum_crazy       { background: @plum_crazy; }
+            &.peggy_pink       { background: @peggy_pink; }
+            &.flamingo_pink    { background: @flamingo_pink; }
+        }
+
+        i {
+            font-size: 26px;
         }
     }
 }

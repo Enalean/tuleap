@@ -29,6 +29,9 @@ plugin_openidconnectclient_admin	token_endpoint	Token endpoint
 plugin_openidconnectclient_admin	userinfo_endpoint	User information endpoint
 plugin_openidconnectclient_admin	client_id	Client ID
 plugin_openidconnectclient_admin	client_secret	Client secret
+plugin_openidconnectclient_admin	icon	Icon
+plugin_openidconnectclient_admin	color	Color
+plugin_openidconnectclient_admin	preview	Preview of the login page button
 plugin_openidconnectclient_admin	btn_create	Create the provider
 plugin_openidconnectclient_admin	btn_delete	Remove
 plugin_openidconnectclient_admin	btn_update	Update the provider

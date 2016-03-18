@@ -8,9 +8,12 @@
     {{> administration-providers-modal-create }}
 
     <div id="providers">
-        {{# providers }}
+        {{# providers_presenters }}
         <div class="provider">
-            <h3>{{ getName }}</h3>
+            {{# getIcon }}<i class="provider-background-icon icon-{{ getIcon }}"></i>{{/ getIcon }}
+            <h3>
+                {{# getIcon }}<i class="provider-icon icon-{{ getIcon }}"></i>{{/ getIcon }} {{ getName }}
+            </h3>
             <div class="provider-endpoint">
                 <span class="provider-label">{{ authorization_endpoint }}</span>
                 <span>{{ getAuthorizationEndpoint }}</span>
@@ -45,6 +48,6 @@
 
             {{> administration-providers-modal-update }}
         </div>
-        {{/ providers }}
+        {{/ providers_presenters }}
     </div>
 </div>

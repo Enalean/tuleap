@@ -15,24 +15,55 @@
         <input type="hidden" name="action" value="update-provider">
         <input type="hidden" name="id" value="{{ getId }}">
         <div class="modal-body">
-            <label for="name">{{ name }}</label>
-            <input class="provider-name" type="text" name="name" id="name" value="{{ getName }}" required>
+            <div class="row-fluid">
+                <div class="span8">
+                    <label for="name-{{ getId }}">{{ name }}</label>
+                    <input class="provider-name" type="text" name="name" id="name-{{ getId }}" value="{{ getName }}" required>
+                </div>
 
-            <label for="authorization_endpoint">{{ authorization_endpoint }}</label>
-            <input type="url" pattern="https://.+" name="authorization_endpoint" id="authorization_endpoint" placeholder="{{ https_placeholder }}" value="{{ getAuthorizationEndpoint }}" required>
+                <div class="span2">
+                    <label for="icon-{{ getId }}">{{ icon }}</label>
+                    <select name="icon" id="icon-{{ getId }}" class="provider-icon-selector">
+                        <option value=""></option>
+                        {{# icons_presenters }}
+                        <option value="{{ icon }}" {{# is_selected }}selected{{/ is_selected }}></option>
+                        {{/ icons_presenters }}
+                    </select>
+                </div>
 
-            <label for="token_endpoint">{{ token_endpoint }}</label>
-            <input type="url" pattern="https://.+"name="token_endpoint" id="token_endpoint" placeholder="{{ https_placeholder }}" value="{{ getTokenEndpoint }}" required>
+                <div class="span2">
+                    <label for="color-{{ getId }}">{{ color }}</label>
+                    <select name="color" id="color-{{ getId }}" class="provider-color-selector">
+                        <option value=""></option>
+                        {{# colors_presenters }}
+                        <option value="{{ color }}" {{# is_selected }}selected{{/ is_selected }}></option>
+                        {{/ colors_presenters }}
+                    </select>
+                </div>
+            </div>
 
-            <label for="userinfo_endpoint">{{ userinfo_endpoint }}</label>
-            <input class="provider-user-info-endpoint" type="url" pattern="https://.+" name="userinfo_endpoint" id="userinfo_endpoint" placeholder="{{ https_placeholder }}" value="{{ getUserInfoEndpoint }}" required>
+            <label for="authorization_endpoint-{{ getId }}">{{ authorization_endpoint }}</label>
+            <input type="url" pattern="https://.+" name="authorization_endpoint" id="authorization_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getAuthorizationEndpoint }}" required>
 
-            <label for="client_id">{{ client_id }}</label>
-            <input type="text" name="client_id" id="client_id" value="{{ getClientId }}" required>
+            <label for="token_endpoint-{{ getId }}">{{ token_endpoint }}</label>
+            <input type="url" pattern="https://.+"name="token_endpoint" id="token_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getTokenEndpoint }}" required>
 
+            <label for="userinfo_endpoint-{{ getId }}">{{ userinfo_endpoint }}</label>
+            <input class="provider-user-info-endpoint" type="url" pattern="https://.+" name="userinfo_endpoint" id="userinfo_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getUserInfoEndpoint }}" required>
 
-            <label for="client_secret">{{ client_secret }}</label>
-            <input type="text" name="client_secret" id="client_secret" value="{{ getClientSecret }}" required>
+            <label for="client_id-{{ getId }}">{{ client_id }}</label>
+            <input type="text" name="client_id" id="client_id-{{ getId }}" value="{{ getClientId }}" required>
+
+            <label for="client_secret-{{ getId }}">{{ client_secret }}</label>
+            <input type="text" name="client_secret" id="client_secret-{{ getId }}" value="{{ getClientSecret }}" required>
+
+            <p class="preview-label">{{ preview }}</p>
+            <div class="provider-button-preview">
+                <a href="#" class="btn btn-large provider-button {{# getColor }}btn-primary {{ getColor }}{{/ getColor }}">
+                    <i {{# getIcon }}class="icon-{{ getIcon }}"{{/ getIcon }}></i>
+                    <span>{{ getName }}</span>
+                </a>
+            </div>
         </div>
 
         <div class="modal-footer">

@@ -57,7 +57,9 @@ class ProviderManager {
         $token_endpoint,
         $user_info_endpoint,
         $client_id,
-        $client_secret
+        $client_secret,
+        $icon,
+        $color
     ) {
         $is_data_valid = $this->isDataValid(
             $name,
@@ -65,7 +67,9 @@ class ProviderManager {
             $token_endpoint,
             $user_info_endpoint,
             $client_id,
-            $client_secret
+            $client_secret,
+            $icon,
+            $color
         );
 
         if (! $is_data_valid) {
@@ -78,7 +82,9 @@ class ProviderManager {
             $token_endpoint,
             $user_info_endpoint,
             $client_id,
-            $client_secret
+            $client_secret,
+            $icon,
+            $color
         );
 
         if ($id === false) {
@@ -92,7 +98,9 @@ class ProviderManager {
             $token_endpoint,
             $user_info_endpoint,
             $client_id,
-            $client_secret
+            $client_secret,
+            $icon,
+            $color
         );
     }
 
@@ -107,7 +115,9 @@ class ProviderManager {
             $provider->getTokenEndpoint(),
             $provider->getUserInfoEndpoint(),
             $provider->getClientId(),
-            $provider->getClientSecret()
+            $provider->getClientSecret(),
+            $provider->getIcon(),
+            $provider->getColor()
         );
 
         if (! $is_data_valid) {
@@ -121,7 +131,9 @@ class ProviderManager {
             $provider->getTokenEndpoint(),
             $provider->getUserInfoEndpoint(),
             $provider->getClientId(),
-            $provider->getClientSecret()
+            $provider->getClientSecret(),
+            $provider->getIcon(),
+            $provider->getColor()
         );
 
         if (! $is_updated) {
@@ -184,7 +196,9 @@ class ProviderManager {
             $row['token_endpoint'],
             $row['user_info_endpoint'],
             $row['client_id'],
-            $row['client_secret']
+            $row['client_secret'],
+            $row['icon'],
+            $row['color']
         );
     }
 
@@ -197,7 +211,9 @@ class ProviderManager {
         $token_endpoint,
         $userinfo_endpoint,
         $client_id,
-        $client_secret
+        $client_secret,
+        $icon,
+        $color
     ) {
         $string_validator   = new Valid_String();
         $http_uri_validator = new Valid_HTTPSURI();
@@ -205,7 +221,8 @@ class ProviderManager {
 
         return $string_validator->validate($name) && $string_validator->validate($client_id) &&
             $string_validator->validate($client_secret) && $http_uri_validator->validate($authorization_endpoint) &&
-            $http_uri_validator->validate($token_endpoint) && $http_uri_validator->validate($userinfo_endpoint);
+            $http_uri_validator->validate($token_endpoint) && $http_uri_validator->validate($userinfo_endpoint) &&
+            $string_validator->validate($icon) && $string_validator->validate($color);
     }
 
 }

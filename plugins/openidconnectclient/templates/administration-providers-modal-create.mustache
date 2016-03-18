@@ -14,8 +14,32 @@
         {{{ csrf_token }}}
         <input type="hidden" name="action" value="create-provider">
         <div class="modal-body">
-            <label for="name">{{ name }}</label>
-            <input class="provider-name" type="text" name="name" id="name" required>
+            <div class="row-fluid">
+                <div class="span8">
+                    <label for="name">{{ name }}</label>
+                    <input class="provider-name" type="text" name="name" id="name" required>
+                </div>
+
+                <div class="span2">
+                    <label for="icon">{{ icon }}</label>
+                    <select name="icon" id="icon" class="provider-icon-selector">
+                        <option value=""></option>
+                        {{# icons_presenters }}
+                        <option value="{{ icon }}"></option>
+                        {{/ icons_presenters }}
+                    </select>
+                </div>
+
+                <div class="span2">
+                    <label for="color">{{ color }}</label>
+                    <select name="color" id="color" class="provider-color-selector">
+                        <option value=""></option>
+                        {{# colors_presenters }}
+                        <option value="{{ color }}"></option>
+                        {{/ colors_presenters }}
+                    </select>
+                </div>
+            </div>
 
             <label for="authorization_endpoint">{{ authorization_endpoint }}</label>
             <input type="url" pattern="https://.+" name="authorization_endpoint" id="authorization_endpoint" placeholder="{{ https_placeholder }}" required>
@@ -31,6 +55,14 @@
 
             <label for="client_secret">{{ client_secret }}</label>
             <input type="text" name="client_secret" id="client_secret" required>
+
+            <p class="preview-label">{{ preview }}</p>
+            <div class="provider-button-preview">
+                <a href="#" class="btn btn-large provider-button">
+                    <i></i>
+                    <span></span>
+                </a>
+            </div>
         </div>
 
         <div class="modal-footer">

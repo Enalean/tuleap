@@ -23,17 +23,36 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 
 class Presenter {
     /**
-     * @var Provider[]
+     * @var ProviderPresenter[]
      */
-    private $providers;
+    public $providers_presenters;
+
+    /**
+     * @var IconPresenter[]
+     */
+    public $icons_presenters;
+
+    /**
+     * @var ColorPresenter[]
+     */
+    public $colors_presenters;
+
     /**
      * @var string
      */
-    private $csrf_token;
+    public $csrf_token;
 
-    public function __construct(array $providers, $csrf_token) {
-        $this->providers  = $providers;
-        $this->csrf_token = $csrf_token;
+
+    public function __construct(
+        array $providers_presenters,
+        array $icons_presenters,
+        array $colors_presenters,
+        $csrf_token
+    ) {
+        $this->providers_presenters = $providers_presenters;
+        $this->icons_presenters     = $icons_presenters;
+        $this->colors_presenters    = $colors_presenters;
+        $this->csrf_token           = $csrf_token;
     }
 
     public function title() {
@@ -68,6 +87,18 @@ class Presenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'client_secret');
     }
 
+    public function icon() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'icon');
+    }
+
+    public function color() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'color');
+    }
+
+    public function preview() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'preview');
+    }
+
     public function add_new_provider() {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'add_new_provider');
     }
@@ -98,14 +129,6 @@ class Presenter {
 
     public function btn_update() {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'btn_update');
-    }
-
-    public function providers() {
-        return $this->providers;
-    }
-
-    public function csrf_token() {
-        return $this->csrf_token;
     }
 
 }
