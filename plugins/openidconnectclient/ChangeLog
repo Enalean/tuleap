@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 8.13
+    * story #8633: Add Google to the initial list of OpenID Connect providers
+
 Version 0.12 - Tuleap 8.13
     * story #8633: Login page gloss
 
