@@ -1,3 +1,9 @@
+Version 8.12-3 (Monday, March 21st 2015)
+	== Bug Fix ==
+	* request #8904: CSRF vulnerability in the project registration page
+	* request #8918: LDAP directory bindings to a user group are kept after the ugroup removal
+	* request #8929: SQL injection in the project history search
+
 Version 8.12-2 (Monday, March 14th 2015)
 	== Bug Fix ==
 	* request #8903: Persistent XSS in the widget image
