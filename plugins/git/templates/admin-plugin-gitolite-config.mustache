@@ -1,0 +1,14 @@
+<form method="POST" action="?pane=gitolite_config&action=update_config">
+    {{{ csrf_input }}}
+    <h2>{{ gitolite_config_title }}</h2>
+
+    <p class="description">{{ gitolite_config_description }}</p>
+    <div class="control-group">
+        <label class="control-label" for="group_id">Project</label>
+        <div class="controls">
+            <input type="text" name="gitolite_config_project" size ="40" id="gitolite_config_project">
+        </div>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="{{ submit }}">
+</form>

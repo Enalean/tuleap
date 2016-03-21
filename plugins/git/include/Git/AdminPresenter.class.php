@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,13 +24,13 @@ class Git_AdminPresenter {
 
     public $csrf_input;
 
-    public $manage_gerrit = false;
+    public $manage_gerrit           = false;
+    public $manage_mirrors          = false;
+    public $manage_gitolite_config  = false;
 
-    public $manage_mirrors = false;
-
-    public $mirrors_active = '';
-
-    public $gerrit_active = '';
+    public $mirrors_active         = '';
+    public $gerrit_active          = '';
+    public $gitolite_config_active = '';
 
     public function __construct($title, CSRFSynchronizerToken $csrf) {
         $this->title      = $title;
@@ -45,5 +45,7 @@ class Git_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_git','mirror_tab_name');
     }
 
-
+    public function gitolite_config_tab_name() {
+        return $GLOBALS['Language']->getText('plugin_git','gitolite_config_tab_name');
+    }
 }

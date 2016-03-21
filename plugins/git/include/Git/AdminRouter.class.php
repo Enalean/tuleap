@@ -78,6 +78,8 @@ class Git_AdminRouter {
     private function getControllerFromRequest(Codendi_Request $request) {
         if ($request->get('pane') == 'gerrit_servers_admin') {
             return new Git_AdminGerritController($this->csrf, $this->gerrit_server_factory);
+        } elseif ($request->get('pane') == 'gitolite_config') {
+            return new Git_AdminGitoliteConfig($this->csrf, $this->project_manager, $this->git_system_event_manager);
         } else {
             return new Git_AdminMirrorController(
                 $this->csrf,
