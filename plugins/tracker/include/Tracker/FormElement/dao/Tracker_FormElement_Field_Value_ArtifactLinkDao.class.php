@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,8 +73,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
     public function keep($from, $to) {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql = "INSERT INTO $this->table_name(changeset_value_id, artifact_id, keyword, group_id)
-                SELECT $to, artifact_id, keyword, group_id
+        $sql = "INSERT INTO $this->table_name(changeset_value_id, nature, artifact_id, keyword, group_id)
+                SELECT $to, nature, artifact_id, keyword, group_id
                 FROM $this->table_name
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
