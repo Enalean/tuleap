@@ -1,3 +1,6 @@
+Version 5.828 - Tuleap 8.13
+    * story #8833: update the tables when adding new art_links
+
 Version 5.827 - Tuleap 8.13
     * Do not scroll the viewport when adding artifacts
 
