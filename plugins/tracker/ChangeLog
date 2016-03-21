@@ -1,3 +1,6 @@
+Version 5.824 - Tuleap 8.13
+    * Refactoring: move value saving in a dedicated object
+
 Version 5.823 - Tuleap 8.13
     * story #8833: add a select nature box in the frontend
 
