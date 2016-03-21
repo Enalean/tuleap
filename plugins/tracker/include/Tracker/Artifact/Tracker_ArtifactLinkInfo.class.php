@@ -20,14 +20,14 @@
  */
 
 class Tracker_ArtifactLinkInfo {
-    
+
     protected $artifact_id;
     protected $keyword;
     protected $group_id;
     protected $tracker_id;
     protected $last_changeset_id;
     private   $nature;
-    
+
     /**
      * @param integer $artifact_id
      * @param string  $keyword
@@ -36,7 +36,7 @@ class Tracker_ArtifactLinkInfo {
      * @param string $nature
      */
     public function __construct($artifact_id, $keyword, $group_id, $tracker_id, $last_changeset_id, $nature) {
-        $this->artifact_id       = $artifact_id; 
+        $this->artifact_id       = $artifact_id;
         $this->keyword           = $keyword;
         $this->group_id          = $group_id;
         $this->tracker_id        = $tracker_id;
@@ -51,15 +51,22 @@ class Tracker_ArtifactLinkInfo {
      *
      * @return Tracker_ArtifactLinkInfo
      */
-    public static function buildFromArtifact(Tracker_Artifact $artifact) {
+    public static function buildFromArtifact(Tracker_Artifact $artifact, $nature) {
         $tracker = $artifact->getTracker();
-        $klass   = __CLASS__;
-        return new $klass(
+
+        $changeset_id   = 0;
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset) {
+            $changeset_id = $last_changeset->getId();
+        }
+
+        return new Tracker_ArtifactLinkInfo(
             $artifact->getId(),
             $tracker->getItemName(),
             $tracker->getGroupId(),
             $tracker->getId(),
-            $artifact->getLastChangeset()->getId()
+            $changeset_id,
+            $nature
         );
     }
 
@@ -69,28 +76,28 @@ class Tracker_ArtifactLinkInfo {
     public function getArtifactId() {
         return $this->artifact_id;
     }
-    
+
     /**
      * @return string the keyword of the artifact link
      */
     public function getKeyword() {
         return $this->keyword;
     }
-    
+
     /**
      * @return int the group_id of the artifact link
      */
     public function getGroupId() {
         return $this->group_id;
     }
-    
+
     /**
      * @return int the tracker_id of the artifact link
      */
     public function getTrackerId() {
         return $this->tracker_id;
     }
-    
+
     /**
      * Returns the tracker this artifact belongs to
      *
@@ -99,14 +106,14 @@ class Tracker_ArtifactLinkInfo {
     public function getTracker() {
         return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
     }
-    
+
     /**
      * @return int the last changeset_id of the artifact link
      */
     public function getLastChangesetId() {
         return $this->last_changeset_id;
     }
-    
+
     /**
      * Get the Url to the artifact link
      *
@@ -116,7 +123,7 @@ class Tracker_ArtifactLinkInfo {
         $server_url = get_server_url();
         return '<a class="cross-reference" href="' . $server_url . '/goto?key=' . $this->getKeyword() . '&val=' . $this->getArtifactId() . '&group_id=' . $this->getGroupId() . '">' . $this->getLabel() . '</a>';
     }
-    
+
     /**
      * Get the raw value of this artifact link (bug #1234, story #9876, etc.)
      *
@@ -136,14 +143,20 @@ class Tracker_ArtifactLinkInfo {
      * @return boolean
      */
     public function userCanView(PFUser $user) {
-        $af = Tracker_ArtifactFactory::instance();
-        $a  = $af->getArtifactById($this->artifact_id);
-        return $a->userCanView($user);
+        $artifact = $this->getArtifact();
+
+        return $artifact->userCanView($user);
     }
-    
+
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getArtifact() {
+        return Tracker_ArtifactFactory::instance()->getArtifactById($this->artifact_id);
+    }
+
     public function __toString() {
         return $this->getLabel();
     }
 
 }
-?>

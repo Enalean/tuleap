@@ -21,6 +21,8 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use TuleapTestCase;
+use Tracker_ArtifactLinkInfo;
+use Tracker_ArtifactFactory;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
@@ -75,16 +77,25 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
         $this->initial_linked_artifact = mock('Tracker_Artifact');
         stub($this->initial_linked_artifact)->getId()->returns(36);
         stub($this->initial_linked_artifact)->getTracker()->returns($this->tracker);
+        stub($this->initial_linked_artifact)->getLastChangeset()->returns(
+            stub('Tracker_Artifact_Changeset')->getId()->returns(361)
+        );
         stub($this->artifact_factory)->getArtifactById(36)->returns($this->initial_linked_artifact);
 
         $this->some_artifact = mock('Tracker_Artifact');
         stub($this->some_artifact)->getId()->returns(456);
         stub($this->some_artifact)->getTracker()->returns($this->tracker_child);
+        stub($this->some_artifact)->getLastChangeset()->returns(
+            stub('Tracker_Artifact_Changeset')->getId()->returns(4561)
+        );
         stub($this->artifact_factory)->getArtifactById(456)->returns($this->some_artifact);
 
         $this->other_artifact = mock('Tracker_Artifact');
         stub($this->other_artifact)->getId()->returns(457);
         stub($this->other_artifact)->getTracker()->returns($this->tracker_child);
+        stub($this->other_artifact)->getLastChangeset()->returns(
+            stub('Tracker_Artifact_Changeset')->getId()->returns(4571)
+        );
         stub($this->artifact_factory)->getArtifactById(457)->returns($this->other_artifact);
 
         $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
@@ -98,13 +109,20 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
             $this->reference_manager,
             mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector')
         );
+
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+    }
+
+    public function tearDown() {
+        Tracker_ArtifactFactory::clearInstance();
+        parent::tearDown();
     }
 
     public function itRemovesACrossReference() {
         $artifact = stub('Tracker_Artifact')->getTracker()->returns($this->tracker);
 
         $value = array(
-            'new_values' => '',
+            'list_of_artifactlinkinfo' => array(),
             'removed_values' => array(
                 36 => 1
             )
@@ -131,14 +149,14 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
         $artifact = stub('Tracker_Artifact')->getTracker()->returns($this->tracker);
 
         $value = array(
-            'new_values' => 36,
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->initial_linked_artifact, 'fixed_in')
+            ),
             'removed_values' => array()
         );
 
         stub($this->dao)->create()->returns(true);
         stub($this->field)->getTracker()->returns($this->tracker);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(0)->returns(array($this->initial_linked_artifact));
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array());
 
         expect($this->reference_manager)->insertBetweenTwoArtifacts($artifact, $this->initial_linked_artifact, $this->user)->once();
         expect($this->dao)->create()->once();
@@ -154,17 +172,17 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
     }
 
     public function itCallsOnlyOneTimeCreateInDBIfAllArtifactsAreInTheSameTracker() {
-        $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
-        $artifact           = mock('Tracker_Artifact');
+        $artifact = mock('Tracker_Artifact');
 
         $value = array(
-            'new_values' => '36,37',
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, 'fixed_in'),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in')
+            ),
             'removed_values' => array()
         );
 
         stub($this->field)->getTracker()->returns($this->tracker);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
 
         expect($this->dao)->create()->once();
 
@@ -179,17 +197,17 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
     }
 
     public function itUsesArtifactLinkNature() {
-        $artifact           = mock('Tracker_Artifact');
-        $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
+        $artifact = mock('Tracker_Artifact');
 
         $value = array(
-            'new_values' => '36,37',
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, 'fixed_in'),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in')
+            ),
             'removed_values' => array()
         );
 
         stub($this->field)->getTracker()->returns($this->tracker);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
 
         expect($this->dao)->create('*', '_is_child', '*', '*', '*')->once();
 
@@ -204,17 +222,17 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
     }
 
     public function itUsesDefaultArtifactLinkNature() {
-        $artifact           = mock('Tracker_Artifact');
-        $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
+        $artifact = mock('Tracker_Artifact');
 
         $value = array(
-            'new_values' => '36,37',
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, NULL),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, NULL)
+            ),
             'removed_values' => array()
         );
 
         stub($this->field)->getTracker()->returns($this->tracker_child);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
 
         expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
 
@@ -261,9 +279,14 @@ class ArtifactLinkValueSaver_updateLinkingDirectionTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
+        $tracker = aTracker()->withId(101)->build();
+
+        $changesets_123 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1231));
+        $changesets_124 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1241));
+
         $this->artifact = anArtifact()->withId(120)->build();
-        $this->art_123  = anArtifact()->withId(123)->build();
-        $this->art_124  = anArtifact()->withId(124)->build();
+        $this->art_123  = anArtifact()->withId(123)->withTracker($tracker)->withChangesets($changesets_123)->build();
+        $this->art_124  = anArtifact()->withId(124)->withTracker($tracker)->withChangesets($changesets_124)->build();
 
         $this->reference_manager = mock('Tracker_ReferenceManager');
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
@@ -272,9 +295,10 @@ class ArtifactLinkValueSaver_updateLinkingDirectionTest extends TuleapTestCase {
         $this->source_of_association_detector = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector');
 
         $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
-        stub($this->previous_changesetvalue)->getArtifactIds()->returns(array());
+        stub($this->previous_changesetvalue)->getValue()->returns(array());
 
-        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(123,124))->returns(array($this->art_123, $this->art_124));
+        stub($this->artifact_factory)->getArtifactById(123)->returns($this->art_123);
+        stub($this->artifact_factory)->getArtifactById(124)->returns($this->art_124);
 
         $this->source_of_association_collection = new SourceOfAssociationCollection();
         $this->saver = new ArtifactLinkValueSaver(
@@ -283,6 +307,13 @@ class ArtifactLinkValueSaver_updateLinkingDirectionTest extends TuleapTestCase {
             $this->reference_manager,
             $this->source_of_association_detector
         );
+
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+    }
+
+    public function tearDown() {
+        Tracker_ArtifactFactory::clearInstance();
+        parent::tearDown();
     }
 
     public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
@@ -291,14 +322,18 @@ class ArtifactLinkValueSaver_updateLinkingDirectionTest extends TuleapTestCase {
         stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
         stub($this->source_of_association_detector)->isChild($this->art_124, $this->artifact)->returns(true);
 
+        $updated_submitted_value = $this->saver->updateLinkingDirection(
+            $this->source_of_association_collection,
+            $this->artifact,
+            $submitted_value,
+            $this->previous_changesetvalue
+        );
+
         $this->assertEqual(
-            $this->saver->updateLinkingDirection(
-                $this->source_of_association_collection,
-                $this->artifact,
-                $submitted_value,
-                $this->previous_changesetvalue
-            ),
-            array('new_values' => '123')
+            $updated_submitted_value['list_of_artifactlinkinfo'],
+            array(
+                123 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_123, '')
+            )
         );
     }
 }
