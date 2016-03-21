@@ -1,3 +1,6 @@
+Version 5.826 - Tuleap 8.13
+    * Refactoring: remove dead code: createInitialChangeset
+
 Version 5.825 - Tuleap 8.13
     * Keep existing nature for artifact links
 
