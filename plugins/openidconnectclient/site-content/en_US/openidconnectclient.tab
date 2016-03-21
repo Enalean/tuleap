@@ -29,6 +29,7 @@ plugin_openidconnectclient_admin	token_endpoint	Token endpoint
 plugin_openidconnectclient_admin	userinfo_endpoint	User information endpoint
 plugin_openidconnectclient_admin	client_id	Client ID
 plugin_openidconnectclient_admin	client_secret	Client secret
+plugin_openidconnectclient_admin	client_help	Following information have to be generated on the OpenID Connect provider side. You'll need to give a callback url to do that, here it is:
 plugin_openidconnectclient_admin	icon	Icon
 plugin_openidconnectclient_admin	color	Color
 plugin_openidconnectclient_admin	preview	Preview of the login page button

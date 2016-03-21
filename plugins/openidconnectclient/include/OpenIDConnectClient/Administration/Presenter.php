@@ -20,6 +20,7 @@
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
+use ForgeConfig;
 
 class Presenter {
     /**
@@ -85,6 +86,16 @@ class Presenter {
 
     public function client_secret() {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'client_secret');
+    }
+
+    public function client_help() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'client_help');
+    }
+
+    public function callback_url() {
+        $host = urlencode(ForgeConfig::get('sys_default_domain'));
+
+        return strtolower('https://' . $host . OPENIDCONNECTCLIENT_BASE_URL . '/');
     }
 
     public function icon() {

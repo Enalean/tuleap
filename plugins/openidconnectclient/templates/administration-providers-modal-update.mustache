@@ -51,6 +51,9 @@
             <label for="userinfo_endpoint-{{ getId }}">{{ userinfo_endpoint }}</label>
             <input class="provider-user-info-endpoint" type="url" pattern="https://.+" name="userinfo_endpoint" id="userinfo_endpoint-{{ getId }}" placeholder="{{ https_placeholder }}" value="{{ getUserInfoEndpoint }}" required>
 
+            <p class="info"><i class="icon-info-sign"></i> {{ client_help }}</p>
+            <p class="info provider-callback-url">{{ callback_url }}</p>
+
             <label for="client_id-{{ getId }}">{{ client_id }}</label>
             <input type="text" name="client_id" id="client_id-{{ getId }}" value="{{ getClientId }}" required>
 
