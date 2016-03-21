@@ -1,27 +1,11 @@
-<h2><a href="?group_id={{ group_id }}&action=display-repository&repo_id={{ repo_id }}">{{ repository_name }}</a> - {{ title }}</h2>
 <div class="tabbable tabs-left">
-    {{# sections }}
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="{{ notifications_url }}">{{ notifications }}</a>
-            </li>
-            <li>
-                <a href="{{ access_control_url }}">{{ access_control }}</a>
-            </li>
-            <li>
-                <a href="{{ immutable_tag_url }}">{{ immutable_tag }}</a>
-            </li>
-            <li>
-                <a href="{{ hooks_config_url }}">{{ hooks_config }}</a>
-            </li>
-        </ul>
-    {{/ sections }}
+    {{> admin/section_presenter}}
     <div class="tab-content">
         <h3>{{ notification_subtitle }}</h3>
         <p><i>{{ comment }} </p></i>
-        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=save-mail-header" method="post">
-            <input type="hidden" name="group_id" value="{{ group_id }}">
-            <input type="hidden" name="repo_id" value="{{ repo_id }}">
+        <form action="/plugins/svn/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=save-mail-header" method="post">
+            <input type="hidden" name="group_id" value="{{ project_id }}">
+            <input type="hidden" name="repo_id" value="{{ repository_id }}">
             {{{ csrf_input }}}
             <label>{{ label_subject_header }}</label>
             <input type="text" name="form_mailing_header" value="{{ subject_header }}">
@@ -30,12 +14,12 @@
             <br/>
         </form>
 
-        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=delete-mailing-list" method="post">
+        <form action="/plugins/svn/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=delete-mailing-list" method="post">
             {{#hasNotification}}
                 <h3>{{ label_notification_aviable }}</h3>
                 <table>
-                    <input type="hidden" name="group_id" value="{{ group_id }}">
-                    <input type="hidden" name="repo_id" value="{{ repo_id }}">
+                    <input type="hidden" name="group_id" value="{{ project_id }}">
+                    <input type="hidden" name="repo_id" value="{{ repository_id }}">
                     {{{ csrf_input }}}
                     <thead>
                         <tr>
@@ -57,9 +41,9 @@
             {{/hasNotification}}
         </form>
 
-        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=create-mailing-lists" method="post">
-            <input type="hidden" name="group_id" value="{{ group_id }}">
-            <input type="hidden" name="repo_id" value="{{ repo_id }}">
+        <form action="/plugins/svn/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=create-mailing-lists" method="post">
+            <input type="hidden" name="group_id" value="{{ project_id }}">
+            <input type="hidden" name="repo_id" value="{{ repository_id }}">
             {{{ csrf_input }}}
             <label> {{ label_path }} </label>
             <input type="text" name="form_path">

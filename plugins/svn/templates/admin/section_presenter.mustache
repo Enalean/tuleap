@@ -1,0 +1,17 @@
+<h2><a href="?group_id={{ project_id }}&action=display-repository&repo_id={{ repository_id }}">{{ repository_name }}</a> - {{ title }}</h2>
+{{# sections }}
+    <ul class="nav nav-tabs">
+        <li {{# notification_active }}class="active"{{/ notification_active }}>
+            <a href="{{ notifications_url }}">{{ notifications }}</a>
+        </li>
+        <li {{# access_control_active }}class="active"{{/ access_control_active }}>
+            <a href="{{ access_control_url }}">{{ access_control }}</a>
+        </li>
+        <li {{# immutable_tag_url_active }}class="active"{{/ immutable_tag_url_active }}>
+            <a href="{{ immutable_tag_url }}">{{ immutable_tag }}</a>
+        </li>
+        <li {{# commit_rule_active }}class="active"{{/ commit_rule_active }}>
+            <a href="{{ hooks_config_url }}">{{ hooks_config }}</a>
+        </li>
+    </ul>
+{{/ sections }}
