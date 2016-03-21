@@ -1,3 +1,6 @@
+Version 5.825 - Tuleap 8.13
+    * Keep existing nature for artifact links
+
 Version 5.824 - Tuleap 8.13
     * Refactoring: move value saving in a dedicated object
 
