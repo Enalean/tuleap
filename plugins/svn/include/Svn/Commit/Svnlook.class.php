@@ -55,4 +55,9 @@ class Svnlook {
         $command = $this->svnlook.' tree --full-paths '.escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec($command);
     }
+
+    public function getTransactionPath(Repository $repository, $transaction) {
+        $command = $this->svnlook.' changed -t ' . escapeshellarg($transaction) . ' ' .escapeshellarg($repository->getSystemPath());
+        return $this->system_commnd->exec($command);
+    }
 }

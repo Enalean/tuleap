@@ -27,7 +27,6 @@ namespace Tuleap\Svn\Commit;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Repository;
 
-
 class CommitInfoEnhancer {
     private $commit_info;
     private $svn_look;
@@ -48,6 +47,15 @@ class CommitInfoEnhancer {
         $this->setGeneralCommitInfo($repository, $revision);
         $this->setChangedFiles($repository, $revision);
         $this->setChangedDirectories($repository, $revision);
+    }
+
+    public function setTransactionPath(Repository $repository, $revision) {
+        if ($this->checkRepositoryExists($repository)) {
+            $transaction_path = $this->svn_look->getTransactionPath($repository, $revision);
+            $this->commit_info->setTransactionPath($transaction_path);
+        } else {
+            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
+        }
     }
 
     private function setGeneralCommitInfo(Repository $repository, $revision) {
