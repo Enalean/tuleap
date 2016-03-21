@@ -987,7 +987,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     }
 
     /**
-     * Convert ISO8601 into internal date needed by createInitialChangeset and createNewChangeset
+     * Convert ISO8601 into internal date needed by createNewChangeset
      *
      * @param array $value
      * @param Tracker_Artifact $artifact
