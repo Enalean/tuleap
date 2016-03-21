@@ -1,3 +1,6 @@
+Version 0.41 - Tuleap 8.13
+    * Move section presenter into a dedicated file
+
 Version 0.40 - Tuleap 8.13
     * story #8820: svn plugin: user interface to change hook configuration
 
