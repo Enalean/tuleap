@@ -1221,18 +1221,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     /**
-     * @return Array the ids
-     */
-    private function getLastChangesetArtifactIds(Tracker_Artifact $artifact) {
-        $lastChangeset = $artifact->getLastChangeset();
-        $ids = array();
-        if($lastChangeset) {
-            $ids = $lastChangeset->getValue($this)->getArtifactIds();
-        }
-        return $ids;
-    }
-
-    /**
      * Say if the submitted value is empty
      * if no last changeset values and empty submitted values : empty
      * if not empty last changeset values and empty submitted values : not empty
