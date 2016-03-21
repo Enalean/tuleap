@@ -1014,27 +1014,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->artifact_factory = $artifact_factory;
     }
 
-    /**
-     * Create the initial changeset of this artifact
-     *
-     * @param array   $fields_data The artifact fields values
-     * @param PFUser  $submitter   The user who did the artifact submission
-     * @param integer $submitted_on When the changeset is created
-     *
-     * @return int The Id of the initial changeset, or null if fields were not valid
-     */
-    public function createInitialChangeset($fields_data, $submitter, $submitted_on) {
-        $creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
-            new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->getFormElementFactory()),
-            $this->getFormElementFactory(),
-            $this->getChangesetDao(),
-            $this->getArtifactFactory(),
-            $this->getEventManager()
-        );
-
-        return $creator->create($this, $fields_data, $submitter, $submitted_on);
-    }
-
     public function getErrors() {
         $list_errors = array();
         $is_valid = true;
