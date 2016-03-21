@@ -97,4 +97,32 @@ class Dao extends DataAccessObject {
 
         return $this->updateAndGetLastId($query);
     }
+
+    public function getHookConfig($id_repository) {
+        $id_repository = $this->da->escapeInt($id_repository);
+        $sql = "SELECT *
+                FROM plugin_svn_hook_config
+                WHERE repository_id = $id_repository";
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function updateHookConfig($id_repository, array $hook_config) {
+        $id         = $this->da->escapeInt($id_repository);
+
+        $update = array();
+        $cols = array();
+        $vals = array();
+        foreach($hook_config as $tablename => $value) {
+            $update[] = "$tablename = " . $this->da->quoteSmart((bool) $value);
+            $cols[] = $tablename;
+            $vals[] = $this->da->quoteSmart((bool) $value);
+        }
+
+        $sql  = "INSERT INTO plugin_svn_hook_config";
+        $sql .= " (repository_id, ". join($cols, ", ") . ")";
+        $sql .= " VALUES ($id, " . join($vals, ", ") . ")";
+        $sql .= " ON DUPLICATE KEY UPDATE " . join($update, ", ") . ";";
+
+        return $this->update($sql);
+    }
 }

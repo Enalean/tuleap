@@ -127,4 +127,18 @@ class RepositoryManager {
             $project
         );
     }
+
+    public function getHookConfig(Repository $repository) {
+        $row = $this->dao->getHookConfig($repository->getId());
+        if(!$row) {
+            $row = array();
+        }
+        return new HookConfig($repository, $row);
+    }
+
+    public function updateHookConfig($repository_id, array $hook_config) {
+        return $this->dao->updateHookConfig(
+            $repository_id,
+            HookConfig::sanitizeHookConfigArray($hook_config));
+    }
 }

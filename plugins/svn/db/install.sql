@@ -20,6 +20,11 @@ CREATE TABLE plugin_svn_repositories(
   INDEX project_idx (project_id)
 );
 
+CREATE TABLE plugin_svn_hook_config(
+  repository_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
+  mandatory_reference BOOL DEFAULT false NOT NULL
+);
+
 CREATE TABLE plugin_svn_mailing_header(
   repository_id INT(11) UNSIGNED NOT NULL,
   header varchar(64) NOT NULL,

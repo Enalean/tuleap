@@ -23,6 +23,7 @@ namespace Tuleap\Svn\Admin;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\HookConfig;
 use Project;
 use HTTPRequest;
 use Valid_String;
@@ -177,6 +178,38 @@ class AdminController {
                   'repo_id'  => $request->get('repo_id'),
                   'action'   => 'display-mail-notification'
             )));
+    }
+
+    public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request) {
+        $hook_config = array(
+            HookConfig::MANDATORY_REFERENCE => (bool)
+                $request->get("pre_commit_must_contain_reference")
+        );
+        $this->repository_manager->updateHookConfig($request->get('repo_id'), $hook_config);
+
+        return $this->displayHooksConfig($service, $request);
+    }
+
+    public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request) {
+        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $hook_config = $this->repository_manager->getHookConfig($repository);
+
+
+        $token = $this->generateToken($request->getProject(), $repository);
+        $title = $GLOBALS['Language']->getText('global', 'Administration');
+
+        $service->renderInPage(
+            $request,
+            $repository->getName() .' – '. $title,
+            'admin/hooks_config',
+            new HooksConfigurationPresenter(
+                $repository,
+                $request->getProject(),
+                $token,
+                $title,
+                $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
+            )
+        );
     }
 
 }
