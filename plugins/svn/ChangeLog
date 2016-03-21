@@ -1,3 +1,6 @@
+Version 0.38 - Tuleap 8.13
+    * Activate pre-commit-hook mechanism
+
 Version 0.37 - Tuleap 8.13
     * Immutable TAG, create admin interface
 
