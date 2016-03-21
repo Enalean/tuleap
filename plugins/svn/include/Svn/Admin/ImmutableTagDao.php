@@ -29,12 +29,13 @@ use DataAccessObject;
 
 class ImmutableTagDao extends DataAccessObject {
 
-    public function save(Repository $repository, $path) {
+    public function save(Repository $repository, $path, $whitelist) {
         $repository_id = $this->da->escapeInt($repository->getId());
         $path          = $this->da->quoteSmart($path);
+        $whitelist     = $this->da->quoteSmart($whitelist);
 
-        $sql = "REPLACE INTO plugin_svn_immutable_tag (repository_id, paths)
-                VALUES ($repository_id, $path)";
+        $sql = "REPLACE INTO plugin_svn_immutable_tag (repository_id, paths, whitelist)
+                VALUES ($repository_id, $path, $whitelist)";
 
         return $this->update($sql);
     }

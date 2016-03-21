@@ -34,8 +34,12 @@ class ImmutableTagCreator {
         $this->dao = $dao;
     }
 
-    public function save(Repository $repository, $immutable_tags_path) {
-        if (! $this->dao->save($repository, $this->cleanImmutableTag($immutable_tags_path))) {
+    public function save(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist) {
+        if (! $this->dao->save(
+            $repository,
+            $this->cleanImmutableTag($immutable_tags_path),
+            $this->cleanImmutableTag($immutable_tags_whitelist))
+        ) {
             throw new CannotCreateImmuableTagException ($GLOBALS['Language']->getText('plugin_svn','create_immutable_tag_error'));
         }
     }
@@ -44,5 +48,4 @@ class ImmutableTagCreator {
         $immutable_paths = explode(PHP_EOL, $immutable_tags_path);
         return implode(PHP_EOL, array_map('trim',$immutable_paths));
     }
-
 }

@@ -54,11 +54,16 @@ class PreCommit {
     public function assertCommitToTagIsAllowed($repository_path, $transaction) {
         $repository = $this->repository_manager->getRepositoryFromSystemPath($repository_path);
 
-        if ($this->immutable_tag_factory->getByRepositoryId($repository)
+
+        if ($this->getImmutableTagFromRepository($repository)
             && ! $this->isCommitAllowed($repository, $transaction)
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
+    }
+
+    private function getImmutableTagFromRepository(Repository $repository) {
+        return $this->immutable_tag_factory->getByRepositoryId($repository);
     }
 
     private function isCommitAllowed(Repository $repository, $transaction) {
@@ -77,8 +82,9 @@ class PreCommit {
     }
 
     private function isCommitDoneInImmutableTag(Repository $repository, $path) {
+
         $paths = $this->immutable_tag_factory->getByRepositoryId($repository)->getPaths();
-        $immutable_paths = explode(PHP_EOL, $this->immutable_tag_factory->getByRepositoryId($repository)->getPaths());
+        $immutable_paths = explode(PHP_EOL, $this->getImmutableTagFromRepository($repository)->getPaths());
 
         foreach ($immutable_paths as $immutable_path) {
             if ($this->isCommitForbidden($repository, $immutable_path, $path)) {
@@ -100,8 +106,32 @@ class PreCommit {
             )%x";
 
         if (preg_match($pattern, $path)) {
-            return true;
+            return ! $this->isCommitDoneOnWhitelistElement($repository, $path);
         }
+
+        return false;
+    }
+
+    private function isCommitDoneOnWhitelistElement(Repository $repository, $path) {
+        $whitelist = explode(PHP_EOL, $this->getImmutableTagFromRepository($repository)->getWhitelist());
+        if (! $whitelist) {
+            return false;
+        }
+
+        $whitelist_regexp = array();
+        foreach ($whitelist as $whitelist_path) {
+            $whitelist_regexp[] = $this->getWellFormedRegexImmutablePath($whitelist_path);
+        }
+
+        $allowed_tags = implode('|', $whitelist_regexp);
+
+        $pattern = "%^
+            A\s+(?:$allowed_tags)/[^/]+/?$  # A  tags/moduleA/v1/   (allowed)
+                                            # A  tags/moduleA/toto  (allowed)
+                                            # A  tags/moduleA/v1/toto (forbidden)
+            %x";
+
+        return preg_match($pattern, $path);
     }
 
     private function getWellFormedRegexImmutablePath($immutable_path) {
