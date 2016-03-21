@@ -114,6 +114,14 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->deleteMailingList($request);
                     break;
+                case "save-hooks-config":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->admin_controller->updateHooksConfig($this->getService($request), $request);
+                    break;
+                case "hooks-config":
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->admin_controller->displayHooksConfig($this->getService($request), $request);
+                    break;
                 case "access-control":
                     $this->checkUserCanAdministrateARepository($request);
                     $this->access_control_controller->displayAuthFile($this->getService($request), $request);

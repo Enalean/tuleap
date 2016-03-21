@@ -65,3 +65,8 @@ plugin_svn	already_used	Repository name is already used in this project.
 plugin_svn	find_error	Repository not found
 plugin_svn	repository_not_created	The repository is in queue for creation. Please check back here in a few minutes
 plugin_svn	create_immutable_tag_error	Unable to save immutable tags.
+plugin_svn	hooks_config	Commit Rules
+plugin_svn_admin_hooks	subtitle	Rules on Commit
+plugin_svn_admin_hooks	comment	When committing, it is possible to enforce some rules.
+plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Force every commit to include a reference.
+plugin_svn_admin_hooks	submit	Save

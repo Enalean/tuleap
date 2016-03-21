@@ -65,3 +65,8 @@ plugin_svn	already_used	Le nom du dépôt existe déjà dans le projet.
 plugin_svn	find_error	Le dépôt n'a pas été trouvé.
 plugin_svn	repository_not_created	Le dépôt est en attente de création. Veuillez revenir dans quelques minutes.
 plugin_svn	create_immutable_tag_error	Impossible d'enregistrer les tags non modifiables.
+plugin_svn	hooks_config	Règles de commit
+plugin_svn_admin_hooks	subtitle	Règles de commit
+plugin_svn_admin_hooks	comment	Lors d'un commit, il est possible de forcer le respect de certaines règles
+plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Requiert une référence dans tous les messages de commit.
+plugin_svn_admin_hooks	submit	Enregistrer

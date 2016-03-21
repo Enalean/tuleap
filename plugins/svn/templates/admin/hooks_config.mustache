@@ -1,0 +1,40 @@
+<h2><a href="?group_id={{ group_id }}&action=display-repository&repo_id={{ repo_id }}">{{ repository_name }}</a> - {{ title }}</h2>
+<div class="tabbable tabs-left">
+    {{# sections }}
+        <ul class="nav nav-tabs">
+            <li>
+                <a href="{{ notifications_url }}">{{ notifications }}</a>
+            </li>
+            <li>
+                <a href="{{ access_control_url }}">{{ access_control }}</a>
+            </li>
+            <li>
+                <a href="{{ immutable_tag_url }}">{{ immutable_tag }}</a>
+            </li>
+            <li class="active">
+                <a href="{{ hooks_config_url }}">{{ hooks_config }}</a>
+            </li>
+        </ul>
+    {{/ sections }}
+    <div class="tab-content">
+        <h3>{{ hooks_config_subtitle }}</h3>
+        <p><em>{{ comment }}</em></p>
+        <form action="/plugins/svn/?group_id={{ group_id }}&repo_id={{ repo_id }}&action=save-hooks-config" method="post">
+            <input type="hidden" name="group_id" value="{{ group_id }}" />
+            <input type="hidden" name="repo_id" value="{{ repo_id }}" />
+            {{{ csrf_input }}}
+            <label>
+              <input
+                type="checkbox"
+                name="pre_commit_must_contain_reference"
+                {{#pre_commit_must_contain_reference}}
+                checked="checked"
+                {{/pre_commit_must_contain_reference}}
+                value="true" />
+              {{ label_pre_commit_must_contain_reference }}
+            </label>
+            <br />
+            <input type="submit" name="submit" value="{{ submit }}" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
