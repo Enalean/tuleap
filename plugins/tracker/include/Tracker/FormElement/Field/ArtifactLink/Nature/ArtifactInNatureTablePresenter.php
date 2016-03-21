@@ -30,12 +30,14 @@ class ArtifactInNatureTablePresenter {
     public $artifact_last_update_date;
     public $artifact_submitter;
     public $artifact_assignees;
+    public $html_classes;
 
-    public function __construct(\Tracker_Artifact $artifact) {
-        $tracker      = $artifact->getTracker();
-        $project      = $tracker->getProject();
-        $user_helper  = \UserHelper::instance();
-        $current_user = \UserManager::instance()->getCurrentUser();
+    public function __construct(\Tracker_Artifact $artifact, $html_classes) {
+        $this->html_classes = $html_classes;
+        $tracker            = $artifact->getTracker();
+        $project            = $tracker->getProject();
+        $user_helper        = \UserHelper::instance();
+        $current_user       = \UserManager::instance()->getCurrentUser();
 
         $this->direct_link_to_artifact   = $artifact->fetchDirectLinkToArtifact();
         $this->project_public_name       = $project->getPublicName();

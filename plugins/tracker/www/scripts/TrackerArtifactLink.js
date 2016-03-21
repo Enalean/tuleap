@@ -109,13 +109,19 @@ codendi.tracker.artifact.artifactLink = {
             )
             .join(',');
         if (ids) {
+            var nature_select = codendi.tracker.artifact.artifactLinker_currentField.down('select.tracker-form-element-artifactlink-new');
+            var nature = '';
+            if(nature_select) {
+                nature = nature_select.value;
+            }
             var req = new Ajax.Request(
             codendi.tracker.base_url + '?',
             {
                 parameters: {
                     formElement: codendi.tracker.artifact.artifactLinker_currentField_id,
                     func: 'fetch-artifacts',
-                    ids: ids
+                    ids: ids,
+                    nature: nature
                 },
                 onSuccess: function (transport) {
                     if (transport.responseJSON) {
@@ -133,14 +139,16 @@ codendi.tracker.artifact.artifactLink = {
                                     list.insert(json.head[pair.key] + '<tbody>');
                                     var first_list = $$('.tracker-form-element-artifactlink-list ul').first();
                                     var tabs_id = first_list.up().identify();
-                                    codendi.tracker.artifact.artifactLink.tabs[tabs_id].loadTab(list.childElements().last().down('h2'), first_list);
-                                    renderer_table = $('tracker_report_table_' + pair.key);
                                     var current_tab = first_list.down('li.tracker-form-element-artifactlink-list-nav-current');
-                                    var is_first_tab = first_list.children.length == 3;
-                                    if(!is_first_tab) {
+                                    if(pair.key.includes('nature')) {
+                                        codendi.tracker.artifact.artifactLink.tabs[tabs_id].loadNatureTab(list.childElements().last().down('h2'), first_list);
+                                    } else {
+                                        codendi.tracker.artifact.artifactLink.tabs[tabs_id].loadTrackerTab(list.childElements().last().down('h2'), first_list);
+                                    }
+                                    renderer_table = $('tracker_report_table_' + pair.key);
+                                    if(typeof current_tab !== 'undefined') {
                                         renderer_table.up('div').hide();
                                     } else {
-                                        codendi.tracker.artifact.artifactLink.tabs[tabs_id].trackerLabel.show();
                                     }
                                 }
 
@@ -239,20 +247,21 @@ codendi.tracker.artifact.artifactLink = {
             this.trackerLabel.hide();
 
             this.ul.appendChild(this.natureLabel);
+            this.ul.appendChild(this.trackerLabel);
+
             var natureTabs = artifact_link.select('h2[class*="tracker-form-element-artifactlink-nature"]');
             if(natureTabs.length > 0) {
                 this.natureLabel.show();
                 natureTabs.each(function(obj) {
-                    self.loadTab(obj);
+                    self.loadNatureTab(obj);
                 });
             }
 
-            this.ul.appendChild(this.trackerLabel);
             var trackerTabs = artifact_link.select('h2[class*="tracker-form-element-artifactlink-tracker"]');
             if(trackerTabs.length > 0) {
                 this.trackerLabel.show();
                 trackerTabs.each(function(obj) {
-                    self.loadTab(obj);
+                    self.loadTrackerTab(obj);
                 });
             }
         },
@@ -279,8 +288,21 @@ codendi.tracker.artifact.artifactLink = {
                 Event.stop(event);
             }
         },
-
-        loadTab: function (h2, tab_list) {
+        loadTrackerTab: function (h2, tab_list) {
+            if (typeof tab_list === 'undefined') {
+                tab_list = this.ul;
+            }
+            this.trackerLabel.show();
+            this.loadTabAfter(h2, tab_list, tab_list.childElements().last());
+        },
+        loadNatureTab: function (h2, tab_list) {
+            if (typeof tab_list === 'undefined') {
+                tab_list = this.ul;
+            }
+            this.natureLabel.show();
+            this.loadTabAfter(h2, tab_list, this.trackerLabel.previous());
+        },
+        loadTabAfter: function(h2, tab_list, afterElement) {
             if (typeof tab_list === 'undefined') {
                 tab_list = this.ul;
             }
@@ -301,7 +323,7 @@ codendi.tracker.artifact.artifactLink = {
             a.update(h2.innerHTML);
 
             li.appendChild(a);
-            tab_list.appendChild(li);
+            afterElement.insert({after: li});
 
             //hide this panel and its title unless is first
             if (this.tracker_panels.size() == 0) {
@@ -309,7 +331,8 @@ codendi.tracker.artifact.artifactLink = {
             }
 
             var firstNotLabel = tab_list.childElements().grep(new Selector(':not(li.tracker-form-element-artifactlink-list-nav-label)'))[0];
-            if (firstNotLabel == li) {
+            var current_tab = tab_list.down('li.tracker-form-element-artifactlink-list-nav-current');
+            if (typeof current_tab === 'undefined') {
                 li.addClassName('tracker-form-element-artifactlink-list-nav-current active');
                 this.showTrackerPanel(null, tracker_panel, a, h2);
             }
