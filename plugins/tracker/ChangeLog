@@ -1,3 +1,6 @@
+Version 5.831 - Tuleap 8.13
+    * request #8967: A file with a size greater than 64Mo can be upload as attachment of a tracker
+
 Version 5.830 - Tuleap 8.13
     * request #8971: Avoid conflict with PHP 7 Error class
 
