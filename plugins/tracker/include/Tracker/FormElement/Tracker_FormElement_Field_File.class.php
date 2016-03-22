@@ -673,16 +673,46 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
 
     private function checkAllFilesHaveBeenSuccessfullyUploaded($value) {
-        $r = new Rule_File();
+        $rule = new Rule_File();
         foreach($value as $i => $attachment) {
-            //is delete or no description and no file uploaded => ignore it
-            if ( "$i" != 'delete' && ((!empty($attachment['error']) && $attachment['error'] != UPLOAD_ERR_NO_FILE) || trim($attachment['description']))) {
-                if (!$r->isValid($attachment)) {
+            if ($this->isAttachmentNeedsToBeValidated($i, $attachment)) {
+                if (! $rule->isValid($attachment)) {
                     $this->has_errors = true;
-                    $GLOBALS['Response']->addFeedback('error', $this->getLabel() .' #'. $i .' has error: '. $r->getErrorMessage());
+                    $attachment_error = $GLOBALS['Language']->getText(
+                        'plugin_tracker_formelement_file',
+                        'attachment_in_error',
+                        array($i)
+                    );
+                    $GLOBALS['Response']->addFeedback('error', $attachment_error . ' ' . $rule->getErrorMessage());
+                }
+                if (trim($attachment['description']) === '') {
+                    $this->has_errors = true;
+                    $attachment_error = $GLOBALS['Language']->getText(
+                        'plugin_tracker_formelement_file',
+                        'attachment_in_error',
+                        array($i)
+                    );
+                    $description_needed = $GLOBALS['Language']->getText(
+                        'plugin_tracker_formelement_file',
+                        'description_not_provided'
+                    );
+                    $GLOBALS['Response']->addFeedback('error', $attachment_error . ' ' . $description_needed);
                 }
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAttachmentNeedsToBeValidated($attachment_index, array $attachment) {
+        $is_attachment_deletion_requested = $attachment_index === 'delete';
+        if ($is_attachment_deletion_requested) {
+            return false;
+        }
+        $is_no_file_uploaded              = ! empty($attachment['error']) && $attachment['error'] == UPLOAD_ERR_NO_FILE;
+        $is_file_description_empty        = trim($attachment['description']) === '';
+        return ! ($is_no_file_uploaded && $is_file_description_empty);
     }
 
     /**

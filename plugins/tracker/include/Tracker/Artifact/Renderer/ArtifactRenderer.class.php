@@ -142,7 +142,6 @@ abstract class Tracker_Artifact_ArtifactRenderer {
     private function fetchArtifactEditForm($url, $html) {
         return '
         <form action="'.$url.'" method="POST" enctype="multipart/form-data" class="artifact-form">
-            <input type="hidden" value="67108864" name="max_file_size" />
             '.$html.'
         </form>
         '.$this->fetchRulesAsJavascript();
