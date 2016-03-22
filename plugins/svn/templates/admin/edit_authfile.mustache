@@ -1,23 +1,26 @@
-<div class="tabbable tabs-left" id="svn-administration">
+<div class="tabbable" id="svn-administration">
     {{> admin/section_presenter}}
+
     <div class="tab-content">
+        <h3>{{ edit_access_file_title }}</h3>
         <form action="/plugins/svn/?group_id={{ project_id }}&action=save-access-file&repo_id={{ repository_id }}" method="POST">
             {{{ csrf }}}
             <input type="hidden" name="project_id" value="{{ project_id }}">
             <input type="hidden" name="repo_id" value="{{ repository_id }}">
+
             <p>{{ default_text }}</p>
-            <p class="feedback_warning"> {{ permissions_warning }} </p>
+            <p class="alert alert-warning"><i class="icon-warning-sign"></i> {{ permissions_warning }}</p>
+
             <div id="access-file-container">
                 <div id="current-access-file-container">
-                    <h3>{{ current_version_title }}</h3>
+                    <h4>{{ current_version_title }}</h4>
                     <pre>{{ default_content }}</pre>
                     <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" name="form_accessfile" id="form_accessfile">{{{ auth_file }}}</textarea>
-                    <p>
-                        <button type="submit" name="submit_new_version" class="btn btn-primary">{{ button_new_version_label }}</button>
-                    </p>
+                    <button type="submit" name="submit_new_version" class="btn btn-primary"><i class="icon-save"></i> {{ button_new_version_label }}</button>
                 </div>
+
                 <div id="old-access-file-container">
-                    <h3>
+                    <h4>
                         {{ saved_versions }}
                         <select name="version_selected" id="version-selected">
                             <option value="0"> {{ select_version }} </option>
@@ -25,13 +28,12 @@
                             <option value="{{ file_id }}">#{{ version }} ({{ saved_on }} {{ date }})</option>
                             {{/ versions }}
                         </select>
-                    </h3>
+                    </h4>
+
                     <span id="old-access-file-form">
                         <pre>{{ default_content }}</pre>
                         <pre class="empty-version" id="other-version-content"></pre>
-                        <p>
-                            <button type="submit" name="submit_other_version" class="btn">{{ use_version }}</button>
-                        </p>
+                        <button type="submit" name="submit_other_version" class="btn"><i class="icon-save"></i> {{ use_version }}</button>
                     </span>
                 </div>
             </div>

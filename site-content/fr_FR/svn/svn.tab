@@ -36,7 +36,7 @@ svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'i
 svn_admin_general_settings	svn_can_change_log	Modification des messages de commit
 svn_admin_general_settings	svn_can_change_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
 
-svn_admin_immutable_tags	title	Tags SVN Non Modifiables
+svn_admin_immutable_tags	title	Tags non modifiables
 svn_admin_immutable_tags	configuration	Configuration des tags non modifiables
 svn_admin_immutable_tags	configuration_description	Spécifiez les répertoires dans lesquels se trouveront les tags non modifiables. Vous pouvez définir une liste de répertoires où les modifications seront tout de même autorisées.
 svn_admin_immutable_tags	layout_example	Exemple d'arborescence

@@ -28,7 +28,7 @@ use CSRFSynchronizerToken;
 
 class AccessControlPresenter extends BaseAdminPresenter {
 
-    public $title_acces_control;
+    public $edit_access_file_title;
     public $default_text;
     public $permissions_warning;
     public $button_new_version_label;
@@ -67,6 +67,7 @@ class AccessControlPresenter extends BaseAdminPresenter {
         $this->title                    = $title;
         $this->access_control_active    = true;
 
+        $this->edit_access_file_title   = $GLOBALS['Language']->getText('plugin_svn_admin', 'edit_access_file_title');
         $this->default_text             = $GLOBALS['Language']->getText('plugin_svn_admin', 'default_text', $GLOBALS['sys_name']);
         $this->permissions_warning      = $GLOBALS['Language']->getText('plugin_svn_admin', 'permissions_warning');
         $this->button_new_version_label = $GLOBALS['Language']->getText('plugin_svn_admin', 'button_new_version_label');
