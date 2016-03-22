@@ -1,24 +1,31 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright Enalean (c) 2016. All rights reserved.
  *
- * This file is a part of Codendi.
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once(dirname(__FILE__).'/../../constants.php');
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
@@ -674,7 +681,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'get-children':
-                $children = $this->getChildPresenterCollection($current_user);
+                if ($this->getTracker()->isProjectAllowedToUseNature()) {
+                    $children = $this->getChildNaturePresenterCollection($request->get('aid'));
+                } else {
+                    $children = $this->getChildPresenterCollection($current_user);
+                }
                 $GLOBALS['Response']->sendJSON($children);
                 exit;
                 break;
@@ -716,7 +727,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $action = new Tracker_Action_UpdateArtifact(
                     $this,
                     $this->getFormElementFactory(),
-                    $this->getEventManager()
+                    $this->getEventManager(),
+                    $this->getNatureIsChildLinkRetriever()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -827,11 +839,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
-                    $renderer = new Tracker_Artifact_ReadOnlyRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
+                    $renderer = new Tracker_Artifact_ReadOnlyRenderer(
+                        $this->getEventManager(),
+                        $this, $this->getFormElementFactory(),
+                        $layout,
+                        $this->getNatureIsChildLinkRetriever()
+                    );
                     $renderer->display($request, $current_user);
                 }
                 break;
         }
+    }
+
+    private function getNatureIsChildLinkRetriever() {
+        return new NatureIsChildLinkRetriever($this->getArtifactFactory(), $this->getArtifactlinkDao());
+    }
+
+    private function getArtifactlinkDao() {
+        return new Tracker_FormElement_Field_Value_ArtifactLinkDao();
     }
 
     private function sendUserDoesNotHavePermissionsErrorCode() {
@@ -887,7 +912,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $tracker      = $child->getTracker();
             $semantics    = Tracker_Semantic_Status::load($tracker);
 
-            $presenters[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
+            $presenters[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics, $this->getNatureIsChildLinkRetriever());
+        }
+        return $presenters;
+    }
+
+    private function getChildNaturePresenterCollection() {
+        $presenters = array();
+        $artifacts = $this->getNatureIsChildLinkRetriever()->getChildren($this);
+
+        foreach ($artifacts as $artifact) {
+            $tracker      = $artifact->getTracker();
+            $semantics    = Tracker_Semantic_Status::load($tracker);
+
+            $presenters[] = new Tracker_ArtifactChildPresenter($artifact, $this, $semantics, $this->getNatureIsChildLinkRetriever());
         }
         return $presenters;
     }

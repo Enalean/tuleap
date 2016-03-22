@@ -1702,3 +1702,4 @@ plugin_tracker_artifact_links_natures	cannot_use_burndown	You cannot use Burndow
 plugin_tracker_artifact_links_natures	cannot_use_burndown_user	No burndown data can be built for this tracker.
 plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Project "$1" cannot use artifact links natures because it is using trackers hierarchy.
 plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Project "$1" cannot use artifact links natures because $2 blocks its usage.
+plugin_tracker_artifact_links_natures	error_multiple_parents	The artifact has more than one parent. Cannot display rest of hierarchy.

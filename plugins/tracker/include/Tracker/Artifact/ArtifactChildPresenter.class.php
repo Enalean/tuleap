@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013-2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 /**
  * Presenter of the child of an artifact
@@ -49,8 +50,14 @@ class Tracker_ArtifactChildPresenter {
      * @param Tracker_Artifact        $artifact The child
      * @param Tracker_Artifact        $parent   The parent
      * @param Tracker_Semantic_Status $semantic The status semantic used by the corresponding tracker
+     * @param NatureIsChildLinkRetriever $retriever
      */
-    public function __construct(Tracker_Artifact $artifact, Tracker_Artifact $parent, Tracker_Semantic_Status $semantic) {
+    public function __construct(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact $parent,
+        Tracker_Semantic_Status $semantic,
+        NatureIsChildLinkRetriever $retriever
+    ) {
         $base_url = get_server_url();
 
         $this->xref         = $artifact->getXRef();
@@ -59,7 +66,15 @@ class Tracker_ArtifactChildPresenter {
         $this->url          = $base_url . $artifact->getUri();
         $this->status       = $semantic->getStatus($artifact);
         $this->parent_id    = $parent->getId();
-        $this->has_children = $artifact->hasChildren();
+        $this->has_children = $this->hasChildren($artifact, $retriever);
+    }
+
+    private function hasChildren(Tracker_Artifact $artifact, $retriever) {
+        if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
+            $artifact_links = $retriever->getChildren($artifact);
+            return $artifact_links->count() > 0;
+        } else {
+            return $artifact->hasChildren();
+        }
     }
 }
-?>
