@@ -1,3 +1,6 @@
+Version 1.9.16 - Tuleap 8.13
+    * request #8971: Avoid conflict with PHP 7 Error class
+
 Version 1.9.15 - Tuleap 8.12
     * story #8631: Add a warning message when the plugin is not accessed with HTTPS
 

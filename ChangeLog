@@ -14,6 +14,7 @@ Version 8.13 (Not released yet)
 	== Bug Fix ==
 	* request #8952: Art keyword doesn't have right project id
 	* request #8880: "Comment" field on every page suddenly became locked and unusable
+	* request #8971: Avoid conflict with PHP 7 Error class
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
@@ -30,16 +31,19 @@ Version 8.13 (Not released yet)
 
 	== Plugins ==
 	* agiledashboard: 1.369
-	* tracker: 5.829
+	* tracker: 5.830
 	* hudson_svn: 0.6
 	* git: 4.138
 	* hudson: 1.27
 	* svn: 0.41
-	* graphontrackersv5: 5.19
+	* graphontrackersv5: 5.20
 	* ldap: 3.100
 	* mediawiki: 0.110
 	* forumml: 2.6.24
 	* openidconnectclient: 0.15
+	* docman: 2.26.99
+	* graphontrackers: 1.14
+	* webdav: 1.9.16
 
     == Themes ==
 	* FlamingParrot: 1.129

@@ -1,3 +1,6 @@
+Version 2.26.99 - Tuleap 8.13
+    * request #8971: Avoid conflict with PHP 7 Error class
+
 Version 2.26.98 - Tuleap 8.12
     * request #8309: Get rid of PrototypeJS (ApprovalTableReminder.js)
 

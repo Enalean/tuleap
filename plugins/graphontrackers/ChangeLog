@@ -1,3 +1,6 @@
+Version 1.14 - Tuleap 8.13
+    * request #8971: Avoid conflict with PHP 7 Error class
+
 Version 1.13 - Tuleap 7.11
     * request #7828: Fix XSS in graph on tracker v3 plugin
 

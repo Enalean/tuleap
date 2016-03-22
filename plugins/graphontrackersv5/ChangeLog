@@ -1,3 +1,6 @@
+Version 5.20 - Tuleap 8.13
+    * request #8971: Avoid conflict with PHP 7 Error class
+
 Version 5.19 - Tuleap 8.13
     * request #8948: Too many messages are displayed for a chart in error
 

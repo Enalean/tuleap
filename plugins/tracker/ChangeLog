@@ -1,3 +1,6 @@
+Version 5.830 - Tuleap 8.13
+    * request #8971: Avoid conflict with PHP 7 Error class
+
 Version 5.829 - Tuleap 8.13
     * Refactoring: remove dead code
 
