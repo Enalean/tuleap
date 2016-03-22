@@ -4,29 +4,30 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
  *
  * Artifact.class.php - Main Artifact class
  */
-class Artifact extends Error {
+class Artifact {
 
     const FORMAT_TEXT  = 0;
     const FORMAT_HTML  = 1;
@@ -49,7 +50,15 @@ class Artifact extends Error {
      * @var             array   $data_array.
      */
     var $data_array;
-        
+    /**
+     * @var string
+     */
+    private $error_message = '';
+    /**
+     * @var bool
+     */
+    private $error_state = false;
+
 
     /**
      *  Artifact - constructor.
@@ -61,7 +70,6 @@ class Artifact extends Error {
      */
     function Artifact(&$ArtifactType, $data=false, $checkPerms = true) {
       global $Language;
-        $this->Error(); 
 
         $this->ArtifactType = $ArtifactType;
 
@@ -3732,6 +3740,32 @@ class Artifact extends Error {
             }
             return $commentText;
         }
+    }
+
+    /**
+     * @param $string
+     */
+    public function setError($string) {
+        $this->error_state = true;
+        $this->error_message = $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorMessage() {
+        if ($this->error_state) {
+            return $this->error_message;
+        } else {
+            return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isError() {
+        return $this->error_state;
     }
 
 }

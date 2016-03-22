@@ -9,11 +9,6 @@
 //  Written for Codendi by Marie-Luise Schneider
 //
 
-//require_once('common/include/Error.class.php');
-//require_once('common/tracker/ArtifactField.class.php');
-//require_once('include/ArtifactFieldHtml.class.php');
-//require_once('common/tracker/ArtifactFieldFactory.class.php');
-
 require_once('include/ArtifactRulesManagerHtml.class.php');
 
 // Check if this tracker is valid (not deleted)

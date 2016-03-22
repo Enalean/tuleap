@@ -2,16 +2,16 @@
 /**
  * ArtifactCanned.class.php - Class to handle canned responses
  *
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
  *
  */
-//require_once('common/include/Error.class.php');
 
 
-class ArtifactCanned extends Error {
+class ArtifactCanned {
 
 	/** 
 	 * The artifact type object.
@@ -27,6 +27,14 @@ class ArtifactCanned extends Error {
 	 * @var		array	$data_array.
 	 */
 	var $data_array;
+	/**
+	 * @var string
+	 */
+	private $error_message = '';
+	/**
+	 * @var bool
+	 */
+	private $error_state = false;
 
 	/**
 	 *  ArtifactCanned - constructor.
@@ -37,8 +45,6 @@ class ArtifactCanned extends Error {
 	 */
 	function ArtifactCanned(&$ArtifactType, $data=false) {
 	  global $Language;
-
-		$this->Error(); 
 
 		//was ArtifactType legit?
 		if (!$ArtifactType) {
@@ -233,6 +239,37 @@ class ArtifactCanned extends Error {
 			$this->setError(db_error());
 			return false;
 		}
+	}
+
+	/**
+	 * @param $string
+	 */
+	public function setError($string) {
+		$this->error_state = true;
+		$this->error_message = $string;
+	}
+
+	public function clearError() {
+		$this->error_state = false;
+		$this->error_message = '';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getErrorMessage() {
+		if ($this->error_state) {
+			return $this->error_message;
+		} else {
+			return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isError() {
+		return $this->error_state;
 	}
 }
 

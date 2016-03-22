@@ -2,7 +2,6 @@
 
 require_once ('pre.php');
 require_once ('session.php');
-require_once('common/include/Error.class.php');
 require_once('Docman_Item.class.php');
 require_once('Docman_ItemFactory.class.php');
 require_once('common/include/SOAPRequest.class.php');

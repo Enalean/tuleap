@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,7 @@ require_once 'common/valid/Rule.class.php';
 /**
  *
  */
-class FRSFileFactory extends Error {
+class FRSFileFactory {
     const COMPUTE_MD5 = 0x0001;
 
     protected $fileforge;

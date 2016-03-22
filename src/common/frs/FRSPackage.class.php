@@ -1,24 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 
@@ -27,7 +27,7 @@ require_once('common/frs/FRSPackageFactory.class.php');
  * FRSPackage.class.php - File Release System Package class
  *
  */
-class FRSPackage extends Error {
+class FRSPackage {
     const PERM_READ      = 'PACKAGE_READ';
 
     const STATUS_ACTIVE  = 1;
@@ -62,7 +62,7 @@ class FRSPackage extends Error {
      * @var boolean $approve_license true if the license has been approved, false otherwise
      */
     var $approve_license;
-    
+
     function FRSPackage($data_array = null) {
         $this->package_id       = null;
         $this->group_id         = null;
@@ -194,7 +194,4 @@ class FRSPackage extends Error {
         return $frspf->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
 	}
 
-
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -23,7 +23,7 @@
  * Tracker_ report.
  * Set of criteria + set of Renderer to search and display artifacts
  */
-class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
+class Tracker_Report implements Tracker_Dispatchable_Interface {
 
     const ACTION_SAVE         = 'report-save';
     const ACTION_SAVEAS       = 'report-saveas';
@@ -64,7 +64,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * @param int     $tracker_id The id of the tracker to which this Tracker_Report is associated.
      */
     function __construct($id, $name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by, $updated_at) {
-        parent::__construct();
         $this->id                  = $id;
         $this->name                = $name;
         $this->description         = $description;

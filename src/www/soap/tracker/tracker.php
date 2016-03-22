@@ -25,7 +25,6 @@ define('delete_artifact_followup_fault','3023');
 
 require_once ('pre.php');
 require_once ('session.php');
-require_once ('common/include/Error.class.php');
 require_once ('common/tracker/ArtifactType.class.php');
 require_once ('common/tracker/ArtifactTypeFactory.class.php');
 require_once ('common/tracker/Artifact.class.php');
