@@ -277,6 +277,21 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addKanbanRenamingHit(
                 $this->getProjectIdForKanban($kanban)
             );
+
+            if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+                $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+                $rights = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+                $message = new MessageDataPresenter(
+                    $user->getId(),
+                    $_SERVER[self::HTTP_CLIENT_UUID],
+                    $kanban->getId(),
+                    $rights,
+                    'kanban:edit',
+                    $label
+                );
+
+                $this->node_js_client->sendMessage($message);
+            }
         }
 
         if ($collapse_column) {
@@ -313,21 +328,6 @@ class KanbanResource extends AuthenticatedResource {
             $this->statistics_aggregator->addExpandCollapseColumnHit(
                 $this->getProjectIdForKanban($kanban)
             );
-        }
-
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            $rights = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $message = new MessageDataPresenter(
-                $user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban:edit',
-                $label
-            );
-
-            $this->node_js_client->sendMessage($message);
         }
 
         Header::allowOptionsGetPatchDelete();

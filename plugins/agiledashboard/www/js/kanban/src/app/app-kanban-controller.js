@@ -950,7 +950,10 @@ function KanbanCtrl(
         var promised_item = findItemInColumnById(id);
 
         if (! promised_item) {
-            promised_item = KanbanItemRestService.getItem(id);
+            promised_item = KanbanItemRestService.getItem(id).then(function(item) {
+                item.is_collapsed = SharedPropertiesService.doesUserPrefersCompactCards();
+                return item;
+            });
         }
 
         $q.when(promised_item).then(function(item) {
@@ -961,10 +964,7 @@ function KanbanCtrl(
             var source_column      = getColumn(item.in_column),
                 destination_column = getColumn(destination_column_id);
 
-            _.extend(item, {
-                updating    : false,
-                is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
-            });
+            item.updating = false;
 
             KanbanColumnService.moveItem(
                 item,
@@ -972,6 +972,8 @@ function KanbanCtrl(
                 destination_column,
                 compared_to
             );
+
+            filterColumnCards(destination_column);
         });
     }
 
@@ -1129,6 +1131,8 @@ function KanbanCtrl(
                     compared_to
                 );
             }
+
+            filterColumnCards(destination_column);
         });
     }
 
