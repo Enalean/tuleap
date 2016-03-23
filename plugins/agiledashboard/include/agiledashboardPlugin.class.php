@@ -889,7 +889,12 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function getAllowedProjectsConfig() {
-        return new AllowedProjectsConfig(ProjectManager::instance(), new AllowedProjectsDao());
+        return new AllowedProjectsConfig(
+            ProjectManager::instance(),
+            new AllowedProjectsDao(),
+            new Tracker_Hierarchy_Dao(),
+            EventManager::instance()
+        );
     }
 
     public function service_is_activable($params) {
