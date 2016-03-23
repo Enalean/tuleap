@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
+use Tracker;
+
 class NatureTablePresenter {
 
     public $table_id;
@@ -33,15 +35,22 @@ class NatureTablePresenter {
     public $last_update_label;
     public $submitted_by_label;
     public $assigned_to_label;
+    public $tracker_id;
 
     public $artifact_links;
 
     const TABLE_ID_PREFIX = "tracker_report_table_nature_";
 
-    public function __construct(NaturePresenter $nature, array $artifact_links, $is_reverse_artifact_links) {
+    public function __construct(
+        NaturePresenter $nature,
+        array $artifact_links,
+        $is_reverse_artifact_links,
+        Tracker $tracker
+    ) {
         $this->table_id           = self::TABLE_ID_PREFIX . $nature->shortname;
         $this->nature             = $nature->shortname;
         $this->nature_label       = $this->fetchTabLabel($nature, $is_reverse_artifact_links);
+        $this->tracker_id         = $tracker->getId();
 
         $language                 = $GLOBALS['Language'];
         $this->id_label           = $language->getText('plugin_tracker_formelement_admin', 'artifactid_label');
@@ -62,8 +71,8 @@ class NatureTablePresenter {
         }
     }
 
-    public static function buildForHeader(NaturePresenter $nature_presenter) {
-       return new NatureTablePresenter($nature_presenter, array(), false);
+    public static function buildForHeader(NaturePresenter $nature_presenter, Tracker $tracker) {
+       return new NatureTablePresenter($nature_presenter, array(), false, $tracker);
     }
 
     private function fetchTabLabel($nature, $is_reverse_artifact_links) {

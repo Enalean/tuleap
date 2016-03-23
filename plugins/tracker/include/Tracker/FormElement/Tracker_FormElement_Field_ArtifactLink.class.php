@@ -627,7 +627,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $nature_presenter = $nature_presenter_factory->getFromShortname($nature);
             $html .= $renderer->renderToString(
                 'artifactlink-nature-table',
-                new NatureTablePresenter($nature_presenter, $artifact_links, $is_reverse_artifact_links)
+                new NatureTablePresenter($nature_presenter, $artifact_links, $is_reverse_artifact_links, $this->getTracker())
             );
         }
         return $html;
@@ -722,7 +722,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
 
                 $this->appendNatureTable($request, $result);
-
                 if ($result) {
                     $head = array();
                     $rows = array();
@@ -1637,7 +1636,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         $head_html = $this->getTemplateRenderer()->renderToString(
                 'artifactlink-nature-table-head',
-                NatureTablePresenter::buildForHeader($nature_presenter)
+                NatureTablePresenter::buildForHeader($nature_presenter, $this->getTracker())
         );
         $result[$key] = array('head' => $head_html, 'rows' => $nature_html);
     }
