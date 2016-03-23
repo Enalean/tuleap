@@ -1,3 +1,6 @@
+Version 0.111 - Tuleap 8.13
+    * request #8975 Can't migrate Mediawiki to 1.23 if MLEB extension is not installed
+
 Version 0.110 - Tuleap 8.13
     * story #8694: import read/write access into MediaWiki
 
