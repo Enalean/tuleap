@@ -1,3 +1,6 @@
+Version 5.832 - Tuleap 8.13
+    * Save nature in database
+
 Version 5.831 - Tuleap 8.13
     * request #8967: A file with a size greater than 64Mo can be upload as attachment of a tracker
 
