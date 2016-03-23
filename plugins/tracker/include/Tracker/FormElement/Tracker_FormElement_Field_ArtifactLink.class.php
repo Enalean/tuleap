@@ -692,31 +692,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     }
                 }
 
-                if($this->getTracker()->isProjectAllowedToUseNature()) {
-                    $nature_shortname      = $request->get('nature');
-                    $nature_presenter      = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
-                    $key                   = "nature_$nature_shortname";
-                    $art_factory           = $this->getArtifactFactory();
-                    $artifact_html_classes = 'additional';
-                    $nature_html           = '';
-
-                    foreach(explode(',', $ids) as $id) {
-                        $artifact = $art_factory->getArtifactById($id);
-
-                        if(!is_null($artifact)) {
-                            $nature_html .= $this->getTemplateRenderer()->renderToString(
-                                'artifactlink-nature-table-row',
-                                new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes)
-                            );
-                        }
-                    }
-
-                    $head_html = $this->getTemplateRenderer()->renderToString(
-                            'artifactlink-nature-table-head',
-                            NatureTablePresenter::buildForHeader($nature_presenter)
-                    );
-                    $result[$key] = array('head' => $head_html, 'rows' => $nature_html);
-                }
+                $this->appendNatureTable($request, $result);
 
                 if ($result) {
                     $head = array();
@@ -1585,5 +1561,40 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     private function getTemplateRenderer() {
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+    }
+
+    private function appendNatureTable(Codendi_Request $request, array &$result) {
+        if (! $this->getTracker()->isProjectAllowedToUseNature()) {
+            return;
+        }
+
+        $nature_shortname = $request->get('nature');
+        if (! $nature_shortname) {
+            return;
+        }
+
+        $nature_presenter      = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
+        $key                   = "nature_$nature_shortname";
+        $art_factory           = $this->getArtifactFactory();
+        $artifact_html_classes = 'additional';
+        $nature_html           = '';
+        $ids                   = $request->get('ids');
+
+        foreach (explode(',', $ids) as $id) {
+            $artifact = $art_factory->getArtifactById(trim($id));
+
+            if (!is_null($artifact)) {
+                $nature_html .= $this->getTemplateRenderer()->renderToString(
+                    'artifactlink-nature-table-row',
+                    new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes)
+                );
+            }
+        }
+
+        $head_html = $this->getTemplateRenderer()->renderToString(
+                'artifactlink-nature-table-head',
+                NatureTablePresenter::buildForHeader($nature_presenter)
+        );
+        $result[$key] = array('head' => $head_html, 'rows' => $nature_html);
     }
 }
