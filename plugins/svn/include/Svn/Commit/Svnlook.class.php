@@ -60,4 +60,13 @@ class Svnlook {
         $command = $this->svnlook.' changed -t ' . escapeshellarg($transaction) . ' ' .escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec($command);
     }
+
+    /**
+     * @return array: the commit message split on new lines
+     */
+    public function getMessageFromTransaction(Repository $repository, $transaction) {
+        $arg_txn  = escapeshellarg($transaction);
+        $arg_repo = escapeshellarg($repository->getSystemPath());
+        return $this->system_commnd->exec("{$this->svnlook} log -t $arg_txn $arg_repo");
+    }
 }
