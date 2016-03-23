@@ -276,6 +276,9 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         $this->current_user    = mock('PFUser');
         
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+
+        $tracker = stub('Tracker')->isProjectAllowedToUseNature()->returns(false);
+        $this->field->setTracker($tracker);
     }
     
     public function tearDown() {
