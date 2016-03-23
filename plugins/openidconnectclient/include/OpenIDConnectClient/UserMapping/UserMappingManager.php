@@ -120,6 +120,7 @@ class UserMappingManager {
         return new UserMappingUsage(
             $row['provider_id'],
             $row['name'],
+            $row['icon'],
             $row['user_id'],
             $row['last_used']
         );
