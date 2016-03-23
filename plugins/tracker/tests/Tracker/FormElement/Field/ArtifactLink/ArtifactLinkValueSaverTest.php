@@ -26,7 +26,7 @@ use Tracker_ArtifactFactory;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
+class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
     /** @var Tracker_FormElement_Field_ArtifactLink */
     private $field;
@@ -106,8 +106,7 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
         $this->saver = new ArtifactLinkValueSaver(
             $this->artifact_factory,
             $this->dao,
-            $this->reference_manager,
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector')
+            $this->reference_manager
         );
 
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
@@ -243,97 +242,6 @@ class ArtifactLinkValueSaver_saveValueTest extends TuleapTestCase {
             $this->changeset_value_id,
             $value,
             $this->previous_changesetvalue
-        );
-    }
-}
-
-class ArtifactLinkValueSaver_updateLinkingDirectionTest extends TuleapTestCase {
-
-    /** @var ArtifactLinkValueSaver */
-    private $saver;
-
-    /** @var SourceOfAssociationDetector */
-    private $source_of_association_detector;
-
-    /** @var Tracker_ReferenceManager */
-    private $reference_manager;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var Tracker_FormElement_Field_Value_ArtifactLinkDao */
-    private $dao;
-
-    /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
-    private $previous_changesetvalue;
-
-    /** @var Tracker_Artifact */
-    private $artifact;
-
-    /** @var Tracker_Artifact */
-    private $art_123;
-
-    /** @var Tracker_Artifact */
-    private $art_124;
-
-    public function setUp() {
-        parent::setUp();
-
-        $tracker = aTracker()->withId(101)->build();
-
-        $changesets_123 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1231));
-        $changesets_124 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1241));
-
-        $this->artifact = anArtifact()->withId(120)->build();
-        $this->art_123  = anArtifact()->withId(123)->withTracker($tracker)->withChangesets($changesets_123)->build();
-        $this->art_124  = anArtifact()->withId(124)->withTracker($tracker)->withChangesets($changesets_124)->build();
-
-        $this->reference_manager = mock('Tracker_ReferenceManager');
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
-        $this->dao               = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
-
-        $this->source_of_association_detector = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector');
-
-        $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
-        stub($this->previous_changesetvalue)->getValue()->returns(array());
-
-        stub($this->artifact_factory)->getArtifactById(123)->returns($this->art_123);
-        stub($this->artifact_factory)->getArtifactById(124)->returns($this->art_124);
-
-        $this->source_of_association_collection = new SourceOfAssociationCollection();
-        $this->saver = new ArtifactLinkValueSaver(
-            $this->artifact_factory,
-            $this->dao,
-            $this->reference_manager,
-            $this->source_of_association_detector
-        );
-
-        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
-    }
-
-    public function tearDown() {
-        Tracker_ArtifactFactory::clearInstance();
-        parent::tearDown();
-    }
-
-    public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
-        $submitted_value = array('new_values' => '123, 124');
-
-        stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
-        stub($this->source_of_association_detector)->isChild($this->art_124, $this->artifact)->returns(true);
-
-        $updated_submitted_value = $this->saver->updateLinkingDirection(
-            $this->source_of_association_collection,
-            $this->artifact,
-            $submitted_value,
-            $this->previous_changesetvalue
-        );
-
-        $this->assertEqual(
-            $updated_submitted_value['list_of_artifactlinkinfo'],
-            array(
-                123 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_123, '')
-            )
         );
     }
 }
