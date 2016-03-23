@@ -27,7 +27,8 @@ class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
 
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         if (isset($row['new_value'])) {
-            $row['new_value'] = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($row['new_value']);
+            $new_value = util_unconvert_htmlspecialchars($row['new_value']);
+            $row['new_value'] = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($new_value);
         }
 
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
