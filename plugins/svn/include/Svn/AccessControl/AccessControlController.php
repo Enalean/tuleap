@@ -75,7 +75,7 @@ class AccessControlController {
         $current_version_number = $this->access_file_factory->getCurrentVersion($repository)->getVersionNumber();
         $last_version_number    = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
 
-        $title = $repository->getName() .' – '. $GLOBALS['Language']->getText('global', 'Administration');
+        $title = $GLOBALS['Language']->getText('global', 'Administration');
 
         $accessfile_reader = new AccessFileReader($repository);
         if ($request->exist('form_accessfile')) {

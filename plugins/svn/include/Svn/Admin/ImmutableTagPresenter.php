@@ -56,7 +56,8 @@ class ImmutableTagPresenter extends BaseAdminPresenter {
     public function __construct(
         Repository $repository,
         ImmutableTag $immutable_tags,
-        array $existing_tree
+        array $existing_tree,
+        $title
     ) {
         parent::__construct();
 
@@ -78,8 +79,8 @@ class ImmutableTagPresenter extends BaseAdminPresenter {
 
         $this->existing_tree = json_encode($existing_tree);
 
+        $this->title                           = $title;
         $this->whitelist                       = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
-        $this->title                           = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'title');
         $this->svn_allow_tag_immutable_comment = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration_description');
         $this->immutable_tag_configuration     = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration');
         $this->tree                            = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree');

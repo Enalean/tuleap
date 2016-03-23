@@ -63,7 +63,8 @@ class ImmutableTagController {
             new ImmutableTagPresenter(
                 $repository,
                 $this->immutable_tag_factory->getByRepositoryId($repository),
-                $this->svnlook->getTree($repository)
+                $this->svnlook->getTree($repository),
+                $title
             )
         );
     }

@@ -43,7 +43,7 @@ svn_admin_general_settings	preamble	<h3>Subversion Preamble</h3><P>Introductory 
 svn_admin_general_settings	svn_can_change_log	Modify the commit messages
 svn_admin_general_settings	svn_can_change_log_comment	When "Modify the commit messages" is on, the commit message can be modified (svn propset --revprop -r X svn:log)
 
-svn_admin_immutable_tags	title	SVN Immutable Tags
+svn_admin_immutable_tags	title	Immutable tags
 svn_admin_immutable_tags	configuration	Immutable tags configuration
 svn_admin_immutable_tags	configuration_description	Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.
 svn_admin_immutable_tags	layout_example	Example layout
