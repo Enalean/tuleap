@@ -25,6 +25,7 @@
 
 namespace Tuleap\Svn\Hooks;
 
+use ForgeConfig;
 use TuleapTestCase;
 use Tuleap\Svn\Hooks\PreCommit;
 use SVN_CommitToTagDeniedException;
@@ -32,6 +33,8 @@ use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
+use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
@@ -89,17 +92,19 @@ class PreCommitBaseTest extends TuleapTestCase {
     }
 
     private function preCommit(array $paths) {
-        $this->mockCommitInfo($paths);
+        $svn_look = safe_mock('Tuleap\Svn\Commit\SVNLook');
+        stub($svn_look)->getMessageFromTransaction()->returns(array("COMMIT MSG"));
+        stub($svn_look)->getTransactionPath()->returns($paths);
+
         $pre_commit = new PreCommit(
-            $this->immutable_tag_factory,
+            $this->system_path,
+            $this->transaction,
             $this->repository_manager,
-            $this->commit_info_enhancer,
+            new CommitInfoEnhancer($svn_look, new CommitInfo()),
+            $this->immutable_tag_factory,
             mock('BackendLogger')
         );
-        $pre_commit->assertCommitToTagIsAllowed(
-           $this->system_path,
-           $this->transaction
-        );
+        $pre_commit->assertCommitToTagIsAllowed();
     }
 
     private function mockRepository() {
@@ -107,12 +112,6 @@ class PreCommitBaseTest extends TuleapTestCase {
         stub($this->repository)->getId()->returns(1);
         stub($this->repository)->getName()->returns($this->repository_name);
         stub($this->repository_manager)->getRepositoryFromSystemPath($this->system_path)->returns($this->repository);
-     }
-
-     private function mockCommitInfo($path) {
-        $this->commit_info_enhancer  = mock('Tuleap\Svn\Commit\CommitInfoEnhancer');
-        $commit_info                 = stub("Tuleap\Svn\Commit\CommitInfo")->getTransactionPath()->returns($path);
-        stub($this->commit_info_enhancer)->getCommitInfo()->returns($commit_info);
      }
 
     public function testCommitToTagIsAllowed() {
@@ -268,5 +267,104 @@ EOS;
         $this->assertCommitIsDenied('D   tags/moduleA/v1/toto');
 
         $this->assertCommitIsDenied('A   trunk/toto', 'A   tags/moduleA/v1/toto');
+    }
+}
+
+class PreCommitReferenceTest extends TuleapTestCase {
+
+    /** @var string repository path */
+    private $repo_path;
+
+    /** @var string transaction */
+    private $transaction;
+
+    /** @var Tuleap\Svn\Repository\Repository */
+    private $repo;
+
+    /** @var Tuleap\Svn\Repository\RepositoryManager */
+    private $repo_manager;
+
+    /** @var Tuleap\Svn\Repository\HookConfig */
+    private $hook_config;
+
+    /** @var Tuleap\Svn\Commit\SVNLook */
+    private $svnlook;
+
+    /** @var PreCommit */
+    private $hook;
+
+    public function setUp() {
+        global $Language;
+        parent::setUp();
+
+        ForgeConfig::store();
+        ForgeConfig::set('sys_data_dir', parent::getTmpDir());
+
+        $this->repo         = safe_mock('Tuleap\Svn\Repository\Repository');
+        $this->svnlook      = safe_mock('Tuleap\Svn\Commit\SVNLook');
+        $this->repo_manager = safe_mock('Tuleap\Svn\Repository\RepositoryManager');
+        $this->hook_config  = safe_mock('Tuleap\Svn\Repository\HookConfig');
+        $this->repo_path    = "FOO";
+        $this->transaction  = "BAR";
+
+        stub($this->repo_manager)->getRepositoryFromSystemPath()->returns($this->repo);
+        stub($this->repo_manager)->getHookConfig()->returns($this->hook_config);
+
+        $Language = mock('BaseLanguage');
+    }
+
+    public function tearDown() {
+        global $Language;
+        unset($Language);
+        ForgeConfig::restore();
+        ProjectManager::clearInstance();
+        parent::tearDown();
+    }
+
+    private function preCommit(){
+        $this->hook = new PreCommit(
+            $this->repo_path,
+            $this->transaction,
+            $this->repo_manager,
+            new CommitInfoEnhancer($this->svnlook, new CommitInfo()),
+            safe_mock('Tuleap\Svn\Admin\ImmutableTagFactory'),
+            safe_mock('Logger'));
+    }
+
+    public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage() {
+        ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
+        stub($this->svnlook)->getMessageFromTransaction()->atLeastOnce()->returns(array(""));
+        stub($this->hook_config)->getHookConfig()->returns(false);
+
+        $this->preCommit();
+
+        $this->expectException('Exception');
+        $this->hook->assertCommitMessageIsValid(safe_mock('ReferenceManager'));
+    }
+
+    public function itDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage() {
+        ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
+        stub($this->svnlook)->getMessageFromTransaction()->returns(array(""));
+        stub($this->hook_config)->getHookConfig()->returns(false);
+
+        $this->preCommit();
+
+        $this->hook->assertCommitMessageIsValid(safe_mock('ReferenceManager'));
+    }
+
+    public function itRejectsCommitMessagesWithoutArtifactReference(){
+        $refmgr = safe_mock('ReferenceManager');
+        $project = safe_mock('Project');
+
+        stub($this->svnlook)->getMessageFromTransaction()->atLeastOnce()->returns(array("Commit message witout reference"));
+        stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->once()->returns(true);
+        stub($this->repo)->getProject()->once()->returns($project);
+        stub($project)->getId()->returns(123);
+        stub($refmgr)->stringContainsReferences("Commit message witout reference", '*')->once()->returns(false);
+
+        $this->preCommit();
+
+        $this->expectException('Exception');
+        $this->hook->assertCommitMessageIsValid($refmgr);
     }
 }

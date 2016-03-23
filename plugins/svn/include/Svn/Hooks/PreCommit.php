@@ -26,52 +26,105 @@ namespace Tuleap\Svn\Hooks;
 
 use SVN_CommitToTagDeniedException;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Commit\CommitInfoEnhancer;
+use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Commit\SVNLook;
+use ReferenceManager;
+use ForgeConfig;
+use Exception;
 use Logger;
+
 
 class PreCommit {
 
     private $immutable_tag_factory;
-    private $repository_manager;
     private $commit_info_enhancer;
     private $logger;
     private $handler;
 
+    /** @var Repository */
+    private $repository;
+
+    /** @var RepositoryManager */
+    private $repository_manager;
+
+    private $transaction;
+
     public function __construct(
-        ImmutableTagFactory $immutable_tag_factory,
+        $repository_path,
+        $transaction,
         RepositoryManager $repository_manager,
         CommitInfoEnhancer $commit_info_enhancer,
-        Logger $logger
-    ) {
-        $this->immutable_tag_factory = $immutable_tag_factory;
+        ImmutableTagFactory $immutable_tag_factory,
+        Logger $logger)
+    {
         $this->repository_manager    = $repository_manager;
-        $this->commit_info_enhancer  = $commit_info_enhancer;
+        $this->immutable_tag_factory = $immutable_tag_factory;
         $this->logger                = $logger;
+        $this->transaction           = $transaction;
+        $this->commit_info_enhancer  = $commit_info_enhancer;
+        $this->repository            = $this->repository_manager
+            ->getRepositoryFromSystemPath($repository_path);
+
+        $this->commit_info_enhancer->enhanceWithTransaction($this->repository, $transaction);
     }
 
-    public function assertCommitToTagIsAllowed($repository_path, $transaction) {
-        $repository = $this->repository_manager->getRepositoryFromSystemPath($repository_path);
+    public function assertCommitMessageIsValid(ReferenceManager $reference_manager) {
+        $this->assertCommitMessageIsNotEmpty();
+        $this->assertCommitMessageContainsArtifactReference($reference_manager);
+    }
 
+    private function assertCommitMessageIsNotEmpty(){
+        if(ForgeConfig::get('sys_allow_empty_svn_commit_message')) {
+            return;
+        }
+        if ($this->getCommitMessage() === "") {
+            throw new Exception('Commit message must not be empty');
+        }
+    }
 
-        if ($this->getImmutableTagFromRepository($repository)
-            && ! $this->isCommitAllowed($repository, $transaction)
+    private function assertCommitMessageContainsArtifactReference(ReferenceManager $reference_manager){
+        $hookcfg = $this->repository_manager->getHookConfig($this->repository);
+
+        if(!$hookcfg->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
+            return;
+        }
+        $commit_message = $this->getCommitMessage();
+        $project = $this->repository->getProject();
+
+        // Marvelous, extractCrossRef depends on globals group_id to find the group
+        // when it's not explicit... yeah!
+        $GLOBALS['group_id'] = $project->getID();
+        if (! $reference_manager->stringContainsReferences($commit_message, $project)) {
+            throw new Exception('Commit message must contains a reference');
+        }
+    }
+
+    private function getCommitMessage() {
+        return $this->commit_info_enhancer->getCommitInfo()->getCommitMessage();
+    }
+
+    public function assertCommitToTagIsAllowed() {
+        if ($this->getImmutableTagFromRepository()
+            && ! $this->isCommitAllowed()
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
     }
 
-    private function getImmutableTagFromRepository(Repository $repository) {
-        return $this->immutable_tag_factory->getByRepositoryId($repository);
+    private function getImmutableTagFromRepository() {
+        return $this->immutable_tag_factory->getByRepositoryId($this->repository);
     }
 
-    private function isCommitAllowed(Repository $repository, $transaction) {
-        $this->commit_info_enhancer->setTransactionPath($repository, $transaction);
+    private function isCommitAllowed() {
+        $this->commit_info_enhancer->setTransactionPath($this->repository, $this->transaction);
 
         $this->logger->debug("Checking if commit is done in tag");
-        foreach ($this->commit_info_enhancer->getCommitInfo() ->getTransactionPath() as $path) {
-            if ($this->isCommitDoneInImmutableTag($repository, $path)) {
+        foreach ($this->commit_info_enhancer->getCommitInfo()->getTransactionPath() as $path) {
+            if ($this->isCommitDoneInImmutableTag($path)) {
                 $this->logger->debug("$path is denied");
                 return false;
             }
@@ -81,13 +134,12 @@ class PreCommit {
         return true;
     }
 
-    private function isCommitDoneInImmutableTag(Repository $repository, $path) {
-
-        $paths = $this->immutable_tag_factory->getByRepositoryId($repository)->getPaths();
-        $immutable_paths = explode(PHP_EOL, $this->getImmutableTagFromRepository($repository)->getPaths());
+    private function isCommitDoneInImmutableTag($path) {
+        $paths = $this->immutable_tag_factory->getByRepositoryId($this->repository)->getPaths();
+        $immutable_paths = explode(PHP_EOL, $this->getImmutableTagFromRepository()->getPaths());
 
         foreach ($immutable_paths as $immutable_path) {
-            if ($this->isCommitForbidden($repository, $immutable_path, $path)) {
+            if ($this->isCommitForbidden($immutable_path, $path)) {
                 return true;
             }
         }
@@ -95,7 +147,7 @@ class PreCommit {
         return false;
     }
 
-    private function isCommitForbidden(Repository $repository, $immutable_path, $path) {
+    private function isCommitForbidden($immutable_path, $path) {
         $immutable_path_regexp = $this->getWellFormedRegexImmutablePath($immutable_path);
 
         $pattern = "%^(?:
@@ -106,14 +158,14 @@ class PreCommit {
             )%x";
 
         if (preg_match($pattern, $path)) {
-            return ! $this->isCommitDoneOnWhitelistElement($repository, $path);
+            return ! $this->isCommitDoneOnWhitelistElement($path);
         }
 
         return false;
     }
 
-    private function isCommitDoneOnWhitelistElement(Repository $repository, $path) {
-        $whitelist = explode(PHP_EOL, $this->getImmutableTagFromRepository($repository)->getWhitelist());
+    private function isCommitDoneOnWhitelistElement($path) {
+        $whitelist = explode(PHP_EOL, $this->getImmutableTagFromRepository()->getWhitelist());
         if (! $whitelist) {
             return false;
         }

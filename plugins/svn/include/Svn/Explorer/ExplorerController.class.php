@@ -80,7 +80,7 @@ class ExplorerController {
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
         } else {
-            $repository_to_create = new Repository ("", $repo_name, $request->getProject());
+            $repository_to_create = new Repository ("", $repo_name, $request->getProject(), array());
             try {
                 $this->repository_manager->create($repository_to_create, $this->system_event_manager);
 

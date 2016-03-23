@@ -49,6 +49,11 @@ class CommitInfoEnhancer {
         $this->setChangedDirectories($repository, $revision);
     }
 
+    public function enhanceWithTransaction(Repository $repository, $transaction) {
+        $this->commit_info->setCommitMessage(implode("\n",
+            $this->svn_look->getMessageFromTransaction($repository, $transaction)));
+    }
+
     public function setTransactionPath(Repository $repository, $revision) {
         if ($this->checkRepositoryExists($repository)) {
             $transaction_path = $this->svn_look->getTransactionPath($repository, $revision);

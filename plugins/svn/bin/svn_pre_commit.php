@@ -23,14 +23,19 @@
  */
 
 use Tuleap\Svn\Dao;
-use Tuleap\Svn\Hooks\PreCommit;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
-use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
-use Tuleap\Svn\Commit\SVNLook;
 use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\SvnLogger;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
+use Tuleap\Svn\Admin\MailHeaderManager;
+use Tuleap\Svn\Admin\MailHeaderDao;
+use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Admin\MailNotificationDao;
+use Tuleap\Svn\Hooks\PreCommit;
+use Tuleap\Svn\Commit\SVNLook;
 
 try {
     require_once 'pre.php';
@@ -39,15 +44,19 @@ try {
     $transaction     = $argv[2];
 
     $hook = new PreCommit(
-        new ImmutableTagFactory(new ImmutableTagDao()),
+        $repository_path,
+        $transaction,
         new RepositoryManager(new Dao(), ProjectManager::instance()),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
+        new ImmutableTagFactory(new ImmutableTagDao()),
         new SvnLogger()
     );
 
+    $hook->assertCommitMessageIsValid(ReferenceManager::instance());
     $hook->assertCommitToTagIsAllowed($repository_path, $transaction);
+
     exit(0);
-} catch (Exception $exeption) {
-    fwrite (STDERR, $exeption->getMessage());
+} catch (Exception $exception) {
+    fwrite (STDERR, $exception->getMessage());
     exit(1);
 }
