@@ -1,3 +1,6 @@
+Version 1.370 - Tuleap 8.13
+    * request #8976 Can no longer desactivate AgileDasbhoard
+
 Version 1.369 - Tuleap 8.13
     * request #8880: "Comment" field on every page suddenly became locked and unusable
 
