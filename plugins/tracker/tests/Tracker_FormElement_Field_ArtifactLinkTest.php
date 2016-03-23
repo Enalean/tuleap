@@ -498,20 +498,20 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->artifact_123)->getId()->returns(123);
         stub($this->artifact_123)->getTracker()->returns($parent_tracker);
         stub($this->artifact_123)->getTrackerId()->returns($parent_tracker->getId());
+        stub($this->artifact_123)->getLastChangeset()->returns(
+            stub('Tracker_Artifact_Changeset')->getId()->returns(1231)
+        );
 
         $this->artifact_124 = mock('Tracker_Artifact');
         stub($this->artifact_124)->getId()->returns(124);
         stub($this->artifact_124)->getTracker()->returns($tracker);
         stub($this->artifact_124)->getTrackerId()->returns($tracker->getId());
+        stub($this->artifact_124)->getLastChangeset()->returns(
+            stub('Tracker_Artifact_Changeset')->getId()->returns(1241)
+        );
 
         stub($artifact_factory)->getArtifactById(123)->returns($this->artifact_123);
         stub($artifact_factory)->getArtifactById(124)->returns($this->artifact_124);
-        stub($artifact_factory)
-            ->getArtifactsByArtifactIdList(array(123,124))
-            ->returns(array($this->artifact_123, $this->artifact_124));
-        stub($artifact_factory)
-            ->getArtifactsByArtifactIdList(array())
-            ->returns(array());
         
         $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
         
@@ -548,9 +548,17 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         expect($this->artifact_123)->linkArtifact()->never();
         
         // Then update the artifact with other links
-        $remaining_submitted_value = array('new_values' => '124',
-                                           'removed_values' => array(345 => array('345'),
-                                                                     346 => array('346')));
+        $remaining_submitted_value = array(
+            'new_values' => '123, 124',
+            'removed_values' => array(
+                345 => array('345'),
+                346 => array('346')
+            ),
+            'list_of_artifactlinkinfo' =>
+            array(
+                124 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->artifact_124, '')
+            )
+        );
         $this->field->expectOnce('saveValue', array($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null));
         
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);

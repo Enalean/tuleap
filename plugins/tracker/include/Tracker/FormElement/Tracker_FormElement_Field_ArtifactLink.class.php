@@ -1457,8 +1457,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $this->getCurrentUser(),
             $artifact,
             $changeset_value_id,
-            $submitted_value,
-            $previous_changesetvalue
+            $submitted_value
         );
     }
 

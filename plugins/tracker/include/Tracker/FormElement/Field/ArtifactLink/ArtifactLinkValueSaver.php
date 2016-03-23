@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_Artifact;
+use Tracker_ArtifactLinkInfo;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_Value_ArtifactLinkDao;
@@ -67,31 +68,36 @@ class ArtifactLinkValueSaver {
     /**
      * Save the value
      *
-     * @param PFUser                          $user                    The current user
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $submitted_value         The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
+     * @param Tracker_FormElement_Field_ArtifactLink $field              The field in which we save the value
+     * @param PFUser                                 $user               The current user
+     * @param Tracker_Artifact                       $artifact           The artifact
+     * @param int                                    $changeset_value_id The id of the changeset_value
+     * @param mixed                                  $submitted_value    The value submitted by the user
      */
     public function saveValue(
         Tracker_FormElement_Field_ArtifactLink $field,
         PFUser $user,
         Tracker_Artifact $artifact,
         $changeset_value_id,
-        array $submitted_value,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        array $submitted_value
     ) {
-        foreach ($this->getArtifactIdsToLink($artifact, $submitted_value, $previous_changesetvalue) as $artifact_to_be_linked_by_tracker) {
+        $artifact_ids_to_link = $this->getArtifactIdsToLink($field->getTracker(), $artifact, $submitted_value);
+        foreach ($artifact_ids_to_link as $artifact_to_be_linked_by_tracker) {
             $tracker = $artifact_to_be_linked_by_tracker['tracker'];
-            $nature  = $this->getNature($field->getTracker(), $tracker);
 
-            $this->dao->create(
-                $changeset_value_id,
-                $nature,
-                $artifact_to_be_linked_by_tracker['ids'],
-                $tracker->getItemName(),
-                $tracker->getGroupId()
-            );
+            foreach ($artifact_to_be_linked_by_tracker['natures'] as $nature => $ids) {
+                if (! $nature) {
+                    $nature = null;
+                }
+
+                $this->dao->create(
+                    $changeset_value_id,
+                    $nature,
+                    $ids,
+                    $tracker->getItemName(),
+                    $tracker->getGroupId()
+                );
+            }
         }
 
         return $this->updateCrossReferences($user, $artifact, $submitted_value);
@@ -120,72 +126,127 @@ class ArtifactLinkValueSaver {
         array $submitted_value,
         Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
-        $artifacts = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
-
-        $artifact_id_already_linked = array();
-        foreach ($artifacts as $artifact_to_add) {
-            if ($this->source_of_association_detector->isChild($artifact_to_add, $artifact)) {
-                $source_of_association_collection->add($artifact_to_add);
-                $artifact_id_already_linked[] = $artifact_to_add->getId();
-            }
-        }
-
-        return $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
-    }
-
-    /**
-     * Remove from user submitted artifact links the artifact ids that where already
-     * linked after the direction checking
-     *
-     * Should be private to the class but almost impossible to test in the context
-     * of saveNewChangeset.
-     *
-     * @param Array $submitted_value
-     * @param Array $artifact_id_already_linked
-     *
-     * @return Array
-     */
-    private function removeArtifactsFromSubmittedValue(array $submitted_value, array $artifact_id_already_linked) {
-        $new_values = explode(',', $submitted_value['new_values']);
-        $new_values = array_map('trim', $new_values);
-        $new_values = array_diff($new_values, $artifact_id_already_linked);
-        $submitted_value['new_values'] = implode(',', $new_values);
+        $submitted_value['list_of_artifactlinkinfo'] = $this->getListOfArtifactLinkInfo(
+            $source_of_association_collection,
+            $artifact,
+            $submitted_value,
+            $previous_changesetvalue
+        );
 
         return $submitted_value;
     }
 
-    private function getArtifactsFromChangesetValue(
+    /** @return Tracker_ArtifactLinkInfo[] */
+    private function getListOfArtifactLinkInfo(
+        SourceOfAssociationCollection $source_of_association_collection,
+        Tracker_Artifact $from_artifact,
         array $submitted_value,
         Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
-        $new_values     = (string)$submitted_value['new_values'];
-        $removed_values = isset($submitted_value['removed_values']) ? $submitted_value['removed_values'] : array();
-        // this array will be the one to save in the new changeset
-        $artifact_ids = array();
+        $list_of_artifactlinkinfo = array();
         if ($previous_changesetvalue != null) {
-            $artifact_ids = $previous_changesetvalue->getArtifactIds();
-            // We remove artifact links that user wants to remove
-            if (is_array($removed_values) && ! empty($removed_values)) {
-                $artifact_ids = array_diff($artifact_ids, array_keys($removed_values));
-            }
+            $list_of_artifactlinkinfo = $previous_changesetvalue->getValue();
+            $this->removeLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
         }
+        $this->addLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
+        $this->removeAlreadyLinkedParentArtifacts(
+            $source_of_association_collection,
+            $from_artifact,
+            $list_of_artifactlinkinfo
+        );
 
-        if (trim($new_values) != '') {
-            $new_artifact_ids = array_diff(explode(',', $new_values), array_keys($removed_values));
-            // We add new links to existing ones
-            foreach ($new_artifact_ids as $new_artifact_id) {
-                if ( ! in_array($new_artifact_id, $artifact_ids)) {
-                    $artifact_ids[] = (int)$new_artifact_id;
-                }
-            }
-        }
-
-        return $this->artifact_factory->getArtifactsByArtifactIdList($artifact_ids);
+        return $list_of_artifactlinkinfo;
     }
 
-    private function getNature(Tracker $from_tracker, Tracker $to_tracker) {
+    private function removeAlreadyLinkedParentArtifacts(
+        SourceOfAssociationCollection $source_of_association_collection,
+        Tracker_Artifact $from_artifact,
+        array &$list_of_artifactlinkinfo
+    ) {
+        foreach ($list_of_artifactlinkinfo as $id => $artifactinfo) {
+            $artifact_to_add = $artifactinfo->getArtifact();
+            if ($this->source_of_association_detector->isChild($artifact_to_add, $from_artifact)) {
+                $source_of_association_collection->add($artifact_to_add);
+                unset($list_of_artifactlinkinfo[$id]);
+            }
+        }
+    }
+
+    private function removeLinksFromSubmittedValue(
+        array &$list_of_artifactlinkinfo,
+        array $submitted_value
+    ) {
+        $removed_values = $this->extractRemovedValuesFromSubmittedValue($submitted_value);
+
+        if (empty($removed_values)) {
+            return;
+        }
+
+        foreach ($list_of_artifactlinkinfo as $id => $noop) {
+            if (isset($removed_values[$id])) {
+                unset($list_of_artifactlinkinfo[$id]);
+            }
+        }
+    }
+
+    private function addLinksFromSubmittedValue(array &$list_of_artifactlinkinfo, array $submitted_value) {
+        $new_values = $this->extractNewValuesFromSubmittedValue($submitted_value);
+        $nature     = $this->extractNatureFromSubmittedValue($submitted_value);
+
+        foreach ($new_values as $new_artifact_id) {
+            if (isset($list_of_artifactlinkinfo[$new_artifact_id])) {
+                continue;
+            }
+
+            $artifact = $this->artifact_factory->getArtifactById($new_artifact_id);
+            if (! $artifact) {
+                continue;
+            }
+
+            $list_of_artifactlinkinfo[$new_artifact_id] = Tracker_ArtifactLinkInfo::buildFromArtifact(
+                $artifact,
+                $nature
+            );
+        }
+    }
+
+    private function extractNatureFromSubmittedValue(array $submitted_value) {
+        if (isset($submitted_value['nature'])) {
+            return $submitted_value['nature'];
+        }
+
+        return null;
+    }
+
+    private function extractNewValuesFromSubmittedValue(array $submitted_value) {
+        $new_values          = (string)$submitted_value['new_values'];
+        $removed_values      = $this->extractRemovedValuesFromSubmittedValue($submitted_value);
+        $new_values_as_array = array_filter(array_map('intval', explode(',', $new_values)));
+
+        return array_unique(array_diff($new_values_as_array, array_keys($removed_values)));
+    }
+
+    private function extractRemovedValuesFromSubmittedValue(array $submitted_value) {
+        if (! isset($submitted_value['removed_values'])) {
+            return array();
+        }
+
+        $removed_values = $submitted_value['removed_values'];
+        if (! is_array($removed_values)) {
+            return array();
+        }
+
+        return $removed_values;
+    }
+
+    private function getNature(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker, Tracker $to_tracker) {
         if (in_array($to_tracker, $from_tracker->getChildren())) {
             return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        }
+
+        $existing_nature = $artifactlinkinfo->getNature();
+        if (! empty($existing_nature)) {
+            return $existing_nature;
         }
 
         return null;
@@ -217,12 +278,12 @@ class ArtifactLinkValueSaver {
     }
 
     private function getAddedArtifactIds(array $values) {
-        if (array_key_exists('new_values', $values)) {
-            if (trim($values['new_values']) != '') {
-                return array_map('intval', explode(',', $values['new_values']));
-            }
+        $ids = array();
+        foreach ($values['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
+            $ids[] = (int) $artifactlinkinfo->getArtifactId();
         }
-        return array();
+
+        return $ids;
     }
 
     private function getRemovedArtifactIds(array $values) {
@@ -250,28 +311,29 @@ class ArtifactLinkValueSaver {
 
     /** @return {'tracker' => Tracker, 'ids' => int[]}[] */
     private function getArtifactIdsToLink(
+        Tracker $from_tracker,
         Tracker_Artifact $artifact,
-        $value,
-        Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
+        array $submitted_value
     ) {
-        $all_artifacts_to_link = $this->getArtifactsFromChangesetValue(
-            $value,
-            $previous_changesetvalue
-        );
-
         $all_artifact_to_be_linked = array();
-        foreach ($all_artifacts_to_link as $artifact_to_link) {
+        foreach ($submitted_value['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
+            $artifact_to_link = $artifactlinkinfo->getArtifact();
             if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
                 $tracker = $artifact_to_link->getTracker();
+                $nature  = $this->getNature($artifactlinkinfo, $from_tracker, $tracker);
 
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
                     $all_artifact_to_be_linked[$tracker->getId()] = array(
                         'tracker' => $tracker,
-                        'ids'     => array()
+                        'natures' => array()
                     );
                 }
 
-                $all_artifact_to_be_linked[$tracker->getId()]['ids'][] = $artifact_to_link->getId();
+                if (! isset($all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature])) {
+                    $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature] = array();
+                }
+
+                $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature][] = $artifact_to_link->getId();
             }
         }
 
