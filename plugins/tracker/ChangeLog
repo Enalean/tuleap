@@ -1,3 +1,6 @@
+Version 5.834 - Tuleap 8.13
+    * Refactoring: split ArtifactLinkValueSaver
+
 Version 5.833 - Tuleap 8.13
     * request #8981: API /projects/{id}/backlog does not retrieve last_update_date value in card_fields
 
