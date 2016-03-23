@@ -583,10 +583,10 @@ setup_apache() {
     cd /etc/httpd/conf.d/
     for f in *.conf
     do
-	# Do not erease conf files provided by "our" packages and for which
+	# Do not erase conf files provided by "our" packages and for which
 	# we don't have a .dist version
 	case "$f" in
-	    "viewvc.conf"|"munin.conf"|"mailman.conf")
+	    "viewvc.conf"|"munin.conf"|"mailman.conf"|"perl.conf")
 		continue;;
 	esac
 	yn="0"
