@@ -587,37 +587,38 @@ $wgTuleapArtLinksGroupId = $group->getGroupId();
 
 $mleb_manager_loader = new MediawikiMLEBExtensionManagerLoader();
 $mleb_manager        = $mleb_manager_loader->getMediawikiMLEBExtensionManager();
+if ($mleb_manager->isMLEBExtensionInstalled()){
+    if ($mleb_manager->isMLEBExtensionAvailableForProject($group) || (isset($IS_RUNNING_UPDATE) && $IS_RUNNING_UPDATE)) {
 
-if ($mleb_manager->isMLEBExtensionAvailableForProject($group) || (isset($IS_RUNNING_UPDATE) && $IS_RUNNING_UPDATE)) {
+        $mleb_path = forge_get_config('extension_mleb_path', 'mediawiki');
 
-    $mleb_path = forge_get_config('extension_mleb_path', 'mediawiki');
+        # Babelww
+        require_once $mleb_path."/extensions/Babel/Babel.php";
 
-    # Babelww
-    require_once $mleb_path."/extensions/Babel/Babel.php";
+        # CLDR
+        require_once $mleb_path."/extensions/cldr/cldr.php";
 
-    # CLDR
-    require_once $mleb_path."/extensions/cldr/cldr.php";
+        # CleanChanges
+        require_once $mleb_path."/extensions/CleanChanges/CleanChanges.php";
+        $wgCCTrailerFilter                = true;
+        $wgCCUserFilter                   = false;
+        $wgDefaultUserOptions['usenewrc'] = 1;
 
-    # CleanChanges
-    require_once $mleb_path."/extensions/CleanChanges/CleanChanges.php";
-    $wgCCTrailerFilter                = true;
-    $wgCCUserFilter                   = false;
-    $wgDefaultUserOptions['usenewrc'] = 1;
+        # LocalisationUpdate
+        require_once $mleb_path."/extensions/LocalisationUpdate/LocalisationUpdate.php";
+        $wgLocalisationUpdateDirectory = $mleb_path."/cache";
 
-    # LocalisationUpdate
-    require_once $mleb_path."/extensions/LocalisationUpdate/LocalisationUpdate.php";
-    $wgLocalisationUpdateDirectory = $mleb_path."/cache";
+        # Translate
+        require_once $mleb_path."/extensions/Translate/Translate.php";
+        $wgGroupPermissions['user']['translate']               = true;
+        $wgGroupPermissions['user']['translate-messagereview'] = true;
+        $wgGroupPermissions['user']['translate-groupreview']   = true;
+        $wgGroupPermissions['user']['translate-import']        = true;
+        $wgGroupPermissions['sysop']['pagetranslation']        = true;
+        $wgGroupPermissions['sysop']['translate-manage']       = true;
+        $wgExtraLanguageNames['qqq']                           = 'Message documentation'; # No linguistic content. Used for documenting messages
 
-    # Translate
-    require_once $mleb_path."/extensions/Translate/Translate.php";
-    $wgGroupPermissions['user']['translate']               = true;
-    $wgGroupPermissions['user']['translate-messagereview'] = true;
-    $wgGroupPermissions['user']['translate-groupreview']   = true;
-    $wgGroupPermissions['user']['translate-import']        = true;
-    $wgGroupPermissions['sysop']['pagetranslation']        = true;
-    $wgGroupPermissions['sysop']['translate-manage']       = true;
-    $wgExtraLanguageNames['qqq']                           = 'Message documentation'; # No linguistic content. Used for documenting messages
-
-    require_once $mleb_path."/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
-    $GLOBALS['wgTranslatePageTranslationULS'] = true;
+        require_once $mleb_path."/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
+        $GLOBALS['wgTranslatePageTranslationULS'] = true;
+    }
 }
