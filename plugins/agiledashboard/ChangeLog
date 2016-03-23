@@ -1,3 +1,6 @@
+Version 1.371 - Tuleap 8.13
+    * request #8974 Fix collapse, filter, label bugs in kanban
+
 Version 1.370 - Tuleap 8.13
     * request #8976 Can no longer desactivate AgileDasbhoard
 
