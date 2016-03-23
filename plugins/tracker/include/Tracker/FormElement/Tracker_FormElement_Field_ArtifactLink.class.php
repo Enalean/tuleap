@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
 
@@ -1404,11 +1405,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         $value = $this->getNormalizedSubmittedValue($value);
 
-        $saver           = $this->getArtifactLinkValueSaver();
-        $submitted_value = $saver->updateLinkingDirection(
+        $convertor      = $this->getSubmittedValueConvertor();
+        $submitted_value = $convertor->convert(
+            $value,
             $this->getSourceOfAssociationCollection(),
             $artifact,
-            $value,
             $previous_changesetvalue
         );
 
@@ -1469,7 +1470,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             new Tracker_ReferenceManager(
                 ReferenceManager::instance(),
                 Tracker_ArtifactFactory::instance()
-            ),
+            )
+        );
+    }
+
+    /** @return ArtifactLinkValueSaver */
+    private function getSubmittedValueConvertor() {
+        return new SubmittedValueConvertor(
+            Tracker_ArtifactFactory::instance(),
             new SourceOfAssociationDetector(
                 Tracker_HierarchyFactory::instance()
             )

@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+
+use TuleapTestCase;
+use Tracker_ArtifactLinkInfo;
+use Tracker_ArtifactFactory;
+
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
+class SubmittedValueConvertorTest extends TuleapTestCase {
+
+    /** @var SubmittedValueConvertor */
+    private $convertor;
+
+    /** @var SourceOfAssociationDetector */
+    private $source_of_association_detector;
+
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
+    private $previous_changesetvalue;
+
+    /** @var Tracker_Artifact */
+    private $artifact;
+
+    /** @var Tracker_Artifact */
+    private $art_123;
+
+    /** @var Tracker_Artifact */
+    private $art_124;
+
+    public function setUp() {
+        parent::setUp();
+
+        $tracker = aTracker()->withId(101)->build();
+
+        $changesets_123 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1231));
+        $changesets_124 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1241));
+
+        $this->artifact = anArtifact()->withId(120)->build();
+        $this->art_123  = anArtifact()->withId(123)->withTracker($tracker)->withChangesets($changesets_123)->build();
+        $this->art_124  = anArtifact()->withId(124)->withTracker($tracker)->withChangesets($changesets_124)->build();
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+
+        $this->source_of_association_detector = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector');
+
+        $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
+        stub($this->previous_changesetvalue)->getValue()->returns(array());
+
+        stub($this->artifact_factory)->getArtifactById(123)->returns($this->art_123);
+        stub($this->artifact_factory)->getArtifactById(124)->returns($this->art_124);
+
+        $this->source_of_association_collection = new SourceOfAssociationCollection();
+        $this->convertor = new SubmittedValueConvertor(
+            $this->artifact_factory,
+            $this->source_of_association_detector
+        );
+
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+    }
+
+    public function tearDown() {
+        Tracker_ArtifactFactory::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
+        $submitted_value = array('new_values' => '123, 124');
+
+        stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
+        stub($this->source_of_association_detector)->isChild($this->art_124, $this->artifact)->returns(true);
+
+        $updated_submitted_value = $this->convertor->convert(
+            $submitted_value,
+            $this->source_of_association_collection,
+            $this->artifact,
+            $this->previous_changesetvalue
+        );
+
+        $this->assertEqual(
+            $updated_submitted_value['list_of_artifactlinkinfo'],
+            array(
+                123 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_123, '')
+            )
+        );
+    }
+}
