@@ -15,6 +15,7 @@ Version 8.13 (Not released yet)
 	* request #8952: Art keyword doesn't have right project id
 	* request #8880: "Comment" field on every page suddenly became locked and unusable
 	* request #8971: Avoid conflict with PHP 7 Error class
+	* request #8970: mod_perl can not be loaded by Apache on a fresh install
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
