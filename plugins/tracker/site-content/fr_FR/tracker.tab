@@ -1041,6 +1041,7 @@ plugin_tracker_artifact	transition_permissions_not_valid	Les permissions de la t
 plugin_tracker_artifact	edit_title	Artefact
 plugin_tracker_artifact	hierarchy_title	Enfants
 plugin_tracker_artifact	references_title	Références
+plugin_tracker_artifact	edit_field	Éditer le champ "$1"
 
 plugin_tracker_artifact	submission_keeper_warning_title	Attention: édition concurrente
 plugin_tracker_artifact	submission_keeper_warning_msg	<p>Quelqu'un a modifié l'artefact pendant que vous l'éditiez.</p><p>Merci d'accuser réception des notifications.</p><p>Attention, lors de la mise à jour, vos modifications seront appliquées par dessus les autres changements.</p>
