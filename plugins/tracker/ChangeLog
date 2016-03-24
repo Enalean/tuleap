@@ -1,3 +1,6 @@
+Version 5.836 - Tuleap 8.13
+    * No burndown for projects with nature
+
 Version 5.835 - Tuleap 8.13
     * story #8833: add an empty value option in the nature selectbox
 
