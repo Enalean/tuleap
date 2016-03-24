@@ -163,6 +163,8 @@ plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
 plugin_git	mail_prefix	Nouveau Préfixe
 plugin_git	mail_prefix_submit	Soumettre
 
+plugin_git	settings_hooks_title	Hooks
+
 plugin_git	add_mail_label	Personnes notifiées
 plugin_git	add_mail_title	Ajouter une adresse mail ou un utilisateur à notifier
 plugin_git	add_mail_msg	Vous pouvez ajouter plus qu'une adresse mail/utilisateur en utilisant la virgule ou le point-virgule comme séparateur.

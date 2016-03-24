@@ -22,12 +22,17 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\HudsonGit\Plugin\PluginInfo;
+use Tuleap\HudsonGit\Hook;
 
 class hudson_gitPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_SYSTEM);
+        $this->setScope(self::SCOPE_PROJECT);
+
+        if (defined('GIT_BASE_URL')) {
+            $this->addHook(GIT_ADDITIONAL_HOOKS);
+        }
     }
 
     /**
@@ -45,5 +50,35 @@ class hudson_gitPlugin extends Plugin {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function git_additional_hooks(array $params) {
+        if ($this->isAllowed($params['repository']->getProjectId())) {
+            $this->getHookController($params['request'])->renderHook(
+                $params['repository'],
+                $params['output']
+            );
+        }
+    }
+
+    public function process() {
+        $request = HTTPRequest::instance();
+        if ($this->isAllowed($request->getProject()->getID())) {
+            $this->getHookController($request)->save();
+        }
+    }
+
+    /**
+     * @return Hook\HookController
+     */
+    private function getHookController(Codendi_Request $request) {
+        return new Hook\HookController(
+            $request,
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
+            ),
+            new Hook\HookDao()
+        );
     }
 }

@@ -1,0 +1,12 @@
+<form name="edit_git_hudson" method="post" action="/plugins/hudson_git/?group_id={{ project_id }}">
+  <input type="hidden" name="action" value="edit_hook" />
+  <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+
+  <p>
+      <label for="repo_jenkins">{{ jenkins_notification_label }}</label>
+      <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server }}" class="input-xxlarge" placeholder="http://yourserver/jenkins" required pattern="https?://.+" />
+      <div>{{ jenkins_notification_desc }} <a href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin#GitPlugin-Pushnotificationfromrepository">{{ jenkins_documentation_link_label }}</a>.</div>
+  </p>
+
+  <p><input type="submit" name="save" class="btn" value="{{ save_label }}" /></p>
+</form>

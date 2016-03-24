@@ -168,6 +168,8 @@ plugin_git	mail_prefix_title	Update notification mail prefix
 plugin_git	mail_prefix	New prefix
 plugin_git	mail_prefix_submit	Update
 
+plugin_git	settings_hooks_title	Hooks
+
 plugin_git	add_mail_label	Notificated People
 plugin_git	add_mail_title	Add a mail address or a user to notify
 plugin_git	add_mail_msg	You can add more than one mail/user using comma or semi-column as separator.

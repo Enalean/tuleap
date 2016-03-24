@@ -1,2 +1,10 @@
 plugin_hudson_git	descriptor_description	Intégration continue avec Hudson/Jenkins pour le plugin Git
 plugin_hudson_git	descriptor_name	Intégration Continue pour le plugin Git
+
+plugin_hudson_git	settings_hooks_jenkins_notification_label	Serveur Jenkins à notifier
+plugin_hudson_git	settings_hooks_jenkins_notification_desc	Lorsqu'une action "git push" aura lieu sur le dépôt, le serveur Jenkins ci-dessus sera notifié et déclanchera une opération de "polling". Plus de détails dans la
+plugin_hudson_git	settings_hooks_jenkins_link_label	documentation Jenkins
+
+plugin_hudson_git	error_repository_invalid	Dépôt invalide
+plugin_hudson_git	error_database	Impossible d'enregistrer l'URL
+plugin_hudson_git	update_success	L'URL a été sauvergardée avec succès

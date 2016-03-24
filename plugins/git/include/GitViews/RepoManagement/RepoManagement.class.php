@@ -89,6 +89,7 @@ class GitViews_RepoManagement {
         }
 
         $panes[] = new GitViews_RepoManagement_Pane_Notification($repository, $this->request);
+        $panes[] = new GitViews_RepoManagement_Pane_Hooks($repository, $this->request);
         $panes[] = new GitViews_RepoManagement_Pane_Delete($repository, $this->request);
 
         $indexed_panes = array();
