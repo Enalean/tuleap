@@ -709,6 +709,8 @@ plugin_tracker_common_artifact	error_float_value	n'est pas une valeur du type fl
 plugin_tracker_common_artifact	error_string_value	$1 n'est pas une valeur de type chaîne de caractère.
 plugin_tracker_common_artifact	error_string_value_characters	$1 ne peut contenir ni retour chariot, ni le caractère null.
 plugin_tracker_common_artifact	error_artifactlink_value	$1 : $2 n'est pas un id d'artefact.
+plugin_tracker_common_artifact	error_artifactlink_nature_value	$1 : $2 n'est pas une nature valable.
+plugin_tracker_common_artifact	error_artifactlink_nature_missing	$1 : nature manquante.
 plugin_tracker_common_artifact	error_artifactlink_choose_parent	Vous devez lier cet artefact à un parent existant ou en créer un nouveau.
 plugin_tracker_common_artifact	error_date_value	$1 n'est pas une valeur du type date.
 plugin_tracker_common_artifact	error_datetime_value	$1 n'est pas une valeur du type "date heure", le format attendu est $2 hh:mm ou $2 hh:mm:ss (dans le dernier cas, les secondes seront ignorées).

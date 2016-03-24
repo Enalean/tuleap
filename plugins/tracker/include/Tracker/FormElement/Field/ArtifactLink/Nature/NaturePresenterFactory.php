@@ -44,13 +44,21 @@ class NaturePresenterFactory {
         return $natures;
     }
 
-    /** @return NaturePresenter */
+    /** @return NaturePresenter | null */
     public function getFromShortname($shortname) {
+        if($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
+            return new NaturePresenter('', '', '');
+        }
+
         if($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
             return new NatureIsChildPresenter();
         }
 
-        return $this->instantiateFromRow($this->dao->getFromShortname($shortname));
+        $row = $this->dao->getFromShortname($shortname);
+        if(!$row) {
+            return null;
+        }
+        return $this->instantiateFromRow($row);
     }
 
     public function instantiateFromRow($row) {
