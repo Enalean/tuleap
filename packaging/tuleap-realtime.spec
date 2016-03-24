@@ -1,6 +1,6 @@
 Name:       tuleap-realtime
-Version:    0.0.3
-Release:    2
+Version:    @@VERSION@@
+Release:    @@RELEASE@@
 Summary:    Tuleap realtime server
 
 Group:      Development/Tools
