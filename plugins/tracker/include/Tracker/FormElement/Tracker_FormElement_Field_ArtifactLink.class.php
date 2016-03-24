@@ -35,6 +35,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     const CREATE_NEW_PARENT_VALUE = -1;
     const NEW_VALUES_KEY          = 'new_values';
     const NATURE_IS_CHILD         = '_is_child';
+    const NO_NATURE               = '';
 
     /**
      * @var Tracker_ArtifactFactory
@@ -1310,6 +1311,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
+
         $is_valid = true;
         if (! isset($value['new_values'])) {
             return $is_valid;
@@ -1326,7 +1328,19 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
-
+        if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+            if(!isset($value['nature'])) {
+                $is_valid = false;
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel())));
+            } else {
+                $nature_shortname = $value['nature'];
+                $nature           = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
+                if(! $nature) {
+                    $is_valid = false;
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_value', array($this->getLabel(), $nature_shortname)));
+                }
+            }
+        }
         return $is_valid;
     }
 
@@ -1585,9 +1599,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $visitor->visitArtifactLink($this);
     }
 
-    private function getNaturePresenterFactory() {
+    protected function getNaturePresenterFactory() {
         return new NaturePresenterFactory(new NatureDao());
-
     }
 
     private function getTemplateRenderer() {
