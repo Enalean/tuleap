@@ -1905,7 +1905,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function sortHasUsedField($store_in_session = true) {
         $sort = $this->getSort($store_in_session);
         foreach($sort as $s) {
-            if ($s['field']->isUsed()) {
+            if (isset($s['field']) && $s['field']->isUsed()) {
                 return true;
             }
         }
