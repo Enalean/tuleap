@@ -148,7 +148,6 @@ codendi.tracker.artifact.artifactLink = {
                                     renderer_table = $('tracker_report_table_' + pair.key);
                                     if(typeof current_tab !== 'undefined') {
                                         renderer_table.up('div').hide();
-                                    } else {
                                     }
                                 }
 

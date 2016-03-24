@@ -20,6 +20,9 @@
  */
 
 require_once('common/include/Codendi_HTTPPurifier.class.php');
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable {
 
@@ -376,13 +379,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $with_sort_links = false;
         $only_one_column = null;
         $pagination      = false;
-        $read_only       = true;
         $store_in_session = true;
         $head = '';
 
         //Display the head of the table
         $suffix = '_'. $field_id .'_'. $this->report->id .'_'. $this->id;
-        $head .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix);
+        $is_nature_col = isset($matching_ids['nature']);
+        $head .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix, '', $is_nature_col);
         if (!$only_rows) {
             $html .= $head;
         }
@@ -669,7 +672,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     const EXTRACOLUMN_LINK       = 2;
     const EXTRACOLUMN_UNLINK     = 3;
 
-    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true) {
+    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_nature_col = false) {
         $current_user = UserManager::instance()->getCurrentUser();
 
         $html  = '';
@@ -783,6 +786,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
                 $html .= '</th>';
             }
+        }
+        if($is_nature_col) {
+            $nature_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'column_label');
+            $html .= "<th>$nature_label</th>";
         }
         $html .= '</tr>';
         $html .= '</thead>';
@@ -922,6 +929,33 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $html      .= '</td>';
                         }
                     }
+                    if(isset($matching_ids['nature'])) {
+                        $artifact_id = $row['id'];
+                        $nature = $matching_ids['nature'][$artifact_id];
+                        if($read_only) {
+                            $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
+                            $html .= "<td>$forward_label</td>";
+                        } else {
+                            $nature_presenter_factory = new NaturePresenterFactory(new NatureDao());
+                            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+                            $natures = $nature_presenter_factory->getAllNatures();
+                            $natures_presenter = array();
+                            foreach($natures as $nature_i) {
+                                $natures_presenter[] = array(
+                                    'shortname'     => $nature_i->shortname,
+                                    'forward_label' => $nature_i->forward_label,
+                                    'is_selected'   => ($nature->shortname == $nature_i->shortname)
+                                );
+                            }
+                            $name = "artifact[{$artifactlink_field_id}][{$row['id']}][nature]";
+                            $html .= '<td>';
+                            $html .= $renderer->renderToString(
+                                'artifactlink-nature-selector',
+                                new NatureSelectorPresenter($natures_presenter, $name, '')
+                            );
+                            $html .= '</td>';
+                        }
+                    }
                     $html .= '</tr>';
                 }
                 if (!$only_rows) {
@@ -1007,6 +1041,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= '</td>';
 
             $is_first = false;
+        }
+        if(isset($matching_ids['nature'])) {
+            $html .= '<td><table><thead><tr><th></th></tr></thead><tbody><tr></tr></tbody></table></td>';
         }
         $html .= '</tr>';
 

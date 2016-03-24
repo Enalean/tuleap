@@ -1655,6 +1655,7 @@ plugin_tracker_emailgateway	required_ok	Required fields are properly configured
 plugin_tracker_emailgateway	semantic_ko	Semantic title and/or description are not configured
 plugin_tracker_emailgateway	required_ko	Other fields than title or description cannot be required
 
+plugin_tracker_artifact_links_natures	column_label	Nature
 plugin_tracker_artifact_links_natures	title	Artifact Links Nature
 plugin_tracker_artifact_links_natures	available_natures	Available natures
 plugin_tracker_artifact_links_natures	desc	Links between artifacts may have a nature for a better semantics between artifacts. Here is the list of allowed natures for this platform:

@@ -474,9 +474,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             if($artifact->getTracker()->isProjectAllowedToUseNature()) {
                 $natures        = $this->getNaturePresenterFactory()->getAllNatures();
+                $natures_presenter = array();
+                foreach($natures as $nature) {
+                    $natures_presenter[] = array(
+                        'shortname'     => $nature->shortname,
+                        'forward_label' => $nature->forward_label,
+                        'is_selected'   => false
+                    );
+                }
                 $html          .= $this->getTemplateRenderer()->renderToString(
                     'artifactlink-nature-selector',
-                    new NatureSelectorPresenter($natures, $name .'[nature]', 'tracker-form-element-artifactlink-new nature-selector')
+                    new NatureSelectorPresenter($natures_presenter, $name .'[nature]', 'tracker-form-element-artifactlink-new nature-selector')
                 );
             }
             $html .= '</span>';
@@ -500,11 +508,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     if (!isset($ids[$artifact_link->getTrackerId()])) {
                         $ids[$artifact_link->getTrackerId()] = array(
                         'id'                => '',
-                        'last_changeset_id' => '',
+                        'last_changeset_id' => ''
                         );
+                        if($this->getTracker()->isProjectAllowedToUseNature()) {
+                            $ids[$artifact_link->getTrackerId()]['nature'] = array();
+                        }
                     }
-                    $ids[$artifact_link->getTrackerId()]['id'] .= $artifact_link->getArtifactId() .',';
+                    $artifact_id = $artifact_link->getArtifactId();
+                    $ids[$artifact_link->getTrackerId()]['id'] .= "$artifact_id,";
                     $ids[$artifact_link->getTrackerId()]['last_changeset_id'] .= $artifact_link->getLastChangesetId() .',';
+                    if($this->getTracker()->isProjectAllowedToUseNature()) {
+                        $nature_presenter_factory = $this->getNaturePresenterFactory();
+                        $nature = $nature_presenter_factory->getFromShortname($artifact_link->getNature());
+                        $ids[$artifact_link->getTrackerId()]['nature'][$artifact_id] = $nature;
+                    }
                 }
             }
 
@@ -651,6 +668,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
                 $result  = array();
+                if($this->getTracker()->isProjectAllowedToUseNature()) {
+                    $nature_shortname      = $request->get('nature');
+                    $nature_presenter      = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
+                }
                 //We must retrieve the last changeset ids of each artifact id.
                 $dao = new Tracker_ArtifactDao();
                 foreach($dao->searchLastChangesetIds($ids, $ugroups, $current_user->isSuperUser()) as $matching_ids) {
@@ -659,6 +680,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $project = $tracker->getProject();
 
                     if ($tracker->userCanView()) {
+                        if($this->getTracker()->isProjectAllowedToUseNature()) {
+                            $matching_ids['nature'] = array();
+                            foreach(explode(',', $matching_ids['id']) as $id) {
+                                $matching_ids['nature'][$id] = $nature_presenter;
+                            }
+                        }
                         $trf = Tracker_ReportFactory::instance();
                         $report = $trf->getDefaultReportsByTrackerId($tracker->getId());
                         if ($report) {
@@ -725,6 +752,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
                     if ($tracker->userCanView()) {
+                        if($this->getTracker()->isProjectAllowedToUseNature()) {
+                            $matching_ids['nature'] = array();
+                        }
                         $trf = Tracker_ReportFactory::instance();
                         $report = $trf->getDefaultReportsByTrackerId($tracker->getId());
                         if ($report) {

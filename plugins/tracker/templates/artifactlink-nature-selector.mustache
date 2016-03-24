@@ -1,6 +1,6 @@
 <select class="{{ select_classes }}" name="{{ select_name }}">
     <option value=""></option>
     {{# natures }}
-        <option value="{{ shortname }}">{{ forward_label }}</option>
+        <option {{# is_selected }}selected{{/ is_selected }} value="{{ shortname }}">{{ forward_label }}</option>
     {{/ natures }}
 </select>
