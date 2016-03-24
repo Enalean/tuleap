@@ -1,3 +1,6 @@
+Version 5.837 - Tuleap 8.13
+    * request #8985: Attachment description became mandatory and it should not
+
 Version 5.836 - Tuleap 8.13
     * No burndown for projects with nature
 
