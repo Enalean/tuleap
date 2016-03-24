@@ -685,19 +685,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     );
                     $GLOBALS['Response']->addFeedback('error', $attachment_error . ' ' . $rule->getErrorMessage());
                 }
-                if (trim($attachment['description']) === '') {
-                    $this->has_errors = true;
-                    $attachment_error = $GLOBALS['Language']->getText(
-                        'plugin_tracker_formelement_file',
-                        'attachment_in_error',
-                        array($i)
-                    );
-                    $description_needed = $GLOBALS['Language']->getText(
-                        'plugin_tracker_formelement_file',
-                        'description_not_provided'
-                    );
-                    $GLOBALS['Response']->addFeedback('error', $attachment_error . ' ' . $description_needed);
-                }
             }
         }
     }
