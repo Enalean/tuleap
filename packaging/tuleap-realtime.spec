@@ -13,6 +13,7 @@ Source2:    %{name}.service
 BuildArch:      noarch
 ExclusiveArch:  %{nodejs_arches} noarch
 
+AutoReqProv: no
 Requires:        nodejs supervisor
 Requires(pre):   /usr/sbin/useradd
 Requires(post):  chkconfig
