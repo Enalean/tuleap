@@ -9,6 +9,7 @@ URL:        https://tuleap.net/plugins/git/tuleap/nodejs/tuleap-realtime
 Source0:    %{name}.tar.gz
 Source1:    %{name}.conf
 Source2:    %{name}.service
+Source3:    logrotate.conf
 
 BuildArch:      noarch
 ExclusiveArch:  %{nodejs_arches} noarch
@@ -44,6 +45,8 @@ mkdir -p             %{buildroot}%{_sysconfdir}/%{name}
 cp -pr               %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}.conf
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initddir}/%{name}
 jq                   '.process_uid="tuleaprt" | .process_gid="tuleaprt"' %{buildroot}%{nodejs_sitelib}/%{name}/config/config.json > %{buildroot}%{_sysconfdir}/%{name}/config.json
+mkdir -p             %{buildroot}%{_sysconfdir}/logrotate.d
+install -m 644       %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
 %pre
 getent group tuleaprt >/dev/null || groupadd -r tuleaprt
@@ -76,10 +79,14 @@ rm -rf %{buildroot}
 %{_sysconfdir}/%{name}.conf
 %{_initddir}/%{name}
 %config %ghost %{_var}/log/%{name}/%{name}.log
+%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 
 %{nodejs_sitelib}/%{name}
 
 %changelog
+* Fri Mar 25 2016 Thomas Gerbet <thomas.gerbet@enalean.com> - 0.0.3-3
+- Add a logrotate configuration
+
 * Fri Feb 7 2016 Juliana Leclaire <juliana.leclaire@enalean.com> - 0.0.3-2
 - Packaging to start node.js server
 

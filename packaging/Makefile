@@ -29,7 +29,7 @@ build:
 	su --login --command "make -C /realtime/packaging rpm RELEASE=$(RELEASE)" builder_user
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/$(PACKAGE_NAME_VERSION)-$(RELEASE).noarch.rpm $(PACKAGINGDIR)
 
-rpm: clean $(RPM_TMP)/SOURCES/$(NAME).tar.gz $(RPM_TMP)/SOURCES/$(NAME).conf $(RPM_TMP)/SOURCES/$(NAME).service
+rpm: clean $(RPM_TMP)/SOURCES/$(NAME).tar.gz $(RPM_TMP)/SOURCES/$(NAME).conf $(RPM_TMP)/SOURCES/$(NAME).service $(RPM_TMP)/SOURCES/logrotate.conf
 	cat $(NAME).spec | sed -e 's/@@VERSION@@/$(VERSION)/' -e 's/@@RELEASE@@/$(RELEASE)/' > $(RPM_TMP)/SPECS/$(NAME).spec
 	time rpmbuild $(RPMDEFINES) -bb $(RPM_TMP)/SPECS/$(NAME).spec
 
@@ -41,6 +41,9 @@ $(RPM_TMP)/SOURCES/$(NAME).conf:
 
 $(RPM_TMP)/SOURCES/$(NAME).service:
 	cp $(NAME).service $@
+
+$(RPM_TMP)/SOURCES/logrotate.conf:
+	cp logrotate.conf $@
 
 $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
