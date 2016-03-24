@@ -1,0 +1,61 @@
+[project]
+	description = Access inherited by all other projects.
+[receive]
+	requireContributorAgreement = false
+	requireSignedOffBy = false
+	requireChangeId = true
+[submit]
+	mergeContent = true
+[capability]
+	administrateServer = group Administrators
+	priority = batch group Non-Interactive Users
+	streamEvents = group Non-Interactive Users
+[access "refs/*"]
+	read = group Administrators
+	read = group Anonymous Users
+	forgeAuthor = group Administrators
+	forgeCommitter = group Administrators
+[access "refs/for/refs/*"]
+	push = group Registered Users
+	pushMerge = group Registered Users
+[access "refs/heads/*"]
+	create = group Administrators
+	create = group Project Owners
+	forgeAuthor = group Registered Users
+	forgeCommitter = group Administrators
+	forgeCommitter = group Project Owners
+	push = group Administrators
+	push = group Project Owners
+	label-Code-Review = -2..+2 group Administrators
+	label-Code-Review = -2..+2 group Project Owners
+	label-Code-Review = -1..+1 group Registered Users
+	submit = group Administrators
+	submit = group Project Owners
+	editTopicName = +force group Administrators
+	editTopicName = +force group Project Owners
+[access "refs/meta/config"]
+	exclusiveGroupPermissions = read
+	read = group Administrators
+	read = group Project Owners
+	push = group Administrators
+	push = group Project Owners
+	label-Code-Review = -2..+2 group Administrators
+	label-Code-Review = -2..+2 group Project Owners
+	submit = group Administrators
+	submit = group Project Owners
+[access "refs/tags/*"]
+	pushTag = group Administrators
+	pushTag = group Project Owners
+	pushSignedTag = group Administrators
+	pushSignedTag = group Project Owners
+[access "refs/meta/*"]
+	read = group Administrators
+	push = group Administrators
+[label "Code-Review"]
+	function = MaxWithBlock
+	copyMinScore = true
+	value = -2 Do not submit
+	value = -1 I would prefer that you didn't submit this
+	value =  0 No score
+	value = +1 Looks good to me, but someone else must approve
+	value = +2 Looks good to me, approved

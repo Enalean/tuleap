@@ -271,6 +271,17 @@ start: ## Start Tuleap Web + LDAP + DB in Docker Compose environment
 start-es:
 	@$(DOCKER_COMPOSE) up -d es
 
+
+env-gerrit: .env
+	@grep --quiet GERRIT_SERVER_NAME .env || echo 'GERRIT_SERVER_NAME=tuleap_gerrit_1.gerrit-tuleap.docker' >> .env
+
+dev-setup-gerrit: env-gerrit
+	@$(DOCKER) inspect tuleap_gerrit_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_gerrit_data -v /data busybox true
+
+start-gerrit: dev-setup-gerrit
+	@docker-compose up -d gerrit
+	@echo "Gerrit will be available soon at http://`grep GERRIT_SERVER_NAME .env | cut -d= -f2`:8080"
+
 start-all:
 	echo "Start all containers (Web, LDAP, DB, Elasticsearch)"
 	@$(DOCKER_COMPOSE) up -d
