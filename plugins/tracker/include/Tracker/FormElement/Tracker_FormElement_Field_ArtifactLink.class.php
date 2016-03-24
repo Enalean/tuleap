@@ -579,9 +579,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $html .= $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . $project_name;
                     $html .= '</h2>';
                     if ($from_aid == null) {
-                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, false);
+                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $reverse_artifact_links, false);
                     } else {
-                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, false, $from_aid);
+                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $reverse_artifact_links, false, $from_aid);
                     }
                     $html .= '</div>';
                 }
@@ -661,6 +661,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $prefill_removed_values = array();
                 $only_rows              = true;
                 $this_project_id = $this->getTracker()->getProject()->getGroupId();
+                $is_reverse = false;
                 $hp = Codendi_HTMLPurifier::instance();
 
                 $ugroups = $current_user->getUgroups($this_project_id, array());
@@ -694,7 +695,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                             foreach ($renderers as $renderer) {
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key = $this->id .'_'. $report->id .'_'. $renderer->getId();
-                                    $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $only_rows);
+                                    $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $is_reverse, $prefill_removed_values, $only_rows);
                                     $head = '<div class="tracker-form-element-artifactlink-trackerpanel">';
 
                                     $project_name = '';

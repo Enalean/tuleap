@@ -370,7 +370,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
-    public function fetchAsArtifactLink($matching_ids, $field_id, $read_only, $prefill_removed_values, $only_rows = false, $from_aid = null) {
+    public function fetchAsArtifactLink($matching_ids, $field_id, $read_only, $prefill_removed_values, $is_reverse, $only_rows = false, $from_aid = null) {
         $html = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $offset     = 0;
@@ -383,8 +383,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $head = '';
 
         //Display the head of the table
-        $suffix = '_'. $field_id .'_'. $this->report->id .'_'. $this->id;
         $is_nature_col = isset($matching_ids['nature']);
+        $suffix = '_'. $field_id .'_'. $this->report->id .'_'. $this->id;
+        if($is_reverse) {
+            $suffix .= '_reverse';
+        }
         $head .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix, '', $is_nature_col);
         if (!$only_rows) {
             $html .= $head;
