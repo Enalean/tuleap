@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_LastUpdateDateTest extends UnitTestCase {
     function testhasChanges() {
         $f = new Tracker_FormElement_Field_LastUpdateDateTestVersion();
         $v = new MockTracker_Artifact_ChangesetValue_Date();
-        $this->assertFalse($f->hasChanges($v, null));
+        $this->assertFalse($f->hasChanges(mock('Tracker_Artifact'), $v, null));
     }
     
     function testisValid() {

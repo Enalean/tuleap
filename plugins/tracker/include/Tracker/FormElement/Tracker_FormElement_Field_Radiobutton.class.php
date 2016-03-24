@@ -58,9 +58,11 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
         return '';
     }
 
-
-    public function hasChanges(Tracker_Artifact_ChangesetValue_List $previous_changesetvalue, $new_value) {
-        return parent::hasChanges($previous_changesetvalue, $this->filterZeroWhenArray($new_value));
+    /**
+     * @see Tracker_FormElement_Field::hasChanges()
+     */
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue_List $previous_changesetvalue, $new_value) {
+        return parent::hasChanges($artifact, $previous_changesetvalue, $this->filterZeroWhenArray($new_value));
     }
 
     public function isNone($value) {

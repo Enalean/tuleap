@@ -162,7 +162,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = array('108', '107');
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertFalse($list_field->hasChanges($cv, $new_value));
+        $this->assertFalse($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesNoChanges_same_order_MSB() {
         $list_field = new $this->field_class();
@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = array('107', '108');
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertFalse($list_field->hasChanges($cv, $new_value));
+        $this->assertFalse($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesNoChanges_empty_MSB() {
         $list_field = new $this->field_class();
@@ -178,7 +178,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = array();
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertFalse($list_field->hasChanges($cv, $new_value));
+        $this->assertFalse($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesNoChanges_SB() {
         $list_field = new $this->field_class();
@@ -186,7 +186,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = '108';
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertFalse($list_field->hasChanges($cv, $new_value));
+        $this->assertFalse($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesChanges_MSB() {
         $list_field = new $this->field_class();
@@ -194,7 +194,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = array('107', '110');
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertTrue($list_field->hasChanges($cv, $new_value));
+        $this->assertTrue($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesChanges_new_MSB() {
         $list_field = new $this->field_class();
@@ -202,7 +202,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = array('107', '110');
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertTrue($list_field->hasChanges($cv, $new_value));
+        $this->assertTrue($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesChanges_SB() {
         $list_field = new $this->field_class();
@@ -210,7 +210,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = '110';
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertTrue($list_field->hasChanges($cv, $new_value));
+        $this->assertTrue($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     function testHasChangesChanges_new_SB() {
         $list_field = new $this->field_class();
@@ -218,7 +218,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $new_value = '110';
         $cv = new $this->mockcv_class();
         $cv->setReturnReference('getValue', $old_value);
-        $this->assertTrue($list_field->hasChanges($cv, $new_value));
+        $this->assertTrue($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
     
     function testIsTransitionExist() {

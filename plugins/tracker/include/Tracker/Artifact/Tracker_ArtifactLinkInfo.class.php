@@ -137,6 +137,10 @@ class Tracker_ArtifactLinkInfo {
         return $this->nature;
     }
 
+    public function setNature($nature) {
+        $this->nature = $nature;
+    }
+
     /**
      * Returns true is the current user can see the artifact
      *
@@ -158,5 +162,4 @@ class Tracker_ArtifactLinkInfo {
     public function __toString() {
         return $this->getLabel();
     }
-
 }

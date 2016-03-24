@@ -1044,7 +1044,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {
-            if ($submitted_value === null || !$hasPermission || !$this->hasChanges($previous_changesetvalue, $submitted_value)) {
+            if ($submitted_value === null || !$hasPermission || !$this->hasChanges($artifact, $previous_changesetvalue, $submitted_value)) {
                 //keep the old value
                 if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 0)) {
                     $updated = $this->keepValue($artifact, $changeset_value_id, $previous_changesetvalue);
@@ -1109,12 +1109,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Check if there are changes between old and new value for this field
      *
+     * @param Tracker_Artifact                $artifact  The current artifact
      * @param Tracker_Artifact_ChangesetValue $old_value The data stored in the db
      * @param mixed                           $new_value May be string or array
      *
      * @return bool true if there are differences
      */
-    public function hasChanges(Tracker_Artifact_ChangesetValue $old_value, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value) {
         return false;
     }
 

@@ -108,6 +108,7 @@ class SubmittedValueConvertor {
         if ($previous_changesetvalue != null) {
             $list_of_artifactlinkinfo = $previous_changesetvalue->getValue();
             $this->removeLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
+            $this->changeNatureOfExistingLinks($list_of_artifactlinkinfo, $submitted_value);
         }
         $this->addLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
         $this->removeAlreadyLinkedParentArtifacts(
@@ -150,6 +151,28 @@ class SubmittedValueConvertor {
         }
     }
 
+    /**
+     * @param Tracker_ArtifactLinkInfo[] $list_of_artifactlinkinfo
+     * @param array $submitted_value
+     */
+    private function changeNatureOfExistingLinks(
+        array &$list_of_artifactlinkinfo,
+        array $submitted_value
+    ) {
+        $natures = $this->extractNaturesFromSubmittedValue($submitted_value);
+
+        if (empty($natures)) {
+            return;
+        }
+
+        foreach ($list_of_artifactlinkinfo as $id => $artifactlinkinfo) {
+            if (isset($natures[$id]) && $artifactlinkinfo->getNature() != $natures[$id]) {
+                $list_of_artifactlinkinfo[$id] = clone $artifactlinkinfo;
+                $list_of_artifactlinkinfo[$id]->setNature($natures[$id]);
+            }
+        }
+    }
+
     private function addLinksFromSubmittedValue(array &$list_of_artifactlinkinfo, array $submitted_value) {
         $new_values = $this->extractNewValuesFromSubmittedValue($submitted_value);
         $nature     = $this->extractNatureFromSubmittedValue($submitted_value);
@@ -188,15 +211,23 @@ class SubmittedValueConvertor {
     }
 
     private function extractRemovedValuesFromSubmittedValue(array $submitted_value) {
-        if (! isset($submitted_value['removed_values'])) {
+        return $this->extractArrayFromSubmittedValue($submitted_value, 'removed_values');
+    }
+
+    private function extractNaturesFromSubmittedValue(array $submitted_value) {
+        return $this->extractArrayFromSubmittedValue($submitted_value, 'natures');
+    }
+
+    private function extractArrayFromSubmittedValue(array $submitted_value, $key) {
+        if (! isset($submitted_value[$key])) {
             return array();
         }
 
-        $removed_values = $submitted_value['removed_values'];
-        if (! is_array($removed_values)) {
+        $values = $submitted_value[$key];
+        if (! is_array($values)) {
             return array();
         }
 
-        return $removed_values;
+        return $values;
     }
 }

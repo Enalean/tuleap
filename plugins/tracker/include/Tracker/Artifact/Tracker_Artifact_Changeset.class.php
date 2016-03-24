@@ -557,7 +557,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                if (array_key_exists($field->id, $fields_data)) {
                    $current_value = $this->getValue($field);
                     if ($current_value) {
-                        $has_changes = $field->hasChanges($current_value, $fields_data[$field->id]);
+                        $has_changes = $field->hasChanges($this->getArtifact(), $current_value, $fields_data[$field->id]);
                     } else {
                         //There is no current value in the changeset for the submitted field
                         //It means that the field has been added afterwards.

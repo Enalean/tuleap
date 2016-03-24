@@ -67,16 +67,28 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      * @return bool true if there are differences
      */
     public function hasChanges($new_value) {
-        if (empty($new_value['new_values']) && empty($new_value['removed_values'])) {
+        if (empty($new_value['list_of_artifactlinkinfo']) && empty($new_value['removed_values'])) {
             // no changes
             return false;
-        } else {
-            $array_new_values = array_map('intval', explode(',', $new_value['new_values']));
-            $array_cur_values = $this->getArtifactIds();
-            sort($array_new_values);
-            sort($array_cur_values);
-            return $array_new_values !== $array_cur_values;
         }
+
+        $array_new_values = $new_value['list_of_artifactlinkinfo'];
+        $array_cur_values = $this->getValue();
+        if (count($array_new_values) !== count($array_cur_values)) {
+            return true;
+        }
+
+        foreach ($array_new_values as $id => $artifactlinkinfo) {
+            if (! isset($array_cur_values[$id])) {
+                return true;
+            }
+
+            if ($array_cur_values[$id]->getNature() !== $artifactlinkinfo->getNature()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -133,7 +133,7 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
 
         $text = new Tracker_FormElement_Field_TextTestVersion();
 
-        $this->assertTrue($text->hasChanges($value, array('content' => 'v2')));
+        $this->assertTrue($text->hasChanges(mock('Tracker_Artifact'), $value, array('content' => 'v2')));
     }
 
     public function testIsValidRequiredField() {
@@ -291,7 +291,7 @@ class Tracker_FormElement_Field_Text_Changes extends TuleapTestCase {
             'format'  => 'text'
         );
 
-        $this->assertTrue($this->field->hasChanges($this->previous_value, $new_value));
+        $this->assertTrue($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
     }
 
     public function itReturnsFalseIfThereIsNoChange() {
@@ -300,7 +300,7 @@ class Tracker_FormElement_Field_Text_Changes extends TuleapTestCase {
             'format'  => 'text'
         );
 
-        $this->assertFalse($this->field->hasChanges($this->previous_value, $new_value));
+        $this->assertFalse($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
     }
 
     public function itReturnsFalseIfOnlyTheFormatChanged() {
@@ -309,6 +309,6 @@ class Tracker_FormElement_Field_Text_Changes extends TuleapTestCase {
             'format'  => 'html'
         );
 
-        $this->assertFalse($this->field->hasChanges($this->previous_value, $new_value));
+        $this->assertFalse($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
     }
 }

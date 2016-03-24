@@ -680,14 +680,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * Check if there are changes between old and new value for this field
-     *
-     * @param Tracker_Artifact_ChangesetValue $old_value The data stored in the db
-     * @param mixed                           $new_value May be string or array
-     *
-     * @return bool true if there are differences
+     * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact_ChangesetValue $old_value, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value) {
         return $old_value !== $new_value;
     }
 

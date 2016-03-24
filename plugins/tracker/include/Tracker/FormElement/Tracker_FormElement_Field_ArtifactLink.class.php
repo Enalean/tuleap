@@ -1173,15 +1173,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     /**
-     * Check if there are changes between old and new value for this field
-     *
-     * @param Tracker_Artifact_ChangesetValue $old_value The data stored in the db
-     * @param array                           $new_value array of artifact ids
-     *
-     * @return bool true if there are differences
+     * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact_ChangesetValue_ArtifactLink $old_value, $new_value) {
-        return $old_value->hasChanges($new_value);
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue_ArtifactLink $old_value, $new_value) {
+        $source_of_association_collection_dev_null = new SourceOfAssociationCollection();
+        $submitted_value = $this->getSubmittedValueConvertor()->convert(
+            $new_value,
+            $source_of_association_collection_dev_null,
+            $artifact,
+            $old_value
+        );
+
+        return $old_value->hasChanges($submitted_value);
     }
 
     /**
@@ -1480,7 +1483,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         );
     }
 
-    /** @return ArtifactLinkValueSaver */
+    /** @return SubmittedValueConvertor */
     private function getSubmittedValueConvertor() {
         return new SubmittedValueConvertor(
             Tracker_ArtifactFactory::instance(),
