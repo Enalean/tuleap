@@ -86,13 +86,14 @@ div.tracker-cant-delete {
     padding-top: 0;
     margin-bottom: 0;
 }
+.tracker-form-element-artifactlink-list-nav {
+    > li:not(.tracker-form-element-artifactlink-list-nav-label) + .tracker-form-element-artifactlink-list-nav-label {
+        margin-left: 30px;
+    }
+}
 .tracker-form-element-artifactlink-list-nav-label {
     color: #BBB;
     padding: 8px 12px;
-
-    &:not(:first-child) {
-        margin-left: 30px;
-    }
 }
 
 h5.artifack_link_subtitle {
@@ -1109,6 +1110,17 @@ div.tracker-admin-field-controls {
             > label.checkbox {
                 display: block;
             }
+        }
+    }
+
+    &.tracker_artifact_field-art_link {
+
+        .tracker_hidden_edition_field {
+            display: none;
+        }
+
+        &.in-edition .tracker_hidden_edition_field {
+            display: block;
         }
     }
 
