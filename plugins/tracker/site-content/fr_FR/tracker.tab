@@ -1009,6 +1009,12 @@ plugin_tracker	help	Aide
 plugin_tracker	linked_to	Cet artefact (de $2) sera lié à $1
 plugin_tracker	tracker_switcher	Sélectionnez un outil de suivi
 
+plugin_tracker	artlink_added_with_nature	Ajout de $1 : $2
+plugin_tracker	artlink_added	Ajout : $1
+plugin_tracker	artlink_removed	Suppression : $1
+plugin_tracker	artlink_updated	Changement de nature de $1 à $2 : $3
+plugin_tracker	artlink_no_nature	sans nature
+
 plugin_tracker_artifact	set_to	à
 plugin_tracker_artifact	cleared	vidé
 plugin_tracker_artifact	changed_from	modifié de

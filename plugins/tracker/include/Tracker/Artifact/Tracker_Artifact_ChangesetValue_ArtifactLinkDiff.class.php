@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,145 +18,142 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff {
-    private $previous = array();
-    private $next     = array();
-    private $added    = array();
-    private $removed  = array();
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RemovedLinkCollection;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddedLinkByNatureCollection;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedNatureLinkCollection;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfLinksFormatter;
+
+class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
+{
+    /** @var Tracker_ArtifactLinkInfo[] */
+    private $previous;
+
+    /** @var Tracker_ArtifactLinkInfo[] */
+    private $next;
+
+    /** @var RemovedLinkCollection */
+    private $removed;
+
+    /** @var AddedLinkByNatureCollection[] */
+    private $added_by_nature;
+
+    /** @var UpdatedNatureLinkCollection[] */
+    private $updated_by_nature;
 
     /**
      * @param Tracker_ArtifactLinkInfo[] $previous
      * @param Tracker_ArtifactLinkInfo[] $next
      */
-    public function __construct(array $previous, array $next) {
-        $this->previous = $previous;
-        $this->next     = $next;
+    public function __construct(
+        array $previous,
+        array $next,
+        Tracker $tracker,
+        NaturePresenterFactory $nature_factory
+    ) {
+        $this->previous       = $previous;
+        $this->next           = $next;
         if ($this->hasChanges()) {
+            $formatter = new CollectionOfLinksFormatter();
+            $this->removed = new RemovedLinkCollection($formatter);
             $removed_elements = array_diff(array_keys($previous), array_keys($next));
             foreach ($removed_elements as $key) {
-                $this->removed[] = $previous[$key];
+                $this->removed->add($previous[$key]);
             }
 
-            $added_elements = array_diff(array_keys($next), array_keys($previous));
-            foreach ($added_elements as $key) {
-                $this->added[] = $next[$key];
+            $this->added_by_nature   = array();
+            $this->updated_by_nature = array();
+            foreach ($next as $key => $artifactlinkinfo) {
+                if (isset($previous[$key])) {
+                    $this->fillUpdatedByNature($previous[$key], $artifactlinkinfo, $tracker, $nature_factory, $formatter);
+                } else {
+                    $this->fillAddedByNature($artifactlinkinfo, $nature_factory, $formatter);
+                }
             }
         }
+    }
+
+    private function fillAddedByNature(
+        Tracker_ArtifactLinkInfo $artifactlinkinfo,
+        NaturePresenterFactory $nature_factory,
+        CollectionOfLinksFormatter $formatter
+    ) {
+        $nature = $nature_factory->getFromShortname($artifactlinkinfo->getNature());
+        if (! isset($this->added_by_nature[$nature->shortname])) {
+            $this->added_by_nature[$nature->shortname] = new AddedLinkByNatureCollection($nature, $formatter);
+        }
+        $this->added_by_nature[$nature->shortname]->add($artifactlinkinfo);
+    }
+
+    private function fillUpdatedByNature(
+        Tracker_ArtifactLinkInfo $previous_link,
+        Tracker_ArtifactLinkInfo $next_link,
+        Tracker $tracker,
+        NaturePresenterFactory $nature_factory,
+        CollectionOfLinksFormatter $formatter
+    ) {
+        if (! $tracker->isProjectAllowedToUseNature()) {
+            return;
+        }
+
+        $previous_nature = $nature_factory->getFromShortname($previous_link->getNature());
+        $next_nature     = $nature_factory->getFromShortname($next_link->getNature());
+        if ($previous_nature == $next_nature) {
+            return;
+        }
+
+        $key = $previous_nature->shortname .'-'. $next_nature->shortname;
+        if (! isset($this->updated_by_nature[$key])) {
+            $this->updated_by_nature[$key] = new UpdatedNatureLinkCollection(
+                $previous_nature,
+                $next_nature,
+                $formatter
+            );
+        }
+        $this->updated_by_nature[$key]->add($next_link);
     }
 
     /**
      * @return boolean
      */
-    public function hasChanges() {
+    public function hasChanges()
+    {
         return $this->previous != $this->next;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isCleared() {
-        return empty($this->next);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isInitialized() {
-        return empty($this->previous);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isReplace() {
-        return count($this->previous) == 1 && count($this->next) == 1;
-    }
-
-    /**
-     * @return Tracker_ArtifactLinkInfo[]
-     */
-    public function getAdded() {
-        return $this->added;
-    }
-
-    /**
-     * Returns all added artifact links user can see
-     *
-     * @param PFUser $user
-     *
-     * @return Tracker_ArtifactLinkInfo[]
-     */
-    public function getAddedUserCanSee(PFUser $user) {
-        $all_added_links          = $this->getAdded();
-        $added_links_user_can_see = array();
-
-        foreach ($all_added_links as $link) {
-            if ($link->userCanView($user)) {
-                $added_links_user_can_see[] = $link;
-            }
+    public function fetchFormatted(PFUser $user, $format)
+    {
+        if (! $this->hasChanges()) {
+            return;
         }
 
-        return $added_links_user_can_see;
-    }
-
-    /**
-     * @return Tracker_ArtifactLinkInfo[]
-     */
-    public function getRemoved() {
-        return $this->removed;
-    }
-
-    /**
-     * Returns all removed artifact links user can see
-     *
-     * @param PFUser $user
-     *
-     * @return Tracker_ArtifactLinkInfo[]
-     */
-    public function getRemovedUserCanSee(PFUser $user) {
-        $all_removed_links        = $this->getRemoved();
-        $added_links_user_can_see = array();
-
-        foreach ($all_removed_links as $link) {
-            if ($link->userCanView($user)) {
-                $added_links_user_can_see[] = $link;
-            }
+        if (empty($this->next)) {
+            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
         }
 
-        return $added_links_user_can_see;
+        $formatted_messages = array();
+        $formatted_messages[] = $this->removed->fetchFormatted($user, $format);
+        foreach ($this->added_by_nature as $collection) {
+            $formatted_messages[] = $collection->fetchFormatted($user, $format);
+        }
+        foreach ($this->updated_by_nature as $collection) {
+            $formatted_messages[] = $collection->fetchFormatted($user, $format);
+        }
+
+        return $this->groupFormattedMessages(array_filter($formatted_messages), $format);
     }
 
-    /**
-     * @param PFUser $user
-     * @param String $format
-     * @return String
-     */
-    public function getAddedFormatted(PFUser $user, $format) {
-        return $this->getFormatted($this->getAddedUserCanSee($user), $format);
-    }
+    private function groupFormattedMessages(array $formatted_messages, $format)
+    {
+        if (! $formatted_messages) {
+            return false;
+        }
 
-    /**
-     * @param PFUser $user
-     * @param String $format
-     * @return String
-     */
-    public function getRemovedFormatted(PFUser $user, $format) {
-        return $this->getFormatted($this->getRemovedUserCanSee($user), $format);
-    }
-
-    private function getFormatted(array $array, $format) {
-        $method = 'getLabel';
         if ($format === 'html') {
-            $method = 'getUrl';
+            return '<ul><li>'. implode('</li><li>', $formatted_messages) .'</li></ul>';
+        } else {
+            $separator = "\n    * ";
+            return $separator . implode($separator, $formatted_messages) . "\n";
         }
-
-        $formatted = array();
-        foreach ($array as $element) {
-            $formatted[] = $element->$method();
-        }
-
-        return implode(', ', $formatted);
     }
 }
-
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 /**
  * Manage values in changeset for 'artifact link' fields
@@ -99,34 +102,12 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
-        $changes = false;
-        $diff = $this->getArtifactLinkInfoDiff($changeset_value);
-        if ($diff->hasChanges()) {
-            $this->setCurrentUserIfUserIsNotDefined($user);
+    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    {
+        $this->setCurrentUserIfUserIsNotDefined($user);
+        $diff = $this->getArtifactLinkInfoDiff($this->getField()->getTracker(), $changeset_value);
 
-            $removed = $diff->getRemovedFormatted($user, $format);
-            $added   = $diff->getAddedFormatted($user, $format);
-
-            if ($diff->isCleared()) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
-            } else if ($diff->isInitialized()) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
-            } else if ($diff->isReplace()) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
-            } else {
-                if ($removed) {
-                    $changes = $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
-                }
-                if ($added) {
-                    if ($changes) {
-                        $changes .= PHP_EOL;
-                    }
-                    $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
-                }
-            }
-        }
-        return $changes;
+        return $diff->fetchFormatted($user, $format);
     }
 
     /**
@@ -136,16 +117,28 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
      */
-    public function getArtifactLinkInfoDiff(Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null) {
+    public function getArtifactLinkInfoDiff(Tracker $tracker, Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null) {
         $previous = array();
         if ($old_changeset_value !== null) {
             $previous = $old_changeset_value->getValue();
         }
+        return $this->getArtifactLinkDiff($previous, $this->getValue(), $tracker);
+    }
+
+    protected function getArtifactLinkDiff($previous, $next, Tracker $tracker) {
         return new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff(
             $previous,
-            $this->getValue()
+            $next,
+            $tracker,
+            $this->getNaturePresenterFactory()
         );
     }
+
+    /** @protected for testing purpose */
+    protected function getNaturePresenterFactory() {
+        return new NaturePresenterFactory(new NatureDao());
+    }
+
 
     /**
      * Returns the "set to" for field added later
