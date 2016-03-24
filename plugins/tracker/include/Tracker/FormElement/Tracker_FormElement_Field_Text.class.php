@@ -171,20 +171,29 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
 
-        $user           = $this->getCurrentUser();
-        $default_format = $this->getDefaultFormatForUser($user);
+        $user   = $this->getCurrentUser();
+        $format = $this->getDefaultFormatForUser($user);
+
+        if (isset($value['format'])) {
+            $format = $value['format'];
+        }
 
         $html .= '<input type="hidden"
                          id="artifact['. $this->id .']_body_format"
                          name="artifact['. $this->id .']_body_format"
-                         value="'.$hp->purify($default_format).'" />';
+                         value="'.$hp->purify($format).'" />';
+
+        $data_field_default_value = '';
+        if ($value === $this->getDefaultValue()) {
+            $data_field_default_value = 'data-field-default-value="1"';
+        }
 
         $html .= '<textarea id = field_'.$this->id.' class="user-mention"
                             name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'"
                             cols="'. $this->getProperty('cols') .'"
-                            '. ($this->isRequired() ? 'required' : '') .'
-                            data-field-default-value="1">';
+                            '. ($this->isRequired() ? 'required' : '') ."
+                            $data_field_default_value>";
         $html .= $hp->purify($value['content'], CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
