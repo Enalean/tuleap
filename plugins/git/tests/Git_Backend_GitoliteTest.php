@@ -311,7 +311,6 @@ class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
 
 class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
 
-    private $previous_servername = null;
     private $backend;
     private $git_plugin;
     private $project;
@@ -319,10 +318,8 @@ class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
 
     public function setUp() {
         parent::setUp();
-        if (isset($_SERVER['SERVER_NAME'])) {
-            $this->previous_servername = $_SERVER['SERVER_NAME'];
-        }
-        $_SERVER['SERVER_NAME'] = '_dummy_';
+        ForgeConfig::store();
+        ForgeConfig::set('sys_default_domain', '_dummy_');
 
         $this->project = new MockProject();
         $this->project->setReturnValue('getUnixName', 'gpig');
@@ -341,11 +338,7 @@ class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
     }
 
     public function tearDown() {
-        if ($this->previous_servername === null) {
-            unset($_SERVER['SERVER_NAME']);
-        } else {
-            $_SERVER['SERVER_NAME'] = $this->previous_servername;
-        }
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

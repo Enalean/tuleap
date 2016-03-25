@@ -36,6 +36,7 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
     protected $git_repository_url_manager;
     protected $system_event_manager;
     protected $mail_builder;
+    protected $event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -49,6 +50,7 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
         $this->git_repository_url_manager = mock('Git_GitRepositoryUrlManager');
         $this->system_event_manager       = mock('Git_SystemEventManager');
         $this->mail_builder               = mock('MailBuilder');
+        $this->event_manager              = mock('EventManager');
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,
@@ -57,7 +59,8 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
             $this->ci_launcher,
             $this->parse_log,
             $this->git_repository_url_manager,
-            $this->system_event_manager
+            $this->system_event_manager,
+            $this->event_manager
         );
 
         stub($this->repository)->getNotifiedMails()->returns(array());
@@ -156,7 +159,21 @@ class Git_Hook_PostReceive_LaunchGrokMirrorUpdates extends Git_Hook_PostReceive_
 
     public function itLaunchesGrokMirrorUpdates() {
         expect($this->system_event_manager)->queueGrokMirrorManifestFollowingAGitPush($this->repository)->once();
-        $this->post_receive->processGrokMirrorActions('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
+        $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
+    }
+
+}
+
+class Git_Hook_PostReceive_TriggerEventForOtherPluginsTest extends Git_Hook_PostReceive_Common {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+    }
+
+    public function itSendsTheEvent() {
+        expect($this->event_manager)->processEvent(GIT_HOOK_POSTRECEIVE, '*')->once();
+        $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
     }
 
 }
@@ -170,5 +187,3 @@ class IsAnonymousUserExpectaction extends SimpleExpectation {
         return "Given parameter is not an anonymous user ($user).";
     }
 }
-
-?>

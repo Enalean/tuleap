@@ -119,6 +119,31 @@ class Jenkins_Client {
 
         return 'json=' . json_encode($parameters);
     }
-}
 
-?>
+    /**
+     * Notify a Jenkins server about activity on a git repository
+     *
+     * It will eventually trigger polling of those repositories configured for the given
+     * repository url for build.
+     *
+     * https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin#GitPlugin-Pushnotificationfromrepository
+     * curl http://yourserver/jenkins/git/notifyCommit?url=<URL of the Git repository>[&branches=branch1[,branch2]*][&sha1=<commit ID>]
+     */
+    public function pushGitNotifications($server_url, $repository_url) {
+        $push_url = $server_url.'/git/notifyCommit?url=' . urlencode($repository_url);
+        $options = array(
+            CURLOPT_URL             => $push_url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_POST            => true,
+        );
+
+        $this->http_curl_client->addOptions($options);
+
+        try {
+            $this->http_curl_client->doRequest();
+            return $this->http_curl_client->getLastResponse();
+        } catch (Http_ClientException $e) {
+            throw new Jenkins_ClientUnableToLaunchBuildException('pushGitNotifications: ' . $push_url . '; Message: ' . $e->getMessage());
+        }
+    }
+}

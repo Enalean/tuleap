@@ -27,6 +27,7 @@
  * executed
  */
 class Git_Hook_PostReceive {
+
     const DEFAULT_MAIL_SUBJECT = 'Git notification';
     const DEFAULT_FROM         = 'git';
 
@@ -51,6 +52,9 @@ class Git_Hook_PostReceive {
     /** @var Git_GitRepositoryUrlManager */
     private $repository_url_manager;
 
+    /** * @var EventManager */
+    private $event_manager;
+
     public function __construct(
             Git_Hook_LogAnalyzer $log_analyzer,
             GitRepositoryFactory $repository_factory,
@@ -58,7 +62,8 @@ class Git_Hook_PostReceive {
             Git_Ci_Launcher $ci_launcher,
             Git_Hook_ParseLog $parse_log,
             Git_GitRepositoryUrlManager $repository_url_manager,
-            Git_SystemEventManager $system_event_manager) {
+            Git_SystemEventManager $system_event_manager,
+            EventManager $event_manager) {
         $this->log_analyzer           = $log_analyzer;
         $this->repository_factory     = $repository_factory;
         $this->user_manager           = $user_manager;
@@ -66,12 +71,16 @@ class Git_Hook_PostReceive {
         $this->parse_log              = $parse_log;
         $this->system_event_manager   = $system_event_manager;
         $this->repository_url_manager = $repository_url_manager;
+        $this->event_manager          = $event_manager;
     }
 
-    public function processGrokMirrorActions($repository_path) {
+    public function beforeParsingReferences($repository_path) {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
             $this->system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
+            $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE, array(
+                'repository' => $repository
+            ));
         }
     }
 

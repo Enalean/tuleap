@@ -23,6 +23,7 @@ require_once 'constants.php';
 
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
+use Tuleap\HudsonGit\Logger;
 
 class hudson_gitPlugin extends Plugin {
 
@@ -32,6 +33,7 @@ class hudson_gitPlugin extends Plugin {
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(GIT_ADDITIONAL_HOOKS);
+            $this->addHook(GIT_HOOK_POSTRECEIVE);
         }
     }
 
@@ -68,6 +70,19 @@ class hudson_gitPlugin extends Plugin {
         }
     }
 
+    public function git_hook_post_receive($params) {
+        if ($this->isAllowed($params['repository']->getProjectId())) {
+            $controller = new Hook\HookTriggerController(
+                new Hook\HookDao(),
+                new Jenkins_Client(
+                    new Http_Client()
+                ),
+                $this->getLogger()
+            );
+            $controller->trigger($params['repository']);
+        }
+    }
+
     /**
      * @return Hook\HookController
      */
@@ -80,5 +95,9 @@ class hudson_gitPlugin extends Plugin {
             ),
             new Hook\HookDao()
         );
+    }
+
+    private function getLogger() {
+        return new WrapperLogger(new Logger(), 'hudson_git');
     }
 }
