@@ -148,16 +148,17 @@ $i = 0;
 // Get project type label
 $template = TemplateSingleton::instance();
 
-if ($group_name_search != "0") {
-    $group_name_param="&group_name_search=" . urlencode($group_name_search);
+if (! empty($group_name_search)) {
+    $group_name_param = "&group_name_search=" . urlencode($group_name_search);
 } else {
-    $group_name_param="";
+    $group_name_param = "";
 }
 
-if ($status !="") {
+if (! empty ($status)) {
+    $status       = implode(',', $status);
     $status_param = "&status=$status";
 } else  {
-    $status_param ="";
+    $status_param = "";
 }
 
 if ($res['numrows'] > 0) {
