@@ -462,6 +462,8 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 # Remove PHPWiki plugin
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
+# Do not package hudson_git yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}

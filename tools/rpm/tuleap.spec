@@ -533,6 +533,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Plugin OpenID Connect is not supported on CentOS 5
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
+# Do not package hudson_git yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
