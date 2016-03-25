@@ -47,6 +47,7 @@ Version 8.13 (Not released yet)
 	* docman: 2.26.99
 	* graphontrackers: 1.14
 	* webdav: 1.9.16
+	* hudson_git: 0.2
 
     == Themes ==
 	* FlamingParrot: 1.129
