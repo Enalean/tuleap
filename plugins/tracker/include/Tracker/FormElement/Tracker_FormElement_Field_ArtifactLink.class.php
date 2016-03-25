@@ -535,7 +535,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
                 $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                 $project = $tracker->getProject();
-                if ($tracker->userCanView()) {
+                if ($tracker->userCanView() && ! $tracker->isDeleted()) {
                     $trf = Tracker_ReportFactory::instance();
                     $report = $trf->getDefaultReportsByTrackerId($tracker->getId());
                     if ($report) {
@@ -681,7 +681,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
 
-                    if ($tracker->userCanView()) {
+                    if ($tracker->userCanView() && ! $tracker->isDeleted()) {
                         if($this->getTracker()->isProjectAllowedToUseNature()) {
                             $matching_ids['nature'] = array();
                             foreach(explode(',', $matching_ids['id']) as $id) {
@@ -1320,34 +1320,69 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         $new_values = $value['new_values'];
         if (trim($new_values) != '') {
-            $r = $this->getRuleArtifactId();
             $art_id_array = explode(',', $new_values);
             foreach ($art_id_array as $artifact_id) {
-                $artifact_id = trim ($artifact_id);
-                if ($artifact_id !== "" && ! $r->isValid($artifact_id)) {
+                $artifact_id = trim($artifact_id);
+                if ($artifact_id === ""){
                     $is_valid = false;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_value', array($this->getLabel(), $artifact_id)));
-                }
-            }
-        }
-        if($artifact->getTracker()->isProjectAllowedToUseNature()) {
-            if(!isset($value['nature'])) {
-                $is_valid = false;
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel())));
-            } else {
-                $nature_shortname = $value['nature'];
-                $nature           = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
-                if(! $nature) {
-                    $is_valid = false;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_value', array($this->getLabel(), $nature_shortname)));
-                }
-            }
-        }
-        return $is_valid;
-    }
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText(
+                            'plugin_tracker_common_artifact',
+                            'error_artifactlink_value',
+                            array($this->getLabel(), $artifact_id)
+                        )
+                    );
 
-    public function getRuleArtifactId() {
-        return new Tracker_Valid_Rule_ArtifactId();
+                    continue;
+                }
+
+                $linked_artifact = $this->getArtifactFactory()->getArtifactById($artifact_id);
+                if (! $linked_artifact) {
+                    $is_valid = false;
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText(
+                            'plugin_tracker_common_artifact',
+                            'error_artifactlink_value',
+                            array($this->getLabel(), $artifact_id)
+                        )
+                    );
+
+                    continue;
+                }
+
+                if ($linked_artifact->getTracker()->isDeleted()) {
+                    $is_valid = false;
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText(
+                            'plugin_tracker_common_artifact',
+                            'error_artifactlink_value_not_exist',
+                            array($this->getLabel(), $artifact_id)
+                        )
+                    );
+
+                    continue;
+                }
+            }
+
+            if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
+                if(! isset($value['nature'])) {
+                    $is_valid = false;
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel())));
+                } else {
+                    $nature_shortname = $value['nature'];
+                    $nature           = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
+                    if(! $nature) {
+                        $is_valid = false;
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_value', array($this->getLabel(), $nature_shortname)));
+                    }
+                }
+            }
+        }
+
+        return $is_valid;
     }
 
     public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory) {
@@ -1624,12 +1659,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $art_factory           = $this->getArtifactFactory();
         $artifact_html_classes = 'additional';
         $nature_html           = '';
+        $head_html             = '';
         $ids                   = $request->get('ids');
 
         foreach (explode(',', $ids) as $id) {
             $artifact = $art_factory->getArtifactById(trim($id));
 
-            if (!is_null($artifact)) {
+            if (!is_null($artifact) && $artifact->getTracker()->isActive()) {
                 $nature_html .= $this->getTemplateRenderer()->renderToString(
                     'artifactlink-nature-table-row',
                     new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes)
@@ -1637,10 +1673,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
 
-        $head_html = $this->getTemplateRenderer()->renderToString(
-                'artifactlink-nature-table-head',
-                NatureTablePresenter::buildForHeader($nature_presenter, $this->getTracker())
-        );
-        $result[$key] = array('head' => $head_html, 'rows' => $nature_html);
+
+        if ($nature_html !== '') {
+            $head_html = $this->getTemplateRenderer()->renderToString(
+                    'artifactlink-nature-table-head',
+                    NatureTablePresenter::buildForHeader($nature_presenter, $this->getTracker())
+            );
+
+            $result[$key] = array('head' => $head_html, 'rows' => $nature_html);
+        } else {
+            $result[$key] = array();
+        }
     }
 }
