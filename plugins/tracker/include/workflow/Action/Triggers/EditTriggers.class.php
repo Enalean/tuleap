@@ -23,8 +23,15 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     private $template_renderer;
     private $token;
     private $rule_manager;
+    private $project_use_artifact_link_natures;
 
-    public function __construct(Tracker $tracker, CSRFSynchronizerToken $token, TemplateRenderer $renderer, Tracker_Workflow_Trigger_RulesManager $rule_manager) {
+    public function __construct(
+        Tracker $tracker,
+        CSRFSynchronizerToken $token,
+        TemplateRenderer $renderer,
+        Tracker_Workflow_Trigger_RulesManager $rule_manager,
+        $project_use_artifact_link_natures
+    ) {
         parent::__construct($tracker);
 
         $this->url_query = TRACKER_BASE_URL.'/?'. http_build_query(
@@ -33,9 +40,10 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
                 'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
             )
         );
-        $this->template_renderer = $renderer;
-        $this->token = $token;
-        $this->rule_manager = $rule_manager;
+        $this->template_renderer                 = $renderer;
+        $this->token                             = $token;
+        $this->rule_manager                      = $rule_manager;
+        $this->project_use_artifact_link_natures = $project_use_artifact_link_natures;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -45,7 +53,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
         $this->displayHeader($layout);
 
-        $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter($this->url_query, $this->token);
+        $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter($this->url_query, $this->token, $this->project_use_artifact_link_natures);
         $this->template_renderer->renderToPage('trigger-pane', $presenter);
 
 

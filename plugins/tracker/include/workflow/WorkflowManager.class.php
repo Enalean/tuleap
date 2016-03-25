@@ -20,6 +20,9 @@
 
 require_once 'common/include/CSRFSynchronizerToken.class.php';
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+
 class WorkflowManager {
     protected $tracker;
     public function __construct($tracker) {
@@ -46,7 +49,15 @@ class WorkflowManager {
             ));
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
 
-            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $workflow_factory->getTriggerRulesManager());
+            $project_use_artifact_link_natures = $this->getAllowedProjectsConfig()->isProjectAllowedToUseNature($this->tracker->getProject());
+
+            $action = new Tracker_Workflow_Action_Triggers_EditTriggers(
+                $this->tracker,
+                $token,
+                $renderer,
+                $workflow_factory->getTriggerRulesManager(),
+                $project_use_artifact_link_natures
+            );
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
@@ -67,6 +78,15 @@ class WorkflowManager {
             $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
         $action->process($engine, $request, $current_user);
+    }
+
+    private function getAllowedProjectsConfig() {
+        return new AllowedProjectsConfig(
+            ProjectManager::instance(),
+            new AllowedProjectsDao(),
+            new Tracker_Hierarchy_Dao(),
+            EventManager::instance()
+        );
     }
 }
 ?>

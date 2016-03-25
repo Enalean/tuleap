@@ -19,13 +19,18 @@
  */
 
 class Tracker_Workflow_Action_Triggers_TriggersPresenter {
+
     private $form_action;
+
     /** @var CSRFSynchronizerToken */
     private $token;
 
-    public function __construct($form_action, CSRFSynchronizerToken $token) {
-        $this->form_action = $form_action;
-        $this->token = $token;
+    public $project_use_artifact_link_natures;
+
+    public function __construct($form_action, CSRFSynchronizerToken $token, $project_use_artifact_link_natures) {
+        $this->form_action                       = $form_action;
+        $this->token                             = $token;
+        $this->project_use_artifact_link_natures = $project_use_artifact_link_natures;
     }
 
     public function title_define_triggers() {
@@ -108,6 +113,9 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
         return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_no_children');
     }
 
+    public function cannot_use_triggers() {
+        return $GLOBALS['Language']->getText('workflow_admin', 'cannot_use_triggers');
+    }
 }
 
 ?>
