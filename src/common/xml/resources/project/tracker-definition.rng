@@ -3,6 +3,11 @@
   <include href="artifact-definition.rng"/>
   <include href="triggers.rng"/>
   <define name="trackers">
+    <optional>
+      <attribute name="use-natures">
+        <data type="boolean"/>
+      </attribute>
+    </optional>
     <zeroOrMore>
       <element name="tracker">
         <ref name="tracker"/>

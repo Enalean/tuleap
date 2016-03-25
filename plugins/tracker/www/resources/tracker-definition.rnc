@@ -2,6 +2,7 @@ include "artifact-definition.rnc"
 include "triggers.rnc"
 
 trackers =
+    attribute use-natures { xsd:boolean }?,
     element tracker {
         tracker
     }*,
