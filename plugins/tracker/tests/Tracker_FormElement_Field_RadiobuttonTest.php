@@ -45,19 +45,19 @@ class Tracker_FormElement_Field_RadiobuttonTest extends TuleapTestCase {
     public function itHasNoChangesWhenSubmittedValuesAreTheSameAsStored() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123));
         $field = aRadiobuttonField()->build();
-        $this->assertFalse($field->hasChanges($previous, array('5123')));
+        $this->assertFalse($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123')));
     }
 
     public function itDetectsChangesEvenWhenCSVImportValueIsNull() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123));
         $field = aRadiobuttonField()->build();
-        $this->assertTrue($field->hasChanges($previous, null));
+        $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, null));
     }
 
     public function itHasChangesWhenSubmittedValuesContainsDifferentValues() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array('5123'));
         $field = aRadiobuttonField()->build();
-        $this->assertTrue($field->hasChanges($previous, array('5122')));
+        $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5122')));
     }
 
     public function itReplaceCSVNullValueByNone() {

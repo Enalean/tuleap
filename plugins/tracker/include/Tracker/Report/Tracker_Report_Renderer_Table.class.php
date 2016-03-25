@@ -950,7 +950,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     'is_selected'   => ($nature->shortname == $nature_i->shortname)
                                 );
                             }
-                            $name = "artifact[{$artifactlink_field_id}][{$row['id']}][nature]";
+                            $name = "artifact[{$artifactlink_field_id}][natures][{$row['id']}]";
                             $html .= '<td>';
                             $html .= $renderer->renderToString(
                                 'artifactlink-nature-selector',

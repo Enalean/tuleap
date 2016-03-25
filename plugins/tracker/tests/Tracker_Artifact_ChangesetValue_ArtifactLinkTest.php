@@ -232,24 +232,75 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
     public function itHasNoChangesWhenNoNewValues() {
         $old_values      = array();
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
-        $new_value       = array('new_values' => '');
+        $new_value       = array('list_of_artifactlinkinfo' => '');
         $this->assertFalse($changeset_value->hasChanges($new_value));
     }
 
     public function itHasNoChangesWhenSameValues() {
-        $old_values      = array(1 => new stdClass(), 2 => new stdClass(), 3 => new stdClass());
+        $old_values = array(
+            1 => mock('Tracker_ArtifactLinkInfo'),
+            2 => mock('Tracker_ArtifactLinkInfo')
+        );
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
-        $new_value       = array('new_values' => '3 ,2,1');
+
+        $new_value = array(
+            'list_of_artifactlinkinfo' => array(
+                2 => mock('Tracker_ArtifactLinkInfo'),
+                1 => mock('Tracker_ArtifactLinkInfo')
+            )
+        );
+
         $this->assertFalse($changeset_value->hasChanges($new_value));
     }
 
-    public function itHasChangesWhenNewValuesAreDifferent() {
-        $old_values      = array(1 => new stdClass(), 2 => new stdClass(), 3 => new stdClass());
+    public function itHasChangesWhenLinksAreAdded() {
+        $old_values = array(
+            1 => mock('Tracker_ArtifactLinkInfo'),
+            2 => mock('Tracker_ArtifactLinkInfo')
+        );
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
-        $new_value       = array('new_values' => '4,6');
+
+        $new_value = array(
+            'list_of_artifactlinkinfo' => array(
+                1 => mock('Tracker_ArtifactLinkInfo'),
+                2 => mock('Tracker_ArtifactLinkInfo'),
+                3 => mock('Tracker_ArtifactLinkInfo')
+            )
+        );
+
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
 
-}
+    public function itHasChangesWhenLinksAreRemoved() {
+        $old_values = array(
+            1 => mock('Tracker_ArtifactLinkInfo'),
+            2 => mock('Tracker_ArtifactLinkInfo')
+        );
+        $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
 
-?>
+        $new_value = array(
+            'list_of_artifactlinkinfo' => array(
+                1 => mock('Tracker_ArtifactLinkInfo')
+            )
+        );
+
+        $this->assertTrue($changeset_value->hasChanges($new_value));
+    }
+
+    public function itHasChangesWhenNatureIsChanged() {
+        $old_values = array(
+            1 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('_is_child'),
+            2 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('')
+        );
+        $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
+
+        $new_value = array(
+            'list_of_artifactlinkinfo' => array(
+            1 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('fixed_in'),
+            2 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('')
+            )
+        );
+
+        $this->assertTrue($changeset_value->hasChanges($new_value));
+    }
+}

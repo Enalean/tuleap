@@ -148,12 +148,12 @@ class Tracker_FormElement_Field_String_Changes extends TuleapTestCase {
     public function itReturnsTrueIfThereIsAChange() {
         $new_value = '1.0';
 
-        $this->assertTrue($this->field->hasChanges($this->previous_value, $new_value));
+        $this->assertTrue($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
     }
 
     public function itReturnsFalseIfThereIsNoChange() {
         $new_value = '1';
 
-        $this->assertFalse($this->field->hasChanges($this->previous_value, $new_value));
+        $this->assertFalse($this->field->hasChanges(mock('Tracker_Artifact'), $this->previous_value, $new_value));
     }
 }

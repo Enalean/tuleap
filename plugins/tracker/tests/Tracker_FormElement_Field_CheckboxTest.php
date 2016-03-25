@@ -50,25 +50,25 @@ class Tracker_FormElement_Field_CheckboxTest extends TuleapTestCase {
     public function itHasNoChangesWhenSubmittedValuesAreTheSameAsStored() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123, 5125));
         $field = aCheckboxField()->build();
-        $this->assertFalse($field->hasChanges($previous, array('5123', '5125')));
+        $this->assertFalse($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123', '5125')));
     }
 
     public function itHasNoChangesWhenSubmittedValuesContainsZero() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123, 5125));
         $field = aCheckboxField()->build();
-        $this->assertFalse($field->hasChanges($previous, array('5123', '0', '5125')));
+        $this->assertFalse($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123', '0', '5125')));
     }
 
     public function itDetectsChangesEvenWhenCSVImportValueIsNull() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123, 5125));
         $field = aCheckboxField()->build();
-        $this->assertTrue($field->hasChanges($previous, null));
+        $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, null));
     }
 
     public function itHasChangesWhenSubmittedValuesContainsDifferentValues() {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array('5123', '5125'));
         $field = aCheckboxField()->build();
-        $this->assertTrue($field->hasChanges($previous, array('5123', '0', '5122')));
+        $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123', '0', '5122')));
     }
 
     public function itHasAnHiddenFieldForEachCheckbox() {
