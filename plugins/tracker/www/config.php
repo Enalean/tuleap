@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDeletor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -41,7 +42,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $request          = HTTPRequest::instance();
     $current_user     = UserManager::instance()->getCurrentUser();
     $nature_dao       = new NatureDao();
-    $nature_validator = new NatureValidator();
+    $nature_validator = new NatureValidator($nature_dao);
 
     $router = new ConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
@@ -65,6 +66,10 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 $nature_validator
             ),
             new NatureEditor(
+                $nature_dao,
+                $nature_validator
+            ),
+            new NatureDeletor(
                 $nature_dao,
                 $nature_validator
             ),

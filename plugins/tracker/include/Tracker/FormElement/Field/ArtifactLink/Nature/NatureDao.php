@@ -68,15 +68,44 @@ class NatureDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function delete($shortname) {
+        $shortname = $this->da->quoteSmart($shortname);
+
+        $sql = "DELETE FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
+
+        return $this->update($sql);
+    }
+
+    public function isOrHasBeenUsed($shortname) {
+        $shortname = $this->da->quoteSmart($shortname);
+
+        $sql = "SELECT nature
+                  FROM tracker_changeset_value_artifactlink
+                 WHERE nature = $shortname
+                 LIMIT 1";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return (bool)$row['nature'];
+    }
+
     public function searchAll() {
-        $sql = "SELECT * FROM plugin_tracker_artifactlink_natures ORDER BY shortname ASC";
+        $sql = "SELECT DISTINCT shortname, forward_label, reverse_label, IF(cv.nature IS NULL, 0, 1) as is_used
+                           FROM plugin_tracker_artifactlink_natures AS n
+                      LEFT JOIN tracker_changeset_value_artifactlink AS cv ON n.shortname = cv.nature
+                       ORDER BY shortname ASC";
 
         return $this->retrieve($sql);
     }
 
     public function getFromShortname($shortname) {
-        $escaped_shortname = db_escape_string($shortname);
-        $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname='$escaped_shortname'";
+        $shortname = $this->da->quoteSmart($shortname);
+
+        $sql = "SELECT DISTINCT shortname, forward_label, reverse_label, IF(cv.nature IS NULL, 0, 1) as is_used
+                  FROM plugin_tracker_artifactlink_natures AS n
+             LEFT JOIN tracker_changeset_value_artifactlink AS cv ON n.shortname = cv.nature
+                 WHERE shortname = $shortname";
+
         return $this->retrieveFirstRow($sql);
     }
 

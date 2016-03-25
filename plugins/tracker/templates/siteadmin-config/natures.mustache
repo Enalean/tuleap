@@ -15,44 +15,59 @@
     <legend>{{ available_natures }}</legend>
     <p>{{ desc }}</p>
 
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>{{ shortname_label }}</th>
-                        <th>{{ forward_label_label }}</th>
-                        <th>{{ reverse_label_label }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{# natures }}
-                        <tr>
-                            <td>{{ shortname }}</td>
-                            <td>{{ forward_label }}</td>
-                            <td>{{ reverse_label }}</td>
-                            <td>
-                                {{# is_system }}
-                                    <span class="muted" title="{{ edit_system_nature_title }}">
-                                        <i class="icon-edit"></i> {{ edit_icon_label }}
-                                    </span>
-                                {{/ is_system }}
-                                {{^ is_system }}
-                                    <a class=""
-                                       role="button"
-                                       data-toggle="modal"
-                                       href="#siteadmin-config-natures-modal-edit-{{ shortname }}"
-                                    >
-                                        <i class="icon-edit"></i> {{ edit_icon_label }}
-                                    </a>
-                                    {{> siteadmin-config/natures-modal-edit }}
-                                {{/ is_system }}
-                            </td>
-                        </tr>
-                    {{/ natures }}
-                </tbody>
-            </table>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{{ shortname_label }}</th>
+                <th>{{ forward_label_label }}</th>
+                <th>{{ reverse_label_label }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# natures }}
+                <tr>
+                    <td>{{ shortname }}</td>
+                    <td>{{ forward_label }}</td>
+                    <td>{{ reverse_label }}</td>
+                    <td class="actions">
+                        {{# is_system }}
+                            <span class="muted" data-toggle="tooltip" data-placement="right" title="{{ edit_system_nature_title }}">
+                                <i class="icon-edit"></i> {{ edit_icon_label }}
+                            </span>
+                        {{/ is_system }}
+                        {{^ is_system }}
+                            <a class=""
+                               role="button"
+                               data-toggle="modal"
+                               href="#siteadmin-config-natures-modal-edit-{{ shortname }}"
+                            >
+                                <i class="icon-edit"></i> {{ edit_icon_label }}
+                            </a>
+                            {{> siteadmin-config/natures-modal-edit }}
+                        {{/ is_system }}
 
-    <a class="btn" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal-create">
+                        {{# is_or_has_been_used }}
+                            <span class="muted" data-toggle="tooltip" data-placement="right" title="{{ cannot_delete_title }}">
+                                <i class="icon-trash"></i> {{ delete_icon_label }}
+                            </span>
+                        {{/ is_or_has_been_used }}
+                        {{^ is_or_has_been_used }}
+                            <form action="?action=delete-nature" method="post">
+                                {{{ csrf_token }}}
+                                <input type="hidden" name="shortname" value="{{ shortname }}">
+                                <button type="submit" class="btn-link">
+                                    <i class="icon-trash"></i> {{ delete_icon_label }}
+                                </button>
+                            </form>
+                        {{/ is_or_has_been_used }}
+                    </td>
+                </tr>
+            {{/ natures }}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" role="button" data-toggle="modal" href="#siteadmin-config-natures-modal-create">
         <i class="icon-plus"></i> {{ create_new_nature }}
     </a>
 
@@ -60,5 +75,6 @@
 
     <legend class="allowed-projects-for-nature-title">{{ allowed_projects_title }}</legend>
     <p>{{ allowed_projects_desc }}</p>
+
     {{{ allowed_projects }}}
 </div>

@@ -2871,7 +2871,6 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
 }
 
 #siteadmin-config {
-
     > .alert > h4 {
         margin: 10px 0;
     }
@@ -2880,13 +2879,57 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
         margin: 0 0 20px 20px;
     }
 
-
     > #submit-panel > button[type=submit] {
         margin: 20px 0 10px;
     }
 
     > .allowed-projects-for-nature-title {
         margin-top: 40px;
+    }
+
+    table {
+        max-width: 960px;
+
+        > thead > tr {
+            background: #E4E4E4;
+
+            > th {
+                vertical-align: top;
+                border-bottom: 2px solid #B2B2B2;
+                border-left-color: #D2D2D2;
+            }
+        }
+
+        td {
+            width: 30%;
+            white-space: nowrap;
+
+            &.actions {
+                width: auto;
+
+                > a, > span {
+                    margin: 0 10px 0 0;
+
+                    &.muted {
+                        cursor: not-allowed;
+                    }
+                }
+
+                > form {
+                    display: inline;
+                    margin: 0;
+
+                    > button {
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .modal, .tooltip-inner {
+        white-space: normal;
     }
 }
 
@@ -2916,19 +2959,4 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
 .email-tracker-help {
     color: #999999;
     font-size: 12px;
-}
-
-#siteadmin-config > table {
-    width: auto;
-    min-width: 960px;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-bottom: 2px solid #B2B2B2;
-            border-left-color: #D2D2D2;
-        }
-    }
 }

@@ -42,6 +42,7 @@ class trackerPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
+        $this->addHook('javascript_file');
         $this->_addHook('cssfile',                             'cssFile',                           false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
@@ -185,6 +186,12 @@ class trackerPlugin extends Plugin {
             if (file_exists($this->getThemePath().'/css/ieStyle.css')) {
                 echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
             }
+        }
+    }
+
+    public function javascript_file($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>';
         }
     }
 

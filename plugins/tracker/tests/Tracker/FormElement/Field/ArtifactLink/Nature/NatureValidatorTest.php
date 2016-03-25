@@ -28,11 +28,14 @@ class NatureValidatorTest extends TuleapTestCase {
 
     private $expected_exception = 'Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\InvalidNatureParameterException';
     private $validator;
+    private $dao;
 
     public function setUp() {
         parent::setUp();
 
-        $this->validator = new NatureValidator();
+        $this->dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
+
+        $this->validator = new NatureValidator($this->dao);
     }
 
     public function itThrowsAnExceptionIfShortnameDoesNotRespectFormat() {
@@ -69,5 +72,13 @@ class NatureValidatorTest extends TuleapTestCase {
 
     public function itDoesNothComplainIfReverseLabelIsValid() {
         $this->validator->checkReverseLabel("Fixed");
+    }
+
+    public function itThrowsAnExceptionIfNatureIsAlreadyUsed() {
+        stub($this->dao)->isOrHasBeenUsed()->returns(true);
+
+        $this->expectException('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\UnableToDeleteNatureException');
+
+        $this->validator->checkIsNotOrHasNotBeenUsed('_fixed_in');
     }
 }

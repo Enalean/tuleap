@@ -75,6 +75,8 @@ class NatureConfigPresenter {
         $this->edit_nature              = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_nature');
         $this->edit_icon_label          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_icon_label');
         $this->edit_system_nature_title = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_system_nature_title');
+        $this->delete_icon_label        = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_icon_label');
+        $this->cannot_delete_title      = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_delete_title');
         $this->shortname_pattern        = NatureValidator::SHORTNAME_PATTERN;
 
         $this->sections = new SectionsPresenter();
