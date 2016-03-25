@@ -87,6 +87,11 @@ class AllowedProjectsConfig {
         }
     }
 
+    public function removeProject(Project $project) {
+        $project_id = $project->getId();
+        return $this->removeProjectIds(array($project_id));
+    }
+
     public function removeProjectIds(array $project_ids) {
         return $this->dao->removeByProjectIds($project_ids);
     }
