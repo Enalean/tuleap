@@ -18,6 +18,7 @@ Version 8.13 (Not released yet)
 	* request #8970: mod_perl can not be loaded by Apache on a fresh install
 	* request #8984 Tracker v3 to v5 migration: Special characters are modified
 	* request #8985: Attachment description became mandatory and it should not
+	* request #8977 The 'All projects' page displays the first 50 projects, but the next one is empty
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
