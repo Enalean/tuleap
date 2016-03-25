@@ -19,6 +19,8 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -307,6 +309,19 @@ class trackerPlugin extends Plugin {
         $tm = new TrackerManager();
         $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
+        $project_manager = $this->getProjectManager();
+        $template        = $project_manager->getProject($params['template_id']);
+        $project         = $project_manager->getProject($params['group_id']);
+
+        $config = new AllowedProjectsConfig(
+            $project_manager,
+            new AllowedProjectsDao(),
+            new Tracker_Hierarchy_Dao(),
+            EventManager::instance()
+        );
+        if ($config->isProjectAllowedToUseNature($template)) {
+            $config->addProject($project);
+        }
     }
 
     function permission_get_name($params) {
