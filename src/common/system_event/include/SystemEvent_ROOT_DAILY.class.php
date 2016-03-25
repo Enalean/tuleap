@@ -55,9 +55,20 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
 
+        $warnings = array();
+
         try {
-            $this->_getEventManager()->processEvent('root_daily_start', array());
-            $this->done();
+            $this->_getEventManager()->processEvent(
+                'root_daily_start',
+                array('warnings' => &$warnings)
+            );
+
+            if (count($warnings) > 0) {
+                $this->warning(implode(PHP_EOL, $warnings));
+            } else {
+                $this->done();
+            }
+
         } catch (Exception $e) {
             $this->error($e->getMessage());
         }

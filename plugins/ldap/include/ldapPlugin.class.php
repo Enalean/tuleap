@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -24,6 +24,8 @@
 
 require_once 'autoload.php';
 require_once 'constants.php';
+
+use Tuleap\LDAP\NonUniqueUidRetriever;
 
 class LdapPlugin extends Plugin {
     /**
@@ -129,6 +131,8 @@ class LdapPlugin extends Plugin {
         if (defined('GIT_EVENT_PLATFORM_CAN_USE_GERRIT')) {
             $this->addHook(GIT_EVENT_PLATFORM_CAN_USE_GERRIT);
         }
+
+        $this->addHook('root_daily_start');
 
         return parent::getHooksAndCallbacks();
     }
@@ -280,7 +284,7 @@ class LdapPlugin extends Plugin {
         $query  = $params['query'];
         $result = $params['results'];
 
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $query->getTypeOfSearch() == Search_SearchPeople::NAME) {
+        if ($this->isLdapAuthType() && $query->getTypeOfSearch() == Search_SearchPeople::NAME) {
             $search = new LDAP_SearchPeople(UserManager::instance(), $this->getLdap());
             $presenter = $search->search($query, $query->getNumberOfResults(), $result);
             $result->setResultsHtml($this->getSearchTemplateRenderer()->renderToString($presenter->getTemplate(), $presenter));
@@ -306,7 +310,7 @@ class LdapPlugin extends Plugin {
      *                 $params['auth_user_status']
      */
     function authenticate($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             try {
                 $params['auth_success'] = false;
 
@@ -332,7 +336,7 @@ class LdapPlugin extends Plugin {
      * registeration.
      */
     function account_redirect_after_login($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
                 $return_to_arg = "";
@@ -352,7 +356,7 @@ class LdapPlugin extends Plugin {
      *                 $params['allow_codendi_login'] IN/OUT
      */
     function allowCodendiLogin($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
 
             if ($params['user']->getLdapId() != null) {
                 $params['allow_codendi_login'] = false;
@@ -430,7 +434,7 @@ class LdapPlugin extends Plugin {
      * @param unknown_type $params
      */
     function user_manager_get_user_by_identifier($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPUserManagementEnabled()) {
+        if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
             // identifier = type:value
             $separatorPosition = strpos($params['identifier'], ':');
             $type = strtolower(substr($params['identifier'], 0, $separatorPosition));
@@ -464,7 +468,7 @@ class LdapPlugin extends Plugin {
      *  OUT $params['entry_value']
      */
     function personalInformationEntry($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+        if($this->isLdapAuthType()) {
             $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
             $ldapUm = $this->getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user_id']);
@@ -487,7 +491,7 @@ class LdapPlugin extends Plugin {
      *  OUT $params['entry_change']
      */
     function accountPiEntry($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+        if($this->isLdapAuthType()) {
             $ldapUm = $this->getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
             if($lr) {
@@ -561,7 +565,7 @@ class LdapPlugin extends Plugin {
      * Hook
      */
     function cancelChange($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+        if($this->isLdapAuthType()) {
             exit_permission_denied();
         }
     }
@@ -572,7 +576,7 @@ class LdapPlugin extends Plugin {
     function cancelChangeAndUserLdap($params) {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        if($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
+        if($this->isLdapAuthType() && $user->getLdapId() != '') {
             if (! $this->hasLDAPWrite()) {
                 exit_permission_denied();
             }
@@ -581,7 +585,7 @@ class LdapPlugin extends Plugin {
     
 
     function before_register($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && ! $this->hasLDAPWrite()) {
+        if ($this->isLdapAuthType() && ! $this->hasLDAPWrite()) {
             if (isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
                 $host = 'https://'.$GLOBALS['sys_https_host'];
             } else {
@@ -593,7 +597,7 @@ class LdapPlugin extends Plugin {
 
     function warnNoPwChange($params) {
         global $Language;
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+        if($this->isLdapAuthType()) {
             // Won't change the LDAP password!
             echo "<p><b><span class=\"feedback\">".$Language->getText('admin_user_changepw','ldap_warning')."</span></b>";
         }
@@ -601,7 +605,7 @@ class LdapPlugin extends Plugin {
 
     function addLdapInput($params) {
         global $Language;
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             echo $Language->getText('admin_usergroup','ldap_id').': <INPUT TYPE="TEXT" NAME="ldap_id" VALUE="'.$params['row_user']['ldap_id'].'" SIZE="35" MAXLENGTH="55">
 <P>';
         }
@@ -618,7 +622,7 @@ class LdapPlugin extends Plugin {
      */
     function updateLdapID($params) {
         global $Language;
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             $request = HTTPRequest::instance();
             $ldapId = $request->getValidated('ldap_id', 'string', false);
             if($ldapId !== false) {
@@ -643,7 +647,7 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function forbidIfLdapAuth($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             if (! $this->hasLDAPWrite()) {
                 $params['allow'] = false;
             }
@@ -662,7 +666,7 @@ class LdapPlugin extends Plugin {
     function forbidIfLdapAuthAndUserLdap($params) {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
+        if ($this->isLdapAuthType()&& $user->getLdapId() != '') {
             if (! $this->hasLDAPWrite()) {
                 $params['allow'] = false;
             }
@@ -682,7 +686,7 @@ class LdapPlugin extends Plugin {
     public function svn_intro($params) {
         $ldap_project_manager = new LDAP_ProjectManager();
 
-        if (ForgeConfig::get('sys_auth_type') === 'ldap' &&
+        if ($this->isLdapAuthType() &&
            isset($params['group_id']) &&
            $ldap_project_manager->hasSVNLDAPAuth($params['group_id'])
         ) {
@@ -703,7 +707,7 @@ class LdapPlugin extends Plugin {
      */
     function svn_check_access_username($params) {
         $svnProjectManager = new LDAP_ProjectManager();
-        if($GLOBALS['sys_auth_type'] == 'ldap'
+        if($this->isLdapAuthType()
            && isset($params['project_svnroot'])
            && $svnProjectManager->hasSVNLDAPAuthByName(basename($params['project_svnroot']))) {
                $ldapUm = $this->getLdapUserManager();
@@ -725,7 +729,7 @@ class LdapPlugin extends Plugin {
      * @param Array $params
      */
     function ugroup_table_row($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
+        if($this->isLdapAuthType() && $this->isLDAPGroupsUsageEnabled()) {
             // No ldap for project 100
             if($params['row']['group_id'] != 100) {
                 $hp = Codendi_HTMLPurifier::instance();
@@ -824,7 +828,7 @@ class LdapPlugin extends Plugin {
      */
     function register_project_creation(array $params)
     {
-        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->getLdap()->getLDAPParam('svn_auth') == 1) {
+        if($this->isLdapAuthType() && $this->getLdap()->getLDAPParam('svn_auth') == 1) {
             $svnProjectManager = new LDAP_ProjectManager();
             $svnProjectManager->setLDAPAuthForSVN($params['group_id']);
         }
@@ -838,14 +842,14 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function backend_factory_get_svn(array $params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             $params['base']  = 'LDAP_BackendSVN';
             $params['setup'] = array($this->getLdap());
         }
     }
     
     public function svn_apache_auth($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             $ldapProjectManager = new LDAP_ProjectManager();
             if ($ldapProjectManager->hasSVNLDAPAuth($params['project_info']['group_id'])) {
                 if ($params['svn_conf_auth'] === SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL ||
@@ -867,21 +871,36 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function codendi_daily_start($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isDailySyncEnabled()) {
-            $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap(), $this->getLogger());
-            $ldapQuery->syncAll();
+        if ($this->isLdapAuthType() && $this->isDailySyncEnabled()) {
+                $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap(), $this->getLogger());
+                $ldapQuery->syncAll();
 
-            $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
-            if($retentionPeriod != NULL && $retentionPeriod!= "") {
-                $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
-                $ldapCleanUpManager->cleanAll();
+                $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
+                if($retentionPeriod != NULL && $retentionPeriod!= "") {
+                    $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+                    $ldapCleanUpManager->cleanAll();
+                }
+
+                //Synchronize the ugroups with the ldap ones
+                $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+                $ldapUserGroupManager->synchronizeUgroups();
+                return true;
             }
-
-            //Synchronize the ugroups with the ldap ones
-            $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
-            $ldapUserGroupManager->synchronizeUgroups();
-            return true;
         }
+
+    public function root_daily_start($params) {
+        if ($this->isLdapAuthType()) {
+            $retriever       = new NonUniqueUidRetriever(new LDAP_UserDao());
+            $non_unique_uids = $retriever->getNonUniqueLdapUid();
+            if ($non_unique_uids) {
+                $params['warnings'][] = 'The following ldap_uids are non unique: ' . implode(', ', $non_unique_uids)
+                                      . PHP_EOL .' This might lead to some SVN misbehaviours for concerned users';
+            }
+        }
+    }
+
+    private function isLdapAuthType() {
+        return ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP;
     }
 
     /**
@@ -938,13 +957,13 @@ class LdapPlugin extends Plugin {
     }
 
     public function get_ldap_login_name_for_user($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             $params['ldap_user'] = $this->getLdapUserManager()->getLDAPUserFromUser($params['user']);
         }
     }
 
     public function login_presenter($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($this->isLdapAuthType()) {
             include_once dirname(__FILE__).'/LoginPresenter.class.php';
             $params['authoritative'] = true;
             $params['presenter']     = new LDAP_LoginPresenter($params['presenter']);
@@ -994,7 +1013,7 @@ class LdapPlugin extends Plugin {
     public function git_event_platform_can_use_gerrit($params) {
         $ldap_params = $this->getLDAPParams();
 
-        $platform_uses_ldap_for_authentication = ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP;
+        $platform_uses_ldap_for_authentication = $this->isLdapAuthType();
         $ldap_write_server_is_configured       = isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '';
 
         if ($platform_uses_ldap_for_authentication || $ldap_write_server_is_configured) {
