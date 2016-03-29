@@ -693,13 +693,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return bool
      */
     private function isAttachmentNeedsToBeValidated($attachment_index, array $attachment) {
-        $is_attachment_deletion_requested = $attachment_index === 'delete';
-        if ($is_attachment_deletion_requested) {
+        if ($attachment_index === 'delete') {
             return false;
         }
-        $is_no_file_uploaded              = ! empty($attachment['error']) && $attachment['error'] == UPLOAD_ERR_NO_FILE;
-        $is_file_description_empty        = trim($attachment['description']) === '';
-        return ! ($is_no_file_uploaded && $is_file_description_empty);
+
+        $is_file_uploaded              = ! empty($attachment['error']) && $attachment['error'] != UPLOAD_ERR_NO_FILE;
+        $is_file_description_provided  = trim($attachment['description']);
+
+        return $is_file_uploaded || $is_file_description_provided;
     }
 
     /**
