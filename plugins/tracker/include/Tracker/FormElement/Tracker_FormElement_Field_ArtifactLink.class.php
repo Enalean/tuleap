@@ -489,11 +489,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 );
             }
             $html .= '</span>';
-            $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add"><i class="icon-plus"></i> Add artifacts</a>';
+
+            $is_submit      = $artifact->getId() == -1;
+            $parent_tracker = $this->getTracker()->getParent();
+
+            if (! $is_submit) {
+                $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add"><i class="icon-plus"></i> Add artifacts</a>';
+            }
+
             $html .= '</div>';
 
-            $parent_tracker = $this->getTracker()->getParent();
-            $is_submit      = $artifact->getId() == -1;
             if ($parent_tracker && $is_submit) {
                 $can_create   = true;
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
