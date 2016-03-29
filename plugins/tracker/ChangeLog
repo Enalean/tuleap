@@ -1,3 +1,6 @@
+Version 5.849 - Tuleap 8.13
+    * Add link tab (on top of artifact page, on top of artifact title)
+
 Version 5.848 - Tuleap 8.13
     * story #8833: Artifacts from deleted trackers cannot be added in artifact links
 
