@@ -484,13 +484,13 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         touch($path.'/post-revprop-change');
 
         stub($this->project)->isSVNTracked()->returns(true);
-        stub($this->project)->canChangeSVNLog()->returns(true);
         expect($backend)->log()->once();
 
         $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
         $backend->updateHooks(
             $this->project,
             $this->svn_prefix.'/toto',
+            true,
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',
             "",
@@ -506,12 +506,12 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         symlink($this->fake_revprop, $path.'/post-revprop-change');
 
         stub($this->project)->isSVNTracked()->returns(true);
-        stub($this->project)->canChangeSVNLog()->returns(true);
         expect($backend)->log()->never();
 
         $backend->updateHooks(
             $this->project,
             $this->svn_prefix.'/toto',
+            true,
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',
             "",

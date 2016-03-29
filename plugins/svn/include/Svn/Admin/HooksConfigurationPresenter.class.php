@@ -35,7 +35,9 @@ class HooksConfigurationPresenter extends BaseAdminPresenter {
     public $hooks_config_subtitle;
     public $comment;
     public $pre_commit_must_contain_reference;
+    public $allow_commit_message_changes;
     public $label_pre_commit_must_contain_reference;
+    public $label_allow_commit_message_changes;
     public $submit;
 
     public function __construct(
@@ -43,7 +45,8 @@ class HooksConfigurationPresenter extends BaseAdminPresenter {
         Project $project,
         CSRFSynchronizerToken $token,
         $title,
-        $pre_commit_must_contain_reference
+        $pre_commit_must_contain_reference,
+        $allow_commit_message_changes
     ) {
         parent::__construct();
 
@@ -54,10 +57,12 @@ class HooksConfigurationPresenter extends BaseAdminPresenter {
         $this->repository_name            = $repository->getName();
         $this->commit_rule_active         = true;
         $this->pre_commit_must_contain_reference = $pre_commit_must_contain_reference;
+        $this->allow_commit_message_changes      = $allow_commit_message_changes;
 
         $this->hooks_config_subtitle                   = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'subtitle');
         $this->comment                                 = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'comment');
         $this->label_pre_commit_must_contain_reference = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'label_pre_commit_must_contain_reference');
+        $this->label_allow_commit_message_changes      = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'label_allow_commit_message_changes');
         $this->submit                                  = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'submit');
 
         $this->sections = new SectionsPresenter($repository);

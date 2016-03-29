@@ -23,6 +23,7 @@ use Exception;
 class HookConfig {
 
     const MANDATORY_REFERENCE = 'mandatory_reference';
+    const COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change';
 
     private $repository; ///< @var Repository
     private $data; ///< @var array
@@ -31,7 +32,7 @@ class HookConfig {
      * @return array of possible keys of a $hook_config array
      */
     public static function hookConfigKeys() {
-        return array(self::MANDATORY_REFERENCE);
+        return array(self::MANDATORY_REFERENCE, self::COMMIT_MESSAGE_CAN_CHANGE);
     }
 
     /**
@@ -54,6 +55,7 @@ class HookConfig {
         if(!isset($this->data[$config_name])) {
             switch($config_name) {
             case self::MANDATORY_REFERENCE:
+            case self::COMMIT_MESSAGE_CAN_CHANGE:
                 return false;
             default:
                 throw new Exception("Incorrect hook configuration $config_name");

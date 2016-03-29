@@ -73,4 +73,5 @@ plugin_svn_admin_hooks	title	Commit rules
 plugin_svn_admin_hooks	subtitle	Rules on commit
 plugin_svn_admin_hooks	comment	When committing, it is possible to enforce some rules. Check the rules you want to apply:
 plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Force every commit to include a reference.
+plugin_svn_admin_hooks	label_allow_commit_message_changes	Allow commit message changes (svn propset --revprop -r X svn:log)
 plugin_svn_admin_hooks	submit	Save the rules

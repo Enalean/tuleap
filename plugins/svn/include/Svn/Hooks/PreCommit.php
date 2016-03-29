@@ -28,13 +28,11 @@ use SVN_CommitToTagDeniedException;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
+use Tuleap\Svn\Commit\CommitMessageValidator;
 use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\Commit\SVNLook;
 use ReferenceManager;
-use ForgeConfig;
-use Exception;
 use Logger;
 
 
@@ -73,34 +71,8 @@ class PreCommit {
     }
 
     public function assertCommitMessageIsValid(ReferenceManager $reference_manager) {
-        $this->assertCommitMessageIsNotEmpty();
-        $this->assertCommitMessageContainsArtifactReference($reference_manager);
-    }
-
-    private function assertCommitMessageIsNotEmpty(){
-        if(ForgeConfig::get('sys_allow_empty_svn_commit_message')) {
-            return;
-        }
-        if ($this->getCommitMessage() === "") {
-            throw new Exception('Commit message must not be empty');
-        }
-    }
-
-    private function assertCommitMessageContainsArtifactReference(ReferenceManager $reference_manager){
-        $hookcfg = $this->repository_manager->getHookConfig($this->repository);
-
-        if(!$hookcfg->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
-            return;
-        }
-        $commit_message = $this->getCommitMessage();
-        $project = $this->repository->getProject();
-
-        // Marvelous, extractCrossRef depends on globals group_id to find the group
-        // when it's not explicit... yeah!
-        $GLOBALS['group_id'] = $project->getID();
-        if (! $reference_manager->stringContainsReferences($commit_message, $project)) {
-            throw new Exception('Commit message must contains a reference');
-        }
+        $validator = new CommitMessageValidator($this->repository, $this->getCommitMessage());
+        $validator->assertCommitMessageIsValid($this->repository_manager, $reference_manager);
     }
 
     private function getCommitMessage() {
