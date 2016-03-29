@@ -116,7 +116,14 @@ class PreCommitBaseTest extends TuleapTestCase {
 
     public function testCommitToTagIsAllowed() {
         $immutable_tags = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns("");
+
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns($immutable_tags);
+
         $this->assertEqual($immutable_tags->getPaths(), "");
+
+        $this->assertCommitIsAllowed('A   file');
+        $this->assertCommitIsAllowed('U   file');
+        $this->assertCommitIsAllowed('D   file');
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -169,6 +176,10 @@ class PreCommitBaseTest extends TuleapTestCase {
         stub($this->immutable_tag_factory)->getByRepositoryId($this->repository)->returns($immutable_tag);
 
         $this->assertCommitIsDenied('A   moduleA/branch', 'A   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   file');
+        $this->assertCommitIsAllowed('U   file');
+        $this->assertCommitIsAllowed('D   file');
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -223,6 +234,10 @@ EOS;
         $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns($paths);
         stub("Tuleap\Svn\Admin\ImmutableTagDao")->searchByRepositoryId()->returns(array($this->repository));
         stub($this->immutable_tag_factory)->getByRepositoryId($this->repository)->returns($immutable_tag);
+
+        $this->assertCommitIsAllowed('A   file');
+        $this->assertCommitIsAllowed('U   file');
+        $this->assertCommitIsAllowed('D   file');
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
