@@ -20,7 +20,7 @@ srpm: $(NAME).tar.gz
 clean:
 	@echo Clean $(NAME) in $(PACKAGINGDIR)
 	@rm -rfv *~ noarch x86_64 *.src.rpm
-	@rm -f $(NAME).tar.gz~
+	@rm -f $(NAME).tar.gz
 
 build:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)

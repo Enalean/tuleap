@@ -143,6 +143,7 @@ io.on('connection', function (socket) {
  * @param data              (Object) : data broadcasting
  */
 app.post('/message', jsonParser, function (req, res) {
+    res.end();
     var room_id           = req.body.room_id;
     var sender_user_id    = req.body.sender_user_id;
     var sender_uuid       = req.body.sender_uuid;
@@ -159,7 +160,6 @@ app.post('/message', jsonParser, function (req, res) {
             rooms.broadcastData(rights, socketSender, req.body);
         }
     }
-    res.end();
 });
 
 /**
