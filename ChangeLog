@@ -1,3 +1,13 @@
+Version 8.12-4 (Tuesday, March 29th 2015)
+	== Bug Fix ==
+	* request #8970: mod_perl can not be loaded by Apache on a fresh install
+	* request #8964: Wrong usage of svnlook argument
+	* request #8967: Tracker attachment does not respect sys_max_size_upload parameter
+	* request #8975: Can't migrate Mediawiki to 1.23 if MLEB extension is not installed
+	* request #8977: The 'All projects' page displays the first 50 projects, but the next one is empty
+	* request #8981: API /projects/{id}/backlog does not retrieve last_update_date value in card_fields
+	* request #8984: Tracker v3 to v5 migration: Special characters are modified when the text/string field value is not kept in history
+
 Version 8.12-3 (Monday, March 21st 2015)
 	== Bug Fix ==
 	* request #8904: CSRF vulnerability in the project registration page
