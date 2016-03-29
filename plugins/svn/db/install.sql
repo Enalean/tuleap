@@ -22,7 +22,8 @@ CREATE TABLE plugin_svn_repositories(
 
 CREATE TABLE plugin_svn_hook_config(
   repository_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
-  mandatory_reference BOOL DEFAULT false NOT NULL
+  mandatory_reference BOOL DEFAULT false NOT NULL,
+  commit_message_can_change BOOL DEFAULT false NOT NULL
 );
 
 CREATE TABLE plugin_svn_mailing_header(

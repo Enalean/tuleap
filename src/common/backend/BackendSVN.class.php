@@ -105,6 +105,7 @@ class BackendSVN extends Backend {
         return $this->updateHooks(
             $project,
             $project->getSVNRootPath(),
+            $project->canChangeSVNLog(),
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',
             "",
@@ -113,26 +114,33 @@ class BackendSVN extends Backend {
     }
 
     public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path) {
-        if ($this->createRepository($project_id, $svn_dir)) {
-            $project=$this->getProjectManager()->getProject($project_id);
-
-            if ($this->updateHooks(
-                    $project,
-                    $svn_dir,
-                    $hook_commit_path,
-                    'svn_post_commit.php',
-                    ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
-                    'svn_pre_commit.php'
-                )) {
-                if ($this->createSVNAccessFile ($project_id, $svn_dir)) {
-                    $this->forceUpdateApacheConf();
-                    return true;
-                }
-            }
+        if (!$this->createRepository($project_id, $svn_dir)) {
+            return false;
         }
 
-        return false;
+        $project=$this->getProjectManager()->getProject($project_id);
+
+        if (!$this->updateHooks(
+                $project,
+                $svn_dir,
+                true,
+                $hook_commit_path,
+                'svn_post_commit.php',
+                ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
+                'svn_pre_commit.php'
+            )) {
+            return false;
+        }
+
+        if (!$this->createSVNAccessFile ($project_id, $svn_dir)) {
+            return false;
+        }
+
+        $this->forceUpdateApacheConf();
+
+        return true;
     }
+
     private function createRepository($group_id, $system_path) {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
@@ -185,7 +193,7 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    public function updateHooks(Project $project, $system_path, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file) {
+    public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file) {
         $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
         if ($project->isSVNTracked()) {
             $filename = "$system_path/hooks/post-commit";
@@ -268,9 +276,9 @@ class BackendSVN extends Backend {
             chmod("$filename", 0775);
         }
 
-        if ($project->canChangeSVNLog()) {
+        if ($can_change_svn_log) {
             try {
-                $this->enableCommitMessageUpdate($system_path);
+                $this->enableCommitMessageUpdate($system_path, $hook_commit_path);
             } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
                 throw $exception;
             }
@@ -728,12 +736,12 @@ class BackendSVN extends Backend {
         return rename($project->getSVNRootPath(), $GLOBALS['svn_prefix'].'/'.$newName);
     }
 
-    private function enableCommitMessageUpdate($project_svnroot) {
+    private function enableCommitMessageUpdate($project_svnroot, $hooks_path) {
         $hook_names = array('pre-revprop-change', 'post-revprop-change');
         $hook_error = array();
 
         foreach ($hook_names as $hook_name) {
-            if(! $this->enableHook($project_svnroot, $hook_name, ForgeConfig::get('codendi_bin_prefix').'/'.$hook_name.'.php')) {
+            if(! $this->enableHook($project_svnroot, $hook_name, "$hooks_path/$hook_name.php")) {
                 $hook_error[] = $this->getHookPath($project_svnroot, $hook_name);
             }
         }

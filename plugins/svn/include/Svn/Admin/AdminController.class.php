@@ -183,7 +183,9 @@ class AdminController {
     public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request) {
         $hook_config = array(
             HookConfig::MANDATORY_REFERENCE => (bool)
-                $request->get("pre_commit_must_contain_reference")
+                $request->get("pre_commit_must_contain_reference"),
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool)
+                $request->get("allow_commit_message_changes")
         );
         $this->repository_manager->updateHookConfig($request->get('repo_id'), $hook_config);
 
@@ -207,7 +209,8 @@ class AdminController {
                 $request->getProject(),
                 $token,
                 $title,
-                $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
+                $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE),
+                $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
             )
         );
     }

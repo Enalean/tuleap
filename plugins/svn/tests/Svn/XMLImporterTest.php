@@ -96,6 +96,7 @@ class XMLImporterTest extends TuleapTestCase {
 
         ForgeConfig::store();
         ForgeConfig::set('sys_data_dir', parent::getTmpDir());
+        ProjectManager::clearInstance();
 
         $this->arpath = parent::getTmpDir();
         $this->logger = mock('Logger');

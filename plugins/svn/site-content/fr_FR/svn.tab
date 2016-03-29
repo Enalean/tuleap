@@ -73,4 +73,5 @@ plugin_svn_admin_hooks	title	Règles de commit
 plugin_svn_admin_hooks	subtitle	Règles lors d'un commit
 plugin_svn_admin_hooks	comment	Lors d'un commit, il est possible de forcer le respect de certaines règles. Cochez les règles que vous souhaitez voir appliquer :
 plugin_svn_admin_hooks	label_pre_commit_must_contain_reference	Requiert une référence dans tous les messages de commit.
+plugin_svn_admin_hooks	label_allow_commit_message_changes	Autorise la modification des messages de commit (svn propset --revprop -r X svn:log)
 plugin_svn_admin_hooks	submit	Sauvegarder les règles

@@ -334,7 +334,7 @@ class PreCommitReferenceTest extends TuleapTestCase {
     public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage() {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
         stub($this->svnlook)->getMessageFromTransaction()->atLeastOnce()->returns(array(""));
-        stub($this->hook_config)->getHookConfig()->returns(false);
+        stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->returns(false);
 
         $this->preCommit();
 
@@ -345,7 +345,7 @@ class PreCommitReferenceTest extends TuleapTestCase {
     public function itDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage() {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
         stub($this->svnlook)->getMessageFromTransaction()->returns(array(""));
-        stub($this->hook_config)->getHookConfig()->returns(false);
+        stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->returns(false);
 
         $this->preCommit();
 

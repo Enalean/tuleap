@@ -35,7 +35,14 @@ class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent {
         $project  = $this->getProject($group_id);
         if ($project) {
             try {
-                $this->backend_svn->updateHooks($project, $project->getSVNRootPath());
+                $this->backend_svn->updateHooks(
+                    $project,
+                    $project->getSVNRootPath(),
+                    $project->canChangeSVNLog(),
+                    ForgeConfig::get('codendi_bin_prefix'),
+                    'commit-email.pl',
+                    "",
+                    "codendi_svn_pre_commit.php");
                 $this->done();
             } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
                 $this->warning($exception->getMessage());
