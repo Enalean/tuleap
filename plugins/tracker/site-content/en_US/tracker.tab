@@ -1632,6 +1632,7 @@ plugin_tracker	copy_of	Copy of $1
 
 plugin_tracker	disable_notifications	Disable notifications
 plugin_tracker	enable_notifications	Enable notifications
+
 plugin_tracker	disable_notifications_alternate_text	Stop receiving notifications for this artifact
 plugin_tracker	enable_notifications_alternate_text	Receive notifications for this artifact
 plugin_tracker	raw_email_button_title	Display original email
@@ -1742,3 +1743,8 @@ plugin_tracker_artifact_links_natures	cannot_format	Cannot be formatted because 
 plugin_tracker_artifact_links_natures	unsupported_field	A field needed for the format cannot be formatted.
 plugin_tracker_artifact_links_natures	no_child	As per config (hierarchy), the type _is_child cannot be used for the link to artifact #$1
 plugin_tracker_artifact_links_natures	force_child	As per config (hierarchy), force use of _is_child type for the link to artifact #$1
+plugin_tracker	pending_tv5_removal	Trackers Pending for Deletion
+plugin_tracker	no_pending	No Tracker pending for Deletion
+
+plugin_tracker	info_tracker_restored	The tracker '$1' has been properly restored
+plugin_tracker	tracker_action_restore	Restore

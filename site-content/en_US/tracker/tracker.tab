@@ -420,9 +420,9 @@ tracker_include_type	field_values	Field Values
 tracker_include_type	canned_resp	Canned Responses
 tracker_include_type	reports	Tracker Reports
 tracker_include_type	mail_notif	Email Notification Settings
-tracker_include_type	pending_removal	Pending Trackers Removals
-tracker_include_type	no_pending	No Tracker pending for Deletion
-tracker_include_type	pending_deletion	Trackers Pending for Deletion
+tracker_include_type	pending_removal	Pending Trackers V3 Removals
+tracker_include_type	no_pending	No Tracker V3 pending for Deletion
+tracker_include_type	pending_deletion	Trackers V3 Pending for Deletion
 tracker_include_type	deletion_date	Deletion date
 tracker_include_type	delay	Delay?
 tracker_include_type	restore	Restore?

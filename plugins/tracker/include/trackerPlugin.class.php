@@ -120,6 +120,8 @@ class trackerPlugin extends Plugin {
             $this->_addHook(FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP);
         }
 
+        $this->_addHook(Event::LIST_DELETED_TRACKERS, 'displayDeletedTrackers');
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -206,7 +208,7 @@ class trackerPlugin extends Plugin {
     public function getSystemEventClass($params) {
         switch($params['type']) {
             case SystemEvent_TRACKER_V3_MIGRATION::NAME:
-                $params['class'] = 'SystemEvent_TRACKER_V3_MIGRATION';
+                $params['class']        = 'SystemEvent_TRACKER_V3_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getMigrationManager(),
                 );
@@ -672,6 +674,16 @@ class trackerPlugin extends Plugin {
             $trackerManager = new TrackerManager();
             $trackerManager->deleteProjectTrackers($groupId);
         }
+    }
+
+    /**
+     * Display the list of trackers marked as deleted with the possibility to completely purge or restore a given deleted tracker.
+     *
+     * @return Void
+     */
+    function displayDeletedTrackers() {
+         $trackerManager = new TrackerManager();
+         $trackerManager->displayDeletedTrackers();
     }
 
    /**

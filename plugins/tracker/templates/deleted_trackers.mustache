@@ -1,0 +1,35 @@
+<h2>{{ title }}</h2>
+<table class="table table-bordered table-striped">
+<thead>
+     <tr>
+         <th>{{ id_column_header }}</th>
+         <th>{{ tracker_column_header }}</th>
+         <th>{{ project_column_header }}</th>
+         <th>{{ deletion_date_column_header }}</th>
+         <th>{{ restore_action_column_header }}</th>
+    </tr>
+</thead>
+<tbody>
+    {{# deleted_trackers_list }}
+        <tr>
+            <td>{{ id }}</td>
+            <td>{{ tracker }}</td>
+            <td>
+                <a href="/project/admin/?group_id={{ project_id }}">
+                    {{ project_name }}
+                </a>
+            </td>
+            <td>{{ deletion_date }}</td>
+            <td>
+            <form class="trackers-pending-tracker-removal-action" method="POST" action="/plugins/tracker/?group_id={{ project_id }}&func=restore-tracker" >
+                <input type="hidden" name="tracker_id" value="{{ id }}" />
+                {{{ restore_token }}}
+                    <button type="submit" class="btn btn-link">
+                        <i class="icon-undo"> </i>
+                   </button>
+            </form>
+            </td>
+        </tr>
+    {{/ deleted_trackers_list }}
+</tbody>
+</table>
