@@ -84,19 +84,18 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         return element;
     },
 
-    insertChildAfter: function (parent_id, child) {
-        var parent = this.body.down('tr[data-child-id='+ parent_id +']'),
-            element;
+    insertChildAfter: function (parent_element, child) {
+        var element;
 
-        parent.insert({after: this.row_template.evaluate(child)});
+        parent_element.insert({after: this.row_template.evaluate(child)});
 
-        element = parent.next();
+        element = parent_element.next();
         if (! child.has_children) {
             element.down('a.toggle-child').setStyle({
                 visibility: 'hidden'
             });
         }
-        this.adjustPadding(parent, element);
+        this.adjustPadding(parent_element, element);
 
         return element;
     },
@@ -157,7 +156,7 @@ tuleap.artifact.HierarchyViewer.ItemProvider = Class.create({
 
     receiveChildren: function (parent, children) {
         children.map(function (child) {
-            var element = this.renderer.insertChildAfter(parent.getId(), child),
+            var element = this.renderer.insertChildAfter(parent.getElement(), child),
                 item    = new tuleap.artifact.HierarchyViewer.Item(child.id, element, this);
             parent.addChild(item);
         }.bind(this));
@@ -185,6 +184,10 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
             }
             Event.stop(evt);
         }.bind(this));
+    },
+
+    getElement: function () {
+        return this.element;
     },
 
     getId: function () {

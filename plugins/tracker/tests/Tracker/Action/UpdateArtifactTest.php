@@ -20,6 +20,8 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+
 class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
 
     /** @var Tracker_Artifact */
@@ -41,6 +43,7 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
     protected $us_computed_field;
 
     protected $old_request_with;
+    protected $artifact_retriever;
 
     public function setUp() {
         parent::setUp();
@@ -79,13 +82,16 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
         stub($this->computed_field)->fetchCardValue($this->task)->returns(42);
         stub($this->us_computed_field)->fetchCardValue($this->user_story)->returns(23);
 
-        $this->event_manager = mock('EventManager');
+        $this->event_manager    = mock('EventManager');
+        $this->artifact_retriever = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever');
 
         $this->action = new Tracker_Action_UpdateArtifact(
             $this->task,
             $this->formelement_factory,
-            $this->event_manager
+            $this->event_manager,
+            $this->artifact_retriever
         );
+
     }
 
     protected function setUpAjaxRequestHeaders() {
@@ -289,7 +295,8 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
         $action   = new Tracker_Artifact_RedirectUrlTestVersion(
             $this->task,
             $this->formelement_factory,
-            $this->event_manager
+            $this->event_manager,
+            $this->artifact_retriever
         );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
 

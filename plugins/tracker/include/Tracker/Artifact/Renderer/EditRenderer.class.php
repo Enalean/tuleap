@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,6 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
+use Tuleap\Tracker\Artifact\View\Nature;
+
 class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer {
 
     /**
@@ -33,16 +37,25 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
      * @var Tracker_IDisplayTrackerLayout
      */
     protected $layout;
+    private $retriever;
 
     /**
      * @var Tracker_Artifact[]
      */
     private $hierarchy;
 
-    public function __construct(EventManager $event_manager, Tracker_Artifact $artifact, Tracker_FormElementFactory $formelement_factory, Tracker_IDisplayTrackerLayout $layout) {
+    public function __construct(
+        EventManager $event_manager,
+        Tracker_Artifact $artifact,
+        Tracker_FormElementFactory $formelement_factory,
+        Tracker_IDisplayTrackerLayout $layout,
+        NatureIsChildLinkRetriever $retriever
+
+    ) {
         parent::__construct($artifact, $event_manager);
         $this->formelement_factory = $formelement_factory;
         $this->layout              = $layout;
+        $this->retriever           = $retriever;
     }
 
     /**
@@ -58,13 +71,23 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         // the following statement needs to be called before displayHeader
         // in order to get the feedback, if any
         $this->hierarchy = $this->artifact->getAllAncestors($current_user);
-
         parent::display($request, $current_user);
     }
 
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
         $html  = parent::fetchFormContent($request, $current_user);
-        $html .= $this->fetchTitleInHierarchy($this->hierarchy);
+
+        if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
+            $parents = $this->retriever->getParentsHierarchy($this->artifact);
+            if ($parents->isGraph()) {
+                $html .= "<div class='alert alert-warning'>".
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'error_multiple_parents')."</div>";
+            }
+            $html .= $this->fetchTitleIsGraph($parents);
+        } else {
+            $html .= $this->fetchTitleInHierarchy($this->hierarchy);
+        }
+
         $html .= $this->fetchView($request, $current_user);
         return $html;
     }
@@ -127,8 +150,16 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     protected function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this, $this->event_manager));
-        if ($this->artifact->getTracker()->getChildren()) {
-            $view_collection->add(new Tracker_Artifact_View_Hierarchy($this->artifact, $request, $user));
+
+        if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
+            $artifact_links = $this->retriever->getChildren($this->artifact);
+            if ($artifact_links->count() > 0) {
+                $view_collection->add(new Nature($this->artifact, $request, $user));
+            }
+        } else {
+            if ($this->artifact->getTracker()->getChildren()) {
+                $view_collection->add(new Tracker_Artifact_View_Hierarchy($this->artifact, $request, $user));
+            }
         }
 
         return $view_collection->fetchRequestedView($request);
@@ -136,6 +167,14 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function fetchTitle() {
         return $this->artifact->fetchTitle();
+    }
+
+    private function fetchTitleIsGraph(ParentOfArtifactCollection $parents) {
+        $html  = '';
+        $html .= $this->artifact->fetchHiddenTrackerId();
+        $html .= $this->fetchMultipleParentsTitle($this->artifact, $parents);
+
+        return $html;
     }
 
     private function fetchTitleInHierarchy(array $hierarchy) {
@@ -146,6 +185,44 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $html .= $this->fetchParentsTitle($hierarchy);
         } else {
             $html .= $this->fetchTitle();
+        }
+        return $html;
+    }
+
+    private function fetchMultipleParentsTitle(Tracker_Artifact $artifact, ParentOfArtifactCollection $hierarchy) {
+        $tab_level = 0;
+        $html      = '';
+        $html     .= '<ul class="tracker-hierarchy">';
+        $parents = array_reverse($hierarchy->getArtifacts());
+
+        foreach($parents as $parent) {
+            foreach($parent as $father) {
+                $html .= '<li>';
+                $html .= $this->displayANumberOfBlankTab($tab_level);
+                $html .= '<div class="tree-last">&nbsp;</div> ';
+                $html .= $father->fetchDirectLinkToArtifactWithTitle();
+                $html .= '</li>';
+            }
+            $tab_level++;
+        }
+        $html .= '</ul>';
+        $html .= '<div class="tracker_artifact_title">';
+        $html .= '<ul class="tracker-hierarchy">';
+        $html .= '<li>';
+        $html .= $this->displayANumberOfBlankTab($tab_level);
+        $html .= '<div class="tree-last">&nbsp;</div> ';
+        $html .= $artifact->getXRefAndTitle();
+        $html .= $artifact->fetchEmailActionButtons();
+        $html .= '</li>';
+        $html .= '</ul>';
+        $html .= '</div>';
+        return $html;
+    }
+
+    private function displayANumberOfBlankTab($number) {
+        $html = "";
+        for ($i = 1; $i <= $number; $i++) {
+            $html .= '<div class="tree-blank">&nbsp;</div> ';
         }
         return $html;
     }

@@ -1706,3 +1706,4 @@ plugin_tracker_artifact_links_natures	cannot_use_burndown	Vous ne pouvez pas uti
 plugin_tracker_artifact_links_natures	cannot_use_burndown_user	Les données pour le diagramme de complétion ne peuvent être construites pour cet outil de suivi.
 plugin_tracker_artifact_links_natures	project_is_using_hierarchy_exception	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car ce projet utilise la hiérarchie d'outils de suivi.
 plugin_tracker_artifact_links_natures	another_service_blocks_link_nature	Le projet "$1" ne peut pas utiliser les natures de liens entre artéfacts car le service $2 bloque son utilisation.
+plugin_tracker_artifact_links_natures	error_multiple_parents	L'artéfact a plus d'un parent. Impossible d'afficher le reste de la hiérarchie.

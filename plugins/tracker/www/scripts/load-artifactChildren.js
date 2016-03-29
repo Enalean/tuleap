@@ -19,9 +19,12 @@
 
 (function ($) {
     $(document).ready(function() {
-        var artifact_hierarchy_containers = $('.artifact-hierarchy');
+        var hierarchy_containers = $('.artifact-hierarchy');
+        var nature_containers    = $('.artifact-nature');
 
-        artifact_hierarchy_containers.each(function (index) {
+        var containers = hierarchy_containers.add(nature_containers);
+
+        containers.each(function (index) {
             var container        = $(this),
                 artifact_id      = container.data('artifactId'),
                 hierarchy_viewer = new tuleap.artifact.HierarchyViewer(
@@ -32,5 +35,6 @@
                     artifact_id
                 );
         });
+
     });
 })(jQuery);

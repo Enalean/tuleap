@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+
 class Tracker_Action_UpdateArtifact {
 
     /** @var Tracker_Artifact */
@@ -28,15 +30,18 @@ class Tracker_Action_UpdateArtifact {
 
     /** @var EventManager */
     private $event_manager;
+    private $artifact_retriever;
 
     public function __construct(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
-        EventManager $event_manager
+        EventManager $event_manager,
+        NatureIsChildLinkRetriever $artifact_retriever
     ) {
         $this->artifact             = $artifact;
         $this->form_element_factory = $form_element_factory;
         $this->event_manager        = $event_manager;
+        $this->artifact_retriever   = $artifact_retriever;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -74,7 +79,12 @@ class Tracker_Action_UpdateArtifact {
                 $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
             } else {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                $render = new Tracker_Artifact_ReadOnlyRenderer($this->event_manager, $this->artifact, $this->form_element_factory, $layout);
+                $render = new Tracker_Artifact_ReadOnlyRenderer(
+                    $this->event_manager,
+                    $this->artifact,
+                    $this->form_element_factory,
+                    $layout,
+                    $this->artifact_retriever);
                 $render->display($request, $current_user);
             }
         } catch (Tracker_Exception $e) {
@@ -82,7 +92,12 @@ class Tracker_Action_UpdateArtifact {
                 $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
             } else {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                $render = new Tracker_Artifact_ReadOnlyRenderer($this->event_manager, $this->artifact, $this->form_element_factory, $layout);
+                $render = new Tracker_Artifact_ReadOnlyRenderer(
+                    $this->event_manager,
+                    $this->artifact,
+                    $this->form_element_factory,
+                    $layout,
+                    $this->artifact_retriever);
                 $render->display($request, $current_user);
             }
         }
