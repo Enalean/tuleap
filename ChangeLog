@@ -35,11 +35,11 @@ Version 8.13 (Not released yet)
 
 	== Plugins ==
 	* agiledashboard: 1.371
-	* tracker: 5.850
+	* tracker: 5.851
 	* hudson_svn: 0.6
 	* git: 4.138
 	* hudson: 1.27
-	* svn: 0.44
+	* svn: 0.45
 	* graphontrackersv5: 5.20
 	* ldap: 3.100
 	* mediawiki: 0.111
