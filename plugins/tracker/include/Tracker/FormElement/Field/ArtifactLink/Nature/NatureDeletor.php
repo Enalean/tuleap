@@ -21,18 +21,27 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use Tracker_FormElement_Field_ArtifactLink;
+class NatureDeletor {
 
-class NatureIsChildPresenter extends NaturePresenter {
+    /** @var NatureDao */
+    private $dao;
 
-    public function __construct() {
-        parent::__construct(
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse'),
-            true
-        );
+    /** @var NatureValidator */
+    private $validator;
 
-        $this->is_system = true;
+    public function __construct(NatureDao $dao, NatureValidator $validator) {
+        $this->dao       = $dao;
+        $this->validator = $validator;
+    }
+
+    /**
+     * @throws UnableToDeleteNatureException
+     */
+    public function delete($shortname) {
+        $this->validator->checkIsNotOrHasNotBeenUsed($shortname);
+
+        if (! $this->dao->delete($shortname)) {
+            throw new UnableToDeleteNatureException($GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'db_error'));
+        }
     }
 }

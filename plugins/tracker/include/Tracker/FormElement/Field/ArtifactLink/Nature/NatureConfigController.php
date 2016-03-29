@@ -48,18 +48,23 @@ class NatureConfigController {
     /** @var NatureEditor */
     private $nature_editor;
 
+    /** @var NatureDeletor */
+    private $nature_deletor;
+
     public function __construct(
         ProjectManager $project_manager,
         AllowedProjectsConfig $allowed_projects_config,
         NatureCreator $nature_creator,
         NatureEditor $nature_editor,
+        NatureDeletor $nature_deletor,
         NaturePresenterFactory $nature_presenter_factory
     ) {
-        $this->project_manager         = $project_manager;
-        $this->nature_creator          = $nature_creator;
-        $this->nature_presenter_factory          = $nature_presenter_factory;
-        $this->nature_editor           = $nature_editor;
-        $this->allowed_projects_config = $allowed_projects_config;
+        $this->project_manager          = $project_manager;
+        $this->nature_creator           = $nature_creator;
+        $this->nature_presenter_factory = $nature_presenter_factory;
+        $this->nature_editor            = $nature_editor;
+        $this->nature_deletor           = $nature_deletor;
+        $this->allowed_projects_config  = $allowed_projects_config;
     }
 
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
@@ -112,6 +117,24 @@ class NatureConfigController {
                     'edit_error',
                     $exception->getMessage()
                 )
+            );
+        }
+        $response->redirect(self::$URL);
+    }
+
+    public function deleteNature(Codendi_Request $request, Response $response) {
+        try {
+            $this->nature_deletor->delete($request->get('shortname'));
+
+            $response->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_success')
+            );
+
+        } catch (NatureManagementException $exception) {
+            $response->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_error', $exception->getMessage())
             );
         }
         $response->redirect(self::$URL);

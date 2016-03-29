@@ -25,6 +25,13 @@ class NatureValidator {
 
     const SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*';
 
+    /** @var NatureDao */
+    private $dao;
+
+    public function __construct(NatureDao $dao) {
+        $this->dao = $dao;
+    }
+
     /** @throws InvalidNatureParameterException */
     public function checkShortname($shortname) {
         if (! $shortname) {
@@ -53,6 +60,14 @@ class NatureValidator {
         if (! $reverse_label) {
             throw new InvalidNatureParameterException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_reverse_label')
+            );
+        }
+    }
+
+    public function checkIsNotOrHasNotBeenUsed($shortname) {
+        if ($this->dao->isOrHasBeenUsed($shortname)) {
+            throw new UnableToDeleteNatureException(
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_delete')
             );
         }
     }

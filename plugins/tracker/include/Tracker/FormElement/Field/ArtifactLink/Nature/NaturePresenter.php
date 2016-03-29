@@ -26,11 +26,13 @@ class NaturePresenter {
     public $reverse_label;
     public $forward_label;
     public $shortname;
+    public $is_or_has_been_used;
     public $is_system = false;
 
-    public function __construct($shortname, $forward_label, $reverse_label) {
-        $this->shortname     = $shortname;
-        $this->forward_label = $forward_label;
-        $this->reverse_label = $reverse_label;
+    public function __construct($shortname, $forward_label, $reverse_label, $is_or_has_been_used) {
+        $this->shortname           = $shortname;
+        $this->forward_label       = $forward_label;
+        $this->reverse_label       = $reverse_label;
+        $this->is_or_has_been_used = $is_or_has_been_used;
     }
 }
