@@ -1,3 +1,6 @@
+Version 5.853 - Tuleap 8.13
+    * request #9001: Fatal error while copying an artifact
+
 Version 5.852 - Tuleap 8.13
     * request #8996: Error on attachment with modal v1
 
