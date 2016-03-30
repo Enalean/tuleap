@@ -494,23 +494,18 @@ function getPackages($sessionKey,$group_id) {
  * @return array the SOAPFRSPackage corresponding to the FRSPackage Object
  */
 function package_to_soap($package) {
-    $return = null;
-    if ($package->isError()) {
-        //skip if error
-    } else {
-        // check if current user is allowed to see this package
-        if ($package->userCanRead()) {
-            $return=array(
-                'package_id' => $package->getPackageID(),
-                'group_id' => $package->getGroupID(),
-                'name' => util_unconvert_htmlspecialchars($package->getName()),
-                'status_id' => $package->getStatusID(),
-                'rank' => $package->getRank(),
-                'approve_license' => $package->getApproveLicense()
-                );
-        }
+    // check if current user is allowed to see this package
+    if ($package->userCanRead()) {
+        return array(
+            'package_id' => $package->getPackageID(),
+            'group_id' => $package->getGroupID(),
+            'name' => util_unconvert_htmlspecialchars($package->getName()),
+            'status_id' => $package->getStatusID(),
+            'rank' => $package->getRank(),
+            'approve_license' => $package->getApproveLicense()
+        );
     }
-    return $return;
+    return null;
 }
 
 function packages_to_soap(&$pkg_arr) {
@@ -617,25 +612,20 @@ function getReleases($sessionKey,$group_id,$package_id) {
  * @return array the SOAPFRSRelease corresponding to the FRSRelease Object
  */
 function release_to_soap($release) {
-    $return = null;
-    if ($release->isError()) {
-        //skip if error
-    } else {
-        // check if the user can view 
-        if ($release->userCanRead()) {
-            $return = array(
-                'release_id' => $release->getReleaseID(),
-                'package_id' => $release->getPackageID(),
-                'name' => $release->getName(),
-                'notes' => $release->getNotes(),
-                'changes' => $release->getChanges(),
-                'status_id' => $release->getStatusID(), 
-                'release_date' => $release->getReleaseDate(),
-                'released_by' => $release->getReleasedBy()
-            );
-        }
+    // check if the user can view
+    if ($release->userCanRead()) {
+        return array(
+            'release_id' => $release->getReleaseID(),
+            'package_id' => $release->getPackageID(),
+            'name' => $release->getName(),
+            'notes' => $release->getNotes(),
+            'changes' => $release->getChanges(),
+            'status_id' => $release->getStatusID(),
+            'release_date' => $release->getReleaseDate(),
+            'released_by' => $release->getReleasedBy()
+        );
     }
-    return $return;
+    return null;
 }
 
 function releases_to_soap($release_arr) {
