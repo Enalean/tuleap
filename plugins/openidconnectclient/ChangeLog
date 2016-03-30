@@ -1,3 +1,6 @@
+Version 0.17 - Tuleap 8.13
+    * request #8999: A fatal error is raised if you provide a wrong username/password while linking to an OpenID Connect account.
+
 Version 0.16 - Tuleap 8.13
     * Fix fatal error on /account/
 

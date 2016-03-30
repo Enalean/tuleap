@@ -44,7 +44,7 @@ Version 8.13 (Not released yet)
 	* ldap: 3.100
 	* mediawiki: 0.111
 	* forumml: 2.6.24
-	* openidconnectclient: 0.16
+	* openidconnectclient: 0.17
 	* docman: 2.26.99
 	* graphontrackers: 1.14
 	* webdav: 1.9.16
