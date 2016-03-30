@@ -80,11 +80,15 @@ class PreCommit {
     }
 
     public function assertCommitToTagIsAllowed() {
-        if ($this->getImmutableTagFromRepository()
+        if ($this->repositoryUsesImmutableTags()
             && ! $this->isCommitAllowed()
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
+    }
+
+    private function repositoryUsesImmutableTags() {
+        return (bool) $this->getImmutableTagFromRepository()->getPaths();
     }
 
     private function getImmutableTagFromRepository() {
@@ -107,7 +111,6 @@ class PreCommit {
     }
 
     private function isCommitDoneInImmutableTag($path) {
-        $paths = $this->immutable_tag_factory->getByRepositoryId($this->repository)->getPaths();
         $immutable_paths = explode(PHP_EOL, $this->getImmutableTagFromRepository()->getPaths());
 
         foreach ($immutable_paths as $immutable_path) {

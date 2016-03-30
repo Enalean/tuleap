@@ -19,7 +19,6 @@
   */
 namespace Tuleap\Svn\Admin;
 
-use Project;
 use Tuleap\Svn\Repository\Repository;
 
 class ImmutableTag {
@@ -35,7 +34,7 @@ class ImmutableTag {
     }
 
     public function getPaths() {
-        return $this->paths;
+        return (string) $this->paths;
     }
 
     public function getRepository(){
@@ -43,6 +42,6 @@ class ImmutableTag {
     }
 
     public function getWhitelist(){
-        return $this->whitelist;
+        return (string) $this->whitelist;
     }
 }
