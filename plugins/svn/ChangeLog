@@ -1,3 +1,6 @@
+Version 0.47 - Tuleap 8.13
+    * request #9000: SVN plugin browser not usable when restricted to some projects
+
 Version 0.46 - Tuleap 8.13
     * request #8995 Immutable tag error always display if no directories in folder
 
