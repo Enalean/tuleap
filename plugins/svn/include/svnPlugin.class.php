@@ -201,12 +201,25 @@ class SvnPlugin extends Plugin {
 
 
     public function process(HTTPRequest $request) {
-        if (! PluginManager::instance()->isPluginAllowedForProject($this, $request->getProject()->getId())) {
+        $project_id = $request->getProject()->getId();
+        if (! $project_id) {
+            $project_id = $this->getProjectIdFromViewVcURL($request);
+        }
+
+        if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_manage_repository','plugin_not_activated'));
             $GLOBALS['Response']->redirect('/projects/'.$request->getProject()->getUnixNameMixedCase().'/');
         } else {
             $this->getRouter()->route($request);
         }
+    }
+
+    private function getProjectIdFromViewVcURL(HTTPRequest $request) {
+        $svn_root          = $request->get('root');
+        $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
+        $project           = ProjectManager::instance()->getProjectByCaseInsensitiveUnixName($project_shortname);
+
+        return $project->getID();
     }
 
     public function cssFile($params) {
