@@ -233,6 +233,8 @@ abstract class Tracker_Report_Renderer {
     }
 
     private function getAddToDashboardURL($owner_id, $widget_id) {
+        $csrf = new CSRFSynchronizerToken('widget_management');
+
         return '/widgets/updatelayout.php?'. http_build_query(
             array(
                 'owner'    => $owner_id,
@@ -245,7 +247,8 @@ abstract class Tracker_Report_Renderer {
                     $widget_id => array (
                         'add' => 1
                     )
-                )
+                ),
+                $csrf->getTokenName() => $csrf->getToken()
             )
         );
     }
