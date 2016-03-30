@@ -19,6 +19,7 @@ Version 8.13 (Not released yet)
 	* request #8984 Tracker v3 to v5 migration: Special characters are modified
 	* request #8985: Attachment description became mandatory and it should not
 	* request #8977 The 'All projects' page displays the first 50 projects, but the next one is empty
+	* request #9002: Call to undefined method FRSRelease::isError() while deleting empty releases with the SOAP API
 
 	== Development ==
 	* request #8921: Makefile should be self-documented
