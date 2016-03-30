@@ -1,3 +1,6 @@
+Version 5.854 - Tuleap 8.13
+    * request #9005: Missing challenge while adding tracker report in dashboard
+
 Version 5.853 - Tuleap 8.13
     * request #9001: Fatal error while copying an artifact
 
