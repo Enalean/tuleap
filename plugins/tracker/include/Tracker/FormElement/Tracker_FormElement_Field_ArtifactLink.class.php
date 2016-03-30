@@ -436,6 +436,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $artifact_links,
         $prefill_new_values,
         $prefill_removed_values,
+        $prefill_nature,
         $prefill_parent,
         $read_only,
         $from_aid = null,
@@ -480,7 +481,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $natures_presenter[] = array(
                         'shortname'     => $nature->shortname,
                         'forward_label' => $nature->forward_label,
-                        'is_selected'   => false
+                        'is_selected'   => ($nature->shortname == $prefill_nature)
                     );
                 }
                 $html          .= $this->getTemplateRenderer()->renderToString(
@@ -863,6 +864,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $prefill_removed_values = $submitted_value['removed_values'];
         }
 
+        $prefill_nature = '';
+        if (isset($submitted_value['nature'])) {
+            $prefill_nature = $submitted_value['nature'];
+        }
+
         $read_only      = false;
         $name           = 'artifact['. $this->id .']';
         $from_aid       = $artifact->getId();
@@ -874,6 +880,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $artifact_links,
             $prefill_new_values,
             $prefill_removed_values,
+            $prefill_nature,
             $read_only,
             $prefill_parent,
             $from_aid
@@ -887,6 +894,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $artifact,
             '',
             $reverse_links,
+            '',
             '',
             '',
             '',
@@ -916,11 +924,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values) . $this->fetchArtifactValueReadOnly($artifact, $value) ;
+        return $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values) .
+               $this->fetchArtifactValueReadOnly($artifact, $value) ;
     }
 
-    public function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" . $this->fetchLinks($artifact, $value) . "</div>";
+    public function getHiddenArtifactValueForEdition(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        return "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" . $this->fetchLinks($artifact, $value, $submitted_values) . "</div>";
     }
 
     private function fetchLinksReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
@@ -934,6 +947,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $name                   = '';
         $prefill_new_values     = '';
         $prefill_removed_values = array();
+        $prefill_nature         = '';
         $prefill_parent         = '';
 
         return $this->fetchHtmlWidget(
@@ -942,6 +956,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $artifact_links,
             $prefill_new_values,
             $prefill_removed_values,
+            $prefill_nature,
             $prefill_parent,
             $read_only
         );
@@ -962,6 +977,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         } else if ($this->hasDefaultValue()) {
             $prefill_new_values = $this->getDefaultValue();
         }
+        $prefill_nature = '';
+        if (isset($submitted_values[$this->getId()]['nature'])) {
+            $prefill_nature = $submitted_values[$this->getId()]['nature'];
+        }
         $prefill_parent = '';
         if (isset($submitted_values[$this->getId()]['parent'])) {
             $prefill_parent = $submitted_values[$this->getId()]['parent'];
@@ -975,7 +994,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         // Here to avoid having to pass null arg for fetchHtmlWidget
         $artifact = new Tracker_Artifact(-1, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
 
-        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only);
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_nature, $prefill_parent, $read_only);
     }
 
     /**
