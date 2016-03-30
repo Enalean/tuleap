@@ -117,7 +117,7 @@ class Controller {
 
         $user = $this->user_manager->login($request->get('loginname'), $request->get('password'));
         if ($user->isAnonymous()) {
-            $this->showIndex($unlinked_account->getId(), $request->get('return_to'));
+            $this->showIndex($request);
         } else {
             $request_time = $request->getTime();
             $this->linkAccount($user, $provider, $unlinked_account, $request_time);
