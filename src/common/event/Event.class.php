@@ -1125,6 +1125,14 @@ class Event {
     const MEMBERSHIP_CREATE = 'membership_create';
 
     /**
+     * When a user is removed to a project
+     *
+     * Paramters:
+     *   'project' => Project
+     */
+    const MEMBERSHIP_DELETE = 'membership_delete';
+
+    /**
      * Retrieve project_id for an artifact reference
      *
      * Parameters:
