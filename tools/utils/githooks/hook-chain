@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Adapted from: http://stackoverflow.com/questions/8730514/chaining-git-hooks
+
+hookname=$(basename "$0")
+script=$(readlink -f "$0")
+path=$(dirname "$script")
+
+FILE=`mktemp`
+trap 'rm -f "$FILE"' EXIT
+cat - > "$FILE"
+
+for hook in "$path/$hookname"-*
+do
+    if test -x "$hook"; then
+        cat "$FILE" | $hook "$@"
+        status=$?
+
+        if test "$status" -ne 0; then
+            hookname=$(basename "$hook")
+            echo Hook $hookname failed with error code $status
+            exit $status
+        fi
+    fi
+done
