@@ -58,6 +58,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -83,7 +84,29 @@ class cardwallPlugin extends Plugin {
         return array('tracker');
     }
 
-    
+    public function tracker_event_export_full_xml($params)
+    {
+        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker($params['user'], $params['group_id']);
+        $this->getAgileDashboardExplorer()->export($params['xml_content'], $plannings);
+
+        $this->getCardwallXmlExporter($params['group_id'])->export($params['xml_content']);
+    }
+
+    private function getAgileDashboardExplorer()
+    {
+        return new AgileDashboard_XMLExporter(new XML_RNGValidator(), new PlanningPermissionsManager());
+    }
+
+    private function getCardwallXmlExporter($group_id)
+    {
+        return new CardwallConfigXmlExport(
+            ProjectManager::instance()->getProject($group_id),
+            TrackerFactory::instance(),
+            new Cardwall_OnTop_ConfigFactory(TrackerFactory::instance(), Tracker_FormElementFactory::instance()),
+            new XML_RNGValidator()
+        );
+    }
+
     // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {

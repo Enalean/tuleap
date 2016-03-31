@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,8 @@ class TrackerXmlExportTest extends TuleapTestCase {
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('XML_RNGValidator'),
             mock('Tracker_Artifact_XMLExport'),
-            mock('UserXMLExporter')
+            mock('UserXMLExporter'),
+            mock('EventManager')
         );
     }
 
@@ -53,7 +54,11 @@ class TrackerXmlExportTest extends TuleapTestCase {
         expect($this->tracker1)->exportToXML()->once();
         expect($this->tracker2)->exportToXML()->once();
 
-        $this->xml_export->exportToXMl($group_id, $xml_content);
+        $this->xml_export->exportToXMl(
+            $group_id,
+            $xml_content,
+            mock('PFUser')
+        );
     }
 
     public function testExportToXmlDoNotIncludeDeletedTrackers() {
@@ -66,7 +71,11 @@ class TrackerXmlExportTest extends TuleapTestCase {
         expect($this->tracker1)->exportToXML()->once();
         expect($this->tracker2)->exportToXML()->never();
 
-        $this->xml_export->exportToXMl($group_id, $xml_content);
+        $this->xml_export->exportToXMl(
+            $group_id,
+            $xml_content,
+            mock('PFUser')
+        );
     }
 
     public function testExportSingleTracker() {

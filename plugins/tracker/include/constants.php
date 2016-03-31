@@ -274,7 +274,7 @@ define('TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION', 'tracker_event_compleme
  *  'project'      Project (IN)
  *  'service_name' string (OUT)
  */
-define ('TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE', 'tracker_event_artifact_link_natures_blocked_by_service');
+define('TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE', 'tracker_event_artifact_link_natures_blocked_by_service');
 
 /**
  * Event emitted to delete tracker
@@ -283,7 +283,7 @@ define ('TRACKER_EVENT_ARTIFACT_LINK_NATURES_BLOCKED_BY_SERVICE', 'tracker_event
  *  'tracker_id'      int (IN)
  *  'key'             string  (IN)
  */
-define ('TRACKER_EVENT_DELETE_TRACKER', 'tracker_event_delete_tracker');
+define('TRACKER_EVENT_DELETE_TRACKER', 'tracker_event_delete_tracker');
 
 /**
  * Event emitted to display tracker admin buttons
@@ -291,4 +291,14 @@ define ('TRACKER_EVENT_DELETE_TRACKER', 'tracker_event_delete_tracker');
  * Parameters:
  *  'tracker_id'      int (IN)
  */
-define ('TRACKER_EVENT_FETCH_ADMIN_BUTTONS', 'tracker_event_fetch_admin_buttons');
+define('TRACKER_EVENT_FETCH_ADMIN_BUTTONS', 'tracker_event_fetch_admin_buttons');
+
+/**
+ * Event emitted to export AgileDashboard and carwall
+ *
+ * Parameters:
+ *   'user'        PFUser
+ *   'xml_content' SimpleXmlElement
+ *   'group_id'    group_id
+ */
+define('TRACKER_EVENT_EXPORT_FULL_XML', 'tracker_event_export_full_xml');

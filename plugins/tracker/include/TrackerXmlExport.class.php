@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerXmlExport {
+use Tuleap\Project\XML\Export\ArchiveInterface;
 
+class TrackerXmlExport
+{
     /**
      * @var UserXMLExporter
      */
@@ -35,23 +37,39 @@ class TrackerXmlExport {
     private $rng_validator;
 
     /** @var Tracker_Artifact_XMLExport */
-    private $artifact_xml_xport;
+    private $artifact_xml_export;
+
+    /** @var AgileDashboard_XMLExporter */
+    private $agiledashboard_exporter;
+
+    /** @var PlanningFactory */
+    private $planning_factory;
+
+    /** @var EventManager */
+    private $event_manager;
 
     public function __construct(
         TrackerFactory $tracker_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         XML_RNGValidator $rng_validator,
         Tracker_Artifact_XMLExport $artifact_xml_export,
-        UserXMLExporter $user_xml_exporter
+        UserXMLExporter $user_xml_exporter,
+        EventManager $event_manager
     ) {
-        $this->tracker_factory       = $tracker_factory;
-        $this->trigger_rules_manager = $trigger_rules_manager;
-        $this->rng_validator         = $rng_validator;
-        $this->artifact_xml_xport    = $artifact_xml_export;
-        $this->user_xml_exporter     = $user_xml_exporter;
+        $this->tracker_factory         = $tracker_factory;
+        $this->trigger_rules_manager   = $trigger_rules_manager;
+        $this->rng_validator           = $rng_validator;
+        $this->artifact_xml_export     = $artifact_xml_export;
+        $this->user_xml_exporter       = $user_xml_exporter;
+        $this->event_manager           = $event_manager;
     }
 
-    public function exportToXml($group_id, SimpleXMLElement $xml_content) {
+    public function exportToXmlFull(
+        $group_id,
+        SimpleXMLElement $xml_content,
+        PFUser $user,
+        ArchiveInterface $archive
+    ) {
         $exported_trackers = array();
         $xml_field_mapping = array();
 
@@ -60,17 +78,66 @@ class TrackerXmlExport {
         foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
-                $child = $xml_trackers->addChild('tracker');
-                $tracker->exportToXML($child, $xml_field_mapping);
+                $artifacts = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
+                $this->artifact_xml_export->export($tracker, $artifacts, $user, $archive);
             }
         }
 
+        $params = array(
+            'user'        => $user,
+            'xml_content' => &$xml_content,
+            'group_id'    => $group_id
+        );
+        $this->event_manager->processEvent(TRACKER_EVENT_EXPORT_FULL_XML, $params);
+
+        $this->exportTriggers($xml_trackers, $xml_field_mapping, $exported_trackers);
+        $this->validateTrackerExport($xml_trackers);
+    }
+
+    public function exportToXml(
+        $group_id,
+        SimpleXMLElement $xml_content,
+        PFUser $user
+    ) {
+        $exported_trackers = array();
+        $xml_field_mapping = array();
+
+        $xml_trackers = $xml_content->addChild('trackers');
+
+        foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
+            if ($tracker->isActive()) {
+                $exported_trackers[] = $tracker;
+                $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
+            }
+        }
+
+        $this->exportTriggers($xml_trackers, $xml_field_mapping, $exported_trackers);
+        $this->validateTrackerExport($xml_trackers);
+    }
+
+    private function exportTracker(SimpleXMLElement $xml_trackers, Tracker $tracker, &$xml_field_mapping)
+    {
+        $child = null;
+
+        if ($tracker->isActive()) {
+            $child = $xml_trackers->addChild('tracker');
+            $tracker->exportToXML($child, $xml_field_mapping);
+        }
+
+        return $child;
+    }
+
+    private function exportTriggers(SimpleXMLElement $xml_trackers, $xml_field_mapping, $exported_trackers)
+    {
         // Cross tracker stuff needs to be exported after to ensure all references exists
         $triggers_xml = $xml_trackers->addChild('triggers');
         foreach ($exported_trackers as $tracker) {
             $this->trigger_rules_manager->exportToXml($triggers_xml, $xml_field_mapping, $tracker);
         }
+    }
 
+    private function validateTrackerExport(SimpleXMLElement $xml_trackers)
+    {
         try {
             $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
             return $xml_trackers;
@@ -81,7 +148,12 @@ class TrackerXmlExport {
         }
     }
 
-    public function exportSingleTrackerToXml(SimpleXMLElement $xml_content, $tracker_id, PFUser $user, Tuleap\Project\XML\Export\ArchiveInterface $archive) {
+    public function exportSingleTrackerToXml(
+        SimpleXMLElement $xml_content,
+        $tracker_id,
+        PFUser $user,
+        Tuleap\Project\XML\Export\ArchiveInterface $archive
+    ) {
         $xml_field_mapping = array();
         $xml_trackers      = $xml_content->addChild('trackers');
         $tracker           = $this->tracker_factory->getTrackerById($tracker_id);
@@ -90,7 +162,7 @@ class TrackerXmlExport {
             $tracker_xml = $xml_trackers->addChild('tracker');
 
             $tracker->exportToXMLInProjectExportContext($tracker_xml, $this->user_xml_exporter, $xml_field_mapping);
-            $this->artifact_xml_xport->export($tracker, $tracker_xml, $user, $archive);
+            $this->artifact_xml_export->export($tracker, $tracker_xml, $user, $archive);
         }
 
         $this->rng_validator->validate($xml_trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
