@@ -111,9 +111,10 @@ class XMLDocmanImport {
         $this->reorder = $reorder;
         $this->importMessageMetadata = $importMessageMetadata;
         $this->autoRetry = $autoRetry;
-        $this->logger = new WrapperLogger($logger, 'Import Docman');
+        $this->logger = $logger;
 
         $this->logger->info("Init Import process");
+
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
             $this->hash = $this->soap->login($login, $password, "3.6")->session_hash;
