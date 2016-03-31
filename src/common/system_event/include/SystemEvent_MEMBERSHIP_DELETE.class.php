@@ -70,6 +70,13 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
                 }
             }
 
+            EventManager::instance()->processEvent(
+                Event::MEMBERSHIP_DELETE,
+                array(
+                    'project' => $project
+                )
+            );
+
             // Need to update system group cache
             Backend::instance('System')->setNeedRefreshGroupCache();
 

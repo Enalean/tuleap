@@ -79,6 +79,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
         $this->addHook(Event::UGROUP_MODIFY);
         $this->addHook(Event::MEMBERSHIP_CREATE);
+        $this->addHook(Event::MEMBERSHIP_DELETE);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
@@ -114,6 +115,15 @@ class SvnPlugin extends Plugin {
 
     /** @see Event::MEMBERSHIP_CREATE */
     public function membership_create(array $params) {
+        $project         = $params['project'];
+        $new_ugroup_name = null;
+        $old_ugroup_name = null;
+
+        $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
+    }
+
+    /** @see Event::MEMBERSHIP_DELETE */
+    public function membership_delete(array $params) {
         $project         = $params['project'];
         $new_ugroup_name = null;
         $old_ugroup_name = null;
