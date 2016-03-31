@@ -27,6 +27,7 @@ Version 8.13 (Not released yet)
 	* story #8815: Manage cross references between svn revisions & the world (Deal with crossproject)
 	* request #8895: remove TinyMCE - Refactoring of tuleap.textarea.RTE
 	* Automatic setup of gerrit
+	* SOAP API maintenance due to some refactoring
 
 	== Security ==
 	* request #8904: CSRF vulnerability in the project registration page
