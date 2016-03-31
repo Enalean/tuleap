@@ -1,3 +1,6 @@
+Version 0.48 - Tuleap 8.13
+    * request #9009 Removed project members not removed from SVNAccessfile
+
 Version 0.47 - Tuleap 8.13
     * request #9000: SVN plugin browser not usable when restricted to some projects
 
