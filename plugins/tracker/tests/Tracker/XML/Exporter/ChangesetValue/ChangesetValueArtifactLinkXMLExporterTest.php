@@ -80,14 +80,19 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
 
     public function itExportsChildren() {
         stub($this->changeset_value)->getValue()->returns(array(
-            $this->anArtifactLinkInfoUserCanView(111, 101),
-            $this->anArtifactLinkInfoUserCanView(222, 102),
+            $this->anArtifactLinkInfoUserCanView(111, 101, null),
+            $this->anArtifactLinkInfoUserCanView(222, 102, null),
         ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(false);
+        stub($artifact)->getTracker()->returns($tracker);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            $artifact,
             $this->changeset_value
         );
 
@@ -100,9 +105,37 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
         $this->assertEqual((int)$field_change->value[1], 222);
     }
 
+    public function itExportsChildrenNatureMode() {
+        stub($this->changeset_value)->getValue()->returns(array(
+            $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
+            $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
+        ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
+
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $artifact,
+            $this->changeset_value
+        );
+
+        $field_change = $this->changeset_xml->field_change;
+
+        $this->assertEqual((string)$field_change['field_name'], 'artifact links');
+        $this->assertEqual((string)$field_change['type'], 'art_link');
+
+        $this->assertEqual((int)$field_change->value[0], 111);
+        $this->assertEqual((int)$field_change->value[1], 222);
+        $this->assertEqual(count($field_change->value), 2);
+    }
+
     public function itDoesNotExportArtifactsThatAreNotChildren() {
         stub($this->changeset_value)->getArtifactIds()->returns(array(
-            $this->anArtifactLinkInfoUserCanView(333, 103),
+            $this->anArtifactLinkInfoUserCanView(333, 103, null),
         ));
 
         $this->exporter->export(
@@ -116,15 +149,69 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
         $this->assertEqual(count($field_change->value), 0);
     }
 
-    public function itDoesNotExportChildrenUserCannotSee() {
+    public function itDoesNotExportArtifactsThatAreNotChildrenNatureMode() {
         stub($this->changeset_value)->getValue()->returns(array(
-            $this->anArtifactLinkInfoUserCannotView(111, 101),
+            $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
+            $this->anArtifactLinkInfoUserCanView(222, 102, 'somekindofnature'),
         ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            $artifact,
+            $this->changeset_value
+        );
+
+        $field_change = $this->changeset_xml->field_change;
+
+        $this->assertEqual((string)$field_change['field_name'], 'artifact links');
+        $this->assertEqual((string)$field_change['type'], 'art_link');
+
+        $this->assertEqual((int)$field_change->value[0], 111);
+        $this->assertEqual(count($field_change->value), 1);
+    }
+
+    public function itDoesNotExportChildrenUserCannotSee() {
+        stub($this->changeset_value)->getValue()->returns(array(
+            $this->anArtifactLinkInfoUserCannotView(111, 101, null),
+        ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(false);
+        stub($artifact)->getTracker()->returns($tracker);
+
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $artifact,
+            $this->changeset_value
+        );
+
+        $field_change = $this->changeset_xml->field_change;
+
+        $this->assertEqual(count($field_change->value), 0);
+    }
+
+    public function itDoesNotExportChildrenUserCannotSeeNatureMode() {
+        stub($this->changeset_value)->getValue()->returns(array(
+            $this->anArtifactLinkInfoUserCannotView(111, 101, '_is_child'),
+        ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
+
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $artifact,
             $this->changeset_value
         );
 
@@ -149,38 +236,65 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
 
     public function itCollectsChildren() {
         stub($this->changeset_value)->getValue()->returns(array(
-            $this->anArtifactLinkInfoUserCanView(111, 101),
-            $this->anArtifactLinkInfoUserCanView(222, 102),
+            $this->anArtifactLinkInfoUserCanView(111, 101, null),
+            $this->anArtifactLinkInfoUserCanView(222, 102, null),
         ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(false);
+        stub($artifact)->getTracker()->returns($tracker);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            $artifact,
             $this->changeset_value
         );
 
         $this->assertEqual($this->collector->getAllChildrenIds(), array(111, 222));
     }
 
-    private function anArtifactLinkInfoUserCanView($artifact_id, $tracker_id) {
-        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id);
+    public function itCollectsChildrenNatureMode() {
+        stub($this->changeset_value)->getValue()->returns(array(
+            $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
+            $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
+        ));
+
+        $artifact = mock('Tracker_Artifact');
+        $tracker = mock('Tracker');
+        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
+
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $artifact,
+            $this->changeset_value
+        );
+
+        $this->assertEqual($this->collector->getAllChildrenIds(), array(111, 222));
+    }
+
+    private function anArtifactLinkInfoUserCanView($artifact_id, $tracker_id, $nature) {
+        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id, $nature);
         stub($artifact_link_info)->userCanView($this->user)->returns(true);
 
         return $artifact_link_info;
     }
 
-    private function anArtifactLinkInfoUserCannotView($artifact_id, $tracker_id) {
-        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id);
+    private function anArtifactLinkInfoUserCannotView($artifact_id, $tracker_id, $nature) {
+        $artifact_link_info = $this->anArtifactLinkInfo($artifact_id, $tracker_id, $nature);
         stub($artifact_link_info)->userCanView($this->user)->returns(false);
 
         return $artifact_link_info;
     }
 
-    private function anArtifactLinkInfo($artifact_id, $tracker_id) {
+    private function anArtifactLinkInfo($artifact_id, $tracker_id, $nature) {
         $artifact_link_info = mock('Tracker_ArtifactLinkInfo');
         stub($artifact_link_info)->getArtifactId()->returns($artifact_id);
         stub($artifact_link_info)->getTracker()->returns(TrackerFactory::instance()->getTrackerById($tracker_id));
+        stub($artifact_link_info)->getNature()->returns($nature);
 
         return $artifact_link_info;
     }
