@@ -59,8 +59,8 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             exit_error('Unrecognized Post','cannot execute');
     }
 
-    $validFormat = new Valid_WhiteList('body_format' ,array(0, 1));
-    $bodyFormat = $request->getValidated('body_format', $validFormat, 0);
+    $validFormat = new Valid_WhiteList('comment_format' ,array('html', 'text'));
+    $bodyFormat = $request->getValidated('comment_format', $validFormat, 'text');
 
     $validMessage = new Valid_Text('mail_message');
     if($request->valid($validMessage)) {
@@ -75,7 +75,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
 
     $mailMgr = new MailManager();
     
-    if ($bodyFormat) {
+    if ($bodyFormat === 'html') {
         $hp = Codendi_HTMLPurifier::instance();
         $mail = $mailMgr->getMailByType('html');
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML));

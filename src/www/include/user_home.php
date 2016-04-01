@@ -22,7 +22,6 @@
 
 
 $HTML->header(array('title'=>$Language->getText('include_user_home','devel_profile')));
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
 if (!$user) {
 	exit_error($Language->getText('include_user_home','no_such_user'),$Language->getText('include_user_home','no_such_user'));
@@ -200,7 +199,7 @@ if (user_isloggedin()) {
         </div>
     </div>
 
-	<P>
+    <P>
 	<B>'.$Language->getText('include_user_home','subject').':</B><BR>
 	<INPUT TYPE="TEXT" NAME="subject" VALUE="" STYLE="width: 99%;">
     </P>
@@ -208,8 +207,10 @@ if (user_isloggedin()) {
     <P>
 	<B>'.$Language->getText('include_user_home','message').':</B><BR>
 	<div id="body_label"></div>
-	<TEXTAREA ID="body" NAME="body" ROWS="15" WRAP="HARD" STYLE="width: 99%;"></TEXTAREA>
-	</P>
+        <div id="user-home-message">
+            <TEXTAREA ID="body" NAME="body" ROWS="15" WRAP="HARD"></TEXTAREA>
+        </div>
+    </P>
 
 	<CENTER>
 	<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="'.$Language->getText('include_user_home','send_message').'">
@@ -236,10 +237,17 @@ $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
-            new Codendi_RTE_Send_HTML_MAIL('body');
-        });";
+    var body_container = $$('#body')[0];
+    var options = {
+        toggle: true,
+        default_in_html: false,
+        htmlFormat : false,
+        id: ''
+    };
+
+    new tuleap.textarea.RTE(body_container, options);
+
+});";
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
 $HTML->footer(array());
-
-?>

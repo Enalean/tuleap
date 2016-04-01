@@ -148,8 +148,19 @@ if (isset($cc) && strlen($cc) > 0) {
 
 $mail->setSubject($subject);
 
-$vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
+$vFormat    = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
 $bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
+
+// Deal with CKEDITOR
+if ($bodyFormat === false) {
+    $ckeditor_format = $request->getValidated('comment_format', $vFormat, FORMAT_HTML);
+    if ($ckeditor_format === 'html') {
+        $bodyFormat = FORMAT_HTML;
+    } else {
+        $bodyFormat = FORMAT_TEXT;
+    }
+}
+
 if ($bodyFormat == FORMAT_HTML) {
     $mail->getLookAndFeelTemplate()->set('title', $purifier->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
     $mail->setBodyHtml($body);
