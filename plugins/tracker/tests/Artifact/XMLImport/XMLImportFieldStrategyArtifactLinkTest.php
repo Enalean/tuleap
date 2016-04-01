@@ -36,7 +36,27 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
                   </field_change>');
         $submitted_by = mock('PFUser');
         $res = $strategy->getFieldData($field, $xml_change, $submitted_by);
-        $expected_res =  array("new_values" => '2,1');
+        $expected_res =  array("new_values" => '2,1', 'natures' => array('1' => '', '2' => ''));
+        $this->assertEqual($expected_res, $res);
+    }
+
+    public function itShouldWorkWithCompleteMappingAndNature() {
+        $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $mapping->add(100, 1);
+        $mapping->add(101, 2);
+        $mapping->add(102, 3);
+        $logger = mock('Logger');
+        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink($mapping, $logger);
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        $xml_change = new SimpleXMLElement('<?xml version="1.0"?>
+                  <field_change field_name="artlink" type="art_link">
+                    <value nature="toto">101</value>
+                    <value nature="titi">100</value>
+                    <value>102</value>
+                  </field_change>');
+        $submitted_by = mock('PFUser');
+        $res = $strategy->getFieldData($field, $xml_change, $submitted_by);
+        $expected_res =  array("new_values" => '2,1,3', 'natures' => array('1' => 'titi', '2' => 'toto', '3' => ''));
         $this->assertEqual($expected_res, $res);
     }
 

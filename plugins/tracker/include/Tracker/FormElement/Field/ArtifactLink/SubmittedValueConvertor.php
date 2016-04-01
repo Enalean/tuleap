@@ -175,9 +175,9 @@ class SubmittedValueConvertor {
 
     private function addLinksFromSubmittedValue(array &$list_of_artifactlinkinfo, array $submitted_value) {
         $new_values = $this->extractNewValuesFromSubmittedValue($submitted_value);
-        $nature     = $this->extractNatureFromSubmittedValue($submitted_value);
 
         foreach ($new_values as $new_artifact_id) {
+            $nature = $this->extractNatureFromSubmittedValue($submitted_value, $new_artifact_id);
             if (isset($list_of_artifactlinkinfo[$new_artifact_id])) {
                 continue;
             }
@@ -186,7 +186,6 @@ class SubmittedValueConvertor {
             if (! $artifact) {
                 continue;
             }
-
             $list_of_artifactlinkinfo[$new_artifact_id] = Tracker_ArtifactLinkInfo::buildFromArtifact(
                 $artifact,
                 $nature
@@ -194,9 +193,10 @@ class SubmittedValueConvertor {
         }
     }
 
-    private function extractNatureFromSubmittedValue(array $submitted_value) {
-        if (isset($submitted_value['nature'])) {
-            return $submitted_value['nature'];
+    private function extractNatureFromSubmittedValue(array $submitted_value, $artifact_id) {
+        if (isset($submitted_value['natures'])) {
+            $natures = $submitted_value['natures'];
+            return $natures[$artifact_id];
         }
 
         return null;

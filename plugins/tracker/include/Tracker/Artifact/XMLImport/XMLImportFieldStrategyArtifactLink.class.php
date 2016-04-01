@@ -38,16 +38,18 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
      */
     public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change, PFUser $submitted_by) {
         $artifact_links = array();
+        $natures = array();
         foreach ($field_change as $artifact_link) {
             $linked_artifact_id = (int)(string) $artifact_link;
             if($this->artifact_id_mapping->containsSource($linked_artifact_id) ) {
                 $link = $this->artifact_id_mapping->get($linked_artifact_id);
                 $artifact_links[] = $link;
+                $natures[$link] = (string) $artifact_link['nature'];
             } else {
                 $this->logger->error("Could not find artifact with id=$linked_artifact_id in xml.");
             }
         }
         $artifact_links = join(',', $artifact_links);
-        return array("new_values" => $artifact_links);
+        return array("new_values" => $artifact_links, "natures" => $natures);
     }
 }

@@ -216,6 +216,11 @@
     </attribute>
     <zeroOrMore>
       <element name="value">
+        <optional>
+          <attribute name="nature">
+            <data type="string"/>
+          </attribute>
+        </optional>
         <data type="int"/>
       </element>
     </zeroOrMore>
