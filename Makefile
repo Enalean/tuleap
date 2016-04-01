@@ -229,8 +229,16 @@ deploy-githooks:
 	@if [ -e .git/hooks/pre-commit ]; then\
 		echo "pre-commit hook already exists";\
 	else\
-		echo "Creating pre-commit hook";\
-		ln -s ../../tools/utils/githooks/hook-chain .git/hooks/pre-commit;\
+		hash phpcs 2>/dev/null && {\
+			echo "Creating pre-commit hook";\
+			ln -s ../../tools/utils/githooks/hook-chain .git/hooks/pre-commit;\
+		} || {\
+			echo "You need to install phpcs before.";\
+			echo "For example on a debian-based environment:";\
+			echo "  sudo apt-get install php-pear";\
+			echo "  sudo pear install PHP_CodeSniffer";\
+			exit 1;\
+		};\
 	fi
 
 #

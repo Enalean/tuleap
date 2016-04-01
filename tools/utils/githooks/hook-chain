@@ -13,7 +13,7 @@ cat - > "$FILE"
 for hook in "$path/$hookname"-*
 do
     if test -x "$hook"; then
-        cat "$FILE" | $hook "$@"
+        cat "$FILE" | . $hook "$@"
         status=$?
 
         if test "$status" -ne 0; then
