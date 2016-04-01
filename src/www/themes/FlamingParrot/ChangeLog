@@ -1,3 +1,9 @@
+Version 1.131 - Tuleap 8.14
+    * request #8895: remove TinyMCE
+
+Version 1.130 - Tuleap 8.14
+    * request #8895: remove TinyMCE
+
 Version 1.129 - Tuleap 8.13
     * story #8633: register page now matches the login page
 

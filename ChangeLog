@@ -4,9 +4,13 @@ Version 8.14 (Not released yet)
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
+	* request #8895: remove TinyMCE
 
 	== Plugins ==
 	* tracker: 5.856
+
+    == Themes ==
+	* FlamingParrot: 1.131
 
 Version 8.13 (Thursday, March 31st 2016)
 	== Enhancement ==
