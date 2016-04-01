@@ -136,7 +136,9 @@ class Tracker_ArtifactCreator {
             return false;
         }
 
-        $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
+        if (! $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0)) {
+            return false;
+        }
 
         return $this->createFirstChangesetNoValidation($tracker, $artifact, $fields_data, $user, $submitted_on, $send_notification);
     }

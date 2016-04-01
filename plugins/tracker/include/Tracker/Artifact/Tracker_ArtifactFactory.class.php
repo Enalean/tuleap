@@ -342,6 +342,10 @@ class Tracker_ArtifactFactory {
         }
         return $this->dao;
     }
+
+    public function setDao(Tracker_ArtifactDao $dao) {
+        $this->dao = $dao;
+    }
     
     /**
      * Add an artefact in the tracker
