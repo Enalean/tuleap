@@ -146,7 +146,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
      * @return Tracker_Artifact
      */
     private function createFakeArtifact() {
-        return new Tracker_Artifact(-1, -1, -1, -1, -1);
+        return new Tracker_Artifact(-1, $this->tracker->getID(), -1, -1, -1);
     }
 
     private function getFieldData(

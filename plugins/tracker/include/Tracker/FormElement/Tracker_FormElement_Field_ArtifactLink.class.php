@@ -1323,6 +1323,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         if (! isset($value['new_values'])) {
             return $is_valid;
         }
+
         $new_values = $value['new_values'];
         if (trim($new_values) != '') {
             $art_id_array = explode(',', $new_values);
@@ -1370,19 +1371,21 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
                     continue;
                 }
+                if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+                    if(!isset($value['natures'][$artifact_id])) {
+                        $is_valid = false;
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel(), $artifact_id)));
+                    }
+                }
             }
+        }
 
-            if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                if(! isset($value['nature'])) {
+        if($artifact->getTracker()->isProjectAllowedToUseNature() && isset($value['natures'])) {
+            foreach($value['natures'] as $nature_shortname) {
+                $nature = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
+                if(! $nature) {
                     $is_valid = false;
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel())));
-                } else {
-                    $nature_shortname = $value['nature'];
-                    $nature           = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
-                    if(! $nature) {
-                        $is_valid = false;
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_value', array($this->getLabel(), $nature_shortname)));
-                    }
                 }
             }
         }

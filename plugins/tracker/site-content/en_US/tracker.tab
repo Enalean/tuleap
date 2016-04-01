@@ -717,7 +717,7 @@ plugin_tracker_common_artifact	error_string_value	$1 is not a string.
 plugin_tracker_common_artifact	error_string_value_characters	$1 can contain neiher carriage return nor null char.
 plugin_tracker_common_artifact	error_artifactlink_value	$1: $2 is not an artifact id.
 plugin_tracker_common_artifact	error_artifactlink_nature_value	$1: $2 is not a valid nature.
-plugin_tracker_common_artifact	error_artifactlink_nature_missing	$1: nature is missing.
+plugin_tracker_common_artifact	error_artifactlink_nature_missing	Nature is missing for artifact #$1.
 plugin_tracker_common_artifact	error_artifactlink_value_not_exist	$1 : artifact #$2 does not exist.
 plugin_tracker_common_artifact	error_artifactlink_choose_parent	You must choose to link to an existing parent artifact or to create a new one.
 plugin_tracker_common_artifact	error_date_value	$1 is not a date.

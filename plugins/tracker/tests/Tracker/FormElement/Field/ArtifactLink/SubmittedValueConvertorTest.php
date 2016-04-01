@@ -169,4 +169,55 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
             $existing_list_of_artifactlinkinfo[201]
         );
     }
+
+    public function itConvertsWhenThereIsNoNature() {
+        $submitted_value = array('new_values' => '123, 124');
+
+        stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
+        stub($this->source_of_association_detector)->isChild($this->art_124, $this->artifact)->returns(false);
+
+        $updated_submitted_value = $this->convertor->convert(
+            $submitted_value,
+            $this->source_of_association_collection,
+            $this->artifact,
+            $this->previous_changesetvalue
+        );
+        $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature(), null);
+        $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature(), null);
+
+    }
+
+    public function itConvertsWhenThereIsOnlyOneNature() {
+        $submitted_value = array('new_values' => '123, 124', 'natures' => array('123' => '_is_child', '124' => '_is_child'));
+
+        stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
+        stub($this->source_of_association_detector)->isChild($this->art_124, $this->artifact)->returns(false);
+
+        $updated_submitted_value = $this->convertor->convert(
+            $submitted_value,
+            $this->source_of_association_collection,
+            $this->artifact,
+            $this->previous_changesetvalue
+        );
+        $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature(), '_is_child');
+        $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature(), '_is_child');
+
+    }
+
+    public function itConvertsWhenEachArtifactLinkHasItsOwnNature() {
+        $submitted_value = array('new_values' => '123, 124', 'natures' => array('123' => '_is_child', '124' => '_is_foo'));
+
+        stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
+        stub($this->source_of_association_detector)->isChild($this->art_124, $this->artifact)->returns(false);
+
+        $updated_submitted_value = $this->convertor->convert(
+            $submitted_value,
+            $this->source_of_association_collection,
+            $this->artifact,
+            $this->previous_changesetvalue
+        );
+        $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature(), '_is_child');
+        $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature(), '_is_foo');
+
+    }
 }

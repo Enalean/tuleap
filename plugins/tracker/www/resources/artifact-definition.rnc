@@ -98,7 +98,10 @@ artifact =
 
     field_art_link =
         attribute type { "art_link" },
-        element value { xsd:int }*
+        element value {
+            attribute nature { xsd:string }?,
+            xsd:int
+        }*
 
     field_static_list =
         attribute type { "list" },
