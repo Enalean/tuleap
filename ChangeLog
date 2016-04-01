@@ -1,4 +1,7 @@
 Version 8.14 (Not released yet)
+	== Bug Fix ==
+	* request #9014: Spelling mistake in the french Tuleap homepage
+
 	== Development ==
 	* request #9011: Deploy our own git hooks
 
