@@ -225,6 +225,14 @@ rest_docker_snap_run:
 	@echo "# ./run.sh --run tests/rest/UsersTest.php"
 	@$(DOCKER) run -ti --rm=true -v $(CURDIR):/tuleap --entrypoint=/bin/bash $(DOCKER_REST_TESTS_IMGINIT) +x
 
+deploy-githooks:
+	@if [ -e .git/hooks/pre-commit ]; then\
+		echo "pre-commit hook already exists";\
+	else\
+		echo "Creating pre-commit hook";\
+		ln -s ../../tools/utils/githooks/hook-chain .git/hooks/pre-commit;\
+	fi
+
 #
 # Start development enviromnent with Docker Compose
 #
@@ -235,7 +243,7 @@ rest_docker_snap_run:
 	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo VIRTUAL_HOST=tuleap_web_1.tuleap-aio-dev.docker >> .env
 
-dev-setup: .env ## Setup environment for Docker Compose (should only be run once)
+dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should only be run once)
 	@echo "Create all data containers"
 	@$(DOCKER) inspect tuleap_ldap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_ldap_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_db_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
