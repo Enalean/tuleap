@@ -33,7 +33,7 @@
 <h3>Avec <?= $GLOBALS['sys_name']?> vous allez pouvoir:</h3>
 <p>
     <ul>
-        <li>plannifier et gérer vos projets,</li>
+        <li>planifier et gérer vos projets,</li>
         <li>gérer le développement logiciel: versions de code source, builds d'intégration continue, etc.,</li>
         <li>suivre les exigences, tâches, bugs, etc.,</li>
         <li>produire des documents et des livrables,</li>
