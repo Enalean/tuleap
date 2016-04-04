@@ -357,7 +357,8 @@ sub get_tuleap_username_from_ldap_uid {
     SELECT user_name
     FROM user
     JOIN plugin_ldap_user ON plugin_ldap_user.user_id=user.user_id
-    WHERE ldap_uid=?;
+    WHERE ldap_uid=?
+    AND user.status IN ('A', 'R');
 EOF
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);
