@@ -1,3 +1,8 @@
+Version 8.13-2 (Monday, April 4th 2016)
+	== Bug Fix ==
+	* request #9015: Unwanted notifications sent with artifact id #0
+	* request #9014: Spelling mistake in the french Tuleap homepage
+
 Version 8.13 (Thursday, March 31st 2016)
 	== Enhancement ==
 	* story #8833: show, import and manipulate links
