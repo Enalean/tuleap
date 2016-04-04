@@ -1,6 +1,7 @@
 Version 8.14 (Not released yet)
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
+	* request #9013: Dev instances can not be started if the Gerrit data container has not been specifically created
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
