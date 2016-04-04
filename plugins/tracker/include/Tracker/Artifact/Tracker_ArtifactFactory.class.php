@@ -403,7 +403,11 @@ class Tracker_ArtifactFactory {
      * @return Tracker_Artifact[]
      */
     public function getChildren(Tracker_Artifact $artifact) {
-        return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+        if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+            return $this->getDao()->getChildrenNatureMode($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+        } else {
+            return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+        }
     }
 
     /**

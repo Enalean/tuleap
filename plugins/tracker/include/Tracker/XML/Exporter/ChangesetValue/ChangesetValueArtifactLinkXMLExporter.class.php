@@ -77,14 +77,19 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
         $artifact          = $userdata['artifact'];
         $children_trackers = $userdata['children_trackers'];
 
-        if ($this->canExportLinkedArtifact($artifact_link_info, $children_trackers)) {
-            $field_xml->addChild('value', $artifact_link_info->getArtifactId());
+        if ($this->canExportLinkedArtifact($artifact, $artifact_link_info, $children_trackers)) {
+            $value_xml = $field_xml->addChild('value', $artifact_link_info->getArtifactId());
+            $value_xml->addAttribute('nature', $artifact_link_info->getNature());
             $this->children_collector->addChild($artifact_link_info->getArtifactId(), $artifact->getId());
         }
     }
 
-    private function canExportLinkedArtifact(Tracker_ArtifactLinkInfo $artifact_link_info, array $children_trackers) {
-        $is_a_child = in_array($artifact_link_info->getTracker(), $children_trackers);
+    private function canExportLinkedArtifact(Tracker_Artifact $artifact, Tracker_ArtifactLinkInfo $artifact_link_info, array $children_trackers) {
+        if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+            $is_a_child = $artifact_link_info->getNature() === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        } else {
+            $is_a_child = in_array($artifact_link_info->getTracker(), $children_trackers);
+        }
 
         return $is_a_child && $artifact_link_info->userCanView($this->current_user);
     }
