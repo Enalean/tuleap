@@ -2,6 +2,7 @@ Version 8.14 (Not released yet)
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
 	* request #9013: Dev instances can not be started if the Gerrit data container has not been specifically created
+	* request #8957: Authorization failed for repository enabling svn token
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
@@ -9,6 +10,7 @@ Version 8.14 (Not released yet)
 
 	== Plugins ==
 	* tracker: 5.857
+	* ldap: 3.101
 
     == Themes ==
 	* FlamingParrot: 1.131

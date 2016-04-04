@@ -1,3 +1,6 @@
+Version 3.101 - Tuleap 8.14
+    * request #8957: Authorization failed for repository enabling svn token
+
 Version 3.100 - Tuleap 8.13
     * request #8918: LDAP directory bindings to a user group are kept after the ugroup removal
 
@@ -292,10 +295,10 @@ Version 3.11 (Tuleap 4.0.26)
 Version 3.10 (Tuleap 4.0.26)
     * Can now disable/enable LDAP daily synchronization in ldap.inc
     * Add the Orange implementation of LDAP_UserSync
-    
+
 Version 3.9 (Tuleap 4.0.25)
     * Checkbox checked by default when importing an LDAP group (contrib STMicroelectronics)
-    
+
 Version 3.8
     * Update synchro example to suspend users upon given criterion.
 
@@ -305,16 +308,15 @@ Version 3.7 (Tuleap 4.0.24)
 Version 3.6 (Tuleap 4.0.23)
     == Bug Fix ==
     * backlog #185: Propagate LDAP login changes in SVNAccessFile
-    
+
 Version 3.5 (Tuleap 4.0.22)
     == Bug Fix ==
     * Add CSRF countermeasures
     * Fix LDAP options settings (for better compat with LDAPv3 directories, hence AD)
 
-Version 3.4 (Codendi_ST 4.0.17) 
-	
+Version 3.4 (Codendi_ST 4.0.17)
+
 	What Changed?
 	============
         ** Make Codendi look for people in several LDAP branches, according to the config
 		** Add the autocompletion for external users
-		
