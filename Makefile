@@ -250,6 +250,7 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 	@$(DOCKER) inspect tuleap_es_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_es_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_data -v /data busybox true
 	@$(DOCKER) inspect tuleap_reverseproxy_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
+	@$(DOCKER) inspect tuleap_gerrit_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_gerrit_data -v /data busybox true
 
 show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
@@ -279,14 +280,10 @@ start: ## Start Tuleap Web + LDAP + DB in Docker Compose environment
 start-es:
 	@$(DOCKER_COMPOSE) up -d es
 
-
 env-gerrit: .env
 	@grep --quiet GERRIT_SERVER_NAME .env || echo 'GERRIT_SERVER_NAME=tuleap_gerrit_1.gerrit-tuleap.docker' >> .env
 
-dev-setup-gerrit: env-gerrit
-	@$(DOCKER) inspect tuleap_gerrit_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_gerrit_data -v /data busybox true
-
-start-gerrit: dev-setup-gerrit
+start-gerrit: env-gerrit
 	@docker-compose up -d gerrit
 	@echo "Gerrit will be available soon at http://`grep GERRIT_SERVER_NAME .env | cut -d= -f2`:8080"
 
