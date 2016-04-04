@@ -1,4 +1,8 @@
-Version 8.12-4 (Tuesday, March 29th 2015)
+Version 8.12-5 (Monday, April 4th 2016)
+	== Bug Fix ==
+	* request #9015: Unwanted notifications sent with artifact id #0
+
+Version 8.12-4 (Tuesday, March 29th 2016)
 	== Bug Fix ==
 	* request #8970: mod_perl can not be loaded by Apache on a fresh install
 	* request #8964: Wrong usage of svnlook argument
@@ -8,13 +12,13 @@ Version 8.12-4 (Tuesday, March 29th 2015)
 	* request #8981: API /projects/{id}/backlog does not retrieve last_update_date value in card_fields
 	* request #8984: Tracker v3 to v5 migration: Special characters are modified when the text/string field value is not kept in history
 
-Version 8.12-3 (Monday, March 21st 2015)
+Version 8.12-3 (Monday, March 21st 2016)
 	== Bug Fix ==
 	* request #8904: CSRF vulnerability in the project registration page
 	* request #8918: LDAP directory bindings to a user group are kept after the ugroup removal
 	* request #8929: SQL injection in the project history search
 
-Version 8.12-2 (Monday, March 14th 2015)
+Version 8.12-2 (Monday, March 14th 2016)
 	== Bug Fix ==
 	* request #8903: Persistent XSS in the widget image
 	* request #8941: Migration to gerrit should assume everything is migrated when no system event
