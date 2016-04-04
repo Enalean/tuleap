@@ -1,3 +1,6 @@
+Version 2.26.100 - Tuleap 8.14
+    * request #9008: Fatal error when running import script from docman v1
+
 Version 2.26.99 - Tuleap 8.13
     * request #8971: Avoid conflict with PHP 7 Error class
 
