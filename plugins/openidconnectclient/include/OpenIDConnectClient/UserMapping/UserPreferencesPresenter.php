@@ -63,6 +63,10 @@ class UserPreferencesPresenter {
         return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unlink');
     }
 
+    public function last_login() {
+        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'last_login');
+    }
+
     public function form_action() {
         return OPENIDCONNECTCLIENT_BASE_URL . '/?action=remove-user-mapping';
     }
