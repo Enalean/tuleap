@@ -71,6 +71,10 @@ class Tracker_Action_CreateArtifact {
         }
 
         $fields_data = $request->get('artifact');
+        if (! isset($fields_data['request_method_called'])) {
+            $fields_data['request_method_called'] = $request->get('func');
+        }
+
         $this->tracker->augmentDataFromRequest($fields_data);
 
         return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, $email);
