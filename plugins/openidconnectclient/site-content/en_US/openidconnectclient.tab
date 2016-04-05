@@ -12,6 +12,7 @@ plugin_openidconnectclient	link_page_header	You have successfully been authentic
 
 plugin_openidconnectclient	title_user_preferences	OpenID Connect providers
 plugin_openidconnectclient	unlink	Unlink
+plugin_openidconnectclient	last_login	Last login date:
 plugin_openidconnectclient	delete_user_mapping_success	The link with $1 have been removed.
 plugin_openidconnectclient	delete_user_mapping_error	An error occurred while removing the link with $1.
 
