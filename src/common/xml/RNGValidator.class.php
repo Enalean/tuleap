@@ -47,10 +47,10 @@ class XML_RNGValidator {
     }
 
     private function extractErrors(DOMDocument $dom, $rng_path) {
-        $indent   = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';
-        $jing     = $GLOBALS['codendi_utils_prefix'] .'/xml/jing.jar';
-        $temp     = tempnam($GLOBALS['tmp_dir'], 'xml');
-        $xml_file = tempnam($GLOBALS['tmp_dir'], 'xml_src_');
+        $indent   = ForgeConfig::get('codendi_utils_prefix') .'/xml/indent.xsl';
+        $jing     = ForgeConfig::get('codendi_utils_prefix') .'/xml/jing.jar';
+        $temp     = tempnam(ForgeConfig::get('tmp_dir'), 'xml');
+        $xml_file = tempnam(ForgeConfig::get('tmp_dir'), 'xml_src_');
         file_put_contents($xml_file, $dom->saveXML());
         $cmd_indent = "xsltproc -o $temp $indent $xml_file";
         `$cmd_indent`;
