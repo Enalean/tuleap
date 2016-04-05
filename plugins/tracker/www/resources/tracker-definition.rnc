@@ -23,9 +23,9 @@ tracker =
         attribute stop_notification { "0" | "1" }?, # default is false
 
         # these elements are not used, they are provided by the user during the import
-        element name { xsd:string }?,
-        element item_name { xsd:string }?,
-        element description { xsd:string }?,
+        element name { non_empty_string }?,
+        element item_name { xsd:string { pattern = "[a-zA-Z0-9_]+" } }?,
+        element description { non_empty_string }?,
         element color { xsd:string }?,
 
         element submit_instructions { xsd:string }?,
@@ -476,3 +476,5 @@ tracker =
                 attribute field_id { xsd:IDREF }?
             )
         )
+
+non_empty_string = xsd:string { minLength = "1" pattern = "(\s*[^\s+]\s*)+" }

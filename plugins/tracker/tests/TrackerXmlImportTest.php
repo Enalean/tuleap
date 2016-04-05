@@ -832,3 +832,153 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         $this->tracker_xml_importer->import($this->project, $xml_input, '');
     }
 }
+
+class TrackerXmlImport_Validator extends TuleapTestCase {
+
+    private $tracker_xml_importer;
+    private $project;
+
+    private $initial_tmp_dir;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->initial_tmp_dir = ForgeConfig::get('tmp_dir');
+        ForgeConfig::set('tmp_dir', '/tmp');
+
+        $this->tracker_xml_importer = partial_mock(
+            'TrackerXmlImportTestInstance',
+            array(
+                'createFromXML'
+            ),
+            array(
+                mock('TrackerFactory'),
+                mock('EventManager'),
+                mock('Tracker_Hierarchy_Dao'),
+                mock('Tracker_CannedResponseFactory'),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_SemanticFactory'),
+                mock('Tracker_RuleFactory'),
+                mock('Tracker_ReportFactory'),
+                mock('WorkflowFactory'),
+                new XML_RNGValidator(),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
+                mock('Tracker_Artifact_XMLImport'),
+                mock('User\XML\Import\IFindUserFromXMLReference'),
+                mock('UGroupManager'),
+                mock('Logger'),
+                mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig')
+            )
+        );
+        stub($this->tracker_xml_importer)->createFromXML()->returns(mock('Tracker'));
+        $this->project              = mock('Project');
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
+    }
+
+    public function itShouldRaiseExceptionWithEmptyTrackerDescription() {
+        $xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name><![CDATA[Name]]></name>
+                        <item_name>shortname</item_name>
+                        <description><![CDATA[]]></description>
+                        <cannedResponses/>
+                    </tracker>
+                </trackers>
+            </project>');
+
+        $this->expectException('XML_ParseException');
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+    }
+
+    public function itShouldRaiseExceptionWithOnlyWhitespacesTrackerDescription() {
+        $xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name><![CDATA[Name]]></name>
+                        <item_name>shortname</item_name>
+                        <description><![CDATA[              ]]></description>
+                        <cannedResponses/>
+                    </tracker>
+                </trackers>
+            </project>');
+
+        $this->expectException('XML_ParseException');
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+    }
+
+    public function itShouldRaiseExceptionWithEmptyTrackerName() {
+        $xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name><![CDATA[]]></name>
+                        <item_name>shortname</item_name>
+                        <description><![CDATA[Description]]></description>
+                        <cannedResponses/>
+                    </tracker>
+                </trackers>
+            </project>');
+
+        $this->expectException('XML_ParseException');
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+    }
+
+    public function itShouldRaiseExceptionWithOnlyWhitespacesTrackerName() {
+        $xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name><![CDATA[              ]]></name>
+                        <item_name>shortname</item_name>
+                        <description><![CDATA[Description]]></description>
+                        <cannedResponses/>
+                    </tracker>
+                </trackers>
+            </project>');
+
+        $this->expectException('XML_ParseException');
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+    }
+
+    public function itShouldRaiseExceptionWithEmptyTrackerShortName() {
+        $xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name><![CDATA[Name]]></name>
+                        <item_name></item_name>
+                        <description><![CDATA[Description]]></description>
+                        <cannedResponses/>
+                    </tracker>
+                </trackers>
+            </project>');
+
+        $this->expectException('XML_ParseException');
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+    }
+
+    public function itShouldRaiseExceptionWithInvalidTrackerShortName() {
+        $xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name><![CDATA[Name]]></name>
+                        <item_name>-------------</item_name>
+                        <description><![CDATA[Description]]></description>
+                        <cannedResponses/>
+                    </tracker>
+                </trackers>
+            </project>');
+
+        $this->expectException('XML_ParseException');
+        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+    }
+}
