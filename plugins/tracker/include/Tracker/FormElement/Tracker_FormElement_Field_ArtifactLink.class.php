@@ -437,6 +437,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $prefill_new_values,
         $prefill_removed_values,
         $prefill_nature,
+        $prefill_edited_natures,
         $prefill_parent,
         $read_only,
         $from_aid = null,
@@ -586,9 +587,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $html .= $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . $project_name;
                     $html .= '</h2>';
                     if ($from_aid == null) {
-                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $reverse_artifact_links, false);
+                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_natures, $reverse_artifact_links, false);
                     } else {
-                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $reverse_artifact_links, false, $from_aid);
+                        $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_natures, $reverse_artifact_links, false, $from_aid);
                     }
                     $html .= '</div>';
                 }
@@ -666,10 +667,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             case 'fetch-artifacts':
                 $read_only              = false;
                 $prefill_removed_values = array();
+                $prefill_edited_natures = array();
                 $only_rows              = true;
-                $this_project_id = $this->getTracker()->getProject()->getGroupId();
-                $is_reverse = false;
-                $hp = Codendi_HTMLPurifier::instance();
+                $this_project_id        = $this->getTracker()->getProject()->getGroupId();
+                $is_reverse             = false;
+                $hp                     = Codendi_HTMLPurifier::instance();
 
                 $ugroups = $current_user->getUgroups($this_project_id, array());
 
@@ -702,7 +704,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                             foreach ($renderers as $renderer) {
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key = $this->id .'_'. $report->id .'_'. $renderer->getId();
-                                    $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $is_reverse, $prefill_removed_values, $only_rows);
+                                    $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $is_reverse, $prefill_removed_values, $prefill_edited_natures, $only_rows);
                                     $head = '<div class="tracker-form-element-artifactlink-trackerpanel">';
 
                                     $project_name = '';
@@ -869,6 +871,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $prefill_nature = $submitted_value['nature'];
         }
 
+        $prefill_edited_natures = array();
+        if (isset($submitted_value['natures'])) {
+            $prefill_edited_natures = $submitted_value['natures'];
+        }
+
         $read_only      = false;
         $name           = 'artifact['. $this->id .']';
         $from_aid       = $artifact->getId();
@@ -881,6 +888,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $prefill_new_values,
             $prefill_removed_values,
             $prefill_nature,
+            $prefill_edited_natures,
             $read_only,
             $prefill_parent,
             $from_aid
@@ -897,6 +905,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             '',
             '',
             '',
+            array(),
             '',
             true,
             null,
@@ -948,6 +957,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $prefill_new_values     = '';
         $prefill_removed_values = array();
         $prefill_nature         = '';
+        $prefill_edited_natures = array();
         $prefill_parent         = '';
 
         return $this->fetchHtmlWidget(
@@ -957,6 +967,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $prefill_new_values,
             $prefill_removed_values,
             $prefill_nature,
+            $prefill_edited_natures,
             $prefill_parent,
             $read_only
         );
@@ -977,13 +988,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         } else if ($this->hasDefaultValue()) {
             $prefill_new_values = $this->getDefaultValue();
         }
+        $prefill_parent = '';
+        if (isset($submitted_values[$this->getId()]['parent'])) {
+            $prefill_parent = $submitted_values[$this->getId()]['parent'];
+        }
         $prefill_nature = '';
         if (isset($submitted_values[$this->getId()]['nature'])) {
             $prefill_nature = $submitted_values[$this->getId()]['nature'];
         }
-        $prefill_parent = '';
-        if (isset($submitted_values[$this->getId()]['parent'])) {
-            $prefill_parent = $submitted_values[$this->getId()]['parent'];
+        $prefill_edited_natures = array();
+        if (isset($submitted_values[$this->getId()]['natures'])) {
+            $prefill_edited_natures = $submitted_values[$this->getId()]['natures'];
         }
         $read_only              = false;
         $name                   = 'artifact['. $this->id .']';
@@ -994,7 +1009,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         // Here to avoid having to pass null arg for fetchHtmlWidget
         $artifact = new Tracker_Artifact(-1, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
 
-        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_nature, $prefill_parent, $read_only);
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_nature, $prefill_edited_natures, $prefill_parent, $read_only);
     }
 
     /**

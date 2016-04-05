@@ -370,7 +370,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
-    public function fetchAsArtifactLink($matching_ids, $field_id, $read_only, $prefill_removed_values, $is_reverse, $only_rows = false, $from_aid = null) {
+    public function fetchAsArtifactLink($matching_ids, $field_id, $read_only, $prefill_removed_values, $prefill_natures, $is_reverse, $only_rows = false, $from_aid = null) {
         $html = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $offset     = 0;
@@ -393,7 +393,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= $head;
         }
         //Display the body of the table
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session, $from_aid);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only, $store_in_session, $from_aid);
 
         if (!$only_rows) {
             $html .= $this->fetchArtifactLinkGoToTracker();
@@ -476,13 +476,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $pagination             = true;
         $artifactlink_field_id  = null;
         $prefill_removed_values = null;
+        $prefill_natures        = array();
         $only_rows              = false;
         $read_only              = true;
         $id_suffix              = '';
         //Display the head of the table
         $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);
         //Display the body of the table
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $prefill_natures, $only_rows, $read_only, $store_in_session);
 
         //Dispaly range
         $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
@@ -838,7 +839,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return string html
      */
-    private function fetchTBody($matching_ids, $total_rows, $offset, $extracolumn = 1, $only_one_column = null, $use_data_from_db = false, $pagination = true, $artifactlink_field_id = null, $prefill_removed_values = null, $only_rows = false, $read_only = false, $store_in_session = true, $from_aid = null) {
+    private function fetchTBody($matching_ids, $total_rows, $offset, $extracolumn = 1, $only_one_column = null, $use_data_from_db = false, $pagination = true, $artifactlink_field_id = null, $prefill_removed_values = null, $prefill_natures = array(), $only_rows = false, $read_only = false, $store_in_session = true, $from_aid = null) {
         $html = '';
         if (!$only_rows) {
             $html .= "\n<!-- table renderer body -->\n";
@@ -943,11 +944,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
                             $natures = $nature_presenter_factory->getAllNatures();
                             $natures_presenter = array();
+                            $selected_nature = $nature->shortname;
+                            if(isset($prefill_natures[$artifact_id])) {
+                               $selected_nature = $prefill_natures[$artifact_id];
+                            }
                             foreach($natures as $nature_i) {
                                 $natures_presenter[] = array(
                                     'shortname'     => $nature_i->shortname,
                                     'forward_label' => $nature_i->forward_label,
-                                    'is_selected'   => ($nature->shortname == $nature_i->shortname)
+                                    'is_selected'   => ($selected_nature == $nature_i->shortname)
                                 );
                             }
                             $name = "artifact[{$artifactlink_field_id}][natures][{$row['id']}]";
