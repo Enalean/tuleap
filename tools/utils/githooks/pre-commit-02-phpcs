@@ -1,0 +1,39 @@
+#!/bin/bash
+# PHP CodeSniffer pre-commit hook for git
+
+TMP_STAGING=$(mktemp -d)
+trap 'rm -f "$TMP_STAGING"' EXIT
+
+hash phpcs 2>/dev/null || {
+    echo "PHP CodeSniffer bin not found or executable"
+    echo "Please run make dev-setup"
+    exit 1
+};
+
+# Initial commit: diff against an empty tree object
+AGAINST=$(git rev-parse --verify HEAD) || AGAINST=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "$AGAINST" | grep \.php$)
+FILES_TO_CHECK=()
+for FILE in $FILES
+do
+    DIFF=$(git diff-index --cached "$AGAINST" "$FILE")
+    STATUS=$(echo $DIFF | cut -d' ' -f5)
+    if [ "$STATUS" == "A" ]; then
+        SHA1=$(echo $DIFF | cut -d' ' -f4)
+        mkdir -p "$TMP_STAGING/$(dirname $FILE)"
+        git cat-file blob $SHA1 > "$TMP_STAGING/$FILE"
+        FILES_TO_CHECK+=("$TMP_STAGING/$FILE")
+    fi
+done
+
+if [ "X${FILES_TO_CHECK[@]}" != "X" ]
+then
+    OUTPUT=$(phpcs --standard=PSR2 --encoding=utf-8 --warning-severity=0 -p "${FILES_TO_CHECK[@]}")
+    STATUS=$?
+    if [ $STATUS -ne 0 ]; then
+        echo "$OUTPUT" | less
+    fi
+
+    exit $STATUS
+fi
