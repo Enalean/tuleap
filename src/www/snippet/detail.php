@@ -122,9 +122,14 @@ if ($type=='snippet') {
                 </TD><TD>'. 
 			        nl2br(db_result($result,$i,'changes')).'</TD><TD align="center">'.
 			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD><b>'.UserHelper::instance()->getLinkOnUser($user).
-			        '</b></TD><TD ALIGN="center"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
-				db_result($result,$i,'snippet_version_id').
-				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+			        '</b></TD><TD ALIGN="center">
+			        <form method="post" action="/snippet/delete.php?type=snippet&snippet_version_id='. db_result($result,$i,'snippet_version_id'). '">
+			        <button type="submit" class="btn btn-link">
+			        <img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0">
+			        '. $csrf->fetchHTMLInput() .'
+			        </button>
+			        </form>
+			        </TD></TR>';
 
 		}
 		echo '</TABLE>';
@@ -262,9 +267,11 @@ if ($type=='snippet') {
 			        '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
 				'"><IMG SRC="'.util_get_image_theme("ic/notes.png").'" BORDER="0"></A></TD><TD ALIGN="center">'.
-				'<A HREF="/snippet/delete.php?type=package&snippet_package_version_id='.
-				db_result($result,$i,'snippet_package_version_id').
-				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" BORDER="0"></A></TD></TR>';
+				'<form method="post" action="/snippet/delete.php?type=package&snippet_package_version_id='.db_result($result,$i,'snippet_package_version_id').'">
+				<button type="submit" class="btn btn-link"><img src="'.util_get_image_theme("ic/trash.png").'" border="0"></button>
+				'. $csrf->fetchHTMLInput() . '
+				</form>
+				</TD></TR>';
 		}
 		echo '</TABLE>';
 
