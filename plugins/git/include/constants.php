@@ -99,3 +99,13 @@ define('GIT_HANDLE_ADDITIONAL_ACTION', 'git_handle_additional_action');
  *   'html'      => (Output) String        Help text
  */
 define('GIT_ADDITIONAL_HELP_TEXT', 'git_additional_help_text');
+
+/**
+ * Allow plugins to add additional hooks setup for git
+ *
+ * Parameters:
+ *   'repository' => (Input) GitRepository Git repository currently modified
+ *   'request'    => (Input) HTTPRequest   Current request
+ *   'output'     => (Output) String       The HTML to present
+ */
+define('GIT_ADDITIONAL_HOOKS', 'git_additional_hooks');
