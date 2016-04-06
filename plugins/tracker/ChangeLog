@@ -1,3 +1,6 @@
+Version 5.863 - Tuleap 8.14
+    * request #9033: Tracker's XML is considered valid even with an empty description
+
 Version 5.862 - Tuleap 8.14
     * Display nature changeset in followup
 

@@ -13,7 +13,7 @@ Version 8.14 (Not released yet)
 	* request #9011: Enforce PSR-2 for Tuleap source code
 
 	== Plugins ==
-	* tracker: 5.862
+	* tracker: 5.863
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
