@@ -1,3 +1,6 @@
+Version 5.859 - Tuleap 8.14
+    * request #9032: No backlog items if no submilestones
+
 Version 5.858 - Tuleap 8.14
     * story #9023: Prefill the art_link nature and links in forms
 
