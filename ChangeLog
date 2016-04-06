@@ -12,6 +12,9 @@ Version 8.14 (Not released yet)
 	* request #8895: remove TinyMCE
 	* request #9011: Enforce PSR-2 for Tuleap source code
 
+	== Security ==
+	* request #8909: CSRF vulnerability in the project and user pending administration approval pages
+
 	== Plugins ==
 	* tracker: 5.863
 	* ldap: 3.101
