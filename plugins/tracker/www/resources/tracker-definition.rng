@@ -85,17 +85,19 @@
       <!-- default is false -->
       <!-- these elements are not used, they are provided by the user during the import -->
       <element name="name">
-        <data type="string"/>
+        <ref name="non_empty_string"/>
       </element>
     </optional>
     <optional>
       <element name="item_name">
-        <data type="string"/>
+        <data type="string">
+          <param name="pattern">[a-zA-Z0-9_]+</param>
+        </data>
       </element>
     </optional>
     <optional>
       <element name="description">
-        <data type="string"/>
+        <ref name="non_empty_string"/>
       </element>
     </optional>
     <optional>
@@ -1150,5 +1152,11 @@
         </optional>
       </group>
     </choice>
+  </define>
+  <define name="non_empty_string">
+    <data type="string">
+      <param name="minLength">1</param>
+      <param name="pattern">(\s*[^\s+]\s*)+</param>
+    </data>
   </define>
 </grammar>
