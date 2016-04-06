@@ -669,9 +669,21 @@ class Tracker_ArtifactDao extends DataAccessObject {
             $additional_artifacts = '';
         }
 
-        $exclude = '';
+        $exclude      = '';
+        $submile_null = '';
         if (count($excluded_linked_ids) > 0) {
-            $exclude = 'AND submile.id IN ('.$this->da->escapeIntImplode($excluded_linked_ids).')';
+            $excluded_linked_ids = $this->da->escapeIntImplode($excluded_linked_ids);
+
+            $exclude =
+                    "-- exlude all those linked to wrong artifacts
+                    LEFT JOIN (
+                        tracker_artifact as submile
+                        INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
+                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                    ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN ($excluded_linked_ids))";
+
+            $submile_null = "AND submile.id IS NULL";
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
@@ -681,13 +693,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
                     INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
-                    -- exlude all those linked to wrong artifacts
-                    LEFT JOIN (
-                        tracker_artifact as submile
-                        INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
-                    ) ON (linked_art.id = artlink2.artifact_id $exclude)
+                    $exclude
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -708,7 +714,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR
                         CVL2.bindvalue_id = SS.open_value_id
                      )
-                    AND submile.id IS NULL
+                    $submile_null
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
                 ORDER BY tracker_artifact_priority.rank ASC";
@@ -879,15 +885,34 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset($artifact_id, array $tracker_ids, array $excluded_linked_ids, $additional_artifacts = '', $limit, $offset) {
+    public function getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
+        $artifact_id,
+        array $tracker_ids,
+        array $excluded_linked_ids,
+        $additional_artifacts = '',
+        $limit,
+        $offset
+    ) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
         $limit        = $this->da->escapeInt($limit);
         $offset       = $this->da->escapeInt($offset);
 
         $exclude      = '';
+        $submile_null = '';
         if (count($excluded_linked_ids) > 0) {
-            $exclude = 'AND submile.id IN ('.$this->da->escapeIntImplode($excluded_linked_ids).')';
+            $excluded_linked_ids = $this->da->escapeIntImplode($excluded_linked_ids);
+
+            $exclude =
+                    "-- exlude all those linked to wrong artifacts
+                    LEFT JOIN (
+                        tracker_artifact as submile
+                        INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
+                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                    ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN ($excluded_linked_ids))";
+
+            $submile_null = "AND submile.id IS NULL";
         }
 
         if ($additional_artifacts) {
@@ -903,13 +928,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts)
                     INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = linked_art.id)
-                    -- exlude all those linked to wrong artifacts
-                    LEFT JOIN (
-                        tracker_artifact as submile
-                        INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
-                    ) ON (linked_art.id = artlink2.artifact_id $exclude)
+                     $exclude
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -920,7 +939,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
                     ) ON (C.id = CV2.changeset_id)
                 WHERE parent_art.id = $artifact_id
-                    AND submile.id IS NULL
+                    $submile_null
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
                 ORDER BY tracker_artifact_priority.rank ASC
