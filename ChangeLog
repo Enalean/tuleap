@@ -6,6 +6,7 @@ Version 8.14 (Not released yet)
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
+		- All added files must be checked
 	* request #8895: remove TinyMCE
 	* request #9011: Enforce PSR-2 for Tuleap source code
 
