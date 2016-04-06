@@ -1129,7 +1129,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $reverse_artifact_links = $this->getReverseLinks($changeset->getArtifact()->getId());
         }
 
-        return new Tracker_Artifact_ChangesetValue_ArtifactLink($value_id, $this, $has_changed, $artifact_links, $reverse_artifact_links);
+        return new Tracker_Artifact_ChangesetValue_ArtifactLink($value_id, $this, $has_changed, $artifact_links, $reverse_artifact_links, new NaturePresenterFactory(new NatureDao()));
     }
 
 

@@ -19,6 +19,10 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+
 class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest extends TuleapTestCase {
 
     protected $field;
@@ -26,13 +30,18 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
     protected $artifact;
     protected $user;
     protected $trigger_rules_manager;
+    protected $nature_factory;
 
     public function setUp() {
         parent::setUp();
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
-        $this->field                 = anArtifactLinkField()->build();
+        $this->tracker               = mock('Tracker');
+        $this->field                 = anArtifactLinkField()->withTracker($this->tracker)->build();
         $this->artifact              = anArtifact()->build();
         $this->user                  = aUser()->build();
+
+        $this->nature_factory = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory');
+        stub($this->nature_factory)->getFromShortname()->returns(new NaturePresenter('', '', '', true));
 
         $this->command = new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand(
             $this->field,
@@ -42,25 +51,27 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
 
     public function itCallsProcessChildrenTriggersWhenThereAreChanges() {
         $previous_changeset = mock('Tracker_Artifact_Changeset');
-        stub($previous_changeset)->getValue($this->field)->returns(
-            aChangesetValueArtifactLink()
-                ->withArtifactLinks(
-                    array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
-                    )
-                )->build()
+
+        $changeset_value = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value)->getValue()->returns(
+            array(
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+            )
         );
+        stub($previous_changeset)->getValue($this->field)->returns($changeset_value);
+        stub($changeset_value)->getNaturePresenterFactory()->returns($this->nature_factory);
 
         $new_changeset = mock('Tracker_Artifact_Changeset');
-        stub($new_changeset)->getValue($this->field)->returns(
-            aChangesetValueArtifactLink()
-                ->withArtifactLinks(
-                    array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
-                        456 => new Tracker_ArtifactLinkInfo(456, 'art', 101, 1, 12345, '')
-                    )
-                )->build()
+
+        $changeset_value_bis = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value_bis)->getValue()->returns(
+            array(
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, ''),
+                456 => new Tracker_ArtifactLinkInfo(456, 'art', 101, 1, 12345, '')
+            )
         );
+        stub($new_changeset)->getValue($this->field)->returns($changeset_value_bis);
+        stub($changeset_value_bis)->getNaturePresenterFactory()->returns($this->nature_factory);
 
         expect($this->trigger_rules_manager)->processChildrenTriggers($this->artifact)->once();
 
@@ -69,24 +80,24 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
 
     public function itCallsNothingWhenThereAreNotAnyChanges() {
         $previous_changeset = mock('Tracker_Artifact_Changeset');
-        stub($previous_changeset)->getValue($this->field)->returns(
-            aChangesetValueArtifactLink()
-                ->withArtifactLinks(
-                    array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
-                    )
-                )->build()
+        $changeset_value = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value)->getValue()->returns(
+            array(
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+            )
         );
+        stub($previous_changeset)->getValue($this->field)->returns($changeset_value);
+        stub($changeset_value)->getNaturePresenterFactory()->returns($this->nature_factory);
 
         $new_changeset = mock('Tracker_Artifact_Changeset');
-        stub($new_changeset)->getValue($this->field)->returns(
-            aChangesetValueArtifactLink()
-                ->withArtifactLinks(
-                    array(
-                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
-                    )
-                )->build()
+        $changeset_value_bis = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value_bis)->getValue()->returns(
+            array(
+                123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
+            )
         );
+        stub($new_changeset)->getValue($this->field)->returns($changeset_value_bis);
+        stub($changeset_value_bis)->getNaturePresenterFactory()->returns($this->nature_factory);
 
         expect($this->trigger_rules_manager)->processChildrenTriggers($this->artifact)->never();
 
@@ -95,17 +106,18 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
 
     public function itDoesntFailWhenPreviousChangesetHasNoValue() {
         $previous_changeset = mock('Tracker_Artifact_Changeset');
-        stub($previous_changeset)->getValue($this->field)->returns(null);
+        $changeset_value = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value)->getValue()->returns(null);
 
         $new_changeset = mock('Tracker_Artifact_Changeset');
-        stub($new_changeset)->getValue($this->field)->returns(
-            aChangesetValueArtifactLink()
-                ->withArtifactLinks(
-                    array(
+        $changeset_value_bis = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value_bis)->getValue()->returns(
+            array(
                         123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
-                    )
-                )->build()
+            )
         );
+        stub($new_changeset)->getValue($this->field)->returns($changeset_value_bis);
+        stub($changeset_value_bis)->getNaturePresenterFactory()->returns($this->nature_factory);
 
         expect($this->trigger_rules_manager)->processChildrenTriggers($this->artifact)->once();
 
@@ -116,14 +128,14 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
         $previous_changeset = null;
 
         $new_changeset = mock('Tracker_Artifact_Changeset');
-        stub($new_changeset)->getValue($this->field)->returns(
-            aChangesetValueArtifactLink()
-                ->withArtifactLinks(
-                    array(
+        $changeset_value_bis = partial_mock('Tracker_Artifact_ChangesetValue_ArtifactLink', array('getValue', 'getNaturePresenterFactory'));
+        stub($changeset_value_bis)->getValue()->returns(
+            array(
                         123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345, '')
-                    )
-                )->build()
+            )
         );
+        stub($new_changeset)->getValue($this->field)->returns($changeset_value_bis);
+        stub($changeset_value_bis)->getNaturePresenterFactory()->returns($this->nature_factory);
 
         expect($this->trigger_rules_manager)->processChildrenTriggers($this->artifact)->once();
 

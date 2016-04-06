@@ -1008,6 +1008,12 @@ plugin_tracker	help	Help
 plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
 plugin_tracker	tracker_switcher	Please select a tracker
 
+plugin_tracker	artlink_added_with_nature	Added $1: $2
+plugin_tracker	artlink_added	Added: $1
+plugin_tracker	artlink_removed	Removed: $1
+plugin_tracker	artlink_updated	Changed nature from $1 to $2: $3
+plugin_tracker	artlink_no_nature	no nature
+
 plugin_tracker_artifact	set_to	set to
 plugin_tracker_artifact	cleared	cleared
 plugin_tracker_artifact	changed_from	changed from
