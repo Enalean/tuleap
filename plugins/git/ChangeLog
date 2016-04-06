@@ -1,3 +1,6 @@
+Version 4.139 - Tuleap 8.14
+    * story #7897: Save target jenkins server to notify
+
 Version 4.138 - Tuleap 8.13
     * request #8946: Be able to force the regeneration of gitolite permission file for project
 

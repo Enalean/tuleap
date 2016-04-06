@@ -1,2 +1,5 @@
+Version 0.3 - Tuleap 8.14
+    * story #7897: Save target jenkins server to notify
+
 Version 0.2 - Tuleap 8.13
     * story #7897: base plugin for git/jenkins
