@@ -713,82 +713,114 @@ class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends Tu
 
 class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends TuleapTestCase {
 
+    public function setUp() {
+        $this->art_link_id = 555;
+        $this->tracker     = mock('Tracker');
+
+        $this->field = anArtifactLinkField()
+                ->withId($this->art_link_id)
+                ->withTracker($this->tracker)
+                ->build();
+    }
+
     public function itDoesNothingWhenThereAreNoParentsInRequest() {
         $new_values  = '32';
-        $art_link_id = 555;
         $fields_data = array(
-            $art_link_id => array(
+            $this->art_link_id => array(
                 'new_values' => $new_values
             )
         );
-        $field = anArtifactLinkField()->withId($art_link_id)->build();
-        $field->augmentDataFromRequest($fields_data);
 
-        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(false);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$this->art_link_id]['new_values'], $new_values);
     }
 
     public function itSetParentHasNewValues() {
         $new_values  = '';
         $parent_id   = '657';
-        $art_link_id = 555;
         $fields_data = array(
-            $art_link_id => array(
+            $this->art_link_id => array(
                 'new_values' => $new_values,
                 'parent'     => $parent_id
             )
         );
-        $field = anArtifactLinkField()->withId($art_link_id)->build();
-        $field->augmentDataFromRequest($fields_data);
 
-        $this->assertEqual($fields_data[$art_link_id]['new_values'], $parent_id);
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(false);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$this->art_link_id]['new_values'], $parent_id);
     }
 
     public function itAppendsParentToNewValues() {
         $new_values  = '356';
         $parent_id   = '657';
-        $art_link_id = 555;
         $fields_data = array(
-            $art_link_id => array(
+            $this->art_link_id => array(
                 'new_values' => $new_values,
                 'parent'     => $parent_id
             )
         );
-        $field = anArtifactLinkField()->withId($art_link_id)->build();
-        $field->augmentDataFromRequest($fields_data);
 
-        $this->assertEqual($fields_data[$art_link_id]['new_values'], "$new_values,$parent_id");
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(false);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$this->art_link_id]['new_values'], "$new_values,$parent_id");
     }
 
     public function itDoesntAppendPleaseChooseOption() {
         $new_values  = '356';
         $parent_id   = '';
-        $art_link_id = 555;
         $fields_data = array(
-            $art_link_id => array(
+            $this->art_link_id => array(
                 'new_values' => $new_values,
                 'parent'     => $parent_id
             )
         );
-        $field = anArtifactLinkField()->withId($art_link_id)->build();
-        $field->augmentDataFromRequest($fields_data);
 
-        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(false);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$this->art_link_id]['new_values'], $new_values);
     }
 
     public function itDoesntAppendCreateNewOption() {
         $new_values  = '356';
         $parent_id   = '-1';
-        $art_link_id = 555;
         $fields_data = array(
-            $art_link_id => array(
+            $this->art_link_id => array(
                 'new_values' => $new_values,
                 'parent'     => $parent_id
             )
         );
-        $field = anArtifactLinkField()->withId($art_link_id)->build();
-        $field->augmentDataFromRequest($fields_data);
 
-        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(false);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$this->art_link_id]['new_values'], $new_values);
+    }
+
+    public function itAddsLinkWithNature() {
+        $new_values  = '356';
+        $nature      = '_is_child';
+        $fields_data = array(
+            $this->art_link_id => array(
+                'new_values' => $new_values,
+                'nature'     => $nature
+            )
+        );
+
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(true);
+
+        $this->field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$this->art_link_id]['natures'], array('356' => '_is_child'));
     }
 }
 

@@ -1645,6 +1645,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function augmentDataFromRequest(&$fields_data) {
         $new_values = array();
 
+        if($this->getTracker()->isProjectAllowedToUseNature()) {
+            $this->addNewValuesInNaturesArray($fields_data);
+        }
+
         if (empty($fields_data[$this->getId()]['parent'])) {
             return;
         }
@@ -1656,6 +1660,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
             $new_values[] = $parent;
             $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
+        }
+
+    }
+
+    private function addNewValuesInNaturesArray(&$fields_data) {
+        $new_values = $fields_data[$this->getId()]['new_values'];
+
+        if (trim($new_values) != '') {
+            $art_id_array = explode(',', $new_values);
+            foreach ($art_id_array as $artifact_id) {
+                if(! isset($fields_data[$this->getId()]['natures'][$artifact_id]) && isset($fields_data[$this->getId()]['nature'])) {
+                        $fields_data[$this->getId()]['natures'][$artifact_id] = $fields_data[$this->getId()]['nature'];
+                }
+            }
         }
     }
 
