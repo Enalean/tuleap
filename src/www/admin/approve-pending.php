@@ -28,11 +28,13 @@ if (! $special_access) {
 
 $action = $request->getValidated('action', 'string', '');
 
-$em = EventManager::instance();
-$pm = ProjectManager::instance();
+$em         = EventManager::instance();
+$pm         = ProjectManager::instance();
+$csrf_token = new CSRFSynchronizerToken('/admin/approve-pending.php');
 
 // group public choice
 if ($action=='activate') {
+    $csrf_token->check();
     $groups = array();
     if ($request->exist('list_of_groups')) {
         $groups = array_filter(array_map('intval', explode(",", $request->get('list_of_groups'))));
@@ -48,6 +50,7 @@ if ($action=='activate') {
     }
 
 } else if ($action=='delete') {
+    $csrf_token->check();
 	group_add_history ('deleted','x',$group_id);
 	db_query("UPDATE groups SET status='D'"
 		. " WHERE group_id='$group_id'");
@@ -141,6 +144,7 @@ if (db_numrows($res_grp) < 1) {
             <TR>
             <TD>
         <FORM action="" method="POST">
+        <?php echo $csrf_token->fetchHTMLInput() ?>
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
@@ -151,6 +155,7 @@ if (db_numrows($res_grp) < 1) {
 
             <TD> 
         <FORM action="?" method="POST">
+        <?php echo $csrf_token->fetchHTMLInput() ?>
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
@@ -170,6 +175,7 @@ if (db_numrows($res_grp) < 1) {
     echo '
         <CENTER>
         <FORM action="?" method="POST">
+        ' . $csrf_token->fetchHTMLInput() . '
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
         <INPUT type="submit" name="submit" class="btn btn-primary" value="'.$Language->getText('admin_approve_pending','approve_all').'">
