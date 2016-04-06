@@ -1,3 +1,6 @@
+Version 5.860 - Tuleap 8.14
+    * request #8954: Can not submit artifact if "can submit" is not checked
+
 Version 5.859 - Tuleap 8.14
     * request #9032: No backlog items if no submilestones
 
