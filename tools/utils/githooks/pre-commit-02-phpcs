@@ -27,7 +27,7 @@ do
     fi
 done
 
-if [ "X${FILES_TO_CHECK[@]}" != "X" ]
+if [ "${#FILES_TO_CHECK[@]}" -ne 0 ]
 then
     OUTPUT=$(phpcs --standard=PSR2 --encoding=utf-8 --warning-severity=0 -p "${FILES_TO_CHECK[@]}")
     STATUS=$?
