@@ -42,7 +42,7 @@
                      ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_environment track by $index"
                      ui-sref=".detail({ execid: execution.id, defid: execution.definition.id, defslug: '{{ execution.definition.summary | slugify }}' })"
                      ui-sref-active="active">
-                    <span class="execution-item-content">
+                    <span class="execution-item-content" ng-click="viewTestExecution(execution)">
                         <span class="execution-item-content-title">
                             <img class="avatar animated" data-toggle="tooltip" title="{{ execution.viewed_by.real_name }}" ng-if="execution.viewed_by" ng-src="{{ execution.viewed_by.avatar_url }}" alt="avatar">
                             <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}

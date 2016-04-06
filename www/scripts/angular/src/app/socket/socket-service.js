@@ -2,30 +2,39 @@ angular
     .module('socket')
     .service('SocketService', SocketService);
 
-SocketService.$inject = ['SocketFactory', 'SharedPropertiesService', 'ExecutionService'];
+SocketService.$inject = [
+    '$q',
+    'Restangular',
+    'SocketFactory',
+    'ExecutionService'
+];
 
-function SocketService(SocketFactory, SharedPropertiesService, ExecutionService) {
+function SocketService(
+    $q,
+    Restangular,
+    SocketFactory,
+    ExecutionService
+) {
+    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setFullResponse(true);
+        RestangularConfigurer.setBaseUrl('/api/v1');
+    });
+
     return {
-        viewTestExecution       : viewTestExecution,
+        listenNodeJSServer      : listenNodeJSServer,
         listenToExecutionViewed : listenToExecutionViewed,
-        updateTestExecution     : updateTestExecution,
-        listenToExecutionUpdated: listenToExecutionUpdated,
-        getGlobalPositions      : getGlobalPositions
+        listenToExecutionUpdated: listenToExecutionUpdated
     };
 
-    function prepareData(data) {
-        var current_user = SharedPropertiesService.getCurrentUser();
-
-        return {
-            project_id: SharedPropertiesService.getProjectId(),
-            user_id   : current_user.id,
-            token     : current_user.token,
-            data      : data
-        };
-    }
-
-    function viewTestExecution(data) {
-        SocketFactory.emit('test_execution:view', prepareData(data));
+    function listenNodeJSServer() {
+        if (! _.isEmpty(SocketFactory) && ! _.has(SocketFactory, 'on')) {
+            return SocketFactory.initialization().then(function (response) {
+                SocketFactory = response;
+                return SocketFactory;
+            });
+        } else {
+            return $q.reject();
+        }
     }
 
     function listenToExecutionViewed(execution) {
@@ -36,68 +45,9 @@ function SocketService(SocketFactory, SharedPropertiesService, ExecutionService)
         });
     }
 
-    function getGlobalPositions() {
-        SocketFactory.on('positions:all', function(response) {
-            response.forEach(function(element) {
-                ExecutionService.executions[element.id].viewed_by = element.user;
-            });
-        });
-
-        SocketFactory.emit('positions:all', prepareData());
-    }
-
-    function updateTestExecution(execution) {
-        SocketFactory.emit('test_execution:update', prepareData(execution));
-    }
-
-    function listenToExecutionUpdated(campaign) {
+    function listenToExecutionUpdated() {
         SocketFactory.on('test_execution:update', function(response) {
-            if (response.status !== 200) {
-                ExecutionService.executions[response.data.id].saving = false;
-                ExecutionService.executions[response.data.id].error  = response.status + ' - ' + JSON.parse(response.message).error.message;
-
-            } else {
-                var execution       = ExecutionService.executions[response.data.id];
-                var previous_status = execution.status;
-
-                response.data.saving = false;
-                _.assign(execution, response.data);
-
-                execution.previous_result.status       = previous_status;
-                execution.previous_result.submitted_on = new Date();
-                execution.previous_result.submitted_by = execution.submitted_by;
-                execution.previous_result.result       = execution.results;
-                execution.submitted_by                 = null;
-                execution.results                      = '';
-                execution.error                        = '';
-
-                switch (execution.status) {
-                    case 'passed':
-                        campaign.nb_of_passed++;
-                        break;
-                    case 'failed':
-                        campaign.nb_of_failed++;
-                        break;
-                    case 'blocked':
-                        campaign.nb_of_blocked++;
-                        break;
-                }
-
-                switch (previous_status) {
-                    case 'passed':
-                        campaign.nb_of_passed--;
-                        break;
-                    case 'failed':
-                        campaign.nb_of_failed--;
-                        break;
-                    case 'blocked':
-                        campaign.nb_of_blocked--;
-                        break;
-                    default:
-                        campaign.nb_of_not_run--;
-                        break;
-                }
-            }
+            ExecutionService.update(response);
         });
     }
 }

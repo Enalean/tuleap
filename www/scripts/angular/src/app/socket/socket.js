@@ -1,4 +1,5 @@
 angular.module('socket', [
     'sharedProperties',
-    'btford.socket-io'
+    'btford.socket-io',
+    'angular-locker'
 ]);

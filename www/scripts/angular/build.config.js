@@ -94,7 +94,8 @@ module.exports = {
       'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'vendor/angular-filter/dist/angular-filter.min.js',
       'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
-      'vendor/angular-ui-select/dist/select.js'
+      'vendor/angular-ui-select/dist/select.js',
+      'vendor/angular-locker/dist/angular-locker.min.js'
     ],
     css: [
       'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',

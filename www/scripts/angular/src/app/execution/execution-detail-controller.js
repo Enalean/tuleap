@@ -1,144 +1,132 @@
-(function () {
-    angular
-        .module('execution')
-        .controller('ExecutionDetailCtrl', ExecutionDetailCtrl);
+angular
+    .module('execution')
+    .controller('ExecutionDetailCtrl', ExecutionDetailCtrl);
 
-    ExecutionDetailCtrl.$inject = [
-        '$scope',
-        '$state',
-        '$sce',
-        '$rootScope',
-        'ExecutionService',
-        'DefinitionService',
-        'SharedPropertiesService',
-        'SocketService',
-        'ArtifactLinksGraphService',
-        'ArtifactLinksGraphModalLoading',
-        'NewTuleapArtifactModalService'
-    ];
+ExecutionDetailCtrl.$inject = [
+    '$scope',
+    '$state',
+    '$sce',
+    '$rootScope',
+    'ExecutionService',
+    'DefinitionService',
+    'SharedPropertiesService',
+    'SocketService',
+    'ArtifactLinksGraphService',
+    'ArtifactLinksGraphModalLoading',
+    'NewTuleapArtifactModalService'
+];
 
-    function ExecutionDetailCtrl(
-        $scope,
-        $state,
-        $sce,
-        $rootScope,
-        ExecutionService,
-        DefinitionService,
-        SharedPropertiesService,
-        SocketService,
-        ArtifactLinksGraphService,
-        ArtifactLinksGraphModalLoading,
-        NewTuleapArtifactModalService
-    ) {
-        var execution_id = +$state.params.execid,
-            campaign_id  = +$state.params.id;
+function ExecutionDetailCtrl(
+    $scope,
+    $state,
+    $sce,
+    $rootScope,
+    ExecutionService,
+    DefinitionService,
+    SharedPropertiesService,
+    SocketService,
+    ArtifactLinksGraphService,
+    ArtifactLinksGraphModalLoading,
+    NewTuleapArtifactModalService
+) {
+    var execution_id = parseInt($state.params.execid, 10),
+        campaign_id  = parseInt($state.params.id, 10);
 
-        ExecutionService.loadExecutions(campaign_id);
-        if (isCurrentExecutionLoaded()) {
-            retrieveCurrentExecution();
-        } else {
-            waitForExecutionToBeLoaded();
-        }
+    ExecutionService.loadExecutions(campaign_id);
 
-        $scope.pass                               = pass;
-        $scope.fail                               = fail;
-        $scope.block                              = block;
-        $scope.sanitizeHtml                       = sanitizeHtml;
-        $scope.getStatusLabel                     = getStatusLabel;
-        $scope.showArtifactLinksGraphModal        = showArtifactLinksGraphModal;
-        $scope.showEditArtifactModal              = showEditArtifactModal;
-        $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
-        $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
+    if (isCurrentExecutionLoaded()) {
+        retrieveCurrentExecution();
+    } else {
+        waitForExecutionToBeLoaded();
+    }
 
-        viewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
+    $scope.pass                               = pass;
+    $scope.fail                               = fail;
+    $scope.block                              = block;
+    $scope.sanitizeHtml                       = sanitizeHtml;
+    $scope.getStatusLabel                     = getStatusLabel;
+    $scope.showArtifactLinksGraphModal        = showArtifactLinksGraphModal;
+    $scope.showEditArtifactModal              = showEditArtifactModal;
+    $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
+    $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
 
-        $scope.$on('$destroy', function iVeBeenDismissed() {
-            viewTestExecution(execution_id, null);
-        });
+    function showArtifactLinksGraphModal(execution) {
+        ArtifactLinksGraphService.showGraphModal(execution);
+    }
 
-        function showArtifactLinksGraphModal(execution) {
-            ArtifactLinksGraphService.showGraphModal(execution);
-        }
+    function showEditArtifactModal(definition) {
+        var old_category    = $scope.execution.definition.category;
+        var current_user_id = SharedPropertiesService.getCurrentUser().id;
 
-        function showEditArtifactModal(definition) {
-            var old_category    = $scope.execution.definition.category;
-            var current_user_id = SharedPropertiesService.getCurrentUser().id;
+        var callback = function(artifact_id) {
+            var executions = ExecutionService.getExecutionsByDefinitionId(artifact_id);
 
-            var callback = function(artifact_id) {
-                var executions = ExecutionService.getExecutionsByDefinitionId(artifact_id);
+            return DefinitionService.getDefinitionById(artifact_id).then(function(definition) {
+                _(executions).forEach(function(execution) {
+                    $scope.execution = ExecutionService.executions[execution.id];
 
-                return DefinitionService.getDefinitionById(artifact_id).then(function(definition) {
-                    _(executions).forEach(function(execution) {
-                        $scope.execution = ExecutionService.executions[execution.id];
+                    $scope.execution.definition.category = definition.category;
+                    $scope.execution.definition.description = definition.description;
+                    $scope.execution.definition.summary = definition.summary;
 
-                        $scope.execution.definition.category = definition.category;
-                        $scope.execution.definition.description = definition.description;
-                        $scope.execution.definition.summary = definition.summary;
-
-                        updateExecution(definition, old_category);
-                    });
-
-                    retrieveCurrentExecution();
+                    updateExecution(definition, old_category);
                 });
-            };
 
-            DefinitionService.getArtifactById(definition.id).then(function(artifact) {
-                NewTuleapArtifactModalService.showEdition(
-                    current_user_id,
-                    artifact.tracker.id,
-                    artifact.id,
-                    callback
-                );
+                retrieveCurrentExecution();
             });
-        }
+        };
 
-        function viewTestExecution(execution_id, user) {
-            SocketService.viewTestExecution({
-                id: execution_id,
-                user: user
-            });
-        }
+        DefinitionService.getArtifactById(definition.id).then(function(artifact) {
+            NewTuleapArtifactModalService.showEdition(
+                current_user_id,
+                artifact.tracker.id,
+                artifact.id,
+                callback
+            );
+        });
+    }
 
-        function waitForExecutionToBeLoaded() {
-            var unbind = $rootScope.$on('bunchOfExecutionsLoaded', function () {
-                if (isCurrentExecutionLoaded()) {
-                    retrieveCurrentExecution();
-                }
-            });
-            $scope.$on('$destroy', unbind);
-        }
-
-        function retrieveCurrentExecution() {
-            $scope.execution         = ExecutionService.executions[execution_id];
-            $scope.execution.results = '';
-            $scope.execution.saving  = false;
-        }
-
-        function isCurrentExecutionLoaded() {
-            return typeof ExecutionService.executions[execution_id] !== 'undefined';
-        }
-
-        function sanitizeHtml(html) {
-            if (html) {
-                return $sce.trustAsHtml(html);
+    function waitForExecutionToBeLoaded() {
+        var unbind = $rootScope.$on('bunchOfExecutionsLoaded', function () {
+            if (isCurrentExecutionLoaded()) {
+                retrieveCurrentExecution();
             }
+        });
+        $scope.$on('$destroy', unbind);
+    }
 
-            return null;
+    function retrieveCurrentExecution() {
+        $scope.execution         = ExecutionService.executions[execution_id];
+        $scope.execution.results = '';
+        $scope.execution.saving  = false;
+    }
+
+    function isCurrentExecutionLoaded() {
+        return typeof ExecutionService.executions[execution_id] !== 'undefined';
+    }
+
+    function sanitizeHtml(html) {
+        if (html) {
+            return $sce.trustAsHtml(html);
         }
 
-        function pass(execution) {
-            setNewStatus(execution, "passed");
-        }
+        return null;
+    }
 
-        function fail(execution) {
-            setNewStatus(execution, "failed");
-        }
+    function pass(execution) {
+        setNewStatus(execution, "passed");
+    }
 
-        function block(execution) {
-            setNewStatus(execution, "blocked");
-        }
+    function fail(execution) {
+        setNewStatus(execution, "failed");
+    }
 
-        function setNewStatus(execution, new_status) {
+    function block(execution) {
+        setNewStatus(execution, "blocked");
+    }
+
+    function setNewStatus(execution, new_status) {
+        ExecutionService.putTestExecution(execution.id, new_status, execution.results).then(function() {
             var execution_to_save = angular.copy(execution);
 
             execution.saving               = true;
@@ -147,62 +135,62 @@
             execution_to_save.status       = new_status;
             execution_to_save.submitted_by = SharedPropertiesService.getCurrentUser();
 
-            SocketService.updateTestExecution(execution_to_save);
+            ExecutionService.updateTestExecution(execution_to_save);
+        });
+    }
+
+    function getStatusLabel(status) {
+        var labels = {
+            passed: 'Passed',
+            failed: 'Failed',
+            blocked: 'Blocked',
+            notrun: 'Not Run'
+        };
+
+        return labels[status];
+    }
+
+    function updateExecution(definition, old_category) {
+        var category_updated = definition.category;
+
+        if (category_updated === null) {
+            category_updated = ExecutionService.UNCATEGORIZED;
         }
 
-        function getStatusLabel(status) {
-            var labels = {
-                passed: 'Passed',
-                failed: 'Failed',
-                blocked: 'Blocked',
-                notrun: 'Not Run'
+        if (old_category === null) {
+            old_category = ExecutionService.UNCATEGORIZED;
+        }
+
+        var category_exist           = categoryExists(ExecutionService.categories, category_updated);
+        var execution_already_placed = executionAlreadyPlaced($scope.execution, ExecutionService.categories, category_updated);
+
+        if (! execution_already_placed) {
+            removeCategory(ExecutionService.categories[old_category].executions, $scope.execution);
+        }
+
+        if (category_exist && ! execution_already_placed) {
+            ExecutionService.categories[category_updated].executions.push($scope.execution);
+        } else if (! category_exist && ! execution_already_placed) {
+            ExecutionService.categories[category_updated] = {
+                label: category_updated,
+                executions: [$scope.execution]
             };
-
-            return labels[status];
-        }
-
-        function updateExecution(definition, old_category) {
-            var category_updated = definition.category;
-
-            if (category_updated === null) {
-                category_updated = ExecutionService.UNCATEGORIZED;
-            }
-
-            if (old_category === null) {
-                old_category = ExecutionService.UNCATEGORIZED;
-            }
-
-            var category_exist           = categoryExists(ExecutionService.categories, category_updated);
-            var execution_already_placed = executionAlreadyPlaced($scope.execution, ExecutionService.categories, category_updated);
-
-            if (! execution_already_placed) {
-                removeCategory(ExecutionService.categories[old_category].executions, $scope.execution);
-            }
-
-            if (category_exist && ! execution_already_placed) {
-                ExecutionService.categories[category_updated].executions.push($scope.execution);
-            } else if (! category_exist && ! execution_already_placed) {
-                ExecutionService.categories[category_updated] = {
-                    label: category_updated,
-                    executions: [$scope.execution]
-                };
-            }
-        }
-
-        function categoryExists(categories, category_updated) {
-            return _.has(categories, category_updated);
-        }
-
-        function executionAlreadyPlaced(scopeExecution, categories, category_updated) {
-            return _.has(categories, function(category) {
-                return _.has(category.executions, scopeExecution.id, category_updated);
-            });
-        }
-
-        function removeCategory(executions, scopeExecution) {
-            _.remove(executions, function(execution) {
-                return execution.id === scopeExecution.id;
-            });
         }
     }
-})();
+
+    function categoryExists(categories, category_updated) {
+        return _.has(categories, category_updated);
+    }
+
+    function executionAlreadyPlaced(scopeExecution, categories, category_updated) {
+        return _.has(categories, function(category) {
+            return _.has(category.executions, scopeExecution.id, category_updated);
+        });
+    }
+
+    function removeCategory(executions, scopeExecution) {
+        _.remove(executions, function(execution) {
+            return execution.id === scopeExecution.id;
+        });
+    }
+}

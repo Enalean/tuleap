@@ -12,5 +12,7 @@ angular.module('trafficlights', [
     'ngSanitize',
     'ngCookies',
     'gettext',
-    'tuleap.artifact-modal'
+    'tuleap.artifact-modal',
+    'uuid-generator',
+    'jwt'
 ]);

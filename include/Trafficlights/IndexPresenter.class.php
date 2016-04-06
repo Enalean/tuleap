@@ -54,6 +54,9 @@ class IndexPresenter {
     /** @var string */
     public $lang;
 
+    /** @var string */
+    public $nodejs_server;
+
     public function __construct(
         $project_id,
         $campaign_tracker_id,
@@ -73,16 +76,13 @@ class IndexPresenter {
 
         $this->test_definition_tracker_id = $test_definition_tracker_id;
         $this->test_execution_tracker_id  = $test_execution_tracker_id;
+        $this->nodejs_server              = TuleapConfig::get('nodejs_server');
     }
 
     private function getLanguageAbbreviation($current_user) {
         list($lang, $country) = explode('_', $current_user->getLocale());
 
         return $lang;
-    }
-
-    public function node_server_address() {
-        return TuleapConfig::get('node_server_address', false) ? TuleapConfig::get('node_server_address'): TuleapConfig::get('sys_default_domain');
     }
 
     public function cookies_prefix() {
