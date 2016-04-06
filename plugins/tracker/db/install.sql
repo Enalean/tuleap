@@ -425,9 +425,10 @@ DROP TABLE IF EXISTS tracker_report_renderer_table_columns;
 CREATE TABLE tracker_report_renderer_table_columns(
     renderer_id INT(11) NOT NULL,
     field_id INT(11) NOT NULL,
+    artlink_nature VARCHAR(255) NULL,
     rank INT(11) NOT NULL,
     width TINYINT NOT NULL,
-    PRIMARY KEY column_idx(renderer_id, field_id)
+    INDEX column_idx(renderer_id, field_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_report_renderer_table_functions_aggregates;

@@ -759,9 +759,11 @@ document.observe('dom:loaded', function () {
         });
     });
     //}}}
-    $$('a.tracker-form-element-artifactlink-add')[0].observe('click', function (evt) {
-        evt.preventDefault();
-        codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
+    $$('a.tracker-form-element-artifactlink-add').each(function (a) {
+        a.observe('click', function (evt) {
+            evt.preventDefault();
+            codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
+        });
     });
     codendi.tracker.artifact.artifactLink.set_checkbox_style_as_cross( $$('.tracker-form-element-artifactlink-list td.tracker_report_table_unlink') );
     codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();

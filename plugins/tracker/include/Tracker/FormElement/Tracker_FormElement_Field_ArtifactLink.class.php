@@ -30,8 +30,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
 
-class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
-
+class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
+{
+    const TYPE                    = 'art_link';
     const CREATE_NEW_PARENT_VALUE = -1;
     const NEW_VALUES_KEY          = 'new_values';
     const NATURE_IS_CHILD         = '_is_child';

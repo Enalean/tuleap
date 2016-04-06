@@ -1334,6 +1334,8 @@ plugin_tracker_hierarchy	error_more_than_one_parent	L'artefact $1 a plusieurs pa
 plugin_tracker_hierarchy	controller_bad_request	La requête contient des données invalides (paramètre 'children')
 
 plugin_tracker_renderer_table	items_range_of	sur
+plugin_tracker_renderer_table	simple_columns	Colonnes
+plugin_tracker_renderer_table	custom_columns	Colonnes basées sur…
 
 plugin_tracker_report	edit_report	Editer le rapport
 plugin_tracker_report	report_is_public	Ce rapport est public
@@ -1668,6 +1670,7 @@ plugin_tracker_artifact_links_natures	forward_label	Label
 plugin_tracker_artifact_links_natures	reverse_label	Label inverse
 plugin_tracker_artifact_links_natures	_is_child_forward	Enfant
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
+plugin_tracker_artifact_links_natures	no_nature	Sans nature
 plugin_tracker_artifact_links_natures	create_new_nature	Créer une nouvelle nature
 plugin_tracker_artifact_links_natures	edit_nature	Éditer la nature
 plugin_tracker_artifact_links_natures	edit_icon_label	Éditer

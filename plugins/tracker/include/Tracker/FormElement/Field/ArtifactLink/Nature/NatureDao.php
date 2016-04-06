@@ -69,9 +69,19 @@ class NatureDao extends DataAccessObject {
     }
 
     public function delete($shortname) {
+        $this->deleteNatureInTableColumns($shortname);
+
         $shortname = $this->da->quoteSmart($shortname);
 
         $sql = "DELETE FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
+
+        return $this->update($sql);
+    }
+
+    private function deleteNatureInTableColumns($shortname) {
+        $shortname = $this->da->quoteSmart($shortname);
+
+        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE artlink_nature = $shortname";
 
         return $this->update($sql);
     }

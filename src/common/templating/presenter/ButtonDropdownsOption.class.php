@@ -23,9 +23,9 @@ class Templating_Presenter_ButtonDropdownsOption {
 
     private $url;
     private $selected;
-    private $label;
-    private $id;
-    private $li_parameters = array();
+    protected $label;
+    protected $id;
+    protected $li_parameters = array();
 
     public function __construct($id, $label, $selected, $url) {
         $this->id       = $id;
@@ -49,7 +49,19 @@ class Templating_Presenter_ButtonDropdownsOption {
         return $this;
     }
 
+    public function simple() {
+        return true;
+    }
+
+    public function submenu() {
+        return false;
+    }
+
     public function divider() {
+        return false;
+    }
+
+    public function title() {
         return false;
     }
 

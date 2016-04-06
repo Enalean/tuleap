@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+
 /**
  * Tracker_ report.
  * Set of criteria + set of Renderer to search and display artifacts
@@ -466,7 +471,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             }
         }
         asort($fields_for_sort);
-        $criteria_options = array();
+
+        $criteria_options          = array();
+        $criteria_advanced_options = array();
+
         foreach ($fields_for_sort as $id => $nop) {
             $option = new Templating_Presenter_ButtonDropdownsOption(
                 $id_prefix.'_'.$id,
@@ -474,15 +482,101 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 isset($used[$id]),
                 '#'
             );
+            $parameters = array(
+                'data-field-id'      => $id,
+                'data-field-is-used' => intval(isset($used[$id])),
+            );
+            if ($dropdown_type !== self::TYPE_CRITERIA) {
+                $parameters['data-column-id'] = $id;
+            }
+            $option->setLiParameters($parameters);
+            $criteria_options[] = $option;
+
+            if ($this->fieldAllowsCustomColumnForTableReport($fields_for_criteria[$id], $dropdown_type)) {
+                $criteria_advanced_options[] = new Templating_Presenter_ButtonDropdownsOptionSubmenu(
+                    $id_prefix.'_'.$id,
+                    $fields_for_criteria[$id]->getLabel(),
+                    $this->getOptionsForCustomColumn($id_prefix, $id, $used)
+                );
+            }
+        }
+
+        if (! empty($criteria_advanced_options)) {
+            $simple_columns_title = new Templating_Presenter_ButtonDropdownsOptionTitle(
+                $GLOBALS['Language']->getText('plugin_tracker_renderer_table', 'simple_columns')
+            );
+            array_unshift($criteria_options, $simple_columns_title);
+
+            $divider              = new Templating_Presenter_ButtonDropdownsOptionDivider();
+            $custom_columns_title = new Templating_Presenter_ButtonDropdownsOptionTitle(
+                $GLOBALS['Language']->getText('plugin_tracker_renderer_table', 'custom_columns')
+            );
+            array_unshift($criteria_advanced_options, $divider, $custom_columns_title);
+        }
+
+        return array_merge($criteria_options, $criteria_advanced_options);
+    }
+
+    private function getOptionsForCustomColumn($id_prefix, $id, $used) {
+        $options = array();
+        $natures = $this->getNaturePresenterFactory()->getAllNatures();
+
+        $column_id = $id .'_';
+        $option = new Templating_Presenter_ButtonDropdownsOption(
+            $id,
+            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature'),
+            isset($used[$column_id]),
+            '#'
+        );
+        $option->setLiParameters(
+            array(
+                'data-column-id'            => $column_id,
+                'data-field-id'             => $id,
+                'data-field-is-used'        => intval(isset($used[$column_id])),
+                'data-field-artlink-nature' => ''
+            )
+        );
+        $options[] = $option;
+
+        foreach($natures as $nature) {
+            $column_id = $id .'_'. $nature->shortname;
+            $option = new Templating_Presenter_ButtonDropdownsOption(
+                $id,
+                $nature->forward_label,
+                isset($used[$column_id]),
+                '#'
+            );
             $option->setLiParameters(
                 array(
-                    'data-field-id'      => $id,
-                    'data-field-is-used' => intval(isset($used[$id])),
+                    'data-column-id'            => $column_id,
+                    'data-field-id'             => $id,
+                    'data-field-is-used'        => intval(isset($used[$column_id])),
+                    'data-field-artlink-nature' => $nature->shortname
                 )
             );
-            $criteria_options[] = $option;
+            $options[] = $option;
         }
-        return $criteria_options;
+
+        return $options;
+    }
+
+    private function fieldAllowsCustomColumnForTableReport(Tracker_FormElement_Field $field, $dropdown_type) {
+        return $this->getAllowedProjectsConfig()->isProjectAllowedToUseNature($this->getTracker()->getProject()) &&
+            $dropdown_type === self::TYPE_TABLE &&
+            $this->getFormElementFactory()->getType($field) === Tracker_FormElement_Field_ArtifactLink::TYPE;
+    }
+
+    private function getNaturePresenterFactory() {
+        return new NaturePresenterFactory(new NatureDao());
+    }
+
+    private function getAllowedProjectsConfig() {
+        return new AllowedProjectsConfig(
+            ProjectManager::instance(),
+            new AllowedProjectsDao(),
+            new Tracker_Hierarchy_Dao(),
+            EventManager::instance()
+        );
     }
 
     public function getTemplateRenderer() {

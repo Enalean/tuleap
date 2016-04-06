@@ -8,11 +8,35 @@
             {{# divider }}
             <li class="divider"></li>
             {{/ divider }}
-            {{^ divider }}
+
+            {{# title }}
+            <li class="nav-header">{{ label }}</li>
+            {{/ title }}
+
+            {{# submenu }}
+            <li class="dropdown-submenu pull-left glued">
+                <a href="#" id="{{ id }}">{{ label }}</a>
+                <ul class="dropdown-menu">
+                    {{# sub_options }}
+                        {{# divider }}
+                        <li class="divider"></li>
+                        {{/ divider }}
+
+                        {{# simple }}
+                        <li {{# li_parameters }} {{ parameter }}="{{ value }}"{{/ li_parameters }}>
+                            <a href="{{ url }}" id="{{ id }}" data-toggle="{{ data_toggle }}">{{# selected }}<i class="icon-ok"></i>{{/ selected }} {{ label }}</a>
+                        </li>
+                        {{/ simple }}
+                    {{/ sub_options }}
+                </ul>
+            </li>
+            {{/ submenu }}
+
+            {{# simple }}
             <li {{# li_parameters }} {{ parameter }}="{{ value }}"{{/ li_parameters }}>
                 <a href="{{ url }}" id="{{ id }}" data-toggle="{{ data_toggle }}">{{# selected }}<i class="icon-ok"></i>{{/ selected }} {{ label }}</a>
             </li>
-            {{/ divider }}
+            {{/ simple }}
         {{/ options }}
     </ul>
 </div>
