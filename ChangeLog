@@ -16,7 +16,7 @@ Version 8.14 (Not released yet)
 	* request #8909: CSRF vulnerability in the project and user pending administration approval pages
 
 	== Plugins ==
-	* tracker: 5.864
+	* tracker: 5.865
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18

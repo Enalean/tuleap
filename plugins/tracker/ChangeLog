@@ -1,3 +1,6 @@
+Version 5.865 - Tuleap 8.14
+    * Spike: Tracker editable fields are now accessible for screen reader
+
 Version 5.864 - Tuleap 8.14
     * story #9023: Prefill the art_link natures in artifact edit form
 
