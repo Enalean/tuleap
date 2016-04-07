@@ -24,6 +24,6 @@
     "jasmine-reporters": "^2.1.1"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "node_modules/.bin/grunt test"
   }
 }
