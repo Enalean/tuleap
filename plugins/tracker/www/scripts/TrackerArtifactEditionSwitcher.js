@@ -71,12 +71,13 @@ tuleap.tracker.artifact.editionSwitcher = function() {
             return;
         }
 
-        setFieldEditable(element);
         bindEditionSwitch(element);
     };
 
     var bindEditionSwitch = function (element) {
-        $(element).find('label').on('click', function() {
+        $(element).find('.tracker_formelement_edit').on('click', function(event) {
+            event.preventDefault();
+
             toggleField(element);
             focusField(element);
         });
@@ -131,10 +132,6 @@ tuleap.tracker.artifact.editionSwitcher = function() {
 
     var removeUnwrappedText = function (element) {
         $(element).contents().filter(function(){ return this.nodeType == 3; }).remove();
-    };
-
-    var setFieldEditable = function (element) {
-        $(element).addClass('editable');
     };
 
     var fieldIsEditable = function(element) {

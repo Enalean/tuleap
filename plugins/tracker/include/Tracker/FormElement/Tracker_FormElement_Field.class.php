@@ -398,7 +398,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="'. $this->getClassNames() .'">';
+
+            if ($this->userCanUpdate()) {
+                $title = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)));
+                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</button>';
+            }
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
+
             $html .= $html_value;
             $html .= '</div>';
         }
@@ -454,7 +460,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="'. $this->getClassNames() .'">';
+            $html .= '<div class="'. $this->getClassNamesForSubmit() .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= $this->fetchSubmitValue($submitted_values);
@@ -485,6 +491,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     private function getClassNames() {
+        $classnames = 'tracker_artifact_field';
+        $classnames .= ' tracker_artifact_field-'. $this->getFormElementFactory()->getType($this);
+        if ($this->has_errors) {
+            $classnames .= ' has_errors';
+        }
+        if ($this->userCanUpdate()) {
+            $classnames .= ' editable';
+        }
+
+        return $classnames;
+    }
+
+    private function getClassNamesForSubmit() {
         $classnames = 'tracker_artifact_field';
         $classnames .= ' tracker_artifact_field-'. $this->getFormElementFactory()->getType($this);
         if ($this->has_errors) {

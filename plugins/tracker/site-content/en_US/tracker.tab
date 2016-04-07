@@ -1046,6 +1046,7 @@ plugin_tracker_artifact	transition_permissions_not_valid	Transition permissions 
 plugin_tracker_artifact	edit_title	Artifact
 plugin_tracker_artifact	hierarchy_title	Children
 plugin_tracker_artifact	references_title	References
+plugin_tracker_artifact	edit_field	Edit the field "$1"
 
 plugin_tracker_artifact	submission_keeper_warning_title	Warning: concurrent edit
 plugin_tracker_artifact	submission_keeper_warning_msg	<p>Someone updated this artifact while you were editing it.</p><p>Please acknowledge all notifications before submit.</p><p>Beware, on submit, your modifications will be applied on top of previous changes.</p>

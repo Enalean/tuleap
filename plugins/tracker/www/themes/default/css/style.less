@@ -1018,7 +1018,8 @@ div.tracker-admin-field-controls {
     display: inline;
 }
 .tracker-admin-field label,
-.tracker_artifact_field label {
+.tracker_artifact_field label,
+.tracker_formelement_edit {
     white-space: nowrap;
     color: #4D4D4D;
     margin-bottom: 3px;
@@ -1055,6 +1056,13 @@ div.tracker-admin-field-controls {
         }
     }
 
+    .tracker_formelement_edit {
+        border: 1px solid transparent;
+        padding: 1px 5px 1px 19px;
+        margin-left: -19px;
+        margin-right: -19px;
+    }
+
     > label:not(.checkbox) {
         border: 1px solid transparent;
         padding: 1px 5px 1px 19px;
@@ -1063,24 +1071,25 @@ div.tracker-admin-field-controls {
         cursor: default;
     }
 
+    &:not(.editable) {
+        .tracker_formelement_edit {
+            display: none;
+        }
+    }
+
     &.editable {
+        .tracker_formelement_edit {
+            background: url('/themes/common/images/ic/artifact_editable_field.png') no-repeat 4px center;
+        }
+
         > label {
-            background-image: url('/themes/common/images/ic/artifact_editable_field.png');
-            background-repeat: no-repeat;
-            background-position: 4px center;
-            cursor: pointer;
-            padding-left: 19px\9;
+            display: none;
         }
     }
 
     &:not(.in-edition).editable {
-        > label:hover {
-            background-image: url('/themes/common/images/ic/artifact_editable_field_active.png');
-            background-repeat: no-repeat;
-            background-position: 4px center;
-            padding-left: 19px\9;
-            cursor: pointer;
-            background-color: #d9edf7;
+        .tracker_formelement_edit:hover {
+            background: #D9EDF7 url('/themes/common/images/ic/artifact_editable_field_active.png') no-repeat 4px center;
             border-radius: 3px;
             border: 1px solid #8FCEDB;
         }
@@ -1094,8 +1103,14 @@ div.tracker-admin-field-controls {
             display: none;
         }
     }
+
     &.in-edition {
+        .tracker_formelement_edit {
+            display: none;
+        }
+
         > label {
+            display: block;
             background-image: url('/themes/common/images/ic/artifact_editable_field_active.png');
             background-repeat: no-repeat;
             background-position: 4px center;
@@ -1190,10 +1205,23 @@ div.tracker-admin-field-controls {
     font-size:0.9em;
     font-style:italic;
 }
+.tracker_formelement_edit {
+    display: block;
+    margin-bottom: 3px;
+    color: #4D4D4D;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 20px;
+    white-space: nowrap;
+
+    &:hover, &:focus, &:visited {
+        text-decoration: none;
+        color: #4D4D4D;
+    }
+}
 .tracker_formelement_label {
     font-weight: bold;
 }
-
 .tracker-admin-field-selected:hover,
 .tracker-admin-field-selected {
     border: 1px solid #66C;
@@ -2236,9 +2264,14 @@ body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-art
                 font-size: 0.9em;
 
                 label {
+                    display: block;
                     margin-bottom: 0;
                     font-size: 0.95em;
                     color: #444;
+                }
+
+                .tracker_formelement_edit {
+                    display: none;
                 }
 
                 .textboxlist {
