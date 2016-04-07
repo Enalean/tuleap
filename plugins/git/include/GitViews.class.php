@@ -193,7 +193,8 @@ class GitViews extends PluginViews {
             $params['driver_factory'],
             $params['gerrit_servers'],
             $params['gerrit_templates'],
-            $this->mirror_data_mapper
+            $this->mirror_data_mapper,
+            $params['gerrit_can_migrate_checker']
         );
         $repo_management_view->display();
     }

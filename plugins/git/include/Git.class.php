@@ -22,6 +22,7 @@
 
 require_once('common/valid/ValidFactory.class.php');
 
+use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 
 /**
@@ -128,6 +129,11 @@ class Git extends PluginController {
      */
     private $project_creator_status;
 
+    /**
+     * @var GerritCanMigrateChecker
+     */
+    private $gerrit_can_migrate_checker;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -147,28 +153,30 @@ class Git extends PluginController {
         Logger $logger,
         Git_Backend_Gitolite $backend_gitolite,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status
+        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
+        GerritCanMigrateChecker $gerrit_can_migrate_checker
     ) {
         parent::__construct($user_manager, $request);
 
-        $this->userManager              = $user_manager;
-        $this->projectManager           = $project_manager;
-        $this->factory                  = $git_repository_factory;
-        $this->gerrit_server_factory    = $gerrit_server_factory;
-        $this->driver_factory           = $driver_factory;
-        $this->repository_manager       = $repository_manager;
-        $this->git_system_event_manager = $system_event_manager;
-        $this->gerrit_usermanager       = $gerrit_usermanager;
-        $this->plugin_manager           = $plugin_manager;
-        $this->project_creator          = $project_creator;
-        $this->template_factory         = $template_factory;
-        $this->permissions_manager      = $permissions_manager;
-        $this->plugin                   = $plugin;
-        $this->url_manager              = $url_manager;
-        $this->logger                   = $logger;
-        $this->backend_gitolite         = $backend_gitolite;
-        $this->mirror_data_mapper       = $mirror_data_mapper;
-        $this->project_creator_status   = $project_creator_status;
+        $this->userManager                = $user_manager;
+        $this->projectManager             = $project_manager;
+        $this->factory                    = $git_repository_factory;
+        $this->gerrit_server_factory      = $gerrit_server_factory;
+        $this->driver_factory             = $driver_factory;
+        $this->repository_manager         = $repository_manager;
+        $this->git_system_event_manager   = $system_event_manager;
+        $this->gerrit_usermanager         = $gerrit_usermanager;
+        $this->plugin_manager             = $plugin_manager;
+        $this->project_creator            = $project_creator;
+        $this->template_factory           = $template_factory;
+        $this->permissions_manager        = $permissions_manager;
+        $this->plugin                     = $plugin;
+        $this->url_manager                = $url_manager;
+        $this->logger                     = $logger;
+        $this->backend_gitolite           = $backend_gitolite;
+        $this->mirror_data_mapper         = $mirror_data_mapper;
+        $this->project_creator_status     = $project_creator_status;
+        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -750,7 +758,7 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
-                if (ForgeConfig::get('sys_auth_type') !== ForgeConfig::AUTH_TYPE_LDAP) {
+                if (! $this->gerrit_can_migrate_checker->canMigrate()) {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }
@@ -1025,7 +1033,8 @@ class Git extends PluginController {
                 $this->driver_factory,
                 $history_dao,
                 $this->project_creator_status
-            )
+            ),
+            $this->gerrit_can_migrate_checker
         );
     }
 
