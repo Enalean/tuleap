@@ -124,7 +124,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         if ($ssh_url === '') {
             return '';
         } elseif (! $ssh_url) {
-            $ssh_url = 'ssh://gitolite@'.$_SERVER['SERVER_NAME'];
+            $ssh_url = 'ssh://gitolite@'.ForgeConfig::get('sys_default_domain');
         }
         return  $ssh_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
     }
@@ -139,7 +139,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     private function getConfigurationParameter($key) {
         $value = $this->getGitPlugin()->getConfigurationParameter($key);
         if ($value !== false && $value !== null) {
-            $value = str_replace('%server_name%', $_SERVER['SERVER_NAME'], $value);
+            $value = str_replace('%server_name%', ForgeConfig::get('sys_default_domain'), $value);
         }
         return $value;
     }

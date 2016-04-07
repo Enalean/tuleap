@@ -76,11 +76,12 @@ $post_receive = new Git_Hook_PostReceive(
         $logger
     ),
     $git_repository_url_manager,
-    $system_event_manager
+    $system_event_manager,
+    EventManager::instance()
 );
 $mail_builder = new MailBuilder(TemplateRendererFactory::build());
 
-$post_receive->processGrokMirrorActions($repository_path);
+$post_receive->beforeParsingReferences($repository_path);
 
 $count = 0;
 while ($count <= COUNT_THRESHOLD && $line = fgets(STDIN)) {

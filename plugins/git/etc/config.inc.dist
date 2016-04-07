@@ -15,8 +15,8 @@ $gitphp_path = "/usr/share/gitphp-tuleap";
 // By default, only ssh is available for use and you can setup HTTP(s) access
 // to your server.
 // For convenience, you can either hardcode the URLs or you can use %server_name%
-// variable that will be replace automatically by the value of $_SERVER['SERVER_NAME']
-// this is typical the URL the user see in location bar of the browser
+// variable that will be replace automatically by the value of $sys_default_domain
+// in /etc/tuleap/conf/local.inc
 
 // Tell to Tuleap that an HTTPS server for git is available at the given
 // address
