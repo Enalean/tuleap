@@ -1,3 +1,4 @@
+
 plugin_git	descriptor_description	Plugin which provides Git support for Tuleap
 plugin_git	descriptor_name	Git Plugin
 plugin_git	please_choose	Please choose
@@ -436,3 +437,4 @@ plugin_git	regenerate_config_waiting	Regenerating Gitolite config for project $1
 
 plugin_git	admin_gitolite_config_title	Administration of Gitolite configuration
 plugin_git	admin_gitolite_config_description	This section allows you to regenerate the Gitolite configuration file of a selected project.
+plugin_git	deprecated	Strating Tuleap 8.14, we recommand you to use polling jobs. Please see <a href="http://doc-en.tuleap.net/en/latest/user-guide/git.html?#continuous-integration-with-hudson-jenkins">Hudson Git Plugin</a>.

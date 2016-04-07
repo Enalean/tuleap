@@ -433,3 +433,4 @@ plugin_git	regenerate_config_waiting	La regénération de la configuration Gitol
 
 plugin_git	admin_gitolite_config_title	Administration de la configuration Gitolite
 plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
+plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "plloing". Merci de consulter <a href="http://doc-en.tuleap.net/en/latest/user-guide/git.html?#continuous-integration-with-hudson-jenkins">Hudson Git</a>

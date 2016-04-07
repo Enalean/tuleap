@@ -46,6 +46,10 @@ class Git_Ci {
         return ProjectManager::instance();
     }
 
+    private function getEventManager() {
+        return EventManager::instance();
+    }
+
     /**
      * Retrieve git triggers
      *
@@ -53,7 +57,8 @@ class Git_Ci {
      *
      * @return Array
      */
-    function retrieveTriggers($params) {
+    function retrieveTriggers($params)
+    {
         if (isset($params['group_id']) && !empty($params['group_id'])) {
             $project = $this->getProjectManager()->getProject($params['group_id']);
             if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
@@ -75,6 +80,20 @@ class Git_Ci {
                         }
                     }
                 }
+
+                $warning = "";
+                $intalled = false;
+                $parameters = array(
+                    'installed' => &$intalled
+                );
+
+                $this->getEventManager()->processEvent('display_hudson_addition_info', $parameters);
+                if ($parameters['installed']) {
+                    $warning = '<div class="alert alert-warning"> '.
+                        $GLOBALS['Language']->getText('plugin_git', 'deprecated').
+                        ' </div>';
+                }
+
                 $dao          = new GitDao();
                 $repositories = $dao->getProjectRepositoryList($params['group_id'], false, false);
                 $selectBox    = '<select id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger">';
@@ -101,6 +120,7 @@ class Git_Ci {
                                      </label>
                                  </div>
                                  <div id="hudson_use_plugin_git_trigger_form">
+                                     '.$warning.'
                                      <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
                                      '.$selectBox.'
                                  </div>
@@ -111,7 +131,7 @@ class Git_Ci {
                                      Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
                                  </script>
                              </p>';
-                $editForm = '<label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label>'.$selectBox;
+                $editForm = $warning.'<label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label>'.$selectBox;
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
                              'title'         => $GLOBALS['Language']->getText('plugin_git', 'ci_trigger'),
                              'used'          => $used,
