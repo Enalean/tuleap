@@ -212,6 +212,14 @@ class ProjectUGroup implements User_UGroup {
     }
 
     /**
+     * @return string
+     */
+    public function getTranslatedDescription()
+    {
+        return util_translate_desc_ugroup($this->getDescription());
+    }
+
+    /**
      * Return array of users members of the ugroup
      *
      * @return PFUser[]
