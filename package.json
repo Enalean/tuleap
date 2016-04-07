@@ -17,11 +17,8 @@
     "socket.io": "^1.3.7"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-cli": "^0.1.13",
-    "grunt-jasmine-node-new": "^0.3.2",
-    "jasmine": "^2.4.1",
-    "jasmine-reporters": "^2.1.1"
+    "grunt": "^1.0.1",
+    "grunt-jasmine-nodejs": "^1.5.2"
   },
   "scripts": {
     "test": "node_modules/.bin/grunt test"
