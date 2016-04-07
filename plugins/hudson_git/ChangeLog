@@ -1,3 +1,6 @@
+Version 0.4 - Tuleap 8.14
+    * story #7897 trigger CI build after push
+
 Version 0.3 - Tuleap 8.14
     * story #7897: Save target jenkins server to notify
 
