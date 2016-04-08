@@ -412,8 +412,6 @@ class UserManager {
         if ($user->getSessionHash()) {
             $this->getDao()->deleteSession($user->getSessionHash());
             $user->setSessionHash(false);
-            $this->getCookieManager()->removeCookie(CookieManager::USER_TOKEN);
-            $this->getCookieManager()->removeCookie(CookieManager::USER_ID);
             $this->getCookieManager()->removeCookie('session_hash');
             $this->destroySession();
         }
@@ -511,8 +509,6 @@ class UserManager {
             $session_hash,
             $this->getExpireTimestamp($user)
         );
-        $this->setUserTokenCookie($user);
-        $this->setUserIdCookie($user);
     }
 
     private function getExpireTimestamp(PFUser $user) {
@@ -524,24 +520,6 @@ class UserManager {
         }
 
         return $expire;
-    }
-
-    public function setUserTokenCookie(PFUser $user) {
-        $token = $this->getTokenManager()->generateTokenForUser($user);
-
-        $this->getCookieManager()->setGlobalCookie(
-            CookieManager::USER_TOKEN,
-            $token->getTokenValue(),
-            $_SERVER['REQUEST_TIME'] + Rest_TokenManager::TOKENS_EXPIRATION_TIME
-        );
-    }
-
-    public function setUserIdCookie(PFUser $user) {
-        $this->getCookieManager()->setGlobalCookie(
-            CookieManager::USER_ID,
-            $user->getId(),
-            $this->getExpireTimestamp($user)
-        );
     }
 
     /**

@@ -197,14 +197,6 @@ if(!IS_SCRIPT) {
 */
 if ($current_user->isLoggedIn()) {
     date_default_timezone_set($current_user->getTimezone());
-
-    if (! $cookie_manager->isCookie(CookieManager::USER_TOKEN) ) {
-        $user_manager->setUserTokenCookie($current_user);
-    }
-
-    if (! $cookie_manager->isCookie(CookieManager::USER_ID) ) {
-        $user_manager->setUserIdCookie($current_user);
-    }
 }
 
 $theme_manager = new ThemeManager();
