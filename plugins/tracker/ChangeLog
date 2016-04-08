@@ -1,3 +1,6 @@
+Version 5.866 - Tuleap 8.14
+    * story #8940: Add a dropdown for configurable column selection
+
 Version 5.865 - Tuleap 8.14
     * Spike: Tracker editable fields are now accessible for screen reader
 

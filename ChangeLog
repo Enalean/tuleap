@@ -16,7 +16,7 @@ Version 8.14 (Not released yet)
 	* request #8909: CSRF vulnerability in the project and user pending administration approval pages
 
 	== Plugins ==
-	* tracker: 5.865
+	* tracker: 5.866
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
@@ -24,7 +24,7 @@ Version 8.14 (Not released yet)
 	* hudson_git: 0.4
 
     == Themes ==
-	* FlamingParrot: 1.131
+	* FlamingParrot: 1.133
 
 Version 8.13 (Thursday, March 31st 2016)
 	== Enhancement ==
