@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Git\GerritCanMigrateChecker;
+
 require_once 'constants.php';
 require_once 'autoload.php';
 
@@ -1173,13 +1175,14 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitController() {
+        $gerrit_server_factory = $this->getGerritServerFactory();
         return new Git(
             $this,
             $this->getGerritServerFactory(),
             $this->getGerritDriverFactory(),
             $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
-            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $gerrit_server_factory),
             $this->getRepositoryFactory(),
             UserManager::instance(),
             ProjectManager::instance(),
@@ -1192,7 +1195,8 @@ class GitPlugin extends Plugin {
             $this->getLogger(),
             $this->getBackendGitolite(),
             $this->getMirrorDataMapper(),
-            $this->getProjectCreatorStatus()
+            $this->getProjectCreatorStatus(),
+            new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory)
         );
     }
 

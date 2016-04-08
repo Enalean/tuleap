@@ -21,6 +21,7 @@
 
 require_once('common/layout/Layout.class.php');
 
+use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 
@@ -97,6 +98,11 @@ class GitActions extends PluginActions {
     private $migration_handler;
 
     /**
+     * @var GerritCanMigrateChecker
+     */
+    private $gerrit_can_migrate_checker;
+
+    /**
      *
      * @param Git $controller
      * @param Git_SystemEventManager                     $system_event_manager
@@ -112,6 +118,7 @@ class GitActions extends PluginActions {
      * @param ProjectHistoryDao                          $history_dao
      * @param GitRepositoryMirrorUpdater                 $mirror_updater
      * @param MigrationHandler                           $migration_handler
+     * @param GerritCanMigrateChecker                    $gerrit_can_migrate_checker
      */
     public function __construct(
         Git                $controller,
@@ -131,26 +138,28 @@ class GitActions extends PluginActions {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         ProjectHistoryDao $history_dao,
         GitRepositoryMirrorUpdater $mirror_updater,
-        MigrationHandler $migration_handler
+        MigrationHandler $migration_handler,
+        GerritCanMigrateChecker $gerrit_can_migrate_checker
     ) {
         parent::__construct($controller);
-        $this->git_system_event_manager = $system_event_manager;
-        $this->factory                  = $factory;
-        $this->manager                  = $manager;
-        $this->gerrit_server_factory    = $gerrit_server_factory;
-        $this->driver_factory           = $driver_factory;
-        $this->gerrit_usermanager       = $gerrit_usermanager;
-        $this->project_creator          = $project_creator;
-        $this->template_factory         = $template_factory;
-        $this->project_manager          = $project_manager;
-        $this->git_permissions_manager  = $git_permissions_manager;
-        $this->url_manager              = $url_manager;
-        $this->logger                   = $logger;
-        $this->backend_gitolite         = $backend_gitolite;
-        $this->mirror_data_mapper       = $mirror_data_mapper;
-        $this->history_dao              = $history_dao;
-        $this->mirror_updater           = $mirror_updater;
-        $this->migration_handler        = $migration_handler;
+        $this->git_system_event_manager   = $system_event_manager;
+        $this->factory                    = $factory;
+        $this->manager                    = $manager;
+        $this->gerrit_server_factory      = $gerrit_server_factory;
+        $this->driver_factory             = $driver_factory;
+        $this->gerrit_usermanager         = $gerrit_usermanager;
+        $this->project_creator            = $project_creator;
+        $this->template_factory           = $template_factory;
+        $this->project_manager            = $project_manager;
+        $this->git_permissions_manager    = $git_permissions_manager;
+        $this->url_manager                = $url_manager;
+        $this->logger                     = $logger;
+        $this->backend_gitolite           = $backend_gitolite;
+        $this->mirror_data_mapper         = $mirror_data_mapper;
+        $this->history_dao                = $history_dao;
+        $this->mirror_updater             = $mirror_updater;
+        $this->migration_handler          = $migration_handler;
+        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
     }
 
     protected function getText($key, $params = array()) {
@@ -521,9 +530,10 @@ class GitActions extends PluginActions {
         $this->addData(array('repository'=>$repository));
         $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
-            'gerrit_servers'   => $this->gerrit_server_factory->getServers(),
-            'driver_factory'   => $this->driver_factory,
-            'gerrit_templates' => $this->template_factory->getTemplatesAvailableForRepository($repository)
+            'gerrit_servers'             => $this->gerrit_server_factory->getServers(),
+            'driver_factory'             => $this->driver_factory,
+            'gerrit_templates'           => $this->template_factory->getTemplatesAvailableForRepository($repository),
+            'gerrit_can_migrate_checker' => $this->gerrit_can_migrate_checker
         ));
         return true;
     }

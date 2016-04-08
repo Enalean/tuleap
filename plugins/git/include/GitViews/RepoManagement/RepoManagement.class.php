@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Git\GerritCanMigrateChecker;
 
 
 /**
@@ -48,22 +49,29 @@ class GitViews_RepoManagement {
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
 
+    /**
+     * @var GerritCanMigrateChecker
+     */
+    private $gerrit_can_migrate_checker;
+
     public function __construct(
         GitRepository $repository,
         Codendi_Request $request,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         array $gerrit_servers,
         array $gerrit_config_templates,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        GerritCanMigrateChecker $gerrit_can_migrate_checker
     ) {
-        $this->repository              = $repository;
-        $this->request                 = $request;
-        $this->driver_factory          = $driver_factory;
-        $this->gerrit_servers          = $gerrit_servers;
-        $this->gerrit_config_templates = $gerrit_config_templates;
-        $this->mirror_data_mapper      = $mirror_data_mapper;
-        $this->panes                   = $this->buildPanes($repository);
-        $this->current_pane            = 'settings';
+        $this->repository                 = $repository;
+        $this->request                    = $request;
+        $this->driver_factory             = $driver_factory;
+        $this->gerrit_servers             = $gerrit_servers;
+        $this->gerrit_config_templates    = $gerrit_config_templates;
+        $this->mirror_data_mapper         = $mirror_data_mapper;
+        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
+        $this->panes                      = $this->buildPanes($repository);
+        $this->current_pane               = 'settings';
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }
@@ -77,7 +85,13 @@ class GitViews_RepoManagement {
         $panes = array(new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request));
 
         if ($repository->getBackendType() == GitDao::BACKEND_GITOLITE) {
-            $panes[] = new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->driver_factory, $this->gerrit_servers, $this->gerrit_config_templates);
+            $panes[] = new GitViews_RepoManagement_Pane_Gerrit(
+                $repository,
+                $this->request,
+                $this->driver_factory,
+                $this->gerrit_can_migrate_checker,
+                $this->gerrit_servers,
+                $this->gerrit_config_templates);
         }
 
         $panes[] = new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request);

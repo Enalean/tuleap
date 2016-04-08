@@ -144,6 +144,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $url_manager           = new Git_GitRepositoryUrlManager($git_plugin);
         $server                = mock('Git_RemoteServer_GerritServer');
         $gerrit_server_factory = stub('Git_RemoteServer_GerritServerFactory')->getServerById()->returns($server);
+        $can_migrate_checker   = stub('Tuleap\Git\GerritCanMigrateChecker')->canMigrate()->returns(true);
+
         $git                   = partial_mock(
             'Git',
             array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
@@ -166,7 +168,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Logger'),
                 mock('Git_Backend_Gitolite'),
                 mock('Git_Mirror_MirrorDataMapper'),
-                mock('Git_Driver_Gerrit_ProjectCreatorStatus')
+                mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
+                $can_migrate_checker
             )
         );
         $git->setRequest($request);

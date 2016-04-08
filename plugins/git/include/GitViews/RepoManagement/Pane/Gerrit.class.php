@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\GerritCanMigrateChecker;
+
 class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
     const OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
@@ -35,6 +37,11 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     private $driver_factory;
 
     /**
+     * @var GerritCanMigrateChecker
+     */
+    private $gerrit_can_migrate_checker;
+
+    /**
      * @var Git_Drive_Gerrit_Template_Template[]
      */
     private $templates;
@@ -43,29 +50,22 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         GitRepository $repository,
         Codendi_Request $request,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        GerritCanMigrateChecker $gerrit_can_migrate_checker,
         array $gerrit_servers,
         array $gerrit_config_templates
     ) {
         parent::__construct($repository, $request);
-        $this->gerrit_servers = $gerrit_servers;
-        $this->driver_factory = $driver_factory;
-        $this->templates      = $gerrit_config_templates;
+        $this->gerrit_servers             = $gerrit_servers;
+        $this->driver_factory             = $driver_factory;
+        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
+        $this->templates                  = $gerrit_config_templates;
     }
 
     /**
      * @return bool true if the pane can be displayed
      */
     public function canBeDisplayed() {
-        $platform_can_use_gerrit = false;
-
-        EventManager::instance()->processEvent(
-            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
-            array(
-                'platform_can_use_gerrit' => &$platform_can_use_gerrit
-            )
-        );
-
-        return $platform_can_use_gerrit && count($this->gerrit_servers) > 0;
+        return $this->gerrit_can_migrate_checker->canMigrate();
     }
 
     /**
