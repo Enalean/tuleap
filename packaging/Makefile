@@ -10,7 +10,7 @@ ifeq ($(RELEASE),)
 	RELEASE=1
 endif
 
-VERSION := $(shell cat ../VERSION)
+VERSION := $(shell cat ../package.json | grep version | cut -d: -f 2 | tr -d ',' | tr -d '"' | tr -d " ")
 PACKAGE_NAME_VERSION := $(NAME)-$(VERSION)
 RPMDEFINES := --define "_topdir $(RPM_TMP)"
 
