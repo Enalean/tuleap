@@ -6,14 +6,14 @@ msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.5\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -208,77 +208,3 @@ msgstr "Zoomer"
 #: src/app/graph/graph.tpl.html
 msgid "Zoom out"
 msgstr "Dézoomer"
-
-#~ msgid "Artifact links field not found."
-#~ msgstr "Le champ lien vers des artéfacts est inexistant."
-
-#~ msgid "Edit this artifact"
-#~ msgstr "Editer cet artefact"
-
-#~ msgid "Show the edition for this test"
-#~ msgstr "Afficher l’édition de ce test"
-
-#~ msgid "Edition of &#34;{{ modal.title }}&#34;"
-#~ msgstr "Edition de &#34;{{ modal.title }}&#34;"
-
-#~ msgid "Dependencies graph"
-#~ msgstr "Graphe des dépendances"
-
-#~ msgid "Show test dependencies graph"
-#~ msgstr "Afficher le graphe de dépendances"
-
-#~ msgid "Anybody"
-#~ msgstr "N'importe qui"
-
-#~ msgid "Login"
-#~ msgstr "Connexion"
-
-#~ msgid "Logout"
-#~ msgstr "Déconnexion"
-
-#~ msgid "Password"
-#~ msgstr "Mot de passe"
-
-#~ msgid "Unable to generate a token: wrong username and/or password."
-#~ msgstr ""
-#~ "Erreur lors de la génération du jeton: mauvais nom d'utilisateur et/ou "
-#~ "mot de passe."
-
-#~ msgid "Unable to retrieve the user"
-#~ msgstr "Erreur lors de la récupération des informations de l'utilisateur"
-
-#~ msgid "Username"
-#~ msgstr "Utilisateur"
-
-#~ msgid "Assigned to"
-#~ msgstr "Assigné à"
-
-#~ msgid "By:"
-#~ msgstr "Par :"
-
-#~ msgid "Comment:"
-#~ msgstr "Commentaire :"
-
-#~ msgid "Date:"
-#~ msgstr "Date :"
-
-#~ msgid "Last execution in this campaign"
-#~ msgstr "Dernière exécution dans cette campagne"
-
-#~ msgid "Test definition"
-#~ msgstr "Définition du test"
-
-#~ msgid "An error has occured. Please contact an administrator."
-#~ msgstr "Une erreur s'est produite. Veuillez contacter un administrateur."
-
-#~ msgid "1 test"
-#~ msgid_plural ""
-#~ "<span class='total-definitions'>{{ getFilteredDefinitions(environment."
-#~ "filter).length }}</span> tests"
-#~ msgstr[0] "1 test"
-#~ msgstr[1] ""
-#~ "<span class='total-definitions'>{{ getFilteredDefinitions(environment."
-#~ "filter).length }}</span> tests"
-
-#~ msgid "Status:"
-#~ msgstr "Status :"
