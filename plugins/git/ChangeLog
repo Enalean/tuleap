@@ -1,3 +1,6 @@
+Version 4.141 - Tuleap 8.14
+    * request #8060: A Git repo can be migrated to Gerrit if we use LDAP write with codendi authentication
+
 Version 4.140 - Tuleap 8.14
     * story #7897 trigger CI build after push
 
