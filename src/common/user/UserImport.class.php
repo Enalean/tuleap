@@ -86,7 +86,7 @@ class UserImport {
         foreach($parsed_users as $user_id) {
             $user = $um->getUserById($user_id);
             if ($user) {
-                $res = $res & account_add_user_obj_to_group($this->group_id, $user);
+                $res = $res & account_add_user_obj_to_group($this->group_id, $user, true);
             }
         }
         return $res;

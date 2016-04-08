@@ -199,7 +199,7 @@ class ProjectXMLImporter {
             return;
         }
 
-        if(!account_add_user_obj_to_group($project->getID(), $user)) {
+        if(! account_add_user_obj_to_group($project->getID(), $user, false)) {
             throw new UserNotAddedAsProjectMemberException($GLOBALS['Response']->getRawFeedback());
         }
     }
