@@ -20,8 +20,9 @@
 
 
 class Tracker_ArtifactDao extends DataAccessObject {
-    const STATUS_OPEN   = 'open';
-    const STATUS_CLOSED = 'closed';
+    const MAX_RETRY_CREATION = 10;
+    const STATUS_OPEN        = 'open';
+    const STATUS_CLOSED      = 'closed';
 
     public function __construct() {
         parent::__construct();
@@ -375,32 +376,37 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function create($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {
+    public function create($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
+    {
         $tracker_id               = $this->da->escapeInt($tracker_id);
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
         $submitted_on             = $this->da->escapeInt($submitted_on);
         $submitted_by             = $this->da->escapeInt($submitted_by);
-        $this->startTransaction();
-        $sql = "SELECT IFNULL(MAX(per_tracker_artifact_id), 0) + 1 as per_tracker_artifact_id
-                FROM tracker_artifact
-                WHERE tracker_id = $tracker_id";
-        $row = $this->retrieveFirstRow($sql);
-        $per_tracker_id            = $row['per_tracker_artifact_id'];
-        $id_sharing = new TrackerIdSharingDao();
-        if ($id = $id_sharing->generateArtifactId()) {
-            if ($this->getPriorityManager()->putArtifactAtTheEnd($id)) {
+
+        for ($tentative = 0; $tentative < self::MAX_RETRY_CREATION; $tentative++) {
+            $this->startTransaction();
+            $sql            = "SELECT IFNULL(MAX(per_tracker_artifact_id), 0) + 1 as per_tracker_artifact_id
+                               FROM tracker_artifact
+                               WHERE tracker_id = $tracker_id";
+            $row            = $this->retrieveFirstRow($sql);
+            $per_tracker_id = $row['per_tracker_artifact_id'];
+
+            $id_sharing = new TrackerIdSharingDao();
+            $id         = $id_sharing->generateArtifactId();
+            if ($id && $this->getPriorityDao()->putArtifactAtTheEndWithoutTransaction($id)) {
                 // We do not keep trace of the history change here because it doesn't have any sense to say
                 // the newly created artifact has less priority than the one at the bottom of the priority chain.
                 $sql = "INSERT INTO $this->table_name
-                        (id, tracker_id, per_tracker_artifact_id, submitted_by, submitted_on, use_artifact_permissions)
-                        VALUES ($id, $tracker_id, $per_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
+                    (id, tracker_id, per_tracker_artifact_id, submitted_by, submitted_on, use_artifact_permissions)
+                    VALUES ($id, $tracker_id, $per_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
                 if ($this->update($sql)) {
                     $this->commit();
                     return $id;
                 }
             }
+            $this->rollBack();
         }
-        $this->rollBack();
+
         return false;
     }
 
@@ -426,13 +432,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $dao->deleteReference($id);
     }
 
-    private function getPriorityManager() {
-        return new Tracker_Artifact_PriorityManager(
-            new Tracker_Artifact_PriorityDao(),
-            new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance(),
-            Tracker_ArtifactFactory::instance()
-        );
+    private function getPriorityDao() {
+        return new Tracker_Artifact_PriorityDao();
     }
 
     /**
