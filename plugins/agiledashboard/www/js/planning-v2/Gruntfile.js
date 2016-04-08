@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     'use strict';
 
     // We explicitly load watch because of the hacks to the watch task below
@@ -441,30 +441,27 @@ module.exports = function (grunt) {
      * before watching for changes.
      */
     grunt.renameTask('watch', 'delta');
-    grunt.registerTask('watch', ['build', 'soft-compile', 'delta']);
+    grunt.registerTask('watch', [
+        'prepare',
+        'soft-compile',
+        'karmaconfig',
+        'delta'
+    ]);
 
     /**
-     * The default task is to build and compile.
+     * The `prepare` task gets your app ready to run for development and testing.
      */
-    grunt.registerTask('default', ['build', 'compile']);
-
-    /**
-     * The `build` task gets your app ready to run for development and testing.
-     */
-    grunt.registerTask('build', [
+    grunt.registerTask('prepare', [
         'clean:build',
         'nggettext_extract',
         'html2js',
-        'jshint',
         'less:build',
         'copy:build_assets',
         'copy:build_appmodules',
         'copy:build_appjs',
         'copy:build_vendorjs',
         'copy:build_vendorcss',
-        'copy:build_vendorassets',
-        'karmaconfig',
-        'karma:continuous'
+        'copy:build_vendorassets'
     ]);
 
     /**
@@ -490,8 +487,27 @@ module.exports = function (grunt) {
         'concat'
     ]);
 
+    grunt.registerTask('build', 'Build and minify the app', function() {
+        return grunt.task.run([
+            'prepare',
+            'compile'
+        ]);
+    });
+
+    grunt.registerTask('default', ['build']);
+
+    grunt.registerTask('test', 'Run unit tests and generate a junit report for the Continuous Integration', function() {
+        return grunt.task.run([
+            'jshint',
+            'html2js',
+            'karmaconfig',
+            'karma:continuous'
+        ]);
+    });
+
     grunt.registerTask('coverage', 'Run unit tests and display test coverage results on your browser', function() {
         return grunt.task.run([
+            'html2js',
             'karmaconfig',
             'clean:coverage',
             'karma:coverage',
@@ -526,5 +542,4 @@ module.exports = function (grunt) {
             }
         });
     });
-
 };
