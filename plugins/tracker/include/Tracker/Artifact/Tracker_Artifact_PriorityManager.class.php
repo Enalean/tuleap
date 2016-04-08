@@ -75,14 +75,6 @@ class Tracker_Artifact_PriorityManager {
         return $this->priority_dao->getGlobalRank($artifact_id);
     }
 
-    public function putArtifactAtTheEnd($artifact_id) {
-        return $this->priority_dao->putArtifactAtTheEnd($artifact_id);
-    }
-
-    public function moveArtifactBefore($artifact_id, $successor_id) {
-        $this->priority_dao->moveArtifactBefore($artifact_id, $successor_id);
-    }
-
     public function moveArtifactBeforeWithHistoryChangeLogging($artifact_id, $successor_id, $context_id, $project_id) {
         $old_global_rank = $this->getGlobalRank($artifact_id);
         $this->priority_dao->moveArtifactBefore($artifact_id, $successor_id);

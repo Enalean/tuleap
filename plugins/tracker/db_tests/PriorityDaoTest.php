@@ -45,13 +45,13 @@ class PriorityDaoTest extends TuleapDbTestCase {
     }
 
     public function itInsertOneElement() {
-        $this->dao->putArtifactAtTheEnd(1);
+        $this->dao->putArtifactAtTheEndWithoutTransaction(1);
         $this->assertOrder(1);
     }
 
     public function itInsertAnElementAtTheEnd() {
         $this->setInitialOrder(1);
-        $this->dao->putArtifactAtTheEnd(42);
+        $this->dao->putArtifactAtTheEndWithoutTransaction(42);
         $this->assertOrder(1, 42);
     }
 
@@ -63,9 +63,9 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function itHasThreeMoreElementsAddedAtTheEnd() {
         $this->setInitialOrder(42, 1);
-        $this->dao->putArtifactAtTheEnd(66);
-        $this->dao->putArtifactAtTheEnd(123);
-        $this->dao->putArtifactAtTheEnd(101);
+        $this->dao->putArtifactAtTheEndWithoutTransaction(66);
+        $this->dao->putArtifactAtTheEndWithoutTransaction(123);
+        $this->dao->putArtifactAtTheEndWithoutTransaction(101);
         $this->assertOrder(42, 1, 66, 123, 101);
     }
 
@@ -184,7 +184,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     private function setInitialOrder() {
         foreach (func_get_args() as $id) {
-            $this->dao->putArtifactAtTheEnd($id);
+            $this->dao->putArtifactAtTheEndWithoutTransaction($id);
         }
     }
 
