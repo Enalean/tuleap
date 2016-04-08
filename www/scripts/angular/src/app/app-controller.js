@@ -7,7 +7,6 @@ TrafficlightsCtrl.$inject = [
     'amMoment',
     'gettextCatalog',
     'SharedPropertiesService',
-    'UserService',
     'UUIDGeneratorService'
 ];
 
@@ -16,11 +15,10 @@ function TrafficlightsCtrl(
     amMoment,
     gettextCatalog,
     SharedPropertiesService,
-    UserService,
     UUIDGeneratorService
 ) {
-    $scope.init = function(nodejs_server, project_id, lang, current_user, cookies_prefix) {
-        SharedPropertiesService.setCurrentUser(UserService.prepareCurrentUser(current_user, cookies_prefix));
+    $scope.init = function(nodejs_server, project_id, lang, current_user) {
+        SharedPropertiesService.setCurrentUser(current_user);
         SharedPropertiesService.setProjectId(project_id);
         var uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);

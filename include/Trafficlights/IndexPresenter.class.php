@@ -44,7 +44,7 @@ class IndexPresenter {
 
     /** @var string */
     public $misconfigured_message;
-    
+
     /** @var Boolean */
     public $is_properly_configured;
 
@@ -83,9 +83,5 @@ class IndexPresenter {
         list($lang, $country) = explode('_', $current_user->getLocale());
 
         return $lang;
-    }
-
-    public function cookies_prefix() {
-        return TuleapConfig::get('sys_cookie_prefix');
     }
 }

@@ -2,13 +2,7 @@ angular
     .module('sharedProperties')
     .service('SharedPropertiesService', SharedPropertiesService);
 
-SharedPropertiesService.$inject = [
-    'UserService'
-];
-
-function SharedPropertiesService(
-    UserService
-) {
+function SharedPropertiesService() {
 
     var property = {
         campaign_id          : undefined,
@@ -51,10 +45,6 @@ function SharedPropertiesService(
     }
 
     function getCurrentUser() {
-        if (typeof property.user === 'undefined') {
-            return UserService.getCurrentUserFromCookies();
-        }
-
         return property.user;
     }
 

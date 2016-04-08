@@ -2,7 +2,6 @@ describe('TrafficlightsCtrl', function() {
   var TrafficlightsCtrl, $location, $scope;
 
   beforeEach(module('trafficlights'));
-  beforeEach(module('user'));
 
   beforeEach(inject(function($controller, _$location_, $rootScope) {
     $location   = _$location_;

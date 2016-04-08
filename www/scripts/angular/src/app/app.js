@@ -1,6 +1,5 @@
 angular.module('trafficlights', [
     'ui.router',
-    'user',
     'socket',
     'campaign',
     'execution',
@@ -10,7 +9,6 @@ angular.module('trafficlights', [
     'ncy-angular-breadcrumb',
     'ngAnimate',
     'ngSanitize',
-    'ngCookies',
     'gettext',
     'tuleap.artifact-modal',
     'uuid-generator',
