@@ -417,7 +417,7 @@ class UGroupManager {
 
     private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user) {
         if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
-            return account_add_user_obj_to_group($user_group->getProjectId(), $user);
+            return account_add_user_obj_to_group($user_group->getProjectId(), $user, true);
         }
 
         return $user_group->addUser($user);
