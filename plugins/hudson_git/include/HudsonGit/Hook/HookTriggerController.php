@@ -24,8 +24,11 @@ use Logger;
 use GitRepository;
 use Jenkins_Client;
 use Exception;
+use Tuleap\HudsonGit\Job\Job;
+use Tuleap\HudsonGit\Job\JobManager;
 
-class HookTriggerController {
+class HookTriggerController
+{
 
     /**
      * @var HookDao
@@ -36,30 +39,49 @@ class HookTriggerController {
      * @var Jenkins_Client
      */
     private $jenkins_client;
+    /**
+    * @var JobManager
+    */
+    private $job_manager;
 
     /**
      * @var Logger
      */
     private $logger;
 
-    public function __construct(HookDao $dao, Jenkins_Client $jenkins_client, Logger $logger) {
+    public function __construct(HookDao $dao, Jenkins_Client $jenkins_client, Logger $logger, JobManager $job_manager)
+    {
         $this->dao            = $dao;
         $this->jenkins_client = $jenkins_client;
         $this->logger         = $logger;
+        $this->job_manager    = $job_manager;
     }
 
-    public function trigger(GitRepository $repository) {
+    public function trigger(GitRepository $repository)
+    {
+        $date_job = $_SERVER['REQUEST_TIME'];
         $dar = $this->dao->getById($repository->getId());
         foreach ($dar as $row) {
             try {
                 $transports = $repository->getAccessURL();
                 foreach ($transports as $protocol => $url) {
                     $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url);
-                    $this->logger->debug('repository #'.$repository->getId().' : '.$response);
+
+                    $this->logger->debug('repository #'.$repository->getId().' : '.$response->getBody());
+                    foreach ($response->getJobPaths() as $job) {
+                        $this->logger->debug('Triggered ' . $job);
+                        $this->addHudsongitJob($repository, $job, $date_job);
+                    }
                 }
             } catch (Exception $exception) {
                 $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
             }
         }
+    }
+
+    private function addHudsongitJob(GitRepository $repository, $job_name, $date_job)
+    {
+        $job = new Job($repository, $date_job, $job_name);
+        $this->job_manager->create($job);
     }
 }

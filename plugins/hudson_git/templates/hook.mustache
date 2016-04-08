@@ -10,3 +10,27 @@
 
   <p><input type="submit" name="save" class="btn" value="{{ save_label }}" /></p>
 </form>
+
+<table class="table table-striped table-bordered mirrors-list">
+    <thead>
+        <tr>
+            <th>{{ label_push_date }}</th>
+            <th>{{ label_triggered }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{# jobs }}
+            <tr>
+                <td>{{ getFormattedPushDate }}</id>
+                <td><a href='{{ getJobUrl }}'>{{ getJobUrl }}</a></id>
+            </tr>
+        {{/ jobs }}
+        {{^ jobs }}
+          <tr class="empty-table">
+                <td colspan="2">
+                    {{ empty_jobs }}
+                </td>
+          </tr>
+      {{/ jobs }}
+    </tbody>
+</table>

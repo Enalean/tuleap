@@ -8,3 +8,8 @@ plugin_hudson_git	settings_hooks_jenkins_link_label	Jenkins documentation
 plugin_hudson_git	error_repository_invalid	Invalid repository
 plugin_hudson_git	error_database	Unable to save URL in database
 plugin_hudson_git	update_success	URL saved with success
+plugin_hudson_git	job_error	Error while saving Job data
+
+plugin_hudson_git	label_push_date	Push date
+plugin_hudson_git	label_triggered	Triggered job
+plugin_hudson_git	empty_jobs	No triggered job
