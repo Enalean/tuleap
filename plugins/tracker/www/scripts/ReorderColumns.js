@@ -33,7 +33,7 @@ codendi.ReorderColumns = Class.create({
         $(table).down('thead').down('tr').select('.tracker_report_table_column').map(this.register.bind(this));
     },
     register: function (cell) {
-        if (cell.id.match(/_\d+$/)) {
+        if (cell.readAttribute('data-column-id')) {
             this.registerDraggables(cell);
             this.registerDroppables(cell);
         }
@@ -76,16 +76,16 @@ codendi.ReorderColumns = Class.create({
                             func:     'renderer',
                             renderer: renderer_id
                         }, 
-                        param_name = 'renderer_table[reorder-column][' + dragged.up('th').id.match(/_(\d+)$/)[1] + ']';
+                        param_name = 'renderer_table[reorder-column][' + dragged.up('th').readAttribute('data-column-id') + ']';
                     if (from < to) {
                         parameters[param_name] = '-2';
                         if (dropped.next()) {
-                            parameters[param_name] = dropped.id.match(/_(\d+)$/)[1];
+                            parameters[param_name] = dropped.readAttribute('data-column-id');
                         }
                     } else {
                         parameters[param_name] = '-1';
                         if (dropped.previous() && dropped.previous().id) {
-                            parameters[param_name] = dropped.previous().id.match(/_(\d+)$/)[1];
+                            parameters[param_name] = dropped.previous().readAttribute('data-column-id');
                         }
                     }
                     

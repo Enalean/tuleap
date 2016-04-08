@@ -1341,6 +1341,8 @@ plugin_tracker_hierarchy	error_more_than_one_parent	Artifact $1 has more than on
 plugin_tracker_hierarchy	controller_bad_request	Your request contains invalid data, cowardly doing nothing (children parameter)
 
 plugin_tracker_renderer_table	items_range_of	of
+plugin_tracker_renderer_table	simple_columns	Simple columns
+plugin_tracker_renderer_table	custom_columns	Custom columns based on…
 
 plugin_tracker_report	edit_report	Edit the report
 plugin_tracker_report	report_is_public	This report is public
@@ -1675,6 +1677,7 @@ plugin_tracker_artifact_links_natures	forward_label	Forward label
 plugin_tracker_artifact_links_natures	reverse_label	Reverse label
 plugin_tracker_artifact_links_natures	_is_child_forward	Child
 plugin_tracker_artifact_links_natures	_is_child_reverse	Parent
+plugin_tracker_artifact_links_natures	no_nature	No nature
 plugin_tracker_artifact_links_natures	create_new_nature	Create new nature
 plugin_tracker_artifact_links_natures	edit_nature	Edit nature
 plugin_tracker_artifact_links_natures	edit_icon_label	Edit
