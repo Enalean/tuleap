@@ -1,3 +1,6 @@
+Version 1.58 - Tuleap 8.14
+    * request #9016: Tracker structure incomplete export in XML format
+
 Version 1.57 - Tuleap 8.12
     * request #8883: Remove Planning v1
 

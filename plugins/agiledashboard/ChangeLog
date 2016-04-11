@@ -1,3 +1,6 @@
+Version 1.372 - Tuleap 8.14
+    * request #9016: Tracker structure incomplete export in XML format
+
 Version 1.371 - Tuleap 8.13
     * request #8974 Fix collapse, filter, label bugs in kanban
 

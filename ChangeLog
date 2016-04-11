@@ -16,12 +16,14 @@ Version 8.14 (Not released yet)
 	* request #8909: CSRF vulnerability in the project and user pending administration approval pages
 
 	== Plugins ==
-	* tracker: 5.866
+	* tracker: 5.867
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
 	* git: 4.141
 	* hudson_git: 0.4
+	* agiledashboard: 1.372
+	* cardwall: 1.58
 
     == Themes ==
 	* FlamingParrot: 1.133

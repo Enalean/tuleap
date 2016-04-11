@@ -1,3 +1,6 @@
+Version 5.867 - Tuleap 8.14
+    * request #9016: Tracker structure incomplete export in XML format
+
 Version 5.866 - Tuleap 8.14
     * story #8940: Add a dropdown for configurable column selection
 
