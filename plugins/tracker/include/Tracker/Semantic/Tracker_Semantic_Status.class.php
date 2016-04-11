@@ -419,19 +419,19 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @return void
      */
      public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
-         if ($this->getFieldId()) {
-             $child = $root->addChild('semantic');
-             $child->addAttribute('type', $this->getShortName());
-             $child->addChild('shortname', $this->getShortName());
-             $child->addChild('label', $this->getLabel());
-             $child->addChild('description', $this->getDescription());
-             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
-             $node_open_values = $child->addChild('open_values');
-             foreach ($this->open_values as $value) {
-                 if ($ref = array_search($value, $xmlMapping['values'])) {
-                     $node_open_values->addChild('open_value')->addAttribute('REF', $ref);
-                 }
-             }
+        if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
+            $child = $root->addChild('semantic');
+            $child->addAttribute('type', $this->getShortName());
+            $child->addChild('shortname', $this->getShortName());
+            $child->addChild('label', $this->getLabel());
+            $child->addChild('description', $this->getDescription());
+            $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+            $node_open_values = $child->addChild('open_values');
+            foreach ($this->open_values as $value) {
+                if ($ref = array_search($value, $xmlMapping['values'])) {
+                    $node_open_values->addChild('open_value')->addAttribute('REF', $ref);
+                }
+            }
          }
      }
 

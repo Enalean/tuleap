@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,7 @@
  */
 
 require_once('bootstrap.php');
-Mock::generate('Tracker');
-Mock::generate('Tracker_FormElement_Field_List');
 require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 
 class Tracker_Semantic_ContributorTest extends TuleapTestCase {
     private $xml_security;
@@ -33,35 +30,44 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+
+        $this->tracker = mock('Tracker');
+        $this->field   = stub('Tracker_FormElement_Field_List')->getId()->returns(102);
+
+        $this->semantic = new Tracker_Semantic_Contributor($this->tracker, $this->field);
+
+        $GLOBALS['Language'] = mock('BaseLanguage');
+        $GLOBALS['Language']->setReturnValue('getText','Assigned to',array('plugin_tracker_admin_semantic','contributor_label'));
+        $GLOBALS['Language']->setReturnValue('getText','Define the contributor of the artifact',array('plugin_tracker_admin_semantic','contributor_description'));
     }
 
     public function tearDown() {
         $this->xml_security->disableExternalLoadOfEntities();
 
+        unset($GLOBALS['Language']);
+
         parent::tearDown();
     }
 
     public function testExport() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText','Assigned to',array('plugin_tracker_admin_semantic','contributor_label'));
-        $GLOBALS['Language']->setReturnValue('getText','Define the contributor of the artifact',array('plugin_tracker_admin_semantic','contributor_description'));
-        
-        $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticContributorTest.xml');
-        
-        $tracker = new MockTracker();
-        $f = new MockTracker_FormElement_Field_List();
-        $f->setReturnValue('getId', 102);
-        $tst = new Tracker_Semantic_Contributor($tracker, $f);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml           = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticContributorTest.xml');
+        $root          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_mapping = array('F13' => '102');
-        $tst->exportToXML($root, $array_mapping);
+
+        $this->semantic->exportToXML($root, $array_mapping);
         
         $this->assertEqual((string)$xml->shortname, (string)$root->semantic->shortname);
         $this->assertEqual((string)$xml->label, (string)$root->semantic->label);
         $this->assertEqual((string)$xml->description, (string)$root->semantic->description);
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
     }
-    
-}
 
-?>
+    public function itDoesNotExportIfFieldIsNotExported() {
+        $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $array_xml_mapping = array();
+
+        $this->semantic->exportToXML($root, $array_xml_mapping);
+
+        $this->assertEqual($root->count(), 0);
+    }
+}

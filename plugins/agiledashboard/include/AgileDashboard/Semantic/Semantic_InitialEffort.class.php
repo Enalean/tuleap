@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013-2015. All rights reserved.
+* Copyright Enalean (c) 2013-2016. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -247,7 +247,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @return void
      */
      public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
-        if ($this->getFieldId()) {
+        if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
              $child = $root->addChild('semantic');
              $child->addAttribute('type', $this->getShortName());
              $child->addChild('shortname', $this->getShortName());
@@ -267,4 +267,3 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
         return $this->getFieldId() == $field->getId();
     }
 }
-?>

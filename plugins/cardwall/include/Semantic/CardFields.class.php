@@ -135,7 +135,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
         $child = $root->addChild('semantic');
         $child->addAttribute('type', $this->getShortName());
         foreach($this->getFields() as $field) {
-            $child->addChild('field')->addAttribute('REF', array_search($field->getId(), $xml_mapping));
+            if (in_array($field->getId(), $xml_mapping)) {
+                $child->addChild('field')->addAttribute('REF', array_search($field->getId(), $xml_mapping));
+            }
         }
     }
 
