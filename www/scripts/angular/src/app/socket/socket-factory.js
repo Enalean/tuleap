@@ -4,7 +4,7 @@ angular
 
 SocketFactory.$inject = [
     '$q',
-    '$state',
+    '$rootScope',
     'socketFactory',
     'SharedPropertiesService',
     'locker',
@@ -13,7 +13,7 @@ SocketFactory.$inject = [
 
 function SocketFactory(
     $q,
-    $state,
+    $rootScope,
     socketFactory,
     SharedPropertiesService,
     locker,
@@ -53,7 +53,8 @@ function SocketFactory(
                 JWTService.getJWT().then(function (data) {
                     locker.put('token', data.token);
                     subscribe(data.token);
-                    $state.reload();
+                    $rootScope.$emit('service-reload');
+                    $rootScope.$broadcast('controller-reload');
                 });
             }
         });
@@ -62,7 +63,7 @@ function SocketFactory(
             socket.emit('subscription', {
                 nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
                 token                : subscribe_token,
-                room_id              : SharedPropertiesService.getCampaignId(),
+                room_id              : 'trafficlights_' + SharedPropertiesService.getCampaignId(),
                 uuid                 : SharedPropertiesService.getUUID()
             });
         }

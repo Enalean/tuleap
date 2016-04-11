@@ -23,6 +23,7 @@ function SocketService(
     return {
         listenNodeJSServer      : listenNodeJSServer,
         listenToExecutionViewed : listenToExecutionViewed,
+        listenToExecutionLeft   : listenToExecutionLeft,
         listenToExecutionUpdated: listenToExecutionUpdated
     };
 
@@ -37,11 +38,20 @@ function SocketService(
         }
     }
 
-    function listenToExecutionViewed(execution) {
-        SocketFactory.on('test_execution:view', function(response) {
-            if (typeof ExecutionService.executions[response.data.id] !== 'undefined') {
-                ExecutionService.executions[response.data.id].viewed_by = response.data.user;
+    function listenToExecutionViewed() {
+        SocketFactory.on('trafficlights_user:presence', function(data) {
+            if (_.has(data, 'execution_to_remove')) {
+                ExecutionService.removeViewTestExecution(data.execution_to_remove, data.user);
             }
+            if (_.has(data, 'execution_to_add')) {
+                ExecutionService.viewTestExecution(data.execution_to_add, data.user);
+            }
+        });
+    }
+
+    function listenToExecutionLeft() {
+        SocketFactory.on('user:leave', function(uuid) {
+            ExecutionService.removeViewTestExecutionByUUID(uuid);
         });
     }
 

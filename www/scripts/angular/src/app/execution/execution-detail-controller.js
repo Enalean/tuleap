@@ -10,10 +10,10 @@ ExecutionDetailCtrl.$inject = [
     'ExecutionService',
     'DefinitionService',
     'SharedPropertiesService',
-    'SocketService',
     'ArtifactLinksGraphService',
     'ArtifactLinksGraphModalLoading',
-    'NewTuleapArtifactModalService'
+    'NewTuleapArtifactModalService',
+    'ExecutionRestService'
 ];
 
 function ExecutionDetailCtrl(
@@ -24,31 +24,43 @@ function ExecutionDetailCtrl(
     ExecutionService,
     DefinitionService,
     SharedPropertiesService,
-    SocketService,
     ArtifactLinksGraphService,
     ArtifactLinksGraphModalLoading,
-    NewTuleapArtifactModalService
+    NewTuleapArtifactModalService,
+    ExecutionRestService
 ) {
-    var execution_id = parseInt($state.params.execid, 10),
+    var execution_id,
+        campaign_id;
+
+    $scope.pass                        = pass;
+    $scope.fail                        = fail;
+    $scope.block                       = block;
+    $scope.sanitizeHtml                = sanitizeHtml;
+    $scope.getStatusLabel              = getStatusLabel;
+    $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
+    $scope.showEditArtifactModal       = showEditArtifactModal;
+
+    initialization();
+
+    $scope.$on('controller-reload', function() {
+        initialization();
+    });
+
+    function initialization() {
+        execution_id = parseInt($state.params.execid, 10);
         campaign_id  = parseInt($state.params.id, 10);
 
-    ExecutionService.loadExecutions(campaign_id);
+        ExecutionService.loadExecutions(campaign_id);
 
-    if (isCurrentExecutionLoaded()) {
-        retrieveCurrentExecution();
-    } else {
-        waitForExecutionToBeLoaded();
+        if (isCurrentExecutionLoaded()) {
+            retrieveCurrentExecution();
+        } else {
+            waitForExecutionToBeLoaded();
+        }
+
+        $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
+        $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
     }
-
-    $scope.pass                               = pass;
-    $scope.fail                               = fail;
-    $scope.block                              = block;
-    $scope.sanitizeHtml                       = sanitizeHtml;
-    $scope.getStatusLabel                     = getStatusLabel;
-    $scope.showArtifactLinksGraphModal        = showArtifactLinksGraphModal;
-    $scope.showEditArtifactModal              = showEditArtifactModal;
-    $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
-    $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
 
     function showArtifactLinksGraphModal(execution) {
         ArtifactLinksGraphService.showGraphModal(execution);
@@ -126,7 +138,7 @@ function ExecutionDetailCtrl(
     }
 
     function setNewStatus(execution, new_status) {
-        ExecutionService.putTestExecution(execution.id, new_status, execution.results).then(function() {
+        ExecutionRestService.putTestExecution(execution.id, new_status, execution.results).then(function() {
             var execution_to_save = angular.copy(execution);
 
             execution.saving               = true;

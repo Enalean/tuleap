@@ -1,4 +1,5 @@
 angular.module('campaign', [
+    'ui.router',
     'restangular',
     'execution',
     'environment',

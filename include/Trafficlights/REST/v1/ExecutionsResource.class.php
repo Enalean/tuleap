@@ -37,10 +37,16 @@ use TrackerFactory;
 use Tracker_URLVerification;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tracker_Artifact_ChangesetValue_Text;
+use Tuleap\RealTime\NodeJSClient;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_Permission_PermissionRetrieveAssignee;
+use Tuleap\RealTime\MessageDataPresenter;
+use Tuleap\Trafficlights\TrafficlightsArtifactRightsPresenter;
 
 class ExecutionsResource {
     const FIELD_RESULTS      = 'results';
     const FIELD_STATUS       = 'status';
+    const HTTP_CLIENT_UUID   = 'HTTP_X_CLIENT_UUID';
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -51,10 +57,21 @@ class ExecutionsResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var NodeJSClient */
+    private $node_js_client;
+
+    /** @var Tracker_Permission_PermissionsSerializer */
+    private $permissions_serializer;
+
     public function __construct() {
         $this->tracker_factory     = TrackerFactory::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
+
+        $this->node_js_client         = new NodeJSClient();
+        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
     }
 
     /**
@@ -69,6 +86,13 @@ class ExecutionsResource {
      */
     public function optionsId($id) {
         Header::allowOptionsPut();
+    }
+
+    /**
+     * @url OPTIONS {id}/presences
+     */
+    public function optionsPresences() {
+        Header::allowOptionsPatch();
     }
 
     /**
@@ -103,6 +127,54 @@ class ExecutionsResource {
             throw new RestException(500, $exception->getMessage());
         }
         $this->sendAllowHeadersForExecution($artifact);
+    }
+
+    /**
+     * User views a test execution
+     *
+     * @url PATCH {id}/presences
+     *
+     * @param string $id           Id of the artifact
+     * @param string $uuid         Uuid of current user {@from body}
+     * @param string $remove_from  Id of the old artifact {@from body}
+     *
+     * @throws 404
+     */
+    protected function presences($id, $uuid, $remove_from = '') {
+        $user = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+
+        if(! $artifact) {
+            throw new RestException(404);
+        }
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $data = array(
+                'presence' => array(
+                    'execution_id' => $id,
+                    'uuid'         => $uuid,
+                    'remove_from'  => $remove_from,
+                    'user'         => array(
+                        'id'         => $user->getId(),
+                        'real_name'  => $user->getRealName(),
+                        'avatar_url' => $user->getAvatarUrl()
+                    )
+                )
+            );
+            $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $message  = new MessageDataPresenter(
+                $user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                'trafficlights_' . $artifact->getParent($user)->getId(),
+                $rights,
+                'trafficlights_user:presence',
+                $data
+            );
+
+            $this->node_js_client->sendMessage($message);
+        }
+
+        Header::allowOptionsPatch();
     }
 
     /** @return array */

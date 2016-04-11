@@ -7,39 +7,48 @@ angular
 
 ExecutionService.$inject = [
     '$q',
-    'Restangular',
     '$rootScope',
     'ExecutionConstants',
-    'SharedPropertiesService'
+    'ExecutionRestService'
 ];
 
 function ExecutionService(
     $q,
-    Restangular,
     $rootScope,
     ExecutionConstants,
-    SharedPropertiesService
+    ExecutionRestService
 ) {
-    var self    = this,
-        baseurl = '/api/v1',
-        rest    = Restangular.withConfig(setRestangularConfig);
+    var self = this;
 
     _.extend(self, {
-        UNCATEGORIZED                         : ExecutionConstants.UNCATEGORIZED,
-        campaign                              : {},
-        executions_by_categories_by_campaigns : {},
-        executions                            : {},
-        categories                            : {},
-        loading                               : {},
-        loadExecutions                        : loadExecutions,
-        getExecutionsByDefinitionId           : getExecutionsByDefinitionId,
-        updateCampaign                        : updateCampaign,
-        updateTestExecution                   : updateTestExecution,
-        putTestExecution                      : putTestExecution,
-        viewTestExecution                     : viewTestExecution,
-        removeViewTestExecution               : removeViewTestExecution,
-        getGlobalPositions                    : getGlobalPositions
+        loadExecutions               : loadExecutions,
+        getExecutions                : getExecutions,
+        getExecutionsByDefinitionId  : getExecutionsByDefinitionId,
+        updateCampaign               : updateCampaign,
+        updateTestExecution          : updateTestExecution,
+        viewTestExecution            : viewTestExecution,
+        removeAllViewTestExecution   : removeAllViewTestExecution,
+        removeViewTestExecution      : removeViewTestExecution,
+        removeViewTestExecutionByUUID: removeViewTestExecutionByUUID,
+        getGlobalPositions           : getGlobalPositions
     });
+
+    initialization();
+
+    $rootScope.$on('service-reload', function() {
+        initialization();
+    });
+
+    function initialization() {
+        _.extend(self, {
+            UNCATEGORIZED                        : ExecutionConstants.UNCATEGORIZED,
+            campaign                             : {},
+            executions_by_categories_by_campaigns: {},
+            executions                           : {},
+            categories                           : {},
+            loading                              : {}
+        });
+    }
 
     function loadExecutions(campaign_id) {
         self.campaign_id = campaign_id;
@@ -56,73 +65,47 @@ function ExecutionService(
 
         self.loading[campaign_id] = true;
         self.executions_by_categories_by_campaigns[campaign_id] = {};
-        return getExecutions(limit, offset);
-
-        function getExecutions(limit, offset) {
-            return getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
-                var total_executions  = data.total;
-
-                nb_fetched += data.results.length;
-                groupExecutionsByCategory(data.results);
-
-                $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
-
-                if (nb_fetched < total_executions) {
-                    getExecutions(limit, offset + limit);
-                } else {
-                    self.loading[campaign_id] = false;
-                }
-            });
-        }
-
-        function groupExecutionsByCategory(executions) {
-            executions.forEach(function(execution) {
-                var category = execution.definition.category;
-                if (! category) {
-                    category = ExecutionConstants.UNCATEGORIZED;
-                    execution.definition._uncategorized = category;
-                }
-
-                self.executions[execution.id] = execution;
-
-                if (typeof self.executions_by_categories_by_campaigns[campaign_id][category] === "undefined") {
-                    self.executions_by_categories_by_campaigns[campaign_id][category] = {
-                        label     : category,
-                        executions: []
-                    };
-                }
-
-                self.executions_by_categories_by_campaigns[campaign_id][category].executions.push(execution);
-            });
-
-            self.categories = self.executions_by_categories_by_campaigns[campaign_id];
-        }
-
-        function getRemoteExecutions(campaign_id, limit, offset) {
-            var data = $q.defer();
-
-            rest.one('trafficlights_campaigns', campaign_id)
-                .all('trafficlights_executions')
-                .getList({
-                    limit: limit,
-                    offset: offset
-                })
-                .then(function(response) {
-                    result = {
-                        results: response.data,
-                        total: response.headers('X-PAGINATION-SIZE')
-                    };
-
-                    data.resolve(result);
-                });
-
-            return data.promise;
-        }
+        return getExecutions(campaign_id, limit, offset, nb_fetched);
     }
 
-    function setRestangularConfig(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl(baseurl);
+    function getExecutions(campaign_id, limit, offset, nb_fetched) {
+        return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
+            var total_executions  = data.total;
+
+            nb_fetched += data.results.length;
+            groupExecutionsByCategory(campaign_id, data.results);
+
+            $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
+
+            if (nb_fetched < total_executions) {
+                getExecutions(campaign_id, limit, offset + limit);
+            } else {
+                self.loading[campaign_id] = false;
+            }
+        });
+    }
+
+    function groupExecutionsByCategory(campaign_id, executions) {
+        executions.forEach(function(execution) {
+            var category = execution.definition.category;
+            if (! category) {
+                category = ExecutionConstants.UNCATEGORIZED;
+                execution.definition._uncategorized = category;
+            }
+
+            self.executions[execution.id] = execution;
+
+            if (typeof self.executions_by_categories_by_campaigns[campaign_id][category] === "undefined") {
+                self.executions_by_categories_by_campaigns[campaign_id][category] = {
+                    label     : category,
+                    executions: []
+                };
+            }
+
+            self.executions_by_categories_by_campaigns[campaign_id][category].executions.push(execution);
+        });
+
+        self.categories = self.executions_by_categories_by_campaigns[campaign_id];
     }
 
     function getExecutionsByDefinitionId(artifact_id) {
@@ -153,63 +136,47 @@ function ExecutionService(
         execution.results                      = '';
         execution.error                        = '';
 
-        switch (execution.status) {
-            case 'passed':
-                self.campaign.nb_of_passed++;
-                break;
-            case 'failed':
-                self.campaign.nb_of_failed++;
-                break;
-            case 'blocked':
-                self.campaign.nb_of_blocked++;
-                break;
+        if (previous_status === 'notrun') {
+            previous_status = 'not_run';
         }
-
-        switch (previous_status) {
-            case 'passed':
-                self.campaign.nb_of_passed--;
-                break;
-            case 'failed':
-                self.campaign.nb_of_failed--;
-                break;
-            case 'blocked':
-                self.campaign.nb_of_blocked--;
-                break;
-            default:
-                self.campaign.nb_of_not_run--;
-                break;
-        }
+        self.campaign[('nb_of_').concat(execution.status)]++;
+        self.campaign[('nb_of_').concat(previous_status)]--;
     }
 
     function updateCampaign(new_campaign) {
         self.campaign = new_campaign;
     }
 
-    function putTestExecution(execution_id, new_status, results) {
-        return rest
-            .one('trafficlights_executions', execution_id)
-            .put({
-                status: new_status,
-                results: results
-            })
-            .then(function (response) {
-                return response;
+    function viewTestExecution(execution_id, user) {
+        if (_.has(self.executions, execution_id)) {
+            var execution = self.executions[execution_id];
+            if (! _.has(execution, 'viewed_by')) {
+                execution.viewed_by = [];
+            }
+            execution.viewed_by.push(user);
+        }
+    }
+
+    function removeViewTestExecution(execution_id, user_to_remove) {
+        if (_.has(self.executions, execution_id)) {
+            _.remove(self.executions[execution_id].viewed_by, function(user) {
+                return user.id === user_to_remove.id && user.uuid === user_to_remove.uuid;
             });
-    }
-
-    function viewTestExecution(execution_id) {
-        /**
-         * TODO: Request Http to Tuleap server (POST /test/{id}/presence)
-         */
-        if (_.has(self.executions, execution_id)) {
-            self.executions[execution_id].viewed_by = SharedPropertiesService.getCurrentUser();
         }
     }
 
-    function removeViewTestExecution(execution_id) {
-        if (_.has(self.executions, execution_id)) {
-            self.executions[execution_id].viewed_by = null;
-        }
+    function removeAllViewTestExecution() {
+        _.forEach(self.executions, function(execution) {
+            _.remove(self.executions[execution.id].viewed_by);
+        });
+    }
+
+    function removeViewTestExecutionByUUID(uuid) {
+        _.forEach(self.executions, function(execution) {
+            _.remove(execution.viewed_by, function(presence) {
+                return presence.uuid === uuid;
+            });
+        });
     }
 
     function getGlobalPositions() {
@@ -218,7 +185,11 @@ function ExecutionService(
          */
         var response = [];
         response.forEach(function(element) {
-            self.executions[element.id].viewed_by = element.user;
+            var execution = self.executions[element.id];
+            if (! _.has(execution, 'viewed_by')) {
+                execution.viewed_by = [];
+            }
+            execution.viewed_by.push(element.user);
         });
     }
 }
