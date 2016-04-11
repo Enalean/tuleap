@@ -16,7 +16,7 @@ function CommentsService(
     var self = this;
 
     lodash.extend(self, {
-        comments_pagination : {
+        comments_pagination: {
             limit : 50,
             offset: 0
         },

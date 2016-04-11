@@ -26,7 +26,6 @@ function FilesController(
     function getFiles() {
         FilesRestService.getFiles(self.pull_request.id).then(function(files) {
             self.files = files;
-
         }).finally(function() {
             self.loading_files = false;
         });

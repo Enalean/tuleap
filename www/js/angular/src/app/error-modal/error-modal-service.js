@@ -19,12 +19,12 @@ function ErrorModalService(
 
     function showError(response) {
         $modal.open({
-            keyboard    : false,
-            backdrop    : 'static',
-            templateUrl : 'error-modal/error-modal.tpl.html',
-            controller  : 'ErrorModalController as error_modal',
-            resolve     : {
-                message: function () {
+            keyboard   : false,
+            backdrop   : 'static',
+            templateUrl: 'error-modal/error-modal.tpl.html',
+            controller : 'ErrorModalController as error_modal',
+            resolve    : {
+                message: function() {
                     var message = response.status + ' ' + response.statusText;
 
                     if (response.data.error) {

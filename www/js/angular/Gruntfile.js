@@ -152,6 +152,7 @@ module.exports = function(grunt) {
          * `grunt concat` concatenates multiple source files into a single file.
          */
         concat: {
+
             /**
              * The `compile_js` target is the concatenation of our application source
              * code and all specified vendor source code into a single file.
@@ -232,7 +233,7 @@ module.exports = function(grunt) {
          * point (!); this is useful when code comes from a third party but is
          * nonetheless inside `src/`.
          */
-        jshint: {
+        eslint: {
             src: [
                 '<%= app_files.js %>'
             ],
@@ -243,13 +244,7 @@ module.exports = function(grunt) {
                 'Gruntfile.js'
             ],
             options: {
-                curly: true,
-                immed: true,
-                newcap: true,
-                noarg: true,
-                sub: true,
-                boss: true,
-                eqnull: true
+                configFile: './.eslintrc.json'
             }
         },
 
@@ -343,7 +338,7 @@ module.exports = function(grunt) {
              */
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['jshint:gruntfile'],
+                tasks: ['eslint:gruntfile'],
                 options: {
                     livereload: false
                 }
@@ -357,7 +352,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.js %>'
                 ],
-                tasks: ['jshint:src', 'nggettext_extract', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
+                tasks: ['eslint:src', 'nggettext_extract', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
             },
 
             /**
@@ -398,7 +393,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.jsunit %>'
                 ],
-                tasks: ['jshint:test', 'karma:continuous'],
+                tasks: ['eslint:test', 'karma:continuous'],
                 options: {
                     livereload: false
                 }
@@ -437,30 +432,27 @@ module.exports = function(grunt) {
      * before watching for changes.
      */
     grunt.renameTask('watch', 'delta');
-    grunt.registerTask('watch', ['build', 'soft-compile', 'delta']);
-
-    /**
-     * The default task is to build and compile.
-     */
-    grunt.registerTask('default', ['build', 'compile']);
+    grunt.registerTask('watch', [
+        'prepare',
+        'soft-compile',
+        'karmaconfig',
+        'delta'
+    ]);
 
     /**
      * The `build` task gets your app ready to run for development and testing.
      */
-    grunt.registerTask('build', [
+    grunt.registerTask('prepare', [
         'clean:build',
         'nggettext_extract',
         'html2js',
-        'jshint',
         'less:build',
         'copy:build_assets',
         'copy:build_appmodules',
         'copy:build_appjs',
         'copy:build_vendorjs',
         'copy:build_vendorcss',
-        'copy:build_vendorassets',
-        'karmaconfig',
-        'karma:continuous'
+        'copy:build_vendorassets'
     ]);
 
     /**
@@ -485,6 +477,25 @@ module.exports = function(grunt) {
         'copy:compile_assets',
         'concat'
     ]);
+
+    grunt.registerTask('build', 'Build and minify the app', function() {
+        return grunt.task.run([
+            'test',
+            'prepare',
+            'compile'
+        ]);
+    });
+
+    grunt.registerTask('default', ['build']);
+
+    grunt.registerTask('test', 'Run unit tests and generate a junit report for the Continuous Integration', function() {
+        return grunt.task.run([
+            'eslint',
+            'html2js',
+            'karmaconfig',
+            'karma:continuous'
+        ]);
+    });
 
     grunt.registerTask('coverage', 'Run unit tests and display test coverage results on your browser', function() {
         return grunt.task.run([
@@ -513,7 +524,7 @@ module.exports = function(grunt) {
         var jsFiles = filterForJS(this.filesSrc);
 
         grunt.file.copy('karma/karma-unit.tpl.js', grunt.config('build_dir') + '/karma-unit.js', {
-            process: function(contents, path) {
+            process: function(contents) {
                 return grunt.template.process(contents, {
                     data: {
                         scripts: jsFiles
@@ -522,5 +533,4 @@ module.exports = function(grunt) {
             }
         });
     });
-
 };

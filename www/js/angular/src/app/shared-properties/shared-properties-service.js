@@ -2,11 +2,13 @@ angular
     .module('shared-properties')
     .service('SharedPropertiesService', SharedPropertiesService);
 
+SharedPropertiesService.$inject = ['$state'];
+
 function SharedPropertiesService($state) {
     var property = {
-        repository_id: undefined,
-        pull_request : undefined,
-        user_id      : undefined
+        repository_id: null,
+        pull_request : null,
+        user_id      : null
     };
 
     return {
@@ -27,7 +29,7 @@ function SharedPropertiesService($state) {
     }
 
     function getPullRequest() {
-        if (property.pull_request === undefined) {
+        if (! property.pull_request) {
             property.pull_request = {
                 id: parseInt($state.params.id, 10)
             };
@@ -44,7 +46,7 @@ function SharedPropertiesService($state) {
         property.user_id = user_id;
     }
 
-    function getUserId(user_id) {
+    function getUserId() {
         return parseInt(property.user_id, 10);
     }
 }

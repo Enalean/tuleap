@@ -10,8 +10,8 @@ function PullRequestsConfig(
     $stateProvider
 ) {
     $stateProvider.state('pull-requests', {
-        url     : '/pull-requests',
-        views   : {
+        url  : '/pull-requests',
+        views: {
             '': {
                 template: '<div pull-requests id="pull-requests"></div>'
             }

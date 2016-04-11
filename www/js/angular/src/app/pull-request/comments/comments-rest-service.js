@@ -39,7 +39,6 @@ function CommentsRestService(
         return $http.post('/api/v1/pull_requests/' + pull_request_id + '/comments', data)
             .then(function(response) {
                 return response.data;
-
             }).catch(function(response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);

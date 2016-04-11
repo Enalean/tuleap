@@ -5,7 +5,6 @@ angular
 PullRequestsController.$inject = [
     '$state',
     'lodash',
-    '$sce',
     'SharedPropertiesService',
     'PullRequestsRestService',
     'PullRequestService'
@@ -14,7 +13,6 @@ PullRequestsController.$inject = [
 function PullRequestsController(
     $state,
     lodash,
-    $sce,
     SharedPropertiesService,
     PullRequestsRestService,
     PullRequestService
@@ -22,11 +20,11 @@ function PullRequestsController(
     var self = this;
 
     lodash.extend(self, {
-        valid_status_keys        : PullRequestService.valid_status_keys,
-        repository_id            : SharedPropertiesService.getRepositoryId(),
-        pull_requests            : [],
-        loading_pull_requests    : true,
-        pull_requests_pagination : {
+        valid_status_keys       : PullRequestService.valid_status_keys,
+        repository_id           : SharedPropertiesService.getRepositoryId(),
+        pull_requests           : [],
+        loading_pull_requests   : true,
+        pull_requests_pagination: {
             limit : 50,
             offset: 0
         },
@@ -38,21 +36,23 @@ function PullRequestsController(
     getPullRequests(self.pull_requests_pagination.limit, self.pull_requests_pagination.offset);
 
     function getPullRequests(limit, offset) {
-        return PullRequestsRestService.getPullRequests(self.repository_id, limit, offset).then(function(response) {
-            self.pull_requests.push.apply(self.pull_requests, response.data.collection);
+        return PullRequestsRestService.getPullRequests(self.repository_id, limit, offset)
+            .then(function(response) {
+                self.pull_requests.push.apply(self.pull_requests, response.data.collection);
 
-            defineSelectedPullRequest();
+                defineSelectedPullRequest();
 
-            var headers = response.headers();
-            var total   = headers['x-pagination-size'];
+                var headers = response.headers();
+                var total   = headers['x-pagination-size'];
 
-            if ((limit + offset) < total) {
-                return getPullRequests(limit, offset + limit);
-            }
+                if ((limit + offset) < total) {
+                    return getPullRequests(limit, offset + limit);
+                }
 
-        }).finally(function() {
-            self.loading_pull_requests = false;
-        });
+                return self.pull_requests;
+            }).finally(function() {
+                self.loading_pull_requests = false;
+            });
     }
 
     function defineSelectedPullRequest() {
@@ -60,7 +60,6 @@ function PullRequestsController(
             self.selected_pull_request = self.pull_requests[0];
 
             self.loadPullRequest(self.selected_pull_request);
-
         } else {
             lodash.forEach(self.pull_requests, function(pull_request) {
                 if (pull_request.id === SharedPropertiesService.getPullRequest().id) {

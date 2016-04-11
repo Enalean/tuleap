@@ -6,16 +6,14 @@ CommentsController.$inject = [
     'lodash',
     'SharedPropertiesService',
     'CommentsRestService',
-    'CommentsService',
-    'ErrorModalService'
+    'CommentsService'
 ];
 
 function CommentsController(
     lodash,
     SharedPropertiesService,
     CommentsRestService,
-    CommentsService,
-    ErrorModalService
+    CommentsService
 ) {
     var self = this;
 
@@ -27,25 +25,27 @@ function CommentsController(
             content: '',
             user_id: SharedPropertiesService.getUserId()
         },
-        addComment      : addComment
+        addComment: addComment
     });
 
     getComments(CommentsService.comments_pagination.limit, CommentsService.comments_pagination.offset);
 
     function getComments(limit, offset) {
-        return CommentsService.getFormattedComments(self.pull_request.id, limit, offset).then(function(response) {
-            self.comments.push.apply(self.comments, response.data);
+        return CommentsService.getFormattedComments(self.pull_request.id, limit, offset)
+            .then(function(response) {
+                self.comments.push.apply(self.comments, response.data);
 
-            var headers = response.headers();
-            var total   = headers['x-pagination-size'];
+                var headers = response.headers();
+                var total   = headers['x-pagination-size'];
 
-            if ((limit + offset) < total) {
-                return getComments(limit, offset + limit);
-            }
+                if ((limit + offset) < total) {
+                    return getComments(limit, offset + limit);
+                }
 
-        }).finally(function() {
-            self.loading_comments = false;
-        });
+                return self.comments;
+            }).finally(function() {
+                self.loading_comments = false;
+            });
     }
 
     function addComment(new_comment) {

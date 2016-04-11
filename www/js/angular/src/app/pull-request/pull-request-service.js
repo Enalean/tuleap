@@ -17,10 +17,10 @@ function PullRequestService(
         valid_status_keys: {
             review : 'review',
             merge  : 'merge',
-            abandon: 'abandon',
+            abandon: 'abandon'
         },
-        merge            : merge,
-        abandon          : abandon
+        merge  : merge,
+        abandon: abandon
     });
 
     function merge(pull_request) {

@@ -1,14 +1,24 @@
 describe('MainController', function() {
-  var MainController, $scope;
+    var $scope;
 
-  beforeEach(module('tuleap.pull-request'));
+    beforeEach(function() {
+        module('tuleap.pull-request');
 
-  beforeEach(inject(function($controller, $rootScope) {
-    $scope         = $rootScope.$new();
-    MainController = $controller('MainController', {$scope: $scope});
-  }));
+        var $controller, $rootScope;
 
-  it('has an init method', inject(function() {
-    expect($scope.init).toBeTruthy();
-  }));
+        // eslint-disable-next-line angular/di
+        inject(function(_$controller_, _$rootScope_) {
+            $controller = _$controller_;
+            $rootScope  = _$rootScope_;
+        });
+
+        $scope = $rootScope.$new();
+        $controller('MainController', {
+            $scope: $scope
+        });
+    });
+
+    it('has an init method', function() {
+        expect($scope.init).toBeTruthy();
+    });
 });

@@ -16,10 +16,10 @@ function PullRequestConfig(
             'pull-request@pull-requests': {
                 template: '<div pull-request id="pull-request"></div>'
             },
-            'files@pull-request'        : {
+            'files@pull-request': {
                 template: '<div files id="files"></div>'
             },
-            'comments@pull-request'     : {
+            'comments@pull-request': {
                 template: '<div comments id="comments"></div>'
             }
         }

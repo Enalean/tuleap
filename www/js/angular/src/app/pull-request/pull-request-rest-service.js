@@ -26,7 +26,6 @@ function PullRequestRestService(
         return $http.get('/api/v1/pull_requests/' + pull_request_id)
             .then(function(response) {
                 return response.data;
-
             }).catch(function(response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
