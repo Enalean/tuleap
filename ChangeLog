@@ -1,3 +1,12 @@
+Version 8.13-3 (Monday, April 11th 2016)
+	== Bug Fix ==
+	* request #9032: No backlog items if no submilestone
+	* request #8954: Can't submit artifact if "can submit" is not checked
+	* request #9033: Tracker's XML is considered valid even with an empty description
+	* request #9008: Fatal error when running import script from docman v1
+	* request #8907: CSRF vulnerability in the snippet creation page
+	* request #8909: CSRF vulnerability in the project and user pending administration approval pages
+
 Version 8.13-2 (Monday, April 4th 2016)
 	== Bug Fix ==
 	* request #9015: Unwanted notifications sent with artifact id #0
