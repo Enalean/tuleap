@@ -1,0 +1,7 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+references =
+    element reference {
+        attribute source { xsd:string } &
+        attribute target { xsd:string }
+    } *

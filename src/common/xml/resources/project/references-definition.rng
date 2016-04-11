@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="references">
+    <zeroOrMore>
+      <element name="reference">
+        <interleave>
+          <attribute name="source">
+            <data type="string"/>
+          </attribute>
+          <attribute name="target">
+            <data type="string"/>
+          </attribute>
+        </interleave>
+      </element>
+    </zeroOrMore>
+  </define>
+</grammar>

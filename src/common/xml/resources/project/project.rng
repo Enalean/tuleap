@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <include href="ugroups-definition.rng"/>
+  <include href="references-definition.rng"/>
   <include href="project-definition.rng"/>
   <include href="git-definition.rng"/>
   <include href="frs-definition.rng"/>

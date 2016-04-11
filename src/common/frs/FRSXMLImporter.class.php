@@ -110,8 +110,9 @@ class FRSXMLImporter {
             return true;
         }
 
+        $created_id_map = array( 'package' => array() );
         foreach($xml_frs->package as $xml_pkg) {
-            $this->importPackage($project, $xml_pkg, $extraction_path);
+            $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map);
         }
 
         if(isset($xml_frs->administrators)) {
@@ -119,6 +120,17 @@ class FRSXMLImporter {
                 $this->importAdministrator($project, $xml_admin);
             }
         }
+        EventManager::instance()->processEvent(
+            Event::IMPORT_COMPAT_REF_XML,
+            array(
+                'logger'          => $this->logger,
+                'created_refs'    => $created_id_map,
+                'service_name'    => 'frs',
+                'xml_content'     => $xml->frs->references,
+                'project'         => $project,
+            )
+        );
+        return true;
     }
 
     private function importAdministrator(Project $project, SimpleXMLElement $xml_admin) {
@@ -133,11 +145,12 @@ class FRSXMLImporter {
         $frs_admin_group->addUser($user);
     }
 
-    private function importPackage(Project $project, SimpleXMLElement $xml_pkg, $extraction_path) {
-        $attrs = $xml_pkg->attributes();
-        $rank= isset($attrs['rank'])?$attrs['rank'] : 'end';
-        $hidden = isset($attrs['hidden'])? $attrs['hidden'] : 'false';
-        $hidden = $hidden == 'true' || $hidden == '1';
+    private function importPackage(Project $project, SimpleXMLElement $xml_pkg, $extraction_path, array &$created_id_map) {
+        $attrs   = $xml_pkg->attributes();
+        $id      = isset($attrs['id']) ? (string) $attrs['id'] : null;
+        $rank    = isset($attrs['rank']) ? $attrs['rank'] : 'end';
+        $hidden  = isset($attrs['hidden']) ? $attrs['hidden'] : 'false';
+        $hidden  = $hidden == 'true' || $hidden == '1';
         $package = new FRSPackage();
         $package->setGroupId($project->getId());
         $package->setName((string) $attrs['name']);
@@ -157,6 +170,13 @@ class FRSXMLImporter {
         foreach($xml_pkg->children() as $xml_rel) {
             if($xml_rel->getName() != "release") continue;
             $this->importRelease($project, $package, $xml_rel, $extraction_path);
+        }
+        if($id != null) {
+            if(isset($created_id_map[$id])) {
+                $this->logger->error("You already referenced a package with the id $id.");
+            } else {
+                $created_id_map['package'][$id] = $package->getPackageID();
+            }
         }
     }
 
