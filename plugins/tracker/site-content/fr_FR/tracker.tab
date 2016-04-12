@@ -1330,6 +1330,7 @@ plugin_tracker_admin_import	nb_updated_import	$1 artefact(s) mis à jour
 plugin_tracker_admin_import	missing_field_value	Valeur de champ manquant:
 plugin_tracker_admin_import	date_format_help	Format de date attendu : <strong>$1</strong>. <a href="/account/">Changer le format de date pour l'import/export</a>
 plugin_tracker_admin_import	separator_not_found	Séparateur CSV non trouvé ($1). Soit vous tentez d'importer un seul champ, soit vous utilisez le mauvais séparateur.<br />Si c'est le cas, vous pouvez <a href="/account/">changer le séparateur CSV pour l'import/export</a>
+plugin_tracker_admin_import	importing_nature	Les colonnes basées sur les natures de liens entre artéfacts ne sont pas pris en compte lors de l'import.
 
 plugin_tracker_admin_hierarchy	edit_children_title	Modifier les enfants de $1
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuellement définie

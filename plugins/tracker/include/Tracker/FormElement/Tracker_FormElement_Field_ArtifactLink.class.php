@@ -127,14 +127,28 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         $arr = array();
         $values = $this->getChangesetValues($changeset_id);
         foreach ($values as $artifact_link_info) {
             $arr[] = $artifact_link_info->getArtifactId();
         }
-        $html = implode(',', $arr);
-        return $html;
+
+        return implode(',', $arr);
+    }
+
+    public function fetchCSVChangesetValueWithNature($changeset_id, $nature)
+    {
+        $arr = array();
+        $values = $this->getChangesetValues($changeset_id);
+        foreach ($values as $artifact_link_info) {
+            if ($nature == $artifact_link_info->getNature()) {
+                $arr[] = $artifact_link_info->getArtifactId();
+            }
+        }
+
+        return implode(',', $arr);
     }
 
     /**
@@ -359,7 +373,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return "$R2.artifact_id AS `". $this->name . "`";
     }
 
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
 
@@ -762,7 +777,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
                     if ($tracker->userCanView()) {
-                        if($this->getTracker()->isProjectAllowedToUseNature()) {
+                        if ($this->getTracker()->isProjectAllowedToUseNature()) {
                             $matching_ids['nature'] = array();
                         }
                         $trf = Tracker_ReportFactory::instance();
@@ -773,11 +788,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                             foreach ($renderers as $renderer) {
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key = $this->id . '_' . $report->id . '_' . $renderer->getId();
-                                    $columns          = $renderer->getTableColumns($only_one_column, $use_data_from_db);
-                                    $extracted_fields = $renderer->extractFieldsFromColumns($columns);
+                                    $columns           = $renderer->getTableColumns($only_one_column, $use_data_from_db);
+                                    $formatted_columns = $renderer->formatColumns($columns);
                                     $json['tabs'][] = array(
                                         'key' => $key,
-                                        'src' => $renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column,$columns, $extracted_fields, $use_data_from_db, $read_only),
+                                        'src' => $renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $formatted_columns, $use_data_from_db, $read_only),
                                     );
                                     break;
                                 }
@@ -1358,8 +1373,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
-
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
         $is_valid = true;
         if (! isset($value['new_values'])) {
             return $is_valid;
@@ -1370,7 +1385,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $art_id_array = explode(',', $new_values);
             foreach ($art_id_array as $artifact_id) {
                 $artifact_id = trim($artifact_id);
-                if ($artifact_id === ""){
+                if ($artifact_id === "") {
                     $is_valid = false;
                     $GLOBALS['Response']->addFeedback(
                         'error',
@@ -1412,21 +1427,21 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
                     continue;
                 }
-                if($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                    if(!isset($value['natures'][$artifact_id])) {
+                if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
+                    if (!isset($value['natures'][$artifact_id])) {
                         $is_valid = false;
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel(), $artifact_id)));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($artifact_id)));
                     }
                 }
             }
         }
 
-        if($artifact->getTracker()->isProjectAllowedToUseNature() && isset($value['natures'])) {
-            foreach($value['natures'] as $nature_shortname) {
+        if ($artifact->getTracker()->isProjectAllowedToUseNature() && isset($value['natures'])) {
+            foreach ($value['natures'] as $nature_shortname) {
                 $nature = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
-                if(! $nature) {
+                if (! $nature) {
                     $is_valid = false;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($this->getLabel())));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($artifact_id)));
                 }
             }
         }
