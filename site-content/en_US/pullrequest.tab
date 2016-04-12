@@ -15,3 +15,10 @@ plugin_pullrequest	new_pull_request_modal_choose_branch_from	Choose a source bra
 plugin_pullrequest	new_pull_request_modal_choose_branch_to	Choose a destination branch
 plugin_pullrequest	new_pull_request_modal_close	Close
 plugin_pullrequest	new_pull_request_modal_submit	Create
+
+plugin_pullrequest	invalid_request	This request is not valid.
+plugin_pullrequest	generate_pull_request_error	An error occured while generating the Pull Request.
+plugin_pullrequest	generate_pull_request_branch_error	A provided branch does not exist.
+plugin_pullrequest	user_cannot_read_repository	You are not authorized to READ the Git repository.
+plugin_pullrequest	pull_request_cannot_be_created	The source and destination references should not be the same.
+plugin_pullrequest	pull_request_already_exists	A pull request with the same source and destination references already exists.

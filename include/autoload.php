@@ -7,13 +7,16 @@ function autoloaddab57921492bc01c038656d66784559b($class) {
     if ($classes === null) {
         $classes = array(
             'pullrequestplugin' => '/pullrequestPlugin.class.php',
+            'tuleap\\pullrequest\\additionalactionspresenter' => '/PullRequest/AdditionalActionsPresenter.php',
             'tuleap\\pullrequest\\additionalinfopresenter' => '/PullRequest/AdditionalInfoPresenter.php',
             'tuleap\\pullrequest\\comment\\comment' => '/PullRequest/Comment/Comment.php',
             'tuleap\\pullrequest\\comment\\dao' => '/PullRequest/Comment/Dao.php',
             'tuleap\\pullrequest\\comment\\factory' => '/PullRequest/Comment/Factory.php',
             'tuleap\\pullrequest\\comment\\paginatedcomments' => '/PullRequest/Comment/PaginatedComments.php',
             'tuleap\\pullrequest\\dao' => '/PullRequest/Dao.php',
+            'tuleap\\pullrequest\\exception\\pullrequestalreadyexistsexception' => '/PullRequest/Exception/PullRequestAlreadyExistsException.php',
             'tuleap\\pullrequest\\exception\\pullrequestcannotbeabandoned' => '/PullRequest/Exception/PullRequestCannotBeAbandoned.php',
+            'tuleap\\pullrequest\\exception\\pullrequestcannotbecreatedexception' => '/PullRequest/Exception/PullRequestCannotBeCreatedException.php',
             'tuleap\\pullrequest\\exception\\pullrequestcannotbemerged' => '/PullRequest/Exception/PullRequestCannotBeMerged.php',
             'tuleap\\pullrequest\\exception\\pullrequestnotcreatedexception' => '/PullRequest/Exception/PullRequestNotCreatedException.php',
             'tuleap\\pullrequest\\exception\\pullrequestnotfoundexception' => '/PullRequest/Exception/PullRequestNotFoundException.php',
@@ -25,6 +28,7 @@ function autoloaddab57921492bc01c038656d66784559b($class) {
             'tuleap\\pullrequest\\plugininfo' => '/PullRequestPluginInfo.class.php',
             'tuleap\\pullrequest\\pullrequest' => '/PullRequest/PullRequest.php',
             'tuleap\\pullrequest\\pullrequestcloser' => '/PullRequest/PullRequestCloser.php',
+            'tuleap\\pullrequest\\pullrequestcreator' => '/PullRequest/PullRequestCreator.php',
             'tuleap\\pullrequest\\pullrequestpresenter' => '/PullRequest/PullRequestPresenter.php',
             'tuleap\\pullrequest\\rest\\resourcesinjector' => '/PullRequest/REST/ResourcesInjector.class.php',
             'tuleap\\pullrequest\\rest\\v1\\commentpostrepresentation' => '/PullRequest/REST/v1/CommentPOSTRepresentation.php',
@@ -40,7 +44,8 @@ function autoloaddab57921492bc01c038656d66784559b($class) {
             'tuleap\\pullrequest\\rest\\v1\\pullrequestrepresentation' => '/PullRequest/REST/v1/PullRequestRepresentation.php',
             'tuleap\\pullrequest\\rest\\v1\\pullrequestsresource' => '/PullRequest/REST/v1/PullRequestsResource.php',
             'tuleap\\pullrequest\\rest\\v1\\repositorypullrequestrepresentation' => '/PullRequest/REST/v1/RepositoryPullRequestRepresentation.php',
-            'tuleap\\pullrequest\\rest\\v1\\repositoryresource' => '/PullRequest/REST/v1/RepositoryResource.php'
+            'tuleap\\pullrequest\\rest\\v1\\repositoryresource' => '/PullRequest/REST/v1/RepositoryResource.php',
+            'tuleap\\pullrequest\\router' => '/PullRequest/Router.php'
         );
     }
     $cn = strtolower($class);

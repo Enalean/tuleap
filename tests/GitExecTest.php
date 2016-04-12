@@ -159,4 +159,20 @@ class GitExecTest extends TuleapTestCase {
 
         $this->git_exec->fastForwardMerge('dev');
     }
+
+    public function itReturnsTheBranchNames() {
+        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
+        file_put_contents("$this->fixture_dir/nonprophetic", "jackassness");
+        $this->git_exec->add("$this->fixture_dir/nonprophetic");
+        $this->git_exec->commit("add nonprophetic");
+
+        $branches = $this->git_exec->getAllBranchNames();
+
+        $expected = array(
+            'dev',
+            'master'
+        );
+
+        $this->assertEqual($branches, $expected);
+    }
 }
