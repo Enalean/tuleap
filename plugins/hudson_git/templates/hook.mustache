@@ -21,8 +21,12 @@
     <tbody>
         {{# jobs }}
             <tr>
-                <td>{{ getFormattedPushDate }}</id>
-                <td><a href='{{ getJobUrl }}'>{{ getJobUrl }}</a></id>
+               <td class='pushdate'>{{ getFormattedPushDate }}</id>
+               <td>
+                   {{# getJobUrlList }}
+                         <a href='{{ . }}'>{{ . }}</a><br>
+                   {{/ getJobUrlList }}
+               </id>
             </tr>
         {{/ jobs }}
         {{^ jobs }}

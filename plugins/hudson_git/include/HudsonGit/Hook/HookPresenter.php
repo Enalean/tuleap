@@ -26,7 +26,6 @@ use GitViews_RepoManagement_Pane_Hooks;
 class HookPresenter
 {
 
-
     /**
      * @var GitRepository
      */
@@ -57,7 +56,8 @@ class HookPresenter
         return $this->repository->getId();
     }
 
-    public function save_label() {
+    public function save_label()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
     }
 
@@ -91,7 +91,9 @@ class HookPresenter
         return $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
     }
 
-    public function empty_jobs() {
+    public function empty_jobs()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
     }
+
 }

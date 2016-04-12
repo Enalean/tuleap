@@ -37,7 +37,8 @@ class JobManager
 
     public function create(Job $job)
     {
-        if (! $this->dao->create($job)) {
+        $id = $this->dao->create($job);
+        if (! $id) {
             throw new CannotCreateJobException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
         }
     }
