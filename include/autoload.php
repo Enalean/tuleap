@@ -8,6 +8,7 @@ function autoloaddab57921492bc01c038656d66784559b($class) {
         $classes = array(
             'pullrequestplugin' => '/pullrequestPlugin.class.php',
             'tuleap\\pullrequest\\additionalactionspresenter' => '/PullRequest/AdditionalActionsPresenter.php',
+            'tuleap\\pullrequest\\additionalhelptextpresenter' => '/PullRequest/AdditionalHelpTextPresenter.php',
             'tuleap\\pullrequest\\additionalinfopresenter' => '/PullRequest/AdditionalInfoPresenter.php',
             'tuleap\\pullrequest\\comment\\comment' => '/PullRequest/Comment/Comment.php',
             'tuleap\\pullrequest\\comment\\dao' => '/PullRequest/Comment/Dao.php',

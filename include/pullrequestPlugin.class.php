@@ -25,9 +25,10 @@ use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\REST\ResourcesInjector;
 use Tuleap\PullRequest\PluginInfo;
-use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\AdditionalActionsPresenter;
+use Tuleap\PullRequest\AdditionalHelpTextPresenter;
 use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Dao;
@@ -51,6 +52,7 @@ class pullrequestPlugin extends Plugin {
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
             $this->addHook(GIT_HANDLE_ADDITIONAL_ACTION);
+            $this->addHook(GIT_ADDITIONAL_HELP_TEXT);
             $this->addHook(GIT_VIEW);
         }
     }
@@ -213,6 +215,20 @@ class pullrequestPlugin extends Plugin {
             } else {
                 $git_controller->redirectNoRepositoryError();
             }
+        }
+    }
+
+    /**
+     * @see GIT_ADDITIONAL_HELP_TEXT
+     */
+    public function git_additional_help_text($params) {
+        $repository = $params['repository'];
+
+        if (! $repository->isMigratedToGerrit()) {
+            $renderer  = $this->getTemplateRenderer();
+            $presenter = new AdditionalHelpTextPresenter();
+
+            $params['html'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }
     }
 
