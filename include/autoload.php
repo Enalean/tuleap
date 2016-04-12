@@ -7,6 +7,7 @@ function autoloade38ae64ab92da9b471cd6dee929b3db1($class) {
     if ($classes === null) {
         $classes = array(
             'pullrequestplugin' => '/pullrequestPlugin.class.php',
+            'tuleap\\pullrequest\\additionalinfopresenter' => '/PullRequest/AdditionalInfoPresenter.php',
             'tuleap\\pullrequest\\comment\\comment' => '/PullRequest/Comment/Comment.php',
             'tuleap\\pullrequest\\comment\\dao' => '/PullRequest/Comment/Dao.php',
             'tuleap\\pullrequest\\comment\\factory' => '/PullRequest/Comment/Factory.php',
@@ -23,6 +24,7 @@ function autoloade38ae64ab92da9b471cd6dee929b3db1($class) {
             'tuleap\\pullrequest\\plugininfo' => '/PullRequestPluginInfo.class.php',
             'tuleap\\pullrequest\\pullrequest' => '/PullRequest/PullRequest.php',
             'tuleap\\pullrequest\\pullrequestcloser' => '/PullRequest/PullRequestCloser.php',
+            'tuleap\\pullrequest\\pullrequestpresenter' => '/PullRequest/PullRequestPresenter.php',
             'tuleap\\pullrequest\\rest\\resourcesinjector' => '/PullRequest/REST/ResourcesInjector.class.php',
             'tuleap\\pullrequest\\rest\\v1\\commentpostrepresentation' => '/PullRequest/REST/v1/CommentPOSTRepresentation.php',
             'tuleap\\pullrequest\\rest\\v1\\commentrepresentation' => '/PullRequest/REST/v1/CommentRepresentation.php',
