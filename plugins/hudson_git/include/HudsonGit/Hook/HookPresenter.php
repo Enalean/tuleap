@@ -33,11 +33,13 @@ class HookPresenter
     private $repository;
 
     private $jenkins_server_url;
+    public $jobs;
 
-    public function __construct(GitRepository $repository, $jenkins_server_url)
+    public function __construct(GitRepository $repository, $jenkins_server_url, array $jobs)
     {
         $this->repository         = $repository;
         $this->jenkins_server_url = $jenkins_server_url;
+        $this->jobs               = $jobs;
     }
 
     public function project_id()
@@ -77,5 +79,19 @@ class HookPresenter
     public function jenkins_documentation_link_label()
     {
         return $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_link_label');
+    }
+
+    public function label_push_date()
+    {
+        return $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
+    }
+
+    public function label_triggered()
+    {
+        return $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
+    }
+
+    public function empty_jobs() {
+        return $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
     }
 }

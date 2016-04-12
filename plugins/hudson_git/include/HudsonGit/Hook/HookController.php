@@ -20,15 +20,17 @@
 
 namespace Tuleap\HudsonGit\Hook;
 
-
 use GitRepository;
 use GitRepositoryFactory;
 use GitViews_RepoManagement_Pane_Hooks;
 use Codendi_Request;
 use TemplateRendererFactory;
 use Feedback;
+use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Job\JobDao;
 
-class HookController {
+class HookController
+{
 
     /**
      * @var Codendi_Request
@@ -44,26 +46,39 @@ class HookController {
      * @var HookDao
      */
     private $dao;
+    /**
+     * @var JobManager
+     */
+    private $job_manager;
 
-    public function __construct(Codendi_Request $request, GitRepositoryFactory $git_repository_factory, HookDao $dao){
-        $this->request = $request;
+    public function __construct(
+        Codendi_Request $request,
+        GitRepositoryFactory $git_repository_factory,
+        HookDao $dao,
+        JobManager $job_manager
+    ) {
+        $this->request                = $request;
         $this->git_repository_factory = $git_repository_factory;
-        $this->dao = $dao;
+        $this->dao                    = $dao;
+        $this->job_manager            = $job_manager;
     }
 
-    public function renderHook(GitRepository $repository, &$output) {
+    public function renderHook(GitRepository $repository, &$output)
+    {
         $renderer = TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates');
-        $dao = new HookDao();
-        $dar = $dao->getById($repository->getId());
+        $dar = $this->dao->getById($repository->getId());
         $url = '';
         if (count($dar)) {
             $row = $dar->getRow();
             $url = $row['jenkins_server_url'];
         }
-        $output = $renderer->renderToString('hook', new HookPresenter($repository, $url));
+
+        $jobs = $this->job_manager->getJobByRepository($repository);
+        $output = $renderer->renderToString('hook', new HookPresenter($repository, $url, $jobs));
     }
 
-    public function save() {
+    public function save()
+    {
         $repository_id = $this->request->getValidated('repository_id', 'uint', 0);
         $repository    = $this->git_repository_factory->getRepositoryById($repository_id);
         if (! $repository) {

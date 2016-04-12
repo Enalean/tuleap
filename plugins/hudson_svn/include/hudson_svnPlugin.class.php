@@ -32,7 +32,6 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Dao as SvnDao;
 
-
 class hudson_svnPlugin extends Plugin {
 
     public function __construct($id) {
@@ -159,10 +158,14 @@ class hudson_svnPlugin extends Plugin {
         }
     }
 
-    public function process_post_commit($params) {
-        $launcher = new Launcher($this->getJobFactory(), new SvnBackendLogger(), new Jenkins_Client(new Http_Client()));
+    public function process_post_commit($params)
+    {
+        $launcher = new Launcher(
+            $this->getJobFactory(),
+            new SvnBackendLogger(),
+            new Jenkins_Client(new Http_Client())
+        );
 
         $launcher->launch($params['repository'], $params['commit_info']);
     }
-
 }

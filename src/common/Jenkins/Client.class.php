@@ -18,6 +18,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\HudsonGit\PollingResponseFactory;
+
 require_once 'common/Http/Client.class.php';
 require_once 'ClientUnableToLaunchBuildException.class.php';
 
@@ -41,7 +44,8 @@ class Jenkins_Client {
     /**
      * @param Http_Client $http_curl_client Any instance of Http_Client
      */
-    public function __construct(Http_Client $http_curl_client) {
+    public function __construct(Http_Client $http_curl_client)
+    {
         $this->http_curl_client = $http_curl_client;
     }
 
@@ -120,28 +124,30 @@ class Jenkins_Client {
         return 'json=' . json_encode($parameters);
     }
 
-    /**
-     * Notify a Jenkins server about activity on a git repository
-     *
-     * It will eventually trigger polling of those repositories configured for the given
-     * repository url for build.
-     *
-     * https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin#GitPlugin-Pushnotificationfromrepository
-     * curl http://yourserver/jenkins/git/notifyCommit?url=<URL of the Git repository>[&branches=branch1[,branch2]*][&sha1=<commit ID>]
-     */
-    public function pushGitNotifications($server_url, $repository_url) {
+    private function getFactory()
+    {
+        return new PollingResponseFactory();
+    }
+
+    public function pushGitNotifications($server_url, $repository_url)
+    {
         $push_url = $server_url.'/git/notifyCommit?url=' . urlencode($repository_url);
-        $options = array(
-            CURLOPT_URL             => $push_url,
+        $options  = array(
             CURLOPT_SSL_VERIFYPEER  => false,
             CURLOPT_POST            => true,
+            CURLOPT_HEADER          => true,
+            CURLOPT_URL             => $push_url
         );
 
         $this->http_curl_client->addOptions($options);
 
         try {
             $this->http_curl_client->doRequest();
-            return $this->http_curl_client->getLastResponse();
+
+            $response     = $this->http_curl_client->getLastResponse();
+            $header_size  = $this->http_curl_client->getInfo(CURLINFO_HEADER_SIZE);
+
+            return $this->getFactory()->buildResponseFormCurl($response, $header_size);
         } catch (Http_ClientException $e) {
             throw new Jenkins_ClientUnableToLaunchBuildException('pushGitNotifications: ' . $push_url . '; Message: ' . $e->getMessage());
         }

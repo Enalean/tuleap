@@ -24,6 +24,9 @@ require_once 'constants.php';
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Logger;
+use Tuleap\HudsonGit\Job\JobManager;
+use Tuleap\HudsonGit\Job\JobDao;
+use Tuleap\HudsonGit\PollingResponseFactory;
 
 class hudson_gitPlugin extends Plugin {
 
@@ -70,14 +73,16 @@ class hudson_gitPlugin extends Plugin {
         }
     }
 
-    public function git_hook_post_receive($params) {
+    public function git_hook_post_receive($params)
+    {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $controller = new Hook\HookTriggerController(
                 new Hook\HookDao(),
                 new Jenkins_Client(
                     new Http_Client()
                 ),
-                $this->getLogger()
+                $this->getLogger(),
+                new JobManager(new JobDao())
             );
             $controller->trigger($params['repository']);
         }
@@ -86,14 +91,16 @@ class hudson_gitPlugin extends Plugin {
     /**
      * @return Hook\HookController
      */
-    private function getHookController(Codendi_Request $request) {
+    private function getHookController(Codendi_Request $request)
+    {
         return new Hook\HookController(
             $request,
             new GitRepositoryFactory(
                 new GitDao(),
                 ProjectManager::instance()
             ),
-            new Hook\HookDao()
+            new Hook\HookDao(),
+            new JobManager(new JobDao())
         );
     }
 
