@@ -1,3 +1,6 @@
+Version 4.142 - Tuleap 8.14
+    * Add the 30last jobs status in git admin settings
+
 Version 4.141 - Tuleap 8.14
     * request #8060: A Git repo can be migrated to Gerrit if we use LDAP write with codendi authentication
 

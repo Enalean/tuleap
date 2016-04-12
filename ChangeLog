@@ -20,10 +20,11 @@ Version 8.14 (Not released yet)
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
-	* git: 4.141
-	* hudson_git: 0.4
+	* git: 4.142
+	* hudson_git: 0.5
 	* agiledashboard: 1.372
 	* cardwall: 1.58
+	* hudson_svn: 0.7
 
     == Themes ==
 	* FlamingParrot: 1.133

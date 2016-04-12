@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 8.14
+    * Add the 30last jobs status in git admin settings
+
 Version 0.4 - Tuleap 8.14
     * story #7897 trigger CI build after push
 
