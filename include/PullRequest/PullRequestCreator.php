@@ -24,6 +24,7 @@ use GitRepositoryFactory;
 use GitRepository;
 use UserManager;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
+use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 
 class PullRequestCreator {
@@ -65,6 +66,11 @@ class PullRequestCreator {
         $user       = $this->user_manager->getCurrentUser();
 
         if ($repository) {
+
+            if ($repository->isMigratedToGerrit()) {
+                throw new PullRequestRepositoryMigratedOnGerritException();
+            }
+
             $executor  = new GitExec($repository->getFullPath(), $repository->getFullPath());
             $sha1_src  = $executor->getReferenceBranch($branch_src);
             $sha1_dest = $executor->getReferenceBranch($branch_dest);

@@ -20,6 +20,7 @@ function autoloaddab57921492bc01c038656d66784559b($class) {
             'tuleap\\pullrequest\\exception\\pullrequestcannotbemerged' => '/PullRequest/Exception/PullRequestCannotBeMerged.php',
             'tuleap\\pullrequest\\exception\\pullrequestnotcreatedexception' => '/PullRequest/Exception/PullRequestNotCreatedException.php',
             'tuleap\\pullrequest\\exception\\pullrequestnotfoundexception' => '/PullRequest/Exception/PullRequestNotFoundException.php',
+            'tuleap\\pullrequest\\exception\\pullrequestrepositorymigratedongerritexception' => '/PullRequest/Exception/PullRequestRepositoryMigratedOnGerritException.php',
             'tuleap\\pullrequest\\exception\\unknownbranchnameexception' => '/PullRequest/Exception/UnknownBranchNameException.php',
             'tuleap\\pullrequest\\exception\\unknownreferenceexception' => '/PullRequest/Exception/UnknownReferenceException.php',
             'tuleap\\pullrequest\\factory' => '/PullRequest/Factory.php',

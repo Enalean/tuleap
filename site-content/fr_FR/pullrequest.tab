@@ -22,3 +22,4 @@ plugin_pullrequest	generate_pull_request_branch_error	Une des branches demandée
 plugin_pullrequest	user_cannot_read_repository	Vous n'êtes pas autorisé à lire le dépôt Git.
 plugin_pullrequest	pull_request_cannot_be_created	Les références source et destination ne peuvent être identiques.
 plugin_pullrequest	pull_request_already_exists	Une pull request existe déjà avec les mêmes références source et destination.
+plugin_pullrequest	repository_migrated_on_gerrit	Le dépôt est migré sur Gerrit.

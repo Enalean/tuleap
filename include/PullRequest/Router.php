@@ -120,6 +120,12 @@ class Router {
                 $project_id,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_already_exists')
             );
+        } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
+            $this->redirectInRepositoryViewWithErrorMessage(
+                $repository_id,
+                $project_id,
+                $GLOBALS['Language']->getText('plugin_pullrequest', 'repository_migrated_on_gerrit')
+            );
         }
 
         if (! $generated_pull_request) {
