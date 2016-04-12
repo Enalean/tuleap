@@ -203,15 +203,6 @@ Integration of git distributed software configuration management tool together
 with Tuleap.
 This package is integrated with gitolite v3 (new version)
 
-%package plugin-pullrequest
-Summary: Pull request plugin for Tuleap
-Group: Development/Tools
-Version: @@PLUGIN_PULLREQUEST_VERSION@@
-Release: @@RELEASE@@%{?dist}
-Requires: tuleap-plugin-git
-%description plugin-pullrequest
-Code review and pull requests inside of Tuleap
-
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
@@ -1044,10 +1035,6 @@ fi
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
-
-%files plugin-pullrequest
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/pullrequest
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)

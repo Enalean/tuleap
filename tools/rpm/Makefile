@@ -11,7 +11,6 @@ CORE_REST_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/api/VERSION)
 
 PLUGIN_FORUMML_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/forumml/VERSION)
 PLUGIN_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/git/VERSION)
-PLUGIN_PULLREQUEST_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/pullrequest/VERSION)
 PLUGIN_LDAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/ldap/VERSION)
 PLUGIN_IM_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/IM/VERSION)
 PLUGIN_HUDSON_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/hudson/VERSION)
@@ -104,10 +103,6 @@ node:
 	cd $(BASE_DIR)/plugins/agiledashboard/www/js/kanban &&\
 		npm install &&\
 		bower install --allow-root --config.interactive=false &&\
-		grunt &&\
-	cd $(BASE_DIR)/plugins/pullrequest/www/js/angular &&\
-		npm install &&\
-		bower install --allow-root --config.interactive=false &&\
 		grunt
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
@@ -123,13 +118,11 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
 			 	-path "*/.DS_Store" -o\
 			 	-path $(PKG_NAME)-$(version)/plugins/tests -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
-				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban -o\
-				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular \)\
+				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
 			&& \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/bin; \
-			find $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular/bin; \
 		} | \
 		cpio -o -H ustar --quiet |\
 		gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
@@ -156,7 +149,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@CORE_REST_VERSION@@/$(CORE_REST_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FORUMML_VERSION@@/$(PLUGIN_FORUMML_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_GIT_VERSION@@/$(PLUGIN_GIT_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_PULLREQUEST_VERSION@@/$(PLUGIN_PULLREQUEST_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_LDAP_VERSION@@/$(PLUGIN_LDAP_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_IM_VERSION@@/$(PLUGIN_IM_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_HUDSON_VERSION@@/$(PLUGIN_HUDSON_VERSION)/g' |\
