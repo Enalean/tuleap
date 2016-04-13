@@ -284,24 +284,21 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      *
      * A -> B -> C -> D
      *
-     * putArtifactAtTheEnd(E) =>
+     * putArtifactAtTheEndWithoutTransaction(E) =>
      * A -> B -> C -> D -> E
      *
      * @todo: check that the artifact doesn't already exist in the list
      *
      * @return bool true if success
      */
-    public function putArtifactAtTheEnd($artifact_id) {
-        $this->da->startTransaction();
+    public function putArtifactAtTheEndWithoutTransaction($artifact_id) {
         try {
             $predecessor_id = $this->searchPredecessor(null);
             if ($this->insert($predecessor_id, $artifact_id)) {
-                $this->da->commit();
                 return true;
             }
         } catch (Tracker_Artifact_Dao_NoPredecessorException $exception) {
         }
-        $this->da->rollback();
         return false;
     }
 
