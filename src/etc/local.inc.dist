@@ -188,7 +188,7 @@ $cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS 
 // Subversion paths
 $svn_prefix    = "/var/lib/codendi/svnroot";// prefix to add to the subversion root directory
 $svnadmin_cmd  = "/usr/bin/svnadmin";     // SVN Admin binary
-$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+$svn_root_file = "/etc/httpd/conf.d/tuleap-svnroot.conf"; // File containing SVN repository definitions for Apache
 $svn_log_path  = 'logs/svn_log'; // Where apache logs files for svn should go to
 
 // FRS paths - do *not* use variables in the following parameters

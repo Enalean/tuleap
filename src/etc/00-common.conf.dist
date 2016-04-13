@@ -1,0 +1,6 @@
+#
+# Commons configuration
+#
+
+RewriteEngine On
+RewriteOptions Inherit

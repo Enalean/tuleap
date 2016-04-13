@@ -590,75 +590,95 @@ test_mysql_host() {
 setup_apache() {
     # Move away useless Apache configuration files
     # before installing our own config files.
+    local httpdconf="/etc/httpd/conf"
+    local httpdconfd="/etc/httpd/conf.d"
+    local logrtd="/etc/logrotate.d"
+    local filesconf=('httpd.conf' 'ssl.conf')
+    local filesconfd=('php.conf' 'subversion.conf' 'auth_mysql.conf'
+                      'tuleap-vhost.conf' 'tuleap-svnroot.conf')
+
     echo "Renaming existing Apache configuration files..."
-    cd /etc/httpd/conf.d/
+    cd ${httpdconfd}
     for f in *.conf
     do
-	# Do not erase conf files provided by "our" packages and for which
-	# we don't have a .dist version
-	case "$f" in
-	    "viewvc.conf"|"munin.conf"|"mailman.conf"|"perl.conf")
-		continue;;
-	esac
-	yn="0"
-	current_name="$f"
-	orig_name="$f.rhel"
-	[ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
+        # Do not erase conf files provided by "our" packages and for which
+        # we don't have a .dist version
+        case "${f}" in
+            "viewvc.conf"|"munin.conf"|"mailman.conf"|"perl.conf")
+            continue;;
+        esac
 
-	if [ "$yn" != "n" ]; then
-	    $MV -f $current_name $orig_name
-	fi
+        yn="0"
+        current_name="${f}"
+        orig_name="${f}.rhel"
 
-	if [ "$yn" = "n" ]; then
-	    $RM -f $current_name
-	fi
-	# In order to prevent RedHat from reinstalling those files during an RPM update, re-create an empty file for each file deleted
-	$TOUCH $current_name
+        if [ -f "${orig_name}" ]
+        then
+            read -p "${orig_name} already exist. Overwrite? [y|n]:" yn
+        fi
+
+        if [ "${yn,,}" = "n" ]
+        then
+            ${RM} -f ${current_name}
+        else
+            ${MV} -f ${current_name} ${orig_name}
+        fi
+
+        # In order to prevent RedHat from reinstalling those files during an
+        # RPM update, re-create an empty file for each file deleted
+        ${TOUCH} ${current_name}
     done
     cd - > /dev/null
 
-    $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
-
     echo "Installing Apache configuration files..."
-    make_backup /etc/httpd/conf/httpd.conf
+    make_backup ${httpdconf}/httpd.conf
 
-    if [ "$RH_MAJOR_VERSION" = 5 ]; then
-	install_dist_conf /etc/httpd/conf/httpd.conf
+    if [ "${RH_MAJOR_VERSION}" = 5 ]
+    then
+        for i in ${filesconf[@]}
+        do
+            install_dist_conf ${httpdconf}/${filesconf[@]}
+        done
     else
-	install_dist_conf /etc/httpd/conf/httpd.conf httpd.conf.rhel6.dist
+        for i in ${filesconf[@]}
+        do
+            install_dist_conf ${httpdconf}/${i} ${i}.rhel6.dist
+        done
     fi
 
-    for f in /etc/httpd/conf/ssl.conf \
-	     /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
-	     /etc/httpd/conf.d/auth_mysql.conf \
-	     /etc/httpd/conf.d/codendi_aliases.conf; do
-	install_dist_conf $f
-	fix_paths $f
+    for f in ${filesconfd[@]}
+    do
+        install_dist_conf ${httpdconfd}/${f}
+        fix_paths ${httpdconfd}/${f}
     done
 
-    # replace string patterns in codendi_aliases.conf
-    substitute "/etc/httpd/conf.d/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain"
-
     # replace string patterns in httpd.conf
-    substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+    substitute ${httpdconf}/httpd.conf '%sys_default_domain%' \
+        "$sys_default_domain"
 
-    # replace string patterns in munin.conf (for MySQL authentication)
-    if [ -f '/etc/httpd/conf.d/munin.conf' ]; then
-	substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute ${httpdconfd}/tuleap-vhost.conf '%sys_default_domain%' \
+        "$sys_default_domain"
+
+        # replace string patterns in munin.conf (for MySQL authentication)
+    if [ -f ${httpdconfd}/munin.conf ]
+    then
+        substitute ${httpdconfd}/munin.conf '%sys_dbauth_passwd%' \
+            "${dbauth_passwd}"
     fi
 
     # Make $PROJECT_ADMIN a member of the apache group
-    # This is needed to use the php session at /var/lib/php/session (e.g. for phpwiki)
-    $USERMOD -a -G apache $PROJECT_ADMIN
+    # This is needed to use the php session at /var/lib/php/session
+    # (e.g. for phpwiki)
+    ${USERMOD} -a -G apache ${PROJECT_ADMIN}
 
     # Log Files rotation configuration
     echo "Installing log files rotation..."
 
-    cp -f $INSTALL_DIR/src/etc/logrotate.httpd.conf /etc/logrotate.d/httpd
-    substitute '/etc/logrotate.d/httpd' "%PROJECT_NAME%" "$PROJECT_NAME"
+    ${CP} -f ${INSTALL_DIR}/src/etc/logrotate.httpd.conf ${logrtd}/httpd
+    substitute "${logrtd}/httpd" "%PROJECT_NAME%" "${PROJECT_NAME}"
 
-    $CHOWN root:root /etc/logrotate.d/httpd
-    $CHMOD 644 /etc/logrotate.d/httpd
+    ${CHOWN} root:root ${logrtd}/httpd
+    ${CHMOD} 644 ${logrtd}/httpd
 }
 
 ###############################################################################
