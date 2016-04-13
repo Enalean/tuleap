@@ -250,6 +250,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerCollapseFieldset.js',
                 '/plugins/tracker/scripts/TrackerArtifactReferences.js',
                 '/plugins/tracker/scripts/CopyArtifact.js',
+                '/plugins/tracker/scripts/tracker-report-nature-column.js'
             )
         );
     }

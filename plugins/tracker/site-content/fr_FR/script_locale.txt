@@ -76,3 +76,11 @@ codendi.locales['tracker_email'] = {
     copy:              'Copier dans le presse-papier',
     copied:            'L\'addresse a été copiée dans votre presse-papier'
 };
+codendi.locales['nature_column_editor'] = {
+    title                    : 'Configuration de la colonne',
+    how_to                   : 'Vous pouvez définir comment les artefacts s\'afficheront dans cette colonne en utilisant le format suivant : <code>%nom_du_champ</code>.',
+    column_format_label      : 'Format :',
+    column_format_placeholder: '#%id %titre (%statut)',
+    cancel                   : 'Annuler',
+    save                     : 'Enregistrer'
+};
