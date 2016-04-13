@@ -173,16 +173,20 @@ describe ('ExecutionService - ', function () {
             var execution_to_save = {
                 id: 4,
                 environment: "CentOS 5 - PHP 5.1",
-                status: "failed"
+                status: "failed",
+                previous_result: {
+                    result: "",
+                    status: "not_run"
+                }
             };
 
             var executions = {
                 4: {
                     id: 4,
                     environment: "CentOS 5 - PHP 5.1",
-                    status: "notrun",
+                    status: "not_run",
                     previous_result: {
-                        status: "notrun"
+                        status: "not_run"
                     }
                 }
             };

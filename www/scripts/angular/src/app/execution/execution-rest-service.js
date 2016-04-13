@@ -54,6 +54,9 @@ function ExecutionRestService(
             .put({
                 status: new_status,
                 results: results
+            })
+            .then(function (response) {
+                return response.data;
             });
     }
 

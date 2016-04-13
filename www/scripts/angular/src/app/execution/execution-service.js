@@ -30,7 +30,8 @@ function ExecutionService(
         removeAllViewTestExecution   : removeAllViewTestExecution,
         removeViewTestExecution      : removeViewTestExecution,
         removeViewTestExecutionByUUID: removeViewTestExecutionByUUID,
-        getGlobalPositions           : getGlobalPositions
+        getGlobalPositions           : getGlobalPositions,
+        displayError                 : displayError
     });
 
     initialization();
@@ -121,25 +122,18 @@ function ExecutionService(
         return executions;
     }
 
-    function updateTestExecution(execution_to_save) {
-        var execution       = self.executions[execution_to_save.id];
-        var previous_status = execution.status;
+    function updateTestExecution(execution_updated) {
+        var execution = self.executions[execution_updated.id];
+        var previous_status = execution.previous_result.status;
 
-        execution.saving = false;
-        _.assign(execution, execution_to_save);
+        _.assign(execution, execution_updated);
 
-        execution.previous_result.status       = previous_status;
-        execution.previous_result.submitted_on = new Date();
-        execution.previous_result.submitted_by = execution.submitted_by;
-        execution.previous_result.result       = execution.results;
-        execution.submitted_by                 = null;
-        execution.results                      = '';
-        execution.error                        = '';
+        execution.saving       = false;
+        execution.submitted_by = null;
+        execution.error        = '';
+        execution.results      = '';
 
-        if (previous_status === 'notrun') {
-            previous_status = 'not_run';
-        }
-        self.campaign[('nb_of_').concat(execution.status)]++;
+        self.campaign[('nb_of_').concat(execution_updated.status)]++;
         self.campaign[('nb_of_').concat(previous_status)]--;
     }
 
@@ -191,5 +185,10 @@ function ExecutionService(
             }
             execution.viewed_by.push(element.user);
         });
+    }
+
+    function displayError(execution, response) {
+        execution.saving = false;
+        execution.error  = response.status + ': ' + response.data.error.message;
     }
 }

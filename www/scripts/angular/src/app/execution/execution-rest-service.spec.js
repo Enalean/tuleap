@@ -45,16 +45,26 @@ describe ('ExecutionRestService - ', function () {
     });
 
     it("putTestExecution() - ", function() {
+        var execution = {
+            id: 4,
+            environment: "CentOS 5 - PHP 5.1",
+            status: "passed",
+            previous_result: {
+                result: "",
+                status: "not_run"
+            }
+        };
+
         mockBackend
             .expectPUT('/api/v1/trafficlights_executions/4?results=nothing&status=passed')
-            .respond();
+            .respond(execution);
 
         var promise = ExecutionRestService.putTestExecution(4, 'passed', 'nothing');
 
         mockBackend.flush();
 
-        promise.then(function(response) {
-            expect(response.status).toEqual(200);
+        promise.then(function(execution_updated) {
+            expect(execution_updated.id).toBeDefined();
         });
     });
 

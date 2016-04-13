@@ -86,6 +86,27 @@ class ExecutionRepresentationBuilder {
         return new SlicedExecutionRepresentations($representations, $executions->getTotalSize());
     }
 
+    /**
+     * @return \Tuleap\Trafficlights\REST\v1\ExecutionRepresentation
+     */
+    public function getExecutionRepresentation(PFUser $user, Tracker_Artifact $execution) {
+        $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
+        $definition_representation      = $this->getDefinitionRepresentationForExecution($user, $execution);
+        $execution_representation       = new ExecutionRepresentation();
+        $execution_representation->build(
+            $execution->getId(),
+            $execution->getStatus(),
+            $this->getExecutionEnvironment($user, $execution),
+            $this->getExecutionResult($user, $execution),
+            $execution->getLastUpdateDate(),
+            $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
+            $previous_result_representation,
+            $definition_representation
+        );
+
+        return $execution_representation;
+    }
+
     private function getListOfRepresentations(PFUser $user, array $executions) {
         $executions_representations = array();
 

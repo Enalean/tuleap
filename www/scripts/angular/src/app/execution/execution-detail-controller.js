@@ -138,16 +138,11 @@ function ExecutionDetailCtrl(
     }
 
     function setNewStatus(execution, new_status) {
-        ExecutionRestService.putTestExecution(execution.id, new_status, execution.results).then(function() {
-            var execution_to_save = angular.copy(execution);
-
-            execution.saving               = true;
-            execution.error                = null;
-            execution_to_save.error        = null;
-            execution_to_save.status       = new_status;
-            execution_to_save.submitted_by = SharedPropertiesService.getCurrentUser();
-
-            ExecutionService.updateTestExecution(execution_to_save);
+        execution.saving = true;
+        ExecutionRestService.putTestExecution(execution.id, new_status, execution.results).then(function(data) {
+            ExecutionService.updateTestExecution(data);
+        }).catch(function(response) {
+            ExecutionService.displayError(execution, response);
         });
     }
 

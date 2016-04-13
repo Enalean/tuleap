@@ -42,6 +42,9 @@ use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\Trafficlights\TrafficlightsArtifactRightsPresenter;
+use Tuleap\Trafficlights\ConfigConformanceValidator;
+use Tuleap\Trafficlights\Config;
+use Tuleap\Trafficlights\Dao;
 
 class ExecutionsResource {
     const FIELD_RESULTS      = 'results';
@@ -57,6 +60,15 @@ class ExecutionsResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var ExecutionRepresentationBuilder */
+    private $execution_representation_builder;
+
+    /** @var AssignedToRepresentationBuilder */
+    private $assigned_to_representation_builder;
+
+    /** @var ConfigConformanceValidator */
+    private $conformance_validator;
+
     /** @var NodeJSClient */
     private $node_js_client;
 
@@ -64,9 +76,26 @@ class ExecutionsResource {
     private $permissions_serializer;
 
     public function __construct() {
-        $this->tracker_factory     = TrackerFactory::instance();
-        $this->formelement_factory = Tracker_FormElementFactory::instance();
-        $this->artifact_factory    = Tracker_ArtifactFactory::instance();
+        $this->user_manager          = UserManager::instance();
+        $this->tracker_factory       = TrackerFactory::instance();
+        $this->formelement_factory   = Tracker_FormElementFactory::instance();
+        $this->artifact_factory      = Tracker_ArtifactFactory::instance();
+        $config                      = new Config(new Dao());
+        $this->conformance_validator = new ConfigConformanceValidator(
+            $config
+        );
+
+        $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
+            $this->formelement_factory,
+            $this->user_manager
+        );
+
+        $this->execution_representation_builder = new ExecutionRepresentationBuilder(
+            $this->user_manager,
+            $this->formelement_factory,
+            $this->conformance_validator,
+            $this->assigned_to_representation_builder
+        );
 
         $this->node_js_client         = new NodeJSClient();
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
@@ -103,6 +132,9 @@ class ExecutionsResource {
      * @param string $id     Id of the artifact
      * @param string $status Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
      * @param string $results Result of the execution {@from body}
+     *
+     * @throws 400
+     * @throws 500
      */
     protected function putId($id, $status, $results = '') {
         try {
@@ -115,6 +147,7 @@ class ExecutionsResource {
                     $this->formelement_factory
                 )
             );
+
             $updater->update($user, $artifact, $changes);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -126,7 +159,29 @@ class ExecutionsResource {
             }
             throw new RestException(500, $exception->getMessage());
         }
+
+        $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
+
+        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $data = array(
+                'artifact' => $execution_representation
+            );
+            $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $message  = new MessageDataPresenter(
+                $user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                'trafficlights_' . $artifact->getParent($user)->getId(),
+                $rights,
+                'trafficlights_execution:update',
+                $data
+            );
+
+            $this->node_js_client->sendMessage($message);
+        }
+
         $this->sendAllowHeadersForExecution($artifact);
+
+        return $execution_representation;
     }
 
     /**

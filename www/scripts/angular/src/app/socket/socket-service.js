@@ -56,8 +56,8 @@ function SocketService(
     }
 
     function listenToExecutionUpdated() {
-        SocketFactory.on('test_execution:update', function(response) {
-            ExecutionService.update(response);
+        SocketFactory.on('trafficlights_execution:update', function(response) {
+            ExecutionService.updateTestExecution(response.artifact);
         });
     }
 }
