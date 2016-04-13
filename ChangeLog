@@ -5,6 +5,7 @@ Version 8.14 (Not released yet)
 	* request #9036:
 		- Export project's admins and members
 		- User that are already project_members must not stop the import
+	* story #9043 have a cookie cleaned with no user token and id
 
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
