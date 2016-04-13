@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once "account.php";
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
@@ -159,7 +161,7 @@ class ProjectXMLImporter {
             list($ugroups_in_xml, $project_members) = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
 
             foreach($project_members as $user) {
-                $this->addUser($project, $user);
+                $this->addProjectMember($project, $user);
             }
 
             foreach ($ugroups_in_xml as $ugroup_def) {
@@ -189,9 +191,14 @@ class ProjectXMLImporter {
         }
     }
 
-    private function addUser(Project $project, PFUser $user) {
-        include_once "account.php";
+    private function addProjectMember(Project $project, PFUser $user) {
         $this->logger->info("Add user {$user->getUserName()} to project.");
+
+        if ($user->isMember($project->getID())) {
+            $this->logger->info("User {$user->getUserName()} is already a project member.");
+            return;
+        }
+
         if(!account_add_user_obj_to_group($project->getID(), $user)) {
             throw new UserNotAddedAsProjectMemberException($GLOBALS['Response']->getRawFeedback());
         }
@@ -222,7 +229,7 @@ class ProjectXMLImporter {
 
             $users = $this->getListOfUgroupMember($ugroup);
 
-            if($dynamic_ugroup_id == ProjectUGroup::PROJECT_MEMBERS) {
+            if ($dynamic_ugroup_id === ProjectUGroup::PROJECT_MEMBERS) {
                 $project_members = $users;
             } else {
                 $ugroups[$ugroup_name]['name']        = $ugroup_name;

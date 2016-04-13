@@ -54,6 +54,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
 
         $this->xml_file_path              = dirname(__FILE__).'/_fixtures/fake_project.xml';
         $this->xml_file_path_with_ugroups = dirname(__FILE__).'/_fixtures/fake_project_with_ugroups.xml';
+        $this->xml_file_path_with_members = dirname(__FILE__).'/_fixtures/fake_project_with_project_members.xml';
 
         $this->xml_content = new SimpleXMLElement(file_get_contents($this->xml_file_path));
     }
@@ -165,5 +166,22 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $ug03->expectCallCount('addUser', 0);
 
         $this->xml_importer->import(122, $this->xml_file_path_with_ugroups);
+    }
+
+    public function itDoesNotStopIfUserIsAlreadyProjectMember() {
+        $user = stub('PFUser')->getId()->returns(101);
+        stub($user)->getLdapId()->returns('ldap_01');
+        stub($user)->getUserName()->returns('user_01');
+        stub($user)->isMember()->returns(true);
+
+        $project_member_ugroup = mock('ProjectUGroup');
+
+        stub($this->ugroup_manager)->getDynamicUGoupByName($this->project, 'project_members')->returns($project_member_ugroup);
+        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->user_manager)->getUserByIdentifier('ldapId:ldap_01')->returns($user);
+
+        //No exception must be raised --> nothing to assert
+
+        $this->xml_importer->import(122, $this->xml_file_path_with_members);
     }
 }
