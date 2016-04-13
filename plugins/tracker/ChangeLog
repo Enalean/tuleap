@@ -1,3 +1,6 @@
+Version 5.868 - Tuleap 8.14
+    * request #9046: Be more friendly with concurrent creation of artifacts
+
 Version 5.867 - Tuleap 8.14
     * request #9016: Tracker structure incomplete export in XML format
 
