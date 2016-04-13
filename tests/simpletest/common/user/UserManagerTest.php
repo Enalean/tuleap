@@ -303,9 +303,7 @@ class UserManagerTest extends UnitTestCase {
         $user123->expectAt(1, 'setSessionHash', array(false));
 
         $cm->setReturnValue('getCookie', 'valid_hash');
-        $cm->expectCallCount('removeCookie', 3);
-        $cm->expectAt(0, 'removeCookie', array('user_token'));
-        $cm->expectAt(1, 'removeCookie', array('user_id'));
+        $cm->expectCallCount('removeCookie', 1);
         $cm->expectAt(2, 'removeCookie', array('session_hash'));
         $dao->expectOnce('deleteSession', array('valid_hash'));
         $dao->setReturnReference('searchBySessionHash', $dar_valid_hash, array('valid_hash'));
@@ -346,12 +344,6 @@ class UserManagerTest extends UnitTestCase {
         $user123->expectOnce('setSessionHash', array($hash));
 
         $cm->expectOnce('setHTTPOnlyCookie', array('session_hash', $hash, 0));
-        expect($cm)->setGlobalCookie(
-            'user_token',
-            $token_value,
-            $_SERVER['REQUEST_TIME'] + Rest_TokenManager::TOKENS_EXPIRATION_TIME
-        )->at(0);
-        expect($cm)->setGlobalCookie('user_id', 123, 0)->at(1);
 
         $user_manager->setReturnReference('getCookieManager', $cm);
         stub($user_manager)->getTokenManager()->returns($token_manager);
