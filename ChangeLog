@@ -2,6 +2,7 @@ Version 8.14 (Not released yet)
 	== Enhancement ==
 	* story #9027: Preserve links at import
 		- Create plugin
+	* request #9036: Export project's admins and members
 
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
