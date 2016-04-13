@@ -1,19 +1,23 @@
 Version 8.14 (Not released yet)
+	== Enhancement ==
+	* story #9027: Preserve links at import
+		- Create plugin
+
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
 	* request #9013: Dev instances can not be started if the Gerrit data container has not been specifically created
 	* request #8957: Authorization failed for repository enabling svn token
 	* request #9026: Subversion webview can not be displayed due to user's session IP invalid check
-	* request #8907: CSRF vulnerability in the snippet manipulation pages
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
 		- All added files must be checked
+		- Enforce PSR-2 for Tuleap source code
 	* request #8895: remove TinyMCE
-	* request #9011: Enforce PSR-2 for Tuleap source code
 
 	== Security ==
 	* request #8909: CSRF vulnerability in the project and user pending administration approval pages
+	* request #8907: CSRF vulnerability in the snippet manipulation pages
 
 	== Plugins ==
 	* tracker: 5.867
@@ -25,6 +29,7 @@ Version 8.14 (Not released yet)
 	* agiledashboard: 1.372
 	* cardwall: 1.58
 	* hudson_svn: 0.7
+	* teamforge_compat: 0.2
 
     == Themes ==
 	* FlamingParrot: 1.133
