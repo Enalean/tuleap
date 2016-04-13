@@ -39,6 +39,7 @@ class ProjectImportTest extends TuleapDbTestCase {
         parent::setUp();
         PluginManager::instance()->invalidateCache();
         PluginFactory::clearInstance();
+        UserManager::clearInstance();
         $this->old_globals = $GLOBALS;
         $GLOBALS['feedback'] = '';
         $GLOBALS['svn_prefix'] = '/tmp';
@@ -106,6 +107,7 @@ class ProjectImportTest extends TuleapDbTestCase {
         EventManager::clearInstance();
         PluginManager::instance()->invalidateCache();
         PluginFactory::clearInstance();
+        UserManager::clearInstance();
         $GLOBALS = $this->old_globals;
         parent::tearDown();
     }
