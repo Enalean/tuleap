@@ -2,6 +2,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 grammar {
     include "../ugroups-definition.rnc"
+    include "../references-definition.rnc"
     include "../project-definition.rnc"
     include "../git-definition.rnc"
     include "../frs-definition.rnc"

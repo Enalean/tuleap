@@ -1,0 +1,5 @@
+Teamforge compatiblity plugin
+===============
+
+This plugin allows to import references from the TeamForge plateform.
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.

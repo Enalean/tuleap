@@ -535,6 +535,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
 # Do not package hudson_git yet
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git
+# do not package teamforge_compat yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}

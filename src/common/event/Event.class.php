@@ -528,6 +528,18 @@ class Event {
     const IMPORT_XML_PROJECT = 'import_xml_project';
 
     /**
+     * Event launched when compat cross ref needs to be imported from XML content
+     *
+     * Parameters:
+     *   'created_refs' => An array mapping array(object_name => array( original_id_in_xml => imported_id_in_tuleap ))
+     *   'service_name' => Service name
+     *   'xml_content'  => SimpleXMLElement node containing references (<reference source="..." target="..."/>)
+     *   'logger'       => Import logger
+     *   'project'      => The project being imported
+     */
+    const IMPORT_COMPAT_REF_XML = 'import_compat_ref_xml';
+
+    /**
      * Event launched while importing a project from a xml content
      *
      * Parameters:

@@ -5,6 +5,11 @@
       <zeroOrMore>
         <element name="package">
           <interleave>
+            <optional>
+              <attribute name="id">
+                <data type="integer"/>
+              </attribute>
+            </optional>
             <attribute name="name">
               <data type="string"/>
             </attribute>
@@ -115,6 +120,11 @@
               <ref name="user_content"/>
             </element>
           </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="references">
+          <ref name="references"/>
         </element>
       </optional>
     </interleave>

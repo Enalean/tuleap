@@ -2,9 +2,10 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 frs =
     element package {
-        attribute name { xsd:string } &
-        attribute rank { xsd:integer }? &
-        attribute hidden { xsd:boolean}? &
+        attribute id     { xsd:integer }? &
+        attribute name   { xsd:string  }  &
+        attribute rank   { xsd:integer }? &
+        attribute hidden { xsd:boolean }? &
         element read-access {
             element ugroup { ugroup_name }*
         } &
@@ -35,5 +36,8 @@ frs =
         element user {
             user_content
         }*
+    }? &
+    element references {
+        references
     }?
 
