@@ -56,6 +56,11 @@ class Job extends DataAccessResult
         return (string) $this->job_url;
     }
 
+    public function getJobUrlList()
+    {
+        return explode(',', $this->job_url);
+    }
+
     public function getRepository()
     {
         return $this->repository;

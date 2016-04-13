@@ -67,10 +67,11 @@ class Jenkins_Client {
      *
      * @throws Tracker_Exception
      */
-    public function launchJobBuild($job_url, array $build_parameters = array()) {
+    public function launchJobBuild($job_url, array $build_parameters = array())
+    {
         $options = array(
             CURLOPT_URL             => $this->getBuildUrl($job_url),
-            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
         );
         

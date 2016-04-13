@@ -68,9 +68,9 @@ class HookTriggerController
                     $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url);
 
                     $this->logger->debug('repository #'.$repository->getId().' : '.$response->getBody());
-                    foreach ($response->getJobPaths() as $job) {
-                        $this->logger->debug('Triggered ' . $job);
-                        $this->addHudsongitJob($repository, $job, $date_job);
+                    if (count($response->getJobPaths()) > 0) {
+                        $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
+                        $this->addHudsongitJob($repository, implode(',', $response->getJobPaths()), $date_job);
                     }
                 }
             } catch (Exception $exception) {
@@ -82,6 +82,10 @@ class HookTriggerController
     private function addHudsongitJob(GitRepository $repository, $job_name, $date_job)
     {
         $job = new Job($repository, $date_job, $job_name);
-        $this->job_manager->create($job);
+        try {
+            $this->job_manager->create($job);
+        } catch (CannotCreateJobException $exception) {
+            $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
+        }
     }
 }

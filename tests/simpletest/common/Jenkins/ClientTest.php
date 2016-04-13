@@ -20,18 +20,21 @@
 
 require_once 'common/Jenkins/Client.class.php';
 
-class Jenkins_ClientTest extends TuleapTestCase {
+class Jenkins_ClientTest extends TuleapTestCase
+{
 
     private $http_client;
     private $jenkins_client;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->http_client = mock('Http_Client');
         $this->jenkins_client = new Jenkins_Client($this->http_client);
     }
 
-    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() {
+    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest()
+    {
         $job_url = 'http://some.url.com/my_job';
         stub($this->http_client)->doRequest()->throws(new Http_ClientException());
 
@@ -39,7 +42,8 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $this->jenkins_client->launchJobBuild($job_url);
     }
 
-    public function testLaunchJobSetsCorrectOptions() {
+    public function testLaunchJobSetsCorrectOptions()
+    {
         $job_url = 'http://degaine:8080/job/dylanJob';
         $build_parameters = array(
             'my_param' => 'mickey mooouse',
@@ -49,7 +53,7 @@ class Jenkins_ClientTest extends TuleapTestCase {
 
         $expected_options = array(
             CURLOPT_URL             => $job_url . '/build',
-            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
             CURLOPT_POSTFIELDS      => 'json='. $json_params,
         );
@@ -60,12 +64,13 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $this->jenkins_client->launchJobBuild($job_url, $build_parameters);
     }
 
-    public function itPassTokenAsParameter() {
+    public function itPassTokenAsParameter()
+    {
         $job_url = 'http://degaine:8080/job/dylanJob';
 
         $expected_options = array(
             CURLOPT_URL             => $job_url . '/build?token=thou+shall+not+pass',
-            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
         );
 
@@ -75,12 +80,13 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $this->jenkins_client->launchJobBuild($job_url);
     }
 
-    public function testLaunchJobWithParametersGivenByUser() {
+    public function testLaunchJobWithParametersGivenByUser()
+    {
         $job_url = 'http://degaine:8080/job/dylanJob/buildWithParameters?stuff=bla';
 
         $expected_options = array(
             CURLOPT_URL             => $job_url,
-            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
         );
 
@@ -90,12 +96,13 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $this->jenkins_client->launchJobBuild($job_url);
     }
 
-    public function testLaunchJobWithParametersGivenByUserAndToken() {
+    public function testLaunchJobWithParametersGivenByUserAndToken()
+    {
         $job_url = 'http://degaine:8080/job/dylanJob/buildWithParameters?stuff=bla';
 
         $expected_options = array(
             CURLOPT_URL             => $job_url.'&token=thou+shall+not+pass',
-            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
         );
 
@@ -106,4 +113,3 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $this->jenkins_client->launchJobBuild($job_url);
     }
 }
-?>

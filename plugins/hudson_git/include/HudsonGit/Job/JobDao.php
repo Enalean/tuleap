@@ -38,7 +38,7 @@ class JobDao extends DataAccessObject
         $sql = "INSERT INTO plugin_hudson_git_job (repository_id, push_date, job_url)
                 VALUES ($repository_id, $push_date, $job_url)";
 
-        return $this->update($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
     public function searchJobsByRepositoryId($repository_id)

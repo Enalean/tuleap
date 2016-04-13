@@ -22,11 +22,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\HudsonGit\job;
+namespace Tuleap\HudsonGit\Job;
 
 use Exception;
 
-class HudsonJobURLFileNotFoundException extends Exception
+class CannotCreateJobException extends Exception
 {
-
+    public function __construct()
+    {
+        parent::__construct($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
+    }
 }
