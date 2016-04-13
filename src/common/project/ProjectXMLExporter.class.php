@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,32 +73,39 @@ class ProjectXMLExporter {
     }
 
     private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml) {
-        $this->logger->debug("Exporting project's static ugroups");
-
-        $ugroups = $this->ugroup_manager->getStaticUGroups($project);
-
-        if (empty($ugroups)) {
-            return;
-        }
-
         $ugroups_node = $into_xml->addChild('ugroups');
 
-        foreach ($ugroups as $ugroup) {
-            $this->logger->debug("Current static ugroups: " . $ugroup->getName());
+        $this->logger->debug('Exporting project_admins ugroup');
+        $project_admins_ugroup = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+        $this->exportProjectUgroup($ugroups_node, $project_admins_ugroup);
 
-            $ugroup_node = $ugroups_node->addChild('ugroup');
-            $ugroup_node->addAttribute('name', $ugroup->getNormalizedName());
-            $ugroup_node->addAttribute('description', $ugroup->getDescription());
+        $this->logger->debug('Exporting project_admins ugroup');
+        $project_members_ugroup = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_MEMBERS);
+        $this->exportProjectUgroup($ugroups_node, $project_members_ugroup);
 
-            $members_node = $ugroup_node->addChild('members');
-
-            foreach ($ugroup->getMembers() as $member) {
-                $this->user_xml_exporter->exportUser($member, $members_node, 'member');
-            }
+        $this->logger->debug("Exporting project's static ugroups");
+        $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
+        foreach ($static_ugroups as $ugroup) {
+            $this->exportProjectUgroup($ugroups_node, $ugroup);
         }
 
         $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($ugroups_node, $rng_path);
+    }
+
+    private function exportProjectUgroup(SimpleXMLElement $ugroups_node, ProjectUGroup $ugroup)
+    {
+        $this->logger->debug("Current ugroup: " . $ugroup->getName());
+
+        $ugroup_node = $ugroups_node->addChild('ugroup');
+        $ugroup_node->addAttribute('name', $ugroup->getNormalizedName());
+        $ugroup_node->addAttribute('description', $ugroup->getTranslatedDescription());
+
+        $members_node = $ugroup_node->addChild('members');
+
+        foreach ($ugroup->getMembers() as $member) {
+            $this->user_xml_exporter->exportUser($member, $members_node, 'member');
+        }
     }
 
     private function exportPlugins(
