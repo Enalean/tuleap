@@ -12,6 +12,7 @@ Version 8.14 (Not released yet)
 	* request #9013: Dev instances can not be started if the Gerrit data container has not been specifically created
 	* request #8957: Authorization failed for repository enabling svn token
 	* request #9026: Subversion webview can not be displayed due to user's session IP invalid check
+	* request #9042: Project import must be able to add non active users to a user group
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
