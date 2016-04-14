@@ -147,5 +147,9 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         $html .= $artifact->getPerTrackerArtifactId();
         return $html;
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
+        return $visitor->visitPerTrackerArtifactId($this);
+    }
 }
-?>

@@ -20,6 +20,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ArtifactInNatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
@@ -111,10 +112,29 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $arr = array();
         $values = $this->getChangesetValues($changeset_id);
         foreach ($values as $artifact_link_info) {
-            $arr[] = $artifact_link_info->getUrl();
+            $arr[] = $artifact_link_info->getLink();
         }
         $html = implode(', ', $arr);
         return $html;
+    }
+
+    public function fetchChangesetValueForNature(
+        $artifact_id,
+        $changeset_id,
+        $value,
+        $nature,
+        $format,
+        $report = null,
+        $from_aid = null
+    ) {
+        $value_formatter = new ValueFormatter(Tracker_FormElementFactory::instance(), Codendi_HTMLPurifier::instance());
+
+        return $value_formatter->fetchFormattedValue(
+            UserManager::instance()->getCurrentUser(),
+            $this->getChangesetValues($changeset_id),
+            $nature,
+            $format
+        );
     }
 
     /**
@@ -838,7 +858,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '<ul class="tracker-form-element-artifactlink-list">';
             foreach ($artifact_links as $artifact_link_info) {
                 $html .= '<li>';
-                $html .= $artifact_link_info->getUrl();
+                $html .= $artifact_link_info->getLink();
                 $html .= '</li>';
             }
             $html .= '</ul>';
@@ -1100,7 +1120,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $url = array();
                 foreach ($artifactlink_infos as $artifactlink_info) {
                     if ($artifactlink_info->userCanView($user)) {
-                        $url[] = $artifactlink_info->getUrl();
+                        $url[] = $artifactlink_info->getLink();
                     }
                 }
                 return implode(' , ', $url);

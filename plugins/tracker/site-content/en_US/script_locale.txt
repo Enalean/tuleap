@@ -80,6 +80,7 @@ codendi.locales['tracker_email'] = {
 codendi.locales['nature_column_editor'] = {
     title                    : 'Column configuration',
     how_to                   : 'You can define how artifacts will be displayed in this column by using the following format: <code>%field_name</code>',
+    supported_types          : 'Only fields of type string, artifact id, integer, float, or select box can be formatted.',
     something_went_wrong     : 'An error has occured. Please contact an administrator.',
     column_format_label      : 'Format:',
     column_format_placeholder: '#%id %title (%status)',

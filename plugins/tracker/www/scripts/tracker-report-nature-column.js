@@ -20,6 +20,10 @@
 (function ($, window, document) {
 
     function initNatureColumnEditor(cog) {
+        $(cog).click(function(evt) {
+            evt.preventDefault();
+        });
+
         $(cog).popover({
             container: 'body',
             html     : true,
@@ -45,6 +49,7 @@
 
         content += '<p class="alert alert-danger">' + codendi.getText('nature_column_editor', 'something_went_wrong') + '</p>';
         content += '<p>' + codendi.getText('nature_column_editor', 'how_to') + '</p>';
+        content += '<p>' + codendi.getText('nature_column_editor', 'supported_types') + '</p>';
 
         content += '<input type="hidden" name="renderer" value="' + renderer_id + '">';
         content += '<input type="hidden" name="report" value="' + report_id + '">';

@@ -151,7 +151,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             $result = '';
             $added_arr = array();
             foreach($next as $art_id => $added_element) {
-                $added_arr[] = $added_element->getUrl();
+                $added_arr[] = $added_element->getLink();
             }
             $added   = implode(', ', $added_arr);
             $result = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;

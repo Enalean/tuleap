@@ -109,10 +109,14 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field($element, $this->allUsedElements);
     }
-    
+
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $element) {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_ArtifactId($element, $this->allUsedElements);
+    }
+
+    public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $element) {
+        $this->visitArtifactId($element);
     }
     
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $element) {

@@ -137,6 +137,10 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         return $this->unknown_updater;
     }
 
+    public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $field) {
+        return $this->unknown_updater;
+    }
+
     public function visitBurndown(Tracker_FormElement_Field_Burndown $field) {
         return $this->unknown_updater;
     }
