@@ -33,6 +33,9 @@ class ProjectXMLImporter {
     /** @var $project_manager */
     private $project_manager;
 
+    /** @var UserManager */
+    private $user_manager;
+
     /** @var XML_RNGValidator */
     private $xml_validator;
 
@@ -48,6 +51,7 @@ class ProjectXMLImporter {
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
+        UserManager $user_manager,
         XML_RNGValidator $xml_validator,
         UGroupManager $ugroup_manager,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
@@ -55,6 +59,7 @@ class ProjectXMLImporter {
     ) {
         $this->event_manager   = $event_manager;
         $this->project_manager = $project_manager;
+        $this->user_manager    = $user_manager;
         $this->xml_validator   = $xml_validator;
         $this->ugroup_manager  = $ugroup_manager;
         $this->user_finder     = $user_finder;
@@ -119,13 +124,15 @@ class ProjectXMLImporter {
 
         $project = $this->getProject($project_id);
 
-        return $this->importContent($project, $xml_element, $extraction_path);
+        $this->importContent($project, $xml_element, $extraction_path);
     }
 
     private function importContent(Project $project, SimpleXMLElement $xml_element, $extraction_path) {
         $this->logger->info("Importing project in project ".$project->getUnixName());
 
-        $this->importUgroups($project, $xml_element);
+        $user_creator = $this->user_manager->getCurrentUser();
+
+        $this->importUgroups($project, $xml_element, $user_creator);
 
         $frs = new FRSXMLImporter($this->logger,
             $this->xml_validator,
@@ -134,7 +141,7 @@ class ProjectXMLImporter {
             new FRSFileFactory(),
             $this->user_finder,
             $this->ugroup_manager,
-            new XMLImportHelper(UserManager::instance()));
+            new XMLImportHelper($this->user_manager));
         $frs->import($project, $xml_element, $extraction_path);
 
         $this->logger->info("Ask to plugin to import data from XML");
@@ -152,7 +159,7 @@ class ProjectXMLImporter {
         $this->logger->info("Finish importing project in project ".$project->getUnixName() . " id " . $project->getID());
     }
 
-    private function importUgroups(Project $project, SimpleXMLElement $xml_element) {
+    private function importUgroups(Project $project, SimpleXMLElement $xml_element, PFUser $user_creator) {
         $this->logger->info("Check if there are ugroups to add");
 
         if ($xml_element->ugroups) {
@@ -187,7 +194,13 @@ class ProjectXMLImporter {
                     $this->logger->debug("Adding user " . $user->getUserName() . " to " . $ugroup_def['name']);
                     $ugroup->addUser($user);
                 }
+
+                if ($ugroup->getId() === ProjectUGroup::PROJECT_ADMIN) {
+                    $this->cleanProjectAdminsFromUserCreator($ugroup, $ugroup_def['users'], $user_creator);
+                }
             }
+
+            $this->cleanProjectMembersFromUserCreator($project, $project_members, $user_creator);
         }
     }
 
@@ -201,6 +214,20 @@ class ProjectXMLImporter {
 
         if(! account_add_user_obj_to_group($project->getID(), $user, false)) {
             throw new UserNotAddedAsProjectMemberException($GLOBALS['Response']->getRawFeedback());
+        }
+    }
+
+    private function cleanProjectMembersFromUserCreator(Project $project, array $users, PFUser $user_creator)
+    {
+        if (! empty($users) && ! in_array($user_creator, $users)) {
+            account_remove_user_from_group($project->getID(), $user_creator->getId());
+        }
+    }
+
+    private function cleanProjectAdminsFromUserCreator(ProjectUGroup $ugroup, array $users, PFUser $user_creator)
+    {
+        if (! empty($users) && ! in_array($user_creator, $users)) {
+            $ugroup->removeUser($user_creator);
         }
     }
 

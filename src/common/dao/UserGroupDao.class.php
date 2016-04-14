@@ -81,6 +81,19 @@ class UserGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchProjectAdminsByProjectIdExcludingOneUserId($project_id, $user_id)
+    {
+        $project_id = $this->getDa()->escapeInt($project_id);
+        $user_id    = $this->getDa()->escapeInt($user_id);
+        $sql = "SELECT u.email as email  FROM user u
+                    JOIN user_group ug
+                    USING(user_id)
+                    WHERE ug.admin_flags='A'
+                    AND u.status IN ('A', 'R')
+                    AND ug.group_id = $project_id AND u.user_id != $user_id";
+        return $this->retrieve($sql);
+    }
+
     /**
      * Remove users from a given project
      *
