@@ -83,6 +83,8 @@ Requires: tuleap-documentation
 Requires: %{php_base}-restler >= 3.0-0.7
 # SELinux policy tools
 Requires(post): policycoreutils-python
+# Bind utils
+Requires: bind-utils
 
 %description
 Tuleap is a web based application that address all the aspects of product development.

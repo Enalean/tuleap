@@ -41,6 +41,7 @@ CHKCONFIG='/sbin/chkconfig'
 CHMOD='/bin/chmod'
 CHOWN='/bin/chown'
 CP='/bin/cp'
+DIG='/usr/bin/dig'
 FIND='/usr/bin/find'
 GREP='/bin/grep'
 GROUPADD='/usr/sbin/groupadd'
@@ -63,8 +64,8 @@ USERADD='/usr/sbin/useradd'
 USERDEL='/usr/sbin/userdel'
 USERMOD='/usr/sbin/usermod'
 
-CMD_LIST=('AWK' 'CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'FIND' 'GREP'
-          'GROUPADD' 'GROUPDEL' 'INSTALL' 'LN' 'LS' 'MKDIR' 'MV' 'MYSQL'
+CMD_LIST=('AWK' 'CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'DIG' 'FIND'
+          'GREP' 'GROUPADD' 'GROUPDEL' 'INSTALL' 'LN' 'LS' 'MKDIR' 'MV' 'MYSQL'
           'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS' 'TOUCH'
           'USERADD' 'USERDEL' 'USERMOD')
 
@@ -741,6 +742,7 @@ Options:
   --disable-httpd-restart          Do not restart httpd during the setup
   --disable-generate-ssl-certs     Do not generate a new ssl certificate
   --disable-mysql-configuration    Do not modify my.cnf (not recommended)
+  --disable-domain-name-check      Do not Domain Name check
 
   --sys-default-domain=<domain>    Server Domain name
   --sys-org-name=<string>          Your Company short name
@@ -775,7 +777,7 @@ sys_ip_address=""
 sys_org_name=""
 sys_long_org_name=""
 disable_subdomains="y"
-
+disable_domain_name_check="n"
 
 auto=""
 auto_passwd="true"
@@ -791,92 +793,100 @@ mysql_user="root"
 rt_passwd=""
 restart_httpd="y"
 error_mode=""
+options_getopt=('auto,' 'disable-auto-passwd,' 'enable-bind-config,'
+                'mysql-host:,' 'mysql-port:,' 'mysql-user:,'
+                'mysql-user-password:,' 'mysql-httpd-host:,'
+                'sys-default-domain:,' 'sys-fullname:,'
+                'sys-ip-address:,' 'sys-org-name:,' 'sys-long-org-name:,'
+                'enable-subdomains,' 'disable-httpd-restart,'
+                'disable-generate-ssl-certs,' 'mysql-server-package:,'
+                'disable-mysql-configuration,' 'disable-domain-name-check,'
+                'disable-selinux,' 'force')
 
-options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-user:,mysql-user-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs,mysql-server-package:,disable-mysql-configuration,disable-selinux,force -- "$@"`
+options=$(getopt -o h -l $(printf "%s" ${options_getopt[@]}) -- "$@")
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 
-eval set -- "$options"
+eval set -- "${options}"
 
 while true
 do
     case "$1" in
-	--force)
-	    error_mode='force'
-	    shift 1;;
-	--auto)
-		auto_passwd="true";
-		configure_bind="false"
-		disable_subdomains="y"
-		sys_default_domain="`hostname -f`"
-		sys_fullname="`hostname -f`"
-		sys_ip_address="127.0.1.1"
-		sys_org_name="Tuleap"
-		sys_long_org_name="Tuleap ALM"
-		auto_passwd="true"
-        mysql_host="localhost"      
-        MYSQL="$MYSQL -h$mysql_host"        
+    --force)
+        error_mode='force'
+        shift 1;;
+    --auto)
+        auto_passwd="true";
+        configure_bind="false"
+        disable_subdomains="y"
+        sys_default_domain="`hostname -f`"
+        sys_fullname="`hostname -f`"
+        sys_ip_address="127.0.1.1"
+        sys_org_name="Tuleap"
+        sys_long_org_name="Tuleap ALM"
+        auto_passwd="true"
+        mysql_host="localhost"
+        MYSQL="$MYSQL -h$mysql_host"
         MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
-		shift 1 ;;
-	--disable-auto-passwd)
-		auto_passwd="false";shift 1 ;;
+        shift 1 ;;
+    --disable-auto-passwd)
+        auto_passwd="false"; shift 1 ;;
     --enable-bind-config)
-		configure_bind="true";shift 1 ;;
-	--enable-subdomains)
-		disable_subdomains="n"; shift 1 ;;
-	--disable-httpd-restart)
-		restart_httpd="n"; shift 1 ;;
+        configure_bind="true"; shift 1 ;;
+    --enable-subdomains)
+        disable_subdomains="n"; shift 1 ;;
+    --disable-httpd-restart)
+        restart_httpd="n"; shift 1 ;;
     --disable-generate-ssl-certs)
         generate_ssl_certificate="n"; shift 1 ;;
     --disable-mysql-configuration)
         mysql_my_cnf="n"; shift 1 ;;
+    --disable-domain-name-check)
+        disable_domain_name_check="y"; shift 1 ;;
     --disable-selinux)
         warning "The disable-selinux is deprecated"; shift 1 ;;
-	--sys-default-domain)
-		sys_default_domain="$2" ; shift 2 ;;
-	--sys-fullname)
-		sys_fullname="$2" ; shift 2 ;;
-	--sys-ip-address)
-		sys_ip_address="$2" ; shift 2 ;;
-	--sys-org-name)
-		sys_org_name="$2" ; shift 2 ;;
-	--sys-long-org-name)
-		sys_long_org_name="$2" ; shift 2 ;;
-	--mysql-host) 
-		mysql_host="$2";shift 2
-		MYSQL="$MYSQL -h$mysql_host"
-		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
-		mysql_remote_server=true
-		;;
-	--mysql-port)
-		mysql_port="$2";shift 2
-		MYSQL="$MYSQL -P$mysql_port"
-		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
-		mysql_remote_server=true
-		;;
+    --sys-default-domain)
+        sys_default_domain="$2"; shift 2 ;;
+    --sys-fullname)
+        sys_fullname="$2"; shift 2 ;;
+    --sys-ip-address)
+        sys_ip_address="$2"; shift 2 ;;
+    --sys-org-name)
+        sys_org_name="$2"; shift 2 ;;
+    --sys-long-org-name)
+        sys_long_org_name="$2"; shift 2 ;;
+    --mysql-host)
+        mysql_host="$2";shift 2
+        MYSQL="$MYSQL -h$mysql_host"
+        MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+        mysql_remote_server=true ;;
+    --mysql-port)
+        mysql_port="$2";shift 2
+        MYSQL="$MYSQL -P$mysql_port"
+        MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
+        mysql_remote_server=true ;;
     --mysql-user)
-        mysql_user="$2";shift 2 ;;
-	--mysql-user-password)
-		rt_passwd="$2";shift 2
-		;;
-	--mysql-httpd-host)
-		mysql_httpd_host="$2";shift 2 ;;
+        mysql_user="$2"; shift 2 ;;
+    --mysql-user-password)
+        rt_passwd="$2"; shift 2 ;;
+    --mysql-httpd-host)
+        mysql_httpd_host="$2"; shift 2 ;;
     --mysql-server-package)
         mysql_package_name="$2"; shift 2 ;;
-	-h|--help)
-		usage $0 ;;
+    -h|--help)
+        usage $0 ;;
     --)
-		shift 1; break ;;
+        shift 1; break ;;
     *)
-		break ;;
+        break ;;
     esac
 done
 
-mysql_host_and_port=$mysql_host;
-mysql_openfire_host_and_port="$mysql_host:$mysql_default_port";
+mysql_host_and_port="$mysql_host"
+mysql_openfire_host_and_port="$mysql_host:$mysql_default_port"
 if [ ! -z "$mysql_port" ]; then
     mysql_host_and_port="$mysql_host_and_port:$mysql_port"
-    mysql_openfire_host_and_port=$mysql_host_and_port;
+    mysql_openfire_host_and_port="$mysql_host_and_port"
 fi
 
 if [ ! -z "$mysql_remote_server" ]; then
@@ -956,25 +966,62 @@ if has_package munin; then
     enable_munin="true"
 fi
 
-
-
-rm -f $TODO_FILE
+${RM} -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE TULEAP INSTALLATION (see $TODO_FILE)"
 
 echo
 echo "Configuration questions"
 echo
 
-# Ask for domain name and other installation parameters
-if [ -z "$sys_default_domain" ]
-then
-	read -p "Tuleap domain name: (e.g. mytuleap.company.com): " sys_default_domain
+while :
+do
+    # Ask for domain name and other installation parameters
+    if [ -z "$sys_default_domain" ]
+    then
+        read -p "Tuleap domain name: (e.g. mytuleap.example.com): " \
+            sys_default_domain
         sys_fullname=$sys_default_domain
-fi
+    fi
+    warning "New feature comming soon!"
+    warning "In the new Tuleap release, setup.sh will check if your domain"
+    warning "name is available. And for your automation or if you are sure,"
+    warning "you can still bypass the check with option:"
+    warning "setup.sh --disable-domain-name-check"
+    sleep 5
+    break
+
+    if [ "${disable_domain_name_check}" = "n" ]
+    then
+        # if ${sys_fullname} is empty, Dig prints the DNS root servers
+        # (dig +short A AAAA)
+        if [ ! -z "${sys_fullname}" ]
+        then
+            if [ ! -z "$(${DIG} +short ${sys_fullname} A \
+                ${sys_fullname} AAAA)" ]
+            then
+                todo "Your domain name is ${sys_fullname}"
+                break
+            else
+                warning "Is your domain name valid? (${sys_fullname})"
+                read -p "[y|n] " yn
+                case ${yn^^} in
+                    "Y"|"YES") todo "Your domain name is ${sys_fullname}"
+                        break
+                        ;;
+                    "N"|"NO") sys_default_domain=""
+                        ;;
+                    *) sys_default_domain=""
+                        ;;
+                esac
+            fi
+        fi
+    fi
+done
+
 if [ -z "$sys_org_name" ]
 then
-	read -p "Your company name: (e.g. My Company): " sys_org_name
-        sys_long_org_name=$sys_org_name
+    read -p "Your company name: (e.g. My Company): " sys_org_name
+    sys_long_org_name=$sys_org_name
 fi
 
 if [ "$configure_bind" != "false" ]; then
