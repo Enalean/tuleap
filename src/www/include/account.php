@@ -25,7 +25,7 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
     $um = UserManager::instance();
     $user = $um->findUser($user_unix_name);
     if ($user) {
-        return account_add_user_obj_to_group($group_id, $user);
+        return account_add_user_obj_to_group($group_id, $user, true);
     } else {
         //user doesn't exist
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
@@ -35,16 +35,16 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 
 /**
  * Add a new user into a given project
- * 
+ *
  * @param Integer $group_id Project id
- * @param PFUser    $user     User to add
- * 
- * @return Boolean
+ * @param PFUser $user User to add
+ * @param bool $check_user_status
+ * @return bool
  */
-function account_add_user_obj_to_group ($group_id, PFUser $user) {
+function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_status) {
     //user was found but if it's a pending account adding
     //is not allowed
-    if (!$user->isActive() && !$user->isRestricted()) {
+    if ($check_user_status && !$user->isActive() && !$user->isRestricted()) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
         return false;
     }
