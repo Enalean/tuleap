@@ -8,7 +8,15 @@ trackers =
     }*,
     element triggers {
         triggers
+    }?,
+
+    element references {
+        element reference {
+            attribute source { xsd:string } &
+            attribute target { xsd:string }
+        }*
     }?
+
 
 tracker =
         # old ids

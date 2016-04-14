@@ -18,6 +18,22 @@
         <ref name="triggers"/>
       </element>
     </optional>
+    <optional>
+      <element name="references">
+        <zeroOrMore>
+          <element name="reference">
+            <interleave>
+              <attribute name="source">
+                <data type="string"/>
+              </attribute>
+              <attribute name="target">
+                <data type="string"/>
+              </attribute>
+            </interleave>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
   </define>
   <define name="tracker">
     <optional>
