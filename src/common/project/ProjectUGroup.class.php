@@ -512,7 +512,8 @@ class ProjectUGroup implements User_UGroup {
      */
     protected function removeUserFromDynamicGroup(PFUser $user) {
         $dao  = $this->_getUserGroupDao();
-        if ($this->id == self::PROJECT_ADMIN && $dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() <= 1) {
+        if ($this->id == self::PROJECT_ADMIN &&
+            $dao->searchProjectAdminsByProjectIdExcludingOneUserId($this->group_id, $user->getId())->rowCount() === 0) {
             throw new Exception('Impossible to remove last admin of the project');
         }
         $flag = $this->getRemoveFlagForUGroupId($this->id);

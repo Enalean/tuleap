@@ -189,6 +189,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                     new ProjectXMLImporter(
                         EventManager::instance(),
                         ProjectManager::instance(),
+                        UserManager::instance(),
                         new XML_RNGValidator(),
                         new UGroupManager(),
                         new XMLImportHelper(UserManager::instance()),

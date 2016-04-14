@@ -348,6 +348,7 @@ class Planning_Controller extends MVC2_PluginController {
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
             ProjectManager::instance(),
+            UserManager::instance(),
             new XML_RNGValidator(),
             new UGroupManager(),
             new XMLImportHelper(UserManager::instance()),

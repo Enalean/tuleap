@@ -161,8 +161,9 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         
         $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
         
-        $project_admin_dar = TestHelper::arrayToDar(array('LastAdmin'));
-        $dao = stub('UserGroupDao')->returnProjectAdminsByGroupId($group_id)->returns($project_admin_dar);
+        $project_admin_dar = TestHelper::emptyDar();
+
+        $dao = stub('UserGroupDao')->searchProjectAdminsByProjectIdExcludingOneUserId()->returns($project_admin_dar);
         stub($ugroup)->_getUserGroupDao()->returns($dao);
         
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));

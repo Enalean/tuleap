@@ -118,6 +118,7 @@ class ProjectImportTest extends TuleapDbTestCase {
         $importer = new ProjectXMLImporter(
             EventManager::instance(),
             $project_manager,
+            UserManager::instance(),
             new XML_RNGValidator(),
             new UGroupManager(),
             new XMLImportHelper($user_manager),

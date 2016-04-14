@@ -40,12 +40,13 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->project_manager = mock('ProjectManager');
         $this->project         = stub('Project')->getID()->returns(122);
         $this->ugroup_manager  = mock('UGroupManager');
-        $this->user_manager    = mock('UserManager');
+        $this->user_manager    = stub('UserManager')->getCurrentUser()->returns(mock('PFUser'));
         $this->user_finder     = new XMLImportHelper($this->user_manager);
         $this->logger          = mock('ProjectXMLImporterLogger');
         $this->xml_importer    = new ProjectXMLImporter(
             $this->event_manager,
             $this->project_manager,
+            $this->user_manager,
             new XML_RNGValidator(),
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager),
