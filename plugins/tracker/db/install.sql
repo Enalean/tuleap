@@ -426,6 +426,7 @@ CREATE TABLE tracker_report_renderer_table_columns(
     renderer_id INT(11) NOT NULL,
     field_id INT(11) NOT NULL,
     artlink_nature VARCHAR(255) NULL,
+    artlink_nature_format VARCHAR(255) NULL,
     rank INT(11) NOT NULL,
     width TINYINT NOT NULL,
     INDEX column_idx(renderer_id, field_id)
