@@ -1,6 +1,6 @@
 'use strict';
 
-var JWT = require('../../backend/jwt');
+var JWT = require('../../../backend/modules/jwt');
 var jwt = new JWT('private_key_to_change');
 
 describe("Module JWT", function() {

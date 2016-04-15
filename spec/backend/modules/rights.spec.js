@@ -1,9 +1,9 @@
 'use strict';
 
-var Rooms = require('../../backend/rooms');
+var Rooms = require('../../../backend/modules/rooms');
 var rooms = new Rooms();
 
-var Rights = require('../../backend/rights');
+var Rights = require('../../../backend/modules/rights');
 var rights = new Rights();
 
 describe("Module Rights", function() {
@@ -18,16 +18,16 @@ describe("Module Rights", function() {
             username  : 165
         };
 
-        rooms.bind(room_id, socket);
-        rights.bind(user_id, groups);
+        rooms.addSocketByRoomId(room_id, socket);
+        rights.addRightsByUserId(user_id, groups);
     });
 
-    it("Given a user id and an array of groups, when I bind rights then rights is with user id as key and array as value", function() {
+    it("Given a user id and an array of groups, when I addRightsByUserId rights then rights is with user id as key and array as value", function() {
         var expect_rights = {
             165: groups
         };
-        expect(rights.bind).toBeDefined();
-        expect(rights.bind(user_id, groups)).toEqual(true);
+        expect(rights.addRightsByUserId).toBeDefined();
+        expect(rights.addRightsByUserId(user_id, groups)).toEqual(true);
         expect(rights.ugroups_collection).toEqual(expect_rights);
     });
 
@@ -39,8 +39,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_159'],
             artifact: ['@arealtime_project_admin']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(true);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(false);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
     });
 
@@ -52,8 +50,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_159'],
             artifact: ['@arealtime_project_admin', '@ug_158']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(true);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(false);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
     });
 
@@ -65,8 +61,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_159'],
             artifact: ['@arealtime_project_admin', '@ug_111']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(false);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(false);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
     });
 
@@ -78,8 +72,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_159'],
             artifact: ['@arealtime_project_admin', '@ug_111']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(false);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(true);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
     });
 
@@ -91,8 +83,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_111'],
             artifact: ['@arealtime_project_admin']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(false);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(true);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
     });
 
@@ -104,8 +94,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_111'],
             artifact: ['@arealtime_project_admin']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(false);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(false);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
     });
 
@@ -117,8 +105,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin','@ug_111'],
             artifact: ['@arealtime_project_admin']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(false);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(false);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
     });
 
@@ -130,8 +116,6 @@ describe("Module Rights", function() {
             tracker: ['@arealtime_project_admin', '@ug_159'],
             artifact: ['@arealtime_project_admin']
         };
-        expect(rights.hasUserRights(165, userRights)).toEqual(true);
-        expect(rights.hasUserRightsAsSubmitter(165, userRights)).toEqual(true);
         expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
     });
 

@@ -31,11 +31,11 @@ define(['lodash'], function (_) {
          * Function to get rights by
          * user id
          *
-         * @param key (int): user id
+         * @param user_id (int)
          * @returns {*}
          */
-        this.get = function(key) {
-            return this.ugroups_collection[key] ?  this.ugroups_collection[key]: [];
+        this.get = function(user_id) {
+            return this.ugroups_collection[user_id] ?  this.ugroups_collection[user_id]: [];
         };
 
         /**
@@ -44,13 +44,13 @@ define(['lodash'], function (_) {
          * Function to add for each user
          * their rights
          *
-         * @param key   (int)  : user id
-         * @param value (Array): rights for a user
+         * @param user_id  (int)
+         * @param rights   (Array): rights for a user
          * @returns {boolean}
          */
-        this.bind = function(key, value) {
+        this.addRightsByUserId = function(user_id, rights) {
             try {
-                this.ugroups_collection[key] = value;
+                this.ugroups_collection[user_id] = rights;
                 return true;
             } catch (e) {
                 return false;
@@ -63,54 +63,10 @@ define(['lodash'], function (_) {
          * Function to remove by
          * user id
          *
-         * @param key (int): user id
+         * @param user_id (int)
          */
-        this.remove = function(key) {
-            delete this.ugroups_collection[key];
-        };
-
-        /**
-         * @access private
-         *
-         * Function to check if user has rights
-         * to receive message from nodejs server
-         *
-         * @param key         (int)   : user id who will receive message
-         * @param user_rights (Object): rights for a message
-         * @returns {boolean}
-         */
-        this.hasUserRights = function(key, user_rights) {
-            var me                  = this;
-            var find_right_artifact = false;
-            var find_right_tracker  = this.hasUserRightsExist(key, user_rights.tracker);
-
-            if(user_rights.artifact.length > 1) {
-                find_right_artifact = this.hasUserRightsExist(key, user_rights.artifact);
-            } else {
-                find_right_artifact = true;
-            }
-            return find_right_tracker && find_right_artifact;
-        };
-
-        /**
-         * @access private
-         *
-         * Function to check if user has rights
-         * to receive message from nodejs server
-         *
-         * @param key         (int)   : submitter id who will receive message
-         * @param user_rights (Object): rights for a message
-         * @returns {boolean}
-         */
-        this.hasUserRightsAsSubmitter = function(key, user_rights) {
-            var me                   = this;
-            var find_right_submitter = false;
-
-            if (user_rights.submitter_can_view) {
-                find_right_submitter = this.hasUserRightsExist(key, user_rights.submitter_only);
-            }
-
-            return find_right_submitter;
+        this.remove = function(user_id) {
+            delete this.ugroups_collection[user_id];
         };
 
         /**
@@ -120,14 +76,14 @@ define(['lodash'], function (_) {
          * receive message from a socket
          * sender
          *
-         * @param key          (int)   : user id who will receive message
+         * @param user_id      (int)   : user id who will receive message
          * @param user_rights  (Object): rights for a message
          * @returns {boolean}
          */
-        this.userCanReceiveData = function(key, user_rights) {
+        this.userCanReceiveData = function(user_id, user_rights) {
             var data_submitter_id = user_rights.submitter_id;
-            return (this.hasUserRights(key, user_rights))
-                || (data_submitter_id === key && this.hasUserRightsAsSubmitter(key, user_rights));
+            return (hasUserRights(this.ugroups_collection[user_id], user_rights))
+                || (data_submitter_id === user_id && hasUserRightsAsSubmitter(this.ugroups_collection[user_id], user_rights));
         };
 
         /**
@@ -154,18 +110,18 @@ define(['lodash'], function (_) {
          * looking field artifact rights
          * for each user
          *
-         * @param key          (int)   : user id who will receive message
+         * @param user_id      (int)   : user id who will receive message
          * @param user_rights  (Object): rights for a message
          * @param artifact     (Object): artifact in message to filter
          * @returns {Object}
          */
-        this.filterMessageByRights = function(key, user_rights, artifact) {
+        this.filterMessageByRights = function(user_id, user_rights, artifact) {
             var me         = this;
             var new_fields = [];
             if (user_rights.field) {
                 _.forEach(artifact.card_fields, function (field) {
                     var field_id = field.field_id ? field.field_id : field.id;
-                    if (me.hasUserRightsExist(key, user_rights.field[field_id])) {
+                    if (hasUserRightsExist(me.ugroups_collection[user_id], user_rights.field[field_id])) {
                         new_fields.push(field);
                     }
                 });
@@ -186,18 +142,59 @@ define(['lodash'], function (_) {
         /**
          * @access private
          *
+         * Function to check if user has rights
+         * to receive message from nodejs server
+         *
+         * @param u_group     (array) : user group corresponding to a user
+         * @param user_rights (Object): rights for a message
+         * @returns {boolean}
+         */
+        function hasUserRights(u_group, user_rights) {
+            var find_right_artifact = false;
+            var find_right_tracker  = hasUserRightsExist(u_group, user_rights.tracker);
+
+            if(user_rights.artifact.length > 1) {
+                find_right_artifact = hasUserRightsExist(u_group, user_rights.artifact);
+            } else {
+                find_right_artifact = true;
+            }
+            return find_right_tracker && find_right_artifact;
+        }
+
+        /**
+         * @access private
+         *
+         * Function to check if user has rights
+         * to receive message from nodejs server
+         *
+         * @param u_group     (array) : user group corresponding to a user
+         * @param user_rights (Object): rights for a message
+         * @returns {boolean}
+         */
+        function hasUserRightsAsSubmitter(u_group, user_rights) {
+            var find_right_submitter = false;
+
+            if (user_rights.submitter_can_view) {
+                find_right_submitter = hasUserRightsExist(u_group, user_rights.submitter_only);
+            }
+
+            return find_right_submitter;
+        }
+
+        /**
+         * @access private
+         *
          * Function to check if rights
          * match
          *
-         * @param key
-         * @param user_rights
+         * @param u_group     (array) : user group corresponding to a user
+         * @param user_rights (Object): rights for a message
          */
-        this.hasUserRightsExist = function(key, user_rights) {
-            var me = this;
+        function hasUserRightsExist(u_group, user_rights) {
             return _.some(user_rights, function(right) {
-                return _.contains(me.ugroups_collection[key], right);
+                return _.contains(u_group, right);
             });
-        };
+        }
     };
 
     return rights;

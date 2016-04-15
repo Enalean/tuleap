@@ -35,10 +35,9 @@ define(['lodash', 'jsonwebtoken'], function (_, jwt) {
          * @param decoded (Object)
          */
         this.isTokenValid = function(decoded) {
-            return _.has(decoded, 'data')
-                && _.has(decoded, 'exp')
-                && _.has(decoded.data, 'user_id')
-                && _.has(decoded.data, 'user_rights');
+            return _.has(decoded, 'exp')
+                && _.has(decoded, 'data.user_id')
+                && _.has(decoded, 'data.user_rights');
         };
 
         /**
