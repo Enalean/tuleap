@@ -22,6 +22,7 @@
 namespace Tuleap\Svn\Explorer;
 
 use Tuleap\Svn\ServiceSvn;
+use Tuleap\Svn\SvnPermissionManager;
 use HTTPRequest;
 use Tuleap\Svn\Explorer\RepositoryDisplayPresenter;
 use \Tuleap\Svn\Repository\RepositoryManager;
@@ -29,23 +30,34 @@ use \Tuleap\Svn\Repository\RepositoryNotFoundException;
 use Tuleap\Svn\ViewVCProxy\ViewVCProxy;
 use ProjectManager;
 
-class RepositoryDisplayController {
-    public function __construct(RepositoryManager $repository_manager, ProjectManager $project_manager) {
-        $this->repository_manager = $repository_manager;
-        $this->proxy              = new ViewVCProxy($repository_manager, $project_manager);
+class RepositoryDisplayController
+{
+
+    /** @var SvnPermissionManager */
+    private $permissions_manager;
+
+    public function __construct(
+        RepositoryManager $repository_manager,
+        ProjectManager $project_manager,
+        SvnPermissionManager $permissions_manager
+    ) {
+        $this->permissions_manager = $permissions_manager;
+        $this->repository_manager  = $repository_manager;
+        $this->proxy               = new ViewVCProxy($repository_manager, $project_manager);
     }
 
-    public function displayRepository(ServiceSvn $service, HTTPRequest $request) {
+    public function displayRepository(ServiceSvn $service, HTTPRequest $request)
+    {
         try {
             $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
             $service->renderInPage(
                 $request,
-                $GLOBALS['Language']->getText('plugin_svn','descriptor_name'),
+                $GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'),
                 'explorer/repository_display',
-                new RepositoryDisplayPresenter($repository, $request, $this->proxy->getContent($request))
+                new RepositoryDisplayPresenter($repository, $request, $this->proxy->getContent($request), $this->permissions_manager)
             );
         } catch (RepositoryNotFoundException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn','repository_not_found'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn', 'repository_not_found'));
             $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
         }
     }

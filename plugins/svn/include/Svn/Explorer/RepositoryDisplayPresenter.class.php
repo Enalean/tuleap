@@ -21,10 +21,12 @@
 
 namespace Tuleap\Svn\Explorer;
 
+use Tuleap\Svn\SvnPermissionManager;
 use Tuleap\Svn\Repository\Repository;
 use HTTPRequest;
 
-class RepositoryDisplayPresenter {
+class RepositoryDisplayPresenter
+{
     private $repository;
     public $viewvc_html;
     public $repository_not_created;
@@ -32,7 +34,8 @@ class RepositoryDisplayPresenter {
     public $help_command;
     public $help_message;
 
-    public function __construct(Repository $repository, HTTPRequest $request, $viewvc_html) {
+    public function __construct(Repository $repository, HTTPRequest $request, $viewvc_html, SvnPermissionManager $permissions_manager)
+    {
         $this->repository   = $repository;
         $this->help_command = "svn checkout --username ".$request->getCurrentUser()->getName()." ".$this->repository->getSvnUrl();
         $this->viewvc_html  = $viewvc_html;
@@ -41,7 +44,7 @@ class RepositoryDisplayPresenter {
             'action'   => 'settings',
             'repo_id'  => $repository->getId()
         ));
-        $this->is_user_admin         = $request->getProject()->userIsAdmin($request->getCurrentUser());
+        $this->is_user_admin         = $permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser());
         $this->is_repository_created = $repository->isRepositoryCreated();
 
         $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');

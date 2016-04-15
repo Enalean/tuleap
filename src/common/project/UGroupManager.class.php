@@ -108,6 +108,18 @@ class UGroupManager {
     }
 
     /**
+     * @return array of projectUGroup indexed by their id
+     */
+    public function getUgroupsById(Project $project){
+        $ugroups = array();
+        foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
+            $ug = $this->instanciateGroupForProject($project, $row);
+            $ugroups[$ug->getId()] = $ug;
+        }
+        return $ugroups;
+    }
+
+    /**
      * @return ProjectUGroup[]
      */
     public function getStaticUGroups(Project $project) {

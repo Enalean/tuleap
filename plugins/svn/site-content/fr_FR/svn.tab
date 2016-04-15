@@ -39,6 +39,9 @@ plugin_svn_admin_notification	delete_error	Impossible de supprimer la liste des 
 plugin_svn_admin_notification	add_notification	Ajouter la notification
 plugin_svn_admin_notification	delete_selected_notifications	Supprimer les notifications sélectionnées
 
+plugin_svn_admin	update_successful	Mise à jour réussie
+plugin_svn_admin	update_failure_with_message	Erreur de mise à jour : $1
+plugin_svn_admin	failed_update_ugroup_permissions	N'a pas pu mettre à jour les permissions des groupes utilisateurs
 plugin_svn_admin	access_control	Contrôle d'accès
 plugin_svn_admin	edit_access_file_title	Modifier le fichier de contrôle d'accès
 plugin_svn_admin	default_text	La politique par défaut de $1 est d'autoriser l'accès en lecture et en écriture à tous les membres du projet sur l'ensemble du dépôt et l'accès en lecture seule aux autres utilisateurs de $1. Vous pouvez ajuster ou même redéfinir les permissions d'accès selon vos besoins.
@@ -54,6 +57,10 @@ plugin_svn_admin	select_version	Séléctionnez une version
 plugin_svn_admin	saved_on	sauvegardée le
 plugin_svn_admin	use_version	Utiliser cette version sauvegardée
 plugin_svn_admin	saved_versions	Versions sauvegardées :
+
+plugin_svn_admin	save	Enregistrer
+plugin_svn_admin	admin_groups	Groupes Administrateurs
+plugin_svn_admin	admin_groups_label	Liste des groupes ayant l'accès administrateur pour Subversion, en plus des administrateurs du projet :
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Contrôle d'accès

@@ -241,6 +241,7 @@ class ViewVCProxy {
                 $content  = str_replace("<h3>".$revision."</h3>", "<h3>".$this->getPurifier()->purify($revision) . "</h3>" . $cross_ref, $content);
             }
 
+
             $begin_body = stripos($content, "<body");
             $begin_doc  = strpos($content, ">", $begin_body) + 1;
             $length     = strpos($content, "</body>\n</html>") - $begin_doc;

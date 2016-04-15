@@ -27,6 +27,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\SvnPermissionManager;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailHeaderDao;
@@ -36,6 +37,7 @@ use Tuleap\Svn\Admin\ImmutableTagController;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Admin\AdminController;
+use Tuleap\Svn\Admin\GlobalAdminController;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
@@ -67,6 +69,13 @@ class SvnPlugin extends Plugin {
 
     /** @var Tuleap\Svn\Admin\MailNotificationManager */
     private $mail_notification_manager;
+
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    /** @var PermissionsManager */
+    private $permissions_manager;
+
 
     public function __construct($id) {
         parent::__construct($id);
@@ -209,6 +218,33 @@ class SvnPlugin extends Plugin {
         return $this->mail_notification_manager;
     }
 
+    /**
+     * @return UGroupManager
+     */
+    private function getUGroupManager()
+    {
+        if (empty($this->ugroup_manager)) {
+            $this->ugroup_manager = new UGroupManager();
+        }
+        return $this->ugroup_manager;
+    }
+
+    /**
+     * @return PermissionsManager
+     */
+    private function getPermissionsManager()
+    {
+        if (empty($this->permissions_manager)) {
+            $this->permissions_manager = new SvnPermissionManager($this->getForgeUserGroupFactory(), PermissionsManager::instance());
+        }
+        return $this->permissions_manager;
+    }
+
+    private function getForgeUserGroupFactory()
+    {
+        return new User_ForgeUserGroupFactory(new UserGroupDao());
+    }
+
 
     public function process(HTTPRequest $request) {
         $project_id = $request->getProject()->getId();
@@ -278,11 +314,16 @@ class SvnPlugin extends Plugin {
         );
     }
 
-    private function getRouter() {
-        $repository_manager = $this->getRepositoryManager();
+    private function getRouter()
+    {
+        $repository_manager  = $this->getRepositoryManager();
+        $ugroup_manager      = $this->getUGroupManager();
+        $permissions_manager = $this->getPermissionsManager();
 
         return new SvnRouter(
             $repository_manager,
+            $ugroup_manager,
+            $permissions_manager,
             new AccessControlController(
                 $repository_manager,
                 $this->getAccessFileHistoryFactory(),
@@ -294,17 +335,23 @@ class SvnPlugin extends Plugin {
                 $this->getMailNotificationManager()
             ),
             new ExplorerController(
-                $repository_manager
+                $repository_manager,
+                $permissions_manager
             ),
             new RepositoryDisplayController(
                 $repository_manager,
-                ProjectManager::instance()
+                ProjectManager::instance(),
+                $permissions_manager
             ),
             new ImmutableTagController(
                 $repository_manager,
                 new Svnlook(new System_Command()),
                 new ImmutableTagCreator(new ImmutableTagDao()),
                 new ImmutableTagFactory(new ImmutableTagDao())
+            ),
+            new GlobalAdminController(
+                $this->getForgeUserGroupFactory(),
+                $permissions_manager
             )
         );
     }

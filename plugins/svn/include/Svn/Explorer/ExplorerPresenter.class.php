@@ -24,6 +24,7 @@ namespace Tuleap\Svn\Explorer;
 use CSRFSynchronizerToken;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
+use Tuleap\Svn\SvnPermissionManager;
 use Project;
 use PFUser;
 
@@ -47,22 +48,23 @@ class ExplorerPresenter {
         Project $project,
         CSRFSynchronizerToken $csrf,
         $repository_name,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
+        SvnPermissionManager $permissions_manager
     ) {
-        $this->group_id                   = $project->getID();
-        $this->csrf_input                 = $csrf->fetchHTMLInput();
-        $this->repository_name            = $repository_name;
-        $this->list_repositories          = $repository_manager->getRepositoriesInProject($project);
-        $this->svn_plugin                 = SVN_BASE_URL;
-        $this->title_list_repositories    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
-        $this->label_repository_name      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
-        $this->no_repositories            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
-        $this->help_repository_name       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
-        $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
-        $this->has_respositories          = count($this->list_repositories) > 0;
-        $this->validate_name              = RuleName::PATTERN_REPOSITORY_NAME;
-        $this->create_repository          = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'create_repository');
+        $this->group_id                                   = $project->getID();
+        $this->csrf_input                                 = $csrf->fetchHTMLInput();
+        $this->repository_name                            = $repository_name;
+        $this->list_repositories                          = $repository_manager->getRepositoriesInProject($project);
+        $this->svn_plugin                                 = SVN_BASE_URL;
+        $this->title_list_repositories                    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
+        $this->label_repository_name                      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
+        $this->no_repositories                            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
+        $this->help_repository_name                       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
+        $this->table_head_list_repository                 = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
+        $this->has_respositories                          = count($this->list_repositories) > 0;
+        $this->validate_name                              = RuleName::PATTERN_REPOSITORY_NAME;
+        $this->create_repository                          = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'create_repository');
 
-        $this->is_user_allowed_to_create_repository = $project->userIsAdmin($user);
+        $this->is_user_allowed_to_create_repository       = $permissions_manager->isAdmin($project, $user);
     }
 }

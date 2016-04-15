@@ -32,7 +32,9 @@ use Tuleap\Svn\AuthFile\AccessFileHistoryManager;
 use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailnotificationManager;
 use Tuleap\Svn\Admin\ImmutableTagController;
+use Tuleap\Svn\Admin\GlobalAdminController;
 use ProjectManager;
+use UGroupManager;
 use Project;
 use ForgeConfig;
 use Feedback;
@@ -54,23 +56,38 @@ class SvnRouter {
     /** @var RepositoryManager */
     private $repository_manager;
 
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    /** @var SvnPermissionManager */
+    private $permissions_manager;
+
     /** @var ImmutableTagController */
     private $immutable_tag_controller;
 
+    /** @var GlobalAdminController */
+    private $global_admin_controller;
+
     public function __construct(
         RepositoryManager $repository_manager,
+        UGroupManager $ugroup_manager,
+        SvnPermissionManager $permissions_manager,
         AccessControlController $access_control_controller,
         AdminController $notification_controller,
         ExplorerController $explorer_controller,
         RepositoryDisplayController $display_controller,
-        ImmutableTagController $immutable_tag_controller
+        ImmutableTagController $immutable_tag_controller,
+        GlobalAdminController $global_admin_controller
     ) {
         $this->repository_manager        = $repository_manager;
+        $this->permissions_manager       = $permissions_manager;
+        $this->ugroup_manager            = $ugroup_manager;
         $this->access_control_controller = $access_control_controller;
         $this->admin_controller          = $notification_controller;
         $this->explorer_controller       = $explorer_controller;
         $this->display_controller        = $display_controller;
         $this->immutable_tag_controller  = $immutable_tag_controller;
+        $this->global_admin_controller   = $global_admin_controller;
     }
 
     /**
@@ -143,6 +160,22 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->immutable_tag_controller->saveImmutableTag($this->getService($request), $request);
                     break;
+                case 'save-admin-groups':
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->global_admin_controller->saveAdminGroups(
+                        $this->getService($request),
+                        $request,
+                        $this->ugroup_manager,
+                        $this->permissions_manager);
+                    break;
+                case 'admin-groups':
+                    $this->checkUserCanAdministrateARepository($request);
+                    $this->global_admin_controller->showAdminGroups(
+                        $this->getService($request),
+                        $request,
+                        $this->ugroup_manager,
+                        $this->permissions_manager);
+                    break;
 
                 default:
                     $this->useDefaultRoute($request);
@@ -159,7 +192,7 @@ class SvnRouter {
 
 
     private function checkUserCanAdministrateARepository(HTTPRequest $request) {
-        if (! $request->getProject()->userIsAdmin($request->getCurrentUser())) {
+        if(!$this->permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser())) {
             throw new UserCannotAdministrateRepositoryException();
         }
     }

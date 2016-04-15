@@ -22,10 +22,35 @@ namespace Tuleap\Svn;
 use Service;
 use HTTPRequest;
 use TemplateRendererFactory;
+use User_ForgeUserGroupFactory;
+use UserGroupDao;
+use PermissionsManager;
 
-class ServiceSvn extends Service {
+class ServiceSvn extends Service
+{
 
-    public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null) {
+    /** @var SvnPermissionManager */
+    private $permissions_manager;
+
+    public function __construct($project, $data)
+    {
+        parent::__construct($project, $data);
+        $this->permissions_manager = null;
+    }
+
+    private function getPermissionsManager()
+    {
+        if (empty($this->permissions_manager)) {
+            $this->permissions_manager = new SvnPermissionManager(
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                PermissionsManager::instance()
+            );
+        }
+        return $this->permissions_manager;
+    }
+
+    public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null)
+    {
         $this->displayHeader($request, $title);
 
         if ($presenter) {
@@ -36,15 +61,25 @@ class ServiceSvn extends Service {
         exit;
     }
 
-    private function getRenderer() {
+    private function getRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR).'/templates');
     }
 
-    public function displayHeader(HTTPRequest $request, $title) {
+    public function displayHeader(HTTPRequest $request, $title)
+    {
         $GLOBALS['HTML']->includeJavascriptSnippet(
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
-        $toolbar     = array();
+        $toolbar[]   = array(
+            'title' => "Repository List",
+            'url'   => "?group_id=" . $request->getProject()->getId());
+        if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
+            $toolbar[] = array(
+                'title' => "Administration",
+                'url'   => "?group_id=" . $request->getProject()->getId() .
+                           "&action=admin-groups");
+        }
         $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_svn', 'service_lbl_key');
         $breadcrumbs = array();
         parent::displayHeader($title, $breadcrumbs, $toolbar);

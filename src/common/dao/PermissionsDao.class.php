@@ -143,6 +143,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         }
 
         $sql = sprintf("SELECT * FROM permissions WHERE ".$_where_clause);
+
         return $this->retrieve($sql);
     }
 
