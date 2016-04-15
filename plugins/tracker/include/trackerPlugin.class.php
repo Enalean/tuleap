@@ -21,6 +21,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use Tuleap\Tracker\Import\Spotter;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -783,12 +784,17 @@ class trackerPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT
      */
     public function import_xml_project($params) {
+        $import_spotter = Spotter::instance();
+        $import_spotter->startImport();
+
         TrackerXmlImport::build($params['user_finder'], $params['logger'])->import(
             $params['project'],
             $params['xml_content'],
             $params['mappings_registery'],
             $params['extraction_path']
         );
+
+        $import_spotter->endImport();
     }
 
     public function user_manager_get_user_instance(array $params) {

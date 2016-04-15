@@ -55,11 +55,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $dao = new Tracker_FormElement_Field_ListDao();
             if ($row = $dao->searchByFieldId($this->id)->getRow()) {
                 //...and build the bind
-                $bf = new Tracker_FormElement_Field_List_BindFactory();
-                $this->bind = $bf->getBind($this, $row['bind_type']);
+                $bind_factory = $this->getFormElementFieldListBindFactory();
+                $this->bind   = $bind_factory->getBind($this, $row['bind_type']);
             }
         }
         return $this->bind;
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindFactory
+     */
+    protected function getFormElementFieldListBindFactory()
+    {
+        return new Tracker_FormElement_Field_List_BindFactory();
     }
 
     /**
@@ -1313,14 +1321,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     protected function isPossibleValue($value) {
         $is_possible_value   = true;
-        $all_possible_values = $this->getBind()->getAllValues();
 
         if (is_array($value)) {
             foreach ($value as $id) {
-                $is_possible_value = $is_possible_value && $this->checkValueExists($id, $all_possible_values);
+                $is_possible_value = $is_possible_value && $this->checkValueExists($id);
             }
         } else {
-            $is_possible_value = $this->checkValueExists($value, $all_possible_values);
+            $is_possible_value = $this->checkValueExists($value);
         }
 
         return $is_possible_value;
@@ -1329,8 +1336,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    protected function checkValueExists($value_id, array $all_possible_values) {
-        return array_key_exists($value_id, $all_possible_values) ||
+    protected function checkValueExists($value_id) {
+        return $this->getBind()->isExistingValue($value_id) ||
                $value_id == Tracker_FormElement_Field_List::NONE_VALUE ||
                $value_id == Tracker_FormElement_Field_List::NOT_INDICATED_VALUE;
     }
