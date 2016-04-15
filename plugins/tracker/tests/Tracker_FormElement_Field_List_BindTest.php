@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -64,6 +64,30 @@ class Tracker_FormElement_Field_List_Bind_JsonFormatTest extends TuleapTestCase 
             $this->bind->fetchFormattedForJson(),
             array()
         );
+    }
+}
+
+class Tracker_FormElement_Field_List_Bind_ValuesTest extends TuleapTestCase
+{
+    const NON_EXISTANT_VALUE_ID = 100;
+    private $bind;
+    private $value_id1 = 101;
+    private $value1;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->bind = partial_mock('Tracker_FormElement_Field_List_Bind4Tests', array('getAllValues'));
+
+        $this->value1 = mock('Tracker_FormElement_Field_List_BindValue');
+
+        stub($this->bind)->getAllValues()->returns(array($this->value_id1 => $this->value1));
+    }
+
+    public function itVerifiesAValueExist()
+    {
+        $this->assertTrue($this->bind->isExistingValue($this->value_id1));
+        $this->assertFalse($this->bind->isExistingValue(self::NON_EXISTANT_VALUE_ID));
     }
 }
 

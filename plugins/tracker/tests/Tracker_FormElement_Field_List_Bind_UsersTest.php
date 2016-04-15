@@ -1,22 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Tracker\Import\Spotter;
+
 require_once('bootstrap.php');
 
 Mock::generatePartial(
@@ -36,7 +39,13 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
 
 
 class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
-    
+
+    public function tearDown() {
+        parent::tearDown();
+        UserManager::clearInstance();
+        Spotter::clearInstance();
+    }
+
     public function testGetSoapAvailableValues() {
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
@@ -146,5 +155,29 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $this->assertNotEqual($field2->formatChangesetValue($value2), '');
         $this->assertNotEqual($field3->formatChangesetValue($value3), '');
     }
+
+    public function itVerifiesAValueExist()
+    {
+        $user_manager = mock('UserManager');
+        stub($user_manager)->getUserById(101)->returns(mock('PFUser'));
+        stub($user_manager)->getUserById(102)->returns(mock('PFUser'));
+        UserManager::setInstance($user_manager);
+        $field      = new MockTracker_FormElement_Field_List();
+        $bind_users = partial_mock(
+            'Tracker_FormElement_Field_List_Bind_Users',
+            array('getAllValues'),
+            array($field, '', '', '')
+        );
+        stub($bind_users)->getAllValues()->returns(array(101 => 'user1'));
+
+        $this->assertTrue($bind_users->isExistingValue(101));
+        $this->assertFalse($bind_users->isExistingValue(102));
+
+        $import_spotter = mock('Tuleap\Tracker\Import\Spotter');
+        stub($import_spotter)->isImportRunning()->returns(true);
+        Spotter::setInstance($import_spotter);
+
+        $this->assertTrue($bind_users->isExistingValue(101));
+        $this->assertTrue($bind_users->isExistingValue(102));
+    }
 }
-?>
