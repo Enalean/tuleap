@@ -1,3 +1,6 @@
+Version 5.870 - Tuleap 8.14
+    * story #8940: Display configuration popovers
+
 Version 5.869 - Tuleap 8.14
     * UserManager is not cleared in some test which break the tests if they are executed in a certain order
 
