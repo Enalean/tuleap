@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,6 +33,7 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command {
         $this->env['GIT_HTTP_BACKEND'] = $command->getCommand();
         $this->env['HOME']             = $this->gitolite_home;
         $this->env['REMOTE_ADDR']      = HTTPRequest::instance()->getIPAddress();
+        $this->env['TERM']             = 'linux';
         $this->appendToEnv('REQUEST_URI');
         $this->appendToEnv('REMOTE_PORT');
         $this->appendToEnv('SERVER_ADDR');
