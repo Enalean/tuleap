@@ -1,3 +1,6 @@
+Version 4.144 - Tuleap 8.14
+    * request #8589: Apache logs filled with No entry for terminal type "unknown";
+
 Version 4.143 - Tuleap 8.14
     * Beautifull table displays
 
