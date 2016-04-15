@@ -146,4 +146,21 @@ class ResultFactoryTest extends TuleapTestCase {
 
         $this->assertCount($this->result_factory->getSearchResults($query_result), 2);
     }
+
+    public function itSkipsResultIfTheProjectHasBeenDeleted() {
+        $query_result = json_decode(
+            file_get_contents(dirname(__FILE__) . '/../_fixtures/ES_query_result_01.txt'),
+            true
+        );
+
+        $project_01 = mock('Project');
+        $project_02 = mock('Project');
+
+        stub($this->project_manager)->getProject(116)->returns($project_01);
+        stub($this->project_manager)->getProject(168)->returns($project_02);
+        stub($this->url_verification)->userCanAccessProject('*', $project_01)->returns(true);
+        stub($this->url_verification)->userCanAccessProject('*', $project_02)->throws(new Project_AccessDeletedException($project_02));
+
+        $this->assertCount($this->result_factory->getSearchResults($query_result), 2);
+    }
 }
