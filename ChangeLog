@@ -36,6 +36,7 @@ Version 8.14 (Not released yet)
 	* cardwall: 1.58
 	* hudson_svn: 0.7
 	* teamforge_compat: 0.2
+	* fulltextsearch: 0.128
 
     == Themes ==
 	* FlamingParrot: 1.133

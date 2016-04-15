@@ -1,3 +1,6 @@
+Version 0.128 - Tuleap 8.14
+    * request #8837: Uncaugh exception when a FTS result concerns something in a deleted project
+
 Version 0.127 - Tuleap 8.0
     * request #7896: refactoring search redirection
 
