@@ -815,7 +815,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $sort_url = $url . $column['field']->id;
 
                     $html .= '<table width="100%" border="0" cellpadding="0" cellspacing="0"><tbody><tr>';
-                    $html .= '<td class="tracker_report_table_column_grip">&nbsp;&nbsp;</td>';
+
+                    if (! $current_user->isAnonymous()) {
+                        $html .= '<td class="tracker_report_table_column_grip">&nbsp;&nbsp;</td>';
+                    }
+
                     $html .= '<td class="tracker_report_table_column_title">';
                     if ( ! isset($column['artlink_nature']) && $this->canFieldBeUsedToSort($column['field'], $current_user)) {
                         $html .= '<a href="'. $sort_url .'">';
@@ -825,13 +829,22 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $html .= $label;
                     }
                     $html .= '</td>';
-                    $html .= '<td class="tracker_report_table_column_caret">';
-                    if ( ! isset($column['artlink_nature']) && isset($sort_columns[$key])) {
+
+                    if (! isset($column['artlink_nature']) && isset($sort_columns[$key])) {
+                        $html .= '<td class="tracker_report_table_column_caret">';
                         $html .= '<a href="'. $sort_url .'">';
                         $html .= $this->getSortIcon($sort_columns[$column['field']->getId()]['is_desc']);
                         $html .= '</a>';
+                        $html .= '</td>';
                     }
-                    $html .= '</td>';
+
+
+                    if (isset($column['artlink_nature']) && ! $current_user->isAnonymous()) {
+                        $html .= '<td class="tracker_report_table_column_nature_editor">';
+                        $html .= '<a href="#" class="nature-column-editor"><i class="icon-cog"></i></a>';
+                        $html .= '</td>';
+                    }
+
                     $html .= '</tr></tbody></table>';
 
                 } else {
@@ -1624,12 +1637,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $this->report_session->setHasChanged();
 
                             if ($request->isAjax()) {
-                                $matching_ids    = $this->report->getMatchingIds();
-                                $offset          = (int)$request->get('offset');
-                                $extracolumn     = self::NO_EXTRACOLUMN;
-                                $total_rows      = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
+                                $matching_ids     = $this->report->getMatchingIds();
+                                $offset           = (int)$request->get('offset');
+                                $extracolumn      = self::NO_EXTRACOLUMN;
+                                $total_rows       = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
+                                $link_artifact_id = (int)$request->get('link-artifact-id');
 
-                                echo $this->fetchTHead($extracolumn, $key);
+                                echo $this->fetchTHead($extracolumn, $key, ! $link_artifact_id);
                                 echo $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $key);
                             }
                         }

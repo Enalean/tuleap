@@ -447,6 +447,22 @@ h5.artifack_link_subtitle {
                     padding-right: 4px;
                 }
 
+                &.tracker_report_table_column_nature_editor {
+                    > a {
+                        display: block;
+                        position: relative;
+                        padding: 0 4px 4px;
+                        z-index: 10;
+                        opacity: 0.2;
+                        transition: opacity 100ms;
+                        text-align: right;
+
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+                }
+
                 &.tracker_report_table_column_title .additional_column_title {
                     font-weight: normal;
                     font-size: 0.8em;
@@ -467,6 +483,28 @@ h5.artifack_link_subtitle {
     }
 }
 
+.nature-column-popover form {
+    margin: 0 0 5px;
+
+    p {
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    input {
+        width: 100%;
+        height: 30px;
+        box-sizing: border-box;
+    }
+
+    .nature-column-popover-actions {
+        text-align: right;
+
+        > .btn {
+            margin: 0 0 0 5px;
+        }
+    }
+}
 
 #tracker_report_table_addcolumn_panel {
     text-align:right;
@@ -2973,6 +3011,10 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
 
 #submit-new-by-mail-popover-container > .popover {
     max-width: 288px;
+
+    p {
+        font-size: 12px;
+    }
 
     #tracker-email-copy-to-clipboard {
         margin: 0;
