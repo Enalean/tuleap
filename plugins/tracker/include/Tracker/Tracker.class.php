@@ -2785,7 +2785,8 @@ EOS;
      *
      * @return bool true if has unknown fields, false otherwise
      */
-    public function hasError($header_line, $lines) {
+    public function hasError($header_line, $lines)
+    {
         $has_error = false;
         $fef = $this->getFormElementFactory();
         $aid_key = array_search('aid', $header_line);
@@ -2793,18 +2794,29 @@ EOS;
         $artifact = null;
         $hp       = Codendi_HTMLPurifier::instance();
 
+        $unknown_fields = array();
+        $error_nature   = false;
         foreach ($lines as $cpt_line => $line) {
             $data = array();
             foreach ($header_line as $idx => $field_name) {
                 //Fields other than aid
                 if ($field_name != 'aid') {
                     $field = $fef->getUsedFieldByName($this->getId(), $field_name);
+
                     if (! $field) {
-                        // a field is unknown
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_field', array($field_name)));
+                        $field_name = explode(" ", $field_name);
+                        $field  = $fef->getUsedFieldByName($this->getId(), $field_name[0]);
+                    }
+
+                    if (! $field) {
+                        if (is_array($field_name)) {
+                            $unknown_fields[implode('.', $field_name)] = implode(' ', $field_name);
+                        } else {
+                            $unknown_fields[$field_name] = $field_name;
+                        }
                         $has_error = true;
-                    } else {
-                        //check if value is ok
+                    } else if ($field && !is_array($field_name)) {
+                        // check if value is ok
                         if ($aid_key !== false && $this->aidExists($line[$aid_key])) {
                             $artifact_id = $line[$aid_key];
                         } else {
@@ -2812,15 +2824,15 @@ EOS;
                         }
 
                         $artifact = $af->getInstanceFromRow(
-                                        array(
-                                            'id'                       => $artifact_id,
-                                            'tracker_id'               => $this->id,
-                                            'submitted_by'             => $this->getUserManager()->getCurrentuser()->getId(),
-                                            'submitted_on'             => $_SERVER['REQUEST_TIME'],
-                                            'use_artifact_permissions' => 0,
-                                        )
-                                  );
-                        if ($line[$idx]!=''){
+                            array(
+                                'id'                       => $artifact_id,
+                                'tracker_id'               => $this->id,
+                                'submitted_by'             => $this->getUserManager()->getCurrentuser()->getId(),
+                                'submitted_on'             => $_SERVER['REQUEST_TIME'],
+                                'use_artifact_permissions' => 0,
+                            )
+                        );
+                        if ($line[$idx]!='') {
 
                             $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
 
@@ -2829,6 +2841,8 @@ EOS;
                                 $has_error = true;
                             }
                         }
+                    } else {
+                        $error_nature = true;
                     }
                 } else {
                     //Field is aid : we check if the artifact id exists
@@ -2849,6 +2863,13 @@ EOS;
                 }
             }
         }
+        if (count($unknown_fields) > 0) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_field', array(implode(',', $unknown_fields))));
+        }
+        if ($error_nature) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'importing_nature'));
+        }
+
         return $has_error;
     }
 
