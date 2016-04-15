@@ -20,9 +20,11 @@
 
 namespace Tuleap\TeamforgeCompat\Plugin;
 
-class PluginInfo extends \PluginInfo {
+class PluginInfo extends \PluginInfo
+{
 
-    public function __construct(\Plugin $plugin) {
+    public function __construct(\Plugin $plugin)
+    {
         parent::__construct($plugin);
 
         $this->setPluginDescriptor(new PluginDescriptor());

@@ -23,49 +23,83 @@ require_once 'constants.php';
 
 use TeamforgeCompat\TeamforgeCompatDao;
 use TeamforgeCompat\ReferencesImporter;
+use TeamforgeCompat\TeamforgeReferencesBuilder;
 
-class teamforge_compatPlugin extends Plugin {
+class teamforge_compatPlugin extends Plugin
+{
 
     /**
      * @var TeamforgeCompatDao
      */
     private $dao;
 
-    public function __construct($id) {
+    /**
+     * @var TeamforgeReferences;
+     */
+    private $teamforge_references_builder;
+
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->dao = new TeamforgeCompatDao();
+        $this->teamforge_references_builder = new TeamforgeReferencesBuilder($this->dao, ProjectManager::instance());
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML, 'importCompatRefXML');
+        $this->addHook(Event::GET_REFERENCE, 'getReference');
+        $this->addHook(Event::GET_PLUGINS_EXTRA_REFERENCES, 'registerExtraReferences');
     }
 
     /**
      * @return Tuleap\TeamforgeCompat\Plugin\PluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new Tuleap\TeamforgeCompat\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return 'plugin_teamforge_compat';
     }
 
-    public function process() {
+    public function process()
+    {
         $renderer = TemplateRendererFactory::build()->getRenderer(TEAMFORGE_COMPAT_BASE_DIR.'/template');
         $renderer->renderToPage('index', array());
     }
 
-    public function importCompatRefXML($params) {
+    public function importCompatRefXML($params)
+    {
         $targeted_service_name = $params['service_name'];
-        if($targeted_service_name == 'frs'){
+        if ($targeted_service_name == 'frs'){
             $xml          = $params['xml_content'];
             $project      = $params['project'];
             $logger       = new WrapperLogger($params['logger'], 'TeamforgeReferencesImporter');
             $created_refs = $params['created_refs'];
             $importer     = new ReferencesImporter($this->dao, $logger);
             $importer->importCompatRefXML($project, $xml, $created_refs);
+        }
+    }
+
+    public function getReference($params)
+    {
+        $keyword   = $params['keyword'];
+        $value     = $params['value'];
+        $project   = $params['project'];
+        $reference = $this->teamforge_references_builder->getReference($project, $keyword, $value);
+
+        if (!empty($reference)) {
+            $params['reference'] = $reference;
+        }
+    }
+
+    public function registerExtraReferences($params)
+    {
+        foreach ($this->teamforge_references_builder->getExtraReferenceSpecs() as $refspec) {
+            $params['refs'][] = $refspec;
         }
     }
 }

@@ -25,13 +25,21 @@ use DataAccessObject;
 use CodendiDataAccess;
 use Project;
 
-class TeamforgeCompatDao extends DataAccessObject {
-    public function insertRef(Project $project, $source, $target) {
+class TeamforgeCompatDao extends DataAccessObject
+{
+    public function insertRef(Project $project, $source, $target)
+    {
         $project_id = $this->da->escapeInt($project->getID());
         $source     = $this->da->quoteSmart($source);
         $target     = $this->da->quoteSmart($target);
-        $sql = "INSERT INTO plugin_teamforge_compat_table VALUES($project_id, $source, $target);";
+        $sql = "INSERT INTO plugin_teamforge_compat_table VALUES($source, $project_id, $target)";
         return $this->update($sql);
     }
 
+    public function getRef($source)
+    {
+        $source = $this->da->quoteSmart($source);
+        $sql = "SELECT project_id, target FROM plugin_teamforge_compat_table WHERE source=$source";
+        return $this->retrieve($sql);
+    }
 }
