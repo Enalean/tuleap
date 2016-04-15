@@ -25,7 +25,8 @@ use WrapperLogger;
 use Project;
 use SimpleXMLElement;
 
-class ReferencesImporter {
+class ReferencesImporter
+{
     /** @var TeamforgeCompatDao */
     private $dao;
 
@@ -34,19 +35,21 @@ class ReferencesImporter {
 
     const TEAMFORGE_XREF_PACKAGE = 'pkg';
 
-    public function __construct(TeamforgeCompatDao $dao, Logger $logger) {
+    public function __construct(TeamforgeCompatDao $dao, Logger $logger)
+    {
         $this->dao = $dao;
         $this->logger = $logger;
     }
 
-    public function importCompatRefXML(Project $project, SimpleXMLElement $xml, array $created_refs) {
-        foreach($xml->children() as $reference) {
+    public function importCompatRefXML(Project $project, SimpleXMLElement $xml, array $created_refs)
+    {
+        foreach ($xml->children() as $reference) {
             $source = (string) $reference['source'];
             $target = (string) $reference['target'];
             $target_on_system = null;
             $xref_kind = $this->cross_ref_kind($source);
 
-            if($xref_kind === self::TEAMFORGE_XREF_PACKAGE) {
+            if ($xref_kind === self::TEAMFORGE_XREF_PACKAGE) {
                 $object_type = 'package';
             } else {
                 $this->logger->warn("Cross reference kind '$xref_kind' for $source not supported");
@@ -60,14 +63,21 @@ class ReferencesImporter {
                 continue;
             }
 
+            $row = $this->dao->getRef($source)->getRow();
+            if (!empty($row)) {
+                $this->logger->warn("The source $source already exists in the database. It will not be imported.");
+                continue;
+            }
+
             $this->dao->insertRef($project, $source, $target_on_system);
             $this->logger->info("Imported teamforge ref '$source' -> $object_type $target_on_system");
         }
     }
 
-    private function cross_ref_kind($xref) {
+    private function cross_ref_kind($xref)
+    {
         $matches = array();
-        if(preg_match('/^([a-zA-Z]*)/', $xref, $matches)) {
+        if (preg_match('/^([a-zA-Z]*)/', $xref, $matches)) {
            return $matches[1];
         } else {
             return null;

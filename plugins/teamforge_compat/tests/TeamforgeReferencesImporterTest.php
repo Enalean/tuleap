@@ -20,15 +20,18 @@
 namespace TeamforgeCompat;
 include 'bootstrap.php';
 
-class TeamforgeReferencesImporterTest extends \TuleapTestCase {
+class TeamforgeReferencesImporterTest extends \TuleapTestCase
+{
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->dao      = mock('TeamforgeCompat\TeamforgeCompatDao');
         $this->logger   = mock('Logger');
         $this->importer = new ReferencesImporter($this->dao, $this->logger);
     }
 
-    public function testItShouldAddPkgLinks() {
+    public function testItShouldAddPkgLinks()
+    {
         $xml = <<<XML
             <references>
                 <reference source="pkg1234" target="1"/>
@@ -38,11 +41,13 @@ XML;
         $xml = new \SimpleXMLElement($xml);
         $created_references = array('package' => array('1' => '1337', '2' => '42'));
 
+        stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->count(2);
         $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
     }
 
-    public function testItShouldNotAddIfTargetIsUnknown() {
+    public function testItShouldNotAddIfTargetIsUnknown()
+    {
         $xml = <<<XML
             <references>
                 <reference source="pkg1234" target="456"/>
@@ -51,11 +56,13 @@ XML;
         $xml = new \SimpleXMLElement($xml);
         $created_references = array('package' => array());
 
+        stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->never();
         $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
     }
 
-    public function testItShouldNotAddUnknownReferences() {
+    public function testItShouldNotAddUnknownReferences()
+    {
         $xml = <<<XML
             <references>
                 <reference source="stuff1234" target="1"/>
@@ -64,6 +71,7 @@ XML;
         $xml = new \SimpleXMLElement($xml);
         $created_references = array('package' => array('1' => '1337'));
 
+        stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
         expect($this->dao)->insertRef()->never();
         $this->importer->importCompatRefXML(mock('Project'), $xml, $created_references);
     }

@@ -56,6 +56,20 @@ class ReferenceManager {
         "tag", "thread", "im", "project", "folder", "plugin", "img", "commit", "rev", "revision", "patch", "bug",
         "sr", "task", "proj", "dossier"); //should be elsewhere?
 
+    /**
+     * @var array containing additional regexp to match more reference formats.
+     * it is a list matching: array(
+     *   array(
+     *      'regexp' => PCRE compatible regular expression matching references,
+     *      'cb'     => PHP callback of a function taking a regexp match
+     *                  followed by the project group_id  and returning a
+     *                  ReferenceInstance (or null if this is not a reference)
+     *   )
+     *   ...
+     * )
+     */
+    private $additional_references = array();
+
     private $php_supported_encoding_types = array(
         'UTF-8',
         'ISO-8859-15',
@@ -98,6 +112,7 @@ class ReferenceManager {
     public function __construct() {
         $this->eventManager = EventManager::instance();
         $this->loadReservedKeywords();
+        $this->loadExtraFormats();
     }
     
     protected function loadReservedKeywords() {
@@ -105,6 +120,14 @@ class ReferenceManager {
         $additional_reserved_keywords = array();
         $this->eventManager->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
         $this->reservedKeywords = array_merge($this->reservedKeywords, $additional_reserved_keywords);
+    }
+
+    protected function loadExtraFormats(){
+        $this->additional_references = array();
+        $this->eventManager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, array(
+            'reference_manager' => $this,
+            'refs'              => &$this->additional_references
+        ));
     }
 
     /**
@@ -478,6 +501,59 @@ class ReferenceManager {
         return $exp;
     }
 
+    // callback function
+    public function _insertRefCallback($match) {
+        $desc         = '';
+        $ref_instance = $this->_getReferenceInstanceFromMatch($match);
+        if (! $ref_instance) {
+            return $match['key']." #".$match['project_name'].$match['value'];
+        } else {
+            return $this->buildLinkForReference($ref_instance);
+        }
+    }
+
+    /*
+     * Callback function that returns a link in place of a custom reference
+     * Must be public because it is called from an anonymous function
+     */
+    public function insertCustomRefCallback($match, $group_id, $reftypecb) {
+        $ref = call_user_func($reftypecb, $match, $group_id);
+        if(empty($ref)) {
+            return $match[0];
+        }
+
+        return $this->buildLinkForReference($ref);
+    }
+
+    /**
+     * @return string html link tag to the reference instance
+     */
+    private function buildLinkForReference(ReferenceInstance $ref_instance){
+        $purifier = Codendi_HTMLPurifier::instance();
+        $ref      = $ref_instance->getReference();
+
+        if (strpos($ref->getDescription(), "_desc_key") !== false) {
+            $desc = $this->getTranslatedDescription($ref);
+        } else {
+            $desc = $ref->getDescription();
+        }
+
+        return '<a href="'.$ref_instance->getFullGotoLink().'" title="'. $purifier->purify($desc) .'" class="cross-reference">'
+                . $purifier->purify($ref_instance->getMatch()) ."</a>";
+    }
+
+    private function getTranslatedDescription(Reference $reference) {
+        $reference_matches = array();
+        if (preg_match('/(.*):(.*)/', $reference->getDescription(), $reference_matches)) {
+            if ($GLOBALS['Language']->hasText($reference_matches[1], $reference_matches[2])) {
+                return $GLOBALS['Language']->getText($reference_matches[1], $reference_matches[2]);
+            }
+        } else {
+            return $GLOBALS['Language']->getText('project_reference', $reference->getDescription());
+        }
+        throw new Exception('Missing translation for ' . $reference->getDescription());
+    }
+
     /**
      * insert html links in text
      * @param $html the string which may contain invalid 
@@ -487,13 +563,25 @@ class ReferenceManager {
         $locale = setlocale(LC_CTYPE, null);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
 
-        if (!preg_match('/[^\s]{5000,}/', $html)) {             
+        if (!preg_match('/[^\s]{5000,}/', $html)) {
             $exp = $this->_getExpForRef();
 
             $html = $this->convertToUTF8($html);
-            $html = preg_replace_callback($exp, array($this,"_insertRefCallback"), $html);
+            $html = preg_replace_callback($exp, array($this, '_insertRefCallback'), $html);
+
+            foreach($this->additional_references as $reftype) {
+                $self = $this;
+                $html = preg_replace_callback(
+                    $reftype['regexp'],
+                    function($m) use ($self, $group_id, $reftype) {
+                        return $self->insertCustomRefCallback($m, $group_id, $reftype['cb']);
+                    },
+                    $html);
+            }
+
             $this->insertLinksForMentions($html);
         }
+
         setlocale(LC_CTYPE, $locale);
         $this->tmpGroupIdForCallbackFunction = null;
     }
@@ -541,10 +629,16 @@ class ReferenceManager {
      * @return array of matches
      */
     function _extractAllMatches($html) {
+        return $this->_extractMatches($html, $this->_getExpForRef());
+    }
+
+    /**
+     * Extract matches from input text according to the regexp
+     */
+    private function _extractMatches($html, $regexp) {
         $locale = setlocale(LC_CTYPE, null);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
-        $exp = $this->_getExpForRef();
-        $count=preg_match_all($exp, $html, $matches,PREG_SET_ORDER);
+        $count = preg_match_all($regexp, $html, $matches, PREG_SET_ORDER);
         setlocale(LC_CTYPE, $locale);
         return $matches;
     }
@@ -591,6 +685,15 @@ class ReferenceManager {
 
             $referencesInstances[]=$ref_instance;
         }
+
+        foreach($this->additional_references as $reftype) {
+            $m = $this->_extractMatches($html, $reftype['regexp']);
+            $ref = $reftype['cb']($m, $group_id);
+            if(!empty($ref)) {
+                $referencesInstances[] = $ref;
+            }
+        }
+
         return $referencesInstances;
     }
     
@@ -718,32 +821,6 @@ class ReferenceManager {
         }
         return $groupedReferencesInstances;
     }
-
-    // callback function
-    function _insertRefCallback($match) {
-        $purifier     = Codendi_HTMLPurifier::instance();
-        $desc         = '';
-        $ref_instance = $this->_getReferenceInstanceFromMatch($match);
-        if (! $ref_instance) {
-            return $match['key']." #".$match['project_name'].$match['value'];
-        } else {
-            $ref = $ref_instance->getReference();
-            if (strpos($ref->getDescription(),"_desc_key")!==false) {
-                if (preg_match('/(.*):(.*)/', $ref->getDescription(), $ref_matches)) {
-                    if ($GLOBALS['Language']->hasText($ref_matches[1], $ref_matches[2])) {
-                        $desc = $GLOBALS['Language']->getText($ref_matches[1], $ref_matches[2]);
-                    }
-                } else {
-                    $desc = $GLOBALS['Language']->getText('project_reference',$ref->getDescription());
-                }
-            } else {
-                $desc=$ref->getDescription();
-            }
-
-            return '<a href="'.$ref_instance->getFullGotoLink().'" title="'. $purifier->purify($desc) .'" class="cross-reference">'
-                    . $purifier->purify($ref_instance->getMatch()) ."</a>";
-        }
-    }    
 
     /**
      * Returns the group id of an artifact id

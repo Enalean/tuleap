@@ -182,6 +182,15 @@ class Event {
      const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
 
      /**
+      * This event is used to get all extra references.
+      *
+      * Parameters:
+      *  'reference_manager' => the ReferenceManager instance
+      *  'refs'              => result array. See EventManager::additional_references
+      */
+     const GET_PLUGINS_EXTRA_REFERENCES = 'get_plugins_extra_references';
+
+     /**
       * Allow to define specific references natures provided by a plugin
       *
       * Parameters:
