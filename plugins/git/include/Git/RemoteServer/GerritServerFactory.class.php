@@ -119,7 +119,8 @@ class Git_RemoteServer_GerritServerFactory {
             $server->getReplicationKey(),
             $server->usesSSL(),
             $server->getGerritVersion(),
-            $server->getHTTPPassword()
+            $server->getHTTPPassword(),
+            $server->getAuthType()
         );
         if ($server->getId() == 0) {
             $server->setId($id);
@@ -173,7 +174,8 @@ class Git_RemoteServer_GerritServerFactory {
             $row['ssh_key'],
             $row['use_ssl'],
             $row['gerrit_version'],
-            $row['http_password']
+            $row['http_password'],
+            $row['auth_type']
         );
     }
 

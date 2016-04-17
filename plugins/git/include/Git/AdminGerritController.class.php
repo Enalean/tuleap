@@ -73,7 +73,7 @@ class Git_AdminGerritController {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
  
-        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '');
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '', Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST);
     }
 
     private function getListOfGerritServersPresenters() {
@@ -110,6 +110,7 @@ class Git_AdminGerritController {
             $use_ssl                = isset($settings['use_ssl'])                                               ;
             $gerrit_version         = isset($settings['gerrit_version'])    ? $settings['gerrit_version']   : '';
             $http_password          = isset($settings['http_password'] )    ? $settings['http_password']    : '';
+            $auth_type              = isset($settings['auth_type'] )        ? $settings['auth_type']        : 'Digest';
 
             if ($host !== '' &&
                 ($host != $server->getHost() ||
@@ -120,8 +121,10 @@ class Git_AdminGerritController {
                 $replication_ssh_key != $server->getReplicationKey() ||
                 $use_ssl != $server->usesSSL() ||
                 $gerrit_version != $server->getGerritVersion() ||
-                $http_password != $server->getHTTPPassword())
+                $http_password != $server->getHTTPPassword() ||
+                $auth_type != $server->getAuthType())
             ) {
+
                 $server
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
@@ -131,7 +134,9 @@ class Git_AdminGerritController {
                     ->setReplicationKey($replication_ssh_key)
                     ->setUseSSL($use_ssl)
                     ->setGerritVersion($gerrit_version)
-                    ->setHTTPPassword($http_password);
+                    ->setHTTPPassword($http_password)
+                    ->setAuthType($auth_type);
+
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }

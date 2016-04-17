@@ -33,5 +33,7 @@ class Git_RemoteServer_GerritServerPresenter {
         $this->use_gerrit_2_8   = $server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
         $this->is_used          = $is_used;
         $this->http_password    = $server->getHTTPPassword();
+        $this->is_digest        = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST;
+        $this->is_basic         = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_BASIC;
     }
 }

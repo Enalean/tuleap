@@ -33,6 +33,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $use_ssl            = false;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -44,7 +45,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
 
         $expected = 'ext::ssh -p le_ssh_port -i le_identity_file le_login@le_host %S le_project';
@@ -62,6 +64,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $use_ssl            = false;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -73,7 +76,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
 
         $this->assertEqual($server->getProjectAdminUrl('gerrit_project_name'), 'http://le_host/#/admin/projects/gerrit_project_name');
@@ -90,6 +94,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $use_ssl            = false;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -101,7 +106,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
         $this->assertEqual($server->getProjectAdminUrl('gerrit_project_name'), 'http://le_host:8080/#/admin/projects/gerrit_project_name');
     }
@@ -117,6 +123,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $use_ssl            = false;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -128,7 +135,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
 
         $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'http://le_host:8080/#/q/project:gerrit_project_name,n,z');
@@ -145,6 +153,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $use_ssl            = true;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -156,7 +165,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
         $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'https://le_host:8080/#/q/project:gerrit_project_name,n,z');
     }
@@ -172,6 +182,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $use_ssl            = false;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $server = new Git_RemoteServer_GerritServer(
             $id,
@@ -183,7 +194,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
 
         $this->assertEqual($server->getReplicationKey('gerrit_project_name'), $replication_key);
@@ -205,6 +217,7 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
         $use_ssl            = false;
         $gerrit_version     = '2.5';
         $http_password      = '1234';
+        $auth_type          = 'Digest';
 
         $this->server = new Git_RemoteServer_GerritServer(
             $id,
@@ -216,7 +229,8 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
 
     }

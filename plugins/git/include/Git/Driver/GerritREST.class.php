@@ -24,6 +24,7 @@
  */
 class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
+
     /**
      * When one create a group when no owners, set Administrators as default
      * @see: https://groups.google.com/d/msg/repo-discuss/kVDkj7Ds970/xzLP1WQI2BAJ
@@ -40,12 +41,17 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     /** @var Guzzle\Http\Client */
     private $guzzle_client;
 
+    /** @var String */
+    private $auth_type;
+
     public function __construct(
         $guzzle_client,
-        Logger $logger
+        Logger $logger,
+        $auth_type
     ) {
         $this->guzzle_client = $guzzle_client;
         $this->logger        = $logger;
+        $this->auth_type     = $auth_type;
     }
 
     public function createProject(
@@ -674,7 +680,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
      * @return Guzzle\Http\Message\Response
      */
     private function sendRequest(Git_RemoteServer_GerritServer $server, Guzzle\Http\Message\RequestInterface $request) {
-        $request->setAuth($server->getLogin(), $server->getHTTPPassword(), 'Digest');
+        $request->setAuth($server->getLogin(), $server->getHTTPPassword(), $this->auth_type);
         return $request->send();
     }
 
