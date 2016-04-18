@@ -26,7 +26,7 @@ Version 8.14 (Not released yet)
 	* request #8907: CSRF vulnerability in the snippet manipulation pages
 
 	== Plugins ==
-	* tracker: 5.872
+	* tracker: 5.873
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18

@@ -1,3 +1,6 @@
+Version 5.873 - Tuleap 8.14
+    * story #8940: Save the column format in session and in database.
+
 Version 5.872 - Tuleap 8.14
     * Fix fatal error on tracker plugin
 
