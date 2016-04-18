@@ -19,6 +19,8 @@
  */
 require_once 'builders/aSystemEvent.php';
 
+use Tuealp\Svn\ApacheConfGenerator;
+
 class SystemEventProcessor_RootTest extends TuleapTestCase {
     private $system_event_manager;
     private $system_event_dao;
@@ -26,12 +28,15 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     private $sys_http_user = 'www-data';
     private $logger;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->system_event_manager = mock('SystemEventManager');
         $this->system_event_dao     = mock('SystemEventDao');
         $this->logger               = mock('Logger');
         $this->site_cache           = mock('SiteCache');
+
+        ;
         $this->processor = partial_mock(
             'SystemEventProcessor_Root',
             array('launchAs'),
@@ -44,12 +49,14 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
                 mock('BackendCVS'),
                 mock('BackendSVN'),
                 mock('BackendSystem'),
-                $this->site_cache
+                $this->site_cache,
+                mock('Tuealp\Svn\ApacheConfGenerator')
             )
         );
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', '/usr/share/codendi');
         ForgeConfig::set('sys_http_user', $this->sys_http_user);
+
     }
 
     public function tearDown() {

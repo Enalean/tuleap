@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2015. All rights reserved.
+ * Copyright Enalean (c) 2015-2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventProcessor_Factory {
+use Tuealp\Svn\ApacheConfGenerator;
+
+class SystemEventProcessor_Factory
+{
 
     /** @var EventManager */
     private $event_manager;
@@ -33,13 +36,15 @@ class SystemEventProcessor_Factory {
     /** @var Logger */
     private $logger;
 
-    public function __construct(Logger $logger, SystemEventManager $system_event_manager, EventManager $event_manager) {
+    public function __construct(Logger $logger, SystemEventManager $system_event_manager, EventManager $event_manager)
+    {
         $this->logger               = $logger;
         $this->system_event_manager = $system_event_manager;
         $this->event_manager        = $event_manager;
     }
 
-    public function getProcessForQueue($request_queue) {
+    public function getProcessForQueue($request_queue)
+    {
         $owner         = SystemEvent::OWNER_APP;
         $custom_queues = array();
         $this->event_manager->processEvent(
@@ -88,7 +93,8 @@ class SystemEventProcessor_Factory {
             Backend::instance('CVS'),
             Backend::instance('SVN'),
             Backend::instance('System'),
-            new SiteCache($this->logger)
+            new SiteCache($this->logger),
+            new ApacheConfGenerator(new System_Command(), Backend::instance('SVN'))
         );
     }
 }

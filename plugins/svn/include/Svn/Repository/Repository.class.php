@@ -51,7 +51,7 @@ class Repository {
     }
 
     public function getPublicPath() {
-        return '/svnroot/'. $this->getFullName();
+        return '/svnplugin/'. $this->getFullName();
     }
 
     public function getFullName() {
