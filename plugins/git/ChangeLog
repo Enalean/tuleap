@@ -1,3 +1,6 @@
+Version 4.145 - Tuleap 8.14
+    * Add a warning on hudson when adding/updating a git job
+
 Version 4.144 - Tuleap 8.14
     * request #8589: Apache logs filled with No entry for terminal type "unknown";
 
