@@ -30,14 +30,23 @@ use Tuleap\HudsonGit\PollingResponseFactory;
 
 class hudson_gitPlugin extends Plugin {
 
-    public function __construct($id) {
+    const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
+
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(GIT_ADDITIONAL_HOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE);
+            $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
         }
+    }
+
+    public function display_hudson_addition_info($params)
+    {
+        $params['installed'] = defined('GIT_BASE_URL');
     }
 
     /**
