@@ -1,3 +1,6 @@
+Version 5.874 - Tuleap 8.14
+    * request #9076: Export tracker permissions for static user groups
+
 Version 5.873 - Tuleap 8.14
     * story #8940: Save the column format in session and in database.
 
