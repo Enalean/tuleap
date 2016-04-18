@@ -1,3 +1,6 @@
+Version 5.872 - Tuleap 8.14
+    * Fix fatal error on tracker plugin
+
 Version 5.871 - Tuleap 8.14
     * story #8940 have configurable columns based on natures (CSV Export for tracker report)
 
