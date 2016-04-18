@@ -53,7 +53,8 @@ Mock::generatePartial('Tracker',
                           'getUserManager',
                           'getHierarchyFactory',
                           'getPermissionController',
-                          'userCanView'
+                          'userCanView',
+                          'getProjectUgroups'
                       )
 );
 
@@ -1850,19 +1851,6 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
 
         $report_factory = mock('Tracker_ReportFactory');
         stub($this->tracker)->getReportFactory()->returns($report_factory);
-
-        $GLOBALS['UGROUPS'] = array(
-            'UGROUP_1' => 1,
-            'UGROUP_2' => 2,
-            'UGROUP_3' => 3,
-            'UGROUP_4' => 4,
-            'UGROUP_5' => 5,
-        );
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        unset($GLOBALS['UGROUPS']);
     }
 
     public function testPermissionsExport() {
@@ -1872,6 +1860,14 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
             5   => array('PERM_3'),
             115 => array('PERM_3'),
         ));
+        $ugroups = array(
+            'UGROUP_1' => 1,
+            'UGROUP_2' => 2,
+            'UGROUP_3' => 3,
+            'UGROUP_4' => 4,
+            'UGROUP_5' => 5,
+        );
+        stub($this->tracker)->getProjectUgroups()->returns($ugroups);
 
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
 
