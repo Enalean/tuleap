@@ -1439,13 +1439,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         //Add group by aggregates
         if ($aggregates) {
             foreach ($columns as $column) {
-                if ($column->isUsed()) {
-                    if (isset($aggregates[$column->getId()])) {
-                        if ($a = $column->getQuerySelectAggregate($aggregates[$column->getId()])) {
+                if ($column['field']->isUsed()) {
+                    if (isset($aggregates[$column['field']->getId()])) {
+                        if ($a = $column['field']->getQuerySelectAggregate($aggregates[$column['field']->getId()])) {
                             foreach ($a['separate_queries'] as $sel) {
-                                $queries['aggregates_group_by'][$column->getName() .'_'. $sel['function']] = "SELECT ".
+                                $queries['aggregates_group_by'][$column['field']->getName() .'_'. $sel['function']] = "SELECT ".
                                     $sel['select'] .
-                                    $from .' '. $column->getQueryFromAggregate() .
+                                    $from .' '. $column['field']->getQueryFromAggregate() .
                                     $where .
                                     ($sel['group_by'] ? " GROUP BY ". $sel['group_by'] : '');
                             }
