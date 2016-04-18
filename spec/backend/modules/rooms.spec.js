@@ -1,10 +1,9 @@
 'use strict';
-
-var Rooms = require('../../../backend/modules/rooms');
-var rooms = new Rooms();
-
 var Rights = require('../../../backend/modules/rights');
 var rights = new Rights();
+
+var Rooms = require('../../../backend/modules/rooms');
+var rooms = new Rooms(rights);
 
 describe("Module Rooms", function() {
     var groups, user_id, room_id, socket, socket_bis, socket_in_room;
@@ -62,7 +61,7 @@ describe("Module Rooms", function() {
         var data = {
             rights: {}
         };
-        rooms.broadcastData(rights, socket, data);
+        rooms.broadcastData(socket, data);
         expect(console.error).toHaveBeenCalled();
     });
 
@@ -76,7 +75,7 @@ describe("Module Rooms", function() {
                 artifact: ['@arealtime_project_admin']
             }
         };
-        rooms.broadcastData(rights, socket, data);
+        rooms.broadcastData(socket, data);
         expect(console.error).not.toHaveBeenCalled();
     });
 

@@ -35,9 +35,11 @@ define([
     Rights
 ) {
     var CommunicationService = function (config) {
-        this.jwt        = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
-        this.rooms      = new Rooms();
-        this.rights     = new Rights();
+        var self = this;
+
+        self.jwt        = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
+        self.rights     = new Rights();
+        self.rooms      = new Rooms(self.rights);
 
         /**
          * @access public
@@ -48,7 +50,7 @@ define([
          * @param socket (Object): user socket
          * @param data   (Object): user information to subscribe
          */
-        this.verifyAndSubscribe = function(socket, data) {
+        self.verifyAndSubscribe = function(socket, data) {
             if (! checkSubscribeCorrect(data)) {
                 console.error('Subscription details are incorrect.');
                 return;
@@ -59,21 +61,21 @@ define([
                 return;
             }
 
-            var decoded = this.jwt.decodeToken(data.token, function (err) {
+            var decoded = self.jwt.decodeToken(data.token, function (err) {
                 console.error(err);
             });
 
-            if (! this.jwt.isTokenValid(decoded)) {
+            if (! self.jwt.isTokenValid(decoded)) {
                 console.error('JWT sent by client isn\'t correct.');
                 return;
             }
 
-            if (this.jwt.isDateExpired(decoded.exp)) {
+            if (self.jwt.isDateExpired(decoded.exp)) {
                 socket.emit('error-jwt', 'JWTExpired');
                 return;
             }
 
-            subscribe(this.rooms, this.rights, socket, data, decoded);
+            subscribe(socket, data, decoded);
         };
 
         /**
@@ -83,9 +85,9 @@ define([
          *
          * @param socket (Object): user socket
          */
-        this.disconnect = function(socket) {
-            this.rights.remove(socket.room);
-            this.rooms.removeByRoomIdAndSocketId(socket.room, socket);
+        self.disconnect = function(socket) {
+            self.rights.remove(socket.room);
+            self.rooms.removeByRoomIdAndSocketId(socket.room, socket);
             console.log('Client (user id: ' + socket.username + ' - room id: ' + socket.room + ') is disconnected.');
         };
 
@@ -97,14 +99,14 @@ define([
          *
          * @param data (Object): data to send
          */
-        this.broadcast = function(data) {
+        self.broadcast = function(data) {
             var room_id           = data.room_id;
             var sender_user_id    = data.sender_user_id;
             var sender_uuid       = data.sender_uuid;
 
-            var room = this.rooms.get(room_id);
+            var room = self.rooms.get(room_id);
             if (room && room.length > 0) {
-                room = this.rooms.update(room_id, this.jwt, data);
+                room = self.rooms.update(room_id, self.jwt, data);
 
                 var socketSender = _.find(room, function(socket) {
                     return socket.username === sender_user_id && socket.uuid === sender_uuid;
@@ -112,11 +114,23 @@ define([
 
                 if (socketSender) {
                     console.log('Client (user id: ' + socketSender.username + ' - room id: ' + socketSender.room + ') broadcasts data.');
-                    this.rooms.broadcastData(this.rights, socketSender, data);
+                    self.rooms.broadcastData(socketSender, data);
                 }
             } else {
                 console.log('Room doesn\'t exist');
             }
+        };
+
+        /**
+         * @access public
+         *
+         * Function to emit presences
+         * by room
+         *
+         * @param socket (Object)
+         */
+        self.emitPresences = function(socket) {
+            self.rooms.emitPresences(socket);
         };
 
         /**
@@ -141,26 +155,24 @@ define([
          * Subscribe a websocket
          * to receive actions
          *
-         * @param rooms   (Object): module rooms
-         * @param rights  (Object): module rights
          * @param socket  (Object): user socket
          * @param data    (Object): data sent by tuleap client
          * @param decoded (Object): data sent by tuleap server
          */
-        function subscribe(rooms, rights, socket, data, decoded) {
+        function subscribe(socket, data, decoded) {
             socket.uuid = data.uuid;
             socket.room = data.room_id;
             socket.username = decoded.data.user_id;
             socket.expired = decoded.exp;
 
-            rooms.updateTokenExpiredForUser(socket.username, decoded.exp);
+            self.rooms.updateTokenExpiredForUser(socket.username, decoded.exp);
             socket.join(data.room_id);
 
-            rooms.addSocketByRoomId(data.room_id, socket);
-            rights.addRightsByUserId(decoded.data.user_id, decoded.data.user_rights);
+            self.rooms.addSocketByRoomId(data.room_id, socket);
+            self.rights.addRightsByUserId(decoded.data.user_id, decoded.data.user_rights);
 
             if (socket.lastAction) {
-                rooms.broadcastData(rights, socket, socket.lastAction);
+                self.rooms.broadcastData(socket, socket.lastAction);
                 delete socket.lastAction;
             }
 
