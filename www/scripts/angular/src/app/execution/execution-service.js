@@ -9,18 +9,21 @@ ExecutionService.$inject = [
     '$q',
     '$rootScope',
     'ExecutionConstants',
-    'ExecutionRestService'
+    'ExecutionRestService',
+    'SharedPropertiesService'
 ];
 
 function ExecutionService(
     $q,
     $rootScope,
     ExecutionConstants,
-    ExecutionRestService
+    ExecutionRestService,
+    SharedPropertiesService
 ) {
     var self = this;
 
     _.extend(self, {
+        initialization               : initialization,
         loadExecutions               : loadExecutions,
         getExecutions                : getExecutions,
         getExecutionsByDefinitionId  : getExecutionsByDefinitionId,
@@ -30,15 +33,11 @@ function ExecutionService(
         removeAllViewTestExecution   : removeAllViewTestExecution,
         removeViewTestExecution      : removeViewTestExecution,
         removeViewTestExecutionByUUID: removeViewTestExecutionByUUID,
-        getGlobalPositions           : getGlobalPositions,
+        displayPresencesOnExecution  : displayPresencesOnExecution,
         displayError                 : displayError
     });
 
     initialization();
-
-    $rootScope.$on('service-reload', function() {
-        initialization();
-    });
 
     function initialization() {
         _.extend(self, {
@@ -47,7 +46,10 @@ function ExecutionService(
             executions_by_categories_by_campaigns: {},
             executions                           : {},
             categories                           : {},
-            loading                              : {}
+            loading                              : {},
+            presences_loaded                     : false,
+            executions_loaded                    : false,
+            presences                            : {}
         });
     }
 
@@ -144,8 +146,17 @@ function ExecutionService(
     function viewTestExecution(execution_id, user) {
         if (_.has(self.executions, execution_id)) {
             var execution = self.executions[execution_id];
+
             if (! _.has(execution, 'viewed_by')) {
                 execution.viewed_by = [];
+            }
+
+            var user_uuid_exists = _.find(execution.viewed_by, function(presence) {
+                return presence.uuid === user.uuid;
+            });
+
+            if (user_uuid_exists) {
+                return;
             }
             execution.viewed_by.push(user);
         }
@@ -173,18 +184,19 @@ function ExecutionService(
         });
     }
 
-    function getGlobalPositions() {
-        /**
-         * TODO: Request Http to Tuleap server (GET)
-         */
-        var response = [];
-        response.forEach(function(element) {
-            var execution = self.executions[element.id];
-            if (! _.has(execution, 'viewed_by')) {
-                execution.viewed_by = [];
-            }
-            execution.viewed_by.push(element.user);
-        });
+    function displayPresencesOnExecution() {
+        var user_uuid = SharedPropertiesService.getUUID();
+        if (self.presences_loaded && self.executions_loaded) {
+            self.presences_loaded  = false;
+            self.executions_loaded = false;
+            _.forEach(self.presences, function (presences, execution_id) {
+                _.forEach(presences, function (presence) {
+                    if (presence.uuid !== user_uuid) {
+                        viewTestExecution(execution_id, presence);
+                    }
+                });
+            });
+        }
     }
 
     function displayError(execution, response) {

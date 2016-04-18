@@ -2,9 +2,13 @@ angular
     .module('campaign')
     .service('CampaignService', CampaignService);
 
-CampaignService.$inject = ['Restangular', '$q'];
+CampaignService.$inject = [
+    'Restangular'
+];
 
-function CampaignService(Restangular, $q) {
+function CampaignService(
+    Restangular
+) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl('/api/v1');
@@ -22,9 +26,7 @@ function CampaignService(Restangular, $q) {
     }
 
     function getCampaigns(project_id, limit, offset) {
-        var data = $q.defer();
-
-        rest.one('projects', project_id)
+        return rest.one('projects', project_id)
             .all('trafficlights_campaigns')
             .getList({
                 limit: limit,
@@ -36,16 +38,12 @@ function CampaignService(Restangular, $q) {
                     total: response.headers('X-PAGINATION-SIZE')
                 };
 
-                data.resolve(result);
+                return result;
             });
-
-        return data.promise;
     }
 
     function getEnvironments(campaign_id, limit, offset) {
-        var data = $q.defer();
-
-        rest.one('trafficlights_campaigns', campaign_id)
+        return rest.one('trafficlights_campaigns', campaign_id)
             .all('trafficlights_environments')
             .getList({
                 limit: limit,
@@ -57,10 +55,8 @@ function CampaignService(Restangular, $q) {
                     total: response.headers('X-PAGINATION-SIZE')
                 };
 
-                data.resolve(result);
+                return result;
             });
-
-        return data.promise;
     }
 
     function createCampaign(campaign) {

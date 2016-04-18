@@ -4,22 +4,23 @@ angular
 
 SocketService.$inject = [
     '$q',
-    'Restangular',
+    '$rootScope',
+    'locker',
     'SocketFactory',
-    'ExecutionService'
+    'ExecutionService',
+    'SharedPropertiesService',
+    'JWTService'
 ];
 
 function SocketService(
     $q,
-    Restangular,
+    $rootScope,
+    locker,
     SocketFactory,
-    ExecutionService
+    ExecutionService,
+    SharedPropertiesService,
+    JWTService
 ) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
-    });
-
     return {
         listenNodeJSServer      : listenNodeJSServer,
         listenToExecutionViewed : listenToExecutionViewed,
@@ -28,14 +29,46 @@ function SocketService(
     };
 
     function listenNodeJSServer() {
-        if (! _.isEmpty(SocketFactory) && ! _.has(SocketFactory, 'on')) {
-            return SocketFactory.initialization().then(function (response) {
-                SocketFactory = response;
-                return SocketFactory;
+        if (SharedPropertiesService.getNodeServerAddress()) {
+            listenToError();
+            listenPresences();
+            return JWTService.getJWT().then(function (data) {
+                locker.put('token', data.token);
+                return subscribe();
             });
         } else {
-            return $q.reject();
+            return $q.reject('No server Node.js.');
         }
+    }
+
+    function subscribe() {
+        SocketFactory.emit('subscription', {
+            nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
+            token                : locker.get('token'),
+            room_id              : 'trafficlights_' + SharedPropertiesService.getCampaignId(),
+            uuid                 : SharedPropertiesService.getUUID()
+        });
+    }
+
+    function listenToError() {
+        SocketFactory.on('error-jwt', function(error) {
+            if(error === 'JWTExpired') {
+                JWTService.getJWT().then(function (data) {
+                    locker.put('token', data.token);
+                    subscribe();
+                    ExecutionService.initialization();
+                    $rootScope.$broadcast('controller-reload');
+                });
+            }
+        });
+    }
+
+    function listenPresences() {
+        SocketFactory.on('presences', function(presences) {
+            ExecutionService.presences_loaded = true;
+            ExecutionService.presences        = presences;
+            ExecutionService.displayPresencesOnExecution(presences);
+        });
     }
 
     function listenToExecutionViewed() {

@@ -266,13 +266,15 @@ describe ('ExecutionService - ', function () {
             var user_one = {
                 id: 101,
                 real_name: 'Test',
-                avatar_url: 'url'
+                avatar_url: 'url',
+                uuid: '456'
             };
 
             var user_two = {
                 id: 102,
                 real_name: 'Test',
-                avatar_url: 'url'
+                avatar_url: 'url',
+                uuid: '123'
             };
 
             var executions = {
@@ -436,6 +438,102 @@ describe ('ExecutionService - ', function () {
             ExecutionService.removeAllViewTestExecution();
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
             expect(ExecutionService.executions[5].viewed_by).toEqual(results);
+        });
+    });
+
+    describe("displayPresencesOnExecution() -", function() {
+        it("Given that executions, when I display all users, then there users are on the associate execution", function () {
+            var user_one = {
+                id: '101',
+                real_name: 'name',
+                avatar_url: 'avatar',
+                uuid: '1234'
+            };
+
+            var user_two = {
+                id: '102',
+                real_name: 'name',
+                avatar_url: 'avatar',
+                uuid: '4567'
+            };
+
+            var presences = {
+                4: [
+                    {
+                        id: '101',
+                        real_name: 'name',
+                        avatar_url: 'avatar',
+                        uuid: '1234'
+                    }
+                ],
+                5: [
+                    {
+                        id: '102',
+                        real_name: 'name',
+                        avatar_url: 'avatar',
+                        uuid: '4567'
+                    }
+                ]
+            };
+
+            var executions = {
+                4: {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    }
+                },
+                5: {
+                    id: 5,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    }
+                }
+            };
+
+            var results = {
+                4: {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_one]
+                },
+                5: {
+                    id: 5,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_two]
+                }
+            };
+
+            ExecutionService.executions        = executions;
+            ExecutionService.executions_loaded = true;
+            ExecutionService.presences_loaded  = true;
+            ExecutionService.presences         = presences;
+            ExecutionService.displayPresencesOnExecution();
+            expect(ExecutionService.executions).toEqual(results);
         });
     });
 });

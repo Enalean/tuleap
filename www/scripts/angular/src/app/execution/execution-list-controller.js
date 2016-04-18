@@ -26,8 +26,6 @@ function ExecutionListCtrl(
     var campaign_id,
         execution_id;
 
-    initialization();
-
     $scope.viewTestExecution = function(current_execution) {
         var old_execution,
             old_execution_id = '';
@@ -53,6 +51,10 @@ function ExecutionListCtrl(
         }
     });
 
+    $scope.$on('execution-detail-destroy', function() {
+        execution_id = '';
+    });
+
     $scope.$on('controller-reload', function() {
         initialization();
     });
@@ -63,6 +65,8 @@ function ExecutionListCtrl(
         SocketService.listenToExecutionLeft();
     });
 
+    initialization();
+
     function initialization() {
         campaign_id = parseInt($state.params.id, 10);
         execution_id = parseInt($state.params.execid, 10);
@@ -71,8 +75,12 @@ function ExecutionListCtrl(
 
         ExecutionService.loadExecutions(campaign_id).then(function() {
             ExecutionService.removeAllViewTestExecution();
-            ExecutionService.viewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
-            ExecutionService.getGlobalPositions();
+            if (execution_id) {
+                updateViewTestExecution(execution_id, '');
+            }
+
+            ExecutionService.executions_loaded = true;
+            ExecutionService.displayPresencesOnExecution();
         });
 
         $scope.campaign             = CampaignService.getCampaign(campaign_id);
@@ -95,10 +103,11 @@ function ExecutionListCtrl(
     }
 
     function updateViewTestExecution(current_execution_id, old_execution_id) {
-        ExecutionRestService.changePresenceOnTestExecution(current_execution_id, old_execution_id);
-        ExecutionService.removeViewTestExecution(old_execution_id, SharedPropertiesService.getCurrentUser());
-        ExecutionService.viewTestExecution(current_execution_id, SharedPropertiesService.getCurrentUser());
-        execution_id = current_execution_id;
+        ExecutionRestService.changePresenceOnTestExecution(current_execution_id, old_execution_id).then(function() {
+            ExecutionService.removeViewTestExecution(old_execution_id, SharedPropertiesService.getCurrentUser());
+            ExecutionService.viewTestExecution(current_execution_id, SharedPropertiesService.getCurrentUser());
+            execution_id = current_execution_id;
+        });
     }
 
     function getEnvironments(campaign_id, limit, offset) {

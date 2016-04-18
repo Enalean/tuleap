@@ -46,6 +46,15 @@ function ExecutionDetailCtrl(
         initialization();
     });
 
+    $scope.$on('$destroy', function() {
+        var future_execution_id = parseInt($state.params.execid, 10);
+        if (! _.isFinite(future_execution_id)) {
+            $rootScope.$broadcast('execution-detail-destroy');
+            ExecutionRestService.leaveTestExecution(execution_id);
+            ExecutionService.removeViewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
+        }
+    });
+
     function initialization() {
         execution_id = parseInt($state.params.execid, 10);
         campaign_id  = parseInt($state.params.id, 10);
