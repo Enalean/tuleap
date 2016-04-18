@@ -212,6 +212,11 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                         //resize
                         TableKit.reload();
+
+                        if (artlink_nature !== null) {
+                            codendi.tracker.report.table.initNatureColumnEditor(new_column.down('.nature-column-editor'));
+                        }
+
                     }.bind(this)
                 }
             );

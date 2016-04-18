@@ -154,13 +154,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * @param array $cols
      */
     public function saveColumns($cols) {
-        $dao            = $this->getColumnsDao();
-        $rank           = -1;
-        $width          = 0;
-        $artlink_nature = null;
+        $dao                   = $this->getColumnsDao();
+        $rank                  = -1;
+        $width                 = 0;
+        $artlink_nature        = null;
+        $artlink_nature_format = null;
         foreach ($cols as $key => $col) {
             $rank ++;
-            $dao->create($this->id, $col['field']->id, $width, $rank, $artlink_nature);
+            $dao->create($this->id, $col['field']->id, $width, $rank, $artlink_nature, $artlink_nature_format);
         }
     }
 
@@ -174,6 +175,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if (isset($this->report_session)) {
             $session_renderer_table_columns = $this->report_session->get("{$this->id}.columns");
         }
+
         if ($session_renderer_table_columns) {
             $columns = $session_renderer_table_columns;
             $ff = $this->report->getFormElementFactory();
@@ -182,16 +184,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $field_id = $this->fallbackFieldId($key, $column);
                 if ($formElement = $ff->getUsedFormElementFieldById($field_id)) {
                     if ($formElement->userCanRead()) {
-                        $artlink_nature = null;
+                        $artlink_nature        = null;
+                        $artlink_nature_format = null;
                         if (isset($column['artlink_nature'])) {
                             $artlink_nature = $column['artlink_nature'];
                         }
+                        if (isset($column['artlink_nature_format'])) {
+                            $artlink_nature_format = $column['artlink_nature_format'];
+                        }
                         $this->_columns[$key] = array(
-                            'field'          => $formElement,
-                            'field_id'       => $formElement->getId(),
-                            'width'          => $column['width'],
-                            'rank'           => $column['rank'],
-                            'artlink_nature' => $artlink_nature
+                            'field'                 => $formElement,
+                            'field_id'              => $formElement->getId(),
+                            'width'                 => $column['width'],
+                            'rank'                  => $column['rank'],
+                            'artlink_nature'        => $artlink_nature,
+                            'artlink_nature_format' => $artlink_nature_format
                         );
                     }
                 }
@@ -271,6 +278,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $this->report_session->set(
                 "{$this->id}.columns.{$key}.artlink_nature",
                 isset($column['artlink_nature']) ? $column['artlink_nature'] : null
+            );
+            $this->report_session->set(
+                "{$this->id}.columns.{$key}.artlink_nature_format",
+                isset($column['artlink_nature_format']) ? $column['artlink_nature_format'] : null
             );
         }
     }
@@ -768,9 +779,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         if ($only_one_column) {
             if (isset($all_columns[$only_one_column])) {
-                $columns = array($all_columns[$only_one_column]);
+                $columns = array($only_one_column => $all_columns[$only_one_column]);
             } else {
-                $columns = array(array(
+                $columns = array($only_one_column => array(
                     'width' => 0,
                     'field' => $ff->getUsedFormElementById($only_one_column),
                 ));
@@ -789,15 +800,20 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $width = '';
             }
             if ( !empty($column['field']) && $column['field']->isUsed()) {
-                $data_nature = '';
+                $data_nature        = '';
+                $data_nature_format = '';
                 if (isset($column['artlink_nature'])) {
-                    $data_nature = 'data-field-artlink-nature="'. $column['artlink_nature'] .'"';
+                    $data_nature        = 'data-field-artlink-nature="'. $column['artlink_nature'] .'"';
+                }
+                if (isset($column['artlink_nature_format'])) {
+                    $data_nature_format = 'data-field-artlink-nature-format="'. $column['artlink_nature_format'] .'"';
                 }
                 $html .= '<th class="tracker_report_table_column"
                     id="tracker_report_table_column_'. $key .'"
                     data-column-id="'. $key .'"
                     data-field-id="'. $column['field']->id .'"
                     '. $data_nature .'
+                    '. $data_nature_format .'
                     '. $width .'>';
 
                 $field_label = $column['field']->getLabel();
@@ -840,10 +856,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $html .= '</td>';
                     }
 
-
                     if (isset($column['artlink_nature']) && ! $current_user->isAnonymous()) {
+                        $column_editor_popover_placement = 'bottom';
+
+                        if (end($columns) === $column) {
+                            $column_editor_popover_placement = 'left';
+                        }
+
                         $html .= '<td class="tracker_report_table_column_nature_editor">';
-                        $html .= '<a href="#" class="nature-column-editor"><i class="icon-cog"></i></a>';
+                        $html .= '<a href="#" class="nature-column-editor" data-placement="'. $column_editor_popover_placement .'"><i class="icon-cog"></i></a>';
                         $html .= '</td>';
                     }
 
@@ -873,9 +894,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         if ($only_one_column) {
             if (isset($all_columns[$only_one_column])) {
-                $columns = array($all_columns[$only_one_column]);
+                $columns = array($only_one_column => $all_columns[$only_one_column]);
             } else {
-                $columns = array(array(
+                $columns = array($only_one_column => array(
                     'width' => 0,
                     'field' => $this->getFieldFactory()->getUsedFormElementFieldById($only_one_column),
                 ));
@@ -1668,10 +1689,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $this->report_session->set(
                                 "{$this->id}.columns.{$key}",
                                 array(
-                                    'field_id'       => $field_id,
-                                    'width'          => 12,
-                                    'rank'           => $nb_col,
-                                    'artlink_nature' => $artlink_nature
+                                    'field_id'              => $field_id,
+                                    'width'                 => 12,
+                                    'rank'                  => $nb_col,
+                                    'artlink_nature'        => $artlink_nature,
+                                    'artlink_nature_format' => null
                                 )
                             );
                             $this->report_session->setHasChanged();
@@ -1740,6 +1762,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if (isset($columns[$column_id])) {
                             if ($ff->getUsedFormElementById($columns[$column_id]['field_id'])) {
                                 $this->report_session->set("{$this->id}.columns.{$column_id}.width", $new_width);
+                                $this->report_session->setHasChanged();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Define format of column
+            if (isset($renderer_parameters['configure-column']) && is_array($renderer_parameters['configure-column'])) {
+                foreach ($renderer_parameters['configure-column'] as $column_id => $format) {
+                    if ($column_id) {
+                        $columns = $this->getColumns();
+                        if (isset($columns[$column_id])) {
+                            if ($ff->getUsedFormElementById($columns[$column_id]['field_id'])) {
+                                $this->report_session->set("{$this->id}.columns.{$column_id}.artlink_nature_format", $format);
                                 $this->report_session->setHasChanged();
                             }
                         }
@@ -1953,7 +1990,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $properties['field_id'],
                 $properties['width'],
                 $properties['rank'],
-                $properties['artlink_nature']
+                $properties['artlink_nature'],
+                $properties['artlink_nature_format']
             );
         }
     }

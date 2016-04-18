@@ -25,75 +25,76 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject {
         $sql = "SELECT col.*
                 FROM tracker_report_renderer_table_columns AS col
                     INNER JOIN tracker_field ON (col.field_id = tracker_field.id)
-                WHERE renderer_id = $renderer_id 
+                WHERE renderer_id = $renderer_id
                 ORDER BY col.rank";
         return $this->retrieve($sql);
     }
-    
-    function create($renderer_id, $field_id, $width, $rank, $artlink_nature) {
-        $renderer_id = $this->da->escapeInt($renderer_id);
-        $field_id    = $this->da->escapeInt($field_id);
-        $width       = $this->da->escapeInt($width);
-        $artlink_nature = is_null($artlink_nature) ? 'NULL' : $this->da->quoteSmart($artlink_nature);
+
+    function create($renderer_id, $field_id, $width, $rank, $artlink_nature, $artlink_nature_format) {
+        $renderer_id           = $this->da->escapeInt($renderer_id);
+        $field_id              = $this->da->escapeInt($field_id);
+        $width                 = $this->da->escapeInt($width);
+        $artlink_nature        = is_null($artlink_nature) ? 'NULL' : $this->da->quoteSmart($artlink_nature);
+        $artlink_nature_format = is_null($artlink_nature_format) ? 'NULL' : $this->da->quoteSmart($artlink_nature_format);
         if (!isset($rank)) {
             $rank = (int)$this->prepareRanking(0, $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);
         }
-        $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, rank, width, artlink_nature)
-                VALUES ($renderer_id, $field_id, $rank, $width, $artlink_nature)";
+        $sql = "INSERT INTO tracker_report_renderer_table_columns (renderer_id, field_id, rank, width, artlink_nature, artlink_nature_format)
+                     VALUES ($renderer_id, $field_id, $rank, $width, $artlink_nature, $artlink_nature_format)";
 
         return $this->update($sql);
     }
-    
+
     function remove($renderer_id, $field_id) {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
-        
+
         $sql = "DELETE FROM tracker_report_renderer_table_columns
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id";
         return $this->update($sql);
     }
-    
+
     function delete($renderer_id) {
         $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
-    
+
     function updateRanking($renderer_id, $field_id, $new_rank) {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
         $rank        = (int)$this->prepareRanking($field_id, $renderer_id, $new_rank, 'field_id', 'renderer_id');
-        
+
         $sql = "UPDATE tracker_report_renderer_table_columns
                 SET rank = $rank
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id";
         return $this->update($sql);
     }
-    
+
     function updateWidth($renderer_id, $field_id, $width) {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
         $width       = $this->da->escapeInt($width);
-        
+
         $sql = "UPDATE tracker_report_renderer_table_columns
                 SET width = $width
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id";
         return $this->update($sql);
     }
-    
+
     function duplicate($from_renderer_id, $to_renderer_id, $field_mapping) {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, rank, artlink_nature)
-                SELECT $to_renderer_id, field_id, width, rank, artlink_nature
+        $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format)
+                SELECT $to_renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format
                 FROM tracker_report_renderer_table_columns
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);
-        
+
         foreach($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);
