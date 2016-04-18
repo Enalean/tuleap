@@ -207,24 +207,15 @@ class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
 
 class Tracker_FormElement__ExportPermissionsToXmlTest extends TuleapTestCase {
 
-    public function setUp() {
-        parent::setUp();
-
-        $GLOBALS['UGROUPS'] = array(
+    public function testPermissionsExport() {
+        $ugroups = array(
             'UGROUP_1' => 1,
             'UGROUP_2' => 2,
             'UGROUP_3' => 3,
             'UGROUP_4' => 4,
-            'UGROUP_5' => 5,
+            'UGROUP_5' => 5
         );
-    }
 
-    public function tearDown() {
-        parent::tearDown();
-        unset($GLOBALS['UGROUPS']);
-    }
-
-    public function testPermissionsExport() {
         $field_01 = partial_mock(
             'Tracker_FormElement_Field_String',
             array(
@@ -243,7 +234,7 @@ class Tracker_FormElement__ExportPermissionsToXmlTest extends TuleapTestCase {
 
         $xmlMapping['F'. $field_01->getId()] = $field_01->getId();
         $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions/>');
-        $field_01->exportPermissionsToXML($xml, $xmlMapping);
+        $field_01->exportPermissionsToXML($xml, $ugroups, $xmlMapping);
 
         $this->assertTrue(isset($xml->permission[0]));
         $this->assertTrue(isset($xml->permission[1]));

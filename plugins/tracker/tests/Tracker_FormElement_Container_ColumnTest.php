@@ -67,11 +67,12 @@ class Tracker_FormElement_Container_Column_ExportXMLTest extends TuleapTestCase 
                     <permissions/>';
         $xml     = new SimpleXMLElement($data);
         $mapping = array();
+        $ugroups = array();
 
         expect($field_01)->exportPermissionsToXML()->once();
         expect($field_02)->exportPermissionsToXML()->once();
         expect($field_03)->exportPermissionsToXML()->once();
 
-        $column->exportPermissionsToXML($xml, $mapping);
+        $column->exportPermissionsToXML($xml, $ugroups, $mapping);
     }
 }

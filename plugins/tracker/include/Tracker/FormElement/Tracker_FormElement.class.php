@@ -793,10 +793,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
     }
 
-    public function exportPermissionsToXML(SimpleXMLElement $node_perms, &$xmlMapping) {
+    public function exportPermissionsToXML(SimpleXMLElement $node_perms, array $ugroups, &$xmlMapping) {
         if ($permissions = $this->getPermissionsByUgroupId()) {
             foreach ($permissions as $ugroup_id => $permission_types) {
-                if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100 && $this->isUsed()) {
+                if (($ugroup = array_search($ugroup_id, $ugroups)) !== false && $this->isUsed()) {
                     foreach ($permission_types as $permission_type) {
                         $node_perm = $node_perms->addChild('permission');
                         $node_perm->addAttribute('scope', 'field');

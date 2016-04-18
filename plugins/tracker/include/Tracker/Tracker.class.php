@@ -2471,11 +2471,12 @@ EOS;
         }
 
         // permissions
-        $node_perms = $xmlElem->addChild('permissions');
+        $node_perms      = $xmlElem->addChild('permissions');
+        $project_ugroups = $this->getProjectUgroups();
         // tracker permissions
         if ($permissions = $this->getPermissionsByUgroupId()) {
             foreach ($permissions as $ugroup_id => $permission_types) {
-                if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100) {
+                if (($ugroup = array_search($ugroup_id, $project_ugroups)) !== false) {
                     foreach ( $permission_types as $permission_type) {
                         $node_perm = $node_perms->addChild('permission');
                         $node_perm->addAttribute('scope', 'tracker');
@@ -2489,11 +2490,26 @@ EOS;
         // fields permission
         if ($formelements = $this->getFormElementFactory()->getUsedFormElementForTracker($this)) {
             foreach ($formelements as $formelement) {
-                $formelement->exportPermissionsToXML($node_perms, $xmlMapping);
+                $formelement->exportPermissionsToXML($node_perms, $project_ugroups, $xmlMapping);
             }
         }
 
         return $xmlElem;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getProjectUgroups()
+    {
+        $ugroup_manager = new UGroupManager();
+        $ugroups        = $GLOBALS['UGROUPS'];
+        $static_groups  = $ugroup_manager->getStaticUGroups($this->getProject());
+        foreach ($static_groups as $ugroup) {
+            $ugroups[$ugroup->getName()] = $ugroup->getId();
+        }
+
+        return $ugroups;
     }
 
     /**
