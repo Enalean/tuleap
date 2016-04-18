@@ -1,3 +1,11 @@
+Version 8.13-4 (Monday, April 18th 2016)
+	== Bug Fix ==
+	* request #9016: Tracker structure incomplete export in XML format
+	* request #9036: Export project's admins and members
+	* request #9042: Project import must be able to add non active users to a user group
+	* request #9046: Be more friendly with concurrent creation of artifacts
+	* request #8589: Apache logs filled with No entry for terminal type "unknown";
+
 Version 8.13-3 (Monday, April 11th 2016)
 	== Bug Fix ==
 	* request #9032: No backlog items if no submilestone
