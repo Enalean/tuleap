@@ -674,6 +674,7 @@ TableKit.Resizable = {
 		e = TableKit.e(e);
 		if(!TableKit.Resizable._onHandle) {return;}
 		var cell = Event.element(e);
+		if (cell.tagName.toLowerCase() !== 'th' && cell.tagName.toLowerCase() !== 'td') { return; }
 		Event.stopObserving(cell, 'mousemove', TableKit.Resizable.detectHandle);
 		Event.stopObserving(cell, 'mousedown', TableKit.Resizable.startResize);
 		Event.stopObserving(cell, 'mouseout', TableKit.Resizable.killDetect);
