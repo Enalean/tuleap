@@ -62,7 +62,7 @@ class Dao extends DataAccessObject {
         $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('sys_data_dir'));
 
         $sql = "SELECT groups.*, service.*,
-                CONCAT('/svnroot/', unix_group_name, '/', name) AS public_path,
+                CONCAT('/svnplugin/', unix_group_name, '/', name) AS public_path,
                 CONCAT($sys_dir,'/svn_plugin/', groups.group_id, '/', name) AS system_path,
                 $auth_mod AS auth_mod
                 FROM groups, service, plugin_svn_repositories
