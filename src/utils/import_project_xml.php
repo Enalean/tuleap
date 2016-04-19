@@ -136,6 +136,7 @@ try {
     $xml_importer  = new ProjectXMLImporter(
         EventManager::instance(),
         ProjectManager::instance(),
+        UserManager::instance(),
         $xml_validator,
         new UGroupManager(),
         $user_finder,

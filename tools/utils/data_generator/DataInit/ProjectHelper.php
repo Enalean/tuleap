@@ -42,13 +42,14 @@ class ProjectHelper {
             new \Rule_ProjectFullName()
         );
 
+        $user_manager       = \UserManager::instance();
         $this->xml_importer = new \ProjectXMLImporter(
             \EventManager::instance(),
             \ProjectManager::instance(),
+            $user_manager,
             new \XML_RNGValidator(),
             new \UGroupManager(),
-            \UserManager::instance(),
-            new \XMLImportHelper(),
+            new \XMLImportHelper($user_manager),
             new \ProjectXMLImporterLogger()
         );
     }

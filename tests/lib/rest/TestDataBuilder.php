@@ -271,6 +271,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
             $this->project_manager,
+            UserManager::instance(),
             new XML_RNGValidator(),
             new UGroupManager(),
             new XMLImportHelper(UserManager::instance()),
