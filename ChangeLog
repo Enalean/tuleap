@@ -32,7 +32,7 @@ Version 8.14 (Not released yet)
 	* openidconnectclient: 0.18
 	* git: 4.145
 	* hudson_git: 0.7
-	* agiledashboard: 1.372
+	* agiledashboard: 1.373
 	* cardwall: 1.58
 	* hudson_svn: 0.7
 	* teamforge_compat: 0.3
