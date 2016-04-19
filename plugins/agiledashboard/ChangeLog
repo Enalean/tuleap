@@ -1,3 +1,6 @@
+Version 1.374 - Tuleap 8.14
+    * request #8963: Ability to scroll right side of modale
+
 Version 1.373 - Tuleap 8.14
     * request #8956: User used during the import is member and admin of each imported project
 
