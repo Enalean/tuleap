@@ -41,7 +41,7 @@ class CollectionOfLinksFormatter
             }
 
             if ($format === 'html') {
-                $formatted_links_user_can_see[] = $link->getUrl();
+                $formatted_links_user_can_see[] = $link->getLink();
             } else {
                 $formatted_links_user_can_see[] = $link->getLabel();
             }

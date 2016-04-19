@@ -41,6 +41,7 @@ interface Tracker_FormElement_FieldVisitor {
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field);
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field);
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field);
+    public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $field);
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field);
     public function visitBurndown(Tracker_FormElement_Field_Burndown $field);
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field);

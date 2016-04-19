@@ -115,13 +115,23 @@ class Tracker_ArtifactLinkInfo {
     }
 
     /**
-     * Get the Url to the artifact link
+     * Get the link to the artifact link
      *
      * @return string the html code (a href) to this artifact link
      */
-    public function getUrl() {
+    public function getLink() {
         $server_url = get_server_url();
-        return '<a class="cross-reference" href="' . $server_url . '/goto?key=' . $this->getKeyword() . '&val=' . $this->getArtifactId() . '&group_id=' . $this->getGroupId() . '">' . $this->getLabel() . '</a>';
+        return '<a class="cross-reference" href="' . $this->getUrl() . '">' . $this->getLabel() . '</a>';
+    }
+
+    public function getUrl() {
+        return get_server_url() . '/goto?'. http_build_query(
+            array(
+                'key'      => $this->getKeyword(),
+                'val'      => $this->getArtifactId(),
+                'group_id' => $this->getGroupId()
+            )
+        );
     }
 
     /**

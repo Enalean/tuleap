@@ -1029,8 +1029,27 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $field_name = $column['field']->name;
                             $value      = isset($row[$field_name]) ? $row[$field_name] : null;
                             $html      .= '<td data-column-id="'. $key .'">';
-                            $html      .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $value, $this->report, $from_aid);
-                            $html      .= '</td>';
+
+                            if (isset($column['artlink_nature'])) {
+                                $html .= $column['field']->fetchChangesetValueForNature(
+                                    $row['id'],
+                                    $row['changeset_id'],
+                                    $value,
+                                    $column['artlink_nature'],
+                                    $column['artlink_nature_format'],
+                                    $this->report,
+                                    $from_aid
+                                );
+                            } else {
+                                $html .= $column['field']->fetchChangesetValue(
+                                    $row['id'],
+                                    $row['changeset_id'],
+                                    $value,
+                                    $this->report,
+                                    $from_aid
+                                );
+                            }
+                            $html .= '</td>';
                         }
                     }
                     if (isset($matching_ids['nature'])) {

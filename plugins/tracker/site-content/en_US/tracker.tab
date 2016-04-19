@@ -1722,3 +1722,5 @@ plugin_tracker_artifact_links_natures	cannot_delete	nature can't be deleted beca
 plugin_tracker_artifact_links_natures	cannot_delete_title	This nature can't be deleted because it is or has been already used.
 plugin_tracker_artifact_links_natures	delete_success	The nature has been successfuly deleted.
 plugin_tracker_artifact_links_natures	delete_error	An error has occured during the deletion of the nature: $1
+plugin_tracker_artifact_links_natures	cannot_format	Cannot be formatted because at least one field needed for the format is missing.
+plugin_tracker_artifact_links_natures	unsupported_field	A field needed for the format cannot be formatted.
