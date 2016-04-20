@@ -54,7 +54,8 @@ class WidgetLayoutManager {
     * @param  owner_id
     * @param  owner_type
     */
-    function displayLayout($owner_id, $owner_type) {
+    public function displayLayout($owner_id, $owner_type)
+    {
         $sql = "SELECT l.*
             FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id)
             WHERE o.owner_type = '". $owner_type ."'
@@ -94,7 +95,8 @@ class WidgetLayoutManager {
                 $layout->add($row);
                 unset($row);
             }
-            $layout->display($readonly, $owner_id, $owner_type);
+            $csrk_token = new CSRFSynchronizerToken('widget_management');
+            $layout->display($readonly, $owner_id, $owner_type, $csrk_token);
         }
     }
 
