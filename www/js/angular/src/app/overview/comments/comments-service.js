@@ -37,7 +37,6 @@ function CommentsService(
 
     function formatComment(comment, pull_request) {
         comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-        comment.content = comment.content.replace(/ /g, '&nbsp;');
         comment.content = $sce.trustAsHtml(comment.content);
         self.markAuthor(comment, pull_request.user_id);
     }

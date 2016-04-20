@@ -24,6 +24,7 @@ use Tuleap\Git\REST\v1\GitRepositoryReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 use GitRepository;
+use Codendi_HTMLPurifier;
 
 class PullRequestRepresentation
 {
@@ -111,8 +112,12 @@ class PullRequestRepresentation
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
         $this->id  = JsonCast::toInt($pull_request->getId());
-        $this->title = $pull_request->getTitle();
-        $this->description = $pull_request->getDescription();
+
+        $project_id        = $repository->getProjectId();
+        $purifier          = Codendi_HTMLPurifier::instance();
+        $this->title       = $purifier->purify($pull_request->getTitle(), CODENDI_PURIFIER_LIGHT, $project_id);
+        $this->description = $purifier->purify($pull_request->getDescription(), CODENDI_PURIFIER_LIGHT, $project_id);
+
         $this->uri = self::ROUTE . '/' . $this->id;
 
         $repository_reference = new GitRepositoryReference();

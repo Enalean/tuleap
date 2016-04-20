@@ -469,11 +469,13 @@ class PullRequestsResource extends AuthenticatedResource
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $project_id     = $git_repository->getProjectId();
 
         $this->checkUserCanReadRepository($user, $git_repository);
 
         $paginated_comments_representations = $this->paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
             $id,
+            $project_id,
             $limit,
             $offset,
             $order
@@ -511,6 +513,7 @@ class PullRequestsResource extends AuthenticatedResource
         $user           = $this->user_manager->getCurrentUser();
         $pull_request   = $this->getPullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $project_id     = $git_repository->getProjectId();
 
         $this->checkUserCanReadRepository($user, $git_repository);
 
@@ -522,7 +525,7 @@ class PullRequestsResource extends AuthenticatedResource
         $user_representation->build($user);
 
         $comment_representation = new CommentRepresentation();
-        $comment_representation->build($new_comment_id, $user_representation, $comment->getPostDate(), $comment->getContent());
+        $comment_representation->build($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());
 
         return $comment_representation;
     }

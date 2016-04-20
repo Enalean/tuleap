@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\REST\JsonCast;
+use Codendi_HTMLPurifier;
 
 class CommentRepresentation
 {
@@ -39,11 +40,12 @@ class CommentRepresentation
     public $content;
 
 
-    public function build($id, $user_representation, $post_date,  $content)
+    public function build($id, $project_id, $user_representation, $post_date, $content)
     {
         $this->id        = $id;
         $this->user      = $user_representation;
         $this->post_date = JsonCast::toDate($post_date);
-        $this->content   = $content;
+        $purifier        = Codendi_HTMLPurifier::instance();
+        $this->content   = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
     }
 }

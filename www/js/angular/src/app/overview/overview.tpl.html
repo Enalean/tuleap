@@ -1,10 +1,8 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span6">
-            <div>{{ overview.pull_request.title }}</div>
-            <blockquote>
-                {{ overview.pull_request.description || 'No description' }}
-            </blockquote>
+            <div ng-bind-html="overview.pull_request.title"></div>
+            <blockquote ng-bind-html="overview.pull_request.description || 'No description'"></blockquote>
             <small>{{ overview.pull_request.reference_src }}</small>
         </div>
         <div class="span3">

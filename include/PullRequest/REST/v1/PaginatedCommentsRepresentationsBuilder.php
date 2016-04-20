@@ -39,7 +39,7 @@ class PaginatedCommentsRepresentationsBuilder
         $this->user_manager    = UserManager::instance();
     }
 
-    public function getPaginatedCommentsRepresentations($pull_request_id, $limit, $offset, $order)
+    public function getPaginatedCommentsRepresentations($pull_request_id, $project_id, $limit, $offset, $order)
     {
         $paginated_comments       = $this->comment_factory->getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order);
         $comments_representations = array();
@@ -49,8 +49,7 @@ class PaginatedCommentsRepresentationsBuilder
             $user_representation->build($this->user_manager->getUserById($comment->getUserId()));
 
             $comment_representation = new CommentRepresentation();
-            $comment_representation->build($comment->getId(), $user_representation, $comment->getPostDate(), $comment->getContent());
-
+            $comment_representation->build($comment->getId(), $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());
             $comments_representations[] = $comment_representation;
         }
 
