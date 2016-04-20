@@ -31,21 +31,20 @@ use Codendi_HTMLPurifier;
  */
 class ValueFormatter
 {
-
     /**
-     * @var Codendi_HTMLPurifier
+     * @var OutputStrategy
      */
-    private $purifier;
+    private $output;
 
     /**
      * @var Tracker_FormElementFactory
      */
     private $factory;
 
-    public function __construct(Tracker_FormElementFactory $factory, Codendi_HTMLPurifier $purifier)
+    public function __construct(Tracker_FormElementFactory $factory, OutputStrategy $output)
     {
-        $this->factory  = $factory;
-        $this->purifier = $purifier;
+        $this->factory = $factory;
+        $this->output  = $output;
     }
 
     public function fetchFormattedValue(PFUser $user, array $values, $nature, $format)
@@ -64,7 +63,7 @@ class ValueFormatter
                 $user
             );
             if (! $artlink_as_html) {
-                $artlink_as_html = $artifact_link_info->getLink();
+                $artlink_as_html = $this->output->fetchDefault($artifact_link_info);
             }
             $arr[] = $artlink_as_html;
         }
@@ -87,7 +86,6 @@ class ValueFormatter
             return '';
         }
 
-        $artlink_as_html = '';
         $search  = array();
         $replace = array();
         try {
@@ -100,30 +98,14 @@ class ValueFormatter
                 $user
             );
 
-            $artlink_as_html .= '<a href="'. $artifact_link_info->getUrl() .'">';
-            $artlink_as_html .= $this->purifier->purify(str_replace($search, $replace, $format));
-            $artlink_as_html .= '</a>';
+            return $this->output->fetchFormatted($artifact_link_info, str_replace($search, $replace, $format));
         } catch (NoFieldToFormatException $exception) {
-            $artlink_as_html .= $this->getDefaultFormatWithWarning(
-                $artifact_link_info,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_format')
-            );
+            return $this->output->fetchWhenNoFieldToFormat($artifact_link_info);
         } catch (UnsupportedFieldException $exception) {
-            $artlink_as_html .= $this->getDefaultFormatWithWarning(
-                $artifact_link_info,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'unsupported_field')
-            );
+            return $this->output->fetchWhenUnsupportedField($artifact_link_info);
         }
 
-        return $artlink_as_html;
-    }
-
-    private function getDefaultFormatWithWarning(Tracker_ArtifactLinkInfo $artifact_link_info, $warning)
-    {
-        $title = $this->purifier->purify($warning);
-
-        return $artifact_link_info->getLink() .
-            ' <i class="icon-warning-sign format-warning" title="'. $title .'"></i>';
+        return '';
     }
 
     private function fillSearchAndReplace(

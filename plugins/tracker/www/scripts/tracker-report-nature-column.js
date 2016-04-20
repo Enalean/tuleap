@@ -58,7 +58,7 @@
         content += '<label for="nature-column-editor-format">' + codendi.getText('nature_column_editor', 'column_format_label') + '</label>';
         content += '<input type="text" id="nature-column-editor-format" name="renderer_table[configure-column][' + column_id + ']" ';
         content += 'placeholder="' + codendi.getText('nature_column_editor', 'column_format_placeholder') + '" ';
-        content += 'value="' + format + '"';
+        content += 'value="' + tuleap.escaper.html(format) + '"';
         content += '">';
 
         content += '<div class="nature-column-popover-actions">';

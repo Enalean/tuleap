@@ -803,10 +803,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $data_nature        = '';
                 $data_nature_format = '';
                 if (isset($column['artlink_nature'])) {
-                    $data_nature        = 'data-field-artlink-nature="'. $column['artlink_nature'] .'"';
+                    $data_nature        = 'data-field-artlink-nature="'. $purifier->purify($column['artlink_nature']) .'"';
                 }
                 if (isset($column['artlink_nature_format'])) {
-                    $data_nature_format = 'data-field-artlink-nature-format="'. $column['artlink_nature_format'] .'"';
+                    $data_nature_format = 'data-field-artlink-nature-format="'. $purifier->purify($column['artlink_nature_format']) .'"';
                 }
                 $html .= '<th class="tracker_report_table_column"
                     id="tracker_report_table_column_'. $key .'"
@@ -952,11 +952,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
 
-            $formatted_columns = $this->formatColumns($columns);
-
             $aggregates = false;
 
-            $queries = $this->buildOrderedQuery($matching_ids, $formatted_columns, $aggregates, $store_in_session);
+            $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
 
             $dao = new DataAccessObject();
             $results = array();
@@ -1086,7 +1084,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $html .= '</tr>';
                 }
                 if (!$only_rows) {
-                    $html .= $this->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $formatted_columns, $use_data_from_db, $read_only);
+                    $html .= $this->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only);
                 }
             }
         } else {
@@ -1099,7 +1097,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    public function fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $extracted_fields, $use_data_from_db, $read_only) {
+    public function fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only) {
         $html = '';
 
         //We presume that if EXTRACOLUMN_LINK then it means that we are in the ArtifactLink selector so we force read only mode
@@ -1119,7 +1117,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if ($rows) {
                 foreach ($rows as $row) {
                     //is the field used as a column?
-                    if (isset($extracted_fields[$row['field_id']])) {
+                    if (isset($columns[$row['field_id']])) {
                         if (!isset($aggregates[$row['field_id']])) {
                             $aggregates[$row['field_id']] = array();
                         }
@@ -1128,7 +1126,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
         }
-        $queries = $this->buildOrderedQuery($matching_ids, $extracted_fields, $aggregates, '', false);
+        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, '', false);
         $dao = new DataAccessObject();
         $results = array();
         foreach ($queries as $key => $sql) {
@@ -1355,42 +1353,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     /**
-     *
-     * @param array $columns [ 0 => { 'field' => F1, 'width' => 40 }, 1 => { 'field' => F2, 'width' => 40 } ]
-     *
-     * @return array
-     */
-    public function formatColumns($columns)
-    {
-        $fields_with_nature = array();
-        foreach ($columns as $column) {
-            if (! isset($fields_with_nature[$column["field"]->getId()]['field'])) {
-                $fields_with_nature[$column["field"]->getId()]['field'] = $column['field'];
-            } else if ($column['artlink_nature'] == "") {
-                $fields_with_nature[$column["field"]->getId()]['all'][] = $column['artlink_nature'];
-            }
-
-            if (isset($column['artlink_nature'])) {
-                $fields_with_nature[$column["field"]->getId()]['nature'][] = $column['artlink_nature'];
-            }
-        }
-
-        $fields = array();
-        foreach ($fields_with_nature as $key => $field) {
-            $fields[$key] = array("field" => $field['field']);
-
-            if (isset($field['nature'])) {
-                $fields[$key] = $fields[$key] + array("nature" => $field['nature']);
-            }
-            if (isset($field['all'])) {
-                $fields[$key] = $fields[$key] + array("all" => $field['all']);
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
      * Build oredered query
      *
      * @param array                       $matching_ids The artifact to display
@@ -1419,26 +1381,34 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $additionnal_select = array();
         $additionnal_from   = array();
+        $already_seen       = array();
 
         foreach ($columns as $column) {
-            if ($column['field']->isUsed()) {
-                $sel = false;
-                if ($aggregates) {
-                    if (isset($aggregates[$column['field']->getId()])) {
-                        if ($a = $column['field']->getQuerySelectAggregate($aggregates[$column['field']->getId()])) {
-                            $sel = $a['same_query'];
-                            if ($sel) {
-                                $additionnal_select[] = $sel;
-                                $additionnal_from[] = $column['field']->getQueryFromAggregate();
-                            }
+            if (! $column['field']->isUsed()) {
+                continue;
+            }
+
+            if (isset($already_seen[$column['field']->getId()])) {
+                continue;
+            }
+            $already_seen[$column['field']->getId()] = true;
+
+            $sel = false;
+            if ($aggregates) {
+                if (isset($aggregates[$column['field']->getId()])) {
+                    if ($a = $column['field']->getQuerySelectAggregate($aggregates[$column['field']->getId()])) {
+                        $sel = $a['same_query'];
+                        if ($sel) {
+                            $additionnal_select[] = $sel;
+                            $additionnal_from[] = $column['field']->getQueryFromAggregate();
                         }
                     }
-                } else {
-                    $sel = $column['field']->getQuerySelect();
-                    if ($sel) {
-                        $additionnal_select[] = $sel;
-                        $additionnal_from[] = $column['field']->getQueryFrom();
-                    }
+                }
+            } else {
+                $sel = $column['field']->getQuerySelect();
+                if ($sel) {
+                    $additionnal_select[] = $sel;
+                    $additionnal_from[] = $column['field']->getQueryFrom();
                 }
             }
         }
@@ -1861,7 +1831,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $matching_ids = $this->report->getMatchingIds();
 
         if ($only_columns) {
-            $columns = $this->formatColumns($this->reorderColumnsByRank($this->getColumns()));
+            $columns = $this->reorderColumnsByRank($this->getColumns());
         } else {
             $columns = array();
             $fields_without_nature = Tracker_FormElementFactory::instance()->getUsedFields($this->report->getTracker());
@@ -1872,29 +1842,23 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $lines = array();
         $head  = array('aid');
-        $nature_type = array();
         foreach ($columns as $column) {
-            if ($this->canFieldBeExportedToCSV($column['field'])) {
-                if (isset($column['nature'])) {
-                    foreach ($column['nature'] as $nature) {
-                        $title = $column['field']->getName();
-                        if (isset($column['nature'])) {
-                            if (! $nature) {
-                                $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
-                            }
-                            $title .= " (". $nature. ")";
-                        }
+            if (! $this->canFieldBeExportedToCSV($column['field'])) {
+                continue;
+            }
 
-                        $head[] = $title;
+            $title = $column['field']->getName();
+            if (isset($column['artlink_nature'])) {
+                if (isset($column['artlink_nature'])) {
+                    $nature = $column['artlink_nature'];
+                    if (! $nature) {
+                        $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
                     }
-                } else {
-                    $head[] = $column['field']->getName();
-                }
-
-                if (isset($column['all'])) {
-                    $head[] = $column['field']->getName();
+                    $title .= " (". $nature. ")";
                 }
             }
+
+            $head[] = $title;
         }
 
         $lines[] = $head;
@@ -1924,20 +1888,20 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $line[] = $row['id'];
 
                 foreach ($columns as $column) {
-                    if ($this->canFieldBeExportedToCSV($column['field'])) {
-                        if (isset($column['nature'])) {
-                            foreach ($column['nature'] as $nature) {
-                                $line[] = $column['field']->fetchCSVChangesetValueWithNature($row['changeset_id'], $nature);
-                            }
-                        } else {
-                            $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
-                            $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
-                        }
+                    if (! $this->canFieldBeExportedToCSV($column['field'])) {
+                        continue;
+                    }
 
-                        if (isset($column['all'])) {
-                            $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
-                            $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
-                        }
+                    if (isset($column['artlink_nature'])) {
+                        $format = isset($column['artlink_nature_format']) ? $column['artlink_nature_format'] : '';
+                        $line[] = $column['field']->fetchCSVChangesetValueWithNature(
+                            $row['changeset_id'],
+                            $column['artlink_nature'],
+                            $format
+                        );
+                    } else {
+                        $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
+                        $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
                     }
                 }
 
