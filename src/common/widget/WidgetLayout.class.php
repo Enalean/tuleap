@@ -37,13 +37,16 @@ class WidgetLayout {
         $this->rows[] =& $r;
         $r->setLayout($this);
     }
-    function display($readonly, $owner_id, $owner_type) {
-        foreach($this->rows as $key => $nop) {
+
+    public function display($readonly, $owner_id, $owner_type, CSRFSynchronizerToken $csrf)
+    {
+        foreach ($this->rows as $key => $nop) {
             $this->rows[$key]->display($readonly, $owner_id, $owner_type);
         }
-        if (!$readonly) {
-            $cells = "['". implode("', '", $this->getColumnIds()) ."']";
-           echo <<<EOS
+        if (! $readonly) {
+            $cells     = "['". implode("', '", $this->getColumnIds()) ."']";
+            $challenge = $csrf->getToken();
+            echo <<<EOS
             <script type="text/javascript">
             var cells = $cells;
             Event.observe(window, 'load', function() {
@@ -56,7 +59,14 @@ class WidgetLayout {
                         containment: cells,
                         format:      /^widget_(.*)$/,
                         onUpdate: function() {
-                            new Ajax.Request('/widgets/updatelayout.php?owner=$owner_type'+$owner_id+'&layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
+                            new Ajax.Request(
+                                '/widgets/updatelayout.php?owner=$owner_type'+$owner_id+'&layout_id='+$this->id+'&'+Sortable.serialize(cell_id),
+                                {
+                                    parameters: {
+                                        challenge: '$challenge'
+                                    }
+                                }
+                            );
                         }
                     });
                 });
