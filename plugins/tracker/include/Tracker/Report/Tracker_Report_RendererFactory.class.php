@@ -463,14 +463,15 @@ class Tracker_Report_RendererFactory {
     
     /**
      * Creates a Tracker_Report_Renderer Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported renderer
      * @param Tracker_Report   $report      to which the renderer is attached
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * 
-     * @return Tracker_Report_Renderer Object 
+     *
+     * @return Tracker_Report_Renderer Object
      */
-    public function getInstanceFromXML($xml, $report, &$xmlMapping) {
+    public function getInstanceFromXML($xml, $report, &$xmlMapping)
+    {
         $att = $xml->attributes();
         $row = array(
             'id'            => 0,
@@ -479,48 +480,57 @@ class Tracker_Report_RendererFactory {
             'rank'          => (int)$att['type'],
             'renderer_type' => (string)$att['type'],
         );
-        
+
         switch ($row['renderer_type']) {
-        case Tracker_Report_Renderer::TABLE:
-            // specific TABLE attributes
-            $row['chunksz']   = (int)$att['chunksz'];
-            $row['multisort'] = (int)$att['multisort'];
-            
-            //columns
-            $cols = array();
-            foreach ($xml->columns->field as $f) {
-                $att = $f->attributes();
-                $cols[] = array('field' => $xmlMapping[(string)$att['REF']]);
-            }
-            $row['columns'] = $cols;
-            
-            //sort
-            $sort = array();
-            if($xml->sort){
-                foreach ($xml->sort->field as $f) {
+            case Tracker_Report_Renderer::TABLE:
+                // specific TABLE attributes
+                $row['chunksz']   = (int)$att['chunksz'];
+                $row['multisort'] = (int)$att['multisort'];
+
+                //columns
+                $cols = array();
+                foreach ($xml->columns->field as $f) {
                     $att = $f->attributes();
-                    $sort[] = array('field' => $xmlMapping[(string)$att['REF']]);
+                    $column = array();
+                    $column['field'] = $xmlMapping[(string)$att['REF']];
+                    if (isset($att['artlink-nature'])) {
+                        $column['artlink_nature'] = $att['artlink-nature'];
+                    }
+                    if (isset($att['artlink-nature-format'])) {
+                        $column['artlink_nature_format'] = (string)$att['artlink-nature-format'];
+                    }
+                    $cols[] = $column;
                 }
-                $row['sort'] = $sort;
-            }
-            break;
-            
-        case Tracker_Report_Renderer::BOARD:
-            //not yet implemented
-            break;
-            
-        default:
-            $this->getEventManager()->processEvent(
-                'tracker_report_renderer_from_xml',
-                array(
-                    'row'     => &$row,
-                    'type'    => $row['renderer_type'],
-                    'xml'     => $xml,
-                    'mapping' => $xmlMapping,
-                    'report'  => $report,
-                )
-            );
+                $row['columns'] = $cols;
+
+                //sort
+                $sort = array();
+                if ($xml->sort) {
+                    foreach ($xml->sort->field as $f) {
+                        $att = $f->attributes();
+                        $column = array();
+                        $column['field'] = $xmlMapping[(string)$att['REF']];
+                        $sort[] = $column;
+                    }
+                    $row['sort'] = $sort;
+                }
+                break;
+            case Tracker_Report_Renderer::BOARD:
+             //not yet implemented
+                break;
+            default:
+                $this->getEventManager()->processEvent(
+                    'tracker_report_renderer_from_xml',
+                    array(
+                        'row'     => &$row,
+                        'type'    => $row['renderer_type'],
+                        'xml'     => $xml,
+                        'mapping' => $xmlMapping,
+                        'report'  => $report,
+                    )
+                );
         }
+
         return $this->getInstanceFromRow($row, $report);
     }
     

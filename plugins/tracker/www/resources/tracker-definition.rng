@@ -953,6 +953,16 @@
                 <attribute name="REF">
                   <data type="IDREF"/>
                 </attribute>
+                <optional>
+                  <attribute name="artlink-nature">
+                    <data type="string"/>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="artlink-nature-format">
+                    <data type="string"/>
+                  </attribute>
+                </optional>
               </element>
             </zeroOrMore>
           </element>
