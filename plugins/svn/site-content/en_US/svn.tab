@@ -39,6 +39,9 @@ plugin_svn_admin_notification	delete_error	Unable to delete notification list
 plugin_svn_admin_notification	add_notification	Add notification
 plugin_svn_admin_notification	delete_selected_notifications	Delete selected notifications
 
+plugin_svn_admin	update_successful	Update successful
+plugin_svn_admin	update_failure_with_message	Update failed: $1
+plugin_svn_admin	failed_update_ugroup_permissions	Failed to update UGroup permissions
 plugin_svn_admin	access_control	Access control
 plugin_svn_admin	edit_access_file_title	Edit access control file
 plugin_svn_admin	default_text	The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other $1 users. You can tune or even redefine the access permissions below to suit your needs.
@@ -54,6 +57,10 @@ plugin_svn_admin	select_version	Select a version
 plugin_svn_admin	saved_on	saved on
 plugin_svn_admin	use_version	Use this selected version
 plugin_svn_admin	saved_versions	Saved versions:
+
+plugin_svn_admin	save	Save
+plugin_svn_admin	admin_groups	Admin Groups
+plugin_svn_admin	admin_groups_label	Select the groups which are allowed to access the subversion admin in addition to the project administrators:
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Access control

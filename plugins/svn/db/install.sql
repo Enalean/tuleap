@@ -53,3 +53,6 @@ CREATE TABLE plugin_svn_immutable_tag (
     paths TEXT NOT NULL,
     whitelist TEXT NOT NULL
 );
+
+INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
+VALUES ('PLUGIN_SVN_ADMIN', 4, 1);

@@ -22,6 +22,7 @@ namespace Tuleap\Svn\Explorer;
 
 use Project;
 use Tuleap\Svn\ServiceSvn;
+use Tuleap\Svn\SvnPermissionManager;
 use Tuleap\Svn\Dao;
 use CSRFSynchronizerToken;
 use \Tuleap\Svn\Repository\RuleName;
@@ -34,11 +35,15 @@ use SystemEventManager;
 class ExplorerController {
     const NAME = 'explorer';
 
+    /** @var SvnPermissionManager */
+    private $permissions_manager;
+
     private $repository_manager;
     private $system_event_manager;
 
-    public function __construct(RepositoryManager $repository_manager) {
+    public function __construct(RepositoryManager $repository_manager, SvnPermissionManager $permissions_manager) {
         $this->repository_manager   = $repository_manager;
+        $this->permissions_manager  = $permissions_manager;
         $this->system_event_manager = SystemEventManager::instance();
     }
 
@@ -59,7 +64,8 @@ class ExplorerController {
                     $project,
                     $token,
                     $request->get('name'),
-                    $this->repository_manager
+                    $this->repository_manager,
+                    $this->permissions_manager
                 )
         );
     }
