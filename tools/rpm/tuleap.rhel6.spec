@@ -457,6 +457,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git
 # do not package teamforge_compat yet
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat
+# do not package teamforge_compat_tracker yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_tracker
 
 
 # Data dir

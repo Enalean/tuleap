@@ -246,6 +246,18 @@ class TrackerXmlImport {
             )
         );
 
+        EventManager::instance()->processEvent(
+            Event::IMPORT_COMPAT_REF_XML,
+            array(
+                'logger'          => $this->logger,
+                'created_refs'    => array('tracker'  => $created_trackers_mapping,
+                                           'artifact' => $artifacts_id_mapping->getMapping()),
+                'service_name'    => 'tracker',
+                'xml_content'     => $xml_input->trackers->references,
+                'project'         => $project,
+            )
+        );
+
         return $created_trackers_mapping;
     }
 

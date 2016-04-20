@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Sogilis, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Importer_ArtifactImportedMapping {
+namespace Tuleap\TeamforgeCompatTracker\Plugin;
 
-    private $mapping = array();
+class PluginInfo extends \PluginInfo
+{
 
-    public function add($source_id, $target_id) {
-        $this->mapping[$source_id] = $target_id;
-    }
+    public function __construct(\Plugin $plugin)
+    {
+        parent::__construct($plugin);
 
-    public function get($source_id) {
-        return $this->mapping[$source_id];
-    }
-
-    public function containsSource($source_id) {
-        return array_key_exists($source_id, $this->mapping);
-    }
-
-    public function getOriginal($target_id) {
-        return array_search($target_id, $this->mapping);
-    }
-
-    public function getMapping() {
-        return $this->mapping;
+        $this->setPluginDescriptor(new PluginDescriptor());
     }
 }
