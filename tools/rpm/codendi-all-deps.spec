@@ -24,6 +24,8 @@ Requires: bind, bind-chroot, caching-nameserver
 Requires: policycoreutils, coreutils, selinux-policy, selinux-policy-targeted, libselinux
 # Munin
 #Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
+# Bind utils
+Requires: bind-utils
 
 ##
 ## Inherited from old install script, possibly useless of just dependencies...

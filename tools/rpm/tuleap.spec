@@ -95,6 +95,8 @@ Requires: shared-mime-info
 Requires: tuleap-documentation
 # SELinux policy tools
 Requires(post): policycoreutils
+# Bind utils
+Requires: bind-utils
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
