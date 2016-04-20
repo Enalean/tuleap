@@ -2811,7 +2811,7 @@ EOS;
         $hp       = Codendi_HTMLPurifier::instance();
 
         $unknown_fields = array();
-        $error_nature   = false;
+        $error_nature   = array();
         foreach ($lines as $cpt_line => $line) {
             $data = array();
             foreach ($header_line as $idx => $field_name) {
@@ -2820,8 +2820,9 @@ EOS;
                     $field = $fef->getUsedFieldByName($this->getId(), $field_name);
 
                     if (! $field) {
-                        $field_name = explode(" ", $field_name);
-                        $field  = $fef->getUsedFieldByName($this->getId(), $field_name[0]);
+                        $column_name = $field_name;
+                        $field_name  = explode(" ", $field_name);
+                        $field       = $fef->getUsedFieldByName($this->getId(), $field_name[0]);
                     }
 
                     if (! $field) {
@@ -2858,7 +2859,7 @@ EOS;
                             }
                         }
                     } else {
-                        $error_nature = true;
+                        $error_nature[$column_name] = $column_name;
                     }
                 } else {
                     //Field is aid : we check if the artifact id exists
@@ -2882,8 +2883,8 @@ EOS;
         if (count($unknown_fields) > 0) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_field', array(implode(',', $unknown_fields))));
         }
-        if ($error_nature) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'importing_nature'));
+        if (count($error_nature) >0) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'importing_nature', array(implode(',', $error_nature))));
         }
 
         return $has_error;
