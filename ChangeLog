@@ -6,7 +6,8 @@ Version 8.14 (Not released yet)
 	* request #9036:
 		- Export project's admins and members
 		- User that are already project_members must not stop the import
-	* story #9043 have a cookie cleaned with no user token and id
+	* story #9043: have a cookie cleaned with no user token and id
+	* story #9027: Create plugin teamforge_compat_tracker
 
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
@@ -14,7 +15,7 @@ Version 8.14 (Not released yet)
 	* request #8957: Authorization failed for repository enabling svn token
 	* request #9026: Subversion webview can not be displayed due to user's session IP invalid check
 	* request #9042: Project import must be able to add non active users to a user group
-	* request #9078 Numerous warnings when checking out from a repo handled by the SVN plugin
+	* request #9078: Numerous warnings when checking out from a repo handled by the SVN plugin
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
@@ -28,7 +29,7 @@ Version 8.14 (Not released yet)
 	* request #8907: CSRF vulnerability in the snippet manipulation pages
 
 	== Plugins ==
-	* tracker: 5.875
+	* tracker: 5.876
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
@@ -41,6 +42,7 @@ Version 8.14 (Not released yet)
 	* fulltextsearch: 0.128
 	* IM: 1.5.35
 	* svn: 0.49
+	* teamforge_compat_tracker: 0.2
 
     == Themes ==
 	* FlamingParrot: 1.133
