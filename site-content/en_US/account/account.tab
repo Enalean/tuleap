@@ -267,7 +267,7 @@ account_register	err_email	Invalid Email Address
 account_register	err_name	The login name is invalid
 account_register	err_invpasswd	The password is invalid
 account_register	err_no_ldap	The LDAP login is missing
-account_register	title_confirm	Your account is created , </br>it now needs to be activated.
+account_register	title_confirm	Your account is created, </br>it now needs to be activated.
 account_register	title_confirm_admin	The user account was created.
 account_register	title	Register
 account_register	title_admin	Create a new user
