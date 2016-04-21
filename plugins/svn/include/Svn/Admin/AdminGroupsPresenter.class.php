@@ -26,7 +26,8 @@ use CSRFSynchronizerToken;
 
 class AdminGroupsPresenter extends BaseGlobalAdminPresenter
 {
-
+    public $admin_groups_active;
+    public $admin_groups_description;
     public $admin_groups_label;
     public $ugroups;
 
@@ -37,8 +38,9 @@ class AdminGroupsPresenter extends BaseGlobalAdminPresenter
     {
         parent::__construct($project, $token);
 
-        $this->admin_groups_active = true;
-        $this->admin_groups_label  = $this->text("plugin_svn_admin", "admin_groups_label");
-        $this->ugroups             = $ugroups;
+        $this->admin_groups_active      = true;
+        $this->admin_groups_description = $this->text("plugin_svn_admin", "admin_groups_description");
+        $this->admin_groups_label       = $this->text("plugin_svn_admin", "admin_groups_label");
+        $this->ugroups                  = $ugroups;
     }
 }
