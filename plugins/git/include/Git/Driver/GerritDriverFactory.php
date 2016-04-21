@@ -44,7 +44,8 @@ class Git_Driver_Gerrit_GerritDriverFactory {
             $class = 'Guzzle\Http\Client';
             return new Git_Driver_GerritREST(
                 new $class('', array('ssl.certificate_authority' => 'system')),
-                $this->logger
+                $this->logger,
+                $server->getAuthType()
             );
         }
 

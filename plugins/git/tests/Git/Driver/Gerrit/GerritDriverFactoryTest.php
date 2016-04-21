@@ -41,6 +41,7 @@ class GerritDriverFactoryTest extends TuleapTestCase {
             '',
             false,
             Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            '',
             ''
         );
 
@@ -57,6 +58,7 @@ class GerritDriverFactoryTest extends TuleapTestCase {
             '',
             '',
             false,
+            '',
             '',
             ''
         );
@@ -75,6 +77,7 @@ class GerritDriverFactoryTest extends TuleapTestCase {
             '',
             false,
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
+            '',
             ''
         );
         $this->assertIsA($this->gerrit_driver_factory->getDriver($server), 'Git_Driver_GerritREST');

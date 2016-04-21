@@ -43,7 +43,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
         try {
             return $this->gerrit_server_factory->getServerById($this->getServerId());
         } catch (Git_RemoteServer_NotFoundException $e) {
-            return new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '', false, '', '');
+            return new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '', false, '', '', '');
         }
     }
 

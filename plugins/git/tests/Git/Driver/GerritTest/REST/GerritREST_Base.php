@@ -76,7 +76,7 @@ abstract class Git_Driver_GerritREST_base extends TuleapTestCase {
         $this->guzzle_client  = mock('Guzzle\Http\Client');
         $this->guzzle_request = mock('Guzzle\Http\Message\EntityEnclosingRequest');
 
-        $this->driver = new Git_Driver_GerritREST($this->guzzle_client, $this->logger);
+        $this->driver = new Git_Driver_GerritREST($this->guzzle_client, $this->logger, 'Digest');
     }
 
     protected function getGuzzleRequestWithTextResponse($text) {

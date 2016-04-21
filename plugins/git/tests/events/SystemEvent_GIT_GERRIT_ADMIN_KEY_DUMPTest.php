@@ -58,6 +58,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $use_ssl         = false;
         $gerrit_version  = '2.5';
         $http_password   = 'ikshjdshg';
+        $auth_type       = 'Digest';
 
         $gerrit_server = new Git_RemoteServer_GerritServer(
             $gerrit_server_id,
@@ -69,7 +70,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
             $replication_key,
             $use_ssl,
             $gerrit_version,
-            $http_password
+            $http_password,
+            $auth_type
         );
         stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
 

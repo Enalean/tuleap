@@ -27,6 +27,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
     const DEFAULT_GERRIT_VERSION  = '2.5';
     const GERRIT_VERSION_2_8_PLUS = '2.8+';
+    const AUTH_TYPE_DIGEST        = 'Digest';
+    const AUTH_TYPE_BASIC         = 'Basic';
 
     private $id;
     private $host;
@@ -41,6 +43,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $http_password;
     /** @var String */
     private $gerrit_version;
+    /** @var String */
+    private $auth_type;
 
     public function __construct(
         $id,
@@ -52,7 +56,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $replication_key,
         $use_ssl,
         $gerrit_version,
-        $http_password
+        $http_password,
+        $auth_type
     ) {
         $this->id               = $id;
         $this->host             = $host;
@@ -64,6 +69,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->use_ssl          = $use_ssl;
         $this->http_password    = $http_password;
         $this->gerrit_version   = $gerrit_version;
+        $this->auth_type        = $auth_type;
     }
 
     public function __toString() {
@@ -98,6 +104,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this->use_ssl;
     }
 
+    public function getAuthType() {
+        return $this->auth_type;
+    }
+
     public function setId($id) {
         $this->id = $id;
     }
@@ -129,6 +139,11 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     public function setUseSSL($use_ssl) {
         $this->use_ssl = $use_ssl;
+        return $this;
+    }
+
+    public function setAuthType($auth_type) {
+        $this->auth_type = $auth_type;
         return $this;
     }
 

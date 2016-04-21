@@ -27,7 +27,7 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
         $this->gerrit_driver = partial_mock(
             'Git_Driver_GerritREST',
             array('doesTheGroupExist', 'getGroupUUID'),
-            array($this->guzzle_client, $this->logger)
+            array($this->guzzle_client, $this->logger, 'Digest')
         );
     }
 

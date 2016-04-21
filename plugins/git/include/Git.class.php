@@ -778,7 +778,7 @@ class Git extends PluginController {
                             $this->addAction('migrateToGerrit', array($repository, $remote_server_id, $gerrit_template_id, $user));
                         }
                     } catch (Git_Driver_Gerrit_Exception $e) {
-                        $this->addError($this->getText('gerrit_server_down'));
+                        $this->addError($this->getText('gerrit_server_down').' '.$e->getMessage());
                     }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repository->getId(), $pane));
                 }

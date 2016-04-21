@@ -86,8 +86,8 @@ class Git_Admin_process_Test extends TuleapTestCase {
             'http_password'     => 'azerty'
         );
 
-        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty');
-        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty');
+        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty', '');
+        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty', '');
 
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server

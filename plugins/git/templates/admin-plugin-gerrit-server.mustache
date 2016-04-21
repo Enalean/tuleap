@@ -96,6 +96,24 @@
                                 />
                             </td>
                         </tr>
+                        <tr>
+                            <td> Authentication type </td>
+                            <td>
+                                <label class="radio">
+                                    <input type="radio"
+                                           name="gerrit_servers[{{ id }}][auth_type]"
+                                           value="Digest"
+                                    {{# is_digest }}checked{{/ is_digest }}>Digest (default)
+                                </label>
+                                <label class="radio">
+                                    <input type="radio"
+                                           name="gerrit_servers[{{ id }}][auth_type]"
+                                           value="Basic"
+                                    {{# is_basic }}checked{{/ is_basic }}>Basic
+                                </label>
+                            </td>
+                        </tr>
+
                         {{# id }}
                         <tr>
                             {{# is_used }}
