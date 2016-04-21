@@ -32,6 +32,7 @@ class BaseGlobalAdminPresenter
     public $project_id;
     public $csrf_input;
     public $submit;
+    public $title;
 
     public function text($prefix, $name)
     {
@@ -47,6 +48,7 @@ class BaseGlobalAdminPresenter
         $this->admin_groups        = $this->text('plugin_svn_admin', 'admin_groups');
 
         $this->csrf_input          = $token->fetchHTMLInput();
+        $this->title               = $this->text('plugin_svn_admin', 'title');
         $this->submit              = $this->text('plugin_svn_admin', 'save');
     }
 }

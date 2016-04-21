@@ -1,16 +1,20 @@
 <div class="tabbable" id="svn-administration">
+    <h2>{{ title }}</h2>
+
     {{> global-admin/section_presenter }}
 
     <div class="tab-content">
-        <form action="/plugins/svn/?group_id={{ project_id }}&action=save-admin-groups" method="post">
-            <label>
-                <p>{{ admin_groups_label }}</p>
+        <form id="admin-groups-form" action="/plugins/svn/?group_id={{ project_id }}&action=save-admin-groups" method="post">
+            <p>{{ admin_groups_description }}</p>
+
+            <div class="control-group">
+                <label>{{ admin_groups_label }}</label>
                 <select name="admin_groups[]" multiple="multiple">
-                {{# ugroups }}
-                    <option {{{ selected }}}" value="{{ id }}">{{ name }}</option>
-                {{/ ugroups }}
+                    {{# ugroups }}
+                    <option value="{{ id }}" {{{ selected }}} >{{ name }}</option>
+                    {{/ ugroups }}
                 </select>
-            </label>
+            </div>
 
             {{{ csrf_input }}}
             <input type="hidden" name="group_id" value="{{ project_id }}">

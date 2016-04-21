@@ -59,8 +59,10 @@ plugin_svn_admin	use_version	Utiliser cette version sauvegardée
 plugin_svn_admin	saved_versions	Versions sauvegardées :
 
 plugin_svn_admin	save	Enregistrer
+plugin_svn_admin	title	Administration de SVN
 plugin_svn_admin	admin_groups	Groupes Administrateurs
-plugin_svn_admin	admin_groups_label	Liste des groupes ayant l'accès administrateur pour Subversion, en plus des administrateurs du projet :
+plugin_svn_admin	admin_groups_description	Sélectionnez les groupes ayant accès à l'administrateur SVN, en plus des administrateurs du projet :
+plugin_svn_admin	admin_groups_label	Groupes :
 
 plugin_svn	notifications	Notifications
 plugin_svn	access_control	Contrôle d'accès
