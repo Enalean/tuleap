@@ -1330,7 +1330,7 @@ plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
 plugin_tracker_admin_import	nb_updated_import	$1 Artifact(s) updated
 plugin_tracker_admin_import	date_format_help	Expected date format is <strong>$1</strong>. <a href="/account/">Change import/export date format</a>
 plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Either you want to import only one field, or you're using the wrong separator.<br />If so, you can <a href="/account/">change the CSV import/export separator</a>
-plugin_tracker_admin_import	importing_nature	Columns using nature will not be taken into account during import.
+plugin_tracker_admin_import	importing_nature	Columns using nature will not be taken into account during import : $1.
 plugin_tracker_admin_hierarchy	edit_children_title	Edit children of $1
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy
 plugin_tracker_admin_hierarchy	cannot_be_used	<strong>Note:</strong> The following trackers cannot be used in the hierarchy because they are used elsewhere (kanban, …):
