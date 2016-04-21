@@ -20,6 +20,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ArtifactInNatureTablePresenter;
@@ -127,7 +129,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $report = null,
         $from_aid = null
     ) {
-        $value_formatter = new ValueFormatter(Tracker_FormElementFactory::instance(), Codendi_HTMLPurifier::instance());
+        $value_formatter = new ValueFormatter(
+            Tracker_FormElementFactory::instance(),
+            new HTMLOutputStrategy(Codendi_HTMLPurifier::instance())
+        );
 
         return $value_formatter->fetchFormattedValue(
             UserManager::instance()->getCurrentUser(),
@@ -158,17 +163,19 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return implode(',', $arr);
     }
 
-    public function fetchCSVChangesetValueWithNature($changeset_id, $nature)
+    public function fetchCSVChangesetValueWithNature($changeset_id, $nature, $format)
     {
-        $arr = array();
-        $values = $this->getChangesetValues($changeset_id);
-        foreach ($values as $artifact_link_info) {
-            if ($nature == $artifact_link_info->getNature()) {
-                $arr[] = $artifact_link_info->getArtifactId();
-            }
-        }
+        $value_formatter = new ValueFormatter(
+            Tracker_FormElementFactory::instance(),
+            new CSVOutputStrategy(Codendi_HTMLPurifier::instance())
+        );
 
-        return implode(',', $arr);
+        return $value_formatter->fetchFormattedValue(
+            UserManager::instance()->getCurrentUser(),
+            $this->getChangesetValues($changeset_id),
+            $nature,
+            $format
+        );
     }
 
     /**
@@ -808,11 +815,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                             foreach ($renderers as $renderer) {
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key = $this->id . '_' . $report->id . '_' . $renderer->getId();
-                                    $columns           = $renderer->getTableColumns($only_one_column, $use_data_from_db);
-                                    $formatted_columns = $renderer->formatColumns($columns);
+                                    $columns        = $renderer->getTableColumns($only_one_column, $use_data_from_db);
                                     $json['tabs'][] = array(
                                         'key' => $key,
-                                        'src' => $renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $formatted_columns, $use_data_from_db, $read_only),
+                                        'src' => $renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only),
                                     );
                                     break;
                                 }
