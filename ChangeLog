@@ -16,6 +16,7 @@ Version 8.14 (Not released yet)
 	* request #9026: Subversion webview can not be displayed due to user's session IP invalid check
 	* request #9042: Project import must be able to add non active users to a user group
 	* request #9078: Numerous warnings when checking out from a repo handled by the SVN plugin
+	* request #9092: Cannot reorder widgets on dashboard
 
 	== Development ==
 	* request #9011: Deploy our own git hooks
