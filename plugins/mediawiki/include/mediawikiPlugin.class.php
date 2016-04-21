@@ -26,6 +26,8 @@
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
 
+include_once 'MediawikiManager.class.php';
+
 class MediaWikiPlugin extends Plugin {
 
     const SERVICE_SHORTNAME = 'plugin_mediawiki';
@@ -792,8 +794,6 @@ class MediaWikiPlugin extends Plugin {
      * @return MediawikiManager
      */
     private function getMediawikiManager() {
-        include_once 'MediawikiManager.class.php';
-
         return new MediawikiManager($this->getDao());
     }
 
