@@ -1,3 +1,6 @@
+Version 5.879 - Tuleap 8.14
+    * Export formatted column in csv
+
 Version 5.878 - Tuleap 8.14
     * Add column ignored in warning message, in import CSV tracker report
 
