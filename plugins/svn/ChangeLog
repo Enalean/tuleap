@@ -1,3 +1,6 @@
+Version 0.51 - Tuleap 8.14
+    * story #8979: Glossify plugin SVN administration part
+
 Version 0.50 - Tuleap 8.14
     * svn: allow to specify additional admin groups
 
