@@ -286,10 +286,16 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
 
             //OTHER INSIGNIFIANT UGROUPS
             ////////////////////////////////////////////////////////////////
+            $ugroup_manager = new UGroupManager();
             foreach($ugroups_permissions as $ugroup_id => $ugroup_permissions) {
                 if (is_numeric($ugroup_id) && $ugroup_id != $GLOBALS['UGROUP_REGISTERED'] && $ugroup_id != $GLOBALS['UGROUP_ANONYMOUS']) {
-                    $name_of_ugroup = $stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name'];
-                         
+                    if (! isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id])) {
+                        $ugroup         = $ugroup_manager->getById($ugroup_id);
+                        $name_of_ugroup = $ugroup->getName();
+                    } else {
+                        $name_of_ugroup = $stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name'];
+                    }
+
                     //SUBMIT Permission
                     //-----------------
                     if ($the_field_can_be_submitted && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
