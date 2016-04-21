@@ -34,7 +34,7 @@ Version 8.14 (Not released yet)
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
-	* git: 4.146
+	* git: 4.147
 	* hudson_git: 0.7
 	* agiledashboard: 1.374
 	* cardwall: 1.58

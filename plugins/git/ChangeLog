@@ -1,3 +1,6 @@
+Version 4.147 - Tuleap 8.14
+    * request #9079 Gerrit REST with BasicAuth
+
 Version 4.146 - Tuleap 8.14
     * story #7897 trigger a jenkins polling on git push (Correction of typos in warning message in Git CI)
 
