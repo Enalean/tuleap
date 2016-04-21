@@ -1,3 +1,6 @@
+Version 5.877 - Tuleap 8.14
+    * request #9093: Notice when you import or create a tracker with some permissions set to UGROUP_TRACKER_ADMIN
+
 Version 5.876 - Tuleap 8.14
     * story #9027: Create plugin teamforge_compat_tracker
 
