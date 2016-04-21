@@ -1,3 +1,6 @@
+Version 5.878 - Tuleap 8.14
+    * Add column ignored in warning message, in import CSV tracker report
+
 Version 5.877 - Tuleap 8.14
     * request #9093: Notice when you import or create a tracker with some permissions set to UGROUP_TRACKER_ADMIN
 
