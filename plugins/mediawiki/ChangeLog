@@ -1,3 +1,6 @@
+Version 0.112 - Tuleap 8.14
+    * request #9091: Administration SVN - error on saving Admin Groups
+
 Version 0.111 - Tuleap 8.13
     * request #8975 Can't migrate Mediawiki to 1.23 if MLEB extension is not installed
 
