@@ -43,10 +43,11 @@ Version 8.14 (Not released yet)
 	* teamforge_compat: 0.3
 	* fulltextsearch: 0.128
 	* IM: 1.5.35
-	* svn: 0.52
+	* svn: 0.53
 	* teamforge_compat_tracker: 0.2
 	* mediawiki: 0.112
 	* teamforge_compat_mediawiki: 0.1
+	* teamforge_compat_svn: 0.1
 
     == Themes ==
 	* FlamingParrot: 1.133
