@@ -31,6 +31,12 @@
               </attribute>
             </element>
           </zeroOrMore>
+          <optional>
+            <!-- References -->
+            <element name="references">
+              <ref name="references"/>
+            </element>
+          </optional>
         </interleave>
       </element>
     </zeroOrMore>

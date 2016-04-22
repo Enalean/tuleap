@@ -22,7 +22,6 @@ namespace Tuleap\Svn\Admin;
 
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\SvnPermissionManager;
-use Tuleap\Svn\CannotChangePermissionsException;
 use HTTPRequest;
 use CSRFSynchronizerToken;
 use Project;

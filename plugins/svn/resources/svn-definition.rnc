@@ -13,7 +13,9 @@ svn = element repository {
     element notification {
         attribute path { xsd:string },
         attribute emails { xsd:string }
-    }*
+    }* &
 
+    # References
+    element references { references }?
 }*
 
