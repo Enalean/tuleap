@@ -21,13 +21,25 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\TeamforgeCompatMediawiki\ReferencesBuilder;
+use Tuleap\TeamforgeCompatMediawiki\CompatibilityDao;
+use Tuleap\TeamforgeCompatMediawiki\ReferencesImporter;
+
 class teamforge_compat_mediawikiPlugin extends Plugin
 {
+
+    private $teamforge_references_builder;
 
     public function __construct($id)
     {
         parent::__construct($id);
+
         $this->setScope(self::SCOPE_SYSTEM);
+        $this->addHook(Event::IMPORT_COMPAT_REF_XML);
+        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(Event::GET_PLUGINS_EXTRA_REFERENCES);
+
+        $this->dao = new CompatibilityDao();
     }
 
     /**
@@ -49,7 +61,39 @@ class teamforge_compat_mediawikiPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function process()
+    public function import_compat_ref_xml($params)
     {
+        $targeted_service_name = $params['service_name'];
+
+        if ($targeted_service_name === 'mediawiki') {
+            $xml          = $params['xml_content'];
+            $project      = $params['project'];
+            $logger       = new WrapperLogger($params['logger'], 'TeamforgeReferencesMediawikiImporter');
+            $created_refs = $params['created_refs'];
+            $importer     = new ReferencesImporter($this->dao, $logger);
+            $importer->importCompatRefXML($project, $xml, $created_refs);
+
+            echo "Import compat ref xml tracker";
+        }
+    }
+
+    public function get_plugins_extra_references($params)
+    {
+        foreach ($this->getTeamforgeReferencesBuilder()->getExtraReferenceSpecs() as $refspec) {
+            $params['refs'][] = $refspec;
+        }
+    }
+
+    public function get_reference($params)
+    {
+        $reference = $this->getTeamforgeReferencesBuilder()->getReference($params['project'], $params['keyword'], $params['value']);
+        if (! empty($reference)) {
+            $params['reference'] = $reference;
+        }
+    }
+
+    private function getTeamforgeReferencesBuilder()
+    {
+        return new ReferencesBuilder($this->dao, ProjectManager::instance());
     }
 }

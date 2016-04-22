@@ -3,4 +3,7 @@ mediawiki =
     attribute files-folder-backup { xsd:string }? &
     attribute language            { xsd:string }? &
     element   read-access         { element ugroup { ugroup_name }+ }? &
-    element   write-access        { element ugroup { ugroup_name }+ }?
+    element   write-access        { element ugroup { ugroup_name }+ }? &
+    element   references {
+        references
+    }?
