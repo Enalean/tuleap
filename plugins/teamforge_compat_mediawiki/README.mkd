@@ -1,0 +1,5 @@
+Teamforge compatiblity mediawiki plugin
+=======================================
+
+This plugin allows to import references from the TeamForge plateform for the Mediawiki plugin.
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.
