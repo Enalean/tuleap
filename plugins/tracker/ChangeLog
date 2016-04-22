@@ -1,3 +1,6 @@
+Version 5.880 - Tuleap 8.14
+    * story #8940 have configurable columns based on natures (export and import XML nature and format columns)
+
 Version 5.879 - Tuleap 8.14
     * Export formatted column in csv
 
