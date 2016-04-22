@@ -21,11 +21,11 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
-use TeamforgeCompat\TeamforgeCompatDao;
-use TeamforgeCompat\ReferencesImporter;
-use TeamforgeCompat\TeamforgeReferencesBuilder;
+use Tuleap\TeamforgeCompatCore\TeamforgeCompatDao;
+use Tuleap\TeamforgeCompatCore\ReferencesImporter;
+use Tuleap\TeamforgeCompatCore\TeamforgeReferencesBuilder;
 
-class teamforge_compatPlugin extends Plugin
+class teamforge_compat_corePlugin extends Plugin
 {
 
     /**
@@ -50,19 +50,19 @@ class teamforge_compatPlugin extends Plugin
     }
 
     /**
-     * @return Tuleap\TeamforgeCompat\Plugin\PluginInfo
+     * @return Tuleap\TeamforgeCompatCore\Plugin\PluginInfo
      */
     public function getPluginInfo()
     {
         if (!$this->pluginInfo) {
-            $this->pluginInfo = new Tuleap\TeamforgeCompat\Plugin\PluginInfo($this);
+            $this->pluginInfo = new Tuleap\TeamforgeCompatCore\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
     public function getServiceShortname()
     {
-        return 'plugin_teamforge_compat';
+        return 'plugin_teamforge_compat_core';
     }
 
     public function process()
@@ -74,7 +74,7 @@ class teamforge_compatPlugin extends Plugin
     public function importCompatRefXML($params)
     {
         $targeted_service_name = $params['service_name'];
-        if ($targeted_service_name == 'frs'){
+        if ($targeted_service_name == 'frs') {
             $xml          = $params['xml_content'];
             $project      = $params['project'];
             $logger       = new WrapperLogger($params['logger'], 'TeamforgeReferencesImporter');

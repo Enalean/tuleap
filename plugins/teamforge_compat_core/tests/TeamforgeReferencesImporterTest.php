@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace TeamforgeCompat;
+namespace Tuleap\TeamforgeCompatCore;
+
 include 'bootstrap.php';
 
 class TeamforgeReferencesImporterTest extends \TuleapTestCase
@@ -25,7 +26,7 @@ class TeamforgeReferencesImporterTest extends \TuleapTestCase
 
     public function setUp()
     {
-        $this->dao      = mock('TeamforgeCompat\TeamforgeCompatDao');
+        $this->dao      = mock('Tuleap\TeamforgeCompatCore\TeamforgeCompatDao');
         $this->logger   = mock('Logger');
         $this->importer = new ReferencesImporter($this->dao, $this->logger);
     }
