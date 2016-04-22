@@ -153,14 +153,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param array $cols
      */
-    public function saveColumns($cols) {
+    public function saveColumns($cols)
+    {
         $dao                   = $this->getColumnsDao();
         $rank                  = -1;
         $width                 = 0;
-        $artlink_nature        = null;
-        $artlink_nature_format = null;
+
         foreach ($cols as $key => $col) {
             $rank ++;
+
+            $artlink_nature        = (isset($col['artlink_nature']) ? $col['artlink_nature'] : null);
+            $artlink_nature_format = (isset($col['artlink_nature_format']) ? $col['artlink_nature_format'] : null);
+
             $dao->create($this->id, $col['field']->id, $width, $rank, $artlink_nature, $artlink_nature_format);
         }
     }
@@ -1781,24 +1785,61 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
     }
 
+    private function getFieldWhenUsingNatures(SimpleXMLElement $node, array $field_info, $xmlMapping)
+    {
+        $field = null;
+
+        if (isset($field_info['artlink_nature']) || isset($field_info['artlink_nature_format'])) {
+            $ref = array_search($field_info['field_id'], $xmlMapping);
+            if ($ref) {
+                $field = $node->addChild('field');
+                $field->addAttribute('REF', $ref);
+                if (isset($field_info['artlink_nature'])) {
+                    $field->addAttribute('artlink-nature', $field_info['artlink_nature']);
+                }
+                if (isset($field_info['artlink_nature_format'])) {
+                    $field->addAttribute('artlink-nature-format', $field_info['artlink_nature_format']);
+                }
+            }
+        }
+
+        return $field;
+    }
+
+    private function getField(SimpleXMLElement $node, $exported_field_id, $xmlMapping)
+    {
+        $field = null;
+
+        $ref = array_search($exported_field_id, $xmlMapping);
+        if ($ref) {
+            $field = $node->addChild('field');
+            $field->addAttribute('REF', $ref);
+        }
+
+        return $field;
+    }
+
     /**
      * Transforms Tracker_Renderer into a SimpleXMLElement
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         parent::exportToXML($root, $xmlMapping);
         $root->addAttribute('chunksz', $this->chunksz);
         if ($this->multisort) {
             $root->addAttribute('multisort', $this->multisort);
         }
+
         $child = $root->addChild('columns');
         foreach ($this->getColumns() as $key => $col) {
-            $ref = array_search($key, $xmlMapping);
-            if ($ref) {
-                $child->addChild('field')->addAttribute('REF', $ref);
+            $field = $this->getFieldWhenUsingNatures($child, $col, $xmlMapping);
+            if (! $field) {
+                $field = $this->getField($child, $key, $xmlMapping);
             }
         }
+
         //TODO : add aggregates in XML export
         /*if ($this->getAggregates()) {
             $child = $root->addChild('aggregates');
@@ -1809,6 +1850,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
         }*/
+
         if ($this->getSort()) {
             $child = $root->addChild('sort');
             foreach ($this->getSort() as $key => $sort) {
@@ -1816,8 +1858,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
     }
-
-
 
     /**
      * Export results to csv
