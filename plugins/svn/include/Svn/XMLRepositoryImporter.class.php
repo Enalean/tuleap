@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Sogilis, 2016. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,11 +24,11 @@ namespace Tuleap\Svn;
 use Logger;
 use Project;
 use SimpleXMLElement;
+use Event;
+use EventManager;
 use SystemEventManager;
 use System_Command_CommandException;
 use SVN_AccessFile_Writer;
-use User\XML\Import;
-use Tuleap\Svn\Dao;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
@@ -35,7 +36,9 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
 
-class XMLRepositoryImporter {
+class XMLRepositoryImporter
+{
+    const SERVICE_NAME = 'svn';
 
     /** @var string */
     private $dump_file_path;
@@ -49,10 +52,13 @@ class XMLRepositoryImporter {
     /** @var array(array(path => (string), emails => (string)), ...) */
     private $subscriptions;
 
+    /** @var SimpleXMLElement */
+    private $references;
+
     public function __construct(
-            SimpleXMLElement $xml_repo,
-            $extraction_path)
-    {
+        SimpleXMLElement $xml_repo,
+        $extraction_path
+    ) {
         $attrs = $xml_repo->attributes();
         $this->name = $attrs['name'];
         if(isset($attrs['dump-file'])) {
@@ -69,6 +75,8 @@ class XMLRepositoryImporter {
                 'emails' => $a['emails']
             );
         }
+
+        $this->references = $xml_repo->references;
     }
 
     public function import(
@@ -78,21 +86,21 @@ class XMLRepositoryImporter {
         SystemEventManager $system_event_manager,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
-        RuleName $rule_name)
-    {
-        if (!$rule_name->isValid($this->name)) {
+        RuleName $rule_name
+    ) {
+        if (! $rule_name->isValid($this->name)) {
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: ".$rule_name->getErrorMessage());
         }
 
         $repo = new Repository ("", $this->name, $project);
         $sysevent = $repository_manager->create($repo, $system_event_manager);
-        if(!$sysevent) {
+        if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
         }
 
         $logger->info("[svn] Creating SVN repository {$this->name}");
         $sysevent->process();
-        if($sysevent->getStatus() != \SystemEvent::STATUS_DONE) {
+        if ($sysevent->getStatus() != \SystemEvent::STATUS_DONE) {
             $logger->error($sysevent->getLog());
             throw new XMLImporterException("Event processing failed: status " . $sysevent->getStatus());
         } else {
@@ -101,16 +109,20 @@ class XMLRepositoryImporter {
 
         $logger->info("[svn] Importing SVN repository {$this->name}");
 
-        if(!empty($this->dump_file_path)) {
+        if (! empty($this->dump_file_path)) {
             $this->importCommits($logger, $repo);
         }
 
-        if(!empty($this->access_file_contents)){
+        if (! empty($this->access_file_contents)){
             $this->importAccessFile($logger, $repo, $accessfile_history_creator);
         }
 
-        if(!empty($this->subscriptions)){
+        if (! empty($this->subscriptions)){
             $this->importSubscriptions($logger, $repo, $mail_notification_manager);
+        }
+
+        if (! empty($this->references)) {
+            $this->importReferences($logger, $repo);
         }
     }
 
@@ -169,5 +181,20 @@ class XMLRepositoryImporter {
             $mail_notification_manager->create($notif);
         }
     }
-}
 
+    private function importReferences(Logger $logger, Repository $repo)
+    {
+        EventManager::instance()->processEvent(
+            Event::IMPORT_COMPAT_REF_XML,
+            array(
+                'logger'         => $logger,
+                'created_refs'   => array(
+                    'repository' => $repo,
+                ),
+                'service_name'   => self::SERVICE_NAME,
+                'xml_content'    => $this->references,
+                'project'        => $repo->getProject(),
+            )
+        );
+    }
+}
