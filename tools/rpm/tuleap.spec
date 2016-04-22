@@ -527,6 +527,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat
 # do not package teamforge_compat_tracker yet
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_tracker
+# do not package teamforge_compat_mediawiki yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_mediawiki
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
