@@ -48,6 +48,7 @@ Version 8.14 (Not released yet)
 	* mediawiki: 0.112
 	* teamforge_compat_mediawiki: 0.1
 	* teamforge_compat_svn: 0.1
+	* teamforge_compat_core: 0.4
 
     == Themes ==
 	* FlamingParrot: 1.133

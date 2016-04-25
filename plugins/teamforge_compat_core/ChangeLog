@@ -1,3 +1,6 @@
+Version 0.4 - Tuleap 8.14
+    * Rename plugin teamforge_compat_Plugin into teamforge_compat_corePlugin
+
 Version 0.3 - Tuleap 8.14
     * story #9027 detect and link teamforge references
 
