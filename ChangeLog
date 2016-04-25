@@ -1,3 +1,13 @@
+Version 8.13-5 (Monday, April 25th 2016)
+	== Bug Fix ==
+	* request #9092: Cannot reorder widgets on dashboard
+	* request #9045: Arbitrary file access and write through a library used by the IM plugin
+	* request #8963: Ability to scroll right side of modale
+	* request #8956: Site admin is member and admin of each imported project
+	* request #9097: Notices are raised when RSS feeds are accessed
+	* request #9095: Typography mistake in the account creation confirmation message
+	* request #9093: Notice when you import or create a tracker with some permissions set to UGROUP_TRACKER_ADMIN
+
 Version 8.13-4 (Monday, April 18th 2016)
 	== Bug Fix ==
 	* request #9016: Tracker structure incomplete export in XML format
