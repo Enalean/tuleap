@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace TeamforgeCompat;
+namespace Tuleap\TeamforgeCompatCore;
 
 use Logger;
 use WrapperLogger;
@@ -78,10 +78,9 @@ class ReferencesImporter
     {
         $matches = array();
         if (preg_match('/^([a-zA-Z]*)/', $xref, $matches)) {
-           return $matches[1];
+            return $matches[1];
         } else {
             return null;
         }
     }
-
 }

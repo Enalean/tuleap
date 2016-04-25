@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TeamforgeCompat\Plugin;
+namespace Tuleap\TeamforgeCompatCore\Plugin;
 
 class PluginInfo extends \PluginInfo
 {

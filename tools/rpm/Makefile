@@ -31,7 +31,7 @@ PLUGIN_BOOMERANG_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/boomerang/VERSIO
 PLUGIN_OPENIDCONNECTCLIENT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/openidconnectclient/VERSION)
 PLUGIN_PROFTPD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/proftpd/VERSION)
 PLUGIN_SVN_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/svn/VERSION)
-PLUGIN_TEAMFORGE_COMPAT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/teamforge_compat/VERSION)
+PLUGIN_TEAMFORGE_COMPAT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/teamforge_compat_core/VERSION)
 PLUGIN_TEAMFORGE_COMPAT_TRACKER_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/teamforge_compat_tracker/VERSION)
 PLUGIN_TEAMFORGE_COMPAT_MEDIAWIKI_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/teamforge_compat_mediawiki/VERSION)
 PLUGIN_TEAMFORGE_COMPAT_SVN_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/teamforge_compat_svn/VERSION)

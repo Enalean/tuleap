@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace TeamforgeCompat;
+namespace Tuleap\TeamforgeCompatCore;
 
 use DataAccessObject;
 use CodendiDataAccess;
@@ -32,14 +32,14 @@ class TeamforgeCompatDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project->getID());
         $source     = $this->da->quoteSmart($source);
         $target     = $this->da->quoteSmart($target);
-        $sql = "INSERT INTO plugin_teamforge_compat_table VALUES($source, $project_id, $target)";
+        $sql = "INSERT INTO plugin_teamforge_compat_core_table VALUES($source, $project_id, $target)";
         return $this->update($sql);
     }
 
     public function getRef($source)
     {
         $source = $this->da->quoteSmart($source);
-        $sql = "SELECT project_id, target FROM plugin_teamforge_compat_table WHERE source=$source";
+        $sql = "SELECT project_id, target FROM plugin_teamforge_compat_core_table WHERE source=$source";
         return $this->retrieve($sql);
     }
 }

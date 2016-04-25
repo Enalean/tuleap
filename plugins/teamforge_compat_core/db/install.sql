@@ -1,7 +1,7 @@
 ##
 ## Sql Install Script
 ##
-CREATE TABLE plugin_teamforge_compat_table (
+CREATE TABLE plugin_teamforge_compat_core_table (
   source VARCHAR(100),
   project_id INT(11) NOT NULL,
   target VARCHAR(100),

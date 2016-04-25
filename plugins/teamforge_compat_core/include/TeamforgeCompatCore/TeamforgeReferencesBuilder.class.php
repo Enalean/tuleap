@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace TeamforgeCompat;
+namespace Tuleap\TeamforgeCompatCore;
 
 use Project;
 use Reference;
