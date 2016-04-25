@@ -465,6 +465,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_mediawiki
 # do not package teamforge_compat_svn yet
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_svn
+# do not package teamforge_compat_git yet
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_git
 
 
 # Data dir

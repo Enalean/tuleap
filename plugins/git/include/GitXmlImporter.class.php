@@ -20,11 +20,12 @@
 
 class GitXmlImporter {
 
-    const READ_TAG  = 'read';
-    const WRITE_TAG = 'write';
-    const WPLUS_TAG = 'wplus';
-
+    const READ_TAG   = 'read';
+    const WRITE_TAG  = 'write';
+    const WPLUS_TAG  = 'wplus';
     const UGROUP_TAG = 'ugroup';
+
+    const SERVICE_NAME = 'git';
 
     /**
      * @var Logger
@@ -71,6 +72,11 @@ class GitXmlImporter {
      */
     private $system_command;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         Logger $logger,
         GitRepositoryManager   $repository_manager,
@@ -78,8 +84,9 @@ class GitXmlImporter {
         Git_Backend_Gitolite   $gitolite_backend,
         Git_SystemEventManager $system_event_manager,
         PermissionsManager $permissions_manager,
-        UGroupManager $ugroup_manager)
-    {
+        UGroupManager $ugroup_manager,
+        EventManager $event_manager
+    ) {
         $this->logger = new WrapperLogger($logger, "GitXmlImporter");
         $this->permission_manager = $permissions_manager;
         $this->repository_manager = $repository_manager;
@@ -89,6 +96,7 @@ class GitXmlImporter {
         $this->ugroup_manager = $ugroup_manager;
         $this->xml_validator = new XML_RNGValidator();
         $this->system_command = new System_Command();
+        $this->event_manager = $event_manager;
     }
 
     /**
@@ -137,12 +145,44 @@ class GitXmlImporter {
         $extraction_path_arg = escapeshellarg($extraction_path);
         $this->system_command->exec("chmod 755 $extraction_path_arg");
         $this->repository_manager->createFromBundle($repository, $this->gitolite_backend, $absolute_bundle_path);
-        $this->importPermissions($project, $repository_xmlnode->children(), $repository);
+        if ($this->hasLegacyPermissions($repository_xmlnode)) {
+            $this->importPermissions($project, $repository_xmlnode, $repository);
+        } else {
+            $this->importPermissions($project, $repository_xmlnode->permissions, $repository);
+            $this->importReferences($project, $repository_xmlnode->references, $repository);
+        }
         $this->system_event_manager->queueProjectsConfigurationUpdate(array($project->getGroupId()));
     }
 
-    private function importPermissions(Project $project, SimpleXMLElement $permission_xmlnodes, GitRepository $repository) {
-        foreach($permission_xmlnodes as $permission_xmlnode) {
+    private function hasLegacyPermissions(SimpleXMLElement $repository_xmlnode)
+    {
+        if ($repository_xmlnode->count() === 0) {
+            return false;
+        }
+        $children    = $repository_xmlnode->children();
+        $first_child = $children[0];
+
+        switch ($first_child->getName()) {
+            case self::READ_TAG:
+            case self::WRITE_TAG:
+            case self::WPLUS_TAG:
+                return true;
+                break;
+            default:
+                return false;
+        }
+    }
+
+    private function importPermissions(
+        Project $project,
+        SimpleXMLElement $permission_xmlnodes,
+        GitRepository $repository
+    ) {
+        if (empty($permission_xmlnodes)) {
+            return;
+        }
+
+        foreach($permission_xmlnodes->children() as $permission_xmlnode) {
             $permission_type = null;
             switch($permission_xmlnode->getName()) {
             case self::READ_TAG:
@@ -156,7 +196,9 @@ class GitXmlImporter {
                 break;
             default:
                 $this->logger->debug('Unknown node found ' . $permission_xmlnode->getName());
+                continue;
             }
+
             if(isset($permission_type)) {
                 $this->importPermission($project, $permission_xmlnode, $permission_type, $repository);
             }
@@ -195,5 +237,21 @@ class GitXmlImporter {
     private function appendProjectAdminUGroup(array $ugroup_ids) {
         $ugroup_ids[] = ProjectUGroup::PROJECT_ADMIN;
         return $ugroup_ids;
+    }
+
+    private function importReferences(Project $project, SimpleXMLElement $xml_references, GitRepository $repository)
+    {
+        $this->event_manager->processEvent(
+            Event::IMPORT_COMPAT_REF_XML,
+            array(
+                'logger'         => $this->logger,
+                'created_refs'   => array(
+                    'repository' => $repository,
+                ),
+                'service_name'   => self::SERVICE_NAME,
+                'xml_content'    => $xml_references,
+                'project'        => $project
+            )
+        );
     }
 }

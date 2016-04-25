@@ -2,10 +2,26 @@ git = element repository {
     attribute bundle-path { xsd:string } &
     attribute name { xsd:string } &
     attribute description { xsd:string }? &
-    element read  { element ugroup { xsd:string }* }? &
-    element write { element ugroup { xsd:string }* }? &
-    element wplus { element ugroup { xsd:string }* }?
+    (
+        (
+            element read  { element ugroup { xsd:string }* }? &
+            element write { element ugroup { xsd:string }* }? &
+            element wplus { element ugroup { xsd:string }* }?
+        )
+    |
+        (
+            element permissions {
+                element read  { element ugroup { xsd:string }* }? &
+                element write { element ugroup { xsd:string }* }? &
+                element wplus { element ugroup { xsd:string }* }?
+            }? &
+            element references {
+                references
+            }?
+        )
+    )
 }* &
+
 element ugroups-admin {
     element ugroup { xsd:string }*
 }?

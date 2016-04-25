@@ -48,6 +48,7 @@ class GitXmlImporterTest extends TuleapTestCase {
     private $system_command;
     private $ugroup_manager;
     private $ugroup_dao;
+    private $event_manager;
 
     public function setUp() {
         $this->old_cwd = getcwd();
@@ -76,6 +77,7 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->git_systemeventmanager = mock('Git_SystemEventManager');
         $this->mirror_updater         = mock('GitRepositoryMirrorUpdater');
         $this->mirror_data_mapper     = mock('Git_Mirror_MirrorDataMapper');
+        $this->event_manager          = mock('EventManager');
 
         $this->git_manager = new GitRepositoryManager(
             $this->git_factory,
@@ -127,7 +129,8 @@ class GitXmlImporterTest extends TuleapTestCase {
             $gitolite,
             $this->git_systemeventmanager,
             $permissions_manager,
-            $this->ugroup_manager
+            $this->ugroup_manager,
+            $this->event_manager
         );
 
         $this->temp_project_dir = parent::getTmpDir() . DIRECTORY_SEPARATOR . 'test_project';
@@ -202,6 +205,38 @@ XML;
     }
 
     public function itShouldImportStaticUgroups() {
+        //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <permissions>
+                            <read>
+                                <ugroup>project_members</ugroup>
+                            </read>
+                            <write>
+                                <ugroup>project_members</ugroup>
+                            </write>
+                            <wplus>
+                                <ugroup>project_admins</ugroup>
+                            </wplus>
+                        </permissions>
+                    </repository>
+                </git>
+            </project>
+XML;
+        $result = mock('DataAccessResult');
+        stub($result)->getRow()->returns(false);
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
+        stub($this->permission_dao)->addPermission(Git::PERM_READ,  '*',  3)->at(0);
+        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*',  3)->at(1);
+        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*',  4)->at(2);
+        $this->import(new SimpleXMLElement($xml));
+    }
+
+    public function itShouldImportLegacyPermissions() {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -297,7 +332,25 @@ XML;
         expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 3)->at(0);
         expect($this->permission_dao)->addPermission(Git::PERM_ADMIN, $this->project->getId(), 4)->at(1);
         $this->import(new SimpleXMLElement($xml));
+    }
 
+    public function itShouldImportReferences() {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="stable.bundle" name="stable">
+                        <references>
+                            <reference source="cmmt1234" target="sha1" />
+                        </references>
+                    </repository>
+                </git>
+            </project>
+XML;
+        stub($this->ugroup_dao)->searchByGroupIdAndName()->returnsEmptyDar();
+
+        expect($this->event_manager)->processEvent()->once();
+
+        $this->import(new SimpleXMLElement($xml));
     }
 
     private function import($xml) {
