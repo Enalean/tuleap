@@ -1,5 +1,0 @@
-[Tuleap-Codendi]
-name="Tuleap Codendi"
-baseurl=file:///home/builder/yum/centos/5/x86_64/
-enabled=1
-gpgcheck=0

@@ -1,4 +1,0 @@
-plugin_MySQLMaintenance	descriptor_description	Execute ANALYZE sur les tables Codendi.
-plugin_MySQLMaintenance	title	Maintenance MySQL
-plugin_MySQLMaintenance	submit	Exécuter ANALYZE TABLE sur toutes les tables maintenant !
-plugin_MySQLMaintenance	result	Résultats de la requête ANALYZE TABLE :

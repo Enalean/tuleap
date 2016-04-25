@@ -1,5 +1,0 @@
-[Tuleap-EPEL]
-name="Tuleap EPEL"
-baseurl=file:///home/builder/yum/epel/5/x86_64/
-enabled=1
-gpgcheck=0
