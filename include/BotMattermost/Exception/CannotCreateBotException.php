@@ -18,14 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+namespace Tuleap\BotMattermost\Exception;
 
-$http_request   = HTTPRequest::instance();
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('botmattermost');
+use Exception;
 
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.$http_request->getServerUrl());
+class CannotCreateBotException extends Exception
+{
 }

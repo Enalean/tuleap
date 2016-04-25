@@ -18,14 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+namespace Tuleap\BotMattermost\Bot;
 
-$http_request   = HTTPRequest::instance();
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('botmattermost');
+class Bot
+{
+    private $id;
+    private $name;
+    private $webhook_url;
 
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.$http_request->getServerUrl());
+    public function __construct($id, $name, $webhook_url)
+    {
+        $this->id          = $id;
+        $this->name        = $name;
+        $this->webhook_url = $webhook_url;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getWebhookUrl()
+    {
+        return $this->webhook_url;
+    }
 }

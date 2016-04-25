@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BotMattermost\AdminController;
+use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\Bot\BotFactory;
+
 require_once 'constants.php';
 
 class BotMattermostPlugin extends Plugin
@@ -27,6 +31,8 @@ class BotMattermostPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        $this->addHook('site_admin_option_hook');
+        $this->addHook('cssfile');
     }
 
     /**
@@ -40,7 +46,27 @@ class BotMattermostPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function process()
+    public function site_admin_option_hook()
     {
+        $url  = $this->getPluginPath().'/admin/';
+        $name = $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name');
+        echo '<li><a href="', $url, '">', $name, '</a></li>';
+    }
+
+    public function cssfile($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+
+    public function processAdmin()
+    {
+        $request = HTTPRequest::instance();
+        $csrf = new CSRFSynchronizerToken('/plugins/botmattermost/admin/');
+        $bot_dao = new BotDao();
+        $bot_factory = new BotFactory($bot_dao);
+        $admin_controller = new AdminController($csrf, $bot_factory);
+        $admin_controller->process($request);
     }
 }

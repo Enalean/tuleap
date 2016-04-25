@@ -1,2 +1,21 @@
 plugin_botmattermost	descriptor_description	Bot to send notifications in Mattermost
 plugin_botmattermost	descriptor_name	Bot Mattermost
+
+
+plugin_botmattermost	configuration_alert_success_addbot	Bot added successfully
+plugin_botmattermost	configuration_alert_error	Database error
+plugin_botmattermost	configuration_alert_empty_input	The name and the webhook URL input must be filled
+plugin_botmattermost	configuration_alert_invalid_url	Invalid URL
+plugin_botmattermost	configuration_empty_list	No results
+
+plugin_botmattermost	configuration_title	Bot Mattermost Configuration
+plugin_botmattermost	configuration_legend_bot	Bot Configuration
+plugin_botmattermost	configuration_label_bot_name	Bot name
+plugin_botmattermost	configuration_input_bot_name	Bot name...
+plugin_botmattermost	configuration_label_hook_url	Webhook channel URL
+plugin_botmattermost	configuration_input_hook_url	https://...
+plugin_botmattermost	configuration_button_add_bot	Add bot
+
+plugin_botmattermost	configuration_table_title	Bots list
+plugin_botmattermost	configuration_table_col_name	Name
+plugin_botmattermost	configuration_table_col_webhook_url	Webhook URL

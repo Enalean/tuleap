@@ -17,15 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Tuleap\BotMattermost\Bot;
 
-require_once 'pre.php';
+use DataAccessObject;
 
-$http_request   = HTTPRequest::instance();
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('botmattermost');
+class BotDao extends DataAccessObject
+{
 
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.$http_request->getServerUrl());
+    public function searchBots()
+    {
+        $sql = "SELECT * FROM plugin_botmattermost_bot";
+
+        return $this->retrieve($sql);
+    }
+
+    public function addBot($bot_name, $bot_webhook_url)
+    {
+        $name        = $this->da->quoteSmart($bot_name);
+        $webhook_url = $this->da->quoteSmart($bot_webhook_url);
+
+        $sql = "INSERT INTO plugin_botmattermost_bot (name, webhook_url)
+                VALUES ($name, $webhook_url)";
+
+        return $this->updateAndGetLastId($sql);
+    }
 }

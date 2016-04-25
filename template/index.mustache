@@ -1,0 +1,52 @@
+<h1>{{ title }}</h1>
+<div>
+    <form class="form-horizontal" method="POST" action="?action=add_bot" >
+        {{{ csrf_input }}}
+        <fieldset>
+            <legend>{{ legend_bot }}</legend>
+            <div class="control-group">
+                <label class="control-label" for="bot-mattermost-name">{{ label_bot_name }}</label>
+                <div class="controls">
+                    <input id="bot-mattermost-name" type="text" name="bot_name" placeholder= "{{ input_bot_name }}" required>
+                </div>
+            </div>
+             <div class="control-group">
+                <label class="control-label" for="bot-mattermost-url">{{ label_hook_url }}</label>
+                <div class="controls">
+                    <input id="bot-mattermost-url" type="url" name="webhook_url" placeholder="{{ input_hook_url }}" required pattern="https?://.+">
+                </div>
+            </div>
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">{{ button_add_bot }}</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<h2>{{ table_title }}</h2>
+<div>
+    <table class="table table-bordered table-striped" id="bot_list">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ table_col_name }}</th>
+                <th>{{ table_col_webhook_url }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# has_bots }}
+                {{# bots }}
+                    <tr>
+                        <td>{{ getId }}</td>
+                        <td>{{ getName }}</td>
+                        <td>{{ getWebhookUrl }}</td>
+                    </tr>
+                {{/ bots }}
+            {{/ has_bots }}
+            {{^ has_bots }}
+                <tr>
+                    <td>{{ empty_bot_list }}</td>
+                </tr>
+            {{/ has_bots }}
+        </tbody>
+    </table>
+</div>

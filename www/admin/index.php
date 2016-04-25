@@ -20,12 +20,11 @@
 
 require_once 'pre.php';
 
-$http_request   = HTTPRequest::instance();
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('botmattermost');
+$http_request = HTTPRequest::instance();
+$plugin       = $plugin_manager->getPluginByName('botmattermost');
 
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
+    $plugin->processAdmin();
 } else {
     header('Location: '.$http_request->getServerUrl());
 }
