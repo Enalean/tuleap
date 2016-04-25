@@ -27,7 +27,9 @@ define([
     _
 ) {
     var executions = function () {
-        this.presences_collection = {};
+        var self = this;
+
+        self.presences_collection = {};
 
         /**
          * @access public
@@ -38,8 +40,8 @@ define([
          * @param execution_id (int)
          * @returns {*}
          */
-        this.get = function(execution_id) {
-            return this.presences_collection[execution_id] ?  this.presences_collection[execution_id]: [];
+        self.get = function(execution_id) {
+            return self.presences_collection[execution_id] ?  self.presences_collection[execution_id]: [];
         };
 
         /**
@@ -52,12 +54,12 @@ define([
          * @param user           (Array)
          * @returns {boolean}
          */
-        this.addUserByExecutionId = function(execution_id, user) {
+        self.addUserByExecutionId = function(execution_id, user) {
             try {
-                if (! _.has(this.presences_collection, execution_id)) {
-                    this.presences_collection[execution_id] = [];
+                if (! _.has(self.presences_collection, execution_id)) {
+                    self.presences_collection[execution_id] = [];
                 }
-                this.presences_collection[execution_id].push(user);
+                self.presences_collection[execution_id].push(user);
                 return true;
             } catch (e) {
                 return false;
@@ -72,8 +74,8 @@ define([
          *
          * @param user_id (int)
          */
-        this.remove = function(user_id) {
-            delete this.presences_collection[user_id];
+        self.remove = function(user_id) {
+            delete self.presences_collection[user_id];
         };
 
         /**
@@ -84,9 +86,8 @@ define([
          *
          * @param user_uuid (String)
          */
-        this.removeByUserUUID = function(user_uuid) {
-            var self = this;
-            _.forEach(this.presences_collection, function(presences, execution_id) {
+        self.removeByUserUUID = function(user_uuid) {
+            _.forEach(self.presences_collection, function(presences, execution_id) {
                 _.remove(presences, function(presence) {
                     return presence.uuid === user_uuid;
                 });
@@ -105,8 +106,8 @@ define([
          * @param execution_id  (String)
          * @param user_uuid     (String)
          */
-        this.removeByExecutionIdAndUserUUID = function(execution_id, user_uuid) {
-            _.remove(this.presences_collection[execution_id], function(presence) {
+        self.removeByExecutionIdAndUserUUID = function(execution_id, user_uuid) {
+            _.remove(self.presences_collection[execution_id], function(presence) {
                 return presence.uuid === user_uuid;
             });
         };
@@ -118,10 +119,10 @@ define([
          * @param data (Object): data to add
          * @returns {{}} data to broadcast
          */
-        this.addWithVerification = function(data) {
+        self.addWithVerification = function(data) {
             var data_to_broadcast = {};
-            if (! verifyIfPresenceAlreadyExists(this.presences_collection, data.uuid)) {
-                this.addUserByExecutionId(data.execution_id, data.user);
+            if (! verifyIfPresenceAlreadyExists(data.uuid)) {
+                self.addUserByExecutionId(data.execution_id, data.user);
                 data_to_broadcast = constructDataToBroadcast(data.execution_id, data.remove_from, data.user);
             }
 
@@ -137,22 +138,22 @@ define([
          * @param data (Object): data to broadcast
          * @returns {{}}
          */
-        this.update = function(data) {
+        self.update = function(data) {
             var data_to_broadcast = {};
             _.extend(data.user, {
                 uuid: data.uuid
             });
             if (data.remove_from !== data.execution_id
                 && data.remove_from !== ''
-                && _.has(this.presences_collection, data.remove_from)) {
-                this.removeByExecutionIdAndUserUUID(data.remove_from, data.uuid);
-                data_to_broadcast = this.addWithVerification(data);
+                && _.has(self.presences_collection, data.remove_from)) {
+                self.removeByExecutionIdAndUserUUID(data.remove_from, data.uuid);
+                data_to_broadcast = self.addWithVerification(data);
             } else if (data.remove_from === data.execution_id
-                && _.has(this.presences_collection, data.remove_from)) {
-                this.removeByExecutionIdAndUserUUID(data.remove_from, data.uuid);
+                && _.has(self.presences_collection, data.remove_from)) {
+                self.removeByExecutionIdAndUserUUID(data.remove_from, data.uuid);
                 data_to_broadcast = constructDataToBroadcast('', data.remove_from, data.user);
             } else {
-                data_to_broadcast = this.addWithVerification(data);
+                data_to_broadcast = self.addWithVerification(data);
             }
 
             return data_to_broadcast;
@@ -164,12 +165,11 @@ define([
          * Function to verify if
          * presence exists on executions
          *
-         * @param presences_collection (Object): presences by execution id
-         * @param uuid                 (String): user uuid
+         * @param uuid (String): user uuid
          * @returns {boolean}
          */
-        function verifyIfPresenceAlreadyExists(presences_collection, uuid) {
-            return _.some(presences_collection, function(presences) {
+        function verifyIfPresenceAlreadyExists(uuid) {
+            return _.some(self.presences_collection, function(presences) {
                 return _.some(presences, function(presence) {
                     return presence.uuid === uuid;
                 });

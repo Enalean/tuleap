@@ -34,7 +34,33 @@ define([
         var communicationService = new CommunicationService(config);
 
         /**
-         * Connection Websocket
+         * Connection Websocket on namespace trafficlights
+         *
+         * To do a subscription we need to have:
+         *      - string    version : To connect Client version to NodeJS server version
+         *      - string    token   : To have correct information on user
+         *      - string    uuid    : To distinguish each client with the same user id
+         *      - string    room_id : Id to broadcast at a specific room
+         */
+        io.of('trafficlights').on('connection', function (socket) {
+            socket.auth = false;
+
+            socket.on('subscription', function (data) {
+                communicationService.verifyAndSubscribe(socket, data);
+
+                if (socket.auth) {
+                    communicationService.emitPresences(socket);
+                } else {
+                    console.log("Disconnecting socket ", socket.id);
+                    socket.disconnect('unauthorized');
+                }
+            });
+
+            listenCommonEvents(socket);
+        });
+
+        /**
+         * Connection Websocket on default namespace
          *
          * To do a subscription we need to have:
          *      - string    version : To connect Client version to NodeJS server version
@@ -54,15 +80,7 @@ define([
                 }
             });
 
-            socket.on('error', function (message) {
-                console.error(message);
-            });
-
-            socket.on('disconnect', function () {
-                if (socket.room) {
-                    communicationService.disconnect(socket);
-                }
-            });
+            listenCommonEvents(socket);
         });
 
         /**
@@ -89,6 +107,23 @@ define([
             res.end();
             communicationService.broadcast(req.body);
         });
+
+        /**
+         * Function to listen events
+         *
+         * @param socket
+         */
+        function listenCommonEvents(socket) {
+            socket.on('error', function (message) {
+                console.error(message);
+            });
+
+            socket.on('disconnect', function () {
+                if (socket.room) {
+                    communicationService.disconnect(socket);
+                }
+            });
+        }
     };
 
     return CommunicationController;
