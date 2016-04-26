@@ -3,6 +3,7 @@ Version 8.14 (Not released yet)
 	* story #8940: The resize of a table should occur only on a th/td
 	* story #9027: Preserve links at import
 		- Create plugin
+		- Import wikiXXXX references and treat them as links
 	* request #9036:
 		- Export project's admins and members
 		- User that are already project_members must not stop the import
@@ -45,8 +46,8 @@ Version 8.14 (Not released yet)
 	* IM: 1.5.35
 	* svn: 0.53
 	* teamforge_compat_tracker: 0.2
-	* mediawiki: 0.112
-	* teamforge_compat_mediawiki: 0.1
+	* mediawiki: 0.113
+	* teamforge_compat_mediawiki: 0.2
 	* teamforge_compat_svn: 0.1
 	* teamforge_compat_core: 0.4
 	* teamforge_compat_git: 0.1

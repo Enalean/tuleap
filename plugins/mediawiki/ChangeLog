@@ -1,3 +1,6 @@
+Version 0.113 - Tuleap 8.14
+    * story #9027: Import wikiXXXX references and treat them as links
+
 Version 0.112 - Tuleap 8.14
     * request #9091: Administration SVN - error on saving Admin Groups
 
