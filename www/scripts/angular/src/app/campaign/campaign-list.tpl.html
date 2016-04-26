@@ -24,7 +24,7 @@
                 | orderBy:'id':true
                 track by $index"
             >
-                <td><a ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">{{ campaign.label }}</a></td>
+                <td><a ui-sref="campaigns.executions({ id: campaign.id })">{{ campaign.label }}</a></td>
                 <td>{{ campaign.status }}</td>
                 <td>{{ campaign.total }}</td>
                 <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>

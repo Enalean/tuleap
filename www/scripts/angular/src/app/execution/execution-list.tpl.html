@@ -40,7 +40,7 @@
                 <div class="category">{{ category.label }}</div>
                 <a class="execution-item {{ execution.status | dasherize }}"
                      ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_environment track by $index"
-                     ui-sref=".detail({ execid: execution.id, defid: execution.definition.id, defslug: '{{ execution.definition.summary | slugify }}' })"
+                     ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
                      ui-sref-active="active">
                     <span class="execution-item-content" ng-click="viewTestExecution(execution)">
                         <span class="execution-item-content-title">
