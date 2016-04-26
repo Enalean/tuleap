@@ -281,7 +281,8 @@ describe ('ExecutionService - ', function () {
             var user = {
                 id: 101,
                 real_name: 'Test',
-                avatar_url: 'url'
+                avatar_url: 'url',
+                score: 0
             };
 
             var results = [
@@ -298,14 +299,16 @@ describe ('ExecutionService - ', function () {
                 id: 101,
                 real_name: 'Test',
                 avatar_url: 'url',
-                uuid: '456'
+                uuid: '456',
+                score: 0
             };
 
             var user_two = {
                 id: 102,
                 real_name: 'Test',
                 avatar_url: 'url',
-                uuid: '123'
+                uuid: '123',
+                score: 0
             };
 
             var executions = {
@@ -329,6 +332,45 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_two);
+            expect(ExecutionService.executions[4].viewed_by).toEqual(results);
+        });
+
+        it("Given that executions with user_one on, when I user_one views a test, then there is twice user_one on but once on campaign", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                uuid: '456'
+            };
+
+            var user_one_bis = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                uuid: '123'
+            };
+
+            var executions = {
+                4: {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_one]
+                }
+            };
+
+            var results = [
+                user_one, user_one_bis
+            ];
+
+            ExecutionService.executions = executions;
+            ExecutionService.viewTestExecution(4, user_one_bis);
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
     });
@@ -416,9 +458,11 @@ describe ('ExecutionService - ', function () {
             var results = [user_one];
 
             ExecutionService.executions = executions;
+            ExecutionService.presences_on_campaign = [user_one, user_two];
             ExecutionService.removeViewTestExecutionByUUID('456');
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
             expect(ExecutionService.executions[5].viewed_by).toEqual(results);
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
     });
 
@@ -472,7 +516,176 @@ describe ('ExecutionService - ', function () {
         });
     });
 
-    describe("displayPresencesOnExecution() -", function() {
+    describe("addPresenceCampaign() -", function() {
+        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                score: 0
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: 'Test',
+                avatar_url: 'url',
+                score: 0
+            };
+
+            var presences_on_campaign = [user_one];
+
+            var results = [user_one, user_two];
+
+            ExecutionService.presences_on_campaign = presences_on_campaign;
+            ExecutionService.addPresenceCampaign(user_two);
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
+        });
+
+        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                score: 0
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: 'Test',
+                avatar_url: 'url'
+
+            };
+
+            var presences_on_campaign = [user_one];
+
+            var results = [user_one, user_two];
+
+            ExecutionService.presences_on_campaign = presences_on_campaign;
+            ExecutionService.addPresenceCampaign(user_two);
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
+        });
+    });
+
+    describe("removePresenceCampaign() -", function() {
+        it("Given that executions with user_two on, when I remove user_one from campaign, then there is only user_two on campaign", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url'
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: 'Test',
+                avatar_url: 'url'
+            };
+
+            var executions = {
+                5: {
+                    id: 5,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_two]
+                }
+            };
+
+            var results = [user_two];
+
+            ExecutionService.executions            = executions;
+            ExecutionService.presences_on_campaign = [user_one, user_two];
+            ExecutionService.removePresenceCampaign(user_one);
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
+        });
+
+        it("Given that executions with user_one and user_two on, when I remove user_one from campaign, then they stay on campaign", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url'
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: 'Test',
+                avatar_url: 'url'
+            };
+
+            var executions = {
+                5: {
+                    id: 5,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_one, user_two]
+                }
+            };
+
+            var results = [user_one, user_two];
+
+            ExecutionService.executions            = executions;
+            ExecutionService.presences_on_campaign = [user_one, user_two];
+            ExecutionService.removePresenceCampaign(user_one);
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
+        });
+    });
+
+    describe("updatePresenceOnCampaign() -", function() {
+        it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function () {
+            var user_one = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                score: 0
+            };
+
+            var user_one_updated = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                score: 1
+            };
+
+            var executions = {
+                5: {
+                    id: 5,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_one]
+                }
+            };
+
+            var user_one_result = {
+                id: 101,
+                real_name: 'Test',
+                avatar_url: 'url',
+                score: 1
+            };
+
+            ExecutionService.executions            = executions;
+            ExecutionService.presences_on_campaign = [user_one];
+            ExecutionService.updatePresenceOnCampaign(user_one_updated);
+            expect(ExecutionService.presences_on_campaign[0]).toEqual(user_one_result);
+        });
+    });
+
+    describe("displayPresencesForAllExecutions() -", function() {
         it("Given that executions, when I display all users, then there users are on the associate execution", function () {
             var user_one = {
                 id: '101',
@@ -563,7 +776,60 @@ describe ('ExecutionService - ', function () {
             ExecutionService.executions_loaded      = true;
             ExecutionService.presences_loaded       = true;
             ExecutionService.presences_by_execution = presences;
-            ExecutionService.displayPresencesOnExecution();
+            ExecutionService.displayPresencesForAllExecutions();
+            expect(ExecutionService.executions).toEqual(results);
+        });
+    });
+
+    describe("displayPresencesByExecution() -", function() {
+        it("Given that executions, when I display all users on one execution, then there users are on", function () {
+            var user_one = {
+                id: '101',
+                real_name: 'name',
+                avatar_url: 'avatar',
+                uuid: '1234'
+            };
+
+            var user_two = {
+                id: '102',
+                real_name: 'name',
+                avatar_url: 'avatar',
+                uuid: '4567'
+            };
+
+            var executions = {
+                4: {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    }
+                }
+            };
+
+            var presences = [user_one, user_two];
+
+            var results = {
+                4: {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    definition: {
+                        category: "Svn",
+                        description: "test",
+                        id: 3,
+                        summary: "My first test",
+                        uri: "trafficlights_definitions/3"
+                    },
+                    viewed_by: [user_one, user_two]
+                }
+            };
+
+            ExecutionService.executions = executions;
+            ExecutionService.displayPresencesByExecution(4, presences);
             expect(ExecutionService.executions).toEqual(results);
         });
     });

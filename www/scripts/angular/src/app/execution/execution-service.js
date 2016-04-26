@@ -8,33 +8,38 @@ angular
 ExecutionService.$inject = [
     '$q',
     '$rootScope',
+    '$modal',
     'ExecutionConstants',
-    'ExecutionRestService',
-    'SharedPropertiesService'
+    'ExecutionRestService'
 ];
 
 function ExecutionService(
     $q,
     $rootScope,
+    $modal,
     ExecutionConstants,
-    ExecutionRestService,
-    SharedPropertiesService
+    ExecutionRestService
 ) {
     var self = this;
 
     _.extend(self, {
-        initialization               : initialization,
-        loadExecutions               : loadExecutions,
-        getExecutions                : getExecutions,
-        getExecutionsByDefinitionId  : getExecutionsByDefinitionId,
-        updateCampaign               : updateCampaign,
-        updateTestExecution          : updateTestExecution,
-        viewTestExecution            : viewTestExecution,
-        removeAllViewTestExecution   : removeAllViewTestExecution,
-        removeViewTestExecution      : removeViewTestExecution,
-        removeViewTestExecutionByUUID: removeViewTestExecutionByUUID,
-        displayPresencesOnExecution  : displayPresencesOnExecution,
-        displayError                 : displayError
+        initialization                    : initialization,
+        loadExecutions                    : loadExecutions,
+        getExecutions                     : getExecutions,
+        getExecutionsByDefinitionId       : getExecutionsByDefinitionId,
+        addPresenceCampaign               : addPresenceCampaign,
+        updateCampaign                    : updateCampaign,
+        updateTestExecution               : updateTestExecution,
+        updatePresenceOnCampaign          : updatePresenceOnCampaign,
+        viewTestExecution                 : viewTestExecution,
+        removeAllViewTestExecution        : removeAllViewTestExecution,
+        removeViewTestExecution           : removeViewTestExecution,
+        removeViewTestExecutionByUUID     : removeViewTestExecutionByUUID,
+        removePresenceCampaign            : removePresenceCampaign,
+        displayPresencesForAllExecutions  : displayPresencesForAllExecutions,
+        displayPresencesByExecution       : displayPresencesByExecution,
+        displayError                      : displayError,
+        showPresencesModal                : showPresencesModal
     });
 
     initialization();
@@ -49,7 +54,8 @@ function ExecutionService(
             loading                              : {},
             presences_loaded                     : false,
             executions_loaded                    : false,
-            presences_by_execution               : {}
+            presences_by_execution               : {},
+            presences_on_campaign                : []
         });
     }
 
@@ -127,23 +133,51 @@ function ExecutionService(
     }
 
     function updateTestExecution(execution_updated) {
-        var execution = self.executions[execution_updated.id];
+        var execution       = self.executions[execution_updated.id];
         var previous_status = execution.previous_result.status;
-        var status = execution_updated.status;
+        var status          = execution_updated.status;
 
-        _.assign(execution, execution_updated);
+        if (execution) {
+            _.assign(execution, execution_updated);
+        }
 
-        execution.saving = false;
+        execution.saving       = false;
         execution.submitted_by = null;
-        execution.error = '';
-        execution.results = '';
+        execution.error        = '';
+        execution.results      = '';
 
         self.campaign[('nb_of_').concat(status)]++;
         self.campaign[('nb_of_').concat(previous_status)]--;
     }
 
+    function updatePresenceOnCampaign(user) {
+        var user_on_campaign = _.find(self.presences_on_campaign, function(presence) {
+            return presence.id === user.id;
+        });
+
+        if (user_on_campaign && ! _.has(user_on_campaign, 'score')) {
+            _.extend(user_on_campaign, user.score);
+        }
+
+        if (user_on_campaign && user_on_campaign.score !== user.score) {
+            user_on_campaign.score = user.score;
+        }
+    }
+
     function updateCampaign(new_campaign) {
         self.campaign = new_campaign;
+    }
+
+    function addPresenceCampaign(user) {
+        var user_id_exists = _.some(self.presences_on_campaign, function(presence) {
+            return presence.id === user.id;
+        });
+
+        if (! user_id_exists) {
+            self.presences_on_campaign.push(user);
+        } else if (_.has(user, 'score')) {
+            _.extend(user_id_exists, user.score);
+        }
     }
 
     function viewTestExecution(execution_id, user) {
@@ -154,7 +188,7 @@ function ExecutionService(
                 execution.viewed_by = [];
             }
 
-            var user_uuid_exists = _.find(execution.viewed_by, function(presence) {
+            var user_uuid_exists = _.some(execution.viewed_by, function(presence) {
                 return presence.uuid === user.uuid;
             });
 
@@ -179,20 +213,50 @@ function ExecutionService(
     }
 
     function removeViewTestExecutionByUUID(uuid) {
+        var user = {};
+
         _.forEach(self.executions, function(execution) {
             _.remove(execution.viewed_by, function(presence) {
+                if (presence.uuid === uuid) {
+                    user = presence;
+                }
                 return presence.uuid === uuid;
             });
         });
+
+        if (user) {
+            removePresenceCampaign(user);
+        }
     }
 
-    function displayPresencesOnExecution() {
+    function removePresenceCampaign(user) {
+        var user_found = _.some(self.executions, function(execution) {
+            return _.some(execution.viewed_by, function(presence) {
+                return presence.id === user.id;
+            });
+        });
+
+        if (! user_found) {
+            _.remove(self.presences_on_campaign, function(presence) {
+                return presence.id === user.id;
+            });
+        }
+    }
+
+    function displayPresencesByExecution(execution_id, presences) {
+        if (_.has(self.executions, execution_id)) {
+            self.executions[execution_id].viewed_by = presences;
+        }
+    }
+
+    function displayPresencesForAllExecutions() {
         if (self.presences_loaded && self.executions_loaded) {
             self.presences_loaded  = false;
             self.executions_loaded = false;
             _.forEach(self.presences_by_execution, function (presences, execution_id) {
                 _.forEach(presences, function (presence) {
                     viewTestExecution(execution_id, presence);
+                    addPresenceCampaign(presence);
                 });
             });
         }
@@ -201,5 +265,20 @@ function ExecutionService(
     function displayError(execution, response) {
         execution.saving = false;
         execution.error  = response.status + ': ' + response.data.error.message;
+    }
+
+    function showPresencesModal() {
+        return $modal.open({
+            backdrop   : 'static',
+            templateUrl: 'execution/execution-presences.tpl.html',
+            controller : 'ExecutionPresencesCtrl as modal',
+            resolve: {
+                modal_model: function () {
+                    return {
+                        presences: self.presences_on_campaign
+                    };
+                }
+            }
+        });
     }
 }

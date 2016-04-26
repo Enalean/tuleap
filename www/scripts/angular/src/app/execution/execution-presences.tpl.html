@@ -1,0 +1,46 @@
+<div id="execution-presences-header" class="modal-header">
+    <button type="button" class="close" ng-click="modal.cancel()" aria-hidden="true"><i class="icon-remove"></i></button>
+    <h3>{{ 'Score users' | translate }}</h3>
+</div>
+
+<div id="execution-presences" class="modal-body">
+    <div id="execution-presences-podium-firsts">
+        <div class="execution-presence" ng-repeat="presence in modal.presences | orderBy:'-score' | limitTo : 3">
+            <div class="presence-avatar" ng-style="{'width': getWidth(presence) + '%'}">
+                <div class="avatar-information">
+                    <img class="avatar"
+                         data-toggle="tooltip"
+                         title="{{ presence.real_name }}"
+                         ng-src="{{ presence.avatar_url }}"
+                         onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
+                         alt="avatar">
+                    <div class="avatar-names">
+                        <span class="avatar-real-name" ng-if="presence.real_name">{{ presence.real_name }}</span>
+                        <span class="avatar-user-name" ng-if="presence.username">@{{ presence.username }}</span>
+                    </div>
+                </div>
+
+                <div class="avatar-score">
+                    <span>{{ presence.score }}</span>
+                </div>
+            </div>
+            <i class="icon-star"></i>
+        </div>
+    </div>
+    <div id="execution-presences-podium-lasts" ng-if="modal.presences.length > 3">
+        <div class="execution-presence" ng-repeat="presence in modal.presences | orderBy:'-score'" ng-if="$index > 2">
+            <div class="presence-avatar" ng-style="{'width': getWidth(presence) + '%'}">
+                <div class="avatar-information">
+                    <img class="avatar" data-toggle="tooltip" title="{{ presence.real_name }}" ng-src="{{ presence.avatar_url }}" alt="avatar">
+                    <div class="avatar-names">
+                        <span class="avatar-real-name" ng-if="presence.real_name">{{ presence.real_name }}</span>
+                        <span class="avatar-user-name" ng-if="presence.username">@{{ presence.username }}</span>
+                    </div>
+                </div>
+                <div class="avatar-score">
+                    <span>{{ presence.score }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

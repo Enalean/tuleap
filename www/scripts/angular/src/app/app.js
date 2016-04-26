@@ -8,6 +8,7 @@ angular.module('trafficlights', [
     'sharedProperties',
     'ncy-angular-breadcrumb',
     'ngAnimate',
+    'animate-change',
     'ngSanitize',
     'gettext',
     'tuleap.artifact-modal',

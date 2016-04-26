@@ -45,6 +45,7 @@ use Tuleap\Trafficlights\TrafficlightsArtifactRightsPresenter;
 use Tuleap\Trafficlights\ConfigConformanceValidator;
 use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\Dao;
+use Tuleap\User\REST\UserRepresentation;
 
 class ExecutionsResource {
     const FIELD_RESULTS      = 'results';
@@ -137,10 +138,14 @@ class ExecutionsResource {
      * @throws 500
      */
     protected function putId($id, $status, $results = '') {
+        $previous_status = '';
+        $preivous_user   = '';
         try {
-            $user     = UserManager::instance()->getCurrentUser();
-            $artifact = $this->getArtifactById($user, $id);
-            $changes  = $this->getChanges($status, $results, $artifact, $user);
+            $user            = UserManager::instance()->getCurrentUser();
+            $artifact        = $this->getArtifactById($user, $id);
+            $changes         = $this->getChanges($status, $results, $artifact, $user);
+            $previous_status = $this->getPreviousStatus($artifact);
+            $preivous_user   = $this->getPreviousSubmittedBy($artifact);
 
             $updater = new Tracker_REST_Artifact_ArtifactUpdater(
                 new Tracker_REST_Artifact_ArtifactValidator(
@@ -163,8 +168,13 @@ class ExecutionsResource {
         $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $artifact);
 
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $user_representation = new UserRepresentation();
+            $user_representation->build($user);
             $data = array(
-                'artifact' => $execution_representation
+                'artifact'        => $execution_representation,
+                'previous_status' => $previous_status,
+                'user'            => $user_representation,
+                'previous_user'   => $preivous_user
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
             $message  = new MessageDataPresenter(
@@ -204,16 +214,14 @@ class ExecutionsResource {
         }
 
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $user_representation = new UserRepresentation();
+            $user_representation->build($user);
             $data = array(
                 'presence' => array(
                     'execution_id' => $id,
                     'uuid'         => $uuid,
                     'remove_from'  => $remove_from,
-                    'user'         => array(
-                        'id'         => $user->getId(),
-                        'real_name'  => $user->getRealName(),
-                        'avatar_url' => $user->getAvatarUrl()
-                    )
+                    'user'         => $user_representation
                 )
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
@@ -344,5 +352,29 @@ class ExecutionsResource {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPut();
         Header::lastModified($date);
+    }
+
+    /** @return string */
+    private function getPreviousStatus(Tracker_Artifact $artifact) {
+        $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        return $artifact->getStatusForChangeset($last_changeset);
+    }
+
+    /** @return UserRepresentation */
+    private function getPreviousSubmittedBy(Tracker_Artifact $artifact) {
+        $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
+        $user_representation = new UserRepresentation();
+        $user_representation->build($submitted_by);
+
+        return $user_representation;
     }
 }

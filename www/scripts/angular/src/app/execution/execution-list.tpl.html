@@ -15,6 +15,15 @@
         </table>
     </div>
     <div id="execution-utils-avatars">
+        <span class="execution-avatar" ng-repeat="presence in presences_on_campaign | orderBy:'-score' | limitTo:6">
+            <img data-toggle="tooltip"
+                 title="{{ presence.real_name }}"
+                 ng-src="{{ presence.avatar_url }}"
+                 onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
+                 alt="avatar">
+            <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score >= 0">{{ presence.score }}</span>
+        </span>
+        <span id="more-avatars" ng-if="presences_on_campaign.length > 3" ng-click="showPresencesModal()"><i class="icon-ellipsis-horizontal"></i></span>
     </div>
 </div>
 
@@ -51,7 +60,12 @@
                    <span class="execution-item-content" ng-click="viewTestExecution(execution)">
                        <span class="execution-item-content-title">
                            <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
-                              <img class="avatar ng-enter" data-toggle="tooltip" title="{{ user.real_name }}" ng-src="{{ user.avatar_url }}" alt="avatar">
+                              <img class="avatar ng-enter"
+                                   data-toggle="tooltip"
+                                   title="{{ user.real_name }}"
+                                   ng-src="{{ user.avatar_url }}"
+                                   onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
+                                   alt="avatar">
                           </span>
                            <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}
                        </span>

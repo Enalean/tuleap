@@ -28,6 +28,7 @@ function SocketService(
     return {
         listenTokenExpired      : listenTokenExpired,
         listenNodeJSServer      : listenNodeJSServer,
+        listenToUserScore       : listenToUserScore,
         listenToExecutionViewed : listenToExecutionViewed,
         listenToExecutionLeft   : listenToExecutionLeft,
         listenToExecutionUpdated: listenToExecutionUpdated,
@@ -92,17 +93,29 @@ function SocketService(
         SocketFactory.on('presences', function(presences) {
             ExecutionService.presences_loaded       = true;
             ExecutionService.presences_by_execution = presences;
-            ExecutionService.displayPresencesOnExecution();
+            ExecutionService.displayPresencesForAllExecutions();
+        });
+    }
+
+    function listenToUserScore() {
+        SocketFactory.on('user:score', function(data) {
+            ExecutionService.updatePresenceOnCampaign(data.user);
+
+            if (_.has(data, 'previous_user')) {
+                ExecutionService.updatePresenceOnCampaign(data.previous_user);
+            }
         });
     }
 
     function listenToExecutionViewed() {
         SocketFactory.on('trafficlights_user:presence', function(data) {
             if (_.has(data, 'execution_to_remove')) {
-                ExecutionService.removeViewTestExecution(data.execution_to_remove, data.user);
+                ExecutionService.displayPresencesByExecution(data.execution_to_remove, data.execution_presences_to_remove);
+                ExecutionService.removePresenceCampaign(data.user);
             }
             if (_.has(data, 'execution_to_add')) {
-                ExecutionService.viewTestExecution(data.execution_to_add, data.user);
+                ExecutionService.displayPresencesByExecution(data.execution_to_add, data.execution_presences_to_add);
+                ExecutionService.addPresenceCampaign(data.user);
             }
         });
     }
@@ -114,8 +127,13 @@ function SocketService(
     }
 
     function listenToExecutionUpdated() {
-        SocketFactory.on('trafficlights_execution:update', function(response) {
-            ExecutionService.updateTestExecution(response.artifact);
+        SocketFactory.on('trafficlights_execution:update', function(data) {
+            ExecutionService.updateTestExecution(data.artifact);
+            ExecutionService.updatePresenceOnCampaign(data.user);
+
+            if (_.has(data, 'previous_user')) {
+                ExecutionService.updatePresenceOnCampaign(data.previous_user);
+            }
         });
     }
 

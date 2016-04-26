@@ -11,6 +11,16 @@
     &.sidebar-collapsed #campaign-new-button-bar {
         padding-left: 45px;
     }
+
+    .execution-avatar {
+        .presence-score {
+            background-color: $main;
+        }
+    }
+
+    #execution-presences-header {
+        border-bottom: 2px solid $main;
+    }
 }
 
 body {

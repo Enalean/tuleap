@@ -48,6 +48,10 @@ function ExecutionListCtrl(
         }
     };
 
+    $scope.showPresencesModal = function() {
+        ExecutionService.showPresencesModal();
+    };
+
     $scope.$on('$destroy', function() {
         var toolbar = angular.element('.toolbar');
         if (toolbar) {
@@ -69,6 +73,7 @@ function ExecutionListCtrl(
     });
 
     SocketService.listenNodeJSServer().then(function() {
+        SocketService.listenToUserScore();
         SocketService.listenTokenExpired();
         SocketService.listenToExecutionViewed();
         SocketService.listenToExecutionUpdated();
@@ -95,7 +100,7 @@ function ExecutionListCtrl(
             }
 
             ExecutionService.executions_loaded = true;
-            ExecutionService.displayPresencesOnExecution();
+            ExecutionService.displayPresencesForAllExecutions();
         });
 
         $scope.campaign             = CampaignService.getCampaign(campaign_id);
@@ -111,6 +116,7 @@ function ExecutionListCtrl(
             notrun:  false
         };
         $scope.canCategoryBeDisplayed = canCategoryBeDisplayed;
+        $scope.presences_on_campaign  = ExecutionService.presences_on_campaign;
 
         getEnvironments(campaign_id, 50, 0);
 
@@ -118,6 +124,8 @@ function ExecutionListCtrl(
     }
 
     function updateViewTestExecution(current_execution_id, old_execution_id) {
+        ExecutionService.addPresenceCampaign(SharedPropertiesService.getCurrentUser());
+
         ExecutionRestService.changePresenceOnTestExecution(current_execution_id, old_execution_id).then(function() {
             ExecutionService.removeViewTestExecution(old_execution_id, SharedPropertiesService.getCurrentUser());
             ExecutionService.viewTestExecution(current_execution_id, SharedPropertiesService.getCurrentUser());

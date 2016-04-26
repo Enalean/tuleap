@@ -28,6 +28,10 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
 msgstr ""
@@ -135,6 +139,10 @@ msgstr ""
 msgid "Please select a test"
 msgstr ""
 
+#: src/app/execution/execution-presences.tpl.html
+msgid "Score users"
+msgstr ""
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests."
 msgstr ""
@@ -171,8 +179,4 @@ msgstr ""
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom out"
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
 msgstr ""

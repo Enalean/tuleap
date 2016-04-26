@@ -53,6 +53,7 @@ function ExecutionDetailCtrl(
             $rootScope.$broadcast('execution-detail-destroy');
             ExecutionRestService.leaveTestExecution(execution_id);
             ExecutionService.removeViewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
+            ExecutionService.removePresenceCampaign(SharedPropertiesService.getCurrentUser());
         }
     });
 

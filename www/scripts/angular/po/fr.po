@@ -1,19 +1,16 @@
-#
-# Translators:
-# Nicolas Terray <nicolas.terray@enalean.com>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Test\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
-"Language-Team: \n"
-"Language: fr\n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"X-Generator: Poedit 1.8.3\n"
+"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.5\n"
+"Language: fr\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -22,12 +19,8 @@ msgid ""
 msgid_plural ""
 "<span class='total-definitions'>{{ getFilteredDefinitions(environment."
 "filter).length }}</span> tests"
-msgstr[0] ""
-"<span class=\"total-definitions\">{{ getFilteredDefinitions(environment."
-"filter).length }}</span> test"
+msgstr[0] "Sélectionnez un test"
 msgstr[1] ""
-"<span class='total-definitions'>{{ getFilteredDefinitions(environment."
-"filter).length }}</span> tests"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -41,8 +34,8 @@ msgid ""
 "All <strong>{{ environment.nb_selected_all }}</strong> tests on this page "
 "are selected."
 msgstr ""
-"Les <strong>{{ environment.nb_selected_all }}</strong> tests sur cette page "
-"sont sélectionnés."
+"Les <strong>{{ environment.nb_selected_all }}</strong> tests sur cette "
+"page sont sélectionnés."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "All environments"
@@ -64,11 +57,11 @@ msgstr "Campagne"
 
 #: src/app/campaign/campaign-new-controller.js
 msgid "Campaign creation"
-msgstr "Création de campagne"
+msgstr "Création de la campagne"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
-msgstr "Nom de la campagne"
+msgstr "Label de la campagne"
 
 #: src/app/campaign/campaign-controller.js
 msgid "Campaigns"
@@ -76,7 +69,7 @@ msgstr "Campagnes"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaigns list"
-msgstr "Liste des campagnes"
+msgstr "Liste de campagnes"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Category"
@@ -84,7 +77,7 @@ msgstr "Catégorie"
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Comment..."
-msgstr "Commentaire..."
+msgstr "Commenter…"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create a campaign"
@@ -92,11 +85,11 @@ msgstr "Créer une campagne"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create campaign"
-msgstr "Créer la campagne"
+msgstr "Créer campagne"
 
 #: src/app/graph/graph.tpl.html
 msgid "Dependencies graph of &#34;{{ graph.title }}&#34;"
-msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
+msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
@@ -104,7 +97,7 @@ msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
-msgstr "Editer ce test"
+msgstr "Éditer ce test"
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
@@ -116,7 +109,7 @@ msgstr "Échoué"
 #: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
-msgstr "Filtrer..."
+msgstr "Filtrer …"
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
@@ -129,9 +122,10 @@ msgstr "Nouvelle campagne"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "No tests on this page are selected."
-msgstr "Aucun test sur cette page n'est sélectionné."
+msgstr "Aucun test sur cette page n’est sélectionné."
 
 #: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
 msgstr "Non exécuté"
@@ -161,12 +155,16 @@ msgid ""
 "Please configure the test execution tracker and\n"
 "                        add environments in order to be able to go further."
 msgstr ""
-"Merci de configurer l'outil de suivi d'exécution des tests et d'ajouter des "
-"environnements afin de pouvoir continuer."
+"Merci de configurer l’outil de suivi d’exécution des tests et d’ajouter "
+"des environnements afin de pouvoir continuer."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Please select a test"
 msgstr "Merci de sélectionner un test"
+
+#: src/app/execution/execution-presences.tpl.html
+msgid "Score users"
+msgstr "Score des utilisateurs"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -177,7 +175,7 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Show dependencies graph for this test"
-msgstr "Afficher le graphe de dépendances pour ce test"
+msgstr "Afficher le graphe de dépendances"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Status"
@@ -197,14 +195,14 @@ msgstr "Total"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
-msgstr "Vous n'avez pas d'environnement défini."
+msgstr "Vous n’avez pas d’environnement défini."
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom in"
-msgstr "Zoomer"
+msgstr "Zoom avant"
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom out"
-msgstr "Dézoomer"
+msgstr "Zoom arrière"

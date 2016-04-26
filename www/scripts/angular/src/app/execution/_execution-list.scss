@@ -21,7 +21,95 @@
     }
 
     #execution-utils-avatars {
-        flex: 1;
+        position: relative;
+        flex: 1.5;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        & > .execution-avatar {
+            position: relative;
+
+            & > img {
+                margin: 0 5px 0 0;
+                border-radius: 50%;
+            }
+
+            & > .presence-score {
+                padding: 1px 5px;
+                position: absolute;
+                right: 0;
+                font-size: 10px;
+                font-weight: bold;
+                text-align: center;
+                line-height: 15px;
+                border-radius: 50%;
+                -webkit-border-radius: 50%;
+                -khtml-border-radius: 50%;
+                -moz-border-radius: 50%;
+                color: #fff;
+            }
+
+            & > .presence-score.ng-animate {
+                -webkit-animation: bounceIn 0.3s;
+                -moz-animation: bounceIn 0.3s;
+                -ms-animation: bounceIn 0.3s;
+                animation: bounceIn 0.3s;
+            }
+        }
+
+        & > .execution-avatar:nth-child(1) {
+            .presence-score {
+                top: -8px;
+                right: -2px;
+            }
+            > img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        & > .execution-avatar:nth-child(2) {
+            .presence-score {
+                top: -11px;
+                right: -2px;
+            }
+            > img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        & > .execution-avatar:nth-child(4) {
+            padding-left: 20px;
+        }
+
+        & > .execution-avatar:nth-child(n+7) {
+            display: none;
+        }
+
+        & > .execution-avatar:not(:nth-child(1)):not(:nth-child(2)) {
+            .presence-score {
+                top: -12px;
+                right: -2px;
+            }
+
+            & > img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        #more-avatars {
+            position: relative;
+            padding-right: 10px;
+            cursor: pointer;
+
+            & > i {
+                padding: 5px;
+                font-size: 10px;
+            }
+        }
     }
 
     #execution-utils-progress-bar {
