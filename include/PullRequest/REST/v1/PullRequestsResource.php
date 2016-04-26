@@ -514,14 +514,15 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->checkUserCanReadRepository($user, $git_repository);
 
-        $comment        = new Comment(0, $id, $user->getId(), $comment_data->content);
+        $current_time   = time();
+        $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
         $new_comment_id = $this->comment_factory->save($comment);
 
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($user);
 
         $comment_representation = new CommentRepresentation();
-        $comment_representation->build($new_comment_id, $user_representation, $comment_data->content);
+        $comment_representation->build($new_comment_id, $user_representation, $comment->getPostDate(), $comment->getContent());
 
         return $comment_representation;
     }

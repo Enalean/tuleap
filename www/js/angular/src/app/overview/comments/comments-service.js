@@ -21,22 +21,28 @@ function CommentsService(
             offset: 0
         },
         getFormattedComments: getFormattedComments,
-        formatComment       : formatComment
+        formatComment       : formatComment,
+        markAuthor          : markAuthor
     });
 
-    function getFormattedComments(pull_request_id, comment_pagination_limit, comment_pagination_offset) {
-        return CommentsRestService.getComments(pull_request_id, comment_pagination_limit, comment_pagination_offset).then(function(response) {
+    function getFormattedComments(pull_request, comment_pagination_limit, comment_pagination_offset) {
+        return CommentsRestService.getComments(pull_request.id, comment_pagination_limit, comment_pagination_offset).then(function(response) {
             lodash.forEach(response.data, function(comment) {
-                self.formatComment(comment);
+                self.formatComment(comment, pull_request);
             });
 
             return response;
         });
     }
 
-    function formatComment(comment) {
+    function formatComment(comment, pull_request) {
         comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
         comment.content = comment.content.replace(/ /g, '&nbsp;');
         comment.content = $sce.trustAsHtml(comment.content);
+        self.markAuthor(comment, pull_request.user_id);
+    }
+
+    function markAuthor(comment, prAuthorId) {
+        comment.isFromPRAuthor = comment.user.id === prAuthorId;
     }
 }

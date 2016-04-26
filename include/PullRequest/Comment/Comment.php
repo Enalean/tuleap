@@ -32,15 +32,19 @@ class Comment
     /** @var int */
     private $user_id;
 
+    /** @var int */
+    private $post_date;
+
     /** @var string */
     private $content;
 
 
-    public function __construct($id, $pull_request_id, $user_id, $content)
+    public function __construct($id, $pull_request_id, $user_id, $post_date, $content)
     {
         $this->id              = $id;
         $this->pull_request_id = $pull_request_id;
         $this->user_id         = $user_id;
+        $this->post_date       = $post_date;
         $this->content         = $content;
     }
 
@@ -57,6 +61,11 @@ class Comment
     public function getUserId()
     {
         return $this->user_id;
+    }
+
+    public function getPostDate()
+    {
+        return $this->post_date;
     }
 
     public function getContent()

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
     id INT(11) PRIMARY KEY AUTO_INCREMENT,
     pull_request_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
+    post_date INT(11) NOT NULL,
     content TEXT,
     INDEX idx_pr_pull_request_id(pull_request_id)
 );

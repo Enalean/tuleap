@@ -49,7 +49,7 @@ class PaginatedCommentsRepresentationsBuilder
             $user_representation->build($this->user_manager->getUserById($comment->getUserId()));
 
             $comment_representation = new CommentRepresentation();
-            $comment_representation->build($comment->getId(), $user_representation, $comment->getContent());
+            $comment_representation->build($comment->getId(), $user_representation, $comment->getPostDate(), $comment->getContent());
 
             $comments_representations[] = $comment_representation;
         }

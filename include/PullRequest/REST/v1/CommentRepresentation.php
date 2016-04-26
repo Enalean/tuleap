@@ -19,6 +19,7 @@
  */
 
 namespace Tuleap\PullRequest\REST\v1;
+use Tuleap\REST\JsonCast;
 
 class CommentRepresentation
 {
@@ -29,14 +30,20 @@ class CommentRepresentation
     /** @var Tuleap\User\REST\MinimalUserRepresentation */
     public $user;
 
+    /**
+     * @var string {@type string}
+     */
+    public $post_date;
+
     /** @var string */
     public $content;
 
 
-    public function build($id, $user_representation, $content)
+    public function build($id, $user_representation, $post_date,  $content)
     {
-        $this->id      = $id;
-        $this->user    = $user_representation;
-        $this->content = $content;
+        $this->id        = $id;
+        $this->user      = $user_representation;
+        $this->post_date = JsonCast::toDate($post_date);
+        $this->content   = $content;
     }
 }

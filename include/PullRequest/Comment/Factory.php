@@ -37,6 +37,7 @@ class Factory
         return $this->dao->save(
             $comment->getPullRequestId(),
             $comment->getUserId(),
+            $comment->getPostDate(),
             $comment->getContent()
         );
     }
@@ -58,6 +59,7 @@ class Factory
             $row['id'],
             $row['pull_request_id'],
             $row['user_id'],
+            $row['post_date'],
             $row['content']
         );
     }

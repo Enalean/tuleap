@@ -9,13 +9,21 @@
     No comment
 </p>
 
-<ul>
-    <li ng-repeat="comment in comments.comments track by $index">
-        <div class="pull-request-comment-user">
-            <div class="avatar"><img src="{{ comment.user.avatar_url }}"></div>
-            {{ comment.user.display_name }}
+<ul class="container-fluid">
+    <li ng-repeat="comment in comments.comments track by $index" class="row-fluid">
+        <div class="media span10"
+             ng-class="{true: 'pull-request-comment-from-author', false: 'offset2'}[comment.isFromPRAuthor]">
+            <div class="avatar" ng-class="comment.isFromPRAuthor ? 'pull-left' : 'pull-right'">
+                <img src="{{ comment.user.avatar_url }}" class="media-object">
+            </div>
+            <div class="media-body">
+                <div class="media-heading">
+                    <span class="pull-request-comment-user">{{ comment.user.display_name }}</span>
+                    <small>{{ comment.post_date | date: 'short' }}</small>
+                </div>
+                <p class="pull-request-comment-content" ng-bind-html="comment.content"></p>
+            </div>
         </div>
-        <p class="pull-request-comment-content" ng-bind-html="comment.content"></p>
     </li>
     <li ng-if="comments.loading_comments" class="loading"></li>
 </ul>

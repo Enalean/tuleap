@@ -25,14 +25,15 @@ use DataAccessObject;
 class Dao extends DataAccessObject
 {
 
-    public function save($pull_request_id, $user_id, $content)
+    public function save($pull_request_id, $user_id, $post_date, $content)
     {
         $pull_request_id = $this->da->escapeInt($pull_request_id);
         $user_id         = $this->da->escapeInt($user_id);
+        $post_date       = $this->da->escapeInt($post_date);
         $content         = $this->da->quoteSmart($content);
 
-        $sql = "INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, content)
-                VALUES ($pull_request_id, $user_id, $content)";
+        $sql = "INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content)
+                VALUES ($pull_request_id, $user_id, $post_date, $content)";
 
         return $this->updateAndGetLastId($sql);
     }
