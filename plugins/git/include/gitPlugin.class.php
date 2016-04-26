@@ -48,6 +48,8 @@ class GitPlugin extends Plugin {
      */
     const SERVICE_SHORTNAME = 'plugin_git';
 
+    const SYSTEM_NATURE_NAME = 'git_revision';
+
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
@@ -1621,7 +1623,8 @@ class GitPlugin extends Plugin {
             $this->getBackendGitolite(),
             $this->getGitSystemEventManager(),
             PermissionsManager::instance(),
-            $this->getUGroupManager()
+            $this->getUGroupManager(),
+            EventManager::instance()
         );
 
         $importer->import($params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);

@@ -16,33 +16,77 @@
                 <data type="string"/>
               </attribute>
             </optional>
-            <optional>
-              <element name="read">
-                <zeroOrMore>
-                  <element name="ugroup">
-                    <data type="string"/>
+            <choice>
+              <interleave>
+                <optional>
+                  <element name="read">
+                    <zeroOrMore>
+                      <element name="ugroup">
+                        <data type="string"/>
+                      </element>
+                    </zeroOrMore>
                   </element>
-                </zeroOrMore>
-              </element>
-            </optional>
-            <optional>
-              <element name="write">
-                <zeroOrMore>
-                  <element name="ugroup">
-                    <data type="string"/>
+                </optional>
+                <optional>
+                  <element name="write">
+                    <zeroOrMore>
+                      <element name="ugroup">
+                        <data type="string"/>
+                      </element>
+                    </zeroOrMore>
                   </element>
-                </zeroOrMore>
-              </element>
-            </optional>
-            <optional>
-              <element name="wplus">
-                <zeroOrMore>
-                  <element name="ugroup">
-                    <data type="string"/>
+                </optional>
+                <optional>
+                  <element name="wplus">
+                    <zeroOrMore>
+                      <element name="ugroup">
+                        <data type="string"/>
+                      </element>
+                    </zeroOrMore>
                   </element>
-                </zeroOrMore>
-              </element>
-            </optional>
+                </optional>
+              </interleave>
+              <interleave>
+                <optional>
+                  <element name="permissions">
+                    <interleave>
+                      <optional>
+                        <element name="read">
+                          <zeroOrMore>
+                            <element name="ugroup">
+                              <data type="string"/>
+                            </element>
+                          </zeroOrMore>
+                        </element>
+                      </optional>
+                      <optional>
+                        <element name="write">
+                          <zeroOrMore>
+                            <element name="ugroup">
+                              <data type="string"/>
+                            </element>
+                          </zeroOrMore>
+                        </element>
+                      </optional>
+                      <optional>
+                        <element name="wplus">
+                          <zeroOrMore>
+                            <element name="ugroup">
+                              <data type="string"/>
+                            </element>
+                          </zeroOrMore>
+                        </element>
+                      </optional>
+                    </interleave>
+                  </element>
+                </optional>
+                <optional>
+                  <element name="references">
+                    <ref name="references"/>
+                  </element>
+                </optional>
+              </interleave>
+            </choice>
           </interleave>
         </element>
       </zeroOrMore>
