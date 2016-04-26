@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Sogilis, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MediaWikiXMLImporter {
+class MediaWikiXMLImporter
+{
+    const SERVICE_NAME = 'mediawiki';
 
     /**
      * @var Logger
@@ -49,19 +52,25 @@ class MediaWikiXMLImporter {
      * @var Backend
      */
     private $backend;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Logger $logger,
         MediawikiManager $mediawiki_manager,
         MediawikiLanguageManager $language_manager,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        EventManager $event_manager
     ) {
-        $this->logger           = new WrapperLogger($logger, "MediaWikiXMLImporter");
+        $this->logger            = new WrapperLogger($logger, "MediaWikiXMLImporter");
         $this->mediawiki_manager = $mediawiki_manager;
-        $this->language_manager = $language_manager;
+        $this->language_manager  = $language_manager;
         $this->ugroup_manager    = $ugroup_manager;
-        $this->sys_command      = new System_Command();
-        $this->backend          = Backend::instance();
+        $this->sys_command       = new System_Command();
+        $this->backend           = Backend::instance();
+        $this->event_manager     = $event_manager;
     }
 
     /**
@@ -72,23 +81,24 @@ class MediaWikiXMLImporter {
      * @var String
      * @return boolean
      */
-    public function import(Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path) {
+    public function import(Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path)
+    {
         $xml_mediawiki = $xml_input->mediawiki;
-        if(!$xml_mediawiki) {
+        if (!$xml_mediawiki) {
             $this->logger->debug('No mediawiki node found into xml.');
             return true;
         }
 
-        if($xml_mediawiki['language']) {
+        if ($xml_mediawiki['language']) {
             $this->importLanguage($project, (string) $xml_mediawiki['language']);
         }
 
-        if(isset($xml_mediawiki['pages-backup'])) {
+        if (isset($xml_mediawiki['pages-backup'])) {
             $pages_backup_path = $extraction_path . '/' . $xml_mediawiki['pages-backup'];
             $this->importPages($project, $pages_backup_path);
         }
 
-        if(isset($xml_mediawiki['files-folder-backup'])) {
+        if (isset($xml_mediawiki['files-folder-backup'])) {
             $files_backup_path = $extraction_path . '/' . $xml_mediawiki['files-folder-backup'];
             $this->importFiles($project, $files_backup_path);
         }
@@ -97,11 +107,13 @@ class MediaWikiXMLImporter {
 
         $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID();
         $owner = ForgeConfig::get('sys_http_user');
-        if($owner) {
+        if ($owner) {
             $this->backend->recurseChownChgrp($mediawiki_storage_path, $owner, $owner);
         } else {
             $this->logger->error("Could not get sys_http_user, permission problems may occur on $mediawiki_storage_path");
         }
+
+        $this->importReferences($project, $xml_mediawiki->references);
     }
 
     private function importPages(Project $project, $backup_path) {
@@ -166,6 +178,20 @@ class MediaWikiXMLImporter {
             array_push($ugroup_ids, $ugroup->getId());
         }
         return $ugroup_ids;
+    }
+
+    private function importReferences(Project $project, SimpleXMLElement $xml_references)
+    {
+        $this->event_manager->processEvent(
+            Event::IMPORT_COMPAT_REF_XML,
+            array(
+                'logger'         => $this->logger,
+                'created_refs'   => array(),
+                'service_name'   => self::SERVICE_NAME,
+                'xml_content'    => $xml_references,
+                'project'        => $project
+            )
+        );
     }
 
 }
