@@ -35,7 +35,7 @@ Version 8.14 (Not released yet)
 	* ldap: 3.101
 	* docman: 2.26.100
 	* openidconnectclient: 0.18
-	* git: 4.147
+	* git: 4.148
 	* hudson_git: 0.7
 	* agiledashboard: 1.374
 	* cardwall: 1.58
@@ -49,6 +49,7 @@ Version 8.14 (Not released yet)
 	* teamforge_compat_mediawiki: 0.1
 	* teamforge_compat_svn: 0.1
 	* teamforge_compat_core: 0.4
+	* teamforge_compat_git: 0.1
 
     == Themes ==
 	* FlamingParrot: 1.133
