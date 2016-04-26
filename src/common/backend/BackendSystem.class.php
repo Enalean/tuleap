@@ -424,7 +424,6 @@ class BackendSystem extends Backend {
             $delay = intval($GLOBALS['sys_file_deletion_delay']);
         }
         $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
-        
         $frs = $this->getFRSFileFactory();
         $status =  $frs->moveFiles($time, $this);
         // {{{ /!\ WARNING HACK /!\
