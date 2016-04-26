@@ -49,7 +49,7 @@ function ExecutionService(
             loading                              : {},
             presences_loaded                     : false,
             executions_loaded                    : false,
-            presences                            : {}
+            presences_by_execution               : {}
         });
     }
 
@@ -158,10 +158,9 @@ function ExecutionService(
                 return presence.uuid === user.uuid;
             });
 
-            if (user_uuid_exists) {
-                return;
+            if (! user_uuid_exists) {
+                execution.viewed_by.push(user);
             }
-            execution.viewed_by.push(user);
         }
     }
 
@@ -188,15 +187,12 @@ function ExecutionService(
     }
 
     function displayPresencesOnExecution() {
-        var user_uuid = SharedPropertiesService.getUUID();
         if (self.presences_loaded && self.executions_loaded) {
             self.presences_loaded  = false;
             self.executions_loaded = false;
-            _.forEach(self.presences, function (presences, execution_id) {
+            _.forEach(self.presences_by_execution, function (presences, execution_id) {
                 _.forEach(presences, function (presence) {
-                    if (presence.uuid !== user_uuid) {
-                        viewTestExecution(execution_id, presence);
-                    }
+                    viewTestExecution(execution_id, presence);
                 });
             });
         }

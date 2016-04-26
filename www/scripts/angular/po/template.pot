@@ -106,6 +106,7 @@ msgid "No tests on this page are selected."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
 msgstr ""

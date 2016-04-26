@@ -49,6 +49,11 @@ function ExecutionListCtrl(
     };
 
     $scope.$on('$destroy', function() {
+        var toolbar = angular.element('.toolbar');
+        if (toolbar) {
+            toolbar.removeClass('hide-toolbar');
+        }
+
         if (execution_id) {
             ExecutionRestService.leaveTestExecution(execution_id);
             ExecutionService.removeViewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
@@ -73,6 +78,11 @@ function ExecutionListCtrl(
     initialization();
 
     function initialization() {
+        var toolbar = angular.element('.toolbar');
+        if (toolbar) {
+            toolbar.addClass('hide-toolbar');
+        }
+
         campaign_id = parseInt($state.params.id, 10);
         execution_id = parseInt($state.params.execid, 10);
 

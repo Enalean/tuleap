@@ -35,6 +35,7 @@ function ExecutionDetailCtrl(
     $scope.pass                        = pass;
     $scope.fail                        = fail;
     $scope.block                       = block;
+    $scope.notrun                      = notrun;
     $scope.sanitizeHtml                = sanitizeHtml;
     $scope.getStatusLabel              = getStatusLabel;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
@@ -144,6 +145,10 @@ function ExecutionDetailCtrl(
 
     function block(execution) {
         setNewStatus(execution, "blocked");
+    }
+
+    function notrun(execution) {
+        setNewStatus(execution, "notrun");
     }
 
     function setNewStatus(execution, new_status) {

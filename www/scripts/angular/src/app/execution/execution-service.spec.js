@@ -559,10 +559,10 @@ describe ('ExecutionService - ', function () {
                 }
             };
 
-            ExecutionService.executions        = executions;
-            ExecutionService.executions_loaded = true;
-            ExecutionService.presences_loaded  = true;
-            ExecutionService.presences         = presences;
+            ExecutionService.executions             = executions;
+            ExecutionService.executions_loaded      = true;
+            ExecutionService.presences_loaded       = true;
+            ExecutionService.presences_by_execution = presences;
             ExecutionService.displayPresencesOnExecution();
             expect(ExecutionService.executions).toEqual(results);
         });

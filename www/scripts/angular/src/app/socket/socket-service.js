@@ -90,9 +90,9 @@ function SocketService(
 
     function listenPresences() {
         SocketFactory.on('presences', function(presences) {
-            ExecutionService.presences_loaded = true;
-            ExecutionService.presences        = presences;
-            ExecutionService.displayPresencesOnExecution(presences);
+            ExecutionService.presences_loaded       = true;
+            ExecutionService.presences_by_execution = presences;
+            ExecutionService.displayPresencesOnExecution();
         });
     }
 

@@ -1,56 +1,62 @@
- <div id="executions">
+<div id="execution-utils">
+    <div id="execution-utils-title">
+        <h1>{{ campaign.label }}</h1>
+    </div>
+    <div id="execution-utils-progress-bar">
+        <table border="0" cellpadding="0" cellspacing="0" class="sense-of-progress">
+            <tbody>
+            <tr>
+                <td class="sense-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">{{ campaign.nb_of_passed }}</td>
+                <td class="sense-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">{{ campaign.nb_of_failed }}</td>
+                <td class="sense-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">{{ campaign.nb_of_blocked }}</td>
+                <td class="sense-of-progress-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">{{ campaign.nb_of_notrun }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="execution-utils-avatars">
+    </div>
+</div>
+
+<div id="executions">
     <div id="executions-pane">
+        <div id="execution-filter">
+            <form class="form-inline">
+                <div id="filter">
+                    <div>
+                        <input type="text" class="filter" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
+                    </div>
+                    <div>
+                        <select ng-model="selected_environment" ng-options="environment for environment in environments">
+                            <option value="" translate>All environments</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <label class="btn" ng-model="status.passed"  title="{{ 'Passed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-passed-color.png" alt="{{ 'Passed' | translate }}"></label>
+                        <label class="btn" ng-model="status.failed"  title="{{ 'Failed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-failed-color.png" alt="{{ 'Failed' | translate }}"></label>
+                        <label class="btn" ng-model="status.blocked" title="{{ 'Blocked' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked-color.png" alt="{{ 'Blocked' | translate }}"></label>
+                        <label class="btn" ng-model="status.notrun"  title="{{ 'Not run' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-notrun-color.png" alt="{{ 'Not run' | translate }}"></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div id="execution-list">
-            <h1>{{ campaign.label }}</h1>
-            <div id="execution-filter">
-                <form class="form-inline">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <input type="text" class="filter span12" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
-                        </div>
-                        <div class="span4">
-                            <select ng-model="selected_environment" ng-options="environment for environment in environments">
-                                <option value="" translate>All environments</option>
-                            </select>
-                        </div>
-                        <div class="btn-group span4">
-                            <label class="btn" ng-model="status.passed"  title="{{ 'Passed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-passed-color.png" alt="{{ 'Passed' | translate }}"></label>
-                            <label class="btn" ng-model="status.failed"  title="{{ 'Failed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-failed-color.png" alt="{{ 'Failed' | translate }}"></label>
-                            <label class="btn" ng-model="status.blocked" title="{{ 'Blocked' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked-color.png" alt="{{ 'Blocked' | translate }}"></label>
-                            <label class="btn" ng-model="status.notrun"  title="{{ 'Not run' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-notrun-color.png" alt="{{ 'Not run' | translate }}"></label>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <table border="0" cellpadding="0" cellspacing="0" class="sens-of-progress">
-                                <tbody>
-                                    <tr>
-                                        <td class="sens-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">{{ campaign.nb_of_passed }}</td>
-                                        <td class="sens-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">{{ campaign.nb_of_failed }}</td>
-                                        <td class="sens-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">{{ campaign.nb_of_blocked }}</td>
-                                        <td class="sens-of-progress-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">{{ campaign.nb_of_notrun }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </form>
-            </div>
             <div ng-repeat="category in categories" ng-if="canCategoryBeDisplayed(category)">
                 <div class="category">{{ category.label }}</div>
                 <a class="execution-item {{ execution.status | dasherize }}"
-                     ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_environment track by $index"
-                     ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
-                     ng-class="{active: checkActiveClassOnExecution(execution)}">
-                    <span class="execution-item-content" ng-click="viewTestExecution(execution)">
-                        <span class="execution-item-content-title">
-                            <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
-                               <img class="avatar animated" data-toggle="tooltip" title="{{ user.real_name }}" ng-src="{{ user.avatar_url }}" alt="avatar">
-                           </span>
-                            <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}
-                        </span>
-                        <span class="execution-item-content-environment"> {{ execution.environment }}</span>
-                    </span>
+                   ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_environment track by $index"
+                   ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
+                   ng-class="{active: checkActiveClassOnExecution(execution)}">
+                   <span class="execution-item-content" ng-click="viewTestExecution(execution)">
+                       <span class="execution-item-content-title">
+                           <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
+                              <img class="avatar ng-enter" data-toggle="tooltip" title="{{ user.real_name }}" ng-src="{{ user.avatar_url }}" alt="avatar">
+                          </span>
+                           <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}
+                       </span>
+                       <span class="execution-item-content-environment"> {{ execution.environment }}</span>
+                   </span>
                 </a>
             </div>
 
@@ -62,5 +68,5 @@
         <div id="no-current-execution">
             <i class="icon-hand-left"></i> {{ 'Please select a test' | translate }}
         </div>
-     </div>
+    </div>
 </div>
