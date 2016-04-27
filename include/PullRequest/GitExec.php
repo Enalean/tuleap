@@ -106,12 +106,22 @@ class GitExec extends Git_Exec
 
     public function getShortStat($ref_base, $ref_compare)
     {
+        return $this->getFileDiffStat($ref_base, $ref_compare, '*');
+    }
+
+    public function getFileDiffStat($ref_base, $ref_compare, $file_path)
+    {
         $ref_base    = escapeshellarg($ref_base);
         $ref_compare = escapeshellarg($ref_compare);
-        $cmd         = "diff --numstat $ref_base $ref_compare";
+        $file_path   = escapeshellarg($file_path);
+        $cmd         = "diff --numstat $ref_base $ref_compare -- $file_path";
         $output      = array();
-        $this->gitCmdWithOutput($cmd, $output);
 
+        $this->gitCmdWithOutput($cmd, $output);
+        return $this->parseDiffNumStatOutput($output);
+    }
+
+    private function parseDiffNumStatOutput($output) {
         $lines_added   = 0;
         $lines_removed = 0;
         $files_changed = 0;

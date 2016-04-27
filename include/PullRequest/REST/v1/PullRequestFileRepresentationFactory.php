@@ -47,8 +47,9 @@ class PullRequestFileRepresentationFactory
 
         foreach ($modified_files as $file) {
             $impacted_file = preg_split("/[\t]/", $file);
+            $shortstat = $this->executor->getFileDiffStat($pull_request->getSha1Dest(), $pull_request->getSha1Src(), $impacted_file[1]);
             $file_representation = new PullRequestFileRepresentation();
-            $file_representation->build($impacted_file[1], $impacted_file[0]);
+            $file_representation->build($impacted_file[1], $impacted_file[0], $shortstat->getLinesAddedNumber(), $shortstat->getLinesRemovedNumber());
             $x_files[] = $file_representation;
         }
 

@@ -32,9 +32,21 @@ class PullRequestFileRepresentation
      */
     public $status;
 
-    public function build($path, $status)
+    /**
+     * @var int {@type int}
+     */
+    public $lines_added;
+
+    /**
+     * @var int {@type int}
+     */
+    public $lines_removed;
+
+    public function build($path, $status, $lines_added, $lines_removed)
     {
-        $this->path   = $path;
-        $this->status = $status;
+        $this->path         = $path;
+        $this->status       = $status;
+        $this->lines_added   = $lines_added;
+        $this->lines_removed = $lines_removed;
     }
 }

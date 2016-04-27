@@ -221,4 +221,33 @@ class GitExecTest extends TuleapTestCase {
         $this->assertEqual(1, $short_stat->getLinesAddedNumber());
         $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
     }
+
+    public function itReturnsShortStatForOneFile() {
+        $file1_path = "$this->fixture_dir/file1";
+        $file2_path = "$this->fixture_dir/file2";
+
+        file_put_contents($file1_path, "Contenu\n");
+        $this->git_exec->add($file1_path);
+        file_put_contents($file2_path, "Contenu\n");
+        $this->git_exec->add($file2_path);
+        $this->git_exec->commit("add $file1_path & add $file2_path");
+
+        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
+
+        $this->git_exec->rm($file2_path);
+        file_put_contents($file1_path, "Contenu\nContenu2");
+        $this->git_exec->add($file1_path);
+        $this->git_exec->add($file2_path);
+        $this->git_exec->commit("rm $file2_path & modify $file1_path");
+
+        $short_stat = $this->git_exec->getFileDiffStat('master', 'dev', $file1_path);
+        $this->assertEqual(1, $short_stat->getFilesChangedNumber());
+        $this->assertEqual(1, $short_stat->getLinesAddedNumber());
+        $this->assertEqual(0, $short_stat->getLinesRemovedNumber());
+
+        $short_stat = $this->git_exec->getFileDiffStat('master', 'dev', $file2_path);
+        $this->assertEqual(1, $short_stat->getFilesChangedNumber());
+        $this->assertEqual(0, $short_stat->getLinesAddedNumber());
+        $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
+    }
 }
