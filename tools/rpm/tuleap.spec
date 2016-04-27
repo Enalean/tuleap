@@ -304,6 +304,20 @@ Provides: tuleap-plugin-hudson-svn = %{version}
 %description plugin-hudson-svn
 Hudson/Jenkins plugin for Tuleap SVN multiple repositories
 
+%package plugin-hudson-git
+Summary: Hudson/Jenkins plugin for Tuleap Git repositories
+Group: Development/Tools
+Version: @@PLUGIN_HUDSON_GIT_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{PKG_NAME}, %{PKG_NAME}-plugin-hudson, %{PKG_NAME}-plugin-git
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-hudson-git = %{version}
+%else
+Provides: tuleap-plugin-hudson-git = %{version}
+%endif
+%description plugin-hudson-git
+Hudson/Jenkins plugin for Tuleap Git repositories
+
 %package plugin-webdav
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
@@ -521,8 +535,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Plugin OpenID Connect is not supported on CentOS 5
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
-# Do not package hudson_git yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1028,6 +1040,10 @@ fi
 %files plugin-hudson-svn
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson_svn
+
+%files plugin-hudson-git
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/hudson_git
 
 %files plugin-webdav
 %defattr(-,%{APP_USER},%{APP_USER},-)
