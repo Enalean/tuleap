@@ -162,6 +162,12 @@ codendi.RTE = Class.create(
             } catch (e) {
             }
             this.rte = null;
+        },
+        getContent: function() {
+            return this.rte.getData();
+        },
+        isInstantiated: function() {
+            return typeof this.rte === 'object';
         }
     }
 );
