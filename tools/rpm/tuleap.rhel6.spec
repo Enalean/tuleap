@@ -457,16 +457,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Do not package hudson_git yet
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_git
-# do not package teamforge_compat_core yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_core
-# do not package teamforge_compat_tracker yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_tracker
-# do not package teamforge_compat_mediawiki yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_mediawiki
-# do not package teamforge_compat_svn yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_svn
-# do not package teamforge_compat_git yet
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/teamforge_compat_git
 
 
 # Data dir

@@ -1,5 +1,0 @@
-Teamforge compatiblity git plugin
-=================================
-
-This plugin allows to import references from the TeamForge plateform for the git plugin.
-See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.
