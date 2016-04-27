@@ -2,8 +2,13 @@
 var Rights = require('../../../backend/modules/rights');
 var rights = new Rights();
 
+var Scores = require('../../../backend/modules/scores');
+var scores = new Scores();
+
 var Rooms = require('../../../backend/modules/rooms');
-var rooms = new Rooms(rights);
+var rooms = new Rooms(rights, scores);
+
+var Executions = require('../../../backend/modules/executions');
 
 describe("Module Rooms", function() {
     var groups, user_id, room_id, socket, socket_bis, socket_in_room;
@@ -22,6 +27,7 @@ describe("Module Rooms", function() {
 
         socket = {
             id: 'socket_id',
+            username: user_id,
             on: function(){},
             to: function(){return socket_in_room;},
             leave: function(){},
@@ -46,6 +52,8 @@ describe("Module Rooms", function() {
         spyOn(console, 'error');
 
         rights.addRightsByUserId(user_id, groups);
+
+        rooms.executions_collection[room_id] = new Executions();
     });
 
     describe("addSocketByRoomId()", function() {
@@ -60,7 +68,7 @@ describe("Module Rooms", function() {
     });
 
     describe("broadcastData()", function() {
-        it("Given rights, socket sender and message to broadcast, when I broadcastData with incorrect rights then console output", function () {
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with incorrect rights then console output", function () {
             var data = {
                 rights: {}
             };
@@ -68,7 +76,7 @@ describe("Module Rooms", function() {
             expect(console.error).toHaveBeenCalled();
         });
 
-        it("Given rights, socket sender and message to broadcast, when I broadcastData with correct rights then the socket will be called", function () {
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights then the socket will be called", function () {
             var data = {
                 rights: {
                     submitter_id: 102,
@@ -80,6 +88,102 @@ describe("Module Rooms", function() {
             };
             rooms.broadcastData(socket, data);
             expect(console.error).not.toHaveBeenCalled();
+        });
+
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with presences on execution message then message data is transformed" +
+            "and socket sender emit user score", function () {
+            var message = {
+                room_id : room_id,
+                rights: {
+                    submitter_id: 165,
+                    submitter_can_view: false,
+                    submitter_only: ['@ug_111'],
+                    tracker: ['@arealtime_project_admin'],
+                    artifact: ['@arealtime_project_admin']
+                },
+                data: {
+                    presence: {
+                        execution_id: '39',
+                        uuid: '123',
+                        remove_from: '',
+                        user: {
+                            id: user_id
+                        }
+                    }
+                }
+            };
+
+            var expect_data = {
+                user: {
+                    id: user_id,
+                    uuid: '123',
+                    score: 0
+                },
+                execution_to_add: '39',
+                execution_presences_to_add: [
+                    {
+                        id: user_id,
+                        uuid: '123',
+                        score: 0
+                    }
+                ]
+            };
+
+            rooms.broadcastData(socket, message);
+            expect(message.data).toEqual(expect_data);
+            expect(console.error).not.toHaveBeenCalled();
+            expect(socket.emit).toHaveBeenCalled();
+        });
+
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with status change execution message then score is calculated socket sender emit user score", function () {
+            var message = {
+                room_id : room_id,
+                rights: {
+                    submitter_id: 165,
+                    submitter_can_view: false,
+                    submitter_only: ['@ug_111'],
+                    tracker: ['@arealtime_project_admin'],
+                    artifact: ['@arealtime_project_admin']
+                },
+                data: {
+                    artifact: {
+                        id: 39,
+                        uri: 'trafficlights_executions/39',
+                        results: '',
+                        status: 'passed'
+                    },
+                    previous_status: 'failed',
+                    previous_user: {
+                        id: user_id
+                    },
+                    user: {
+                        id: user_id
+                    }
+                }
+            };
+
+            var expect_data = {
+                artifact: {
+                    id: 39,
+                    uri: 'trafficlights_executions/39',
+                    results: '',
+                    status: 'passed'
+                },
+                previous_status: 'failed',
+                previous_user: {
+                    id: user_id,
+                    score: 0
+                },
+                user: {
+                    id: user_id,
+                    score: 0
+                }
+            };
+
+            rooms.broadcastData(socket, message);
+            expect(message.data).toEqual(expect_data);
+            expect(console.error).not.toHaveBeenCalled();
+            expect(socket.emit).toHaveBeenCalled();
         });
     });
 

@@ -23,23 +23,38 @@ if (typeof define !== 'function') {
 
 define([
     'lodash',
+    'moment',
     '../../package.json',
     '../modules/jwt',
     '../modules/rooms',
-    '../modules/rights'
+    '../modules/rights',
+    '../modules/scores'
 ], function (
     _,
+    moment,
     packageJson,
     JWT,
     Rooms,
-    Rights
+    Rights,
+    Scores
 ) {
     var CommunicationService = function (config) {
         var self = this;
 
-        self.jwt        = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
-        self.rights     = new Rights();
-        self.rooms      = new Rooms(self.rights);
+        self.jwt   = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
+        self.rooms = new Rooms(new Rights(), new Scores());
+
+        /**
+         * @access public
+         *
+         * Function to clear scores for
+         * each room id
+         */
+        self.clearScoresInTwoDays = function() {
+            setInterval(function() {
+                self.rooms.scores.removeAll();
+            }, moment.duration(7, 'days'));
+        };
 
         /**
          * @access public
@@ -76,7 +91,7 @@ define([
          * @param socket (Object): user socket
          */
         self.disconnect = function(socket) {
-            self.rights.remove(socket.room);
+            self.rooms.rights.remove(socket.room);
             self.rooms.removeByRoomIdAndSocketId(socket.room, socket);
             console.log('Client (user id: ' + socket.username + ' - room id: ' + socket.room + ') is disconnected.');
         };
@@ -136,7 +151,7 @@ define([
             var decoded = verifyAndGetDecoded(socket, token);
             if (decoded) {
                 self.rooms.updateTokenExpiredForUser(socket.username, decoded.exp);
-                self.rights.update(decoded.data.user_id, decoded.data.user_rights);
+                self.rooms.rights.update(decoded.data.user_id, decoded.data.user_rights);
             }
         };
 
@@ -176,7 +191,7 @@ define([
             socket.join(data.room_id);
 
             self.rooms.addSocketByRoomId(data.room_id, socket);
-            self.rights.addRightsByUserId(decoded.data.user_id, decoded.data.user_rights);
+            self.rooms.rights.addRightsByUserId(decoded.data.user_id, decoded.data.user_rights);
 
             if (socket.lastAction) {
                 self.rooms.broadcastData(socket, socket.lastAction);

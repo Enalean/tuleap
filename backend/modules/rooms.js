@@ -23,17 +23,20 @@ if (typeof define !== 'function') {
 
 define([
     'lodash',
-    '../modules/executions'
+    '../modules/executions',
+    '../services/message-content-verifier'
 ], function (
     _,
-    Executions
+    Executions,
+    MessageContentVerifier
 ) {
-    var rooms = function (rights) {
+    var rooms = function (rights, scores) {
         var self = this;
 
         self.sockets_collection    = {};
         self.executions_collection = {};
         self.rights                = rights;
+        self.scores                = scores;
 
         /**
          * @access public
@@ -180,13 +183,22 @@ define([
                 return;
             }
 
-            var transformed_data = message.data;
-            if (hasMessageContentPresencesOnExecutions(message.data)) {
-                transformed_data = self.executions_collection[room_id].update(message.data.presence);
-                socketSenderBroadcasts(room, socket_sender, message, transformed_data);
-            } else {
-                socketSenderBroadcasts(room, socket_sender, message, message.data);
+            if (MessageContentVerifier.hasPresencesOnExecutions(message.data)) {
+                message.data = self.executions_collection[room_id].update(message.data.presence);
+                extendUserWithScore(room_id, message.data.user);
+                socket_sender.emit('user:score', {
+                    user: message.data.user
+                });
+            } else if(MessageContentVerifier.hasChangeStatusOnExecutions(message.data)) {
+                self.scores.update(socket_sender.username, room_id, message.data);
+                extendUserWithScore(room_id, message.data.user);
+                extendUserWithScore(room_id, message.data.previous_user);
+                socket_sender.emit('user:score', {
+                    user: message.data.user,
+                    previous_user: message.data.previous_user
+                });
             }
+            socketSenderBroadcasts(room, socket_sender, message, message.data);
         };
 
         /**
@@ -199,50 +211,15 @@ define([
          */
         self.emitPresences = function(socket) {
             var data = self.executions_collection[socket.room].presences_collection;
+
+            _.forEach(data, function(presences) {
+                _.forEach(presences, function(presence) {
+                    extendUserWithScore(socket.room, presence);
+                });
+            });
+
             socket.emit('presences', data);
         };
-
-        /**
-         * @access private
-         *
-         * Function to verify if content message sent
-         * has an artifact with fields
-         *
-         * @param data (Object)
-         * @returns {boolean}
-         */
-        function hasMessageContentArtifact(data) {
-            return _.has(data, 'artifact.card_fields');
-        }
-
-        /**
-         * @access private
-         *
-         * Function to verify if content message sent
-         * a presence for an artifact
-         *
-         * @param data (Object)
-         * @returns {boolean}
-         */
-        function hasMessageContentPresencesOnExecutions(data) {
-            return _.has(data, 'presence.execution_id')
-                && _.has(data, 'presence.remove_from')
-                && _.has(data, 'presence.uuid')
-                && _.has(data, 'presence.user');
-        }
-
-        /**
-         * @access private
-         *
-         * Function to verify if content message sent
-         * to get presences
-         *
-         * @param data (Object)
-         * @returns {boolean}
-         */
-        function hasMessageContentGetPresencesOnExecutions(data) {
-            return _.has(data, 'presences');
-        }
 
         /**
          * @access private
@@ -262,13 +239,35 @@ define([
                 return (socket.id !== socket_sender.id
                 && self.rights.userCanReceiveData(socket.username, rights_user));
             }).forEach(function (socket) {
-                if (hasMessageContentArtifact(data)) {
+                if (MessageContentVerifier.hasCardFields(data)) {
                     data.artifact = self.rights.filterMessageByRights(socket.username, rights_user, data.artifact);
                 }
                 if (! _.isEmpty(data)) {
                     socket_sender.to(socket.id).emit(message.cmd, data);
                 }
             });
+        }
+
+        /**
+         * @access private
+         *
+         * Function to put score
+         * on user
+         *
+         * @param room_id  (string)
+         * @param user     (Object)
+         */
+        function extendUserWithScore(room_id, user) {
+            if (user) {
+                var score = self.scores.getScoreByUserIdAndRoomId(user.id, room_id);
+                if (_.has(user, 'score')) {
+                    user.score = score;
+                } else {
+                    _.extend(user, {
+                        score: score
+                    });
+                }
+            }
         }
     };
 

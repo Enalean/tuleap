@@ -18,7 +18,7 @@ describe("Module Executions", function() {
     });
 
     describe("addUserByExecutionId()", function() {
-        it("Given a execution id and a presence, when I addUserByExecutionId executions then executions is with execution id as key and an array of presence as value", function () {
+        it("Given a execution id and a presence, when I add user by execution id then executions is with execution id as key and an array of presence as value", function () {
             var presence = {
                 id: 102,
                 uuid: '456'
@@ -57,7 +57,14 @@ describe("Module Executions", function() {
 
             var expect_data = {
                 execution_to_add: 1,
+                execution_presences_to_add: [
+                    {
+                        id: 101,
+                        uuid: '123'
+                    }
+                ],
                 execution_to_remove: 5,
+                execution_presences_to_remove: [],
                 user: {
                     id: 101,
                     uuid: '123'
@@ -91,6 +98,16 @@ describe("Module Executions", function() {
 
             var expect_data = {
                 execution_to_add: 5,
+                execution_presences_to_add: [
+                    {
+                        id: 101,
+                        uuid: '123'
+                    },
+                    {
+                        id: 121,
+                        uuid: '789'
+                    }
+                ],
                 user: {
                     id: 121,
                     uuid: '789'
@@ -141,7 +158,7 @@ describe("Module Executions", function() {
     });
 
     describe("removeByUserUUID()", function() {
-        it("Given a uuid of user, when I removeByUserUUID then presence doesn't exist anymore in the execution", function () {
+        it("Given a uuid of user, when I remove by user uuid then presence doesn't exist anymore in the execution", function () {
             var expect_executions = {
                 5: [
                     {
@@ -160,7 +177,7 @@ describe("Module Executions", function() {
             expect(executions.presences_collection).toEqual(expect_executions);
         });
 
-        it("Given a uuid of user, when I removeByUserUUID with only this presence then presence doesn't exist anymore and the execution too", function () {
+        it("Given a uuid of user, when I remove by user uuid with only this presence then presence doesn't exist anymore and the execution too", function () {
             expect(executions.removeByUserUUID).toBeDefined();
             executions.removeByUserUUID('123');
             expect(executions.presences_collection).toEqual({});

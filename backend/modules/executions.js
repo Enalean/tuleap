@@ -191,14 +191,17 @@ define([
 
             if (execution_to_add !== '') {
                 _.extend(data_to_broadcast, {
-                    execution_to_add: execution_to_add
+                    execution_to_add: execution_to_add,
+                    execution_presences_to_add: self.presences_collection[execution_to_add]
                 });
             }
             if (execution_to_remove !== '') {
                 _.extend(data_to_broadcast, {
-                    execution_to_remove: execution_to_remove
+                    execution_to_remove: execution_to_remove,
+                    execution_presences_to_remove: self.presences_collection[execution_to_remove]
                 });
             }
+
             return data_to_broadcast;
         }
     };

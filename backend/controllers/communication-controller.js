@@ -32,6 +32,7 @@ define([
     var CommunicationController = function (io, app, config) {
         var jsonParser           = bodyParser.json();
         var communicationService = new CommunicationService(config);
+        communicationService.clearScoresInTwoDays();
 
         /**
          * Connection Websocket on namespace trafficlights
