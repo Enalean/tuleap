@@ -687,16 +687,19 @@ class FRSFileFactory {
      *
      * @return Boolean
      */
-    public function purgeFile($file, $backend) {
+    public function purgeFile($file, $backend)
+    {
         $dao = $this->_getFRSFileDao();
         if (file_exists($this->getStagingPath($file))) {
-            $this->archiveBeforePurge($file, $backend);
-            if (unlink($this->getStagingPath($file))) {
-                if (!$dao->setPurgeDate($file->getFileID(), time())) {
-                    $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", Backend::LOG_ERROR);
-                    return false;
+            $has_been_archived = $this->archiveBeforePurge($file, $backend);
+            if ($has_been_archived) {
+                if (unlink($this->getStagingPath($file))) {
+                    if (!$dao->setPurgeDate($file->getFileID(), time())) {
+                        $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", Backend::LOG_ERROR);
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
             }
             $backend->log("File ".$this->getStagingPath($file)." not purged, unlink failed", Backend::LOG_ERROR);
             return false;

@@ -2,6 +2,7 @@
 
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -36,7 +37,8 @@ Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion
 
 Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge', '_getEventManager', '_getItemFactory', '_getUserManager'));
 
-class Docman_VersionFactoryTest extends UnitTestCase {
+
+class Docman_VersionFactoryTest extends TuleapTestCase {
 
     function testPurgeDeletedVersionsWithNoVersions() {
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
@@ -106,7 +108,7 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $this->assertFalse($versionFactory->PurgeDeletedVersion($version));
     }
 
-function testPurgeDeletedVersion() {
+    function testPurgeDeletedVersion() {
         $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
 
         $dao = new MockDocman_VersionDao($this);
@@ -126,11 +128,43 @@ function testPurgeDeletedVersion() {
                                             'path'      => dirname(__FILE__).'/_fixtures/fileToPurge_txt'));
 
         $fp = fopen($version->getPath(), 'w');
+
+        stub($versionFactory)->archiveBeforePurge()->returns(true);
         $versionFactory->expectOnce('archiveBeforePurge', array($version));
 
         $this->assertTrue($versionFactory->PurgeDeletedVersion($version));
         $this->assertFalse(file_exists($version->getPath()));
     }
+
+    public function itDoesNotRemoveLocalFileIfPurgeFails() {
+        $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
+
+        $dao = new MockDocman_VersionDao($this);
+        $dao->setReturnValue('setPurgeDate', true);
+        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $version = new Docman_Version(array(
+            'id'        => null,
+            'user_id'   => null,
+            'item_id'   => null,
+            'number'    => null,
+            'label'     => null,
+            'changelog' => null,
+            'date'      => null,
+            'filename'  => 'fileToDontPurge.txt',
+            'filesize'  => null,
+            'filetype'  => null,
+            'path'      => dirname(__FILE__).'/_fixtures/fileToPurge_txt'));
+        fopen($version->getPath(), 'w');
+
+        stub($versionFactory)->archiveBeforePurge()->returns(false);
+        $versionFactory->expectNever('archiveBeforePurge', array($version));
+
+        $this->assertTrue(file_exists($version->getPath()));
+
+        unlink($version->getPath());
+    }
+
 
     function testRestoreOneVersion() {
         $filePath       = dirname(__FILE__).'/_fixtures/version.test';
