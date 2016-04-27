@@ -20,12 +20,13 @@
  * Manages sending a preview
  */
 var MassMail = Class.create({
-    initialize: function () {
+    initialize: function (editor) {
         // Must use Event.observe(toggle... instead of toggle.observe(...
         // Otherwise IE cannot manage it. Oo
         Event.observe($('preview_submit'), 'click', this.sendPreview.bindAsEventListener(this));
         Event.observe($('preview_destination'), 'keypress', this.disableEnterKey.bindAsEventListener(this));
         Event.observe($('massmail_form'), 'submit', this.confirmSubmitMassMail.bindAsEventListener(this));
+        this.editor = editor;
     },
     //Disable massmail_form submission when enter key is pressed, the preview is sent instead .
     disableEnterKey: function(event) {
@@ -40,18 +41,16 @@ var MassMail = Class.create({
         var mailSubject = encodeURIComponent($('mail_subject').value);
         previewDestination = encodeURIComponent($('preview_destination').value);
         if (previewDestination != '') {
-             $('body_format_text', 'body_format_html').each(function(node){
+             $('comment_format_text', 'comment_format_html').each(function(node){
                 if (node.selected) {
                     bodyFormat = encodeURIComponent(node.value);
                 }
             });
-            //Once toggled, TinyMCE will inlay an amount of html so the content of the mass_mail textarea must be updated.
-            var inst = tinyMCE.getInstanceById('mail_message');
-            if (inst) {
-                $('mail_message').value = tinyMCE.getInstanceById('mail_message').getBody().innerHTML;
+            if (this.editor.isInstantiated()) {
+                $('mail_message').value = this.editor.getContent();
             }
             var mailMessage = encodeURIComponent($('mail_message').value);
-            var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
+            var formParameters = 'destination=preview&mail_subject='+mailSubject+'&comment_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
             var spinner = Builder.node('img', {'src'    : '/themes/common/images/ic/spinner.gif',
                                                'border' : '0'});
             //we request the preview here, massmail_execute will process the whole stuff

@@ -99,7 +99,7 @@ document.observe('dom:loaded', function() {
                 id: ''
             };
 
-            new tuleap.textarea.RTE(mail_message_container, options);
+            var editor = new tuleap.textarea.RTE(mail_message_container, options);
 
             // Building input for the submission of preview adresses 
             var button = Builder.node('input', {'id'      : 'preview_submit',
@@ -110,7 +110,7 @@ document.observe('dom:loaded', function() {
             $('preview_button').appendChild(button);
 
             //launching initialize function on MassMail instance will observe Events on the  input built above
-            new MassMail();
+            new MassMail(editor);
         });";
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
