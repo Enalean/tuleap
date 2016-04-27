@@ -9,6 +9,7 @@ Version 8.14 (Not released yet)
 		- User that are already project_members must not stop the import
 	* story #9043: have a cookie cleaned with no user token and id
 	* story #9027: Create plugin teamforge_compat_tracker
+	* story #7897: Package plugin hudson_git
 
 	== Bug Fix ==
 	* request #9014: Spelling mistake in the french Tuleap homepage
