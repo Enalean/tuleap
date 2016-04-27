@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 8.14
+	* Load all tests of a campaign
+
 Version 0.4 - Tuleap 8.14
 	* b9a12a2 - bugs #26608 Correct url with no specials characters (24 hours ago) <Juliana Leclaire>
 	* 2c42f94 - stories #26536 know who is on which test when I load the page (2
