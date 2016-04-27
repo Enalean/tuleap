@@ -1,3 +1,76 @@
+Version 0.4 - Tuleap 8.14
+	* b9a12a2 - bugs #26608 Correct url with no specials characters (24 hours ago) <Juliana Leclaire>
+	* 2c42f94 - stories #26536 know who is on which test when I load the page (2
+	days ago) <Juliana Leclaire>
+	* fced0d8 - request #8963: Ability to scroll right side of modale (6 days ago)
+	<Joris Masson>
+	* 08ca44b - stories #26537 have test status, progress bar and list update in
+	real time (6 days ago) <Juliana Leclaire>
+	* 226c933 - stories #26535 know who's on which test in real time (7 days ago)
+	<Juliana Leclaire>
+	* ef93623 - story #9043 have a cookie cleaned with no user token and id (2
+	weeks ago) <Juliana Leclaire>
+	* a0d0ef4 - story #9041 Have a new architecture for real time (2 weeks ago)
+	<Juliana Leclaire>
+	* 483b5b3 - Update grunt build (3 months ago) <Joris Masson>
+	* da406ef - request #8527: update modal version (5 months ago) <Joris Masson>
+	* 184cbc6 - request #8619: error when transitions exist but are not used (5
+	months ago) <Joris Masson>
+	* 557ea9d - Story #7858: enforce field dependencies in the artifact-modal (5
+	months ago) <Joris Masson>
+	* 4b705b4 - Update the modal version (6 months ago) <Joris Masson>
+	* 2c7d44d - request #8530: Modal: title not well displayed when text field (6
+	months ago) <Joris Masson>
+	* 55b8df3 - update to new artifact modal (8 months ago) <Martin GOYOT>
+	* 25d5e9b - Show people position on application startup (8 months ago) <Martin
+	GOYOT>
+	* 4f3b2f7 - Automatically use sys_default_domain if no adress specified for
+	node server (8 months ago) <Martin GOYOT>
+	* a6d8a45 - fix: cannot create a campaign anymore (8 months ago) <Martin
+	GOYOT>
+	* 66852d0 - Style on grapgh (8 months ago) <Juliana Leclaire>
+	* 37126e9 - Correct bug to display graph complement. (8 months ago) <Juliana
+	Leclaire>
+	* 4637d1c - Trafficlights properly run in a separate directory (8 months ago)
+	<Manuel Vacelet>
+	* 53949c4 - Answer to complete references of an artifact (8 months ago)
+	<Juliana Leclaire>
+	* 46862a2 - Display graph on new view (8 months ago) <Juliana Leclaire>
+	* 8b21972 - Redirect when we click on label (8 months ago) <Juliana Leclaire>
+	* b944313 - Review the code with a simplified REST route (8 months ago)
+	<Juliana Leclaire>
+	* a18cfc4 - Remove specific management of test_executions (8 months ago)
+	<Manuel Vacelet>
+	* 58c3fb4 - Fix less compilation for plugin part (8 months ago) <Manuel
+	Vacelet>
+	* 3c5333a - Drag & Drop, Zoom In/Out on graph (8 months ago) <Juliana
+	Leclaire>
+	* 268d615 - Distinguish Artifact nodes and Test execution nodes (8 months ago)
+	<Manuel Vacelet>
+	* 610c7b2 - Add route to get graph nodes (8 months ago) <Manuel Vacelet>
+	* bf18cda - Edit a test definition in a modal (8 months ago) <Juliana
+	Leclaire>
+	* 3beba8a - Display the graph complement when there is a click event on node
+	(8 months ago) <Juliana Leclaire>
+	* 610e0ed - Fix build of packages on centos6 for centos5 (9 months ago)
+	<Manuel Vacelet>
+	* 980c406 - -ti prevent build in jenkins because there is no tty (9 months
+	ago) <Manuel Vacelet>
+	* f045bd6 - Properly package and build RPMs (9 months ago) <Manuel Vacelet>
+	* 9b0d51b - Display informations (item_name, color) on each nodes (9 months
+	ago) <Juliana Leclaire>
+	* 54df267 - Display the title of modal graph (9 months ago) <Juliana Leclaire>
+	* d90a47f - Merge definition and execution nodes in artifact link graph (9
+	months ago) <Juliana Leclaire>
+	* 6df6f6b - Sexyfication of graph button (9 months ago) <Benjamin Dauton>
+	* a289de6 - D3 graph with fake data (9 months ago) <Juliana Leclaire>
+	* d7020c9 - Transform REST data for D3 (9 months ago) <Benjamin Dauton>
+	* f6640a4 - New artifact-links-graph angular module structure (9 months ago)
+	<Benjamin Dauton>
+	* f115f9e - Remove nbsp (9 months ago) <Manuel Vacelet>
+	* 1017c82 - Fix tests (11 months ago) <Yannis ROSSETTO>
+	* 6abaf45 - Rename to TrafficLights (12 months ago) <Manuel Vacelet>
+
 Version 0.3 - Tuleap 8.1
 	* Remove all localStorage access and clean duplicate module prefix/suffix
 	* Fix sense of progress CSS
