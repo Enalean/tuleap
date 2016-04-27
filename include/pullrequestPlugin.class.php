@@ -33,9 +33,11 @@ use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Dao;
 
-class pullrequestPlugin extends Plugin {
+class pullrequestPlugin extends Plugin
+{
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
@@ -57,35 +59,41 @@ class pullrequestPlugin extends Plugin {
         }
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return 'plugin_pullrequest';
     }
 
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('git');
     }
 
-    public function service_classnames($params) {
+    public function service_classnames($params)
+    {
         $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
 
-    public function cssfile($params) {
+    public function cssfile($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/angular/bin/assets/tuleap-pullrequest.css" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
         }
     }
 
-    public function javascript_file() {
+    public function javascript_file()
+    {
         if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-pullrequest.js"></script>';
         }
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         $user_manager           = UserManager::instance();
         $git_repository_factory = new GitRepositoryFactory(
             new GitDao(),
@@ -106,7 +114,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @return Tuleap\PullRequest\PluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
         }
@@ -116,7 +125,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources(array $params) {
+    public function rest_resources(array $params)
+    {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
@@ -124,14 +134,16 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see REST_GIT_PULL_REQUEST_ENDPOINTS
      */
-    public function rest_git_pull_request_endpoints($params) {
+    public function rest_git_pull_request_endpoints($params)
+    {
         $params['available'] = true;
     }
 
     /**
      * @see REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY
      */
-    public function rest_git_pull_request_get_for_repository($params) {
+    public function rest_git_pull_request_get_for_repository($params)
+    {
         $version = $params['version'];
         $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
         $repository_resource = new $class;
@@ -146,7 +158,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_ADDITIONAL_INFO
      */
-    public function git_additional_info($params) {
+    public function git_additional_info($params)
+    {
         $repository = $params['repository'];
 
         if (! $repository->isMigratedToGerrit()) {
@@ -162,7 +175,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_ADDITIONAL_ACTIONS
      */
-    public function git_additional_actions($params) {
+    public function git_additional_actions($params)
+    {
         $repository = $params['repository'];
 
         if (! $repository->isMigratedToGerrit()) {
@@ -180,7 +194,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_ADDITIONAL_BODY_CLASSES
      */
-    public function git_additional_body_classes($params) {
+    public function git_additional_body_classes($params)
+    {
         if ($params['request']->get('action') === 'pull-requests') {
             $params['classes'][] = 'git-pull-requests';
         }
@@ -189,7 +204,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_ADDITIONAL_PERMITTED_ACTIONS
      */
-    public function git_additional_permitted_actions($params) {
+    public function git_additional_permitted_actions($params)
+    {
         $repository = $params['repository'];
         $user       = $params['user'];
 
@@ -201,7 +217,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_HANDLE_ADDITIONAL_ACTION
      */
-    public function git_handle_additional_action($params) {
+    public function git_handle_additional_action($params)
+    {
         $git_controller = $params['git_controller'];
         $repository     = $params['repository'];
 
@@ -211,7 +228,6 @@ class pullrequestPlugin extends Plugin {
             if ($repository) {
                 $git_controller->addAction('getRepositoryDetails', array($repository->getProjectId(), $repository->getId()));
                 $git_controller->addView('view');
-
             } else {
                 $git_controller->redirectNoRepositoryError();
             }
@@ -221,7 +237,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_ADDITIONAL_HELP_TEXT
      */
-    public function git_additional_help_text($params) {
+    public function git_additional_help_text($params)
+    {
         $repository = $params['repository'];
 
         if (! $repository->isMigratedToGerrit()) {
@@ -235,7 +252,8 @@ class pullrequestPlugin extends Plugin {
     /**
      * @see GIT_VIEW
      */
-    public function git_view($params) {
+    public function git_view($params)
+    {
         $repository = $params['repository'];
         $user       = $params['user'];
         $request    = $params['request'];
@@ -248,11 +266,13 @@ class pullrequestPlugin extends Plugin {
         }
     }
 
-    private function getPullRequestFactory() {
+    private function getPullRequestFactory()
+    {
         return new Factory(new Dao());
     }
 
-    private function getTemplateRenderer() {
+    private function getTemplateRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . '/templates');
     }
 }

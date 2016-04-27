@@ -20,8 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-
-class PullRequestPOSTRepresentation {
+class PullRequestPOSTRepresentation
+{
 
     /**
      * @var int {@type int}
@@ -38,7 +38,8 @@ class PullRequestPOSTRepresentation {
      */
     public $branch_dest;
 
-    public function build($repository_id, $branch_src, $branch_dest) {
+    public function build($repository_id, $branch_src, $branch_dest)
+    {
         $this->repository_id = $repository_id;
         $this->branch_src    = $branch_src;
         $this->branch_dest   = $branch_dest;

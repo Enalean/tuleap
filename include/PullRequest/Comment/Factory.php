@@ -20,17 +20,20 @@
 
 namespace Tuleap\PullRequest\Comment;
 
-class Factory {
+class Factory
+{
 
     /** @var Tuleap\PullRequest\Comment\Dao */
     private $dao;
 
 
-    public function __construct(Dao $dao) {
+    public function __construct(Dao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function save(Comment $comment) {
+    public function save(Comment $comment)
+    {
         return $this->dao->save(
             $comment->getPullRequestId(),
             $comment->getUserId(),
@@ -38,17 +41,19 @@ class Factory {
         );
     }
 
-    public function getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order) {
+    public function getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order)
+    {
         $comments = array();
 
-        foreach($this->dao->searchByPullRequestId($pull_request_id, $limit, $offset, $order) as $row) {
+        foreach ($this->dao->searchByPullRequestId($pull_request_id, $limit, $offset, $order) as $row) {
             $comments[] = $this->instantiateFromRow($row);
         }
 
         return new PaginatedComments($comments, $this->dao->foundRows());
     }
 
-    private function instantiateFromRow($row) {
+    private function instantiateFromRow($row)
+    {
         return new Comment(
             $row['id'],
             $row['pull_request_id'],

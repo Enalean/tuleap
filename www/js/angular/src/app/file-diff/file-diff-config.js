@@ -11,9 +11,9 @@ function FileDiffConfig(
 ) {
     $stateProvider.state('diff', {
         url   : '/diff-{file_path}',
-        parent: 'pull-request',
+        parent: 'files',
         views : {
-            'file-diff@pull-request': {
+            'file-diff@files': {
                 template: '<div file-diff id="file-diff"></div>'
             }
         }

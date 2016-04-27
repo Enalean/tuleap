@@ -15,12 +15,6 @@ function PullRequestConfig(
         views : {
             'pull-request@pull-requests': {
                 template: '<div pull-request id="pull-request"></div>'
-            },
-            'files@pull-request': {
-                template: '<div files id="files"></div>'
-            },
-            'comments@pull-request': {
-                template: '<div comments id="comments"></div>'
             }
         }
     });

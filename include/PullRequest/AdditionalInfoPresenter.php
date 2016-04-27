@@ -22,7 +22,8 @@ namespace Tuleap\PullRequest;
 
 use GitRepository;
 
-class AdditionalInfoPresenter {
+class AdditionalInfoPresenter
+{
 
     /** @var GitRepository */
     private $repository;
@@ -31,20 +32,24 @@ class AdditionalInfoPresenter {
     private $nb_pull_requests;
 
 
-    public function __construct(GitRepository $repository, $nb_pull_requests) {
+    public function __construct(GitRepository $repository, $nb_pull_requests)
+    {
         $this->repository       = $repository;
         $this->nb_pull_requests = $nb_pull_requests;
     }
 
-    public function getTemplateName() {
+    public function getTemplateName()
+    {
         return 'additional-info';
     }
 
-    public function action_url() {
+    public function action_url()
+    {
         return '/plugins/git/?action=pull-requests&repo_id=' . $this->repository->getId() . '&group_id=' . $this->repository->getProjectId();
     }
 
-    public function nb_pull_request_badge() {
+    public function nb_pull_request_badge()
+    {
         if ($this->nb_pull_requests <= 1) {
             return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge', array($this->nb_pull_requests));
         }
@@ -52,8 +57,8 @@ class AdditionalInfoPresenter {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($this->nb_pull_requests));
     }
 
-    public function is_there_at_least_one_pull_request() {
+    public function is_there_at_least_one_pull_request()
+    {
         return $this->nb_pull_requests > 0;
     }
-
 }

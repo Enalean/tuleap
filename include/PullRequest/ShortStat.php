@@ -18,23 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST\v1;
+namespace Tuleap\PullRequest;
 
-class PullRequestFileRepresentation
+class ShortStat
 {
-    /**
-     * @var string {@type string}
-     */
-    public $path;
+    /** @var int */
+    private $files_changed;
+    /** @var int */
+    private $lines_added;
+    /** @var int */
+    private $lines_removed;
 
-    /**
-     * @var string {@type string}
-     */
-    public $status;
+    public function __construct(
+        $files_changed,
+        $lines_added,
+        $lines_removed
+    ) {
+        $this->files_changed = $files_changed;
+        $this->lines_added    = $lines_added;
+        $this->lines_removed  = $lines_removed;
+    }
 
-    public function build($path, $status)
+    public function getFilesChangedNumber()
     {
-        $this->path   = $path;
-        $this->status = $status;
+        return $this->files_changed;
+    }
+
+    public function getLinesAddedNumber()
+    {
+        return $this->lines_added;
+    }
+
+    public function getLinesRemovedNumber()
+    {
+        return $this->lines_removed;
     }
 }

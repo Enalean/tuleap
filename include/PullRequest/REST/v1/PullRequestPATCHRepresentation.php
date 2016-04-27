@@ -20,8 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-
-class PullRequestPATCHRepresentation {
+class PullRequestPATCHRepresentation
+{
 
     /**
      * @var string {@type string}

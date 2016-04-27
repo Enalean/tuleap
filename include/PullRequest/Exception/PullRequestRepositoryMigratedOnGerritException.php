@@ -22,8 +22,10 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestRepositoryMigratedOnGerritException extends Exception {
-    public function __construct() {
+class PullRequestRepositoryMigratedOnGerritException extends Exception
+{
+    public function __construct()
+    {
         parent::__construct("The repository is migrated on Gerrit. The Pull Request cannot be created.");
     }
 }

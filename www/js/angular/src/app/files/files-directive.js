@@ -6,7 +6,7 @@ function FilesDirective() {
     return {
         restrict        : 'A',
         scope           : {},
-        templateUrl     : 'pull-request/files/files.tpl.html',
+        templateUrl     : 'files/files.tpl.html',
         controller      : 'FilesController as files',
         bindToController: true
     };

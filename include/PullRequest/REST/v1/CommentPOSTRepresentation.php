@@ -20,11 +20,11 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-class CommentPOSTRepresentation {
+class CommentPOSTRepresentation
+{
 
     /**
      * @var string {@type string}
      */
     public $content;
-
 }

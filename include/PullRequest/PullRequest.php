@@ -20,13 +20,16 @@
 
 namespace Tuleap\PullRequest;
 
-class PullRequest {
+class PullRequest
+{
 
     const STATUS_ABANDONED = 'A';
     const STATUS_MERGED    = 'M';
     const STATUS_REVIEW    = 'R';
 
     private $id;
+    private $title;
+    private $description;
     private $repository_id;
     private $user_id;
     private $creation_date;
@@ -38,6 +41,8 @@ class PullRequest {
 
     public function __construct(
         $id,
+        $title,
+        $description,
         $repository_id,
         $user_id,
         $creation_date,
@@ -48,6 +53,8 @@ class PullRequest {
         $status = 'R'
     ) {
         $this->id            = $id;
+        $this->title         = $title;
+        $this->description   = $description;
         $this->repository_id = $repository_id;
         $this->user_id       = $user_id;
         $this->creation_date = $creation_date;
@@ -58,43 +65,63 @@ class PullRequest {
         $this->status        = $status;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getRepositoryId() {
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getRepositoryId()
+    {
         return $this->repository_id;
     }
 
-    public function getBranchSrc() {
+    public function getBranchSrc()
+    {
         return $this->branch_src;
     }
 
-    public function getSha1Src() {
+    public function getSha1Src()
+    {
         return $this->sha1_src;
     }
 
-    public function getBranchDest() {
+    public function getBranchDest()
+    {
         return $this->branch_dest;
     }
 
-    public function getSha1Dest() {
+    public function getSha1Dest()
+    {
         return $this->sha1_dest;
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->user_id;
     }
 
-    public function getCreationDate() {
+    public function getCreationDate()
+    {
         return $this->creation_date;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 }

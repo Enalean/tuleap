@@ -25,7 +25,8 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 use GitRepository;
 
-class PullRequestRepresentation {
+class PullRequestRepresentation
+{
 
     const ROUTE          = 'pull_requests';
     const COMMENTS_ROUTE = 'comments';
@@ -37,6 +38,16 @@ class PullRequestRepresentation {
      * @var int {@type int}
      */
     public $id;
+
+    /**
+     * @var string {@type string}
+     */
+    public $title;
+
+    /**
+     * @var string {@type string}
+     */
+    public $description;
 
     /**
      * @var string {@type string}
@@ -88,9 +99,20 @@ class PullRequestRepresentation {
      */
     public $resources;
 
+    /**
+     * @var array {@type PullRequestShortStatRepresentation}
+     */
+    public $short_stat;
 
-    public function build(PullRequest $pull_request, GitRepository $repository) {
+
+    public function build(
+        PullRequest $pull_request,
+        GitRepository $repository,
+        PullRequestShortStatRepresentation $pr_short_stat_representation
+    ) {
         $this->id  = JsonCast::toInt($pull_request->getId());
+        $this->title = $pull_request->getTitle();
+        $this->description = $pull_request->getDescription();
         $this->uri = self::ROUTE . '/' . $this->id;
 
         $repository_reference = new GitRepositoryReference();
@@ -110,9 +132,12 @@ class PullRequestRepresentation {
                 'uri' => $this->uri . '/'. self::COMMENTS_ROUTE
             )
         );
+
+        $this->short_stat = $pr_short_stat_representation;
     }
 
-    private function expandStatusName($status_acronym) {
+    private function expandStatusName($status_acronym)
+    {
         $status_name = array(
             PullRequest::STATUS_ABANDONED => self::STATUS_ABANDON,
             PullRequest::STATUS_MERGED    => self::STATUS_MERGE,

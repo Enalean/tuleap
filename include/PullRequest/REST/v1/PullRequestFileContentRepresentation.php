@@ -20,8 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-
-class PullRequestFileContentRepresentation {
+class PullRequestFileContentRepresentation
+{
     /**
      * @var string {@type string}
      */
@@ -32,9 +32,9 @@ class PullRequestFileContentRepresentation {
      */
     public $new_content;
 
-    public function build($old_content, $new_content) {
+    public function build($old_content, $new_content)
+    {
         $this->old_content = $old_content;
         $this->new_content = $new_content;
     }
-
 }

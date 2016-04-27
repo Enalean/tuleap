@@ -20,7 +20,8 @@
 
 namespace Tuleap\PullRequest\Comment;
 
-class PaginatedComments {
+class PaginatedComments
+{
 
     /** @var array */
     public $comments;
@@ -29,17 +30,19 @@ class PaginatedComments {
     public $total_size;
 
 
-    public function __construct(array $comments, $total_size) {
+    public function __construct(array $comments, $total_size)
+    {
         $this->comments   = $comments;
         $this->total_size = $total_size;
     }
 
-    public function getComments() {
+    public function getComments()
+    {
         return $this->comments;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
-
 }

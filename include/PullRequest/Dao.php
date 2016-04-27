@@ -22,9 +22,11 @@ namespace Tuleap\PullRequest;
 
 use DataAccessObject;
 
-class Dao extends DataAccessObject {
+class Dao extends DataAccessObject
+{
 
-    public function searchByPullRequestId($pull_request_id) {
+    public function searchByPullRequestId($pull_request_id)
+    {
         $pull_request_id = $this->da->escapeInt($pull_request_id);
 
         $sql = "SELECT *
@@ -34,7 +36,8 @@ class Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByShaOnes($sha1_src, $sha1_dest) {
+    public function searchByShaOnes($sha1_src, $sha1_dest)
+    {
         $sha1_src  = $this->da->quoteSmart($sha1_src);
         $sha1_dest = $this->da->quoteSmart($sha1_dest);
 
@@ -46,7 +49,8 @@ class Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function countPullRequestOfRepository($repository_id) {
+    public function countPullRequestOfRepository($repository_id)
+    {
         $repository_id = $this->da->escapeInt($repository_id);
 
         $sql = "SELECT COUNT(*) as nb_pull_requests FROM plugin_pullrequest_review WHERE repository_id = $repository_id";
@@ -56,6 +60,8 @@ class Dao extends DataAccessObject {
 
     public function create(
         $repository_id,
+        $title,
+        $description,
         $user_id,
         $creation_date,
         $branch_src,
@@ -64,6 +70,8 @@ class Dao extends DataAccessObject {
         $sha1_dest
     ) {
         $repository_id = $this->da->escapeInt($repository_id);
+        $title         = $this->da->quoteSmart($title);
+        $description   = $this->da->quoteSmart($description);
         $user_id       = $this->da->escapeInt($user_id);
         $creation_date = $this->da->escapeInt($creation_date);
         $branch_src    = $this->da->quoteSmart($branch_src);
@@ -73,6 +81,8 @@ class Dao extends DataAccessObject {
 
         $sql = "INSERT INTO plugin_pullrequest_review (
                                 repository_id,
+                                title,
+                                description,
                                 user_id,
                                 creation_date,
                                 branch_src,
@@ -81,6 +91,8 @@ class Dao extends DataAccessObject {
                                 sha1_dest
                             ) VALUES (
                                 $repository_id,
+                                $title,
+                                $description,
                                 $user_id,
                                 $creation_date,
                                 $branch_src,
@@ -92,7 +104,8 @@ class Dao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function getPaginatedPullRequests($repository_id, $limit, $offset) {
+    public function getPaginatedPullRequests($repository_id, $limit, $offset)
+    {
         $repository_id = $this->da->escapeInt($repository_id);
         $limit         = $this->da->escapeInt($limit);
         $offset        = $this->da->escapeInt($offset);
@@ -106,7 +119,8 @@ class Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function markAsAbandoned($pull_request_id) {
+    public function markAsAbandoned($pull_request_id)
+    {
         $pull_request_id  = $this->da->escapeInt($pull_request_id);
         $abandoned_status = $this->da->quoteSmart(PullRequest::STATUS_ABANDONED);
 
@@ -117,7 +131,8 @@ class Dao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function markAsMerged($pull_request_id) {
+    public function markAsMerged($pull_request_id)
+    {
         $pull_request_id = $this->da->escapeInt($pull_request_id);
         $merged_status   = $this->da->quoteSmart(PullRequest::STATUS_MERGED);
 

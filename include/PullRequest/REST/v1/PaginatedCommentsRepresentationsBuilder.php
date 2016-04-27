@@ -24,7 +24,8 @@ use Tuleap\PullRequest\Comment\Factory;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
-class PaginatedCommentsRepresentationsBuilder {
+class PaginatedCommentsRepresentationsBuilder
+{
 
     /** @var Tuleap\PullRequest\Comment\Factory */
     private $comment_factory;
@@ -32,16 +33,18 @@ class PaginatedCommentsRepresentationsBuilder {
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct(Factory $comment_factory) {
+    public function __construct(Factory $comment_factory)
+    {
         $this->comment_factory = $comment_factory;
         $this->user_manager    = UserManager::instance();
     }
 
-    public function getPaginatedCommentsRepresentations($pull_request_id, $limit, $offset, $order) {
+    public function getPaginatedCommentsRepresentations($pull_request_id, $limit, $offset, $order)
+    {
         $paginated_comments       = $this->comment_factory->getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order);
         $comments_representations = array();
 
-        foreach($paginated_comments->getComments() as $comment) {
+        foreach ($paginated_comments->getComments() as $comment) {
             $user_representation = new MinimalUserRepresentation();
             $user_representation->build($this->user_manager->getUserById($comment->getUserId()));
 

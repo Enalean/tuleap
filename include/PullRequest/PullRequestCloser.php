@@ -29,15 +29,18 @@ use FileSystemIterator;
 use GitRepository;
 use ForgeConfig;
 
-class PullRequestCloser {
+class PullRequestCloser
+{
 
     private $dao;
 
-    public function __construct(Dao $dao) {
+    public function __construct(Dao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function abandon(PullRequest $pull_request) {
+    public function abandon(PullRequest $pull_request)
+    {
         $status = $pull_request->getStatus();
 
         if ($status === PullRequest::STATUS_ABANDONED) {
@@ -77,7 +80,7 @@ class PullRequestCloser {
             $executor->fetch($repository_full_path, $pull_request->getBranchSrc());
             $executor->fastForwardMerge($pull_request->getSha1Src());
             $executor->push(escapeshellarg('file://' . $repository_full_path) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
-        } catch(Git_Command_Exception $exception) {
+        } catch (Git_Command_Exception $exception) {
             throw new PullRequestCannotBeMerged(
                 'This Pull Request cannot be merged. It seems that the attempted merge is not fast-forward'
             );
@@ -88,13 +91,15 @@ class PullRequestCloser {
         return $this->dao->markAsMerged($pull_request->getId());
     }
 
-    private function getUniqueRandomDirectory() {
+    private function getUniqueRandomDirectory()
+    {
         $tmp = ForgeConfig::get('codendi_cache_dir');
 
         return exec("mktemp -d -p $tmp pr_XXXXXX");
     }
 
-    private function cleanTemporaryRepository($temporary_name) {
+    private function cleanTemporaryRepository($temporary_name)
+    {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(
                 $temporary_name,

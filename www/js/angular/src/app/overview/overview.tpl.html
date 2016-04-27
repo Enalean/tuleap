@@ -1,0 +1,64 @@
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span6">
+            <div>{{ overview.pull_request.title }}</div>
+            <blockquote>
+                {{ overview.pull_request.description || 'No description' }}
+            </blockquote>
+            <small>{{ overview.pull_request.reference_src }}</small>
+        </div>
+        <div class="span3">
+            <div class="pull-request-author">
+                <small>Author</small>
+                <div>
+                    <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
+                    {{ overview.author.display_name }}
+                </div>
+            </div>
+            <div>
+                <small>Date</small>
+                <div>{{ overview.pull_request.creation_date | date: 'short' }}</div>
+            </div>
+        </div>
+        <div class="span3">
+            <div>
+                <small>Changes</small>
+                <div>
+                    <span class="text-success">+{{ overview.pull_request.short_stat.lines_added}}</span>
+                    <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pull-request-actions">
+    <button ng-if="overview.pull_request.status === overview.valid_status_keys.review"
+            class="btn btn-large btn-primary"
+            ng-click="overview.merge(overview.pull_request.id)"
+    >
+        <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+    </button>
+    <button ng-if="overview.pull_request.status === overview.valid_status_keys.abandon"
+            class="btn btn-large btn-danger"
+            disabled
+            translate
+    >
+        Abandoned
+    </button>
+    <button ng-if="overview.pull_request.status === overview.valid_status_keys.merge"
+            class="btn btn-large btn-success"
+            disabled
+            translate
+    >
+        Already merged
+    </button>
+    <button ng-if="overview.pull_request.status === overview.valid_status_keys.review"
+            class="btn btn-large btn-danger"
+            ng-click="overview.abandon(overview.pull_request.id)"
+    >
+        <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+    </button>
+</div>
+
+<div ui-view="comments"></div>

@@ -25,9 +25,11 @@ use Git_Exec;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
 
-class GitExec extends Git_Exec {
+class GitExec extends Git_Exec
+{
 
-    public function getReferenceBranch($branch_name) {
+    public function getBranchSha1($branch_name)
+    {
         $output = array();
 
         try {
@@ -43,7 +45,8 @@ class GitExec extends Git_Exec {
         throw new UnknownBranchNameException($branch_name);
     }
 
-    public function getModifiedFiles($src_reference, $dest_reference) {
+    public function getModifiedFiles($src_reference, $dest_reference)
+    {
         $output = array();
 
         try {
@@ -58,7 +61,8 @@ class GitExec extends Git_Exec {
         return $output;
     }
 
-    public function fetch($remote, $branch_name) {
+    public function fetch($remote, $branch_name)
+    {
         $output = array();
         $remote = escapeshellarg($remote);
         $branch = escapeshellarg('refs/heads/' . $branch_name);
@@ -66,7 +70,8 @@ class GitExec extends Git_Exec {
         return $this->gitCmdWithOutput("fetch $remote $branch", $output);
     }
 
-    public function fetchNoHistory($remote, $branch_name) {
+    public function fetchNoHistory($remote, $branch_name)
+    {
         $output = array();
         $remote = escapeshellarg($remote);
         $branch = escapeshellarg('refs/heads/' . $branch_name);
@@ -74,16 +79,57 @@ class GitExec extends Git_Exec {
         return $this->gitCmdWithOutput("fetch --depth 1 $remote $branch", $output);
     }
 
-    public function fastForwardMerge($reference) {
+    public function fastForwardMerge($reference)
+    {
         $output    = array();
         $reference = escapeshellarg($reference);
 
         return $this->gitCmdWithOutput('merge --ff-only ' . $reference, $output);
     }
 
-    public function getAllBranchNames() {
+    public function getAllBranchNames()
+    {
+        $output = array();
+        $this->gitCmdWithOutput("branch | cut -c 3-", $output);
+        return $output;
+    }
+
+    public function getCommitMessage($ref)
+    {
+       $ref    = escapeshellarg($ref);
+       $cmd    = "log -1 $ref --pretty=%B";
        $output = array();
-       $this->gitCmdWithOutput("branch | cut -c 3-", $output);
+
+       $this->gitCmdWithOutput($cmd, $output);
        return $output;
+    }
+
+    public function getShortStat($ref_base, $ref_compare)
+    {
+        $ref_base    = escapeshellarg($ref_base);
+        $ref_compare = escapeshellarg($ref_compare);
+        $cmd         = "diff --numstat $ref_base $ref_compare";
+        $output      = array();
+        $this->gitCmdWithOutput($cmd, $output);
+
+        $lines_added   = 0;
+        $lines_removed = 0;
+        $files_changed = 0;
+
+        foreach ($output as $file_stat) {
+            $tokens = explode("\t", $file_stat);
+            if (count($tokens) != 3) {
+                continue;
+            }
+            if (is_numeric($tokens[0])) {
+                $lines_added   += intval($tokens[0]);
+            }
+            if (is_numeric($tokens[1])) {
+                $lines_removed += intval($tokens[1]);
+            }
+            $files_changed += 1;
+        }
+
+        return new ShortStat($files_changed, $lines_added, $lines_removed);
     }
 }

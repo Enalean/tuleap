@@ -22,9 +22,11 @@ namespace Tuleap\PullRequest\Comment;
 
 use DataAccessObject;
 
-class Dao extends DataAccessObject {
+class Dao extends DataAccessObject
+{
 
-    public function save($pull_request_id, $user_id, $content) {
+    public function save($pull_request_id, $user_id, $content)
+    {
         $pull_request_id = $this->da->escapeInt($pull_request_id);
         $user_id         = $this->da->escapeInt($user_id);
         $content         = $this->da->quoteSmart($content);
@@ -35,7 +37,8 @@ class Dao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function searchByPullRequestId($pull_request_id, $limit, $offset, $order) {
+    public function searchByPullRequestId($pull_request_id, $limit, $offset, $order)
+    {
         $pull_request_id = $this->da->escapeInt($pull_request_id);
         $limit           = $this->da->escapeInt($limit);
         $offset          = $this->da->escapeInt($offset);

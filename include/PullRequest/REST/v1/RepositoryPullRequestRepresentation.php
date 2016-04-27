@@ -20,7 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-class RepositoryPullRequestRepresentation {
+class RepositoryPullRequestRepresentation
+{
 
     /** @var array */
     public $collection;
@@ -28,7 +29,8 @@ class RepositoryPullRequestRepresentation {
     /** @var int */
     public $total_size;
 
-    public function build(array $collection, $total_size) {
+    public function build(array $collection, $total_size)
+    {
         $this->total_size = (int) $total_size;
         $this->collection = $collection;
     }

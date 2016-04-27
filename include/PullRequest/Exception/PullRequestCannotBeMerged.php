@@ -22,4 +22,6 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestCannotBeMerged extends Exception {}
+class PullRequestCannotBeMerged extends Exception
+{
+}

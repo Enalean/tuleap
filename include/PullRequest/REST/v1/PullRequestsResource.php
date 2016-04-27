@@ -52,7 +52,8 @@ use URLVerification;
 use Tuleap\REST\ProjectAuthorization;
 use BackendLogger;
 
-class PullRequestsResource extends AuthenticatedResource {
+class PullRequestsResource extends AuthenticatedResource
+{
 
     const MAX_LIMIT = 50;
 
@@ -77,7 +78,8 @@ class PullRequestsResource extends AuthenticatedResource {
     /** @var Tuleap\PullRequest\PullRequestCreator */
     private $pull_request_creator;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->git_repository_factory = new GitRepositoryFactory(
             new GitDao(),
             ProjectManager::instance()
@@ -96,9 +98,7 @@ class PullRequestsResource extends AuthenticatedResource {
         $this->user_manager         = UserManager::instance();
         $this->pull_request_creator = new PullRequestCreator(
             $this->pull_request_factory,
-            $pull_request_dao,
-            $this->git_repository_factory,
-            $this->user_manager
+            $pull_request_dao
         );
         $this->pull_request_closer  = new PullRequestCloser($pull_request_dao);
         $this->logger               = new BackendLogger();
@@ -107,7 +107,8 @@ class PullRequestsResource extends AuthenticatedResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         return $this->sendAllowHeadersForPullRequests();
     }
 
@@ -132,7 +133,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404 x Pull request does not exist
      */
-    protected function get($id) {
+    protected function get($id)
+    {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
@@ -142,8 +144,13 @@ class PullRequestsResource extends AuthenticatedResource {
 
         $this->checkUserCanReadRepository($user, $git_repository);
 
+        $executor          = new GitExec($git_repository->getFullPath(), $git_repository->getFullPath());
+        $short_stat        = $executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
+        $short_stat_repres = new PullRequestShortStatRepresentation();
+        $short_stat_repres->build($short_stat);
+
         $pull_request_representation = new PullRequestRepresentation();
-        $pull_request_representation->build($pull_request, $git_repository);
+        $pull_request_representation->build($pull_request, $git_repository, $short_stat_repres);
 
         return $pull_request_representation;
     }
@@ -169,7 +176,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404 x Pull request does not exist
      */
-    protected function getFiles($id) {
+    protected function getFiles($id)
+    {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
@@ -214,7 +222,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @throws 404 x Pull request does not exist
      * @throws 404 x The file does not exist
      */
-    protected function getFileContent($id, $path) {
+    protected function getFileContent($id, $path)
+    {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
@@ -238,7 +247,8 @@ class PullRequestsResource extends AuthenticatedResource {
         return $file_content_representation;
     }
 
-    private function getSourceContent(PullRequest $pull_request, GitExec $executor, $path) {
+    private function getSourceContent(PullRequest $pull_request, GitExec $executor, $path)
+    {
         try {
             $src_content  = $executor->getFileContent($pull_request->getSha1Src(), $path);
         } catch (Git_Command_Exception $exception) {
@@ -248,7 +258,8 @@ class PullRequestsResource extends AuthenticatedResource {
         return $src_content;
     }
 
-    private function getDestinationContent(PullRequest $pull_request, GitExec $executor, $path) {
+    private function getDestinationContent(PullRequest $pull_request, GitExec $executor, $path)
+    {
         try {
             $dest_content  = $executor->getFileContent($pull_request->getSha1Dest(), $path);
         } catch (Git_Command_Exception $exception) {
@@ -288,7 +299,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @throws 404
      * @status 201
      */
-    protected function post(PullRequestPOSTRepresentation $content) {
+    protected function post(PullRequestPOSTRepresentation $content)
+    {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
@@ -304,17 +316,15 @@ class PullRequestsResource extends AuthenticatedResource {
             $generated_pull_request = $this->pull_request_creator->generatePullRequest(
                 $git_repository,
                 $branch_src,
-                $branch_dest
+                $branch_dest,
+                $user
             );
         } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
-
         } catch (PullRequestCannotBeCreatedException $exception) {
             throw new RestException(400, $exception->getMessage());
-
         } catch (PullRequestAlreadyExistsException $exception) {
             throw new RestException(400, $exception->getMessage());
-
         } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -373,7 +383,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @throws 500 x Error while abandoning the pull request
      * @throws 500 x Error while merging the pull request
      */
-    protected function patch($id, PullRequestPATCHRepresentation $body) {
+    protected function patch($id, PullRequestPATCHRepresentation $body)
+    {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
@@ -413,7 +424,8 @@ class PullRequestsResource extends AuthenticatedResource {
         }
     }
 
-    private function abandon(PullRequest $pull_request) {
+    private function abandon(PullRequest $pull_request)
+    {
         if (! $this->pull_request_closer->abandon($pull_request)) {
             throw new RestException(500, 'Error while abandoning the pull request');
         }
@@ -422,7 +434,8 @@ class PullRequestsResource extends AuthenticatedResource {
     /**
      * @url OPTIONS {id}/comments
      */
-    public function optionsComments($id) {
+    public function optionsComments($id)
+    {
         return $this->sendAllowHeadersForComments();
     }
 
@@ -447,7 +460,8 @@ class PullRequestsResource extends AuthenticatedResource {
      * @throws 404
      * @throws 406
      */
-    protected function getComments($id, $limit = 10, $offset = 0, $order = 'asc') {
+    protected function getComments($id, $limit = 10, $offset = 0, $order = 'asc')
+    {
         $this->checkAccess();
         $this->checkLimit($limit);
         $this->sendAllowHeadersForComments();
@@ -489,7 +503,8 @@ class PullRequestsResource extends AuthenticatedResource {
      *
      * @status 201
      */
-    protected function postComments($id, CommentPOSTRepresentation $comment_data) {
+    protected function postComments($id, CommentPOSTRepresentation $comment_data)
+    {
         $this->checkAccess();
         $this->sendAllowHeadersForComments();
 
@@ -511,22 +526,24 @@ class PullRequestsResource extends AuthenticatedResource {
         return $comment_representation;
     }
 
-    private function checkLimit($limit) {
+    private function checkLimit($limit)
+    {
         if ($limit > self::MAX_LIMIT) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
 
-    private function getPullRequest($pull_request_id) {
+    private function getPullRequest($pull_request_id)
+    {
         try {
             return $this->pull_request_factory->getPullRequestById($pull_request_id);
-
         } catch (PullRequestNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
     }
 
-    private function getRepository($repository_id) {
+    private function getRepository($repository_id)
+    {
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
 
         if (! $repository) {
@@ -536,7 +553,8 @@ class PullRequestsResource extends AuthenticatedResource {
         return $repository;
     }
 
-    private function checkUserCanReadRepository(PFUser $user, GitRepository $repository) {
+    private function checkUserCanReadRepository(PFUser $user, GitRepository $repository)
+    {
         ProjectAuthorization::userCanAccessProject($user, $repository->getProject(), new URLVerification());
 
         if (! $repository->userCanRead($user)) {
@@ -544,7 +562,8 @@ class PullRequestsResource extends AuthenticatedResource {
         }
     }
 
-    private function checkUserCanWriteRepository(PFUser $user, GitRepository $repository) {
+    private function checkUserCanWriteRepository(PFUser $user, GitRepository $repository)
+    {
         ProjectAuthorization::userCanAccessProject($user, $repository->getProject(), new URLVerification());
 
         if (! $repository->userCanWrite($user)) {
@@ -552,24 +571,28 @@ class PullRequestsResource extends AuthenticatedResource {
         }
     }
 
-    private function sendLocationHeader($uri) {
+    private function sendLocationHeader($uri)
+    {
         $uri_with_api_version = '/api/v1/' . $uri;
 
         Header::Location($uri_with_api_version);
     }
 
-    private function sendAllowHeadersForPullRequests() {
+    private function sendAllowHeadersForPullRequests()
+    {
         Header::allowOptionsGetPostPatch();
     }
 
-    private function sendAllowHeadersForComments() {
+    private function sendAllowHeadersForComments()
+    {
         HEADER::allowOptionsGetPost();
     }
 
     /**
      * @return GitExec
      */
-    private function getExecutor(GitRepository $git_repository) {
+    private function getExecutor(GitRepository $git_repository)
+    {
         return new GitExec($git_repository->getFullPath(), $git_repository->getFullPath());
     }
 }

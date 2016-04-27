@@ -23,7 +23,8 @@ namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 
-class PullRequestReference {
+class PullRequestReference
+{
 
     /**
      * @var id
@@ -35,7 +36,8 @@ class PullRequestReference {
      */
     public $uri;
 
-    public function build(PullRequest $pull_request) {
+    public function build(PullRequest $pull_request)
+    {
         $this->id = JsonCast::toInt($pull_request->getId());
         $this->uri = PullRequestRepresentation::ROUTE . '/' . $this->id;
     }

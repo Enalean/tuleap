@@ -72,6 +72,6 @@ function PullRequestsController(
 
     function loadPullRequest(pull_request) {
         SharedPropertiesService.setPullRequest(pull_request);
-        $state.go('pull-request', { id: pull_request.id });
+        $state.go('overview', { id: pull_request.id });
     }
 }

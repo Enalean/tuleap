@@ -22,8 +22,10 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestNotFoundException extends Exception {
-    public function __construct() {
+class PullRequestNotFoundException extends Exception
+{
+    public function __construct()
+    {
         parent::__construct("This pull request does not exists");
     }
 }

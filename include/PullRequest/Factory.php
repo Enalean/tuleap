@@ -25,21 +25,24 @@ use \PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 
-class Factory {
+class Factory
+{
 
     /**
      * @var PullRequest\Dao
      */
     private $dao;
 
-    public function __construct(Dao $dao) {
+    public function __construct(Dao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return PullRequest
      */
-    public function getPullRequestById($id) {
+    public function getPullRequestById($id)
+    {
         $row = $this->dao->searchByPullRequestId($id)->getRow();
         if ($row === false) {
             throw new PullRequestNotFoundException();
@@ -48,7 +51,8 @@ class Factory {
         return $this->getInstanceFromRow($row);
     }
 
-    public function countPullRequestOfRepository(GitRepository $repository) {
+    public function countPullRequestOfRepository(GitRepository $repository)
+    {
         $row = $this->dao->countPullRequestOfRepository($repository->getId())->getRow();
 
         return (int)$row['nb_pull_requests'];
@@ -57,9 +61,12 @@ class Factory {
     /**
      * @return PullRequest
      */
-    public function getInstanceFromRow(array $row) {
+    public function getInstanceFromRow(array $row)
+    {
         return new PullRequest(
             $row['id'],
+            $row['title'],
+            $row['description'],
             $row['repository_id'],
             $row['user_id'],
             $row['creation_date'],
@@ -74,27 +81,12 @@ class Factory {
     /**
      * @return PullRequest
      */
-    public function create(
-        GitRepository $git_repository,
-        PFUser $user,
-        $branch_src,
-        $sha1_src,
-        $branch_dest,
-        $sha1_dest
-    ) {
-        $pull_request = new PullRequest(
-            0,
-            $git_repository->getId(),
-            $user->getId(),
-            time(),
-            $branch_src,
-            $sha1_src,
-            $branch_dest,
-            $sha1_dest
-        );
-
+    public function create(PullRequest $pull_request)
+    {
         $new_pull_request_id = $this->dao->create(
             $pull_request->getRepositoryId(),
+            $pull_request->getTitle(),
+            $pull_request->getDescription(),
             $pull_request->getUserId(),
             $pull_request->getCreationDate(),
             $pull_request->getBranchSrc(),

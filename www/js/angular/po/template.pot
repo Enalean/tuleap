@@ -4,16 +4,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Abandon"
 msgstr ""
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 #: src/app/pull-requests/pull-requests.tpl.html
 msgid "Abandoned"
 msgstr ""
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr ""
 
@@ -21,11 +21,11 @@ msgstr ""
 msgid "An error occured while doing one of your last actions."
 msgstr ""
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/overview/comments/comments.tpl.html
 msgid "Comment"
 msgstr ""
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/overview/comments/comments.tpl.html
 msgid "Comments"
 msgstr ""
 
@@ -33,11 +33,7 @@ msgstr ""
 msgid "Error details"
 msgstr ""
 
-#: src/app/pull-request/files/files.tpl.html
-msgid "Files"
-msgstr ""
-
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr ""
 
@@ -45,7 +41,11 @@ msgstr ""
 msgid "Merged"
 msgstr ""
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/files/files.tpl.html
+msgid "Modified Files"
+msgstr ""
+
+#: src/app/overview/comments/comments.tpl.html
 msgid "No comment"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Pull requests"
 msgstr ""
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/overview/comments/comments.tpl.html
 msgid "Say something…"
 msgstr ""
 

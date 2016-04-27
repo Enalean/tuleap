@@ -20,7 +20,8 @@
 
 namespace Tuleap\PullRequest;
 
-class PullRequestPresenter {
+class PullRequestPresenter
+{
 
     /** @var int */
     public $repository_id;
@@ -32,13 +33,15 @@ class PullRequestPresenter {
     public $language;
 
 
-    public function __construct($repository_id, $user_id, $language) {
+    public function __construct($repository_id, $user_id, $language)
+    {
         $this->repository_id = $repository_id;
         $this->user_id       = $user_id;
         $this->language      = $language;
     }
 
-    public function getTemplateName() {
+    public function getTemplateName()
+    {
         return 'index';
     }
 }

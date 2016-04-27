@@ -20,7 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-class CommentRepresentation {
+class CommentRepresentation
+{
 
     /** @var int */
     public $id;
@@ -32,10 +33,10 @@ class CommentRepresentation {
     public $content;
 
 
-    public function build($id, $user_representation, $content) {
+    public function build($id, $user_representation, $content)
+    {
         $this->id      = $id;
         $this->user    = $user_representation;
         $this->content = $content;
     }
-
 }

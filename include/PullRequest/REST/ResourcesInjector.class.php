@@ -25,8 +25,10 @@ use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
 /**
  * Inject resource into restler
  */
-class ResourcesInjector {
-    public function populate(\Luracast\Restler\Restler $restler) {
+class ResourcesInjector
+{
+    public function populate(\Luracast\Restler\Restler $restler)
+    {
         $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
     }
 }

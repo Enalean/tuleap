@@ -23,21 +23,24 @@ namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
-class PullRequestFileRepresentationFactory {
+class PullRequestFileRepresentationFactory
+{
 
     /**
      * @var GitExec;
      */
     private $executor;
 
-    public function __construct(GitExec $executor) {
+    public function __construct(GitExec $executor)
+    {
         $this->executor = $executor;
     }
 
     /**
      * @throws UnknownReferenceException
      */
-    public function getModifiedFilesRepresentations(PullRequest $pull_request) {
+    public function getModifiedFilesRepresentations(PullRequest $pull_request)
+    {
         $x_files = array();
 
         $modified_files = $this->executor->getModifiedFiles($pull_request->getSha1Src(), $pull_request->getSha1Dest());

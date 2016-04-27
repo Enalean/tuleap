@@ -22,8 +22,10 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestAlreadyExistsException extends Exception {
-    public function __construct() {
+class PullRequestAlreadyExistsException extends Exception
+{
+    public function __construct()
+    {
         parent::__construct("A pull request with the same source and destination references already exists.");
     }
 }

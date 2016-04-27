@@ -6,7 +6,7 @@ function CommentsDirective() {
     return {
         restrict        : 'A',
         scope           : {},
-        templateUrl     : 'pull-request/comments/comments.tpl.html',
+        templateUrl     : 'overview/comments/comments.tpl.html',
         controller      : 'CommentsController as comments',
         bindToController: true
     };

@@ -22,8 +22,10 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class UnknownReferenceException extends Exception {
-    public function __construct() {
+class UnknownReferenceException extends Exception
+{
+    public function __construct()
+    {
         parent::__construct("One or more given references do not exist");
     }
 }

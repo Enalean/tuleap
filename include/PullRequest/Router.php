@@ -30,7 +30,8 @@ use GitRepository;
 use UserManager;
 use CSRFSynchronizerToken;
 
-class Router {
+class Router
+{
 
     /**
      * @var UserManager
@@ -57,7 +58,8 @@ class Router {
         $this->user_manager           = $user_manager;
     }
 
-    public function route(Codendi_Request $request) {
+    public function route(Codendi_Request $request)
+    {
         $repository_id = $request->get('repository_id');
         $project_id    = $request->get('group_id');
 
@@ -77,7 +79,8 @@ class Router {
         }
     }
 
-    private function generatePullRequest(Codendi_Request $request, GitRepository $repository, $project_id) {
+    private function generatePullRequest(Codendi_Request $request, GitRepository $repository, $project_id)
+    {
         $branch_src    = $request->get('branch_src');
         $branch_dest   = $request->get('branch_dest');
         $repository_id = $repository->getId();
@@ -98,7 +101,8 @@ class Router {
             $generated_pull_request = $this->pull_request_creator->generatePullRequest(
                 $repository,
                 $branch_src,
-                $branch_dest
+                $branch_dest,
+                $user
             );
         } catch (UnknownBranchNameException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
@@ -106,14 +110,12 @@ class Router {
                 $project_id,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'generate_pull_request_branch_error')
             );
-
         } catch (PullRequestCannotBeCreatedException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
                 $repository_id,
                 $project_id,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_cannot_be_created')
             );
-
         } catch (PullRequestAlreadyExistsException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
                 $repository_id,
@@ -139,13 +141,15 @@ class Router {
         return $this->redirectToPullRequestViewIntoGitRepository($generated_pull_request, $project_id);
     }
 
-    private function redirectInRepositoryViewWithErrorMessage($repository_id, $project_id, $message) {
+    private function redirectInRepositoryViewWithErrorMessage($repository_id, $project_id, $message)
+    {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
 
         $this->redirectInRepositoryView($repository_id, $project_id);
     }
 
-    private function redirectInRepositoryViewBecauseOfBadRequest($repository_id, $project_id) {
+    private function redirectInRepositoryViewBecauseOfBadRequest($repository_id, $project_id)
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $GLOBALS['Language']->getText('plugin_pullrequest', 'invalid_request')
@@ -154,13 +158,15 @@ class Router {
         $this->redirectInRepositoryView($repository_id, $project_id);
     }
 
-    private function redirectInRepositoryView($repository_id, $project_id) {
+    private function redirectInRepositoryView($repository_id, $project_id)
+    {
         $GLOBALS['Response']->redirect(
             "/plugins/git/?action=view&repo_id=$repository_id&group_id=$project_id"
         );
     }
 
-    private function redirectToPullRequestViewIntoGitRepository(PullRequest $generated_pull_request, $project_id) {
+    private function redirectToPullRequestViewIntoGitRepository(PullRequest $generated_pull_request, $project_id)
+    {
         $repository_id            = $generated_pull_request->getRepositoryId();
         $generated_pull_request_id= $generated_pull_request->getId();
 

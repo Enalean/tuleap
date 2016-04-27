@@ -3,42 +3,25 @@ angular
     .controller('PullRequestController', PullRequestController);
 
 PullRequestController.$inject = [
+    '$state',
     'lodash',
-    'SharedPropertiesService',
-    'PullRequestService',
-    'PullRequestRestService'
+    'SharedPropertiesService'
 ];
 
 function PullRequestController(
+    $state,
     lodash,
-    SharedPropertiesService,
-    PullRequestService,
-    PullRequestRestService
+    SharedPropertiesService
 ) {
     var self = this;
 
+    // TODO use presenters in template instead of asking $state
     lodash.extend(self, {
-        valid_status_keys: PullRequestService.valid_status_keys,
-        pull_request     : SharedPropertiesService.getPullRequest(),
-        merge            : merge,
-        abandon          : abandon
+        $state: $state
     });
 
-    refreshPullRequest();
-
-    function refreshPullRequest() {
-        if (! lodash.has(self.pull_request, 'status')) {
-            PullRequestRestService.getPullRequest(self.pull_request.id).then(function(pull_request) {
-                self.pull_request = pull_request;
-            });
-        }
-    }
-
-    function merge() {
-        PullRequestService.merge(self.pull_request);
-    }
-
-    function abandon() {
-        PullRequestService.abandon(self.pull_request);
+    if ($state.current.name === 'pull-request') {
+        var prId = SharedPropertiesService.getPullRequest().id;
+        $state.go('overview', { id: prId });
     }
 }

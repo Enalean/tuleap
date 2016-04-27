@@ -85,11 +85,13 @@ class PullRequestCloserTest extends TuleapTestCase {
     public function itMergesABranchIntoAnEmptyBranch() {
         stub($this->dao)->markAsMerged(1)->returns(true);
 
-        $chat_ouane_master = $this->git_exec->getReferenceBranch('master');
-        $chat_ouane_dev    = $this->git_exec->getReferenceBranch('dev');
+        $chat_ouane_master = $this->git_exec->getBranchSha1('master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
 
         $pull_request = new PullRequest(
             1,
+            'title',
+            'description',
             73,
             105,
             1456309611,
@@ -119,11 +121,13 @@ class PullRequestCloserTest extends TuleapTestCase {
         file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
         system("cd $this->git_repository_dir && git checkout -b feature --quiet && git add . && git commit --quiet -m 'Add antiracing'");
 
-        $chat_ouane_dev     = $this->git_exec->getReferenceBranch('dev');
-        $chat_ouane_feature = $this->git_exec->getReferenceBranch('feature');
+        $chat_ouane_dev     = $this->git_exec->getBranchSha1('dev');
+        $chat_ouane_feature = $this->git_exec->getBranchSha1('feature');
 
         $pull_request = new PullRequest(
             1,
+            'title',
+            'description',
             73,
             105,
             1456309611,
@@ -148,11 +152,13 @@ class PullRequestCloserTest extends TuleapTestCase {
     }
 
     public function itReturnsTrueIfPullRequestIsAlreadyMerged() {
-        $chat_ouane_master = $this->git_exec->getReferenceBranch('master');
-        $chat_ouane_dev    = $this->git_exec->getReferenceBranch('dev');
+        $chat_ouane_master = $this->git_exec->getBranchSha1('master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
 
         $pull_request = new PullRequest(
             1,
+            'title',
+            'description',
             73,
             105,
             1456309611,
@@ -174,11 +180,13 @@ class PullRequestCloserTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfPullRequestWasPreviouslyAbandoned() {
-        $chat_ouane_master = $this->git_exec->getReferenceBranch('master');
-        $chat_ouane_dev    = $this->git_exec->getReferenceBranch('dev');
+        $chat_ouane_master = $this->git_exec->getBranchSha1('master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
 
         $pull_request = new PullRequest(
             1,
+            'title',
+            'description',
             73,
             105,
             1456309611,

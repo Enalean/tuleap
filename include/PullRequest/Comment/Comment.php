@@ -20,7 +20,8 @@
 
 namespace Tuleap\PullRequest\Comment;
 
-class Comment {
+class Comment
+{
 
     /** @var int */
     private $id;
@@ -35,27 +36,31 @@ class Comment {
     private $content;
 
 
-    public function __construct($id, $pull_request_id, $user_id, $content) {
+    public function __construct($id, $pull_request_id, $user_id, $content)
+    {
         $this->id              = $id;
         $this->pull_request_id = $pull_request_id;
         $this->user_id         = $user_id;
         $this->content         = $content;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getPullRequestId() {
+    public function getPullRequestId()
+    {
         return $this->pull_request_id;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->user_id;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         return $this->content;
     }
-
 }

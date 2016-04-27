@@ -22,9 +22,11 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
+use Tuleap\PullRequest\GitExec;
 use GitRepository;
 
-class RepositoryResource {
+class RepositoryResource
+{
 
     /** @var Tuleap\PullRequest\Dao */
     private $pull_request_dao;
@@ -32,21 +34,29 @@ class RepositoryResource {
     /** @var Tuleap\PullRequest\Factory */
     private $pull_request_factory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pull_request_dao     = new PullRequestDao();
         $this->pull_request_factory = new PullRequestFactory($this->pull_request_dao);
     }
 
-    public function getPaginatedPullRequests(GitRepository $repository, $limit, $offset) {
-        $result = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $limit, $offset);
+    public function getPaginatedPullRequests(GitRepository $repository, $limit, $offset)
+    {
+        $result   = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $limit, $offset);
+        $executor = new GitExec($repository->getFullPath(), $repository->getFullPath());
 
         $total_size = (int) $this->pull_request_dao->foundRows();
         $collection = array();
 
         foreach ($result as $row) {
-            $pull_request                = $this->pull_request_factory->getInstanceFromRow($row);
+            $pull_request      = $this->pull_request_factory->getInstanceFromRow($row);
+
+            $short_stat        = $executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
+            $short_stat_repres = new PullRequestShortStatRepresentation();
+            $short_stat_repres->build($short_stat);
+
             $pull_request_representation = new PullRequestRepresentation();
-            $pull_request_representation->build($pull_request, $repository);
+            $pull_request_representation->build($pull_request, $repository, $short_stat_repres);
             $collection[]                = $pull_request_representation;
         }
 

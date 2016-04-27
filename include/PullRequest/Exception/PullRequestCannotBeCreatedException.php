@@ -22,8 +22,10 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestCannotBeCreatedException extends Exception {
-    public function __construct() {
+class PullRequestCannotBeCreatedException extends Exception
+{
+    public function __construct()
+    {
         parent::__construct("The source and destination references should not be the same.");
     }
 }

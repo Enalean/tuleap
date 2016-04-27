@@ -22,4 +22,6 @@ namespace Tuleap\PullRequest\Exception;
 
 use Exception;
 
-class PullRequestCannotBeAbandoned extends Exception {}
+class PullRequestCannotBeAbandoned extends Exception
+{
+}

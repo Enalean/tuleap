@@ -17,24 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Tuleap\PullRequest\REST\v1;
 
-class PullRequestFileRepresentation
+use Tuleap\PullRequest\ShortStat;
+
+class PullRequestShortStatRepresentation
 {
-    /**
-     * @var string {@type string}
-     */
-    public $path;
 
-    /**
-     * @var string {@type string}
-     */
-    public $status;
+    /** @var int */
+    public $files_changed;
 
-    public function build($path, $status)
+    /** @var int */
+    public $lines_added;
+
+    /** @var int */
+    public $lines_removed;
+
+    public function build(ShortStat $short_stat)
     {
-        $this->path   = $path;
-        $this->status = $status;
+        $this->files_changed = $short_stat->getFilesChangedNumber();
+        $this->lines_added   = $short_stat->getLinesAddedNumber();
+        $this->lines_removed = $short_stat->getLinesRemovedNumber();
     }
 }

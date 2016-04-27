@@ -22,36 +22,43 @@ namespace Tuleap\PullRequest;
 
 use GitRepository;
 
-class AdditionalHelpTextPresenter {
+class AdditionalHelpTextPresenter
+{
 
-    public function getTemplateName() {
+    public function getTemplateName()
+    {
         return 'additional-help-text';
     }
 
-    public function git_clone_bar_help_text_title() {
+    public function git_clone_bar_help_text_title()
+    {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_title');
     }
 
-    public function git_clone_bar_help_text_intro() {
+    public function git_clone_bar_help_text_intro()
+    {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_intro');
     }
 
-    public function git_clone_bar_help_text_create_pull_request() {
+    public function git_clone_bar_help_text_create_pull_request()
+    {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_create_pull_request');
     }
 
-    public function new_pull_request_button_title() {
+    public function new_pull_request_button_title()
+    {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_button_title');
     }
 
-    public function git_clone_bar_help_text_view_pull_requests() {
+    public function git_clone_bar_help_text_view_pull_requests()
+    {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_view_pull_requests', array(
             $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array('#'))
         ));
     }
 
-    public function git_clone_bar_help_text_pull_request_actions() {
+    public function git_clone_bar_help_text_pull_request_actions()
+    {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_pull_request_actions');
     }
-
 }
