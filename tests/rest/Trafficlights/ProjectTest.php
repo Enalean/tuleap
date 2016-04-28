@@ -57,8 +57,8 @@ class ProjectTest extends BaseTest {
         $campaigns = $response->json();
 
         $first_campaign = $campaigns[0];
-        $this->assertArrayHasKey('nb_of_not_run', $first_campaign);
-        $this->assertEquals($first_campaign['nb_of_not_run'], 0);
+        $this->assertArrayHasKey('nb_of_notrun', $first_campaign);
+        $this->assertEquals($first_campaign['nb_of_notrun'], 0);
 
         $this->assertArrayHasKey('nb_of_passed', $first_campaign);
         $this->assertEquals($first_campaign['nb_of_passed'], 2);

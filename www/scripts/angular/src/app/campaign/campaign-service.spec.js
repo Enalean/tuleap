@@ -31,7 +31,7 @@ describe ('CampaignService - ', function () {
                 status: "Open",
                 nb_of_passed: 0,
                 nb_of_failed: 0,
-                nb_of_not_run: 1,
+                nb_of_notrun: 1,
                 nb_of_blocked: 0
             }
         ];

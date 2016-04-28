@@ -51,7 +51,7 @@ describe ('ExecutionRestService - ', function () {
             status: "passed",
             previous_result: {
                 result: "",
-                status: "not_run"
+                status: "notrun"
             }
         };
 

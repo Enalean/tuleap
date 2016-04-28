@@ -129,15 +129,16 @@ function ExecutionService(
     function updateTestExecution(execution_updated) {
         var execution = self.executions[execution_updated.id];
         var previous_status = execution.previous_result.status;
+        var status = execution_updated.status;
 
         _.assign(execution, execution_updated);
 
-        execution.saving       = false;
+        execution.saving = false;
         execution.submitted_by = null;
-        execution.error        = '';
-        execution.results      = '';
+        execution.error = '';
+        execution.results = '';
 
-        self.campaign[('nb_of_').concat(execution_updated.status)]++;
+        self.campaign[('nb_of_').concat(status)]++;
         self.campaign[('nb_of_').concat(previous_status)]--;
     }
 
