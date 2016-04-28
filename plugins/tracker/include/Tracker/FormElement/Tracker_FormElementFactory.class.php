@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -78,10 +79,40 @@ class Tracker_FormElementFactory {
         'separator'   => 'Tracker_FormElement_StaticField_Separator',
         'staticrichtext' => 'Tracker_FormElement_StaticField_RichText',
     );
+
+    /**
+     * Get the classname of additional form elements
+     *
+     * Params:
+     *  - fields  => (in/out) array of {'type' => 'classname'} Regular fields (int, float, …)
+     *  - dynamic => (in/out) array of {'type' => 'classname'} Fields that are computed (computed, per tracker art id, …)
+     *  - group   => (in/out) array of {'type' => 'classname'} Containers of fields (column, fieldset, …)
+     *  - static  => (in/out) array of {'type' => 'classname'} Static fields (static text, separators, …)
+     */
+    const GET_CLASSNAMES     = 'tracker_formelement_get_classnames';
+
+    /**
+     * Get the visitor responsible of the display of create interface for the element
+     *
+     * Params:
+     *  - all_used_elements => Tracker_FormElement[]
+     *  - visitor           => (output) Tracker_FormElement_View_Admin_CreateVisitor
+     */
+    const VIEW_ADMIN_CREATE_VISITOR = 'tracker_formelement_factory_view_admin_create_visitor';
+
     /**
      * A protected constructor; prevents direct creation of object
      */
     protected function __construct() {
+        $this->getEventManager()->processEvent(
+            self::GET_CLASSNAMES,
+            array(
+                'fields'  => &$this->classnames,
+                'dynamic' => &$this->special_classnames,
+                'group'   => &$this->group_classnames,
+                'static'  => &$this->staticfield_classnames
+            )
+        );
     }
 
     /**
@@ -470,7 +501,7 @@ class Tracker_FormElementFactory {
 
     private function getFieldsSQLTypes() {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
-        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
+
         return array_keys($field_classnames);
     }
 
@@ -480,7 +511,7 @@ class Tracker_FormElementFactory {
      */
     public function getUsedNonDynamicFields($tracker) {
         $field_classnames = $this->classnames;
-        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
+
         return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
     }
 
@@ -490,7 +521,7 @@ class Tracker_FormElementFactory {
      */
     public function getFields($tracker) {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
-        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
+
         return $this->getFormElementsByType($tracker, array_keys($field_classnames));
     }
 
@@ -908,38 +939,31 @@ class Tracker_FormElementFactory {
      * @return Tracker_FormElement Object
      */
     public function getInstanceFromRow($row) {
-        $form_element      = null;
-        $form_element_id   = $row['id'];
         $form_element_type = $row['formElement_type'];
         $klass             = $this->getFormElementClass($form_element_type);
 
-        if ($klass) {
-            $original_field = null;
-            if ($row['original_field_id']) {
-                $original_field = $this->getFormElementById($row['original_field_id']);
-            }
-            $form_element = new $klass(
-                                    $row['id'],
-                                    $row['tracker_id'],
-                                    $row['parent_id'],
-                                    $row['name'],
-                                    $row['label'],
-                                    $row['description'],
-                                    $row['use_it'],
-                                    $row['scope'],
-                                    $row['required'],
-                                    $row['notifications'],
-                                    $row['rank'],
-                                    $original_field
-            );
-        } else {
-            $event_parameters = array(
-                'instance' => &$form_element,
-                'type'     => $form_element_type,
-                'row'      => $row
-            );
-            EventManager::instance()->processEvent('tracker_formElement_instance', $event_parameters);
+        if (! $klass) {
+            return null;
         }
+
+        $original_field = null;
+        if ($row['original_field_id']) {
+            $original_field = $this->getFormElementById($row['original_field_id']);
+        }
+        $form_element = new $klass(
+                                $row['id'],
+                                $row['tracker_id'],
+                                $row['parent_id'],
+                                $row['name'],
+                                $row['label'],
+                                $row['description'],
+                                $row['use_it'],
+                                $row['scope'],
+                                $row['required'],
+                                $row['notifications'],
+                                $row['rank'],
+                                $original_field
+        );
 
         return $form_element;
     }
@@ -1268,17 +1292,12 @@ class Tracker_FormElementFactory {
     public function displayFactories(Tracker $tracker) {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $klasses = $this->classnames;
-        $special_klasses = $this->special_classnames;
-        $all_klasses = array_merge($klasses, $special_klasses);
-        EventManager::instance()->processEvent('tracker_formElement_classnames',
-                                               array('classnames' => &$all_klasses));
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fields'));
-        $w->setContent($this->fetchFactoryButtons($klasses, $tracker));
+        $w->setContent($this->fetchFactoryButtons($this->classnames, $tracker));
         $w->display();
 
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','dynamic_fields'));
-        $w->setContent($this->fetchFactoryButtons($special_klasses, $tracker));
+        $w->setContent($this->fetchFactoryButtons($this->special_classnames, $tracker));
         $w->display();
 
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','structural_elements'));
@@ -1360,8 +1379,6 @@ class Tracker_FormElementFactory {
             $form_element->setTracker($tracker);
 
             $klasses = array_merge($this->classnames, $this->special_classnames, $this->group_classnames, $this->staticfield_classnames);
-            $this->getEventManager()->processEvent('tracker_formElement_classnames',
-                                                   array('classnames' => &$klasses));
             $klass = $klasses[$type];
 
             //Waiting for PHP5.3 and $klass::staticMethod()
@@ -1373,6 +1390,13 @@ class Tracker_FormElementFactory {
                 $visitor = new Tracker_FormElement_View_Admin_CreateSharedVisitor($allUsedElements);
             } else {
                 $visitor = new Tracker_FormElement_View_Admin_CreateVisitor($allUsedElements);
+                $this->getEventManager()->processEvent(
+                    self::VIEW_ADMIN_CREATE_VISITOR,
+                    array(
+                        'all_used_elements' => $allUsedElements,
+                        'visitor'           => &$visitor
+                    )
+                );
             }
 
             $visitor->setType($type);
