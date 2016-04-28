@@ -54,10 +54,10 @@ function ExecutionService(
     }
 
     function loadExecutions(campaign_id) {
+        var deferred = $q.defer();
         self.campaign_id = campaign_id;
 
         if (self.executions_by_categories_by_campaigns[campaign_id]) {
-            var deferred = $q.defer();
             deferred.resolve();
             return deferred.promise;
         }
@@ -68,12 +68,13 @@ function ExecutionService(
 
         self.loading[campaign_id] = true;
         self.executions_by_categories_by_campaigns[campaign_id] = {};
+
         return getExecutions(campaign_id, limit, offset, nb_fetched);
     }
 
     function getExecutions(campaign_id, limit, offset, nb_fetched) {
         return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
-            var total_executions  = data.total;
+            var total_executions = data.total;
 
             nb_fetched += data.results.length;
             groupExecutionsByCategory(campaign_id, data.results);
@@ -81,9 +82,10 @@ function ExecutionService(
             $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
 
             if (nb_fetched < total_executions) {
-                getExecutions(campaign_id, limit, offset + limit, nb_fetched);
+                return getExecutions(campaign_id, limit, offset + limit, nb_fetched);
             } else {
                 self.loading[campaign_id] = false;
+                return;
             }
         });
     }
