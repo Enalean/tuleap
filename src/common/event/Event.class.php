@@ -1172,4 +1172,13 @@ class Event {
      *   message           => string
      */
     const SERVICE_IS_ACTIVABLE = 'service_is_activable';
+
+    /**
+     * Allow plugins to add user actions in the navbar
+     *
+     * Parameters:
+     *  - user    => (input)  PFUser
+     *  - actions => (output) Tuleap\User\UserActionPresenter[]
+     */
+    const USER_ACTIONS = "user_actions";
 }

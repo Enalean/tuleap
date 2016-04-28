@@ -2,6 +2,15 @@
     {{> navbar-search-form }}
 
     {{# user_is_logged_in }}
+        {{# user_actions }}
+            <li>
+                <a {{# id }}id="user-action-{{ id }}"{{/ id }} href="{{ href }}">
+                    {{# icon }}<i class="{{ icon }}"></i>{{/ icon }}
+                    {{ label }}
+                </a>
+                {{{ purified_content }}}
+            </li>
+        {{/ user_actions }}
         <li class="dropdown user-menu {{ nav_user_class }}">
             <a id="navbar-user-navigation" href="#" class="dropdown-toggle username" data-toggle="dropdown">
                 {{# has_user_avatar }}
