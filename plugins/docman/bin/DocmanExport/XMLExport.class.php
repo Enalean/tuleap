@@ -46,12 +46,11 @@ class XMLExport {
     }
 
     public function dumpPackage() {
-        $directoryPath = $this->packagePath.'/'.$this->archiveName;
-        $this->logger->info("Exporting documents of project [".$this->groupId."] in [".$directoryPath."]");
+        $this->logger->info("Exporting documents of project [".$this->groupId."] in [".$this->packagePath."]");
         if($this->createDirectories()) {
             $doc = $this->dump();
             $doc->save($this->packagePath.'/'.$this->archiveName.'.xml');
-            $this->logger->info("Documents of project [".$this->groupId."] dumped in [".$directoryPath."]");
+            $this->logger->info("Documents of project [".$this->groupId."] dumped in [".$this->packagePath."]");
         }
     }
 
@@ -68,22 +67,32 @@ class XMLExport {
         $doc->appendChild($docmanExport->getXML($doc));
     }
 
-    public function createDirectories() {
+    private function createDirectories() {
+        return $this->createDirectory($this->packagePath) &&
+               $this->createDirectory($this->packagePath.'/'.$this->archiveName);
+    }
+
+    private function createDirectory($directoryPath) {
         try {
-            $directoryPath = $this->packagePath.'/'.$this->archiveName;
             if (is_dir($directoryPath)) {
-                throw new DocmanExportException("Folder [".$directoryPath."] already exist");
-                return false;
+                if (!is_writable($directoryPath)) {
+                    throw new DocmanExportException("Folder [".$directoryPath."] already exist and is not writable");
+                } else {
+                    return true;
+                }
             }
+
             $parentDirectory = dirname($directoryPath);
             if(!is_dir($parentDirectory)) {
                 throw new DocmanExportException("Folder [".$parentDirectory."] does not exist");
                 return false;
             }
+
             if(!is_writable($parentDirectory)) {
                 throw new DocmanExportException("Folder [".$parentDirectory."] is not writable");
                 return false;
             }
+
             $dirCreated = mkdir($directoryPath, 0755, true);
             if($dirCreated == true) {
                 $this->dataPath = $directoryPath;
@@ -100,4 +109,3 @@ class XMLExport {
         }
     }
 }
-?>
