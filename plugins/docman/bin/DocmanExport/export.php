@@ -33,8 +33,9 @@ require 'Docman_ExportException.class.php';
 
 $consoleLogger = new Log_ConsoleLogger();
 
-$sys_user = getenv("USER");
-if ( $sys_user !== 'root' && $sys_user !== ForgeConfig::get('sys_http_user') ) {
+$posix_user = posix_getpwuid(posix_geteuid());
+$sys_user   = $posix_user['name'];
+if ($sys_user !== 'root' && $sys_user !== ForgeConfig::get('sys_http_user')) {
     $consoleLogger->error('Unsufficient privileges for user '.$sys_user);
     return false;
 }
