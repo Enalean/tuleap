@@ -2,16 +2,23 @@ angular
     .module('jwt')
     .service('JWTService', JWTService);
 
-JWTService.$inject = ['Restangular', '$q'];
+JWTService.$inject = [
+    'Restangular',
+    'jwtHelper'
+];
 
-function JWTService(Restangular, $q) {
+function JWTService(
+    Restangular,
+    jwtHelper
+) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl('/api/v1');
     });
 
     return {
-        getJWT: getJWT
+        getJWT             : getJWT,
+        getTokenExpiredDate: getTokenExpiredDate
     };
 
     function getJWT() {
@@ -21,5 +28,9 @@ function JWTService(Restangular, $q) {
             .then(function (response) {
                 return response.data;
             });
+    }
+
+    function getTokenExpiredDate(token) {
+        return jwtHelper.getTokenExpirationDate(token);
     }
 }

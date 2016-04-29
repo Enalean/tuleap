@@ -3,8 +3,10 @@ angular
     .service('SocketService', SocketService);
 
 SocketService.$inject = [
+    '$timeout',
     '$q',
     '$rootScope',
+    'moment',
     'locker',
     'SocketFactory',
     'ExecutionService',
@@ -13,8 +15,10 @@ SocketService.$inject = [
 ];
 
 function SocketService(
+    $timeout,
     $q,
     $rootScope,
+    moment,
     locker,
     SocketFactory,
     ExecutionService,
@@ -22,11 +26,25 @@ function SocketService(
     JWTService
 ) {
     return {
+        listenTokenExpired      : listenTokenExpired,
         listenNodeJSServer      : listenNodeJSServer,
         listenToExecutionViewed : listenToExecutionViewed,
         listenToExecutionLeft   : listenToExecutionLeft,
-        listenToExecutionUpdated: listenToExecutionUpdated
+        listenToExecutionUpdated: listenToExecutionUpdated,
+        refreshToken            : refreshToken
     };
+
+    function listenTokenExpired() {
+        var expired_date = moment(locker.get('token-expired-date')).subtract(5, 'm');
+        var timeout      = expired_date.diff(moment());
+        if (timeout < 0) {
+            requestJWTToRefreshToken();
+        } else {
+            $timeout(function () {
+                requestJWTToRefreshToken();
+            }, timeout);
+        }
+    }
 
     function listenNodeJSServer() {
         if (SharedPropertiesService.getNodeServerAddress()) {
@@ -34,6 +52,7 @@ function SocketService(
             listenPresences();
             return JWTService.getJWT().then(function (data) {
                 locker.put('token', data.token);
+                locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
                 return subscribe();
             });
         } else {
@@ -47,6 +66,12 @@ function SocketService(
             token                : locker.get('token'),
             room_id              : 'trafficlights_' + SharedPropertiesService.getCampaignId(),
             uuid                 : SharedPropertiesService.getUUID()
+        });
+    }
+
+    function refreshToken() {
+        SocketFactory.emit('token', {
+            token: locker.get('token')
         });
     }
 
@@ -91,6 +116,15 @@ function SocketService(
     function listenToExecutionUpdated() {
         SocketFactory.on('trafficlights_execution:update', function(response) {
             ExecutionService.updateTestExecution(response.artifact);
+        });
+    }
+
+    function requestJWTToRefreshToken() {
+        JWTService.getJWT().then(function (data) {
+            locker.put('token', data.token);
+            locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
+            refreshToken();
+            listenTokenExpired();
         });
     }
 }

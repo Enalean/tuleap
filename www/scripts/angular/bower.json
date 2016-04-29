@@ -21,7 +21,8 @@
     "angular-socket-io": "~0.6.0",
     "angular-ui-utils": "bower-unique",
     "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#089daee1f2cee808e12cfcff9b653fb5507dbc2e",
-    "angular-locker": "~2.0.3"
+    "angular-locker": "~2.0.3",
+    "angular-jwt": "~0.0.9"
   },
   "resolutions": {
     "angular": "1.3.11",

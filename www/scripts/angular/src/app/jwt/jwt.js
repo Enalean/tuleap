@@ -1,1 +1,3 @@
-angular.module('jwt', []);
+angular.module('jwt', [
+    'angular-jwt'
+]);

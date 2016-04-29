@@ -60,6 +60,7 @@ function ExecutionListCtrl(
     });
 
     SocketService.listenNodeJSServer().then(function() {
+        SocketService.listenTokenExpired();
         SocketService.listenToExecutionViewed();
         SocketService.listenToExecutionUpdated();
         SocketService.listenToExecutionLeft();

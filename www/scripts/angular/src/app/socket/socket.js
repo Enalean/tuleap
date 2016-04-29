@@ -1,5 +1,7 @@
 angular.module('socket', [
     'sharedProperties',
     'btford.socket-io',
-    'angular-locker'
+    'angular-locker',
+    'jwt',
+    'angularMoment'
 ]);

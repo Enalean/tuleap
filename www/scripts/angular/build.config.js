@@ -93,7 +93,8 @@ module.exports = {
             'vendor/angular-filter/dist/angular-filter.min.js',
             'vendor/artifact-modal/dist/tuleap-artifact-modal.js',
             'vendor/angular-ui-select/dist/select.js',
-            'vendor/angular-locker/dist/angular-locker.min.js'
+            'vendor/angular-locker/dist/angular-locker.min.js',
+            'vendor/angular-jwt/dist/angular-jwt.min.js'
         ],
         css: [
             'vendor/ng-scrollbar/dist/ng-scrollbar.min.css',
