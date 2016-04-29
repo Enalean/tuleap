@@ -51,6 +51,8 @@ Optional parameters:
     --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
     --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. If not defined, the messages will be appended to the item description.
     --auto-retry                            In case of error, retry 5 times before asking the user what to do
+    --login                                 Provide the username through the cli
+    --password                              Provide the user password through the cli
     --help                                  Show this help");
     die;
 }
@@ -83,13 +85,15 @@ if ($project === null && $projectId === null) {
     $console->error("One of the following parameters is required: --project, --project-id");
 }
 
-$force = getParameter($argv, 'force');
-$reorder = getParameter($argv, 'reorder');
-$update = getParameter($argv, 'update');
-$continue = getParameter($argv, 'continue');
-$path = getParameter($argv, 'path');
+$force                 = getParameter($argv, 'force');
+$reorder               = getParameter($argv, 'reorder');
+$update                = getParameter($argv, 'update');
+$continue              = getParameter($argv, 'continue');
+$path                  = getParameter($argv, 'path');
 $importMessageMetadata = getParameter($argv, 'import-metadata');
-$autoRetry = getParameter($argv, 'auto-retry');
+$autoRetry             = getParameter($argv, 'auto-retry');
+$login                 = getParameter($argv, 'login');
+$password              = getParameter($argv, 'password');
 
 // Path parameter check
 if ($path === null) {
