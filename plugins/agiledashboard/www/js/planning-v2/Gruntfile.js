@@ -416,6 +416,9 @@ module.exports = function(grunt) {
 
         nggettext_extract: {
             pot: {
+                options: {
+                    lineNumbers: false
+                },
                 files: {
                     'po/template.pot': ['src/**/*.html', 'src/**/*.js']
                 }
