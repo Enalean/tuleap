@@ -38,6 +38,8 @@ use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
+use Tuleap\PullRequest\FileUniDiff;
+use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -200,29 +202,29 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     /**
-     * Get the contents of a given file in a pull request
+     * Get the diff of a given file in a pull request
      *
-     * Get the contents of a given file for the source branch and the dest branch for a pull request.<br/>
+     * Get the diff of a given file between the source branch and the dest branch for a pull request.<br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
      *
      * <pre>
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
      * </pre>
      *
-     * @url GET {id}/file_content
+     * @url GET {id}/file_diff
      *
      * @access protected
      *
      * @param  int $id pull request ID
      * @param  string $path File path {@from query}
      *
-     * @return PullRequestFileContentRepresentation {@type Tuleap\PullRequest\REST\v1\PullRequestFileContentRepresentation}
+     * @return PullRequestFileUniDiffRepresentation {@type Tuleap\PullRequest\REST\v1\PullRequestFileUniDiffRepresentation}
      *
      * @throws 403
      * @throws 404 x Pull request does not exist
      * @throws 404 x The file does not exist
      */
-    protected function getFileContent($id, $path)
+    protected function getFileDiff($id, $path)
     {
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
@@ -241,10 +243,9 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(404, 'The file does not exist');
         }
 
-        $file_content_representation = new PullRequestFileContentRepresentation();
-        $file_content_representation->build($dest_content, $src_content);
-
-        return $file_content_representation;
+        $unidiff_builder = new FileUniDiffBuilder();
+        $diff            = $unidiff_builder->buildFileUniDiff($dest_content, $src_content);
+        return PullRequestFileUniDiffRepresentation::buildFromFileUniDiff($diff);
     }
 
     private function getSourceContent(PullRequest $pull_request, GitExec $executor, $path)

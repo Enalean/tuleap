@@ -19,22 +19,33 @@
  */
 
 namespace Tuleap\PullRequest\REST\v1;
+use Tuleap\PullRequest\FileUniDiff;
 
-class PullRequestFileContentRepresentation
+class PullRequestFileUniDiffRepresentation
 {
     /**
-     * @var string {@type string}
+     * @var PullRequestLineUniDiffRepresentation[] {@type PullRequestLineUniDiffRepresentation[]}
      */
-    public $old_content;
+    public $lines;
 
-    /**
-     * @var string {@type string}
-     */
-    public $new_content;
-
-    public function build($old_content, $new_content)
+    public function __construct()
     {
-        $this->old_content = $old_content;
-        $this->new_content = $new_content;
+        $lines = array();
+    }
+
+    public function addLine(PullRequestLineUniDiffRepresentation $line)
+    {
+        $this->lines[] = $line;
+    }
+
+    static public function buildFromFileUniDiff(FileUniDiff $diff)
+    {
+        $new_instance = new PullRequestFileUniDiffRepresentation();
+        foreach ($diff->getLines() as $line) {
+            $new_instance->addLine(
+                new PullRequestLineUniDiffRepresentation($line[0], $line[1], $line[2], $line[3])
+            );
+        }
+        return $new_instance;
     }
 }

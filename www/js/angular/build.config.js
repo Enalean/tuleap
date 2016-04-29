@@ -73,15 +73,11 @@ module.exports = {
             'bower_components/angular-gettext/dist/angular-gettext.min.js',
             'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             'bower_components/angular-sanitize/angular-sanitize.min.js',
-            'bower_components/google-diff-match-patch/diff_match_patch_uncompressed.js',
-            'bower_components/codemirror/lib/codemirror.js',
-            'bower_components/codemirror/addon/merge/merge.js',
-            'bower_components/ui-codemirror/src/ui-codemirror.js'
+            'bower_components/codemirror/lib/codemirror.js'
         ],
         css: [
             'bower_components/ui-select/dist/select.min.css',
-            'bower_components/codemirror/lib/codemirror.css',
-            'bower_components/codemirror/addon/merge/merge.css'
+            'bower_components/codemirror/lib/codemirror.css'
         ],
         assets: [
         ]

@@ -8,8 +8,7 @@
     "angular-ui-bootstrap-bower": "~0.8.0",
     "angular-ui-router": "~0.2.15",
     "ng-lodash": "~0.4.0",
-    "ui-codemirror": "https://github.com/CarlAmbroselli/ui-codemirror.git#8806332869a39f207ecc189edd0ae9e4b325f0d9",
-    "google-diff-match-patch": "~0.1.0",
+    "codemirror": "CodeMirror#^5.14.2",
     "ui-select": "angular-ui-select#~0.13.2"
   },
   "devDependencies": {

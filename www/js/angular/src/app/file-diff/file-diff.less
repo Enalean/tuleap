@@ -3,7 +3,32 @@
     padding: 0 15px 0 0;
     box-sizing: border-box;
 
-    .CodeMirror-merge, .CodeMirror-merge .CodeMirror {
+    .CodeMirror {
         height: 500px;
+        border: 1px solid lightgray;
+        margin: 15px 0 0 0;
+
+        .CodeMirror-gutter {
+            min-width: 30px;
+        }
+
+        .CodeMirror-gutter-elt {
+            text-align: right;
+        }
+
+        .gutter-oldlines {
+        }
+
+        .gutter-newlines {
+            background-color: lightgray;
+        }
+
+        .added-lines {
+            background-color: #e6ffe6;
+        }
+
+        .deleted-lines {
+            background-color: #ffe6e6;
+        }
     }
 }

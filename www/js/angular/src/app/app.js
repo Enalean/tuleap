@@ -4,7 +4,6 @@ angular.module('tuleap.pull-request', [
     'ui.router',
     'ui.bootstrap',
     'ui.select',
-    'ui.codemirror',
     'gettext',
     'ngLodash',
     'shared-properties'
