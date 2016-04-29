@@ -36,4 +36,20 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $user_id         = $this->da->escapeInt($user_id);
+        $file_path       = $this->da->quoteSmart($file_path);
+        $post_date       = $this->da->escapeInt($post_date);
+        $unidiff_offset  = $this->da->escapeInt($unidiff_offset);
+        $content         = $this->da->quoteSmart($content);
+
+        $sql = "INSERT INTO plugin_pullrequest_inline_comments(
+                pull_request_id,  user_id,  file_path,  post_date,  unidiff_offset,  content)
+        VALUES($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
 }

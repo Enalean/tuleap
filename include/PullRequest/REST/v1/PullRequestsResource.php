@@ -255,6 +255,62 @@ class PullRequestsResource extends AuthenticatedResource
         return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments);
     }
 
+
+    /**
+     * Post a new inline comment
+     *
+     * Post a new inline comment for a given pull request file<br>
+     * Format: { "content": "My new comment" , "unidiff_offset": 1, "file_path": "dir/myfile.txt"}
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url POST {id}/inline-comments
+     *
+     * @access protected
+     *
+     * @param int $id Pull request id
+     * @param PullRequestInlineCommentPOSTRepresentation $comment_data Comment {@from body} {@type Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation}
+     *
+     * @status 201
+     */
+    protected function postInline($id, PullRequestInlineCommentPOSTRepresentation $comment_data)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersForInlineComments();
+
+        $pull_request   = $this->getPullRequest($id);
+        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $user           = $this->user_manager->getCurrentUser();
+
+        $this->checkUserCanReadRepository($user, $git_repository);
+
+        $executor     = $this->getExecutor($git_repository);
+        $dest_content = $this->getDestinationContent($pull_request, $executor, $comment_data->file_path);
+        $src_content  = $this->getSourceContent($pull_request, $executor, $comment_data->file_path);
+
+        if ($src_content === null && $dest_content === null) {
+            throw new RestException(404, 'The file does not exist');
+        }
+
+        $post_date = time();
+
+        $dao = new \Tuleap\PullRequest\InlineComment\Dao();
+        $dao->insert($id, $user->getId(), $comment_data->file_path, $post_date, $comment_data->unidiff_offset, $comment_data->content);
+
+        $user_representation = new MinimalUserRepresentation();
+        $user_representation->build($this->user_manager->getUserById($user->getId()));
+
+        return new PullRequestInlineCommentRepresentation(
+            $comment_data->unidiff_offset,
+            $user_representation,
+            $post_date,
+            $comment_data->content
+        );
+    }
+
+
     private function getSourceContent(PullRequest $pull_request, GitExec $executor, $path)
     {
         try {
@@ -596,6 +652,11 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     private function sendAllowHeadersForComments()
+    {
+        HEADER::allowOptionsGetPost();
+    }
+
+    private function sendAllowHeadersForInlineComments()
     {
         HEADER::allowOptionsGetPost();
     }

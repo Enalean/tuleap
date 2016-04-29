@@ -19,6 +19,57 @@ function FileDiffDirective(
     SharedPropertiesService,
     FileDiffRestService
 ) {
+    var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
+        + '<div class="info"><div class="author">'
+        + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
+        + '<span>{{ user.username }}</span></div>'
+        + '<small class="post-date">{{ post_date | date: "short" }}</small></div>'
+        + '<div class="content">{{ content }}</div>'
+        + '</div>');
+
+    function displayInlineComment(unidiff, comment) {
+        var elt = document.createElement('div'); // eslint-disable-line angular/document-service
+        comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        elt.innerHTML = inlineCommentTemplate(comment);
+        unidiff.addLineWidget(comment.unidiff_offset - 1, elt, {
+            coverGutter: true
+        });
+    }
+
+    function showCommentForm(unidiff, lnb) {
+        var elt = document.createElement('div'); // eslint-disable-line angular/document-service
+        elt.innerHTML = '<form class="inline-comment-form">'
+            + '<textarea cols="80" rows="4"></textarea>'
+            + '<div class="controls"><input type="submit" value="Comment"><input type="button" value="Close"></div></form>';
+        var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
+            coverGutter: true
+        });
+
+        elt.querySelector('input[type="submit"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            var commentText = elt.querySelector('textarea').value;
+            postComment(lnb, commentText).then(function(comment) {
+                displayInlineComment(unidiff, comment);
+                commentFormWidget.clear();
+            });
+        });
+
+        elt.querySelector('input[type="button"]').addEventListener('click', function() {
+            commentFormWidget.clear();
+        });
+    }
+
+    function postComment(lnb, commentText) {
+        var pullRequest = SharedPropertiesService.getPullRequest();
+        var filePath = $state.params.file_path;
+        var unidiff_offset = lnb + 1;
+        return FileDiffRestService.postInlineComment(
+            pullRequest.id,
+            filePath,
+            unidiff_offset,
+            commentText);
+    }
+
     return {
         restrict        : 'A',
         scope           : {},
@@ -53,22 +104,11 @@ function FileDiffDirective(
                     }
                 });
 
-                var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
-                    + '<div class="info"><div class="author">'
-                    + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
-                    + '<span>{{ user.username }}</span></div>'
-                    + '<small class="post-date">{{ post_date | date: "short" }}</small></div>'
-                    + '<div class="content">{{ content }}</div>'
-                    + '</div>');
-
                 data.inline_comments.forEach(function(comment) {
-                    var elt = document.createElement('div'); // eslint-disable-line angular/document-service
-                    comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-                    elt.innerHTML = inlineCommentTemplate(comment);
-                    unidiff.addLineWidget(comment.unidiff_offset - 1, elt, {
-                        coverGutter: true
-                    });
+                    displayInlineComment(unidiff, comment);
                 });
+
+                unidiff.on('gutterClick', showCommentForm);
             });
         }
     };
