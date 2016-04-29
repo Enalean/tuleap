@@ -244,7 +244,7 @@ class PostCommit {
             }
         }
 
-        return $notified_mail;
+        return array_unique($notified_mail);
     }
 
     private function setFrom(MailEnhancer $mail_enhancer, PFUser $user) {
