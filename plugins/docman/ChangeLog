@@ -1,3 +1,6 @@
+Version 2.26.101 - Tuleap 8.15
+    * request #9114 Provide login and password through the DocmanImport script
+
 Version 2.26.100 - Tuleap 8.14
     * request #9008: Fatal error when running import script from docman v1
 
