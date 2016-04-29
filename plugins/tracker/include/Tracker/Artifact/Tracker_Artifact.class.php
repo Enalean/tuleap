@@ -35,6 +35,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     const STATUS_OPEN       = 'open';
     const STATUS_CLOSED     = 'closed';
 
+    /**
+     * Allow listeners to add custom action buttons alongside [Enable notifications]
+     *
+     * Parameters:
+     *  - html     => (in/out) string           The buttons should be appended here
+     *  - artifact => (in)     Tracker_Artifact The current artifact
+     */
+    const ACTION_BUTTONS    = 'tracker_artifact_action_buttons';
+
     public $id;
     public $tracker_id;
     public $use_artifact_permissions;
@@ -433,14 +442,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= $prefix;
         $html .= $this->getXRefAndTitle();
         if ($unsubscribe_button) {
-            $html .= $this->fetchEmailActionButtons();
+            $html .= $this->fetchActionButtons();
         }
+
         $html .= '</div>';
         return $html;
     }
 
-    public function fetchEmailActionButtons() {
-        $html = '<div class="tracker-artifact-email-actions">';
+    public function fetchActionButtons()
+    {
+        $html = '<div class="tracker-artifact-actions">';
+
+        $params = array(
+            'html'     => &$html,
+            "artifact" => $this
+        );
+        EventManager::instance()->processEvent(self::ACTION_BUTTONS, $params);
+
         $html .= $this->fetchIncomingMailButton() . ' ';
         $html .= $this->fetchNotificationButton();
         $html .= '</div>';

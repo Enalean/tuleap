@@ -212,7 +212,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html .= $this->displayANumberOfBlankTab($tab_level);
         $html .= '<div class="tree-last">&nbsp;</div> ';
         $html .= $artifact->getXRefAndTitle();
-        $html .= $artifact->fetchEmailActionButtons();
+        $html .= $artifact->fetchActionButtons();
         $html .= '</li>';
         $html .= '</ul>';
         $html .= '</div>';
@@ -239,7 +239,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
                 $html .= $parent->getXRefAndTitle();
-                $html .= $parent->fetchEmailActionButtons();
+                $html .= $parent->fetchActionButtons();
             }
             if ($parents) {
                 $html .= '</a>';
