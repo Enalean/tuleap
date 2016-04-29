@@ -9,7 +9,7 @@
   "private": true,
   "devDependencies": {
     "grunt": "^1.0.1",
-    "grunt-angular-gettext": "^0.2.15",
+    "grunt-angular-gettext": "^2.1.14",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-concat": "^1.0.0",
     "grunt-contrib-connect": "^1.0.1",

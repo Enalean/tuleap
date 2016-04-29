@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kanban\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: Enalean <crew@enalean.com>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -120,7 +120,7 @@ msgstr "Filtrer..."
 msgid "General configuration"
 msgstr "Configuration générale"
 
-#: src/app/edit-kanban/edit-kanban-controller.js
+#: src/app/app-kanban-controller.js
 msgid "Kanban {{ label }} successfuly deleted"
 msgstr "Le Kanban {{ label }} a été supprimé"
 
