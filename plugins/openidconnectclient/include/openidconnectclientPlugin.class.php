@@ -218,7 +218,7 @@ class openidconnectclientPlugin extends Plugin {
         $user_mapping_manager = new UserMappingManager(new UserMappingDao());
         $user_mappings_usage  = $user_mapping_manager->getUsageByUser($user);
 
-        if (count($user_mappings_usage) > 0) {
+        if (count($user_mappings_usage) > 0 && $this->canPluginAuthenticateUser()) {
             $renderer        = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
             $csrf_token      = new CSRFSynchronizerToken('openid-connect-user-preferences');
             $presenter       = new UserPreferencesPresenter($user_mappings_usage, $csrf_token);
