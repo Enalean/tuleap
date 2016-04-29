@@ -1221,31 +1221,35 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             $result = $results[$result_key];
             $html .= '<td>';
-            if (is_a($result, 'DataAccessResult')) {
-                if ($row = $result->getRow()) {
-                    if (isset($row[$result_key])) {
-                        //this case is for multiple selectbox/count
-                        $html .= '<label>';
-                        $html .= $this->formatAggregateResult($row[$result_key]);
-                        $html .= '<label>';
-                    } else {
-                        foreach ($result as $row) {
+            if ($field->hasCustomFormatForAggregateResults()) {
+                $html .= $field->formatAggregateResult($function, $result);
+            } else {
+                if (is_a($result, 'DataAccessResult')) {
+                    if ($row = $result->getRow()) {
+                        if (isset($row[$result_key])) {
+                            //this case is for multiple selectbox/count
                             $html .= '<label>';
-                            if ($row['label'] === null) {
-                                $html .= '<em>'. $GLOBALS['Language']->getText('global', 'null') .'</em>';
-                            } else {
-                                $html .= $hp->purify($row['label']);
+                            $html .= $this->formatAggregateResult($row[$result_key]);
+                            $html .= '<label>';
+                        } else {
+                            foreach ($result as $row) {
+                                $html .= '<label>';
+                                if ($row['label'] === null) {
+                                    $html .= '<em>'. $GLOBALS['Language']->getText('global', 'null') .'</em>';
+                                } else {
+                                    $html .= $hp->purify($row['label']);
+                                }
+                                $html .= ':&nbsp;';
+                                $html .= $this->formatAggregateResult($row['value']);
+                                $html .= '</label>';
                             }
-                            $html .= ':&nbsp;';
-                            $html .= $this->formatAggregateResult($row['value']);
-                            $html .= '</label>';
                         }
                     }
+                } else {
+                    $html .= '<label>';
+                    $html .= $this->formatAggregateResult($result);
+                    $html .= '<label>';
                 }
-            } else {
-                $html .= '<label>';
-                $html .= $this->formatAggregateResult($result);
-                $html .= '<label>';
             }
             $html .= '</td>';
         }
