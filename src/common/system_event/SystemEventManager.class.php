@@ -728,5 +728,3 @@ class SystemEventManager {
         return $this->_getDao()->resetStatus($id, SystemEvent::STATUS_NEW);
     }
 }
-
-?>
