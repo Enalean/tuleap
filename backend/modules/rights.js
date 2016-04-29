@@ -21,9 +21,15 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-define(['lodash'], function (_) {
+define([
+    'lodash'
+], function (
+    _
+) {
     var rights = function () {
-        this.ugroups_collection = {};
+        var self = this;
+
+        self.ugroups_collection = {};
 
         /**
          * @access public
@@ -34,8 +40,8 @@ define(['lodash'], function (_) {
          * @param user_id (int)
          * @returns {*}
          */
-        this.get = function(user_id) {
-            return this.ugroups_collection[user_id] ?  this.ugroups_collection[user_id]: [];
+        self.get = function(user_id) {
+            return self.ugroups_collection[user_id] ?  self.ugroups_collection[user_id]: [];
         };
 
         /**
@@ -60,13 +66,29 @@ define(['lodash'], function (_) {
         /**
          * @access public
          *
+         * Function to update by
+         * user id
+         *
+         * @param user_id (int)
+         * @param rights  (Array): rights for a user
+         */
+        self.update = function(user_id, rights) {
+            if (_.has(self.ugroups_collection, user_id)) {
+                delete self.ugroups_collection[user_id];
+            }
+            self.addRightsByUserId(user_id, rights);
+        };
+
+        /**
+         * @access public
+         *
          * Function to remove by
          * user id
          *
          * @param user_id (int)
          */
-        this.remove = function(user_id) {
-            delete this.ugroups_collection[user_id];
+        self.remove = function(user_id) {
+            delete self.ugroups_collection[user_id];
         };
 
         /**
@@ -80,10 +102,10 @@ define(['lodash'], function (_) {
          * @param user_rights  (Object): rights for a message
          * @returns {boolean}
          */
-        this.userCanReceiveData = function(user_id, user_rights) {
+        self.userCanReceiveData = function(user_id, user_rights) {
             var data_submitter_id = user_rights.submitter_id;
-            return (hasUserRights(this.ugroups_collection[user_id], user_rights))
-                || (data_submitter_id === user_id && hasUserRightsAsSubmitter(this.ugroups_collection[user_id], user_rights));
+            return (hasUserRights(self.ugroups_collection[user_id], user_rights))
+                || (data_submitter_id === user_id && hasUserRightsAsSubmitter(self.ugroups_collection[user_id], user_rights));
         };
 
         /**
@@ -94,7 +116,7 @@ define(['lodash'], function (_) {
          * @param user_rights (Object): rights for a message
          * @returns {boolean}
          */
-        this.isRightsContentWellFormed = function(user_rights) {
+        self.isRightsContentWellFormed = function(user_rights) {
             return _.has(user_rights, 'submitter_id')
                 && _.has(user_rights, 'submitter_can_view')
                 && _.has(user_rights, 'submitter_only')
@@ -115,13 +137,12 @@ define(['lodash'], function (_) {
          * @param artifact     (Object): artifact in message to filter
          * @returns {Object}
          */
-        this.filterMessageByRights = function(user_id, user_rights, artifact) {
-            var me         = this;
+        self.filterMessageByRights = function(user_id, user_rights, artifact) {
             var new_fields = [];
             if (user_rights.field) {
                 _.forEach(artifact.card_fields, function (field) {
                     var field_id = field.field_id ? field.field_id : field.id;
-                    if (hasUserRightsExist(me.ugroups_collection[user_id], user_rights.field[field_id])) {
+                    if (hasUserRightsExist(self.ugroups_collection[user_id], user_rights.field[field_id])) {
                         new_fields.push(field);
                     }
                 });

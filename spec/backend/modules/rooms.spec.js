@@ -48,50 +48,56 @@ describe("Module Rooms", function() {
         rights.addRightsByUserId(user_id, groups);
     });
 
-    it("Given a room id and a socket, when I addSocketByRoomId rooms then rooms is with room id as key and an array of sockets as value", function() {
-        var expect_rooms = {
-            20: [socket]
-        };
-        expect(rooms.addSocketByRoomId).toBeDefined();
-        expect(rooms.addSocketByRoomId(room_id, socket)).toEqual(true);
-        expect(rooms.sockets_collection).toEqual(expect_rooms);
+    describe("addSocketByRoomId()", function() {
+        it("Given a room id and a socket, when I addSocketByRoomId rooms then rooms is with room id as key and an array of sockets as value", function () {
+            var expect_rooms = {
+                20: [socket]
+            };
+            expect(rooms.addSocketByRoomId).toBeDefined();
+            expect(rooms.addSocketByRoomId(room_id, socket)).toEqual(true);
+            expect(rooms.sockets_collection).toEqual(expect_rooms);
+        });
     });
 
-    it("Given rights, socket sender and message to broadcast, when I broadcastData with incorrect rights then console output", function() {
-        var data = {
-            rights: {}
-        };
-        rooms.broadcastData(socket, data);
-        expect(console.error).toHaveBeenCalled();
+    describe("broadcastData()", function() {
+        it("Given rights, socket sender and message to broadcast, when I broadcastData with incorrect rights then console output", function () {
+            var data = {
+                rights: {}
+            };
+            rooms.broadcastData(socket, data);
+            expect(console.error).toHaveBeenCalled();
+        });
+
+        it("Given rights, socket sender and message to broadcast, when I broadcastData with correct rights then the socket will be called", function () {
+            var data = {
+                rights: {
+                    submitter_id: 102,
+                    submitter_can_view: false,
+                    submitter_only: ['@ug_111'],
+                    tracker: ['@arealtime_project_admin'],
+                    artifact: ['@arealtime_project_admin']
+                }
+            };
+            rooms.broadcastData(socket, data);
+            expect(console.error).not.toHaveBeenCalled();
+        });
     });
 
-    it("Given rights, socket sender and message to broadcast, when I broadcastData with correct rights then the socket will be called", function() {
-        var data = {
-            rights: {
-                submitter_id: 102,
-                submitter_can_view: false,
-                submitter_only: ['@ug_111'],
-                tracker: ['@arealtime_project_admin'],
-                artifact: ['@arealtime_project_admin']
-            }
-        };
-        rooms.broadcastData(socket, data);
-        expect(console.error).not.toHaveBeenCalled();
-    });
+    describe("removeByRoomIdAndSocketId()", function() {
+        it("Given a room id and a socket to delete, when I removeByRoomIdAndSocketId then socket doesn't exist anymore in the room", function () {
+            var expect_rooms = {
+                20: [socket_bis]
+            };
+            rooms.addSocketByRoomId(room_id, socket_bis);
+            expect(rooms.removeByRoomIdAndSocketId).toBeDefined();
+            rooms.removeByRoomIdAndSocketId(room_id, socket);
+            expect(rooms.sockets_collection).toEqual(expect_rooms);
+        });
 
-    it("Given a room id and a socket to delete, when I removeByRoomIdAndSocketId then socket doesn't exist anymore in the room", function() {
-        var expect_rooms = {
-            20: [socket_bis]
-        };
-        rooms.addSocketByRoomId(room_id, socket_bis);
-        expect(rooms.removeByRoomIdAndSocketId).toBeDefined();
-        rooms.removeByRoomIdAndSocketId(room_id, socket);
-        expect(rooms.sockets_collection).toEqual(expect_rooms);
-    });
-
-    it("Given a room id and a socket to delete, when I removeByRoomIdAndSocketId in room with only this socket then socket doesn't exist anymore and the room too", function() {
-        expect(rooms.removeByRoomIdAndSocketId).toBeDefined();
-        rooms.removeByRoomIdAndSocketId(room_id, socket_bis);
-        expect(rooms.sockets_collection).toEqual({});
+        it("Given a room id and a socket to delete, when I removeByRoomIdAndSocketId in room with only this socket then socket doesn't exist anymore and the room too", function () {
+            expect(rooms.removeByRoomIdAndSocketId).toBeDefined();
+            rooms.removeByRoomIdAndSocketId(room_id, socket_bis);
+            expect(rooms.sockets_collection).toEqual({});
+        });
     });
 });

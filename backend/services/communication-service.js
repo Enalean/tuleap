@@ -61,21 +61,11 @@ define([
                 return;
             }
 
-            var decoded = self.jwt.decodeToken(data.token, function (err) {
-                console.error(err);
-            });
+            var decoded = verifyAndGetDecoded(socket, data);
 
-            if (! self.jwt.isTokenValid(decoded)) {
-                console.error('JWT sent by client isn\'t correct.');
-                return;
+            if (decoded) {
+                subscribe(socket, data, decoded);
             }
-
-            if (self.jwt.isDateExpired(decoded.exp)) {
-                socket.emit('error-jwt', 'JWTExpired');
-                return;
-            }
-
-            subscribe(socket, data, decoded);
         };
 
         /**
@@ -134,6 +124,23 @@ define([
         };
 
         /**
+         * @access public
+         *
+         * Function to refresh token
+         * before it expires
+         *
+         * @param socket
+         * @param token
+         */
+        self.refreshToken = function (socket, token) {
+            var decoded = verifyAndGetDecoded(socket, token);
+            if (decoded) {
+                self.rooms.updateTokenExpiredForUser(socket.username, decoded.exp);
+                self.rights.update(decoded.data.user_id, decoded.data.user_rights);
+            }
+        };
+
+        /**
          * @access private
          *
          * Function to check if tuleap clients send
@@ -178,6 +185,34 @@ define([
 
             socket.auth = true;
             console.log('Client (user id: ' + socket.username + ' - room id: ' + socket.room + ') is subscribed.');
+        }
+
+        /**
+         * @access private
+         *
+         * Function to verify and decode
+         * token
+         *
+         * @param socket  (Object): user socket
+         * @param data    (Object): data sent by tuleap client
+         * @returns {*}
+         */
+        function verifyAndGetDecoded(socket, data) {
+            var decoded = self.jwt.decodeToken(data.token, function (err) {
+                console.error(err);
+            });
+
+            if (! self.jwt.isTokenValid(decoded)) {
+                console.error('JWT sent by client isn\'t correct.');
+                return;
+            }
+
+            if (self.jwt.isDateExpired(decoded.exp)) {
+                socket.emit('error-jwt', 'JWTExpired');
+                return;
+            }
+
+            return decoded;
         }
     };
 

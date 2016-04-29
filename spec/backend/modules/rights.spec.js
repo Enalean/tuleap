@@ -22,143 +22,172 @@ describe("Module Rights", function() {
         rights.addRightsByUserId(user_id, groups);
     });
 
-    it("Given a user id and an array of groups, when I addRightsByUserId rights then rights is with user id as key and array as value", function() {
-        var expect_rights = {
-            165: groups
-        };
-        expect(rights.addRightsByUserId).toBeDefined();
-        expect(rights.addRightsByUserId(user_id, groups)).toEqual(true);
-        expect(rights.ugroups_collection).toEqual(expect_rights);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and user has rights and the user isn't the submitter then true is returned", function() {
-        var userRights = {
-            submitter_id: 102,
-            submitter_can_view: false,
-            submitter_only: ['@ug_111'],
-            tracker: ['@arealtime_project_admin', '@ug_159'],
-            artifact: ['@arealtime_project_admin']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted on tracker and artifact and the user has rights and the user isn't the submitter then true is returned", function() {
-        var userRights = {
-            submitter_id: 102,
-            submitter_can_view: true,
-            submitter_only: [],
-            tracker: ['@arealtime_project_admin', '@ug_159'],
-            artifact: ['@arealtime_project_admin', '@ug_158']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted on tracker and artifact and the user hasn't rights and the user isn't the submitter then false is returned", function() {
-        var userRights = {
-            submitter_id: 102,
-            submitter_can_view: true,
-            submitter_only: [],
-            tracker: ['@arealtime_project_admin', '@ug_159'],
-            artifact: ['@arealtime_project_admin', '@ug_111']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted on tracker and artifact and the user hasn't rights and the user is the submitter then true is returned", function() {
-        var userRights = {
-            submitter_id: 165,
-            submitter_can_view: true,
-            submitter_only: ['@ug_159'],
-            tracker: ['@arealtime_project_admin', '@ug_159'],
-            artifact: ['@arealtime_project_admin', '@ug_111']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and user hasn't rights and the user is the submitter then true is returned", function() {
-        var userRights = {
-            submitter_id: 165,
-            submitter_can_view: true,
-            submitter_only: ['@ug_159'],
-            tracker: ['@arealtime_project_admin', '@ug_111'],
-            artifact: ['@arealtime_project_admin']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and the user hasn't rights and the user is the submitter but can't view then false is returned", function() {
-        var userRights = {
-            submitter_id: 165,
-            submitter_can_view: false,
-            submitter_only: ['@ug_159'],
-            tracker: ['@arealtime_project_admin', '@ug_111'],
-            artifact: ['@arealtime_project_admin']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and the user hasn't rights and the user isn't the submitter then false is returned", function() {
-        var userRights = {
-            submitter_id: 102,
-            submitter_can_view: true,
-            submitter_only: ['@ug_111'],
-            tracker: ['@arealtime_project_admin','@ug_111'],
-            artifact: ['@arealtime_project_admin']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
-    });
-
-    it("Given user id and user rights object for a message, when I userCanReceiveData with incorrect rights with permissions restricted only on tracker the user has rights and the user is the submitter then true is returned", function() {
-        var userRights = {
-            submitter_id: 165,
-            submitter_can_view: true,
-            submitter_only: ['@ug_101'],
-            tracker: ['@arealtime_project_admin', '@ug_159'],
-            artifact: ['@arealtime_project_admin']
-        };
-        expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
-    });
-
-    it("Given user id and user rights object for a message with an artifact, when I filterMessageByRights with field rights restricted then we transform message content corresponding to the user rights", function() {
-        var userRights = {
-            field: {
-                '352': ['@ug_105']
-            }
-        };
-        var data = {
-            artifact: {
-                label: '1',
-                card_fields: [
-                    {
-                        field_id: 352,
-                        label: 'Summary'
-                    }
-                ]
-            }
-        };
-        expect(rights.filterMessageByRights(165, userRights, data.artifact)).toEqual({
-            label: null,
-            card_fields: []
+    describe("addRightsByUserId()", function() {
+        it("Given a user id and an array of groups, when I addRightsByUserId rights then rights is with user id as key and array as value", function () {
+            var expect_rights = {
+                165: groups
+            };
+            expect(rights.addRightsByUserId).toBeDefined();
+            expect(rights.addRightsByUserId(user_id, groups)).toEqual(true);
+            expect(rights.ugroups_collection).toEqual(expect_rights);
         });
     });
 
-    it("Given user id and user rights object for a message with an artifact, when I filterMessageByRights with field rights not restricted then we don't transform message", function() {
-        var userRights = {
-            field: {
-                '352': ['@site_active']
-            }
-        };
-        var data = {
-            artifact: {
-                label: '1',
-                card_fields: [
-                    {
-                        field_id: 352,
-                        label: 'Summary'
-                    }
-                ]
-            }
-        };
-        expect(rights.filterMessageByRights(165, userRights, data.artifact)).toEqual(data.artifact);
+    describe("update()", function() {
+        it("Given a user id and an array of new groups, when I update rights then rights is with user id as key and new array groups as value", function () {
+            var new_groups = ['@site_active', '@ug_158'];
+            var expect_rights = {
+                165: new_groups
+            };
+            expect(rights.update).toBeDefined();
+            rights.update(user_id, new_groups);
+            expect(rights.ugroups_collection).toEqual(expect_rights);
+        });
+
+        it("Given a user id who doesn't exist and an array of new groups, when I update rights then user id with array groups is added", function () {
+            var new_groups = ['@site_active', '@ug_158'];
+            var expect_rights = {
+                165: groups,
+                111: new_groups
+            };
+            expect(rights.update).toBeDefined();
+            rights.update(111, new_groups);
+            expect(rights.ugroups_collection).toEqual(expect_rights);
+        });
+    });
+
+    describe("userCanReceiveData()", function() {
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and user has rights and the user isn't the submitter then true is returned", function () {
+            var userRights = {
+                submitter_id: 102,
+                submitter_can_view: false,
+                submitter_only: ['@ug_111'],
+                tracker: ['@arealtime_project_admin', '@ug_159'],
+                artifact: ['@arealtime_project_admin']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted on tracker and artifact and the user has rights and the user isn't the submitter then true is returned", function () {
+            var userRights = {
+                submitter_id: 102,
+                submitter_can_view: true,
+                submitter_only: [],
+                tracker: ['@arealtime_project_admin', '@ug_159'],
+                artifact: ['@arealtime_project_admin', '@ug_158']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted on tracker and artifact and the user hasn't rights and the user isn't the submitter then false is returned", function () {
+            var userRights = {
+                submitter_id: 102,
+                submitter_can_view: true,
+                submitter_only: [],
+                tracker: ['@arealtime_project_admin', '@ug_159'],
+                artifact: ['@arealtime_project_admin', '@ug_111']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted on tracker and artifact and the user hasn't rights and the user is the submitter then true is returned", function () {
+            var userRights = {
+                submitter_id: 165,
+                submitter_can_view: true,
+                submitter_only: ['@ug_159'],
+                tracker: ['@arealtime_project_admin', '@ug_159'],
+                artifact: ['@arealtime_project_admin', '@ug_111']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and user hasn't rights and the user is the submitter then true is returned", function () {
+            var userRights = {
+                submitter_id: 165,
+                submitter_can_view: true,
+                submitter_only: ['@ug_159'],
+                tracker: ['@arealtime_project_admin', '@ug_111'],
+                artifact: ['@arealtime_project_admin']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and the user hasn't rights and the user is the submitter but can't view then false is returned", function () {
+            var userRights = {
+                submitter_id: 165,
+                submitter_can_view: false,
+                submitter_only: ['@ug_159'],
+                tracker: ['@arealtime_project_admin', '@ug_111'],
+                artifact: ['@arealtime_project_admin']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with correct rights with permissions restricted only on tracker and the user hasn't rights and the user isn't the submitter then false is returned", function () {
+            var userRights = {
+                submitter_id: 102,
+                submitter_can_view: true,
+                submitter_only: ['@ug_111'],
+                tracker: ['@arealtime_project_admin', '@ug_111'],
+                artifact: ['@arealtime_project_admin']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(false);
+        });
+
+        it("Given user id and user rights object for a message, when I userCanReceiveData with incorrect rights with permissions restricted only on tracker the user has rights and the user is the submitter then true is returned", function () {
+            var userRights = {
+                submitter_id: 165,
+                submitter_can_view: true,
+                submitter_only: ['@ug_101'],
+                tracker: ['@arealtime_project_admin', '@ug_159'],
+                artifact: ['@arealtime_project_admin']
+            };
+            expect(rights.userCanReceiveData(165, userRights)).toEqual(true);
+        });
+    });
+
+    describe("filterMessageByRights()", function() {
+        it("Given user id and user rights object for a message with an artifact, when I filterMessageByRights with field rights restricted then we transform message content corresponding to the user rights", function () {
+            var userRights = {
+                field: {
+                    '352': ['@ug_105']
+                }
+            };
+            var data = {
+                artifact: {
+                    label: '1',
+                    card_fields: [
+                        {
+                            field_id: 352,
+                            label: 'Summary'
+                        }
+                    ]
+                }
+            };
+            expect(rights.filterMessageByRights(165, userRights, data.artifact)).toEqual({
+                label: null,
+                card_fields: []
+            });
+        });
+
+        it("Given user id and user rights object for a message with an artifact, when I filterMessageByRights with field rights not restricted then we don't transform message", function () {
+            var userRights = {
+                field: {
+                    '352': ['@site_active']
+                }
+            };
+            var data = {
+                artifact: {
+                    label: '1',
+                    card_fields: [
+                        {
+                            field_id: 352,
+                            label: 'Summary'
+                        }
+                    ]
+                }
+            };
+            expect(rights.filterMessageByRights(165, userRights, data.artifact)).toEqual(data.artifact);
+        });
     });
 });

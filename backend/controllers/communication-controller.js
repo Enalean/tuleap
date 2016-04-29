@@ -123,6 +123,10 @@ define([
                     communicationService.disconnect(socket);
                 }
             });
+
+            socket.on('token', function(token) {
+                communicationService.refreshToken(socket, token);
+            });
         }
     };
 
