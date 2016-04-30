@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     const SOAP_PERMISSION_SUBMIT = 'submit';
 
     const XML_ID_PREFIX = 'F';
+
+    /**
+     * Get the visitor responsible of the display of update interface for the element
+     *
+     * Params:
+     *  - all_used_elements => Tracker_FormElement[]
+     *  - visitor           => (output) Tracker_FormElement_View_Admin_UpdateVisitor
+     */
+    const VIEW_ADMIN_UPDATE_VISITOR = 'tracker_formelement_view_admin_update_visitor';
 
     /**
      * The field id
@@ -356,6 +365,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);
         } else {
             $visitor = new Tracker_FormElement_View_Admin_UpdateVisitor($allUsedElements);
+            EventManager::instance()->processEvent(
+                self::VIEW_ADMIN_UPDATE_VISITOR,
+                array(
+                    'all_used_elements' => $allUsedElements,
+                    'visitor'           => &$visitor
+                )
+            );
         }
         $this->accept($visitor);
         $visitor->display($layout, $request);

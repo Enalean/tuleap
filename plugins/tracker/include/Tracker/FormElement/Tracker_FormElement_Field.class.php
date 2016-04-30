@@ -1409,4 +1409,28 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function canBeUsedAsReportCriterion() {
         return true;
     }
+
+    /** @return bool */
+    public function hasCustomFormatForAggregateResults()
+    {
+        return false;
+    }
+
+    /**
+     * Please note that the result may be not a DataAccessResult:
+     *
+     * In case of a simple query that can be computed alongside others, result will be a string (the result from mysql).
+     * In case of a complex query that must be run alone, result will be the DataAccessResult.
+     *
+     * @see Tracker_Report_Renderer_Table::fetchAddAggregatesUsedFunctionsValue()
+     *
+     * @param string                  $function AVG, SUM, …
+     * @param DataAccessResult|string $result
+     *
+     * @return string
+     */
+    public function formatAggregateResult($function, $result)
+    {
+        return '';
+    }
 }
