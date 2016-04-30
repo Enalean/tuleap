@@ -268,7 +268,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
                 $search_form_presenter,
                 $this->displayNewAccount(),
                 $this->getMOTD(),
-                $navbar_items_builder->buildNavBarItemPresentersCollection()
+                $navbar_items_builder->buildNavBarItemPresentersCollection(),
+                $this->getUserActions($current_user)
             )
         );
 
@@ -496,6 +497,18 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     private function isInDebugMode() {
         return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
-}
 
-?>
+    private function getUserActions(PFUser $current_user)
+    {
+        $user_actions = array();
+        EventManager::instance()->processEvent(
+            Event::USER_ACTIONS,
+            array(
+                'user'    => $current_user,
+                'actions' => &$user_actions
+            )
+        );
+
+        return $user_actions;
+    }
+}

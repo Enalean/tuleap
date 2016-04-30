@@ -50,6 +50,9 @@ class FlamingParrot_NavBarPresenter {
     /** @var FlamingParrot_NavBarItemPresenter[] */
     public $navbar_items;
 
+    /** @var Tuleap\User\UserActionPresenter[] */
+    public $user_actions;
+
     public function __construct(
         $imgroot,
         PFUser $user,
@@ -60,7 +63,8 @@ class FlamingParrot_NavBarPresenter {
         $search_form_presenter,
         $display_new_account,
         $motd,
-        FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection
+        FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection,
+        array $user_actions
     ) {
         $this->imgroot                = $imgroot;
         $this->user                   = $user;
@@ -74,6 +78,7 @@ class FlamingParrot_NavBarPresenter {
         $this->has_motd               = ! empty($motd);
         $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
         $this->navbar_items           = $navbar_items_collection->getItems();
+        $this->user_actions           = $user_actions;
     }
 
     public function imgroot() {
