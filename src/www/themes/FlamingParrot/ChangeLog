@@ -1,3 +1,6 @@
+Version 1.134 - Tuleap 8.15
+    * request #9118: Allow plugins to display user actions in the navbar
+
 Version 1.133 - Tuleap 8.14
     * story #8940: Add a dropdown for configurable column selection
 

@@ -22,6 +22,7 @@ Version 8.14 (Thursday, April 28th 2016)
 	* request #9107: No preview in massmail
 
 	== Development ==
+	* request #9118: Allow plugins to display user actions in the navbar
 	* request #9011: Deploy our own git hooks
 		- All added files must be checked
 		- Enforce PSR-2 for Tuleap source code
