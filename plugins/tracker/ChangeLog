@@ -1,3 +1,6 @@
+Version 5.883 - Tuleap 8.15
+    * request #9117: allow plugins to add action buttons for an artifact
+
 Version 5.882 - Tuleap 8.15
     * request #9116: Fields may need to have a custom representation of aggregate results
     * request #9115: Ease creation of tracker custom fields for other plugins
