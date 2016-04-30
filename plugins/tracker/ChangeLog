@@ -1,3 +1,7 @@
+Version 5.882 - Tuleap 8.15
+    * request #9116: Fields may need to have a custom representation of aggregate results
+    * request #9115: Ease creation of tracker custom fields for other plugins
+
 Version 5.881 - Tuleap 8.14
     * request #9099: Field labels in masschange screen disappear
 
