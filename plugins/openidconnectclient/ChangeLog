@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 8.15
+    * request #9106: OpenID Connect informations should not be displayed on the My Account page when the plugin is not usable
+
 Version 0.18 - Tuleap 8.14
     * request #9029: A sentence is not internationalized in OpenID Connect user's preferences
 
