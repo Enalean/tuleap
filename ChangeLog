@@ -2,6 +2,9 @@ Version 8.15 (Not yet released)
 	== Enhancement ==
 	* request #9113: Having a REST route to monitor Sysevents
 
+    == Plugins ==
+	* svn: 0.54
+
 Version 8.14 (Thursday, April 28th 2016)
 	== Enhancement ==
 	* story #8940: The resize of a table should occur only on a th/td

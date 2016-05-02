@@ -1,3 +1,6 @@
+Version 0.54 - Tuleap 8.15
+    * request #9110 Mail notifications, too much mails
+
 Version 0.53 - Tuleap 8.14
     * Import cmmtXXXX references and treat them as links
 
