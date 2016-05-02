@@ -19,5 +19,4 @@ function FileDiffController(
         file_path   : $state.params.file_path,
         pull_request: SharedPropertiesService.getPullRequest()
     });
-
 }

@@ -28,6 +28,11 @@ class PullRequestFileUniDiffRepresentation
      */
     public $lines;
 
+    /**
+     * @var PullRequestInlineCommentRepresentation[] {@type PullRequestInlineCommentRepresentation[]}
+     */
+    public $inline_comments;
+
     public function __construct()
     {
         $lines = array();
@@ -38,7 +43,7 @@ class PullRequestFileUniDiffRepresentation
         $this->lines[] = $line;
     }
 
-    static public function buildFromFileUniDiff(FileUniDiff $diff)
+    static public function build(FileUniDiff $diff, array $inline_comments)
     {
         $new_instance = new PullRequestFileUniDiffRepresentation();
         foreach ($diff->getLines() as $line) {
@@ -46,6 +51,8 @@ class PullRequestFileUniDiffRepresentation
                 new PullRequestLineUniDiffRepresentation($line[0], $line[1], $line[2], $line[3])
             );
         }
+        $new_instance->inline_comments = $inline_comments;
+
         return $new_instance;
     }
 }

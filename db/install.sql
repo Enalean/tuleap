@@ -22,3 +22,14 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
     content TEXT,
     INDEX idx_pr_pull_request_id(pull_request_id)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments (
+    id              INT(11) PRIMARY KEY AUTO_INCREMENT,
+    pull_request_id INT(11) NOT NULL,
+    user_id         INT(11) NOT NULL,
+    post_date       INT(11) NOT NULL,
+    file_path       TEXT    NOT NULL,
+    unidiff_offset  INT(6)  NOT NULL,
+    content         TEXT    NOT NULL,
+    is_outdated     BOOL    NOT NULL DEFAULT false
+);

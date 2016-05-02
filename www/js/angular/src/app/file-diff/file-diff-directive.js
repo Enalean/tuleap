@@ -6,6 +6,7 @@ FileDiffDirective.$inject = [
     '$window',
     'lodash',
     '$state',
+    '$interpolate',
     'SharedPropertiesService',
     'FileDiffRestService'
 ];
@@ -14,6 +15,7 @@ function FileDiffDirective(
     $window,
     lodash,
     $state,
+    $interpolate,
     SharedPropertiesService,
     FileDiffRestService
 ) {
@@ -49,6 +51,23 @@ function FileDiffDirective(
                     } else {
                         unidiff.addLineClass(lnb, 'background', 'deleted-lines');
                     }
+                });
+
+                var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
+                    + '<div class="info"><div class="author">'
+                    + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
+                    + '<span>{{ user.username }}</span></div>'
+                    + '<small class="post-date">{{ post_date | date: "short" }}</small></div>'
+                    + '<div class="content">{{ content }}</div>'
+                    + '</div>');
+
+                data.inline_comments.forEach(function(comment) {
+                    var elt = document.createElement('div'); // eslint-disable-line angular/document-service
+                    comment.content = comment.content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+                    elt.innerHTML = inlineCommentTemplate(comment);
+                    unidiff.addLineWidget(comment.unidiff_offset - 1, elt, {
+                        coverGutter: true
+                    });
                 });
             });
         }
