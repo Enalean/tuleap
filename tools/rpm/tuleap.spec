@@ -441,6 +441,20 @@ Release: @@RELEASE@@%{?dist}
 %description plugin-boomerang
 Allow performances evaluation in Tuleap.
 
+%package plugin-frs
+Summary: File release system plugin
+Group: Development/Tools
+Version: @@PLUGIN_FRS_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-frs = %{version}
+%else
+Provides: tuleap-plugin-frs = %{version}
+%endif
+%description plugin-frs
+Add features to the file release system provided by Tuleap
+
 %if %{php_base} == php53
 
 %package plugin-mediawiki
@@ -1103,6 +1117,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/boomerang
 %dir %{APP_DATA_DIR}/boomerang
+
+%files plugin-frs
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/frs
 
 %if %{php_base} == php53
 

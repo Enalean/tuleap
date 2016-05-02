@@ -1,0 +1,4 @@
+FRS plugin
+==========
+
+This plugin extends features of the file release system provided by Tuleap.

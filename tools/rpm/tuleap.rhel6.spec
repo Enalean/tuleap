@@ -397,6 +397,15 @@ Requires: %{php_base}-pear-HTTP-Download >= 1.1.4-3
 %description plugin-proftpd
 Control and interfact with Proftpd as FTP server
 
+%package plugin-frs
+Summary: File release system plugin
+Group: Development/Tools
+Version: @@PLUGIN_FRS_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap
+%description plugin-frs
+Add features to the file release system provided by Tuleap
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -1138,6 +1147,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/proftpd
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
+
+%files plugin-frs
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/frs
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)
