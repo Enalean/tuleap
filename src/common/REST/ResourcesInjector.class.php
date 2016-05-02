@@ -27,6 +27,7 @@ use \Tuleap\Project\REST\UserGroupRepresentation;
 use \Tuleap\User\REST\UserRepresentation;
 use \Tuleap\REST\v1\PhpWikiPageRepresentation;
 use \Tuleap\User\REST\v1\UserMembershipRepresentation;
+use Tuleap\SystemEvent\REST\v1\SystemEventRepresentation;
 use \Tuleap\Project\REST\ProjectResourceReference;
 use \Project;
 
@@ -43,6 +44,7 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\User\\REST\\v1\\UserMembershipResource', UserMembershipRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\PhpWiki\\REST\\v1\\PhpWikiResource',  PhpWikiPageRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\JWT\\REST\\v1\\JWTResource',  JWTRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\SystemEvent\\REST\\v1\\SystemEventResource',  SystemEventRepresentation::ROUTE);
     }
 
     public function declareProjectUserGroupResource(array &$resources, Project $project) {

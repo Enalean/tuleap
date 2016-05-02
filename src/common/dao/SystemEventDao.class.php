@@ -217,5 +217,16 @@ class SystemEventDao extends DataAccessObject {
         $sql = "OPTIMIZE TABLE system_event";
         return $this->update($sql);
     }
+
+    public function searchAllMatchingEvents($limit, $offset) {
+        $limit  = $this->da->escapeInt($limit);
+        $offset = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM system_event
+                LIMIT $limit
+                OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
 }
-?>
