@@ -26,6 +26,10 @@ function ExecutionListCtrl(
     var campaign_id,
         execution_id;
 
+    $scope.checkActiveClassOnExecution = function(execution) {
+        return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
+    };
+
     $scope.viewTestExecution = function(current_execution) {
         var old_execution,
             old_execution_id = '';

@@ -41,7 +41,7 @@
                 <a class="execution-item {{ execution.status | dasherize }}"
                      ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_environment track by $index"
                      ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
-                     ui-sref-active="active">
+                     ng-class="{active: checkActiveClassOnExecution(execution)}">
                     <span class="execution-item-content" ng-click="viewTestExecution(execution)">
                         <span class="execution-item-content-title">
                             <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
