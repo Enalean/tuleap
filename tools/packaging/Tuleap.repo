@@ -1,5 +1,0 @@
-[Tuleap-FT]
-name="Tuleap France Telecom"
-baseurl=file:///root/rpmbuild/yum/
-enabled=1
-gpgcheck=0

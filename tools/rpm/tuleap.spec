@@ -876,7 +876,6 @@ fi
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade
 %{APP_DIR}/src/templates
-%{APP_DIR}/src/updates
 %{APP_DIR}/src/utils
 # Split src/www for src/www/themes
 %dir %{APP_DIR}/src/www
