@@ -1,10 +1,10 @@
 <div>
     <ul class="nav nav-tabs">
         <li ng-class="{active: pull_request.$state.includes('overview')}">
-          <a ui-sref="overview"><i class="icon-pencil"></i> Pull Request Details</a>
+          <a ui-sref="overview"><i class="icon-pencil"></i> {{ 'Pull Request Details' | translate }}</a>
         </li>
         <li ng-class="{active: pull_request.$state.includes('files')}">
-          <a ui-sref="files"><i class="icon-copy"></i> Files</a>
+          <a ui-sref="files"><i class="icon-copy"></i> {{ 'Files' | translate }}</a>
         </li>
     </ul>
 </div>

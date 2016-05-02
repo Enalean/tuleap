@@ -42,6 +42,6 @@ function CommentsService(
     }
 
     function markAuthor(comment, prAuthorId) {
-        comment.isFromPRAuthor = comment.user.id === prAuthorId;
+        comment.isFromPRAuthor = (comment.user.id === prAuthorId);
     }
 }

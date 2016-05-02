@@ -73,6 +73,9 @@ module.exports = {
             'bower_components/angular-gettext/dist/angular-gettext.min.js',
             'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             'bower_components/angular-sanitize/angular-sanitize.min.js',
+            'bower_components/moment/min/moment.min.js',
+            'bower_components/moment/locale/fr.js',
+            'bower_components/angular-moment/angular-moment.min.js',
             'bower_components/codemirror/lib/codemirror.js'
         ],
         css: [

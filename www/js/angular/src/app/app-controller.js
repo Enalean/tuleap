@@ -5,14 +5,16 @@ angular
 MainController.$inject = [
     '$scope',
     'SharedPropertiesService',
-    'gettextCatalog'
+    'gettextCatalog',
+    'amMoment'
 ];
 
 /* eslint-disable angular/controller-as */
 function MainController(
     $scope,
     SharedPropertiesService,
-    gettextCatalog
+    gettextCatalog,
+    amMoment
 ) {
     $scope.init = init;
 
@@ -25,5 +27,6 @@ function MainController(
 
     function initLocale(language) {
         gettextCatalog.setCurrentLanguage(language);
+        amMoment.changeLocale(language);
     }
 }

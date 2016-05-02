@@ -9,19 +9,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Abandon"
 msgstr "Abandonner"
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 #: src/app/pull-requests/pull-requests.tpl.html
 msgid "Abandoned"
 msgstr "Abandonné"
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr "Déjà intégré"
 
@@ -29,23 +29,43 @@ msgstr "Déjà intégré"
 msgid "An error occured while doing one of your last actions."
 msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/overview/overview.tpl.html
+msgid "Author"
+msgstr "Auteur"
+
+#: src/app/overview/overview.tpl.html
+msgid "Changes"
+msgstr "Changements"
+
+#: src/app/overview/comments/comments.tpl.html
 msgid "Comment"
 msgstr "Commenter"
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/overview/comments/comments.tpl.html
 msgid "Comments"
 msgstr "Commentaires"
+
+#: src/app/overview/overview.tpl.html
+msgid "Date"
+msgstr "Date"
 
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
-#: src/app/pull-request/files/files.tpl.html
+#: src/app/file-diff/file-diff.tpl.html
+msgid "File Diff"
+msgstr "Diff fichier"
+
+#: src/app/pull-request/pull-request.tpl.html
 msgid "Files"
 msgstr "Fichiers"
 
-#: src/app/pull-request/pull-request.tpl.html
+#: src/app/files/files.tpl.html
+msgid "Go to diff"
+msgstr "Voir le diff"
+
+#: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr "Intégrer"
 
@@ -53,7 +73,11 @@ msgstr "Intégrer"
 msgid "Merged"
 msgstr "Intégré"
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/files/files.tpl.html
+msgid "Modified Files"
+msgstr "Fichiers modifiés"
+
+#: src/app/overview/comments/comments.tpl.html
 msgid "No comment"
 msgstr "Aucun commentaire"
 
@@ -65,11 +89,15 @@ msgstr "Oh mince !"
 msgid "OK"
 msgstr "OK"
 
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Pull Request Details"
+msgstr "Détails Pull Request"
+
 #: src/app/pull-requests/pull-requests.tpl.html
 msgid "Pull requests"
 msgstr "Pull requests"
 
-#: src/app/pull-request/comments/comments.tpl.html
+#: src/app/overview/comments/comments.tpl.html
 msgid "Say something…"
 msgstr "Dites quelque chose…"
 

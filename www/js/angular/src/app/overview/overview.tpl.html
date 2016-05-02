@@ -7,20 +7,20 @@
         </div>
         <div class="span3">
             <div class="pull-request-author">
-                <small>Author</small>
+                <small translate>Author</small>
                 <div>
                     <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
                     {{ overview.author.display_name }}
                 </div>
             </div>
             <div>
-                <small>Date</small>
+                <small translate>Date</small>
                 <div>{{ overview.pull_request.creation_date | date: 'short' }}</div>
             </div>
         </div>
         <div class="span3">
             <div>
-                <small>Changes</small>
+                <small translate>Changes</small>
                 <div>
                     <span class="text-success">+{{ overview.pull_request.short_stat.lines_added}}</span>
                     <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed}}</span>

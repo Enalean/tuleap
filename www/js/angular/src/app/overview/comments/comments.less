@@ -23,18 +23,34 @@
                 background: url('loader-mini.gif') no-repeat center center;
             }
 
-            .pull-request-comment-from-author {
-                border: 1px solid #AAA;
-            }
+            .pull-request-comment {
+                &.from-pr-author {
+                    border: 1px solid #AAA;
 
-            .pull-request-comment-user {
-                margin: 0;
-                color: #AAA;
-                font-style: italic;
-            }
+                    .avatar {
+                        float: left;
+                        margin-right: 10px;
+                    }
+                }
 
-            .pull-request-comment-content {
-                margin: 3px 0 0;
+                &:not(.from-pr-author) {
+                    margin-left: 17%;
+
+                    .avatar {
+                        float: right;
+                        margin-left: 10px;
+                    }
+                }
+
+                .pull-request-comment-user {
+                    margin: 0;
+                    color: #AAA;
+                    font-style: italic;
+                }
+
+                .pull-request-comment-content {
+                    margin: 3px 0 0;
+                }
             }
         }
     }

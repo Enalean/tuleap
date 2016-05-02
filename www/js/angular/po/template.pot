@@ -21,6 +21,14 @@ msgstr ""
 msgid "An error occured while doing one of your last actions."
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Author"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Changes"
+msgstr ""
+
 #: src/app/overview/comments/comments.tpl.html
 msgid "Comment"
 msgstr ""
@@ -29,8 +37,24 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Date"
+msgstr ""
+
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
+msgstr ""
+
+#: src/app/file-diff/file-diff.tpl.html
+msgid "File Diff"
+msgstr ""
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Files"
+msgstr ""
+
+#: src/app/files/files.tpl.html
+msgid "Go to diff"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
@@ -55,6 +79,10 @@ msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
 msgid "OK"
+msgstr ""
+
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Pull Request Details"
 msgstr ""
 
 #: src/app/pull-requests/pull-requests.tpl.html

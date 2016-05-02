@@ -1,10 +1,11 @@
 angular.module('tuleap.pull-request', [
     'ngSanitize',
-    'templates-app',
-    'ui.router',
-    'ui.bootstrap',
-    'ui.select',
+    'angularMoment',
     'gettext',
     'ngLodash',
-    'shared-properties'
+    'shared-properties',
+    'templates-app',
+    'ui.bootstrap',
+    'ui.router',
+    'ui.select'
 ]);

@@ -9,7 +9,8 @@
     "angular-ui-router": "~0.2.15",
     "ng-lodash": "~0.4.0",
     "codemirror": "CodeMirror#^5.14.2",
-    "ui-select": "angular-ui-select#~0.13.2"
+    "ui-select": "angular-ui-select#~0.13.2",
+    "angular-moment": "^0.10.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.9",
