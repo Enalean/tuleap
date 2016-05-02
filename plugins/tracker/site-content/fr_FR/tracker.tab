@@ -1470,8 +1470,10 @@ workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer toutes les tr
 workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de <em>$1</em> à <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
 workflow_admin	label_define_transition_required_field	Champ qui doit être rempli :
-workflow_admin	permissions_not_updated	Les mises à jour n'ont pas été prises en compte.
-workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
+workflow_admin	permissions_not_updated	Les permissions n'ont pas été prises en compte.
+workflow_admin	permissions_updated	Les permissions ont été prises en compte.
+workflow_admin	empty_fields_not_updated	Les champs obligatoires n'ont pas été pris en compte.
+workflow_admin	empty_fields_updated	Les champs obligatoires ont été pris en compte.
 workflow_admin	permissions_transition	Peut effectuer la transition
 workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2

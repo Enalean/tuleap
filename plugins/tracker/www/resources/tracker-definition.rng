@@ -635,11 +635,13 @@
     </element>
   </define>
   <define name="conditionFieldNotEmptyContent">
-    <element name="field">
-      <attribute name="REF">
-        <data type="IDREF"/>
-      </attribute>
-    </element>
+    <oneOrMore>
+      <element name="field">
+        <attribute name="REF">
+          <data type="IDREF"/>
+        </attribute>
+      </element>
+    </oneOrMore>
   </define>
   <define name="listRuleContent">
     <element name="source_field">

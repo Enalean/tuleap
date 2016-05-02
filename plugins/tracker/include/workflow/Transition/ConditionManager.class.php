@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
+
 /**
  * Manager for Condition
  */
@@ -34,12 +36,19 @@ class Transition_ConditionManager {
      *
      * @return void
      */
-    public function process(Transition $transition, Codendi_Request $request, PFUser $current_user) {
+    public function process(Transition $transition, Codendi_Request $request, PFUser $current_user)
+    {
         $transition_condition_factory = $this->getConditionFactory();
 
-        // Create new condition
-        if ($request->existAndNonEmpty('add_notempty_condition')) {
-            $transition_condition_factory->addCondition($transition, $request->get('add_notempty_condition'));
+        $list_fields_id = $request->get('add_notempty_condition');
+
+        try {
+            // Create new condition
+            if (is_array($list_fields_id)) {
+                $transition_condition_factory->addCondition($transition, $list_fields_id);
+            }
+        } catch (CannotCreateTransitionException $excpetion) {
+            throw $excpetion;
         }
 
         // Loop over defined actions and update them if relevant

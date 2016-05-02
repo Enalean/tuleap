@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,26 +34,28 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
         return $this->dao->isFieldUsed($field->getId());
     }
 
-    public function getFieldNotEmpty(Transition $transition){
+    public function getFieldNotEmpty(Transition $transition)
+    {
         $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
-        $row = $this->dao->searchByTransitionId($transition->getId())->getRow();
-        if ($row) {
-            $condition->setField($this->element_factory->getFormElementById($row['field_id']));
+        $fields_rows = $this->dao->searchByTransitionId($transition->getId());
+        foreach ($fields_rows as $row) {
+            $condition->addField($this->element_factory->getFormElementById($row['field_id']));
         }
 
         return $condition;
     }
 
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
+    {
         $condition = null;
         if (isset($xml->field)) {
-            $xml_field            = $xml->field;
-            $xml_field_attributes = $xml_field->attributes();
-            $field                = $xmlMapping[(string)$xml_field_attributes['REF']];
-
             $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
-            $condition->setField($field);
+            foreach ($xml->field as $xml_field) {
+                $xml_field_attributes = $xml_field->attributes();
+                $field                = $xmlMapping[(string)$xml_field_attributes['REF']];
+                $condition->addField($field);
+            }
         }
         return $condition;
     }
@@ -65,4 +67,3 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
         $this->dao->duplicate($from_transition->getId(), $new_transition_id, $field_mapping);
     }
 }
-?>

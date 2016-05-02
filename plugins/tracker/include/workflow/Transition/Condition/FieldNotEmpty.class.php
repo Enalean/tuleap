@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     public $identifier = 'notempty';
 
     /** @var Tracker_FormElement_Field */
-    private $field;
+    private $fields = array();
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
     private $dao;
@@ -40,25 +40,26 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::fetch()
      * @return string The field wrapped in Html
      */
-    public function fetch() {
+    public function fetch()
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
-        $html    .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_required_field');
+        $html    .= $GLOBALS['Language']->getText('workflow_admin', 'label_define_transition_required_field');
         $html    .= '<br />';
         $html    .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
-        $html    .= '<select name="add_notempty_condition">';
+        $html    .= '<select multiple name="add_notempty_condition[]">';
 
         $selected = '';
-        if (! $this->getField()) {
+        if (empty($this->fields)) {
             $selected = 'selected="selected"';
         }
         $html .= '<option value="0" '. $selected .'>';
         $html .= $GLOBALS['Language']->getText('global', 'please_choose_dashed');
         $html .= '</option>';
 
-        foreach ($this->getFields() as $field) {
+        foreach ($this->getSelectableFields() as $field) {
             $selected = '';
-            if ($this->getFieldId() == $field->getId()) {
+            if (in_array($field, $this->fields)) {
                 $selected .= 'selected="selected"';
             }
 
@@ -75,36 +76,41 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
-        if ($this->getField()) {
-            $child = $root->addChild('condition');
-            $child->addAttribute('type', $this->identifier);
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
+        if (! $this->fields) {
+            return null;
+        }
+
+        $child = $root->addChild('condition');
+        $child->addAttribute('type', $this->identifier);
+        foreach ($this->fields as $field) {
             $grand_child = $child->addChild('field');
-            $grand_child->addAttribute('REF', array_search($this->getField()->getId(), $xmlMapping));
+            $grand_child->addAttribute('REF', array_search($field->getId(), $xmlMapping));
         }
     }
 
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
-    public function saveObject() {
-        $this->dao->create($this->getTransition()->getId() , $this->getFieldId());
+    public function saveObject()
+    {
+        $this->dao->create($this->getTransition()->getId(), $this->getFieldIds());
     }
 
-    public function setField(Tracker_FormElement_Field $field) {
-        $this->field = $field;
+    public function addField(Tracker_FormElement_Field $field)
+    {
+        $this->fields[] = $field;
     }
 
-    public function getField() {
-        return $this->field;
-    }
-
-    private function getFieldId() {
-        $field = $this->getField();
-        if (! $field) {
-            return null;
+    private function getFieldIds()
+    {
+        $ids = array();
+        foreach ($this->fields as $field) {
+            $ids[] = $field->getId();
         }
-        return $field->getId();
+
+        return $ids;
     }
 
     /**
@@ -112,7 +118,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      *
      * @return array Array of Tracker_FormElement_Field
      */
-    private function getFields(){
+    private function getSelectableFields()
+    {
         $tracker = $this->transition->getWorkflow()->getTracker();
         return $this->formElementFactory->getUsedNonDynamicFields($tracker);
     }
@@ -121,21 +128,23 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      *
      * @return bool
      */
-    public function validate($fields_data, Tracker_Artifact $artifact) {
-        $field = $this->getField();
-        if (! $field) {
+    public function validate($fields_data, Tracker_Artifact $artifact)
+    {
+        if (empty($this->fields)) {
             return true;
         }
 
-        $value    = $this->getFieldValue($fields_data,  $artifact, $field);
+        $is_valid = true;
+        foreach ($this->fields as $field) {
+            $value = $this->getFieldValue($fields_data, $artifact, $field);
 
-        $is_valid = ! $field->isEmpty($value, $artifact);
-
-        if (! $is_valid) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_condition', 'invalid_condition', $field->getLabel(). ' ('. $field->getName() .')'));
+            if ($field->isEmpty($value, $artifact)) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_condition', 'invalid_condition', $field->getLabel(). ' ('. $field->getName() .')'));
+                $field->setHasErrors(true);
+                $is_valid = false;
+            }
         }
-        
-        $field->setHasErrors(true);
+
         return $is_valid;
     }
 
@@ -159,4 +168,3 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $value;
     }
 }
-?>

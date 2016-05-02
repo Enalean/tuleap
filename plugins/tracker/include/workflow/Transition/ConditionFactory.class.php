@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
 class Workflow_Transition_ConditionFactory {
 
@@ -77,10 +78,13 @@ class Workflow_Transition_ConditionFactory {
      * @param int $field_id
      * @return int The ID of the newly created condition
      */
-    public function addCondition(Transition $transition, $field_id) {
+    public function addCondition(Transition $transition, $list_field_id)
+    {
         $this->getFieldNotEmptyDao()->deleteByTransitionId($transition->getId());
-        if ($field_id) {
-            return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
+        if ($list_field_id) {
+            if (! $this->getFieldNotEmptyDao()->create($transition->getId(), $list_field_id)) {
+                throw new CannotCreateTransitionException();
+            }
         }
     }
 

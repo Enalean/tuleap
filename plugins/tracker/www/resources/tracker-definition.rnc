@@ -253,7 +253,7 @@ tracker =
     conditionFieldNotEmptyContent =
         element field {
             attribute REF { xsd:IDREF }
-        }
+        }+
 
     listRuleContent =
         (
