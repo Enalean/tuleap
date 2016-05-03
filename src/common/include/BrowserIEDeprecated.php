@@ -18,24 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class BrowserIE7Deprecated extends Browser {
+class BrowserIEDeprecated extends Browser
+{
 
     /** @var PFUser */
     private $user;
 
-    public function __construct(PFUser $user) {
+    public function __construct(PFUser $user)
+    {
         $this->user = $user;
     }
 
     /**
      * @return string
      */
-    public function getDeprecatedMessage() {
+    public function getDeprecatedMessage()
+    {
         if ($this->user->getPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING)) {
             return;
         }
 
-        $warning_message = $GLOBALS['Language']->getText('include_browser', 'ie7_deprecated');
+        $warning_message = $GLOBALS['Language']->getText('include_browser', 'ie_deprecated');
         if ($this->user->isAnonymous()) {
             return $warning_message;
         }
@@ -45,18 +48,19 @@ class BrowserIE7Deprecated extends Browser {
         $form  = '<form action="'. $url .'" method="POST" style="margin: 0">';
         $form .= $csrf->fetchHTMLInput();
         $form .= $warning_message;
-        $form .= '<button
+        $form .= ' <button
                     type="submit"
                     class="btn btn-small btn-inverse"
                   >
-                    '.$GLOBALS['Language']->getText('include_browser', 'ie7_deprecated_button').'
+                    '.$GLOBALS['Language']->getText('include_browser', 'ie_deprecated_button').'
                   </button>
                   </form>';
 
         return $form;
     }
 
-    public function isCompatibleWithD3() {
+    public function isCompatibleWithD3()
+    {
         return false;
     }
 }

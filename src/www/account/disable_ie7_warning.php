@@ -27,5 +27,5 @@ $request = HTTPRequest::instance();
 
 $request->getCurrentUser()->setPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING, 1);
 
-$GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('include_browser', 'ie7_deprecated_warning_disabled'));
+$GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('include_browser', 'ie_deprecated_warning_disabled'));
 $GLOBALS['Response']->redirect('/my/');

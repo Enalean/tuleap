@@ -46,11 +46,6 @@ compile_less()
             if [[ $nb_generated_lines == 0 ]]; then
                 recess $recess_options "$path/$filename.less"
             fi
-
-            if [[ $(echo "$filename" | grep 'FlamingParrot_') ]]; then
-                echo "Splitting $filename.css for IE9"
-                blessc "$path/$filename.css" "$path/$filename-IE9.css"
-            fi
         fi
     fi
 }
