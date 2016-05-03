@@ -93,6 +93,13 @@ class Git_Hook_PostReceive {
             }
             $this->sendMail($repository, $mail_builder, $oldrev, $newrev, $refname);
             $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
+            $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE_REF_UPDATE, array(
+                'repository' => $repository,
+                'oldrev'     => $oldrev,
+                'newrev'     => $newrev,
+                'refname'    => $refname,
+                'user'       => $user,
+            ));
         }
     }
 

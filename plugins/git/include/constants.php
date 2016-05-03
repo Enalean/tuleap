@@ -117,3 +117,16 @@ define('GIT_ADDITIONAL_HOOKS', 'git_additional_hooks');
  *   'repository' => (Input) GitRepository Git repository currently modified
  */
 define('GIT_HOOK_POSTRECEIVE', 'git_hook_post_receive');
+
+/**
+ * Allow plugins to do something when Tuleap receive a git push with a reference
+ * update
+ *
+ * Parameters:
+ *   'repository' => (Input) GitRepository Git repository currently modified
+ *   'oldrev'     => (Input) The old revision of the currently updated reference
+ *   'newrev'     => (Input) The new revision of the currently updated reference
+ *   'refname'    => (Input) The name of the reference being updated
+ *   'user'       => (Input) The user performing the action
+ */
+define('GIT_HOOK_POSTRECEIVE_REF_UPDATE', 'git_hook_post_receive_ref_update');
