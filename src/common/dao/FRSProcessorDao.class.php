@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Sogilis, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,4 +44,11 @@ class FRSProcessorDao extends DataAccessObject {
         return $current['processor_id'];
     }
 
+    public function searchById($processor_id)
+    {
+        $processor_id = $this->da->escapeInt($processor_id);
+        $sql = "SELECT * FROM frs_processor WHERE processor_id=$processor_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

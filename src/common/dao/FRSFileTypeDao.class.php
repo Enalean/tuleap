@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Sogilis, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,4 +40,10 @@ class FRSFileTypeDao extends DataAccessObject {
         return $current['type_id'];
     }
 
+    public function searchById($id)
+    {
+        $id = $this->da->escapeInt($id);
+        $sql = "SELECT * FROM frs_filetype WHERE type_id=$id ORDER BY type_id LIMIT 1";
+        return $this->retrieveFirstRow($sql);
+    }
 }

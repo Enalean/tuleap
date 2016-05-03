@@ -51,14 +51,15 @@ class frsPlugin extends \Plugin
         $this->addHook('frs_process_edit_form');
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
-        $this->addHook(Event::REST_RESOURCES);
         $this->addHook(self::FRS_RELEASE_VIEW);
+        $this->addHook(Event::REST_RESOURCES);
     }
 
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('tracker');
     }
 
@@ -159,5 +160,11 @@ class frsPlugin extends \Plugin
     private function getTemplateRenderer()
     {
         return TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR . '/templates');
+    }
+
+    public function rest_resources($params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }

@@ -240,6 +240,14 @@ class FRSRelease {
         }
         return $this->group_id;
     }
+
+    /**
+     * @return FRSPackage
+     */
+    public function getPackage()
+    {
+        return $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID());
+    }
     
 	function initFromArray($array) {
 		if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
