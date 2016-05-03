@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
+
 
 class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Action_Transitions {
      /** @var TransitionFactory */
@@ -28,7 +30,8 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         $this->transition_factory = $transition_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         $transition = $request->get('transition');
 
         //TODO check that the transition belongs to the current tracker
@@ -37,13 +40,19 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         $ugroups = $request->get('ugroups');
         permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false);
         if ($this->transition_factory->addPermissions($ugroups, $transition)) {
-           $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'permissions_updated'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin', 'permissions_not_updated'));
         }
+
         //Conditions
-        $condition_manager = new Transition_ConditionManager();
-        $condition_manager->process($this->transition_factory->getTransition($transition), $request, $current_user);
+        try {
+            $condition_manager = new Transition_ConditionManager();
+            $condition_manager->process($this->transition_factory->getTransition($transition), $request, $current_user);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'empty_fields_updated'));
+        } catch (CannotCreateTransitionException $exception) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin', 'empty_fields_not_updated'));
+        }
 
         // Post actions
         $tpam = new Transition_PostActionManager();
@@ -58,5 +67,3 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         ));
     }
 }
-
-?>

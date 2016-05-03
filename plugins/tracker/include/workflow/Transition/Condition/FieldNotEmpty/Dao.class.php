@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,16 +35,26 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
      *
      * @param int $transition_id The transition the post action belongs to
      *
-     * @return bool true if success false otherwise
      */
-    public function create($transition_id, $field_id) {
+    public function create($transition_id, $list_field_id)
+    {
         $transition_id = $this->da->escapeInt($transition_id);
-        $field_id = $this->da->escapeInt($field_id);
 
-        $sql = "INSERT INTO $this->table_name (`transition_id`, `field_id`)
-                VALUES ($transition_id, $field_id)";
+        $fields = array();
+        foreach ($list_field_id as $field_id) {
+            if ($field_id != 0) {
+                $field_id = $this->da->escapeInt($field_id);
+                $fields[] .= " ($transition_id, $field_id)";
+            }
+        }
 
-        return $this->updateAndGetLastId($sql);
+        if (count($fields) > 0) {
+            $sql = "INSERT INTO $this->table_name (`transition_id`, `field_id`) VALUES ";
+            $sql .= implode(",", $fields);
+            return $this->update($sql);
+        }
+
+        return true;
     }
 
     /**
@@ -83,7 +93,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
 
         $case           = array();
         $from_field_ids = array();
-        foreach($field_mapping as $mapping) {
+        foreach ($field_mapping as $mapping) {
             $from = $this->da->escapeInt($mapping['from']);
             $to   = $this->da->escapeInt($mapping['to']);
 

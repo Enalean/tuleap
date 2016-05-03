@@ -1472,6 +1472,8 @@ workflow_admin	label_define_transition_permissions	Groups that may make the tran
 workflow_admin	label_define_transition_required_field	Field that must not be empty
 workflow_admin	permissions_not_updated	Permissions on transition have not been updated.
 workflow_admin	permissions_updated	Permissions on transition have been updated.
+workflow_admin	empty_fields_not_updated	Empty fields on transition have not been updated.
+workflow_admin	empty_fields_updated	Empty fields on transition have been updated.
 workflow_admin	permissions_transition	Can make the transition
 workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
