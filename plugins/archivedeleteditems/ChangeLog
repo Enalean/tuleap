@@ -1,3 +1,6 @@
+Version 0.7 - Tuleap 8.15
+    * request #9122: Add new log file for archivedeleteditem plugin
+
 Version 0.6 - Tuleap 8.6
     * request #8384 Final / is no more mandatory for archived delete item path
 
