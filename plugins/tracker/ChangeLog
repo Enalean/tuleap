@@ -1,3 +1,6 @@
+Version 5.884 - Tuleap 8.15
+    * story #5079 define more than one field that is not empty for a given state transition
+
 Version 5.883 - Tuleap 8.15
     * request #9117: allow plugins to add action buttons for an artifact
 
