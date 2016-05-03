@@ -446,7 +446,7 @@ Summary: File release system plugin
 Group: Development/Tools
 Version: @@PLUGIN_FRS_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}
+Requires: %{PKG_NAME}, %{PKG_NAME}-plugin-tracker
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-frs = %{version}
 %else

@@ -402,7 +402,7 @@ Summary: File release system plugin
 Group: Development/Tools
 Version: @@PLUGIN_FRS_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: tuleap
+Requires: tuleap, tuleap-plugin-tracker
 %description plugin-frs
 Add features to the file release system provided by Tuleap
 
