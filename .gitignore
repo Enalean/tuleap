@@ -43,7 +43,8 @@ vendor/*
 composer.*
 src/www/api/explorer
 /.idea/
-/.config/
 npm-debug.log
 .env
 .DS_Store
+.sass-cache/
+*.css.map
