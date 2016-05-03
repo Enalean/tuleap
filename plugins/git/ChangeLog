@@ -1,3 +1,6 @@
+Version 4.149 - Tuleap 8.15
+    * request #9126: Add an event on reference update
+
 Version 4.148 - Tuleap 8.14
     * Import cmmtXXXX git references
 
