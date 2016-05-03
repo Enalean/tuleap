@@ -497,7 +497,29 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         print frs_show_status_popup($name = 'release[status_id]', $release->getStatusID()) . "<br>";
     ?>
                 </TD>
-            </TR></TABLE></FIELDSET>
+            </TR>
+
+            <?php
+                $additional_info = '';
+
+                $params = array(
+                    'release_id'      => $release->getReleaseId(),
+                    'additional_info' => &$additional_info
+                );
+
+                EventManager::instance()->processEvent(
+                    'frs_edit_form_additional_info',
+                    $params
+                );
+
+                if ($additional_info) {
+                    echo '<tr>';
+                    echo $additional_info;
+                    echo '</tr>';
+                }
+            ?>
+
+        </TABLE></FIELDSET>
         </TD></TR>
         <TR><TD><FIELDSET><LEGEND><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','fieldset_uploaded_files'); ?></LEGEND>
     <?php
@@ -1275,8 +1297,25 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'add_files'));
                 }
             }
-            //redirect to files
-            $GLOBALS['Response']->redirect('/file/?group_id=' . $group_id);
+
+            $error  = '';
+            $params = array(
+                'release_id'      => $release_id,
+                'release_request' => $request->get('release'),
+                'error'           => &$error
+            );
+
+            EventManager::instance()->processEvent(
+                'frs_process_edit_form',
+                $params
+            );
+
+            if ($error) {
+                $GLOBALS['Response']->addFeedback('error', $error);
+            } else {
+                //redirect to files
+                $GLOBALS['Response']->redirect('/file/?group_id=' . $group_id);
+            }
         }
     } else {
         $GLOBALS['Response']->addFeedback('error', $validator->getErrors());

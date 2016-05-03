@@ -19,6 +19,12 @@
  */
 
 use Tuleap\FRS\PluginInfo;
+use Tuleap\FRS\AdditionalInformationPresenter;
+use Tuleap\FRS\Link\Updater;
+use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\Link\Dao;
+
+require_once 'constants.php';
 
 class frsPlugin extends \Plugin
 {
@@ -27,6 +33,9 @@ class frsPlugin extends \Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+
+        $this->addHook('frs_edit_form_additional_info');
+        $this->addHook('frs_process_edit_form');
     }
 
     /**
@@ -38,5 +47,53 @@ class frsPlugin extends \Plugin
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function frs_edit_form_additional_info($params)
+    {
+        $renderer  = TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR.'/templates');
+
+        $release_id         = $params['release_id'];
+        $linked_artifact_id = $this->getLinkRetriever()->getLinkedArtifactId($release_id);
+
+        $presenter                 = new AdditionalInformationPresenter($linked_artifact_id);
+        $params['additional_info'] = $renderer->renderToString('additional-information', $presenter);
+    }
+
+    public function frs_process_edit_form($params)
+    {
+        $release_request = $params['release_request'];
+
+        if ($this->doesRequestContainsAdditionalInformation($release_request)) {
+            $release_id  = $params['release_id'];
+            $artifact_id = $release_request['artifact-id'];
+
+            if (! ctype_digit($artifact_id)) {
+                $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_id_not_int');
+                return;
+            }
+
+            $updater = $this->getLinkUpdater();
+            $saved   = $updater->updateLink($release_id, $artifact_id);
+
+            if (! $saved) {
+                $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'db_error');
+            }
+        }
+    }
+
+    private function doesRequestContainsAdditionalInformation(array $release_request)
+    {
+        return isset($release_request['artifact-id']);
+    }
+
+    private function getLinkUpdater()
+    {
+        return new Updater(new Dao(), $this->getLinkRetriever());
+    }
+
+    private function getLinkRetriever()
+    {
+        return new Retriever(new Dao());
     }
 }

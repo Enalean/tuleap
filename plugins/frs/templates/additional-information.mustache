@@ -1,0 +1,9 @@
+<td>
+    <b>{{ artifact_id_title }}</b>
+</td>
+<td>
+    <input type="text"
+           name="release[artifact-id]"
+           {{# has_a_linked_artifact }} value="{{ linked_artifact_id }}" {{/ has_a_linked_artifact }}
+    />
+</td>
