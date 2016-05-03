@@ -30,5 +30,5 @@
 
 <form ng-submit="comments.addComment(comments.new_comment)">
     <textarea ng-model="comments.new_comment.content" placeholder="{{ 'Say something…' | translate }}"></textarea>
-    <button type="submit" class="btn" translate>Comment</button>
+    <button type="submit" class="btn" translate ng-disabled="comments.loading_comments">Comment</button>
 </form>
