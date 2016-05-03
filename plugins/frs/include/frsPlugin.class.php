@@ -18,16 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'autoload.php';
+require_once 'constants.php';
+
 use Tuleap\FRS\PluginInfo;
 use Tuleap\FRS\AdditionalInformationPresenter;
 use Tuleap\FRS\Link\Updater;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Dao;
-
-require_once 'constants.php';
+use Tuleap\FRS\REST\ResourcesInjector;
+use Tuleap\FRS\ReleasePresenter;
 
 class frsPlugin extends \Plugin
 {
+
+    /**
+     * Allow a plugin to display its own view instead of the release notes view
+     *
+     * Parameters:
+     *   'release'    => (Input)  FRSRelease    FRS Release
+     *   'user'       => (Input)  PFUser        Current user
+     *   'view'       => (Output) String        Rendered template of the view
+     */
+    const FRS_RELEASE_VIEW = 'frs_release_view';
 
     public function __construct($id)
     {
@@ -36,6 +49,10 @@ class frsPlugin extends \Plugin
 
         $this->addHook('frs_edit_form_additional_info');
         $this->addHook('frs_process_edit_form');
+        $this->addHook('cssfile');
+        $this->addHook('javascript_file');
+        $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(self::FRS_RELEASE_VIEW);
     }
 
     /**
@@ -108,5 +125,39 @@ class frsPlugin extends \Plugin
     private function getLinkRetriever()
     {
         return new Retriever(new Dao());
+    }
+
+    public function cssfile($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/angular/bin/assets/tuleap-frs.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+        }
+    }
+
+    public function javascript_file()
+    {
+        if (strpos($_SERVER['REQUEST_URI'], FRS_BASE_URL . '/') === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-frs.js"></script>';
+        }
+    }
+
+    /**
+     * @see FRS_RELEASE_VIEW
+     */
+    public function frs_release_view($params)
+    {
+        $release = $params['release'];
+        $user    = $params['user'];
+
+        $renderer  = $this->getTemplateRenderer();
+        $presenter = new ReleasePresenter($release->release_id, $user->getShortLocale());
+
+        $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
+    }
+
+    private function getTemplateRenderer()
+    {
+        return TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR . '/templates');
     }
 }

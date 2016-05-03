@@ -100,11 +100,15 @@ node:
 	cd $(BASE_DIR)/plugins/agiledashboard/www/js/planning-v2 &&\
 		npm install &&\
 		bower install --allow-root --config.interactive=false &&\
-		grunt &&\
+		npm run build &&\
 	cd $(BASE_DIR)/plugins/agiledashboard/www/js/kanban &&\
 		npm install &&\
 		bower install --allow-root --config.interactive=false &&\
-		grunt
+		npm run build &&\
+	cd $(BASE_DIR)/plugins/frs/www/js/angular &&\
+		npm install &&\
+		bower install --allow-root --config.interactive=false &&\
+		npm run build
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
