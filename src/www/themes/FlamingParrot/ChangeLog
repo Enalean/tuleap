@@ -1,3 +1,6 @@
+Version 1.135 - Tuleap 8.15
+    * request #8840: Remove usage of Bless
+
 Version 1.134 - Tuleap 8.15
     * request #9118: Allow plugins to display user actions in the navbar
 

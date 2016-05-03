@@ -3,10 +3,16 @@ Version 8.15 (Not yet released)
 	* request #9113: Having a REST route to monitor Sysevents
 	* Spring Housekeeping
 
+	== Development ==
+	* request #8840: Remove usage of Bless
+
 	== Plugins ==
 	* svn: 0.54
 	* frs: 0.1
 	* archivedeleteditems: 0.7
+
+    == Themes ==
+	* FlamingParrot: 1.135
 
 Version 8.14 (Thursday, April 28th 2016)
 	== Enhancement ==
