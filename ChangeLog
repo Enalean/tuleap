@@ -4,13 +4,14 @@ Version 8.15 (Not yet released)
 	* Spring Housekeeping
 	* story #9087: see linked artifacts in releases
 		- Add a linked artifact for a release
+		- Add tracker dependency
 
 	== Development ==
 	* request #8840: Remove usage of Bless
 
 	== Plugins ==
 	* svn: 0.54
-	* frs: 0.2
+	* frs: 0.3
 	* archivedeleteditems: 0.7
 	* git: 4.149
 	* tracker: 5.884
