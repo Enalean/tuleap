@@ -1166,7 +1166,7 @@ plugin_tracker_formelement_admin	switch_msb	Multi Select Box
 plugin_tracker_formelement_admin	switch_sb	Select Box
 plugin_tracker_formelement_admin	switch_cb	CheckBox
 plugin_tracker_formelement_admin	switch_rb	Radio button
-plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of thie field?
+plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of this field?
 plugin_tracker_formelement_admin	field_used_in_semantics	Impossible to delete this field (used in semantics)
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible to delete this field (used in workflow)
 plugin_tracker_formelement_admin	field_used_in_field_dependencies	Impossible to delete this field (field dependencies)
