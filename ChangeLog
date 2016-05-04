@@ -10,7 +10,7 @@ Version 8.15 (Not yet released)
 	* request #8840: Remove usage of Bless
 
 	== Plugins ==
-	* svn: 0.54
+	* svn: 0.55
 	* frs: 0.3
 	* archivedeleteditems: 0.7
 	* git: 4.149
