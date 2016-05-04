@@ -1,0 +1,12 @@
+plugin_botmattermost_git	descriptor_description	Robot pour recevoir des notifications Git sur Mattermost
+plugin_botmattermost_git	descriptor_name	Robot Mattermost-Git Plugin
+
+
+plugin_botmattermost_git	alert_success_update	Changement(s) effectué(s) avec succès
+plugin_botmattermost_git	alert_invalid_post	Erreur dans la requête : Le robot n'a pas été trouvé
+
+plugin_botmattermost_git	title	Notification dans Mattermost
+plugin_botmattermost_git	description	Choix de robot(s) afin d'envoyer des notifications dans Mattermost lorsqu'un push à lieu dans ce dépot.
+
+
+plugin_botmattermost_git	push_notification_text	a publié un nouveau commit sur

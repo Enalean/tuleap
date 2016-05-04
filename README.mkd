@@ -1,0 +1,18 @@
+Bot Mattermost-Git plugin
+=========================
+
+The plugin is used to notify git event in Mattermost.
+
+
+**examples of use :**
+
+* Notification about new git push.
+
+Installation
+------------
+You need first to install BotMattermost plugin and Git plugin.
+
+References
+----------
+* [https://www.mattermost.org/](https://www.mattermost.org/)
+* [https://about.mattermost.com/](https://about.mattermost.com/)
