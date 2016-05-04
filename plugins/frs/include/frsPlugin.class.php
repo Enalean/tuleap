@@ -39,6 +39,13 @@ class frsPlugin extends \Plugin
     }
 
     /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('tracker');
+    }
+
+    /**
      * @return PluginInfo
      */
     public function getPluginInfo()
@@ -70,6 +77,12 @@ class frsPlugin extends \Plugin
 
             if (! ctype_digit($artifact_id)) {
                 $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_id_not_int');
+                return;
+            }
+
+            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+            if (! $artifact) {
+                $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_does_not_exist', $artifact_id);
                 return;
             }
 
