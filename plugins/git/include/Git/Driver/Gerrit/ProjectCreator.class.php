@@ -60,6 +60,33 @@ class Git_Driver_Gerrit_ProjectCreator {
             'reference'  => 'refs/for',
             'permission' => 'pushMerge',
             'group'      => 'group Administrators'
+        ),
+        // Reset explicitely some access rigths for Administrators
+        // To deal with the case they were removed
+        array(
+            'reference'  => 'refs/for/refs',
+            'permission' => 'push',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/for/refs',
+            'permission' => 'pushMerge',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/heads',
+            'permission' => 'push',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/tags',
+            'permission' => 'pushSignedTag',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/tags',
+            'permission' => 'pushAnnotatedTag',
+            'group'      => 'group Administrators'
         )
     );
 
