@@ -116,6 +116,7 @@ class XMLImporterTest extends TuleapTestCase {
         $this->notifdao = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
         $this->notifmgr = new MailNotificationManager($this->notifdao);
 
+        Backend::clearInstances();
         Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
         $Language = mock('BaseLanguage');
     }
@@ -127,6 +128,7 @@ class XMLImporterTest extends TuleapTestCase {
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
         EventManager::clearInstance();
+        Backend::clearInstances();
         parent::tearDown();
     }
 

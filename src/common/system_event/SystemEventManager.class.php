@@ -101,7 +101,7 @@ class SystemEventManager {
         self::$_instance = $instance;
     }
 
-    public function clearInstance() {
+    public static function clearInstance() {
         self::$_instance = null;
     }
 
