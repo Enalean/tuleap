@@ -1404,8 +1404,8 @@ class Layout extends Response {
     }
 
     protected function displayCommonStylesheetElements($params) {
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.2.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.2.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-22d39b3.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         $this->displayFontAwesomeStylesheetElements();

@@ -41,11 +41,6 @@ less()
     find $less_path -type f -name "*.less" -not -wholename "*/node_modules/*" -not -wholename "*/vendor/*" -not -wholename "*/angular/*" -not -wholename "*/js/kanban/*" -not -wholename "*/js/planning-v2/*" -not -wholename "*/src/www/guidelines/*" -o -wholename "*/src/www/guidelines/_css/*.less" | while read -r file; do
         compile_less $file
     done
-
-    recess --compile --compress "$1/src/www/themes/common/css/bootstrap-2.3.2/bootstrap.less" > "$1/src/www/themes/common/css/bootstrap-2.3.2.min.css"
-    set_user_id "$1/src/www/themes/common/css/bootstrap-2.3.2.min.css"
-    recess --compile --compress "$1/src/www/themes/common/css/bootstrap-2.3.2/responsive.less" > "$1/src/www/themes/common/css/bootstrap-responsive-2.3.2.min.css"
-    set_user_id "$1/src/www/themes/common/css/bootstrap-responsive-2.3.2.min.css"
 }
 
 less_dev()
