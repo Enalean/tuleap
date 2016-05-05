@@ -1,3 +1,6 @@
+Version 5.21 - Tuleap 8.15
+    * request #9017: Tracker bargraph not working any more
+
 Version 5.20 - Tuleap 8.13
     * request #8971: Avoid conflict with PHP 7 Error class
 
