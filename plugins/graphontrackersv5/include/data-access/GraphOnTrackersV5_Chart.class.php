@@ -306,24 +306,22 @@ abstract class GraphOnTrackersV5_Chart {
      * @return GraphOnTrackersV5_Engine
      */
     protected function getEngineWithData() {
-        if ($this->engine === null) {
-            //Define the artifacts which must be added to the chart
-            $artifacts = $this->renderer->report->getMatchingIds();
-
-            //Get the ChartDataBuilder for this chart
-            $pcdb = $this->getChartDataBuilder($artifacts);
-
+        if (! $this->engine) {
             //Get the chart engine
-            $e = $this->getEngine();
+            $this->engine = $this->getEngine();
+        }
 
-            //prepare the propeties for the chart
-            $pcdb->buildProperties($e);
+        //Define the artifacts which must be added to the chart
+        $artifacts = $this->renderer->report->getMatchingIds();
 
+        //Get the ChartDataBuilder for this chart
+        $pcdb = $this->getChartDataBuilder($artifacts);
+
+        //prepare the propeties for the chart
+        $pcdb->buildProperties($this->engine);
+
+        if (! $this->engine->validData()) {
             $this->engine = false;
-            if ($e->validData()) {
-                $this->engine = $e;
-            }
-
         }
 
         return $this->engine;
