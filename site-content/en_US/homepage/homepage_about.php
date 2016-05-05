@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2011. All rights reserved
+ * Copyright (c) Enalean 2011-2016. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
     </ul>
 </p>
 <p>
-    <a href="http://www.tuleap.com" target="_blank">More info on Tuleap</a>
+    <a href="https://www.tuleap.org" target="_blank">More info on Tuleap</a>
 </p>
 <?php
 ?>
