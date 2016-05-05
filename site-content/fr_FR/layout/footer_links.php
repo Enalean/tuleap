@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,10 +21,10 @@
 
 ?>
 <h3>A propos de Tuleap</h3>
-Tuleap est la première suite ALM d'Entreprise 100% Libre utilisée par les plus grandes entreprises et start-up innovantes. Plus d'infos sur <a href="http://www.tuleap.org" target="_blank">www.tuleap.org</a>.
+Tuleap est la première suite ALM d'Entreprise 100% Libre utilisée par les plus grandes entreprises et start-up innovantes. Plus d'infos sur <a href="https://www.tuleap.org" target="_blank">www.tuleap.org</a>.
 <div style="margin-top: 10px">
     <a href="https://twitter.com/TuleapOpenALM" target="_blank">Suivre @TuleapOpenALM</a>
-    <br><a href="http://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank">Rejoindre Tuleap sur LinkedIn</a>
+    <br><a href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank">Rejoindre Tuleap sur LinkedIn</a>
 </div>
 <?php
 ?>

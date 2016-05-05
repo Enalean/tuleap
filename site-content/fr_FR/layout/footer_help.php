@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@
 ?><h3>Besoin d'aide?</h3>
 <ul class="unstyled">
     <li>Consulter la <a href="/site/">documentation</a></li>
-    <li><a href="http://www.tuleap.net" target="_blank">Communauté Tuleap</a></li>
+    <li><a href="https://www.tuleap.net" target="_blank">Communauté Tuleap</a></li>
     <li><a href="/contact.php">Contactez-nous</a></li>
 </ul>
 <?php
