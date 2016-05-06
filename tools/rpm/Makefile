@@ -58,7 +58,7 @@ SPEC_FILE=tuleap.spec
 CUSTOM_SPEC_FILE=codendi-customization.spec
 endif
 
-.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball less node srpms dist
+.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball less sass node srpms dist
 
 .PRECIOUS: $(RPM_TMP) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
@@ -96,6 +96,9 @@ tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 less:
 	$(MAKE) -C $(BASE_DIR) less
 
+sass:
+	$(MAKE) -C $(BASE_DIR) sass
+
 node:
 	cd $(BASE_DIR)/plugins/agiledashboard/www/js/planning-v2 &&\
 		npm install &&\
@@ -106,18 +109,19 @@ node:
 		bower install --allow-root --config.interactive=false &&\
 		grunt
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less sass
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \
 			find $(PKG_NAME)-$(version)/ \(\
 				-path '*/.svn' -o\
-			 	-name '*.less' -o\
-			 	-name ".git" -o\
-			 	-name ".gitignore" -o\
-			 	-name ".gitmodules" -o\
-			 	-path "*/.DS_Store" -o\
-			 	-path $(PKG_NAME)-$(version)/plugins/tests -o\
+				-name '*.less' -o\
+				-name '*.scss' -o\
+				-name ".git" -o\
+				-name ".gitignore" -o\
+				-name ".gitmodules" -o\
+				-path "*/.DS_Store" -o\
+				-path $(PKG_NAME)-$(version)/plugins/tests -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
