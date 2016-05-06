@@ -18,5 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('FRS_BASE_DIR', realpath(__DIR__.'/..'));
-define('FRS_BASE_URL', '/file');
+namespace Tuleap\FRS;
+
+class ReleasePresenter
+{
+    /** @var int */
+    public $release_id;
+
+    /** @var string */
+    public $language;
+
+    public function __construct($release_id, $language)
+    {
+        $this->release_id = $release_id;
+        $this->language   = $language;
+    }
+
+    public function getTemplateName()
+    {
+        return 'release';
+    }
+}
