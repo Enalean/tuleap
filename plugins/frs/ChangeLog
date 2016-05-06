@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 8.15
+    * story #9087: We should be able to create or edit a release without artifact linked to it
+
 Version 0.4 - Tuleap 8.15
     * story #9087: Create the angular app
 
