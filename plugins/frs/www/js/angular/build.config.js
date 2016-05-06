@@ -70,9 +70,13 @@ module.exports = {
     vendor_files: {
         js: [
             'vendor/angular/angular.js',
+            'vendor/angular-sanitize/angular-sanitize.js',
             'vendor/ng-lodash/build/ng-lodash.js',
             'vendor/angular-gettext/dist/angular-gettext.js',
-            'vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js'
+            'vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
+            'vendor/angular-filter/dist/angular-filter.js',
+            'vendor/showdown/dist/showdown.js',
+            'vendor/ng-showdown/dist/ng-showdown.js'
         ],
         css: [
         ],

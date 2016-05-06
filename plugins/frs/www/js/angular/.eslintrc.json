@@ -35,7 +35,7 @@
         "angular/controller-as-vm": [2, "self"],
         "angular/deferred": 1,
         "angular/di-unused": 2,
-        "angular/directive-restrict": 0, // raises error if A when configured with AE
+        "angular/directive-restrict": 0, // raises error if A when configured with AE in @1.0.1
         "angular/empty-controller": 2,
         "angular/no-controller": 0, // We define our controllers outside of the directive
         "angular/no-inline-template": 1,
@@ -59,8 +59,8 @@
         "angular/service-name": [2, "/[A-Z].*Service$/"],
         // Conventions
         "angular/di": [2, "$inject"],
-        "angular/di-order": [0, true],
-        "angular/dumb-inject": 2,
+        "angular/di-order": 0, // Broken and far too annoying in @1.0.1
+        "angular/dumb-inject": 1, // The 'sort' part of this rule seems broken in @1.0.1
         "angular/function-type": [2, "named"],
         "angular/module-dependency-order": [1, {
             "grouped": true
