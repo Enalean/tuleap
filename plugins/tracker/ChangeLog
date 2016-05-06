@@ -1,3 +1,6 @@
+Version 5.886 - Tuleap 8.15
+    * request #9138: Persistent XSS via a tracker field label
+
 Version 5.885 - Tuleap 8.15
     * request #9134: Confirm message to switch type of a select box contains a spelling mistake
 
