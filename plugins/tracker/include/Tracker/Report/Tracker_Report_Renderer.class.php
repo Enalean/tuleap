@@ -287,7 +287,7 @@ abstract class Tracker_Report_Renderer {
     public function fetchArtifactLinkGoToTracker() {
         $html = '';
         $html .= '<div class="tracker-form-element-artifactlink-gototracker">';
-        $html .=  $this->fetchLinkGoTo($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'go_to_tracker'), array('target' => '_blank'));
+        $html .=  $this->fetchLinkGoTo($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'go_to_tracker'), array('target' => '_blank', 'rel' => 'noreferrer'));
         $html .= '</div>';
         return $html;
     }

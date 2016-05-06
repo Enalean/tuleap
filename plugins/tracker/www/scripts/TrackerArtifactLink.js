@@ -385,6 +385,7 @@ document.observe('dom:loaded', function () {
         '#tracker-link-artifact-slow-way-content a.direct-link-to-artifact',
         '#tracker-link-artifact-slow-way-content a.direct-link-to-user').each(function (a) {
             a.target = '_blank';
+            a.rel = 'noreferrer';
         });
 
         var renderer_panel = $$('.tracker_report_renderer')[0];
@@ -679,6 +680,7 @@ document.observe('dom:loaded', function () {
                     '#tracker-link-artifact-fast-ways a.direct-link-to-artifact',
                     '#tracker-link-artifact-fast-ways a.direct-link-to-user').each(function (a) {
                         a.target = '_blank';
+                        a.rel = 'noreferrer';
                     });
 
                     var input_to_link = $('lightwindow_contents').down('input[name="link-artifact[manual]"]');

@@ -21,10 +21,10 @@
 
 ?>
 <h3>About Tuleap</h3>
-Tuleap is the first 100% Libre Enterprise ALM suite used by fortune 500 companies and innovative start-ups. More info <a href="https://www.tuleap.org" target="_blank">www.tuleap.org</a>.
+Tuleap is the first 100% Libre Enterprise ALM suite used by fortune 500 companies and innovative start-ups. More info <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">www.tuleap.org</a>.
 <div style="margin-top: 10px">
-    <a href="https://twitter.com/TuleapOpenALM" target="_blank">Follow @TuleapOpenALM</a>
-    <br><a href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank">Join Tuleap on LinkedIn</a>
+    <a href="https://twitter.com/TuleapOpenALM" target="_blank" rel="noreferrer">Follow @TuleapOpenALM</a>
+    <br><a href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank" rel="noreferrer">Join Tuleap on LinkedIn</a>
 </div>
 <?php
 ?>

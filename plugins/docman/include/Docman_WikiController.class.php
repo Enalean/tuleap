@@ -376,7 +376,7 @@ class Docman_WikiController extends Docman_Controller {
         $item_url = '/plugins/docman/?group_id=' . $group_id . '&sort_update_date=0&action=show&id=';
 
         foreach($parents as $parent) {
-            $html->pushContent(HTML::a(array('href' => $item_url . $parent['id'], 'target' => '_blank'), HTML::strong($parent['title'])));
+            $html->pushContent(HTML::a(array('href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'), HTML::strong($parent['title'])));
             $html->pushContent(' / ');
         }
 
@@ -408,7 +408,7 @@ class Docman_WikiController extends Docman_Controller {
             $parents = array_reverse($parents);
             $item_url = '/plugins/docman/?group_id=' . $group_id . '&sort_update_date=0&action=show&id=';
             foreach($parents as $parent) {
-                $html->pushContent(HTML::a(array('href' => $item_url . $parent['id'], 'target' => '_blank'), HTML::strong($parent['title'])));
+                $html->pushContent(HTML::a(array('href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'), HTML::strong($parent['title'])));
                 $html->pushContent(' / ');
             }
 
