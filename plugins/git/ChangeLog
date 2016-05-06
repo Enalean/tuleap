@@ -1,3 +1,6 @@
+Version 4.150 - Tuleap 8.15
+    * request #9135: Deploy some Administrators gerrit access rights during migration
+
 Version 4.149 - Tuleap 8.15
     * request #9126: Add an event on reference update
 
