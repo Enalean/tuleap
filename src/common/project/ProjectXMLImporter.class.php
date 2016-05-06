@@ -204,7 +204,8 @@ class ProjectXMLImporter {
         }
     }
 
-    private function addProjectMember(Project $project, PFUser $user) {
+    private function addProjectMember(Project $project, PFUser $user)
+    {
         $this->logger->info("Add user {$user->getUserName()} to project.");
 
         if ($user->isMember($project->getID())) {
@@ -212,7 +213,9 @@ class ProjectXMLImporter {
             return;
         }
 
-        if(! account_add_user_obj_to_group($project->getID(), $user, false)) {
+        $check_user_status  = false;
+        $send_notifications = false;
+        if (! account_add_user_obj_to_group($project->getID(), $user, $check_user_status, $send_notifications)) {
             throw new UserNotAddedAsProjectMemberException($GLOBALS['Response']->getRawFeedback());
         }
     }

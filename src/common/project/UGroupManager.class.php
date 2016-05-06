@@ -427,9 +427,12 @@ class UGroupManager {
         return array_diff($users_from_references, $current_members);
     }
 
-    private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user) {
+    private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user)
+    {
         if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
-            return account_add_user_obj_to_group($user_group->getProjectId(), $user, true);
+            $send_notifications = true;
+            $check_user_status  = true;
+            return account_add_user_obj_to_group($user_group->getProjectId(), $user, $check_user_status, $send_notifications);
         }
 
         return $user_group->addUser($user);

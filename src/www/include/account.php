@@ -21,14 +21,17 @@ function account_pwvalid($pw, &$errors) {
 }
 
 // Add user to an existing project
-function account_add_user_to_group ($group_id,&$user_unix_name) {
+function account_add_user_to_group ($group_id, &$user_unix_name)
+{
     $um = UserManager::instance();
     $user = $um->findUser($user_unix_name);
     if ($user) {
-        return account_add_user_obj_to_group($group_id, $user, true);
+        $send_notifications = true;
+        $check_user_status  = true;
+        return account_add_user_obj_to_group($group_id, $user, $check_user_status, $send_notifications);
     } else {
         //user doesn't exist
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_not_exist'));
         return false;
     }
 }
@@ -41,7 +44,9 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
  * @param bool $check_user_status
  * @return bool
  */
-function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_status) {
+
+function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_status, $send_notifications)
+{
     //user was found but if it's a pending account adding
     //is not allowed
     if ($check_user_status && !$user->isActive() && !$user->isRestricted()) {
@@ -72,13 +77,15 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
                 'user_unix_name' => $user->getUserName(),
         ));
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_account','user_added'));
-        account_send_add_user_to_group_email($group_id, $user->getId());
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_account', 'user_added'));
+        if ($send_notifications) {
+            account_send_add_user_to_group_email($group_id, $user->getId());
+        }
         group_add_history('added_user', $user->getUserName(), $group_id, array($user->getUserName()));
 
         return true;
     } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_already_member'));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_already_member'));
     }
     return false;
 }
