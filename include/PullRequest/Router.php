@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
+use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
@@ -138,7 +139,7 @@ class Router
             );
         }
 
-        return $this->redirectToPullRequestViewIntoGitRepository($generated_pull_request, $project_id);
+        $this->redirectToPullRequestViewIntoGitRepository($generated_pull_request, $project_id);
     }
 
     private function redirectInRepositoryViewWithErrorMessage($repository_id, $project_id, $message)
