@@ -122,6 +122,15 @@ class Dao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function updateSha1Dest($pull_request_id, $sha1_dest)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $sha1_dest       = $this->da->quoteSmart($sha1_dest);
+
+        $sql = "UPDATE plugin_pullrequest_review SET sha1_dest=$sha1_dest WHERE id=$pull_request_id";
+        return $this->update($sql);
+    }
+
     public function getPaginatedPullRequests($repository_id, $limit, $offset)
     {
         $repository_id = $this->da->escapeInt($repository_id);

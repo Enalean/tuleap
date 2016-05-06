@@ -37,9 +37,15 @@ class PullRequestUpdater
 
     public function updatePullRequests(GitRepository $repository, $src_branch_name, $new_rev)
     {
+        $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
         $prs = $this->pull_request_factory->getPullRequestsBySourceBranch($repository, $src_branch_name);
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
+
+            $ancestor_rev = $git_exec->getCommonAncestor($pr->getBranchSrc(), $pr->getBranchDest());
+            if ($ancestor_rev != $pr->getSha1Dest()) {
+                $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
+            }
         }
     }
 

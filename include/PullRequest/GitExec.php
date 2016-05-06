@@ -121,6 +121,17 @@ class GitExec extends Git_Exec
         return $this->parseDiffNumStatOutput($output);
     }
 
+    public function getCommonAncestor($ref1, $ref2)
+    {
+        $ref1   = escapeshellarg($ref1);
+        $ref2   = escapeshellarg($ref2);
+        $cmd    = "merge-base $ref1 $ref2";
+        $output = array();
+
+        $this->gitCmdWithOutput($cmd, $output);
+        return $output[0];
+    }
+
     private function parseDiffNumStatOutput($output) {
         $lines_added   = 0;
         $lines_removed = 0;

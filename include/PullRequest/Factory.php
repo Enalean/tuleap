@@ -133,4 +133,9 @@ class Factory
     {
         return $this->dao->updateSha1Src($pull_request->getId(), $new_rev);
     }
+
+    public function updateDestRev(PullRequest $pull_request, $new_rev)
+    {
+        return $this->dao->updateSha1Dest($pull_request->getId(), $new_rev);
+    }
 }
