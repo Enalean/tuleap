@@ -2081,7 +2081,7 @@ class Layout extends Response {
             }
                 if (substr($url, 0, 1)!="/") {
                     // Absolute link -> open new window on click
-                    print "target=_blank ";
+                    print "target=\"_blank\" rel=\"noreferrer\" ";
                 }
                 if ($description) {
                     print "title=\"$description\" ";
