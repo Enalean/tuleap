@@ -97,7 +97,7 @@ class frsPlugin extends \Plugin
 
     private function doesRequestContainsAdditionalInformation(array $release_request)
     {
-        return isset($release_request['artifact-id']);
+        return isset($release_request['artifact-id']) && $release_request['artifact-id'] !== '';
     }
 
     private function getLinkUpdater()
