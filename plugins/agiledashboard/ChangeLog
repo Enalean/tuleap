@@ -1,3 +1,6 @@
+Version 1.378 - Tuleap 8.15
+    * request #9136: All URLs in the footer and homepage are in HTTPS
+
 Version 1.377 - Tuleap 8.15
     * request #9039: Update artifact modal version
 
