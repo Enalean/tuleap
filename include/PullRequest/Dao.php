@@ -49,6 +49,15 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function searchBySourceBranch($repository_id, $branch_name)
+    {
+        $repository_id   = $this->da->escapeInt($repository_id);
+        $branch_name     = $this->da->quoteSmart($branch_name);
+
+        $sql = "SELECT * FROM plugin_pullrequest_review WHERE repository_id=$repository_id AND branch_src=$branch_name";
+        return $this->retrieve($sql);
+    }
+
     public function countPullRequestOfRepository($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
@@ -102,6 +111,15 @@ class Dao extends DataAccessObject
                             )";
 
         return $this->updateAndGetLastId($sql);
+    }
+
+    public function updateSha1Src($pull_request_id, $sha1_src)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $sha1_src        = $this->da->quoteSmart($sha1_src);
+
+        $sql = "UPDATE plugin_pullrequest_review SET sha1_src=$sha1_src WHERE id=$pull_request_id";
+        return $this->update($sql);
     }
 
     public function getPaginatedPullRequests($repository_id, $limit, $offset)

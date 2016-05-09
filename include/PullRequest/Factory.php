@@ -51,6 +51,15 @@ class Factory
         return $this->getInstanceFromRow($row);
     }
 
+    /**
+     * @return PullRequest[]
+     */
+    public function getPullRequestsBySourceBranch(GitRepository $repository, $branch_name)
+    {
+        $res = $this->dao->searchBySourceBranch($repository->getId(), $branch_name);
+        return $this->getInstancesFromRows($res);
+    }
+
     public function countPullRequestOfRepository(GitRepository $repository)
     {
         $row = $this->dao->countPullRequestOfRepository($repository->getId())->getRow();
@@ -79,6 +88,22 @@ class Factory
     }
 
     /**
+     * @return PullRequest[]
+     */
+    public function getInstancesFromRows($rows)
+    {
+        $prs = array();
+
+        if ($rows) {
+            foreach ($rows as $row) {
+                $prs[] = $this->getInstanceFromRow($row);
+            }
+        }
+
+        return $prs;
+    }
+
+    /**
      * @return PullRequest
      */
     public function create(PullRequest $pull_request)
@@ -102,5 +127,10 @@ class Factory
         $pull_request->setId($new_pull_request_id);
 
         return $pull_request;
+    }
+
+    public function updateSourceRev(PullRequest $pull_request, $new_rev)
+    {
+        return $this->dao->updateSha1Src($pull_request->getId(), $new_rev);
     }
 }

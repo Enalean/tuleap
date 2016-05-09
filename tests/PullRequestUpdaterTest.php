@@ -1,0 +1,103 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\PullRequest;
+
+use \TuleapDbTestCase;
+use \GitRepository;
+use \ForgeConfig;
+
+require_once 'bootstrap.php';
+
+class PullRequestUpdaterTest extends TuleapDbTestCase
+{
+
+    /**
+     * @var PullRequestUpdater
+     */
+    private $pull_request_updater;
+
+    /**
+     * @var GitRepository
+     */
+    private $git_repository;
+
+    /**
+     * @var Dao
+     */
+    private $dao;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->mysqlLoadFile('plugins/pullrequest/db/install.sql');
+
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_cache_dir', '/tmp/');
+
+        $this->dao = new Dao();
+        $this->pull_request_updater = new PullRequestUpdater(new Factory($this->dao));
+    }
+
+    public function tearDown()
+    {
+        ForgeConfig::restore();
+
+        parent::tearDown();
+    }
+
+    public function itUpdatesSourceBranchInPRs()
+    {
+        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 'master', 'sha2');
+        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 'other', 'sha2');
+        $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 'dev', 'sha2');
+
+        $git_repo = mock('\GitRepository');
+        stub($git_repo)->getId()->returns(1);
+
+        $this->pull_request_updater->updateSourceBranchRev($git_repo, 'dev', 'sha1new');
+
+        $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
+        $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
+        $pr3 = $this->dao->searchByPullRequestId($pr3_id)->getRow();
+
+        $this->assertEqual('sha1new', $pr1['sha1_src']);
+        $this->assertEqual('sha1new', $pr2['sha1_src']);
+        $this->assertEqual('sha1',    $pr3['sha1_src']);
+    }
+
+    public function itDoesNotUpdateSourceBranchOfOtherRepositories()
+    {
+        $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 'master', 'sha2');
+        $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 'dev', 'sha2');
+
+        $git_repo = mock('\GitRepository');
+        stub($git_repo)->getId()->returns(1);
+
+        $this->pull_request_updater->updateSourceBranchRev($git_repo, 'dev', 'sha1new');
+
+        $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
+        $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
+
+        $this->assertEqual('sha1', $pr1['sha1_src']);
+        $this->assertEqual('sha1', $pr2['sha1_src']);
+    }
+
+}

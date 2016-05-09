@@ -32,6 +32,7 @@ use Tuleap\PullRequest\AdditionalHelpTextPresenter;
 use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Dao;
+use Tuleap\PullRequest\PullRequestUpdater;
 
 class pullrequestPlugin extends Plugin
 {
@@ -43,6 +44,7 @@ class pullrequestPlugin extends Plugin
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -264,6 +266,29 @@ class pullrequestPlugin extends Plugin
 
             $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }
+    }
+
+    public function gitHookPostReceive($params) {
+        $refname     = $params['refname'];
+        $branch_name = $this->getBranchNameFromRef($refname);
+
+        if ($branch_name != null) {
+            $repository           = $params['repository'];
+            $pull_request_updater = new PullRequestUpdater($this->getPullRequestFactory());
+            $pull_request_updater->updatePullRequests($repository, $branch_name, $params['newrev']);
+        }
+    }
+
+    private function getBranchNameFromRef($refname)
+    {
+        $prefix = 'refs/heads/';
+
+        if (substr($refname, 0, strlen($prefix)) == $prefix) {
+            $refname = substr($refname, strlen($prefix));
+            return $refname;
+        }
+
+        return null;
     }
 
     private function getPullRequestFactory()
