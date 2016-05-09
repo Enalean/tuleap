@@ -1,3 +1,11 @@
+Version 8.14-2 (Monday, May 9th)
+	== Bug Fix ==
+	* request #9017: Tracker bargraph not working any more
+	* request #9106: OpenID Connect informations should not be displayed on the My Account page when the plugin is not usable
+	* request #9110: Mail notifications, too much mails (plugin svn)
+	* request #9114: Provide login and password through the DocmanImport script
+	* request #9135: Deploy some Administrators gerrit access rights during migration
+	* request #9136: All URLs in the footer and homepage are in HTTPS
 Version 8.14 (Thursday, April 28th 2016)
 	== Enhancement ==
 	* story #8940: The resize of a table should occur only on a th/td
