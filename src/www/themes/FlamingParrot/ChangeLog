@@ -1,8 +1,8 @@
 Version 1.137 - Tuleap 8.15
-    * story #9087 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
+    * story #9132 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
 
 Version 1.136 - Tuleap 8.15
-    * story #9087 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
+    * story #9132 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
 
 Version 1.135 - Tuleap 8.15
     * request #8840: Remove usage of Bless
