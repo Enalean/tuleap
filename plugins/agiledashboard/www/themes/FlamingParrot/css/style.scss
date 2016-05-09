@@ -1,0 +1,337 @@
+@import "../../default/css/style.scss";
+
+@mixin definitions($main) {
+    .agiledashboard-admin-kanban .agiledashboard-admin-section section .plannings > thead > tr > th {
+        border-bottom-color: $main;
+    }
+
+    div.milestones > fieldset.milestone {
+        legend {
+            border-bottom-color: $main;
+            color: $main;
+
+            > span.status {
+                &.open {
+                    background-color: $main;
+                }
+            }
+        }
+
+        &.collapsed {
+            legend {
+                border-bottom-color: #E9E9E9;
+            }
+        }
+    }
+
+    #planning-app {
+        li.backlog-item .backlog-item-details .moves > .icon-stack:hover > .icon-stack-base {
+            color: $main;
+        }
+
+        #backlog-items-selected-bar .label {
+            background: $main;
+        }
+
+        li.backlog-item.gu-transit {
+            background: $main;
+        }
+    }
+
+    #kanban-board {
+        .kanban-item > .kanban-item-content > .moves > .icon-stack:hover > .icon-stack-base {
+            color: $main;
+        }
+
+        .kanban-item > .kanban-item-expand-collapse:hover > i {
+            color: $main;
+        }
+
+        > div:not(.wip-reached) > .column-header {
+            box-shadow: inset 0 3px 0 $main, inset 0 -1px 0 #E0E0E0;
+            color: $main;
+
+            > .wip-limit {
+                background-color: $main;
+            }
+        }
+
+        .angular-ui-tree-placeholder {
+            background: $main;
+        }
+    }
+
+    .edit-kanban-modal > .modal-body > .column-configuration > ul > li.column.draggable:not(.editing):hover {
+        background: fade($main, 10%);
+    }
+
+    .modal-header {
+        border-bottom: 3px solid $main;
+    }
+
+    .tuleap-artifact-modal {
+        .followups-title {
+            color: $main;
+        }
+
+        .modal-body fieldset > legend {
+            border-bottom-color: $main;
+            color: $main;
+        }
+    }
+
+}
+
+body {
+    &.FlamingParrot_Orange {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-orange.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 45%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-orange.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_Blue {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 55%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_Green {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-green";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 47%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 52%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_Purple {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 50%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_Red {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-red";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 52%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_DarkOrange {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkorange";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-dark-orange.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 45%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-dark-orange.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_DarkBlue {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkblue";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-blue.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 55%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_DarkGreen {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkgreen";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-green.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 47%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_DarkBlueGrey {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkbluegrey";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-bluegrey.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 52%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_DarkPurple {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkpurple";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-purple.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 50%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
+        }
+    }
+
+    &.FlamingParrot_DarkRed {
+        @import "../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkred";
+
+        @include definitions($main);
+        #kanban-board {
+            .angular-ui-tree-placeholder:only-child {
+                background: transparent url('../images/column-empty-drop-red.png') no-repeat center 100px;
+            }
+
+            > div.column-hidden > .column-content .angular-ui-tree-placeholder:only-child {
+                background: transparentize($main, 0.9);
+            }
+        }
+        #kanban-board .kanban-item > .kanban-item-expand-collapse:hover {
+            background-color: lighten($main, 52%);
+        }
+        .empty-home {
+            background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+th.resize-handle-active {
+    cursor: e-resize;
+}
+
+div.resize-handle {
+    cursor: e-resize;
+    width: 2px;
+    border-right: 1px dashed #1E90FF;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+th.drop-over {
+    background-color: #eeeef0;
+}

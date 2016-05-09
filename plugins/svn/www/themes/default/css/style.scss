@@ -1,0 +1,251 @@
+#svn-homepage {
+    form {
+        margin: 30px 0 15px;
+
+        > .help {
+            margin: 0 0 0 5px;
+            font-size: 12px;
+        }
+    }
+
+    table {
+        max-width: 960px;
+
+        > thead > tr {
+            background: #E4E4E4;
+
+            > th {
+                vertical-align: top;
+                border-left-color: #D2D2D2;
+                border-bottom: 2px solid #B2B2B2;
+            }
+        }
+
+        > tbody > tr {
+            &:first-child > td {
+                border-top: none;
+            }
+
+            &.empty-table > td {
+                padding: 50px;
+                color: #AAAAAA;
+                text-align: center;
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+#svn-repository {
+    #svn-repository-url-bar {
+        > .input-append {
+            margin: 0;
+
+            > input[type="text"] {
+                width: 800px;
+            }
+        }
+    }
+
+    #svn-repository-help {
+        display: none;
+        margin: 10px 0;
+
+        .svn-intro-command {
+            margin: 0;
+        }
+    }
+
+    #svn-repository-viewvc {
+        margin: 30px 0 0;
+        padding: 15px;
+        background: #FCFCFC;
+        border: 1px solid #E3E3E3;
+        border-radius: 3px;
+    }
+}
+
+#svn-administration {
+    > h2 {
+        margin: 10px 0 30px;
+    }
+
+    .nav-tabs {
+        margin: 0;
+
+        > li {
+            &:first-child {
+                margin-left: 15px;
+            }
+
+            i {
+                margin: 0 3px 0 0;
+            }
+        }
+    }
+
+    > .tab-content {
+        padding: 0 15px;
+        max-width: 1200px;
+
+        label:not(.checkbox), h4 {
+            margin: 0 0 5px;
+            color: #666666;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        button[type="submit"] {
+            margin: 20px 0 0;
+
+            > i {
+                margin: 0 3px 0 0;
+            }
+        }
+    }
+
+    #admin-groups-form {
+        margin: 20px 0 0;
+
+        select {
+            height: 150px;
+        }
+    }
+
+    #notifications {
+        button[type="submit"] {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        table {
+            > thead > tr {
+                background: #E4E4E4;
+
+                > th {
+                    vertical-align: top;
+                    border-left-color: #D2D2D2;
+                    border-bottom: 2px solid #B2B2B2;
+                    white-space: nowrap;
+
+                    &:first-child {
+                        width: 20px;
+                        text-align: center;
+                    }
+                }
+            }
+
+            > tbody > tr {
+                &:first-child > td {
+                    border-top: none;
+                }
+
+                &.empty-table > td {
+                    padding: 50px;
+                    color: #AAAAAA;
+                    text-align: center;
+                    font-size: 12px;
+                }
+
+                > td {
+                    vertical-align: middle;
+
+                    &:first-child {
+                        width: 20px;
+                        min-width: 20px;
+                        text-align: center;
+                    }
+
+                    &.notification-path {
+                        width: 25%;
+                        white-space: nowrap;
+                    }
+
+                    &.add-notification-list {
+                        width: 100%;
+                    }
+
+                    > input {
+                        margin: 0;
+                        width: 100%;
+                        height: 30px;
+                        box-sizing: border-box;
+                    }
+                }
+            }
+        }
+    }
+
+    #immutable-tags {
+        .immutable-tags-configuration {
+            margin: 0 0 50px;
+        }
+    }
+
+    #access-file-container {
+        margin: 30px 0 0;
+
+        > #current-access-file-container {
+            margin-right: 10px;
+        }
+
+        > #current-access-file-container,
+        > #old-access-file-container {
+            display: inline-block;
+            vertical-align: top;
+
+            > h4 {
+                position: relative;
+                height: 30px;
+
+                > select {
+                    position: absolute;
+                    top: -4px;
+                    margin: 0 0 0 10px;
+                }
+            }
+
+            pre {
+                width: 440px;
+                box-sizing: border-box;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                border-bottom: 0;
+                border-radius: 4px 4px 0 0;
+                margin: 0;
+                background: #fcfcfc;
+
+                & + pre {
+                    width: 440px;
+                    height: 435px;
+                    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+                    border-radius: 0 0 4px 4px;
+                    overflow: auto;
+                }
+            }
+
+            > textarea {
+                display: block;
+                width: 440px;
+                height: 435px;
+                margin: 0;
+                padding: 9.5px;
+                box-sizing: border-box;
+                border-radius: 0 0 4px 4px;
+                font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+                font-size: 13px;
+                resize: none;
+            }
+
+            .empty-version {
+                font-style: italic;
+                color: #BBBBBB;
+                text-align: center;
+            }
+
+            > #old-access-file-form {
+                visibility: hidden;
+            }
+        }
+    }
+}

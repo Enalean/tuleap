@@ -1,0 +1,599 @@
+#cardwall {
+    padding-bottom: 1em;
+
+}
+
+.cardwall_board-actions {
+    text-align: right;
+    margin-bottom: 1em;
+}
+
+.cardwall_board > table {
+    clear: both;
+    border-color: #D8D8D8;
+    border-top: 1px solid #D8D8D8;
+    border-left: 1px solid #D8D8D8;
+    border-collapse: separate;
+}
+
+.cardwall_board > table > thead > tr > th, .cardwall > tr > td {
+    border-right: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.cardwall_admin_ontop_mappings th > .cardwall-column-header-color {
+    height: 5px;
+    margin-bottom: 7px;
+}
+
+#cardwall_board-nifty {
+    float: right;
+    color: #999;
+}
+
+.cardwall_board p {
+    font-size: 100%;
+    font-weight: normal;
+    margin: 0;
+}
+
+.cardwall_board ul, .cardwall_board li {
+    list-style: none;
+}
+
+.cardwall_board ul {
+    padding: 0em;
+}
+
+.cardwall_board.nifty ul {
+    padding: 3em;
+}
+
+.cardwall_board .toggle-collapse {
+    display: none;
+}
+
+.cardwall_board .card {
+    cursor: move;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #FFFFBB;
+    border: 1px solid #CACACA;
+    -moz-box-shadow: 0px 1px 0px 0px rgba(217, 217, 217, 0.50);
+    -webkit-box-shadow: 0px 1px 0px 0px rgba(217, 217, 217, 0.50);
+    box-shadow: 0px 1px 0px 0px rgba(217, 217, 217, 0.50);
+}
+
+.cardwall_board .nodrag .card {
+    cursor: auto;
+    background: #ffffff;
+    height: 100%;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.cardwall_board .nodrag .card {
+    background: #ffffff;
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.cardwall_board .nodrag .card > .card-container {
+    background: #ffffff;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.widget .cardwall_board .card {
+    cursor: auto;
+}
+
+.cardwall_board.nifty ul li .card {
+    height: 8em;
+    font-size: 1.5em;
+}
+
+.cardwall_board.nifty ul li {
+    -moz-box-shadow: 5px 5px 7px rgba(33, 33, 33, 1);
+    -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    -moz-transition: -moz-transform .15s linear;
+    -o-transition: -o-transform .15s linear;
+    -webkit-transition: -webkit-transform .15s linear;
+}
+
+.cardwall_board ul li.error {
+    -moz-box-shadow: 5px 5px 12px rgba(254, 0, 0, 1);
+    -webkit-box-shadow: 5px 5px 12px rgba(254, 0, 0, .7);
+    box-shadow: 5px 5px 12px rgba(254, 0, 0, .7);
+}
+
+.cardwall_board ul li p.cardwall_board_title {
+    font-size: 140%;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.cardwall_board.nifty ul li div.cardwall_board_content {
+    font-family: "Reenie Beanie", arial, sans-serif;
+    font-size: 180%;
+    height: 83%;
+    overflow: hidden;
+}
+
+.cardwall_board.nifty ul li {
+    -webkit-transform: rotate(-6deg);
+    -o-transform: rotate(-6deg);
+    -moz-transform: rotate(-6deg);
+}
+
+.cardwall_board.nifty ul li:nth-child(even) {
+    -o-transform: rotate(4deg);
+    -webkit-transform: rotate(4deg);
+    -moz-transform: rotate(4deg);
+    position: relative;
+    top: 5px;
+    /*  background:#cfc; */
+}
+
+.cardwall_board.nifty ul li:nth-child(3n) {
+    -o-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    position: relative;
+    top: -5px;
+    /*  background:#ccf; */
+}
+
+.cardwall_board.nifty ul li:nth-child(5n) {
+    -o-transform: rotate(5deg);
+    -webkit-transform: rotate(5deg);
+    -moz-transform: rotate(5deg);
+    position: relative;
+    top: -10px;
+}
+
+.cardwall_board.nifty ul.nodrag li {
+    -o-transform: none;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/* magnifying-glass effect. Maybe too disturbing?
+.cardwall_board.nifty ul li:hover, ul li:focus{
+  box-shadow:10px 10px 7px rgba(0,0,0,.7);
+  -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
+  -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+  -webkit-transform: scale(1.25);
+  -moz-transform: scale(1.25);
+  -o-transform: scale(1.25);
+  position:relative;
+  z-index:5;
+}
+*/
+
+.cardwall_board_column_hover {
+    /*background: #fcfcfc;*/
+    -moz-box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1) inset;
+    -webkit-box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1) inset;
+}
+
+#plugin_cardwall_qrcode_toggler {
+    filter: alpha(opacity=20);
+    -khtml-opacity: 0.2;
+    -moz-opacity: 0.2;
+    opacity: 0.2;
+}
+
+@font-face {
+    font-family: 'Reenie Beanie';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Reenie Beanie'), local('ReenieBeanie'), url('../fonts/Reenie-Beanie-regular.woff') format('woff');
+}
+
+.card_element_edit_form > input[type=text] {
+    width: 40px;
+}
+
+.card_element_edit_form > input[type=submit] {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.valueOf_remaining_effort {
+    min-width: 30px;
+}
+
+.search-in-cardwall::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+.search-in-cardwall {
+    display: inline-block;
+    vertical-align: middle;
+
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+
+    width: 330px;
+    height: 20px;
+
+    margin: 0;
+    padding: 4px 6px;
+
+    color: #555555;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+input[type="text"].search-in-cardwall {
+    margin-bottom: 0;
+}
+
+.search-in-cardwall:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted \9
+;
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.cardwall-column-header {
+    text-transform: uppercase;
+    vertical-align: top;
+}
+
+.cardwall-cell ul, .cardwall-cell ol {
+    margin: 14px 0;
+}
+
+.card-actions ul {
+    margin: 0;
+}
+
+.cardwall-column-header, .cardwall-cell-header {
+    background-color: #F8F8F8;
+    color: #595959;
+}
+
+.cardwall-column-header-color {
+    height: 5px;
+}
+
+.cardwall-column-header-container,
+.cardwall-cell-container {
+    position: relative;
+    padding: 10px;
+}
+
+.cardwall-cell-stacked {
+    overflow: hidden;
+    padding-bottom: 1em;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul {
+    position: relative;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit {
+    position: absolute !important; /* !important as we want to override inline style (drag 'n drop) */
+    width: 100%;
+    top: 10px;
+}
+
+.cardwall_board_postit_flying {
+    -moz-box-shadow: -1px 13px 11px 0px rgba(203, 203, 203, 0.70);
+    -webkit-box-shadow: -1px 13px 11px 0px rgba(203, 203, 203, 0.70);
+    box-shadow: -1px 13px 11px 0px rgba(203, 203, 203, 0.70);
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(1) {
+    top: 0px;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(2) {
+    top: 5px;
+}
+
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
+    display: inline;
+}
+
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
+    display: none;
+}
+
+.cardwall-column-header-controls {
+    position: absolute;
+    top: 9px;
+    right: 0;
+    cursor: pointer;
+    padding: 2px 4px;
+    color: #ccc;
+    font-size: 1.5em;
+}
+
+.cardwall-cell-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    padding: 2px 4px;
+    color: #ccc;
+    font-size: 1.5em;
+}
+
+.cardwall-column-header-controls:hover,
+.cardwall-cell-controls:hover {
+    color: #333;
+}
+
+.cardwall-auto-stack-toggle {
+    margin: 0;
+}
+
+.widget {
+    .cardwall-column-header-controls, .cardwall-cell-controls {
+        display: none;
+    }
+}
+
+body.fullscreen {
+    $cardwall-full-screen-top-color: #e6e6e6;
+    $cardwall-full-screen-bottom-color: #ffffff;
+    min-width: 100%;
+    min-height: 100%;
+    padding: 0;
+    background: $cardwall-full-screen-top-color;
+    background: -moz-linear-gradient(top, $cardwall-full-screen-top-color 0%, $cardwall-full-screen-bottom-color 20%, $cardwall-full-screen-bottom-color 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $cardwall-full-screen-top-color), color-stop(20%, $cardwall-full-screen-bottom-color), color-stop(100%, $cardwall-full-screen-bottom-color));
+    background: -webkit-linear-gradient(top, $cardwall-full-screen-top-color 0%, $cardwall-full-screen-bottom-color 20%, $cardwall-full-screen-bottom-color 100%);
+    background: -o-linear-gradient(top, $cardwall-full-screen-top-color 0%, $cardwall-full-screen-bottom-color 20%, $cardwall-full-screen-bottom-color 100%);
+    background: -ms-linear-gradient(top, $cardwall-full-screen-top-color 0%, $cardwall-full-screen-bottom-color 20%, $cardwall-full-screen-bottom-color 100%);
+    background: linear-gradient(to bottom, $cardwall-full-screen-top-color 0%, $cardwall-full-screen-bottom-color 20%, $cardwall-full-screen-bottom-color 100%);
+    background-repeat: repeat-x;
+
+    #header, #navigation, #feedback, footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav, .agiledashboard > .release-date-info {
+        display: none;
+    }
+
+    .main_body_row {
+        margin: 0;
+    }
+
+    .main {
+        margin: 0;
+        padding: 0;
+    }
+
+    #cardwall {
+        min-width: 100%;
+        min-height: 100%;
+
+        .cardwall_board-actions, .cardwall_board-fullscreen-bar {
+            padding: 20px 10px 0;
+        }
+    }
+}
+
+.cardwall_board-fullscreen-bar {
+    text-align: right;
+
+    i {
+        margin-right: 10px;
+    }
+}
+
+.cardwall_board-milestone-info {
+
+    $cardwall-points-color: #5AAF5A;
+    $cardwall-border-between-info-panes: 1px solid #ddd;
+
+    margin: 30px 0;
+
+    > div {
+        padding: 10px 0 0 30px;
+        height: 90px;
+        border-left: $cardwall-border-between-info-panes;
+    }
+
+    > .milestone-burndown {
+        padding-top: 0;
+    }
+
+    > div:first-child,
+    > .milestone-capacity {
+        border-left: none;
+    }
+
+    .milestone-name {
+        a {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 2em;
+            line-height: 1em;
+            color: #444;
+
+            i {
+                font-size: 0.8em;
+                color: #888;
+            }
+
+            &:hover {
+                text-decoration: none;
+                color: #666;
+
+                i {
+                    color: #aaa;
+                }
+            }
+        }
+    }
+
+    .date-info, .points-info {
+        color: #888;
+        font-size: 0.9em;
+        margin: 0 0 10px 0;
+
+        span {
+            margin-right: 20px;
+        }
+    }
+
+    .line-break {
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    .progress-bar {
+        float: left;
+        width: 40%;
+        margin: 0 10% 0 0;
+
+        .progress {
+            height: 30px;
+
+            .bar {
+                padding: 5px 0 0 0;
+            }
+        }
+    }
+
+    .to-go {
+        float: left;
+        width: 50%;
+        font-size: 1.3em;
+        color: #444;
+
+        @media screen and (max-width: 1230px) {
+            font-size: 1.0em;
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .days, .points {
+            font-size: 3em;
+            @media screen and (max-width: 1230px) {
+                font-size: 2.5em;
+            }
+            font-weight: bold;
+            margin: 0 10px 0 0;
+        }
+
+        .days {
+            color: #0989C8;
+        }
+
+        .points {
+            color: $cardwall-points-color;
+        }
+    }
+
+    .no-data {
+        text-align: center;
+        font-style: italic;
+        font-size: 0.9em;
+        color: #aaa;
+    }
+
+    .milestone-capacity .no-data {
+        float: left;
+        width: 40%;
+        margin-right: 10%;
+    }
+
+    .milestone-burndown {
+        .line.actual {
+            stroke: $cardwall-points-color;
+        }
+        .circle.actual {
+            stroke: $cardwall-points-color;
+        }
+    }
+
+    &.mini {
+        margin: 15px 0;
+
+        > div {
+            height: 60px;
+        }
+
+        > .milestone-capacity {
+            border-left: $cardwall-border-between-info-panes;
+        }
+
+        .milestone-name {
+            display: none;
+        }
+
+        > div:nth-child(2) {
+            border: none;
+            margin-left: 0 !important;
+        }
+
+        .date-info, .points-info {
+            margin: 0 0 3px 0;
+        }
+
+        .progress-bar {
+            .progress {
+                height: 20px;
+
+                .bar {
+                    padding: 0;
+                }
+            }
+        }
+
+        .to-go {
+            font-size: 1em;
+
+            .days, .points {
+                font-size: 2.2em;
+            }
+        }
+    }
+}
+
+#tracker_report_cardwall_settings {
+    clear: both;
+}

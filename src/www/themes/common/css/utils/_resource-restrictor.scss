@@ -1,0 +1,68 @@
+#allowed-projects-all-form {
+    margin: 40px 0;
+
+    #allowed-projects-all-allowed-state {
+        margin: 10px 0 0;
+    }
+}
+
+#allowed-projects-list {
+    max-width: 960px;
+
+    > form {
+        > #allowed-projects-list-actions {
+            margin: 0 0 10px;
+
+            > div, > button {
+                display: inline-block;
+                margin: 0;
+            }
+
+            #project-to-allow-autocompleter {
+                > #project-to-allow {
+                    max-width: 200px;
+                }
+
+                > button {
+                    border-radius: 0 4px 4px 0;
+                }
+
+                #search_indicator {
+                    visibility: hidden;
+                    position: absolute;
+                }
+            }
+
+            > .filter {
+                float: right;
+
+                > .add-on {
+                    font-family: FontAwesome;
+                    font-size: 12px;
+                }
+
+                > #filter-projects {
+                    max-width: 210px;
+                }
+            }
+        }
+
+        > table {
+            .checkbox-cell {
+                width: 15px;
+            }
+
+            .id-cell {
+                width: 50px;
+            }
+
+            #empty-project-list {
+                text-align: center;
+                padding: 40px;
+                color: #BBB;
+                font-style: italic;
+                font-size: 0.9em;
+            }
+        }
+    }
+}
