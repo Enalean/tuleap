@@ -1,3 +1,6 @@
+Version 5.887 - Tuleap 8.15
+    * request #9140: Links with target set to _blank does not expose window.opener object anymore
+
 Version 5.886 - Tuleap 8.15
     * request #9138: Persistent XSS via a tracker field label
 

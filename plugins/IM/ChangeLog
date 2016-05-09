@@ -1,3 +1,6 @@
+Version 1.5.36 - Tuleap 8.15
+    * request #9140: Links with target set to _blank does not expose window.opener object anymore
+
 Version 1.5.35 - Tuleap 8.14
     * request #9045: Arbitrary file access and write in the IM plugin
 
