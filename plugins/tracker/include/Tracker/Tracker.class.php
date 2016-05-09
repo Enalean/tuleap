@@ -455,6 +455,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'delete':
                 if ($this->userCanDeleteTracker($current_user)) {
                     if ($this->getTrackerFactory()->markAsDeleted($this->id)) {
+                        $event_manager = EventManager::instance();
+                        $event_manager->processEvent(TRACKER_EVENT_DELETE_TRACKER, array(
+                                          'tracker_id' => $this->getId())
+                                         );
                         $GLOBALS['Response']->addFeedback(
                             'info',
                             $GLOBALS['Language']->getText(
@@ -1422,6 +1426,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-delete.png'),
                 ),
         );
+        $params = array("items" => &$items, "tracker_id" => $this->id);
+        EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $params);
 
         if ($this->isProjectAllowedToUseNature()) {
             unset($items['hierarchy']);
@@ -2075,8 +2081,6 @@ EOS;
             }
         }
     }
-
-
 
     /**
      * Validate the format of the item name
@@ -3661,7 +3665,6 @@ EOS;
                 return true;
             }
         }
-
         return false;
     }
 

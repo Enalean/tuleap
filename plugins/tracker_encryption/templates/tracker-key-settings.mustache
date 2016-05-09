@@ -1,0 +1,37 @@
+   <form name="form1" method="POST" action="{{ action_url }}" id="tracker-settings">
+    <input type="hidden" name="update" value="1">
+    <label for="tracker-key"> <h2> {{ tracker_key_label }} </h2>  </label>
+    <div id="help_tree" class="alert alert-warning">
+    {{ display_help }}
+    </div>
+    <textarea id="tracker-key" name="key" rows="20" cols="100">{{ get_tracker_key }}</textarea>
+    <div id="confirm" class="modal hide fade modal-content panel-warning">
+        <div class="modal-header panel-heading alert">
+          <h4 class="modal-title">Warning</h4>
+        </div>
+        <div class="modal-body">
+            {{ update_key_warning }}
+        </div>
+        <div class="modal-footer">
+            <input type="submit" data-dismiss="submit" class="btn btn-warning" id="submit_modal" value="{{ submit_button }}"/>
+            <input type="button" data-dismiss="modal" class="btn" value="{{ cancel_button }}"/>
+        </div>
+    </div>
+    <div class="submit-bar">
+        <input id="submit_form" type="submit" class="btn btn-large btn-primary" value="{{ submit_button }}" />
+    </div>
+   </form>
+
+<script>
+    jQuery(document).ready(function( $ ) {
+    var tracker_key = document.getElementById("tracker-key").textContent;
+        $("#submit_form").on("click", function(e){
+        e.preventDefault();
+        if (tracker_key == "" || $("#tracker-key").val() == tracker_key) {
+            $('form').submit();
+        } else {
+            $('#confirm').modal('show');
+        }
+    });
+});
+</script>
