@@ -2684,7 +2684,7 @@ class Artifact {
      */
     public function fetchHtmlAnswerButton($artifact_href) {
         return '<p align="right" class="cta">
-            <a href="'. $artifact_href .'" target="_blank">' .
+            <a href="'. $artifact_href .'" target="_blank" rel="noreferrer">' .
             $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
             '</a>
             </p>';

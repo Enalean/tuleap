@@ -57,7 +57,7 @@ et géré par <?php print $GLOBALS['sys_org_name']; ?> dans le but de
 promouvoir le développement logiciel collaboratif et la réutilisation
 de composants logiciels selon les termes de la <b><u><a
 href="<?php echo $exchangePolicyUrl ?>"
-target="_blank">Politique d'échange générale de <?php print
+target="_blank" rel="noreferrer">Politique d'échange générale de <?php print
 $GLOBALS['sys_org_name']; ?></a></b></u>.  Enregistrer votre projet
 sur <?php print $GLOBALS['sys_name']; ?> implique que vous comprenez
 les termes de cette politique générale et que vous prenez l'engagement

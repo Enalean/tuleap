@@ -78,6 +78,7 @@ extends WikiPlugin
         extract($this->getArgs($argstr, $request));
         return HTML::a(array('href' => WikiURL($link),
 	                      'target' => "_blank",
+	                      'rel' => "noreferrer",
 	                      'onClick' => ($close == "yes" ? "window.close()" : ("window.open('" .
 			          WikiURL($link) . "', '" .
 				  ($title == "" ? ($text == "" ? $link : $text) : $title) . "', '" .

@@ -1264,7 +1264,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      */
     private function fetchHtmlAnswerButton($artifact_link) {
         return '<span class="cta">
-            <a href="'. $artifact_link .'" target="_blank">' .
+            <a href="'. $artifact_link .'" target="_blank" rel="noreferrer">' .
                 $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
             '</a>
         </span>';
@@ -1276,7 +1276,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     private function getUnsubscribeLink() {
         $link = get_server_url().'/plugins/tracker/?aid='.(int)$this->getArtifact()->getId().'&func=manage-subscription';
 
-        return '<a href="'. $link .'" target="_blank">' .
+        return '<a href="'. $link .'" target="_blank" rel="noreferrer">' .
             $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_unsubscribe') .
         '</a>';
     }

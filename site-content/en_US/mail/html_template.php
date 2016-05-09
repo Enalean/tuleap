@@ -579,7 +579,7 @@ display:inline;
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
                                                                 <?php echo !empty($additional_footer_link) ? '&nbsp;'. $additional_footer_link . '&nbsp; |' : '' ?>
-                                                                &nbsp;<a href="<?php echo get_server_url() ?>/account/preferences.php" target="_blank"><?php echo $txt_can_update_prefs ?></a>&nbsp;
+                                                                &nbsp;<a href="<?php echo get_server_url() ?>/account/preferences.php" target="_blank" rel="noreferrer"><?php echo $txt_can_update_prefs ?></a>&nbsp;
                                                             </div>
                                                         </td>
                                                     </tr>

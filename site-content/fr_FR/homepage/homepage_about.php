@@ -41,7 +41,7 @@
     </ul>
 </p>
 <p>
-    <a href="https://www.tuleap.org" target="_blank">Plus d'infos sur Tuleap</a>
+    <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">Plus d'infos sur Tuleap</a>
 </p>
 <?php
 ?>

@@ -107,10 +107,10 @@ function msgFormat(msg) { // replaces emoticons and urls in a message
 	}
 	
   // replace http://<url>
-  msg = msg.replace(/(\s|^)(https?:\/\/\S+)/gi,"$1<a href=\"$2\" target=\"_blank\">$2</a>");
+  msg = msg.replace(/(\s|^)(https?:\/\/\S+)/gi,"$1<a href=\"$2\" target=\"_blank\" rel=\"noreferrer\">$2</a>");
 
 	// replace ftp://<url>
-  msg = msg.replace(/(\s|^)(ftp:\/\/\S+)/gi,"$1<a href=\"$2\" target=\"_blank\">$2</a>");
+  msg = msg.replace(/(\s|^)(ftp:\/\/\S+)/gi,"$1<a href=\"$2\" target=\"_blank\" rel=\"noreferrer\">$2</a>");
   
   // replace mail-links
   msg = msg.replace(/(\s|^)(\w+\@\S+\.\S+)/g,"$1<a href=\"mailto:$2\">$2</a>");
@@ -127,11 +127,11 @@ function msgFormat(msg) { // replaces emoticons and urls in a message
   codendiRefRegexpSameProject = /(\s|^)(\S+) #([\S]+)/g;
   var serverBaseUrl = ('https:' == document.location.protocol ? 'https://'+XMPPDOMAINSSL : 'http://'+XMPPDOMAIN);
   if (codendiRefRegexpOtherProject.test(msg)) {
-    msg = msg.replace(codendiRefRegexpOtherProject,"$1<a href=\"" + serverBaseUrl + "/goto?key=$2&val=$4&group_id=$3\" target=\"_blank\">$2 #$3:$4</a>");
+    msg = msg.replace(codendiRefRegexpOtherProject,"$1<a href=\"" + serverBaseUrl + "/goto?key=$2&val=$4&group_id=$3\" target=\"_blank\" rel=\"noreferrer\">$2 #$3:$4</a>");
   } else {
     if (! codendiRefRegexpOtherProjectNotOk.test(msg)) {
       if (codendiRefRegexpSameProject.test(msg)) {
-        msg = msg.replace(codendiRefRegexpSameProject,"$1<a href=\"" + serverBaseUrl + "/goto?key=$2&val=$3&group_id=" + GROUP_ID  + "\" target=\"_blank\">$2 #$3</a>");
+        msg = msg.replace(codendiRefRegexpSameProject,"$1<a href=\"" + serverBaseUrl + "/goto?key=$2&val=$3&group_id=" + GROUP_ID  + "\" target=\"_blank\" rel=\"noreferrer\">$2 #$3</a>");
       }
     }
   }

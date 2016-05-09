@@ -38,7 +38,7 @@
     </ul>
 </p>
 <p>
-    <a href="https://www.tuleap.org" target="_blank">More info on Tuleap</a>
+    <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">More info on Tuleap</a>
 </p>
 <?php
 ?>

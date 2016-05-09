@@ -167,17 +167,17 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
     function testMakeLinks() {
         $p = new Codendi_HTMLPurifierTestVersion2($this);
         $this->assertEqual('', $p->makeLinks());
-        $this->assertEqual('<a href="http://www.example.com" target="_blank">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
-        $this->assertEqual('"<a href="http://www.example.com" target="_blank">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
-        $this->assertEqual('\'<a href="http://www.example.com" target="_blank">http://www.example.com</a>\'', $p->makeLinks('\'http://www.example.com\''));
-        $this->assertEqual('<<a href="http://www.example.com" target="_blank">http://www.example.com</a>>', $p->makeLinks('<http://www.example.com>'));
-        $this->assertEqual(' <a href="http://www.example.com" target="_blank">http://www.example.com</a>', $p->makeLinks(' www.example.com'));
-        $this->assertEqual('<a href="mailto:john.doe@example.com" target="_blank">john.doe@example.com</a>', $p->makeLinks('john.doe@example.com'));
-        $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_blank">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));
-        $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_blank">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
-        $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_blank">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
+        $this->assertEqual('<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
+        $this->assertEqual('"<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
+        $this->assertEqual('\'<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>\'', $p->makeLinks('\'http://www.example.com\''));
+        $this->assertEqual('<<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>>', $p->makeLinks('<http://www.example.com>'));
+        $this->assertEqual(' <a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>', $p->makeLinks(' www.example.com'));
+        $this->assertEqual('<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>', $p->makeLinks('john.doe@example.com'));
+        $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));
+        $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
+        $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
         $this->assertEqual(
-            '<a href="ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git" target="_blank">ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git</a>',
+            '<a href="ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git" target="_blank" rel="noreferrer">ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git</a>',
             $p->makeLinks('ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git')
         );
 

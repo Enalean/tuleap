@@ -361,7 +361,7 @@ function LinkURL($url, $linktext = '') {
     else {
         if (!$linktext)
             $linktext = preg_replace("/mailto:/A", "", $url);
-        $args = array('href' => $url);
+        $args = array('href' => $url, 'rel' => 'noreferrer');
         if ( defined('EXTERNAL_LINK_TARGET') ) // can also be set in the css
             $args['target'] = is_string(EXTERNAL_LINK_TARGET) ? EXTERNAL_LINK_TARGET : "_blank";
         $link = HTML::a($args, PossiblyGlueIconToText($url, $linktext));
