@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,10 +21,10 @@
 
 ?>
 <h3>About Tuleap</h3>
-Tuleap is the first 100% Libre Enterprise ALM suite used by fortune 500 companies and innovative start-ups. More info <a href="http://www.tuleap.org" target="_blank">www.tuleap.org</a>.
+Tuleap is the first 100% Libre Enterprise ALM suite used by fortune 500 companies and innovative start-ups. More info <a href="https://www.tuleap.org" target="_blank">www.tuleap.org</a>.
 <div style="margin-top: 10px">
     <a href="https://twitter.com/TuleapOpenALM" target="_blank">Follow @TuleapOpenALM</a>
-    <br><a href="http://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank">Join Tuleap on LinkedIn</a>
+    <br><a href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank">Join Tuleap on LinkedIn</a>
 </div>
 <?php
 ?>
