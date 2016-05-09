@@ -1,6 +1,7 @@
 Version 8.15 (Not yet released)
 	== Bug fix ==
 	* request #9136: All URLs in the footer and homepage are in HTTPS
+	* request #9098: All PHP files created after the introduction of PSR2 into Tuleap must be compliant
 
 	== Enhancement ==
 	* request #9113: Having a REST route to monitor Sysevents
