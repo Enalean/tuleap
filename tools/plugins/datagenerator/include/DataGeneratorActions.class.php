@@ -54,8 +54,9 @@ class DataGeneratorActions extends Actions {
                 $nb_done = 0;
                 while((list(,$project) = each($projects)) && ($nb_wanted > $nb_done)) {
                     if (!group_get_object_by_name($project['name'])) {
-			$projectCreator = new ProjectCreator(ProjectManager::instance(), ReferenceManager::instance());
-			$projectCreator->create(array('project' => array(
+                        $send_notifications = true;
+                        $projectCreator = new ProjectCreator(ProjectManager::instance(), ReferenceManager::instance(), $send_notifications);
+                        $projectCreator->create(array('project' => array(
                             'form_unix_name'            => $project['name'],
                             'form_full_name'            => $project['name'],
                             'form_short_description'    => $project['description'],

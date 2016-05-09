@@ -110,7 +110,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     private function doCreate() {
-        $projectCreator = new ProjectCreator($this->project_manager, ReferenceManager::instance());
+        $send_notifications = true;
+        $projectCreator = new ProjectCreator($this->project_manager, ReferenceManager::instance(), $send_notifications);
         $data = $this->creation_request->getProjectValues();
         $creationData = ProjectCreationData::buildFromFormArray($data);
         return $projectCreator->build($creationData);

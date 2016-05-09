@@ -43,7 +43,7 @@ class Project_SOAPServer {
     private $userManager;
 
     /**
-     * @var SOAP_RequestLimitator 
+     * @var SOAP_RequestLimitator
      */
     private $limitator;
 
@@ -100,11 +100,11 @@ class Project_SOAPServer {
      * Create a new project
      *
      * This method throw an exception if there is a conflict on names or if there is an error during the creation process.
-     * 
+     *
      * You can select:
      * * The privacy of the project 'private' or 'public'
      * * The projectId of the template (100 means default template aka default new project).
-     * 
+     *
      * It assumes a couple of things:
      * * The project type is "Project" (Not modifiable)
      * * There is no "Project description" nor any "Project description fields" (long desc, patents, IP, other software)
@@ -124,7 +124,7 @@ class Project_SOAPServer {
      * * 3104, Project is not a template
      * * 3105, Generic User creation failure
      * * 4000, SOAP Call Quota exceeded (you created to much project during the last hour, according to configuration)
-     * 
+     *
      * @param String  $sessionKey      Session key of the desired project admin
      * @param String  $adminSessionKey Session key of a site admin
      * @param String  $shortName       Unix name of the project
@@ -165,10 +165,10 @@ class Project_SOAPServer {
 
     /**
      * Return a project the user is authorized to use as template
-     * 
+     *
      * @param Integer $id
      * @param PFUser    $requester
-     * 
+     *
      * @return Project
      */
     private function getTemplateById($id, PFUser $requester) {
@@ -184,9 +184,9 @@ class Project_SOAPServer {
     
     /**
      * Ensure the given session key belong to an authenticated site admin
-     * 
+     *
      * @param String  $adminSessionKey Session key of a site admin
-     * 
+     *
      * @return PFUser
      */
     private function checkAdminSessionIsValid($adminSessionKey, $sessionKey) {
@@ -200,15 +200,16 @@ class Project_SOAPServer {
 
     /**
      * Create the data array needed by create_project and create the project
-     * 
+     *
      * @param String $shortName
      * @param String $publicName
      * @param String $privacy
      * @param Project $template
-     * 
+     *
      * @return Integer
      */
-    private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template) {
+    private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template)
+    {
         $data = array(
             'project' => array(
                 'form_short_description' => '',
@@ -260,7 +261,7 @@ class Project_SOAPServer {
      * * 3201, Permission denied: need to be project admin
      * * 3202, Invalid user login
      * * 3203, User not member of project
-     * 
+     *
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId Project ID
      * @param String  $userLogin User login name
@@ -276,13 +277,13 @@ class Project_SOAPServer {
 
     /**
      * Add user to a User Group
-     * 
+     *
      * * Error codes:
      *   * 3000, Invalid project id
      *   * 3201, Permission denied: need to be project admin
      *   * 3203, Invalid user id
      *   * 3301, User Group doesn't exist
-     * 
+     *
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId    The Project id where the User Group is defined
      * @param Integer $ugroupId   The User Group where the user should be added
@@ -308,19 +309,19 @@ class Project_SOAPServer {
     
     /**
      * Remove User from User Group
-     * 
+     *
      * * Error codes:
      *   * 3000, Invalid project id
      *   * 3201, Permission denied: need to be project admin
      *   * 3203, Invalid user id
      *   * 3301, User Group doesn't exist
-     * 
+     *
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId    The Project id where the User Group is defined
      * @param Integer $ugroupId   The User Group where the user should be removed
      * @param Integer $userId     The user id to remove
-     * 
-     * @return Boolean 
+     *
+     * @return Boolean
      */
     public function removeUserFromUGroup($sessionKey, $groupId, $ugroupId, $userId) {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
@@ -590,10 +591,10 @@ class Project_SOAPServer {
 
     /**
      * Return a user member of project
-     * 
+     *
      * @param Project $project
      * @param String  $userLogin
-     * 
+     *
      * @return PFUser
      */
     private function getProjectMember(Project $project, $userLogin) {
@@ -609,10 +610,10 @@ class Project_SOAPServer {
     
     /**
      * Return a Project is the given user is authorized to administrate it
-     * 
+     *
      * @param Integer $groupId
      * @param String  $sessionKey
-     * 
+     *
      * @return Project
      */
     private function getProjectIfUserIsAdmin($groupId, $sessionKey) {
@@ -665,9 +666,9 @@ class Project_SOAPServer {
     /**
      *
      * @see session_continue
-     * 
+     *
      * @param String $sessionKey
-     * 
+     *
      * @return PFUser
      */
     private function continueSession($sessionKey) {
@@ -679,5 +680,3 @@ class Project_SOAPServer {
     }
 
 }
-
-?>
