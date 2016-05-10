@@ -1,3 +1,6 @@
+Version 0.7 - Tuleap 8.15
+    * story #9087: see linked artifacts in releases (Display files, release note and changelog)
+
 Version 0.6 - Tuleap 8.15
     * story #9087: Create REST route /frs_release/:id
 
