@@ -27,7 +27,12 @@ use Feedback;
 use Valid_HTTPURI;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
-use Tuleap\BotMattermost\Exception\CannotAccessDataBaseException;
+use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
+use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
+use Tuleap\BotMattermost\Exception\BotNotFoundException;
+use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
+use Tuleap\BotMattermost\Presenter\adminPresenter;
+use Tuleap\BotMattermost\Presenter\adminAddBotPresenter;
 
 class AdminController
 {
@@ -49,6 +54,12 @@ class AdminController
                 case 'add_bot':
                     $this->addBot($request);
                     break;
+                case 'delete_bot':
+                    $this->deleteBot($request);
+                    break;
+                case 'show_add_bot':
+                    $this->showAddBot($request);
+                    break;
                 default:
                     $this->displayIndex();
             }
@@ -62,15 +73,23 @@ class AdminController
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_BASE_DIR.'/template');
         try {
-            $bots = $this->bot_factory->getBots();
-            $admin_presenter = new AdminPresenter($this->csrf, $bots);
             $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name')));
-            $renderer->renderToPage('index', $admin_presenter);
+            $renderer->renderToPage('index', new AdminPresenter($this->csrf, $this->bot_factory->getBots()));
             $GLOBALS['HTML']->footer(array());
-        } catch (CannotAccessDataBaseException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
-            $GLOBALS['Response']->redirect('/admin/');
+        } catch (BotNotFoundException $e) {
+            $this->redirectToAdminSectionWithErrorFeedback($e);
+        } catch (ChannelsNotFoundException $e) {
+            $this->redirectToAdminSectionWithErrorFeedback($e);
         }
+    }
+
+    private function displayAddBot()
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_BASE_DIR.'/template');
+
+        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name')));
+        $renderer->renderToPage('addBot', new adminAddBotPresenter($this->csrf));
+        $GLOBALS['HTML']->footer(array());
     }
 
     private function addBot(HTTPRequest $request)
@@ -78,23 +97,58 @@ class AdminController
         $this->csrf->check();
         if ($this->validPostArgumentForAddBot($request)) {
             try {
-                $this->bot_factory->save($request->get('bot_name'), $request->get('webhook_url'));
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_alert_success_addbot'));
+                $this->bot_factory->save(
+                        $request->get('bot_name'),
+                        $request->get('webhook_url'),
+                        $request->get('avatar_url'),
+                        $request->get('channels_names')
+                );
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_add_bot'));
             } catch (CannotCreateBotException $e) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+            } catch (BotAlreadyExistException $e) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
         $this->displayIndex();
     }
 
+    private function deleteBot(HTTPRequest $request)
+    {
+        $this->csrf->check();
+        try {
+            $this->bot_factory->deleteBotById($request->get('id'));
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost','alert_success_delete_bot'));
+        } catch (CannotDeleteBotException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+        }
+        $this->displayIndex();
+    }
+
+    private function showAddBot(HTTPRequest $request)
+    {
+        $this->displayAddBot();
+    }
+
     private function validPostArgumentForAddBot(HTTPRequest $request)
     {
-        if ($request->existAndNonEmpty('bot_name') && $request->existAndNonEmpty('webhook_url')) {
-            return $this->ValidUrl($request->get('webhook_url'));
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_alert_empty_input'));
+        if (! $request->existAndNonEmpty('bot_name') || ! $request->existAndNonEmpty('webhook_url')) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_empty_input'));
             return false;
         }
+
+        return (
+            $this->validUrl($request->get('webhook_url')) &&
+            $this->validOptionnalUrl($request->get('avatar_url'))
+        );
+    }
+
+    private function validOptionnalUrl($url) {
+        if (! $url) {
+            return true;
+        }
+
+        return $this->validUrl($url);
     }
 
     private function validUrl($url)
@@ -103,8 +157,14 @@ class AdminController
         if ($valid_url->validate($url)) {
             return true;
         } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_alert_invalid_url'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_url'));
             return false;
         }
+    }
+
+    private function redirectToAdminSectionWithErrorFeedback(Exception $e)
+    {
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+        $GLOBALS['Response']->redirect('/admin/');
     }
 }

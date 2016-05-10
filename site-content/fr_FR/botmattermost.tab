@@ -2,20 +2,38 @@ plugin_botmattermost	descriptor_description	Robot pour recevoir des notification
 plugin_botmattermost	descriptor_name	Robot Mattermost
 
 
-plugin_botmattermost	configuration_alert_success_addbot	Ajout d'un robot avec succès
-plugin_botmattermost	configuration_alert_error	Erreur : base de donnée
-plugin_botmattermost	configuration_alert_empty_input	les champs "nom du robot" et "URL du salon de discussion (webhook)" doivent être renseignés
-plugin_botmattermost	configuration_alert_invalid_url	URL invalide
-plugin_botmattermost	configuration_empty_list	Aucun résultat
+plugin_botmattermost	alert_success_add_bot	Robot ajouté avec succès
+plugin_botmattermost	alert_success_delete_bot	Robot supprimé avec succès
+
+plugin_botmattermost	alert_error_empty_input	les champs "nom du robot" et "URL du salon de discussion (webhook)" doivent être renseignés
+plugin_botmattermost	alert_error_invalid_url	URL invalide
+plugin_botmattermost	alert_error_bot_already_exist	Un robot avec le même nom et le même lien de salon de discussion (webhook) existe déjà
+plugin_botmattermost	alert_error_bot_not_found	Aucun robot n'a été trouvé
+plugin_botmattermost	alert_error_channels_not_found	Aucun salon de discussion n'a été trouvé
+plugin_botmattermost	alert_error_add_bot	L'ajout du robot et de ses salons de discussion associés a échoué
+plugin_botmattermost	alert_error_delete_bot	La suppression du robot et de ses salons de discussion associés à échoué
+
 
 plugin_botmattermost	configuration_title	Configuration du robot Mattermost
 plugin_botmattermost	configuration_legend_bot	Configuration
 plugin_botmattermost	configuration_label_bot_name	Nom du robot
-plugin_botmattermost	configuration_input_bot_name	Nom...
 plugin_botmattermost	configuration_label_hook_url	URL du salon de discussion (webhook)
-plugin_botmattermost	configuration_input_hook_url	https://...
+plugin_botmattermost	configuration_label_avatar_url	URL de l'avatar
+plugin_botmattermost	configuration_label_channels_names	Liste des noms des salons de discussion
+plugin_botmattermost	configuration_input_bot_name	Nom...
+plugin_botmattermost	configuration_input_url	https://...
+plugin_botmattermost	configuration_input_avatar_url	lien vers l'avatar...
+plugin_botmattermost	configuration_text_area_channels_names_help	Ajoutez un nom de salon de discussion par ligne
 plugin_botmattermost	configuration_button_add_bot	Ajouter le robot
+plugin_botmattermost	configuration_button_submit	Envoyer
 
+plugin_botmattermost	configuration_empty_list	Aucun résultat
 plugin_botmattermost	configuration_table_title	Liste des robots
 plugin_botmattermost	configuration_table_col_name	Nom
 plugin_botmattermost	configuration_table_col_webhook_url	URL des salons de discussion (webhook)
+plugin_botmattermost	configuration_table_col_channels	Salons de discussion
+plugin_botmattermost	configuration_table_col_avatar	Avatar
+
+plugin_botmattermost	configuration_confirm_delete_bot	Etes vous sûr de vouloir supprimer le bot
+
+plugin_botmattermost	delete	Supprimer

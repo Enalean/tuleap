@@ -22,6 +22,13 @@ namespace Tuleap\BotMattermost\Exception;
 
 use Exception;
 
-class CannotAccessDataBaseException extends Exception
+class BotAlreadyExistException extends Exception
 {
+
+    public function __construct()
+    {
+        parent::__construct(
+            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_bot_already_exist')
+        );
+    }
 }

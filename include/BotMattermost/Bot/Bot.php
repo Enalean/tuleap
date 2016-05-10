@@ -20,17 +20,26 @@
 
 namespace Tuleap\BotMattermost\Bot;
 
-class Bot
-{
+class Bot {
+
     private $id;
     private $name;
     private $webhook_url;
+    private $avatar_url;
+    private $channels_names;
 
-    public function __construct($id, $name, $webhook_url)
-    {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->webhook_url = $webhook_url;
+    public function __construct(
+        $id,
+        $name,
+        $webhook_url,
+        $avatar_url,
+        array $channels_names
+    ) {
+        $this->id             = $id;
+        $this->name           = $name;
+        $this->webhook_url    = $webhook_url;
+        $this->avatar_url     = $avatar_url;
+        $this->channels_names = $channels_names;
     }
 
     public function getId()
@@ -46,5 +55,20 @@ class Bot
     public function getWebhookUrl()
     {
         return $this->webhook_url;
+    }
+
+    public function getAvatarUrl()
+    {
+        return $this->avatar_url;
+    }
+
+    public function getChannelsNames()
+    {
+        return $this->channels_names;
+    }
+
+    public function getChannelsNamesInOneRow()
+    {
+        return implode(' | ', $this->channels_names);
     }
 }

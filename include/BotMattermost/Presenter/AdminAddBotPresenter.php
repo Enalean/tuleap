@@ -18,23 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermost;
+namespace Tuleap\BotMattermost\Presenter;
 
 use CSRFSynchronizerToken;
 
-class AdminPresenter
-{
+class AdminAddBotPresenter {
 
     private $csrf_input;
-    private $bots;
 
-    /**
-     * @param Bot[] $bots
-     */
-    public function __construct(CSRFSynchronizerToken $csrf, array $bots)
+    public function __construct(CSRFSynchronizerToken $csrf)
     {
         $this->csrf_input = $csrf->fetchHTMLInput();
-        $this->bots       = $bots;
     }
 
     public function csrf_input()
@@ -57,53 +51,38 @@ class AdminPresenter
         return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
     }
 
-    public function input_bot_name()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_bot_name');
-    }
-
     public function label_hook_url()
     {
         return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_hook_url');
     }
 
-    public function input_hook_url()
+    public function label_avatar_url()
     {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_hook_url');
+        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
     }
 
-    public function button_add_bot()
+    public function label_channels_names()
     {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_add_bot');
+        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_channels_names');
     }
 
-    public function bots()
+    public function input_bot_name()
     {
-        return $this->bots;
+        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_bot_name');
     }
 
-    public function has_bots()
+    public function input_url()
     {
-        return count($this->bots) > 0;
+        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_url');
     }
 
-    public function empty_bot_list()
+    public function text_area_channels_names_help()
     {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_text_area_channels_names_help');
     }
 
-    public function table_col_name()
+    public function button_submit()
     {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-    }
-
-    public function table_col_webhook_url()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
-    }
-
-    public function table_title()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_title');
+        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_submit');
     }
 }

@@ -63,10 +63,10 @@ class BotMattermostPlugin extends Plugin
     public function processAdmin()
     {
         $request = HTTPRequest::instance();
-        $csrf = new CSRFSynchronizerToken('/plugins/botmattermost/admin/');
-        $bot_dao = new BotDao();
-        $bot_factory = new BotFactory($bot_dao);
-        $admin_controller = new AdminController($csrf, $bot_factory);
+        $admin_controller = new AdminController(
+            new CSRFSynchronizerToken('/plugins/botmattermost/admin/'),
+            new BotFactory(new BotDao())
+        );
         $admin_controller->process($request);
     }
 }

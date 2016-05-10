@@ -15,4 +15,12 @@
     & > tbody > tr:first-child > td {
         border-top: none;
     }
+
+    & > tbody > tr > td {
+        vertical-align: middle;
+    }
+
+    & > tbody > tr > td > form {
+        margin: 0
+    }
 }

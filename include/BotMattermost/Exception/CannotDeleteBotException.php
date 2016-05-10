@@ -22,13 +22,13 @@ namespace Tuleap\BotMattermost\Exception;
 
 use Exception;
 
-class CannotCreateBotException extends Exception
+class CannotDeleteBotException extends Exception
 {
 
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_add_bot')
+            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_delete_bot')
         );
     }
 }

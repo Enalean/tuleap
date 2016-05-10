@@ -31,14 +31,122 @@ class BotDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function addBot($bot_name, $bot_webhook_url)
+    public function addBotAndChannels(
+        $bot_name,
+        $bot_webhook_url,
+        $bot_avatar_url,
+        array $bot_channels_names
+    ) {
+        $this->da->startTransaction();
+
+        $id = $this->addBot($bot_name, $bot_webhook_url, $bot_avatar_url);
+        if(! $id) {
+            $this->da->rollback();
+            return false;
+        } else {
+            $dar = $this->addChannels($id, $bot_channels_names);
+            if($dar === false) {
+                $this->da->rollback();
+                return false;
+            }
+        }
+
+        return $this->da->commit();
+    }
+
+    private function addBot($bot_name, $bot_webhook_url, $bot_avatar_url)
+    {
+        $name           = $this->da->quoteSmart($bot_name);
+        $webhook_url    = $this->da->quoteSmart($bot_webhook_url);
+        $avatar_url     = $this->da->quoteSmart($bot_avatar_url);
+
+        $sql = "INSERT INTO plugin_botmattermost_bot (name, webhook_url, avatar_url)
+                VALUES ($name, $webhook_url, $avatar_url)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    private function addChannels($bot_id, $bot_channels_names)
+    {
+        $channels = array();
+        foreach($bot_channels_names as $bot_channel_name) {
+            $channels[] = $this->getChannelValueSql($bot_id, $bot_channel_name);
+        }
+
+        $sql = "INSERT INTO plugin_botmattermost_channel (bot_id, name)
+                VALUES ".implode(',', $channels);
+
+        return $this->update($sql);
+    }
+
+    private function getChannelValueSql($bot_id, $bot_channel_name)
+    {
+        $id           = $this->da->escapeInt($bot_id);
+        $channel_name = $this->da->quoteSmart($bot_channel_name);
+
+        return "($id, $channel_name)";
+    }
+
+    public function deleteBotAndChannelsByBotId($bot_id)
+    {
+        $this->da->startTransaction();
+
+        $dar = $this->deleteBotById($bot_id);
+        if ($dar === false) {
+            $this->da->rollback();
+            return false;
+        } else {
+            $dar = $this->deleteChannelsByBotId($bot_id);
+            if ($dar === false) {
+                $this->da->rollback();
+                return false;
+            }
+        }
+
+        return $this->da->commit();
+    }
+
+    private function deleteBotById($bot_id)
+    {
+        $id = $this->da->escapeInt($bot_id);
+
+        $sql = "DELETE FROM plugin_botmattermost_bot
+                WHERE id = $id";
+
+        return $this->update($sql);
+    }
+
+    private function deleteChannelsByBotId($bot_id)
+    {
+        $id = $this->da->escapeInt($bot_id);
+
+        $sql = "DELETE FROM plugin_botmattermost_channel
+                WHERE bot_id = $id";
+
+        return $this->update($sql);
+    }
+
+    public function searchBotByNameAndByWebhookUrl($bot_name, $bot_webhook_url)
     {
         $name        = $this->da->quoteSmart($bot_name);
         $webhook_url = $this->da->quoteSmart($bot_webhook_url);
 
-        $sql = "INSERT INTO plugin_botmattermost_bot (name, webhook_url)
-                VALUES ($name, $webhook_url)";
+        $sql = "SELECT *
+                FROM plugin_botmattermost_bot
+                WHERE name = $name
+                    AND webhook_url = $webhook_url";
 
-        return $this->updateAndGetLastId($sql);
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function searchChannelsByBotId($bot_id)
+    {
+        $id = $this->da->escapeInt($bot_id);
+
+        $sql = "SELECT *
+                FROM plugin_botmattermost_channel
+                WHERE bot_id = $id";
+
+        return $this->retrieve($sql);
     }
 }
