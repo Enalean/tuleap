@@ -102,7 +102,7 @@ class PullRequestsResource extends AuthenticatedResource
             $this->pull_request_factory,
             $pull_request_dao
         );
-        $this->pull_request_closer  = new PullRequestCloser($pull_request_dao);
+        $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory);
         $this->logger               = new BackendLogger();
     }
 

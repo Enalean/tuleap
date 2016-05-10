@@ -31,12 +31,14 @@ use ForgeConfig;
 
 class PullRequestCloser
 {
+    /**
+     * @var Factory
+     */
+    private $pull_request_factory;
 
-    private $dao;
-
-    public function __construct(Dao $dao)
+    public function __construct(Factory $factory)
     {
-        $this->dao = $dao;
+        $this->pull_request_factory = $factory;
     }
 
     public function abandon(PullRequest $pull_request)
@@ -50,8 +52,15 @@ class PullRequestCloser
         if ($status === PullRequest::STATUS_MERGED) {
             throw new PullRequestCannotBeAbandoned('This pull request has already been merged, it can no longer be abandoned');
         }
+        return $this->pull_request_factory->markAsAbandoned($pull_request);
+    }
 
-        return $this->dao->markAsAbandoned($pull_request->getId());
+    public function abandonFromSourceBranch(GitRepository $repository, $branch_name)
+    {
+        $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
+        foreach ($prs as $pr) {
+            $this->abandon($pr);
+        }
     }
 
     public function fastForwardMerge(
@@ -88,7 +97,7 @@ class PullRequestCloser
 
         $this->cleanTemporaryRepository($temporary_name);
 
-        return $this->dao->markAsMerged($pull_request->getId());
+        return $this->pull_request_factory->markAsMerged($pull_request);
     }
 
     private function getUniqueRandomDirectory()

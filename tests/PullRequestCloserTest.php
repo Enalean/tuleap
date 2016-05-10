@@ -26,7 +26,8 @@ use ForgeConfig;
 
 require_once 'bootstrap.php';
 
-class PullRequestCloserTest extends TuleapTestCase {
+class PullRequestCloserTest extends TuleapTestCase
+{
 
     private $git_repository_dir;
 
@@ -46,11 +47,17 @@ class PullRequestCloserTest extends TuleapTestCase {
     private $git_exec;
 
     /**
+     * @var Factory
+     */
+    private $factory;
+
+    /**
      * @var Dao
      */
     private $dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->git_repository_dir = '/tmp/tuleap-pullrequest-git-exec-test_'.rand(0, 99999999);
@@ -65,7 +72,8 @@ class PullRequestCloserTest extends TuleapTestCase {
         system("cd $this->git_repository_dir && git add . && git commit --quiet -m 'Add preguilt'");
 
         $this->dao                 = mock('Tuleap\PullRequest\Dao');
-        $this->pull_request_closer = new PullRequestCloser($this->dao);
+        $this->factory             = new Factory($this->dao);
+        $this->pull_request_closer = new PullRequestCloser($this->factory);
         $this->git_repository      = stub('GitRepository')->getFullPath()->returns($this->git_repository_dir);
         $this->git_exec            = new GitExec($this->git_repository_dir);
 
@@ -75,14 +83,16 @@ class PullRequestCloserTest extends TuleapTestCase {
         ForgeConfig::set('codendi_cache_dir', '/tmp/');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         system("rm -rf $this->git_repository_dir");
         ForgeConfig::restore();
 
         parent::tearDown();
     }
 
-    public function itMergesABranchIntoAnEmptyBranch() {
+    public function itMergesABranchIntoAnEmptyBranch()
+    {
         stub($this->dao)->markAsMerged(1)->returns(true);
 
         $chat_ouane_master = $this->git_exec->getBranchSha1('master');
@@ -115,7 +125,8 @@ class PullRequestCloserTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents("$this->git_repository_dir/preguilt"), "semibarbarous");
     }
 
-    public function itMergesABranchIntoAnotherBranchThatIsNotMaster() {
+    public function itMergesABranchIntoAnotherBranchThatIsNotMaster()
+    {
         stub($this->dao)->markAsMerged(1)->returns(true);
 
         file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
@@ -151,7 +162,8 @@ class PullRequestCloserTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents("$this->git_repository_dir/antiracing"), "hatlike");
     }
 
-    public function itReturnsTrueIfPullRequestIsAlreadyMerged() {
+    public function itReturnsTrueIfPullRequestIsAlreadyMerged()
+    {
         $chat_ouane_master = $this->git_exec->getBranchSha1('master');
         $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
 
@@ -179,7 +191,8 @@ class PullRequestCloserTest extends TuleapTestCase {
         $this->assertTrue($result);
     }
 
-    public function itThrowsAnExceptionIfPullRequestWasPreviouslyAbandoned() {
+    public function itThrowsAnExceptionIfPullRequestWasPreviouslyAbandoned()
+    {
         $chat_ouane_master = $this->git_exec->getBranchSha1('master');
         $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
 

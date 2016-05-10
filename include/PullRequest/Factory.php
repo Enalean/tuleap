@@ -138,4 +138,14 @@ class Factory
     {
         return $this->dao->updateSha1Dest($pull_request->getId(), $new_rev);
     }
+
+    public function markAsAbandoned($pull_request)
+    {
+        return $this->dao->markAsAbandoned($pull_request->getId());
+    }
+
+    public function markAsMerged($pull_request)
+    {
+        return $this->dao->markAsMerged($pull_request->getId());
+    }
 }
