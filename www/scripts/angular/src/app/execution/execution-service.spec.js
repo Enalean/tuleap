@@ -166,27 +166,22 @@ describe ('ExecutionService - ', function () {
                 status: "Open",
                 nb_of_passed: 0,
                 nb_of_failed: 0,
-                nb_of_not_run: 1,
+                nb_of_notrun: 1,
                 nb_of_blocked: 0
             };
 
             var execution_to_save = {
                 id: 4,
                 environment: "CentOS 5 - PHP 5.1",
-                status: "failed",
-                previous_result: {
-                    result: "",
-                    status: "not_run"
-                }
+                status: "failed"
             };
 
             var executions = {
                 4: {
                     id: 4,
                     environment: "CentOS 5 - PHP 5.1",
-                    status: "not_run",
                     previous_result: {
-                        status: "not_run"
+                        status: "notrun"
                     }
                 }
             };
@@ -197,7 +192,7 @@ describe ('ExecutionService - ', function () {
                 status: "Open",
                 nb_of_passed: 0,
                 nb_of_failed: 1,
-                nb_of_not_run: 0,
+                nb_of_notrun: 0,
                 nb_of_blocked: 0
             };
 
@@ -206,6 +201,42 @@ describe ('ExecutionService - ', function () {
             ExecutionService.updateTestExecution(execution_to_save);
             expect(ExecutionService.executions[4].status).toEqual("failed");
             expect(ExecutionService.campaign).toEqual(campaign_results);
+        });
+
+        it("Given that campaign, when I update an execution with different values, then the execution and the campaign must change", function () {
+            var campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 0,
+                nb_of_blocked: 1
+            };
+
+            var execution_to_save = {
+                id: 4,
+                environment: "CentOS 5 - PHP 5.1",
+                status: "notrun"
+            };
+
+            var executions = {
+                4: {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    previous_result: {
+                        status: "blocked"
+                    }
+                }
+            };
+
+            var campaign_copy = _.clone(campaign);
+
+            ExecutionService.campaign   = campaign;
+            ExecutionService.executions = executions;
+            ExecutionService.updateTestExecution(execution_to_save);
+            expect(ExecutionService.campaign).not.toEqual(campaign_copy);
+            expect(Object.keys(ExecutionService.campaign).length).toEqual(Object.keys(campaign_copy).length);
         });
     });
 

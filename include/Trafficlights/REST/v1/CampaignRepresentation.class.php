@@ -64,7 +64,7 @@ class CampaignRepresentation {
     public $uri;
 
     /** @var int */
-    public $nb_of_not_run;
+    public $nb_of_notrun;
 
     /** @var int */
     public $nb_of_passed;
@@ -91,11 +91,11 @@ class CampaignRepresentation {
 
         $executions_status          = $this->getExecutionsStatus();
 
-        $this->nb_of_not_run        = $executions_status[self::STATUS_NOT_RUN];
+        $this->nb_of_notrun         = $executions_status[self::STATUS_NOT_RUN];
         $this->nb_of_passed         = $executions_status[self::STATUS_PASSED];
         $this->nb_of_failed         = $executions_status[self::STATUS_FAILED];
         $this->nb_of_blocked        = $executions_status[self::STATUS_BLOCKED];
-        $this->total                = $this->nb_of_not_run + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
+        $this->total                = $this->nb_of_notrun + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
 
         $this->resources = array(
             array(
