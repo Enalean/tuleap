@@ -54,9 +54,9 @@ class Factory
     /**
      * @return PullRequest[]
      */
-    public function getPullRequestsBySourceBranch(GitRepository $repository, $branch_name)
+    public function getOpenedBySourceBranch(GitRepository $repository, $branch_name)
     {
-        $res = $this->dao->searchBySourceBranch($repository->getId(), $branch_name);
+        $res = $this->dao->searchOpenedBySourceBranch($repository->getId(), $branch_name);
         return $this->getInstancesFromRows($res);
     }
 

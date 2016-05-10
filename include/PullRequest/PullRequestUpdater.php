@@ -35,10 +35,9 @@ class PullRequestUpdater
         $this->pull_request_factory = $pull_request_factory;
     }
 
-    public function updatePullRequests(GitRepository $repository, $src_branch_name, $new_rev)
+    public function updatePullRequests(GitExec $git_exec, GitRepository $repository, $src_branch_name, $new_rev)
     {
-        $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
-        $prs = $this->pull_request_factory->getPullRequestsBySourceBranch($repository, $src_branch_name);
+        $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $src_branch_name);
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 

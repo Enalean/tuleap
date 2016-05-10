@@ -275,7 +275,8 @@ class pullrequestPlugin extends Plugin
         if ($branch_name != null) {
             $repository           = $params['repository'];
             $pull_request_updater = new PullRequestUpdater($this->getPullRequestFactory());
-            $pull_request_updater->updatePullRequests($repository, $branch_name, $params['newrev']);
+            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
+            $pull_request_updater->updatePullRequests($git_exec, $repository, $branch_name, $params['newrev']);
         }
     }
 

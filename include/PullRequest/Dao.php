@@ -49,12 +49,15 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchBySourceBranch($repository_id, $branch_name)
+    public function searchOpenedBySourceBranch($repository_id, $branch_name)
     {
         $repository_id   = $this->da->escapeInt($repository_id);
         $branch_name     = $this->da->quoteSmart($branch_name);
+        $status_review   = $this->da->quoteSmart(PullRequest::STATUS_REVIEW);
 
-        $sql = "SELECT * FROM plugin_pullrequest_review WHERE repository_id=$repository_id AND branch_src=$branch_name";
+        $sql = "SELECT * FROM plugin_pullrequest_review
+            WHERE repository_id=$repository_id AND branch_src=$branch_name
+              AND status=$status_review";
         return $this->retrieve($sql);
     }
 

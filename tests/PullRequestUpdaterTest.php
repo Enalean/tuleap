@@ -54,6 +54,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         $this->dao = new Dao();
         $this->pull_request_updater = new PullRequestUpdater(new Factory($this->dao));
+
+        $this->git_exec = mock('\Tuleap\PullRequest\GitExec');
     }
 
     public function tearDown()
@@ -72,7 +74,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
 
-        $this->pull_request_updater->updateSourceBranchRev($git_repo, 'dev', 'sha1new');
+
+        $this->pull_request_updater->updatePullRequests($this->git_exec, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
         $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
@@ -91,7 +94,27 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
 
-        $this->pull_request_updater->updateSourceBranchRev($git_repo, 'dev', 'sha1new');
+        $this->pull_request_updater->updatePullRequests($this->git_exec, $git_repo, 'dev', 'sha1new');
+
+        $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
+        $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
+
+        $this->assertEqual('sha1', $pr1['sha1_src']);
+        $this->assertEqual('sha1', $pr2['sha1_src']);
+    }
+
+    public function itDoesNotUpdateClosedPRs()
+    {
+        $pr1_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 'master', 'sha2');
+        $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 'dev', 'sha2');
+
+        $this->dao->markAsMerged($pr1_id);
+        $this->dao->markAsAbandoned($pr2_id);
+
+        $git_repo = mock('\GitRepository');
+        stub($git_repo)->getId()->returns(1);
+
+        $this->pull_request_updater->updatePullRequests($this->git_exec, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
         $pr2 = $this->dao->searchByPullRequestId($pr2_id)->getRow();
