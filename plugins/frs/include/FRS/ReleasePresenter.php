@@ -23,21 +23,18 @@ namespace Tuleap\FRS;
 class ReleasePresenter
 {
 
-    /** @var int */
-    public $project_id;
-
-    /** @var int */
-    public $release_id;
+    /**
+     * @var Tuleap\FRS\REST\v1\ReleaseRepresentation
+     */
+    public $release_representation;
 
     /** @var string */
     public $language;
 
-    public function __construct($project_id, $release_id, $language
-    )
+    public function __construct($release_representation, $language)
     {
-        $this->project_id = $project_id;
-        $this->release_id = $release_id;
-        $this->language   = $language;
+        $this->release_representation = json_encode($release_representation);
+        $this->language               = $language;
     }
 
     public function getTemplateName()
