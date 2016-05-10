@@ -80,13 +80,16 @@ class UserImport {
      *                            all the users parsed from import file
      * @return true if parse ok, false if errors occurred
      */
-    function updateDB($parsed_users) {
+    function updateDB($parsed_users)
+    {
         $res = true;
         $um = UserManager::instance();
-        foreach($parsed_users as $user_id) {
+        foreach ($parsed_users as $user_id) {
             $user = $um->getUserById($user_id);
             if ($user) {
-                $res = $res & account_add_user_obj_to_group($this->group_id, $user, true);
+                $send_notifications = true;
+                $check_user_status  = true;
+                $res = $res & account_add_user_obj_to_group($this->group_id, $user, $check_user_status, $send_notifications);
             }
         }
         return $res;
