@@ -3,20 +3,22 @@ angular
     .controller('AppController', AppController);
 
 AppController.$inject = [
-    'gettextCatalog'
+    'gettextCatalog',
+    'SharedPropertiesService'
 ];
 
 function AppController(
-    gettextCatalog
+    gettextCatalog,
+    SharedPropertiesService
 ) {
     var self = this;
 
     self.init = init;
 
-    function init(release_id, language) {
+    function init(project_id, release_id, language) {
+        SharedPropertiesService.setProjectId(project_id);
+        SharedPropertiesService.setReleaseId(release_id);
         initLocale(language);
-
-        self.itWorks = 'IT WORKS ! release_id = ' + release_id;
     }
 
     function initLocale(language) {

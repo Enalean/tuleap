@@ -22,14 +22,20 @@ namespace Tuleap\FRS;
 
 class ReleasePresenter
 {
+
+    /** @var int */
+    public $project_id;
+
     /** @var int */
     public $release_id;
 
     /** @var string */
     public $language;
 
-    public function __construct($release_id, $language)
+    public function __construct($project_id, $release_id, $language
+    )
     {
+        $this->project_id = $project_id;
         $this->release_id = $release_id;
         $this->language   = $language;
     }

@@ -1,61 +1,69 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: \n"
+"X-Generator: Poedit 1.8.5\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/release/release.tpl.html
 msgid "Arch."
-msgstr ""
+msgstr "Arch."
 
 #: src/app/release/release.tpl.html
 msgid "Changelog"
-msgstr ""
+msgstr "Modifications"
 
 #: src/app/release/release.tpl.html
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: src/app/release/release.tpl.html
 msgid "Downloads"
-msgstr ""
+msgstr "Téléchargements"
 
 #: src/app/release/release.tpl.html
 msgid "Files"
-msgstr ""
+msgstr "Fichiers"
 
 #: src/app/release/release.tpl.html
 msgid "MD5Sum"
-msgstr ""
+msgstr "MD5Sum"
 
 #: src/app/release/release.tpl.html
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: src/app/release/release.tpl.html
 msgid "Owner"
-msgstr ""
+msgstr "Propriétaire"
 
 #: src/app/release/release.tpl.html
 msgid "Package {{ $ctrl.release.package.name }}"
-msgstr ""
+msgstr "Paquet {{ $ctrl.release.package.name }}"
 
 #: src/app/release/release.tpl.html
 msgid "Release Note"
-msgstr ""
+msgstr "Notes"
 
 #: src/app/release/release.tpl.html
 msgid "Release Note &amp; Files"
-msgstr ""
+msgstr "Notes &amp; Fichiers"
 
 #: src/app/release/release.tpl.html
 msgid "Size"
-msgstr ""
+msgstr "Taille"
 
 #: src/app/release/release.tpl.html
 msgid "There are no files in this release."
-msgstr ""
+msgstr "Il n'y a aucun fichier dans cette version."
 
 #: src/app/release/release.tpl.html
 msgid "Type"
-msgstr ""
+msgstr "Type"

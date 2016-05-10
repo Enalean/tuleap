@@ -1,0 +1,69 @@
+<h4 class="package-name">
+    <i class="icon-archive" aria-hidden="true"></i>
+    <a ng-href="/file/?group_id={{ $ctrl.project_id }}">
+        <span translate>Package {{ $ctrl.release.package.name }}</span>
+    </a>
+</h4>
+<h1 class="release-name">
+    <i class="icon-level-up icon-rotate-90" aria-hidden="true"></i>
+    <span>{{ $ctrl.release.name }}</span>
+</h1>
+
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="javascript: void(0)" translate>Release Note &amp; Files</a>
+    </li>
+</ul>
+
+<div class="files">
+    <h2 translate>Files</h2>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th translate>Name</th>
+                <th translate>Size</th>
+                <th translate>Downloads</th>
+                <th translate>Arch.</th>
+                <th translate>Type</th>
+                <th translate>Date</th>
+                <th translate>MD5Sum</th>
+                <th translate>Owner</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="$ctrl.release.files.length === 0">
+                <td colspan="8" id="empty-files-list" translate>
+                    There are no files in this release.
+                </td>
+            </tr>
+            <tr ng-repeat="file in $ctrl.release.files">
+                <td file-download="file"></td>
+                <td>{{ file.file_size | byteFmt: 2 }}</td>
+                <td>{{ file.nb_download }}</td>
+                <td>{{ file.arch }}</td>
+                <td>{{ file.type }}</td>
+                <td>{{ file.date | date:'yyyy-MM-dd' }}</td>
+                <td>{{ file.computed_md5 }}</td>
+                <td>
+                    <a ng-href="/users/{{ file.owner.username }}">{{ file.owner.display_name }}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div
+    class="release-note"
+    ng-if="$ctrl.release.release_note"
+>
+    <h2 translate>Release Note</h2>
+    <div markdown-to-html="$ctrl.release.release_note"></div>
+</div>
+
+<div
+    class="changelog"
+    ng-if="$ctrl.release.changelog"
+>
+    <h2 translate>Changelog</h2>
+    <div markdown-to-html="$ctrl.release.changelog"></div>
+</div>

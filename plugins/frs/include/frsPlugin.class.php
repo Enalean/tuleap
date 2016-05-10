@@ -152,7 +152,11 @@ class frsPlugin extends \Plugin
         $user    = $params['user'];
 
         $renderer  = $this->getTemplateRenderer();
-        $presenter = new ReleasePresenter($release->release_id, $user->getShortLocale());
+        $presenter = new ReleasePresenter(
+            $release->getGroupID(),
+            $release->getReleaseID(),
+            $user->getShortLocale()
+        );
 
         $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
     }
