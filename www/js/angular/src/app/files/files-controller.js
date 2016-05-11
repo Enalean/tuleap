@@ -16,12 +16,15 @@ function FilesController(
     var self = this;
 
     lodash.extend(self, {
-        pull_request : SharedPropertiesService.getPullRequest(),
+        pull_request : {},
         files        : [],
         loading_files: true
     });
 
-    getFiles();
+    SharedPropertiesService.whenReady().then(function() {
+        self.pull_request = SharedPropertiesService.getPullRequest();
+        getFiles();
+    });
 
     function getFiles() {
         FilesRestService.getFiles(self.pull_request.id).then(function(files) {

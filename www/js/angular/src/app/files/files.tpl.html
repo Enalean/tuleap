@@ -1,7 +1,7 @@
 <div id="modified-files">
     <h3><i class="icon-copy"></i> <span translate>Modified Files</span></h3>
 
-    <ul class="container-fluid">
+    <ul class="modified-files container-fluid">
         <li ng-if="files.loading_files" class="loading"></li>
         <li ng-repeat="file in files.files track by $index" class="row-fluid">
           <div class="span1"><span class="badge badge-{{ file.status }}">{{ file.status }}</span></div>
@@ -22,4 +22,4 @@
     </ul>
 </div>
 
-<div ui-view="file-diff"></div>
+<div ui-view="file-diff" ng-if="!files.loading_files"></div>

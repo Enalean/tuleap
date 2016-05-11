@@ -18,7 +18,7 @@ function CommentsController(
     var self = this;
 
     lodash.extend(self, {
-        pull_request    : SharedPropertiesService.getPullRequest(),
+        pull_request    : {},
         comments        : [],
         loading_comments: true,
         new_comment     : {
@@ -28,7 +28,10 @@ function CommentsController(
         addComment: addComment
     });
 
-    getComments(CommentsService.comments_pagination.limit, CommentsService.comments_pagination.offset);
+    SharedPropertiesService.whenReady().then(function() {
+        self.pull_request = SharedPropertiesService.getPullRequest();
+        getComments(CommentsService.comments_pagination.limit, CommentsService.comments_pagination.offset);
+    });
 
     function getComments(limit, offset) {
         return CommentsService.getFormattedComments(self.pull_request, limit, offset)
