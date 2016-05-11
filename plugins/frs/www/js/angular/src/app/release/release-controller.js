@@ -4,13 +4,11 @@ angular
 
 ReleaseController.$inject = [
     'lodash',
-    'ReleaseRestService',
     'SharedPropertiesService'
 ];
 
 function ReleaseController(
     _,
-    ReleaseRestService,
     SharedPropertiesService
 ) {
     var self = this;
@@ -26,10 +24,6 @@ function ReleaseController(
 
     function init() {
         self.project_id = SharedPropertiesService.getProjectId();
-
-        ReleaseRestService.getRelease(SharedPropertiesService.getReleaseId())
-            .then(function(release) {
-                self.release = release;
-            });
+        self.release    = SharedPropertiesService.getRelease();
     }
 }

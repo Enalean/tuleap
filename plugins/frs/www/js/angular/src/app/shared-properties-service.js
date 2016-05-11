@@ -5,14 +5,14 @@ angular
 function SharedPropertiesService() {
     var property = {
         project_id: null,
-        release_id: null
+        release   : null
     };
 
     return {
         getProjectId: getProjectId,
         setProjectId: setProjectId,
-        getReleaseId: getReleaseId,
-        setReleaseId: setReleaseId
+        getRelease  : getRelease,
+        setRelease  : setRelease
     };
 
     function getProjectId() {
@@ -23,11 +23,11 @@ function SharedPropertiesService() {
         property.project_id = project_id;
     }
 
-    function getReleaseId() {
-        return property.release_id;
+    function getRelease() {
+        return property.release;
     }
 
-    function setReleaseId(release_id) {
-        property.release_id = release_id;
+    function setRelease(release) {
+        property.release = release;
     }
 }

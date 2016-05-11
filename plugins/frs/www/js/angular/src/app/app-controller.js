@@ -15,9 +15,9 @@ function AppController(
 
     self.init = init;
 
-    function init(project_id, release_id, language) {
-        SharedPropertiesService.setProjectId(project_id);
-        SharedPropertiesService.setReleaseId(release_id);
+    function init(release, language) {
+        SharedPropertiesService.setProjectId(release.project.id);
+        SharedPropertiesService.setRelease(release);
         initLocale(language);
     }
 

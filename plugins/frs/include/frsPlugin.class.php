@@ -28,6 +28,7 @@ use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\REST\ResourcesInjector;
 use Tuleap\FRS\ReleasePresenter;
+use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 
 class frsPlugin extends \Plugin
 {
@@ -151,10 +152,11 @@ class frsPlugin extends \Plugin
         $release = $params['release'];
         $user    = $params['user'];
 
-        $renderer  = $this->getTemplateRenderer();
+        $renderer       = $this->getTemplateRenderer();
+        $representation = new ReleaseRepresentation();
+        $representation->build($release);
         $presenter = new ReleasePresenter(
-            $release->getGroupID(),
-            $release->getReleaseID(),
+            $representation,
             $user->getShortLocale()
         );
 

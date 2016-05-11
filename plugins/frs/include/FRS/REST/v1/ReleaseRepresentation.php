@@ -22,6 +22,7 @@ namespace Tuleap\FRS\REST\v1;
 
 use Tuleap\REST\JsonCast;
 use FRSRelease;
+use Tuleap\Project\REST\ProjectReference;
 
 class ReleaseRepresentation
 {
@@ -62,6 +63,11 @@ class ReleaseRepresentation
      */
     public $resources;
 
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
+    public $project;
+
     public function build(FRSRelease $release)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
@@ -78,6 +84,8 @@ class ReleaseRepresentation
                 "uri" => $this->uri ."/artifacts"
             )
         );
+        $this->project = new ProjectReference();
+        $this->project->build($release->getProject());
 
         foreach ($release->getFiles() as $file) {
             $file_representation = new FileRepresentation();

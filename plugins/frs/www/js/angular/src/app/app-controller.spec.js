@@ -17,21 +17,25 @@ describe("AppController -", function() {
         });
 
         spyOn(SharedPropertiesService, "setProjectId");
-        spyOn(SharedPropertiesService, "setReleaseId");
+        spyOn(SharedPropertiesService, "setRelease");
         spyOn(gettextCatalog, "setCurrentLanguage");
 
         AppController = $controller('AppController');
     });
 
-    it("Given a project id, a release_id and a language, when I init the app, then the project id and release id will be set in the shared properties and the language for translations will be set", function() {
-        var project_id = 197;
-        var release_id = 80;
+    it("Given a release object and a language, when I init the app, then the project_id and the release will be set in the shared properties and the language for translations will be set", function() {
+        var release = {
+            id     : 80,
+            project: {
+                id: 163
+            }
+        };
         var language   = "en";
 
-        AppController.init(project_id, release_id, language);
+        AppController.init(release, language);
 
-        expect(SharedPropertiesService.setProjectId).toHaveBeenCalledWith(project_id);
-        expect(SharedPropertiesService.setReleaseId).toHaveBeenCalledWith(release_id);
+        expect(SharedPropertiesService.setProjectId).toHaveBeenCalledWith(release.project.id);
+        expect(SharedPropertiesService.setRelease).toHaveBeenCalledWith(release);
         expect(gettextCatalog.setCurrentLanguage).toHaveBeenCalledWith(language);
     });
 });

@@ -11,4 +11,5 @@ function FrsConfig(
 ) {
     $showdownProvider.setOption('sanitize', true);
     $showdownProvider.setOption('simplifiedAutoLink', true);
+    $showdownProvider.setOption('headerLevelStart', 3);
 }
