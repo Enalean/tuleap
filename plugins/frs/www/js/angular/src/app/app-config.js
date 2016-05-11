@@ -3,13 +3,16 @@ angular
     .config(FrsConfig);
 
 FrsConfig.$inject = [
-    '$showdownProvider'
+    '$showdownProvider',
+    '$urlRouterProvider'
 ];
 
 function FrsConfig(
-    $showdownProvider
+    $showdownProvider,
+    $urlRouterProvider
 ) {
     $showdownProvider.setOption('sanitize', true);
     $showdownProvider.setOption('simplifiedAutoLink', true);
-    $showdownProvider.setOption('headerLevelStart', 3);
+
+    $urlRouterProvider.otherwise('/');
 }

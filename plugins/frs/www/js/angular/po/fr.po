@@ -12,35 +12,43 @@ msgstr ""
 "X-Generator: Poedit 1.8.5\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Arch."
 msgstr "Arch."
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts-controller.js
+msgid "Artifact links"
+msgstr "Artéfacts référencés par cet artéfact"
+
+#: src/app/release/files/files.tpl.html
 msgid "Changelog"
 msgstr "Modifications"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Date"
 msgstr "Date"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Downloads"
 msgstr "Téléchargements"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Files"
 msgstr "Fichiers"
 
 #: src/app/release/release.tpl.html
+msgid "Linked Artifacts"
+msgstr "Artéfacts liés"
+
+#: src/app/release/files/files.tpl.html
 msgid "MD5Sum"
 msgstr "MD5Sum"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Name"
 msgstr "Nom"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Owner"
 msgstr "Propriétaire"
 
@@ -48,7 +56,11 @@ msgstr "Propriétaire"
 msgid "Package {{ $ctrl.release.package.name }}"
 msgstr "Paquet {{ $ctrl.release.package.name }}"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Project"
+msgstr "Projet"
+
+#: src/app/release/files/files.tpl.html
 msgid "Release Note"
 msgstr "Notes"
 
@@ -56,14 +68,50 @@ msgstr "Notes"
 msgid "Release Note &amp; Files"
 msgstr "Notes &amp; Fichiers"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts-controller.js
+msgid "Reverse Artifact links"
+msgstr "Artéfacts qui référencent cet artéfact"
+
+#: src/app/release/files/files.tpl.html
 msgid "Size"
 msgstr "Taille"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Status"
+msgstr "Statut"
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Submitted by"
+msgstr "Auteur"
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Submitted on"
+msgstr "Date de soumission"
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Summary"
+msgstr "Titre"
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "There are no artifact links defined in this release."
+msgstr "Aucun lien d'artéfact n'a été créé pour cette version."
+
+#: src/app/release/files/files.tpl.html
 msgid "There are no files in this release."
 msgstr "Il n'y a aucun fichier dans cette version."
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid ""
+"There was an error while getting the list of linked artifacts: {{ $ctrl."
+"getError().rest_error }}"
+msgstr ""
+"Une erreur est survenue pendant la récupération des artéfacts liés : "
+"{{ $ctrl.getError().rest_error }}"
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Tracker"
+msgstr "Suivi"
+
+#: src/app/release/files/files.tpl.html
 msgid "Type"
 msgstr "Type"

@@ -14,8 +14,9 @@ function ReleaseController(
     var self = this;
 
     _.extend(self, {
-        project_id: null,
-        release   : null,
+        error_no_release_artifact: false,
+        project_id               : SharedPropertiesService.getProjectId(),
+        release                  : SharedPropertiesService.getRelease(),
 
         init: init
     });
@@ -23,7 +24,9 @@ function ReleaseController(
     self.init();
 
     function init() {
-        self.project_id = SharedPropertiesService.getProjectId();
-        self.release    = SharedPropertiesService.getRelease();
+        if (! _.has(self.release, 'artifact.id')) {
+            self.error_no_release_artifact = true;
+            return;
+        }
     }
 }

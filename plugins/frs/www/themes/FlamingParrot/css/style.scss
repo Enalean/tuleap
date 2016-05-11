@@ -7,7 +7,8 @@ body {
                 color: $main;
             }
 
-            > .files th {
+            #files > .files-list th,
+            #linked-artifacts > .artifact-links th {
                 border-bottom-color: $main;
             }
         }
