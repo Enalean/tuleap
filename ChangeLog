@@ -12,6 +12,7 @@ Version 8.15 (Not yet released)
 		- Add tracker dependency
 		- Create the angular app
 	* story #9132 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
+	* request #8944: check if the domain name is valid before the installation is started
 
 
 	== Development ==
