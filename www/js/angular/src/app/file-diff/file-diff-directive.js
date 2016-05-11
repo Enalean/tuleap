@@ -19,23 +19,29 @@ function FileDiffDirective(
     SharedPropertiesService,
     FileDiffRestService
 ) {
-    function linkFileDiffDirective(scope, element) {
-        var unidiffOptions = {
-            readOnly: true,
-            gutters : ['gutter-oldlines', 'gutter-newlines']
-        };
-        var unidiff = $window.CodeMirror.fromTextArea(element.find('textarea')[0], unidiffOptions);
-
+    function linkFileDiffDirective(scope, element, attrs, diffController) {
         var pullRequest = SharedPropertiesService.getPullRequest();
         var filePath = $state.params.file_path;
+
         FileDiffRestService.getUnidiff(pullRequest.id, filePath).then(function(data) {
-            displayUnidiff(unidiff, data.lines);
+            diffController.isBinaryFile = data.charset === 'binary';
 
-            data.inline_comments.forEach(function(comment) {
-                displayInlineComment(unidiff, comment);
-            });
+            if (! diffController.isBinaryFile) {
+                var unidiffOptions = {
+                    readOnly: true,
+                    lineWrapping: true,
+                    gutters : ['gutter-oldlines', 'gutter-newlines'],
+                    mode    : data.mime_type
+                };
+                var unidiff = $window.CodeMirror.fromTextArea(element.find('textarea')[0], unidiffOptions);
+                displayUnidiff(unidiff, data.lines);
 
-            unidiff.on('gutterClick', showCommentForm);
+                data.inline_comments.forEach(function(comment) {
+                    displayInlineComment(unidiff, comment);
+                });
+
+                unidiff.on('gutterClick', showCommentForm);
+            }
         });
     }
 

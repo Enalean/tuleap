@@ -243,19 +243,25 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(404, 'The file does not exist');
         }
 
-        $unidiff_builder = new FileUniDiffBuilder();
-        $executor        = $this->getExecutor($git_repository);
-        $diff            = $unidiff_builder->buildFileUniDiff($executor, $path, $pull_request->getSha1Dest(), $pull_request->getSha1Src());
+        list($mime_type, $charset) = MimeDetector::getMimeInfo($path, $dest_content, $src_content);
 
-        $inline_comment_builder = new PullRequestInlineCommentRepresentationBuilder(
-            new \Tuleap\PullRequest\InlineComment\Dao(),
-            $this->user_manager
-        );
-        $inline_comments = $inline_comment_builder->getForFile($pull_request, $path);
+        if ($charset === "binary") {
+            $diff = new FileUniDiff();
+            $inline_comments = array();
+        } else {
+            $unidiff_builder = new FileUniDiffBuilder();
+            $executor        = $this->getExecutor($git_repository);
+            $diff            = $unidiff_builder->buildFileUniDiff($executor, $path, $pull_request->getSha1Dest(), $pull_request->getSha1Src());
 
-        return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments);
+            $inline_comment_builder = new PullRequestInlineCommentRepresentationBuilder(
+                new \Tuleap\PullRequest\InlineComment\Dao(),
+                $this->user_manager
+            );
+            $inline_comments = $inline_comment_builder->getForFile($pull_request, $path);
+        }
+
+        return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments, $mime_type, $charset);
     }
-
 
     /**
      * Post a new inline comment

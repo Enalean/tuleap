@@ -30,10 +30,6 @@ msgid "An error occured while doing one of your last actions."
 msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 
 #: src/app/overview/overview.tpl.html
-msgid "Author"
-msgstr "Auteur"
-
-#: src/app/overview/overview.tpl.html
 msgid "Changes"
 msgstr "Changements"
 
@@ -64,6 +60,10 @@ msgstr "Fichiers"
 #: src/app/files/files.tpl.html
 msgid "Go to diff"
 msgstr "Voir le diff"
+
+#: src/app/file-diff/file-diff.tpl.html
+msgid "is a binary file."
+msgstr "est un fichier binaire."
 
 #: src/app/overview/overview.tpl.html
 msgid "Merge"
@@ -97,6 +97,10 @@ msgstr "Détails Pull Request"
 msgid "Pull requests"
 msgstr "Pull requests"
 
+#: src/app/overview/overview.tpl.html
+msgid "Requester"
+msgstr "Demandeur"
+
 #: src/app/overview/comments/comments.tpl.html
 msgid "Say something…"
 msgstr "Dites quelque chose…"
@@ -104,18 +108,3 @@ msgstr "Dites quelque chose…"
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Show details"
 msgstr "Voir les détails"
-
-#~ msgid "Say something..."
-#~ msgstr "Dites quelque chose…"
-
-#~ msgid "Abandonned"
-#~ msgstr "Abandonné"
-
-#~ msgid "<i class=\"icon-code-fork icon-rotate-270\"></i> Merge"
-#~ msgstr "<i class=\"icon-code-fork icon-rotate-270\"></i> Intégrer"
-
-#~ msgid "<i class=\"icon-trash\"></i> Abandon"
-#~ msgstr "<i class=\"icon-trash\"></i> Abandonner"
-
-#~ msgid "An error occured while doing one of your last action."
-#~ msgstr "Une erreur est survenue durant l’une de vos dernières actions."

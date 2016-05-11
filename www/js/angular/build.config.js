@@ -76,7 +76,9 @@ module.exports = {
             'bower_components/moment/min/moment.min.js',
             'bower_components/moment/locale/fr.js',
             'bower_components/angular-moment/angular-moment.min.js',
-            'bower_components/codemirror/lib/codemirror.js'
+            'bower_components/codemirror/lib/codemirror.js',
+            'bower_components/codemirror/addon/mode/simple.js',
+            'bower_components/codemirror/mode/**/*.js'
         ],
         css: [
             'bower_components/ui-select/dist/select.min.css',

@@ -22,10 +22,6 @@ msgid "An error occured while doing one of your last actions."
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid "Author"
-msgstr ""
-
-#: src/app/overview/overview.tpl.html
 msgid "Changes"
 msgstr ""
 
@@ -57,6 +53,10 @@ msgstr ""
 msgid "Go to diff"
 msgstr ""
 
+#: src/app/file-diff/file-diff.tpl.html
+msgid "is a binary file."
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr ""
@@ -74,11 +74,11 @@ msgid "No comment"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
-msgid "OK"
+msgid "Oh snap!"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
-msgid "Oh snap!"
+msgid "OK"
 msgstr ""
 
 #: src/app/pull-request/pull-request.tpl.html
@@ -87,6 +87,10 @@ msgstr ""
 
 #: src/app/pull-requests/pull-requests.tpl.html
 msgid "Pull requests"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Requester"
 msgstr ""
 
 #: src/app/overview/comments/comments.tpl.html

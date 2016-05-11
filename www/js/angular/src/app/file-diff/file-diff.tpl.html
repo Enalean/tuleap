@@ -1,4 +1,11 @@
 <h3><i class="icon-file-text-alt"></i> {{ 'File Diff' | translate }}</h3>
 
-<div><i class="icon-file-text-alt"></i> {{ diff.file_path }}</div>
-<textarea></textarea>
+<div ng-if="! diff.isBinaryFile">
+  <div><i class="icon-file-text-alt"></i> {{ diff.file_path }} </div>
+  <textarea style="display: none"></textarea>
+</div>
+
+<div ng-if="diff.isBinaryFile">
+  <div><i class="icon-file-alt"></i> {{ diff.file_path }} <span translate>is a binary file.</span></div>
+</div>
+
