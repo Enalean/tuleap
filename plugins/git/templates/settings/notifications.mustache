@@ -1,0 +1,35 @@
+<h3>{{ title }}</h3>
+
+<form id="mail_prefix_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="mail" />
+    <input type="hidden" name="pane" value="{{ identifier }}" />
+    <input type="hidden" id="group_id" name="group_id" value="{{ repository_project_id }}" />
+    <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
+
+    <label for="mail_prefix">{{ mail_prefix_label }}</label>
+    <input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="{{ mail_prefix }}" />
+
+    <h4>{{ notified_mails_title }}</h4>
+
+    {{# has_mails }}
+        <table id="git-notification-mail-list">
+            <tbody>
+            {{# list_of_mails }}
+                <tr class="{{ color }}">
+                    <td>{{ mail }}</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" name="remove_mail[]" value="{{ mail }}" title="delete" />
+                        </label>
+                    </td>
+                </tr>
+            {{/ list_of_mails }}
+            </tbody>
+        </table>
+    {{/ has_mails }}
+
+    <label for="add_mail">{{ add_mail_title }}</label>
+    <textarea id="add_mail" name="add_mail" class="text"></textarea>
+    <p class="help-block">{{ add_mail_msg }}</p>
+    <input type="submit" class="btn" value="{{ btn_submit }}" />
+</form>

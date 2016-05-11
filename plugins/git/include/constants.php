@@ -111,6 +111,16 @@ define('GIT_ADDITIONAL_HELP_TEXT', 'git_additional_help_text');
 define('GIT_ADDITIONAL_HOOKS', 'git_additional_hooks');
 
 /**
+ * Allow plugins to add additional notifications setup for git
+ *
+ * Parameters:
+ *   'repository' => (Input) GitRepository Git repository currently modified
+ *   'request'    => (Input) HTTPRequest   Current request
+ *   'output'     => (Output) String       The HTML to present
+ */
+define('GIT_ADDITIONAL_NOTIFICATIONS', 'git_additional_notifications');
+
+/**
  * Allow plugins to do something when Tuleap receive a git push
  *
  * Parameters:
