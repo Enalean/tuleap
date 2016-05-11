@@ -549,6 +549,12 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/phpwiki
 # Plugin OpenID Connect is not supported on CentOS 5
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient
+# ReferenceAlias is not shipped in CentOs5
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/referencealias_core
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/referencealias_tracker
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/referencealias_mediawiki
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/referencealias_svn
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/referencealias_git
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}

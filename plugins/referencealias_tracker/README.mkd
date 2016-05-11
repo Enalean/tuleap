@@ -1,0 +1,5 @@
+Reference aliases for tracker plugin
+===============
+
+This plugin allows to import references like "artfXXX" or "trackerYYYY" for the tracker plugin.
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.

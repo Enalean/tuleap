@@ -1,0 +1,5 @@
+Reference aliases for svn plugin
+=================================
+
+This plugin allows to use cmmtXXX references as aliases for svn plugin commit references
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.

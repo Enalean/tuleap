@@ -42,7 +42,7 @@ Version 8.14 (Thursday, April 28th 2016)
 		- Export project's admins and members
 		- User that are already project_members must not stop the import
 	* story #9043: have a cookie cleaned with no user token and id
-	* story #9027: Create plugin teamforge_compat_tracker
+	* story #9027: Create plugin referencealias_tracker
 	* story #7897: Package plugin hudson_git
 
 	== Bug Fix ==
@@ -78,16 +78,15 @@ Version 8.14 (Thursday, April 28th 2016)
 	* agiledashboard: 1.374
 	* cardwall: 1.58
 	* hudson_svn: 0.7
-	* teamforge_compat: 0.3
 	* fulltextsearch: 0.128
 	* IM: 1.5.35
 	* svn: 0.53
-	* teamforge_compat_tracker: 0.2
+	* referencealias_tracker: 0.2
 	* mediawiki: 0.113
-	* teamforge_compat_mediawiki: 0.2
-	* teamforge_compat_svn: 0.1
-	* teamforge_compat_core: 0.4
-	* teamforge_compat_git: 0.1
+	* referencealias_mediawiki: 0.2
+	* referencealias_svn: 0.1
+	* referencealias_core: 0.4
+	* referencealias_git: 0.1
 
     == Themes ==
 	* FlamingParrot: 1.133

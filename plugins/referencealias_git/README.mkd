@@ -1,0 +1,5 @@
+Reference aliases for git plugin
+=================================
+
+This plugin allows to use cmmtXXX as aliases for git references
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.
