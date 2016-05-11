@@ -30,13 +30,38 @@ class FileUniDiff
         $this->lines = array();
     }
 
-    public function addLine($unidiff_offset, $old_offset, $new_offset, $content)
+    public function addLine($type, $unidiff_offset, $old_offset, $new_offset, $content)
     {
-        $this->lines[] = array($unidiff_offset, $old_offset, $new_offset, $content);
+        $this->lines[$unidiff_offset] = new UniDiffLine($type, $unidiff_offset, $old_offset, $new_offset, $content);
     }
 
     public function getLines()
     {
         return $this->lines;
+    }
+
+    public function getLine($unidiff_offset)
+    {
+        return $this->lines[$unidiff_offset];
+    }
+
+    public function getLineFromOldOffset($old_offset)
+    {
+        foreach ($this->lines as  $line) {
+            if ($line->getOldOffset() == $old_offset) {
+                return $line;
+            }
+        }
+        return null;
+    }
+
+    public function getLineFromNewOffset($new_offset)
+    {
+        foreach ($this->lines as  $line) {
+            if ($line->getNewOffset() == $new_offset) {
+                return $line;
+            }
+        }
+        return null;
     }
 }

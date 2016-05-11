@@ -47,14 +47,14 @@ class FileUniDiffBuilder
                 $unidiff_offset += 1;
                 if ($type == self::REMOVED) {
                     $old_offset += 1;
-                    $diff->addLine($unidiff_offset, $old_offset, null, $line);
+                    $diff->addLine($type, $unidiff_offset, $old_offset, null, $line);
                 } else if($type == self::KEPT) {
                     $new_offset += 1;
                     $old_offset += 1;
-                    $diff->addLine($unidiff_offset, $old_offset, $new_offset, $line);
+                    $diff->addLine($type, $unidiff_offset, $old_offset, $new_offset, $line);
                 } else if($type == self::ADDED) {
                     $new_offset += 1;
-                    $diff->addLine($unidiff_offset, null, $new_offset, $line);
+                    $diff->addLine($type, $unidiff_offset, null, $new_offset, $line);
                 }
             }
         }

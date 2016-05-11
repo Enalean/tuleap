@@ -36,6 +36,16 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function searchUpToDateByPullRequestId($pull_request_id)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+
+        $sql = "SELECT * FROM plugin_pullrequest_inline_comments
+                WHERE pull_request_id=$pull_request_id AND is_outdated=false";
+
+        return $this->retrieve($sql);
+    }
+
     public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content)
     {
         $pull_request_id = $this->da->escapeInt($pull_request_id);
@@ -52,4 +62,16 @@ class Dao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
+    public function updateComment($comment_id, $unidiff_offset, $is_outdated)
+    {
+        $comment_id     = $this->da->escapeInt($comment_id);
+        $unidiff_offset = $this->da->escapeInt($unidiff_offset);
+        $is_outdated    = $this->da->escapeInt($is_outdated);
+
+        $sql = "UPDATE plugin_pullrequest_inline_comments
+            SET unidiff_offset=$unidiff_offset, is_outdated=$is_outdated
+            WHERE id=$comment_id";
+
+        return $this->update($sql);
+    }
 }

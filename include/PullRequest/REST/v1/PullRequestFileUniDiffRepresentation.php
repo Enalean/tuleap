@@ -48,7 +48,7 @@ class PullRequestFileUniDiffRepresentation
         $new_instance = new PullRequestFileUniDiffRepresentation();
         foreach ($diff->getLines() as $line) {
             $new_instance->addLine(
-                new PullRequestLineUniDiffRepresentation($line[0], $line[1], $line[2], $line[3])
+                new PullRequestLineUniDiffRepresentation($line)
             );
         }
         $new_instance->inline_comments = $inline_comments;

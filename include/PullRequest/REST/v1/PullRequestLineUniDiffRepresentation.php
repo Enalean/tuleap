@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use \Tuleap\PullRequest\UniDiffLine;
+
 class PullRequestLineUniDiffRepresentation
 {
     /**
@@ -42,11 +44,11 @@ class PullRequestLineUniDiffRepresentation
      */
     public $content;
 
-    public function __construct($unidiff_offset, $old_offset, $new_offset, $content)
+    public function __construct(UniDiffLine $line)
     {
-        $this->unidiff_offset = $unidiff_offset;
-        $this->old_offset     = $old_offset;
-        $this->new_offset     = $new_offset;
-        $this->content        = $content;
+        $this->unidiff_offset = $line->getUniDiffOffset();
+        $this->old_offset     = $line->getOldOffset();
+        $this->new_offset     = $line->getNewOffset();
+        $this->content        = $line->getContent();
     }
 }

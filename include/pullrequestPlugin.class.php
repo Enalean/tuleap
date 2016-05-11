@@ -34,6 +34,9 @@ use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Dao;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestCloser;
+use Tuleap\PullRequest\FileUnidiffBuilder;
+use \Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
+use \Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 
 class pullrequestPlugin extends Plugin
 {
@@ -282,7 +285,12 @@ class pullrequestPlugin extends Plugin
             if ($new_rev == '0000000000000000000000000000000000000000') {
                 $closer->abandonFromSourceBranch($repository, $branch_name);
             } else {
-                $pull_request_updater = new PullRequestUpdater($this->getPullRequestFactory());
+                $pull_request_updater = new PullRequestUpdater(
+                    $this->getPullRequestFactory(),
+                    new InlineCommentDao(),
+                    new InlineCommentUpdater(),
+                    new FileUnidiffBuilder()
+                );
                 $pull_request_updater->updatePullRequests($git_exec, $repository, $branch_name, $new_rev);
             }
             $closer->markManuallyMerged($git_exec, $repository, $branch_name);
