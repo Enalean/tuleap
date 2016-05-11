@@ -63,6 +63,18 @@ class PullRequestCloser
         }
     }
 
+    public function markManuallyMerged(GitExec $git_exec, GitRepository $repository, $dest_branch_name)
+    {
+        $merged_branches = $git_exec->getMergedBranches($dest_branch_name);
+        $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $dest_branch_name);
+
+        foreach ($prs as $pr) {
+            if (in_array($pr->getBranchSrc(), $merged_branches)) {
+                $this->pull_request_factory->markAsMerged($pr);
+            }
+        }
+    }
+
     public function fastForwardMerge(
         GitRepository $repository,
         PullRequest $pull_request

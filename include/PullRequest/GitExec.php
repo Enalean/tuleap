@@ -132,6 +132,16 @@ class GitExec extends Git_Exec
         return $output[0];
     }
 
+    public function getMergedBranches($ref)
+    {
+        $ref    = escapeshellarg($ref);
+        $cmd    = "branch --merged $ref | cut -c 3-";
+        $output = array();
+
+        $this->gitCmdWithOutput($cmd, $output);
+        return $output;
+    }
+
     private function parseDiffNumStatOutput($output) {
         $lines_added   = 0;
         $lines_removed = 0;

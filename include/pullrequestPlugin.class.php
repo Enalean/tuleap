@@ -276,15 +276,16 @@ class pullrequestPlugin extends Plugin
         if ($branch_name != null) {
             $new_rev    = $params['newrev'];
             $repository = $params['repository'];
+            $closer     = new PullRequestCloser($this->getPullRequestFactory());
 
+            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
             if ($new_rev == '0000000000000000000000000000000000000000') {
-                $closer = new PullRequestCloser($this->getPullRequestFactory());
                 $closer->abandonFromSourceBranch($repository, $branch_name);
             } else {
                 $pull_request_updater = new PullRequestUpdater($this->getPullRequestFactory());
-                $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
                 $pull_request_updater->updatePullRequests($git_exec, $repository, $branch_name, $new_rev);
             }
+            $closer->markManuallyMerged($git_exec, $repository, $branch_name);
         }
     }
 

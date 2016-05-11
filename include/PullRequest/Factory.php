@@ -60,6 +60,12 @@ class Factory
         return $this->getInstancesFromRows($res);
     }
 
+    public function getOpenedByDestinationBranch(GitRepository $repository, $branch_name)
+    {
+        $res = $this->dao->searchOpenedByDestinationBranch($repository->getId(), $branch_name);
+        return $this->getInstancesFromRows($res);
+    }
+
     public function countPullRequestOfRepository(GitRepository $repository)
     {
         $row = $this->dao->countPullRequestOfRepository($repository->getId())->getRow();
