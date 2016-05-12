@@ -22,31 +22,26 @@ namespace Tuleap\BotMattermostGit\BotGit;
 
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Bot\Bot;
-use Tuleap\BotMattermost\Exception\CannotAccessDataBaseException;
+use Tuleap\BotMattermost\Exception\BotNotFoundException;
+use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 
-class BotGitFactory extends BotFactory
+class BotGitFactory
 {
 
     private $dao;
+    private $bot_factory;
 
-    public function __construct(BotGitDao $dao)
+    public function __construct(BotGitDao $bot_git_dao, BotFactory $bot_factory)
     {
-        $this->dao = $dao;
-    }
-
-    public function save($repository_id, $bot_id)
-    {
-        $id = $this->dao->addBotGit($repository_id, $bot_id);
-        if (!$id) {
-            throw new CannotCreateBotException($GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_alert_error'));
-        }
+        $this->dao         = $bot_git_dao;
+        $this->bot_factory = $bot_factory;
     }
 
     public function saveBotsAssignements($repository_id, array $bots_ids)
     {
         if (! $this->dao->updateBotsAssignements($repository_id, $bots_ids)) {
-            throw new CannotCreateBotException($GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_alert_error'));
+            throw new CannotCreateBotException();
         }
     }
 
@@ -55,45 +50,35 @@ class BotGitFactory extends BotFactory
      */
     public function getBots()
     {
-        $dar = $this->dao->searchBotsWithRepositoryId();
-        if ($dar === false) {
-            throw new CannotAccessDataBaseException($GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_alert_error'));
+        $bots_git = array();
+        try {
+            $bots = $this->bot_factory->getBots();
+            foreach ($bots as $bot) {
+                $repository_ids = $this->dao->searchRepositoryIdByBotId($bot->getId());
+                $bots_git[] = new BotGit($bot, $repository_ids);
+            }
+
+            return $bots_git;
+        } catch (ChannelsNotFoundException $e) {
+            throw $e;
+        } catch (BotNotFoundException $e) {
+            throw $e;
         }
-        $bots = array();
+    }
+
+
+    public function getBotsByRepositoryId($repository_id)
+    {
+        $dar = $this->dao->searchBotsByRepositoryId($repository_id);
         foreach ($dar as $row) {
-            $bots[] = new BotGit(
-                $row['id'],
-                $row['name'],
-                $row['webhook_url'],
-                $row['repository_id']
-            );
+            $id = $row['id'];
+            try {
+                $bots[] = $this->bot_factory->getBotById($id);
+            } catch (ChannelsNotFoundException $e) {
+                throw $e;
+            }
         }
+
         return $bots;
-    }
-
-    /**
-     * @return Bot
-     */
-    public function getBotById($id)
-    {
-        $row = $this->dao->searchBotById($id);
-        if ($row === false){
-            throw new CannotAccessDataBaseException($GLOBALS['Language']->getText('plugin_botmattermost','configuration_alert_error'));
-        }
-        return $bot = new Bot(
-            $row['id'],
-            $row['name'],
-            $row['webhook_url']
-        );
-    }
-
-    public function getBotsIdsByRepositoryId($repository_id)
-    {
-        $dar = $this->dao->searchBotsIdsByRepositoryId($repository_id);
-        foreach ($dar as $row) {
-            $bots_ids[] = $row['bot_id'];
-        }
-
-        return $bots_ids;
     }
 }

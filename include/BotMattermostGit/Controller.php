@@ -27,11 +27,13 @@ use GitRepositoryFactory;
 use Valid_UInt;
 use TemplateRendererFactory;
 use Feedback;
-use Tuleap\BotMattermost\Exception\CannotAccessDataBaseException;
-use Tuleap\BotMattermost\Exception\CannotCreateBotException;
+use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
 use Tuleap\BotMattermostGit\SenderServices\Sender;
+use Tuleap\BotMattermost\Bot\BotFactory;
 use PFUser;
+use Exception;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 
 
 class Controller
@@ -48,19 +50,20 @@ class Controller
         CSRFSynchronizerToken $csrf,
         GitRepositoryFactory  $git_repository_factory,
         BotGitFactory         $bot_git_factory,
-        Sender                $sender
+        Sender                $sender,
+        BotFactory            $bot_factory
     ) {
         $this->request                = $request;
         $this->csrf                   = $csrf;
         $this->git_repository_factory = $git_repository_factory;
         $this->bot_git_factory        = $bot_git_factory;
         $this->sender                 = $sender;
+        $this->bot_factory             = $bot_factory;
     }
 
     public function render(GitRepository $repository)
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR.'/template');
-
         $presenter_bots = array();
         foreach ($this->bot_git_factory->getBots() as $bot) {
             $presenter_bots[] = $bot->toArray($repository->getId());
@@ -85,7 +88,7 @@ class Controller
         } else {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost_git', 'alert_invalid_post'));
         }
-        $GLOBALS['Response']->redirect(GIT_BASE_URL."/?action=repo_management&group_id=".$repository->getProjectId()."&repo_id=$repository_id&pane=".\GitViews_RepoManagement_Pane_Notification::ID);
+        $GLOBALS['Response']->redirect(GIT_BASE_URL."/?action=repo_management&group_id=".$repository->getProjectId()."&repo_id=$repository_id&pane=".Notification::ID);
     }
 
     public function sendNotification(
@@ -94,13 +97,10 @@ class Controller
         $newrev,
         $refname
     ) {
-        $bots_ids = $this->bot_git_factory->getBotsIdsByRepositoryId($repository->getId());
-        foreach ($bots_ids as $bot_id) {
-            try {
-                $bots[] = $this->bot_git_factory->getBotById($bot_id);
-            } catch (CannotAccessDataBaseException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
-            }
+        try {
+            $bots = $this->bot_git_factory->getBotsByRepositoryId($repository->getId());
+        } catch (BotNotFoundException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
         }
         $this->sender->pushGitNotifications(
             $bots,
@@ -116,7 +116,7 @@ class Controller
         try {
             $this->bot_git_factory->saveBotsAssignements($repository_id, $bots_ids);
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost_git','alert_success_update'));
-        } catch (\Exception $e) {
+        } catch (CannotCreateBotException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
         }
     }
@@ -141,8 +141,12 @@ class Controller
     private function validBotsIds(array $bots_ids)
     {
         $valid_uint = new Valid_UInt();
-        $bots = $this->bot_git_factory->getBots();
-        foreach ($bots_ids as $key => $bot_id) {
+        try {
+            $bots = $this->bot_factory->getBots();
+        } catch (Exception $e) {
+            return false;
+        }
+        foreach ($bots_ids as $bot_id) {
             if (!$valid_uint->validate($bot_id) || !$this->validBotId($bots, $bot_id)) {
                 return false;
             }

@@ -21,72 +21,75 @@
 namespace Tuleap\BotMattermostGit\BotGit;
 
 use DataAccessObject;
-use Tuleap\BotMattermost\Exception\CannotAccessDataBaseException;
-use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 
 class BotGitDao extends DataAccessObject
 {
 
-    public function addBotGit($repository_id, $bot_id)
-    {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $bot_id        = $this->da->escapeInt($bot_id);
-
-        $sql = "INSERT INTO plugin_botmattermost_git(repository_id, bot_id)
-                VALUES($repository_id, $bot_id)";
-
-        return $this->update($sql);
-    }
-
-    public function searchBotsIdsByRepositoryId($repository_id)
+    public function searchBotsByRepositoryId($repository_id)
     {
         $repository_id  = $this->da->escapeInt($repository_id);
 
-        $sql = "SELECT bot_id
-                FROM plugin_botmattermost_git
+        $sql = "SELECT *
+                FROM plugin_botmattermost_bot
+                LEFT JOIN plugin_botmattermost_git
+                ON plugin_botmattermost_bot.id = plugin_botmattermost_git.bot_id
                 WHERE repository_id = $repository_id";
 
         return $this->retrieve($sql);
     }
 
-    public function searchBotsWithRepositoryId()
-    {
-        $sql = "SELECT *
-                FROM plugin_botmattermost_bot
-                LEFT JOIN plugin_botmattermost_git
-                ON plugin_botmattermost_bot.id = plugin_botmattermost_git.bot_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function searchBotById($bot_id)
+    public function searchRepositoryIdByBotId($bot_id)
     {
         $id = $this->da->escapeInt($bot_id);
 
-        $sql = "SELECT * FROM plugin_botmattermost_bot
-                WHERE id = $id";
+        $sql = "SELECT repository_id AS id
+                FROM plugin_botmattermost_git
+                WHERE bot_id = $id";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->retrieveIds($sql);
     }
 
-    public function updateBotsAssignements($repository_id, array $bots_ids) {
-        $this->getDa()->startTransaction();
+    public function updateBotsAssignements($repository_id, array $bots_ids)
+    {
+        $this->da->startTransaction();
 
         $dar = $this->deleteBotsForRepository($repository_id);
         if ($dar === false) {
-            $this->getDa()->rollback();
+            $this->da->rollback();
             return false;
         }
 
-        foreach($bots_ids as $bot_id) {
-            $dar = $this->addBotGit($repository_id, $bot_id);
+
+        if (count($bots_ids) > 0) {
+            $dar = $this->addBotsGit($repository_id, $bots_ids);
             if ($dar === false) {
-                $this->getDa()->rollback();
+                $this->da->rollback();
                 return false;
             }
         }
 
-        return $this->getDa()->commit();
+        return $this->da->commit();
+    }
+
+    private function addBotsGit($repository_id, array $bots_ids)
+    {
+        $bots = array();
+        foreach($bots_ids as $bot_id) {
+            $bots[] = $this->getBotGitValueSql($repository_id, $bot_id);
+        }
+
+        $sql = "INSERT INTO plugin_botmattermost_git(repository_id, bot_id)
+                VALUES ".implode(',', $bots);
+
+        return $this->update($sql);
+    }
+
+    public function getBotGitValueSql($repository_id, $bot_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $bot_id        = $this->da->escapeInt($bot_id);
+
+        return "($repository_id, $bot_id)";
     }
 
     private function deleteBotsForRepository($repository_id)

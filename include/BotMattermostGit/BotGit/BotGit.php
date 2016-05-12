@@ -22,31 +22,33 @@ namespace Tuleap\BotMattermostGit\BotGit;
 
 use Tuleap\BotMattermost\Bot\Bot;
 
-class BotGit extends Bot
+class BotGit
 {
-    private $repository_id;
+    private $bot;
+    private $repository_ids;
 
     public function __construct(
-        $id,
-        $name,
-        $webhook_url,
-        $repository_id
+        Bot $bot,
+        array $repository_ids
     ) {
-        parent::__construct(
-            $id,
-            $name,
-            $webhook_url
-        );
-        $this->repository_id = $repository_id;
+        $this->bot            = $bot;
+        $this->repository_ids = $repository_ids;
+    }
+
+    public function getBot()
+    {
+        $this->bot;
     }
 
     public function toArray($repository_id)
     {
         return array(
-            'id'          => $this->getId(),
-            'name'        => $this->getName(),
-            'webhook_url' => $this->getWebhookUrl(),
-            'is_assigned' => $this->repository_id == $repository_id
+            'id'             => $this->bot->getId(),
+            'name'           => $this->bot->getName(),
+            'webhook_url'    => $this->bot->getWebhookUrl(),
+            'avatar'         => $this->bot->getAvatarUrl(),
+            'channels_names' => $this->bot->getChannelsNamesInOneRow(),
+            'is_assigned'    => in_array($repository_id, $this->repository_ids)
         );
     }
 }

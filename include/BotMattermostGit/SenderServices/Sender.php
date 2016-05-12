@@ -58,8 +58,7 @@ class Sender
             $refname
         );
         foreach ($bots as $bot) {
-            $message = $this->encoder_message->generateMessage($bot, $text);
-            $this->send($message, $bot->getWebhookUrl());
+            $this->pushGitNotificationsForEachChannels($bot, $text);
         }
     }
 
@@ -83,6 +82,20 @@ class Sender
             $response = $request->send();
         } catch (\Exception $ex) {
             $ex->getMessage();
+        }
+    }
+
+    private function pushGitNotificationsForEachChannels(Bot $bot, $text)
+    {
+        $channels_names = $bot->getChannelsNames();
+        if (count($channels_names) > 0) {
+            foreach ($channels_names as $channel) {
+                $message = $this->encoder_message->generateMessage($bot, $text, $channel);
+                $this->send($message, $bot->getWebhookUrl());
+            }
+        } else {
+            $message = $this->encoder_message->generateMessage($bot, $text);
+            $this->send($message, $bot->getWebhookUrl());
         }
     }
 }

@@ -21,6 +21,8 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
 use Tuleap\BotMattermostGit\BotGit\BotGitDao;
 use Tuleap\BotMattermostGit\Controller;
@@ -104,6 +106,8 @@ class botmattermost_gitPlugin extends Plugin
 
     private function getController(Codendi_Request $request)
     {
+        $botFactory = new BotFactory(new BotDao());
+
         return new Controller(
             $request,
             new CSRFSynchronizerToken('/plugins/botmattermost_git/?group_id='.$request->getProject()->getID()),
@@ -111,11 +115,12 @@ class botmattermost_gitPlugin extends Plugin
                 new GitDao(),
                 ProjectManager::instance()
             ),
-            new BotGitFactory(new BotGitDao()),
+            new BotGitFactory(new BotGitDao(), $botFactory),
             new Sender(
                 new EncoderMessage(),
                 new NotificationMaker(new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git')))
-            )
+            ),
+            $botFactory
         );
     }
 }

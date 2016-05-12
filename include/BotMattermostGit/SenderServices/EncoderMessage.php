@@ -27,15 +27,15 @@ class EncoderMessage
     /**
     * @return String [POST format]
     */
-    public function generateMessage(Bot $bot, $text)
+    public function generateMessage(Bot $bot, $text, $channel_name = null)
     {
+        $avatar = $bot->getAvatarUrl();
         $tab = array(
-            "username" => $bot->getName()
+            "username" => $bot->getName(),
+            "channel" => strtolower($channel_name),
+            "icon_url" => $avatar
         );
-        if (isset($text)) {
-            $tab["text"] = $text;
-        }
-
+        $tab["text"] = $text;
         return json_encode($tab);
     }
 }

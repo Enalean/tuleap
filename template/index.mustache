@@ -11,9 +11,10 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>ID</th>
+                    <th>Avatar</th>
                     <th>{{ table_col_name }}</th>
                     <th>{{ table_col_webhook_url }}</th>
+                    <th>Channels</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,9 +27,10 @@
                 {{# bots }}
                     <tr>
                         <td><input type="checkbox" name="bots_ids[]" value="{{ id }}" {{# is_assigned }}checked="checked"{{/ is_assigned }}></td>
-                        <td>{{ id }}</td>
+                        <td>{{# avatar }}<img src="{{ avatar }}" class="img-circle" width="30" height="30">{{/ avatar }}</td>
                         <td>{{ name }}</td>
                         <td>{{ webhook_url }}</td>
+                        <td>{{ channels_names }}</td>
                     </tr>
                 {{/ bots }}
                 {{/ botListIsEmpty }}

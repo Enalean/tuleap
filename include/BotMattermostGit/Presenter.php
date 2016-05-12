@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermostGit;
 use CSRFSynchronizerToken;
 use GitRepository;
 use GitViews_RepoManagement_Pane_Notification;
-use Tuleap\BotMattermost\Bot\Bot;
 
 class Presenter
 {
