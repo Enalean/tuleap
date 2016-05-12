@@ -31,6 +31,11 @@ Version 8.15 (Not yet released)
 	* docman: 2.26.103
 	* ldap: 3.102
 	* forumml: 2.6.25
+	* referencealias_core: 0.5
+	* referencealias_git: 0.2
+	* referencealias_mediawiki: 0.3
+	* referencealias_svn: 0.2
+	* referencealias_tracker: 0.3
 
     == Themes ==
 	* FlamingParrot: 1.137
