@@ -1,3 +1,6 @@
+Version 2.6.25 - Tuleap 8.15
+    * request #8972: ForumML plugin does not directly use mysql_* API anymore
+
 Version 2.6.24 - Tuleap 8.13
     * request #8911: stop installation if SELinux is in enforcing mode
 
