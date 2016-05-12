@@ -1,0 +1,5 @@
+Reference aliases for mediawiki plugin
+=======================================
+
+This plugin allows to use wikiXXXX references to point to mediawiki pages
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.

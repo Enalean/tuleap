@@ -406,6 +406,51 @@ Requires: tuleap, tuleap-plugin-tracker
 %description plugin-frs
 Add features to the file release system provided by Tuleap
 
+%package plugin-referencealias-core
+Summary: Reference aliases plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_CORE_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap
+%description plugin-referencealias-core
+This plugin allows to have references defined with "pkgXXX" syntax as an alias for Tuleap FRS refrences.
+
+%package plugin-referencealias-git
+Summary: Reference aliases for git plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_GIT_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap, tuleap-plugin-git
+%description plugin-referencealias-git
+This plugin allows to use cmmtXXX as aliases for git references
+
+%package plugin-referencealias-svn
+Summary: Reference aliases for svn plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_SVN_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap, tuleap-plugin-svn
+%description plugin-referencealias-svn
+This plugin allows to use cmmtXXX references as aliases for svn plugin commit references
+
+%package plugin-referencealias-mediawiki
+Summary: Reference aliases for mediawiki plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_MEDIAWIKI_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap, tuleap-plugin-mediawiki
+%description plugin-referencealias-mediawiki
+This plugin allows to use wikiXXXX references to point to mediawiki pages
+
+%package plugin-referencealias-tracker
+Summary: Reference aliases for tracker plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_TRACKER_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap, tuleap-plugin-tracker
+%description plugin-referencealias-tracker
+This plugin allows to import references like "artfXXX" or "trackerYYYY" for the tracker plugin.
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -1150,6 +1195,26 @@ fi
 %files plugin-frs
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/frs
+
+%files plugin-referencealias-core
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/referencealias_core
+
+%files plugin-referencealias-git
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/referencealias_git
+
+%files plugin-referencealias-svn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/referencealias_svn
+
+%files plugin-referencealias-mediawiki
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/referencealias_mediawiki
+
+%files plugin-referencealias-tracker
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/referencealias_tracker
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)

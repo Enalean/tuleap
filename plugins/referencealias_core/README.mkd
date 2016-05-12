@@ -1,0 +1,5 @@
+Reference aliases plugin
+===============
+
+This plugin allows to have references defined with "pkgXXX" syntax as an alias for Tuleap FRS refrences.
+See https://tuleap.net/doc/en/administration-guide/project-export-import.html for more information.
