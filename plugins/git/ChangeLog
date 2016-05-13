@@ -1,3 +1,6 @@
+Version 4.151 - Tuleap 8.15
+    * story #9032: Migrate from Less to Sass
+
 Version 4.150 - Tuleap 8.15
     * request #9135: Deploy some Administrators gerrit access rights during migration
 

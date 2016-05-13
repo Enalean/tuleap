@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 8.15
+    * story #9032: Migrate from Less to Sass
+
 Version 0.8 - Tuleap 8.15
     * story #9087: see linked artifacts in releases (Preload the release)
 

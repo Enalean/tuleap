@@ -18,17 +18,18 @@ Version 8.15 (Not yet released)
 	== Development ==
 	* request #8840: Remove usage of Bless
 	* story #9132: Sass files in Tuleap sources can be built
+	* story #9032: Migrate from Less to Sass
 
 	== Plugins ==
-	* svn: 0.55
-	* frs: 0.8
+	* svn: 0.56
+	* frs: 0.9
 	* archivedeleteditems: 0.7
-	* git: 4.150
-	* tracker: 5.887
+	* git: 4.151
+	* tracker: 5.888
 	* graphontrackersv5: 5.21
-	* agiledashboard: 1.378
+	* agiledashboard: 1.379
 	* IM: 1.5.36
-	* docman: 2.26.103
+	* docman: 2.26.104
 	* ldap: 3.102
 	* forumml: 2.6.25
 	* referencealias_core: 0.5
@@ -36,9 +37,13 @@ Version 8.15 (Not yet released)
 	* referencealias_mediawiki: 0.3
 	* referencealias_svn: 0.2
 	* referencealias_tracker: 0.3
+	* admindelegation: 2.12
+	* openidconnectclient: 0.20
+	* statistics: 0.59
 
     == Themes ==
-	* FlamingParrot: 1.137
+	* FlamingParrot: 1.139
+	* Tuleap: 2.14
 
 Version 8.14 (Thursday, April 28th 2016)
 	== Enhancement ==

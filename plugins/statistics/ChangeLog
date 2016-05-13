@@ -1,3 +1,6 @@
+Version 0.59 - Tuleap 8.15
+    * story #9032: Migrate from Less to Sass
+
 Version 0.58 - Tuleap 8.12
     * request #8309: Get rid of PrototypeJS (autocomplete.js)
 

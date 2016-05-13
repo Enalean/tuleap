@@ -1,3 +1,9 @@
+Version 1.139 - Tuleap 8.15
+    * story #9032: Migrate from Less to Sass
+
+Version 1.138 - Tuleap 8.15
+    * story #9032: Migrate from Less to Sass
+
 Version 1.137 - Tuleap 8.15
     * story #9132 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
 

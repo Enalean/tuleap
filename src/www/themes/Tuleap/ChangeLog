@@ -1,3 +1,6 @@
+Version 2.14 - Tuleap 8.15
+    * story #9032: Migrate from Less to Sass
+
 Version 2.13 - Tuleap 7.1
     * story #6341: see maintenance & preferences pages into a single page
 
