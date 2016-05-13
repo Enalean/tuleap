@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -134,7 +134,7 @@ class Jenkins_Client {
     {
         $push_url = $server_url.'/git/notifyCommit?url=' . urlencode($repository_url);
         $options  = array(
-            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
             CURLOPT_HEADER          => true,
             CURLOPT_URL             => $push_url
