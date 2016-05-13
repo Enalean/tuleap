@@ -57,6 +57,9 @@ exit 0
 
 %post
 /sbin/chkconfig --add %{name}
+touch %{_var}/log/%{name}/%{name}.log
+chmod -R 0640 %{_var}/log/%{name}
+chown -R tuleaprt:tuleaprt %{_var}/log/%{name}
 
 %preun
 if [ $1 = 0 ]; then
@@ -75,7 +78,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc README.md
-%config %{_sysconfdir}/%{name}
+%attr(0750, tuleaprt, tuleaprt) %dir %{_sysconfdir}/%{name}
+%attr(0640, tuleaprt, tuleaprt) %config(noreplace) %{_sysconfdir}/%{name}/config.json
 %{_sysconfdir}/%{name}.conf
 %{_initddir}/%{name}
 %config %ghost %{_var}/log/%{name}/%{name}.log
@@ -84,6 +88,9 @@ rm -rf %{buildroot}
 %{nodejs_sitelib}/%{name}
 
 %changelog
+* Fri May 13 2016 Juliana Leclaire <juliana.leclaire@enalean.com> - 0.0.3-15
+- Change rights on files
+
 * Fri Mar 25 2016 Thomas Gerbet <thomas.gerbet@enalean.com> - 0.0.3-3
 - Add a logrotate configuration
 
