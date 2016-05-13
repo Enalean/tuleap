@@ -115,19 +115,6 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'           => REST_TestDataBuilder::ADMIN_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::ADMIN_ID,
-                    'user_url'     => '/users/admin',
-                    'email'        => REST_TestDataBuilder::ADMIN_EMAIL,
-                    'real_name'    => REST_TestDataBuilder::ADMIN_REAL_NAME,
-                    'display_name' => REST_TestDataBuilder::ADMIN_DISPLAY_NAME,
-                    'username'     => REST_TestDataBuilder::ADMIN_USER_NAME,
-                    'ldap_id'      => null,
-                    'avatar_url'   => '/themes/common/images/avatar_default.png',
-                    'status'       => 'A',
-                    'is_anonymous' => false
-                ),
-                array(
                     'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
                     'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
                     'user_url'     => '/users/rest_api_tester_1',
@@ -255,18 +242,15 @@ class UserGroupTest extends RestBase {
 
         $response_get_json = $response_get->json();
 
-        $this->assertEquals(count($response_get_json), 3);
-        // The project is created by siteadmin user, and PUT does not remove admins
-        $this->assertEquals($response_get_json[0]["id"], 101);
-        $this->assertEquals($response_get_json[1]["id"], 102);
-        $this->assertEquals($response_get_json[2]["id"], 105);
+        $this->assertEquals(count($response_get_json), 2);
+        $this->assertEquals($response_get_json[0]["id"], 102);
+        $this->assertEquals($response_get_json[1]["id"], 105);
 
         $this->restoreProjectMembersToAvoidBreakingOtherTests();
     }
 
     private function restoreProjectMembersToAvoidBreakingOtherTests() {
         $put_resource = json_encode(array(
-            array('id' => REST_TestDataBuilder::ADMIN_ID),
             array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
             array('id' => REST_TestDataBuilder::TEST_USER_2_ID),
             array('id' => REST_TestDataBuilder::TEST_USER_3_ID)

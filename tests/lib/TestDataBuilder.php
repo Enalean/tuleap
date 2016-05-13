@@ -158,9 +158,11 @@ class TestDataBuilder {
         array $project_admins,
         array $services
     ) {
-
-        $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
-        $this->user_manager->setCurrentUser($user);
+        $first_admin = array_shift($project_admins);
+        if (! $first_admin) {
+            $first_admin = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+        }
+        $this->user_manager->setCurrentUser($first_admin);
 
         $project = $this->project_creator->create($project_short_name, $project_long_name, array(
             'project' => array(

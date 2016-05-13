@@ -246,15 +246,24 @@ class ProjectDao extends DataAccessObject {
         $limit        = $this->da->escapeInt($limit);
         $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
 
-        $sql = "SELECT DISTINCT groups.*
-                FROM groups
-                  JOIN user_group USING (group_id)
-                WHERE status = 'A'
-                  AND group_id > 100
-                  AND (access != $private_type
-                    OR user_group.user_id = $user_id)
-                ORDER BY group_id ASC
-                LIMIT $offset, $limit";
+        if ($user->isSuperUser()) {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
+                    FROM groups
+                    WHERE status = 'A'
+                      AND group_id > 100
+                    ORDER BY group_id ASC
+                    LIMIT $offset, $limit";
+        } else {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
+                    FROM groups
+                      JOIN user_group USING (group_id)
+                    WHERE status = 'A'
+                      AND group_id > 100
+                      AND (access != $private_type
+                        OR user_group.user_id = $user_id)
+                    ORDER BY group_id ASC
+                    LIMIT $offset, $limit";
+        }
 
         return $this->retrieve($sql);
     }
@@ -271,21 +280,6 @@ class ProjectDao extends DataAccessObject {
                   AND (access != $private_type
                     OR user_group.user_id = $user_id)
                 ORDER BY group_id ASC";
-
-        return $this->retrieve($sql);
-    }
-
-    public function countMyAndPublicProjectsForREST(PFUser $user) {
-        $user_id      = $this->da->escapeInt($user->getId());
-        $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
-
-        $sql = "SELECT count(DISTINCT group_id) AS 'count_projects'
-                FROM groups
-                  JOIN user_group USING (group_id)
-                WHERE status = 'A'
-                  AND group_id > 100
-                  AND (access != $private_type
-                    OR user_group.user_id = $user_id)";
 
         return $this->retrieve($sql);
     }

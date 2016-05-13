@@ -217,8 +217,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
             self::PROJECT_PRIVATE_SHORTNAME,
             'Private',
             false,
-            array(),
-            array(),
+            array($user_test_rest_3),
+            array($user_test_rest_3),
             array()
         );
         $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
