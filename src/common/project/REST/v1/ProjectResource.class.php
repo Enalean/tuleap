@@ -71,7 +71,9 @@ class ProjectResource extends AuthenticatedResource {
     /**
      * Get projects
      *
-     * Get the projects list
+     * Get the public projects and the projects the current user is member of.
+     *
+     * If current user is site administrator, then returns all active projects.
      *
      * @url GET
      * @access hybrid
@@ -94,14 +96,14 @@ class ProjectResource extends AuthenticatedResource {
 
         $user                    = $this->user_manager->getCurrentUser();
         $project_representations = array();
-        $projects                = $this->getMyAndPublicProjects($user, $offset, $limit);
+        $paginated_projects      = $this->getMyAndPublicProjects($user, $offset, $limit);
 
-        foreach($projects as $project) {
+        foreach($paginated_projects->getProjects() as $project) {
             $project_representations[] = $this->getProjectRepresentation($project);
         }
 
         $this->sendAllowHeadersForProject();
-        $this->sendPaginationHeaders($limit, $offset, $this->countMyAndPublicProjects($user));
+        $this->sendPaginationHeaders($limit, $offset, $paginated_projects->getTotalSize());
 
         return $project_representations;
     }
@@ -118,21 +120,10 @@ class ProjectResource extends AuthenticatedResource {
      * a project but I'm in a static group of this project, this one will not be
      * retrieve)
      *
-     * @return Project[]
+     * @return Tuleap\Project\PaginatedProjects
      */
     private function getMyAndPublicProjects(PFUser $user, $offset, $limit) {
         return $this->project_manager->getMyAndPublicProjectsForREST($user, $offset, $limit);
-    }
-
-    /**
-     * Count projects which I am member of, public projects (if I'm not a member of
-     * a project but I'm in a static group of this project, this one will not be
-     * retrieve)
-     *
-     * @return int
-     */
-    private function countMyAndPublicProjects(PFUser $user) {
-        return $this->project_manager->countMyAndPublicProjectsForREST($user);
     }
 
     /**

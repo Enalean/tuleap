@@ -142,6 +142,30 @@ class ProjectTest extends RestBase {
         $this->assertEquals($json_project['shortname'], REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
     }
 
+    public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf() {
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'));
+        $admin_projects = $response->json();
+
+        foreach ($admin_projects as $project) {
+            if ($project['id'] !== REST_TestDataBuilder::PROJECT_PRIVATE_ID) {
+                continue;
+            }
+
+            $project_members_uri = 'user_groups/'. REST_TestDataBuilder::PROJECT_PRIVATE_ID .'_3/users';
+            $project_members = $this
+                ->getResponseByName(
+                    REST_TestDataBuilder::ADMIN_USER_NAME,
+                    $this->client->get($project_members_uri)
+                )->json();
+            foreach ($project_members as $member) {
+                $this->assertNotEquals('admin', $member['username']);
+            }
+            return;
+        }
+
+        $this->fail('Admin should be able to get private projects even if she is not member of');
+    }
+
     public function testGETbyIdForAdmin() {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
