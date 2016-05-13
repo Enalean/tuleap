@@ -1,0 +1,140 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Originally written by Mohamed CHAARI, 2007
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
+/* {{{ ForumML */
+th.forumml {
+    background-color: #cdcdc1;
+    text-align: left;
+    font-size: medium;
+}
+
+.subject {
+    font-size: small;
+}
+
+.info {
+    font-size: small;
+}
+
+blockquote.grep {
+    color: #848696;
+    margin: 0;
+    margin-left: 1em;
+    padding: 0;
+    border: 0;
+}
+
+font.headerlabel {
+    color: #83731a;
+}
+
+font.headerlabelalt {
+    color: #8a604a
+}
+
+.plugin_forumml_message {
+    border: 2px solid #cdcdc1;
+    margin-bottom: 1em;
+}
+
+.plugin_forumml_message_header {
+    color: #999;
+}
+
+.plugin_forumml_message_header_subject {
+    float: right;
+    padding-right: 1em;
+}
+
+.plugin_forumml_message_header_cc,
+.plugin_forumml_message_header_attachments {
+    padding-left: 20px;
+}
+
+.plugin_forumml_message_header_from {
+    white-space: nowrap;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #666;
+}
+
+.plugin_forumml_toggle_font {
+    font-size: x-small;
+}
+
+.plugin_forumml_message_content_pre {
+    padding: 0.5em;
+    font-family: "Courier New", courier, monospace;
+}
+
+.plugin_forumml_message_content_std {
+    padding: 0.5em;
+}
+
+.plugin_forumml_message_footer {
+    border-top: 1px solid #cdcdc1;
+}
+
+.plugin_forumml_message_reply {
+    padding-left: 1em;
+}
+
+.plugin_forumml_message_content_std blockquote, .plugin_forumml_message_content_pre blockquote {
+    border-left: 1px solid blue;
+    padding-left: 1em;
+    margin-left: 0.5em;
+}
+
+.plugin_forumml_message_content_std blockquote blockquote {
+    border-color: red;
+}
+
+.plugin_forumml_message_content_std blockquote blockquote blockquote {
+    border-color: green;
+}
+
+.plugin_forumml_message_content_std blockquote blockquote blockquote blockquote {
+    border-color: darkorange;
+}
+
+.plugin_forumml_message_content_std blockquote blockquote blockquote blockquote blockquote {
+    border-color: #8A2BE2;
+}
+
+.plugin_forumml_message_content_pre blockquote blockquote {
+    border-color: red;
+}
+
+.plugin_forumml_message_content_pre blockquote blockquote blockquote {
+    border-color: green;
+}
+
+.plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote {
+    border-color: darkorange;
+}
+
+.plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote blockquote {
+    border-color: #8A2BE2;
+}
+
+/* }}} */

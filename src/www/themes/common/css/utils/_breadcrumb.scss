@@ -1,0 +1,21 @@
+.breadcrumb {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+    min-height: 40px;
+}
+
+.breadcrumb select {
+    vertical-align: middle;
+}
+
+.breadcrumb li {
+    margin: 0;
+    display: inline;
+}
+
+.breadcrumb-sep {
+    padding-left: 8px;
+    padding-right: 8px;
+}

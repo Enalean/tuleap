@@ -63,7 +63,7 @@ SPEC_FILE=tuleap.spec
 CUSTOM_SPEC_FILE=codendi-customization.spec
 endif
 
-.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball less sass node srpms dist
+.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball sass node srpms dist
 
 .PRECIOUS: $(RPM_TMP) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
@@ -98,9 +98,6 @@ $(RPM_TMP):
 
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
-less:
-	$(MAKE) -C $(BASE_DIR) less
-
 sass:
 	$(MAKE) -C $(BASE_DIR) sass
 
@@ -118,7 +115,7 @@ node:
 		bower install --allow-root --config.interactive=false &&\
 		npm run build
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less sass
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep sass
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \

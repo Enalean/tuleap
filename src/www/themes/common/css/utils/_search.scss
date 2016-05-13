@@ -1,0 +1,366 @@
+$accordion-width: 200px;
+
+body.search-page .content {
+    padding: 0px;
+}
+
+body.search-page {
+    .navbar-search, .header_searchbox {
+        display: none;
+    }
+}
+
+.search-bar {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #DDDDDD;
+
+    form {
+        margin: 0;
+
+        .input-append {
+            margin: 0;
+
+            input {
+                font-size: 18px;
+                padding: 10px;
+            }
+
+            .btn {
+                font-size: 18px;
+                padding: 10px 30px;
+            }
+        }
+    }
+}
+
+.additional-search-tabs {
+    width: 100%;
+    margin: 0;
+
+    li {
+        float: left;
+        width: 50%;
+        list-style-type: none;
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 1.2em;
+        letter-spacing: 0.1em;
+
+        > a {
+            display: block;
+            padding: 15px 0;
+            transition: all 0.1s linear;
+            border-left: 1px solid #DDDDDD;
+            box-shadow: inset 0 -1px 0 #DDDDDD;
+            color: #777;
+            background: #FFFFFF;
+
+            &:hover {
+                color: #444;
+                text-decoration: none;
+                transition: all 0.1s linear;
+                box-shadow: inset 0 -2px 0 #444;
+            }
+        }
+
+        &:first-child {
+            > a {
+                border-left: none;
+            }
+        }
+
+        &.active {
+            > a {
+                color: #444;
+                text-decoration: none;
+                transition: all 0.1s linear;
+                box-shadow: inset 0 -2px 0 #444;
+            }
+        }
+    }
+}
+
+.search-panes {
+    float: left;
+    margin: 0 30px 50px 0;
+    width: 250px;
+    max-width: 250px;
+    height: 100%;
+    padding: 15px;
+
+    .search-pane {
+        border: 1px solid #e9e9e9;
+        background-color: #FFFFFF;
+        border-radius: 3px;
+        margin: 0 0 20px 0;
+
+        .search-pane-header {
+            padding: 8px 12px 10px;
+            border-bottom: 2px solid #444;
+            color: #444;
+        }
+
+        .search-pane-body {
+            padding: 10px;
+
+            > .search-pane-body-no-types {
+                color: #888;
+                text-align: center;
+                padding: 8px;
+                font-size: 0.8em;
+            }
+
+            ul {
+                margin: 0;
+                padding: 0;
+
+                li {
+                    list-style-type: none;
+                    padding: 0 0 10px;
+
+                    &:last-child {
+                        padding: 0;
+                    }
+
+                    a, span {
+                        color: #0088cc;
+
+                        &.active {
+                            color: darken(#0088cc, 10%);
+                            text-decoration: underline;
+                        }
+
+                        &:hover {
+                            text-decoration: none;
+                            color: #005580;
+                            cursor: pointer;
+                        }
+                    }
+
+                    p {
+                        margin: 0 0 3px;
+                    }
+
+                    select {
+                        width: 100%;
+                    }
+
+                    .select2-container {
+                        display: inline-block;
+                        width: 100%;
+                        max-width: 100%;
+                        box-sizing: border-box;
+
+                        > ul {
+                            margin: 0;
+                            padding: 0;
+                            border: 1px solid #DADADA;
+                            border-radius: 3px;
+
+                            > li {
+                                padding: 3px 5px 3px 18px;
+
+                                &.select2-search-field {
+                                    padding: 0;
+                                }
+                            }
+                        }
+
+                        &.select2-container-active {
+                            ul {
+                                box-shadow: none;
+                                border: 1px solid #AAA;
+                            }
+                        }
+                    }
+
+                    .sub-facets {
+                        font-size: 0.85em;
+                        color: #838383;
+                        font-style: italic;
+
+                        &:hover {
+                            text-decoration: none;
+                            color: #aaaaaa;
+                            cursor: pointer;
+                        }
+                    }
+
+                    ul.sub-facets-list {
+                        padding: 0;
+
+                        li {
+                            padding: 0;
+                            font-size: 0.85em;
+
+                            .checkbox {
+                                font-size: 1em;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.full-text-search {
+                > ul > li {
+                    padding: 0 0 15px;
+
+                    &:last-child {
+                        padding: 0;
+                    }
+
+                    label {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+body > .select2-drop {
+    border: 1px solid #ccc;
+
+    > ul.select2-results {
+        max-height: 500px;
+
+        li {
+            font-size: 0.95em;
+        }
+    }
+}
+
+#search-results {
+    float: left;
+    padding: 15px 0;
+    min-width: 32px;
+    min-height: 32px;
+
+    &.loading {
+        background: url('../images/tuleap-spinner.gif') no-repeat center center;
+    }
+
+    &.no-search-panes {
+        padding-left: 20px;
+    }
+
+    p.results-count {
+        margin: 0 0 20px 0;
+        color: #aaa;
+        font-size: 0.9em;
+        font-style: italic;
+    }
+
+    p.no-result {
+        font-size: 1.2em;
+        padding: 10px 0 0;
+
+        span {
+            font-weight: bold;
+        }
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+
+        li.result {
+            margin: 0 0 20px 0;
+            padding: 0 0 0 20px;
+            position: relative;
+            max-width: 750px;
+
+            &.wiki:before {
+                content: $services-wiki;
+                font-family: 'tuleap-services', 'FontAwesome';
+                left: 0;
+                top: 6px;
+                right: 2px;
+                position: absolute;
+            }
+
+            &:before {
+                content: '\F105';
+                font-family: 'FontAwesome';
+                left: 0;
+                top: 6px;
+                position: absolute;
+            }
+
+            .title {
+                display: block;
+                font-size: 1.6em;
+                line-height: 1.4em;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            .subtitle {
+                color: #888;
+                font-style: italic;
+            }
+
+            .description {
+                margin: 0 0 5px;
+                color: #444;
+                font-size: 0.9em;
+            }
+        }
+
+        @media screen and (max-width: 1150px) {
+            li.result {
+                max-width: 550px;
+            }
+        }
+
+        @media screen and (max-width: 850px) {
+            li.result {
+                max-width: 350px;
+            }
+        }
+
+        li.user {
+            margin: 0 0 30px 0;
+
+            .avatar {
+                float: left;
+                position: relative;
+                top: 1px;
+                margin: 0 10px 0 0;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .realname {
+                font-size: 1.6em;
+                line-height: 1.4em;
+                min-width: 500px;
+
+                &:hover {
+                    text-decoration: none;
+                }
+
+                &.only {
+                    position: relative;
+                    top: 8px;
+                }
+            }
+
+            .username {
+                min-width: 500px;
+                margin: 0 0 5px;
+                color: #444;
+                font-size: 0.9em;
+
+                &.only {
+                    position: relative;
+                    top: 8px;
+                }
+            }
+        }
+    }
+}

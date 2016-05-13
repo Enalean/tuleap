@@ -1,0 +1,125 @@
+.sidebar-nav {
+    background: darken($dark-grey, 3%);
+    background: -moz-linear-gradient(top, lighten($dark-grey, 6%) 0%, $dark-grey 150px);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, lighten($dark-grey, 6%)), color-stop(150px, $dark-grey));
+    background: -webkit-linear-gradient(top, lighten($dark-grey, 6%) 0%, $dark-grey 150px);
+    background: -o-linear-gradient(top, lighten($dark-grey, 6%) 0%, $dark-grey 150px);
+    background: -ms-linear-gradient(top, lighten($dark-grey, 6%) 0%, $dark-grey 150px);
+    background: linear-gradient(to bottom, lighten($dark-grey, 6%) 0%, $dark-grey 150px);
+    font-family: 'SourceSansPro', Arial;
+    position: fixed;
+    height: 100%;
+    width: $sidebar-width;
+    max-width: $sidebar-width;
+    overflow: hidden;
+    padding: 0 0 150px 0;
+    z-index: 1000;
+    @media screen and (max-width: 880px) {
+        padding: $navbar-height 0 150px 0;
+    }
+
+    @media screen and (max-width: 650px) {
+        padding: $navbar-height * 2 0 150px 0;
+    }
+
+    a.project-title {
+        color: $white;
+        text-align: center;
+        font-size: 1.6em;
+        line-height: 1.5em;
+        box-shadow: inset 0 -7px 30px -10px darken($dark-grey, 5%);
+        margin: 0 0 20px 0;
+        padding: 10px 0;
+        display: block;
+
+        &:hover {
+            text-decoration: none;
+            box-shadow: inset 0 -10px 30px -10px darken($dark-grey, 7%);
+        }
+
+        i {
+            font-size: 0.7em;
+            color: $grey;
+            margin-right: 5px;
+        }
+    }
+
+    li > a {
+        color: $grey;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+        padding: 7px 12px 7px 10px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        display: block;
+        width: $sidebar-width;
+        border-left: 3px solid transparent;
+    }
+
+    .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
+        background: none;
+        font-weight: normal;
+        color: lighten($grey, 25%);
+        border-left: 3px solid $main;
+        background: darken($dark-grey, 3%) url('../images/sidebar_active.png') right center no-repeat;
+    }
+
+    .nav > li > a:hover, .nav > li > a:focus {
+        background: none;
+        color: $grey;
+        border-left: 3px solid darken($dark-grey, 3%);
+        background: darken($dark-grey, 3%);
+    }
+
+    i.sidebar-collapse {
+        color: $grey;
+        background: darken($dark-grey, 5%);
+        font-size: 1em;
+        display: block;
+        text-align: center;
+        width: 30px;
+        height: 30px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        margin: 10px auto;
+        border-radius: 50%;
+        padding: 8px 2px 0 0;
+        cursor: pointer;
+
+        &.icon-chevron-right {
+            margin: 10px 8px;
+            padding: 8px 0 0 0;
+        }
+
+        &:hover {
+            color: lighten($grey, 10%);
+            background: darken($dark-grey, 3%);
+        }
+    }
+}
+
+.sidebar-about {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: $sidebar-width;
+    padding: 33px 0 20px 0;
+    height: 25px;
+    background: $dark-grey url('../images/sidebar_tuleap.png') no-repeat center top;
+    text-align: center;
+
+    p {
+        font-size: 0.8em;
+        color: $medium-grey;
+        text-shadow: 0 1px 0 darken($dark-grey, 10%);
+        margin: 0;
+
+        a {
+            color: $grey;
+
+            &:hover {
+                color: lighten($grey, 10%);
+                text-decoration: none;
+            }
+        }
+    }
+}

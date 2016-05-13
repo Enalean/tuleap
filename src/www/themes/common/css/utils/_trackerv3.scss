@@ -1,0 +1,95 @@
+#tracker_toolbar_generic, #tracker_toolbar_specific {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+#tracker_toolbar_generic {
+    float: left;
+}
+
+#tracker_toolbar_specific {
+    float: right;
+}
+
+#tracker_toolbar_clear {
+    clear: both;
+}
+
+#tracker_toolbar_tracker_name {
+    font-size: 1.3em;
+}
+
+/* Disable boostrap fixed size of input area (enforced by tracker config) */
+#artifact_section_details input, textarea {
+    width: auto;
+}
+
+.followup_comment {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.followup_comment_title {
+    float: left;
+}
+
+.followup_comment_title_user {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #999;
+}
+
+.followup_comment_title_edited_user {
+    font-weight: bold;
+    color: #999;
+}
+
+.followup_comment_title_date {
+    font-size: 0.95em;
+    color: #666;
+}
+
+.followup_comment_title_toolbar {
+    text-align: right;
+}
+
+.followup_comment_content {
+    padding: 0.5em 1em 0.5em 3em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid #ccc;
+}
+
+.followup_comment_content blockquote {
+    background-color: ivory;
+    border-left: 2px solid green;
+    padding-left: 0.5em;
+    margin: 0;
+}
+
+.followup_comment_content blockquote blockquote {
+    border-left: 2px solid red;
+}
+
+.followup_comment_content blockquote blockquote blockquote {
+    border-left: 2px solid blue;
+}
+
+.followup_comment_content pre {
+    max-width: 1024px;
+    background: none repeat scroll 0 0 ivory;
+    overflow: auto;
+    border: 1px solid #D2D2D2;
+    padding: 0.5em;
+    margin: 0;
+}
+
+#tv3-mail-reminders {
+    div.tv3-mail-reminder {
+        margin: 0;
+        padding-bottom: 10px;
+    }
+}

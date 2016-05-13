@@ -51,7 +51,7 @@ build_dev_file_to_css() {
     local css_file=$2
 
     echo "Building $sass_file"
-    sass --scss --style expanded --sourcemap=auto "$sass_file":"$css_file"
+    sass --scss --style expanded --sourcemap=file "$sass_file":"$css_file"
 }
 
 build() {

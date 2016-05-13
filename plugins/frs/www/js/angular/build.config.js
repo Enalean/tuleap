@@ -50,7 +50,7 @@ module.exports = {
         atpl: ['src/app/**/*.tpl.html'],
 
         html: ['src/index.html'],
-        less: 'src/less/main.less'
+        scss: 'src/app/main.scss'
     },
 
     /**

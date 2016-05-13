@@ -1,0 +1,236 @@
+ul.backlog-items, ul.backlog-item-children {
+    margin: 0;
+    -moz-user-select: none;
+}
+
+li.backlog-item {
+    list-style-type: none;
+    position: relative;
+
+    > backlog-item {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .show-children {
+        margin: 0 auto;
+        width: 90%;
+        background: #FFFFFF;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+        box-shadow: inset 1px 0 0 #EFEFEF,
+        inset -1px 0 0 #EFEFEF,
+        inset 0 1px 0 rgba(242, 242, 242, 0.50),
+        inset 0 -1px 0 #E3E3E3,
+        0 1px 0 0 rgba(242, 242, 242, 0.50);
+
+        > .children {
+            padding: 10px;
+        }
+
+        > .show-children-handle {
+            border: 1px solid #E3E3E3;
+            border-top: none;
+            height: 8px;
+            cursor: pointer;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+            transition: background-color 0.1s linear;
+            background: #EAEAEA url("grip-open.png") center center no-repeat;
+
+            &.show-children-close {
+                background-image: url("grip-close.png");
+            }
+
+            &:hover {
+                background-color: lighten(#EAEAEA, 3%);
+                transition: background-color 0.1s linear;
+            }
+
+        }
+    }
+
+    @import "backlog-item-details/backlog-item-details";
+
+    &.compact-view {
+        margin: 5px 0;
+
+        .backlog-item-details {
+            span.parent {
+                display: inline;
+                float: right;
+                text-align: right;
+                color: #4DB3D0;
+            }
+
+            ul.extra_card_fields {
+                display: none;
+            }
+
+            &:after {
+                content: ".";
+                visibility: hidden;
+                display: block;
+                height: 0;
+                clear: both;
+            }
+        }
+    }
+
+    &:first-child > backlog-item > .backlog-item-details .moves > .icon-stack:first-child,
+    &:first-child > .backlog-item-details .moves > .icon-stack:first-child,
+    &:last-child > backlog-item > .backlog-item-details .moves > .icon-stack:last-child,
+    &:last-child > .backlog-item-details .moves > .icon-stack:last-child {
+        visibility: hidden;
+    }
+
+    &:only-child .backlog-item-details {
+        .moves {
+            display: none;
+        }
+
+        .initial-effort-placeholder {
+            left: 0;
+        }
+    }
+
+    &.undraggable > backlog-item > .backlog-item-details, &.undraggable > .backlog-item-details {
+        cursor: auto;
+
+        .moves {
+            display: none;
+        }
+
+        .initial-effort-placeholder {
+            left: 0;
+        }
+    }
+
+    &.updating > backlog-item > .backlog-item-details, &.updating > .backlog-item-details {
+        background-image: url('loader-mini.gif');
+        background-repeat: no-repeat;
+        background-position: right 5px bottom 5px;
+    }
+
+    &.selected > backlog-item > .backlog-item-details, &.selected > .backlog-item-details {
+        background-color: #EBF7FF;
+        border-color: #C9E6F9;
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+
+        &.closed {
+            background-color: #EBF7FF;
+        }
+    }
+
+    &.shaking > backlog-item > .backlog-item-details, &.shaking > .backlog-item-details {
+        animation: shake 750ms ease-in-out;
+        border-color: lighten(#DA5353, 33%);
+        background-color: lighten(#DA5353, 37%);
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+    }
+
+    &.gu-transit {
+        opacity: 1;
+        height: 4px;
+        margin: 10px 3px;
+        border-radius: 3px;
+        background: #58B359;
+
+        .show-children, .backlog-item-details {
+            display: none;
+        }
+    }
+
+    &.gu-mirror {
+        opacity: 1;
+    }
+
+    &.gu-mirror.multiple > backlog-item > .backlog-item-details, &.gu-mirror.multiple > .backlog-item-details {
+        &::before, &::after {
+            content: '';
+            position: absolute;
+            visibility: visible;
+            top: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            background: #FDFDFD;
+            border: 1px solid #EFEFEF;
+            border-radius: 3px;
+            box-shadow: inset 5px 0px 0 0px #AAAAAA, 0px 1px 0px 0px rgba(242, 242, 242, 0.5);
+        }
+
+        &::before {
+            animation: stackedFirstCard 100ms ease-in-out forwards;
+        }
+
+        &::after {
+            animation: stackedSecondCard 100ms ease-in-out forwards;
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
+
+ul.backlog-items, ul.backlog-item-children {
+    backlog-item.appending-child {
+        > div.backlog-item-details {
+            border: 1px solid #58B359;
+            box-shadow: inset 0 0 0 1px #58B359;
+            background: rgba(88, 179, 89, 0.12);
+
+            div.type-border {
+                background-color: #58B359;
+            }
+        }
+    }
+}
+
+div.milestones > fieldset.milestone > div.content {
+    ul.backlog-items, ul.backlog-item-children {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+ul.backlog-item-children {
+    span.initial-effort-placeholder {
+        display: none;
+    }
+}
+
+#planning-view.multi-selected-backlog-items li.backlog-item:not(.selected) > backlog-item > .backlog-item-details,
+#planning-view.multi-selected-backlog-items li.backlog-item:not(.selected) > .backlog-item-details {
+    .moves {
+        display: none;
+    }
+
+    .initial-effort-placeholder {
+        left: 0;
+    }
+}
+
+@keyframes stackedFirstCard {
+    0% {
+        left: -8px;
+        transform: rotate(-1deg);
+    }
+    100% {
+        left: -8px;
+        transform: rotate(-2.5deg);
+    }
+}
+
+@keyframes stackedSecondCard {
+    0% {
+        left: 8px;
+        transform: rotate(1deg);
+    }
+    100% {
+        left: 8px;
+        transform: rotate(2.5deg);
+    }
+}

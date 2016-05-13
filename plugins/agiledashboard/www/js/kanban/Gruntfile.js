@@ -117,14 +117,6 @@ module.exports = function(grunt) {
                     expand: true
                 }]
             },
-            build_vendorcss: {
-                files: [{
-                    src: ['<%= vendor_files.css %>'],
-                    dest: '<%= build_dir %>/',
-                    cwd: '.',
-                    expand: true
-                }]
-            },
             build_vendorassets: {
                 files: [{
                     src: ['<%= vendor_files.assets %>'],
@@ -147,6 +139,18 @@ module.exports = function(grunt) {
                     cwd: '.',
                     expand: true
                 }]
+            },
+            css_to_scss: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%=  vendor_dir %>',
+                        src: ['**/*.css'],
+                        dest: '<%=  vendor_dir %>',
+                        filter: 'isFile',
+                        ext: ".scss"
+                    }
+                ]
             }
         },
 
@@ -204,24 +208,23 @@ module.exports = function(grunt) {
             }
         },
 
-        /**
-         * `less` handles our LESS compilation and uglification automatically.
-         * Only our `main.less` file is included in compilation; all other files
-         * must be imported from this file.
-         */
-        less: {
-            build: {
-                src: ['<%= app_files.less %>'],
-                dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
+        sass: {
+            dev: {
+                files: {
+                    '<%= build_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.scss %>'
+                },
                 options: {
-                    compress: false
+                    sourcemap: 'file',
+                    style: 'expanded'
                 }
             },
-            compile: {
-                src: ['<%= less.build.dest %>'],
-                dest: '<%= less.build.dest %>',
+            prod: {
+                files: {
+                    '<%= compile_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.scss %>'
+                },
                 options: {
-                    compress: true
+                    sourcemap: 'none',
+                    style: 'compressed'
                 }
             }
         },
@@ -378,8 +381,7 @@ module.exports = function(grunt) {
              */
             tpls: {
                 files: [
-                    '<%= app_files.atpl %>',
-                    '<%= app_files.ctpl %>'
+                    '<%= app_files.atpl %>'
                 ],
                 tasks: ['nggettext_extract', 'html2js', 'concat']
             },
@@ -387,9 +389,9 @@ module.exports = function(grunt) {
             /**
              * When the CSS files change, we need to compile and minify them.
              */
-            less: {
-                files: ['src/**/*.less'],
-                tasks: ['less:build', 'copy:compile_assets']
+            sass: {
+                files: ['src/**/*.scss'],
+                tasks: ['sass:dev', 'copy:compile_assets']
             },
 
             /**
@@ -456,12 +458,11 @@ module.exports = function(grunt) {
         'clean:build',
         'nggettext_extract',
         'html2js',
-        'less:build',
+        'copy:css_to_scss',
         'copy:build_assets',
         'copy:build_appmodules',
         'copy:build_appjs',
         'copy:build_vendorjs',
-        'copy:build_vendorcss',
         'copy:build_vendorassets'
     ]);
 
@@ -471,7 +472,7 @@ module.exports = function(grunt) {
      */
     grunt.registerTask('compile', [
         'nggettext_compile',
-        'less:compile',
+        'sass:prod',
         'copy:compile_assets',
         'ngAnnotate',
         'concat',
@@ -483,7 +484,7 @@ module.exports = function(grunt) {
      */
     grunt.registerTask('soft-compile', [
         'nggettext_compile',
-        'less:compile',
+        'sass:dev',
         'copy:compile_assets',
         'concat'
     ]);

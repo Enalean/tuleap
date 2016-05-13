@@ -1,0 +1,285 @@
+body.account-maintenance .content {
+    padding: 0px;
+}
+
+h3.account-title {
+    font-size: 1.2em;
+
+    i.help-button {
+        vertical-align: initial;
+    }
+}
+
+#account-maintenance {
+    padding-left: 25px;
+
+    > div {
+        margin-bottom: 35px;
+    }
+
+    h4 {
+        color: #666;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+}
+
+#account-third-party-applications {
+    > div {
+        margin-bottom: 35px;
+    }
+}
+
+.user-personnal-info {
+    float: left;
+    display: table-cell;
+    vertical-align: middle;
+    padding-top: 16px;
+}
+
+.user-real-name {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 10px 10px 0 0;
+    vertical-align: inherit;
+}
+
+.user-username {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: grey;
+    display: block;
+    margin-top: 15px;
+}
+
+#account-shell .ssh-keys-table,
+#account-svn-tokens .svn-tokens-table {
+    width: 100%;
+
+    > tbody > tr > td {
+        &:first-child {
+            width: 20px;
+            text-align: center;
+
+            > input {
+                margin: 0;
+            }
+        }
+
+        &.empty-table {
+            text-align: center;
+            padding: 20px;
+            color: #999999;
+        }
+    }
+}
+
+.svn-generated-token {
+    font-weight: bold;
+}
+
+#svn-tokens-generate-modal {
+    .modal-body {
+        > p {
+            margin: 0 0 20px;
+        }
+
+        > textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+}
+
+.user-info-label {
+    color: grey;
+}
+
+.table-label {
+    text-align: right;
+    padding-right: 10px;
+}
+
+#user-avatar {
+    margin-right: 40px;
+    padding-top: 19px;
+}
+
+.first-user-info {
+    padding-top: 15px;
+}
+
+.user-info-table {
+    margin-top: 30px;
+}
+
+#account-preferences {
+    background-color: #F6F6F6;
+    padding-left: 25px;
+
+    border-left: solid 1px #EBEBEB;
+
+    > h2 {
+        padding-top: 15px;
+    }
+
+    > form {
+        > hr {
+            margin-right: 25px;
+            border-color: #EBEBEB;
+        }
+
+        > fieldset {
+            margin-bottom: 15px;
+
+            > label {
+                margin-bottom: 10px;
+            }
+        }
+
+        select {
+            margin: 0;
+        }
+    }
+}
+
+#account-email-settings {
+    > p {
+        margin: 0;
+    }
+}
+
+.table-content-centered {
+    display: inline;
+    vertical-align: middle;
+}
+
+.button-centered {
+    text-align: center;
+}
+
+.control-label.user-account-label {
+    display: block;
+    text-align: right;
+    color: #9B9B9B;
+}
+
+.control-group.user-account-group {
+    margin: 0;
+}
+
+.form-horizontal.account-form {
+    > fieldset > .control-group {
+
+        > label.control-label {
+            padding-top: 0;
+            width: 170px;
+        }
+
+        > .controls {
+            margin-left: 190px;
+        }
+    }
+}
+
+#user-info-separation {
+    margin-bottom: 30px;
+}
+
+i.help-button {
+    font-size: 1.3em;
+    vertical-align: middle;
+    color: #C2C2C2;
+    text-decoration: none
+}
+
+.select-user-preferences {
+    width: 80%;
+    max-width: 206px;
+}
+
+@-webkit-keyframes bounce-picker {
+    0% {
+        -webkit-transform: scale(0.75);
+    }
+
+    50% {
+        -webkit-transform: scale(1);
+    }
+
+    75% {
+        -webkit-transform: scale(0.9);
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+    }
+}
+
+@keyframes bounce-picker {
+    0% {
+        transform: scale(0.75);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    75% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.theme_picker_container {
+    margin-left: 3px;
+    cursor: pointer;
+    display: inline-block;
+    background: #373737;
+    height: 20px;
+
+    > .theme_variant {
+        display: block;
+        border-left: 20px solid;
+        border-bottom: 20px solid;
+    }
+
+    &.checked {
+        height: 16px;
+        border: 2px solid #0088cd;
+        animation: bounce-picker 400ms ease-out;
+        -webkit-animation: bounce-picker 400ms ease-out;
+
+        > .theme_variant {
+            border-left-width: 16px;
+            border-bottom-width: 16px;
+        }
+
+    }
+}
+
+@import "../../../FlamingParrot/css/utils/picker";
+
+#theme_variant_group {
+    display: none;
+
+    > label {
+        font-size: 0.8em;
+    }
+}
+
+#theme_variant_list {
+    padding-top: 5px;
+}
+
+[data-ssh_key_value] {
+    word-break: break-all;
+    cursor: pointer;
+}
+
+.account-maintenance > .wrapper {
+    min-height: initial;
+}
