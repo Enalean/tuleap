@@ -1,2 +1,2 @@
 plugin_referencealias_git	descriptor_description	Plugin permettant de gérer les références de type "cmmtXXX" comme alias de commit git Tuleap
-plugin_referencealias_git	descriptor_name	Reference aliases for git plugin
+plugin_referencealias_git	descriptor_name	Référence les alias pour le plugin Git

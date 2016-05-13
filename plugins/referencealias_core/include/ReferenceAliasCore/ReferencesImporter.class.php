@@ -69,8 +69,11 @@ class ReferencesImporter
                 continue;
             }
 
-            $this->dao->insertRef($project, $source, $target_on_system);
-            $this->logger->info("Imported original ref '$source' -> $object_type $target_on_system");
+            if (! $this->dao->insertRef($project, $source, $target_on_system)) {
+                $this->logger->error("Could not insert object for $source");
+            } else {
+                $this->logger->info("Imported original ref '$source' -> $object_type $target_on_system");
+            }
         }
     }
 

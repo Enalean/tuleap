@@ -62,8 +62,11 @@ class ReferencesImporter
 
             $repository_id = $repository->getId();
 
-            $this->dao->insertRef($source, $repository_id, $sha1);
-            $this->logger->info("Imported original ref '$source' -> git repo $repository_id, sha1 $sha1.");
+            if (! $this->dao->insertRef($source, $repository_id, $sha1)) {
+                $this->logger->error("Could not insert object for $source");
+            } else {
+                $this->logger->info("Imported original ref '$source' -> git repo $repository_id, sha1 $sha1.");
+            }
         }
     }
 
