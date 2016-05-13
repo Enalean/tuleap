@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,7 +71,8 @@ class ArtifactsResource extends AuthenticatedResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tracker_factory     = TrackerFactory::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
@@ -158,6 +159,41 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendLocationHeader($representation->uri);
 
         return $representation;
+    }
+
+    /**
+     * Get possible natures for an artifact
+     *
+     * @url GET {id}/links
+     * @access hybrid
+     *
+     * @param int $id Id of the artifact
+     *
+     * @return Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation
+     *
+     */
+    public function getArtifactLinkNatures($id)
+    {
+        $this->checkAccess();
+
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+
+        $artifact_link_representation = new ArtifactLinkRepresentation();
+        $artifact_link_representation->build($artifact);
+
+        $this->sendAllowHeadersForLinkNatures();
+        return $artifact_link_representation;
+    }
+
+    /**
+     * @url OPTIONS {id}/links
+     *
+     * @param int $id Id of the artifact
+     */
+    public function optionsArtifactLinkNatures($id)
+    {
+        $this->sendAllowHeadersForLinkNatures();
     }
 
     /**
@@ -406,6 +442,10 @@ class ArtifactsResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeadersForChangesets() {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForLinkNatures() {
         Header::allowOptionsGet();
     }
 
