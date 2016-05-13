@@ -13,7 +13,7 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 Requires: php(language) >= 5.3
-Requires: tuleap, tuleap-plugin-tracker
+Requires: tuleap, tuleap-plugin-git
 
 %description
 Pullrequest management for Tuleap
@@ -33,7 +33,6 @@ find www/themes -name '*.less' | xargs rm -f
 
 # Frontend
 cd www/js/angular
-sed -i -e "s%tuleap_dir: .*%tuleap_dir: '/tuleap',%" build.config.js
 npm install
 bower install
 grunt
@@ -43,17 +42,13 @@ grunt
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-plugins/pullrequest
-%{__cp} -ar include db templates README.mkd VERSION ChangeLog site-content $RPM_BUILD_ROOT/%{_datadir}/tuleap-plugins/pullrequest
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest
+%{__cp} -ar include db templates README.mkd VERSION ChangeLog site-content $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest
 
 # www
-%{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap-plugins/pullrequest/www/js/angular
-%{__cp} -ar www/index.php www/themes $RPM_BUILD_ROOT/%{_datadir}/tuleap-plugins/pullrequest/www
-%{__cp} -ar www/js/angular/bin $RPM_BUILD_ROOT/%{_datadir}/tuleap-plugins/pullrequest/www/js/angular
-
-# conf
-%{__mkdir} -p $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
-%{__cp} pullrequest.conf $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+%{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www/js/angular
+%{__cp} -ar www/index.php www/themes $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www
+%{__cp} -ar www/js/angular/bin $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest/www/js/angular
 
 %pre
 if [ "$1" -eq "1" ]; then
@@ -72,8 +67,7 @@ fi
 #
 %files
 %defattr(-,root,root,-)
-%{_datadir}/tuleap-plugins/pullrequest
-%config %{_sysconfdir}/httpd/conf.d/tuleap-plugins/pullrequest.conf
+%{_datadir}/tuleap/plugins/pullrequest
 
 %changelog
 * Tue Feb 9 2016 Manuel VACELET <manuel.vacelet@enalean.com> -
