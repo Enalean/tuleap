@@ -651,15 +651,18 @@ class ProjectManager {
     }
 
     /**
-     * @param PFUser $user
-     * @param int $offset
-     * @param int $limit
-     * @return Project[]
+     * @return Tuleap\Project\PaginatedProjects
      */
     public function getMyAndPublicProjectsForREST(PFUser $user, $offset, $limit) {
-        return $this->_getDao()
-            ->getMyAndPublicProjectsForREST($user, $offset, $limit)
-            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+        $paginated_projects = $this->_getDao()->getMyAndPublicProjectsForREST($user, $offset, $limit);
+        $total_size         = $this->_getDao()->foundRows();
+
+        $projects = array();
+        foreach ($paginated_projects as $row) {
+            $projects[] = $this->getProjectFromDbRow($row);
+        }
+
+        return new Tuleap\Project\PaginatedProjects($projects, $total_size);
     }
 
     /**
@@ -676,16 +679,6 @@ class ProjectManager {
         }
 
         return $projects;
-    }
-
-    /**
-     * @param PFUser $user
-     * @return int
-     */
-    public function countMyAndPublicProjectsForREST(PFUser $user) {
-        $results = $this->_getDao()->countMyAndPublicProjectsForREST($user)->getRow();
-
-        return $results['count_projects'];
     }
 
     /**
