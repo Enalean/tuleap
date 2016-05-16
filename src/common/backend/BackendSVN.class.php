@@ -118,6 +118,15 @@ class BackendSVN extends Backend {
             return false;
         }
 
+        $params = array(
+            'project_id' => $project_id
+        );
+
+        EventManager::instance()->processEvent(
+            Event::SVN_REPOSITORY_CREATED,
+            $params
+        );
+
         $project=$this->getProjectManager()->getProject($project_id);
 
         if (!$this->updateHooks(

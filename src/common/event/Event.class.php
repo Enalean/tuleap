@@ -1181,4 +1181,13 @@ class Event {
      *  - actions => (output) Tuleap\User\UserActionPresenter[]
      */
     const USER_ACTIONS = "user_actions";
+
+    /**
+     * When an SVN repository is created
+     *
+     * Parameters:
+     *  - project_id => (input) int
+     *
+     */
+    const SVN_REPOSITORY_CREATED = 'svn_repository_created';
 }

@@ -94,6 +94,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('javascript_file');
 
         $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(Event::SVN_REPOSITORY_CREATED);
     }
 
     public function getPluginInfo() {
@@ -391,5 +392,20 @@ class SvnPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    public function svn_repository_created($params)
+    {
+        $backend           = Backend::instance();
+        $svn_plugin_folder = ForgeConfig::get('sys_data_dir') .'/svn_plugin/';
+        $project_id        = $params['project_id'];
+
+        $backend->chown($svn_plugin_folder, $backend->getHTTPUser());
+        $backend->chgrp($svn_plugin_folder, $backend->getHTTPUser());
+
+        $svn_project_folder = $svn_plugin_folder . $project_id;
+
+        $backend->chown($svn_project_folder, $backend->getHTTPUser());
+        $backend->chgrp($svn_project_folder, $backend->getHTTPUser());
     }
 }
