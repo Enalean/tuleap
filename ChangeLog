@@ -1,3 +1,9 @@
+Version 8.14-3 (Monday, May 16th)
+	== Bug Fix ==
+	* request #9140: Links with target set to _blank does not expose window.opener object anymore
+	* request #9138: Persistent XSS via a tracker field label
+	* request #9134: Confirm message to switch type of a select box contains a spelling mistake
+
 Version 8.14-2 (Monday, May 9th)
 	== Bug Fix ==
 	* request #9017: Tracker bargraph not working any more
