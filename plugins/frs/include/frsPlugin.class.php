@@ -154,7 +154,7 @@ class frsPlugin extends \Plugin
 
         $renderer       = $this->getTemplateRenderer();
         $representation = new ReleaseRepresentation();
-        $representation->build($release);
+        $representation->build($release, $this->getLinkRetriever(), $user);
         $presenter = new ReleasePresenter(
             $representation,
             $user->getShortLocale()

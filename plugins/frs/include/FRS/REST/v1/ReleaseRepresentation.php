@@ -22,7 +22,12 @@ namespace Tuleap\FRS\REST\v1;
 
 use Tuleap\REST\JsonCast;
 use FRSRelease;
+use PFUser;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\FRS\Link\Retriever;
+use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use Tracker_FormElementFactory;
+use Tracker_ArtifactFactory;
 
 class ReleaseRepresentation
 {
@@ -68,7 +73,12 @@ class ReleaseRepresentation
      */
     public $project;
 
-    public function build(FRSRelease $release)
+    /**
+     * @var Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     */
+    public $artifact;
+
+    public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
         $this->uri          = self::ROUTE ."/". urlencode($release->getReleaseID());
@@ -79,6 +89,8 @@ class ReleaseRepresentation
             "id"   =>$release->getPackage()->getPackageID(),
             "name" => $release->getPackage()->getName()
         );
+
+        $this->artifact  = $this->getArtifactRepresentation($release, $link_retriever, $user);
         $this->resources = array(
             "artifacts" => array(
                 "uri" => $this->uri ."/artifacts"
@@ -93,5 +105,27 @@ class ReleaseRepresentation
             $this->files[] = $file_representation;
         }
 
+    }
+
+    private function getArtifactRepresentation(FRSRelease $release, Retriever $link_retriever, PFUser $user)
+    {
+        $artifact_id = $link_retriever->getLinkedArtifactId($release->getReleaseID());
+
+        if (! $artifact_id) {
+            return null;
+        }
+
+        $tracker_artifact_builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            Tracker_FormElementFactory::instance()
+        );
+
+        $tracker_factory = Tracker_ArtifactFactory::instance();
+        $artifact        = $tracker_factory->getArtifactByIdUserCanView($user, $artifact_id);
+
+        if (! $artifact) {
+            return null;
+        }
+
+        return $tracker_artifact_builder->getArtifactRepresentation($artifact);
     }
 }

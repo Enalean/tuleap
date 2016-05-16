@@ -26,15 +26,19 @@ use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use UserManager;
 use FRSPackageFactory;
+use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\Link\Dao;
 
 class ReleaseResource extends AuthenticatedResource
 {
     private $frs_release_factory;
+    private $retriever;
 
     public function __construct()
     {
         parent::__construct();
         $this->frs_release_factory = FRSReleaseFactory::instance();
+        $this->retriever           = new Retriever(new Dao());
     }
     /**
      * Get FRS release
@@ -63,11 +67,11 @@ class ReleaseResource extends AuthenticatedResource
         }
 
         if ($package->isActive()) {
-            $release_representation->build($release);
+            $release_representation->build($release, $this->retriever, $user);
         } else if ($package->isHidden()
             && FRSPackageFactory::userCanAdmin($user, $package->getGroupID())
         ) {
-            $release_representation->build($release);
+            $release_representation->build($release, $this->retriever, $user);
         } else {
             throw new RestException(403, "Access to package denied");
         }
