@@ -24,6 +24,7 @@ use Logger;
 use GitRepository;
 use Jenkins_Client;
 use Exception;
+use Tuleap\HudsonGit\Job\CannotCreateJobException;
 use Tuleap\HudsonGit\Job\Job;
 use Tuleap\HudsonGit\Job\JobManager;
 
