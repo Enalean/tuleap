@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 8.15
+    * story #9087 : see linked artifacts in releases (Add artifact representation into frs_release/{:id})
+
 Version 0.9 - Tuleap 8.15
     * story #9032: Migrate from Less to Sass
 
