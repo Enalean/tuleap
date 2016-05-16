@@ -3,3 +3,5 @@ npm-debug.log
 .env
 .DS_Store
 *.css
+.sass-cache/
+node_modules/

@@ -1,4 +1,4 @@
-@import "comments/comments.less";
+@import "comments/comments";
 
 #overview {
     .pull-request-author .avatar {
@@ -11,7 +11,7 @@
         width: 100%;
         padding: 20px 0;
         box-sizing: border-box;
-        background: rgba(255,255,255,0.95);
+        background: rgba(255, 255, 255, 0.95);
         text-align: center;
 
         > .btn {
@@ -23,6 +23,7 @@
 body.sidebar-collapsed #overview #pull-request-actions {
     padding-left: 45px;
 }
+
 body.sidebar-expanded #overview #pull-request-actions {
     padding-left: 200px;
 }

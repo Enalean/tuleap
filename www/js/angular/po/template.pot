@@ -74,11 +74,11 @@ msgid "No comment"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
-msgid "Oh snap!"
+msgid "OK"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
-msgid "OK"
+msgid "Oh snap!"
 msgstr ""
 
 #: src/app/pull-request/pull-request.tpl.html

@@ -2,7 +2,7 @@
   "author": "Enalean Team",
   "name": "tuleap-pullrequest",
   "version": "0.0.1",
-  "homepage": "http://www.enalean.com",
+  "homepage": "https://www.enalean.com",
   "licenses": {
     "type": "GNU General Public License v2"
   },
@@ -17,7 +17,7 @@
     "grunt-contrib-concat": "^1.0.0",
     "grunt-contrib-connect": "1.0.0",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-less": "^1.2.0",
+    "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^18.0.0",

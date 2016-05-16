@@ -27,9 +27,15 @@
                     margin: 0 3px 0 0;
                     text-align: center;
 
-                    &.badge-A { background: #58B359; }
-                    &.badge-M { background: #F5B849; }
-                    &.badge-D { background: #DA5353; }
+                    &.badge-A {
+                        background: #58B359;
+                    }
+                    &.badge-M {
+                        background: #F5B849;
+                    }
+                    &.badge-D {
+                        background: #DA5353;
+                    }
                 }
 
                 a {

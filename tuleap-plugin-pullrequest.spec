@@ -29,7 +29,7 @@ Pullrequest management for Tuleap
 # Backend
 npm install
 grunt
-find www/themes -name '*.less' | xargs rm -f
+find www/themes -name '*.scss' | xargs rm -f
 
 # Frontend
 cd www/js/angular
