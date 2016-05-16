@@ -8,3 +8,4 @@ www/scripts/angular/vendor/
 *.mo
 node_modules/
 /nbproject/
+.sass-cache/

@@ -7,7 +7,7 @@ Release: @@RELEASE@@%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://tuleap.net
+URL: https://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@enalean.com>
@@ -33,9 +33,9 @@ Test and tracability plugin
 #
 # Build
 %build
-scl enable nodejs010 "npm install"
-scl enable nodejs010 "grunt"
-find www/themes -name '*.less' | xargs rm -f
+npm install
+grunt
+find www/themes -name '*.scss' | xargs rm -f
 
 #
 # Install

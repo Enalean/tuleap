@@ -83,5 +83,5 @@ $(RPM_TMP):
 docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
-	su --login --command "make -C /app all RELEASE=$(RELEASE)" build
+	su --login --command "make -C /tuleap/plugins/trafficlights all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output

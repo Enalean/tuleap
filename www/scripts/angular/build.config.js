@@ -10,6 +10,7 @@ module.exports = {
      */
     build_dir  : 'build',
     compile_dir: 'bin',
+    vendor_dir: 'vendor',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -45,10 +46,9 @@ module.exports = {
         jsunit: ['src/**/*.spec.js'],
 
         atpl: ['src/app/**/*.tpl.html'],
-        ctpl: ['src/common/**/*.tpl.html'],
 
         html: ['src/index.html'],
-        less: 'src/less/main.less'
+        scss: 'src/app/main.scss'
     },
 
     /**

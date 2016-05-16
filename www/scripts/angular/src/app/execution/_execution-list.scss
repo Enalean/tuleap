@@ -1,4 +1,4 @@
-@import "colors.less";
+@import "colors";
 
 #execution-utils {
     height: 10%;
@@ -24,7 +24,6 @@
         flex: 1;
     }
 
-
     #execution-utils-progress-bar {
         flex: 1 1 auto;
         max-width: 50%;
@@ -41,15 +40,15 @@
                 box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 
                 &.sense-of-progress-failed {
-                    background: linear-gradient(to bottom, lighten(@failed, 5%), @failed);
+                    background: linear-gradient(to bottom, lighten($failed, 5%), $failed);
                 }
 
                 &.sense-of-progress-blocked {
-                    background: linear-gradient(to bottom, lighten(@blocked, 5%), @blocked);
+                    background: linear-gradient(to bottom, lighten($blocked, 5%), $blocked);
                 }
 
                 &.sense-of-progress-passed {
-                    background: linear-gradient(to bottom, lighten(@passed, 5%), @passed);
+                    background: linear-gradient(to bottom, lighten($passed, 5%), $passed);
                 }
 
                 &.sense-of-progress-notrun {
@@ -88,7 +87,7 @@
         #execution-filter {
             flex: 0 1 auto;
             padding: 15px 12px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
             z-index: 2;
             background: #FCFCFC;
 
@@ -209,8 +208,8 @@
                 }
 
                 &.passed {
-                    border-left: 8px solid @passed;
-                    color: @passed;
+                    border-left: 8px solid $passed;
+                    color: $passed;
 
                     & > .execution-item-content {
                         background: url('status-passed-color.png') no-repeat right 10px center;
@@ -218,8 +217,8 @@
                 }
 
                 &.failed {
-                    border-left: 8px solid @failed;
-                    color: @failed;
+                    border-left: 8px solid $failed;
+                    color: $failed;
 
                     & > .execution-item-content {
                         background: url('status-failed-color.png') no-repeat right 10px center;
@@ -227,8 +226,8 @@
                 }
 
                 &.blocked {
-                    border-left: 8px solid @blocked;
-                    color: @blocked;
+                    border-left: 8px solid $blocked;
+                    color: $blocked;
 
                     & > .execution-item-content {
                         background: url('status-blocked-color.png') no-repeat right 10px center;

@@ -28,10 +28,6 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
 msgstr ""
@@ -175,4 +171,8 @@ msgstr ""
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom out"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
 msgstr ""

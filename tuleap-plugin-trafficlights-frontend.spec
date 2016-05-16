@@ -7,7 +7,7 @@ Release: @@RELEASE@@%{?dist}
 BuildArch: noarch
 License: Enalean
 Group: Development/Tools
-URL: http://tuleap.net
+URL: https://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@enalean.com>
@@ -30,9 +30,9 @@ Test and tracability plugin
 %build
 cd www/scripts/angular
 sed -i -e "s%tuleap_dir: .*%tuleap_dir: '/tuleap',%" build.config.js
-scl enable nodejs010 "npm install"
-scl enable nodejs010 "bower install --allow-root --config.interactive=false"
-scl enable nodejs010 "grunt"
+npm install
+bower install --allow-root --config.interactive=false
+grunt
 
 #
 # Install

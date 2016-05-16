@@ -1,9 +1,9 @@
-FROM centos:6
+FROM centos:7
 
-RUN yum install -y scl-utils rpm-build centos-release-SCL tar git fontconfig && \
-    yum install -y nodejs010-nodejs nodejs010-npm && \
-    scl enable nodejs010 "npm install -g grunt-cli bower less recess bless"
+RUN yum install -y rpm-build epel-release tar git fontconfig make && \
+    yum install -y nodejs npm rubygem-sass && \
+    npm install -g grunt-cli bower
 
-WORKDIR /app
-VOLUME ["/app"]
+WORKDIR /tuleap/plugins/trafficlights
+VOLUME ["/tuleap/plugins/trafficlights"]
 CMD make docker-run

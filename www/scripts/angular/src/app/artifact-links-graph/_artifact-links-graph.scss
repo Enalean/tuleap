@@ -1,3 +1,5 @@
+@import "../../../../../../../../src/www/themes/common/css/utils/colors";
+
 .modal .modal-body {
     max-height: 70vh;
     height: 70vh;
@@ -25,52 +27,52 @@ circle {
     }
 
     &.inca_silver {
-        stroke: darken(@inca_silver, 20%);
+        stroke: darken($inca_silver, 20%);
     }
     &.chrome_silver {
-        stroke: darken(@chrome_silver, 20%);
+        stroke: darken($chrome_silver, 20%);
     }
     &.fiesta_red {
-        stroke: darken(@fiesta_red, 20%);
+        stroke: darken($fiesta_red, 20%);
     }
     &.teddy_brown {
-        stroke: darken(@teddy_brown, 20%);
+        stroke: darken($teddy_brown, 20%);
     }
     &.clockwork_orange {
-        stroke: darken(@clockwork_orange, 20%);
+        stroke: darken($clockwork_orange, 20%);
     }
     &.red_wine {
-        stroke: darken(@red_wine, 20%);
+        stroke: darken($red_wine, 20%);
     }
     &.acid_green {
-        stroke: darken(@acid_green, 20%);
+        stroke: darken($acid_green, 20%);
     }
     &.army_green {
-        stroke: darken(@army_green, 20%);
+        stroke: darken($army_green, 20%);
     }
     &.sherwood_green {
-        stroke: darken(@sherwood_green, 20%);
+        stroke: darken($sherwood_green, 20%);
     }
     &.ocean_turquoise {
-        stroke: darken(@ocean_turquoise, 20%);
+        stroke: darken($ocean_turquoise, 20%);
     }
     &.daphne_blue {
-        stroke: darken(@daphne_blue, 20%);
+        stroke: darken($daphne_blue, 20%);
     }
     &.lake_placid_blue {
-        stroke: darken(@lake_placid_blue, 20%);
+        stroke: darken($lake_placid_blue, 20%);
     }
     &.deep_blue {
-        stroke: darken(@deep_blue, 20%);
+        stroke: darken($deep_blue, 20%);
     }
     &.plum_crazy {
-        stroke: darken(@plum_crazy, 20%);
+        stroke: darken($plum_crazy, 20%);
     }
     &.peggy_pink {
-        stroke: darken(@peggy_pink, 20%);
+        stroke: darken($peggy_pink, 20%);
     }
     &.flamingo_pink {
-        stroke: darken(@flamingo_pink, 20%);
+        stroke: darken($flamingo_pink, 20%);
     }
 }
 
@@ -118,50 +120,65 @@ text {
 }
 
 .inca_silver {
-    fill: @inca_silver;
+    fill: $inca_silver;
 }
+
 .chrome_silver {
-    fill: @chrome_silver;
+    fill: $chrome_silver;
 }
+
 .fiesta_red {
-    fill: @fiesta_red;
+    fill: $fiesta_red;
 }
+
 .teddy_brown {
-    fill: @teddy_brown;
+    fill: $teddy_brown;
 }
+
 .clockwork_orange {
-    fill: @clockwork_orange;
+    fill: $clockwork_orange;
 }
+
 .red_wine {
-    fill: @red_wine;
+    fill: $red_wine;
 }
+
 .acid_green {
-    fill: @acid_green;
+    fill: $acid_green;
 }
+
 .army_green {
-    fill: @army_green;
+    fill: $army_green;
 }
+
 .sherwood_green {
-    fill: @sherwood_green;
+    fill: $sherwood_green;
 }
+
 .ocean_turquoise {
-    fill: @ocean_turquoise;
+    fill: $ocean_turquoise;
 }
+
 .daphne_blue {
-    fill: @daphne_blue;
+    fill: $daphne_blue;
 }
+
 .lake_placid_blue {
-    fill: @lake_placid_blue;
+    fill: $lake_placid_blue;
 }
+
 .deep_blue {
-    fill: @deep_blue;
+    fill: $deep_blue;
 }
+
 .plum_crazy {
-    fill: @plum_crazy;
+    fill: $plum_crazy;
 }
+
 .peggy_pink {
-    fill: @peggy_pink;
+    fill: $peggy_pink;
 }
+
 .flamingo_pink {
-    fill: @flamingo_pink;
+    fill: $flamingo_pink;
 }
