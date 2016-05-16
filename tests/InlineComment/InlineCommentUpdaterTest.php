@@ -23,8 +23,8 @@ namespace Tuleap\PullRequest\InlineComment;
 use TuleapTestCase;
 use GitRepository;
 use ForgeConfig;
-use Tuleap\PullRequest\FileUniDiff;
-use Tuleap\PullRequest\FileUniDiffBuilder;
+use \Tuleap\PullRequest\FileUniDiff;
+use \Tuleap\PullRequest\UniDiffLine;
 
 require_once 'bootstrap.php';
 
@@ -42,10 +42,10 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'une ligne');
+        $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::REMOVED, 1, 1, null, '');
+        $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
         $targeted_diff = new FileUniDiff();
 
@@ -61,10 +61,10 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::KEPT, 1, 1, 1, 'une ligne');
+        $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::REMOVED, 1, 1, null, '');
+        $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
         $targeted_diff = new FileUniDiff();
 
@@ -80,17 +80,17 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'une ligne');
+        $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'header 1');
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 2, null, 2, 'header 2');
-        $changes_diff->addLine(FileUniDiffBuilder::KEPT , 3, 1   , 3, 'une ligne');
+        $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
+        $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
+        $changes_diff->addLine(UniDiffLine::KEPT , 3, 1   , 3, 'une ligne');
 
         $targeted_diff = new FileUniDiff();
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'header 1');
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED, 2, null, 2, 'header 2');
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED, 3, null, 3, 'une ligne');
+        $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
+        $targeted_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
+        $targeted_diff->addLine(UniDiffLine::ADDED, 3, null, 3, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
             $comments, $original_diff, $changes_diff, $targeted_diff);
@@ -105,17 +105,17 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::KEPT, 1, 1, 1, 'une ligne');
+        $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'header 1');
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 2, null, 2, 'header 2');
-        $changes_diff->addLine(FileUniDiffBuilder::KEPT , 3, 1   , 3, 'une ligne');
+        $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
+        $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
+        $changes_diff->addLine(UniDiffLine::KEPT , 3, 1   , 3, 'une ligne');
 
         $targeted_diff = new FileUniDiff();
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'header 1');
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED, 2, null, 2, 'header 2');
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED, 3, null, 3, 'une ligne');
+        $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
+        $targeted_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
+        $targeted_diff->addLine(UniDiffLine::ADDED, 3, null, 3, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
             $comments, $original_diff, $changes_diff, $targeted_diff);
@@ -130,13 +130,13 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::REMOVED, 1, 1, null, 'une ligne');
+        $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'une ligne');
+        $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
         $targeted_diff = new FileUniDiff();
-        $targeted_diff->addLine(FileUniDiffBuilder::KEPT, 1, 1, 1, 'une ligne');
+        $targeted_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
             $comments, $original_diff, $changes_diff, $targeted_diff);
@@ -150,14 +150,14 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::REMOVED, 1, 1, null, 'une ligne');
+        $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'header 1');
+        $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
 
         $targeted_diff = new FileUniDiff();
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED,    1, null, 1,    'header 1');
-        $targeted_diff->addLine(FileUniDiffBuilder::REMOVED,  2, 1   , null, 'une ligne');
+        $targeted_diff->addLine(UniDiffLine::ADDED,    1, null, 1,    'header 1');
+        $targeted_diff->addLine(UniDiffLine::REMOVED,  2, 1   , null, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
             $comments, $original_diff, $changes_diff, $targeted_diff);
@@ -176,10 +176,10 @@ class OnRebase extends InlineCommentUpdaterTest
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::KEPT, 1, 1, 1, 'une ligne');
+        $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::REMOVED, 1, 1, null, '');
+        $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
         $targeted_diff = new FileUniDiff();
 
@@ -196,19 +196,19 @@ class OnRebase extends InlineCommentUpdaterTest
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
         $original_diff = new FileUniDiff();
-        $original_diff->addLine(FileUniDiffBuilder::KEPT, 1, 1, 1, 'une ligne');
-        $original_diff->addLine(FileUniDiffBuilder::ADDED, 2, NULL, 2, 'chose');
+        $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
+        $original_diff->addLine(UniDiffLine::ADDED, 2, NULL, 2, 'chose');
 
         $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 1, null, 1, 'header 1');
-        $changes_diff->addLine(FileUniDiffBuilder::ADDED, 2, null, 2, 'header 2');
-        $changes_diff->addLine(FileUniDiffBuilder::KEPT , 3, 1   , 3, 'une ligne');
+        $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
+        $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
+        $changes_diff->addLine(UniDiffLine::KEPT , 3, 1   , 3, 'une ligne');
 
         $targeted_diff = new FileUniDiff();
-        $targeted_diff->addLine(FileUniDiffBuilder::KEPT  , 1, 1   , 1, 'header 1');
-        $targeted_diff->addLine(FileUniDiffBuilder::KEPT  , 2, 2   , 2, 'header 2');
-        $targeted_diff->addLine(FileUniDiffBuilder::KEPT  , 3, 3   , 3, 'une ligne');
-        $targeted_diff->addLine(FileUniDiffBuilder::ADDED , 4, NULL, 4, 'chose');
+        $targeted_diff->addLine(UniDiffLine::KEPT  , 1, 1   , 1, 'header 1');
+        $targeted_diff->addLine(UniDiffLine::KEPT  , 2, 2   , 2, 'header 2');
+        $targeted_diff->addLine(UniDiffLine::KEPT  , 3, 3   , 3, 'une ligne');
+        $targeted_diff->addLine(UniDiffLine::ADDED , 4, NULL, 4, 'chose');
 
         $updated_comments = $this->updater->updateOnRebase(
             $comments, $original_diff, $changes_diff, $targeted_diff);

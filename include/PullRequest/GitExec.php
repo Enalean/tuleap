@@ -142,6 +142,17 @@ class GitExec extends Git_Exec
         return $output;
     }
 
+    public function unidiff($file_path, $old_rev, $new_rev)
+    {
+        $file_path = escapeshellarg($file_path);
+        $old_rev   = escapeshellarg($old_rev);
+        $new_rev   = escapeshellarg($new_rev);
+        $cmd       = "diff -U9999999 $old_rev $new_rev -- $file_path";
+
+        $this->gitCmdWithOutput($cmd, $output);
+        return $output;
+    }
+
     private function parseDiffNumStatOutput($output) {
         $lines_added   = 0;
         $lines_removed = 0;

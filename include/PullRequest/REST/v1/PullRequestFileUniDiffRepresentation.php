@@ -35,7 +35,7 @@ class PullRequestFileUniDiffRepresentation
 
     public function __construct()
     {
-        $lines = array();
+        $this->lines = array();
     }
 
     public function addLine(PullRequestLineUniDiffRepresentation $line)

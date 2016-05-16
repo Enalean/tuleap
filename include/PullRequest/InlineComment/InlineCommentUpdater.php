@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\InlineComment;
 
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
+use Tuleap\PullRequest\UniDiffLine;
 
 class InlineCommentUpdater
 {
@@ -42,17 +43,17 @@ class InlineCommentUpdater
 
         foreach ($comments as $comment) {
             $original_line = $original_diff->getLine($comment->getUniDiffOffset());
-            if ($original_line->getType() == FileUnidiffBuilder::ADDED || $original_line->getType() == FileUnidiffBuilder::KEPT) {
+            if ($original_line->getType() == UniDiffLine::ADDED || $original_line->getType() == UniDiffLine::KEPT) {
                 $changes_line = $changes_diff->getLineFromOldOffset($original_line->getNewOffset());
-                if ($changes_line->getType() == FileUnidiffBuilder::REMOVED) {
+                if ($changes_line->getType() == UniDiffLine::REMOVED) {
                     $comment->markAsOutdated();
                 } else {
                     $new_unidiff_offset = $targeted_diff->getLineFromNewOffset($changes_line->getNewOffset())->getUnidiffOffset();
                     $comment->setUnidiffOffset($new_unidiff_offset);
                 }
-            } else if ($original_line->getType() == FileUnidiffBuilder::REMOVED) {
+            } else if ($original_line->getType() == UnidiffLine::REMOVED) {
                 $targeted_line = $targeted_diff->getLineFromOldOffset($original_line->getOldOffset());
-                if ($targeted_line->getType() == FileUnidiffBuilder::REMOVED) {
+                if ($targeted_line->getType() == UnidiffLine::REMOVED) {
                     $new_unidiff_offset = $targeted_line->getUnidiffOffset();
                     $comment->setUnidiffOffset($new_unidiff_offset);
                 } else {
@@ -81,9 +82,9 @@ class InlineCommentUpdater
 
         foreach ($comments as $comment) {
             $original_line = $original_diff->getLine($comment->getUniDiffOffset());
-            if ($original_line->getType() == FileUnidiffBuilder::KEPT) {
+            if ($original_line->getType() == UniDiffLine::KEPT) {
                 $changes_line = $changes_diff->getLineFromOldOffset($original_line->getOldOffset());
-                if ($changes_line->getType() == FileUnidiffBuilder::REMOVED) {
+                if ($changes_line->getType() == UniDiffLine::REMOVED) {
                     $comment->markAsOutdated();
                 } else {
                     $new_unidiff_offset = $targeted_diff->getLineFromOldOffset($changes_line->getNewOffset())->getUnidiffOffset();

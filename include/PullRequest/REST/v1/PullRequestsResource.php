@@ -244,7 +244,8 @@ class PullRequestsResource extends AuthenticatedResource
         }
 
         $unidiff_builder = new FileUniDiffBuilder();
-        $diff            = $unidiff_builder->buildFileUniDiff($dest_content, $src_content);
+        $executor        = $this->getExecutor($git_repository);
+        $diff            = $unidiff_builder->buildFileUniDiff($executor, $path, $pull_request->getSha1Dest(), $pull_request->getSha1Src());
 
         $inline_comment_builder = new PullRequestInlineCommentRepresentationBuilder(
             new \Tuleap\PullRequest\InlineComment\Dao(),

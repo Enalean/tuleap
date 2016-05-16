@@ -20,62 +20,64 @@
 
 namespace Tuleap\PullRequest;
 
-use \diff_match_patch;
-
-include PULLREQUEST_BASE_DIR . '/include/diff_match_patch/diff_match_patch.php';
-
 class FileUniDiffBuilder
 {
-    const REMOVED = -1;
-    const KEPT    =  0;
-    const ADDED   =  1;
+    private $REMOVED = '-';
+    private $KEPT    = ' ';
+    private $ADDED   = '+';
 
-    public function buildFileUniDiff($old_content, $new_content)
+    public function buildFileUniDiff(GitExec $git_exec, $file_path, $old_rev, $new_rev)
     {
-        $raw_diff       = $this->getRawDiffFromDiffMatchPatch($old_content, $new_content);
-        $diff           = new FileUniDiff();
+        $raw_diff = $git_exec->unidiff($file_path, $old_rev, $new_rev);
+        $diff     = new FileUniDiff();
+
         $old_offset     = 0;
         $new_offset     = 0;
         $unidiff_offset = 0;
 
-        foreach ($raw_diff as $tuple) {
-            $lines = explode(PHP_EOL, $tuple[1]);
-            $this->removeLastEmpty($lines);
+        $i = $this->getUniDiffStartLineIndex($raw_diff);
+        $raw_diff_count = count($raw_diff);
+        while ($i < $raw_diff_count) {
+            $line = $raw_diff[$i];
+            $i   += 1;
 
-            $type = $tuple[0];
-            foreach ($lines as $line) {
-                $unidiff_offset += 1;
-                if ($type == self::REMOVED) {
-                    $old_offset += 1;
-                    $diff->addLine($type, $unidiff_offset, $old_offset, null, $line);
-                } else if($type == self::KEPT) {
-                    $new_offset += 1;
-                    $old_offset += 1;
-                    $diff->addLine($type, $unidiff_offset, $old_offset, $new_offset, $line);
-                } else if($type == self::ADDED) {
-                    $new_offset += 1;
-                    $diff->addLine($type, $unidiff_offset, null, $new_offset, $line);
-                }
+            if (strlen($line) == 0) {
+                continue;
+            }
+
+            $type = $line[0];
+            $line = substr($line, 1);
+            if ($line == false) {
+                $line = '';
+            }
+
+            $unidiff_offset += 1;
+            if ($type == $this->REMOVED) {
+                $old_offset += 1;
+                $diff->addLine(UniDiffLine::REMOVED, $unidiff_offset, $old_offset, null, $line);
+            } else if($type == $this->KEPT) {
+                $new_offset += 1;
+                $old_offset += 1;
+                $diff->addLine(UniDiffLine::KEPT, $unidiff_offset, $old_offset, $new_offset, $line);
+            } else if($type == $this->ADDED) {
+                $new_offset += 1;
+                $diff->addLine(UniDiffLine::ADDED, $unidiff_offset, null, $new_offset, $line);
             }
         }
         return $diff;
     }
 
-    private function getRawDiffFromDiffMatchPatch($old_content, $new_content)
+    private function getUniDiffStartLineIndex($raw_diff)
     {
-        $differ   = new diff_match_patch();
-        $lines    = $differ->diff_linesToChars($old_content, $new_content);
-        $raw_diff = $differ->diff_main($lines[0], $lines[1]);
-
-        $differ->diff_charsToLines($raw_diff, $lines[2]);
-        return $raw_diff;
-    }
-
-    private function removeLastEmpty(array &$array)
-    {
-        $last = array_pop($array);
-        if (! empty($last)) {
-          $array[] = $last;
+        $i = 0;
+        $raw_diff_count = count($raw_diff);
+        while ($i < $raw_diff_count) {
+            $line = substr($raw_diff[$i], 0, 2);
+            $i   += 1;
+            if ($line == '@@') {
+                break;
+            }
         }
+        return $i;
     }
 }
