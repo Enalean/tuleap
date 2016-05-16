@@ -41,6 +41,7 @@ Version 8.15 (Not yet released)
 	* admindelegation: 2.12
 	* openidconnectclient: 0.20
 	* statistics: 0.59
+	* hudson_git: 0.8
 
     == Themes ==
 	* FlamingParrot: 1.139
