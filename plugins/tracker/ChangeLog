@@ -1,3 +1,6 @@
+Version 5.889 - Tuleap 8.15
+    * story #9087 : see linked artifacts in releases (route artifacts/{:id}/links)
+
 Version 5.888 - Tuleap 8.15
     * story #9032: Migrate from Less to Sass
 
