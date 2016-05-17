@@ -101,12 +101,18 @@ class TestDataBuilder {
     /** @var UserPermissionsDao */
     protected $user_permissions_dao;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->project_manager      = ProjectManager::instance();
         $this->user_manager         = UserManager::instance();
         $this->user_permissions_dao = new UserPermissionsDao();
+        $send_notifications         = true;
 
-        $this->project_creator = new ProjectCreator($this->project_manager, ReferenceManager::instance());
+        $this->project_creator = new ProjectCreator(
+            $this->project_manager,
+            ReferenceManager::instance(),
+            $send_notifications
+        );
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['sys_lf'] = '\n';

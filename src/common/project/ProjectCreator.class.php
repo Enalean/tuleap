@@ -73,12 +73,20 @@ class ProjectCreator {
      */
     var $ruleFullName;
 
-    public function __construct(ProjectManager $projectManager, ReferenceManager $reference_manager, $force_activation = false) {
-        $this->force_activation  = $force_activation;
-        $this->reference_manager = $reference_manager;
-        $this->ruleShortName  = new Rule_ProjectName();
-        $this->ruleFullName   = new Rule_ProjectFullName();
-        $this->projectManager = $projectManager;
+    private $send_notifications;
+
+    public function __construct(
+        ProjectManager $projectManager,
+        ReferenceManager $reference_manager,
+        $send_notifications,
+        $force_activation = false
+    ) {
+        $this->send_notifications = $send_notifications;
+        $this->force_activation   = $force_activation;
+        $this->reference_manager  = $reference_manager;
+        $this->ruleShortName      = new Rule_ProjectName();
+        $this->ruleFullName       = new Rule_ProjectFullName();
+        $this->projectManager     = $projectManager;
     }
 
     /**
@@ -559,14 +567,17 @@ class ProjectCreator {
     }
 
     //Verify if the approbation of the new project is automatic or not
-    private function autoActivateProject($group){
+    private function autoActivateProject($group)
+    {
         $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
         if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
-            $this->projectManager->activate($group);
+            if ($this->send_notifications) {
+                $this->projectManager->activate($group);
+            } else {
+                $this->projectManager->activateWithoutNotifications($group);
+            }
         }
     }
 
 }
-
-?>

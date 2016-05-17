@@ -286,21 +286,29 @@ class ProjectManager {
      *
      * @return Boolean
      */
-    public function activate(Project $project) {
-        $dao = $this->_getDao();
-        if ($dao->updateStatus($project->getId(), 'A')) {
+    public function activate(Project $project)
+    {
+        if ($this->activateWithoutNotifications($project)) {
+            if (! send_new_project_email($project)) {
+                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function activateWithoutNotifications(Project $project)
+    {
+        if ($this->_getDao()->updateStatus($project->getId(), 'A')) {
             include_once 'proj_email.php';
 
             group_add_history('approved', 'x', $project->getId());
 
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
-
-            if (!send_new_project_email($project)) {
-                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
-            }
             return true;
         }
+
         return false;
     }
 
