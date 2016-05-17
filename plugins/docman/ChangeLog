@@ -1,3 +1,6 @@
+Version 2.26.105 - Tuleap 8.15
+    * request #9109: DocmanExport is no more usable in dev context
+
 Version 2.26.104 - Tuleap 8.15
     * story #9132: Migrate from Less to Sass
 
