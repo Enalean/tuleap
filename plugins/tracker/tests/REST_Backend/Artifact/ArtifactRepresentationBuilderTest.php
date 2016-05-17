@@ -29,7 +29,11 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         $this->user     = aUser()->withId(111)->build();
         $formelement_factory = mock('Tracker_FormElementFactory');
         stub($formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array());
-        $this->builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder($formelement_factory);
+        $this->builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            $formelement_factory,
+            mock('Tracker_ArtifactFactory'),
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
+        );
 
         UserHelper::clearInstance();
         UserHelper::setInstance(mock('UserHelper'));
@@ -88,7 +92,11 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
         stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder($this->formelement_factory);
+        $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            $this->formelement_factory,
+            mock('Tracker_ArtifactFactory'),
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
+        );
     }
 
     public function tearDown()
@@ -204,7 +212,11 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact = anArtifact()
             ->withTracker(aMockTracker()->build())
             ->build();
-        $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(mock('Tracker_FormElementFactory'));
+        $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            mock('Tracker_FormElementFactory'),
+            mock('Tracker_ArtifactFactory'),
+            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
+        );
     }
 
     public function itReturnsEmptyArrayWhenNoChanges() {
