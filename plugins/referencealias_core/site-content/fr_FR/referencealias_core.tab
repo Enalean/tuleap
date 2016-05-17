@@ -1,2 +1,2 @@
-plugin_referencealias	descriptor_description	Plugin permettant de gérer les references de type "pkgXXX" comme des alias de reference du FRS de Tuleap
-plugin_referencealias	descriptor_name	Reference aliases for core FRS
+plugin_referencealias	descriptor_description	Plugin permettant de gérer les références de type "pkgXXX" comme des alias de référence du gestionnaire de livrable de Tuleap
+plugin_referencealias	descriptor_name	Référence les alias pour le gestionnaire de livrable inclus à Tuleap

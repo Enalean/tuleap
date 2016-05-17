@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,8 +62,11 @@ class ReferencesImporter
 
             $repository_id = $repository->getId();
 
-            $this->dao->insertRef($source, $repository_id, $revision_id);
-            $this->logger->info("Imported original ref '$source' -> svn repo $repository_id, revision $revision_id.");
+            if (! $this->dao->insertRef($source, $repository_id, $revision_id)) {
+                $this->logger->error("Could not insert object for $source");
+            } else {
+                $this->logger->info("Imported original ref '$source' -> svn repo $repository_id, revision $revision_id.");
+            }
         }
     }
 

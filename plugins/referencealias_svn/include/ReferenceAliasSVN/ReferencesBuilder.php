@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -130,7 +129,6 @@ class ReferencesBuilder
             $repository = $this->repository_manager->getById($row["repository_id"], $project);
 
             return new Reference($project, $repository, $keyword, $row["revision_id"]);
-
         } catch (Project_NotFoundException $exception) {
             return null;
         }

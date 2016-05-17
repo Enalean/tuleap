@@ -70,8 +70,6 @@ class referencealias_mediawikiPlugin extends Plugin
             $created_refs = $params['created_refs'];
             $importer     = new ReferencesImporter($this->dao, $logger);
             $importer->importCompatRefXML($project, $xml, $created_refs);
-
-            echo "Import compat ref xml tracker";
         }
     }
 
