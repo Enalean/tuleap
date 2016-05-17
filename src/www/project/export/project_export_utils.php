@@ -94,7 +94,7 @@ function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
     $res_insert = db_project_query($dbname,$sql_insert);
     
     if (!$res_insert) {
-	$feedback .= $Language->getText('project_export_utils','ins_err',array($tbl_name,db_project_error()))." - ";
+	$feedback .= $Language->getText('project_export_utils','ins_err',array($tbl_name,db_error()))." - ";
     }
 
 }
@@ -427,22 +427,21 @@ echo '
 function db_project_query($dbname,$qstring,$print=0) {
   global $Language;
 	if ($print) print '<br>'.$Language->getText('project_export_utils','query_is',array($dbname,$qstring)).'<br>';
-	//$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
-	
+
 	// Changes by SL Enhance access to databases and project data
 	// mysql_db_query is now deprecated and has been replaced by 
 	//mysql_select_db then mysql_query
 	//
 	// Select the project database
-	$db = @mysql_select_db($dbname);
+	$db = db_select($dbname);
 	if (!$db){
 		die('Can\'t connect to ' . $dbname . 'database' . db_error());
 	} else{
-	$GLOBALS['db_project_qhandle'] = @mysql_query($qstring);
+	$GLOBALS['db_project_qhandle'] = db_query($qstring);
 	
 	// Switch back to system database
 	$dbname = $GLOBALS['sys_dbname']; 
-	$db = @mysql_select_db($dbname);
+	$db = db_select($dbname);
 	if (!$db) die ('Can\'t switch back to system database'. db_error());
 	}
 	return $GLOBALS['db_project_qhandle'];
@@ -481,10 +480,6 @@ function db_project_create($dbname) {
 function db_database_exist($dbname) {
     $res = db_query("SHOW DATABASES LIKE '$dbname'");
     return db_numrows($res) == 1;
-}
-
-function db_project_error() {
-	return @mysql_error();
 }
 
 ?>

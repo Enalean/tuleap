@@ -267,7 +267,7 @@ if ($export == 'artifact') {
                         }
                     }
 				} else {
-				    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+				    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_error()));
 				}
 
 				// MV add

@@ -201,6 +201,14 @@ function db_rollback(){
 }
 
 /**
+ * @deprecated
+ * @return bool
+ */
+function db_select($database_name) {
+	return @mysql_select_db($database_name);
+}
+
+/**
  *  db_query_from_file() - Query the database, from a file.
  *
  *  @param string File that contains the SQL statements.
