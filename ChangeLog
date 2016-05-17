@@ -25,10 +25,10 @@ Version 8.15 (Not yet released)
 
 	== Plugins ==
 	* svn: 0.56
-	* frs: 0.10
+	* frs: 0.11
 	* archivedeleteditems: 0.7
 	* git: 4.153
-	* tracker: 5.890
+	* tracker: 5.891
 	* graphontrackersv5: 5.21
 	* agiledashboard: 1.379
 	* IM: 1.5.36
