@@ -48,7 +48,7 @@
     z-index: 2001;
     top: 150px;
     left: 50%;
-    margin: 0 0 0 -($modal-width + 2 * $grip-width) / 2;
+    margin: 0 0 0 #{-($modal-width + 2 * $grip-width) / 2};
     padding: 0;
     height: $modal-height;
     box-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
