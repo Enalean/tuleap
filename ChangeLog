@@ -4,6 +4,7 @@ Version 8.15 (Not yet released)
 	* request #9098: All PHP files created after the introduction of PSR2 into Tuleap must be compliant
 	* story #9088: turn notification off at XML import (core)
 	* request #9156: Git notifications are pushed to a Jenkins instance without verifying the authenticity of the peer's certificate
+	* request #8972: Utilities to export project does not directly use mysql_* API anymore
 
 	== Enhancement ==
 	* request #9113: Having a REST route to monitor Sysevents
