@@ -1,5 +1,5 @@
 Version 2.26.104 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 2.26.103 - Tuleap 8.15
     * request #8972: Docman plugin does not directly use mysql_* API anymore

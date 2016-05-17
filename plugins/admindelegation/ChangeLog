@@ -1,5 +1,5 @@
 Version 2.12 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 2.11 - Tuleap 8.12
     * request #8309: Get rid of PrototypeJS (defaultValueActsAsHint)

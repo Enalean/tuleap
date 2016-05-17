@@ -5,7 +5,7 @@ Version 5.889 - Tuleap 8.15
     * story #9087 : see linked artifacts in releases (route artifacts/{:id}/links)
 
 Version 5.888 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 5.887 - Tuleap 8.15
     * request #9140: Links with target set to _blank does not expose window.opener object anymore

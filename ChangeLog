@@ -19,7 +19,7 @@ Version 8.15 (Not yet released)
 	== Development ==
 	* request #8840: Remove usage of Bless
 	* story #9132: Sass files in Tuleap sources can be built
-	* story #9032: Migrate from Less to Sass
+	* story #9132: Migrate from Less to Sass
 
 	== Plugins ==
 	* svn: 0.56

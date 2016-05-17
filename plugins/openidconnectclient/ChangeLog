@@ -1,5 +1,5 @@
 Version 0.20 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 0.19 - Tuleap 8.15
     * request #9106: OpenID Connect informations should not be displayed on the My Account page when the plugin is not usable

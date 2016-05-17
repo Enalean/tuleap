@@ -1,11 +1,11 @@
 Version 1.140 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass (The Tuleap modal is centered again)
+    * story #9132: Migrate from Less to Sass (The Tuleap modal is centered again)
 
 Version 1.139 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 1.138 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 1.137 - Tuleap 8.15
     * story #9132 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)

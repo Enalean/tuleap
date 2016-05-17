@@ -1,5 +1,5 @@
 Version 0.56 - Tuleap 8.15
-    * story #9032: Migrate from Less to Sass
+    * story #9132: Migrate from Less to Sass
 
 Version 0.55 - Tuleap 8.15
     * Somewhere a BackendSVN instance is initialized and not cleared at the end of the test.
