@@ -1,3 +1,6 @@
+Version 5.892 - Tuleap 8.15
+    * request #9137 Warning on project import
+
 Version 5.891 - Tuleap 8.15
     * story #9087 : see linked artifacts in releases (REST route artifacts/:id/linked_artifacts)
 
