@@ -111,12 +111,19 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             );
 
             if ($field) {
+                $this->forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow($field);
                 $this->appendValidValue($data, $field, $field_change, $submitted_by);
             } else {
                 $this->logger->debug("Skipped unknown/unused field ".(string) $field_change['field_name']);
             }
         }
         return $data;
+    }
+
+    private function forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow(
+        Tracker_FormElement_Field $field
+    ) {
+        $field->setTracker($this->tracker);
     }
 
     private function appendValidValue(
