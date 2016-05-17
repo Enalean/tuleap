@@ -35,11 +35,11 @@ Version 8.15 (Not yet released)
 	* docman: 2.26.106
 	* ldap: 3.102
 	* forumml: 2.6.25
-	* referencealias_core: 0.5
-	* referencealias_git: 0.2
-	* referencealias_mediawiki: 0.3
-	* referencealias_svn: 0.2
-	* referencealias_tracker: 0.3
+	* referencealias_core: 0.6
+	* referencealias_git: 0.3
+	* referencealias_mediawiki: 0.4
+	* referencealias_svn: 0.3
+	* referencealias_tracker: 0.4
 	* admindelegation: 2.12
 	* openidconnectclient: 0.20
 	* statistics: 0.59
