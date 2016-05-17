@@ -60,6 +60,16 @@ class UserHelper {
         }
         return self::$_instance;
     }
+
+    public static function setInstance($instance)
+    {
+        self::$_instance = $instance;
+    }
+
+    public static function clearInstance()
+    {
+        self::$_instance = null;
+    }
     
     function _getCurrentUserUsernameDisplayPreference() {
         return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");

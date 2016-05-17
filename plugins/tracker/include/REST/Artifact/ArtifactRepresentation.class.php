@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,15 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tuleap\Tracker\REST\TrackerRepresentation;
-use Tuleap\REST\ResourceReference;
+use Tuleap\Tracker\REST\TrackerReference;
 use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
-class ArtifactRepresentation {
+class ArtifactRepresentation
+{
 
     const ROUTE = 'artifacts';
 
@@ -42,7 +43,7 @@ class ArtifactRepresentation {
     public $uri;
 
     /**
-     * @var Tuleap\REST\ResourceReference Reference to tracker the artifact belongs to {@type Tuleap\REST\ResourceReference} {@required true}
+     * @var Tuleap\Tracker\REST\TrackerReference Reference to tracker the artifact belongs to {@type Tuleap\Tracker\REST\TrackerReference} {@required true}
      */
     public $tracker;
 
@@ -56,6 +57,11 @@ class ArtifactRepresentation {
      */
     public $submitted_by;
     
+    /**
+     * @var Tuleap\User\REST\MinimalUserRepresentation the minimal user representation who created the first version of the artifact {@type Tuleap\User\REST\MinimalUserRepresentation} {@required true}
+     */
+    public $submitted_by_user;
+
     /**
      * @var string Date, when the first version of the artifact was created {@type string} {@required true}
      */
@@ -86,23 +92,40 @@ class ArtifactRepresentation {
      */
     public $last_modified_date;
 
-    public function build(Tracker_Artifact $artifact, $values, $values_by_field) {
+    /**
+     * @var the semantic status value {@type string}
+     */
+    public $status;
+
+    /**
+     * @var the semantic title value {@type string}
+     */
+    public $title;
+
+    public function build(Tracker_Artifact $artifact, $values, $values_by_field)
+    {
         $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
 
-        $this->tracker        = new ResourceReference();
-        $this->tracker->build($artifact->getTrackerId(), TrackerRepresentation::ROUTE);
+        $this->tracker        = new TrackerReference();
+        $this->tracker->build($artifact->getTracker());
 
         $this->project        = new ProjectReference();
         $this->project->build($artifact->getTracker()->getProject());
 
         $this->submitted_by       = JsonCast::toInt($artifact->getSubmittedBy());
+        $user = $artifact->getSubmittedByUser();
+        $this->submitted_by_user = new MinimalUserRepresentation();
+        $this->submitted_by_user->build($user);
+
         $this->submitted_on       = JsonCast::toDate($artifact->getSubmittedOn());
         $this->html_url           = $artifact->getUri();
         $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
         $this->values             = $values;
         $this->values_by_field    = $values_by_field;
         $this->last_modified_date = JsonCast::toDate($artifact->getLastUpdateDate());
+
+        $this->status = $artifact->getStatus();
+        $this->title  = $artifact->getTitle();
     }
 }
-

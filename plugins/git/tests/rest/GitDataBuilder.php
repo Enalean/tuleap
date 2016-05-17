@@ -101,7 +101,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             '',
             true,
             Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
-            ''
+            '',
+            'Digest'
         );
 
         $server_02 = new Git_RemoteServer_GerritServer(
@@ -114,7 +115,8 @@ class GitDataBuilder extends REST_TestDataBuilder {
             '',
             false,
             Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
-            ''
+            '',
+            'Digest'
         );
 
         $this->server_factory->save($server_01);

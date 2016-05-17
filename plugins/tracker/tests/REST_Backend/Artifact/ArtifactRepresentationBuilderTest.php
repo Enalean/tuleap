@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,15 +31,26 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         stub($formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array());
         $this->builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder($formelement_factory);
 
+        UserHelper::clearInstance();
+        UserHelper::setInstance(mock('UserHelper'));
+
+        $user_submitter  = mock('PFUser');
         $this->changeset = mock('Tracker_Artifact_Changeset');
 
-        $this->artifact = anArtifact()
-            ->withId(12)
-            ->withTracker($this->tracker)
-            ->withSubmittedBy(777)
-            ->withSubmittedOn(6546546554)
-            ->withChangesets(array($this->changeset))
-            ->build();
+        $this->artifact = mock('Tracker_Artifact');
+        stub($this->artifact)->getId()->returns(12);
+        stub($this->artifact)->getTracker()->returns($this->tracker);
+        stub($this->artifact)->getSubmittedBy()->returns(777);
+        stub($this->artifact)->getSubmittedOn()->returns(6546546554);
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+        stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
+        stub($this->artifact)->getUri()->returns('/plugins/tracker/?aid=12');
+    }
+
+    public function tearDown()
+    {
+        UserHelper::clearInstance();
+        parent::tearDown();
     }
 
     public function itBuildsTheBasicInfo() {
@@ -66,12 +77,24 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
         $this->tracker  = aTracker()->withId(888)->withProject($project)->build();
         $this->user     = aUser()->withId(111)->build();
         $this->changeset = mock('Tracker_Artifact_Changeset');
-        $this->artifact = anArtifact()
-            ->withTracker($this->tracker)
-            ->withChangesets(array($this->changeset))
-            ->build();
+        $user_submitter  = mock('PFUser');
+
+        UserHelper::clearInstance();
+        UserHelper::setInstance(mock('UserHelper'));
+
+        $this->artifact = mock('Tracker_Artifact');
+        stub($this->artifact)->getTracker()->returns($this->tracker);
+        stub($this->artifact)->getLastChangeset()->returns($this->changeset);
+        stub($this->artifact)->getSubmittedByUser()->returns($user_submitter);
+
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder($this->formelement_factory);
+    }
+
+    public function tearDown()
+    {
+        UserHelper::clearInstance();
+        parent::tearDown();
     }
 
     public function itGetsTheFieldsFromTheFactory() {
