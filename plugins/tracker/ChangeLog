@@ -1,3 +1,6 @@
+Version 5.890 - Tuleap 8.15
+    * story #9087 : see linked artifacts in releases (Enhance artifact representation)
+
 Version 5.889 - Tuleap 8.15
     * story #9087 : see linked artifacts in releases (route artifacts/{:id}/links)
 
