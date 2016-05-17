@@ -1,3 +1,6 @@
+Version 2.26.106 - Tuleap 8.15
+    * request #9111: DocmanExport exported folder is not well formed
+
 Version 2.26.105 - Tuleap 8.15
     * request #9109: DocmanExport is no more usable in dev context
 
