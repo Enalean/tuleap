@@ -28,6 +28,7 @@ use Tuleap\FRS\Link\Retriever;
 use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_FormElementFactory;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class ReleaseRepresentation
 {
@@ -116,7 +117,9 @@ class ReleaseRepresentation
         }
 
         $tracker_artifact_builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            Tracker_ArtifactFactory::instance(),
+            new NatureDao()
         );
 
         $tracker_factory = Tracker_ArtifactFactory::instance();

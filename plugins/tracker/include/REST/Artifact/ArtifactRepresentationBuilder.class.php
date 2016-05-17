@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+
 class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
+
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    /**
+     * @var NatureDao
+     */
+    private $nature_dao;
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory) {
+    public function __construct(
+        Tracker_FormElementFactory $formelement_factory,
+        Tracker_ArtifactFactory $artifact_factory,
+        NatureDao $nature_dao
+    ) {
         $this->formelement_factory = $formelement_factory;
+        $this->artifact_factory    = $artifact_factory;
+        $this->nature_dao          = $nature_dao;
     }
 
     /**
@@ -188,6 +207,45 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
                 }
             ),
             count($all_changesets)
+        );
+    }
+
+    public function getArtifactRepresentationCollection(
+        PFUser $user,
+        Tracker_Artifact $artifact_id,
+        $nature,
+        $direction,
+        $offset,
+        $limit
+    ) {
+        if ($direction === NaturePresenter::REVERSE_LABEL) {
+            $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
+                $artifact_id->getId(),
+                $nature,
+                $limit,
+                $offset
+            );
+        } else {
+            $linked_artifacts_ids = $this->nature_dao->getForwardLinkedArtifactIds(
+                $artifact_id->getId(),
+                $nature,
+                $limit,
+                $offset
+            );
+        }
+
+        $total_size               = (int) $this->nature_dao->foundRows();
+        $artifact_representations = array();
+        foreach ($linked_artifacts_ids as $artifact_id) {
+            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
+            if ($artifact) {
+                $artifact_representations[] = $this->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+            }
+        }
+
+        return new Tracker_Artifact_PaginatedArtifacts(
+            $artifact_representations,
+            $total_size
         );
     }
 }

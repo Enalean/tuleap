@@ -33,6 +33,7 @@ use \PFUser;
 use \Tuleap\REST\Header;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use \Tracker_URLVerification;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 /**
  * Wrapper for Tracker Report related REST methods
@@ -54,7 +55,9 @@ class ReportsResource extends AuthenticatedResource {
     public function __construct() {
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $this->builder          = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            $this->artifact_factory,
+            new NatureDao()
         );
     }
 
@@ -170,9 +173,7 @@ class ReportsResource extends AuthenticatedResource {
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
-        $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance()
-        );
+        $builder = $this->builder;
 
         $build_artifact_representation = function ($artifact) use (
             $builder,

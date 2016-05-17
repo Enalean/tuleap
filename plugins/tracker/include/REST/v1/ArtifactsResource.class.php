@@ -46,6 +46,7 @@ use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tracker_URLVerification;
 use \Tracker_Artifact_Changeset as Changeset;
 use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class ArtifactsResource extends AuthenticatedResource {
     const MAX_LIMIT      = 50;
@@ -58,6 +59,8 @@ class ArtifactsResource extends AuthenticatedResource {
     const VALUES_FORMAT_BY_FIELD   = 'by_field';
     const VALUES_FORMAT_ALL        = 'all';
     const VALUES_DEFAULT           = '';
+
+    const EMPTY_NATURE = '';
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -77,7 +80,9 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
         $this->builder             = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            $this->formelement_factory
+            $this->formelement_factory,
+            $this->artifact_factory,
+            new NatureDao()
         );
     }
 
@@ -194,6 +199,62 @@ class ArtifactsResource extends AuthenticatedResource {
     public function optionsArtifactLinkNatures($id)
     {
         $this->sendAllowHeadersForLinkNatures();
+    }
+
+    /**
+     * Get all artifacts linked by nature
+     *
+     * Get all the artifacts linked by nature.
+     * If no nature is provided, it will search linked artifacts witn no nature.
+     *
+     * @url GET {id}/linked_artifacts
+     *
+     * @access hybrid
+     *
+     * @param int    $id        Id of the artifact
+     * @param string $direction The artifact link direction {@from query} {@choice forward,reverse}
+     * @param string $nature    The artifact link nature to filter {@from query}
+     * @param int    $limit     Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset    Position of the first element to display {@from path}{@min 0}
+     *
+     * @return Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation
+     *
+     */
+    public function getLinkedArtifacts(
+        $id,
+        $direction,
+        $nature = self::EMPTY_NATURE,
+        $limit  = 10,
+        $offset = self::DEFAULT_OFFSET
+    ) {
+        $this->checkAccess();
+
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+
+        $linked_artifacts = $this->builder->getArtifactRepresentationCollection(
+            $user,
+            $artifact,
+            $nature,
+            $direction,
+            $offset,
+            $limit
+        );
+
+        $this->sendAllowHeadersForLinkedArtifacts();
+        Header::sendPaginationHeaders($limit, $offset, $linked_artifacts->getTotalSize(), self::MAX_LIMIT);
+
+        return $linked_artifacts->getArtifacts();
+    }
+
+    /**
+     * @url OPTIONS {id}/linked_artifacts
+     *
+     * @param int $id Id of the artifact
+     */
+    public function optionsLinkedArtifacts($id)
+    {
+        $this->sendAllowHeadersForLinkedArtifacts();
     }
 
     /**
@@ -446,6 +507,10 @@ class ArtifactsResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeadersForLinkNatures() {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForLinkedArtifacts() {
         Header::allowOptionsGet();
     }
 

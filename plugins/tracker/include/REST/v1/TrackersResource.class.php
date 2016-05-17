@@ -44,6 +44,7 @@ use \Tracker_FormElementFactory                   as FormElementFactory;
 use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
 use \Tracker_Artifact_PossibleParentsRetriever;
 use \Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 /**
  * Wrapper for Tracker related REST methods
@@ -291,7 +292,9 @@ class TrackersResource extends AuthenticatedResource {
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
         $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            $this->formelement_factory
+            $this->formelement_factory,
+            $this->tracker_artifact_factory,
+            new NatureDao()
         );
 
         $build_artifact_representation = function ($artifact) use (
