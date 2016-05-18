@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,8 @@ require_once 'www/project/admin/permissions.php';
  * This class manages permissions for the Git service
  */
 class GitPermissionsManager {
+
+    const REQUEST_KEY = 'default_access_rights';
 
     /**
      * @var Git_SystemEventManager
@@ -113,5 +115,53 @@ class GitPermissionsManager {
             $this->git_system_event_manager->queueProjectsConfigurationUpdate($projects_ids);
         }
         return $projects_ids;
+    }
+
+    public function updateProjectDefaultPermissions(Codendi_Request $request)
+    {
+        $project    = $request->getProject();
+        $project_id = $project->getID();
+
+        $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access_rights");
+        $csrf->check();
+
+        $ugroup_ids        = $request->get(self::REQUEST_KEY);
+        $read_ugroup_ids   = $ugroup_ids[Git::DEFAULT_PERM_READ];
+        $write_ugroup_ids  = $ugroup_ids[Git::DEFAULT_PERM_WRITE];
+        $rewind_ugroup_ids = $ugroup_ids[Git::DEFAULT_PERM_WPLUS];
+
+        $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_READ, $project_id);
+        $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_WRITE, $project_id);
+        $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_WPLUS, $project_id);
+
+        $this->saveDefaultPermission(
+            $project,
+            $read_ugroup_ids,
+            Git::DEFAULT_PERM_READ
+        );
+
+        $this->saveDefaultPermission(
+            $project,
+            $write_ugroup_ids,
+            Git::DEFAULT_PERM_WRITE
+        );
+
+        $this->saveDefaultPermission(
+            $project,
+            $rewind_ugroup_ids,
+            Git::DEFAULT_PERM_WPLUS
+        );
+    }
+
+    private function saveDefaultPermission(Project $project, array $ugroup_ids, $permission)
+    {
+        $override_collection = $this->permissions_manager->savePermissions(
+            $project,
+            $project->getID(),
+            $permission,
+            $ugroup_ids
+        );
+
+        $override_collection->emitFeedback($permission);
     }
 }

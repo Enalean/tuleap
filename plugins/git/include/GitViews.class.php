@@ -23,6 +23,8 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 
 require_once 'www/project/admin/permissions.php';
 
+use Tuleap\Git\GitPresenters\AdminGitAccessRightsPresenter;
+
 /**
  * GitViews
  */
@@ -385,6 +387,31 @@ class GitViews extends PluginViews {
             $are_mirrors_defined,
             $this->ugroup_manager->getStaticUGroups($this->project),
             $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
+        echo $renderer->renderToString('admin', $presenter);
+    }
+
+    protected function adminDefaultAccessRights($are_mirrors_defined) {
+        $params     = $this->getData();
+        $builder    = $this->getAccessRightsPresenterOptionsBuilder();
+        $project_id = $this->project->getID();
+
+        $read_options   = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_READ);
+        $write_options  = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WRITE);
+        $rewind_options = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WPLUS);
+
+        $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access_rights");
+
+        $presenter = new AdminGitAccessRightsPresenter(
+            $this->project->getID(),
+            $are_mirrors_defined,
+            $csrf,
+            $read_options,
+            $write_options,
+            $rewind_options
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

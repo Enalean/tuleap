@@ -275,6 +275,7 @@ plugin_git	view_admin_tab_gerrit_templates	Modèles Gerrit
 plugin_git	view_admin_tab_git_admins	Administrateurs Git
 plugin_git	view_admin_tab_mass_update	Mise à jour massive des dépôts
 plugin_git	view_admin_tab_default_settings	Paramètres git par défaut
+plugin_git	view_admin_tab_default_access_rights	Permissions par défaut
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Modèles
 plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:

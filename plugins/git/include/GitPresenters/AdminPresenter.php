@@ -29,6 +29,7 @@ abstract class GitPresenters_AdminPresenter {
     public $manage_mass_update_select_repositories = false;
     public $manage_mass_update                     = false;
     public $manage_default_settings                = false;
+    public $manage_default_access_rights           = false;
 
 
     public function __construct($project_id, $are_mirrors_defined) {
@@ -54,6 +55,11 @@ abstract class GitPresenters_AdminPresenter {
 
     public function tab_default_settings() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_settings');
+    }
+
+    public function tab_default_access_rights()
+    {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_access_rights');
     }
 
     public function manage_mass_update_active() {

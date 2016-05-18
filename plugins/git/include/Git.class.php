@@ -35,6 +35,10 @@ class Git extends PluginController {
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
+    const DEFAULT_PERM_READ  = 'DEFAULT_PLUGIN_GIT_READ';
+    const DEFAULT_PERM_WRITE = 'DEFAULT_PLUGIN_GIT_WRITE';
+    const DEFAULT_PERM_WPLUS = 'DEFAULT_PLUGIN_GIT_WPLUS';
+
     const PERM_ADMIN         = 'PLUGIN_GIT_ADMIN';
     const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
 
@@ -388,6 +392,7 @@ class Git extends PluginController {
                 'admin-git-admins',
                 'admin-gerrit-templates',
                 'admin-default-settings',
+                'admin-default-access_rights',
                 'fetch_git_config',
                 'fetch_git_template',
                 'fork_repositories_permissions',
@@ -678,6 +683,17 @@ class Git extends PluginController {
             case 'admin-default-settings':
                 $this->addView(
                     'adminDefaultSettings',
+                    array($this->areMirrorsEnabledForProject())
+                );
+
+                break;
+            case 'admin-default-access_rights':
+                if ($this->request->get('save')) {
+                    $this->permissions_manager->updateProjectDefaultPermissions($this->request);
+                }
+
+                $this->addView(
+                    'adminDefaultAccessRights',
                     array($this->areMirrorsEnabledForProject())
                 );
 
