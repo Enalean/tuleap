@@ -13,3 +13,5 @@ plugin_hudson_git	job_error	Une erreur est survenue lors de l'enregistrement des
 plugin_hudson_git	label_push_date	Date du push
 plugin_hudson_git	label_triggered	Job déclenchés
 plugin_hudson_git	empty_jobs	Aucun job déclenché
+plugin_hudson_git	empty_hooks	Aucun hook défini
+plugin_hudson_git	jenkins_hook	Hook Jenkins

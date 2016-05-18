@@ -13,3 +13,5 @@ plugin_hudson_git	job_error	Error while saving Job data
 plugin_hudson_git	label_push_date	Push date
 plugin_hudson_git	label_triggered	Triggered job
 plugin_hudson_git	empty_jobs	No triggered job
+plugin_hudson_git	empty_hooks	No defined hooks yet
+plugin_hudson_git	jenkins_hook	Jenkins hook

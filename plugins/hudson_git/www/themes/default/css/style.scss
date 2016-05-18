@@ -1,0 +1,32 @@
+.hooks-list {
+    max-width: 960px;
+
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
+    }
+
+    & > thead > tr > th,
+    & > tbody > tr > td {
+        min-width: 100px;
+        vertical-align: middle;
+    }
+
+    & > tbody > tr.hook-section > td {
+        background: #E4E4E4;
+        text-transform: uppercase;
+        line-height: 6pt;
+        color: #999;
+        font-size: 8pt;
+        font-weight: 600;
+    }
+}

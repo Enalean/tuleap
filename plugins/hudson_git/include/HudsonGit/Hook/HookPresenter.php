@@ -25,75 +25,42 @@ use GitViews_RepoManagement_Pane_Hooks;
 
 class HookPresenter
 {
-
-    /**
-     * @var GitRepository
-     */
-    private $repository;
-
-    private $jenkins_server_url;
     public $jobs;
+    public $jenkins_server_url;
+    public $has_a_jenkins_hook;
+    public $has_hooks;
+    public $project_id;
+    public $repository_id;
+    public $save_label;
+    public $jenkins_notification_label;
+    public $jenkins_notification_desc;
+    public $jenkins_documentation_link_label;
+    public $label_push_date;
+    public $label_triggered;
+    public $empty_jobs;
+    public $empty_hooks;
+    public $jenkins_hook;
 
     public function __construct(GitRepository $repository, $jenkins_server_url, array $jobs)
     {
-        $this->repository         = $repository;
         $this->jenkins_server_url = $jenkins_server_url;
         $this->jobs               = $jobs;
-    }
 
-    public function project_id()
-    {
-        return $this->repository->getProjectId();
-    }
+        $this->has_a_jenkins_hook = $this->jenkins_server_url;
+        $this->has_hooks          = $this->jenkins_server_url;
 
-    public function pane_identifier()
-    {
-        return GitViews_RepoManagement_Pane_Hooks::ID;
-    }
+        $this->project_id    = $repository->getProjectId();
+        $this->repository_id = $repository->getId();
 
-    public function repository_id()
-    {
-        return $this->repository->getId();
-    }
+        $this->save_label      = $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
+        $this->label_push_date = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
+        $this->label_triggered = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
+        $this->empty_jobs      = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
+        $this->empty_hooks     = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_hooks');
+        $this->jenkins_hook    = $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook');
 
-    public function save_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
+        $this->jenkins_notification_label       = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_label');
+        $this->jenkins_notification_desc        = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_desc');
+        $this->jenkins_documentation_link_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_link_label');
     }
-
-    public function jenkins_notification_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_label');
-    }
-
-    public function jenkins_server()
-    {
-        return $this->jenkins_server_url;
-    }
-
-    public function jenkins_notification_desc()
-    {
-        return $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_desc');
-    }
-
-    public function jenkins_documentation_link_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_link_label');
-    }
-
-    public function label_push_date()
-    {
-        return $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
-    }
-
-    public function label_triggered()
-    {
-        return $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
-    }
-
-    public function empty_jobs()
-    {
-        return $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
-    }
-
 }

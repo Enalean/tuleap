@@ -38,6 +38,7 @@ class hudson_gitPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
+            $this->addHook('cssfile');
             $this->addHook(GIT_ADDITIONAL_HOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
@@ -54,6 +55,14 @@ class hudson_gitPlugin extends Plugin {
      */
     public function getDependencies() {
         return array('git', 'hudson');
+    }
+
+    public function cssFile()
+    {
+        // Only show the stylesheet if we're actually in the Git pages.
+        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
     }
 
     /**
