@@ -1,3 +1,6 @@
+Version 0.57 - Tuleap 8.15
+    * request #9160 Svn multiple repos not created
+
 Version 0.56 - Tuleap 8.15
     * story #9132: Migrate from Less to Sass
 
