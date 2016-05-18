@@ -1,3 +1,7 @@
+Version 8.14-4 (Wednesday, May 18th)
+	* request #9145: Notifications are not sent when a Git repository uses hudson_git plugin
+	* request #9155: GET /projects should return all active projects for site administrators
+
 Version 8.14-3 (Monday, May 16th)
 	== Bug Fix ==
 	* request #9140: Links with target set to _blank does not expose window.opener object anymore
