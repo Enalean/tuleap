@@ -23,6 +23,7 @@ Version 8.15 (Not yet released)
 	* request #8840: Remove usage of Bless
 	* story #9132: Sass files in Tuleap sources can be built
 	* story #9132: Migrate from Less to Sass
+	* request #9072: Refactor and clean the Apache configuration
 
 	== Plugins ==
 	* svn: 0.57
@@ -32,7 +33,7 @@ Version 8.15 (Not yet released)
 	* tracker: 5.892
 	* graphontrackersv5: 5.21
 	* agiledashboard: 1.379
-	* IM: 1.5.36
+	* IM: 1.5.37
 	* docman: 2.26.106
 	* ldap: 3.102
 	* forumml: 2.6.25
