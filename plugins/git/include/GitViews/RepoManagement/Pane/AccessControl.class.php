@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 
 class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement_Pane {
 
@@ -87,9 +88,21 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      *
      * @return void
      */
-    private function accessControlGitolite() {
-        $forkPermissionsManager = new GitForkPermissionsManager($this->repository);
+    private function accessControlGitolite()
+    {
+        $forkPermissionsManager = new GitForkPermissionsManager(
+            $this->repository,
+            $this->getAccessRightsPresenterOptionsBuilder()
+        );
+
         return $forkPermissionsManager->displayAccessControl();
     }
+
+    private function getAccessRightsPresenterOptionsBuilder()
+    {
+        $dao                = new UserGroupDao();
+        $user_group_factory = new User_ForgeUserGroupFactory($dao);
+
+        return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
+    }
 }
-?>

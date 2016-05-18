@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +19,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+
 /**
  * GitForkPermissionsManager
  */
 class GitForkPermissionsManager {
 
+    /**
+     * @var AccessRightsPresenterOptionsBuilder
+     */
+    private $builder;
+
     /** @var GitRepository */
     private $repository;
 
-    /** @var User_ForgeUserGroupFactory */
-    private $user_group_factory;
-
-    /** @var PermissionsManager */
-    private $permissions_manager;
-
-    public function __construct(GitRepository $repository) {
-        $this->repository          = $repository;
-        $this->user_group_factory  = new User_ForgeUserGroupFactory(new UserGroupDao());
-        $this->permissions_manager = PermissionsManager::instance();
+    public function __construct(GitRepository $repository, AccessRightsPresenterOptionsBuilder $builder) {
+        $this->repository = $repository;
+        $this->builder    = $builder;
     }
 
     /**
@@ -155,24 +156,8 @@ class GitForkPermissionsManager {
         return ! $project_creator_status->canModifyPermissionsTuleapSide($this->repository);
     }
 
-    private function getOptions(Project $project, $permission) {
-        $user_groups     = $this->user_group_factory->getAllForProject($project);
-        $options         = array();
-        $selected_values = $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $this->repository->getId(), $permission);
-
-        foreach ($user_groups as $ugroup) {
-            if ($ugroup->getId() == ProjectUGroup::ANONYMOUS && $permission !== Git::PERM_READ) {
-                continue;
-            }
-
-            $selected  = in_array($ugroup->getId(), $selected_values) ? 'selected="selected"' : '';
-            $options []= array(
-                'value'    => $ugroup->getId(),
-                'label'    => $ugroup->getName(),
-                'selected' => $selected
-            );
-        }
-
-        return $options;
+    private function getOptions(Project $project, $permission)
+    {
+        return $this->builder->getOptions($project, $this->repository, $permission);
     }
 }

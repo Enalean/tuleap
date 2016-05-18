@@ -19,6 +19,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+
 require_once 'www/project/admin/permissions.php';
 
 /**
@@ -507,10 +509,22 @@ class GitViews extends PluginViews {
         $repositories = explode(',', $params['repos']);
         $repository   = $this->getGitRepositoryFactory()->getRepositoryById($repositories[0]);
         if (!empty($repository)) {
-            $forkPermissionsManager = new GitForkPermissionsManager($repository);
-            $userName               = $this->user->getName();
+            $forkPermissionsManager = new GitForkPermissionsManager(
+                $repository,
+                $this->getAccessRightsPresenterOptionsBuilder()
+            );
+
+            $userName = $this->user->getName();
             echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
+    }
+
+    private function getAccessRightsPresenterOptionsBuilder()
+    {
+        $dao                = new UserGroupDao();
+        $user_group_factory = new User_ForgeUserGroupFactory($dao);
+
+        return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
     }
 
     private function getGitRepositoryFactory() {
