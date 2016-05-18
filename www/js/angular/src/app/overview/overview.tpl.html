@@ -1,7 +1,26 @@
 <div id="pull-request-info">
-    <div class="pull-request-description">
-        <div ng-bind-html="overview.pull_request.title"></div>
-        <blockquote ng-bind-html="overview.pull_request.description || 'No description'"></blockquote>
+    <div class="pull-request-details">
+        <div ng-hide="overview.showEditionForm">
+            <div>
+                <span ng-bind-html="overview.pull_request.title"></span>
+                <button class="btn btn-link btn-small" ng-click="overview.showEditionForm = true">
+                    <i class="icon-edit"></i>
+                </button>
+            </div>
+            <blockquote class="pull-request-description" ng-bind-html="overview.pull_request.description"></blockquote>
+        </div>
+        <form class="pull-request-edition-form" ng-show="overview.showEditionForm">
+            <div>
+                <input type="text" ng-model="overview.editionForm.title" placeholder="title" tabindex="10" />
+                <button ng-click="overview.saveEditionForm()" class="btn btn-link btn-small" tabindex="12">
+                    <i class="icon-ok"></i>
+                </button>
+                <button ng-click="overview.showEditionForm = false" class="btn btn-link btn-small" tabindex="13">
+                    <i class="icon-remove"></i>
+                </button>
+            </div>
+            <textarea ng-model="overview.editionForm.description" rows="5" placeholder="description" tabindex="11"></textarea>
+        </form>
         <div class="pull-requests-references">
             <div>
                 <span class="pull-requests-source-destination">

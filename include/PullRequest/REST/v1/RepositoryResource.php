@@ -63,13 +63,10 @@ class RepositoryResource
             $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
 
-            $executor          = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
-            $short_stat        = $executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
-            $short_stat_repres = new PullRequestShortStatRepresentation();
-            $short_stat_repres->build($short_stat);
+            $executor                  = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
+            $pr_representation_factory = new PullRequestRepresentationFactory($executor);
 
-            $pull_request_representation = new PullRequestRepresentation();
-            $pull_request_representation->build($pull_request, $repository_src, $repository_dest, $short_stat_repres);
+            $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest);
             $collection[] = $pull_request_representation;
         }
 

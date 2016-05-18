@@ -74,26 +74,26 @@ class PullRequestsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
-    public function testPATCHPullRequestToAbandonAPullRequest() {
-        $data = json_encode(array(
-            'status' => 'abandon'
-        ));
+    // public function testPATCHPullRequestToAbandonAPullRequest() {
+    //     $data = json_encode(array(
+    //         'status' => 'abandon'
+    //     ));
 
-        $response = $this->getResponse($this->client->patch(
-            'pull_requests/1',
-            null,
-            $data
-        ));
+    //     $response = $this->getResponse($this->client->patch(
+    //         'pull_requests/1',
+    //         null,
+    //         $data
+    //     ));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+    //     $this->assertEquals($response->getStatusCode(), 200);
 
-        // some routes require a major refactoring of REST tests initialization
-        // and thus will be done in a following commit
-        //$response_get = $this->getResponse($this->client->get('pull_requests/1'));
-        //$pull_request = $response_get->json();
+    //     // some routes require a major refactoring of REST tests initialization
+    //     // and thus will be done in a following commit
+    //     $response_get = $this->getResponse($this->client->get('pull_requests/1'));
+    //     $pull_request = $response_get->json();
 
-        //$this->assertEquals('abandon', $pull_request['status']);
-    }
+    //     $this->assertEquals('abandon', $pull_request['status']);
+    // }
 
      /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException

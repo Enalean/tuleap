@@ -156,4 +156,9 @@ class Factory
     {
         return $this->dao->markAsMerged($pull_request->getId());
     }
+
+    public function updateTitleAndDescription($pull_request, $new_title, $new_description)
+    {
+        return $this->dao->updateTitleAndDescription($pull_request->getId(), $new_title, $new_description);
+    }
 }

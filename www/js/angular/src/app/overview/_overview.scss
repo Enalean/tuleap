@@ -5,9 +5,19 @@
     justify-content: space-between;
     padding: 0 15px;
 
-    .pull-request-description {
+    .pull-request-details {
         flex: 1 1 auto;
         max-width: 50%;
+    }
+
+    .pull-request-description {
+        white-space: pre-wrap;
+    }
+
+    .pull-request-edition-form {
+        textarea {
+            width: 95%;
+        }
     }
 
     .pull-requests-references {

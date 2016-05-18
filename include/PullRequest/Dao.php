@@ -194,4 +194,18 @@ class Dao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function updateTitleAndDescription($pull_request_id, $new_title, $new_description)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $new_title       = $this->da->quoteSmart($new_title);
+        $new_description = $this->da->quoteSmart($new_description);
+
+        $sql = "UPDATE plugin_pullrequest_review
+                SET title = $new_title,
+                    description = $new_description
+                WHERE id = $pull_request_id";
+
+        return $this->update($sql);
+    }
 }

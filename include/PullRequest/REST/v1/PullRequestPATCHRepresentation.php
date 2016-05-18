@@ -24,7 +24,17 @@ class PullRequestPATCHRepresentation
 {
 
     /**
-     * @var string {@type string}
+     * @var string {@type string} {@required false}
      */
     public $status;
+
+    /**
+     * @var string {@type string} {@required false}
+     */
+    public $title;
+
+    /**
+     * @var string {@type string} {@required false}
+     */
+    public $description;
 }

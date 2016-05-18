@@ -147,17 +147,10 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->checkUserCanReadRepository($user, $repository_src);
 
-        $executor          = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
+        $executor                  = $this->getExecutor($repository_src);
+        $pr_representation_factory = new PullRequestRepresentationFactory($executor);
 
-        $short_stat        = $executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
-        $short_stat_repres = new PullRequestShortStatRepresentation();
-        $short_stat_repres->build($short_stat);
-
-
-        $pull_request_representation = new PullRequestRepresentation();
-        $pull_request_representation->build($pull_request, $repository_src, $repository_dest, $short_stat_repres);
-
-        return $pull_request_representation;
+        return $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest);
     }
 
     /**
@@ -427,6 +420,10 @@ class PullRequestsResource extends AuthenticatedResource
      * Partial update of a pull request
      *
      * Merge or abandon a pull request.
+     * <br/>
+     * -- OR --
+     * <br/>
+     * Update title and description of pull request.
      *
      * <pre>
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
@@ -451,6 +448,16 @@ class PullRequestsResource extends AuthenticatedResource
      * &nbsp;&nbsp;"status": "abandon"<br/>
      * }<br/>
      * </pre>
+     * <br/>
+     *
+     * Here is an example of a valid PATCH content to update a pull request:
+     * <pre>
+     * {<br/>
+     * &nbsp;&nbsp;"title": "new title",<br/>
+     * &nbsp;&nbsp;"description": "new description"<br/>
+     * }<br/>
+     * </pre>
+     * <br/>
      *
      * @url PATCH {id}
      *
@@ -458,6 +465,7 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @param  int $id pull request ID
      * @param  PullRequestPATCHRepresentation $body new pull request status {@from body}
+     * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
      *
      * @throws 400
      * @throws 403
@@ -470,13 +478,30 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
-        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $user            = $this->user_manager->getCurrentUser();
+        $pull_request    = $this->getPullRequest($id);
+        $repository_src  = $this->getRepository($pull_request->getRepositoryId());
+        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
-        $this->checkUserCanWriteRepository($user, $git_repository);
+        $this->checkUserCanWriteRepository($user, $repository_src);
+        $this->checkUserCanReadRepository($user, $repository_src);
 
         $status = $body->status;
+        if ($status !== null) {
+            $this->patchStatus($pull_request, $repository_src, $status);
+        } else {
+            $this->patchInfo($pull_request, $body);
+        }
+        $updated_pull_request        = $this->getPullRequest($id);
+
+        $executor                  = $this->getExecutor($repository_src);
+        $pr_representation_factory = new PullRequestRepresentationFactory($executor);
+
+        return $pr_representation_factory->getPullRequestRepresentation($updated_pull_request, $repository_src, $repository_dest);
+    }
+
+    private function patchStatus(PullRequest $pull_request, $git_repository, $status)
+    {
         switch ($status) {
             case PullRequestRepresentation::STATUS_ABANDON:
                 try {
@@ -514,6 +539,11 @@ class PullRequestsResource extends AuthenticatedResource
         if (! $this->pull_request_closer->abandon($pull_request)) {
             throw new RestException(500, 'Error while abandoning the pull request');
         }
+    }
+
+    private function patchInfo(PullRequest $pull_request, $body)
+    {
+        $this->pull_request_factory->updateTitleAndDescription($pull_request, $body->title, $body->description);
     }
 
     /**
