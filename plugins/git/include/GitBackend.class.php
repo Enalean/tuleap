@@ -187,8 +187,13 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      */
 
     protected function setRepositoryPermissions($repository) {
-        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();   
-        $this->recurseChownChgrp($path, 'codendiadm',$repository->getProject()->getUnixName() );
+        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
+        $no_filter_file_extension = array();
+        $this->recurseChownChgrp($path,
+            'codendiadm',
+            $repository->getProject()->getUnixName(),
+            $no_filter_file_extension
+        );
         return true;
     }
 

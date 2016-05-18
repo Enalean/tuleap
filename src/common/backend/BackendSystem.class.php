@@ -186,7 +186,13 @@ class BackendSystem extends Backend {
      * @return null
      */
     private function setUserHomeOwnership(PFUser $user) {
-        $this->recurseChownChgrp($user->getUnixHomeDir(), $user->getUserName(), $user->getUserName());
+        $no_filter_file_extension = array();
+        $this->recurseChownChgrp(
+            $user->getUnixHomeDir(),
+            $user->getUserName(),
+            $user->getUserName(),
+            $no_filter_file_extension
+        );
     }
     
     /**
@@ -227,7 +233,8 @@ class BackendSystem extends Backend {
             $stat = stat("$projdir");
             if ($stat && $stat['gid'] != $project->getUnixGID()) {
                 $this->log("Restoring ownership on project dir: $projdir", Backend::LOG_WARNING);
-                $this->recurseChgrp($projdir,$unix_group_name);
+                $no_filter_file_extension = array();
+                $this->recurseChgrp($projdir, $unix_group_name, $no_filter_file_extension);
             }
         }
 

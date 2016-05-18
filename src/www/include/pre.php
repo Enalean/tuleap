@@ -121,9 +121,9 @@ if (!isset($GLOBALS['feedback'])) {
 }
 
 // Create cache directory if needed
-if (!file_exists($GLOBALS['codendi_cache_dir'])) {
-      // This directory must be world reachable, but writable only by the web-server
-      mkdir($GLOBALS['codendi_cache_dir'], 0755);
+if (! file_exists(ForgeConfig::get('codendi_cache_dir'))) {
+    $site_cache = new SiteCache();
+    $site_cache->restoreRootCacheDirectory();
 }
 
 // Instantiate System Event listener

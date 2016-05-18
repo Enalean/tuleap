@@ -1016,7 +1016,7 @@ fi
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
-%dir %{APP_CACHE_DIR}
+%dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf

@@ -173,7 +173,13 @@ class BackendCVS extends Backend {
             $this->system("touch $cvs_dir/CVSROOT/history");
             // Must be writable
             $this->system("chmod 0666 $cvs_dir/CVSROOT/history");
-            $this->recurseChownChgrp($cvs_dir."/CVSROOT", $this->getHTTPUser(), $unix_group_name);
+            $no_filter_file_extension = array();
+            $this->recurseChownChgrp(
+                $cvs_dir."/CVSROOT",
+                $this->getHTTPUser(),
+                $unix_group_name,
+                $no_filter_file_extension
+            );
         }
 
         // Update post-commit hooks
@@ -238,7 +244,13 @@ class BackendCVS extends Backend {
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename, $command);
                 $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT", $this->getHTTPUser(), $unix_group_name);
+                $no_filter_file_extension = array();
+                $this->recurseChownChgrp(
+                    $cvs_dir."/CVSROOT",
+                    $this->getHTTPUser(),
+                    $unix_group_name,
+                    $no_filter_file_extension
+                );
             }
 
 
@@ -249,7 +261,13 @@ class BackendCVS extends Backend {
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename, "ALL ".$GLOBALS['codendi_bin_prefix']."/commit_prep -T $unix_group_name -r");
                 $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT", $this->getHTTPUser(), $unix_group_name);
+                $no_filter_file_extension = array();
+                $this->recurseChownChgrp(
+                    $cvs_dir."/CVSROOT",
+                    $this->getHTTPUser(),
+                    $unix_group_name,
+                    $no_filter_file_extension
+                );
             }
         } else {
             // Remove Codendi blocks if needed
@@ -366,7 +384,13 @@ class BackendCVS extends Backend {
                 $this->_RcsCheckout($filename);
                 $this->removeBlock($filename);
                 $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT", $this->getHTTPUser(), $unix_group_name);
+                $no_filter_file_extension = array();
+                $this->recurseChownChgrp(
+                    $cvs_dir."/CVSROOT",
+                    $this->getHTTPUser(),
+                    $unix_group_name,
+                    $no_filter_file_extension
+                );
                 $this->CVSWatch($cvs_dir, $unix_group_name, 0);
             }
         }
