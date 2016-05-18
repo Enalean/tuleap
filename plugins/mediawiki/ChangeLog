@@ -1,3 +1,6 @@
+Version 0.114 - Tuleap 8.15
+    * request #8726: Cache directories are reconstructed when Tuleap start
+
 Version 0.113 - Tuleap 8.14
     * story #9027: Import wikiXXXX references and treat them as links
 

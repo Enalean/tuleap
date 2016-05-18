@@ -6,6 +6,7 @@ Version 8.15 (Not yet released)
 	* request #9156: Git notifications are pushed to a Jenkins instance without verifying the authenticity of the peer's certificate
 	* request #8972: Utilities to export project does not directly use mysql_* API anymore
 	* request #9158: A fatal error can be thrown when checking user's permissions
+	* request #8726: Cache directories are reconstructed when Tuleap start
 
 	== Enhancement ==
 	* request #9113: Having a REST route to monitor Sysevents
@@ -29,7 +30,7 @@ Version 8.15 (Not yet released)
 	* svn: 0.57
 	* frs: 0.11
 	* archivedeleteditems: 0.7
-	* git: 4.153
+	* git: 4.154
 	* tracker: 5.892
 	* graphontrackersv5: 5.21
 	* agiledashboard: 1.379
@@ -46,6 +47,7 @@ Version 8.15 (Not yet released)
 	* openidconnectclient: 0.20
 	* statistics: 0.59
 	* hudson_git: 0.8
+	* mediawiki: 0.114
 
     == Themes ==
 	* FlamingParrot: 1.142

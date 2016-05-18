@@ -1,3 +1,6 @@
+Version 4.154 - Tuleap 8.15
+    * request #8726: Cache directories are reconstructed when Tuleap start
+
 Version 4.153 - Tuleap 8.15
     * story #9087 : see linked artifacts in releases (Enhance artifact representation)
 
