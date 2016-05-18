@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -434,5 +434,83 @@ class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
 
         $urls = $this->backend->getAccessUrl($this->repository);
         $this->assertEqual('http://_dummy_/gpig/bionic.git', $urls['http']);
+    }
+}
+
+class Git_Backend_Gitolite_UserAccessRightsTest extends Git_Backend_GitoliteCommonTest
+{
+
+    /**
+     * @var Git_Backend_Gitolite
+     */
+    private $backend;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $driver        = mock('Git_GitoliteDriver');
+        $this->backend = new Git_Backend_Gitolite($driver, mock('Logger'));
+
+        $this->user       = mock('PFUser');
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getId()->returns(1);
+        stub($this->repository)->getProjectId()->returns(101);
+    }
+
+    public function itReturnsTrueIfUserIsProjectAdmin()
+    {
+        stub($this->user)->isMember(101, 'A')->returns(true);
+
+        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsTrueIfUserHasReadAccess()
+    {
+        stub($this->user)->hasPermission(Git::PERM_READ, 1, 101)->returns(true);
+
+        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsTrueIfUserHasReadAccessAndRepositoryIsMigratedToGerrit()
+    {
+        stub($this->user)->hasPermission(Git::PERM_READ, 1, 101)->returns(true);
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+
+        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsTrueIfUserHasWriteAccess()
+    {
+        stub($this->user)->hasPermission(Git::PERM_WRITE, 1, 101)->returns(true);
+
+        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsFalseIfUserHasWriteAccessAndRepositoryIsMigratedToGerrit()
+    {
+        stub($this->user)->hasPermission(Git::PERM_WRITE, 1, 101)->returns(true);
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+
+        $this->assertFalse($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsTrueIfUserHasRewindAccess()
+    {
+        stub($this->user)->hasPermission(Git::PERM_WPLUS, 1, 101)->returns(true);
+
+        $this->assertTrue($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsFalseIfUserHasRewindAccessAndRepositoryIsMigratedToGerrit()
+    {
+        stub($this->user)->hasPermission(Git::PERM_WPLUS, 1, 101)->returns(true);
+        stub($this->repository)->isMigratedToGerrit()->returns(true);
+
+        $this->assertFalse($this->backend->userCanRead($this->user, $this->repository));
+    }
+
+    public function itReturnsFalseIfUserHasNoPermissions()
+    {
+        $this->assertFalse($this->backend->userCanRead($this->user, $this->repository));
     }
 }
