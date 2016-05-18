@@ -64,8 +64,8 @@
         "angular/service-name": [2, "/[A-Z].*Service$/"],
         // Conventions
         "angular/di": [2, "$inject"],
-        "angular/di-order": [0, true],
-        "angular/dumb-inject": 2,
+        "angular/di-order": 0,
+        "angular/dumb-inject": 1,
         "angular/function-type": [2, "named"],
         "angular/module-dependency-order": [1, {
             "grouped": true

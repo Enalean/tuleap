@@ -10,6 +10,27 @@
         max-width: 50%;
     }
 
+    .pull-requests-references {
+        font-size: 12px;
+
+        .pull-requests-source-destination {
+            border: 1px solid #f79514;
+            border-radius: 3px;
+            color: #f79514;
+            padding: 2px 2px;
+            margin: 0 5px 0 0;
+
+            .repository {
+                font-weight: 600;
+            }
+        }
+
+        .pull-request-reference {
+            letter-spacing: 0.3px;
+            color: #888;
+        }
+    }
+
     .pull-request-author,
     .pull-request-date,
     .pull-request-changes {
@@ -33,11 +54,6 @@
         &:first-child {
             margin: 0 0 5px;
         }
-    }
-
-    .pull-request-reference {
-        font-size: 12px;
-        color: #888;
     }
 
     .pull-request-author > div {

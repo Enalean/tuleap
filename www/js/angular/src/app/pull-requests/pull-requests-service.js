@@ -37,6 +37,17 @@ function PullRequestsService(
                 }
 
                 return self.pull_requests;
+            }).then(function() {
+                self.pull_requests.forEach(function(pullRequest) {
+                    var repoId = parseInt(repository_id, 10);
+                    var repositorySrc = pullRequest.repository;
+                    var repositoryDest = pullRequest.repository_dest;
+                    repositorySrc.isCurrent = (repositorySrc.id === repoId);
+                    repositoryDest.isCurrent = (repositoryDest.id === repoId);
+                    repositorySrc.isFork = (repositorySrc.id !== repositoryDest.id);
+                });
+                lodash.reverse(self.pull_requests);
+                return self.pull_requests;
             });
     }
 }

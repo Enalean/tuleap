@@ -25,23 +25,21 @@
             margin: 0 5px 0 0;
         }
 
-        .icon-long-arrow-right {
-            color: #AAA;
-            margin: 0 10px;
+        .title {
+            margin: 0 5px 0 0;
         }
 
-        .sha1 {
-            padding: 2px 4px;
-            border: 1px solid #999;
+        .source-dest {
+            border: 1px solid #f79514;
             border-radius: 3px;
-            color: #666;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+            color: #f79514;
+            padding: 2px 2px;
+            margin: 0 5px 0 0;
         }
 
-        .status {
-            margin: 0 0 0 5px;
+        .creation-date {
+            color: #AAA;
+            margin: 0 5px 0 0;
         }
 
         &.ui-select-bootstrap > .ui-select-choices {
@@ -51,11 +49,6 @@
             .ui-select-choices-row.active > a {
                 .id {
                     color: #DDD;
-                }
-
-                .sha1 {
-                    color: #DDD;
-                    border-color: #DDD;
                 }
             }
         }

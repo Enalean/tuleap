@@ -2,8 +2,20 @@
     <div class="pull-request-description">
         <div ng-bind-html="overview.pull_request.title"></div>
         <blockquote ng-bind-html="overview.pull_request.description || 'No description'"></blockquote>
-
-        <span class="pull-request-reference">{{ overview.pull_request.reference_src }}</span>
+        <div class="pull-requests-references">
+            <div>
+                <span class="pull-requests-source-destination">
+                    <span class="repository"
+                        ng-if="! overview.pull_request.repository.isCurrent">{{ overview.pull_request.repository.name }}:
+                    </span>{{ overview.pull_request.branch_src }}
+                    <i class="icon-long-arrow-right"></i>
+                    <span class="repository"
+                        ng-if="! overview.pull_request.repository_dest.isCurrent">{{ overview.pull_request.repository_dest.name }}:
+                    </span>{{ overview.pull_request.branch_dest }}
+                </span>
+            </div>
+            <span class="pull-request-reference">{{ overview.pull_request.reference_src }}</span>
+        </div>
     </div>
     <div class="pull-request-author">
         <span class="pull-request-label" translate>Requester</span>

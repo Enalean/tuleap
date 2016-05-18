@@ -3,7 +3,6 @@ describe('MainController', function() {
         $scope,
         $state,
         PullRequestsService,
-        PullRequestRestService,
         SharedPropertiesService,
         repoId,
         userId;
@@ -19,14 +18,12 @@ describe('MainController', function() {
                         _$rootScope_,
                         _$state_,
                         _PullRequestsService_,
-                        _PullRequestRestService_,
                         _SharedPropertiesService_
         ) {
             $controller = _$controller_;
             $q = _$q_;
             $rootScope  = _$rootScope_;
             $state = _$state_;
-            PullRequestRestService = _PullRequestRestService_;
             PullRequestsService = _PullRequestsService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -45,7 +42,6 @@ describe('MainController', function() {
     });
 
     describe('#init', function() {
-
         var expectedPullRequests, expectedPullRequest;
 
         beforeEach(function() {
@@ -67,7 +63,6 @@ describe('MainController', function() {
             expectedPullRequest = expectedPullRequests[0];
 
             spyOn(PullRequestsService, 'getPullRequests').and.returnValue($q.when(expectedPullRequests));
-            spyOn(PullRequestRestService, 'getPullRequest').and.returnValue($q.when(expectedPullRequest));
         });
 
         it('sets some shared properties', function() {
