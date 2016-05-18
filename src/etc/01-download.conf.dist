@@ -1,0 +1,11 @@
+#
+# Tuleap downloads
+#
+
+Alias /downloads/ "/usr/share/codendi/downloads/"
+<Directory "/usr/share/codendi/downloads">
+    Options MultiViews FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>

@@ -613,6 +613,12 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
 %{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 %{__install} src/etc/tuleap-uploaded-images.conf.rhel5.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
+%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/
+%{__install} src/etc/00-common.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/00-common.conf
+%{__install} src/etc/01-download.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/01-download.conf
+%{__install} src/etc/02-themes.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/02-themes.conf
+%{__install} src/etc/03-plugins.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
+%{__install} src/etc/04-cgi.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -675,12 +681,15 @@ rm -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd
 
 %endif
 
-#Plugin boomerang
+# Plugin boomerang
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/boomerang
 
 # Plugin fulltextsearch
 %{__install} plugins/fulltextsearch/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
+
+# Plugin im
+%{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
 ##
 ## On package install
@@ -987,6 +996,12 @@ fi
 %dir /etc/httpd/conf.d/tuleap-plugins
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
+%dir /etc/httpd/conf.d/tuleap-aliases
+%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/00-common.conf
+%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/01-download.conf
+%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/02-themes.conf
+%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
+%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
 
 #
 # Install
@@ -1051,6 +1066,7 @@ fi
 %files plugin-im
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/IM
+%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)

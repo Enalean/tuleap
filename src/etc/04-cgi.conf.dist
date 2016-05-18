@@ -1,0 +1,27 @@
+#
+# CGI scripts
+#
+
+ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+
+# FollowSymLinks is needed here because of the rewrite rule (otherwise, other CGIs are forbidden...)
+<Directory "/var/www/cgi-bin">
+    AllowOverride None
+    Options ExecCGI FollowSymLinks
+    Order allow,deny
+    Allow from all
+    RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewvc.php/$1
+    <IfModule mod_rewrite.c>
+      RewriteEngine on
+      RewriteCond %{QUERY_STRING} roottype=svn
+      RewriteRule viewcvs.cgi/(.*) /svn/viewvc.php/$1 [R]
+      RewriteRule viewcvs.cgi/(.*) /cvs/viewvc.php/$1 [R]
+    </IfModule>
+</Directory>
+
+# Redirect viewcvs calls to viewvc
+RedirectMatch permanent ^/svn/viewcvs.php(.*) /svn/viewvc.php$1
+RedirectMatch permanent ^/cvs/viewcvs.php(.*) /cvs/viewvc.php$1
+
+# Forbid access to .svn directories
+RedirectMatch 404 /\.svn(/|$)

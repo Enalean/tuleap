@@ -1,0 +1,39 @@
+#
+# Plugins
+#
+
+# 1- plugins CGI scripts
+ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codendi/plugins/$1"
+<Directory "/usr/share/codendi/plugins/[^/]*/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
+# 2- plugins web/php pages
+AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codendi/plugins/$1/www/$2
+<Directory "/usr/share/codendi/plugins/*/www/">
+        Options MultiViews FollowSymlinks
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+</Directory>
+
+# 3- Custom plugins CGI scripts
+ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codendi/plugins/$1"
+<Directory "/etc/codendi/plugins/[^/]*/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
+# 4- Custom plugins web/php pages
+AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codendi/plugins/$1/www/$2
+<DirectoryMatch "/etc/codendi/plugins/([^/]*)/www/">
+    Options MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
