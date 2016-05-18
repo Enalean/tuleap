@@ -87,15 +87,6 @@ autoload-docker: ## Generate autoload files
 autoload-dev:
 	@tools/utils/autoload.sh
 
-less:
-	@tools/utils/less.sh less `pwd`
-
-less-dev:
-	@tools/utils/less.sh watch `pwd`
-
-less-docker: ## Compile less files into css
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --less
-
 sass:
 	@tools/utils/sass.sh sass "$(CURDIR)"
 
