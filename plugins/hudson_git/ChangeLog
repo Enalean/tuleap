@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 8.15
+    * Display current Jenkins in a dedicated table
+
 Version 0.8 - Tuleap 8.15
     * request #9157: A fatal error can be raised if for some reasons the trigger of a Hudson job can't be saved
 
