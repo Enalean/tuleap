@@ -30,3 +30,35 @@
         font-weight: 600;
     }
 }
+
+.modal-jenkins {
+    > .modal-header {
+        border-bottom: 2px solid #888888;
+    }
+
+    .modal-body {
+
+        > p:first-child {
+            margin-bottom: 30px;
+        }
+
+        #repo_jenkins {
+            width: 100%;
+            box-sizing: border-box;
+            height: 30px;
+        }
+    }
+}
+
+.only-one-jenkins {
+    display: inline-block;
+    cursor: not-allowed;
+
+    > .btn[disabled] {
+        pointer-events: none;
+    }
+}
+
+.hooks-desc {
+    margin: 20px 0 20px;
+}

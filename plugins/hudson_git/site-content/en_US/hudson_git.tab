@@ -1,8 +1,8 @@
 plugin_hudson_git	descriptor_description	Continuous Integration with Hudson/Jenkins for Git plugin
 plugin_hudson_git	descriptor_name	Continuous Integration for Git plugin
 
-plugin_hudson_git	settings_hooks_jenkins_notification_label	Jenkins server to notify
-plugin_hudson_git	settings_hooks_jenkins_notification_desc	Will notify the given server about git activity on this repository and trigger git polling. More details on
+plugin_hudson_git	settings_hooks_jenkins_notification_label	Jenkins server:
+plugin_hudson_git	settings_hooks_jenkins_notification_desc	Jenkins server will be notified about git activity on this repository and will trigger git polling. More details on
 plugin_hudson_git	settings_hooks_jenkins_link_label	Jenkins documentation
 
 plugin_hudson_git	error_repository_invalid	Invalid repository
@@ -15,3 +15,10 @@ plugin_hudson_git	label_triggered	Triggered job
 plugin_hudson_git	empty_jobs	No triggered job
 plugin_hudson_git	empty_hooks	No defined hooks yet
 plugin_hudson_git	jenkins_hook	Jenkins hook
+plugin_hudson_git	add_jenkins_hook	Add Jenkins hook
+plugin_hudson_git	add_a_jenkins_hook	Add a Jenkins webhook
+plugin_hudson_git	edit_jenkins_hook	Edit the Jenkins webhook
+plugin_hudson_git	btn_add_jenkins	Add Jenkins webhook
+plugin_hudson_git	btn_save_jenkins	Save Jenkins webhook
+plugin_hudson_git	only_one	Only one Jenkins hook can be configured
+plugin_hudson_git	hooks_desc	You can define one Jenkins webhook.

@@ -38,6 +38,7 @@ class hudson_gitPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
+            $this->addHook('javascript_file');
             $this->addHook('cssfile');
             $this->addHook(GIT_ADDITIONAL_HOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE);
@@ -57,11 +58,17 @@ class hudson_gitPlugin extends Plugin {
         return array('git', 'hudson');
     }
 
-    public function cssFile()
+    public function cssfile()
     {
-        // Only show the stylesheet if we're actually in the Git pages.
-        if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL) === 0) {
+        if ($this->areWeOnGitService()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+
+    public function javascript_file()
+    {
+        if ($this->areWeOnGitService()) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/hudson_git.js"></script>';
         }
     }
 
@@ -118,11 +125,16 @@ class hudson_gitPlugin extends Plugin {
                 ProjectManager::instance()
             ),
             new Hook\HookDao(),
-            new JobManager(new JobDao())
+            new JobManager(new JobDao()),
+            new CSRFSynchronizerToken('hudson-git-hook-management')
         );
     }
 
     private function getLogger() {
         return new WrapperLogger(new Logger(), 'hudson_git');
+    }
+
+    private function areWeOnGitService() {
+        return strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL) === 0;
     }
 }

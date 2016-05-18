@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+    <h3 id="modal-create-jenkins-title">{{ title }}</h3>
+</div>
+<form name="edit_git_hudson" method="post" action="/plugins/hudson_git/?group_id={{ project_id }}">
+    <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+    <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+
+    <div class="modal-body">
+
+        <p>{{ jenkins_notification_desc }} <a href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin#GitPlugin-Pushnotificationfromrepository">{{ jenkins_documentation_link_label }}</a>.</p>
+        <p>
+            <label for="repo_jenkins">{{ jenkins_notification_label }}</label>
+            <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="http://yourserver/jenkins" required pattern="https?://.+" />
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_cancel }}</button>
+        <input type="submit" class="btn btn-primary" value="{{ save }}">
+    </div>
+</form>
