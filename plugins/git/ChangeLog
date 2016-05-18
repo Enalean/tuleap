@@ -1,3 +1,6 @@
+Version 4.155 - Tuleap 8.15
+    * story #9130: Event on notification panel of Git configuration to display plugin template
+
 Version 4.154 - Tuleap 8.15
     * request #8726: Cache directories are reconstructed when Tuleap start
 
