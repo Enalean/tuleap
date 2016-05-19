@@ -243,10 +243,21 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @return Boolean
      */
     public function userCanRead($user, $repository) {
-        return $user->isMember($repository->getProjectId(), 'A')
-               || $user->hasPermission(Git::PERM_READ, $repository->getId(), $repository->getProjectId())
-               || $user->hasPermission(Git::PERM_WRITE, $repository->getId(), $repository->getProjectId())
+
+        if ($user->isMember($repository->getProjectId(), 'A')) {
+            return true;
+        }
+
+        if ($user->hasPermission(Git::PERM_READ, $repository->getId(), $repository->getProjectId())) {
+            return true;
+        }
+
+        if (! $repository->isMigratedToGerrit()) {
+            return $user->hasPermission(Git::PERM_WRITE, $repository->getId(), $repository->getProjectId())
                || $user->hasPermission(Git::PERM_WPLUS, $repository->getId(), $repository->getProjectId());
+        }
+
+        return false;
     }
 
     /**
