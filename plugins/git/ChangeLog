@@ -1,3 +1,6 @@
+Version 4.157 - Tuleap 8.15
+    * story #8418: Refactoring - Extract access rights options building
+
 Version 4.156 - Tuleap 8.15
     * story #8418: Take into account gerrit migration for repository display in web UI
 
