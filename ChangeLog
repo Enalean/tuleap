@@ -46,7 +46,7 @@ Version 8.15 (Not yet released)
 	* admindelegation: 2.12
 	* openidconnectclient: 0.20
 	* statistics: 0.59
-	* hudson_git: 0.9
+	* hudson_git: 0.10
 	* mediawiki: 0.114
 
     == Themes ==
