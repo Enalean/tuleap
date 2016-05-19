@@ -38,6 +38,7 @@ class hudson_gitPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
+            $this->addHook('javascript');
             $this->addHook('javascript_file');
             $this->addHook('cssfile');
             $this->addHook(GIT_ADDITIONAL_HOOKS);
@@ -63,6 +64,11 @@ class hudson_gitPlugin extends Plugin {
         if ($this->areWeOnGitService()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
+    }
+
+    public function javascript($params)
+    {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'hudson_git', '.js');
     }
 
     public function javascript_file()
@@ -93,8 +99,20 @@ class hudson_gitPlugin extends Plugin {
 
     public function process() {
         $request = HTTPRequest::instance();
-        if ($this->isAllowed($request->getProject()->getID())) {
-            $this->getHookController($request)->save();
+        $action  = $request->get('action');
+
+        if (! $this->isAllowed($request->getProject()->getID())) {
+            return;
+        }
+
+        switch ($action) {
+            case 'save_jenkins':
+                $this->getHookController($request)->save();
+                break;
+
+            case 'remove_jenkins':
+                $this->getHookController($request)->remove();
+                break;
         }
     }
 

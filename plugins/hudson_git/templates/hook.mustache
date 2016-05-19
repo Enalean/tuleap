@@ -1,3 +1,5 @@
+<p class="hooks-desc">{{ hooks_desc }}</p>
+
 {{# has_a_jenkins_hook }}
 <span class="only-one-jenkins"
     data-toggle="tooltip"
@@ -8,8 +10,7 @@
 
 <button
     type="button"
-    id="create-jenkins-btn"
-    class="btn btn-primary"
+    class="btn btn-primary create-jenkins-btn"
     {{# has_a_jenkins_hook }}
         disabled
     {{/ has_a_jenkins_hook }}
@@ -24,8 +25,6 @@
 {{# has_a_jenkins_hook }}
 </span>
 {{/ has_a_jenkins_hook }}
-
-<p class="hooks-desc">{{ hooks_desc }}</p>
 
 <table class="table table-striped table-bordered hooks-list">
     <thead>
@@ -47,6 +46,9 @@
                     <a role="button" data-toggle="modal" href="#modal-edit-jenkins">
                         <i class="icon-edit"></i> {{ edit_hook }}
                     </a>
+                    <a href="javascript:;" class="remove-hook" data-toggle="popover" data-trigger="click" data-placement="left" data-html="true">
+                        <i class="icon-trash"></i> {{ remove }}
+                    </a>
                 </td>
             </tr>
         {{/ has_a_jenkins_hook }}
@@ -59,6 +61,21 @@
         {{/ has_hooks }}
     </tbody>
 </table>
+
+<div id="remove-jenkins-popover">
+    <form action="/plugins/hudson_git/?group_id={{ project_id }}" method="POST">
+        <p>{{ remove_jenkins_desc }}</p>
+
+        <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+        <input type="hidden" name="action" value="remove_jenkins" />
+        <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+
+        <div class="remove-jenkins-confirm-actions">
+            <button type="button" class="btn btn-small btn-default dismiss-popover">{{ remove_jenkins_cancel }}</button>
+            <button type="submit" class="btn btn-small btn-danger">{{ remove_jenkins_confirm }}</button>
+        </div>
+    </form>
+</div>
 
 {{# has_hooks }}
     <table class="table table-striped table-bordered mirrors-list">

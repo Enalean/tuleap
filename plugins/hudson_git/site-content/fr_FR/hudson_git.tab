@@ -6,8 +6,9 @@ plugin_hudson_git	settings_hooks_jenkins_notification_desc	Le serveur Jenkins se
 plugin_hudson_git	settings_hooks_jenkins_link_label	documentation Jenkins
 
 plugin_hudson_git	error_repository_invalid	Dépôt invalide
-plugin_hudson_git	error_database	Impossible d'enregistrer l'URL
-plugin_hudson_git	update_success	L'URL a été sauvergardée avec succès
+plugin_hudson_git	error_database	Impossible d'enregistrer le webhook Jenkins
+plugin_hudson_git	update_success	Le webhook Jenkins a été sauvergardée avec succès
+plugin_hudson_git	delete_success	Le webhook Jenkins a été enlevé avec succès
 plugin_hudson_git	job_error	Une erreur est survenue lors de l'enregistrement des données du job
 
 plugin_hudson_git	label_push_date	Date du push
@@ -22,3 +23,7 @@ plugin_hudson_git	btn_add_jenkins	Ajouter le webhook Jenkins
 plugin_hudson_git	btn_save_jenkins	Sauvegarder le webhook Jenkins
 plugin_hudson_git	only_one	Seulement un hook Jenkins peut être configuré
 plugin_hudson_git	hooks_desc	Vous pouvez definir un webhook Jenkins.
+plugin_hudson_git	remove	Enlever
+plugin_hudson_git	remove_jenkins_desc	Vous êtes sur le point de supprimer le serveur Jenkins. Veuillez confirmer la suppression.
+plugin_hudson_git	remove_jenkins_confirm	Confirmer la suppression
+plugin_hudson_git	remove_jenkins_cancel	Annuler

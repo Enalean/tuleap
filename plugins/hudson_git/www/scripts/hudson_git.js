@@ -18,7 +18,33 @@
  */
 
 (function ($) {
+    function confirmJenkinsDeletionPopover() {
+        $('.remove-hook').popover({
+            title: codendi.getText('hudson_git', 'remove_jenkins_title'),
+            content: $('#remove-jenkins-popover').html()
+        });
+    }
+
+    function dismissPopover() {
+        $('.remove-hook').popover('hide');
+    }
+
     $(function () {
         $('.only-one-jenkins').tooltip();
+
+        confirmJenkinsDeletionPopover();
+
+        $('body').on('click', function(event) {
+            if ($(event.target).hasClass('dismiss-popover')) {
+                dismissPopover();
+            }
+
+            if ($(event.target).data('toggle') !== 'popover' &&
+                $(event.target).parents('.popover.in').length === 0 &&
+                $(event.target).parents('[data-toggle="popover"]').length === 0
+            ) {
+                dismissPopover();
+            }
+        });
     });
 }(jQuery));
