@@ -1,16 +1,31 @@
-<form name="edit_git_hudson" method="post" action="/plugins/hudson_git/?group_id={{ project_id }}">
-  <input type="hidden" name="action" value="edit_hook" />
-  <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+{{# has_a_jenkins_hook }}
+<span class="only-one-jenkins"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="{{ only_one }}"
+>
+{{/ has_a_jenkins_hook }}
 
-  <p>
-      <label for="repo_jenkins">{{ jenkins_notification_label }}</label>
-      <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="http://yourserver/jenkins" required pattern="https?://.+" />
-      <div>{{ jenkins_notification_desc }} <a href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin#GitPlugin-Pushnotificationfromrepository">{{ jenkins_documentation_link_label }}</a>.</div>
-  </p>
+<button
+    type="button"
+    id="create-jenkins-btn"
+    class="btn btn-primary"
+    {{# has_a_jenkins_hook }}
+        disabled
+    {{/ has_a_jenkins_hook }}
+    {{^ has_a_jenkins_hook }}
+        data-toggle="modal"
+        data-target="#modal-create-jenkins"
+    {{/ has_a_jenkins_hook }}
+>
+    <i class="icon-plus"></i> {{ add_jenkins_hook }}
+</button>
 
-  <p><input type="submit" name="save" class="btn" value="{{ save_label }}" /></p>
-</form>
+{{# has_a_jenkins_hook }}
+</span>
+{{/ has_a_jenkins_hook }}
 
+<p class="hooks-desc">{{ hooks_desc }}</p>
 
 <table class="table table-striped table-bordered hooks-list">
     <thead>
@@ -28,7 +43,11 @@
             </tr>
             <tr>
                 <td>{{ jenkins_server_url }}</td>
-                <td></td>
+                <td>
+                    <a role="button" data-toggle="modal" href="#modal-edit-jenkins">
+                        <i class="icon-edit"></i> {{ edit_hook }}
+                    </a>
+                </td>
             </tr>
         {{/ has_a_jenkins_hook }}
         {{^ has_hooks }}
@@ -70,3 +89,27 @@
         </tbody>
     </table>
 {{/ has_hooks }}
+
+<div id="modal-create-jenkins"
+    class="modal hide fade modal-jenkins"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modal-jenkins-title"
+    aria-hidden="true"
+>
+    {{# modal_create_jenkins }}
+        {{> modal-jenkins }}
+    {{/ modal_create_jenkins }}
+</div>
+
+<div id="modal-edit-jenkins"
+    class="modal hide fade modal-jenkins"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modal-jenkins-title"
+    aria-hidden="true"
+>
+    {{# modal_edit_jenkins }}
+        {{> modal-jenkins }}
+    {{/ modal_edit_jenkins }}
+</div>

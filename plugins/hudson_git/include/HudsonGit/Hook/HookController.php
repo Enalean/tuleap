@@ -27,10 +27,15 @@ use Codendi_Request;
 use TemplateRendererFactory;
 use Feedback;
 use Tuleap\HudsonGit\Job\JobManager;
-use Tuleap\HudsonGit\Job\JobDao;
+use CSRFSynchronizerToken;
 
 class HookController
 {
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf;
 
     /**
      * @var Codendi_Request
@@ -55,12 +60,14 @@ class HookController
         Codendi_Request $request,
         GitRepositoryFactory $git_repository_factory,
         HookDao $dao,
-        JobManager $job_manager
+        JobManager $job_manager,
+        CSRFSynchronizerToken $csrf
     ) {
         $this->request                = $request;
         $this->git_repository_factory = $git_repository_factory;
         $this->dao                    = $dao;
         $this->job_manager            = $job_manager;
+        $this->csrf                   = $csrf;
     }
 
     public function renderHook(GitRepository $repository, &$output)
@@ -74,7 +81,7 @@ class HookController
         }
 
         $jobs = $this->job_manager->getJobByRepository($repository);
-        $output = $renderer->renderToString('hook', new HookPresenter($repository, $url, $jobs));
+        $output = $renderer->renderToString('hook', new HookPresenter($repository, $url, $jobs, $this->csrf));
     }
 
     public function save()
@@ -86,6 +93,14 @@ class HookController
             $GLOBALS['Response']->redirect(GIT_BASE_URL."/?group_id=".$repository->getProjectId());
         }
 
+        $url = GIT_BASE_URL . '/?' . http_build_query(array(
+            'action'   => 'repo_management',
+            'group_id' => $repository->getProjectId(),
+            'repo_id'  => $repository_id,
+            'pane'     => GitViews_RepoManagement_Pane_Hooks::ID
+        ));
+        $this->csrf->check($url);
+
         $jenkins_server = trim($this->request->getValidated('url', 'string', ''));
         if (! $this->dao->save($repository->getId(), $jenkins_server)) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_database'));
@@ -93,6 +108,6 @@ class HookController
 
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_hudson_git', 'update_success'));
 
-        $GLOBALS['Response']->redirect(GIT_BASE_URL."/?action=repo_management&group_id=".$repository->getProjectId()."&repo_id=$repository_id&pane=".GitViews_RepoManagement_Pane_Hooks::ID);
+        $GLOBALS['Response']->redirect($url);
     }
 }

@@ -21,13 +21,12 @@
 namespace Tuleap\HudsonGit\Hook;
 
 use GitRepository;
-use GitViews_RepoManagement_Pane_Hooks;
+use CSRFSynchronizerToken;
 
 class HookPresenter
 {
     public $jobs;
     public $jenkins_server_url;
-    public $has_a_jenkins_hook;
     public $has_hooks;
     public $project_id;
     public $repository_id;
@@ -40,11 +39,20 @@ class HookPresenter
     public $empty_jobs;
     public $empty_hooks;
     public $jenkins_hook;
+    public $only_one;
+    public $hooks_desc;
+    public $modal_create_jenkins;
+    public $modal_edit_jenkins;
 
-    public function __construct(GitRepository $repository, $jenkins_server_url, array $jobs)
-    {
+    public function __construct(
+        GitRepository $repository,
+        $jenkins_server_url,
+        array $jobs,
+        CSRFSynchronizerToken $csrf
+    ) {
         $this->jenkins_server_url = $jenkins_server_url;
         $this->jobs               = $jobs;
+        $this->csrf_token         = $csrf->getToken();
 
         $this->has_a_jenkins_hook = $this->jenkins_server_url;
         $this->has_hooks          = $this->jenkins_server_url;
@@ -52,12 +60,20 @@ class HookPresenter
         $this->project_id    = $repository->getProjectId();
         $this->repository_id = $repository->getId();
 
+        $this->btn_cancel      = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->edit_hook       = $GLOBALS['Language']->getText('global', 'btn_edit');
         $this->save_label      = $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
         $this->label_push_date = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
         $this->label_triggered = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
         $this->empty_jobs      = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
         $this->empty_hooks     = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_hooks');
         $this->jenkins_hook    = $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook');
+        $this->only_one        = $GLOBALS['Language']->getText('plugin_hudson_git', 'only_one');
+        $this->hooks_desc      = $GLOBALS['Language']->getText('plugin_hudson_git', 'hooks_desc');
+
+        $this->add_jenkins_hook     = $GLOBALS['Language']->getText('plugin_hudson_git', 'add_jenkins_hook');
+        $this->modal_create_jenkins = new ModalCreatePresenter();
+        $this->modal_edit_jenkins   = new ModalEditPresenter();
 
         $this->jenkins_notification_label       = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_label');
         $this->jenkins_notification_desc        = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_desc');
