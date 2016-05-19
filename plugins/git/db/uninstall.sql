@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS plugin_git_repository_mirrors;
 DROP TABLE IF EXISTS plugin_git_restricted_mirrors;
 DROP TABLE IF EXISTS plugin_git_restricted_mirrors_allowed_projects;
 DROP TABLE IF EXISTS plugin_git_default_project_mirrors;
+DROP TABLE IF EXISTS plugin_git_webhook_url;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

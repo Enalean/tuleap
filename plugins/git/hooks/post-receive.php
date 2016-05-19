@@ -51,6 +51,8 @@ if ($user_name === false) {
     $user_name         = $user_informations['name'];
 }
 
+$http_client = new Http_Client();
+
 $post_receive = new Git_Hook_PostReceive(
     new Git_Hook_LogAnalyzer(
         $git_exec,
@@ -60,7 +62,7 @@ $post_receive = new Git_Hook_PostReceive(
     $user_manager,
     new Git_Ci_Launcher(
         new Jenkins_Client(
-            new Http_Client()
+            $http_client
         ),
         new Git_Ci_Dao(),
         $logger
@@ -77,8 +79,14 @@ $post_receive = new Git_Hook_PostReceive(
     ),
     $git_repository_url_manager,
     $system_event_manager,
-    EventManager::instance()
+    EventManager::instance(),
+    new \Tuleap\Git\Git\Hook\WebHookRequestSender(
+        new \Tuleap\Git\Git\Hook\WebHookDao(),
+        $http_client,
+        $logger
+    )
 );
+
 $mail_builder = new MailBuilder(TemplateRendererFactory::build());
 
 $post_receive->beforeParsingReferences($repository_path);

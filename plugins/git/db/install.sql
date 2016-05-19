@@ -158,3 +158,10 @@ CREATE TABLE IF NOT EXISTS plugin_git_restricted_mirrors_allowed_projects (
     project_id INT(11) NOT NULL,
     PRIMARY KEY idx(mirror_id, project_id)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_webhook_url (
+    id int(11) unsigned PRIMARY KEY AUTO_INCREMENT,
+    repository_id int(10) unsigned NOT NULL,
+    url TEXT NOT NULL,
+    INDEX idx_git_webhook_url_repository_id (repository_id)
+);

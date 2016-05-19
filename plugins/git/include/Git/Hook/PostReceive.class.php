@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Git\Hook\WebHookRequestSender;
+
 /**
  * Central access point for things that needs to happen when post-receive is
  * executed
@@ -55,15 +57,22 @@ class Git_Hook_PostReceive {
     /** * @var EventManager */
     private $event_manager;
 
+    /**
+     * @var WebHookRequestSender
+     */
+    private $webhook_request_sender;
+
     public function __construct(
-            Git_Hook_LogAnalyzer $log_analyzer,
-            GitRepositoryFactory $repository_factory,
-            UserManager $user_manager,
-            Git_Ci_Launcher $ci_launcher,
-            Git_Hook_ParseLog $parse_log,
-            Git_GitRepositoryUrlManager $repository_url_manager,
-            Git_SystemEventManager $system_event_manager,
-            EventManager $event_manager) {
+        Git_Hook_LogAnalyzer $log_analyzer,
+        GitRepositoryFactory $repository_factory,
+        UserManager $user_manager,
+        Git_Ci_Launcher $ci_launcher,
+        Git_Hook_ParseLog $parse_log,
+        Git_GitRepositoryUrlManager $repository_url_manager,
+        Git_SystemEventManager $system_event_manager,
+        EventManager $event_manager,
+        WebHookRequestSender $webhook_request_sender
+    ) {
         $this->log_analyzer           = $log_analyzer;
         $this->repository_factory     = $repository_factory;
         $this->user_manager           = $user_manager;
@@ -72,6 +81,7 @@ class Git_Hook_PostReceive {
         $this->system_event_manager   = $system_event_manager;
         $this->repository_url_manager = $repository_url_manager;
         $this->event_manager          = $event_manager;
+        $this->webhook_request_sender = $webhook_request_sender;
     }
 
     public function beforeParsingReferences($repository_path) {
@@ -93,6 +103,7 @@ class Git_Hook_PostReceive {
             }
             $this->sendMail($repository, $mail_builder, $oldrev, $newrev, $refname);
             $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
+            $this->processGitWebHooks($repository, $user, $oldrev, $newrev, $refname);
             $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE_REF_UPDATE, array(
                 'repository' => $repository,
                 'oldrev'     => $oldrev,
@@ -100,6 +111,7 @@ class Git_Hook_PostReceive {
                 'refname'    => $refname,
                 'user'       => $user,
             ));
+
         }
     }
 
@@ -158,4 +170,10 @@ class Git_Hook_PostReceive {
         }
         return $body;
     }
+
+    private function processGitWebHooks(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    {
+        return $this->webhook_request_sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
+    }
+
 }
