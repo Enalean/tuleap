@@ -29,20 +29,25 @@
 <table class="table table-striped table-bordered hooks-list">
     <thead>
         <tr>
-            <th>URL</th>
+            <th>{{ url }}</th>
+            <th>{{ last_push }}</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         {{# has_a_jenkins_hook }}
             <tr class="hook-section">
-                <td colspan="2">
+                <td colspan="3">
                     {{ jenkins_hook }}
                 </td>
             </tr>
             <tr>
                 <td>{{ jenkins_server_url }}</td>
+                <td><span class="text-info">{{ n_jobs_triggered }}</span></td>
                 <td>
+                    <a role="button" data-toggle="modal" href="#modal-logs-jenkins">
+                        <i class="icon-list"></i> {{ logs }}
+                    </a>
                     <a role="button" data-toggle="modal" href="#modal-edit-jenkins">
                         <i class="icon-edit"></i> {{ edit_hook }}
                     </a>
@@ -77,36 +82,6 @@
     </form>
 </div>
 
-{{# has_hooks }}
-    <table class="table table-striped table-bordered mirrors-list">
-        <thead>
-            <tr>
-                <th>{{ label_push_date }}</th>
-                <th>{{ label_triggered }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{# jobs }}
-                <tr>
-                   <td class='pushdate'>{{ getFormattedPushDate }}</id>
-                   <td>
-                       {{# getJobUrlList }}
-                             <a href='{{ . }}'>{{ . }}</a><br>
-                       {{/ getJobUrlList }}
-                   </id>
-                </tr>
-            {{/ jobs }}
-            {{^ jobs }}
-              <tr class="empty-table">
-                    <td colspan="2">
-                        {{ empty_jobs }}
-                    </td>
-              </tr>
-          {{/ jobs }}
-        </tbody>
-    </table>
-{{/ has_hooks }}
-
 <div id="modal-create-jenkins"
     class="modal hide fade modal-jenkins"
     tabindex="-1"
@@ -130,3 +105,5 @@
         {{> modal-jenkins }}
     {{/ modal_edit_jenkins }}
 </div>
+
+{{> modal-logs }}

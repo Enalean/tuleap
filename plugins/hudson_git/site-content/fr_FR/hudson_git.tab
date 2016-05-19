@@ -27,3 +27,8 @@ plugin_hudson_git	remove	Enlever
 plugin_hudson_git	remove_jenkins_desc	Vous êtes sur le point de supprimer le serveur Jenkins. Veuillez confirmer la suppression.
 plugin_hudson_git	remove_jenkins_confirm	Confirmer la suppression
 plugin_hudson_git	remove_jenkins_cancel	Annuler
+plugin_hudson_git	logs	Logs
+plugin_hudson_git	logs_for	Logs pour $1
+plugin_hudson_git	n_jobs_triggered	$1 jobs déclenchés
+plugin_hudson_git	last_push	Dernier push
+plugin_hudson_git	url	URL

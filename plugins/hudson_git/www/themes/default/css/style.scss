@@ -39,22 +39,22 @@
     > thead > tr > th,
     > tbody > tr > td {
         vertical-align: middle;
+        white-space: nowrap;
 
         &:first-child {
-            width: 100%;
+            max-width: 430px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
-        &:last-child {
-            white-space: nowrap;
+        &:last-child > a {
+            margin: 0 5px;
 
-            a {
-                margin: 0 5px;
-
-                &:hover,
-                &:focus {
-                    text-decoration: none;
-                    opacity: .8;
-                }
+            &:hover,
+            &:focus {
+                text-decoration: none;
+                opacity: .8;
             }
         }
     }
@@ -89,9 +89,48 @@
     }
 }
 
+.hooks-jobs-list {
+
+    > thead > tr {
+        background: #e4e4e4;
+
+        > th {
+            border-bottom: 2px solid #b2b2b2;
+            border-left-color: #d2d2d2;
+            vertical-align: top;
+        }
+    }
+
+    > tbody {
+        font-size: 12px;
+
+        > tr:first-child > td {
+            border-top: 0;
+            white-space: nowrap;
+        }
+
+        > tr > td:last-child {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 383px;
+        }
+    }
+}
+
 .modal-jenkins {
     > .modal-header {
         border-bottom: 2px solid #888888;
+
+        > .close {
+            margin-left: 10px;
+        }
+
+        > h3 {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     }
 
     .modal-body {

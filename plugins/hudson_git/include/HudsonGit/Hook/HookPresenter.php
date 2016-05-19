@@ -48,6 +48,12 @@ class HookPresenter
     public $remove_jenkins_confirm;
     public $remove_jenkins_cancel;
     public $csrf_token;
+    public $logs;
+    public $add_jenkins_hook;
+    public $btn_close;
+    public $n_jobs_triggered;
+    public $last_push;
+    public $url;
 
     public function __construct(
         GitRepository $repository,
@@ -66,6 +72,7 @@ class HookPresenter
         $this->repository_id = $repository->getId();
 
         $this->btn_cancel             = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->btn_close              = $GLOBALS['Language']->getText('global', 'btn_close');
         $this->edit_hook              = $GLOBALS['Language']->getText('global', 'btn_edit');
         $this->save_label             = $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
         $this->label_push_date        = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
@@ -79,6 +86,10 @@ class HookPresenter
         $this->remove_jenkins_desc    = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_desc');
         $this->remove_jenkins_confirm = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_confirm');
         $this->remove_jenkins_cancel  = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_cancel');
+        $this->logs            = $GLOBALS['Language']->getText('plugin_hudson_git', 'logs');
+        $this->logs_for        = $GLOBALS['Language']->getText('plugin_hudson_git', 'logs_for', $this->jenkins_server_url);
+        $this->last_push       = $GLOBALS['Language']->getText('plugin_hudson_git', 'last_push');
+        $this->url             = $GLOBALS['Language']->getText('plugin_hudson_git', 'url');
 
         $this->add_jenkins_hook     = $GLOBALS['Language']->getText('plugin_hudson_git', 'add_jenkins_hook');
         $this->modal_create_jenkins = new ModalCreatePresenter();
@@ -87,5 +98,29 @@ class HookPresenter
         $this->jenkins_notification_label       = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_label');
         $this->jenkins_notification_desc        = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_desc');
         $this->jenkins_documentation_link_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_link_label');
+
+        $this->n_jobs_triggered = $GLOBALS['Language']->getText(
+            'plugin_hudson_git',
+            'n_jobs_triggered',
+            $this->countNbJobsTriggeredOnLastPush($jobs)
+        );
+    }
+
+    private function countNbJobsTriggeredOnLastPush($jobs)
+    {
+        $nb = 0;
+        $last_push_date = null;
+        foreach ($jobs as $job) {
+            if ($nb === 0) {
+                $last_push_date = $job->getPushDate();
+            }
+            if ($job->getPushDate() !== $last_push_date) {
+                break;
+            }
+
+            $nb++;
+        }
+
+        return $nb;
     }
 }
