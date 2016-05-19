@@ -51,6 +51,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             return $this->getFastComputedValue($artifact->getId(), $timestamp);
         }
 
+        $computed_artifact_ids[$artifact->getId()] = true;
+
         if ($timestamp === null) {
             $dar = $this->getDao()->getFieldValues(array($artifact->getId()), $this->getProperty('target_field_name'));
         } else {
@@ -72,11 +74,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             }
             $artifact_ids_to_fetch = array();
             foreach ($dar as $row) {
-                if ($row['type'] == 'computed' && ! isset($already_seen[$row['id']])) {
-                    $artifact_ids_to_fetch[] = $row['id'];
+                if (! isset($already_seen[$row['id']])) {
                     $already_seen[$row['id']] = true;
-                } elseif (isset($row[$row['type'].'_value'])) {
-                    $sum += $row[$row['type'].'_value'];
+                    if ($row['type'] == 'computed') {
+                        $artifact_ids_to_fetch[] = $row['id'];
+                    } elseif (isset($row[$row['type'].'_value'])) {
+                        $sum += $row[$row['type'].'_value'];
+                    }
                 }
             }
             $dar->freeMemory();
@@ -89,9 +93,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         $sum = null;
 
         foreach ($dar as $row) {
-            $linked_artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
-            if ($linked_artifact->userCanView($user)) {
-                $this->addIfNotNull($sum, $this->getValueOrContinueComputing($user, $linked_artifact, $row, $timestamp, $computed_artifact_ids));
+            if (! isset($computed_artifact_ids[$row['id']])) {
+                $linked_artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
+                if ($linked_artifact->userCanView($user)) {
+                    $this->addIfNotNull($sum, $this->getValueOrContinueComputing($user, $linked_artifact, $row, $timestamp, $computed_artifact_ids));
+                }
             }
         }
 
@@ -106,30 +112,17 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
 
     private function getValueOrContinueComputing(PFUser $user, Tracker_Artifact $linked_artifact, array $row, $timestamp, array &$computed_artifact_ids) {
         if ($row['type'] == 'computed') {
-            return $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
+            return $this->getFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
         } else if (! isset($row[$row['type'].'_value'])) {
+            $computed_artifact_ids[$row['id']] = true;
             return null;
         } else {
+            $computed_artifact_ids[$row['id']] = true;
             return $row[$row['type'].'_value'];
         }
     }
 
-    private function getUniqueFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {
-        if ($this->notAlreadyComputed($artifact, $computed_artifact_ids)) {
-            return $this->getFieldValue($user, $artifact, $timestamp, $computed_artifact_ids);
-        }
-        return null;
-    }
-
-    private function notAlreadyComputed(Tracker_Artifact $artifact, &$computed_artifact_ids) {
-        if (!isset($computed_artifact_ids[$artifact->getId()])) {
-            $computed_artifact_ids[$artifact->getId()] = true;
-            return true;
-        }
-        return false;
-    }
-
-    private function getFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {
+    private function getFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, array &$computed_artifact_ids) {
         $field = $this->getTargetField($user, $artifact);
         if ($field) {
             return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids);
