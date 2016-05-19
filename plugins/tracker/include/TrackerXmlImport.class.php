@@ -269,6 +269,48 @@ class TrackerXmlImport {
         return $created_trackers_mapping;
     }
 
+    /**
+     * @throws XML_ParseException
+     * @return string
+     */
+    public function collectErrorsWithoutImporting(Project $project, SimpleXMLElement $xml_input)
+    {
+        if (! $xml_input->trackers) {
+            return '';
+        }
+
+        $this->rng_validator->validate($xml_input->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
+
+        $xml_trackers = $this->getAllXmlTrackers($xml_input);
+        $trackers = array();
+
+        foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
+            $name = (string) $xml_tracker->name;
+            $description = (string) $xml_tracker->description;
+            $item_name = (string) $xml_tracker->item_name;
+            $trackers[] = $this->getInstanceFromXML($xml_tracker, $project, $name, $description, $item_name);
+        }
+
+        $trackers_name_error = $this->tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo(
+            $trackers,
+            $project->getID()
+        );
+
+        $errors = '';
+
+        if (! empty($trackers_name_error)) {
+
+            $list_trackers_name = implode(', ', $trackers_name_error);
+            $errors = $GLOBALS['Language']->getText(
+                'plugin_tracker_common_type',
+                'trackers_cant_be_imported',
+                array($list_trackers_name)
+            );
+        }
+
+        return $errors;
+    }
+
     private function activateArtlinkV2(Project $project, SimpleXMLElement $xml_element) {
         $use_natures = $xml_element{'use-natures'};
         if($use_natures == 'true') {

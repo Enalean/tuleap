@@ -126,13 +126,25 @@ class ProjectXMLImporter {
     public function import($project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
-        $xml_contents    = file_get_contents($xml_file_path, 'r');
-        $xml_element     = $this->getSimpleXMLElementFromString($xml_contents);
+        $xml_element     = $this->getSimpleXMLElementFromFilePath($xml_file_path);
         $extraction_path = '';
 
         $project = $this->getProject($project_id);
 
         $this->importContent($project, $xml_element, $extraction_path);
+    }
+
+    /**
+     * @return string
+     */
+    public function collectBlockingErrorsWithoutImporting($project_id, $xml_file_path)
+    {
+        $this->logger->info('Start collecting errors from file ' . $xml_file_path);
+
+        $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
+        $project = $this->getProject($project_id);
+
+        return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
     }
 
     private function importContent(Project $project, SimpleXMLElement $xml_element, $extraction_path) {
@@ -171,6 +183,27 @@ class ProjectXMLImporter {
         );
 
         $this->logger->info("Finish importing project in project ".$project->getUnixName() . " id " . $project->getID());
+    }
+
+    /**
+     * @return string
+     */
+    private function collectBlockingErrorsWithoutImportingContent(Project $project, SimpleXMLElement $xml_element)
+    {
+        $errors = '';
+
+        $this->logger->info("Ask plugins to check if errors might be raised from importing the XML");
+        $this->event_manager->processEvent(
+            Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT,
+            array(
+                'logger'      => $this->logger,
+                'project'     => $project,
+                'xml_content' => $xml_element,
+                'user_finder' => $this->user_finder,
+                'errors'      => &$errors
+            )
+        );
+        return $errors;
     }
 
     private function importUgroups(Project $project, SimpleXMLElement $xml_element, PFUser $user_creator) {
@@ -307,6 +340,15 @@ class ProjectXMLImporter {
             throw new RuntimeException('No content available in archive for file ' . ArchiveInterface::PROJECT_FILE);
         }
 
+        return $this->getSimpleXMLElementFromString($xml_contents);
+    }
+
+    /**
+     * @return SimpleXMLElement
+     */
+    private function getSimpleXMLElementFromFilePath($file_path)
+    {
+        $xml_contents = file_get_contents($file_path, 'r');
         return $this->getSimpleXMLElementFromString($xml_contents);
     }
 

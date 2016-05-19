@@ -356,10 +356,21 @@ class Planning_Controller extends MVC2_PluginController {
         );
 
         try {
-            $xml_importer->import($this->group_id, $_FILES["template_file"]["tmp_name"]);
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success') );
+            $errors = $xml_importer->collectBlockingErrorsWithoutImporting(
+                $this->group_id,
+                $_FILES["template_file"]["tmp_name"]
+            );
+            if ($errors === '') {
+                $xml_importer->import($this->group_id, $_FILES["template_file"]["tmp_name"]);
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $errors);
+            }
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_import') );
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_import'));
         }
     }
 

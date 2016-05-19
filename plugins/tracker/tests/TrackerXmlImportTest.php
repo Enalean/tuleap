@@ -272,6 +272,42 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->assertNotNull($hierarchy[444]);
         $this->assertIdentical($expected_hierarchy, $hierarchy);
     }
+
+    public function itCollectsErrorsWithoutImporting()
+    {
+        $tracker_xml_importer = partial_mock(
+            'TrackerXmlImportTestInstance',
+            array(
+                'getInstanceFromXML',
+                'import'
+            ),
+            array(
+                $this->tracker_factory,
+                $this->event_manager,
+                $this->hierarchy_dao,
+                mock('Tracker_CannedResponseFactory'),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_SemanticFactory'),
+                mock('Tracker_RuleFactory'),
+                mock('Tracker_ReportFactory'),
+                mock('WorkflowFactory'),
+                mock('XML_RNGValidator'),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
+                $this->xml_import,
+                mock('User\XML\Import\IFindUserFromXMLReference'),
+                $this->ugroup_manager,
+                mock('Logger'),
+                mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig')
+            )
+        );
+
+        expect($tracker_xml_importer)->getInstanceFromXML()->count(3);
+        expect($tracker_xml_importer)->import()->never();
+        expect($this->tracker_factory)->collectTrackersNameInErrorOnMandatoryCreationInfo()->once();
+
+        $collected_errors = $tracker_xml_importer->collectErrorsWithoutImporting($this->project, $this->xml_input);
+        $this->assertEqual($collected_errors, '');
+    }
 }
 
 class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
