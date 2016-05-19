@@ -1,3 +1,6 @@
+Version 4.156 - Tuleap 8.15
+    * story #8418: Take into account gerrit migration for repository display in web UI
+
 Version 4.155 - Tuleap 8.15
     * story #9130: Event on notification panel of Git configuration to display plugin template
 
