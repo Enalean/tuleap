@@ -45,7 +45,6 @@ use \Tracker_REST_Artifact_ArtifactCreator;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tracker_URLVerification;
 use \Tracker_Artifact_Changeset as Changeset;
-use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class ArtifactsResource extends AuthenticatedResource {
@@ -214,7 +213,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * @param int    $id        Id of the artifact
      * @param string $direction The artifact link direction {@from query} {@choice forward,reverse}
      * @param string $nature    The artifact link nature to filter {@from query}
-     * @param int    $limit     Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $limit     Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int    $offset    Position of the first element to display {@from path}{@min 0}
      *
      * @return Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation
@@ -244,7 +243,9 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendAllowHeadersForLinkedArtifacts();
         Header::sendPaginationHeaders($limit, $offset, $linked_artifacts->getTotalSize(), self::MAX_LIMIT);
 
-        return $linked_artifacts->getArtifacts();
+        return array(
+            self::VALUES_FORMAT_COLLECTION => $linked_artifacts->getArtifacts()
+        );
     }
 
     /**
