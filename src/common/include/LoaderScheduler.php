@@ -39,6 +39,7 @@ class LoaderScheduler {
 
     private function startSession($is_script) {
         if (! $is_script) {
+            $this->cookie_manager->configureSessionCookie();
             // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
             session_cache_limiter(false);
             session_start();
