@@ -51,18 +51,18 @@ class FileUniDiffBuilderTest extends TuleapTestCase
     {
         $file_path = "$this->fixture_dir/file";
 
-        file_put_contents($file_path, "Contenu\nContenu2");
+        file_put_contents($file_path, "Contenu\n\nContenu2\nContenu3");
         $this->git_exec->add($file_path);
         $this->git_exec->commit("add $file_path");
 
-        file_put_contents($file_path, "Contenu3\nContenu\nContenu4");
+        file_put_contents($file_path, "Contenu3\nContenu\n\nContenu2\n\nContenu4");
         $this->git_exec->add($file_path);
         $this->git_exec->commit("change $file_path");
 
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEqual(4, count($lines));
+        $this->assertEqual(7, count($lines));
 
         $line = $diff->getLineFromNewOffset(1);
         $this->assertEqual(UniDiffLine::ADDED, $line->getType());
@@ -73,10 +73,22 @@ class FileUniDiffBuilderTest extends TuleapTestCase
         $this->assertEqual(1, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(3);
+        $this->assertEqual(UniDiffLine::KEPT, $line->getType());
+        $this->assertEqual(2, $line->getOldOffset());
+
+        $line = $diff->getLineFromNewOffset(4);
+        $this->assertEqual(UniDiffLine::KEPT, $line->getType());
+        $this->assertEqual(3, $line->getOldOffset());
+
+        $line = $diff->getLineFromNewOffset(5);
         $this->assertEqual(UniDiffLine::ADDED, $line->getType());
         $this->assertEqual(NULL, $line->getOldOffset());
 
-        $line = $diff->getLineFromOldOffset(2);
+        $line = $diff->getLineFromNewOffset(6);
+        $this->assertEqual(UniDiffLine::ADDED, $line->getType());
+        $this->assertEqual(NULL, $line->getOldOffset());
+
+        $line = $diff->getLineFromOldOffset(4);
         $this->assertEqual(UniDiffLine::REMOVED, $line->getType());
         $this->assertEqual(NULL, $line->getNewOffset());
     }

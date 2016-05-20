@@ -42,13 +42,14 @@ class FileUniDiffBuilder
             $i   += 1;
 
             if (strlen($line) == 0) {
-                continue;
-            }
-
-            $type = $line[0];
-            $line = substr($line, 1);
-            if ($line == false) {
+                $type = $this->KEPT;
                 $line = '';
+            } else {
+                $type = $line[0];
+                $line = substr($line, 1);
+                if ($line == false) {
+                    $line = '';
+                }
             }
 
             $unidiff_offset += 1;
