@@ -1,0 +1,48 @@
+<div id="modal-logs-jenkins"
+    class="modal hide fade modal-jenkins"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modal-logs-jenkins-title"
+    aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+        <h3 id="modal-create-logs-jenkins-title">{{ logs_for }}</h3>
+    </div>
+
+    <div class="modal-body">
+        {{# has_hooks }}
+            <table class="table table-striped table-bordered hooks-jobs-list">
+                <thead>
+                    <tr>
+                        <th>{{ label_push_date }}</th>
+                        <th>{{ label_triggered }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# jobs }}
+                        <tr>
+                           <td class='pushdate'>{{ getFormattedPushDate }}</id>
+                           <td>
+                               {{# getJobUrlList }}
+                                     <a href='{{ . }}'>{{ . }}</a><br>
+                               {{/ getJobUrlList }}
+                           </id>
+                        </tr>
+                    {{/ jobs }}
+                    {{^ jobs }}
+                      <tr class="empty-table">
+                            <td colspan="2">
+                                {{ empty_jobs }}
+                            </td>
+                      </tr>
+                  {{/ jobs }}
+                </tbody>
+            </table>
+        {{/ has_hooks }}
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
+    </div>
+</div>

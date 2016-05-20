@@ -1,6 +1,7 @@
 @import "../../default/css/style";
 
 @mixin definitions($main) {
+    .hooks-jobs-list,
     .hooks-list {
         & > thead > tr > th {
             border-bottom-color: $main;
