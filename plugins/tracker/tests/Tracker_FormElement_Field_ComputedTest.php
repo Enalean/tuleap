@@ -45,12 +45,13 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     public function tearDown() {
         parent::tearDown();
         Tracker_FormElementFactory::clearInstance();
+        Tracker_ArtifactFactory::clearInstance();
     }
 
     public function itComputesDirectValues() {
         stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
-            array('type' => 'int', 'int_value' => 5),
-            array('type' => 'int', 'int_value' => 15)
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15)
         );
 
         $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
@@ -68,6 +69,144 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
+    }
+}
+
+class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCase {
+    private $user;
+    private $field;
+    private $formelement_factory;
+    private $dao;
+    private $artifact_factory;
+    private $artifact;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user  = mock('PFUser');
+        $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
+        $this->field = $this->getComputedField();
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        Tracker_FormElementFactory::setInstance($this->formelement_factory);
+
+        $this->artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->artifact)->userCanView()->returns(true);
+        stub($this->artifact)->getTracker()->returns(aMockTracker()->withId(12)->build());
+    }
+
+    private function getComputedField() {
+        $field = partial_mock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
+        stub($field)->getProperty('target_field_name')->returns('effort');
+        stub($field)->getProperty('fast_compute')->returns(0);
+        stub($field)->getDao()->returns($this->dao);
+        return $field;
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        Tracker_FormElementFactory::clearInstance();
+        Tracker_ArtifactFactory::clearInstance();
+    }
+
+    public function itComputesRecursively() {
+        $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
+        $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
+        $row_766 = array('id' => 766, 'type' => 'computed');
+        $row_722 = array('id' => 722, 'type' => 'int', 'int_value' => 5);
+
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            $row_750,
+            $row_751,
+            $row_766
+        );
+        stub($this->dao)->getFieldValues(array(766), 'effort')->returnsDar(
+            $row_722
+        );
+
+        stub($this->artifact_factory)->getInstanceFromRow($row_750)->returns($this->getArtifact(750));
+        stub($this->artifact_factory)->getInstanceFromRow($row_751)->returns($this->getArtifact(751));
+        stub($this->artifact_factory)->getInstanceFromRow($row_722)->returns($this->getArtifact(722));
+        stub($this->artifact_factory)->getInstanceFromRow($row_766)->returns($this->getArtifact(766));
+
+        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
+
+        $this->assertEqual(25, $this->field->getComputedValue($this->user, $this->artifact));
+    }
+
+    public function itDoesntMakeLoopInGraph() {
+        $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
+        $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
+        $row_752 = array('id' => 752, 'type' => 'int', 'int_value' => 10);
+        $row_753 = array('id' => 753, 'type' => 'int', 'int_value' => 10);
+        $row_766 = array('id' => 766, 'type' => 'computed');
+        $row_777 = array('id' => 777, 'type' => 'computed');
+        $row_233 = array('id' => 233, 'type' => 'computed');
+
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            $row_750,
+            $row_751,
+            $row_766,
+            $row_777
+        );
+        stub($this->dao)->getFieldValues(array(766), 'effort')->returnsDar(
+            $row_752,
+            $row_233
+        );
+        stub($this->dao)->getFieldValues(array(777), 'effort')->returnsDar(
+            $row_753,
+            $row_766
+        );
+
+        stub($this->artifact_factory)->getInstanceFromRow($row_750)->returns($this->getArtifact(750));
+        stub($this->artifact_factory)->getInstanceFromRow($row_751)->returns($this->getArtifact(751));
+        stub($this->artifact_factory)->getInstanceFromRow($row_752)->returns($this->getArtifact(752));
+        stub($this->artifact_factory)->getInstanceFromRow($row_753)->returns($this->getArtifact(753));
+        stub($this->artifact_factory)->getInstanceFromRow($row_766)->returns($this->getArtifact(766));
+        stub($this->artifact_factory)->getInstanceFromRow($row_777)->returns($this->getArtifact(777));
+        stub($this->artifact_factory)->getInstanceFromRow($row_233)->returns($this->artifact);
+
+        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
+
+        $this->assertEqual(40, $this->field->getComputedValue($this->user, $this->artifact));
+    }
+
+    public function itDoesntCountTwiceTheFinalData() {
+        $row_750 = array('id' => 750, 'type' => 'int', 'int_value' => 5);
+        $row_751 = array('id' => 751, 'type' => 'int', 'int_value' => 15);
+        $row_766 = array('id' => 766, 'type' => 'computed');
+        $row_777 = array('id' => 777, 'type' => 'computed');
+
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            $row_750,
+            $row_751,
+            $row_766,
+            $row_777
+        );
+        stub($this->dao)->getFieldValues(array(766), 'effort')->returnsDar(
+            $row_750
+        );
+        stub($this->dao)->getFieldValues(array(777), 'effort')->returnsDar(
+            $row_751
+        );
+
+        stub($this->artifact_factory)->getInstanceFromRow($row_750)->returns($this->getArtifact(750));
+        stub($this->artifact_factory)->getInstanceFromRow($row_751)->returns($this->getArtifact(751));
+        stub($this->artifact_factory)->getInstanceFromRow($row_766)->returns($this->getArtifact(766));
+        stub($this->artifact_factory)->getInstanceFromRow($row_777)->returns($this->getArtifact(777));
+
+        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($this->getComputedField());
+
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $this->artifact));
+    }
+
+    private function getArtifact($id) {
+        $artifact = stub('Tracker_Artifact')->userCanView()->returns(true);
+        stub($artifact)->getTracker()->returns(aMockTracker()->withId(12)->build());
+        stub($artifact)->getId()->returns($id);
+        return $artifact;
     }
 }
 
@@ -102,8 +241,8 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase {
     public function itComputesDirectValues() {
         expect($this->dao)->getFieldValues()->once();
         stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
-            array('type' => 'int', 'int_value' => 5),
-            array('type' => 'int', 'int_value' => 15)
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15)
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
@@ -113,14 +252,14 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase {
     public function itMakesOneDbCallPerGraphDepth() {
         expect($this->dao)->getFieldValues()->count(2);
         stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
-            array('type' => 'int', 'int_value' => 5),
-            array('type' => 'int', 'int_value' => 15),
-            array('type' => 'computed', 'id' => 766),
-            array('type' => 'computed', 'id' => 777)
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15),
+            array('id' => 766, 'type' => 'computed'),
+            array('id' => 777, 'type' => 'computed')
         );
         stub($this->dao)->getFieldValues(array(766, 777), 'effort')->returnsDar(
-            array('type' => 'int', 'int_value' => 10),
-            array('type' => 'int', 'int_value' => 10)
+            array('id' => 752, 'type' => 'int', 'int_value' => 10),
+            array('id' => 753, 'type' => 'int', 'int_value' => 10)
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
@@ -130,20 +269,42 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase {
     public function itDoesntMakeLoopInGraph() {
         expect($this->dao)->getFieldValues()->count(2);
         stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
-            array('type' => 'int', 'int_value' => 5),
-            array('type' => 'int', 'int_value' => 15),
-            array('type' => 'computed', 'id' => 766),
-            array('type' => 'computed', 'id' => 777)
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15),
+            array('id' => 766, 'type' => 'computed'),
+            array('id' => 777, 'type' => 'computed')
         );
         stub($this->dao)->getFieldValues(array(766, 777), 'effort')->returnsDar(
-            array('type' => 'int', 'int_value' => 10),
-            array('type' => 'int', 'int_value' => 10),
-            array('type' => 'computed', 'id' => 766),
-            array('type' => 'computed', 'id' => 233)
+            array('id' => 752, 'type' => 'int', 'int_value' => 10),
+            array('id' => 753, 'type' => 'int', 'int_value' => 10),
+            array('id' => 766, 'type' => 'computed'),
+            array('id' => 233, 'type' => 'computed')
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
         $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
+    }
+
+    /**
+     * This use case highlights the case where a Release have 2 backlog elements
+     * and 2 sprints. The backlog elements are also presents in the sprints backlog
+     * each backlog element should be counted only once.
+     */
+    public function itDoesntCountTwiceTheFinalData() {
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15),
+            array('id' => 766, 'type' => 'computed'),
+            array('id' => 777, 'type' => 'computed')
+        );
+        stub($this->dao)->getFieldValues(array(766, 777), 'effort')->returnsDar(
+            array('id' => 750, 'type' => 'int', 'int_value' => 5),
+            array('id' => 751, 'type' => 'int', 'int_value' => 15),
+            array('id' => 766, 'type' => 'computed')
+        );
+
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
 }
 
@@ -186,5 +347,3 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
         );
     }
 }
-
-?>
