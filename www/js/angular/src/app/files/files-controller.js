@@ -5,13 +5,15 @@ angular
 FilesController.$inject = [
     'lodash',
     'SharedPropertiesService',
-    'FilesRestService'
+    'FilesRestService',
+    'FilepathsService'
 ];
 
 function FilesController(
     lodash,
     SharedPropertiesService,
-    FilesRestService
+    FilesRestService,
+    FilepathsService
 ) {
     var self = this;
 
@@ -29,6 +31,7 @@ function FilesController(
     function getFiles() {
         FilesRestService.getFiles(self.pull_request.id).then(function(files) {
             self.files = files;
+            FilepathsService.setFilepaths(files);
         }).finally(function() {
             self.loading_files = false;
         });

@@ -6,6 +6,7 @@ FileDiffDirective.$inject = [
     '$window',
     'lodash',
     '$state',
+    '$uiViewScroll',
     '$interpolate',
     'SharedPropertiesService',
     'FileDiffRestService'
@@ -15,6 +16,7 @@ function FileDiffDirective(
     $window,
     lodash,
     $state,
+    $uiViewScroll,
     $interpolate,
     SharedPropertiesService,
     FileDiffRestService
@@ -28,10 +30,10 @@ function FileDiffDirective(
 
             if (! diffController.isBinaryFile) {
                 var unidiffOptions = {
-                    readOnly: true,
+                    readOnly    : true,
                     lineWrapping: true,
-                    gutters : ['gutter-oldlines', 'gutter-newlines'],
-                    mode    : data.mime_type
+                    gutters     : ['gutter-oldlines', 'gutter-newlines'],
+                    mode        : data.mime_type
                 };
                 var unidiff = $window.CodeMirror.fromTextArea(element.find('textarea')[0], unidiffOptions);
                 displayUnidiff(unidiff, data.lines);
@@ -42,6 +44,8 @@ function FileDiffDirective(
 
                 unidiff.on('gutterClick', showCommentForm);
             }
+
+            $uiViewScroll(element);
         });
     }
 

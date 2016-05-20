@@ -6,8 +6,10 @@
 
         > ul.modified-files {
             overflow: auto;
-            max-height: 300px;
-            margin: 0 0 30px;
+            max-height: 150px;
+            padding-top: 2px;
+            margin: 0 0 20px;
+            border: 1px solid lightgray;
             list-style-type: none;
 
             > li {
