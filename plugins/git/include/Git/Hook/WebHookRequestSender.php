@@ -28,7 +28,6 @@ use Logger;
 
 class WebHookRequestSender
 {
-
     /**
      * @var Logger
      */
@@ -40,23 +39,23 @@ class WebHookRequestSender
     private $http_client;
 
     /**
-     * @var WebHookDao
+     * @var WebHookFactory
      */
-    private $dao;
+    private $factory;
 
-    public function __construct(WebHookDao $dao, Http_Client $http_client, Logger $logger)
+    public function __construct(WebHookFactory $factory, Http_Client $http_client, Logger $logger)
     {
-        $this->dao         = $dao;
+        $this->factory     = $factory;
         $this->http_client = $http_client;
         $this->logger      = $logger;
     }
 
     public function sendRequests(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
-        $webhook_urls = $this->getWebhookUrlsForRepository($repository);
-        foreach ($webhook_urls as $webhook_url) {
-            $this->logger->info("Processing webhook at $webhook_url for repository #" . $repository->getId());
-            $this->buildRequest($repository, $user, $webhook_url, $oldrev, $newrev, $refname);
+        $web_hooks = $this->factory->getWebHooksForRepository($repository);
+        foreach ($web_hooks as $web_hook) {
+            $this->logger->info("Processing webhook at ". $web_hook->getUrl() ." for repository #" . $repository->getId());
+            $this->buildRequest($repository, $user, $web_hook, $oldrev, $newrev, $refname);
 
             try {
                 $this->http_client->doRequest();
@@ -66,10 +65,16 @@ class WebHookRequestSender
         }
     }
 
-    private function buildRequest(GitRepository $repository, PFUser $user, $webhook_url, $oldrev, $newrev, $refname)
-    {
+    private function buildRequest(
+        GitRepository $repository,
+        PFUser $user,
+        WebHook $web_hook,
+        $oldrev,
+        $newrev,
+        $refname
+    ) {
         $options = array(
-            CURLOPT_URL             => $webhook_url,
+            CURLOPT_URL             => $web_hook->getUrl(),
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
             CURLOPT_POSTFIELDS      => $this->getRequestBody($repository, $user, $oldrev, $newrev, $refname)
@@ -104,15 +109,5 @@ class WebHookRequestSender
         );
 
         return json_encode($body);
-    }
-
-    private function getWebhookUrlsForRepository(GitRepository $repository)
-    {
-        $webhook_urls = array();
-        foreach ($this->dao->searchWebhookUrlsForRepository($repository->getId()) as $row) {
-            $webhook_urls[] = $row['url'];
-        }
-
-        return $webhook_urls;
     }
 }

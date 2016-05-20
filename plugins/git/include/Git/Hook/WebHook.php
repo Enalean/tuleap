@@ -15,23 +15,38 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 namespace Tuleap\Git\Git\Hook;
 
-use DataAccessObject;
-
-class WebHookDao extends DataAccessObject
+class WebHook
 {
-    public function searchWebHooksForRepository($repository_id)
+
+    private $url;
+    private $repository_id;
+    private $id;
+
+    public function __construct($id, $repository_id, $url)
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $this->id            = $id;
+        $this->repository_id = $repository_id;
+        $this->url           = $url;
+    }
 
-        $sql = "SELECT *
-                FROM plugin_git_webhook_url
-                WHERE repository_id = $repository_id";
+    public function getId()
+    {
+        return $this->id;
+    }
 
-        return $this->retrieve($sql);
+    public function getRepositoryId()
+    {
+        return $this->repository_id;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
     }
 }

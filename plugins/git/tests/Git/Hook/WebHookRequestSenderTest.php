@@ -44,10 +44,10 @@ class WebHookRequestSenderTest extends TuleapTestCase
 
     public function itSendsOneRequestPerDefinedHook()
     {
-        $dao         = mock('Tuleap\Git\Git\Hook\WebHookDao');
+        $factory     = mock('Tuleap\Git\Git\Hook\WebHookFactory');
         $http_client = mock('Http_Client');
         $logger      = mock('Logger');
-        $sender      = new WebHookRequestSender($dao, $http_client, $logger);
+        $sender      = new WebHookRequestSender($factory, $http_client, $logger);
 
         $repository = mock('GitRepository');
         $user       = mock('PFUser');
@@ -55,12 +55,13 @@ class WebHookRequestSenderTest extends TuleapTestCase
         $newrev     = 'newrev';
         $refname    = 'refs/heads/master';
 
-        $result = stub('DataAccessResult')->current()->returnsAt(0, array('url' => "url_01"));
-        stub($result)->valid()->returnsAt(0, true);
-        stub($result)->current()->returnsAt(1, array('url' => "url_02"));
-        stub($result)->valid()->returnsAt(1, true);
+        $web_hook_01 = new WebHook(1, 1, 'url_01');
+        $web_hook_02 = new WebHook(2, 1, 'url_02');
 
-        stub($dao)->searchWebhookUrlsForRepository()->returns($result);
+        stub($factory)->getWebHooksForRepository()->returns(array(
+            $web_hook_01,
+            $web_hook_02,
+        ));
 
         $http_client->expectCallCount('doRequest', 2);
 

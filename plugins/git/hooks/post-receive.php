@@ -81,7 +81,7 @@ $post_receive = new Git_Hook_PostReceive(
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Git\Hook\WebHookRequestSender(
-        new \Tuleap\Git\Git\Hook\WebHookDao(),
+        new \Tuleap\Git\Git\Hook\WebHookFactory(new \Tuleap\Git\Git\Hook\WebHookDao()),
         $http_client,
         $logger
     )
