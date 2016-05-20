@@ -1,3 +1,6 @@
+Version 5.894 - Tuleap 8.15
+    * request #9165 Computed field counts twice final
+
 Version 5.893 - Tuleap 8.15
     * story #9087: Fix pagination of artifacts/:id/linked_artifacts
 
