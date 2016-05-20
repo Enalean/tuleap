@@ -12,9 +12,8 @@ plugin_hudson_git	delete_success	Jenkins webhook successfully removed
 plugin_hudson_git	job_error	Error while saving Job data
 
 plugin_hudson_git	label_push_date	Push date
-plugin_hudson_git	label_triggered	Triggered job
-plugin_hudson_git	empty_jobs	No triggered job
-plugin_hudson_git	empty_hooks	No defined hooks yet
+plugin_hudson_git	label_triggered	Triggered jobs
+plugin_hudson_git	empty_jobs	No triggered jobs
 plugin_hudson_git	jenkins_hook	Jenkins hook
 plugin_hudson_git	add_jenkins_hook	Add Jenkins hook
 plugin_hudson_git	add_a_jenkins_hook	Add a Jenkins webhook
@@ -22,13 +21,8 @@ plugin_hudson_git	edit_jenkins_hook	Edit the Jenkins webhook
 plugin_hudson_git	btn_add_jenkins	Add Jenkins webhook
 plugin_hudson_git	btn_save_jenkins	Save Jenkins webhook
 plugin_hudson_git	only_one	Only one Jenkins hook can be configured
-plugin_hudson_git	hooks_desc	You can define one Jenkins webhook.
-plugin_hudson_git	remove	Remove
+plugin_hudson_git	hooks_desc	You can define one Jenkins webhook and several generic webhooks.
 plugin_hudson_git	remove_jenkins_desc	You are about to remove the Jenkins server. Please confirm your action.
 plugin_hudson_git	remove_jenkins_confirm	Confirm deletion
 plugin_hudson_git	remove_jenkins_cancel	Cancel
-plugin_hudson_git	logs	Logs
-plugin_hudson_git	logs_for	Logs for $1
 plugin_hudson_git	n_jobs_triggered	$1 jobs triggered
-plugin_hudson_git	last_push	Last push
-plugin_hudson_git	url	URL

@@ -12,9 +12,8 @@ plugin_hudson_git	delete_success	Le webhook Jenkins a été enlevé avec succès
 plugin_hudson_git	job_error	Une erreur est survenue lors de l'enregistrement des données du job
 
 plugin_hudson_git	label_push_date	Date du push
-plugin_hudson_git	label_triggered	Job déclenchés
+plugin_hudson_git	label_triggered	Jobs déclenchés
 plugin_hudson_git	empty_jobs	Aucun job déclenché
-plugin_hudson_git	empty_hooks	Aucun hook défini
 plugin_hudson_git	jenkins_hook	Hook Jenkins
 plugin_hudson_git	add_jenkins_hook	Ajouter un hook Jenkins
 plugin_hudson_git	add_a_jenkins_hook	Ajouter un webhook Jenkins
@@ -22,13 +21,8 @@ plugin_hudson_git	edit_jenkins_hook	Éditer le webhook Jenkins
 plugin_hudson_git	btn_add_jenkins	Ajouter le webhook Jenkins
 plugin_hudson_git	btn_save_jenkins	Sauvegarder le webhook Jenkins
 plugin_hudson_git	only_one	Seulement un hook Jenkins peut être configuré
-plugin_hudson_git	hooks_desc	Vous pouvez definir un webhook Jenkins.
-plugin_hudson_git	remove	Enlever
+plugin_hudson_git	hooks_desc	Vous pouvez definir un webhook Jenkins et plusieurs webhooks génériques.
 plugin_hudson_git	remove_jenkins_desc	Vous êtes sur le point de supprimer le serveur Jenkins. Veuillez confirmer la suppression.
 plugin_hudson_git	remove_jenkins_confirm	Confirmer la suppression
 plugin_hudson_git	remove_jenkins_cancel	Annuler
-plugin_hudson_git	logs	Logs
-plugin_hudson_git	logs_for	Logs pour $1
 plugin_hudson_git	n_jobs_triggered	$1 jobs déclenchés
-plugin_hudson_git	last_push	Dernier push
-plugin_hudson_git	url	URL

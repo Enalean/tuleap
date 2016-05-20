@@ -812,3 +812,149 @@ h1, h2, h3 {
         margin-bottom: 10px;
     }
 }
+
+.git_webhook {
+
+    > .hooks-desc {
+        margin: 10px 0 20px;
+    }
+
+    .create-webhook-btn {
+        margin: 0 0 10px;
+    }
+
+    > .only-one-webhook {
+        display: inline-block;
+        cursor: not-allowed;
+        margin-right: 4px;
+
+        > .btn[disabled] {
+            pointer-events: none;
+        }
+    }
+
+    > .popover {
+        h3 {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+
+        form {
+            margin: 0;
+
+            .remove-webhook-confirm-actions {
+                text-align: right;
+            }
+        }
+
+        p {
+            font-size: 13px;
+        }
+    }
+}
+
+.hooks-list {
+    max-width: 960px;
+
+    > thead > tr {
+        background: #e4e4e4;
+
+        > th {
+            border-bottom: 2px solid #b2b2b2;
+            border-left-color: #d2d2d2;
+            vertical-align: top;
+        }
+    }
+
+    > tbody > tr:first-child > td {
+        border-top: 0;
+    }
+
+    > thead > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+        white-space: nowrap;
+
+        &:first-child {
+            width: 430px;
+            max-width: 430px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        &.action-buttons {
+            display: flex;
+            justify-content: space-around;
+
+            > a {
+                margin: 0 5px;
+
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    opacity: .8;
+                }
+            }
+        }
+    }
+
+    > tbody > .hook-section > td {
+        background: #e4e4e4;
+        color: #999999;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 10px;
+        text-transform: uppercase;
+    }
+}
+
+.hooks-jobs-list {
+
+    > thead > tr {
+        background: #e4e4e4;
+
+        > th {
+            border-bottom: 2px solid #b2b2b2;
+            border-left-color: #d2d2d2;
+            vertical-align: top;
+        }
+    }
+
+    > tbody {
+        font-size: 12px;
+
+        > tr:first-child > td {
+            border-top: 0;
+            white-space: nowrap;
+        }
+
+        > tr > td:last-child {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 383px;
+        }
+    }
+}
+
+.modal-logs {
+    > .modal-header {
+        border-bottom: 2px solid #888888;
+
+        > .close {
+            margin-left: 10px;
+        }
+
+        > h3 {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.remove-webhook-popover {
+    display: none;
+}

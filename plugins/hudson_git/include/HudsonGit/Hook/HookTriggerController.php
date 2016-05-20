@@ -61,7 +61,7 @@ class HookTriggerController
     public function trigger(GitRepository $repository)
     {
         $date_job = $_SERVER['REQUEST_TIME'];
-        $dar = $this->dao->getById($repository->getId());
+        $dar = $this->dao->searchById($repository->getId());
         foreach ($dar as $row) {
             try {
                 $transports = $repository->getAccessURL();

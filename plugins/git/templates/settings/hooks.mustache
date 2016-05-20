@@ -1,3 +1,86 @@
-<h3>{{ title }}</h3>
+<div class="git_webhook">
+    <h3>{{ title }}</h3>
 
-{{{ plugin_hooks }}}
+    <p class="hooks-desc">{{ description }}</p>
+
+    {{# create_buttons }}
+        {{# has_reached_the_limit }}
+        <span class="only-one-webhook"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="{{ only_one }}"
+        >
+        {{/ has_reached_the_limit }}
+
+        <button
+            type="button"
+            class="btn btn-primary create-webhook-btn"
+            {{# has_reached_the_limit }}
+                disabled
+            {{/ has_reached_the_limit }}
+            {{^ has_reached_the_limit }}
+                data-toggle="modal"
+                data-target="#{{ target_modal }}"
+            {{/ has_reached_the_limit }}
+        >
+            <i class="icon-plus"></i> {{ label }}
+        </button>
+
+        {{# has_reached_the_limit }}
+        </span>
+        {{/ has_reached_the_limit }}
+    {{/ create_buttons }}
+
+    <table class="table table-striped table-bordered hooks-list">
+        <thead>
+            <tr>
+                <th>{{ url }}</th>
+                <th>{{ last_push }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# sections }}
+                <tr class="hook-section">
+                    <td colspan="3">
+                        {{ label }}
+                    </td>
+                </tr>
+                {{# webhooks }}
+                    <tr>
+                        <td>{{ url }}</td>
+                        <td><span class="text-info">{{ last_push_info }}</span></td>
+                        <td class="action-buttons">
+                            <a role="button" data-toggle="modal" href="#modal-logs-{{ id }}">
+                                <i class="icon-list"></i> {{ logs }}
+                            </a>
+                            <a role="button" data-toggle="modal" href="#modal-edit-{{ id }}">
+                                <i class="icon-edit"></i> {{ edit_hook }}
+                            </a>
+                            <a href="javascript:;"
+                                class="remove-hook"
+                                data-toggle="popover"
+                                data-trigger="click"
+                                data-placement="left"
+                                data-html="true"
+                                data-popover-id="remove-{{ id }}-popover"
+                            >
+                                <i class="icon-trash"></i> {{ remove }}
+                            </a>
+
+                            {{> modal-logs }}
+                            {{> popover-remove-hook }}
+                        </td>
+                    </tr>
+                {{/ webhooks }}
+            {{/ sections }}
+            {{^ has_sections }}
+                <tr class="empty-table">
+                    <td colspan="3">
+                        {{ empty_hooks }}
+                    </td>
+                </tr>
+            {{/ has_sections }}
+        </tbody>
+    </table>
+</div>

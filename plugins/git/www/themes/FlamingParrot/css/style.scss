@@ -4,8 +4,16 @@
     .mass-mirrors-list,
     .mirrors-list,
     .git-admin-mass-update-table,
-    #git_repositories_list {
+    #git_repositories_list,
+    .hooks-jobs-list,
+    .hooks-list {
         & > thead > tr > th {
+            border-bottom-color: $main;
+        }
+    }
+
+    .modal-logs {
+        .modal-header {
             border-bottom-color: $main;
         }
     }

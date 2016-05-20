@@ -26,7 +26,7 @@ use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Logger;
 use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Job\JobDao;
-use Tuleap\HudsonGit\PollingResponseFactory;
+use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 
 class hudson_gitPlugin extends Plugin {
 
@@ -38,10 +38,8 @@ class hudson_gitPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
-            $this->addHook('javascript');
-            $this->addHook('javascript_file');
             $this->addHook('cssfile');
-            $this->addHook(GIT_ADDITIONAL_HOOKS);
+            $this->addHook(GitViews_RepoManagement_Pane_Hooks::ADDITIONAL_WEBHOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
         }
@@ -66,18 +64,6 @@ class hudson_gitPlugin extends Plugin {
         }
     }
 
-    public function javascript($params)
-    {
-        include $GLOBALS['Language']->getContent('script_locale', null, 'hudson_git', '.js');
-    }
-
-    public function javascript_file()
-    {
-        if ($this->areWeOnGitService()) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/hudson_git.js"></script>';
-        }
-    }
-
     /**
      * @return PluginInfo
      */
@@ -88,12 +74,15 @@ class hudson_gitPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    public function git_additional_hooks(array $params) {
+    /** @see GitViews_RepoManagement_Pane_Hooks::ADDITIONAL_WEBHOOKS */
+    public function plugin_git_settings_additional_webhooks(array $params) {
         if ($this->isAllowed($params['repository']->getProjectId())) {
-            $this->getHookController($params['request'])->renderHook(
-                $params['repository'],
-                $params['output']
+            $xzibit = new GitWebhooksSettingsEnhancer(
+                new Hook\HookDao(),
+                new JobManager(new JobDao()),
+                $this->getCSRF()
             );
+            $xzibit->pimp($params);
         }
     }
 
@@ -110,8 +99,10 @@ class hudson_gitPlugin extends Plugin {
                 $this->getHookController($request)->save();
                 break;
 
-            case 'remove_jenkins':
-                $this->getHookController($request)->remove();
+            case 'remove_webhook':
+                if ($request->get('webhook_id') === 'jenkins') {
+                    $this->getHookController($request)->remove();
+                }
                 break;
         }
     }
@@ -143,9 +134,12 @@ class hudson_gitPlugin extends Plugin {
                 ProjectManager::instance()
             ),
             new Hook\HookDao(),
-            new JobManager(new JobDao()),
-            new CSRFSynchronizerToken('hudson-git-hook-management')
+            $this->getCSRF()
         );
+    }
+
+    private function getCSRF() {
+        return new CSRFSynchronizerToken('hudson-git-hook-management');
     }
 
     private function getLogger() {

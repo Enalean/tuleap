@@ -1,0 +1,15 @@
+<div id="remove-{{ id }}-popover" class="remove-webhook-popover">
+    <form action="{{ remove_form_action }}" method="POST">
+        <p>{{ remove_webhook_desc }}</p>
+
+        <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+        <input type="hidden" name="action" value="remove_webhook" />
+        <input type="hidden" name="webhook_id" value="{{ id }}" />
+        <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+
+        <div class="remove-webhook-confirm-actions">
+            <button type="button" class="btn btn-small btn-default dismiss-popover">{{ btn_cancel }}</button>
+            <button type="submit" class="btn btn-small btn-danger">{{ remove_webhook_confirm }}</button>
+        </div>
+    </form>
+</div>

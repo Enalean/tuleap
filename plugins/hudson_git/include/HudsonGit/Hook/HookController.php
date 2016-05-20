@@ -24,9 +24,7 @@ use GitRepository;
 use GitRepositoryFactory;
 use GitViews_RepoManagement_Pane_Hooks;
 use Codendi_Request;
-use TemplateRendererFactory;
 use Feedback;
-use Tuleap\HudsonGit\Job\JobManager;
 use CSRFSynchronizerToken;
 
 class HookController
@@ -51,37 +49,17 @@ class HookController
      * @var HookDao
      */
     private $dao;
-    /**
-     * @var JobManager
-     */
-    private $job_manager;
 
     public function __construct(
         Codendi_Request $request,
         GitRepositoryFactory $git_repository_factory,
         HookDao $dao,
-        JobManager $job_manager,
         CSRFSynchronizerToken $csrf
     ) {
         $this->request                = $request;
         $this->git_repository_factory = $git_repository_factory;
         $this->dao                    = $dao;
-        $this->job_manager            = $job_manager;
         $this->csrf                   = $csrf;
-    }
-
-    public function renderHook(GitRepository $repository, &$output)
-    {
-        $renderer = TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates');
-        $dar = $this->dao->getById($repository->getId());
-        $url = '';
-        if (count($dar)) {
-            $row = $dar->getRow();
-            $url = $row['jenkins_server_url'];
-        }
-
-        $jobs = $this->job_manager->getJobByRepository($repository);
-        $output = $renderer->renderToString('hook', new HookPresenter($repository, $url, $jobs, $this->csrf));
     }
 
     public function save()
