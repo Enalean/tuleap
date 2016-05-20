@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest;
 use \TuleapDbTestCase;
 use \GitRepository;
 use \ForgeConfig;
+use \Tuleap\PullRequest\FileUniDiffBuilder;
 
 require_once 'bootstrap.php';
 
@@ -53,7 +54,13 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         ForgeConfig::set('codendi_cache_dir', '/tmp/');
 
         $this->dao = new Dao();
-        $this->pull_request_updater = new PullRequestUpdater(new Factory($this->dao));
+        $this->inline_comments_dao = mock('Tuleap\PullRequest\InlineComment\Dao');
+        $this->pull_request_updater = new PullRequestUpdater(
+            new Factory($this->dao),
+            $this->inline_comments_dao,
+            mock('Tuleap\PullRequest\InlineComment\InlineCommentUpdater'),
+            new FileUniDiffBuilder()
+        );
 
         $this->git_exec = mock('\Tuleap\PullRequest\GitExec');
     }
@@ -74,6 +81,7 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
 
+        stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
 
         $this->pull_request_updater->updatePullRequests($this->git_exec, $git_repo, 'dev', 'sha1new');
 
@@ -94,6 +102,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
 
+        stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
+
         $this->pull_request_updater->updatePullRequests($this->git_exec, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id)->getRow();
@@ -113,6 +123,8 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
+
+        stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
 
         $this->pull_request_updater->updatePullRequests($this->git_exec, $git_repo, 'dev', 'sha1new');
 

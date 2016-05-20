@@ -75,12 +75,9 @@ class PullRequestUpdater
     {
         $comments_by_file = $this->getInlineCommentsByFile($pull_request);
         foreach ($comments_by_file as $file_path => $comments) {
-            $dest_content         = $git_exec->getFileContent($pull_request->getSha1Dest(), $file_path);
-            $new_src_content      = $git_exec->getFileContent($new_rev, $file_path);
-            $src_content          = $git_exec->getFileContent($pull_request->getSha1Src(), $file_path);
-            $original_diff        = $this->diff_builder->buildFileUniDiff($dest_content, $src_content);
-            $changes_diff         = $this->diff_builder->buildFileUniDiff($src_content, $new_src_content);
-            $targeted_diff        = $this->diff_builder->buildFileUniDiff($dest_content, $new_src_content);
+            $original_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $pull_request->getSha1Src());
+            $changes_diff         = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Src(), $new_rev);
+            $targeted_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_rev);
 
             $comments_to_update = $this->inline_comment_updater->updateWhenSourceChanges($comments, $original_diff, $changes_diff, $targeted_diff);
             $this->saveInDb($comments_to_update);
@@ -92,12 +89,9 @@ class PullRequestUpdater
     {
         $comments_by_file = $this->getInlineCommentsByFile($pull_request);
         foreach ($comments_by_file as $file_path => $comments) {
-            $old_dest_content     = $git_exec->getFileContent($pull_request->getSha1Dest(), $file_path);
-            $new_dest_content     = $git_exec->getFileContent($new_ancestor_rev, $file_path);
-            $src_content          = $git_exec->getFileContent($new_rev, $file_path);
-            $original_diff        = $this->diff_builder->buildFileUniDiff($old_dest_content, $src_content);
-            $changes_diff         = $this->diff_builder->buildFileUniDiff($old_dest_content, $new_dest_content);
-            $targeted_diff        = $this->diff_builder->buildFileUniDiff($new_dest_content, $src_content);
+            $original_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_rev);
+            $changes_diff         = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_ancestor_rev);
+            $targeted_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $new_ancestor_rev, $new_rev);
 
             $comments_to_update = $this->inline_comment_updater->updateOnRebase($comments, $original_diff, $changes_diff, $targeted_diff);
             $this->saveInDb($comments_to_update);
