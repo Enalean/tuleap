@@ -22,9 +22,20 @@ namespace Tuleap\HudsonGit\Hook;
 
 use DataAccessObject;
 
-class HookDao extends DataAccessObject {
+class HookDao extends DataAccessObject
+{
 
-    public function save($id, $jenkins_server) {
+    public function delete($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "DELETE FROM plugin_hudson_git_server WHERE repository_id = $repository_id";
+
+        return $this->update($sql);
+    }
+
+    public function save($id, $jenkins_server)
+    {
         $id             = $this->da->escapeInt($id);
         $jenkins_server = $this->da->quoteSmart($jenkins_server);
 
@@ -34,7 +45,8 @@ class HookDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
         $id  = $this->da->escapeInt($id);
 
         $sql = "SELECT jenkins_server_url

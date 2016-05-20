@@ -43,6 +43,11 @@ class HookPresenter
     public $hooks_desc;
     public $modal_create_jenkins;
     public $modal_edit_jenkins;
+    public $remove;
+    public $remove_jenkins_desc;
+    public $remove_jenkins_confirm;
+    public $remove_jenkins_cancel;
+    public $csrf_token;
 
     public function __construct(
         GitRepository $repository,
@@ -60,16 +65,20 @@ class HookPresenter
         $this->project_id    = $repository->getProjectId();
         $this->repository_id = $repository->getId();
 
-        $this->btn_cancel      = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->edit_hook       = $GLOBALS['Language']->getText('global', 'btn_edit');
-        $this->save_label      = $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
-        $this->label_push_date = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
-        $this->label_triggered = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
-        $this->empty_jobs      = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
-        $this->empty_hooks     = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_hooks');
-        $this->jenkins_hook    = $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook');
-        $this->only_one        = $GLOBALS['Language']->getText('plugin_hudson_git', 'only_one');
-        $this->hooks_desc      = $GLOBALS['Language']->getText('plugin_hudson_git', 'hooks_desc');
+        $this->btn_cancel             = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->edit_hook              = $GLOBALS['Language']->getText('global', 'btn_edit');
+        $this->save_label             = $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
+        $this->label_push_date        = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
+        $this->label_triggered        = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
+        $this->empty_jobs             = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
+        $this->empty_hooks            = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_hooks');
+        $this->jenkins_hook           = $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook');
+        $this->only_one               = $GLOBALS['Language']->getText('plugin_hudson_git', 'only_one');
+        $this->hooks_desc             = $GLOBALS['Language']->getText('plugin_hudson_git', 'hooks_desc');
+        $this->remove                 = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove');
+        $this->remove_jenkins_desc    = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_desc');
+        $this->remove_jenkins_confirm = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_confirm');
+        $this->remove_jenkins_cancel  = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_cancel');
 
         $this->add_jenkins_hook     = $GLOBALS['Language']->getText('plugin_hudson_git', 'add_jenkins_hook');
         $this->modal_create_jenkins = new ModalCreatePresenter();
