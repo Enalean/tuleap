@@ -4,5 +4,6 @@ angular.module('tuleap.frs', [
     'ng-showdown',
     'ngLodash',
     'templates-app',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ui.router'
 ]);

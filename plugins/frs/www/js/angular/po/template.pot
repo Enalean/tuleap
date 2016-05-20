@@ -4,35 +4,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Arch."
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Changelog"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Date"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Downloads"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Files"
 msgstr ""
 
 #: src/app/release/release.tpl.html
+msgid "Linked Artifacts"
+msgstr ""
+
+#: src/app/release/files/files.tpl.html
 msgid "MD5Sum"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Name"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Owner"
 msgstr ""
 
@@ -40,7 +44,11 @@ msgstr ""
 msgid "Package {{ $ctrl.release.package.name }}"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Project"
+msgstr ""
+
+#: src/app/release/files/files.tpl.html
 msgid "Release Note"
 msgstr ""
 
@@ -48,14 +56,42 @@ msgstr ""
 msgid "Release Note &amp; Files"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/files/files.tpl.html
 msgid "Size"
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Status"
+msgstr ""
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Submitted by"
+msgstr ""
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Submitted on"
+msgstr ""
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Summary"
+msgstr ""
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "There are no artifact links defined in this release."
+msgstr ""
+
+#: src/app/release/files/files.tpl.html
 msgid "There are no files in this release."
 msgstr ""
 
-#: src/app/release/release.tpl.html
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}"
+msgstr ""
+
+#: src/app/release/linked-artifacts/linked-artifacts.tpl.html
+msgid "Tracker"
+msgstr ""
+
+#: src/app/release/files/files.tpl.html
 msgid "Type"
 msgstr ""

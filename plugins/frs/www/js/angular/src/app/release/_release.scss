@@ -3,29 +3,6 @@
         font-size: 22px;
     }
 
-    > .files {
-        thead {
-            background-color: #E4E4E4;
-        }
-
-        #empty-files-list {
-            text-align: center;
-            padding: 40px;
-            color: #BBB;
-            font-style: italic;
-            font-size: 0.9em;
-        }
-    }
-
-    > .release-note > div {
-        padding: 5px;
-        border: 1px solid #F0F0F0;
-        background-color: #FDFDFD;
-    }
-
-    > .changelog > div {
-        padding: 5px;
-        border: 1px solid #F0F0F0;
-        background-color: #FDFDFD;
-    }
+    @import 'files/files';
+    @import 'linked-artifacts/linked-artifacts';
 }

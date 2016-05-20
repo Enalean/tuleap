@@ -76,7 +76,8 @@ module.exports = {
             'vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             'vendor/angular-filter/dist/angular-filter.js',
             'vendor/showdown/dist/showdown.js',
-            'vendor/ng-showdown/dist/ng-showdown.js'
+            'vendor/ng-showdown/dist/ng-showdown.js',
+            'vendor/angular-ui-router/release/angular-ui-router.js'
         ],
         css: [
         ],
