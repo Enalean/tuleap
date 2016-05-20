@@ -18,6 +18,7 @@ describe("AppController -", function() {
 
         spyOn(SharedPropertiesService, "setProjectId");
         spyOn(SharedPropertiesService, "setRelease");
+        spyOn(SharedPropertiesService, "setPlatformLicenseInfo");
         spyOn(gettextCatalog, "setCurrentLanguage");
 
         AppController = $controller('AppController');
@@ -32,10 +33,21 @@ describe("AppController -", function() {
         };
         var language   = "en";
 
-        AppController.init(release, language);
+        var platform_license_info = {
+            exchange_policy_url: 'http://paraphonic.com/alphabetarian/seriousness?a=chlordan&b=unregardant#horizontalization',
+            organisation_name  : 'Confidential Wrench',
+            contact_email      : 'mensurableness@nonmetallic.net'
+        };
+
+        AppController.init(
+            release,
+            language,
+            platform_license_info
+        );
 
         expect(SharedPropertiesService.setProjectId).toHaveBeenCalledWith(release.project.id);
         expect(SharedPropertiesService.setRelease).toHaveBeenCalledWith(release);
+        expect(SharedPropertiesService.setPlatformLicenseInfo).toHaveBeenCalledWith(platform_license_info);
         expect(gettextCatalog.setCurrentLanguage).toHaveBeenCalledWith(language);
     });
 });

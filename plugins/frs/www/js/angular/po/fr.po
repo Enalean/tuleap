@@ -12,13 +12,48 @@ msgstr ""
 "X-Generator: Poedit 1.8.5\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid ""
+"<p>\n"
+"        You are about to download software from this site. Software re-use "
+"and sharing <b>inside</b> {{ $ctrl.organisation_name }} is subject to the <a "
+"ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>Code eXchange Corporate "
+"Policy</b></a>.\n"
+"    </p>\n"
+"    <p>\n"
+"        By downloading this software you implicitly recognize that you have "
+"<a ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>read the Policy</b></a> "
+"and agree with the terms and conditions.\n"
+"    </p>\n"
+"    <p>\n"
+"        To proceed with the file download, click on '<b>I accept</b>'. If "
+"you do not want to download the file click on '<b>I decline</b>' and <a ng-"
+"href=\"mailto:{{ $ctrl.contact_email }}\"><b>contact us</b></a> if you need "
+"clarification or want to explain why you declined the agreement.\n"
+"    </p>"
+msgstr ""
+"<p>\n"
+"        Vous êtes sur le point de télécharger un logiciel depuis ce site. Le "
+"partage et la réutilisation de logiciels <b>à l'intérieur</b> de {{ $ctrl."
+"organisation_name }} est soumis à la <a ng-href=\"{{ $ctrl."
+"exchange_policy_url }}\"><b>Politique d'échange de code</b></a>.\n"
+"    </p>\n"
+"    <p>\n"
+"        En téléchargeant ce logiciel vous reconnaissez implicitement <a ng-"
+"href=\"{{ $ctrl.exchange_policy_url  }}\"><b>avoir lu cette politique "
+"d'échange de code</b></a> et être en accord avec son contenu.\n"
+"    </p>\n"
+"    <p>\n"
+"        Pour débuter le téléchargement, cliquer sur '<b>Je suis d'accord</"
+"b>'. Si vous ne souhaitez pas télécharger le fichier cliquer sur '<b>Je "
+"refuse</b>' et <a href=\"mailto:{{ $ctrl.contact_email }}\"><b>contactez-"
+"nous</b></a> si vous avez besoin de clarifications ou si vous souhaitez "
+"expliquer les raisons de votre refus.\n"
+"    </p>"
+
 #: src/app/release/files/files.tpl.html
 msgid "Arch."
 msgstr "Arch."
-
-#: src/app/release/linked-artifacts/linked-artifacts-controller.js
-msgid "Artifact links"
-msgstr "Artéfacts référencés par cet artéfact"
 
 #: src/app/release/files/files.tpl.html
 msgid "Changelog"
@@ -28,6 +63,10 @@ msgstr "Modifications"
 msgid "Date"
 msgstr "Date"
 
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid "Download agreement"
+msgstr "Accord de téléchargement"
+
 #: src/app/release/files/files.tpl.html
 msgid "Downloads"
 msgstr "Téléchargements"
@@ -35,6 +74,14 @@ msgstr "Téléchargements"
 #: src/app/release/files/files.tpl.html
 msgid "Files"
 msgstr "Fichiers"
+
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid "I accept"
+msgstr "Je suis d'accord"
+
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid "I decline"
+msgstr "Je refuse"
 
 #: src/app/release/release.tpl.html
 msgid "Linked Artifacts"
@@ -67,10 +114,6 @@ msgstr "Notes"
 #: src/app/release/release.tpl.html
 msgid "Release Note &amp; Files"
 msgstr "Notes &amp; Fichiers"
-
-#: src/app/release/linked-artifacts/linked-artifacts-controller.js
-msgid "Reverse Artifact links"
-msgstr "Artéfacts qui référencent cet artéfact"
 
 #: src/app/release/files/files.tpl.html
 msgid "Size"

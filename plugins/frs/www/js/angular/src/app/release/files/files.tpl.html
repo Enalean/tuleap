@@ -20,7 +20,10 @@
                 </td>
             </tr>
             <tr ng-repeat="file in $ctrl.release.files">
-                <td file-download="file"></td>
+                <td
+                    file-download="file"
+                    license-approval-mandatory="$ctrl.release.license_approval"
+                ></td>
                 <td>{{ file.file_size | byteFmt: 2 }}</td>
                 <td>{{ file.nb_download }}</td>
                 <td>{{ file.arch }}</td>

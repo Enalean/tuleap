@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <button
+        type="button"
+        class="close"
+        aria-hidden="true"
+        ng-click="$ctrl.decline()"
+    >&times;</button>
+    <h3 translate>Download agreement</h3>
+</div>
+<div class="modal-body" translate>
+    <p>
+        You are about to download software from this site. Software re-use and sharing <b>inside</b> {{ $ctrl.organisation_name }} is subject to the <a ng-href="{{ $ctrl.exchange_policy_url }}"><b>Code eXchange Corporate Policy</b></a>.
+    </p>
+    <p>
+        By downloading this software you implicitly recognize that you have <a ng-href="{{ $ctrl.exchange_policy_url }}"><b>read the Policy</b></a> and agree with the terms and conditions.
+    </p>
+    <p>
+        To proceed with the file download, click on '<b>I accept</b>'. If you do not want to download the file click on '<b>I decline</b>' and <a ng-href="mailto:{{ $ctrl.contact_email }}"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.
+    </p>
+</div>
+<div class="modal-footer">
+
+    <a
+        class="btn btn-large btn-primary"
+        ng-click="$ctrl.accept()"
+        translate
+    >I accept</a>
+
+    <a
+        class="btn btn-large btn-danger"
+        ng-click="$ctrl.decline()"
+        translate
+    >I decline</a>
+</div>
