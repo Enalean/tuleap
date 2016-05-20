@@ -806,3 +806,9 @@ h1, h2, h3 {
 #git-notification-mail-list {
     margin-bottom: 15px;
 }
+
+#admin-git-default-access-rights {
+    > table {
+        margin-bottom: 10px;
+    }
+}

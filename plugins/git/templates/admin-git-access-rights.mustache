@@ -1,0 +1,17 @@
+<h3>{{ default_git_access_rights }}</h3>
+
+<form class="form-horizontal"
+      id="admin-git-default-access-rights"
+      method="POST"
+      action="{{ default_access_rights_form_action }}"
+>
+
+    {{{ csrf_token }}}
+    {{> access-control }}
+
+    <input type="submit"
+           name="save"
+           class="btn btn-primary"
+           value="{{ submit_default_access_rights }}" />
+
+</form>

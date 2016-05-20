@@ -50,16 +50,36 @@ class AccessRightsPresenterOptionsBuilder
 
     public function getOptions(Project $project, GitRepository $repository, $permission)
     {
-        $user_groups     = $this->user_group_factory->getAllForProject($project);
-        $options         = array();
         $selected_values = $this->permissions_manager->getAuthorizedUGroupIdsForProject(
             $project,
             $repository->getId(),
             $permission
         );
 
+        return $this->buildOptions($project, $selected_values, $permission);
+    }
+
+    public function getDefaultOptions(Project $project, $permission)
+    {
+        $selected_values = $this->permissions_manager->getAuthorizedUGroupIdsForProject(
+            $project,
+            $project->getID(),
+            $permission
+        );
+
+        return $this->buildOptions($project, $selected_values, $permission);
+
+    }
+
+    private function buildOptions(Project $project, array $selected_values, $permission)
+    {
+        $user_groups = $this->user_group_factory->getAllForProject($project);
+        $options     = array();
+
         foreach ($user_groups as $ugroup) {
-            if ($ugroup->getId() == ProjectUGroup::ANONYMOUS && $permission !== Git::PERM_READ) {
+            if ($ugroup->getId() == ProjectUGroup::ANONYMOUS &&
+                ($permission !== Git::PERM_READ && $permission !== Git::DEFAULT_PERM_READ)
+            ) {
                 continue;
             }
 
