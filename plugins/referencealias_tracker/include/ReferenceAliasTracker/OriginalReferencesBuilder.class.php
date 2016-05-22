@@ -70,7 +70,9 @@ class OriginalReferencesBuilder
                 'regexp' => '/
                     (?<![_a-zA-Z0-9])  # ensure the pattern is not following digits or letters
                     (?P<ref>
-                        (?P<key>'.ReferencesImporter::XREF_ARTF.'|'.ReferencesImporter::XREF_TRACKER.')
+                        (?P<key>'. ReferencesImporter::XREF_ARTF .'
+                            |'. ReferencesImporter::XREF_TRACKER .'
+                            |'. ReferencesImporter::XREF_PLAN .')
                         (?P<val>[0-9]+)
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters
@@ -122,6 +124,7 @@ class OriginalReferencesBuilder
             case ReferencesImporter::XREF_TRACKER:
                 $reference = new TrackerReference($keyword, $target, $project_id);
                 break;
+            case ReferencesImporter::XREF_PLAN:
             case ReferencesImporter::XREF_ARTF:
                 $reference = new ArtifactReference($keyword, $target, $project_id);
                 break;

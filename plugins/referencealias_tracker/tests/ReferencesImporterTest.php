@@ -22,32 +22,37 @@ namespace Tuleap\ReferenceAliasTracker;
 
 include 'bootstrap.php';
 
-class ReferencesImporterTest extends \TuleapTestCase {
+class ReferencesImporterTest extends \TuleapTestCase
+{
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->dao      = mock('Tuleap\ReferenceAliasTracker\Dao');
         $this->logger   = mock('Logger');
         $this->importer = new ReferencesImporter($this->dao, $this->logger);
     }
 
-    public function testItShouldAddArtifactAndTrackerLinks() {
+    public function testItShouldAddArtifactAndTrackerLinks()
+    {
         $xml = <<<XML
             <references>
                 <reference source="artf1234" target="1"/>
+                <reference source="plan678" target="5"/>
                 <reference source="tracker12" target="T2"/>
             </references>
 XML;
         $simple_xml         = new \SimpleXMLElement($xml);
-        $created_references = array('tracker' => array('T2' => '12'), 'artifact' => array('1' => '2'));
+        $created_references = array('tracker' => array('T2' => '12'), 'artifact' => array('1' => '2', '5' => '6'));
 
         stub($this->dao)->getRef()->returns(mock('DataAccessResult'));
 
-        expect($this->dao)->insertRef()->count(2);
+        expect($this->dao)->insertRef()->count(3);
 
         $this->importer->importCompatRefXML(mock('Project'), $simple_xml, $created_references);
     }
 
-    public function testItShouldNotAddIfTargetIsUnknown() {
+    public function testItShouldNotAddIfTargetIsUnknown()
+    {
         $xml = <<<XML
             <references>
                 <reference source="artf1234" target="1"/>
@@ -64,7 +69,8 @@ XML;
         $this->importer->importCompatRefXML(mock('Project'), $simple_xml, $created_references);
     }
 
-    public function testItShouldNotAddUnknownReferences() {
+    public function testItShouldNotAddUnknownReferences()
+    {
         $xml = <<<XML
             <references>
                 <reference source="stuff1234" target="1"/>

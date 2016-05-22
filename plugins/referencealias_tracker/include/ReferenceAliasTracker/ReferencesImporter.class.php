@@ -35,6 +35,7 @@ class ReferencesImporter
 
     const XREF_TRACKER  = 'tracker';
     const XREF_ARTF     = 'artf';
+    const XREF_PLAN     = 'plan';
 
     public function __construct(Dao $dao, Logger $logger)
     {
@@ -54,6 +55,8 @@ class ReferencesImporter
             if ($reference_keyword === self::XREF_TRACKER) {
                 $object_type = 'tracker';
             } elseif ($reference_keyword === self::XREF_ARTF) {
+                $object_type = 'artifact';
+            } elseif ($reference_keyword === self::XREF_PLAN) {
                 $object_type = 'artifact';
             } else {
                 $this->logger->warn("Cross reference kind '$reference_keyword' for $source not supported");
