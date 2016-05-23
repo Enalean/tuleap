@@ -1,3 +1,6 @@
+Version 4.162 - Tuleap 8.15
+    * Refactoring: move all webhook management in git plugin
+
 Version 4.161 - Tuleap 8.15
     * story #8418: Save Git default access rights
 

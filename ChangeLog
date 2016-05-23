@@ -30,7 +30,7 @@ Version 8.15 (Not yet released)
 	* svn: 0.57
 	* frs: 0.13
 	* archivedeleteditems: 0.7
-	* git: 4.161
+	* git: 4.162
 	* tracker: 5.894
 	* graphontrackersv5: 5.21
 	* agiledashboard: 1.380
@@ -46,7 +46,7 @@ Version 8.15 (Not yet released)
 	* admindelegation: 2.12
 	* openidconnectclient: 0.20
 	* statistics: 0.59
-	* hudson_git: 0.12
+	* hudson_git: 0.13
 	* mediawiki: 0.115
 
     == Themes ==
