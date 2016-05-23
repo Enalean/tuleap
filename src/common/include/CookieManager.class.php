@@ -56,6 +56,16 @@ class CookieManager {
         );
     }
 
+    public function configureSessionCookie()
+    {
+        $lifetime  = 0;
+        $path      = '/';
+        $domain    = $this->getCookieHost();
+        $secure    = (bool) ForgeConfig::get('sys_force_ssl');
+        $http_only = true;
+        session_set_cookie_params($lifetime, $path, $domain, $secure, $http_only);
+    }
+
     private function getCookieHost() {
         // Make sure there isn't a port number in the default domain name
         // or the setcookie for the entire domain won't work
