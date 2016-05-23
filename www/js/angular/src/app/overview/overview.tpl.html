@@ -1,31 +1,26 @@
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span6">
-            <div ng-bind-html="overview.pull_request.title"></div>
-            <blockquote ng-bind-html="overview.pull_request.description || 'No description'"></blockquote>
-            <small>{{ overview.pull_request.reference_src }}</small>
+<div id="pull-request-info">
+    <div class="pull-request-description">
+        <div ng-bind-html="overview.pull_request.title"></div>
+        <blockquote ng-bind-html="overview.pull_request.description || 'No description'"></blockquote>
+
+        <span class="pull-request-reference">{{ overview.pull_request.reference_src }}</span>
+    </div>
+    <div class="pull-request-author">
+        <span class="pull-request-label" translate>Requester</span>
+        <div>
+            <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
+            {{ overview.author.display_name }}
         </div>
-        <div class="span3">
-            <div class="pull-request-author">
-                <small translate>Requester</small>
-                <div>
-                    <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
-                    {{ overview.author.display_name }}
-                </div>
-            </div>
-            <div>
-                <small translate>Date</small>
-                <div>{{ overview.pull_request.creation_date | date: 'short' }}</div>
-            </div>
-        </div>
-        <div class="span3">
-            <div>
-                <small translate>Changes</small>
-                <div>
-                    <span class="text-success">+{{ overview.pull_request.short_stat.lines_added}}</span>
-                    <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed}}</span>
-                </div>
-            </div>
+    </div>
+    <div class="pull-request-date">
+        <span class="pull-request-label" translate>Date</span>
+        <div>{{ overview.pull_request.creation_date | date: 'short' }}</div>
+    </div>
+    <div class="pull-request-changes">
+        <span class="pull-request-label" translate>Changes</span>
+        <div>
+            <span class="text-success">+{{ overview.pull_request.short_stat.lines_added}}</span>
+            <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed}}</span>
         </div>
     </div>
 </div>

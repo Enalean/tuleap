@@ -1,5 +1,10 @@
 #pull-request {
-    #pull-request-content {
+    .nav {
         padding: 0 15px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    #pull-request-content {
+        margin: 25px 0;
     }
 }

@@ -1,13 +1,11 @@
-<div>
-    <ul class="nav nav-tabs">
-        <li ng-class="{active: pull_request.$state.includes('overview')}">
-          <a ui-sref="overview"><i class="icon-pencil"></i> {{ 'Pull Request Details' | translate }}</a>
-        </li>
-        <li ng-class="{active: pull_request.$state.includes('files')}">
-          <a ui-sref="files"><i class="icon-copy"></i> {{ 'Files' | translate }}</a>
-        </li>
-    </ul>
-</div>
+<ul class="nav nav-tabs">
+    <li ng-class="{active: pull_request.$state.includes('overview')}">
+        <a ui-sref="overview"><i class="icon-pencil"></i> {{ 'Pull Request Details' | translate }}</a>
+    </li>
+    <li ng-class="{active: pull_request.$state.includes('files')}">
+        <a ui-sref="files"><i class="icon-copy"></i> {{ 'Files' | translate }}</a>
+    </li>
+</ul>
 
 <div id="pull-request-content">
   <div ui-view="overview" ng-show="pull_request.$state.includes('overview')"></div>
