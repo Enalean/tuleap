@@ -23,6 +23,7 @@ namespace Tuleap\FRS\REST\v1;
 use Tuleap\REST\JsonCast;
 use FRSRelease;
 use PFUser;
+use ForgeConfig;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\FRS\Link\Retriever;
 use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
@@ -79,6 +80,11 @@ class ReleaseRepresentation
      */
     public $artifact;
 
+    /**
+     * @var boolean
+     */
+    public $license_approval;
+
     public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
@@ -87,7 +93,7 @@ class ReleaseRepresentation
         $this->release_note = $release->getNotes();
         $this->name         = $release->getName();
         $this->package      = array(
-            "id"   =>$release->getPackage()->getPackageID(),
+            "id"   => $release->getPackage()->getPackageID(),
             "name" => $release->getPackage()->getName()
         );
 
@@ -106,6 +112,18 @@ class ReleaseRepresentation
             $this->files[] = $file_representation;
         }
 
+        $this->license_approval = $this->getLicenseApprovalState($release);
+    }
+
+    private function getLicenseApprovalState(FRSRelease $release)
+    {
+        if (ForgeConfig::get('sys_frs_license_mandatory')) {
+            return JsonCast::toBoolean(true);
+        }
+
+        $package = $release->getPackage();
+
+        return JsonCast::toBoolean($package->getApproveLicense());
     }
 
     private function getArtifactRepresentation(FRSRelease $release, Retriever $link_retriever, PFUser $user)
