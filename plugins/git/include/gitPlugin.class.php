@@ -199,6 +199,7 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
         }
     }
 

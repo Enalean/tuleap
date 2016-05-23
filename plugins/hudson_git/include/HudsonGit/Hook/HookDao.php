@@ -45,7 +45,7 @@ class HookDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function getById($id)
+    public function searchById($id)
     {
         $id  = $this->da->escapeInt($id);
 
