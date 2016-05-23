@@ -6,13 +6,11 @@ function fileDownloadDirective() {
     return {
         restrict: 'A',
         scope   : {
-            file: '=fileDownload'
+            file                      : '=fileDownload',
+            license_approval_mandatory: '=licenseApprovalMandatory'
         },
-        link    : link,
-        template: '<a ng-href="{{ file_download_url }}" target="_blank">{{ file.name }}</a>'
+        template        : '<a href="" ng-click="$ctrl.downloadFile()">{{ $ctrl.file.name }}</a>',
+        controller      : 'FileDownloadController as $ctrl',
+        bindToController: true
     };
-
-    function link($scope) {
-        $scope.file_download_url = decodeURIComponent($scope.file.download_url);
-    }
 }

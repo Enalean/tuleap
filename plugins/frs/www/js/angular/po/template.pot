@@ -4,6 +4,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid ""
+"<p>\n"
+"        You are about to download software from this site. Software re-use and sharing <b>inside</b> {{ $ctrl.organisation_name }} is subject to the <a ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>Code eXchange Corporate Policy</b></a>.\n"
+"    </p>\n"
+"    <p>\n"
+"        By downloading this software you implicitly recognize that you have <a ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>read the Policy</b></a> and agree with the terms and conditions.\n"
+"    </p>\n"
+"    <p>\n"
+"        To proceed with the file download, click on '<b>I accept</b>'. If you do not want to download the file click on '<b>I decline</b>' and <a ng-href=\"mailto:{{ $ctrl.contact_email }}\"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.\n"
+"    </p>"
+msgstr ""
+
 #: src/app/release/files/files.tpl.html
 msgid "Arch."
 msgstr ""
@@ -16,12 +29,24 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid "Download agreement"
+msgstr ""
+
 #: src/app/release/files/files.tpl.html
 msgid "Downloads"
 msgstr ""
 
 #: src/app/release/files/files.tpl.html
 msgid "Files"
+msgstr ""
+
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid "I accept"
+msgstr ""
+
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid "I decline"
 msgstr ""
 
 #: src/app/release/release.tpl.html

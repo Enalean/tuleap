@@ -15,9 +15,10 @@ function AppController(
 
     self.init = init;
 
-    function init(release, language) {
+    function init(release, language, platform_license_info) {
         SharedPropertiesService.setProjectId(release.project.id);
-        SharedPropertiesService.setRelease(release);
+        SharedPropertiesService.setRelease(angular.fromJson(release));
+        SharedPropertiesService.setPlatformLicenseInfo(angular.fromJson(platform_license_info));
         initLocale(language);
     }
 
