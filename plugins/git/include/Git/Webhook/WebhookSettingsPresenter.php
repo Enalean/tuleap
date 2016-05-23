@@ -20,8 +20,11 @@
 
 namespace Tuleap\Git\Webhook;
 
+use CSRFSynchronizerToken;
+
 class WebhookSettingsPresenter
 {
+    public $create_modal;
     public $sections;
     public $create_buttons;
     public $description;
@@ -33,13 +36,22 @@ class WebhookSettingsPresenter
     public $remove;
     public $btn_close;
     public $btn_cancel;
+    public $csrf_token;
 
-    public function __construct($title, $description, array $create_buttons, array $sections)
-    {
+    public function __construct(
+        CSRFSynchronizerToken $csrf,
+        $title,
+        $description,
+        array $create_buttons,
+        array $sections,
+        CreateWebhookModalPresenter $create_modal
+    ) {
+        $this->csrf_token     = $csrf->getToken();
         $this->title          = $title;
         $this->description    = $description;
         $this->create_buttons = $create_buttons;
         $this->sections       = $sections;
+        $this->create_modal   = $create_modal;
 
         $this->has_sections = count($sections) > 0;
 

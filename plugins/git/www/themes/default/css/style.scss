@@ -877,7 +877,7 @@ h1, h2, h3 {
         white-space: nowrap;
 
         &:first-child {
-            width: 430px;
+            width: 100%;
             max-width: 430px;
             overflow: hidden;
             white-space: nowrap;
@@ -939,7 +939,7 @@ h1, h2, h3 {
     }
 }
 
-.modal-logs {
+.modal-webhook {
     > .modal-header {
         border-bottom: 2px solid #888888;
 
@@ -951,6 +951,19 @@ h1, h2, h3 {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+        }
+    }
+
+    .modal-body {
+
+        > p:first-child {
+            margin-bottom: 30px;
+        }
+
+        input[type=url] {
+            width: 100%;
+            height: 30px;
+            box-sizing: border-box;
         }
     }
 }

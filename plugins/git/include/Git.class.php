@@ -412,7 +412,8 @@ class Git extends PluginController {
                 'update_mirroring',
                 'update_default_mirroring',
                 'restore',
-                'remove_webhook'
+                'remove-webhook',
+                'add-webhook',
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
@@ -430,7 +431,8 @@ class Git extends PluginController {
                 $this->addPermittedAction('clone');
                 if ($repository->belongsTo($user)) {
                     $this->addPermittedAction('repo_management');
-                    $this->addPermittedAction('remove_webhook');
+                    $this->addPermittedAction('remove-webhook');
+                    $this->addPermittedAction('add-webhook');
                     $this->addPermittedAction('mail');
                     $this->addPermittedAction('del');
                     $this->addPermittedAction('confirm_deletion');
@@ -565,13 +567,27 @@ class Git extends PluginController {
                 $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
                 break;
-            case 'remove_webhook';
+            case 'remove-webhook';
                 if (empty($repository)) {
                     $this->redirectNoRepositoryError();
                     return false;
                 }
 
                 $this->addAction('removeWebhook', array($repository, $this->request->get('webhook_id')));
+                break;
+            case 'add-webhook';
+                if (empty($repository)) {
+                    $this->redirectNoRepositoryError();
+                    return false;
+                }
+                $valid = new Valid_HTTPURI('url');
+                $valid->required();
+                if (! $this->request->valid($valid)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                }
+
+                $this->addAction('addWebhook', array($repository, $this->request->get('url')));
                 break;
             case 'mail':
                 $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);

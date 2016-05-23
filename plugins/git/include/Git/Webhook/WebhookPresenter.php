@@ -44,7 +44,6 @@ class WebhookPresenter
         $this->url                  = $url;
         $this->last_push_info       = '';
         $this->hooklogs             = $hooklogs;
-        $this->modal_logs_classname = 'modal-logs';
         $this->csrf_token           = $csrf->getToken();
 
         $this->repository_id = $repository->getId();
