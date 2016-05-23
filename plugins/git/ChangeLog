@@ -1,3 +1,6 @@
+Version 4.164 - Tuleap 8.15
+    * story #9083: Add missing use statement
+
 Version 4.163 - Tuleap 8.15
     * story #8418: Emit feedback on save
 
