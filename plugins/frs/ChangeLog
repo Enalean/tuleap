@@ -1,3 +1,6 @@
+Version 0.14 - Tuleap 8.15
+    * Display license modal when downloading a file
+
 Version 0.13 - Tuleap 8.15
     * story #9087: Add licence_approval for Release representation
 
