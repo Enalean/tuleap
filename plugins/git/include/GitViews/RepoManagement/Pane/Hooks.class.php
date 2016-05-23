@@ -20,6 +20,9 @@
 
 use Tuleap\Git\Webhook\WebhookSettingsPresenter;
 use Tuleap\Git\Webhook\CreateWebhookButtonPresenter;
+use Tuleap\Git\Webhook\WebhookPresenter;
+use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
+use Tuleap\Git\Git\Hook\WebHookFactory;
 
 class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
 {
@@ -36,6 +39,12 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
      *   'additional_html_bits' => (Output) Array of html string
      */
     const ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks';
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, WebHookFactory $webhook_factory)
+    {
+        parent::__construct($repository, $request);
+        $this->webhook_factory = $webhook_factory;
+    }
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
@@ -76,7 +85,7 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
             )
         );
 
-        $create_buttons[] = new CreateWebhookButtonPresenter();
+        $this->addCustomWebhooks($sections, $create_buttons);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
 
@@ -89,5 +98,31 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
                 $sections
             )
         ) . implode('', $additional_html_bits);
+    }
+
+    private function addCustomWebhooks(array &$sections, array &$create_buttons)
+    {
+        $create_buttons[] = new CreateWebhookButtonPresenter();
+        $csrf = new CSRFSynchronizerToken('TODO-IN-NEXT-COMMITS');
+
+        $label               = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_generic');
+        $webhooks_presenters = array();
+
+        $webhooks = $this->webhook_factory->getWebHooksForRepository($this->repository);
+        if (count($webhooks) === 0) {
+            return;
+        }
+        foreach ($webhooks as $webhook) {
+            $webhook_logs = array();
+
+            $webhooks_presenters[] = new WebhookPresenter(
+                $this->repository,
+                $webhook->getId(),
+                $webhook->getUrl(),
+                $webhook_logs,
+                $csrf
+            );
+        }
+        $sections[] = new SectionOfWebhooksPresenter($label, $webhooks_presenters);
     }
 }
