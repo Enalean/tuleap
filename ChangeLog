@@ -42,7 +42,7 @@ Version 8.15 (Not yet released)
 	* referencealias_git: 0.3
 	* referencealias_mediawiki: 0.4
 	* referencealias_svn: 0.3
-	* referencealias_tracker: 0.4
+	* referencealias_tracker: 0.5
 	* admindelegation: 2.12
 	* openidconnectclient: 0.20
 	* statistics: 0.59
