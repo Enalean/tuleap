@@ -302,6 +302,14 @@ class Git_Exec {
         return $this->work_tree;
     }
 
+    public function getGitCommand() {
+        return $this->git_cmd;
+    }
+
+    public function getGitDir() {
+        return $this->git_dir;
+    }
+
     protected function gitCmd($cmd) {
         $output = array();
         return $this->gitCmdWithOutput($cmd, $output);
