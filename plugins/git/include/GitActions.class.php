@@ -24,6 +24,7 @@ require_once('common/layout/Layout.class.php');
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\Git\Hook\WebHookDao;
 
 /**
  * GitActions
@@ -31,6 +32,11 @@ use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
  * @author Guillaume Storchi
  */
 class GitActions extends PluginActions {
+
+    /**
+     * @var WebHookDao
+     */
+    private $webhook_dao;
 
     /**
      * @var GitRepositoryMirrorUpdater
@@ -102,24 +108,6 @@ class GitActions extends PluginActions {
      */
     private $gerrit_can_migrate_checker;
 
-    /**
-     *
-     * @param Git $controller
-     * @param Git_SystemEventManager                     $system_event_manager
-     * @param GitRepositoryFactory                       $factory
-     * @param GitRepositoryManager                       $manager
-     * @param Git_RemoteServer_GerritServerFactory       $gerrit_server_factory
-     * @param Git_Driver_Gerrit_GerritDriverFactory      $driver_factory
-     * @param Git_Driver_Gerrit_UserAccountManager       $gerrit_usermanager
-     * @param Git_Driver_Gerrit_ProjectCreator           $project_creator
-     * @param Git_Driver_Gerrit_Template_TemplateFactory $template_factory
-     * @param ProjectManager                             $project_manager
-     * @param GitPermissionsManager                      $git_permissions_manager
-     * @param ProjectHistoryDao                          $history_dao
-     * @param GitRepositoryMirrorUpdater                 $mirror_updater
-     * @param MigrationHandler                           $migration_handler
-     * @param GerritCanMigrateChecker                    $gerrit_can_migrate_checker
-     */
     public function __construct(
         Git                $controller,
         Git_SystemEventManager $system_event_manager,
@@ -139,7 +127,8 @@ class GitActions extends PluginActions {
         ProjectHistoryDao $history_dao,
         GitRepositoryMirrorUpdater $mirror_updater,
         MigrationHandler $migration_handler,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker
+        GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        WebHookDao $webhook_dao
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager   = $system_event_manager;
@@ -160,6 +149,7 @@ class GitActions extends PluginActions {
         $this->mirror_updater             = $mirror_updater;
         $this->migration_handler          = $migration_handler;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
+        $this->webhook_dao                = $webhook_dao;
     }
 
     protected function getText($key, $params = array()) {
@@ -536,6 +526,35 @@ class GitActions extends PluginActions {
             'gerrit_can_migrate_checker' => $this->gerrit_can_migrate_checker
         ));
         return true;
+    }
+
+    public function removeWebhook(GitRepository $repository, $webhook_id) {
+        $csrf = new CSRFSynchronizerToken(GitViews_RepoManagement_Pane_Hooks::CSRF_TOKEN_ID);
+
+        $redirect_url = $this->getWebhookSettingsURL($repository);
+        $csrf->check($redirect_url);
+
+        if ($this->webhook_dao->deleteByRepositoryIdAndWebhookId($repository->getId(), $webhook_id)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_delete_success')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_delete_error')
+            );
+        }
+        $GLOBALS['Response']->redirect($redirect_url);
+    }
+
+    private function getWebhookSettingsURL(GitRepository $repository) {
+        return GIT_BASE_URL .'/?'. http_build_query(array(
+            'action'   => 'repo_management',
+            'group_id' => $repository->getProjectId(),
+            'repo_id'  => $repository->getId(),
+            'pane'     => GitViews_RepoManagement_Pane_Hooks::ID
+        ));
     }
 
     private function displayFeedbacksOnRepoManagement(GitRepository $repository) {

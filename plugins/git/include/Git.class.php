@@ -24,6 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\Git\Hook\WebHookDao;
 
 /**
  * Git
@@ -55,6 +56,11 @@ class Git extends PluginController {
     public static function allPermissionTypes() {
         return array(Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS);
     }
+
+    /**
+     * @var WebHookDao
+     */
+    private $webhook_dao;
 
     /**
      * @var Git_Backend_Gitolite
@@ -158,7 +164,8 @@ class Git extends PluginController {
         Git_Backend_Gitolite $backend_gitolite,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker
+        GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        WebHookDao $webhook_dao
     ) {
         parent::__construct($user_manager, $request);
 
@@ -181,6 +188,7 @@ class Git extends PluginController {
         $this->mirror_data_mapper         = $mirror_data_mapper;
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
+        $this->webhook_dao                = $webhook_dao;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -403,7 +411,8 @@ class Git extends PluginController {
                 'delete_gerrit_project',
                 'update_mirroring',
                 'update_default_mirroring',
-                'restore'
+                'restore',
+                'remove_webhook'
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
@@ -421,6 +430,7 @@ class Git extends PluginController {
                 $this->addPermittedAction('clone');
                 if ($repository->belongsTo($user)) {
                     $this->addPermittedAction('repo_management');
+                    $this->addPermittedAction('remove_webhook');
                     $this->addPermittedAction('mail');
                     $this->addPermittedAction('del');
                     $this->addPermittedAction('confirm_deletion');
@@ -554,6 +564,14 @@ class Git extends PluginController {
                 }
                 $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
+                break;
+            case 'remove_webhook';
+                if (empty($repository)) {
+                    $this->redirectNoRepositoryError();
+                    return false;
+                }
+
+                $this->addAction('removeWebhook', array($repository, $this->request->get('webhook_id')));
                 break;
             case 'mail':
                 $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);
@@ -1050,7 +1068,8 @@ class Git extends PluginController {
                 $history_dao,
                 $this->project_creator_status
             ),
-            $this->gerrit_can_migrate_checker
+            $this->gerrit_can_migrate_checker,
+            $this->webhook_dao
         );
     }
 

@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Git\Hook\WebHookDao;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1199,7 +1200,8 @@ class GitPlugin extends Plugin {
             $this->getBackendGitolite(),
             $this->getMirrorDataMapper(),
             $this->getProjectCreatorStatus(),
-            new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory)
+            new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory),
+            new WebHookDao()
         );
     }
 

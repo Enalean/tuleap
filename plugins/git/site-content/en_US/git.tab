@@ -170,6 +170,8 @@ plugin_git	mail_prefix	New prefix
 plugin_git	mail_prefix_submit	Update
 
 plugin_git	settings_hooks_title	Webhooks
+plugin_git	settings_hooks_delete_success	Webhook removed
+plugin_git	settings_hooks_delete_error	Error while removing the webhook :(
 plugin_git	settings_hooks_desc	You can define several generic webhooks.
 plugin_git	settings_hooks_create	Add generic webhook
 plugin_git	settings_hooks_last_push	Last push
@@ -183,7 +185,7 @@ plugin_git	settings_hooks_logs_for	Logs for $1
 plugin_git	settings_hooks_empty_logs	No logs yet
 plugin_git	settings_hooks_remove_webhook_desc	You are about to remove the webhook. Please confirm your action.
 plugin_git	settings_hooks_remove_webhook_confirm	Confirm deletion
-plugin_git	settings_hooks_generic	Webhooks génériques
+plugin_git	settings_hooks_generic	Generic webhooks
 
 plugin_git	add_mail_label	Notificated People
 plugin_git	add_mail_title	Add a mail address or a user to notify

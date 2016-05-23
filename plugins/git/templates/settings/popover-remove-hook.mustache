@@ -2,7 +2,7 @@
     <form action="{{ remove_form_action }}" method="POST">
         <p>{{ remove_webhook_desc }}</p>
 
-        <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+        <input type="hidden" name="repo_id" value="{{ repository_id }}" />
         <input type="hidden" name="action" value="remove_webhook" />
         <input type="hidden" name="webhook_id" value="{{ id }}" />
         <input type="hidden" name="challenge" value="{{ csrf_token }}" />

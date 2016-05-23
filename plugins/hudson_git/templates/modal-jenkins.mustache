@@ -3,7 +3,7 @@
     <h3 id="modal-create-jenkins-title">{{ title }}</h3>
 </div>
 <form name="edit_git_hudson" method="post" action="/plugins/hudson_git/?group_id={{ project_id }}">
-    <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+    <input type="hidden" name="repo_id" value="{{ repository_id }}" />
     <input type="hidden" name="action" value="save_jenkins" />
     <input type="hidden" name="challenge" value="{{ csrf_token }}" />
 

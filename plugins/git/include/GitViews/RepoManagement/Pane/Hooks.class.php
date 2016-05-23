@@ -27,6 +27,7 @@ use Tuleap\Git\Git\Hook\WebHookFactory;
 class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
 {
     const ID = 'hooks';
+    const CSRF_TOKEN_ID = 'GIT-WEBHOOK-SETTINGS';
 
     /**
      * Allow plugins to add additional hooks setup for git
@@ -39,6 +40,7 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
      *   'additional_html_bits' => (Output) Array of html string
      */
     const ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks';
+
 
     public function __construct(GitRepository $repository, Codendi_Request $request, WebHookFactory $webhook_factory)
     {
@@ -103,7 +105,7 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
     private function addCustomWebhooks(array &$sections, array &$create_buttons)
     {
         $create_buttons[] = new CreateWebhookButtonPresenter();
-        $csrf = new CSRFSynchronizerToken('TODO-IN-NEXT-COMMITS');
+        $csrf = new CSRFSynchronizerToken(self::CSRF_TOKEN_ID);
 
         $label               = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_generic');
         $webhooks_presenters = array();
