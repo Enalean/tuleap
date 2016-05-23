@@ -125,10 +125,16 @@ class GitPermissionsManager {
         $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access_rights");
         $csrf->check();
 
+        $read_ugroup_ids   = array();
+        $write_ugroup_ids  = array();
+        $rewind_ugroup_ids = array();
         $ugroup_ids        = $request->get(self::REQUEST_KEY);
-        $read_ugroup_ids   = $ugroup_ids[Git::DEFAULT_PERM_READ];
-        $write_ugroup_ids  = $ugroup_ids[Git::DEFAULT_PERM_WRITE];
-        $rewind_ugroup_ids = $ugroup_ids[Git::DEFAULT_PERM_WPLUS];
+
+        if ($ugroup_ids) {
+            $read_ugroup_ids   = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_READ);
+            $write_ugroup_ids  = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_WRITE);
+            $rewind_ugroup_ids = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_WPLUS);
+        }
 
         $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_READ, $project_id);
         $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_WRITE, $project_id);
@@ -151,6 +157,25 @@ class GitPermissionsManager {
             $rewind_ugroup_ids,
             Git::DEFAULT_PERM_WPLUS
         );
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('plugin_git', 'default_access_control_saved')
+        );
+    }
+
+    /**
+     * @return array
+     */
+    private function getUgroupIdsForPermission(array $ugroup_ids, $permission)
+    {
+        $ugroup_ids_for_permission = array();
+
+        if ($ugroup_ids[$permission] && is_array($ugroup_ids[$permission])) {
+            $ugroup_ids_for_permission = $ugroup_ids[$permission];
+        }
+
+        return $ugroup_ids_for_permission;
     }
 
     private function saveDefaultPermission(Project $project, array $ugroup_ids, $permission)
