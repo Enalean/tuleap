@@ -18,7 +18,7 @@ Version 8.15 (Not yet released)
 	* story #9132 to migrate from Less to Sass (Remove Bootstrap sources from Tuleap)
 	* request #8944: check if the domain name is valid before the installation is started
 	* request #9155: GET /projects should return all active projects for site administrators
-
+	* request #9166 Missing HTTPOnly flag on PHP session cookie
 
 	== Development ==
 	* request #8840: Remove usage of Bless
