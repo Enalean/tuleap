@@ -23,6 +23,7 @@ namespace Tuleap\Git\Git\Hook;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use GitRepository;
 use Http_Client;
+use Http_ClientException;
 use PFUser;
 use Logger;
 
