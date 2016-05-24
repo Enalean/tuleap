@@ -173,8 +173,12 @@ plugin_git	settings_hooks_title	Webhooks
 plugin_git	settings_hooks_delete_success	Webhook removed
 plugin_git	settings_hooks_delete_error	Error while removing the webhook :(
 plugin_git	settings_hooks_add_success	Webhook added
+plugin_git	settings_hooks_edit_error	Error while saving the webhook :(
+plugin_git	settings_hooks_edit_success	Webhook saved
 plugin_git	settings_hooks_add_error	Error while adding the webhook :(
 plugin_git	settings_hooks_desc	You can define several generic webhooks.
+plugin_git	settings_hooks_edit	Edit generic webhook
+plugin_git	settings_hooks_edit_save	Save generic webhook
 plugin_git	settings_hooks_create	Add generic webhook
 plugin_git	settings_hooks_create_desc	Add a target which will be called everytime a git push will be done. The URL will be called using HTTP POST method.
 plugin_git	settings_hooks_create_label	Target URL:

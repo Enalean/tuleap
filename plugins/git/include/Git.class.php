@@ -414,6 +414,7 @@ class Git extends PluginController {
                 'restore',
                 'remove-webhook',
                 'add-webhook',
+                'edit-webhook',
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
@@ -432,6 +433,7 @@ class Git extends PluginController {
                 if ($repository->belongsTo($user)) {
                     $this->addPermittedAction('repo_management');
                     $this->addPermittedAction('remove-webhook');
+                    $this->addPermittedAction('edit-webhook');
                     $this->addPermittedAction('add-webhook');
                     $this->addPermittedAction('mail');
                     $this->addPermittedAction('del');
@@ -527,9 +529,9 @@ class Git extends PluginController {
                     return false;
                 }
                 if ( $this->isAPermittedAction('clone') && $this->request->get('clone') ) {
-                    $valid = new Valid_UInt('parent_id');
-                    $valid->required();
-                    if($this->request->valid($valid)) {
+                    $valid_url = new Valid_UInt('parent_id');
+                    $valid_url->required();
+                    if($this->request->valid($valid_url)) {
                         $parentId = (int)$this->request->get('parent_id');
                     }
                     $this->addAction( 'cloneRepository', array($this->groupId, $repositoryName, $parentId) );
@@ -539,16 +541,16 @@ class Git extends PluginController {
                     $repoDesc = null;
                     if ($this->request->exist('repo_desc')) {
                         $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
-                        $valid = new Valid_Text('repo_desc');
-                        $valid->required();
-                        if($this->request->valid($valid)) {
+                        $valid_url = new Valid_Text('repo_desc');
+                        $valid_url->required();
+                        if($this->request->valid($valid_url)) {
                             $repoDesc = $this->request->get('repo_desc');
                         }
                     }
                     $repoAccess = null;
-                    $valid = new Valid_String('repo_access');
-                    $valid->required();
-                    if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
+                    $valid_url = new Valid_String('repo_access');
+                    $valid_url->required();
+                    if($this->request->valid($valid_url) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
                     $this->addAction('save', array($this->groupId, $repository->getId(), $repoAccess, $repoDesc, $pane) );
@@ -580,14 +582,30 @@ class Git extends PluginController {
                     $this->redirectNoRepositoryError();
                     return false;
                 }
-                $valid = new Valid_HTTPURI('url');
-                $valid->required();
-                if (! $this->request->valid($valid)) {
+                $valid_url = new Valid_HTTPURI('url');
+                $valid_url->required();
+                if (! $this->request->valid($valid_url)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 }
 
                 $this->addAction('addWebhook', array($repository, $this->request->get('url')));
+                break;
+            case 'edit-webhook';
+                if (empty($repository)) {
+                    $this->redirectNoRepositoryError();
+                    return false;
+                }
+                $valid_url = new Valid_HTTPURI('url');
+                $valid_url->required();
+                $valid_id = new Valid_UInt('id');
+                $valid_id->required();
+                if (! $this->request->valid($valid_url) || ! $this->request->valid($valid_id)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                }
+
+                $this->addAction('editWebhook', array($repository, $this->request->get('id'), $this->request->get('url')));
                 break;
             case 'mail':
                 $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);
@@ -604,14 +622,14 @@ class Git extends PluginController {
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repository->getId()) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
-                    $valid = new Valid_Text('repo_desc');
-                    $valid->required();
-                    if($this->request->valid($valid)) {
+                    $valid_url = new Valid_Text('repo_desc');
+                    $valid_url->required();
+                    if($this->request->valid($valid_url)) {
                         $repoDesc = $this->request->get('repo_desc');
                     }
-                    $valid = new Valid_String('repo_access');
-                    $valid->required();
-                    if($this->request->valid($valid)) {
+                    $valid_url = new Valid_String('repo_access');
+                    $valid_url->required();
+                    if($this->request->valid($valid_url)) {
                         $repoAccess = $this->request->get('repo_access');
                     }
                     $this->addAction('confirmPrivate', array($this->groupId, $repository->getId(), $repoAccess, $repoDesc) );
@@ -629,10 +647,10 @@ class Git extends PluginController {
                 break;
             case 'admin-git-admins':
                 if ($this->request->get('submit')) {
-                    $valid = new Valid_Numeric(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
+                    $valid_url = new Valid_Numeric(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
                     $project = $this->projectManager->getProject($this->groupId);
 
-                    if ($this->request->validArray($valid)) {
+                    if ($this->request->validArray($valid_url)) {
                         $select_project_ids = $this->request->get(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
 
                         if ($select_project_ids) {
@@ -745,24 +763,24 @@ class Git extends PluginController {
                 break;
             case 'fork_repositories_permissions':
                 $scope = self::SCOPE_PERSONAL;
-                $valid = new Valid_UInt('repos');
-                $valid->required();
-                if($this->request->validArray($valid)) {
+                $valid_url = new Valid_UInt('repos');
+                $valid_url->required();
+                if($this->request->validArray($valid_url)) {
                     $repos = $this->request->get('repos');
                 }
-                $valid = new Valid_UInt('to_project');
-                if ($this->request->valid($valid)) {
+                $valid_url = new Valid_UInt('to_project');
+                if ($this->request->valid($valid_url)) {
                     $toProject = $this->request->get('to_project');
                 }
-                $valid = new Valid_String('path');
-                $valid->required();
+                $valid_url = new Valid_String('path');
+                $valid_url->required();
                 $path = '';
-                if($this->request->valid($valid)) {
+                if($this->request->valid($valid_url)) {
                     $path = $this->request->get('path');
                 }
-                $valid = new Valid_String('choose_destination');
-                $valid->required();
-                if($this->request->valid($valid)) {
+                $valid_url = new Valid_String('choose_destination');
+                $valid_url->required();
+                if($this->request->valid($valid_url)) {
                     $scope = $this->request->get('choose_destination');
                 }
                 if (!empty($repos)) {
@@ -909,10 +927,10 @@ class Git extends PluginController {
 
                 if (! $handled) {
                     $user_id = null;
-                    $valid   = new Valid_UInt('user');
-                    $valid->required();
+                    $valid_url   = new Valid_UInt('user');
+                    $valid_url->required();
 
-                    if($this->request->valid($valid)) {
+                    if($this->request->valid($valid_url)) {
                         $user_id = $this->request->get('user');
                         $this->addData(array('user' => $user_id));
                     }
@@ -923,6 +941,22 @@ class Git extends PluginController {
 
                 break;
         }
+    }
+
+    private function changeWebhook($repository, $action_method)
+    {
+        if (empty($repository)) {
+            $this->redirectNoRepositoryError();
+            return false;
+        }
+        $valid = new Valid_HTTPURI('url');
+        $valid->required();
+        if (! $this->request->valid($valid)) {
+            $this->addError($this->getText('actions_params_error'));
+            $this->redirect('/plugins/git/?group_id='. $this->groupId);
+        }
+
+        $this->addAction($action_method, array($repository, $this->request->get('url')));
     }
 
     private function handleAdditionalAction(/* GitRepository */ $repository, $action) {

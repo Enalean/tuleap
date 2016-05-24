@@ -568,6 +568,27 @@ class GitActions extends PluginActions {
         $GLOBALS['Response']->redirect($redirect_url);
     }
 
+    public function editWebhook(GitRepository $repository, $webhook_id, $webhook_url)
+    {
+        $csrf = new CSRFSynchronizerToken(GitViews_RepoManagement_Pane_Hooks::CSRF_TOKEN_ID);
+
+        $redirect_url = $this->getWebhookSettingsURL($repository);
+        $csrf->check($redirect_url);
+
+        if ($this->webhook_dao->edit($repository->getId(), $webhook_id, $webhook_url)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_edit_success')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_edit_error')
+            );
+        }
+        $GLOBALS['Response']->redirect($redirect_url);
+    }
+
     private function getWebhookSettingsURL(GitRepository $repository) {
         return GIT_BASE_URL .'/?'. http_build_query(array(
             'action'   => 'repo_management',

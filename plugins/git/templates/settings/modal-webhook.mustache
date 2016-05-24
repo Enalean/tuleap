@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+    <h3 id="modal-create-webhook-title">{{ title }}</h3>
+</div>
+<form method="post" action="/plugins/git/?group_id={{ project_id }}">
+    <input type="hidden" name="id" value="{{ id }}" />
+    <input type="hidden" name="repo_id" value="{{ repository_id }}" />
+    <input type="hidden" name="action" value="{{ action }}" />
+    <input type="hidden" name="challenge" value="{{ csrf_token }}" />
+
+    <div class="modal-body">
+
+        <p>{{ desc }}</p>
+        <p>
+            <label for="webhook-url">{{ label }}</label>
+            <input type="url" id="webhook-url" name="url" value="{{ webhook_url }}" placeholder="https://example.com/webhook" required pattern="https?://.+" />
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_cancel }}</button>
+        <input type="submit" class="btn btn-primary" value="{{ save }}">
+    </div>
+</form>

@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 
 class WebhookSettingsPresenter
 {
+    public $edit_modal;
     public $create_modal;
     public $sections;
     public $create_buttons;
@@ -44,7 +45,8 @@ class WebhookSettingsPresenter
         $description,
         array $create_buttons,
         array $sections,
-        CreateWebhookModalPresenter $create_modal
+        WebhookModalPresenter $create_modal,
+        WebhookModalPresenter $edit_modal
     ) {
         $this->csrf_token     = $csrf->getToken();
         $this->title          = $title;
@@ -52,6 +54,7 @@ class WebhookSettingsPresenter
         $this->create_buttons = $create_buttons;
         $this->sections       = $sections;
         $this->create_modal   = $create_modal;
+        $this->edit_modal     = $edit_modal;
 
         $this->has_sections = count($sections) > 0;
 

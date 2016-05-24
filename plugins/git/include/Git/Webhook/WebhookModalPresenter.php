@@ -22,19 +22,26 @@ namespace Tuleap\Git\Webhook;
 
 use GitRepository;
 
-class CreateWebhookModalPresenter extends WebhookModalPresenter
+class WebhookModalPresenter
 {
-    public $webhook_url;
-    public $id;
+    public $title;
+    public $btn_cancel;
+    public $csrf_token;
+    public $project_id;
+    public $repository_id;
+    public $label;
+    public $save;
+    public $action;
 
     public function __construct(GitRepository $repository)
     {
-        parent::__construct($repository);
+        $this->project_id     = $repository->getProjectId();
+        $this->repository_id  = $repository->getId();
 
-        $this->title       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
-        $this->save        = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
-        $this->webhook_url = '';
-        $this->id          = '';
-        $this->action      = 'add-webhook';
+        $this->title      = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
+        $this->desc       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create_desc');
+        $this->label      = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create_label');
+        $this->save       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
+        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 }

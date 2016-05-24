@@ -48,7 +48,7 @@
                 </tr>
                 {{# webhooks }}
                     <tr>
-                        <td>{{ url }}</td>
+                        <td>{{ webhook_url }}</td>
                         <td><span class="text-info">{{ last_push_info }}</span></td>
                         <td class="action-buttons">
                             <a role="button" data-toggle="modal" href="#modal-logs-{{ id }}">
@@ -85,4 +85,32 @@
     </table>
 </div>
 
-{{> modal-create-webhook }}
+{{# sections }}
+    {{# webhooks }}
+        {{# use_default_edit_modal }}
+            {{# edit_modal }}
+                <div id="modal-edit-{{ id }}"
+                    class="modal hide fade modal-webhook"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="modal-webhook-title"
+                    aria-hidden="true"
+                >
+                    {{> modal-webhook }}
+                </div>
+            {{/ edit_modal }}
+        {{/ use_default_edit_modal }}
+    {{/ webhooks }}
+{{/ sections }}
+
+{{# create_modal }}
+    <div id="modal-create-webhook"
+        class="modal hide fade modal-webhook"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-webhook-title"
+        aria-hidden="true"
+    >
+        {{> modal-webhook }}
+    </div>
+{{/ create_modal }}
