@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -18,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-
-$http_request   = HTTPRequest::instance();
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('botmattermost_agiledashboard');
-
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.$http_request->getServerUrl());
-}
+(function ($) {
+    $(document).ready(function () {
+        $('.bot-mattermost-agiledashboard-field-time').datetimepicker({
+            language: codendi.locale,
+            pickTime: true,
+            pickSeconds: false,
+            pickDate: false
+        });
+    });
+})(window.jQuery);

@@ -1,0 +1,80 @@
+<form method="POST" action="/plugins/botmattermost_agiledashboard/?action=save&group_id={{ project_id }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <legend>{{ title }}</legend>
+    <fieldset>
+        <label for="bot-mattermost-agiledashboard-start-time">{{ label_start_time }}</label>
+        <div id="bot-mattermost-agiledashboard-start-time" class="input-append">
+            <span class="bot-mattermost-agiledashboard-field-time">
+                <input required
+                    name="start_time"
+                    class="input-small"
+                    data-format="hh:mm"
+                    type="text"
+                    {{# has_start_time_and_duration }}
+                       value="{{ start_time }}"
+                    {{/ has_start_time_and_duration }}
+                    >
+                </input>
+                <span class="add-on">
+                    <i class="icon-time"></i>
+                </span>
+            </span>
+        </div>
+
+        <label for="bot-mattermost-agiledashboard-duration">{{ label_duration }}</label>
+        <div id="bot-mattermost-agiledashboard-duration" class="input-append">
+            <span class="bot-mattermost-agiledashboard-field-time">
+                <input required
+                    name="duration"
+                    class="input-small"
+                    data-format="hh:mm"
+                    type="text"
+                    {{# has_start_time_and_duration }}
+                        value="{{ duration }}"
+                    {{/ has_start_time_and_duration }}
+                    {{^ has_start_time_and_duration }}
+                       value="{{ default_duration }}"
+                    {{/ has_start_time_and_duration }}
+                    >
+                </input>
+                <span class="add-on">
+                    <i class="icon-time"></i>
+                 </span>
+            </span>
+        </div>
+
+        <span class="help-block">{{ description }}</span>
+        <table class="table table-bordered table-striped" id="bot_list">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>{{ table_col_name }}</th>
+                    <th>{{ table_col_webhook_url }}</th>
+                    <th>{{ table_col_channels }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# botListIsEmpty }}
+                <tr>
+                    <td>{{ empty_bot_list }}</td>
+                </tr>
+                {{/ botListIsEmpty }}
+                {{^ botListIsEmpty }}
+                {{# bots }}
+                    <tr>
+                        <td><input type="checkbox" name="bots_ids[]" value="{{ id }}" {{# is_assigned }}checked="checked"{{/ is_assigned }}></td>
+                        <td>{{# avatar }}<img src="{{ avatar }}" class="img-circle" width="30" height="30">{{/ avatar }}{{ name }}</td>
+                        <td>{{ webhook_url }}</td>
+                        <td>{{ channels_names }}</td>
+                    </tr>
+                {{/ bots }}
+                {{/ botListIsEmpty }}
+            </tbody>
+        </table>
+
+        <div><button type="submit" class="btn btn-primary">Save</button></div>
+    </fieldset>
+
+</form>
