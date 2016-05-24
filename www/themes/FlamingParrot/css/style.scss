@@ -17,6 +17,29 @@
             border-color: $main;
         }
     }
+
+    #file-diff .CodeMirror .inline-comment {
+        .comment {
+            border-color: $main;
+        }
+
+        .info {
+            background: $main;
+        }
+    }
+
+    #file-diff .CodeMirror .new-inline-comment .new-inline-comment-content {
+        border-color: $main;
+    }
+
+    #file-diff .CodeMirror .inline-comment .arrow,
+    #file-diff .CodeMirror .new-inline-comment .arrow {
+        border-color: transparent $main transparent transparent;
+    }
+
+    #file-diff .CodeMirror .CodeMirror-lines .CodeMirror-gutter-wrapper:hover .CodeMirror-gutter-elt {
+        background: $main;
+    }
 }
 
 body {

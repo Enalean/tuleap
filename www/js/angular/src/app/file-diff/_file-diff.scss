@@ -1,85 +1,214 @@
 #file-diff {
     margin: 0 0 100px;
-    padding: 0 15px 0 0;
+    padding: 15px;
     box-sizing: border-box;
 
-    .file-diff-nav-links {
-        a {
-            margin-right: 25px;
+    .diff-file-title {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 10px;
 
-            &.disabled {
-                color: #333333;
+        h3 {
+            display: inline-block;
+            margin: 0;
+            line-height: normal;
+
+            > i {
+                margin: 0 3px 0 1px;
             }
+        }
+
+        .file-diff-nav-links {
+            a {
+                &:first-child {
+                    margin: 0 20px 0 0;
+                }
+
+                &.disabled {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .binary-file {
+        padding: 100px;
+        border: 1px solid #dddddd;
+        border-radius: 3px;
+        color: #cccccc;
+        text-align: center;
+        line-height: 40px;
+
+        > i {
+            font-size: 40px;
         }
     }
 
     .CodeMirror {
         height: 500px;
-        border: 1px solid lightgray;
-        margin: 15px 0 0 0;
+        border: 1px solid #dddddd;
+        border-radius: 3px;
+
+        .CodeMirror-gutters {
+            border: 0;
+        }
 
         .CodeMirror-gutter {
             min-width: 30px;
+            background: #fdfdfd;
+            border-right: 1px solid #f6f6f6;
         }
 
-        .CodeMirror-gutter-elt {
-            text-align: right;
-        }
+        .CodeMirror-lines {
+            font-size: 13px;
+            line-height: 20px;
 
-        .gutter-oldlines {
-        }
+            .CodeMirror-gutter-elt {
+                color: #8c8c8c;
+                font-size: 11px;
+                text-align: center;
 
-        .gutter-newlines {
-            background-color: lightgray;
-        }
-
-        .added-lines {
-            background-color: #e6ffe6;
-        }
-
-        .deleted-lines {
-            background-color: #ffe6e6;
-        }
-
-        .inline-comment {
-            background-color: white;
-            border: 1px solid lightgray;
-
-            .info {
-                display: inline-block;
-                vertical-align: top;
-                padding: 2px 5px 0 5px;
-                background-color: #eee;
-            }
-
-            .avatar {
-                display: inline-block;
-                width: 20px;
-                height: 20px;
-                margin: 0 5px 0 0;
-            }
-
-            .content {
-                display: inline-block;
-                padding: 0 0 0 5px;
-            }
-        }
-
-        .inline-comment-form {
-            margin: 0;
-
-            textarea {
-                margin: 0;
-            }
-
-            .controls {
-                display: inline-block;
-
-                input {
-                    display: block;
-                    margin: 3px;
+                &:hover {
+                    background: #666666;
+                    color: #ffffff;
+                    font-weight: 600;
+                    cursor: pointer;
                 }
             }
+
+            .added-lines {
+                background-color: #eff8ef;
+
+                + .CodeMirror-gutter-wrapper .CodeMirror-gutter-elt {
+                    color: #58b359;
+                }
+            }
+
+            .deleted-lines {
+                background-color: #ffe6e6;
+
+                + .CodeMirror-gutter-wrapper .CodeMirror-gutter-elt {
+                    color: #da5353;
+                }
+            }
+
+            .CodeMirror-gutter-wrapper:hover .CodeMirror-gutter-elt {
+                background: #666666;
+                color: #ffffff;
+                font-weight: 600;
+                cursor: pointer;
+            }
+        }
+
+
+        .inline-comment {
+            display: flex;
+            align-items: center;
+            margin: 3px 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+            .avatar {
+                flex: 0 0 auto;
+                width: 30px;
+                height: 30px;
+                margin: 0 5px 0 15px;
+            }
+
+            .comment {
+                display: flex;
+                flex: 1 1 auto;
+                margin: 0 15px 0 0;
+                background: #ffffff;
+                border: 1px solid #eeeeee;
+                border-radius: 3px;
+                box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
+
+                .info {
+                    padding: 4px 6px;
+                    background: #eeeeee;
+                    color: #ffffff;
+                    font-size: 12px;
+                    white-space: nowrap;
+
+                    .author {
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .post-date {
+
+                    }
+                }
+
+                .content {
+                    display: flex;
+                    align-items: center;
+                    padding: 3px 6px;
+                    color: #333;
+                    font-size: 13px;
+                    line-height: 24px;
+                }
+            }
+
+        }
+
+        .new-inline-comment {
+            display: flex;
+            align-items: center;
+            margin: 3px 15px 3px 23px;
+
+            .icon-plus-sign {
+                margin: 0 11px 0 0;
+                color: #1593c4;
+                font-size: 18px;
+            }
+
+            .new-inline-comment-content {
+                display: flex;
+                flex: 1 1 auto;
+                padding: 7px;
+                background: #ffffff;
+                border: 1px solid #eeeeee;
+                border-radius: 3px;
+
+                form {
+                    flex: 1 1 auto;
+                    margin: 0;
+
+                    textarea {
+                        width: 100%;
+                        height: 43px;
+                        box-sizing: border-box;
+                        margin: 0;
+                        font-size: 13px;
+                    }
+                }
+
+                .controls {
+                    display: flex;
+
+                    > .btn {
+                        max-height: 43px;
+                        width: 50%;
+                        min-width: 120px;
+                        white-space: nowrap;
+
+                        &:first-child {
+                            margin: 0 5px 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        .inline-comment .arrow,
+        .new-inline-comment .arrow {
+            flex: 0 0 auto;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 5px 5px 5px 0;
+            border-color: transparent #eeeeee transparent transparent;
         }
     }
 }

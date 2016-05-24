@@ -70,11 +70,15 @@ function FileDiffDirective(
     }
 
     var inlineCommentTemplate = $interpolate('<div class="inline-comment">'
-        + '<div class="info"><div class="author">'
         + '<div class="avatar"><img src="{{ user.avatar_url }}"></div>'
-        + '<span>{{ user.username }}</span></div>'
-        + '<small class="post-date">{{ post_date | date: "short" }}</small></div>'
+        + '<div class="arrow"></div>'
+        + '<div class="comment">'
+        + '<div class="info">'
+        + '<span class="author">{{ user.display_name }}</span>'
+        + '<span class="post-date">{{ post_date | date: "short" }}</span>'
+        + '</div>'
         + '<div class="content">{{ content }}</div>'
+        + '</div>'
         + '</div>');
 
     function displayInlineComment(unidiff, comment) {
@@ -88,14 +92,22 @@ function FileDiffDirective(
 
     function showCommentForm(unidiff, lnb) {
         var elt = document.createElement('div'); // eslint-disable-line angular/document-service
-        elt.innerHTML = '<form class="inline-comment-form">'
-            + '<textarea cols="80" rows="4"></textarea>'
-            + '<div class="controls"><input type="submit" value="Comment"><input type="button" value="Close"></div></form>';
+        elt.innerHTML = '<div class="new-inline-comment">'
+            + '<i class="icon-plus-sign"></i>'
+            + '<div class="arrow"></div>'
+            + '<div class="new-inline-comment-content">'
+            + '<form>'
+            + '<textarea></textarea>'
+            + '</form>'
+            + '<div class="controls">'
+            + '<button type="submit" class="btn btn-primary"><i class="icon-comment"></i> Comment</button>'
+            + '<button type="button" class="btn"><i class="icon-remove"></i> Cancel</button>'
+            + '</div></div></div>';
         var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
             coverGutter: true
         });
 
-        elt.querySelector('input[type="submit"]').addEventListener('click', function(e) {
+        elt.querySelector('button[type="submit"]').addEventListener('click', function(e) {
             e.preventDefault();
             var commentText = elt.querySelector('textarea').value;
             postComment(lnb, commentText).then(function(comment) {
@@ -104,7 +116,7 @@ function FileDiffDirective(
             });
         });
 
-        elt.querySelector('input[type="button"]').addEventListener('click', function() {
+        elt.querySelector('button[type="button"]').addEventListener('click', function() {
             commentFormWidget.clear();
         });
     }
