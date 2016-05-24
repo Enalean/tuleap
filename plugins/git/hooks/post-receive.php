@@ -53,6 +53,7 @@ if ($user_name === false) {
 
 $http_client = new Http_Client();
 
+$webhook_dao  = new \Tuleap\Git\Git\Hook\WebHookDao();
 $post_receive = new Git_Hook_PostReceive(
     new Git_Hook_LogAnalyzer(
         $git_exec,
@@ -81,7 +82,8 @@ $post_receive = new Git_Hook_PostReceive(
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Git\Hook\WebHookRequestSender(
-        new \Tuleap\Git\Git\Hook\WebHookFactory(new \Tuleap\Git\Git\Hook\WebHookDao()),
+        new \Tuleap\Git\Git\Hook\WebHookResponseReceiver($webhook_dao),
+        new \Tuleap\Git\Git\Hook\WebHookFactory($webhook_dao),
         $http_client,
         $logger
     )
