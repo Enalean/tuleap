@@ -1,3 +1,6 @@
+Version 4.169 - Tuleap 8.15
+    * story #9083: Edit custom webhook
+
 Version 4.168 - Tuleap 8.15
     * story #9083: Do not send JSON in a application/x-www-form-urlencoded
 
