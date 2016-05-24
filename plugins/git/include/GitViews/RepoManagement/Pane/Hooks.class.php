@@ -23,6 +23,7 @@ use Tuleap\Git\Webhook\CreateWebhookButtonPresenter;
 use Tuleap\Git\Webhook\WebhookPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
 use Tuleap\Git\Webhook\CreateWebhookModalPresenter;
+use Tuleap\Git\Webhook\EditWebhookModalPresenter;
 use Tuleap\Git\Git\Hook\WebHookFactory;
 
 class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
@@ -101,7 +102,8 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
                 $description,
                 $create_buttons,
                 $sections,
-                new CreateWebhookModalPresenter($this->repository)
+                new CreateWebhookModalPresenter($this->repository),
+                new EditWebhookModalPresenter($this->repository)
             )
         ) . implode('', $additional_html_bits);
     }
@@ -117,6 +119,7 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
         if (count($webhooks) === 0) {
             return;
         }
+        $use_default_edit_modal = true;
         foreach ($webhooks as $webhook) {
             $webhook_logs = array();
 
@@ -125,7 +128,8 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
                 $webhook->getId(),
                 $webhook->getUrl(),
                 $webhook_logs,
-                $csrf
+                $csrf,
+                $use_default_edit_modal
             );
         }
         $sections[] = new SectionOfWebhooksPresenter($label, $webhooks_presenters);

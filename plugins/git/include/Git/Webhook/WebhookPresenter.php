@@ -25,10 +25,12 @@ use CSRFSynchronizerToken;
 
 class WebhookPresenter
 {
+    public $use_default_edit_modal;
+    public $edit_modal;
     public $repository_id;
     public $hooklogs;
     public $csrf_token;
-    public $url;
+    public $webhook_url;
     public $last_push_info;
     public $modal_logs_time_label;
     public $modal_logs_info_label;
@@ -37,14 +39,22 @@ class WebhookPresenter
     public $remove_webhook_desc;
     public $remove_webhook_confirm;
     public $remove_form_action;
+    public $id;
 
-    public function __construct(GitRepository $repository, $id, $url, array $hooklogs, CSRFSynchronizerToken $csrf)
-    {
-        $this->id                   = $id;
-        $this->url                  = $url;
-        $this->last_push_info       = '';
-        $this->hooklogs             = $hooklogs;
-        $this->csrf_token           = $csrf->getToken();
+    public function __construct(
+        GitRepository $repository,
+        $id,
+        $webhook_url,
+        array $hooklogs,
+        CSRFSynchronizerToken $csrf,
+        $use_default_edit_modal
+    ) {
+        $this->id                     = $id;
+        $this->webhook_url            = $webhook_url;
+        $this->last_push_info         = '';
+        $this->hooklogs               = $hooklogs;
+        $this->csrf_token             = $csrf->getToken();
+        $this->use_default_edit_modal = $use_default_edit_modal;
 
         $this->repository_id = $repository->getId();
 
@@ -55,7 +65,7 @@ class WebhookPresenter
         $this->remove_webhook_confirm = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_remove_webhook_confirm');
         $this->remove_form_action     = GIT_BASE_URL .'/?group_id='. (int)$repository->getProjectId();
 
-        $this->logs_for   = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_logs_for', $url);
+        $this->logs_for   = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_logs_for', $webhook_url);
         $this->empty_logs = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_empty_logs');
     }
 }

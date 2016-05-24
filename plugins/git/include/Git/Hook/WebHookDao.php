@@ -57,4 +57,17 @@ class WebHookDao extends DataAccessObject
 
         return $this->updateAndGetLastId($sql);
     }
+
+    public function edit($repository_id, $webhook_id, $webhook_url)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $webhook_url   = $this->da->quoteSmart($webhook_url);
+
+        $sql = "UPDATE plugin_git_webhook_url
+                SET url = $webhook_url
+                WHERE repository_id = $repository_id
+                  AND id = $webhook_id";
+
+        return $this->update($sql);
+    }
 }
