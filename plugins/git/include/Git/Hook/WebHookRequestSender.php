@@ -109,6 +109,8 @@ class WebHookRequestSender
             "sender"     => $sender_representation,
         );
 
-        return json_encode($body);
+        return http_build_query(array(
+            'payload' => json_encode($body)
+        ));
     }
 }
