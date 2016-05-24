@@ -49,12 +49,12 @@ class WebhookPresenter
         CSRFSynchronizerToken $csrf,
         $use_default_edit_modal
     ) {
-        $this->id                     = $id;
-        $this->webhook_url            = $webhook_url;
-        $this->last_push_info         = '';
-        $this->hooklogs               = $hooklogs;
-        $this->csrf_token             = $csrf->getToken();
-        $this->use_default_edit_modal = $use_default_edit_modal;
+        $this->id                      = $id;
+        $this->webhook_url             = $webhook_url;
+        $this->purified_last_push_info = '';
+        $this->hooklogs                = $hooklogs;
+        $this->csrf_token              = $csrf->getToken();
+        $this->use_default_edit_modal  = $use_default_edit_modal;
 
         $this->repository_id = $repository->getId();
 
@@ -67,5 +67,9 @@ class WebhookPresenter
 
         $this->logs_for   = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_logs_for', $webhook_url);
         $this->empty_logs = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_empty_logs');
+
+        if (count($hooklogs) > 0) {
+            $this->purified_last_push_info = $hooklogs[0]->purified_information;
+        }
     }
 }

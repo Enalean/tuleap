@@ -70,4 +70,29 @@ class WebHookDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function addLog($webhook_id, $status)
+    {
+        $created_on = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        $webhook_id = $this->da->escapeInt($webhook_id);
+        $status     = $this->da->quoteSmart($status);
+
+        $sql = "INSERT INTO plugin_git_webhook_log(created_on, webhook_id, status)
+                VALUES ($created_on, $webhook_id, $status)";
+
+        return $this->update($sql);
+    }
+
+    public function getLogs($webhook_id)
+    {
+        $webhook_id = $this->da->escapeInt($webhook_id);
+
+        $sql = "SELECT *
+                FROM plugin_git_webhook_log
+                WHERE webhook_id = $webhook_id
+                ORDER BY created_on DESC
+                LIMIT 30";
+
+        return $this->retrieve($sql);
+    }
 }

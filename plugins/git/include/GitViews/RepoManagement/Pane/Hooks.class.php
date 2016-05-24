@@ -24,7 +24,10 @@ use Tuleap\Git\Webhook\WebhookPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
 use Tuleap\Git\Webhook\CreateWebhookModalPresenter;
 use Tuleap\Git\Webhook\EditWebhookModalPresenter;
+use Tuleap\Git\Webhook\WebhookLogPresenter;
 use Tuleap\Git\Git\Hook\WebHookFactory;
+use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\Git\Hook\WebHook;
 
 class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
 {
@@ -43,11 +46,25 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
      */
     const ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks';
 
+    /**
+     * @var WebHookFactory
+     */
+    private $webhook_factory;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, WebHookFactory $webhook_factory)
-    {
+    /**
+     * @var WebHookDao
+     */
+    private $webhook_dao;
+
+    public function __construct(
+        GitRepository $repository,
+        Codendi_Request $request,
+        WebHookFactory $webhook_factory,
+        WebHookDao $webhook_dao
+    ) {
         parent::__construct($repository, $request);
         $this->webhook_factory = $webhook_factory;
+        $this->webhook_dao     = $webhook_dao;
     }
 
     /**
@@ -121,7 +138,7 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
         }
         $use_default_edit_modal = true;
         foreach ($webhooks as $webhook) {
-            $webhook_logs = array();
+            $webhook_logs = $this->getLogsForWebhook($webhook);
 
             $webhooks_presenters[] = new WebhookPresenter(
                 $this->repository,
@@ -133,5 +150,32 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
             );
         }
         $sections[] = new SectionOfWebhooksPresenter($label, $webhooks_presenters);
+    }
+
+    private function getLogsForWebhook(WebHook $webhook)
+    {
+        $logs = array();
+        foreach ($this->webhook_dao->getLogs($webhook->getId()) as $row) {
+            $logs[] = new WebhookLogPresenter(
+                format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['created_on']),
+                $this->formatStatus($row['status'])
+            );
+        }
+
+        return $logs;
+    }
+
+    private function formatStatus($status)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $classname = 'text-success';
+        $icon      = 'icon-ok-sign';
+        if ($status{0} !== '2') {
+            $classname = 'text-warning';
+            $icon      = 'icon-warning-sign';
+        }
+
+        return '<span class="'. $classname .'"><i class="'. $icon .'"></i> '. $purifier->purify($status) .'</span>';
     }
 }

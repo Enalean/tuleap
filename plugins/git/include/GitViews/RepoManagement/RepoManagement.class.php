@@ -104,8 +104,11 @@ class GitViews_RepoManagement {
             $panes[]            = new GitViews_RepoManagement_Pane_Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
 
+        $webhook_dao     = new WebHookDao();
+        $webhook_factory = new WebHookFactory($webhook_dao);
+
         $panes[] = new GitViews_RepoManagement_Pane_Notification($repository, $this->request);
-        $panes[] = new GitViews_RepoManagement_Pane_Hooks($repository, $this->request, new WebHookFactory(new WebHookDao));
+        $panes[] = new GitViews_RepoManagement_Pane_Hooks($repository, $this->request, $webhook_factory, $webhook_dao);
         $panes[] = new GitViews_RepoManagement_Pane_Delete($repository, $this->request);
 
         $indexed_panes = array();

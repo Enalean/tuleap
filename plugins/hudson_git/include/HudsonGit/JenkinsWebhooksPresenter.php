@@ -40,11 +40,11 @@ class JenkinsWebhookPresenter extends WebhookPresenter
         $this->modal_logs_info_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_triggered');
         $this->empty_logs            = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
 
-        $this->last_push_info = $GLOBALS['Language']->getText(
+        $this->purified_last_push_info = '<span class="text-info">'. $GLOBALS['Language']->getText(
             'plugin_hudson_git',
             'n_jobs_triggered',
             $this->countNbJobsTriggeredOnLastPush($hooklogs)
-        );
+        ) .'</span>';
 
         $this->generateHooklogs($hooklogs);
     }

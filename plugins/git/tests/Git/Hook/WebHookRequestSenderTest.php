@@ -47,7 +47,8 @@ class WebHookRequestSenderTest extends TuleapTestCase
         $factory     = mock('Tuleap\Git\Git\Hook\WebHookFactory');
         $http_client = mock('Http_Client');
         $logger      = mock('Logger');
-        $sender      = new WebHookRequestSender($factory, $http_client, $logger);
+        $receiver    = mock('Tuleap\Git\Git\Hook\WebHookResponseReceiver');
+        $sender      = new WebHookRequestSender($receiver, $factory, $http_client, $logger);
 
         $repository = mock('GitRepository');
         $user       = mock('PFUser');

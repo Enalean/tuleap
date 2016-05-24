@@ -29,6 +29,12 @@ use Logger;
 
 class WebHookRequestSender
 {
+
+    /**
+     * @var WebHookResponseReceiver
+     */
+    private $receiver;
+
     /**
      * @var Logger
      */
@@ -44,11 +50,16 @@ class WebHookRequestSender
      */
     private $factory;
 
-    public function __construct(WebHookFactory $factory, Http_Client $http_client, Logger $logger)
-    {
+    public function __construct(
+        WebHookResponseReceiver $receiver,
+        WebHookFactory $factory,
+        Http_Client $http_client,
+        Logger $logger
+    ) {
         $this->factory     = $factory;
         $this->http_client = $http_client;
         $this->logger      = $logger;
+        $this->receiver    = $receiver;
     }
 
     public function sendRequests(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
@@ -60,8 +71,9 @@ class WebHookRequestSender
 
             try {
                 $this->http_client->doRequest();
+                $this->receiver->receive($web_hook, $this->http_client->getLastResponse());
             } catch (Http_ClientException $e) {
-                //Do nothing for now
+                //Do nothing
             }
         }
     }
@@ -78,6 +90,8 @@ class WebHookRequestSender
             CURLOPT_URL             => $web_hook->getUrl(),
             CURLOPT_SSL_VERIFYPEER  => true,
             CURLOPT_POST            => true,
+            CURLOPT_HEADER          => true,
+            CURLOPT_FAILONERROR     => false,
             CURLOPT_POSTFIELDS      => $this->getRequestBody($repository, $user, $oldrev, $newrev, $refname)
         );
 
