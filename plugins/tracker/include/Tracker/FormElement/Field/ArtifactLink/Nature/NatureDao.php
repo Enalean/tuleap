@@ -180,7 +180,7 @@ class NatureDao extends DataAccessObject {
         $limit       = $this->da->escapeInt($limit);
         $offset      = $this->da->escapeInt($offset);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS artlink.artifact_id AS id
+        $sql = "SELECT SQL_CALC_FOUND_ROWS parent_art.id AS id
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
