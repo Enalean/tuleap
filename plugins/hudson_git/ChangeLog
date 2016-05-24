@@ -1,4 +1,7 @@
-Version 0.12 - Tuleap 8.15
+Version 0.15 - Tuleap 8.15
+    * story #9083: Create generic webhook
+
+Version 0.14 - Tuleap 8.15
     * story #9083: Delete a custom webhook
 
 Version 0.13 - Tuleap 8.15
