@@ -18,6 +18,10 @@
         }
     }
 
+    #modified-files h3 .badge {
+        background: $main;
+    }
+
     #file-diff .CodeMirror .inline-comment {
         .comment {
             border-color: $main;

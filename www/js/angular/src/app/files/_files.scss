@@ -1,54 +1,64 @@
-#files {
-    #modified-files {
-        > h3 {
-            margin-bottom: 5px;
+#modified-files {
+    padding: 0 15px;
+    margin: 0 0 50px;
+
+    > h3 {
+        margin-bottom: 5px;
+
+        > .badge {
+            position: relative;
+            top: -1px;
         }
+    }
 
-        > ul.modified-files {
-            overflow: auto;
-            max-height: 150px;
-            padding-top: 2px;
-            margin: 0 0 20px;
-            border: 1px solid lightgray;
-            list-style-type: none;
+    > .modified-files {
+        max-height: 229px;
+        overflow-y: auto;
 
-            > li {
-                margin: 0;
-                position: relative;
-                left: -5px;
+        > table {
+            margin: 0;
 
-                &.loading {
-                    height: 16px;
-                    background: url('loader-mini.gif') no-repeat center center;
-                }
+            tr {
+                cursor: pointer;
 
-                .badge {
-                    position: relative;
-                    top: -1px;
-                    width: 12px;
-                    margin: 0 3px 0 0;
-                    text-align: center;
+                > td {
+                    white-space: nowrap;
 
-                    &.badge-A {
-                        background: #58B359;
+                    &.loading {
+                        height: 16px;
+                        background: url('loader-mini.gif') no-repeat center center;
                     }
-                    &.badge-M {
-                        background: #F5B849;
-                    }
-                    &.badge-D {
-                        background: #DA5353;
-                    }
-                }
 
-                a {
-                    display: block;
-                    padding: 5px;
-                    border-radius: 3px;
+                    &.file {
+                        width: 100%;
+                        font-size: 13px;
 
-                    &:hover, &:focus {
-                        text-decoration: none;
-                        background: #F4F4F4;
+                        .status {
+                            display: inline-block;
+                            width: 26px;
+                            text-align: center;
+                            font-weight: 600;
+
+                            &.status-A {
+                                color: #58b359;
+                            }
+                            &.status-M {
+                                color: #f5b849;
+                            }
+                            &.status-D {
+                                color: #da5353;
+                            }
+                        }
                     }
+
+                    &.changes {
+                        min-width: 50px;
+
+                        &.lines-added {
+                            text-align: right;
+                        }
+                    }
+
                 }
             }
         }
