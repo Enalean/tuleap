@@ -177,6 +177,7 @@ plugin_git	settings_hooks_logs_for	Historique pour $1
 plugin_git	settings_hooks_empty_logs	Pas encore d'historique
 plugin_git	settings_hooks_remove_webhook_desc	Vous êtes sur le point de supprimer le webhook. Veuillez confirmer la suppression.
 plugin_git	settings_hooks_remove_webhook_confirm	Confirmer la suppression
+plugin_git	settings_hooks_generic	Generic webhooks
 
 plugin_git	add_mail_label	Personnes notifiées
 plugin_git	add_mail_title	Ajouter une adresse mail ou un utilisateur à notifier

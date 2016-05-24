@@ -183,6 +183,7 @@ plugin_git	settings_hooks_logs_for	Logs for $1
 plugin_git	settings_hooks_empty_logs	No logs yet
 plugin_git	settings_hooks_remove_webhook_desc	You are about to remove the webhook. Please confirm your action.
 plugin_git	settings_hooks_remove_webhook_confirm	Confirm deletion
+plugin_git	settings_hooks_generic	Webhooks génériques
 
 plugin_git	add_mail_label	Notificated People
 plugin_git	add_mail_title	Add a mail address or a user to notify

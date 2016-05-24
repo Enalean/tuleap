@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use Tuleap\Git\GerritCanMigrateChecker;
 
+use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Git\Hook\WebHookFactory;
+use Tuleap\Git\Git\Hook\WebHookDao;
 
 /**
  * Dedicated screen for repo management
@@ -103,7 +105,7 @@ class GitViews_RepoManagement {
         }
 
         $panes[] = new GitViews_RepoManagement_Pane_Notification($repository, $this->request);
-        $panes[] = new GitViews_RepoManagement_Pane_Hooks($repository, $this->request);
+        $panes[] = new GitViews_RepoManagement_Pane_Hooks($repository, $this->request, new WebHookFactory(new WebHookDao));
         $panes[] = new GitViews_RepoManagement_Pane_Delete($repository, $this->request);
 
         $indexed_panes = array();
