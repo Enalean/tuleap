@@ -1,0 +1,13 @@
+Bot Mattermost-Agile Dashboard
+=========================
+
+The plugin is used to notify stand up release.
+
+Installation
+------------
+You need first to install BotMattermost plugin and Agile Dashboard plugin.
+
+References
+----------
+* [https://www.mattermost.org/](https://www.mattermost.org/)
+* [https://about.mattermost.com/](https://about.mattermost.com/)
