@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\XML\MappingsRegistry;
 
 class ProjectXMLImporterTest extends TuleapTestCase {
 
@@ -58,6 +60,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->xml_file_path_with_members = dirname(__FILE__).'/_fixtures/fake_project_with_project_members.xml';
 
         $this->xml_content = new SimpleXMLElement(file_get_contents($this->xml_file_path));
+
+        $this->mapping_registery = new MappingsRegistry();
     }
 
     public function itAsksToPluginToImportInformationsFromTheGivenXml() {
@@ -66,11 +70,12 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(
-                'logger' => $this->logger,
-                'project' => $this->project,
-                'xml_content' => $this->xml_content,
-                'extraction_path' => '',
-                'user_finder'     => $this->user_finder,
+                'logger'              => $this->logger,
+                'project'             => $this->project,
+                'xml_content'         => $this->xml_content,
+                'extraction_path'     => '',
+                'user_finder'         => $this->user_finder,
+                'mappings_registery'  => $this->mapping_registery,
             )
         )->once();
 

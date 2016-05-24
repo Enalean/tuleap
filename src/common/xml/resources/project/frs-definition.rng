@@ -42,6 +42,11 @@
                   <attribute name="preformatted">
                     <data type="boolean"/>
                   </attribute>
+                  <optional>
+                    <attribute name="artifact_id">
+                      <data type="string"/>
+                    </attribute>
+                  </optional>
                   <element name="notes">
                     <data type="string"/>
                   </element>

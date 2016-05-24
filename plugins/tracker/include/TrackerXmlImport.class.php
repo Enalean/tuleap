@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use Tuleap\XML\MappingsRegistry;
 
 class TrackerXmlImport {
 
@@ -186,7 +187,12 @@ class TrackerXmlImport {
      * @throws XML_ParseException
      * @return Tracker[]
      */
-    public function import(Project $project, SimpleXMLElement $xml_input, $extraction_path) {
+    public function import(
+        Project $project,
+        SimpleXMLElement $xml_input,
+        MappingsRegistry $registery,
+        $extraction_path
+    ) {
         if (! $xml_input->trackers) {
             return;
         }
@@ -239,10 +245,12 @@ class TrackerXmlImport {
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
-                'project_id'    => $project->getId(),
-                'xml_content'   => $xml_input,
-                'mapping'       => $created_trackers_mapping,
-                'field_mapping' => $this->xmlFieldsMapping
+                'project_id'          => $project->getId(),
+                'xml_content'         => $xml_input,
+                'mapping'             => $created_trackers_mapping,
+                'field_mapping'       => $this->xmlFieldsMapping,
+                'mappings_registery'  => $registery,
+                'artifact_id_mapping' => $artifacts_id_mapping,
             )
         );
 
