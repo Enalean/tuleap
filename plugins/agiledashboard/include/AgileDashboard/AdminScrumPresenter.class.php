@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,13 +32,12 @@ class AdminScrumPresenter {
     /** @var string */
     public $scrum_title;
 
-    /** @var string */
-    public $kanban_title;
 
     private $root_planning_tracker_url;
     private $root_planning_name;
     private $planning_hierarchy = array();
     private $can_create_planning;
+    private $additional_panes;
 
     public function __construct(
         array $plannings,
@@ -48,7 +47,8 @@ class AdminScrumPresenter {
         $root_planning_name,
         array $hierarchy,
         $scrum_activated,
-        $scrum_title
+        $scrum_title,
+        array $additional_panes
     ) {
         $this->plannings                 = $plannings;
         $this->group_id                  = $group_id;
@@ -57,6 +57,7 @@ class AdminScrumPresenter {
         $this->root_planning_name        = $root_planning_name;
         $this->scrum_activated           = $scrum_activated;
         $this->scrum_title               = $scrum_title;
+        $this->additional_panes          = $additional_panes;
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
@@ -175,5 +176,10 @@ class AdminScrumPresenter {
     public function token() {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         return $token->fetchHTMLInput();
+    }
+
+    public function additional_panes()
+    {
+        return array_values($this->additional_panes);
     }
 }

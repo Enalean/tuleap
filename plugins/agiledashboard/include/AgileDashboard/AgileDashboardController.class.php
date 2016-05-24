@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\AdminAdditionalPanePresenter;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -44,14 +46,14 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     private $hierarchy_checker;
 
     public function __construct(
-        Codendi_Request $request,
-        PlanningFactory $planning_factory,
-        AgileDashboard_KanbanManager $kanban_manager,
-        AgileDashboard_KanbanFactory $kanban_factory,
+        Codendi_Request                     $request,
+        PlanningFactory                     $planning_factory,
+        AgileDashboard_KanbanManager        $kanban_manager,
+        AgileDashboard_KanbanFactory        $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
-        TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager,
-        AgileDashboard_HierarchyChecker $hierarchy_checker
+        TrackerFactory                      $tracker_factory,
+        AgileDashboard_PermissionsManager   $permissions_manager,
+        AgileDashboard_HierarchyChecker     $hierarchy_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -92,7 +94,19 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         );
     }
 
-    private function getAdminScrumPresenter(PFUser $user, $group_id) {
+    public function adminAdditionalPane()
+    {
+        return $this->renderToString(
+            'admin-additional-pane',
+            $this->getAdminAdditionalPanePresenterByName(
+                $this->group_id,
+                $this->request->get('pane')
+            )
+        );
+    }
+
+    private function getAdminScrumPresenter(PFUser $user, $group_id)
+    {
         $can_create_planning         = true;
         $tracker_uri                 = '';
         $root_planning_name          = '';
@@ -115,20 +129,51 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $root_planning_name,
             $potential_planning_trackers,
             $scrum_activated,
-            $this->config_manager->getScrumTitle($group_id)
+            $this->config_manager->getScrumTitle($group_id),
+            $this->getAdditionalPanesAdmin()
         );
     }
 
-    private function getAdminKanbanPresenter(PFUser $user, $project_id) {
-
+    private function getAdminKanbanPresenter(PFUser $user, $project_id)
+    {
         $has_kanban = count($this->kanban_factory->getListOfKanbansForProject($user, $project_id)) > 0;
 
         return new AdminKanbanPresenter(
             $project_id,
             $this->config_manager->kanbanIsActivatedForProject($project_id),
             $this->config_manager->getKanbanTitle($project_id),
-            $has_kanban
+            $has_kanban,
+            $this->getAdditionalPanesAdmin()
         );
+    }
+
+    private function getAdminAdditionalPanePresenterByName($project_id, $name)
+    {
+        $panes = $this->getAdditionalPanesAdmin();
+
+        foreach ($panes as &$pane) {
+            $pane['activated'] = $pane['name'] === $name;
+        }
+
+        return new AdminAdditionalPanePresenter(
+            $project_id,
+            $panes[$name]['title'],
+            $panes[$name]['output'],
+            $panes
+        );
+    }
+
+    public function getAdditionalPanesAdmin()
+    {
+        $panes = array();
+        EventManager::instance()->processEvent(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN, array(
+            'additional_panes' => &$panes
+        ));
+        foreach ($panes as $pane_name => &$pane) {
+            $pane['name'] = $pane_name;
+        }
+
+        return $panes;
     }
 
     private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name) {
@@ -311,5 +356,4 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     private function isTrackerUsedInScrum(Tracker $tracker) {
         return count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 || count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0;
     }
-
 }
