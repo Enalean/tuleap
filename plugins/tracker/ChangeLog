@@ -1,3 +1,6 @@
+Version 5.896 - Tuleap 8.15
+    * story #9087: see linked artifacts in releases (FRS can now import artifact_id)
+
 Version 5.895 - Tuleap 8.15
     * request #9185: Reverse artifact links are not show properly in FRS page
 
