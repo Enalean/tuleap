@@ -176,6 +176,8 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
             $icon      = 'icon-warning-sign';
         }
 
-        return '<span class="'. $classname .'"><i class="'. $icon .'"></i> '. $purifier->purify($status) .'</span>';
+        return '<span class="'. $classname .'" title="'. $purifier->purify($status) .'">
+            <i class="'. $icon .'"></i> '. $purifier->purify($status) .'
+            </span>';
     }
 }

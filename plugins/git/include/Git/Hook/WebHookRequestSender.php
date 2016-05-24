@@ -73,7 +73,7 @@ class WebHookRequestSender
                 $this->http_client->doRequest();
                 $this->receiver->receive($web_hook, $this->http_client->getLastResponse());
             } catch (Http_ClientException $e) {
-                //Do nothing
+                $this->receiver->receiveError($web_hook, $e->getMessage());
             }
         }
     }

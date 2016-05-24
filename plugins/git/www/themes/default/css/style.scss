@@ -884,6 +884,13 @@ h1, h2, h3 {
             text-overflow: ellipsis;
         }
 
+        &.last-push {
+            max-width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
         &.action-buttons {
             display: flex;
             justify-content: space-around;
