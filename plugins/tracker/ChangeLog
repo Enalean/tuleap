@@ -1,3 +1,6 @@
+Version 5.895 - Tuleap 8.15
+    * request #9185: Reverse artifact links are not show properly in FRS page
+
 Version 5.894 - Tuleap 8.15
     * request #9165 Computed field counts twice final
 
