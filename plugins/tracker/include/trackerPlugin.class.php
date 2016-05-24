@@ -786,6 +786,7 @@ class trackerPlugin extends Plugin {
         TrackerXmlImport::build($params['user_finder'], $params['logger'])->import(
             $params['project'],
             $params['xml_content'],
+            $params['mappings_registery'],
             $params['extraction_path']
         );
     }

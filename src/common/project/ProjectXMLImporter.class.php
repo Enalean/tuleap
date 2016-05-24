@@ -21,6 +21,7 @@
 require_once "account.php";
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
+use Tuleap\XML\MappingsRegistry;
 
 /**
  * This class import a project from a xml content
@@ -149,17 +150,23 @@ class ProjectXMLImporter {
             $this->user_finder,
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager));
-        $frs->import($project, $xml_element, $extraction_path);
+
+        $frs_release_mapping = array();
+        $frs->import($project, $xml_element, $extraction_path, $frs_release_mapping);
+
+        $mappings_registery = new MappingsRegistry();
+        $mappings_registery->add($frs_release_mapping, FRSXMLImporter::MAPPING_KEY);
 
         $this->logger->info("Ask to plugin to import data from XML");
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(
-                'logger'          => $this->logger,
-                'project'         => $project,
-                'xml_content'     => $xml_element,
-                'extraction_path' => $extraction_path,
-                'user_finder'     => $this->user_finder,
+                'logger'              => $this->logger,
+                'project'             => $project,
+                'xml_content'         => $xml_element,
+                'extraction_path'     => $extraction_path,
+                'user_finder'         => $this->user_finder,
+                'mappings_registery'  => $mappings_registery,
             )
         );
 

@@ -13,6 +13,7 @@ frs =
             attribute name { xsd:string } &
             attribute time { xsd:dateTime } &
             attribute preformatted { xsd:boolean } &
+            attribute artifact_id { xsd:string }? &
             element notes { xsd:string } &
             element changes { xsd:string } &
             element user { user_content } &

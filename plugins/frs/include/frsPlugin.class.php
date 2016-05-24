@@ -54,6 +54,7 @@ class frsPlugin extends \Plugin
         $this->addHook('javascript_file');
         $this->addHook(self::FRS_RELEASE_VIEW);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
     }
 
     /**
@@ -119,6 +120,9 @@ class frsPlugin extends \Plugin
         return isset($release_request['artifact-id']) && $release_request['artifact-id'] !== '';
     }
 
+    /**
+     * @return Updater
+     */
     private function getLinkUpdater()
     {
         return new Updater(new Dao(), $this->getLinkRetriever());
@@ -172,5 +176,21 @@ class frsPlugin extends \Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function import_xml_project_tracker_done($params)
+    {
+        $mappings            = $params['mappings_registery'];
+        $artifact_id_mapping = $params['artifact_id_mapping'];
+
+        $frs_release_mapping = $mappings->get(FRSXMLImporter::MAPPING_KEY);
+
+        foreach ($frs_release_mapping as $release_id => $xml_artifact_id) {
+            $artifact_id = $artifact_id_mapping->get($xml_artifact_id);
+
+            if ($artifact_id) {
+                $this->getLinkUpdater()->updateLink($release_id, $artifact_id);
+            }
+        }
     }
 }

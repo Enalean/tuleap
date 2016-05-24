@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Sogilis, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +20,8 @@
  */
 
 class FRSXMLImporter {
+
+    const MAPPING_KEY = 'frs_release_mapping';
 
     /** @var XML_RNGValidator */
     private $xml_validator;
@@ -104,7 +107,8 @@ class FRSXMLImporter {
         return $this->permission_manager;
     }
 
-    public function import(Project $project, SimpleXMLElement $xml, $extraction_path) {
+    public function import(Project $project, SimpleXMLElement $xml, $extraction_path, array &$frs_release_mapping)
+    {
         $xml_frs = $xml->frs;
         if(!$xml_frs) {
             return true;
@@ -112,7 +116,7 @@ class FRSXMLImporter {
 
         $created_id_map = array( 'package' => array() );
         foreach($xml_frs->package as $xml_pkg) {
-            $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map);
+            $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
         }
 
         if(isset($xml_frs->administrators)) {
@@ -145,7 +149,13 @@ class FRSXMLImporter {
         $frs_admin_group->addUser($user);
     }
 
-    private function importPackage(Project $project, SimpleXMLElement $xml_pkg, $extraction_path, array &$created_id_map) {
+    private function importPackage(
+        Project $project,
+        SimpleXMLElement $xml_pkg,
+        $extraction_path,
+        array &$created_id_map,
+        array &$frs_release_mapping
+    ) {
         $attrs   = $xml_pkg->attributes();
         $id      = isset($attrs['id']) ? (string) $attrs['id'] : null;
         $rank    = isset($attrs['rank']) ? $attrs['rank'] : 'end';
@@ -169,7 +179,7 @@ class FRSXMLImporter {
 
         foreach($xml_pkg->children() as $xml_rel) {
             if($xml_rel->getName() != "release") continue;
-            $this->importRelease($project, $package, $xml_rel, $extraction_path);
+            $this->importRelease($project, $package, $xml_rel, $extraction_path, $frs_release_mapping);
         }
         if($id != null) {
             if(isset($created_id_map[$id])) {
@@ -180,7 +190,13 @@ class FRSXMLImporter {
         }
     }
 
-    private function importRelease(Project $project, FRSPackage $package, SimpleXMLElement $xml_rel, $extraction_path) {
+    private function importRelease(
+        Project $project,
+        FRSPackage $package,
+        SimpleXMLElement $xml_rel,
+        $extraction_path,
+        array &$frs_release_mapping
+    ) {
         $user  = $this->user_finder->getUser($xml_rel->user);
         $attrs = $xml_rel->attributes();
 
@@ -194,7 +210,13 @@ class FRSXMLImporter {
         $release->setChanges((string) $xml_rel->changes);
         $release->setPreformatted($attrs['preformatted'] == '1' || $attrs['preformatted'] == 'true');
         $release->setReleasedBy($user->getId());
-        $release->setReleaseID($this->release_factory->create($release->toArray()));
+
+        $created_release_id = $this->release_factory->create($release->toArray());
+        $release->setReleaseID($created_release_id);
+
+        if (isset($attrs['artifact_id'])) {
+            $frs_release_mapping[$created_release_id] = (string) $attrs['artifact_id'];
+        }
 
         $read_perms = array();
         foreach($xml_rel->{'read-access'} as $perm) {
@@ -269,5 +291,4 @@ class FRSXMLImporter {
         $newFile->setPostDate($date);
         $this->file_factory->createFile($newFile);
     }
-
 }

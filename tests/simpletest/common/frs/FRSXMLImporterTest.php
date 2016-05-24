@@ -38,7 +38,7 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
 
     public function setUp() {
         $this->package_factory = new FRSPackageFactoryMock();
-        $this->release_factory = new FRSReleaseFactory();
+        $this->release_factory = partial_mock('FRSReleaseFactory', array('getFRSReleaseFromDb'));
         $this->file_factory = new FRSXMLImporterTest_FRSFileFactory();
 
         $this->package_dao = mock('FRSPackageDao');
@@ -96,6 +96,8 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase {
 
     public function tearDown() {
         $GLOBALS['Language'] = null;
+        FRSPackageFactory::clearInstance();
+        FRSReleaseFactory::clearInstance();
         PermissionsManager::clearInstance();
         UserManager::clearInstance();
         if(isset($this->old_ftp_incoming_dir)) {
@@ -131,7 +133,8 @@ XML;
         $this->package_dao->expectAt(0, 'createFromArray', array($expected_package_array));
         $this->package_dao->expectCallCount('createFromArray', 1);
 
-        $this->frs_importer->import($project, $xml_element, '');
+        $frs_mapping = array();
+        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
     }
 
     public function itShouldImportOnePackageWithOneRelease() {
@@ -177,7 +180,46 @@ XML;
         $this->release_dao->expectAt(0, 'createFromArray', array($expected_release_array));
         $this->release_dao->expectCallCount('createFromArray', 1);
 
-        $this->frs_importer->import($project, $xml_element, '');
+        $frs_mapping = array();
+        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+    }
+
+    public function itShouldImportOnePackageWithOneReleaseLinkedToAnArtifact() {
+        $pm = ProjectManager::instance();
+        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $xml = <<<XML
+        <project>
+            <frs>
+                <package name="package">
+                    <read-access><ugroup>project_members</ugroup></read-access>
+                    <release name="release" time="2015-12-03T14:55:00" preformatted="false" artifact_id="A101">
+                        <read-access><ugroup>project_members</ugroup></read-access>
+                        <notes>some notes</notes>
+                        <changes>some changes</changes>
+                        <user format="username">toto</user>
+                    </release>
+                </package>
+            </frs>
+        </project>
+XML;
+
+        $xml_element = new SimpleXMLElement($xml);
+
+        $user_id    = 42;
+        $package_id = 1337;
+        $release    = mock('FRSRelease');
+
+        stub($release)->getGroupID()->returns(123);
+        stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
+        stub($this->package_dao)->createFromArray()->returns($package_id);
+        stub($this->release_dao)->createFromArray()->returns(47);
+        stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
+
+        $frs_mapping = array();
+        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
+
+        $this->assertArrayNotEmpty($frs_mapping);
+        $this->assertEqual($frs_mapping[47], 'A101');
     }
 
     public function itShouldImportOnePackageWithOneReleaseWithOneFile() {
@@ -277,7 +319,12 @@ XML;
         $expected_file_array_with_id['id'] = $file_id;
         stub($this->file_dao)->searchById($file_id)->returnsDar($expected_file_array_with_id);
 
-        $this->frs_importer->import($project, $xml_element, $extraction_path);
+        $release = mock('FRSRelease');
+        stub($release)->getGroupID()->returns(123);
+        stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
+
+        $frs_mapping = array();
+        $this->frs_importer->import($project, $xml_element, $extraction_path, $frs_mapping);
     }
 
     private function getDefaultPackage($name) {
@@ -330,7 +377,9 @@ XML;
         $project_ugroup = mock('ProjectUGroup');
         stub($this->ugroup_manager)->getUGroupByName()->returns($project_ugroup);
         expect($project_ugroup)->addUser($user)->once();
-        $this->frs_importer->import($project, $xml_element, '');
+
+        $frs_mapping = array();
+        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
     }
 
     public function itShouldNotImportAdministratorsIfNotMemberOfTheProject() {
@@ -362,6 +411,8 @@ XML;
         $project_ugroup = mock('ProjectUGroup');
         stub($this->ugroup_manager)->getUGroupByName()->returns($project_ugroup);
         expect($project_ugroup)->addUser()->once();
-        $this->frs_importer->import($project, $xml_element, '');
+
+        $frs_mapping = array();
+        $this->frs_importer->import($project, $xml_element, '', $frs_mapping);
     }
 }

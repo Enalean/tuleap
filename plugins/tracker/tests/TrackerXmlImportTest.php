@@ -20,6 +20,8 @@
 
 require_once 'bootstrap.php';
 
+use Tuleap\XML\MappingsRegistry;
+
 class TrackerXmlImportTestInstance extends TrackerXmlImport {
 
     public function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname) {
@@ -145,6 +147,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             )
         );
 
+        $this->mapping_registery = new MappingsRegistry();
+
         $GLOBALS['Response'] = new MockResponse();
     }
 
@@ -169,7 +173,12 @@ class TrackerXmlImportTest extends TuleapTestCase {
         expect($this->tracker_xml_importer)->createFromXML()->count(3);
         expect($this->hierarchy_dao)->updateChildren(2);
 
-        $result = $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
+        $result = $this->tracker_xml_importer->import(
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
 
         $this->assertEqual($result, $this->mapping);
     }
@@ -179,7 +188,12 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->expectException();
         expect($this->tracker_xml_importer)->createFromXML()->count(1);
-        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import(
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
@@ -210,16 +224,23 @@ class TrackerXmlImportTest extends TuleapTestCase {
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
-                'project_id'    => $this->group_id,
-                'xml_content'   => $this->xml_input,
-                'mapping'       => $this->mapping,
-                'field_mapping' => array()
+                'project_id'          => $this->group_id,
+                'xml_content'         => $this->xml_input,
+                'mapping'             => $this->mapping,
+                'field_mapping'       => array(),
+                'mappings_registery'  => $this->mapping_registery,
+                'artifact_id_mapping' => new Tracker_XML_Importer_ArtifactImportedMapping(),
             )
         )->once();
 
         expect($this->tracker_xml_importer)->createFromXML()->count(3);
 
-        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import(
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
     }
 
     public function itBuildsTrackersHierarchy() {
@@ -308,6 +329,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
                 mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig')
             )
         );
+
+        $this->mapping_registery = new MappingsRegistry();
     }
 
     public function itImportsArtifacts() {
@@ -315,7 +338,12 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
         $this->xml_import->expectCallCount('importBareArtifactsFromXML', 1);
         $this->xml_import->expectCallCount('importArtifactChangesFromXML', 1);
 
-        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import(
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
     }
 }
 
@@ -637,12 +665,19 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
         );
         $this->project = mock('Project');
         stub($this->project)->getId()->returns($this->group_id);
+
+        $this->mapping_registery = new MappingsRegistry();
      }
 
     public function itDelegatesToRulesManager() {
         expect($this->trigger_rulesmanager)->createFromXML($this->triggers, $this->xmlFieldMapping)->once();
 
-        $this->tracker_xml_importer->import($this->project, $this->xml_input, $this->extraction_path);
+        $this->tracker_xml_importer->import(
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
     }
 }
 
@@ -696,6 +731,8 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
         $this->contributors_ugroup = mock('ProjectUGroup');
         $this->contributors_ugroup_id = 42;
         stub($this->contributors_ugroup)->getId()->returns($this->contributors_ugroup_id);
+
+        $this->mapping_registery = new MappingsRegistry();
     }
 
     public function tearDown(){
@@ -751,7 +788,7 @@ XML;
         expect($this->tracker)->setCachePermission(3, 'PLUGIN_TRACKER_ACCESS_FULL')->at(1);
         expect($this->field1685)->setCachePermission(4, 'PLUGIN_TRACKER_FIELD_UPDATE')->once();
 
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 }
 
@@ -779,6 +816,8 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
             $this->nature_config
         );
         $this->project = mock('Project');
+
+        $this->mapping_registery = new MappingsRegistry();
     }
 
     public function itShouldDoNothingIfNoAttributeAndProjectUsesNature() {
@@ -787,7 +826,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
         expect($this->nature_config)->addProject()->never();
         expect($this->nature_config)->removeProject()->never();
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDoNothingIfNoAttributeAndProjectDoesNotUseNature() {
@@ -796,7 +835,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
         expect($this->nature_config)->addProject()->never();
         expect($this->nature_config)->removeProject()->never();
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldNotActivateIfAttributeIsFalseAndProjectDoesNotUseNature() {
@@ -804,7 +843,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
         expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
         expect($this->nature_config)->addProject()->never();
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
 
     }
 
@@ -813,7 +852,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
         expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
         expect($this->nature_config)->addProject()->once();
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDoNothingIfAttributeIsTrueAndProjectUsesNature() {
@@ -821,7 +860,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
         expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
         expect($this->nature_config)->addProject()->never();
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDeactivateIfAttributeIsFalseAndProjectUsesNature() {
@@ -829,7 +868,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
         expect($this->nature_config)->isProjectAllowedToUseNature()->count(2);
         expect($this->nature_config)->removeProject()->once();
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 }
 
@@ -872,6 +911,8 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
         );
         stub($this->tracker_xml_importer)->createFromXML()->returns(mock('Tracker'));
         $this->project              = mock('Project');
+
+        $this->mapping_registery = new MappingsRegistry();
     }
 
     public function tearDown() {
@@ -894,7 +935,7 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             </project>');
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldRaiseExceptionWithOnlyWhitespacesTrackerDescription() {
@@ -911,7 +952,7 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             </project>');
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldRaiseExceptionWithEmptyTrackerName() {
@@ -928,7 +969,7 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             </project>');
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldRaiseExceptionWithOnlyWhitespacesTrackerName() {
@@ -945,7 +986,7 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             </project>');
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldRaiseExceptionWithEmptyTrackerShortName() {
@@ -962,7 +1003,7 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             </project>');
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldRaiseExceptionWithInvalidTrackerShortName() {
@@ -979,6 +1020,6 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
             </project>');
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->project, $xml_input, '');
+        $this->tracker_xml_importer->import($this->project, $xml_input, $this->mapping_registery, '');
     }
 }
