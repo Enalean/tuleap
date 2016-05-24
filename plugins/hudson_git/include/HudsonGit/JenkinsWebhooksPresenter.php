@@ -33,7 +33,6 @@ class JenkinsWebhookPresenter extends WebhookPresenter
         parent::__construct($repository, 'jenkins', $url, array(), $csrf);
 
         $this->remove_form_action   = '/plugins/hudson_git/?group_id='. (int)$repository->getProjectId();
-        $this->modal_logs_classname = 'modal-logs-jenkins';
 
         $this->remove_webhook_desc   = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_desc');
         $this->modal_logs_time_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');

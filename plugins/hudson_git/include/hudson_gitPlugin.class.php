@@ -38,7 +38,6 @@ class hudson_gitPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
-            $this->addHook('cssfile');
             $this->addHook(GitViews_RepoManagement_Pane_Hooks::ADDITIONAL_WEBHOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
@@ -55,13 +54,6 @@ class hudson_gitPlugin extends Plugin {
      */
     public function getDependencies() {
         return array('git', 'hudson');
-    }
-
-    public function cssfile()
-    {
-        if ($this->areWeOnGitService()) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
-        }
     }
 
     /**
@@ -95,11 +87,11 @@ class hudson_gitPlugin extends Plugin {
         }
 
         switch ($action) {
-            case 'save_jenkins':
+            case 'save-jenkins':
                 $this->getHookController($request)->save();
                 break;
 
-            case 'remove_webhook':
+            case 'remove-webhook':
                 if ($request->get('webhook_id') === 'jenkins') {
                     $this->getHookController($request)->remove();
                 }
@@ -144,9 +136,5 @@ class hudson_gitPlugin extends Plugin {
 
     private function getLogger() {
         return new WrapperLogger(new Logger(), 'hudson_git');
-    }
-
-    private function areWeOnGitService() {
-        return strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL) === 0;
     }
 }

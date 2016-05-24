@@ -22,6 +22,7 @@ use Tuleap\Git\Webhook\WebhookSettingsPresenter;
 use Tuleap\Git\Webhook\CreateWebhookButtonPresenter;
 use Tuleap\Git\Webhook\WebhookPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
+use Tuleap\Git\Webhook\CreateWebhookModalPresenter;
 use Tuleap\Git\Git\Hook\WebHookFactory;
 
 class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
@@ -87,25 +88,27 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
             )
         );
 
-        $this->addCustomWebhooks($sections, $create_buttons);
+        $csrf = new CSRFSynchronizerToken(self::CSRF_TOKEN_ID);
+        $this->addCustomWebhooks($sections, $create_buttons, $csrf);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
 
         return $renderer->renderToString(
             'hooks',
             new WebhookSettingsPresenter(
+                $csrf,
                 $this->getTitle(),
                 $description,
                 $create_buttons,
-                $sections
+                $sections,
+                new CreateWebhookModalPresenter($this->repository)
             )
         ) . implode('', $additional_html_bits);
     }
 
-    private function addCustomWebhooks(array &$sections, array &$create_buttons)
+    private function addCustomWebhooks(array &$sections, array &$create_buttons, CSRFSynchronizerToken $csrf)
     {
         $create_buttons[] = new CreateWebhookButtonPresenter();
-        $csrf = new CSRFSynchronizerToken(self::CSRF_TOKEN_ID);
 
         $label               = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_generic');
         $webhooks_presenters = array();
