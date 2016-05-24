@@ -164,6 +164,8 @@ plugin_git	mail_prefix	Nouveau Préfixe
 plugin_git	mail_prefix_submit	Soumettre
 
 plugin_git	settings_hooks_title	Webhooks
+plugin_git	settings_hooks_delete_success	Webhook supprimé
+plugin_git	settings_hooks_delete_error	Erreur lors de la suppression du webhook :(
 plugin_git	settings_hooks_desc	Vous pouvez définir plusieurs webhooks génériques.
 plugin_git	settings_hooks_create	Ajouter un webhook générique
 plugin_git	settings_hooks_last_push	Dernier push
@@ -177,7 +179,7 @@ plugin_git	settings_hooks_logs_for	Historique pour $1
 plugin_git	settings_hooks_empty_logs	Pas encore d'historique
 plugin_git	settings_hooks_remove_webhook_desc	Vous êtes sur le point de supprimer le webhook. Veuillez confirmer la suppression.
 plugin_git	settings_hooks_remove_webhook_confirm	Confirmer la suppression
-plugin_git	settings_hooks_generic	Generic webhooks
+plugin_git	settings_hooks_generic	Webhooks génériques
 
 plugin_git	add_mail_label	Personnes notifiées
 plugin_git	add_mail_title	Ajouter une adresse mail ou un utilisateur à notifier

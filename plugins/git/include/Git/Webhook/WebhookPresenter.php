@@ -54,7 +54,7 @@ class WebhookPresenter
 
         $this->remove_webhook_desc    = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_remove_webhook_desc');
         $this->remove_webhook_confirm = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_remove_webhook_confirm');
-        $this->remove_form_action     = '';
+        $this->remove_form_action     = GIT_BASE_URL .'/?group_id='. (int)$repository->getProjectId();
 
         $this->logs_for   = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_logs_for', $url);
         $this->empty_logs = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_empty_logs');

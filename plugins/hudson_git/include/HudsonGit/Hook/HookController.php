@@ -92,7 +92,7 @@ class HookController
     /** @return GitRepository */
     private function getRepository()
     {
-        $repository_id = $this->request->getValidated('repository_id', 'uint', 0);
+        $repository_id = $this->request->getValidated('repo_id', 'uint', 0);
         $repository    = $this->git_repository_factory->getRepositoryById($repository_id);
         if (! $repository) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_repository_invalid'));

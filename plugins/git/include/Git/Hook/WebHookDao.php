@@ -34,4 +34,16 @@ class WebHookDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function deleteByRepositoryIdAndWebhookId($repository_id, $webhook_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $webhook_id    = $this->da->escapeInt($webhook_id);
+
+        $sql = "DELETE FROM plugin_git_webhook_url
+                WHERE repository_id = $repository_id
+                  AND id = $webhook_id";
+
+        return $this->update($sql);
+    }
 }
