@@ -1,3 +1,6 @@
+Version 4.171 - Tuleap 8.15
+    * story #9083: Display error when the server cannot be reached
+
 Version 4.170 - Tuleap 8.15
     * story #9083: Display status of the webhooks
 
