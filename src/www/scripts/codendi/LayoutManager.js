@@ -123,6 +123,7 @@ document.observe('dom:loaded', function() {
                 });
                 if (invalid) {
                     alert(invalid.value+' is not a valid number');
+                    evt.preventDefault();
                 } else {
                     var form = $('layout-manager').up('form');
                     if (form) {

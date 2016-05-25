@@ -351,7 +351,11 @@ class WidgetLayoutManager {
                 $old_scope         = $data['scope'];
                 $old_layout_id = $data['id'];
                 $new_layout_id = null;
-                if ($layout == '-1' && is_array($custom_layout)) {
+                if ($layout == '-1') {
+                    if (! is_array($custom_layout)) {
+                        return;
+                    }
+
                     //Create a new layout based on the custom layout structure defined by the user
                     $rows = array();
                     foreach($custom_layout as $widths) {
