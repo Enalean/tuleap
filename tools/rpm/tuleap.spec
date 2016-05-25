@@ -442,6 +442,7 @@ Release: @@RELEASE@@%{?dist}
 Allow performances evaluation in Tuleap.
 
 %package plugin-frs
+AutoReqProv: no
 Summary: File release system plugin
 Group: Development/Tools
 Version: @@PLUGIN_FRS_VERSION@@
