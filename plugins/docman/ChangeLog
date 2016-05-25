@@ -1,3 +1,6 @@
+Version 2.26.107 - Tuleap 8.15
+    * request #9193: Fatal error when entering a deleted document ID in Docman widget
+
 Version 2.26.106 - Tuleap 8.15
     * request #9111: DocmanExport exported folder is not well formed
 
