@@ -19,7 +19,9 @@
 
 require_once 'SVN_SvnlookException.class.php';
 
-class SVN_Svnlook {
+class SVN_Svnlook
+{
+    private $timeout = '/usr/bin/timeout 5s';
     private $svnlook = '/usr/bin/svnlook';
 
     public function getDirectoryListing(Project $project, $svn_path) {
@@ -80,7 +82,7 @@ class SVN_Svnlook {
     private function execute($command) {
         $output  = array();
         $ret_val = 1;
-        exec("$this->svnlook $command 2>&1", $output, $ret_val);
+        exec("$this->timeout $this->svnlook $command 2>&1", $output, $ret_val);
         if ($ret_val == 0) {
             return $output;
         } else {

@@ -30,7 +30,7 @@ use HTTPRequest;
 use Valid_String;
 use Valid_Text;
 use Tuleap\Svn\Commit\Svnlook;
-use Project;
+use System_Command_CommandException;
 
 class ImmutableTagController {
 
@@ -56,6 +56,12 @@ class ImmutableTagController {
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
+        try {
+            $existing_tree = $this->svnlook->getTree($repository);
+        } catch (System_Command_CommandException $ex) {
+            $existing_tree = ImmutableTagPresenter::$SO_MUCH_FOLDERS;
+        }
+
         $service->renderInPage(
             $request,
             $repository->getName() .' – '. $title,
@@ -63,7 +69,7 @@ class ImmutableTagController {
             new ImmutableTagPresenter(
                 $repository,
                 $this->immutable_tag_factory->getByRepositoryId($repository),
-                $this->svnlook->getTree($repository),
+                $existing_tree,
                 $title
             )
         );

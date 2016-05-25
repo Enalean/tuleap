@@ -19,7 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_ImmutableTagsPresenter {
+class SVN_ImmutableTagsPresenter
+{
+    // Should be a const, waiting for PHP 5.6+
+    public static $SO_MUCH_FOLDERS = array();
 
     const MAX_NUMBER_OF_FOLDERS = 10000;
 
@@ -49,10 +52,11 @@ class SVN_ImmutableTagsPresenter {
         $this->immutable_tags_path      = $immutable_tags_path;
 
         $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
-        $this->exceeds_max_number_of_folders = count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS;
-        if ($this->exceeds_max_number_of_folders) {
+        if ($existing_tree === self::$SO_MUCH_FOLDERS || count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS) {
+            $this->exceeds_max_number_of_folders = true;
             $existing_tree = array();
         } else {
+            $this->exceeds_max_number_of_folders = false;
             array_walk($existing_tree, array($this, 'addSlasheAsPrefix'));
             usort($existing_tree, 'strnatcasecmp');
         }
