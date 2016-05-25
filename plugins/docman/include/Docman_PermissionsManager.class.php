@@ -132,8 +132,12 @@ class Docman_PermissionsManager {
             if ($can_read) {
                 $item_factory = $this->_getItemFactory();
                 $item = $item_factory->getItemFromDb($item_id);
-                $can_access_parent = $item->getParentId() == 0 || $this->userCanAccess($user, $item->getParentId());
-                $this->cache_access[$user->getId()][$item_id] = $can_access_parent;
+                if ($item) {
+                    $can_access_parent = $item->getParentId() == 0 || $this->userCanAccess($user, $item->getParentId());
+                    $this->cache_access[$user->getId()][$item_id] = $can_access_parent;
+                } else {
+                    $this->cache_access[$user->getId()][$item_id] = false;
+                }
             } else {
                 $this->cache_access[$user->getId()][$item_id] = false;
             }
