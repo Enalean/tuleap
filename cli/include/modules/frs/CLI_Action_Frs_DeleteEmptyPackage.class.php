@@ -17,8 +17,8 @@ require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_DeleteEmptyPackage extends CLI_Action {
 
-    function CLI_Action_Frs_DeleteEmptyPackage() {
-        $this->CLI_Action('deleteEmptyPackage', 'Delete an empty package in a project.');
+    function __construct() {
+        parent::__construct('deleteEmptyPackage', 'Delete an empty package in a project.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package to be deleted.',
@@ -43,5 +43,3 @@ class CLI_Action_Frs_DeleteEmptyPackage extends CLI_Action {
     }
 
 }
-
-?>

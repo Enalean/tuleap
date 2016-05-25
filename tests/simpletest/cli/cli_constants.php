@@ -6,5 +6,3 @@
 */
 
 define('CODENDI_CLI_DIR', dirname(__FILE__).'/../../../cli');
-
-?>

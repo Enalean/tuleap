@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
-    function CLI_Action_Docman_CreateItem($name, $description) {
-        $this->CLI_Action($name, $description);
+    function __construct($name, $description) {
+        parent::__construct($name, $description);
 
         $this->addParam(array(
             'name'           => 'parent_id',
@@ -57,7 +57,7 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
             'soap'     => false,
         ));
     }
-    
+
     function validate_parent_id(&$parent_id) {
         if (!isset($parent_id)) {
             echo $this->help();
@@ -87,7 +87,7 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
         return true;
     }
     function validate_status(&$status) {
-        $allowed_values= array("none", "draft", "approved", "rejected");      
+        $allowed_values= array("none", "draft", "approved", "rejected");
         if (isset($status) && !in_array($status, $allowed_values)) {
             echo $this->help();
             exit_error("The --status parameter must take one of the following values: ".implode(", ", $allowed_values));
@@ -125,7 +125,7 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
         }
         return true;
     }
-    
+
     /**
      * Retrieve the groups given by the CLI parameters (read_groups, write_groups, manage_groups) and put them in the SOAP parameter "permissions" with their associated permission
      */
@@ -137,7 +137,7 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
                         array('type' => 'PLUGIN_DOCMAN_WRITE', 'param_name' => 'perm_write'),
                         array('type' => 'PLUGIN_DOCMAN_MANAGE', 'param_name' => 'perm_manage'),
                         array('type' => '', 'param_name' => 'perm_none'));
-        
+
         foreach ($permissions as $permission) {
             if (isset($loaded_params['others'][$permission['param_name']])) {
                 $ids = explode(',', $loaded_params['others'][$permission['param_name']]);
@@ -148,20 +148,20 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
             }
         }
     }
-    
+
     /**
      * Read metadata from the specified "properties" file. This file must be formatted as the following example:
      * ;======example.properties======
      * field_2=This is a string
-     * 
+     *
      * ;List of values must follow this format: <N1,N2,N3,...> where Nx is an existing value ID
      * field_9=<103,104>
-     * 
+     *
      * ;Values enclosed in double quotes can contain new lines
      * field_10="Ceci est un texte
      * sur plusieurs lignes
      * en français."
-     * 
+     *
      * ;Date format must be "yyyy-mm-dd"
      * field_3=2008-12-25
      * ;==============================
@@ -190,10 +190,9 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
             }
         }
     }
-    
+
     function after_loadParams(&$loaded_params) {
         $this->loadPermissionParams($loaded_params);
         $this->loadMetadata($loaded_params);
     }
 }
-?>

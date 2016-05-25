@@ -2,16 +2,16 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 class CLI_ModuleFactory {
 
     var $root;
-    function CLI_ModuleFactory($root) {
+    function __construct($root) {
         $this->root = $root;
     }
-    
+
     function exist($module) {
         $ok = false;
         if (is_dir($this->root . $module) && is_file($this->_getFileName($module))) {
@@ -20,7 +20,7 @@ class CLI_ModuleFactory {
         }
         return $ok;
     }
-    
+
     function &getModule($module) {
         $m = null;
         if ($this->exist($module)) {
@@ -29,7 +29,7 @@ class CLI_ModuleFactory {
         }
         return $m;
     }
-    
+
     function getAllModules() {
         $modules = array();
         if ($dh = opendir($this->root)) {
@@ -43,7 +43,7 @@ class CLI_ModuleFactory {
         }
         return $modules;
     }
-    
+
     /* protected */
     function _getFileName($module) {
         return $this->root . $module.'/'. $module .'.php';
@@ -52,5 +52,3 @@ class CLI_ModuleFactory {
         return 'CLI_Module_'.ucfirst($module);
     }
 }
-
-?>

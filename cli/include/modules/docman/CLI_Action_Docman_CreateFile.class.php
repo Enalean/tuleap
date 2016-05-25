@@ -10,8 +10,8 @@ require_once(CODENDI_CLI_DIR.'/lib/PHP_BigFile.class.php');
 
 class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
 
-    function CLI_Action_Docman_CreateFile() {
-        $this->CLI_Action_Docman_CreateDocument('createFile', 'Create a document of type file');
+    function __construct() {
+        parent::__construct('createFile', 'Create a document of type file');
         $this->setSoapCommand('createDocmanFile');
 
         $this->addParam(array(
@@ -125,4 +125,3 @@ class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
         return $item_id;
     }
 }
-?>

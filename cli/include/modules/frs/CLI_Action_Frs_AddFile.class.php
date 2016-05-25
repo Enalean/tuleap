@@ -2,15 +2,15 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 require_once(CODENDI_CLI_DIR.'/lib/PHP_BigFile.class.php');
 
 class CLI_Action_Frs_AddFile extends CLI_Action {
-    function CLI_Action_Frs_AddFile() {
-        $this->CLI_Action('addFile', 'Add the the file to a release.');
+    function __construct() {
+        parent::__construct('addFile', 'Add the the file to a release.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the returned file belong to.',
@@ -111,7 +111,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                      * or use of addFileChunk again with the same filename.
                      * This corruption will be automatically detected at the end of upload
                      * when comparing the md5 sums and file will not be released.
-                     */ 
+                     */
                     do {
                         $offset = $i * $chunkSize;
                         $contents = file_get_contents($path, false, NULL, $offset, $chunkSize);
@@ -138,13 +138,13 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     $loaded_params['soap']['is_upload'] = true;
                 }
             }
-            
+
             // sort the parameters in the right order
             uksort($loaded_params['soap'], array($this, "sort_parameters"));
-            
+
         }
     }
-    
+
     function confirmation($loaded_params) {
         if (!array_key_exists('noask', $loaded_params['others']) || !$loaded_params['others']['noask']) {
             if ($loaded_params['others']['local_file']) {
@@ -158,12 +158,11 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
         }
         return true;
     }
-    
+
     function sort_parameters($p1, $p2) {
         $order = array('group_id', 'package_id', 'release_id', 'filename', 'type_id', 'processor_id', 'reference_md5', 'comment', 'is_upload');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }
-    
+
 }
-?>

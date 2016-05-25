@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once('CLI_Action_Tracker_MajFields.class.php');
 
 class CLI_Action_Tracker_Update extends CLI_Action_Tracker_MajFields {
-    function CLI_Action_Tracker_Update() {
-        $this->CLI_Action_Tracker_MajFields('update', 'Update an artifact in a tracker.');
+    function __construct() {
+        parent::__construct('update', 'Update an artifact in a tracker.');
         $this->soapCommand = 'updateArtifactWithFieldNames';
     }
     function addParamArtifactId() {
@@ -28,7 +28,7 @@ class CLI_Action_Tracker_Update extends CLI_Action_Tracker_MajFields {
     function getGroupArtifactIdDescription() {
         return 'Specify the ID of the tracker the artifact will be updated in.';
     }
-    
+
     function before_soapCall(&$loaded_params) {
         // add potential missing parameters : $status_id, $close_date, $summary, $details, $severity
         // and give it the value null : it will take the default value for this field.
@@ -37,16 +37,14 @@ class CLI_Action_Tracker_Update extends CLI_Action_Tracker_MajFields {
     	if ( ! array_key_exists('summary', $loaded_params['soap'])) $loaded_params['soap']['summary'] = null;
     	if ( ! array_key_exists('details', $loaded_params['soap'])) $loaded_params['soap']['details'] = null;
     	if ( ! array_key_exists('severity', $loaded_params['soap'])) $loaded_params['soap']['severity'] = null;
-    	
+
     	// sort the parameters in the right order
         uksort($loaded_params['soap'], array($this, "sort_parameters"));
     }
-    
+
 	function sort_parameters($p1, $p2) {
         $order = array('group_id', 'group_artifact_id', 'artifact_id', 'status_id', 'close_date', 'summary', 'details', 'severity', 'extra_fields');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }
 }
-
-?>

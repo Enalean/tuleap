@@ -35,7 +35,7 @@
 
 /**
  * Directory where common include files and module scripts are located (use trailing slash)
- */ 
+ */
 define("CODENDI_CLI_DIR", dirname(__FILE__)."/include/");
 
 // Will be used if no other way to set host are valid:
@@ -80,26 +80,26 @@ for ($i = 1; $i <= $argc-1; $i++) {
 		// Increase verbose level
         $log_level = 1;
 	}
-    
+
     // Version
 	else if ($argv[$i] == "--version" || $argv[$i] == "-version") {
 		echo "Tuleap Command Line Interface: version ".$CLI_VERSION."\n";
         exit(0);
 	}
-	
+
     // Interactive
 	else if ($argv[$i] == "--interactive" || $argv[$i] == "-i") {
 		// Set the interactive mode
 		$interactive = true;
 	}
-    
+
 	// Not a parameter for the main script (does not start with "-").
 	// Then, it must be a name of a module or a name of a function
 	else if (!preg_match("/^-/", $argv[$i])) {
 		$function_index = $i;
 		break;
 	}
-	
+
     else if ($argv[$i] == "--host") {
         $i++;
         if (isset($argv[$i]) && !preg_match("/^-/", $argv[$i])) {
@@ -139,7 +139,7 @@ if ($host) {
 }
 
 $LOG = new Log();
-$modules =& new CLI_ModuleFactory(CODENDI_CLI_DIR."modules/");
+$modules = new CLI_ModuleFactory(CODENDI_CLI_DIR."modules/");
 
 if ($display_help || !$function_index) {		// No function was specified. Show the help.
 	display_help($modules, $soap);
@@ -165,7 +165,7 @@ if (!$module) {
 
 // At this point, we know which script we should execute.
 // Now we need to prepare the environment for the script (common variables,
-// pass the parameters, etc) 
+// pass the parameters, etc)
 
 // Set up the parameters for the script... we don't need to pass that script the parameters that were
 // passed to THIS script
@@ -228,7 +228,7 @@ EOT;
 Available modules:
    * tracker
    * frs
-   
+
 Available functions for the default module:
    * login: Begin a session with the server.
    * logout: Terminate a session

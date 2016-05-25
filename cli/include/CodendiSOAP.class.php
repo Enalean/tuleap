@@ -52,13 +52,13 @@ class CodendiSOAP extends SoapClient {
 			$session_dir = $_ENV["HOMEDRIVE"]."\\".$_ENV["HOMEPATH"]."\\";
 
 		}
-				
+
 		$this->session_file = $session_dir.".codendirc";
 		if (file_exists($this->session_file)) {
  			$this->readSession();
 		}
 	}
-	
+
 	/**
 	 * call - Calls a SOAP method
 	 *
@@ -68,16 +68,16 @@ class CodendiSOAP extends SoapClient {
 	 */
 	function call($command,$params=array(),$use_extra_params=true) {
 		global $LOG;
-		
+
 		// checks if a session is established
 		if ($command != "login" && strlen($this->session_string) == 0) {
 			exit_error("You must start a session first using the \"login\" function");
 		}
-		
+
 		if (!$this->connected) {		// try to connect to the server
 			$this->connect();
 		}
-		
+
 		// Add session parameters
 		if ($use_extra_params) {
 			if (!array_key_exists("sessionKey", $params)) {
@@ -95,8 +95,8 @@ class CodendiSOAP extends SoapClient {
 				return call_user_func_array(array($this, $command), $params);
 			}
 			catch (SoapFault $e) {
-				if (strtolower($e->faultcode) == 'http' &&
-					strtolower($e->faultstring) == 'error fetching http headers' &&
+				if (strtolower($e->getCode()) == 'http' &&
+					strtolower($e->getMessage()) == 'error fetching http headers' &&
 					$nbAttempt < $this->getMaxRetry()) {
 					$GLOBALS['LOG']->add('CodendiSOAP::An error occured while executing '.$command.', try again [Nb attempt: '.$nbAttempt.'/'.$GLOBALS['soap']->getMaxRetry().']. Wait for '.($nbAttempt * $this->getCallDelay()).' seconds (mitigate network congestion) ...');
 					sleep($nbAttempt * $this->getCallDelay());
@@ -113,7 +113,7 @@ class CodendiSOAP extends SoapClient {
 	 */
 	function connect() {
 		global $LOG;
-		
+
         try {
         	$log_proxy = '';
         	if ($this->proxy_host && $this->proxy_port) {
@@ -131,10 +131,10 @@ class CodendiSOAP extends SoapClient {
 		}
 		$LOG->add("CodendiSOAP::Connected!");
 		$this->connected = true;
-		
+
 	}
-	
-	/** 
+
+	/**
 	 * setSessionString - Set the session ID for future calls
 	 *
 	 * @param string Session string ID
@@ -142,31 +142,31 @@ class CodendiSOAP extends SoapClient {
 	function setSessionString($string) {
 		$this->session_string = $string;
 	}
-	
+
 	function setSessionGroupID($group_id) {
 		$this->session_group_id = $group_id;
 	}
-	
+
 	function getSessionGroupID() {
 		return $this->session_group_id;
 	}
-	
+
 	function setSessionUser($user) {
 		$this->session_user = $user;
 	}
-	
+
 	function getSessionUser() {
 		return $this->session_user;
 	}
-	
+
     function setSessionUserID($user_id) {
 		$this->session_user_id = $user_id;
 	}
-	
+
 	function getSessionUserID() {
 		return $this->session_user_id;
 	}
-    
+
 	function setWSDLString($wsdl) {
 		$this->wsdl_string = $wsdl;
 	}
@@ -192,7 +192,7 @@ class CodendiSOAP extends SoapClient {
 	function getProxyPort() {
 		return $this->proxy_port;
 	}
-	
+
 	function getFileChunkSize() {
 		return $this->fileChunkSize;
 	}
@@ -255,16 +255,15 @@ class CodendiSOAP extends SoapClient {
 			}
 		}
 	}
-	
+
 	function endSession() {
 		if (file_exists($this->session_file) && !@unlink($this->session_file)) {
 			exit_error("Could not delete existing session file ".$this->session_file);
 		}
-		
+
 		$this->session_group_id = 0;
 		$this->session_string = "";
 		$this->session_user = "";
         $this->session_user_id = 0;
 	}
 }
-?>

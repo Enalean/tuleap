@@ -18,7 +18,7 @@ class CLI_ModuleTest extends TuleapTestCase {
     
     function test_get_parameter() {
         $params = explode(' ', '-v --name=john -l doe -abc --content=/tracker/?group_id=1');
-        $m =& new CLI_Module('name', 'description');
+        $m = new CLI_Module('name', 'description');
         $this->assertFalse($m->getParameter($params, 'version'));
         $this->assertTrue($m->getParameter($params, 'v'));
         $this->assertTrue($m->getParameter($params, 'a'));
@@ -30,24 +30,24 @@ class CLI_ModuleTest extends TuleapTestCase {
     }
     
     function testExecute() {
-        $action =& new MockCLI_Action();
+        $action = new MockCLI_Action();
         $action->setReturnValue('getName', 'action_name');
         $action->expectOnce('execute');
         
-        $other_action =& new MockCLI_Action();
+        $other_action = new MockCLI_Action();
         $other_action->setReturnValue('getName', 'other_action_name');
         $other_action->expectNever('execute');
         
         
         $params = explode(' ', $action->getName());
-        $m =& new CLI_Module('name', 'description');
+        $m = new CLI_Module('name', 'description');
         $m->addAction($action);
         $m->addAction($other_action);
         $m->execute($params);
     }
     
     function testNoAction() {
-        $m =& new CLI_ModuleTestVersion();
+        $m = new CLI_ModuleTestVersion();
         $m->expectCallCount('help', 3);
         
         $m->execute(explode(' ', ''));               //no parameters
@@ -55,18 +55,18 @@ class CLI_ModuleTest extends TuleapTestCase {
         $m->execute(explode(' ', 'does_not_exist')); //invalid action
     }
     function testHelp() {
-        $action =& new MockCLI_Action();
+        $action = new MockCLI_Action();
         $action->setReturnValue('getName', 'action_1');
         $action->setReturnValue('getDescription', 'Description of the 1° action');
         $action->expectNever('execute');
         
-        $other_action =& new MockCLI_Action();
+        $other_action = new MockCLI_Action();
         $other_action->setReturnValue('getName', 'action_2');
         $other_action->setReturnValue('getDescription', 'Description of the 2° action');
         $other_action->expectNever('execute');
         
         
-        $m =& new CLI_Module('name', 'description');
+        $m = new CLI_Module('name', 'description');
         $m->addAction($action);
         $m->addAction($other_action);
         
@@ -85,4 +85,3 @@ EOS;
         $this->assertEqual($m->help(), $expected_help);
     }
 }
-?>

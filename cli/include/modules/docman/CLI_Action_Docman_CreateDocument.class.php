@@ -2,15 +2,15 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once('CLI_Action_Docman_CreateItem.class.php');
 
 class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 
-    function CLI_Action_Docman_CreateDocument($name, $description) {
-        $this->CLI_Action_Docman_CreateItem($name, $description);
+    function __construct($name, $description) {
+        parent::__construct($name, $description);
 
         $this->addParam(array(
             'name'           => 'obsolescence_date',
@@ -28,7 +28,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
             } else {
                 $month  = $m[2];
                 $day    = $m[3];
-                
+
                 if ($month > 12 || $day > 31 || $month < 1 ||  $day < 1) {
                     echo $this->help();
                     exit_error('Obsolescence date format must be: yyyy-mm-dd or yy-mm-dd. Please respect the correct ranges: 1 < mm < 12; 1 < dd < 31');
@@ -38,5 +38,3 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
         return true;
     }
 }
-
-?>

@@ -20,8 +20,8 @@ require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 require_once(CODENDI_CLI_DIR.'lib/PHP_BigFile.class.php');
 
 class CLI_Action_Docman_GetFile extends CLI_Action {
-    function CLI_Action_Docman_GetFile() {
-        $this->CLI_Action('getFile', 'Returns the file content.');
+    function __construct() {
+        parent::__construct('getFile', 'Returns the file content.');
         $this->setSoapCommand('getDocmanFileChunk');
             $this->addParam(array(
             'name'           => 'item_id',
@@ -45,7 +45,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
         ));
 
     }
-    
+
     function validate_item_id(&$item_id) {
         if (!$item_id) {
             exit_error("You must specify the ID of the document with the --id parameter");
@@ -129,7 +129,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
 
             unset($callParams['chunk_offset']);
             unset($callParams['chunk_size']);
-            
+
             //Check the md5sum
             $localChecksum = PHP_BigFile::getMd5Sum($output);
             $remoteChecksum = $GLOBALS['soap']->call('getDocmanFileMD5sum', $callParams, $use_extra_params);
@@ -143,5 +143,3 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
 
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {}
 }
-
-?>

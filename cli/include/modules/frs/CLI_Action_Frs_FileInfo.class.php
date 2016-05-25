@@ -21,8 +21,8 @@
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_FileInfo extends CLI_Action {
-    function CLI_Action_Frs_FileInfo() {
-        $this->CLI_Action('getFileInfo', 'Obtain information about the file.');
+    function __construct() {
+        parent::__construct('getFileInfo', 'Obtain information about the file.');
             $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the file belong to.',
@@ -55,4 +55,3 @@ class CLI_Action_Frs_FileInfo extends CLI_Action {
         return true;
     }
 }
-?>

@@ -2,17 +2,17 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_DeleteAttachedFile extends CLI_Action {
-    function CLI_Action_Tracker_DeleteAttachedFile() {
-        $this->CLI_Action('deleteAttachedFile', 'Delete an attached file to a specific artifact.');
-        
+    function __construct() {
+        parent::__construct('deleteAttachedFile', 'Delete an attached file to a specific artifact.');
+
         $this->soapCommand = 'deleteArtifactAttachedFile';
-        
+
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the returned attached file belong to.',
@@ -48,5 +48,3 @@ class CLI_Action_Tracker_DeleteAttachedFile extends CLI_Action {
         return true;
     }
 }
-
-?>

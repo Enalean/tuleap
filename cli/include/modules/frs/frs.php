@@ -28,8 +28,8 @@ require_once('CLI_Action_Frs_DeleteEmptyRelease.class.php');
 require_once('CLI_Action_Frs_DeleteAllEmptyReleases.class.php');
 
 class CLI_Module_Frs extends CLI_Module {
-    function CLI_Module_Frs() {
-        $this->CLI_Module("frs", "Manage file releases");
+    function __construct() {
+        parent::__construct("frs", "Manage file releases");
         $this->addAction(new CLI_Action_Frs_Packages());
         $this->addAction(new CLI_Action_Frs_AddPackage());
         $this->addAction(new CLI_Action_Frs_Releases());
@@ -46,5 +46,3 @@ class CLI_Module_Frs extends CLI_Module {
         $this->addAction(new CLI_Action_Frs_DeleteAllEmptyReleases());
     }
 }
-
-?>

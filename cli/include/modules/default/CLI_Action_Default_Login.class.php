@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Default_Login extends CLI_Action {
-    function CLI_Action_Default_Login() {
-        $this->CLI_Action('login', 'Log into Codendi server');
+    function __construct() {
+        parent::__construct('login', 'Log into Codendi server');
         $this->addParam(array(
             'name'           => 'loginname',
             'description'    => '--username=<username> or -U <username>    Specify the user name',
@@ -45,7 +45,7 @@ class CLI_Action_Default_Login extends CLI_Action {
             'soap'           => false,
         ));
     }
-    
+
     function addProjectParam() {
     }
     function validate_loginname(&$loginname) {
@@ -68,7 +68,7 @@ class CLI_Action_Default_Login extends CLI_Action {
     }
     function before_soapCall(&$loaded_params) {
     	$GLOBALS['soap']->endSession();
-    	
+
         if (isset($loaded_params['others']['host'])) {
             if (isset($loaded_params['others']['host']) && $loaded_params['others']['secure']) {
                 $protocol = "https";
@@ -81,7 +81,7 @@ class CLI_Action_Default_Login extends CLI_Action {
     		$proxy = $loaded_params['others']['proxy'];
             $GLOBALS['soap']->setProxy($proxy);
         }
-        
+
     }
 	function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!$loaded_params['others']['quiet']) $this->show_output($soap_result);
@@ -92,25 +92,23 @@ class CLI_Action_Default_Login extends CLI_Action {
         $GLOBALS['soap']->setSessionString($session_string);
         $GLOBALS['soap']->setSessionUser($loaded_params['soap']['loginname']);
         $GLOBALS['soap']->setSessionUserID($user_id);
-        
+
         // If project was specified, get project information and store for future use
         if (isset($loaded_params['others']['projectname'])) {
             $group_id = $this->get_group_id($loaded_params['others']['projectname']);
             if (!$group_id) {
                 exit_error('Project "'.$loaded_params['others']['projectname'].'" doesn\'t exist');
             }
-            
+
             $GLOBALS['soap']->setSessionGroupID($group_id);
             $GLOBALS['LOG']->add("Using group #".$group_id);
         }
-        
+
         $GLOBALS['soap']->saveSession();
     }
-    
+
     function use_extra_params() {
         return false;
     }
-    
-}
 
-?>
+}

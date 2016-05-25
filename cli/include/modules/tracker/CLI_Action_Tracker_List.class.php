@@ -2,17 +2,17 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_List extends CLI_Action {
-    function CLI_Action_Tracker_List() {
-        $this->CLI_Action('list', 'Returns a list of artifacts that belongs to a specific tracker.');
-        
+    function __construct() {
+        parent::__construct('list', 'Returns a list of artifacts that belongs to a specific tracker.');
+
         $this->soapCommand = 'getArtifacts';
-        
+
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the returned artifacts belong to.',
@@ -78,5 +78,3 @@ class CLI_Action_Tracker_List extends CLI_Action {
     }
 
 }
-
-?>

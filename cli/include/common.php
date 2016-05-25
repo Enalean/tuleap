@@ -20,7 +20,7 @@ function exit_error($msg, $errcode=1) {
     if (is_string($msg)) {
         echo "Fatal error: ".$msg."\n";
     } elseif (is_object($msg)) {
-        echo "Fatal error: [".$msg->faultcode."] ".$msg->faultstring."\n";
+        echo "Fatal error: [".$msg->getCode()."] ".$msg->getMessage()."\n";
     }
     exit (intval($errcode));
 }

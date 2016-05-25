@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Docman_Monitor extends CLI_Action {
-    function CLI_Action_Docman_Monitor() {
-        $this->CLI_Action('monitor', 'Monitor a document or a folder');
+    function __construct() {
+        parent::__construct('monitor', 'Monitor a document or a folder');
         $this->setSoapCommand('monitorDocmanItem');
         $this->addParam(array(
             'name'           => 'item_id',
@@ -25,5 +25,3 @@ class CLI_Action_Docman_Monitor extends CLI_Action {
         return true;
     }
 }
-
-?>

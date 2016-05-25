@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_Releases extends CLI_Action {
-    function CLI_Action_Frs_Releases() {
-        $this->CLI_Action('getReleases', 'Returns the list of releases that belongs to a package.');
+    function __construct() {
+        parent::__construct('getReleases', 'Returns the list of releases that belongs to a package.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the returned releases belong to.',
@@ -22,5 +22,3 @@ class CLI_Action_Frs_Releases extends CLI_Action {
         return true;
     }
 }
-
-?>

@@ -9,17 +9,17 @@ require_once('CLI_Action_Docman_CreateDocument.class.php');
 
 class CLI_Action_Docman_CreateLink extends CLI_Action_Docman_CreateDocument  {
 
-    function CLI_Action_Docman_CreateLink() {
-        $this->CLI_Action_Docman_CreateDocument('createLink', 'Create a document of type link');
+    function __construct() {
+        parent::__construct('createLink', 'Create a document of type link');
         $this->setSoapCommand('createDocmanLink');
-        
+
         $this->addParam(array(
             'name'           => 'content',
             'description'    => '--content=<url>    Url of the link',
             'soap'     => true,
         ));
     }
-    
+
     function validate_content(&$content) {
         if (!isset($content) || trim($content) == '') {
             echo $this->help();
@@ -28,5 +28,3 @@ class CLI_Action_Docman_CreateLink extends CLI_Action_Docman_CreateDocument  {
         return true;
     }
 }
-
-?>
