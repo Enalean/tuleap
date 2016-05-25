@@ -7,6 +7,7 @@ Version 8.15 (Not yet released)
 	* request #8972: Utilities to export project does not directly use mysql_* API anymore
 	* request #9158: A fatal error can be thrown when checking user's permissions
 	* request #8726: Cache directories are reconstructed when Tuleap start
+	* request #9191: Loss of layout when invalid entry is given as column size
 
 	== Enhancement ==
 	* request #9113: Having a REST route to monitor Sysevents
