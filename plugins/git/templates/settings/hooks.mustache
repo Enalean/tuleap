@@ -49,7 +49,7 @@
                 {{# webhooks }}
                     <tr>
                         <td>{{ webhook_url }}</td>
-                        <td>{{{ purified_last_push_info }}}</td>
+                        <td class="last-push">{{{ purified_last_push_info }}}</td>
                         <td class="action-buttons">
                             <a role="button" data-toggle="modal" href="#modal-logs-{{ id }}">
                                 <i class="icon-list"></i> {{ logs }}

@@ -38,6 +38,11 @@ class WebHookResponseReceiver
         $this->dao->addLog($webhook->getId(), $this->getStatusCodeAndReasonPhrase($raw_response));
     }
 
+    public function receiveError(WebHook $webhook, $error)
+    {
+        $this->dao->addLog($webhook->getId(), $error);
+    }
+
     /**
      * status-line = HTTP-version SP status-code SP reason-phrase CRLF
      * @see https://tools.ietf.org/html/rfc7230#section-3.1.2
