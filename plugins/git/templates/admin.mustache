@@ -16,9 +16,11 @@
             <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_default_settings }}</a>
         </li>
         {{/ are_mirrors_defined }}
+        {{# default_access_rights_enabled }}
         <li {{# manage_default_access_rights }}class="active"{{/ manage_default_access_rights }}>
             <a href="/plugins/git/?action=admin-default-access_rights&group_id={{ project_id }}">{{ tab_default_access_rights }}</a>
         </li>
+        {{/ default_access_rights_enabled }}
     </ul>
 
     <div class="tab-content git-admin-tab-content">

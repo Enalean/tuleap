@@ -30,6 +30,7 @@ abstract class GitPresenters_AdminPresenter {
     public $manage_mass_update                     = false;
     public $manage_default_settings                = false;
     public $manage_default_access_rights           = false;
+    public $default_access_rights_enabled          = false;
 
 
     public function __construct($project_id, $are_mirrors_defined) {
