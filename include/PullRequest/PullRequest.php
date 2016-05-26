@@ -27,6 +27,11 @@ class PullRequest
     const STATUS_MERGED    = 'M';
     const STATUS_REVIEW    = 'R';
 
+    const UNKNOWN_MERGE        = 0;
+    const NO_FASTFORWARD_MERGE = 1;
+    const FASTFORWARD_MERGE    = 2;
+    const CONFLICT_MERGE       = 3;
+
     private $id;
     private $title;
     private $description;
@@ -39,6 +44,7 @@ class PullRequest
     private $branch_dest;
     private $sha1_dest;
     private $status;
+    private $merge_status;
 
     public function __construct(
         $id,
@@ -52,7 +58,8 @@ class PullRequest
         $repo_dest_id,
         $branch_dest,
         $sha1_dest,
-        $status = 'R'
+        $status = 'R',
+        $merge_status = self::UNKNOWN_MERGE
     ) {
         $this->id             = $id;
         $this->title          = $title;
@@ -66,6 +73,7 @@ class PullRequest
         $this->branch_dest    = $branch_dest;
         $this->sha1_dest      = $sha1_dest;
         $this->status         = $status;
+        $this->merge_status   = $merge_status;
     }
 
     public function getId()
@@ -116,6 +124,16 @@ class PullRequest
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function getMergeStatus()
+    {
+        return $this->merge_status;
+    }
+
+    public function setMergeStatus($merge_status)
+    {
+        return $this->merge_status = $merge_status;
     }
 
     public function getUserId()

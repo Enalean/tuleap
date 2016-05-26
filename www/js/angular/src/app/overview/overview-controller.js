@@ -3,29 +3,38 @@ angular
     .controller('OverviewController', OverviewController);
 
 OverviewController.$inject = [
+    '$q',
     'lodash',
     'SharedPropertiesService',
     'PullRequestService',
-    'UserRestService'
+    'UserRestService',
+    'MergeModalService'
 ];
 
 function OverviewController(
+    $q,
     lodash,
     SharedPropertiesService,
     PullRequestService,
-    UserRestService
+    UserRestService,
+    MergeModalService
 ) {
     var self = this;
 
     lodash.extend(self, {
-        valid_status_keys: PullRequestService.valid_status_keys,
-        pull_request     : {},
-        author           : {},
-        merge            : merge,
-        abandon          : abandon,
-        editionForm      : {},
-        showEditionForm  : false,
-        saveEditionForm  : saveEditionForm
+        valid_status_keys    : PullRequestService.valid_status_keys,
+        pull_request         : {},
+        author               : {},
+        editionForm          : {},
+        showEditionForm      : false,
+        saveEditionForm      : saveEditionForm,
+        checkMerge           : checkMerge,
+        abandon              : abandon,
+        isConflictingMerge   : isConflictingMerge,
+        isNonFastForwardMerge: isNonFastForwardMerge,
+        isUnknownMerge       : isUnknownMerge,
+        hasMergeRight        : hasMergeRight,
+        hasAbandonRight      : hasAbandonRight
     });
 
     SharedPropertiesService.whenReady().then(function() {
@@ -39,14 +48,6 @@ function OverviewController(
         });
     });
 
-    function merge() {
-        PullRequestService.merge(self.pull_request);
-    }
-
-    function abandon() {
-        PullRequestService.abandon(self.pull_request);
-    }
-
     function saveEditionForm() {
         PullRequestService.updateTitleAndDescription(
             self.pull_request,
@@ -55,5 +56,42 @@ function OverviewController(
         .then(function() {
             self.showEditionForm = false;
         });
+    }
+
+    function isOpen() {
+        return self.pull_request.status === self.valid_status_keys.review;
+    }
+
+    function isConflictingMerge() {
+        return self.pull_request.merge_status === 'conflict' && isOpen();
+    }
+
+    function isNonFastForwardMerge() {
+        return self.pull_request.merge_status === 'no_fastforward' && isOpen();
+    }
+
+    function isUnknownMerge() {
+        return self.pull_request.merge_status === 'unknown-merge-status' && isOpen();
+    }
+
+    function hasMergeRight() {
+        return self.pull_request.user_can_merge && isOpen();
+    }
+
+    function hasAbandonRight() {
+        return self.pull_request.user_can_abandon && isOpen();
+    }
+
+    function checkMerge() {
+        var shouldMerge = isNonFastForwardMerge() ? MergeModalService.showMergeModal() : $q.when('go');
+        shouldMerge.then(merge);
+    }
+
+    function merge() {
+        PullRequestService.merge(self.pull_request);
+    }
+
+    function abandon() {
+        PullRequestService.abandon(self.pull_request);
     }
 }

@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
     branch_dest VARCHAR(255) NOT NULL,
     sha1_dest CHAR(40) NOT NULL,
     status VARCHAR(1) NOT NULL DEFAULT 'R',
+    merge_status INT(2) NOT NULL,
     INDEX idx_pr_user_id(user_id),
     INDEX idx_pr_repository_id(repository_id)
 );

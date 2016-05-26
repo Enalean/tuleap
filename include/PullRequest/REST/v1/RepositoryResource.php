@@ -26,6 +26,8 @@ use Tuleap\PullRequest\GitExec;
 use GitRepositoryFactory;
 use GitRepository;
 use ProjectManager;
+use UserManager;
+use PFUser;
 use GitDao;
 
 class RepositoryResource
@@ -40,6 +42,10 @@ class RepositoryResource
     /** @var GitRepositoryFactory */
     private $git_repository_factory;
 
+    /** @var UserManager */
+    private $user_manager;
+
+
     public function __construct()
     {
         $this->pull_request_dao     = new PullRequestDao();
@@ -48,12 +54,13 @@ class RepositoryResource
             new GitDao(),
             ProjectManager::instance()
         );
-
+        $this->user_manager = UserManager::instance();
     }
 
     public function getPaginatedPullRequests(GitRepository $repository, $limit, $offset)
     {
         $result   = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $limit, $offset);
+        $user     = $this->user_manager->getCurrentUser();
 
         $total_size = (int) $this->pull_request_dao->foundRows();
         $collection = array();
@@ -66,7 +73,7 @@ class RepositoryResource
             $executor                  = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
             $pr_representation_factory = new PullRequestRepresentationFactory($executor);
 
-            $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest);
+            $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user);
             $collection[] = $pull_request_representation;
         }
 

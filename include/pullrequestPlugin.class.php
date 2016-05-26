@@ -34,6 +34,7 @@ use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Dao;
 use Tuleap\PullRequest\PullRequestUpdater;
+use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\FileUnidiffBuilder;
 use \Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
@@ -106,11 +107,13 @@ class pullrequestPlugin extends Plugin
         $user_manager           = UserManager::instance();
         $git_repository_factory = $this->getRepositoryFactory();
 
+        $pull_request_merger = new PullRequestMerger(
+            $git_repository_factory
+        );
         $pull_request_creator = new PullRequestCreator(
             $this->getPullRequestFactory(),
             new Dao(),
-            $git_repository_factory,
-            $user_manager
+            $pull_request_merger
         );
 
         $router = new Router($pull_request_creator, $git_repository_factory, $user_manager);
@@ -301,6 +304,7 @@ class pullrequestPlugin extends Plugin
             } else {
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
+                    new PullRequestMerger($this->getRepositoryFactory()),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
                     new FileUnidiffBuilder(),

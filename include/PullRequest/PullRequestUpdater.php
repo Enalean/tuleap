@@ -21,11 +21,16 @@
 namespace Tuleap\PullRequest;
 
 use \GitRepository;
+use Git_Command_Exception;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use \Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use PFUser;
+use ForgeConfig;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use FileSystemIterator;
 
 class PullRequestUpdater
 {
@@ -34,6 +39,11 @@ class PullRequestUpdater
      * @var Factory
      */
     private $pull_request_factory;
+
+    /**
+     * @var PullRequestMerger
+     */
+    private $pull_request_merger;
 
     /**
      * \Tuleap\PullRequest\InlineComment\Dao
@@ -52,6 +62,7 @@ class PullRequestUpdater
 
     public function __construct(
         Factory $pull_request_factory,
+        PullRequestMerger $pull_request_merger,
         InlineCommentDao $inline_comment_dao,
         InlineCommentUpdater $inline_comment_updater,
         FileUniDiffBuilder $diff_builder,
@@ -59,6 +70,7 @@ class PullRequestUpdater
     )
     {
         $this->pull_request_factory   = $pull_request_factory;
+        $this->pull_request_merger    = $pull_request_merger;
         $this->inline_comment_dao     = $inline_comment_dao;
         $this->inline_comment_updater = $inline_comment_updater;
         $this->diff_builder           = $diff_builder;
@@ -71,8 +83,10 @@ class PullRequestUpdater
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
-            $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
+            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr);
+            $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
 
+            $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
             if ($ancestor_rev != $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
                 $this->updateInlineCommentsOnRebase($git_exec, $pr, $ancestor_rev, $new_rev);

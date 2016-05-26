@@ -37,8 +37,9 @@ use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
-use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestMerger;
+use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
@@ -84,6 +85,9 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var UserManager */
     private $user_manager;
 
+    /** @var Tuleap\PullRequest\PullRequestMerger */
+    private $pull_request_merger;
+
     /** @var Tuleap\PullRequest\PullRequestCloser */
     private $pull_request_closer;
 
@@ -119,11 +123,13 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $this->user_manager         = UserManager::instance();
+        $this->pull_request_merger  = new PullRequestMerger($this->git_repository_factory);
         $this->pull_request_creator = new PullRequestCreator(
             $this->pull_request_factory,
-            $pull_request_dao
+            $pull_request_dao,
+            $this->pull_request_merger
         );
-        $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory);
+        $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory, $this->pull_request_merger);
         $this->logger               = new BackendLogger();
 
         $this->timeline_event_creator = new TimelineEventCreator(new TimelineDao());
@@ -173,7 +179,7 @@ class PullRequestsResource extends AuthenticatedResource
         $executor                  = $this->getExecutor($repository_src);
         $pr_representation_factory = new PullRequestRepresentationFactory($executor);
 
-        return $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest);
+        return $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user);
     }
 
     /**
@@ -520,7 +526,7 @@ class PullRequestsResource extends AuthenticatedResource
         $executor                  = $this->getExecutor($repository_src);
         $pr_representation_factory = new PullRequestRepresentationFactory($executor);
 
-        return $pr_representation_factory->getPullRequestRepresentation($updated_pull_request, $repository_src, $repository_dest);
+        return $pr_representation_factory->getPullRequestRepresentation($updated_pull_request, $repository_src, $repository_dest, $user);
     }
 
     private function patchStatus(PFUser $user, PullRequest $pull_request, $git_repository, $status)
@@ -538,11 +544,7 @@ class PullRequestsResource extends AuthenticatedResource
                 $git_repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
                 try {
-                    $this->pull_request_closer->fastForwardMerge(
-                        $git_repository,
-                        $git_repository_dest,
-                        $pull_request
-                    );
+                    $this->pull_request_closer->doMerge($git_repository_dest, $pull_request, $user);
                     $this->timeline_event_creator->storeMergeEvent($pull_request, $user);
                 } catch (PullRequestCannotBeMerged $exception) {
                     throw new RestException(400, $exception->getMessage());

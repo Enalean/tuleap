@@ -1,0 +1,14 @@
+<div class="merge-modal">
+    <div class="modal-header">
+        <h3 class="alert"><i class="icon-warning-sign"></i> <span translate>Non fast-forward merge</span></h3>
+    </div>
+
+    <div class="modal-body">
+        <p translate>Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request.</p>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="merge_modal.proceed()"><span translate>Proceed with merge</span></button>
+        <button class="btn" ng-click="merge_modal.cancel()"><span translate>Cancel</span></button>
+    </div>
+</div>

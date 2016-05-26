@@ -36,14 +36,23 @@ class PullRequestRepresentationFactory
         $this->executor = $executor;
     }
 
-    public function getPullRequestRepresentation($pull_request, $repository_src, $repository_dest)
+    public function getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user)
     {
         $short_stat        = $this->executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
         $short_stat_repres = new PullRequestShortStatRepresentation();
         $short_stat_repres->build($short_stat);
 
+        $user_can_merge   = $repository_dest->userCanWrite($user);
+        $user_can_abandon = ($repository_dest->userCanWrite($user) || $repository_src->userCanWrite($user));
+
         $pull_request_representation = new PullRequestRepresentation();
-        $pull_request_representation->build($pull_request, $repository_src, $repository_dest, $short_stat_repres);
+        $pull_request_representation->build(
+            $pull_request,
+            $repository_src,
+            $repository_dest,
+            $user_can_merge,
+            $user_can_abandon,
+            $short_stat_repres);
 
         return $pull_request_representation;
     }

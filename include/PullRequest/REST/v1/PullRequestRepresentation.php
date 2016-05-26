@@ -34,6 +34,12 @@ class PullRequestRepresentation
     const STATUS_MERGE   = 'merge';
     const STATUS_REVIEW  = 'review';
 
+    const NO_FASTFORWARD_MERGE = 'no_fastforward';
+    const FASTFORWARD_MERGE    = 'fastforward';
+    const CONFLICT_MERGE       = 'conflict';
+    const UNKNOWN_MERGE        = 'unknown-merge-status';
+
+
     /**
      * @var int {@type int}
      */
@@ -105,6 +111,21 @@ class PullRequestRepresentation
     public $resources;
 
     /**
+     * @var bool {@type bool}
+     */
+    public $user_can_merge;
+
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_abandon;
+
+    /**
+     * @var string {@type string}
+     */
+    public $merge_status;
+
+    /**
      * @var array {@type PullRequestShortStatRepresentation}
      */
     public $short_stat;
@@ -114,6 +135,8 @@ class PullRequestRepresentation
         PullRequest $pull_request,
         GitRepository $repository,
         GitRepository $repository_dest,
+        $user_can_merge,
+        $user_can_abandon,
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
         $this->id  = JsonCast::toInt($pull_request->getId());
@@ -147,6 +170,10 @@ class PullRequestRepresentation
             )
         );
 
+        $this->user_can_merge   = $user_can_merge;
+        $this->user_can_abandon = $user_can_abandon;
+        $this->merge_status     = $this->expandMergeStatusName($pull_request->getMergeStatus());
+
         $this->short_stat = $pr_short_stat_representation;
     }
 
@@ -159,5 +186,17 @@ class PullRequestRepresentation
         );
 
         return $status_name[$status_acronym];
+    }
+
+    private function expandMergeStatusName($merge_status_acronym)
+    {
+        $status_name = array(
+            PullRequest::NO_FASTFORWARD_MERGE => self::NO_FASTFORWARD_MERGE,
+            PullRequest::FASTFORWARD_MERGE    => self::FASTFORWARD_MERGE,
+            PullRequest::CONFLICT_MERGE       => self::CONFLICT_MERGE,
+            PullRequest::UNKNOWN_MERGE        => self::UNKNOWN_MERGE
+        );
+
+        return $status_name[$merge_status_acronym];
     }
 }

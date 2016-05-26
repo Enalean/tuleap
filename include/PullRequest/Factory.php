@@ -90,7 +90,8 @@ class Factory
             $row['repo_dest_id'],
             $row['branch_dest'],
             $row['sha1_dest'],
-            $row['status']
+            $row['status'],
+            $row['merge_status']
         );
     }
 
@@ -125,7 +126,8 @@ class Factory
             $pull_request->getSha1Src(),
             $pull_request->getRepoDestId(),
             $pull_request->getBranchDest(),
-            $pull_request->getSha1Dest()
+            $pull_request->getSha1Dest(),
+            $pull_request->getMergeStatus()
         );
 
         if (! $new_pull_request_id) {
@@ -145,6 +147,11 @@ class Factory
     public function updateDestRev(PullRequest $pull_request, $new_rev)
     {
         return $this->dao->updateSha1Dest($pull_request->getId(), $new_rev);
+    }
+
+    public function updateMergeStatus(PullRequest $pull_request, $merge_status)
+    {
+        return $this->dao->updateMergeStatus($pull_request->getId(), $merge_status);
     }
 
     public function markAsAbandoned($pull_request)

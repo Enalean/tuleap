@@ -88,6 +88,25 @@ class GitExec extends Git_Exec
         return $output;
     }
 
+    public function fetchAndCheckout($remote, $branch_name)
+    {
+        $output = array();
+        $remote = escapeshellarg($remote);
+        $branch = escapeshellarg('refs/heads/' . $branch_name);
+
+        $this->gitCmdWithOutput("fetch $remote $branch", $output);
+        return $this->gitCmdWithOutput("checkout FETCH_HEAD", $output);
+    }
+
+    public function merge($reference, $user)
+    {
+        $output    = array();
+        $reference = escapeshellarg($reference);
+
+        $this->setLocalCommiter($user->getRealName(), $user->getEmail());
+        return $this->gitCmdWithOutput("merge --no-edit " . $reference, $output);
+    }
+
     public function fastForwardMerge($reference)
     {
         $output    = array();

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
@@ -32,6 +32,10 @@ msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 #: src/app/file-diff/file-diff.tpl.html
 msgid "Binary file"
 msgstr "Fichier binaire"
+
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Cancel"
+msgstr "Annuler"
 
 #: src/app/overview/overview.tpl.html
 msgid "Changes"
@@ -73,6 +77,10 @@ msgstr "Intégré"
 msgid "Modified Files"
 msgstr "Fichiers modifiés"
 
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Non fast-forward merge"
+msgstr "Intégration non fast-forward"
+
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Oh snap!"
 msgstr "Oh mince !"
@@ -80,6 +88,39 @@ msgstr "Oh mince !"
 #: src/app/error-modal/error-modal.tpl.html
 msgid "OK"
 msgstr "OK"
+
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Proceed with merge"
+msgstr "Continuer l’intégration"
+
+#: src/app/overview/overview.tpl.html
+msgid ""
+"Pull request can not be merged automatically due to conflicts with "
+"destination. Resolve conflicts on the command line and update the pull "
+"request."
+msgstr ""
+"Cette pull request ne peut pas être intégrée automatiquement car il existe "
+"des conflits avec la destination. Résolvez ces conflits via la ligne de "
+"commande et mettez à jour la pull request."
+
+#: src/app/overview/overview.tpl.html
+msgid ""
+"Pull request destination has diverged. Merge will not resolve in a fast-"
+"forward. Be careful if you merge now or update your pull request."
+msgstr ""
+"La destination de la pull request a divergé. L’intégration ne sera pas en "
+"fast-forward. Soyez prudent si vous intégrez maintenant ou mettez à jour "
+"votre pull request."
+
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid ""
+"Pull request destination has diverged. Merge will not resolve in a fast-"
+"forward. You can proceed with the merge, or cancel and update your pull "
+"request."
+msgstr ""
+"La destination de la pull request a divergé. L’intégration ne sera pas en "
+"fast-forward. Vous pouvez continuer l’intégration, ou annuler et mettre à "
+"jour la pull request."
 
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Pull Request Details"
@@ -100,15 +141,3 @@ msgstr "Dites quelque chose…"
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Show details"
 msgstr "Voir les détails"
-
-#~ msgid "Binary file."
-#~ msgstr "Fichier binaire"
-
-#~ msgid "Go to diff"
-#~ msgstr "Voir le diff"
-
-#~ msgid "is a binary file."
-#~ msgstr "est un fichier binaire."
-
-#~ msgid "File Diff"
-#~ msgstr "Diff fichier"

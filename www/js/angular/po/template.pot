@@ -25,6 +25,10 @@ msgstr ""
 msgid "Binary file"
 msgstr ""
 
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Cancel"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Changes"
 msgstr ""
@@ -65,6 +69,10 @@ msgstr ""
 msgid "Modified Files"
 msgstr ""
 
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Non fast-forward merge"
+msgstr ""
+
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Oh snap!"
 msgstr ""
@@ -73,8 +81,28 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Proceed with merge"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request."
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Pull request destination has diverged. Merge will not resolve in a fast-forward. Be careful if you merge now or update your pull request."
+msgstr ""
+
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request."
+msgstr ""
+
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Pull Request Details"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
 msgstr ""
 
 #: src/app/pull-requests/pull-requests.tpl.html

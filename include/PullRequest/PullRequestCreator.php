@@ -39,12 +39,16 @@ class PullRequestCreator
      * @var Dao
      */
     private $pull_request_dao;
+
+
     public function __construct(
         Factory $pull_request_factory,
-        Dao $pull_request_dao
+        Dao $pull_request_dao,
+        PullRequestMerger $pull_request_merger
     ) {
-        $this->pull_request_factory   = $pull_request_factory;
-        $this->pull_request_dao       = $pull_request_dao;
+        $this->pull_request_factory = $pull_request_factory;
+        $this->pull_request_dao     = $pull_request_dao;
+        $this->pull_request_merger  = $pull_request_merger;
     }
 
     public function generatePullRequest(GitRepository $repository_src, $branch_src, GitRepository $repository_dest, $branch_dest, \PFUser $creator)
@@ -96,6 +100,9 @@ class PullRequestCreator
             $branch_dest,
             $sha1_dest
         );
+
+        $merge_status = $this->pull_request_merger->detectMergeabilityStatus($executor, $pull_request);
+        $pull_request->setMergeStatus($merge_status);
 
         return $this->pull_request_factory->create($pull_request);
     }

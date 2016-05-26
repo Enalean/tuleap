@@ -57,9 +57,24 @@
 </div>
 
 <div id="pull-request-actions">
-    <button ng-if="overview.pull_request.status === overview.valid_status_keys.review"
+    <div id="pull-request-merge-info">
+        <div class="alert" ng-if="overview.isNonFastForwardMerge()">
+        <i class="icon-warning-sign"></i>
+        {{ 'Pull request destination has diverged. Merge will not resolve in a fast-forward. Be careful if you merge now or update your pull request.' | translate }}
+        </div>
+        <div class="alert alert-error" ng-if="overview.isConflictingMerge()">
+        <i class="icon-warning-sign"></i>
+        {{ 'Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request.' | translate }}
+        </div>
+        <div class="alert alert-error" ng-if="overview.isUnknownMerge()">
+        <i class="icon-warning-sign"></i>
+        {{ 'Pull request mergeability with destination is not determined. You can merge on the command line and push to destination.' | translate }}
+        </div>
+    </div>
+    <button ng-if="overview.hasMergeRight()"
             class="btn btn-large btn-primary"
-            ng-click="overview.merge(overview.pull_request.id)"
+            ng-disabled="overview.isConflictingMerge() || overview.isUnknownMerge()"
+            ng-click="overview.checkMerge()"
     >
         <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
     </button>
@@ -77,9 +92,9 @@
     >
         Already merged
     </button>
-    <button ng-if="overview.pull_request.status === overview.valid_status_keys.review"
+    <button ng-if="overview.hasAbandonRight()"
             class="btn btn-large btn-danger"
-            ng-click="overview.abandon(overview.pull_request.id)"
+            ng-click="overview.abandon()"
     >
         <i class="icon-trash"></i> {{ 'Abandon' | translate }}
     </button>

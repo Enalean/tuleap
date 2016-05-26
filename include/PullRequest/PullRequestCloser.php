@@ -26,6 +26,7 @@ use Git_Command_Exception;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use FileSystemIterator;
+use PFUser;
 use GitRepository;
 use GitRepositoryFactory;
 use ForgeConfig;
@@ -38,9 +39,15 @@ class PullRequestCloser
      */
     private $pull_request_factory;
 
-    public function __construct(Factory $factory)
+    /**
+     * @var PullRequestMerger
+     */
+    private $pull_request_merger;
+
+    public function __construct(Factory $factory, PullRequestMerger $pull_request_merger)
     {
         $this->pull_request_factory = $factory;
+        $this->pull_request_merger  = $pull_request_merger;
     }
 
     public function abandon(PullRequest $pull_request)
@@ -55,6 +62,28 @@ class PullRequestCloser
             throw new PullRequestCannotBeAbandoned('This pull request has already been merged, it can no longer be abandoned');
         }
         return $this->pull_request_factory->markAsAbandoned($pull_request);
+    }
+
+    public function doMerge(
+        GitRepository $repository_dest,
+        PullRequest $pull_request,
+        PFUser $user
+    ) {
+        $status = $pull_request->getStatus();
+
+        if ($status === PullRequest::STATUS_MERGED) {
+            return true;
+        }
+
+        if ($status === PullRequest::STATUS_ABANDONED) {
+            throw new PullRequestCannotBeMerged(
+                'This pull request has already been abandoned, it can no longer be merged'
+            );
+        }
+
+        $this->pull_request_merger->doMergeIntoDestination($pull_request, $repository_dest, $user);
+
+        return $this->pull_request_factory->markAsMerged($pull_request);
     }
 
     public function fastForwardMerge(

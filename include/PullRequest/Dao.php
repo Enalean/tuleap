@@ -98,7 +98,8 @@ class Dao extends DataAccessObject
         $sha1_src,
         $repo_dest_id,
         $branch_dest,
-        $sha1_dest
+        $sha1_dest,
+        $merge_status
     ) {
         $repository_id = $this->da->escapeInt($repository_id);
         $title         = $this->da->quoteSmart($title);
@@ -110,6 +111,7 @@ class Dao extends DataAccessObject
         $repo_dest_id  = $this->da->quoteSmart($repo_dest_id);
         $branch_dest   = $this->da->quoteSmart($branch_dest);
         $sha1_dest     = $this->da->quoteSmart($sha1_dest);
+        $merge_status  = $this->da->escapeInt($merge_status);
 
         $sql = "INSERT INTO plugin_pullrequest_review (
                                 repository_id,
@@ -121,7 +123,8 @@ class Dao extends DataAccessObject
                                 sha1_src,
                                 repo_dest_id,
                                 branch_dest,
-                                sha1_dest
+                                sha1_dest,
+                                merge_status
                             ) VALUES (
                                 $repository_id,
                                 $title,
@@ -132,7 +135,8 @@ class Dao extends DataAccessObject
                                 $sha1_src,
                                 $repo_dest_id,
                                 $branch_dest,
-                                $sha1_dest
+                                $sha1_dest,
+                                $merge_status
                             )";
 
         return $this->updateAndGetLastId($sql);
@@ -153,6 +157,15 @@ class Dao extends DataAccessObject
         $sha1_dest       = $this->da->quoteSmart($sha1_dest);
 
         $sql = "UPDATE plugin_pullrequest_review SET sha1_dest=$sha1_dest WHERE id=$pull_request_id";
+        return $this->update($sql);
+    }
+
+    public function updateMergeStatus($pull_request_id, $merge_status)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $merge_status    = $this->da->quoteSmart($merge_status);
+
+        $sql = "UPDATE plugin_pullrequest_review SET merge_status=$merge_status WHERE id=$pull_request_id";
         return $this->update($sql);
     }
 
