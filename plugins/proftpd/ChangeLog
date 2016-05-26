@@ -1,3 +1,6 @@
+Version 0.24 - Tuleap 8.15
+    * story #9132: Migrate from Less to Sass
+
 Version 0.23 - Tuleap 8.6
     * request #8363: Update service load mecanism
 

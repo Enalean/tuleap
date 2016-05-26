@@ -1,3 +1,6 @@
+7.4 - Tuleap 8.15
+    * story #9088: remove project approval mail
+
 7.3 - Tuleap 8.13
 	* request #9002: Call to undefined method FRSRelease::isError() while deleting empty releases with the SOAP API
 	* request #8971: Avoid conflict with PHP 7 Error class

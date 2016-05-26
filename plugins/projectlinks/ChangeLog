@@ -1,3 +1,6 @@
+Version 2.8 - Tuleap 8.15
+    * story #9132: Migrate from Less to Sass
+
 Version 2.7 - Tuleap 8.12
     * request #8849: Purge legacy themes in plugins
 

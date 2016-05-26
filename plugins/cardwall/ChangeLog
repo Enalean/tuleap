@@ -1,3 +1,6 @@
+Version 1.59 - Tuleap 8.15
+    * story #9132: Migrate from Less to Sass
+
 Version 1.58 - Tuleap 8.14
     * request #9016: Tracker structure incomplete export in XML format
 

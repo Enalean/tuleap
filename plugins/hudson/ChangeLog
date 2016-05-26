@@ -1,3 +1,6 @@
+Version 1.28 - Tuleap 8.15
+    * story #9132: Migrate from Less to Sass
+
 Version 1.27 - Tuleap 8.13
     * story #8823: Add HTML5 validator on Job URL
 
