@@ -8,6 +8,7 @@ Version 8.15 (Not yet released)
 	* request #9158: A fatal error can be thrown when checking user's permissions
 	* request #8726: Cache directories are reconstructed when Tuleap start
 	* request #9191: Loss of layout when invalid entry is given as column size
+	* request #9192: FRS plugin require zsh but it is not needed
 
 	== Enhancement ==
 	* request #9113: Having a REST route to monitor Sysevents
