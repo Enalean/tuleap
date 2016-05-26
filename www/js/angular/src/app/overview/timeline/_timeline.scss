@@ -1,0 +1,113 @@
+#timeline {
+    padding: 0 15px;
+
+    > h3 {
+        margin-bottom: 20px;
+    }
+
+    > .empty {
+        color: #cccccc;
+        text-align: center;
+        padding: 20px 10px 30px;
+        font-size: 12px;
+    }
+
+    > ul {
+        margin: 0 0 20px;
+        list-style-type: none;
+
+        > .clear {
+            clear: both;
+        }
+    }
+
+    > form {
+        display: flex;
+        margin: 0 0 100px;
+        padding: 15px;
+        background: #fafafa;
+        border-radius: 3px;
+        border: 1px solid #eeeeee;
+        text-align: right;
+
+        textarea {
+            flex: 1 1 auto;
+            width: 100%;
+            height: 50px;
+            margin: 0 15px 0 0;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .btn {
+            white-space: nowrap;
+        }
+    }
+}
+
+.pull-request-event {
+    display: flex;
+    float: left;
+    width: 65%;
+    margin: 0 0 15px;
+    padding: 15px;
+    border-radius: 3px;
+    border: 1px solid #ebebeb;
+
+    &.loading {
+        height: 16px;
+        background: url('loader-mini.gif') no-repeat center center;
+    }
+
+    &.inline-comment {
+        background-color: #D0D0FF;
+
+        &.is-outdated {
+            background-color: #E6E6E6;
+            .pull-request-event-content {
+                text-decoration: line-through;
+            }
+        }
+    }
+
+    .pull-request-event-file-path {
+        color: #AAA;
+    }
+
+    > .avatar {
+        flex: 0 0 auto;
+        margin: 0 15px 0 0;
+    }
+
+    > .pull-request-event-content {
+        flex: 1 0 auto;
+
+        > .pull-request-event-author {
+            font-size: 13px;
+        }
+
+        > .pull-request-event-date {
+            font-size: 11px;
+            color: #888888;
+        }
+
+        > p {
+            margin: 8px 0 0;
+            font-size: 13px;
+        }
+    }
+
+    &:not(.from-pr-author) {
+        float: right;
+
+        > .avatar {
+            order: 2;
+            margin: 0 0 0 15px;
+        }
+
+        > .pull-request-event-content {
+            order: 1;
+            text-align: right;
+        }
+    }
+}

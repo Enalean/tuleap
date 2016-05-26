@@ -1,3 +1,4 @@
+/* eslint-disable max-nested-callbacks */
 describe('MainController', function() {
     var $q,
         $scope,

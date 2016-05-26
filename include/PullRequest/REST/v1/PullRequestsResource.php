@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
+use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
@@ -32,6 +33,7 @@ use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
+use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
@@ -65,8 +67,14 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var Tuleap\PullRequest\Factory */
     private $pull_request_factory;
 
+    /** @var Tuleap\PullRequest\Timeline\Factory */
+    private $timeline_factory;
+
     /** @var Tuleap\PullRequest\Comment\Factory */
     private $comment_factory;
+
+    /** @var PaginatedCommentsRepresentationsBuilder */
+    private $paginated_timeline_representation_builder;
 
     /** @var PaginatedCommentsRepresentationsBuilder */
     private $paginated_comments_representations_builder;
@@ -92,6 +100,13 @@ class PullRequestsResource extends AuthenticatedResource
 
         $comment_dao           = new CommentDao();
         $this->comment_factory = new CommentFactory($comment_dao);
+
+        $inline_comment_dao     = new InlineCommentDao();
+        $this->timeline_factory = new TimelineFactory($comment_dao, $inline_comment_dao);
+
+        $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
+            $this->timeline_factory
+        );
 
         $this->paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
             $this->comment_factory
@@ -547,6 +562,59 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/timeline
+     */
+    public function optionsTimeline($id)
+    {
+        return $this->sendAllowHeadersForTimeline();
+    }
+
+    /**
+     * Get pull request's timeline
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url GET {id}/timeline
+     *
+     * @access protected
+     *
+     * @param int    $id     Pull request id
+     * @param int    $limit  Number of fetched comments {@from path}
+     * @param int    $offset Position of the first comment to fetch {@from path}
+     *
+     * @return array {@type Tuleap\PullRequest\REST\v1\TimelineRepresentation}
+     *
+     * @throws 404
+     * @throws 406
+     */
+    protected function getTimeline($id, $limit = 10, $offset = 0)
+    {
+        $this->checkAccess();
+        $this->checkLimit($limit);
+        $this->sendAllowHeadersForTimeline();
+
+        $user           = $this->user_manager->getCurrentUser();
+        $pull_request   = $this->getPullRequest($id);
+        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $project_id     = $git_repository->getProjectId();
+
+        $this->checkUserCanReadRepository($user, $git_repository);
+
+        $paginated_timeline_representation = $this->paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
+            $id,
+            $project_id,
+            $limit,
+            $offset
+        );
+
+        Header::sendPaginationHeaders($limit, $offset, $paginated_timeline_representation->total_size, self::MAX_LIMIT);
+
+        return $paginated_timeline_representation;
+    }
+
+    /**
      * @url OPTIONS {id}/comments
      */
     public function optionsComments($id)
@@ -700,6 +768,11 @@ class PullRequestsResource extends AuthenticatedResource
     private function sendAllowHeadersForPullRequests()
     {
         Header::allowOptionsGetPostPatch();
+    }
+
+    private function sendAllowHeadersForTimeline()
+    {
+        HEADER::allowOptionsGet();
     }
 
     private function sendAllowHeadersForComments()

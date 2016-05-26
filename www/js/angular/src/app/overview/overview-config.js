@@ -16,8 +16,8 @@ function OverviewConfig(
             'overview@pull-request': {
                 template: '<div overview id="overview"></div>'
             },
-            'comments@overview': {
-                template: '<div comments id="comments"></div>'
+            'timeline@overview': {
+                template: '<div timeline id="timeline"></div>'
             }
         }
     });

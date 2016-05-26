@@ -37,17 +37,21 @@ msgstr "Fichier binaire"
 msgid "Changes"
 msgstr "Changements"
 
-#: src/app/overview/comments/comments.tpl.html
+#: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr "Commenter"
-
-#: src/app/overview/comments/comments.tpl.html
-msgid "Comments"
-msgstr "Commentaires"
 
 #: src/app/overview/overview.tpl.html
 msgid "Date"
 msgstr "Date"
+
+#: src/app/overview/timeline/timeline.tpl.html
+msgid "Discussion"
+msgstr "Discussion"
+
+#: src/app/overview/timeline/timeline.tpl.html
+msgid "Discussion has not started yet"
+msgstr "La discussion n’a pas commencé"
 
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
@@ -69,10 +73,6 @@ msgstr "Intégré"
 msgid "Modified Files"
 msgstr "Fichiers modifiés"
 
-#: src/app/overview/comments/comments.tpl.html
-msgid "No comment"
-msgstr "Aucun commentaire"
-
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Oh snap!"
 msgstr "Oh mince !"
@@ -93,7 +93,7 @@ msgstr "Pull requests"
 msgid "Requester"
 msgstr "Demandeur"
 
-#: src/app/overview/comments/comments.tpl.html
+#: src/app/overview/timeline/timeline.tpl.html
 msgid "Say something…"
 msgstr "Dites quelque chose…"
 

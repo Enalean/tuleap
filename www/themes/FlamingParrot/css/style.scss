@@ -18,6 +18,10 @@
         }
     }
 
+    .pull-request-event.from-pr-author {
+        border-color: transparentize($main, .7);
+    }
+
     #modified-files h3 .badge {
         background: $main;
     }

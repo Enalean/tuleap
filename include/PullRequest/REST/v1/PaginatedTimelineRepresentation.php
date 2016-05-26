@@ -19,37 +19,20 @@
  */
 
 namespace Tuleap\PullRequest\REST\v1;
-use Tuleap\REST\JsonCast;
-use Codendi_HTMLPurifier;
 
-class CommentRepresentation
+class PaginatedTimelineRepresentation
 {
 
+    /** @var array */
+    public $collection;
+
     /** @var int */
-    public $id;
-
-    /** @var Tuleap\User\REST\MinimalUserRepresentation */
-    public $user;
-
-    /**
-     * @var string {@type string}
-     */
-    public $post_date;
-
-    /** @var string */
-    public $content;
-
-    /** @var string */
-    public $type;
+    public $total_size;
 
 
-    public function build($id, $project_id, $user_representation, $post_date, $content)
+    public function __construct(array $timeline_representation, $total_size)
     {
-        $this->id        = $id;
-        $this->user      = $user_representation;
-        $this->post_date = JsonCast::toDate($post_date);
-        $purifier        = Codendi_HTMLPurifier::instance();
-        $this->content   = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
-        $this->type      = 'comment';
+        $this->collection = $timeline_representation;
+        $this->total_size = $total_size;
     }
 }

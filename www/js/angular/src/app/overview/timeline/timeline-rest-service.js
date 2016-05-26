@@ -1,15 +1,15 @@
 angular
     .module('tuleap.pull-request')
-    .service('CommentsRestService', CommentsRestService);
+    .service('TimelineRestService', TimelineRestService);
 
-CommentsRestService.$inject = [
+TimelineRestService.$inject = [
     '$http',
     '$q',
     'lodash',
     'ErrorModalService'
 ];
 
-function CommentsRestService(
+function TimelineRestService(
     $http,
     $q,
     lodash,
@@ -18,12 +18,12 @@ function CommentsRestService(
     var self = this;
 
     lodash.extend(self, {
-        getComments: getComments,
+        getTimeline: getTimeline,
         addComment : addComment
     });
 
-    function getComments(pull_request_id, limit, offset) {
-        return $http.get('/api/v1/pull_requests/' + pull_request_id + '/comments?limit=' + limit + '&offset=' + offset)
+    function getTimeline(pull_request_id, limit, offset) {
+        return $http.get('/api/v1/pull_requests/' + pull_request_id + '/timeline?limit=' + limit + '&offset=' + offset)
             .catch(function(response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);

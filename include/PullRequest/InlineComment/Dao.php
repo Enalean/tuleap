@@ -46,6 +46,17 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function searchAllByPullRequestId($pull_request_id)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM plugin_pullrequest_inline_comments
+                WHERE pull_request_id = $pull_request_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content)
     {
         $pull_request_id = $this->da->escapeInt($pull_request_id);

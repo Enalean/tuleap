@@ -19,16 +19,25 @@
  */
 
 namespace Tuleap\PullRequest\REST\v1;
+
+use Tuleap\User\REST\MinimalUserRepresentation ;
 use Tuleap\REST\JsonCast;
-use Codendi_HTMLPurifier;
 
-class CommentRepresentation
+class TimelineInlineCommentRepresentation
 {
+    /**
+     * @var string {@type string}
+     */
+    public $file_path;
 
-    /** @var int */
-    public $id;
+    /**
+     * @var int {@type int}
+     */
+    public $unidiff_offset;
 
-    /** @var Tuleap\User\REST\MinimalUserRepresentation */
+    /**
+     * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
+     */
     public $user;
 
     /**
@@ -36,20 +45,30 @@ class CommentRepresentation
      */
     public $post_date;
 
-    /** @var string */
+    /**
+     * @var string {@type string}
+     */
     public $content;
 
-    /** @var string */
+    /**
+     * @var bool {@type bool}
+     */
+    public $is_outdated;
+
+    /**
+     * @var string {@type string}
+     */
     public $type;
 
 
-    public function build($id, $project_id, $user_representation, $post_date, $content)
+    public function __construct($file_path, $unidiff_offset, $user, $post_date, $content, $is_outdated)
     {
-        $this->id        = $id;
-        $this->user      = $user_representation;
-        $this->post_date = JsonCast::toDate($post_date);
-        $purifier        = Codendi_HTMLPurifier::instance();
-        $this->content   = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
-        $this->type      = 'comment';
+        $this->file_path      = $file_path;
+        $this->unidiff_offset = $unidiff_offset;
+        $this->user           = $user;
+        $this->post_date      = JsonCast::toDate($post_date);
+        $this->content        = $content;
+        $this->is_outdated    = $is_outdated;
+        $this->type           = 'inline-comment';
     }
 }
