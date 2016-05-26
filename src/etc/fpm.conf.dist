@@ -1,0 +1,5 @@
+; Tuleap
+php_value[include_path] = "/usr/share/pear/:/usr/share/php:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:."
+php_value[memory_limit] = 196M
+php_admin_flag[short_open_tag] = on
+php_value[date.timezone] = Europe/Paris

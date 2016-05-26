@@ -37,9 +37,13 @@ class DBTestAccess {
     }
 
     private function loadConfiguration() {
-        $config_file = 'tests.inc';
-        ForgeConfig::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
-        ForgeConfig::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
+        if (is_file('/etc/tuleap/conf/database.inc')) {
+            ForgeConfig::loadFromFile('/etc/tuleap/conf/database.inc');
+        } else {
+            $config_file = 'tests.inc';
+            ForgeConfig::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
+            ForgeConfig::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
+        }
         $GLOBALS['sys_dbhost']   = ForgeConfig::get('sys_dbhost');
         $GLOBALS['sys_dbuser']   = ForgeConfig::get('sys_dbuser');
         $GLOBALS['sys_dbpasswd'] = ForgeConfig::get('sys_dbpasswd');
