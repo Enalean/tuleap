@@ -1,3 +1,8 @@
+Version 8.16 (Not yet release)
+
+	== Plugins ==
+	* git: 4.173
+
 Version 8.15 (Thursday, May 26th 2016)
 	== Bug fix ==
 	* request #9136: All URLs in the footer and homepage are in HTTPS
