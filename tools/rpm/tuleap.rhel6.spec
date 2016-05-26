@@ -19,7 +19,6 @@
 %define OLD_APP_CACHE_DIR %{_localstatedir}/tmp/%{OLD_APP_NAME}_cache
 %define OLD_APP_LOG_DIR /var/log/%{OLD_APP_NAME}
 
-
 %define app_group        codendiadm
 %define app_user         codendiadm
 %define dummy_group      dummy
@@ -398,6 +397,7 @@ Requires: %{php_base}-pear-HTTP-Download >= 1.1.4-3
 Control and interfact with Proftpd as FTP server
 
 %package plugin-frs
+AutoReqProv: no
 Summary: File release system plugin
 Group: Development/Tools
 Version: @@PLUGIN_FRS_VERSION@@
