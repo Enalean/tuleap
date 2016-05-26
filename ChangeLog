@@ -50,6 +50,15 @@ Version 8.15 (Not yet released)
 	* statistics: 0.59
 	* hudson_git: 0.17
 	* mediawiki: 0.115
+	* cardwall: 1.60
+	* fulltextsearch: 0.130
+	* graphontrackers: 1.16
+	* hudson: 1.29
+	* hudson_svn: 0.9
+	* pluginsadministration: 1.18
+	* proftpd: 0.25
+	* projectlinks: 2.9
+	* userlog: 1.8
 
     == Themes ==
 	* FlamingParrot: 1.142
