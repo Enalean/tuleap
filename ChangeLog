@@ -1,4 +1,4 @@
-Version 8.15 (Not yet released)
+Version 8.15 (Thursday, May 26th 2016)
 	== Bug fix ==
 	* request #9136: All URLs in the footer and homepage are in HTTPS
 	* request #9098: All PHP files created after the introduction of PSR2 into Tuleap must be compliant
