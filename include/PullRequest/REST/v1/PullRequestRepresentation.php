@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use Tuleap\Git\REST\v1\GitRepositoryReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 use GitRepository;
@@ -59,6 +58,11 @@ class PullRequestRepresentation
      * @var int {@type GitRepositoryReference}
      */
     public $repository;
+
+    /**
+     * @var int {@type GitRepositoryReference}
+     */
+    public $repository_dest;
 
     /**
      * @var int {@type int}
@@ -109,6 +113,7 @@ class PullRequestRepresentation
     public function build(
         PullRequest $pull_request,
         GitRepository $repository,
+        GitRepository $repository_dest,
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
         $this->id  = JsonCast::toInt($pull_request->getId());
@@ -123,6 +128,10 @@ class PullRequestRepresentation
         $repository_reference = new GitRepositoryReference();
         $repository_reference->build($repository);
         $this->repository = $repository_reference;
+
+        $repository_dest_reference = new GitRepositoryReference();
+        $repository_dest_reference->build($repository_dest);
+        $this->repository_dest = $repository_dest_reference;
 
         $this->user_id        = JsonCast::toInt($pull_request->getUserId());
         $this->creation_date  = JsonCast::toDate($pull_request->getCreationDate());

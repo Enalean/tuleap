@@ -47,51 +47,73 @@ class PullRequestCreator
         $this->pull_request_dao       = $pull_request_dao;
     }
 
-    public function generatePullRequest(GitRepository $repository, $branch_src, $branch_dest, \PFUser $creator)
+    public function generatePullRequest(GitRepository $repository_src, $branch_src, GitRepository $repository_dest, $branch_dest, \PFUser $creator)
     {
-        if ($repository) {
-            if ($repository->isMigratedToGerrit()) {
-                throw new PullRequestRepositoryMigratedOnGerritException();
-            }
-
-            $executor       = new GitExec($repository->getFullPath(), $repository->getFullPath());
-            $sha1_src       = $executor->getBranchSha1($branch_src);
-            $sha1_dest      = $executor->getBranchSha1($branch_dest);
-            $commit_message = $executor->getCommitMessage($sha1_src);
-            $first_line     = array_shift($commit_message);
-            $other_lines    = implode("\n", $commit_message);
-
-            if ($sha1_src === $sha1_dest) {
-                throw new PullRequestCannotBeCreatedException();
-            }
-
-            $this->checkIfPullRequestAlreadyExists($sha1_src, $sha1_dest);
-
-            $pull_request = new PullRequest(
-                0,
-                $first_line,
-                $other_lines,
-                $repository->getId(),
-                $creator->getId(),
-                time(),
-                $branch_src,
-                $sha1_src,
-                $branch_dest,
-                $sha1_dest
-            );
-
-            return $this->pull_request_factory->create($pull_request);
+        if (! $repository_src || ! $repository_dest) {
+            return false;
         }
 
-        return false;
+        if ($repository_src->getId() != $repository_dest->getId() && $repository_src->getParentId() != $repository_dest->getId()) {
+            throw new \Exception('Pull requests can only target the same repository or its parent.');
+        }
+
+        if ($repository_dest->isMigratedToGerrit()) {
+            throw new PullRequestRepositoryMigratedOnGerritException();
+        }
+
+        $executor       = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
+        $sha1_src       = $executor->getBranchSha1("refs/heads/$branch_src");
+        $repo_dest_id   = $repository_dest->getId();
+        $repo_src_id    = $repository_src->getId();
+
+        if ($repo_src_id == $repo_dest_id) {
+            $sha1_dest = $executor->getBranchSha1("refs/heads/$branch_dest");
+        } else {
+            $this->setUpRemote($executor, $repo_dest_id, $repository_dest->getFullPath());
+            $sha1_dest = $executor->getBranchSha1("$repo_dest_id/$branch_dest");
+        }
+
+        if ($sha1_src === $sha1_dest) {
+            throw new PullRequestCannotBeCreatedException();
+        }
+
+        $this->checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest);
+
+        $commit_message = $executor->getCommitMessage($sha1_src);
+        $first_line     = array_shift($commit_message);
+        $other_lines    = implode("\n", $commit_message);
+
+        $pull_request = new PullRequest(
+            0,
+            $first_line,
+            $other_lines,
+            $repo_src_id,
+            $creator->getId(),
+            time(),
+            $branch_src,
+            $sha1_src,
+            $repo_dest_id,
+            $branch_dest,
+            $sha1_dest
+        );
+
+        return $this->pull_request_factory->create($pull_request);
     }
 
-    private function checkIfPullRequestAlreadyExists($sha1_src, $sha1_dest)
+    private function checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)
     {
-        $row = $this->pull_request_dao->searchByShaOnes($sha1_src, $sha1_dest)->getRow();
+        $row = $this->pull_request_dao->searchByReferences($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)->getRow();
 
         if ($row) {
             throw new PullRequestAlreadyExistsException();
         }
+    }
+
+    private function setUpRemote(GitExec $executor, $repo_id, $repo_path)
+    {
+        if (! $executor->remoteExists($repo_id)) {
+            $executor->addRemote($repo_id, $repo_path);
+        }
+        $executor->fetchRemote($repo_id);
     }
 }

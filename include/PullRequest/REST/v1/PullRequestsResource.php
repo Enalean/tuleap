@@ -140,19 +140,22 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
-        $git_repository = $this->getRepository($pull_request->getRepositoryId());
+        $user            = $this->user_manager->getCurrentUser();
+        $pull_request    = $this->getPullRequest($id);
+        $repository_src  = $this->getRepository($pull_request->getRepositoryId());
+        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
-        $this->checkUserCanReadRepository($user, $git_repository);
+        $this->checkUserCanReadRepository($user, $repository_src);
 
-        $executor          = new GitExec($git_repository->getFullPath(), $git_repository->getFullPath());
+        $executor          = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
+
         $short_stat        = $executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
         $short_stat_repres = new PullRequestShortStatRepresentation();
         $short_stat_repres->build($short_stat);
 
+
         $pull_request_representation = new PullRequestRepresentation();
-        $pull_request_representation->build($pull_request, $git_repository, $short_stat_repres);
+        $pull_request_representation->build($pull_request, $repository_src, $repository_dest, $short_stat_repres);
 
         return $pull_request_representation;
     }
@@ -354,6 +357,7 @@ class PullRequestsResource extends AuthenticatedResource
      * {<br/>
      * &nbsp;&nbsp;"repository_id": 3,<br/>
      * &nbsp;&nbsp;"branch_src": "dev",<br/>
+     * &nbsp;&nbsp;"repository_dest_id": 3,<br/>
      * &nbsp;&nbsp;"branch_dest": "master"<br/>
      * }<br/>
      * </pre>
@@ -375,18 +379,23 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $repository_id  = $content->repository_id;
-        $git_repository = $this->getRepository($repository_id);
-        $branch_src     = $content->branch_src;
-        $branch_dest    = $content->branch_dest;
+        $user                = $this->user_manager->getCurrentUser();
 
-        $this->checkUserCanReadRepository($user, $git_repository);
+        $repository_id       = $content->repository_id;
+        $repository_src      = $this->getRepository($repository_id);
+        $branch_src          = $content->branch_src;
+
+        $repository_dest_id  = $content->repository_dest_id;
+        $repository_dest     = $this->getRepository($repository_dest_id);
+        $branch_dest         = $content->branch_dest;
+
+        $this->checkUserCanReadRepository($user, $repository_src);
 
         try {
             $generated_pull_request = $this->pull_request_creator->generatePullRequest(
-                $git_repository,
+                $repository_src,
                 $branch_src,
+                $repository_dest,
                 $branch_dest,
                 $user
             );
@@ -397,6 +406,8 @@ class PullRequestsResource extends AuthenticatedResource
         } catch (PullRequestAlreadyExistsException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch(\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -475,9 +486,12 @@ class PullRequestsResource extends AuthenticatedResource
                 }
                 break;
             case PullRequestRepresentation::STATUS_MERGE:
+                $git_repository_dest = $this->getRepository($pull_request->getRepoDestId());
+
                 try {
                     $this->pull_request_closer->fastForwardMerge(
                         $git_repository,
+                        $git_repository_dest,
                         $pull_request
                     );
                 } catch (PullRequestCannotBeMerged $exception) {

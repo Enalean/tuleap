@@ -28,6 +28,7 @@ use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\AdditionalActionsPresenter;
+use Tuleap\PullRequest\ForkAdditionalActionsPresenter;
 use Tuleap\PullRequest\AdditionalHelpTextPresenter;
 use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\Factory;
@@ -101,10 +102,7 @@ class pullrequestPlugin extends Plugin
     public function process(Codendi_Request $request)
     {
         $user_manager           = UserManager::instance();
-        $git_repository_factory = new GitRepositoryFactory(
-            new GitDao(),
-            ProjectManager::instance()
-        );
+        $git_repository_factory = $this->getRepositoryFactory();
 
         $pull_request_creator = new PullRequestCreator(
             $this->getPullRequestFactory(),
@@ -186,13 +184,27 @@ class pullrequestPlugin extends Plugin
         $repository = $params['repository'];
 
         if (! $repository->isMigratedToGerrit()) {
-            $git_exec   = new GitExec($repository->getFullPath(), $repository->getFullPath());
-            $branches   = $git_exec->getAllBranchNames();
-            $csrf       = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
+            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
+            $renderer = $this->getTemplateRenderer();
+            $csrf     = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
 
-            $renderer  = $this->getTemplateRenderer();
-            $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches);
+            $branches = $git_exec->getAllBranchNames();
 
+            $dest_branches   = array();
+            foreach ($branches as $branch) {
+                $dest_branches[] = array('repo_id' => $repository->getId(), 'repo_name' => null, 'branch_name' => $branch);
+            }
+
+            if ($repository->getParentId() != 0) {
+                $parent_repo     = $repository->getParent();
+                $git_exec        = new GitExec($parent_repo->getFullPath(), $parent_repo->getFullPath());
+                $parent_branches = $git_exec->getAllBranchNames();
+                foreach ($parent_branches as $branch) {
+                    $dest_branches[] = array('repo_id' => $parent_repo->getId(), 'repo_name' => $parent_repo->getFullName(), 'branch_name' => $branch);
+                }
+            }
+
+            $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches, $dest_branches);
             $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }
     }
@@ -293,7 +305,9 @@ class pullrequestPlugin extends Plugin
                 );
                 $pull_request_updater->updatePullRequests($git_exec, $repository, $branch_name, $new_rev);
             }
-            $closer->markManuallyMerged($git_exec, $repository, $branch_name);
+
+            $git_repository_factory = $this->getRepositoryFactory();
+            $closer->markManuallyMerged($git_repository_factory, $repository, $branch_name, $new_rev);
         }
     }
 
@@ -312,6 +326,11 @@ class pullrequestPlugin extends Plugin
     private function getPullRequestFactory()
     {
         return new Factory(new Dao());
+    }
+
+    private function getRepositoryFactory()
+    {
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
     private function getTemplateRenderer()

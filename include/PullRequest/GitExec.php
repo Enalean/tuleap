@@ -33,7 +33,7 @@ class GitExec extends Git_Exec
         $output = array();
 
         try {
-            $this->gitCmdWithOutput('show-ref --hash refs/heads/' . escapeshellarg($branch_name), $output);
+            $this->gitCmdWithOutput('show-ref --hash ' . escapeshellarg($branch_name), $output);
         } catch (Git_Command_Exception $exception) {
             throw new UnknownBranchNameException($branch_name, 0, $exception);
         }
@@ -77,6 +77,15 @@ class GitExec extends Git_Exec
         $branch = escapeshellarg('refs/heads/' . $branch_name);
 
         return $this->gitCmdWithOutput("fetch --depth 1 $remote $branch", $output);
+    }
+
+    public function fetchRemote($remote_name)
+    {
+        $remote_name = escapeshellarg($remote_name);
+        $cmd         = "fetch $remote_name";
+
+        $this->execAsGitoliteGroup($cmd, $output);
+        return $output;
     }
 
     public function fastForwardMerge($reference)
@@ -132,14 +141,25 @@ class GitExec extends Git_Exec
         return $output[0];
     }
 
-    public function getMergedBranches($ref)
+    /** @return true if $merged_ref is an ancestor of $base_ref */
+    public function isAncestor($base_ref, $merged_ref)
     {
-        $ref    = escapeshellarg($ref);
-        $cmd    = "branch --merged $ref | cut -c 3-";
-        $output = array();
+        $base_ref   = escapeshellarg($base_ref);
+        $merged_ref = escapeshellarg($merged_ref);
 
-        $this->gitCmdWithOutput($cmd, $output);
-        return $output;
+        $merge_base_cmd    = "merge-base $base_ref $merged_ref";
+        $merge_base_output = array();
+
+        $rev_parse_cmd    = "rev-parse --verify $merged_ref";
+        $rev_parse_output = array();
+
+        try {
+            $this->gitCmdWithOutput($merge_base_cmd, $merge_base_output);
+            $this->gitCmdWithOutput($rev_parse_cmd, $rev_parse_output);
+            return $rev_parse_output[0] == $merge_base_output[0];
+        } catch (Git_Command_Exception $e) {
+            return false;
+        }
     }
 
     public function unidiff($file_path, $old_rev, $new_rev)
@@ -151,6 +171,29 @@ class GitExec extends Git_Exec
 
         $this->gitCmdWithOutput($cmd, $output);
         return $output;
+    }
+
+    public function addRemote($remote_name, $remote_path)
+    {
+        $remote_name = escapeshellarg($remote_name);
+        $remote_path = escapeshellarg($remote_path);
+        $cmd         = "remote add $remote_name $remote_path";
+
+        $this->execAsGitoliteGroup($cmd, $output);
+        return $output;
+    }
+
+    public function remoteExists($remote_name)
+    {
+        $remote_name = escapeshellarg($remote_name);
+        $cmd         = "remote show $remote_name";
+
+        try {
+            $this->gitCmdWithOutput($cmd, $output);
+        } catch (Git_Command_Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     private function parseDiffNumStatOutput($output) {
@@ -173,5 +216,20 @@ class GitExec extends Git_Exec
         }
 
         return new ShortStat($files_changed, $lines_added, $lines_removed);
+    }
+
+    private function execAsGitoliteGroup($cmd, &$output)
+    {
+        $retVal   = 1;
+        $as_group = 'sg - gitolite -c ';
+        $git      = $this->getGitCommand() . ' --work-tree=' . escapeshellarg($this->getPath()) . ' --git-dir=' . escapeshellarg($this->getGitDir());
+
+        exec("$as_group '$git $cmd' 2>&1", $output, $retVal);
+
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Git_Command_Exception("$git $cmd", $output, $retVal);
+        }
     }
 }

@@ -35,6 +35,7 @@ class PullRequest
     private $creation_date;
     private $branch_src;
     private $sha1_src;
+    private $repo_dest_id;
     private $branch_dest;
     private $sha1_dest;
     private $status;
@@ -48,21 +49,23 @@ class PullRequest
         $creation_date,
         $branch_src,
         $sha1_src,
+        $repo_dest_id,
         $branch_dest,
         $sha1_dest,
         $status = 'R'
     ) {
-        $this->id            = $id;
-        $this->title         = $title;
-        $this->description   = $description;
-        $this->repository_id = $repository_id;
-        $this->user_id       = $user_id;
-        $this->creation_date = $creation_date;
-        $this->branch_src    = $branch_src;
-        $this->sha1_src      = $sha1_src;
-        $this->branch_dest   = $branch_dest;
-        $this->sha1_dest     = $sha1_dest;
-        $this->status        = $status;
+        $this->id             = $id;
+        $this->title          = $title;
+        $this->description    = $description;
+        $this->repository_id  = $repository_id;
+        $this->user_id        = $user_id;
+        $this->creation_date  = $creation_date;
+        $this->branch_src     = $branch_src;
+        $this->sha1_src       = $sha1_src;
+        $this->repo_dest_id   = $repo_dest_id;
+        $this->branch_dest    = $branch_dest;
+        $this->sha1_dest      = $sha1_dest;
+        $this->status         = $status;
     }
 
     public function getId()
@@ -93,6 +96,11 @@ class PullRequest
     public function getSha1Src()
     {
         return $this->sha1_src;
+    }
+
+    public function getRepoDestId()
+    {
+        return $this->repo_dest_id;
     }
 
     public function getBranchDest()

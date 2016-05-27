@@ -61,7 +61,9 @@ class PullRequestUpdater
         $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $src_branch_name);
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
-            $ancestor_rev = $git_exec->getCommonAncestor($pr->getBranchSrc(), $pr->getBranchDest());
+
+            $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
+
             if ($ancestor_rev != $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
                 $this->updateInlineCommentsOnRebase($git_exec, $pr, $ancestor_rev, $new_rev);
@@ -69,6 +71,20 @@ class PullRequestUpdater
                 $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $new_rev);
             }
         }
+    }
+
+    private function getCommonAncestorRev(GitExec $git_exec, PullRequest $pr)
+    {
+        if ($pr->getRepositoryId() != $pr->getRepoDestId()) {
+            $git_exec->fetchRemote($pr->getRepoDestId());
+            $base_ref   = 'refs/heads/' . $pr->getBranchSrc();
+            $merged_ref = 'refs/remotes/' . $pr->getRepoDestId() . '/' . $pr->getBranchDest();
+        } else {
+            $base_ref   = $pr->getBranchSrc();
+            $merged_ref = $pr->getBranchDest();
+        }
+        $ancestor_rev = $git_exec->getCommonAncestor($base_ref, $merged_ref);
+        return $ancestor_rev;
     }
 
     private function updateInlineCommentsWhenSourceChanges(GitExec $git_exec, PullRequest $pull_request, $new_rev)
@@ -79,8 +95,10 @@ class PullRequestUpdater
             $changes_diff         = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Src(), $new_rev);
             $targeted_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_rev);
 
-            $comments_to_update = $this->inline_comment_updater->updateWhenSourceChanges($comments, $original_diff, $changes_diff, $targeted_diff);
-            $this->saveInDb($comments_to_update);
+            if (count($changes_diff->getLines()) > 0) {
+                $comments_to_update = $this->inline_comment_updater->updateWhenSourceChanges($comments, $original_diff, $changes_diff, $targeted_diff);
+                $this->saveInDb($comments_to_update);
+            }
         }
 
     }

@@ -60,9 +60,9 @@ class Factory
         return $this->getInstancesFromRows($res);
     }
 
-    public function getOpenedByDestinationBranch(GitRepository $repository, $branch_name)
+    public function getOpenedByDestinationBranch(GitRepository $dest_repository, $branch_name)
     {
-        $res = $this->dao->searchOpenedByDestinationBranch($repository->getId(), $branch_name);
+        $res = $this->dao->searchOpenedByDestinationBranch($dest_repository->getId(), $branch_name);
         return $this->getInstancesFromRows($res);
     }
 
@@ -87,6 +87,7 @@ class Factory
             $row['creation_date'],
             $row['branch_src'],
             $row['sha1_src'],
+            $row['repo_dest_id'],
             $row['branch_dest'],
             $row['sha1_dest'],
             $row['status']
@@ -122,6 +123,7 @@ class Factory
             $pull_request->getCreationDate(),
             $pull_request->getBranchSrc(),
             $pull_request->getSha1Src(),
+            $pull_request->getRepoDestId(),
             $pull_request->getBranchDest(),
             $pull_request->getSha1Dest()
         );

@@ -36,14 +36,18 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchByShaOnes($sha1_src, $sha1_dest)
+    public function searchByReferences($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)
     {
-        $sha1_src  = $this->da->quoteSmart($sha1_src);
-        $sha1_dest = $this->da->quoteSmart($sha1_dest);
+        $repo_src_id  = $this->da->quoteSmart($repo_src_id);
+        $sha1_src     = $this->da->quoteSmart($sha1_src);
+        $repo_dest_id = $this->da->quoteSmart($repo_dest_id);
+        $sha1_dest    = $this->da->quoteSmart($sha1_dest);
 
         $sql = "SELECT *
                 FROM plugin_pullrequest_review
-                WHERE sha1_src = $sha1_src
+                WHERE repository_id = $repo_src_id
+                  AND sha1_src = $sha1_src
+                  AND repo_dest_id = $repo_dest_id
                   AND sha1_dest = $sha1_dest";
 
         return $this->retrieve($sql);
@@ -68,7 +72,7 @@ class Dao extends DataAccessObject
         $status_review   = $this->da->quoteSmart(PullRequest::STATUS_REVIEW);
 
         $sql = "SELECT * FROM plugin_pullrequest_review
-            WHERE repository_id=$repository_id AND branch_dest=$branch_name
+            WHERE repo_dest_id=$repository_id AND branch_dest=$branch_name
               AND status=$status_review";
         return $this->retrieve($sql);
     }
@@ -77,7 +81,9 @@ class Dao extends DataAccessObject
     {
         $repository_id = $this->da->escapeInt($repository_id);
 
-        $sql = "SELECT COUNT(*) as nb_pull_requests FROM plugin_pullrequest_review WHERE repository_id = $repository_id";
+        $sql = "SELECT COUNT(*) as nb_pull_requests
+                FROM plugin_pullrequest_review
+                WHERE repository_id = $repository_id OR repo_dest_id = $repository_id";
 
         return $this->retrieve($sql);
     }
@@ -90,6 +96,7 @@ class Dao extends DataAccessObject
         $creation_date,
         $branch_src,
         $sha1_src,
+        $repo_dest_id,
         $branch_dest,
         $sha1_dest
     ) {
@@ -100,6 +107,7 @@ class Dao extends DataAccessObject
         $creation_date = $this->da->escapeInt($creation_date);
         $branch_src    = $this->da->quoteSmart($branch_src);
         $sha1_src      = $this->da->quoteSmart($sha1_src);
+        $repo_dest_id  = $this->da->quoteSmart($repo_dest_id);
         $branch_dest   = $this->da->quoteSmart($branch_dest);
         $sha1_dest     = $this->da->quoteSmart($sha1_dest);
 
@@ -111,6 +119,7 @@ class Dao extends DataAccessObject
                                 creation_date,
                                 branch_src,
                                 sha1_src,
+                                repo_dest_id,
                                 branch_dest,
                                 sha1_dest
                             ) VALUES (
@@ -121,6 +130,7 @@ class Dao extends DataAccessObject
                                 $creation_date,
                                 $branch_src,
                                 $sha1_src,
+                                $repo_dest_id,
                                 $branch_dest,
                                 $sha1_dest
                             )";
@@ -154,7 +164,7 @@ class Dao extends DataAccessObject
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_pullrequest_review
-                WHERE repository_id = $repository_id
+                WHERE repository_id = $repository_id OR repo_dest_id = $repository_id
                 LIMIT $limit
                 OFFSET $offset";
 

@@ -54,7 +54,7 @@ class GitExecTest extends TuleapTestCase {
     }
 
     public function itReturnsTheSha1OfAGivenBranch() {
-        $sha1 = $this->git_exec->getBranchSha1('master');
+        $sha1 = $this->git_exec->getBranchSha1('refs/heads/master');
 
         $this->assertNotNull($sha1);
         $this->assertNotEmpty($sha1);
@@ -64,7 +64,7 @@ class GitExecTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfBranchDoesNotExist() {
         $this->expectException('Tuleap\PullRequest\Exception\UnknownBranchNameException');
 
-        $sha1 = $this->git_exec->getBranchSha1('universitylike');
+        $sha1 = $this->git_exec->getBranchSha1('refs/heads/universitylike');
     }
 
     public function itReturnsAnArrayOfModifiedFiles() {
@@ -73,8 +73,8 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("modify toto");
 
-        $sha1_src  = $this->git_exec->getBranchSha1('dev');
-        $sha1_dest = $this->git_exec->getBranchSha1('master');
+        $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
+        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
 
         $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
 
@@ -94,8 +94,8 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->add("$this->fixture_dir/added-file-in-dev");
         $this->git_exec->commit("add file added-file-in-dev");
 
-        $sha1_src  = $this->git_exec->getBranchSha1('dev');
-        $sha1_dest = $this->git_exec->getBranchSha1('master');
+        $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
+        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
 
         $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
 
@@ -105,7 +105,7 @@ class GitExecTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionIfReferenceIsUnknown() {
         $sha1_src  = 'weeakplbrhmj03pjcjtw5blestib2hy3rgpwxmwt';
-        $sha1_dest = $this->git_exec->getBranchSha1('master');
+        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
 
         $this->expectException('Tuleap\PullRequest\Exception\UnknownReferenceException');
 
@@ -250,4 +250,37 @@ class GitExecTest extends TuleapTestCase {
         $this->assertEqual(0, $short_stat->getLinesAddedNumber());
         $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
     }
+
+    public function itReturnsFalseIfBaseCommitRefDoesntExist_isAncestor()
+    {
+        $res = $this->git_exec->isAncestor('aldfkezjjzfrkj', 'HEAD');
+        $this->assertEqual(false, $res);
+    }
+
+    public function itReturnsFalseIfMergedCommitRefDoesntExist_isAncestor()
+    {
+        $res = $this->git_exec->isAncestor('HEAD^', 'fezefzefzeef');
+        $this->assertEqual(false, $res);
+    }
+
+    public function itReturnsFalseWhenIsNotAncestor()
+    {
+        file_put_contents("$this->fixture_dir/toto", "stuff2");
+        $this->git_exec->add("$this->fixture_dir/toto");
+        $this->git_exec->commit("add stuff");
+
+        $res = $this->git_exec->isAncestor('HEAD^', 'HEAD');
+        $this->assertEqual(false, $res);
+    }
+
+    public function itReturnsTrueWhenIsAncestor()
+    {
+        file_put_contents("$this->fixture_dir/toto", "stuff2");
+        $this->git_exec->add("$this->fixture_dir/toto");
+        $this->git_exec->commit("add stuff");
+
+        $res = $this->git_exec->isAncestor('HEAD', 'HEAD^');
+        $this->assertEqual(true, $res);
+    }
+
 }

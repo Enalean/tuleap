@@ -29,6 +29,11 @@ class PullRequestPOSTRepresentation
     public $repository_id;
 
     /**
+     * @var int {@type int}
+     */
+    public $repository_dest_id;
+
+    /**
      * @var string {@type string}
      */
     public $branch_src;
@@ -38,10 +43,11 @@ class PullRequestPOSTRepresentation
      */
     public $branch_dest;
 
-    public function build($repository_id, $branch_src, $branch_dest)
+    public function build($repository_id, $repository_dest_id, $branch_src, $branch_dest)
     {
-        $this->repository_id = $repository_id;
-        $this->branch_src    = $branch_src;
-        $this->branch_dest   = $branch_dest;
+        $this->repository_id      = $repository_id;
+        $this->branch_src         = $branch_src;
+        $this->branch_dest        = $branch_dest;
+        $this->repository_dest_id = $repository_dest_id;
     }
 }

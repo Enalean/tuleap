@@ -79,6 +79,13 @@ class PullRequestCloserTest extends TuleapTestCase
 
         stub($this->git_repository)->getId()->returns(73);
 
+        $this->git_parent_repository_dir = $this->git_repository_dir . '_fork';
+        system("git clone --mirror {$this->git_repository_dir} {$this->git_parent_repository_dir} 2>&1 >/dev/null");
+        $this->git_parent_repository = stub('GitRepository')->getFullPath()->returns($this->git_parent_repository_dir);
+        stub($this->git_parent_repository)->getId()->returns(72);
+        $this->git_exec->addRemote(72, $this->git_parent_repository_dir);
+        $this->git_exec->fetchRemote(72);
+
         ForgeConfig::store();
         ForgeConfig::set('codendi_cache_dir', '/tmp/');
     }
@@ -86,6 +93,7 @@ class PullRequestCloserTest extends TuleapTestCase
     public function tearDown()
     {
         system("rm -rf $this->git_repository_dir");
+        system("rm -rf $this->git_parent_repository_dir");
         ForgeConfig::restore();
 
         parent::tearDown();
@@ -95,8 +103,8 @@ class PullRequestCloserTest extends TuleapTestCase
     {
         stub($this->dao)->markAsMerged(1)->returns(true);
 
-        $chat_ouane_master = $this->git_exec->getBranchSha1('master');
-        $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
+        $chat_ouane_master = $this->git_exec->getBranchSha1('refs/heads/master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
 
         $pull_request = new PullRequest(
             1,
@@ -107,12 +115,14 @@ class PullRequestCloserTest extends TuleapTestCase
             1456309611,
             'dev',
             $chat_ouane_dev,
+            null,
             'master',
             $chat_ouane_master,
             'R'
         );
 
         $result = $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
             $this->git_repository,
             $pull_request
         );
@@ -132,8 +142,8 @@ class PullRequestCloserTest extends TuleapTestCase
         file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
         system("cd $this->git_repository_dir && git checkout -b feature --quiet && git add . && git commit --quiet -m 'Add antiracing'");
 
-        $chat_ouane_dev     = $this->git_exec->getBranchSha1('dev');
-        $chat_ouane_feature = $this->git_exec->getBranchSha1('feature');
+        $chat_ouane_dev     = $this->git_exec->getBranchSha1('refs/heads/dev');
+        $chat_ouane_feature = $this->git_exec->getBranchSha1('refs/heads/feature');
 
         $pull_request = new PullRequest(
             1,
@@ -144,12 +154,14 @@ class PullRequestCloserTest extends TuleapTestCase
             1456309611,
             'feature',
             $chat_ouane_feature,
+            null,
             'dev',
             $chat_ouane_dev,
             'R'
         );
 
         $result = $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
             $this->git_repository,
             $pull_request
         );
@@ -164,8 +176,8 @@ class PullRequestCloserTest extends TuleapTestCase
 
     public function itReturnsTrueIfPullRequestIsAlreadyMerged()
     {
-        $chat_ouane_master = $this->git_exec->getBranchSha1('master');
-        $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
+        $chat_ouane_master = $this->git_exec->getBranchSha1('refs/heads/master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
 
         $pull_request = new PullRequest(
             1,
@@ -176,6 +188,7 @@ class PullRequestCloserTest extends TuleapTestCase
             1456309611,
             'dev',
             $chat_ouane_dev,
+            null,
             'master',
             $chat_ouane_master,
             'M'
@@ -185,6 +198,7 @@ class PullRequestCloserTest extends TuleapTestCase
 
         $result = $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
+            $this->git_repository,
             $pull_request
         );
 
@@ -193,8 +207,8 @@ class PullRequestCloserTest extends TuleapTestCase
 
     public function itThrowsAnExceptionIfPullRequestWasPreviouslyAbandoned()
     {
-        $chat_ouane_master = $this->git_exec->getBranchSha1('master');
-        $chat_ouane_dev    = $this->git_exec->getBranchSha1('dev');
+        $chat_ouane_master = $this->git_exec->getBranchSha1('refs/heads/master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
 
         $pull_request = new PullRequest(
             1,
@@ -205,6 +219,7 @@ class PullRequestCloserTest extends TuleapTestCase
             1456309611,
             'dev',
             $chat_ouane_dev,
+            null,
             'master',
             $chat_ouane_master,
             'A'
@@ -215,7 +230,150 @@ class PullRequestCloserTest extends TuleapTestCase
 
         $this->pull_request_closer->fastForwardMerge(
             $this->git_repository,
+            $this->git_repository,
             $pull_request
         );
     }
+
+    public function itMergesAForkBranchIntoAnEmptyBranch()
+    {
+        stub($this->dao)->markAsMerged(1)->returns(true);
+
+        $chat_ouane_master = $this->git_exec->getBranchSha1('72/master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
+
+        $pull_request = new PullRequest(
+            1,
+            'title',
+            'description',
+            73,
+            105,
+            1456309611,
+            'dev',
+            $chat_ouane_dev,
+            72,
+            'master',
+            $chat_ouane_master,
+            'R'
+        );
+
+        $result = $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
+            $this->git_parent_repository,
+            $pull_request
+        );
+
+        $this->assertTrue($result);
+
+        system("mkdir {$this->git_parent_repository_dir}_local");
+        system("git clone --quiet $this->git_parent_repository_dir {$this->git_parent_repository_dir}_local");
+
+        $this->assertTrue(is_file("{$this->git_parent_repository_dir}_local/preguilt"));
+        $this->assertEqual(file_get_contents("{$this->git_parent_repository_dir}_local/preguilt"), "semibarbarous");
+    }
+
+    public function itMergesAForkBranchIntoAnotherBranchThatIsNotMaster()
+    {
+        stub($this->dao)->markAsMerged(1)->returns(true);
+
+        file_put_contents("$this->git_repository_dir/antiracing", "hatlike");
+        system("cd $this->git_repository_dir && git checkout -b feature --quiet && git add . && git commit --quiet -m 'Add antiracing'");
+
+        $chat_ouane_dev     = $this->git_exec->getBranchSha1('72/dev');
+        $chat_ouane_feature = $this->git_exec->getBranchSha1('refs/heads/feature');
+
+        $pull_request = new PullRequest(
+            1,
+            'title',
+            'description',
+            73,
+            105,
+            1456309611,
+            'feature',
+            $chat_ouane_feature,
+            72,
+            'dev',
+            $chat_ouane_dev,
+            'R'
+        );
+
+        $result = $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
+            $this->git_parent_repository,
+            $pull_request
+        );
+
+        $this->assertTrue($result);
+
+        system("mkdir {$this->git_parent_repository_dir}_local");
+        system("git clone --quiet $this->git_parent_repository_dir {$this->git_parent_repository_dir}_local");
+        system("cd {$this->git_parent_repository_dir}_local && git checkout dev --quiet");
+
+
+        $this->assertTrue(is_file("{$this->git_parent_repository_dir}_local/antiracing"));
+        $this->assertEqual(file_get_contents("{$this->git_parent_repository_dir}_local/antiracing"), "hatlike");
+    }
+
+    public function itReturnsTrueIfPullRequestToForkIsAlreadyMerged()
+    {
+        $chat_ouane_master = $this->git_exec->getBranchSha1('72/master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
+
+        $pull_request = new PullRequest(
+            1,
+            'title',
+            'description',
+            73,
+            105,
+            1456309611,
+            'dev',
+            $chat_ouane_dev,
+            72,
+            'master',
+            $chat_ouane_master,
+            'M'
+        );
+
+        expect($this->dao)->markAsMerged()->never();
+
+        $result = $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
+            $this->git_parent_repository,
+            $pull_request
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function itThrowsAnExceptionIfForkPullRequestWasPreviouslyAbandoned()
+    {
+        $chat_ouane_master = $this->git_exec->getBranchSha1('72/master');
+        $chat_ouane_dev    = $this->git_exec->getBranchSha1('refs/heads/dev');
+
+        $pull_request = new PullRequest(
+            1,
+            'title',
+            'description',
+            73,
+            105,
+            1456309611,
+            'dev',
+            $chat_ouane_dev,
+            72,
+            'master',
+            $chat_ouane_master,
+            'A'
+        );
+
+        expect($this->dao)->markAsMerged()->never();
+        $this->expectException('Tuleap\PullRequest\Exception\PullRequestCannotBeMerged');
+
+        $this->pull_request_closer->fastForwardMerge(
+            $this->git_repository,
+            $this->git_parent_repository,
+            $pull_request
+        );
+    }
+
+
 }

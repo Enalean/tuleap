@@ -18,14 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Exception;
+namespace Tuleap\PullRequest\REST\v1;
 
-use Exception;
+use GitRepository;
 
-class PullRequestRepositoryMigratedOnGerritException extends Exception
+class GitRepositoryReference extends \Tuleap\Git\REST\v1\GitRepositoryReference
 {
-    public function __construct()
+    public $name;
+    
+    public function build(GitRepository $repository)
     {
-        parent::__construct("The destination repository is migrated on Gerrit. The Pull Request cannot be created.");
+        parent::build($repository);
+        $this->name = $repository->getFullName();
     }
+
 }

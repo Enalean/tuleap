@@ -75,6 +75,27 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $this->assertEqual(true, $updated_comments[0]->isOutdated());
     }
 
+    public function itShouldBeObsoleteIfLineWasAddedAndLineContentHasChanged()
+    {
+        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+
+        $original_diff = new FileUniDiff();
+        $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
+
+        $changes_diff  = new FileUniDiff();
+        $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1   , null, 'une ligne');
+        $changes_diff->addLine(UniDiffLine::ADDED  , 2, null, 1   , 'une ligne avec changement');
+
+        $targeted_diff = new FileUniDiff();
+        $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne avec changement');
+
+        $updated_comments = $this->updater->updateWhenSourceChanges(
+            $comments, $original_diff, $changes_diff, $targeted_diff);
+
+        $this->assertEqual(1, count($updated_comments));
+        $this->assertEqual(true, $updated_comments[0]->isOutdated());
+    }
+
     public function itShouldBeMovedIfLineWasAddedAndLineIsMoved()
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));

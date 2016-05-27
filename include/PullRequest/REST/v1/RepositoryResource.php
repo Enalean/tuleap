@@ -23,7 +23,10 @@ namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
+use GitRepositoryFactory;
 use GitRepository;
+use ProjectManager;
+use GitDao;
 
 class RepositoryResource
 {
@@ -34,30 +37,40 @@ class RepositoryResource
     /** @var Tuleap\PullRequest\Factory */
     private $pull_request_factory;
 
+    /** @var GitRepositoryFactory */
+    private $git_repository_factory;
+
     public function __construct()
     {
         $this->pull_request_dao     = new PullRequestDao();
         $this->pull_request_factory = new PullRequestFactory($this->pull_request_dao);
+        $this->git_repository_factory = new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        );
+
     }
 
     public function getPaginatedPullRequests(GitRepository $repository, $limit, $offset)
     {
         $result   = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $limit, $offset);
-        $executor = new GitExec($repository->getFullPath(), $repository->getFullPath());
 
         $total_size = (int) $this->pull_request_dao->foundRows();
         $collection = array();
-
         foreach ($result as $row) {
             $pull_request      = $this->pull_request_factory->getInstanceFromRow($row);
 
+            $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
+            $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
+
+            $executor          = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
             $short_stat        = $executor->getShortStat($pull_request->getSha1Dest(), $pull_request->getSha1Src());
             $short_stat_repres = new PullRequestShortStatRepresentation();
             $short_stat_repres->build($short_stat);
 
             $pull_request_representation = new PullRequestRepresentation();
-            $pull_request_representation->build($pull_request, $repository, $short_stat_repres);
-            $collection[]                = $pull_request_representation;
+            $pull_request_representation->build($pull_request, $repository_src, $repository_dest, $short_stat_repres);
+            $collection[] = $pull_request_representation;
         }
 
         $representation = new RepositoryPullRequestRepresentation();

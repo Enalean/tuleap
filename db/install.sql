@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_review (
     creation_date INT(11) NOT NULL,
     branch_src VARCHAR(255) NOT NULL,
     sha1_src CHAR(40) NOT NULL,
+    repo_dest_id INT(11) NOT NULL,
     branch_dest VARCHAR(255) NOT NULL,
     sha1_dest CHAR(40) NOT NULL,
     status VARCHAR(1) NOT NULL DEFAULT 'R',

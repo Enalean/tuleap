@@ -33,14 +33,18 @@ class AdditionalActionsPresenter
     public $csrf_input;
 
     /** @var array */
-    public $branches;
+    public $src_branches;
+
+    /** @var array */
+    public $dest_branches;
 
 
-    public function __construct(GitRepository $repository, CSRFSynchronizerToken $csrf, array $branches)
+    public function __construct(GitRepository $repository, CSRFSynchronizerToken $csrf, array $src_branches, array $dest_branches)
     {
-        $this->repository = $repository;
-        $this->csrf_input = $csrf->fetchHTMLInput();
-        $this->branches   = $branches;
+        $this->repository    = $repository;
+        $this->csrf_input    = $csrf->fetchHTMLInput();
+        $this->src_branches  = $src_branches;
+        $this->dest_branches = $dest_branches;
     }
 
     public function getTemplateName()

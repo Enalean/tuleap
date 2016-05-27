@@ -80,17 +80,19 @@ class Router
         }
     }
 
-    private function generatePullRequest(Codendi_Request $request, GitRepository $repository, $project_id)
+    private function generatePullRequest(Codendi_Request $request, GitRepository $repository_src, $project_id)
     {
         $branch_src    = $request->get('branch_src');
         $branch_dest   = $request->get('branch_dest');
-        $repository_id = $repository->getId();
+        list($repo_dest_id, $branch_dest)  = explode(':', $branch_dest, 2);
+
+        $repository_id = $repository_src->getId();
         $user          = $this->user_manager->getCurrentUser();
 
-        $token = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $project_id);
+        $token = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository_src->getId() . '&group_id=' . $project_id);
         $token->check();
 
-        if (! $repository->userCanRead($user)) {
+        if (! $repository_src->userCanRead($user)) {
             $this->redirectInRepositoryViewWithErrorMessage(
                 $repository_id,
                 $project_id,
@@ -98,10 +100,13 @@ class Router
             );
         }
 
+        $repository_dest = $this->git_repository_factory->getRepositoryById($repo_dest_id);
+
         try {
             $generated_pull_request = $this->pull_request_creator->generatePullRequest(
-                $repository,
+                $repository_src,
                 $branch_src,
+                $repository_dest,
                 $branch_dest,
                 $user
             );
@@ -128,6 +133,12 @@ class Router
                 $repository_id,
                 $project_id,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'repository_migrated_on_gerrit')
+            );
+        } catch (Exception $exception) {
+            $this->redirectInRepositoryViewWithErrorMessage(
+                $repository_id,
+                $project_id,
+                $exception->getMessage()
             );
         }
 

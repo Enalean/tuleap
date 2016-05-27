@@ -27,6 +27,7 @@ use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use FileSystemIterator;
 use GitRepository;
+use GitRepositoryFactory;
 use ForgeConfig;
 
 class PullRequestCloser
@@ -63,20 +64,26 @@ class PullRequestCloser
         }
     }
 
-    public function markManuallyMerged(GitExec $git_exec, GitRepository $repository, $dest_branch_name)
-    {
-        $merged_branches = $git_exec->getMergedBranches($dest_branch_name);
-        $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $dest_branch_name);
+    public function markManuallyMerged(
+        GitRepositoryFactory $git_repository_factory,
+        GitRepository $dest_repository,
+        $dest_branch_name,
+        $new_rev
+    ) {
+        $prs = $this->pull_request_factory->getOpenedByDestinationBranch($dest_repository, $dest_branch_name);
 
         foreach ($prs as $pr) {
-            if (in_array($pr->getBranchSrc(), $merged_branches)) {
+            $repository = $git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
+            if ($git_exec->isAncestor($new_rev, $pr->getSha1Src())) {
                 $this->pull_request_factory->markAsMerged($pr);
             }
         }
     }
 
     public function fastForwardMerge(
-        GitRepository $repository,
+        GitRepository $repository_src,
+        GitRepository $repository_dest,
         PullRequest $pull_request
     ) {
         $status = $pull_request->getStatus();
@@ -93,14 +100,13 @@ class PullRequestCloser
 
         $temporary_name       = $this->getUniqueRandomDirectory();
         $executor             = new GitExec($temporary_name);
-        $repository_full_path = $repository->getFullPath();
 
         try {
             $executor->init();
-            $executor->fetchNoHistory($repository_full_path, $pull_request->getBranchDest());
-            $executor->fetch($repository_full_path, $pull_request->getBranchSrc());
+            $executor->fetchNoHistory($repository_dest->getFullPath(), $pull_request->getBranchDest());
+            $executor->fetch($repository_src->getFullPath(), $pull_request->getBranchSrc());
             $executor->fastForwardMerge($pull_request->getSha1Src());
-            $executor->push(escapeshellarg('file://' . $repository_full_path) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
+            $executor->push(escapeshellarg('file://' . $repository_dest->getFullPath()) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
         } catch (Git_Command_Exception $exception) {
             throw new PullRequestCannotBeMerged(
                 'This Pull Request cannot be merged. It seems that the attempted merge is not fast-forward'

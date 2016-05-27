@@ -14,18 +14,18 @@
                 <label for="field-select-id">{{ new_pull_request_modal_from }}</label>
                 <select name="branch_src">
                     <option value="" disabled="disabled" selected="selected">{{ new_pull_request_modal_choose_branch_from }}</option>
-                    {{# branches }}
+                    {{# src_branches }}
                         <option value="{{ . }}">{{ . }}</option>
-                    {{/ branches }}
+                    {{/ src_branches }}
                 </select>
             </div>
             <div class="form-group">
                 <label for="field-select-id">{{ new_pull_request_modal_to }}</label>
                 <select name="branch_dest">
                     <option value="" disabled="disabled" selected="selected">{{ new_pull_request_modal_choose_branch_to }}</option>
-                    {{# branches }}
-                        <option value="{{ . }}">{{ . }}</option>
-                    {{/ branches }}
+                    {{# dest_branches }}
+                        <option value="{{ repo_id }}:{{ branch_name }}">{{# repo_name }} {{ repo_name }} : {{/ repo_name }} {{ branch_name }}</option>
+                    {{/ dest_branches }}
                 </select>
             </div>
         </div>
