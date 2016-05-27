@@ -254,18 +254,6 @@ $transition_delay: 350ms;
     &:first-child {
         margin-top: $kanban-column-header-height + 10px;
 
-        &.angular-ui-tree-placeholder:only-child {
-            margin-top: 0;
-        }
-
-        &.angular-ui-tree-hidden {
-            display: list-item;
-        }
-
-        &.angular-ui-tree-hidden + li {
-            margin-top: 10px;
-        }
-
         .moves > .icon-stack:first-child {
             visibility: hidden;
         }
