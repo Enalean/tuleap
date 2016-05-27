@@ -7,13 +7,19 @@
 // 
 
 
+$request  = HTTPRequest::instance();
+$group_id = $request->get('group_id');
+
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
 
-commits_header(array ('title'=>$Language->getText('cvs_browse_commit', 'title'),
-		      'help' => 'cvs.html#querying-cvs'));
+commits_header(array(
+    'title' => $GLOBALS['Language']->getText('cvs_browse_commit', 'title'),
+    'help'  => 'cvs.html#querying-cvs',
+    'group' => $group_id
+));
 
 if (!isset($offset) || $offset < 0) {
 	$offset=0;
@@ -75,8 +81,20 @@ if (isset($order)) {
 	}
 }
 
+$set = false;
+if ($request->exist('set')) {
+    $set = $request->get('set');
+}
 
-if (!isset($set)) {
+$_tag       = 100;
+$_branch    = 100;
+$_commit_id = '';
+$_commiter  = 100;
+$_srch      = '';
+$order_by   = '';
+$pv         = 0;
+
+if (! $set) {
 	/*
 		if no set is passed in, see if a preference was set
 		if no preference or not logged in, use my set
@@ -94,23 +112,19 @@ if (!isset($set)) {
 			$set='custom';
 		} else {
 			$set='custom';
-			$_commiter=100;
 		}
 	} else {
-		$_commiter=100;
 		$set='custom';
 	}
 }
 
-if ($set=='my') {
+if ($set == 'my') {
 	/*
 		My commits - backwards compat can be removed 9/10
 	*/
-	$_tag=100;
 	$_commiter=user_getname();
-	$_branch=100;
 
-} else if ($set=='custom') {
+} else if ($set == 'custom') {
 	/*
 		if this custom set is different than the stored one, reset preference
 	*/
@@ -119,23 +133,24 @@ if ($set=='my') {
 		//echo 'setting pref';
 		user_set_preference('commits_browcust'.$group_id,$pref_);
 	}
-} else if ($set=='any') {
+} else if ($set == 'any') {
 	/*
 		Closed commits - backwards compat can be removed 9/10
 	*/
-	$tag=$branch=$_commiter=100;
+	// Do nothing > Done with default values;
 } 
 
 /*
 	Display commits based on the form post - by user or status or both
 */
-$_tag      = isset($_tag) ? $_tag : 100;
-$_branch   = isset($_branch) ? $_branch : 100;
-$_commit_id= isset($_commit_id) ? $_commit_id : ''; 
-$_commiter = isset($_commiter) ? $_commiter : 100; 
-$_srch     = isset($_srch) ? $_srch : '';
-$order_by  = isset($order_by) ? $order_by : ''; 
-$pv        = isset($pv) ? $pv : 0;
+$_tag      = $request->exist('_tag') ? $request->get('_tag') : $_tag;
+$_branch   = $request->exist('_branch') ? $request->get('_branch') : $_branch;
+$_commit_id= $request->exist('_commit_id') ? $request->get('_commit_id') : $_commit_id;
+$_commiter = $request->exist('_commiter') ? $request->get('_commiter') : $_commiter;
+$_srch     = $request->exist('_srch') ? $request->get('_srch') : $_srch;
+$order_by  = $request->exist('$order_by') ? $request->get('$order_by') : $order_by;
+$pv        = $request->exist('$pv') ? $request->get('$pv') : $pv;
+
 list($result, $totalrows) = cvs_get_revisions($project, $offset, $chunksz, $_tag, $_branch, $_commit_id, $_commiter, $_srch, $order_by, $pv);
 
 /*
@@ -149,17 +164,17 @@ $tech_box=commits_technician_box($projectname, '_commiter', $_commiter, 'Any');
 /*
 	Show the new pop-up boxes to select assigned to and/or status
 */
-echo '<H3>'.$Language->getText('cvs_browse_commit', 'browse_by').':</H3>'; 
+echo '<H3>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'browse_by').':</H3>';
 echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center">
-                      <TD><b>'.$Language->getText('cvs_browse_commit', 'id').'</b></TD>
-                      <TD><b>'.$Language->getText('cvs_browse_commit', 'branch').'</b></TD>
-                      <TD><b>'.$Language->getText('cvs_browse_commit', 'who').'</b></TD>
-                      <TD><b>'.$Language->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
+                      <TD><b>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'id').'</b></TD>
+                      <TD><b>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'branch').'</b></TD>
+                      <TD><b>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'who').'</b></TD>
+                      <TD><b>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
         '</TR>'.
         '<TR><TD><INPUT TYPE="TEXT" CLASS="input-mini" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD>'.
         '<TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>'.
@@ -168,9 +183,9 @@ echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         '></TD>'.
        '</TR></TABLE>'.
 	
-'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$Language->getText('global', 'btn_browse').'">'.
+'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('global', 'btn_browse').'">'.
 ' <input CLASS="input-mini" TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-'VALUE="'.$chunksz.'">'.$Language->getText('cvs_browse_commit', 'nb_at_once').'.'.
+'VALUE="'.$chunksz.'">'.$GLOBALS['Language']->getText('cvs_browse_commit', 'nb_at_once').'.'.
 '</FORM>';
 
 
@@ -183,13 +198,11 @@ if ($result && db_numrows($result) > 0) {
 	  $set .= '&_branch=100&_commiter=100&_tag=100&chunksz='.$chunksz;
 	}
 
-	show_commitslist($result,$offset,$totalrows,$set,$_commiter,$_tag, $_branch, $_srch, $chunksz, $morder, $msort);
+	show_commitslist($group_id, $result,$offset,$totalrows,$set,$_commiter,$_tag, $_branch, $_srch, $chunksz, $morder, $msort);
 
 } else {
 	echo '
-	       <H3>'.$Language->getText('cvs_browse_commit', 'no_commit').'</H3>';
+	       <H3>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'no_commit').'</H3>';
 }
 
 commits_footer(array());
-
-?>

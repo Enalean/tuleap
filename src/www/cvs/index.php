@@ -12,7 +12,14 @@ require_once('../cvs/commit_utils.php');
 
 // ######################## table for summary info
 
-if (!isset($func)) $func="";
+$request  = HTTPRequest::instance();
+$func     = $request->get('func');
+$group_id = $request->get('group_id');
+
+if (! $func) {
+    $func="";
+}
+
 switch ($func) {
 
  case 'browse' : {
@@ -36,8 +43,14 @@ switch ($func) {
    $result = db_query($sql);
    $initial_settings = db_fetch_array($result);
    
-   $feedback .= $Language->getText('cvs_index', 'config_updated');
-   $status = $Language->getText('cvs_index', 'full_success');
+   $feedback .= $GLOBALS['Language']->getText('cvs_index', 'config_updated');
+   $status = $GLOBALS['Language']->getText('cvs_index', 'full_success');
+
+   $tracked               = $request->get('tracked');
+   $watches               = $request->get('watches');
+   $mailing_list          = $request->get('mailing_list');
+   $custom_mailing_header = $request->get('custom_mailing_header');
+   $form_preamble         = $request->get('form_preamble');
 
    if (trim($custom_mailing_header) == '') {
      $mailing_header = 'NULL';
@@ -49,7 +62,7 @@ switch ($func) {
    } else {
      if (!validate_emails ($mailing_list)) {
        $mailing_list = 'NULL';
-       $status = $Language->getText('cvs_index', 'partial_success');
+       $status = $GLOBALS['Language']->getText('cvs_index', 'partial_success');
      }
    }
    $feedback = $feedback.' '.$status;
@@ -66,6 +79,7 @@ switch ($func) {
            ));
        }
    }
+
    $query = 'update groups 
              set cvs_tracker="'.$tracked.'",
                  cvs_watch_mode="'.$watches.'", 
@@ -95,6 +109,3 @@ switch ($func) {
    break;
  }
 }
-
-
-?>
