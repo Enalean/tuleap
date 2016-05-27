@@ -48,10 +48,10 @@ class Docman_MetadataValueFactory {
     /**
      * Return Docman_MetadataValueDao reference.
      */
-    function &getDao() {
+    function getDao() {
         static $_plugin_docman_metadata_value_dao_instance;
         if(!$_plugin_docman_metadata_value_dao_instance) {
-            $_plugin_docman_metadata_value_dao_instance =& new Docman_MetadataValueDao(CodendiDataAccess::instance());
+            $_plugin_docman_metadata_value_dao_instance = new Docman_MetadataValueDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_value_dao_instance;
     }
@@ -80,7 +80,7 @@ class Docman_MetadataValueFactory {
      * Create and set-up a MetadataValue object.
      */
     function &newMetadataValue($itemId, $fieldId, $type, $value) {
-        $mdv =& $this->createFromType($type);
+        $mdv = $this->createFromType($type);
         
         $mdv->setFieldId($fieldId);
         $mdv->setItemId($itemId);
@@ -112,14 +112,14 @@ class Docman_MetadataValueFactory {
      * Insert new metadata value(s) in database.
      */
     function create(&$mdv) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         switch($mdv->getType()) {
         case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            $eIter =& $mdv->getValue();
+            $eIter = $mdv->getValue();
             $eIter->rewind();
             $ret = true;
             while($eIter->valid()) {
-                $e =& $eIter->current();
+                $e = $eIter->current();
 
                 $pret = $dao->create($mdv->getItemId(),
                                      $mdv->getFieldId(),
@@ -142,7 +142,7 @@ class Docman_MetadataValueFactory {
                                 $mdv->getType(),
                                 $mdv->getValue());
             // extract cross references
-            $reference_manager =& ReferenceManager::instance();
+            $reference_manager = ReferenceManager::instance();
             $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
             break;
 
@@ -161,12 +161,12 @@ class Docman_MetadataValueFactory {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
 
         foreach($row as $md_name => $md_v) {
-            $md =& $mdFactory->getFromLabel($md_name);
+            $md = $mdFactory->getFromLabel($md_name);
             
             if($md !== null) {
                 $this->validateInput($md, $md_v);
 
-                $mdv =& $this->newMetadataValue($id
+                $mdv = $this->newMetadataValue($id
                                                 ,$md->getId()
                                                 ,$md->getType()
                                                 ,$md_v);
@@ -190,7 +190,7 @@ class Docman_MetadataValueFactory {
      * Update MetadataValue in database.
      */
     function update($mdv) {
-        $dao =& $this->getDao(); 
+        $dao = $this->getDao();
         switch($mdv->getType()) {
         case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
             // First delete all previous values
@@ -214,7 +214,7 @@ class Docman_MetadataValueFactory {
                                      $mdv->getType(),
                                      $mdv->getValue());
             // extract cross references
-            $reference_manager =& ReferenceManager::instance();
+            $reference_manager = ReferenceManager::instance();
             $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
             break;
 
@@ -234,12 +234,12 @@ class Docman_MetadataValueFactory {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
 
         foreach($row as $md_name => $md_v) {
-            $md =& $mdFactory->getFromLabel($md_name);
+            $md = $mdFactory->getFromLabel($md_name);
 
             if($md !== null) {
                 $this->validateInput($md, $md_v);
 
-                $mdv =& $this->newMetadataValue($id
+                $mdv = $this->newMetadataValue($id
                                                 ,$md->getId()
                                                 ,$md->getType()
                                                 ,$md_v);
@@ -278,7 +278,7 @@ class Docman_MetadataValueFactory {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         if($mdFactory->isRealMetadata($mdLabel)) {
             $md  = $mdFactory->getFromLabel($mdLabel);
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);   
         } else {
             $itemFactory = new Docman_ItemFactory($this->groupId);
@@ -292,7 +292,7 @@ class Docman_MetadataValueFactory {
      * defaulted to '100'
      */
     function deleteLove($mdId, $loveId) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $deleted = $dao->deleteLove($loveId);
         if($deleted) {
             return $this->updateOrphansLoveItem($mdId);
@@ -304,7 +304,7 @@ class Docman_MetadataValueFactory {
      * Ensure there is no item w/o a value for '$mdId' metadata
      */
     function updateOrphansLoveItem($mdId) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         return $dao->updateOrphansLoveItem($mdId);
     }
 
@@ -313,8 +313,8 @@ class Docman_MetadataValueFactory {
      */
     function exist($itemId, $fieldId) {
         $exist = false;
-        $dao =& $this->getDao();
-        $dar = $dao->exist($itemId, $fieldId);        
+        $dao   = $this->getDao();
+        $dar   = $dao->exist($itemId, $fieldId);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             if($row['nb'] > 0) {

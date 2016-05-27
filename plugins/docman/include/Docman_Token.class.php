@@ -37,7 +37,6 @@ class Docman_Token {
         $tok     = null;
         $user_id = $this->_getCurrentUserId();
         $referer = $this->_getReferer();
-        $request =& $this->_getHTTPRequest();
         if ($referer && $user_id) {
             $url = parse_url($referer);
             if (isset($url['query'])) {
@@ -59,17 +58,17 @@ class Docman_Token {
                 );
                 if ($is_valid) {
                     $this->tok = md5(uniqid(rand(), true));
-                    $dao =& $this->_getDao();
+                    $dao       = $this->_getDao();
                     $dao->create($user_id, $this->tok, $referer);
                 }
             }
         }
     }
     /* static */ function retrieveUrl($token) {
-        $url = null;
-        $um =& UserManager::instance();
-        $dao =& new Docman_TokenDao(CodendiDataAccess::instance());
-        $user =& $um->getCurrentUser();
+        $url  = null;
+        $um   = UserManager::instance();
+        $dao  = new Docman_TokenDao(CodendiDataAccess::instance());
+        $user = $um->getCurrentUser();
         $user_id = $user->getId();
         if ($user_id) {
             $dar = $dao->searchUrl($user_id, $token);
@@ -85,7 +84,7 @@ class Docman_Token {
     function getToken() {
         return $this->tok;
     }
-    function &_getDao() {
+    protected function _getDao() {
         $d = new Docman_TokenDao(CodendiDataAccess::instance());
         return $d;
     }
@@ -93,8 +92,8 @@ class Docman_Token {
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
     }
     function _getCurrentUserId() {
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
+        $um   = UserManager::instance();
+        $user = $um->getCurrentUser();
         return $user->isAnonymous() ? null : $user->getId();
     }
     function _getHTTPRequest() {

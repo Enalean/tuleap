@@ -38,55 +38,27 @@ Mock::generate('Docman_ApprovalTable');
 
 class ApprovalTableNotificationCycleTest extends UnitTestCase {
 
-    function setUp() {
-        //$GLOBALS['Language'] =& new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        //unset($GLOBALS['Language']);
-    }
-
-    /* to do when Docman:txt usage will be removed.
-     function testReviewerReject() {
-        $review =& new MockDocman_ApprovalReviewer($this);
-        $review->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-
-        $mail =& new MockMail();
-        $mail->expectOnce('_sendmail');
-
-        $owner = mock('PFUser');
-        $owner->setReturnValue('getEmail', 'owner@codendi.com');
-        $owner->setReturnValue('getRealName', 'Owner');
-
-        $cycle =& new Docman_ApprovalTableNotificationCycleTest($this);
-        $cycle->setOwner($owner);
-        $cycle->setReturnReference('_getMail', $mail);
-        $cycle->expectOnce('reviewReject');
-
-        $cycle->reviewUpdated($review);
-        }*/
-
     /**
      * first:  approve
      * second: reject
      * last: approve
      */
     function testGetTableStateReject() {
-        $reviewers[0] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[0] = new MockDocman_ApprovalReviewer($this);
         $reviewers[0]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewers[1] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[1] = new MockDocman_ApprovalReviewer($this);
         $reviewers[1]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
 
-        $reviewers[2] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[2] = new MockDocman_ApprovalReviewer($this);
         $reviewers[2]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewerIterator =& new ArrayIterator($reviewers);
+        $reviewerIterator = new ArrayIterator($reviewers);
 
-        $table =& new MockDocman_ApprovalTable($this);
+        $table = new MockDocman_ApprovalTable($this);
         $table->setReturnReference('getReviewerIterator', $reviewerIterator);
 
-        $cycle =& new Docman_ApprovalTableNotificationCycleTest($this);
+        $cycle = new Docman_ApprovalTableNotificationCycleTest($this);
         $cycle->setTable($table);
 
         $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
@@ -98,21 +70,21 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
      * last: approve
      */
     function testGetTableStateNotYet() {
-        $reviewers[0] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[0] = new MockDocman_ApprovalReviewer($this);
         $reviewers[0]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewers[1] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[1] = new MockDocman_ApprovalReviewer($this);
         $reviewers[1]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
 
-        $reviewers[2] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[2] = new MockDocman_ApprovalReviewer($this);
         $reviewers[2]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewerIterator =& new ArrayIterator($reviewers);
+        $reviewerIterator = new ArrayIterator($reviewers);
 
-        $table =& new MockDocman_ApprovalTable($this);
+        $table = new MockDocman_ApprovalTable($this);
         $table->setReturnReference('getReviewerIterator', $reviewerIterator);
 
-        $cycle =& new Docman_ApprovalTableNotificationCycleTest($this);
+        $cycle = new Docman_ApprovalTableNotificationCycleTest($this);
         $cycle->setTable($table);
 
         $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
@@ -124,21 +96,21 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
      * last: approve
      */
     function testGetTableStateWillNotReview() {
-        $reviewers[0] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[0] = new MockDocman_ApprovalReviewer($this);
         $reviewers[0]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewers[1] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[1] = new MockDocman_ApprovalReviewer($this);
         $reviewers[1]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
 
-        $reviewers[2] =& new MockDocman_ApprovalReviewer($this);
+        $reviewers[2] = new MockDocman_ApprovalReviewer($this);
         $reviewers[2]->setReturnValue('getState', PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
 
-        $reviewerIterator =& new ArrayIterator($reviewers);
+        $reviewerIterator = new ArrayIterator($reviewers);
 
-        $table =& new MockDocman_ApprovalTable($this);
+        $table = new MockDocman_ApprovalTable($this);
         $table->setReturnReference('getReviewerIterator', $reviewerIterator);
 
-        $cycle =& new Docman_ApprovalTableNotificationCycleTest($this);
+        $cycle = new Docman_ApprovalTableNotificationCycleTest($this);
         $cycle->setTable($table);
 
         $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
@@ -146,9 +118,9 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
 
     function testLastReviewerApprove() {
         Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalTableNotificationCycleTest2', array('_getReviewerDao', '_getMail', '_getUserManager', '_getUserById', 'getReviewUrl', 'sendNotifTableApproved', 'notifyNextReviewer'));
-        $cycle =& new Docman_ApprovalTableNotificationCycleTest2($this);
+        $cycle = new Docman_ApprovalTableNotificationCycleTest2($this);
 
-        $mail =& new MockMail($this);
+        $mail = new MockMail($this);
         //php5: this will works without having to explicitly return reference.
         //$mail->expectOnce('send');
         $cycle->setReturnReference('sendNotifTableApproved', $mail);
@@ -156,7 +128,7 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
         $cycle->expectOnce('sendNotifTableApproved');
         $cycle->expectNever('notifyNextReviewer');
 
-        $reviewer =& new MockDocman_ApprovalReviewer($this);
+        $reviewer = new MockDocman_ApprovalReviewer($this);
         $isLastReviewer = true;
         $withComments = "";
         $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);

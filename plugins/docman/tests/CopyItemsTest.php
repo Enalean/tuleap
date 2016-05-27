@@ -67,44 +67,44 @@ class CopyItemsTest extends UnitTestCase {
     function testDocumentCopyWithinTheSameProject() {
         $srcGroupId = $dstGroupId = 1789;
 
-        $item_to_clone =& new MockDocman_Link();
+        $item_to_clone = new MockDocman_Link();
         $item_to_clone->setReturnValue('getId', 25);
         $item_to_clone->setReturnValue('getGroupId', $srcGroupId);
         $item_to_clone->setReturnReference('getMetadataIterator', new MockIterator());
 
         $new_id = 52;
 
-        $dest_folder =& new MockDocman_Folder();
+        $dest_folder = new MockDocman_Folder();
         $dest_folder->setReturnValue('getId', 33);
 
         $cloneItemsVisitor = new Docman_CloneItemsVisitorTest($this);
 
         // expectations
         // - create new item
-        $itemFactory =& new MockDocman_ItemFactory($this);
+        $itemFactory = new MockDocman_ItemFactory($this);
         $itemFactory->setReturnValue('rawCreate', $new_id);
         $cloneItemsVisitor->setReturnReference('_getItemFactory', $itemFactory);
         // - apply perms
-        $dPm =& new MockDocman_PermissionsManager($this);
+        $dPm = new MockDocman_PermissionsManager($this);
         $dPm->expectNever('setDefaultItemPermissions');
         $dPm->expectOnce('cloneItemPermissions', array($item_to_clone->getId(), $new_id, $dstGroupId));
         $cloneItemsVisitor->setReturnReference('_getPermissionsManager', $dPm);
 
-        $newMdvFactory =& new MockDocman_MetadataValueFactory($this);
-        $oldMdvFactory =& new MockDocman_MetadataValueFactory($this);
+        $newMdvFactory = new MockDocman_MetadataValueFactory($this);
+        $oldMdvFactory = new MockDocman_MetadataValueFactory($this);
 
         $cloneItemsVisitor->setReturnReferenceAt(0, '_getMetadataValueFactory', $newMdvFactory);
         $cloneItemsVisitor->setReturnReferenceAt(1, '_getMetadataValueFactory', $oldMdvFactory);
 
-        $oldMdFactory =& new MockDocman_MetadataFactory($this);
+        $oldMdFactory = new MockDocman_MetadataFactory($this);
         $oldMdFactory->expectOnce('appendItemMetadataList');
         $cloneItemsVisitor->setReturnReference('_getMetadataFactory', $oldMdFactory);
 
-        $srcSettingsBo =& new MockDocman_SettingsBo($this);
+        $srcSettingsBo = new MockDocman_SettingsBo($this);
         $srcSettingsBo->setReturnValue('getMetadataUsage', true);
         $cloneItemsVisitor->setReturnReference('_getSettingsBo', $srcSettingsBo, array($srcGroupId));
 
-        $dstSettingsBo =& new MockDocman_SettingsBo($this);
+        $dstSettingsBo = new MockDocman_SettingsBo($this);
         $dstSettingsBo->setReturnValue('getMetadataUsage', true);
         $cloneItemsVisitor->setReturnReference('_getSettingsBo', $dstSettingsBo, array($dstGroupId));
 

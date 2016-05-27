@@ -52,23 +52,23 @@ class Docman_View_Details extends Docman_View_Display {
             }
         }
 
-        $item_factory =& $this->_getItemFactory($params);
-        $details      =& new Docman_View_ItemDetails($params['item'], $url);
+        $item_factory = $this->_getItemFactory($params);
+        $details      = new Docman_View_ItemDetails($params['item'], $url);
         $sections     = array();
         if ($user_can_read || $user_can_read_obsolete) {
             if ($view && $section == 'properties') {
-                $props =& $view;
+                $props = $view;
             } else {
-                $props =& new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $params['theme_path'], $user_can_write, $token);
+                $props = new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $params['theme_path'], $user_can_write, $token);
             }
             $sections['properties'] = true;
             $details->addSection($props);
         }
         if ($user_can_write) {
             if ($view && $section == 'actions') {
-                $actions =& $view;
+                $actions = $view;
             } else {
-                $actions =& new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), !$item_factory->isRoot($params['item']), $this->_controller, $token);
+                $actions = new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), !$item_factory->isRoot($params['item']), $this->_controller, $token);
             }
             $sections['actions'] = true;
             $details->addSection($actions);
@@ -85,7 +85,7 @@ class Docman_View_Details extends Docman_View_Display {
         
         if ($user_can_read && !is_a($params['item'], 'Docman_Empty')) {
             if ($view && $section == 'approval') {
-                $approval =& $view;
+                $approval = $view;
             } else {
                 $approval = new Docman_View_ItemDetailsSectionApproval($params['item'], $params['default_url'], $params['theme_path'], $this->_controller->notificationsManager);
             }

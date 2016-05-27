@@ -196,16 +196,16 @@ class NotificationsManager_MoveTest extends UnitTestCase {
     function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = "%s") {
         $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] ". $msg;
 
-        $a =& new MockDocman_Item();
+        $a = new MockDocman_Item();
         $a->setReturnValue('getId', 'a');
         $a->setReturnValue('getParentId', 0);
-        $b =& new MockDocman_Item();
+        $b = new MockDocman_Item();
         $b->setReturnValue('getId', 'b');
         $b->setReturnValue('getParentId', 'a');
-        $c =& new MockDocman_Item();
+        $c = new MockDocman_Item();
         $c->setReturnValue('getId', 'c');
         $c->setReturnValue('getParentId', 'a');
-        $d =& new MockDocman_Item();
+        $d = new MockDocman_Item();
         $d->setReturnValue('getId', 'd');
         $d->setReturnValue('getParentId', 'b');
 
@@ -217,19 +217,19 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         $listener = mock('PFUser');
         $listener->setReturnValue('getId', 'listener');
 
-        $feedback =& new Feedback();
+        $feedback = new Feedback();
 
-        $item_factory =& new MockDocman_ItemFactory();
+        $item_factory = new MockDocman_ItemFactory();
         $item_factory->setReturnReference('getItemFromDb', $a, array($a->getId()));
         $item_factory->setReturnReference('getItemFromDb', $b, array($b->getId()));
         $item_factory->setReturnReference('getItemFromDb', $c, array($c->getId()));
         $item_factory->setReturnReference('getItemFromDb', $d, array($d->getId()));
 
-        $user_manager =& new MockUserManager();
+        $user_manager = new MockUserManager();
         $user_manager->setReturnReference('getUserById', $user, array($user->getId()));
         $user_manager->setReturnReference('getUserById', $listener, array($listener->getId()));
 
-        $permissions_manager =& new MockDocman_PermissionsManager();
+        $permissions_manager = new MockDocman_PermissionsManager();
         $permissions_manager->setReturnValue('userCanRead',   true, array(&$listener, $a->getId()));
         $permissions_manager->setReturnValue('userCanAccess', true, array(&$listener, $a->getId()));
         $permissions_manager->setReturnValue('userCanRead',   $cr, array(&$listener, $c->getId()));
@@ -239,7 +239,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         $permissions_manager->setReturnValue('userCanRead',   $dr, array(&$listener, $d->getId()));
         $permissions_manager->setReturnValue('userCanAccess', $dr && $br, array(&$listener, $d->getId()));
 
-        $dar_d =& new MockDataAccessResult();
+        $dar_d = new MockDataAccessResult();
         if ($ld) {
             $dar_d->setReturnValueAt(0, 'valid', true);
             $dar_d->setReturnValueAt(1, 'valid', false);
@@ -248,7 +248,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
             $dar_d->setReturnValue('valid', false);
         }
 
-        $dar_c =& new MockDataAccessResult();
+        $dar_c = new MockDataAccessResult();
         if ($lc) {
             $dar_c->setReturnValueAt(0, 'valid', true);
             $dar_c->setReturnValueAt(1, 'valid', false);
@@ -257,7 +257,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
             $dar_c->setReturnValue('valid', false);
         }
 
-        $dar_b =& new MockDataAccessResult();
+        $dar_b = new MockDataAccessResult();
         if ($lb) {
             $dar_b->setReturnValueAt(0, 'valid', true);
             $dar_b->setReturnValueAt(1, 'valid', false);
@@ -266,14 +266,14 @@ class NotificationsManager_MoveTest extends UnitTestCase {
             $dar_b->setReturnValue('valid', false);
         }
 
-        $docman_path =& new MockDocman_Path();
+        $docman_path = new MockDocman_Path();
 
-        $dao =& new MockNotificationsDao();
+        $dao = new MockNotificationsDao();
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_d, array($d->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_c, array($c->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_b, array($b->getId(), 'plugin_docman'));
 
-        $dnmm =& new Docman_NotificationsManager_MoveTestVersion();
+        $dnmm = new Docman_NotificationsManager_MoveTestVersion();
         $dnmm->setReturnReference('_groupGetObject', $project);
         $dnmm->setReturnReference('_getItemFactory', $item_factory);
         $dnmm->setReturnReference('_getUserManager', $user_manager);

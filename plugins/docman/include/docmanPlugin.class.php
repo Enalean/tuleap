@@ -166,8 +166,8 @@ class DocmanPlugin extends Plugin {
         if (!$params['object_type']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
-                $if =& new Docman_ItemFactory();
-                $item =& $if->getItemFromDb($params['object_id']);
+                $if = new Docman_ItemFactory();
+                $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $params['object_type'] = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                 }
@@ -178,8 +178,8 @@ class DocmanPlugin extends Plugin {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
-                $if =& new Docman_ItemFactory();
-                $item =& $if->getItemFromDb($params['object_id']);
+                $if = new Docman_ItemFactory();
+                $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $params['object_name'] = $item->getTitle();
                 }
@@ -190,8 +190,8 @@ class DocmanPlugin extends Plugin {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
-                $if =& new Docman_ItemFactory();
-                $item =& $if->getItemFromDb($params['object_id']);
+                $if = new Docman_ItemFactory();
+                $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                     $name = $item->getTitle();
@@ -204,8 +204,8 @@ class DocmanPlugin extends Plugin {
         if (!$params['results']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
-                $if =& new Docman_ItemFactory();
-                $item =& $if->getItemFromDb($params['object_id']);
+                $if = new Docman_ItemFactory();
+                $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                     $params['results']  = $GLOBALS['Language']->getText('plugin_docman', 'resource_name_'.$type, array(
@@ -242,8 +242,7 @@ class DocmanPlugin extends Plugin {
     }
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'DocmanPluginInfo')) {
-            require_once('DocmanPluginInfo.class.php');
-            $this->pluginInfo =& new DocmanPluginInfo($this);
+            $this->pluginInfo = new DocmanPluginInfo($this);
         }
         return $this->pluginInfo;
     }

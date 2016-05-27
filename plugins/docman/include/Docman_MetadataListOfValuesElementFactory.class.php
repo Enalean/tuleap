@@ -37,10 +37,10 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return Docman_MetadataListOfValuesElementDao object.
      */
-    function &getDao() {
+    private function getDao() {
         static $_plugin_docman_metadata_love_dao_instance;
         if(!$_plugin_docman_metadata_love_dao_instance) {
-            $_plugin_docman_metadata_love_dao_instance =& new Docman_MetadataListOfValuesElementDao(CodendiDataAccess::instance());
+            $_plugin_docman_metadata_love_dao_instance = new Docman_MetadataListOfValuesElementDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_love_dao_instance;
     }
@@ -51,7 +51,7 @@ class Docman_MetadataListOfValuesElementFactory {
      * (item, $this->metadataId), create a default entry (NONE value).
      */
     function delete(&$love) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $deleted = $dao->delete($love->getId());
         if($deleted) {
             $mdvFactory = new Docman_MetadataValueFactory(null);
@@ -63,14 +63,14 @@ class Docman_MetadataListOfValuesElementFactory {
     function deleteByMetadataId() {
         $deleted = false;
         if($this->metadataId !== null ) {
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $deleted = $dao->deleteByMetadataId($this->metadataId);
         }
         return $deleted;
     }
 
     function create(&$love) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
 
         $status = $love->getStatus();
         if($status == null) {
@@ -85,7 +85,7 @@ class Docman_MetadataListOfValuesElementFactory {
     }
 
     function update($love) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         return $dao->updateElement($this->metadataId,
                                    $love->getId(),
                                    $love->getName(),
@@ -98,7 +98,7 @@ class Docman_MetadataListOfValuesElementFactory {
      * Add 'None' value as a value of the list for metadata $this->metadataId.
      */
     function createNoneValue() {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         return $dao->createMetadataElementBond($this->metadataId, PLUGIN_DOCMAN_ITEM_STATUS_NONE);
     }
     
@@ -111,19 +111,19 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return the list of Elements for a given Metadata id.
      */
-    function &getListByFieldId($id, $mdLabel, $onlyActive) {
+    public function getListByFieldId($id, $mdLabel, $onlyActive) {
         if($mdLabel == 'status') {
             $lst = $this->getStatusList();
             return $lst;
         }
         else {
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $dar = $dao->serachByFieldId($id, $onlyActive);
             $res = array();
             while($dar->valid()) {
                 $row = $dar->current();
                                 
-                $res[] =& $this->instanciateLove($row);
+                $res[] = $this->instanciateLove($row);
                 
                 $dar->next();
             }
@@ -131,7 +131,7 @@ class Docman_MetadataListOfValuesElementFactory {
         }
     }
 
-    function &getIteratorByFieldId($id, $mdLabel, $onlyActive) {
+    public function getIteratorByFieldId($id, $mdLabel, $onlyActive) {
         $loveArray = $this->getListByFieldId($id, $mdLabel, $onlyActive);
         $loveIter  = new ArrayIterator($loveArray);
         return $loveIter;
@@ -140,16 +140,16 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return the Element from its Id.
      */
-    function &getByElementId($id, $mdLabel = null) {
+    public function getByElementId($id, $mdLabel = null) {
         $e = null;
         switch($mdLabel) {
         case 'status':
             $ea = $this->getStatusList();
-            $e =& $ea[$id];
+            $e  = $ea[$id];
             break;
             
         default:
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $dar = $dao->serachByValueId($id);
             if($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $e = $this->instanciateLove($dar->current());
@@ -178,16 +178,16 @@ class Docman_MetadataListOfValuesElementFactory {
         default:
             $dao = $this->getDao();
             $dar = $dao->searchByName($this->metadataId, $name, true);
-            $ei  =& $this->_returnLoveIteratorFromDar($dar);
+            $ei  = $this->_returnLoveIteratorFromDar($dar);
         }
         
         return $ei;
     }
 
-    function &getLoveValuesForItem($item, $md) {
+    public function getLoveValuesForItem($item, $md) {
         $dao = $this->getDao();
         $dar = $dao->searchListValuesById($md->getId(), $item->getId());
-        $i =& $this->_returnLoveIteratorFromDar($dar);
+        $i   = $this->_returnLoveIteratorFromDar($dar);
         return $i;
     }
 
@@ -297,7 +297,7 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return static list of status (hardcoded metadata with hardcoded values)
      */
-    function &getStatusList($status=null) {
+    public function getStatusList($status=null) {
         $ea = array();
 
         $e = new Docman_MetadataListOfValuesElement();
@@ -306,7 +306,7 @@ class Docman_MetadataListOfValuesElementFactory {
         //$e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_none_desc'));
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
         $e->setStatus('P');
-        $ea[PLUGIN_DOCMAN_ITEM_STATUS_NONE] =& $e;
+        $ea[PLUGIN_DOCMAN_ITEM_STATUS_NONE] = $e;
         unset($e);
 
         $e = new Docman_MetadataListOfValuesElement();
@@ -315,7 +315,7 @@ class Docman_MetadataListOfValuesElementFactory {
         //$e->setDescription('md_love_status_draft_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
         $e->setStatus('P');
-        $ea[PLUGIN_DOCMAN_ITEM_STATUS_DRAFT] =& $e;
+        $ea[PLUGIN_DOCMAN_ITEM_STATUS_DRAFT] = $e;
         unset($e);
 
         $e = new Docman_MetadataListOfValuesElement();
@@ -324,7 +324,7 @@ class Docman_MetadataListOfValuesElementFactory {
         //$e->setDescription('md_love_status_approved_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
         $e->setStatus('P');
-        $ea[PLUGIN_DOCMAN_ITEM_STATUS_APPROVED] =& $e;
+        $ea[PLUGIN_DOCMAN_ITEM_STATUS_APPROVED] = $e;
         unset($e);
 
         $e = new Docman_MetadataListOfValuesElement();
@@ -333,7 +333,7 @@ class Docman_MetadataListOfValuesElementFactory {
         //$e->setDescription('md_love_status_rejected_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
         $e->setStatus('P');
-        $ea[PLUGIN_DOCMAN_ITEM_STATUS_REJECTED] =& $e;
+        $ea[PLUGIN_DOCMAN_ITEM_STATUS_REJECTED] = $e;
         unset($e);
         
         if($status === null) {
@@ -343,12 +343,12 @@ class Docman_MetadataListOfValuesElementFactory {
         }
     }
 
-    function &_returnLoveIteratorFromDar($dar) {
+    private function _returnLoveIteratorFromDar($dar) {
         $ea = array();
         if($dar && !$dar->isError()) {
             $dar->rewind();
             while($dar->valid()) {
-                $ea[] =& $this->instanciateLove($dar->current());
+                $ea[] = $this->instanciateLove($dar->current());
                 $dar->next();
             }
         }
@@ -360,5 +360,3 @@ class Docman_MetadataListOfValuesElementFactory {
         return new Docman_MetadataListOfValuesElementFactory($metadataId);
     }
 }
-
-?>

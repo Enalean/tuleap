@@ -40,9 +40,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
     function setUp() {
         $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 1234);
-        $this->docmanPm =& new Docman_PermissionsManagerTestVersion($this);
+        $this->docmanPm  = new Docman_PermissionsManagerTestVersion($this);
         $this->refOnNull = null;
-        $this->project = new MockProject();
+        $this->project   = new MockProject();
     }
 
     function tearDown() {
@@ -72,7 +72,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         $this->assertTrue($this->docmanPm->userCanAdmin($this->user));
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -96,7 +96,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -127,7 +127,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -157,7 +157,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_READ', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -182,7 +182,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -229,7 +229,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 3);
         $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_READ', 'test'));
@@ -256,7 +256,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 2);
         $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
@@ -282,7 +282,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         // Start Test
         //
 
-        $pm =& new MockPermissionsManager($this);
+        $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 1);
         $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
@@ -307,7 +307,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         //
 
         // Read one object
-        $pm1 =& new MockPermissionsManager($this);
+        $pm1 = new MockPermissionsManager($this);
         $pm1->expectCallCount('userHasPermission', 3);
         $this->docmanPm->setReturnReferenceAt(0, '_getPermissionManagerInstance', $pm1); // call in userCanRead
         $this->docmanPm->setReturnReferenceAt(1, '_getPermissionManagerInstance', $pm1); // call in userCanWrite
@@ -316,29 +316,29 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->assertFalse($this->docmanPm->userCanRead($this->user, '1515'));
 
         // Test cache read og this object
-        $pm2 =& new MockPermissionsManager($this);
+        $pm2 = new MockPermissionsManager($this);
         $pm2->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanRead($this->user, '1515'));
 
         // Read perm for another object
-        $pm3 =& new MockPermissionsManager($this);
+        $pm3 = new MockPermissionsManager($this);
         $pm3->setReturnValue('userHasPermission', true);
         $pm3->expectCallCount('userHasPermission', 1);
         $this->docmanPm->setReturnReferenceAt(3, '_getPermissionManagerInstance', $pm3);
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '6667'));
 
         // Read 2nd time perm for second object
-        $pm4 =& new MockPermissionsManager($this);
+        $pm4 = new MockPermissionsManager($this);
         $pm4->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '6667'));
 
         // Read 3rd time first object perms
-        $pm5 =& new MockPermissionsManager($this);
+        $pm5 = new MockPermissionsManager($this);
         $pm5->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanRead($this->user, '1515'));
 
         // Read 3rd time second object perms
-        $pm6 =& new MockPermissionsManager($this);
+        $pm6 = new MockPermissionsManager($this);
         $pm6->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '6667'));
     }
@@ -357,7 +357,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         //
 
         // Read one object
-        $pm1 =& new MockPermissionsManager($this);
+        $pm1 = new MockPermissionsManager($this);
         $pm1->expectCallCount('userHasPermission', 2);
         $this->docmanPm->setReturnReferenceAt(0, '_getPermissionManagerInstance', $pm1); // userCanWrite call
         $this->docmanPm->setReturnReferenceAt(1, '_getPermissionManagerInstance', $pm1); // userCanManage call
@@ -365,29 +365,29 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, '1515'));
 
         // Test cache read og this object
-        $pm2 =& new MockPermissionsManager($this);
+        $pm2 = new MockPermissionsManager($this);
         $pm2->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, '1515'));
 
         // Read perm for another object
-        $pm3 =& new MockPermissionsManager($this);
+        $pm3 = new MockPermissionsManager($this);
         $pm3->setReturnValue('userHasPermission', true);
         $pm3->expectCallCount('userHasPermission', 1);
         $this->docmanPm->setReturnReferenceAt(2, '_getPermissionManagerInstance', $pm3);
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '6667'));
 
         // Read 2nd time perm for second object
-        $pm4 =& new MockPermissionsManager($this);
+        $pm4 = new MockPermissionsManager($this);
         $pm4->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '6667'));
 
         // Read 3rd time first object perms
-        $pm5 =& new MockPermissionsManager($this);
+        $pm5 = new MockPermissionsManager($this);
         $pm5->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, '1515'));
 
         // Read 3rd time second object perms
-        $pm6 =& new MockPermissionsManager($this);
+        $pm6 = new MockPermissionsManager($this);
         $pm6->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '6667'));
     }
@@ -406,36 +406,36 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         //
 
         // Read one object
-        $pm1 =& new MockPermissionsManager($this);
+        $pm1 = new MockPermissionsManager($this);
         $pm1->expectCallCount('userHasPermission', 1);
         $this->docmanPm->setReturnReferenceAt(0, '_getPermissionManagerInstance', $pm1);
         $pm1->setReturnValue('userHasPermission', false);
         $this->assertFalse($this->docmanPm->userCanManage($this->user, '1515'));
 
         // Test cache read og this object
-        $pm2 =& new MockPermissionsManager($this);
+        $pm2 = new MockPermissionsManager($this);
         $pm2->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanManage($this->user, '1515'));
 
         // Read perm for another object
-        $pm3 =& new MockPermissionsManager($this);
+        $pm3 = new MockPermissionsManager($this);
         $pm3->setReturnValue('userHasPermission', true);
         $pm3->expectCallCount('userHasPermission', 1);
         $this->docmanPm->setReturnReferenceAt(1, '_getPermissionManagerInstance', $pm3);
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '6667'));
 
         // Read 2nd time perm for second object
-        $pm4 =& new MockPermissionsManager($this);
+        $pm4 = new MockPermissionsManager($this);
         $pm4->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '6667'));
 
         // Read 3rd time first object perms
-        $pm5 =& new MockPermissionsManager($this);
+        $pm5 = new MockPermissionsManager($this);
         $pm5->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanManage($this->user, '1515'));
 
         // Read 3rd time second object perms
-        $pm6 =& new MockPermissionsManager($this);
+        $pm6 = new MockPermissionsManager($this);
         $pm6->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '6667'));
     }

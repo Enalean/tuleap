@@ -17,14 +17,14 @@ class Docman_View_Embedded extends Docman_View_Display {
     
     function _content($params) {
         if (isset($params['version_number'])) {
-            $version_factory =& $this->_getVersionFactory($params);
-            $version =& $version_factory->getSpecificVersion($params['item'], $params['version_number']);
+            $version_factory = $this->_getVersionFactory($params);
+            $version = $version_factory->getSpecificVersion($params['item'], $params['version_number']);
         } else {
-            $version =& $params['item']->getCurrentVersion();
+            $version = $params['item']->getCurrentVersion();
         }
         if ($version) {
             if (file_exists($version->getPath())) {
-                $event_manager =& EventManager::instance();
+                $event_manager = EventManager::instance();
                 $event_manager->processEvent('plugin_docman_event_access', array(
                     'group_id' => $params['group_id'],
                     'item'     => &$params['item'],
@@ -42,7 +42,7 @@ class Docman_View_Embedded extends Docman_View_Display {
                 echo '</'. $balise .'>';
             } else {
                 $this->_controller->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));
-                $v =& new Docman_View_DocmanError($this->_controller);
+                $v = new Docman_View_DocmanError($this->_controller);
                 $v->display($params);
             }
         }
