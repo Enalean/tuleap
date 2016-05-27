@@ -1,4 +1,6 @@
 Version 8.16 (Not yet release)
+	== Enhancement ==
+	* request #9195: Clean up Trove Categorization
 
 	== Plugins ==
 	* git: 4.173
