@@ -21,7 +21,7 @@
         <span class="pull-request-label" translate>Requester</span>
         <div>
             <div class="avatar"><img src="{{ overview.author.avatar_url }}"></div>
-            {{ overview.author.display_name }}
+            <a href="{{ overview.author.user_url }}">{{ overview.author.display_name }}</a>
         </div>
     </div>
     <div class="pull-request-date">
