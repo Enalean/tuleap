@@ -1,3 +1,6 @@
+Version 1.381 - Tuleap 8.16
+    * request #9203: Fix Kanban drag placeholder & header/footer z-index
+
 Version 1.380 - Tuleap 8.15
     * story #9132: Migrate from Less to Sass (Tuleap artifact modal is built with Sass)
 
