@@ -36,9 +36,6 @@ class FRSPackageFactory {
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
     private static $instance;
 
-    function FRSPackageFactory() {
-    }
-
     public static function instance(){
         if(empty(self::$instance)) {
             self::$instance = new FRSPackageFactory();
@@ -62,7 +59,7 @@ class FRSPackageFactory {
 
     function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0) {
         $_id = (int) $package_id;
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         if($group_id){
         	$_group_id = (int) $group_id;
         	$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
@@ -77,14 +74,14 @@ class FRSPackageFactory {
             return;
         }
 
-        $data_array =& $dar->current();
+        $data_array = $dar->current();
 
         return($this->getFRSPackageFromArray($data_array));
     }
     
     function getFRSPackageByFileIdFromDb($file_id){
     	$_id = (int) $file_id;
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByFileId($_id);
         
         if($dar->isError()){
@@ -95,7 +92,7 @@ class FRSPackageFactory {
             return;
         }
         
-        $data_array =& $dar->current();
+        $data_array = $dar->current();
 
         return($this->getFRSPackageFromArray($data_array));
     }
@@ -103,7 +100,7 @@ class FRSPackageFactory {
     function getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
         $_id = (int) $release_id;
         $_group_id = (int) $group_id;
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchInGroupByReleaseId($_id, $_group_id);
 
         if($dar->isError()){
@@ -114,7 +111,7 @@ class FRSPackageFactory {
             return;
         }
 
-        $data_array =& $dar->current();
+        $data_array = $dar->current();
 
         return($this->getFRSPackageFromArray($data_array));
     }
@@ -164,7 +161,7 @@ class FRSPackageFactory {
 
     function getPackageIdByName($package_name, $group_id){
     	$_id = (int) $group_id;
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
 
         if($dar->isError()){
@@ -174,14 +171,14 @@ class FRSPackageFactory {
         if(!$dar->valid()){
         	return;
         }else{
-        	$res =& $dar->current();
-        	return $res['package_id'];
+            $res = $dar->current();
+            return $res['package_id'];
         }
     }
 
     function isPackageNameExist($package_name, $group_id){
     	$_id = (int) $group_id;
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
 
         if($dar->isError()){
@@ -207,7 +204,7 @@ class FRSPackageFactory {
     
     
     function create($data_array) {
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         if ($id) {
             $data_array['package_id'] = $id;
@@ -392,5 +389,3 @@ class FRSPackageFactory {
         return $this->dao;
     }
 }
-
-?>

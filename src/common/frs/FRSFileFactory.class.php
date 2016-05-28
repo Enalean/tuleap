@@ -53,9 +53,10 @@ class FRSFileFactory {
     /**
      * @return FRSFile | null
      */
-    function &getFRSFileFromDb($file_id, $group_id=null) {
+    public function getFRSFileFromDb($file_id, $group_id=null)
+    {
         $_id = (int) $file_id;
-        $dao =& $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
         if($group_id){
             $_group_id = (int) $group_id;
             $dar = $dao->searchInReleaseById($_id, $group_id);
@@ -65,7 +66,7 @@ class FRSFileFactory {
 
         $file = null;
         if(!$dar->isError() && $dar->valid()) {
-            $data_array =& $dar->current();
+            $data_array = $dar->current();
             $file = FRSFileFactory::getFRSFileFromArray($data_array);
         }
         return $file;
@@ -78,13 +79,13 @@ class FRSFileFactory {
      */
     function &getFRSFilesFromDb($release_id) {
         $_id = (int) $release_id;
-        $dao =& $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
         $dar = $dao->searchByReleaseId($_id);
 
         $files = array();
         if(!$dar->isError() && $dar->valid()) {
             while ($dar->valid()){
-                $data_array =& $dar->current();
+                $data_array = $dar->current();
                 $files[] = FRSFileFactory::getFRSFileFromArray($data_array);
                 $dar->next();
             }
@@ -141,7 +142,7 @@ class FRSFileFactory {
 
     function isFileNameExist($file_name, $group_id){
         $_id = (int) $group_id;
-        $dao =& $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFileByName($file_name, $_id);
 
         if($dar->isError()){
@@ -194,7 +195,7 @@ class FRSFileFactory {
     }
 
     public function update($data_array) {
-        $dao =& $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
         $old_file = $this->getFRSFileFromDb($data_array['file_id']);
 
         if ($dao->updateFromArray($data_array)) {
@@ -236,7 +237,7 @@ class FRSFileFactory {
 
 
     function create($data_array) {
-        $dao =& $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
         if ($id = $dao->createFromArray($data_array)) {
             $file = $this->getFRSFileFromDb($id);
             $um = UserManager::instance();
@@ -428,7 +429,7 @@ class FRSFileFactory {
     function _delete($file_id){
         $_id = (int) $file_id;
         $file = $this->getFRSFileFromDb($_id);
-        $dao =& $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
         if ($dao->delete($_id)) {
             $this->_getEventManager()->processEvent('frs_delete_file',
             array('group_id' => $file->getGroup()->getGroupId(),
@@ -803,12 +804,12 @@ class FRSFileFactory {
      * @return boolean true if the user has permission to add files, false otherwise
      */
     function userCanAdd($group_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = PermissionsManager::instance();
+        $um = UserManager::instance();
         if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);
+            $user = $um->getUserById($user_id);
         }
         $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
         return $ok;
