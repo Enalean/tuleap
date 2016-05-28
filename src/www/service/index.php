@@ -3,7 +3,7 @@
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $pm = ProjectManager::instance();
 $project = $pm->getProject($request->get('group_id'));
@@ -34,4 +34,3 @@ if ($project && $request->exist('id')) {
 }
 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
 $GLOBALS['Response']->redirect('/');
-?>
