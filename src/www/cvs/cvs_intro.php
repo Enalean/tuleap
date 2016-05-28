@@ -9,12 +9,18 @@
 //	Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
 //
 
+$request  = HTTPRequest::instance();
+$group_id = $request->get('group_id');
+
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
 
-commits_header(array ('title'=>$Language->getText('cvs_intro', 'title')));
+commits_header(array(
+    'title' => $GLOBALS['Language']->getText('cvs_intro', 'title'),
+    'group' => $group_id
+));
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
@@ -27,25 +33,24 @@ $row_grp = db_fetch_array($res_grp);
 if ($row_grp['cvs_preamble']!='') {
     echo util_unconvert_htmlspecialchars($row_grp['cvs_preamble']);
 } else {
-    include($Language->getContent('cvs/intro'));
+    include($GLOBALS['Language']->getContent('cvs/intro'));
 }
 
 // Summary info
 print '</TD><TD width="25%">';
-print $HTML->box1_top($Language->getText('cvs_intro', 'repo_history'));
+print $HTML->box1_top($GLOBALS['Language']->getText('cvs_intro', 'repo_history'));
 echo format_cvs_history($group_id);
 
 
 // CVS Browsing Box
 $uri = session_make_url('/cvs/viewvc.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
-print '<HR><B>'.$Language->getText('cvs_intro', 'browse_title').'</B>
-<P>'.$Language->getText('cvs_intro', 'browse_msg').'
+print '<HR><B>'.$GLOBALS['Language']->getText('cvs_intro', 'browse_title').'</B>
+<P>'.$GLOBALS['Language']->getText('cvs_intro', 'browse_msg').'
 <UL>
-<LI><A href="'.$uri.'"><B>'.$Language->getText('cvs_commit_utils', 'menu_browse').'</B></A></LI>';
+<LI><A href="'.$uri.'"><B>'.$GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse').'</B></A></LI>';
 
 print $HTML->box1_bottom();
 
 print '</TD></TR></TABLE>';
 
 commits_footer(array());
-?>

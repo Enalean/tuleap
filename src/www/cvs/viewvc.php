@@ -13,15 +13,19 @@ require_once('www/cvs/commit_utils.php');
 
 if (user_isloggedin()) {
   // be backwards compatible with old viewvc.cgi links that are now redirected
-  if (!$root) $root = $cvsroot;
+  $request = HTTPRequest::instance();
+  $root    = $request->get('root');
+  if (!$root) {
+    $root = $cvsroot;
+  }
 
   $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
   $row_grp = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
   
   if (!check_cvs_access(user_getname(), $root, viewvc_utils_getfile("/cvs/viewvc.php"))) {
-      exit_error($Language->getText('cvs_viewvc', 'error_noaccess'),
-		 $Language->getText('cvs_viewvc', 'error_noaccess_msg',session_make_url("/project/memberlist.php?group_id=$group_id")));
+      exit_error($GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess'),
+		 $GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess_msg',session_make_url("/project/memberlist.php?group_id=$group_id")));
   }
 
   viewvc_utils_track_browsing($group_id,'cvs');
@@ -29,7 +33,11 @@ if (user_isloggedin()) {
   $display_header_footer = viewvc_utils_display_header();
 
   if ($display_header_footer) {
-    commits_header(array ('title'=>$Language->getText('cvs_viewvc', 'title'),'stylesheet'=>(array('/viewvc-static/styles.css'))));
+    commits_header(array(
+        'title'     => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
+        'stylesheet'=> (array('/viewvc-static/styles.css')),
+        'group'     => $group_id
+    ));
   }
 
   viewvc_utils_passcommand();
@@ -41,6 +49,3 @@ if (user_isloggedin()) {
 } else {
   exit_not_logged_in();
 }
-
-
-?>

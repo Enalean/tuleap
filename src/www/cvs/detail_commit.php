@@ -6,11 +6,14 @@
 //
 // 
 
+$request  = HTTPRequest::instance();
+$group_id = $request->get('group_id');
+
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-
+$order     = $request->get('order');
 $order_str = "";
 
 if ($order) {
@@ -21,8 +24,9 @@ if ($order) {
 }
 
 $when_str = '';
+$id_str   = "AND cvs_checkins.descid='$checkin_id' ";
 
-$id_str = "AND cvs_checkins.descid='$checkin_id' ";
+$commit_id  = $request->get('commit_id');
 if ($commit_id) {
   $id_str = "AND cvs_checkins.commitid='$commit_id' ";
   if ($desc_id) {
@@ -30,12 +34,16 @@ if ($commit_id) {
   }
 }
 
+$when = $request->get('when');
 if ($when) {
   $when_str = "AND cvs_checkins.ci_when='$when' ";
 }
+
+$tag = $request->get('tag');
 if ($tag) {
   $when_str = $when_str."AND cvs_checkins.stickytag='$tag' ";
 }
+
 $sql="SELECT repository, cvs_commits.comm_when as c_when, repositoryid, description, file, fileid, dir, dirid, type, branch, revision, addedlines, removedlines ".
 	"FROM cvs_dirs, cvs_descs, cvs_files, cvs_checkins, cvs_branches, cvs_repositories, cvs_commits ".
 	"WHERE cvs_checkins.fileid=cvs_files.id ".
@@ -51,15 +59,19 @@ $sql="SELECT repository, cvs_commits.comm_when as c_when, repositoryid, descript
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
-    if (get_group_id_from_repository(db_result($result, 0, 'repository'))!=$group_id)
-        exit_error('Error',$Language->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
+    if (get_group_id_from_repository(db_result($result, 0, 'repository'))!=$group_id) {
+        exit_error('Error',$GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
+    }
 
-    commits_header(array ('title'=>$Language->getText('cvs_detail_commit', 'title',array($commit_id)),
-			  'help' => 'cvs.html#querying-cvs'));
-    show_commit_details($result);
+    commits_header(array(
+        'title' => $GLOBALS['Language']->getText('cvs_detail_commit', 'title',array($commit_id)),
+        'help'  => 'cvs.html#querying-cvs',
+        'group' => $group_id
+    ));
+
+    show_commit_details($group_id, $commit_id, $result);
+
     commits_footer(array());
 } else {
-    exit_error('Error',$Language->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
+    exit_error('Error',$GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
 }
-
-?>
