@@ -11,13 +11,11 @@
 
 require_once('pre.php');
 
-$lang = $current_user->getShortLocale();
+$lang    = $current_user->getShortLocale();
+$request = HTTPRequest::instance();
 
-// Retrieve the user language if not guest
-// TODO
-
-// if section param not given then defaults to index.html
-if ( !isset($section) ) {
+$section = $request->get('section');
+if (! $section) {
     $section = "index.html";
 }
 
@@ -36,5 +34,3 @@ if ( $cl->status == 200) {
   echo $Language->getText('help_show_help','page_not_available',array($section,$GLOBALS['sys_email_admin'],$GLOBALS['sys_name']));
     echo help_footer();
 }
-
-?>

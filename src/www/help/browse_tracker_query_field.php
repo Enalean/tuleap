@@ -18,6 +18,9 @@ require_once('common/tracker/ArtifactFieldFactory.class.php');
 require_once('common/tracker/ArtifactField.class.php');
 
 
+$request    = HTTPRequest::instance();
+$helpid     = $request->get('helpid');
+$field_info = $request->get('field_info');
 // Get the group_id, group_artifact_id and field_name from the 
 // help_id argument
 list($group_id, $artifact_type_id, $field_name) = explode('|',urldecode($helpid));
@@ -80,10 +83,8 @@ if ( $field->isSelectBox() ) {
 	$cug_section = 'ArtifactTextField';
 }
 
-
 // Display the customized help frame at the top with info for this specific field
-if (isset($field_info) && $field_info) {
-
+if ($field_info) {
     // Show the artifact field info in the top frame
     help_header($Language->getText('help_browse_tracker_query_field','art_search_criteria'));
     print '<TABLE class="contenttable" cellpadding="0" cellspacing="0" border="0">'."\n";
@@ -92,9 +93,7 @@ if (isset($field_info) && $field_info) {
     print "</TABLE>\n"; 
     print '<hr><u>'.$Language->getText('help_browse_bug_query_field','description').'</u>:<I>'.$field->getDescription().'</I>'."\n";
     help_footer();
-
 } else {
-
     // send the frameset: at top we want the artifact description and
     // the relevant user guide section at the bottom
     echo '
@@ -104,4 +103,3 @@ if (isset($field_info) && $field_info) {
     <FRAME src="/help/show_help.php?section=ArtifactBrowsing.html#'.$cug_section.'" frameborder="0">
     </FRAMESET></HTML>';
 }
-?>
