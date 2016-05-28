@@ -5,6 +5,7 @@ Version 8.16 (Not yet release)
 	== Development ==
 	* request #9202: Make Tuleap compatible with PHP 5.6
 		- CVS
+		- File Release System
 
 	== Plugins ==
 	* git: 4.173
