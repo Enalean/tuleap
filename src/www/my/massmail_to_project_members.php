@@ -47,5 +47,3 @@ if ($is_sent) {
 }
 
 $GLOBALS['Response']->redirect("/my");
-
-?>
