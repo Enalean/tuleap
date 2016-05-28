@@ -332,7 +332,7 @@ class FRSFileFactory {
         // Remove last (empty) element
         array_pop($files);
         foreach ($files as $file) {
-            if (!ereg('^\.', $file[0])) {
+            if (!preg_match('/^\./', $file[0])) {
                 $uploaded_file_names[] = $file;
             }
         }

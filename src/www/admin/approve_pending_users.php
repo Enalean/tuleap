@@ -36,7 +36,7 @@ $valid_page = new Valid_WhiteList('page', array(ADMIN_APPROVE_PENDING_PAGE_PENDI
 $page = $request->getValidated('page', $valid_page, '');
 $csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
-    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
+    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
         $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
     }else{
         $vDate = new Valid_String();

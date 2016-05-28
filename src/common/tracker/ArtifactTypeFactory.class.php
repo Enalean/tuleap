@@ -546,7 +546,7 @@ class ArtifactTypeFactory {
 		}
 
          // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)               
-        if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
+        if (! preg_match("/^[a-zA-Z0-9_]+$/i",$itemname)) {
                 $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
                 return false;
          }

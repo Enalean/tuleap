@@ -877,7 +877,7 @@ class ArtifactType {
 			return false;
 		}
         
-        if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
+        if (! preg_match("/^[a-zA-Z0-9_]+$/i",$itemname)) {
             $hp = Codendi_HTMLPurifier::instance();
             $this->setError($Language->getText('tracker_common_type','invalid_shortname', $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) ));
             return false;

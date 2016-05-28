@@ -1111,7 +1111,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             }
                         } 
                          if($new_release_id[$index] == $release_id || $res2) {
-                                if (!ereg("[0-9]{4}-[0-9]{2}-[0-9]{2}", $release_time[$index])) {
+                                if (! preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/", $release_time[$index])) {
                                     $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed_file', $fname));
                                 } else {
                                     $res2 = & $frsff->getFRSFileFromDb($rel_file);

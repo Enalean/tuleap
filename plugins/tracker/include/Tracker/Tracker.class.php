@@ -1988,8 +1988,9 @@ EOS;
      * @param string $itemname
      * @return boolean
      */
-    public function itemNameIsValid($item_name) {
-        return eregi("^[a-zA-Z0-9_]+$",$item_name);
+    public function itemNameIsValid($item_name)
+    {
+        return preg_match("/^[a-zA-Z0-9_]+$/i",$item_name);
     }
 
     /**

@@ -481,7 +481,7 @@ function horizontal_graph($names, $values, $bars, $vals)
 	echo ">";
 
         // Decide if the value in bar is a color code or image.
-        if (ereg("^#", $bars[$i]))
+        if (preg_match("/^#/", $bars[$i]))
            { 
 ?>
 
@@ -618,13 +618,13 @@ function double_horizontal_graph($names, $values, $bars, $vals, $dvalues, $dbars
 <?php
         // Set background to a color if it starts with # or
         // an image otherwise.
-        if (ereg("^#", $dbars[$i])) { print 'BGCOLOR="' . $dbars[$i] . '">'; }
+        if (preg_match("/^#/", $dbars[$i])) { print 'BGCOLOR="' . $dbars[$i] . '">'; }
         else { print 'BACKGROUND="' . $dbars[$i] . '">'; }
 ?>
            <NOWRAP>
 <?php
         // Decide if the value in bar is a color code or image.
-        if (ereg("^#", $bars[$i]))
+        if (preg_match("/^#/", $bars[$i]))
            { 
 ?>
             <TABLE ALIGN="LEFT" CELLPADDING=0 CELLSPACING=0 

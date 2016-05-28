@@ -20,7 +20,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 function strip_commas($string) {
-	return ereg_replace(",","",$string);
+	return preg_replace("/,/","",$string);
 }
 
 /*
