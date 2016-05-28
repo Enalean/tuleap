@@ -23,12 +23,15 @@ require_once 'pre.php';
 require_once 'common/svn/SVN_SOAPServer.class.php';
 
 // Check if we the server is in secure mode or not.
-if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+$request = HTTPRequest::instance();
+if ($request->isSecure() || ForgeConfig::get('sys_force_ssl') == 1) {
     $protocol = "https";
 } else {
     $protocol = "http";
 }
-$uri = $protocol.'://'.$GLOBALS['sys_default_domain'].'/soap/svn';
+$default_domain = ForgeConfig::get('sys_default_domain');
+
+$uri = $protocol.'://'.$default_domain.'/soap/svn';
 
 $serviceClass = 'SVN_SOAPServer';
 
