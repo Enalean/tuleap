@@ -16,7 +16,6 @@
 my_index	my_dashboard	My Dashboard
 my_index	account_maintenance	My Account
 my_index	title	Personal Page for $1
-my_index	err_badbrowser	Warning: your browser (Netscape 4.x) is not supported. Some functionalities will not be available.
 my_index	message	Your personal page contains lists of bugs [<b>A</b>]ssigned to or  [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, monitored forums and packages plus a list of groups that you are a member of.<P>
 my_index	err_artf	Failed to create ArtifactTypeFactory
 my_index	my_bugs	My Bugs

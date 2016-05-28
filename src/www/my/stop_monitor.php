@@ -9,7 +9,7 @@
 require_once('pre.php');
 require('../forum/forum_utils.php');
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 $HTML->header(array("title"=>$Language->getText('my_monitored_forum', 'title')));
 print "<H3>".$Language->getText('my_monitored_forum', 'title')."</H3>\n";
 if (user_isloggedin()) {
@@ -45,4 +45,3 @@ if (user_isloggedin()) {
 } else {
 	exit_not_logged_in();
 }
-?>

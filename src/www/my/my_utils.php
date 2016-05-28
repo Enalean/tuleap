@@ -96,27 +96,6 @@ function my_hide($svc, $db_item_id, $item_id, $hide) {
     return $hide;
 }
 
-function my_format_as_flag($assigned_to, $submitted_by, $multi_assigned_to=null) {
-    $AS_flag = '';
-    if ($assigned_to == user_getid()) {
-	$AS_flag = 'A';
-    } else if ($multi_assigned_to) {
-     // For multiple assigned to
-       for ($i=0; $i<count($multi_assigned_to); $i++) {
-            if ($multi_assigned_to[$i]==user_getid()) {
-                $AS_flag = 'A';
-            }
-        }
-    }
-    if ($submitted_by == user_getid()) {
-	$AS_flag .= 'S';
-    }
-    if ($AS_flag) { $AS_flag = '[<b>'.$AS_flag.'</b>]'; }
-
-    return $AS_flag;
-}
-
-
 /* second case */
 function my_format_as_flag2($assignee, $submitter) {
     $AS_flag = '';
@@ -160,4 +139,3 @@ function my_check_bookmark_URL($bookmark_url, $redirect_url) {
 function my_has_URL_invalid_content($bookmark_url) {
     return URL::getScheme($bookmark_url) === 'javascript';
 }
-?>
