@@ -46,7 +46,7 @@ class URLTest extends TuleapTestCase {
         unset($GLOBALS['group_id']);
         unset($GLOBALS['sys_news_group']);
         unset($_REQUEST['forum_id']);
-        unset($GLOBALS['PATH_INFO']);
+        unset($_SERVER['PATH_INFO']);
     }
 
     function testProjectsSvnExist() {
@@ -251,11 +251,8 @@ class URLTest extends TuleapTestCase {
     
     function testFileDownload() {
         $url = partial_mock('URL', array('getProjectDao'));
-        $GLOBALS['PATH_INFO'] = '/101/1/p9_r4/toto.csv';
+        $_SERVER['PATH_INFO'] = '/101/1/p9_r4/toto.csv';
         $this->assertEqual($url->getGroupIdFromURL('/file/download.php/101/1/p9_r4/toto.csv'), 101);
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/file/download.php/101/1/p9_r4/toto.csv'), 101);
     }
-
 }
-
-?>

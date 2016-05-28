@@ -32,7 +32,7 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
     if (!$GLOBALS['sys_frs_license_mandatory']) {
         // Display license popup?
         // This is useful when using a 'file #123' reference, that points to this script
-        $res =& $frspf->getFRSPackageByFileIdFromDb($file_id);
+        $res = $frspf->getFRSPackageByFileIdFromDb($file_id);
         //$sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
         //res = db_query( $sql);
         if (count( $res ) > 0) {

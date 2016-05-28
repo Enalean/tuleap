@@ -66,8 +66,10 @@ class URL {
         return new Rule_ProjectName();
     }
 
-    function getGroupIdFromUrl($url) {
-        $req_uri='/'.trim($url, "/");
+    public function getGroupIdFromUrl($url)
+    {
+        $request = HTTPRequest::instance();
+        $req_uri = '/'.trim($url, "/");
         // /projects/ and /viewvc/
         if ((strpos($req_uri,'/projects/') === 0) || (strpos($req_uri,'/viewvc.php/') !== false)) {
             if (strpos($req_uri,'/viewvc.php/') !== false) {
@@ -111,7 +113,7 @@ class URL {
         }
         // File downloads. It might be a good idea to restrict access to shownotes.php too...
         if (strpos($req_uri,'/file/download.php') === 0) {
-            list(,$group_id, $file_id) = explode('/', $GLOBALS['PATH_INFO']);
+            list(,$group_id, $file_id) = explode('/', $request->getFromServer('PATH_INFO'));
         }
 
         // Artifact attachment download...

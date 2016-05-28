@@ -10,7 +10,7 @@ require_once('www/project/admin/permissions.php');
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('www/file/file_utils.php');
 
-  list(,$group_id, $file_id) = explode('/', $_SERVER['PATH_INFO']);
+list(,$group_id, $file_id) = explode('/', $request->getFromServer('PATH_INFO'));
 
   // Must have a group_id and file_id otherwise
   // we cannot do much
@@ -26,7 +26,7 @@ require_once('www/file/file_utils.php');
   // that the file_id we have belongs to the given group_id
 
   $frsff = new FRSFileFactory();
-  $file =& $frsff->getFRSFileFromDb($file_id, $group_id);
+  $file  = $frsff->getFRSFileFromDb($file_id, $group_id);
 
   if (! $file) {
     exit_error($Language->getText('file_download','incorrect_release_id'), $Language->getText('file_download','report_error',$GLOBALS['sys_name']));
