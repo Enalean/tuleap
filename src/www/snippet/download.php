@@ -9,7 +9,9 @@
 
 require_once('pre.php');
 
-$id = (int)$request->get('id');
+$request = HTTPRequest::instance();
+$id      = (int)$request->get('id');
+$mode    = $request->get('mode');
 
 $sql="SELECT * FROM snippet_version WHERE snippet_version_id='". db_ei($id) ."'";
 $result=db_query($sql);

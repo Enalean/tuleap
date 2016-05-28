@@ -10,6 +10,10 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
+$request                    = HTTPRequest::instance();
+$type                       = $request->get('type');
+$snippet_version_id         = $request->get('snippet_version_id');
+$snippet_package_version_id = $request->get('snippet_package_version_id');
 
 /*
 	By Tim Perdue, 2000/01/10
@@ -129,7 +133,5 @@ if (user_isloggedin()) {
 	}
 
 } else {
-
-	exit_not_logged_in();
-
+    exit_not_logged_in();
 }

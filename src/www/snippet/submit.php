@@ -10,12 +10,18 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
+$request = HTTPRequest::instance();
 
 if (user_isloggedin()) {
+    $uploaded_data = $_FILES['uploaded_data'];
 
+    $temporary_uploaded_file_name = $uploaded_data['tmp_name'];
+    $uploaded_data_name           = $uploaded_data['name'];
+    $uploaded_data_size           = $uploaded_data['size'];
+    $uploaded_data_type           = $uploaded_data['type'];
     // check if the code snippet is uploaded
-    if ($uploaded_data) {
-	$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+    if ($temporary_uploaded_file_name) {
+	$code = addslashes(file_get_contents($temporary_uploaded_file_name));
 	if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 	    //size is fine
 	    $feedback .= ' '.$Language->getText('snippet_addversion','s_uploaded').' ';
@@ -26,11 +32,23 @@ if (user_isloggedin()) {
 	}
     }
 
+    $post_changes = $request->get('post_changes');
     if ($post_changes) {
 	/*
 	  Create a new snippet entry, then create a new snippet version entry
 	*/
         $csrf->check();
+
+        $name               = $request->get('name');
+        $description        = $request->get('description');
+        $language           = $request->get('language');
+        $category           = $request->get('category');
+        $type               = $request->get('type');
+        $version            = $request->get('version');
+        $code               = isset($code) ? $code : $request->get('code');
+        $license            = $request->get('license');
+        $changes            = $request->get('changes');
+
         if ($name && $description && $language != 0 && $category != 0 && $type != 0 && 
             $language != 100 && $category != 100 && $type != 100 && $license != 100 && $version && $code) {
                 $category = (int)$category;
@@ -149,7 +167,5 @@ if (user_isloggedin()) {
 	snippet_footer(array());
 
 } else {
-
-	exit_not_logged_in();
-
+    exit_not_logged_in();
 }
