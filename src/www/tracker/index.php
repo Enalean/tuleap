@@ -288,7 +288,7 @@ if ( $func == 'gotoid' ) {
 				// Add new dependencies if any
                 $artifact_id_dependent = $request->get('artifact_id_dependent');
 				if ($artifact_id_dependent) {
-				  $ah->addDependencies($artifact_id_dependent,&$changes,false, false);
+				  $ah->addDependencies($artifact_id_dependent, $changes, false, false);
 				}
 
 				// Add follow-up comments if any
