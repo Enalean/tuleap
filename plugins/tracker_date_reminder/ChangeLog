@@ -1,3 +1,6 @@
+Version 1.2.10 - Tuleap 8.16
+    * request #9202: Remove deprecated ereg
+
 Version 1.2.9 - Tuleap 7.10
     * request #5550 Date reminder form messed with bootstrap
 

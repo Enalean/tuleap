@@ -1,3 +1,6 @@
+Version 5.897 - Tuleap 8.16
+    * request #9202: Remove deprecated ereg
+
 Version 5.896 - Tuleap 8.15
     * story #9087: see linked artifacts in releases (FRS can now import artifact_id)
 
