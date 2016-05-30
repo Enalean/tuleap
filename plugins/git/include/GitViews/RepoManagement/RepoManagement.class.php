@@ -21,6 +21,7 @@
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Git\Hook\WebHookFactory;
 use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 /**
  * Dedicated screen for repo management
@@ -84,10 +85,10 @@ class GitViews_RepoManagement {
      * @return array
      */
     private function buildPanes(GitRepository $repository) {
-        $panes = array(new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request));
+        $panes = array(new Pane\GeneralSettings($repository, $this->request));
 
         if ($repository->getBackendType() == GitDao::BACKEND_GITOLITE) {
-            $panes[] = new GitViews_RepoManagement_Pane_Gerrit(
+            $panes[] = new Pane\Gerrit(
                 $repository,
                 $this->request,
                 $this->driver_factory,
@@ -96,20 +97,20 @@ class GitViews_RepoManagement {
                 $this->gerrit_config_templates);
         }
 
-        $panes[] = new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request);
+        $panes[] = new Pane\AccessControl($repository, $this->request);
 
         $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {
             $repository_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
-            $panes[]            = new GitViews_RepoManagement_Pane_Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
+            $panes[]            = new Pane\Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
 
         $webhook_dao     = new WebHookDao();
         $webhook_factory = new WebHookFactory($webhook_dao);
 
-        $panes[] = new GitViews_RepoManagement_Pane_Notification($repository, $this->request);
-        $panes[] = new GitViews_RepoManagement_Pane_Hooks($repository, $this->request, $webhook_factory, $webhook_dao);
-        $panes[] = new GitViews_RepoManagement_Pane_Delete($repository, $this->request);
+        $panes[] = new Pane\Notification($repository, $this->request);
+        $panes[] = new Pane\Hooks($repository, $this->request, $webhook_factory, $webhook_dao);
+        $panes[] = new Pane\Delete($repository, $this->request);
 
         $indexed_panes = array();
         foreach ($panes as $pane) {

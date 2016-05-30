@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
+class Delete extends Pane
+{
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'delete';
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return ucfirst($GLOBALS['Language']->getText('global', 'delete'));
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'admin_deletion_submit') .'</h3>';
 
@@ -58,7 +63,8 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function fetchDeleteButton() {
+    private function fetchDeleteButton()
+    {
         $html  = '';
         $html .= '<input type="hidden" id="action" name="action" value="repo_management" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
@@ -71,7 +77,8 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function fetchConfirmDeletionButton() {
+    private function fetchConfirmDeletionButton()
+    {
         $html  = '';
         $html .= '<div class="alert alert-block">';
         $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
@@ -91,11 +98,10 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function fetchGerritMigtatedInfo() {
+    private function fetchGerritMigtatedInfo()
+    {
         $html = '<div class="alert alert-info">'. $GLOBALS['Language']->getText('plugin_git', 'deletion_gerrit_no') .'</div>';
 
         return $html;
     }
-
 }
-?>

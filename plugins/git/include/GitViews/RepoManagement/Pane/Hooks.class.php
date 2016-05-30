@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
+
 use Tuleap\Git\Webhook\WebhookSettingsPresenter;
 use Tuleap\Git\Webhook\CreateWebhookButtonPresenter;
 use Tuleap\Git\Webhook\WebhookPresenter;
@@ -28,8 +30,14 @@ use Tuleap\Git\Webhook\WebhookLogPresenter;
 use Tuleap\Git\Git\Hook\WebHookFactory;
 use Tuleap\Git\Git\Hook\WebHookDao;
 use Tuleap\Git\Git\Hook\WebHook;
+use GitRepository;
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use Codendi_HTMLPurifier;
+use EventManager;
+use TemplateRendererFactory;
 
-class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
+class Hooks extends Pane
 {
     const ID = 'hooks';
     const CSRF_TOKEN_ID = 'GIT-WEBHOOK-SETTINGS';
@@ -167,8 +175,6 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
 
     private function formatStatus($status)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-
         $classname = 'text-success';
         $icon      = 'icon-ok-sign';
         if ($status{0} !== '2') {
@@ -176,8 +182,8 @@ class GitViews_RepoManagement_Pane_Hooks extends GitViews_RepoManagement_Pane
             $icon      = 'icon-warning-sign';
         }
 
-        return '<span class="'. $classname .'" title="'. $purifier->purify($status) .'">
-            <i class="'. $icon .'"></i> '. $purifier->purify($status) .'
+        return '<span class="'. $classname .'" title="'. $this->hp->purify($status) .'">
+            <i class="'. $icon .'"></i> '. $this->hp->purify($status) .'
             </span>';
     }
 }

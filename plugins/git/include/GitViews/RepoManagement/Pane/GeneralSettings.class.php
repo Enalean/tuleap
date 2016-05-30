@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,57 +18,71 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManagement_Pane {
+use TemplateRendererFactory;
+
+class GeneralSettings extends Pane
+{
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'settings';
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'admin_settings');
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
 
         return $renderer->renderToString('general-settings', $this);
     }
 
-    public function title() {
+    public function title()
+    {
         return $this->getTitle();
     }
 
-    public function project_id() {
+    public function project_id()
+    {
         return $this->repository->getProjectId();
     }
 
-    public function pane_identifier() {
+    public function pane_identifier()
+    {
         return $this->getIdentifier();
     }
 
-    public function repository_id() {
+    public function repository_id()
+    {
         return $this->repository->getId();
     }
 
-    public function repository_description_label() {
+    public function repository_description_label()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'view_repo_description');
     }
 
-    public function description() {
+    public function description()
+    {
         return $this->repository->getDescription();
     }
 
-    public function save_label() {
+    public function save_label()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
     }
 }

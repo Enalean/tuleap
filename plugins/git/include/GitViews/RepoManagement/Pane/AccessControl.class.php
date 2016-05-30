@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
+
+use GitRepository;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use GitForkPermissionsManager;
+use PermissionsManager;
+use UserGroupDao;
+use User_ForgeUserGroupFactory;
+use Git_Backend_Gitolite;
 
-class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement_Pane {
-
+class AccessControl extends Pane
+{
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'perms';
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'view_repo_access_control');
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         $html  = '';
         $html .= '<h3>'. $this->getTitle() .'</h3>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
@@ -61,15 +72,16 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      *
      * @return void
      */
-    private function accessControl() {
+    private function accessControl()
+    {
         $html    = '';
         $public  = '';
         $private = '';
         $checked = 'checked="checked"';
-        if ( $this->repository->getAccess() == GitRepository::PRIVATE_ACCESS ) {
+        if ($this->repository->getAccess() == GitRepository::PRIVATE_ACCESS) {
             $private = $checked;
             $html .= '<input type="hidden" id="action" name="action" value="edit" />';
-        } else if ( $this->repository->getAccess() == GitRepository::PUBLIC_ACCESS ) {
+        } elseif ($this->repository->getAccess() == GitRepository::PUBLIC_ACCESS) {
             $public  = $checked;
             $html .= '<input type="hidden" id="action" name="action" value="confirm_private" />';
         }
@@ -80,6 +92,7 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
         $html .= '<input type="radio" name="repo_access" value="public" '. $public .'/> Public';
         $html .= '</span>';
         $html .= '</p>';
+
         return $html;
     }
 

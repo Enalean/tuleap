@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
+
+use GitRepository;
+use Codendi_Request;
+use Codendi_HTMLPurifier;
+
 /**
  * A pane to be displayed in git repo management
  */
-abstract class GitViews_RepoManagement_Pane {
+abstract class Pane
+{
 
     /**
      * @var GitRepository
@@ -33,7 +40,8 @@ abstract class GitViews_RepoManagement_Pane {
      */
     protected $request;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request) {
+    public function __construct(GitRepository $repository, Codendi_Request $request)
+    {
         $this->repository = $repository;
         $this->request    = $request;
         $this->hp         = Codendi_HTMLPurifier::instance();
@@ -42,23 +50,23 @@ abstract class GitViews_RepoManagement_Pane {
     /**
      * @return bool true if the pane can be displayed
      */
-    public function canBeDisplayed() {
+    public function canBeDisplayed()
+    {
         return true;
     }
 
     /**
      * @return string eg: 'perms'
      */
-    public abstract function getIdentifier();
+    abstract public function getIdentifier();
 
     /**
      * @return string eg: 'Accesss Control'
      */
-    public abstract function getTitle();
+    abstract public function getTitle();
 
     /**
      * @return string eg: '<form>...</form>'
      */
-    public abstract function getContent();
+    abstract public function getContent();
 }
-?>

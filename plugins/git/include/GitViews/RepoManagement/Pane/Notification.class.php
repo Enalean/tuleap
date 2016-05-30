@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitViews_RepoManagement_Pane_Notification extends GitViews_RepoManagement_Pane
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
+
+use TemplateRendererFactory;
+use RepositoryPaneNotificationPresenter;
+use EventManager;
+
+class Notification extends Pane
 {
 
     const ID = 'mail';
@@ -42,7 +48,8 @@ class GitViews_RepoManagement_Pane_Notification extends GitViews_RepoManagement_
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
         $html     = $renderer->renderToString(
             'notifications',
@@ -58,7 +65,8 @@ class GitViews_RepoManagement_Pane_Notification extends GitViews_RepoManagement_
         return $html;
     }
 
-    private function getPluginNotifications() {
+    private function getPluginNotifications()
+    {
         $output = '';
         EventManager::instance()->processEvent(GIT_ADDITIONAL_NOTIFICATIONS, array(
             'request'    => $this->request,

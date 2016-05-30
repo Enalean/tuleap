@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\GerritCanMigrateChecker;
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
+use GitRepository;
+use Codendi_Request;
+use Tuleap\Git\GerritCanMigrateChecker;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_RemoteServer_Gerrit_ProjectNameBuilder;
+use DateHelper;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_RemoteServer_GerritServer;
+use Git_Driver_Gerrit_ProjectCreatorStatusDao;
+use Git_Driver_Gerrit_Exception;
+
+class Gerrit extends Pane
+{
 
     const OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
     const OPTION_DELETE_GERRIT_PROJECT     = 'delete';
@@ -64,28 +76,32 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     /**
      * @return bool true if the pane can be displayed
      */
-    public function canBeDisplayed() {
+    public function canBeDisplayed()
+    {
         return $this->gerrit_can_migrate_checker->canMigrate();
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'gerrit';
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_git', 'gerrit_pane_title');
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         if ($this->repository->isMigratedToGerrit()) {
             return $this->getContentAlreadyMigrated();
         }
@@ -145,7 +161,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getServers() {
+    private function getServers()
+    {
         $html = '';
         foreach ($this->gerrit_servers as $server) {
             $driver         = $this->driver_factory->getDriver($server);
@@ -163,14 +180,15 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getTemplates() {
+    private function getTemplates()
+    {
         $html = '<option
                         value="none">'
-                .$GLOBALS['Language']->getText('plugin_git','none_gerrit_template') .
+                .$GLOBALS['Language']->getText('plugin_git', 'none_gerrit_template') .
                 '</option>
                  <option
                         value="default">'
-                .$GLOBALS['Language']->getText('plugin_git','default_gerrit_template') .
+                .$GLOBALS['Language']->getText('plugin_git', 'default_gerrit_template') .
                 '</option>';
 
         foreach ($this->templates as $template) {
@@ -183,7 +201,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function doesRemoteGerritProjectNeedDeleting(Git_RemoteServer_GerritServer $server) {
+    private function doesRemoteGerritProjectNeedDeleting(Git_RemoteServer_GerritServer $server)
+    {
         if ($server->getId() != $this->repository->getRemoteServerId()) {
             return false;
         }
@@ -205,7 +224,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return true;
     }
 
-    private function getContentAlreadyMigrated() {
+    private function getContentAlreadyMigrated()
+    {
         $btn_name      = 'confirm_disconnect_gerrit';
         if ($this->request->get($btn_name)) {
             return $this->getDisconnectFromGerritConfirmationScreen();
@@ -229,7 +249,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getMessageAccordingToMigrationStatus() {
+    private function getMessageAccordingToMigrationStatus()
+    {
         $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
             new Git_Driver_Gerrit_ProjectCreatorStatusDao()
         );
@@ -246,7 +267,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         }
     }
 
-    private function getMigratedToGerritInfo() {
+    private function getMigratedToGerritInfo()
+    {
         $driver         = $this->getGerritDriverForRepository($this->repository);
         $gerrit_project = $driver->getGerritProjectName($this->repository);
         $gerrit_server  = $this->getGerritServerForRepository($this->repository);
@@ -262,13 +284,15 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status) {
+    private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status)
+    {
         $date = DateHelper::timeAgoInWords($status->getEventDate($this->repository), false, true);
         return '<div class="alert alert-error">'.$GLOBALS['Language']->getText('plugin_git', 'gerrit_server_migration_error', array($date)).'</div>'.
                '<pre class="pre-scrollable">'.$status->getLog($this->repository).'</pre>';
     }
 
-    private function getDisconnectFromGerritConfirmationScreen() {
+    private function getDisconnectFromGerritConfirmationScreen()
+    {
         $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_title') .'</h3>';
 
@@ -292,7 +316,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getDisconnectFromGerritOptions() {
+    private function getDisconnectFromGerritOptions()
+    {
         $gerrit_server = $this->getGerritServerForRepository($this->repository);
         $html = '';
 
@@ -313,14 +338,15 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getGerritDriverForRepository(GitRepository $repository) {
+    private function getGerritDriverForRepository(GitRepository $repository)
+    {
         $server = $this->getGerritServerForRepository($repository);
 
         return $this->driver_factory->getDriver($server);
     }
 
-    private function getGerritServerForRepository(GitRepository $repository) {
+    private function getGerritServerForRepository(GitRepository $repository)
+    {
         return $this->gerrit_servers[$repository->getRemoteServerId()];
     }
 }
-?>

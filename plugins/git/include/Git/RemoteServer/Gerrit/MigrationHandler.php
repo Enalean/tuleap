@@ -22,7 +22,7 @@
 namespace Tuleap\Git\RemoteServer\Gerrit;
 
 use GitRepository;
-use GitViews_RepoManagement_Pane_Gerrit;
+use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Git_SystemEventManager;
 use Git_RemoteServer_GerritServerFactory;
 use Git_Driver_Gerrit_GerritDriverFactory;
@@ -124,7 +124,7 @@ class MigrationHandler {
         $this->disconnectFromGerrit($repository);
 
         switch($disconnect_option) {
-            case GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT:
+            case Pane\Gerrit::OPTION_DELETE_GERRIT_PROJECT:
                 $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $driver);
 
                 $this->history_dao->groupAddHistory(
@@ -134,7 +134,7 @@ class MigrationHandler {
                 );
 
                 break;
-            case GitViews_RepoManagement_Pane_Gerrit::OPTION_READONLY_GERRIT_PROJECT:
+            case Pane\Gerrit::OPTION_READONLY_GERRIT_PROJECT:
                 $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $driver);
 
                 $this->history_dao->groupAddHistory(
@@ -167,7 +167,7 @@ class MigrationHandler {
         $disconnect_option
     ) {
         if (! $driver->isDeletePluginEnabled($server) &&
-            $disconnect_option === GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT
+            $disconnect_option === Pane\Gerrit::OPTION_DELETE_GERRIT_PROJECT
         ) {
             throw new DeletePluginNotInstalledException();
         }

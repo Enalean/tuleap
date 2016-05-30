@@ -22,7 +22,7 @@ namespace Tuleap\HudsonGit\Hook;
 
 use GitRepository;
 use GitRepositoryFactory;
-use GitViews_RepoManagement_Pane_Hooks;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Codendi_Request;
 use Feedback;
 use CSRFSynchronizerToken;
@@ -113,7 +113,7 @@ class HookController
             'action'      => 'repo_management',
             'group_id'    => $repository->getProjectId(),
             'repo_id'     => $repository->getId(),
-            'pane'        => GitViews_RepoManagement_Pane_Hooks::ID
+            'pane'        => Hooks::ID
         ));
     }
 }
