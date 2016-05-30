@@ -199,8 +199,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.field_group = F.id";
         $this->update($sql);
 
-        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A
-                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+        $sql = "UPDATE plugin_graphontrackersv5_gantt_chart AS A
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
                        INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_start
@@ -208,8 +208,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.field_start = F.id";
         $this->update($sql);
 
-        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A
-                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+        $sql = "UPDATE plugin_graphontrackersv5_gantt_chart AS A
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
                        INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_due
@@ -217,8 +217,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.field_due = F.id";
         $this->update($sql);
 
-        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A
-                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+        $sql = "UPDATE plugin_graphontrackersv5_gantt_chart AS A
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
                        INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_finish
@@ -226,8 +226,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.field_finish = F.id";
         $this->update($sql);
 
-        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A
-                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+        $sql = "UPDATE plugin_graphontrackersv5_gantt_chart AS A
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
                        INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_percentage
@@ -235,8 +235,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.field_percentage = F.id";
         $this->update($sql);
 
-        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A
-                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+        $sql = "UPDATE plugin_graphontrackersv5_gantt_chart AS A
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
                        INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_righttext
@@ -244,8 +244,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.field_righttext = F.id";
         $this->update($sql);
 
-        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A
-                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+        $sql = "UPDATE plugin_graphontrackersv5_gantt_chart AS A
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
                        INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.summary
