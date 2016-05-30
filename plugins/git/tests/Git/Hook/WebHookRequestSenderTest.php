@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Git\Hook;
+namespace Tuleap\Git\Hook;
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-use Tuleap\Git\Git\Hook\WebHookRequestSender;
+use Tuleap\Git\Hook\WebHookRequestSender;
 use TuleapTestCase;
 use UserHelper;
 
@@ -44,10 +44,10 @@ class WebHookRequestSenderTest extends TuleapTestCase
 
     public function itSendsOneRequestPerDefinedHook()
     {
-        $factory     = mock('Tuleap\Git\Git\Hook\WebHookFactory');
+        $factory     = mock('Tuleap\Git\Hook\WebHookFactory');
         $http_client = mock('Http_Client');
         $logger      = mock('Logger');
-        $receiver    = mock('Tuleap\Git\Git\Hook\WebHookResponseReceiver');
+        $receiver    = mock('Tuleap\Git\Hook\WebHookResponseReceiver');
         $sender      = new WebHookRequestSender($receiver, $factory, $http_client, $logger);
 
         $repository = mock('GitRepository');

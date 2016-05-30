@@ -51,7 +51,7 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
         $this->system_event_manager       = mock('Git_SystemEventManager');
         $this->mail_builder               = mock('MailBuilder');
         $this->event_manager              = mock('EventManager');
-        $this->request_sender             = mock('Tuleap\Git\Git\Hook\WebHookRequestSender');
+        $this->request_sender             = mock('Tuleap\Git\Hook\WebHookRequestSender');
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,

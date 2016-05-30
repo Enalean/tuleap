@@ -21,7 +21,7 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
-use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\Hook\WebHookDao;
 
 require_once 'constants.php';
 require_once 'autoload.php';

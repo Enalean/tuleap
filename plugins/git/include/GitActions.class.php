@@ -24,7 +24,7 @@ require_once('common/layout/Layout.class.php');
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
-use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\Hook\WebHookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 /**

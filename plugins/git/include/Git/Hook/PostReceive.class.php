@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Git\Hook\WebHookRequestSender;
+use Tuleap\Git\Hook\WebHookRequestSender;
 
 /**
  * Central access point for things that needs to happen when post-receive is

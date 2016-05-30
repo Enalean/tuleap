@@ -24,7 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
-use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\Hook\WebHookDao;
 
 /**
  * Git
