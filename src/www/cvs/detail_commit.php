@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2016. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -17,30 +18,32 @@ $order     = $request->get('order');
 $order_str = "";
 
 if ($order) {
-  if ($order != 'filename')
-    $order_str = " ORDER BY ".$order;
-  else
-    $order_str = " ORDER BY dir, file";
+  if ($order === 'filename') {
+      $order_str = " ORDER BY dir, file";
+  }
 }
 
 $when_str = '';
-$id_str   = "AND cvs_checkins.descid='$checkin_id' ";
+$id_str   = "AND cvs_checkins.descid=". db_ei($checkin_id) ." ";
 
 $commit_id  = $request->get('commit_id');
 if ($commit_id) {
-  $id_str = "AND cvs_checkins.commitid='$commit_id' ";
+  $id_str    = "AND cvs_checkins.commitid=" . db_ei($commit_id) ." ";
   if ($desc_id) {
-    $id_str = $id_str . "AND cvs_checkins.descid='$desc_id' ";
+    $desc_id = db_ei($desc_id);
+    $id_str  = $id_str . "AND cvs_checkins.descid=$desc_id ";
   }
 }
 
 $when = $request->get('when');
 if ($when) {
+  $when     = db_es($when);
   $when_str = "AND cvs_checkins.ci_when='$when' ";
 }
 
 $tag = $request->get('tag');
 if ($tag) {
+  $tag      = db_es($tag);
   $when_str = $when_str."AND cvs_checkins.stickytag='$tag' ";
 }
 

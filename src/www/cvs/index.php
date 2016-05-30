@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2016. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -39,7 +40,7 @@ switch ($func) {
  }
 
  case 'setAdmin' : {
-   $sql = "SELECT cvs_is_private FROM groups WHERE group_id=". (int)$group_id;
+   $sql = "SELECT cvs_is_private FROM groups WHERE group_id=". db_ei($group_id);
    $result = db_query($sql);
    $initial_settings = db_fetch_array($result);
    
@@ -80,14 +81,20 @@ switch ($func) {
        }
    }
 
+   if ($mailing_list !== 'NULL') {
+       $mailing_list = '"' . db_es($mailing_list) . '"';
+   }
+   if ($mailing_header !== 'NULL') {
+       $mailing_header = '"' . db_es($mailing_header) . '"';
+   }
    $query = 'update groups 
-             set cvs_tracker="'.$tracked.'",
-                 cvs_watch_mode="'.$watches.'", 
-                 cvs_events_mailing_list="'.$mailing_list.'", 
-                 cvs_events_mailing_header="'.$mailing_header.'", 
-                 cvs_preamble="'.htmlspecialchars($form_preamble).'" '.
+             set cvs_tracker="'. db_es($tracked) .'",
+                 cvs_watch_mode="'. db_es($watches) .'",
+                 cvs_events_mailing_list='.$mailing_list.',
+                 cvs_events_mailing_header='.$mailing_header.',
+                 cvs_preamble="'. db_es(htmlspecialchars($form_preamble)) .'" '.
                  $is_private .'
-             where group_id='.$group_id;
+             where group_id='. db_ei($group_id);
    $result=db_query($query);
    require('../cvs/admin_commit.php');
    break;

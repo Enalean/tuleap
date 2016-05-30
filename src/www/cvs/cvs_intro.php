@@ -1,8 +1,8 @@
 <?php
 //
-// Codendi
+// Tuleap
+// Copyright (c) Enalean, 2016. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
 //
 // 
 //
@@ -26,7 +26,7 @@ commits_header(array(
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 
 // Get group properties
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
 $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information

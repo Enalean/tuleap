@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2016. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -23,7 +24,7 @@ commits_header(array(
 ));
 
 // get project name
-$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=$group_id";
+$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=" . db_ei($group_id);
 
 $result = db_query($sql);
 $projectname = db_result($result, 0, 'unix_group_name');

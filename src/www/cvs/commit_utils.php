@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2016. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -66,15 +67,16 @@ function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_10
 	if (!$group_id) {
 		return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
 	} else {
-	  $sql = "SELECT unix_group_name from groups where group_id=$group_id";
+	  $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
 
-	  $result = db_query($sql);
-	  $projectname = db_result($result, 0, 'unix_group_name');
+	  $result         = db_query($sql);
+	  $projectname    = db_result($result, 0, 'unix_group_name');
+	  $cvs_repository = db_es('/cvsroot/' . $projectname);
 		/*
 			List of possible commits_categories set up for the project
 		*/
 		$sql="select distinct cvs_branches.* FROM cvs_branches, cvs_checkins, cvs_repositories  where ".
-		  "cvs_checkins.repositoryid=cvs_repositories.id AND cvs_repositories.repository='/cvsroot/".$projectname."' ".
+		  "cvs_checkins.repositoryid=cvs_repositories.id AND cvs_repositories.repository='$cvs_repository' ".
 		  "AND cvs_checkins.branchid=cvs_branches.id";
 		$result=db_query($sql);
 
@@ -86,9 +88,10 @@ function commits_data_get_technicians($projectname) {
 
     // Get list of all people who once committed something in the CVS
     // including those who may have been removed from the project since then.
+	$cvs_repository = db_es('%/' . $projectname);
     $sql="SELECT DISTINCT user.user_name, user.user_name ".
         "FROM cvs_checkins, cvs_repositories, user ".
-        "WHERE (cvs_repositories.repository like '%/".$projectname."') AND (cvs_repositories.id = cvs_checkins.repositoryid) AND (cvs_checkins.whoid=user.user_id) ".
+        "WHERE (cvs_repositories.repository like '$cvs_repository') AND (cvs_repositories.id = cvs_checkins.repositoryid) AND (cvs_checkins.whoid=user.user_id) ".
         "ORDER BY user.user_name ASC";
 	return db_query($sql);
 }
@@ -107,12 +110,13 @@ function commits_technician_box($projectname,$name='_commiter',$checked='xzxz',$
 }
 
 function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='None' ) {
-  $sql = "SELECT unix_group_name from groups where group_id=$group_id";
+  $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
 
   $result = db_query($sql);
   $projectname = db_result($result, 0, 'unix_group_name');
-  
-  $sql="select distinct stickytag, stickytag from cvs_checkins, cvs_repositories where cvs_checkins.repositoryid=cvs_repositories.id AND cvs_repositories.repository='/cvsroot/".$projectname."'";
+
+  $cvs_repository = db_es('/cvsroot/' . $projectname);
+  $sql="select distinct stickytag, stickytag from cvs_checkins, cvs_repositories where cvs_checkins.repositoryid=cvs_repositories.id AND cvs_repositories.repository='$cvs_repository'";
   $result=db_query($sql);
   return html_build_select_box($result,$name,$checked,true,$text_100);
 }
@@ -286,7 +290,7 @@ function show_commitslist(
 }
 
 function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
-  $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+  $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
 
   $view_str=$displayfunc;
   if ($rev) {
@@ -299,7 +303,7 @@ function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
 }
 
 function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
-  $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+  $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
   $row_grp = db_fetch_array($res_grp);
   $group_name = $row_grp['unix_group_name'];
   return '<A HREF="/cvs/viewvc.php/'.$dir.'?root='.$group_name.'&roottype=cvs"><B>'.$text.'</B></A>';
@@ -447,7 +451,7 @@ function show_commit_details ($group_id, $commit_id, $result)
 		($removed == 999)) { // the default values
 	      // back to rcs to complete
 	      $repo = db_result($result,$i,'repository');
-	      $command = "rlog -r".$revision." ".$repo."/".$filename;
+	      $command = "rlog -r".escapeshellarg($revision)." ". escapeshellarg($repo."/".$filename);
 	      $output = array();
 	      exec($command, $output, $ret);
 	      $added = 0;
@@ -457,9 +461,12 @@ function show_commit_details ($group_id, $commit_id, $result)
 		$line = $output[$l];
 		$l++;
 		if (preg_match ('/state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$/', $line, $na)) {
-		  $added = $na[1];
-		  $removed = $na[2];
-		  $sql_up = "UPDATE cvs_checkins SET addedlines=".$added.", removedlines=".$removed." WHERE repositoryid=".db_result($result,$i,'repositoryid')." AND dirid=".db_result($result,$i,'dirid')." AND fileid=".db_result($result,$i,'fileid')." AND revision=".$revision;
+		  $added         = db_ei($na[1]);
+		  $removed       = db_ei($na[2]);
+		  $repository_id = db_ei(db_result($result,$i,'repositoryid'));
+		  $dir_id        = db_ei(db_result($result,$i,'dirid'));
+		  $file_id       = db_ei(db_result($result,$i,'fileid'));
+		  $sql_up        = "UPDATE cvs_checkins SET addedlines=".$added.", removedlines=".$removed." WHERE repositoryid=". $repository_id ." AND dirid=". $dir_id ." AND fileid=". $file_id ." AND revision='". db_es($revision) . "'";
 		  $res=db_query($sql_up);
 		  break;
 		}
@@ -588,10 +595,11 @@ function get_cvs_history($group_id, $period=false) {
     // All times in cvs tables are stored in UTC ???
     $date_clause = "AND co.comm_when >= ".date("YmdHis",(gmdate('U')-$period))." ";
   } else $date_clause = "";
+  $cvs_repository = db_es('/cvsroot/' . $group->getUnixName(false));
   $query = "SELECT u.user_name, count(co.id) as commits ".
     "FROM cvs_commits co, user u, cvs_repositories repo, cvs_checkins ci ".
     "WHERE co.whoid=u.user_id ".
-    "AND repo.repository='/cvsroot/".$group->getUnixName(false)."' ".
+    "AND repo.repository='$cvs_repository' ".
     "AND ci.repositoryid=repo.id ".
     "AND ci.whoid=co.whoid ".
     "AND ci.commitid=co.id ".
@@ -602,6 +610,7 @@ function get_cvs_history($group_id, $period=false) {
 }
 
 function get_user_shell($user_id) {
+    $user_id  = db_ei($user_id);
     $res_user = db_query("SELECT shell FROM user WHERE user_id=$user_id");
     $row_user = db_fetch_array($res_user);
     return $row_user['shell'];
@@ -650,19 +659,10 @@ function get_group_id_from_repository($repository) {
 }
 
 function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', $order_by = '', $pv = 0) {
-    //if tag selected, and more to where clause
-    if ($_tag != 100) {
-        //for open tasks, add status=100 to make sure we show all
-        $tag_str="AND cvs_checkins.stickytag='$_tag'";
-    } else {
-        //no status was chosen, so don't add it to where clause
-        $tag_str='';
-    }
-    
     //if status selected, and more to where clause
     if ($_branch != 100) {
         //for open tasks, add status=100 to make sure we show all
-        $branch_str="AND cvs_checkins.branchid='$_branch'";
+        $branch_str="AND cvs_checkins.branchid=" . db_ei($_branch);
     } else {
         //no status was chosen, so don't add it to where clause
         $branch_str='';
@@ -670,13 +670,15 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     
     //if assigned to selected, and more to where clause
     if ($_commit_id != '') {
-      $commit_str="AND cvs_commits.id='$_commit_id' AND cvs_checkins.commitid != 0 ";
+      $_commit_id = db_ei($_commit_id);
+      $commit_str = "AND cvs_commits.id=$_commit_id AND cvs_checkins.commitid != 0 ";
     } else {
       $commit_str='';
     }
     
     if ($_commiter != 100) {
-        $commiter_str="AND user.user_id=cvs_checkins.whoid ".
+        $_commiter    = db_ei($_commiter);
+        $commiter_str = "AND user.user_id=cvs_checkins.whoid ".
           "AND user.user_name='$_commiter' ";
     } else {
         //no assigned to was chosen, so don't add it to where clause
@@ -684,7 +686,8 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     }
     
     if ($_srch != '') {
-      $srch_str = "AND cvs_descs.description like '%".$_srch."%' ";
+      $_srch    = db_es('%' . $_srch . '%');
+      $srch_str = "AND cvs_descs.description like '$_srch' ";
     } else {
       $srch_str = "";
     }
@@ -699,7 +702,8 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     //		   'help' => 'CommitsManager.html'));
     
     // get repository id
-    $query = "SELECT id from cvs_repositories where cvs_repositories.repository='/cvsroot/".$project->getUnixName(false)."' ";
+    $cvs_repository = db_es('/cvsroot/' . $project->getUnixName(false));
+    $query = "SELECT id from cvs_repositories where cvs_repositories.repository='$cvs_repository' ";
     $rs = db_query($query);
     $repo_id = db_result($rs, 0, 0);
     $repo_id = $repo_id ? $repo_id : -1;
@@ -743,7 +747,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
 }
 
 function cvs_get_revision_detail($commit_id) {
-    
+    $commit_id = db_ei($commit_id);
     $sql = "SELECT repository, cvs_commits.comm_when as c_when, repositoryid, description, file, fileid, dir, dirid, type, branch, revision, addedlines, removedlines ".
                     "FROM cvs_dirs, cvs_descs, cvs_files, cvs_checkins, cvs_branches, cvs_repositories, cvs_commits ".
                     "WHERE cvs_checkins.fileid=cvs_files.id ".
@@ -752,7 +756,7 @@ function cvs_get_revision_detail($commit_id) {
                     "   AND cvs_checkins.branchid=cvs_branches.id ".
                     "   AND cvs_checkins.descid=cvs_descs.id ".
                     "   AND cvs_checkins.repositoryid=cvs_repositories.id ".
-                    "   AND cvs_checkins.commitid='$commit_id' ";
+                    "   AND cvs_checkins.commitid=$commit_id ";
     $result = db_query($sql);
     return $result;
 }
