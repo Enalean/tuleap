@@ -23,13 +23,15 @@ namespace Tuleap\Tracker\Config;
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
+use Tuleap\Tracker\Deprecation\DeprecationController;
 use CSRFSynchronizerToken;
 use Codendi_Request;
 use Response;
 use PFUser;
 use Feedback;
 
-class ConfigRouter {
+class ConfigRouter
+{
 
     /** @var NatureConfigController */
     private $nature_controller;
@@ -40,17 +42,23 @@ class ConfigRouter {
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
+    /** @var DeprecationController */
+    private $deprecation_controller;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         MailGatewayConfigController $mailgateway_controller,
-        NatureConfigController $nature_controller
+        NatureConfigController $nature_controller,
+        DeprecationController $deprecation_controller
     ) {
-        $this->csrf                   = $csrf;
-        $this->mailgateway_controller = $mailgateway_controller;
-        $this->nature_controller      = $nature_controller;
+        $this->csrf                    = $csrf;
+        $this->mailgateway_controller  = $mailgateway_controller;
+        $this->nature_controller       = $nature_controller;
+        $this->deprecation_controller = $deprecation_controller;
     }
 
-    public function process(Codendi_Request $request, Response $response, PFUser $user) {
+    public function process(Codendi_Request $request, Response $response, PFUser $user)
+    {
         $this->checkUserIsSiteadmin($user, $response);
 
         switch ($request->get('action')) {
@@ -79,6 +87,9 @@ class ConfigRouter {
             case 'natures':
                 $this->nature_controller->index($this->csrf, $response);
                 break;
+            case 'deprecation':
+                $this->deprecation_controller->index($response);
+                break;
             case 'update-emailgateway':
                 $this->csrf->check();
                 $this->mailgateway_controller->update($request, $response);
@@ -90,7 +101,8 @@ class ConfigRouter {
 
     }
 
-    private function checkUserIsSiteadmin(PFUser $user, Response $response) {
+    private function checkUserIsSiteadmin(PFUser $user, Response $response)
+    {
         if (! $user->isSuperUser()) {
             $response->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'perm_denied'));
             $response->redirect('/');

@@ -52,6 +52,12 @@
         height: 25px;
     }
 
+    .tracker-deprecated-fields {
+        & > thead > tr > th {
+            border-bottom-color: $main;
+        }
+    }
+
 }
 
 body {

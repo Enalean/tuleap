@@ -1,0 +1,44 @@
+<h2>{{ title }}</h2>
+
+{{# sections }}
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="{{ emailgateway_url }}">{{ emailgateway }}</a>
+        </li>
+        <li>
+            <a href="{{ natures_url }}">{{ natures }}</a>
+        </li>
+        <li class="active">
+            <a href="{{ deprecation_url }}">{{ deprecation_panel }}</a>
+        </li>
+    </ul>
+{{/ sections }}
+
+<p class="alert alert-warning">
+{{ warning_deprecation }}
+</p>
+
+    <table class="tracker-deprecated-fields table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>{{ project_title }}</th>
+                <th>{{ tracker_title }}</th>
+                <th>{{ incremented_files_title }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{# projects }}
+            <tr>
+                <td>
+                    <a href="{{ getBaseUrl }}/project/?group_id={{ getProjectId }}">{{ getProjectName }}</a>
+                </td>
+                <td>
+                    <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ getProjectId }}&tracker={{ getTrackerId }}">{{ getTrackerName }}</a>
+                </td>
+                <td>
+                    <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ getProjectId }}&tracker={{ getTrackerId }}&func=admin-formElements">{{ getFieldName }}</a>
+                </td>
+            </tr>
+        {{/ projects }}
+        </tbody>
+    </table>

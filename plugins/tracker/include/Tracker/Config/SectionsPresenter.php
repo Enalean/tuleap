@@ -20,22 +20,30 @@
 
 namespace Tuleap\Tracker\Config;
 
-class SectionsPresenter {
+class SectionsPresenter
+{
 
     public $emailgateway;
     public $natures;
+    public $deprecation_panel;
     public $emailgateway_url;
     public $natures_url;
+    public $deprecation_url;
 
-    public function __construct() {
-        $this->emailgateway = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
-        $this->natures      = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
+    public function __construct()
+    {
+        $this->emailgateway       = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
+        $this->natures            = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
+        $this->deprecation_panel = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title');
 
         $this->emailgateway_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
             'action'   => 'emailgateway'
         ));
         $this->natures_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
             'action'   => 'natures'
+        ));
+        $this->deprecation_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
+            'action'   => 'deprecation'
         ));
     }
 }
