@@ -65,7 +65,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     }
 
     public function itAsksToPluginToImportInformationsFromTheGivenXml() {
-        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
 
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT,
@@ -83,33 +83,20 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     }
 
     public function itAsksProjectManagerForTheProject() {
-        expect($this->project_manager)->getProject(122)->once();
-        $this->expectException();
+        stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
+        expect($this->project_manager)->getValidProjectByShortNameOrId(122)->once();
         $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itStopsIfNoProjectIsFound() {
-        $this->expectException();
-
-        $this->xml_importer->import(122, $this->xml_file_path);
-    }
-
-    public function itStopsIfProjectIsError() {
-        stub($this->project_manager)->getProject()->returns(stub('Project')->isError()->returns(true));
-        $this->expectException();
-
-        $this->xml_importer->import(122, $this->xml_file_path);
-    }
-
-    public function itStopsIfProjectIsDeleted() {
-        stub($this->project_manager)->getProject()->returns(stub('Project')->isDeleted()->returns(true));
+        stub($this->project_manager)->getValidProjectByShortNameOrId()->throws(new Project_NotFoundException());
         $this->expectException();
 
         $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itImportsProjectDataWithUgroups() {
-        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
         stub($this->ugroup_manager)->getUGroupByName()->returns(false);
 
         $user_01 = aUser()->withLdapId('ldap_01')->withUserName('user_01')->withId(101)->build();
@@ -143,7 +130,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     }
 
     public function itDoesNotImportsExistingUgroups() {
-        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ug01')->returns(false);
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ug02')->returns(true);
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ug03')->returns(false);
@@ -183,7 +170,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $project_member_ugroup = mock('ProjectUGroup');
 
         stub($this->ugroup_manager)->getDynamicUGoupByName($this->project, 'project_members')->returns($project_member_ugroup);
-        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->project_manager)->getValidProjectByShortNameOrId()->returns($this->project);
         stub($this->user_manager)->getUserByIdentifier('ldapId:ldap_01')->returns($user);
 
         //No exception must be raised --> nothing to assert

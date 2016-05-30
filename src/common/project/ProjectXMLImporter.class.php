@@ -118,7 +118,7 @@ class ProjectXMLImporter {
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $project = $this->getProject($project_id);
+        $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
 
         $this->importContent($project, $xml_element, $archive->getExtractionPath());
     }
@@ -129,7 +129,7 @@ class ProjectXMLImporter {
         $xml_element     = $this->getSimpleXMLElementFromFilePath($xml_file_path);
         $extraction_path = '';
 
-        $project = $this->getProject($project_id);
+        $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
 
         $this->importContent($project, $xml_element, $extraction_path);
     }
@@ -368,17 +368,5 @@ class ProjectXMLImporter {
         if (! empty($errors)){
             throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_xml'));
         }
-    }
-
-    /**
-     * @throws RuntimeException
-     * @return Project
-     */
-    private function getProject($project_id) {
-        $project = $this->project_manager->getProject($project_id);
-        if (! $project || ($project && ($project->isError() || $project->isDeleted()))) {
-            throw new RuntimeException('Invalid project_id '.$project_id);
-        }
-        return $project;
     }
 }

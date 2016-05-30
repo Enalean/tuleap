@@ -47,11 +47,11 @@ function usage() {
     global $argv;
 
     echo <<< EOT
-Usage: $argv[0] -p project_id -u user_name -o path_to_archive [-t tracker_id] [-f] [-x]
+Usage: $argv[0] -p project -u user_name -o path_to_archive [-t tracker_id] [-f] [-x]
 
 Dump a project structure to XML format
 
-  -p <project_id> The id of the project to export
+  -p <project>    The id or shortname of the project to export
   -u <user_name>  The user used to export
   -t <tracker_id> The id of the tracker to include in the export (optional)
   -o <path>       The full path where the archive (project in XML + data) will be created (example: /tmp/archive.zip)
@@ -74,7 +74,7 @@ if (isset($arguments['h'])) {
 if (! isset($arguments['p'])) {
     usage();
 } else {
-    $project_id = (int)$arguments['p'];
+    $project_id = $arguments['p'];
 }
 
 if (! isset($arguments['u'])) {
@@ -101,63 +101,62 @@ if (isset($arguments['t'])) {
 
 $options['force'] = isset($arguments['f']);
 
-$project = ProjectManager::instance()->getProject($project_id);
-if ($project && ! $project->isError() && ! $project->isDeleted()) {
-    try {
-        $rng_validator    = new XML_RNGValidator();
-        $users_collection = new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory());
+try {
+    $project =  ProjectManager::instance()->getValidProjectByShortNameOrId($project_id);
 
-        $xml_exporter = new ProjectXMLExporter(
-            EventManager::instance(),
-            new UGroupManager(),
-            $rng_validator,
-            new UserXMLExporter(UserManager::instance(), $users_collection),
-            new ProjectXMLExporterLogger()
-        );
+    $rng_validator    = new XML_RNGValidator();
+    $users_collection = new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory());
 
-        if (isset ($arguments['dir'])) {
-            $archive = new Export\DirectoryArchive($output);
-        } else {
-            $archive = new Export\ZipArchive($output);
-        }
+    $xml_exporter = new ProjectXMLExporter(
+        EventManager::instance(),
+        new UGroupManager(),
+        $rng_validator,
+        new UserXMLExporter(UserManager::instance(), $users_collection),
+        new ProjectXMLExporterLogger()
+    );
 
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
-
-        $user = UserManager::instance()->forceLogin($username);
-
-        $xml_content       = $xml_exporter->export($project, $options, $user, $archive);
-        $users_xml_content = $users_collection->toXML();
-
-        if ($display_xml) {
-            echo $xml_content;
-            echo PHP_EOL;
-            echo $users_xml_content;
-        }
-
-        $archive->addFromString(Export\ArchiveInterface::PROJECT_FILE, $xml_content);
-        $archive->addFromString(Export\ArchiveInterface::USER_FILE, $users_xml_content);
-
-        $xml_security->disableExternalLoadOfEntities();
-
-        $archive->close();
-
-        fwrite(STDOUT, "Archive $output created." . PHP_EOL);
-
-        exit(0);
-    } catch (XML_ParseException $exception) {
-        fwrite(STDERR, "*** PARSE ERROR: ".$exception->getIndentedXml().PHP_EOL);
-        foreach ($exception->getErrors() as $parse_error) {
-            fwrite(STDERR, "*** PARSE ERROR: ".$parse_error.PHP_EOL);
-        }
-        fwrite(STDERR, "RNG path: ". $exception->getRngPath() . PHP_EOL);
-        exit(1);
-    } catch (Exception $exception) {
-        fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
-        exit(1);
+    if (isset ($arguments['dir'])) {
+        $archive = new Export\DirectoryArchive($output);
+    } else {
+        $archive = new Export\ZipArchive($output);
     }
-} else {
-    echo "*** ERROR: Invalid project_id\n";
+
+    $xml_security = new XML_Security();
+    $xml_security->enableExternalLoadOfEntities();
+
+    $user = UserManager::instance()->forceLogin($username);
+
+    $xml_content       = $xml_exporter->export($project, $options, $user, $archive);
+    $users_xml_content = $users_collection->toXML();
+
+    if ($display_xml) {
+        echo $xml_content;
+        echo PHP_EOL;
+        echo $users_xml_content;
+    }
+
+    $archive->addFromString(Export\ArchiveInterface::PROJECT_FILE, $xml_content);
+    $archive->addFromString(Export\ArchiveInterface::USER_FILE, $users_xml_content);
+
+    $xml_security->disableExternalLoadOfEntities();
+
+    $archive->close();
+
+    fwrite(STDOUT, "Archive $output created." . PHP_EOL);
+
+    exit(0);
+} catch (XML_ParseException $exception) {
+    fwrite(STDERR, "*** PARSE ERROR: ".$exception->getIndentedXml().PHP_EOL);
+    foreach ($exception->getErrors() as $parse_error) {
+        fwrite(STDERR, "*** PARSE ERROR: ".$parse_error.PHP_EOL);
+    }
+    fwrite(STDERR, "RNG path: ". $exception->getRngPath() . PHP_EOL);
+    exit(1);
+} catch (Project_NotFoundException $exception) {
+    fwrite(STDERR, "*** ERROR: Invalid -p <project> parameter: project not found".PHP_EOL);
+    exit(1);
+} catch (Exception $exception) {
+    fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
     exit(1);
 }
 
