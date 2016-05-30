@@ -88,6 +88,12 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->xml_importer->import(122, $this->xml_file_path);
     }
 
+    public function itAsksProjectManagerForProjectByUnixName() {
+        expect($this->project_manager)->getProjectByUnixName('1gpig')->once();
+        $this->expectException();
+        $this->xml_importer->import('1gpig', $this->xml_file_path);
+    }
+
     public function itStopsIfNoProjectIsFound() {
         $this->expectException();
 

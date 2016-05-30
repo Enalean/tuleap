@@ -375,10 +375,20 @@ class ProjectXMLImporter {
      * @return Project
      */
     private function getProject($project_id) {
-        $project = $this->project_manager->getProject($project_id);
+        try {
+            $project = $this->project_manager->getProjectByUnixName($project_id);
+            $this->assertProjectIsValid($project_id, $project);
+            return $project;
+        } catch (RuntimeException $exception) {
+            $project = $this->project_manager->getProject($project_id);
+            $this->assertProjectIsValid($project_id, $project);
+            return $project;
+        }
+    }
+
+    private function assertProjectIsValid($project_id, $project) {
         if (! $project || ($project && ($project->isError() || $project->isDeleted()))) {
             throw new RuntimeException('Invalid project_id '.$project_id);
         }
-        return $project;
     }
 }
