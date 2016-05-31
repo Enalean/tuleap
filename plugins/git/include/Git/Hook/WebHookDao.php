@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Git\Hook;
+namespace Tuleap\Git\Hook;
 
 use DataAccessObject;
 

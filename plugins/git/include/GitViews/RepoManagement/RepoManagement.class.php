@@ -19,8 +19,8 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
-use Tuleap\Git\Git\Hook\WebHookFactory;
-use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\Hook\WebHookFactory;
+use Tuleap\Git\Hook\WebHookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 /**
