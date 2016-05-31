@@ -89,7 +89,10 @@ class ExecutionRepresentationBuilder {
     /**
      * @return \Tuleap\Trafficlights\REST\v1\ExecutionRepresentation
      */
-    public function getExecutionRepresentation(PFUser $user, Tracker_Artifact $execution) {
+    public function getExecutionRepresentation(
+        PFUser $user,
+        Tracker_Artifact $execution
+    ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
         $definition_representation      = $this->getDefinitionRepresentationForExecution($user, $execution);
         $execution_representation       = new ExecutionRepresentation();

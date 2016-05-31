@@ -22,6 +22,7 @@
                  onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
                  alt="avatar">
             <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score >= 0">{{ presence.score }}</span>
+            <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score < 0">0</span>
         </span>
         <span id="more-avatars" ng-if="presences_on_campaign.length > 3" ng-click="showPresencesModal()"><i class="icon-ellipsis-horizontal"></i></span>
     </div>

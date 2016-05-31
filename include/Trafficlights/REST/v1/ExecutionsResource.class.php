@@ -133,7 +133,7 @@ class ExecutionsResource {
      *
      * @param string $id      Id of the artifact
      * @param string $status  Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
-     * @param int    $time     Time to pass the execution {@from body}
+     * @param int    $time    Time to pass the execution {@from body}
      * @param string $results Result of the execution {@from body}
      *
      * @throws 400
@@ -141,13 +141,13 @@ class ExecutionsResource {
      */
     protected function putId($id, $status, $time = 0, $results = '') {
         $previous_status = '';
-        $preivous_user   = '';
+        $previous_user   = '';
         try {
             $user            = UserManager::instance()->getCurrentUser();
             $artifact        = $this->getArtifactById($user, $id);
             $changes         = $this->getChanges($status, $time, $results, $artifact, $user);
             $previous_status = $this->getPreviousStatus($artifact);
-            $preivous_user   = $this->getPreviousSubmittedBy($artifact);
+            $previous_user   = $this->getPreviousSubmittedBy($artifact);
 
             $updater = new Tracker_REST_Artifact_ArtifactUpdater(
                 new Tracker_REST_Artifact_ArtifactValidator(
@@ -176,7 +176,7 @@ class ExecutionsResource {
                 'artifact'        => $execution_representation,
                 'previous_status' => $previous_status,
                 'user'            => $user_representation,
-                'previous_user'   => $preivous_user
+                'previous_user'   => $previous_user
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
             $message  = new MessageDataPresenter(

@@ -21,7 +21,8 @@
                 </div>
 
                 <div class="avatar-score">
-                    <span>{{ presence.score }}</span>
+                    <span ng-if="presence.score >= 0">{{ presence.score }}</span>
+                    <span ng-if="presence.score < 0">0</span>
                 </div>
             </div>
             <i class="icon-star"></i>
@@ -38,7 +39,8 @@
                     </div>
                 </div>
                 <div class="avatar-score">
-                    <span>{{ presence.score }}</span>
+                    <span ng-if="presence.score >= 0">{{ presence.score }}</span>
+                    <span ng-if="presence.score < 0">0</span>
                 </div>
             </div>
         </div>
