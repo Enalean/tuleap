@@ -1,3 +1,6 @@
+Version 4.174 - Tuleap 8.16
+    * story #9083: Refactoring: new git settings pane should be PSR-2
+
 Version 4.173 - Tuleap 8.16
     * story #9182: Have the possibility to get informations about Git execution
 

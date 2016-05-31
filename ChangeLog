@@ -12,10 +12,11 @@ Version 8.16 (Not yet release)
 		- Service
 
 	== Plugins ==
-	* git: 4.173
+	* git: 4.174
 	* agiledashboard: 1.381
 	* tracker: 5.898
 	* tracker_date_reminder: 1.2.10
+	* hudson_git: 0.18
 
 Version 8.15 (Thursday, May 26th 2016)
 	== Bug fix ==
