@@ -28,7 +28,9 @@ use System_Command;
 
 use Tuleap\Svn\Repository\Repository;
 
-class Svnlook {
+class Svnlook
+{
+    private $timeout = '/usr/bin/timeout 5s';
     private $svnlook = '/usr/bin/svnlook';
     private $system_commnd;
 
@@ -51,8 +53,9 @@ class Svnlook {
         return $this->system_commnd->exec($command);
     }
 
-    public function getTree(Repository $repository) {
-        $command = $this->svnlook.' tree --full-paths '.escapeshellarg($repository->getSystemPath());
+    public function getTree(Repository $repository)
+    {
+        $command =  $this->timeout .' '. $this->svnlook.' tree --full-paths '.escapeshellarg($repository->getSystemPath());
         return $this->system_commnd->exec($command);
     }
 

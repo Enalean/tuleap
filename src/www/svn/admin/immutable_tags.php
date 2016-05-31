@@ -50,12 +50,17 @@ $project = $pm->getProject($group_id);
 $template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/svn/';
 $renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 $svnlook      = new SVN_Svnlook();
+try {
+    $existing_tree = $svnlook->getTree($project);
+} catch (SVN_SvnlookException $exception) {
+    $existing_tree = SVN_ImmutableTagsPresenter::$SO_MUCH_FOLDERS;
+}
 
 $presenter = new SVN_ImmutableTagsPresenter(
     $project,
     $immutable_tags_handler->getImmutableTagsWhitelistForProject($group_id),
     $immutable_tags_handler->getImmutableTagsPathForProject($group_id),
-    $svnlook->getTree($project)
+    $existing_tree
 );
 
 $renderer->renderToPage(

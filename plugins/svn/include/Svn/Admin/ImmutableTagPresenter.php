@@ -26,8 +26,12 @@ namespace Tuleap\Svn\Admin;
 
 use Tuleap\Svn\Repository\Repository;
 
-class ImmutableTagPresenter extends BaseAdminPresenter {
-    const MAX_NUMBER_OF_FOLDERS = 10000;
+class ImmutableTagPresenter extends BaseAdminPresenter
+{
+    // Should be a const, waiting for PHP 5.6+
+    public static $SO_MUCH_FOLDERS = array();
+
+    const MAX_NUMBER_OF_FOLDERS    = 10000;
 
     public $svn_allow_tag_immutable_title;
     public $svn_allow_tag_immutable_comment;
@@ -69,10 +73,11 @@ class ImmutableTagPresenter extends BaseAdminPresenter {
         $this->immutable_tag_url_active        = true;
 
         $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));
-        $this->exceeds_max_number_of_folders = count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS;
-        if ($this->exceeds_max_number_of_folders) {
+        if ($existing_tree === self::$SO_MUCH_FOLDERS || count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS) {
+            $this->exceeds_max_number_of_folders = true;
             $existing_tree = array();
         } else {
+            $this->exceeds_max_number_of_folders = false;
             array_walk($existing_tree, array($this, 'addSlasheAsPrefix'));
             usort($existing_tree, 'strnatcasecmp');
         }
