@@ -49,9 +49,9 @@ class BotFactory
         );
         if (! $this->doesBotAlreadyExist($bot_name, $bot_webhook_url)) {
             $id = $this->dao->addBotAndChannels(
-                $bot_name,
-                $bot_webhook_url,
-                $bot_avatar_url,
+                trim($bot_name),
+                trim($bot_webhook_url),
+                trim($bot_avatar_url),
                 $channels_names
             );
             if (! $id) {
