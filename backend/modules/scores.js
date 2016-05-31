@@ -64,6 +64,39 @@ define([
         /**
          * @access public
          *
+         * Function to add score
+         * by user id and room id
+         *
+         * @param user     (Object)
+         * @param room_id  (string)
+         */
+        self.addScoreByUserIdAndRoomId = function(user, room_id) {
+            try {
+                if (! _.has(self.user_scores_collection, user.id)) {
+                    self.user_scores_collection[user.id] = [];
+                }
+
+                var user_score_room = getByUserIdAndRoomId(user.id, room_id);
+
+                if (! user_score_room) {
+                    _.extend(user, {
+                        score: 0
+                    });
+                    user_score_room = {
+                        room_id: room_id,
+                        user   : user
+                    };
+                    self.user_scores_collection[user.id].push(user_score_room);
+                }
+                return true;
+            } catch (e) {
+                return false;
+            }
+        };
+
+        /**
+         * @access public
+         *
          * Function to get score
          * by user id and room id
          *
@@ -75,7 +108,7 @@ define([
             var user_score = getByUserIdAndRoomId(user_id, room_id);
 
             if (user_score) {
-                score = user_score.score;
+                score = user_score.user.score;
             }
 
             return score;
@@ -84,26 +117,47 @@ define([
         /**
          * @access public
          *
+         * Function to get score
+         * for all users by room id
+         *
+         * @param room_id  (string)
+         */
+        self.getAllUsersByRoomId = function(room_id) {
+            var users = [];
+            _.forEach(self.user_scores_collection, function (score_by_user) {
+                _.forEach(score_by_user, function(score_by_room) {
+                    if (score_by_room.room_id === room_id) {
+                        users.push(score_by_room.user);
+                    }
+                });
+            });
+
+            return users;
+        };
+
+        /**
+         * @access public
+         *
          * Function to verify if the test
          * is finished before adding new score
          *
-         * @param user_id      (int)
-         * @param room_id      (string)
-         * @param data         (Object)
+         * @param user     (Object)
+         * @param room_id  (string)
+         * @param data     (Object)
          */
-        self.update = function(user_id, room_id, data) {
-            var status           = data.artifact.status;
-            var previous_status  = data.previous_status;
-            var previous_user_id = data.previous_user.id;
+        self.update = function(user, room_id, data) {
+            var status          = data.artifact.status;
+            var previous_status = data.previous_status;
+            var previous_user   = data.previous_user;
             var delta_for_current_user  = score_map_previous_status_to_status_for_current_user[previous_status][status];
             var delta_for_previous_user = score_map_previous_status_to_status_for_previous_user[previous_status][status];
 
-            if (delta_for_current_user) {
-                updateByUser(delta_for_current_user, user_id, room_id);
+            if (user) {
+                updateByUser(delta_for_current_user, user, room_id);
             }
 
-            if (delta_for_previous_user) {
-                updateByUser(delta_for_previous_user, previous_user_id, room_id);
+            if (previous_user) {
+                updateByUser(delta_for_previous_user, previous_user, room_id);
             }
         };
 
@@ -136,25 +190,18 @@ define([
          * by user id and room id
          *
          * @param delta   (int)
-         * @param user_id (int)
+         * @param user    (object)
          * @param room_id (string)
          */
-        function updateByUser(delta, user_id, room_id) {
-            if (! _.has(self.user_scores_collection, user_id)) {
-                self.user_scores_collection[user_id] = [];
-            }
+        function updateByUser(delta, user, room_id) {
+            self.addScoreByUserIdAndRoomId(user, room_id);
 
-            var user_score_room = getByUserIdAndRoomId(user_id, room_id);
+            var user_score_room        = getByUserIdAndRoomId(user.id, room_id);
+            var score                  = user_score_room.user.score;
+            user_score_room.user       = user;
+            user_score_room.user.score = score;
 
-            if (! user_score_room) {
-                user_score_room = {
-                    room_id: room_id,
-                    score: 0
-                };
-                self.user_scores_collection[user_id].push(user_score_room);
-            }
-
-            user_score_room.score + delta < 0 ? user_score_room.score = 0 : user_score_room.score += delta;
+            user_score_room.user.score + delta < 0 ? user_score_room.user.score = 0 : user_score_room.user.score += delta;
         }
 
         /**

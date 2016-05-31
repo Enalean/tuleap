@@ -90,7 +90,7 @@ describe("Module Rooms", function() {
             expect(console.error).not.toHaveBeenCalled();
         });
 
-        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with presences on execution message then message data is transformed" +
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with presences on execution message then message data is transformed " +
             "and socket sender emit user score", function () {
             var message = {
                 room_id : room_id,

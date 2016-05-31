@@ -7,11 +7,59 @@ describe("Module Scores", function() {
     var user_id = 101,
         room_id = 6;
 
+    var user = {
+        id: user_id
+    };
+
+    var user_updated = {
+        id: user_id,
+        avatar: 'avatar.png'
+    };
+
     beforeEach(function() {
         scores.user_scores_collection = {};
     });
 
     describe("update()", function() {
+        it("Given user id with new information, when I verify and update then user information are changed", function() {
+            var data = {
+                artifact: {
+                    id: 40,
+                    status: 'blocked'
+                },
+                previous_status: 'blocked',
+                previous_user: {
+                    id: 102
+                }
+            };
+
+            var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0,
+                            avatar: 'avatar.png'
+                        }
+                    }
+                ],
+                102: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
+                    }
+                ]
+            };
+
+            expect(scores.update).toBeDefined();
+            scores.update(user_updated, room_id, data);
+            expect(scores.user_scores_collection).toEqual(expect_score);
+        });
+
         it("Given user id and new status of an execution equal to 'notrun', when I verify and update then there are no changements", function() {
             var data = {
                 artifact: {
@@ -24,9 +72,30 @@ describe("Module Scores", function() {
                 }
             };
 
+            var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
+                102: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
+                    }
+                ]
+            };
+
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
-            expect(scores.user_scores_collection).toEqual({});
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
         it("Given user id and new status of an execution equal to previous status, when I change the status then there are no changements", function() {
@@ -41,9 +110,30 @@ describe("Module Scores", function() {
                 }
             };
 
+            var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
+                102: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
+                    }
+                ]
+            };
+
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
-            expect(scores.user_scores_collection).toEqual({});
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
         it("Given user id and new status of an execution not equal to previous status, when I change the status from notrun to passed then the score is updated", function() {
@@ -62,13 +152,25 @@ describe("Module Scores", function() {
                 101: [
                     {
                         room_id: room_id,
-                        score: 1
+                        user: {
+                            id: 101,
+                            score: 1
+                        }
+                    }
+                ],
+                102: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -88,13 +190,25 @@ describe("Module Scores", function() {
                 101: [
                     {
                         room_id: room_id,
-                        score: 1
+                        user: {
+                            id: 101,
+                            score: 1
+                        }
+                    }
+                ],
+                102: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -111,16 +225,28 @@ describe("Module Scores", function() {
             };
 
             var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
                 102: [
                     {
                         room_id: room_id,
-                        score: 0
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -137,16 +263,28 @@ describe("Module Scores", function() {
             };
 
             var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
                 102: [
                     {
                         room_id: room_id,
-                        score: 0
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -163,16 +301,28 @@ describe("Module Scores", function() {
             };
 
             var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
                 102: [
                     {
                         room_id: room_id,
-                        score: 0
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -192,19 +342,25 @@ describe("Module Scores", function() {
                 101: [
                     {
                         room_id: room_id,
-                        score: 1
+                        user: {
+                            id: 101,
+                            score: 1
+                        }
                     }
                 ],
                 102: [
                     {
                         room_id: room_id,
-                        score: 0
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -221,16 +377,28 @@ describe("Module Scores", function() {
             };
 
             var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
                 102: [
                     {
                         room_id: room_id,
-                        score: 0
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
                     }
                 ]
             };
 
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
+            scores.update(user, room_id, data);
             expect(scores.user_scores_collection).toEqual(expect_score);
         });
 
@@ -246,9 +414,30 @@ describe("Module Scores", function() {
                 }
             };
 
+            var expect_score = {
+                101: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 101,
+                            score: 0
+                        }
+                    }
+                ],
+                102: [
+                    {
+                        room_id: room_id,
+                        user: {
+                            id: 102,
+                            score: 0
+                        }
+                    }
+                ]
+            };
+
             expect(scores.update).toBeDefined();
-            scores.update(user_id, room_id, data);
-            expect(scores.user_scores_collection).toEqual({});
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual(expect_score);
         });
     });
 
@@ -258,7 +447,10 @@ describe("Module Scores", function() {
                 101: [
                     {
                         room_id: room_id,
-                        score: 1
+                        user: {
+                            id: 101,
+                            score: 1
+                        }
                     }
                 ]
             };

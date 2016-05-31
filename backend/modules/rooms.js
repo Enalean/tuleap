@@ -185,12 +185,13 @@ define([
 
             if (MessageContentVerifier.hasPresencesOnExecutions(message.data)) {
                 message.data = self.executions_collection[room_id].update(message.data.presence);
+                self.scores.addScoreByUserIdAndRoomId(message.data.user, room_id);
                 extendUserWithScore(room_id, message.data.user);
                 socket_sender.emit('user:score', {
                     user: message.data.user
                 });
             } else if(MessageContentVerifier.hasChangeStatusOnExecutions(message.data)) {
-                self.scores.update(socket_sender.username, room_id, message.data);
+                self.scores.update(message.data.user, room_id, message.data);
                 extendUserWithScore(room_id, message.data.user);
                 extendUserWithScore(room_id, message.data.previous_user);
                 socket_sender.emit('user:score', {
@@ -210,15 +211,11 @@ define([
          * @param socket (Object)
          */
         self.emitPresences = function(socket) {
-            var data = self.executions_collection[socket.room].presences_collection;
+            var users_have_score     = self.scores.getAllUsersByRoomId(socket.room);
+            var presences_collection = self.executions_collection[socket.room].presences_collection;
 
-            _.forEach(data, function(presences) {
-                _.forEach(presences, function(presence) {
-                    extendUserWithScore(socket.room, presence);
-                });
-            });
-
-            socket.emit('presences', data);
+            socket.emit('presences', presences_collection);
+            socket.emit('users:score', users_have_score);
         };
 
         /**
