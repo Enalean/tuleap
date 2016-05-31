@@ -18,27 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Webhook;
 
-class WebHookResponseReceiver
+class WebhookResponseReceiver
 {
 
     /**
-     * @var WebHookDao
+     * @var WebhookDao
      */
     private $dao;
 
-    public function __construct(WebHookDao $dao)
+    public function __construct(WebhookDao $dao)
     {
         $this->dao = $dao;
     }
 
-    public function receive(WebHook $webhook, $raw_response)
+    public function receive(Webhook $webhook, $raw_response)
     {
         $this->dao->addLog($webhook->getId(), $this->getStatusCodeAndReasonPhrase($raw_response));
     }
 
-    public function receiveError(WebHook $webhook, $error)
+    public function receiveError(Webhook $webhook, $error)
     {
         $this->dao->addLog($webhook->getId(), $error);
     }

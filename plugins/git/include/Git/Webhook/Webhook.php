@@ -19,33 +19,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Webhook;
 
-use GitRepository;
-
-class WebHookFactory
+class Webhook
 {
-    /**
-     * @var WebHookDao
-     */
-    private $dao;
 
-    public function __construct(WebHookDao $dao)
+    private $url;
+    private $repository_id;
+    private $id;
+
+    public function __construct($id, $repository_id, $url)
     {
-        $this->dao = $dao;
+        $this->id            = $id;
+        $this->repository_id = $repository_id;
+        $this->url           = $url;
     }
 
-    /**
-     * @return array
-     */
-    public function getWebHooksForRepository(GitRepository $repository)
+    public function getId()
     {
-        $repository_id = $repository->getId();
+        return $this->id;
+    }
 
-        $web_hooks = array();
-        foreach ($this->dao->searchWebHooksForRepository($repository_id) as $web_hook_row) {
-            $web_hooks[] = new WebHook($web_hook_row['id'], $web_hook_row['repository_id'], $web_hook_row['url']);
-        }
-        return $web_hooks;
+    public function getRepositoryId()
+    {
+        return $this->repository_id;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
     }
 }

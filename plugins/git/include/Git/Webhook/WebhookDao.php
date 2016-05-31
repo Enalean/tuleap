@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Webhook;
 
 use DataAccessObject;
 
-class WebHookDao extends DataAccessObject
+class WebhookDao extends DataAccessObject
 {
-    public function searchWebHooksForRepository($repository_id)
+    public function searchWebhooksForRepository($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
 

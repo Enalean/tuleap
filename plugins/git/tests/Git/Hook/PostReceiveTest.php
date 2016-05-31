@@ -51,7 +51,7 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
         $this->system_event_manager       = mock('Git_SystemEventManager');
         $this->mail_builder               = mock('MailBuilder');
         $this->event_manager              = mock('EventManager');
-        $this->request_sender             = mock('Tuleap\Git\Hook\WebHookRequestSender');
+        $this->request_sender             = mock('Tuleap\Git\Webhook\WebhookRequestSender');
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,
@@ -74,7 +74,7 @@ class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common {
     public function setUp() {
         parent::setUp();
 
-        $this->push_details           = stub('Git_Hook_PushDetails')->getRevisionList()->returns(array());
+        $this->push_details = stub('Git_Hook_PushDetails')->getRevisionList()->returns(array());
         stub($this->log_analyzer)->getPushDetails()->returns($this->push_details);
     }
 

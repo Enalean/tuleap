@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Webhook;
 
 use Tuleap\User\REST\MinimalUserRepresentation;
 use GitRepository;
@@ -27,11 +27,11 @@ use Http_ClientException;
 use PFUser;
 use Logger;
 
-class WebHookRequestSender
+class WebhookRequestSender
 {
 
     /**
-     * @var WebHookResponseReceiver
+     * @var WebhookResponseReceiver
      */
     private $receiver;
 
@@ -46,13 +46,13 @@ class WebHookRequestSender
     private $http_client;
 
     /**
-     * @var WebHookFactory
+     * @var WebhookFactory
      */
     private $factory;
 
     public function __construct(
-        WebHookResponseReceiver $receiver,
-        WebHookFactory $factory,
+        WebhookResponseReceiver $receiver,
+        WebhookFactory $factory,
         Http_Client $http_client,
         Logger $logger
     ) {
@@ -64,7 +64,7 @@ class WebHookRequestSender
 
     public function sendRequests(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
-        $web_hooks = $this->factory->getWebHooksForRepository($repository);
+        $web_hooks = $this->factory->getWebhooksForRepository($repository);
         foreach ($web_hooks as $web_hook) {
             $this->logger->info("Processing webhook at ". $web_hook->getUrl() ." for repository #" . $repository->getId());
             $this->buildRequest($repository, $user, $web_hook, $oldrev, $newrev, $refname);
@@ -81,7 +81,7 @@ class WebHookRequestSender
     private function buildRequest(
         GitRepository $repository,
         PFUser $user,
-        WebHook $web_hook,
+        Webhook $web_hook,
         $oldrev,
         $newrev,
         $refname

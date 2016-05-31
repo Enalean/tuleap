@@ -18,15 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Webhook;
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-use Tuleap\Git\Hook\WebHookRequestSender;
 use TuleapTestCase;
 use UserHelper;
 
-class WebHookRequestSenderTest extends TuleapTestCase
+class WebhookRequestSenderTest extends TuleapTestCase
 {
     public function setUp()
     {
@@ -44,11 +43,11 @@ class WebHookRequestSenderTest extends TuleapTestCase
 
     public function itSendsOneRequestPerDefinedHook()
     {
-        $factory     = mock('Tuleap\Git\Hook\WebHookFactory');
+        $factory     = mock('Tuleap\Git\Webhook\WebhookFactory');
         $http_client = mock('Http_Client');
         $logger      = mock('Logger');
-        $receiver    = mock('Tuleap\Git\Hook\WebHookResponseReceiver');
-        $sender      = new WebHookRequestSender($receiver, $factory, $http_client, $logger);
+        $receiver    = mock('Tuleap\Git\Webhook\WebhookResponseReceiver');
+        $sender      = new WebhookRequestSender($receiver, $factory, $http_client, $logger);
 
         $repository = mock('GitRepository');
         $user       = mock('PFUser');
@@ -56,10 +55,10 @@ class WebHookRequestSenderTest extends TuleapTestCase
         $newrev     = 'newrev';
         $refname    = 'refs/heads/master';
 
-        $web_hook_01 = new WebHook(1, 1, 'url_01');
-        $web_hook_02 = new WebHook(2, 1, 'url_02');
+        $web_hook_01 = new Webhook(1, 1, 'url_01');
+        $web_hook_02 = new Webhook(2, 1, 'url_02');
 
-        stub($factory)->getWebHooksForRepository()->returns(array(
+        stub($factory)->getWebhooksForRepository()->returns(array(
             $web_hook_01,
             $web_hook_02,
         ));

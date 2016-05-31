@@ -24,7 +24,7 @@ require_once('common/layout/Layout.class.php');
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
-use Tuleap\Git\Hook\WebHookDao;
+use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 /**
@@ -35,7 +35,7 @@ use Tuleap\Git\GitViews\RepoManagement\Pane;
 class GitActions extends PluginActions {
 
     /**
-     * @var WebHookDao
+     * @var WebhookDao
      */
     private $webhook_dao;
 
@@ -129,7 +129,7 @@ class GitActions extends PluginActions {
         GitRepositoryMirrorUpdater $mirror_updater,
         MigrationHandler $migration_handler,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        WebHookDao $webhook_dao
+        WebhookDao $webhook_dao
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager   = $system_event_manager;
