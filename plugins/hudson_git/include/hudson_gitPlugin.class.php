@@ -27,6 +27,7 @@ use Tuleap\HudsonGit\Logger;
 use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 
 class hudson_gitPlugin extends Plugin {
 
@@ -38,7 +39,7 @@ class hudson_gitPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         if (defined('GIT_BASE_URL')) {
-            $this->addHook(GitViews_RepoManagement_Pane_Hooks::ADDITIONAL_WEBHOOKS);
+            $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
             $this->addHook(GIT_HOOK_POSTRECEIVE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
         }
@@ -66,7 +67,7 @@ class hudson_gitPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    /** @see GitViews_RepoManagement_Pane_Hooks::ADDITIONAL_WEBHOOKS */
+    /** @see Tuleap\Git\GitViews\RepoManagement\Pane\Hooks::ADDITIONAL_WEBHOOKS */
     public function plugin_git_settings_additional_webhooks(array $params) {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $xzibit = new GitWebhooksSettingsEnhancer(

@@ -18,7 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitViews_RepoManagement_Pane_Mirroring extends GitViews_RepoManagement_Pane {
+namespace Tuleap\Git\GitViews\RepoManagement\Pane;
+
+use GitRepository;
+use Codendi_Request;
+use GitPresenters_MirroringPresenter;
+use TemplateRendererFactory;
+use GitPresenters_MirrorPresenter;
+
+class Mirroring extends Pane
+{
 
     /**
      * @var Git_Mirror_Mirror[]
@@ -44,31 +53,35 @@ class GitViews_RepoManagement_Pane_Mirroring extends GitViews_RepoManagement_Pan
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'mirroring';
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return ucfirst($GLOBALS['Language']->getText('plugin_git', 'admin_mirroring'));
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         $presenter = new GitPresenters_MirroringPresenter($this->repository, $this->getMirrorPresenters());
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         return $renderer->renderToString('mirroring', $presenter);
     }
 
-    private function getMirrorPresenters() {
+    private function getMirrorPresenters()
+    {
         $mirror_presenters = array();
 
-        foreach($this->mirrors as $mirror) {
+        foreach ($this->mirrors as $mirror) {
             $is_used = false;
             if (in_array($mirror, $this->repository_mirrors)) {
                 $is_used = true;
@@ -79,5 +92,4 @@ class GitViews_RepoManagement_Pane_Mirroring extends GitViews_RepoManagement_Pan
 
         return $mirror_presenters;
     }
-
 }

@@ -25,6 +25,7 @@ use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Git\Hook\WebHookDao;
+use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 /**
  * GitActions
@@ -529,7 +530,7 @@ class GitActions extends PluginActions {
     }
 
     public function removeWebhook(GitRepository $repository, $webhook_id) {
-        $csrf = new CSRFSynchronizerToken(GitViews_RepoManagement_Pane_Hooks::CSRF_TOKEN_ID);
+        $csrf = new CSRFSynchronizerToken(Pane\Hooks::CSRF_TOKEN_ID);
 
         $redirect_url = $this->getWebhookSettingsURL($repository);
         $csrf->check($redirect_url);
@@ -549,7 +550,7 @@ class GitActions extends PluginActions {
     }
 
     public function addWebhook(GitRepository $repository, $webhook_url) {
-        $csrf = new CSRFSynchronizerToken(GitViews_RepoManagement_Pane_Hooks::CSRF_TOKEN_ID);
+        $csrf = new CSRFSynchronizerToken(Pane\Hooks::CSRF_TOKEN_ID);
 
         $redirect_url = $this->getWebhookSettingsURL($repository);
         $csrf->check($redirect_url);
@@ -570,7 +571,7 @@ class GitActions extends PluginActions {
 
     public function editWebhook(GitRepository $repository, $webhook_id, $webhook_url)
     {
-        $csrf = new CSRFSynchronizerToken(GitViews_RepoManagement_Pane_Hooks::CSRF_TOKEN_ID);
+        $csrf = new CSRFSynchronizerToken(Pane\Hooks::CSRF_TOKEN_ID);
 
         $redirect_url = $this->getWebhookSettingsURL($repository);
         $csrf->check($redirect_url);
@@ -594,7 +595,7 @@ class GitActions extends PluginActions {
             'action'   => 'repo_management',
             'group_id' => $repository->getProjectId(),
             'repo_id'  => $repository->getId(),
-            'pane'     => GitViews_RepoManagement_Pane_Hooks::ID
+            'pane'     => Pane\Hooks::ID
         ));
     }
 
@@ -951,7 +952,7 @@ class GitActions extends PluginActions {
     }
 
     public function disconnectFromGerrit(GitRepository $repository) {
-        $disconnect_option = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT);
+        $disconnect_option = $this->request->get(Pane\Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT);
         try {
             $this->migration_handler->disconnect($repository, $disconnect_option);
         } catch (RepositoryNotMigratedException $e) {
