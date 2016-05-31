@@ -200,7 +200,7 @@ class HTTPRequest extends Codendi_Request {
 
 
     private function getScheme() {
-        if ($this->isSecure()) {
+        if (ForgeConfig::get('sys_force_ssl') || $this->isSecure()) {
             return 'https://';
         } else {
             return 'http://';
