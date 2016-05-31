@@ -277,6 +277,22 @@ class TrackerFactory {
     }
 
     /**
+     * @return bool
+     */
+    private function isShortNameValid($shortname)
+    {
+        return preg_match('/^[a-zA-Z0-9_]+$/i', $shortname) === 1;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isRequiredInformationsAvailable($name, $description, $itemname)
+    {
+        return trim($name) !== '' && trim($description) !== '' && trim($itemname) !== '';
+    }
+
+    /**
      * Valid the name, description and itemname on creation.
      * Add feedback if error.
      *
@@ -289,13 +305,13 @@ class TrackerFactory {
      */
     public function validMandatoryInfoOnCreate($name, $description, $itemname, $group_id)
     {
-        if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
+        if (! $this->isRequiredInformationsAvailable($name, $description, $itemname)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
             return false;
         }
 
         // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
-        if (! preg_match("/^[a-zA-Z0-9_]+$/i",$itemname)) {
+        if (! $this->isShortNameValid($itemname)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_shortname',$itemname));
             return false;
         }
@@ -319,6 +335,39 @@ class TrackerFactory {
 
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function collectTrackersNameInErrorOnMandatoryCreationInfo(array $trackers, $project_id)
+    {
+        $invalid_trackers_name = array();
+
+        foreach ($trackers as $tracker) {
+            if (! $this->areMandatoryCreationInformationsValid($tracker->getName(), $tracker->getDescription(), $tracker->getItemName(), $project_id)) {
+                $invalid_trackers_name[] = $tracker->getName();
+            }
+        }
+
+        return $invalid_trackers_name;
+    }
+
+    /**
+     * @return bool
+     */
+    private function areMandatoryCreationInformationsValid(
+        $tracker_name,
+        $tracker_description,
+        $tracker_shortname,
+        $project_id
+    ) {
+        $reference_manager = $this->getReferenceManager();
+
+        return $this->isRequiredInformationsAvailable($tracker_name, $tracker_description, $tracker_shortname)
+            && $this->isShortNameValid($tracker_shortname) && ! $this->isNameExists($tracker_name, $project_id)
+            && ! $this->isShortNameExists($tracker_shortname, $project_id)
+            && ! $reference_manager->_isKeywordExists($tracker_shortname, $project_id);
     }
 
     /**

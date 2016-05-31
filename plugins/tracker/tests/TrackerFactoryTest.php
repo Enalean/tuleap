@@ -289,3 +289,104 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
     }
 
 }
+
+class TrackerFactoryCollectErrorWithoutImportingTest extends TuleapTestCase
+{
+    const PROJECT_ID = 123;
+
+    public function itDoesNotFindErrorsWhenTrackerInformationsAreValid()
+    {
+        $tracker_factory = new TrackerFactoryTestVersion2();
+        $tracker_factory->setReturnValue('isNameExists', false, array('My New Tracker', self::PROJECT_ID));
+        $tracker_factory->setReturnValue('isShortNameExists', false, array('ref', self::PROJECT_ID));
+        $reference_manager = new MockReferenceManager();
+        $reference_manager->setReturnValue('_isKeywordExists', false, array('ref', self::PROJECT_ID));
+        $tracker_factory->setReturnReference('getReferenceManager', $reference_manager);
+
+        $tracker = $this->getTracker(
+            'My New Tracker',
+            'My New Tracker to manage my brand new artifacts',
+            'ref'
+        );
+
+        $trackers_name_error = $tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo(
+            array($tracker),
+            self::PROJECT_ID
+        );
+        $this->assertEqual($trackers_name_error, array());
+    }
+
+    public function itFindsErrorsWhenProjectHasAReferenceEqualsToTrackerShortname()
+    {
+        $tracker_factory = new TrackerFactoryTestVersion2();
+        $tracker_factory->setReturnValue('isNameExists', false, array('My New Tracker', self::PROJECT_ID));
+        $tracker_factory->setReturnValue('isShortNameExists', false, array('existingreference', self::PROJECT_ID));
+        $reference_manager = new MockReferenceManager();
+        $reference_manager->setReturnValue('_isKeywordExists', true, array('existingreference', self::PROJECT_ID));
+        $tracker_factory->setReturnReference('getReferenceManager', $reference_manager);
+
+        $tracker = $this->getTracker(
+            'My New Tracker',
+            'My New Tracker to manage my brand new artifacts',
+            'existingreference'
+        );
+
+        $trackers_name_error = $tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo(
+            array($tracker),
+            self::PROJECT_ID
+        );
+        $this->assertEqual($trackers_name_error, array('My New Tracker'));
+    }
+
+    public function itFindsErrorsWhenTrackerTryToUseAnAlreadyUsedShortName()
+    {
+        $tracker_factory = new TrackerFactoryTestVersion2();
+        $tracker_factory->setReturnValue('isNameExists', false, array('My New Tracker', self::PROJECT_ID));
+        $tracker_factory->setReturnValue('isShortNameExists', true, array('ref', self::PROJECT_ID));
+        $reference_manager = new MockReferenceManager();
+        $reference_manager->setReturnValue('_isKeywordExists', false, array('ref', self::PROJECT_ID));
+        $tracker_factory->setReturnReference('getReferenceManager', $reference_manager);
+
+        $tracker = $this->getTracker(
+            'My New Tracker',
+            'My New Tracker to manage my brand new artifacts',
+            'ref'
+        );
+
+        $trackers_name_error = $tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo(
+            array($tracker),
+            self::PROJECT_ID
+        );
+        $this->assertEqual($trackers_name_error, array('My New Tracker'));
+    }
+
+    public function itFindsErrorsWhenTrackerTryToUseAnAlreadyUsedName()
+    {
+        $tracker_factory = new TrackerFactoryTestVersion2();
+        $tracker_factory->setReturnValue('isNameExists', true, array('My New Tracker', self::PROJECT_ID));
+        $tracker_factory->setReturnValue('isShortNameExists', false, array('ref', self::PROJECT_ID));
+        $reference_manager = new MockReferenceManager();
+        $reference_manager->setReturnValue('_isKeywordExists', false, array('ref', self::PROJECT_ID));
+        $tracker_factory->setReturnReference('getReferenceManager', $reference_manager);
+
+        $tracker = $this->getTracker(
+            'My New Tracker',
+            'My New Tracker to manage my brand new artifacts',
+            'ref'
+        );
+
+        $trackers_name_error = $tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo(
+            array($tracker),
+            self::PROJECT_ID
+        );
+        $this->assertEqual($trackers_name_error, array('My New Tracker'));
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getTracker($name, $description, $shortname)
+    {
+        return new Tracker(1, self::PROJECT_ID, $name, $description, $shortname, 0, '', '', '', '', 0, 0, 0, '', 0);
+    }
+}

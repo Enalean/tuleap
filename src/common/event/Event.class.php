@@ -538,6 +538,19 @@ class Event {
     const IMPORT_XML_PROJECT = 'import_xml_project';
 
     /**
+     * Event launched to check if a project can be imported from XML content
+     *
+     * Parameters:
+     *   'project'         => The project where trackers, cardwall and AD must be created
+     *   'xml_content'     => The xml content in string to check in
+     *   'user_finder'     => IFindUserFromXMLReference
+     *
+     * Expected Results:
+     *   'errors' => All errors messages have been collected
+     */
+    const COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT = 'collect_errors_without_importing_xml_project';
+
+    /**
      * Event launched when compat cross ref needs to be imported from XML content
      *
      * Parameters:

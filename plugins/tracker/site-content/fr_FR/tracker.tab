@@ -819,6 +819,7 @@ plugin_tracker_common_type	no_view_permission_on_artifact	Vous n'avez pas les pe
 plugin_tracker_common_type	artifact_not_exist	Cet artefact n'existe pas.
 plugin_tracker_common_type	report_not_exist	Ce rapport n'existe pas.
 plugin_tracker_common_type	tracker_not_exist	Ce tracker n'existe pas.
+plugin_tracker_common_type	trackers_cant_be_imported	Les trackers suivants ne peuvent pas être importés en raisons de données invalides, d'un nom ou d'un nom court déjà utilisé : $1
 
 #
 #-----------------------------------------------

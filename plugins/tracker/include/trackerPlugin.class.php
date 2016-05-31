@@ -81,6 +81,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
         $this->_addHook(Event::IMPORT_XML_PROJECT);
+        $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->_addHook('plugin_statistics_service_usage');
         $this->addHook(Event::REST_RESOURCES);
@@ -788,6 +789,18 @@ class trackerPlugin extends Plugin {
             $params['xml_content'],
             $params['mappings_registery'],
             $params['extraction_path']
+        );
+    }
+
+    /**
+     * @see Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT
+     */
+    public function collect_errors_without_importing_xml_project($params)
+    {
+        $tracker_xml_import = TrackerXmlImport::build($params['user_finder'], $params['logger']);
+        $params['errors'] = $tracker_xml_import->collectErrorsWithoutImporting(
+            $params['project'],
+            $params['xml_content']
         );
     }
 
