@@ -172,11 +172,11 @@ describe("Module Rooms", function() {
                 previous_status: 'failed',
                 previous_user: {
                     id: user_id,
-                    score: 0
+                    score: 1
                 },
                 user: {
                     id: user_id,
-                    score: 0
+                    score: 1
                 }
             };
 

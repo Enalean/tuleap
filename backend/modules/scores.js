@@ -51,7 +51,7 @@ define([
                 passed: 0, failed: -1, blocked: -1, notrun: -1
             },
             failed: {
-                passed: -1, failed: 0, blocked: -1, notrun: -1
+                passed: 0, failed: 0, blocked: -1, notrun: -1
             },
             blocked: {
                 passed: 0, failed: 0, blocked: 0,  notrun: 0
@@ -201,7 +201,7 @@ define([
             user_score_room.user       = user;
             user_score_room.user.score = score;
 
-            user_score_room.user.score + delta < 0 ? user_score_room.user.score = 0 : user_score_room.user.score += delta;
+            user_score_room.user.score += delta;
         }
 
         /**

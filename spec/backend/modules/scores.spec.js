@@ -33,7 +33,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user_updated, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -53,11 +55,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user_updated, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id and new status of an execution equal to 'notrun', when I verify and update then there are no changements", function() {
@@ -72,7 +70,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -91,11 +91,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id and new status of an execution equal to previous status, when I change the status then there are no changements", function() {
@@ -110,7 +106,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -129,11 +127,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id and new status of an execution not equal to previous status, when I change the status from notrun to passed then the score is updated", function() {
@@ -148,7 +142,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -167,11 +163,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id and new status of an execution not equal to previous status, when I change the status from notrun to failed then the score is updated", function() {
@@ -186,7 +178,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -205,11 +199,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to notrun then the score is updated for the previous user", function() {
@@ -224,7 +214,18 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            scores.user_scores_collection[102] = [
+                {
+                    room_id: room_id,
+                    user: {
+                        id: 102,
+                        score: 1
+                    }
+                }
+            ];
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -243,11 +244,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from passed to blocked then the score is updated for the previous user", function() {
@@ -262,7 +259,18 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            scores.user_scores_collection[102] = [
+                {
+                    room_id: room_id,
+                    user: {
+                        id: 102,
+                        score: 1
+                    }
+                }
+            ];
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -281,11 +289,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to blocked then the score is updated for the previous user", function() {
@@ -300,7 +304,18 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            scores.user_scores_collection[102] = [
+                {
+                    room_id: room_id,
+                    user: {
+                        id: 102,
+                        score: 1
+                    }
+                }
+            ];
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -319,14 +334,10 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
-        it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to passed then the score is updated for the previous user and the user", function() {
+        it("Given user id, new status of an execution and a previous submitter id, when I change the status test from failed to passed then the score is updated for the user", function() {
             var data = {
                 artifact: {
                     id: 40,
@@ -338,7 +349,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -357,11 +370,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from passed to notrun then the score is updated for the previous user", function() {
@@ -376,7 +385,18 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            scores.user_scores_collection[102] = [
+                {
+                    room_id: room_id,
+                    user: {
+                        id: 102,
+                        score: 1
+                    }
+                }
+            ];
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -395,11 +415,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
 
         it("Given user id, new status of an execution and a previous submitter id, when I change the status test from blocked to notrun then the score isn't updated", function() {
@@ -414,7 +430,9 @@ describe("Module Scores", function() {
                 }
             };
 
-            var expect_score = {
+            expect(scores.update).toBeDefined();
+            scores.update(user, room_id, data);
+            expect(scores.user_scores_collection).toEqual({
                 101: [
                     {
                         room_id: room_id,
@@ -433,11 +451,7 @@ describe("Module Scores", function() {
                         }
                     }
                 ]
-            };
-
-            expect(scores.update).toBeDefined();
-            scores.update(user, room_id, data);
-            expect(scores.user_scores_collection).toEqual(expect_score);
+            });
         });
     });
 
