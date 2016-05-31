@@ -1,3 +1,6 @@
+Version 4.175 - Tuleap 8.16
+    * story #9083: Refactoring: Remove double namespace Tuleap\Git\Git
+
 Version 4.174 - Tuleap 8.16
     * story #9083: Refactoring: new git settings pane should be PSR-2
 
