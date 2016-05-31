@@ -3,6 +3,7 @@ Version 8.16 (Not yet release)
 	* request #9195: Clean up Trove Categorization
 
 	== Development ==
+	* request #9141: A preliminary check is done before importing an agile dashboard configuration
 	* request #9202: Make Tuleap compatible with PHP 5.6
 		- Remove deprecated ereg
 		- CVS
@@ -13,8 +14,8 @@ Version 8.16 (Not yet release)
 
 	== Plugins ==
 	* git: 4.175
-	* agiledashboard: 1.381
-	* tracker: 5.898
+	* agiledashboard: 1.382
+	* tracker: 5.899
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.18
 

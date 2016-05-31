@@ -1,3 +1,6 @@
+Version 1.382 - Tuleap 8.16
+    * request #9141: A preliminary check is done before importing an agile dashboard configuration
+
 Version 1.381 - Tuleap 8.16
     * request #9203: Fix Kanban drag placeholder & header/footer z-index
 

@@ -1,3 +1,6 @@
+Version 5.899 - Tuleap 8.16
+    * request #9141: A preliminary check is done before importing an agile dashboard configuration
+
 Version 5.898 - Tuleap 8.16
     * request #9196: tv3->tv5 migration does not import the Gantt chart field properties
 
