@@ -1,4 +1,7 @@
 Version 8.16 (Not yet release)
+	== Bug fix ==
+	* request #8468: Unable to access svn immutable tags configuration with huge repository
+
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
 
@@ -18,6 +21,7 @@ Version 8.16 (Not yet release)
 	* tracker: 5.899
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.19
+	* svn: 0.58
 
 Version 8.15 (Thursday, May 26th 2016)
 	== Bug fix ==
