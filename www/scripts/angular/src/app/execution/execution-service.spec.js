@@ -455,14 +455,15 @@ describe ('ExecutionService - ', function () {
                 }
             };
 
-            var results = [user_one];
+            var results                      = [user_one];
+            var result_presences_on_campaign = [user_one, user_two];
 
             ExecutionService.executions = executions;
             ExecutionService.presences_on_campaign = [user_one, user_two];
             ExecutionService.removeViewTestExecutionByUUID('456');
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
             expect(ExecutionService.executions[5].viewed_by).toEqual(results);
-            expect(ExecutionService.presences_on_campaign).toEqual(results);
+            expect(ExecutionService.presences_on_campaign).toEqual(result_presences_on_campaign);
         });
     });
 

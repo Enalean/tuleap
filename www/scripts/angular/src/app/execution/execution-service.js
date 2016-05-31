@@ -162,6 +162,10 @@ function ExecutionService(
         if (user_on_campaign && user_on_campaign.score !== user.score) {
             user_on_campaign.score = user.score;
         }
+
+        if (! user_on_campaign) {
+            addPresenceCampaign(user);
+        }
     }
 
     function updateCampaign(new_campaign) {
@@ -223,10 +227,6 @@ function ExecutionService(
                 return presence.uuid === uuid;
             });
         });
-
-        if (user) {
-            removePresenceCampaign(user);
-        }
     }
 
     function removePresenceCampaign(user) {

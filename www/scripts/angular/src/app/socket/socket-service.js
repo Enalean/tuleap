@@ -51,6 +51,7 @@ function SocketService(
         if (SharedPropertiesService.getNodeServerAddress()) {
             listenToError();
             listenPresences();
+            listenToUsersScore();
             return JWTService.getJWT().then(function (data) {
                 locker.put('token', data.token);
                 locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
@@ -97,6 +98,14 @@ function SocketService(
         });
     }
 
+    function listenToUsersScore() {
+        SocketFactory.on('users:score', function(data) {
+            _.forEach(data, function(user) {
+                ExecutionService.updatePresenceOnCampaign(user);
+            });
+        });
+    }
+
     function listenToUserScore() {
         SocketFactory.on('user:score', function(data) {
             ExecutionService.updatePresenceOnCampaign(data.user);
@@ -111,11 +120,10 @@ function SocketService(
         SocketFactory.on('trafficlights_user:presence', function(data) {
             if (_.has(data, 'execution_to_remove')) {
                 ExecutionService.displayPresencesByExecution(data.execution_to_remove, data.execution_presences_to_remove);
-                ExecutionService.removePresenceCampaign(data.user);
             }
             if (_.has(data, 'execution_to_add')) {
                 ExecutionService.displayPresencesByExecution(data.execution_to_add, data.execution_presences_to_add);
-                ExecutionService.addPresenceCampaign(data.user);
+                ExecutionService.updatePresenceOnCampaign(data.user);
             }
         });
     }
