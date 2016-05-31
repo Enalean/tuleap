@@ -116,7 +116,7 @@ class BotFactory
     /**
      * @return array
      */
-    public function getChannelsByBotId($bot_id)
+    private function getChannelsByBotId($bot_id)
     {
         $dar = $this->dao->searchChannelsByBotId($bot_id);
         if ($dar === false) {
@@ -128,5 +128,26 @@ class BotFactory
         }
 
         return $channels;
+    }
+
+    public function getBotById($bot_id)
+    {
+        $row = $this->dao->searchBotById($bot_id);
+        if ($row === null) {
+            throw new BotNotFoundException();
+        }
+        try {
+            $channels = $this->getChannelsByBotId($bot_id);
+        } catch (ChannelsNotFoundException $e) {
+            throw $e;
+        }
+
+        return new Bot(
+            $bot_id,
+            $row['name'],
+            $row['webhook_url'],
+            $row['avatar_url'],
+            $channels
+        );
     }
 }

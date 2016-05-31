@@ -149,4 +149,15 @@ class BotDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function searchBotById($bot_id)
+    {
+        $id = $this->da->escapeInt($bot_id);
+
+        $sql = "SELECT *
+                FROM plugin_botmattermost_bot
+                WHERE id = $id";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }
