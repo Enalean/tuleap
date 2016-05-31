@@ -24,6 +24,8 @@ use \GitRepository;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use \Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\Timeline\TimelineEventCreator;
+use PFUser;
 
 class PullRequestUpdater
 {
@@ -43,20 +45,27 @@ class PullRequestUpdater
      */
     private $inline_comment_updater;
 
+    /**
+     * TimelineEventCreator
+     */
+    private $timeline_event_creator;
+
     public function __construct(
         Factory $pull_request_factory,
         InlineCommentDao $inline_comment_dao,
         InlineCommentUpdater $inline_comment_updater,
-        FileUniDiffBuilder $diff_builder
+        FileUniDiffBuilder $diff_builder,
+        TimelineEventCreator $timeline_event_creator
     )
     {
         $this->pull_request_factory   = $pull_request_factory;
         $this->inline_comment_dao     = $inline_comment_dao;
         $this->inline_comment_updater = $inline_comment_updater;
         $this->diff_builder           = $diff_builder;
+        $this->timeline_event_creator = $timeline_event_creator;
     }
 
-    public function updatePullRequests(GitExec $git_exec, GitRepository $repository, $src_branch_name, $new_rev)
+    public function updatePullRequests(PFUser $user, GitExec $git_exec, GitRepository $repository, $src_branch_name, $new_rev)
     {
         $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $src_branch_name);
         foreach ($prs as $pr) {
@@ -67,8 +76,10 @@ class PullRequestUpdater
             if ($ancestor_rev != $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
                 $this->updateInlineCommentsOnRebase($git_exec, $pr, $ancestor_rev, $new_rev);
+                $this->timeline_event_creator->storeRebaseEvent($pr, $user, $new_rev);
             } else {
                 $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $new_rev);
+                $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
             }
         }
     }

@@ -66,6 +66,42 @@ describe('TimelineService', function() {
                     type       : 'inline-comment',
                     file_path  : 'Readme.md',
                     is_outdated: true
+                }, {
+                    user: {
+                        id          : 102,
+                        display_name: 'Site User (userX)',
+                        avatar_url  : '\/themes\/common\/images\/avatar_default.png'
+                    },
+                    post_date : '1970-01-01T00:00:00+00:00',
+                    type      : 'timeline-event',
+                    event_type: 'update'
+                }, {
+                    user: {
+                        id          : 101,
+                        display_name: 'Site Administrator (admin)',
+                        avatar_url  : '\/themes\/common\/images\/avatar_default.png'
+                    },
+                    post_date : '1970-01-01T00:00:00+00:00',
+                    type      : 'timeline-event',
+                    event_type: 'rebase'
+                }, {
+                    user: {
+                        id          : 102,
+                        display_name: 'Site User (userX)',
+                        avatar_url  : '\/themes\/common\/images\/avatar_default.png'
+                    },
+                    post_date : '1970-01-01T00:00:00+00:00',
+                    type      : 'timeline-event',
+                    event_type: 'merge'
+                }, {
+                    user: {
+                        id          : 101,
+                        display_name: 'Site Administrator (admin)',
+                        avatar_url  : '\/themes\/common\/images\/avatar_default.png'
+                    },
+                    post_date : '1970-01-01T00:00:00+00:00',
+                    type      : 'timeline-event',
+                    event_type: 'abandon'
                 }]
             };
         });
@@ -90,6 +126,11 @@ describe('TimelineService', function() {
 
             expect($sce.getTrustedHtml(timeline[0].content)).toEqual('Hello world');
             expect($sce.getTrustedHtml(timeline[1].content)).toEqual('Hello<br/>Site User<br/>');
+
+            expect($sce.getTrustedHtml(timeline[3].content)).toEqual('Has updated the pull request.');
+            expect($sce.getTrustedHtml(timeline[4].content)).toEqual('Has rebased the pull request.');
+            expect($sce.getTrustedHtml(timeline[5].content)).toEqual('Has merged the pull request.');
+            expect($sce.getTrustedHtml(timeline[6].content)).toEqual('Has abandoned the pull request.');
         });
 
         it('sets author flag for each timeline event', function() {
@@ -103,6 +144,8 @@ describe('TimelineService', function() {
 
             expect(timeline[0].isFromPRAuthor).toBe(true);
             expect(timeline[1].isFromPRAuthor).toBe(false);
+            expect(timeline[3].isFromPRAuthor).toBe(true);
+            expect(timeline[4].isFromPRAuthor).toBe(false);
         });
 
         it('sets flags for inline comments, both outdated or not', function() {
@@ -149,7 +192,8 @@ describe('TimelineService', function() {
                 user: {
                     id: 100
                 },
-                content: 'hello'
+                content: 'hello',
+                type: 'comment'
             };
             var expectedUrl = '/api/v1/pull_requests/' + pullRequest.id + '/comments';
             $httpBackend.expectPOST(expectedUrl, newComment).respond(expectedComment);

@@ -24,6 +24,7 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\Timeline\Dao as TimeLineDao;
 
 class Factory
 {
@@ -34,11 +35,14 @@ class Factory
     /** @var Tuleap\PullRequest\InlineComment\Dao */
     private $inline_comments_dao;
 
+    /** @var Tuleap\PullRequest\Timeline\Dao */
+    private $timeline_dao;
 
-    public function __construct(CommentDao $comments_dao, InlineCommentDao $inline_comments_dao)
+    public function __construct(CommentDao $comments_dao, InlineCommentDao $inline_comments_dao, TimeLineDao $timeline_dao)
     {
         $this->comments_dao        = $comments_dao;
         $this->inline_comments_dao = $inline_comments_dao;
+        $this->timeline_dao        = $timeline_dao;
     }
 
     public function getPaginatedTimelineByPullRequestId($pull_request_id, $limit, $offset)
@@ -47,16 +51,24 @@ class Factory
         foreach ($this->comments_dao->searchAllByPullRequestId($pull_request_id) as $row) {
             $comments[] = $this->buildComment($row);
         }
+
         $inline_comments = array();
         foreach ($this->inline_comments_dao->searchAllByPullRequestId($pull_request_id) as $row) {
             $inline_comments[] = InlineComment::buildFromRow($row);
         }
 
-        $full_timeline   = array_merge($comments, $inline_comments);
+
+        $timeline_events = array();
+        foreach ($this->timeline_dao->searchAllByPullRequestId($pull_request_id) as $row) {
+            $timeline_events[] = TimelineEvent::buildFromRow($row);
+        }
+
+        $full_timeline   = array_merge($comments, $inline_comments, $timeline_events);
         usort($full_timeline, array($this, 'sortByPostDate'));
         $timeline     = array_slice($full_timeline, $offset, $limit);
         $total_events = $this->comments_dao->foundRows() +
-                        $this->inline_comments_dao->foundRows();
+                        $this->inline_comments_dao->foundRows() +
+                        $this->timeline_dao->foundRows();
         return new PaginatedTimeline($timeline, $total_events);
     }
 

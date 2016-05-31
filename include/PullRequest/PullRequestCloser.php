@@ -29,6 +29,7 @@ use FileSystemIterator;
 use GitRepository;
 use GitRepositoryFactory;
 use ForgeConfig;
+use User;
 
 class PullRequestCloser
 {
@@ -54,31 +55,6 @@ class PullRequestCloser
             throw new PullRequestCannotBeAbandoned('This pull request has already been merged, it can no longer be abandoned');
         }
         return $this->pull_request_factory->markAsAbandoned($pull_request);
-    }
-
-    public function abandonFromSourceBranch(GitRepository $repository, $branch_name)
-    {
-        $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
-        foreach ($prs as $pr) {
-            $this->abandon($pr);
-        }
-    }
-
-    public function markManuallyMerged(
-        GitRepositoryFactory $git_repository_factory,
-        GitRepository $dest_repository,
-        $dest_branch_name,
-        $new_rev
-    ) {
-        $prs = $this->pull_request_factory->getOpenedByDestinationBranch($dest_repository, $dest_branch_name);
-
-        foreach ($prs as $pr) {
-            $repository = $git_repository_factory->getRepositoryById($pr->getRepoDestId());
-            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
-            if ($git_exec->isAncestor($new_rev, $pr->getSha1Src())) {
-                $this->pull_request_factory->markAsMerged($pr);
-            }
-        }
     }
 
     public function fastForwardMerge(

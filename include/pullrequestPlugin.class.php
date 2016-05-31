@@ -38,6 +38,8 @@ use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\FileUnidiffBuilder;
 use \Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use \Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use \Tuleap\PullRequest\Timeline\Dao as TimelineDao;
+use \Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
 class pullrequestPlugin extends Plugin
 {
@@ -291,23 +293,59 @@ class pullrequestPlugin extends Plugin
         if ($branch_name != null) {
             $new_rev    = $params['newrev'];
             $repository = $params['repository'];
-            $closer     = new PullRequestCloser($this->getPullRequestFactory());
+            $user       = $params['user'];
 
             $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
             if ($new_rev == '0000000000000000000000000000000000000000') {
-                $closer->abandonFromSourceBranch($repository, $branch_name);
+                $this->abandonFromSourceBranch($user, $repository, $branch_name);
             } else {
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
-                    new FileUnidiffBuilder()
+                    new FileUnidiffBuilder(),
+                    $this->getTimelineEventCreator()
                 );
-                $pull_request_updater->updatePullRequests($git_exec, $repository, $branch_name, $new_rev);
+                $pull_request_updater->updatePullRequests($user, $git_exec, $repository, $branch_name, $new_rev);
             }
 
             $git_repository_factory = $this->getRepositoryFactory();
-            $closer->markManuallyMerged($git_repository_factory, $repository, $branch_name, $new_rev);
+            $this->markManuallyMerged($user, $repository, $branch_name, $new_rev);
+        }
+    }
+
+    private function markManuallyMerged(
+        PFUser $user,
+        GitRepository $dest_repository,
+        $dest_branch_name,
+        $new_rev
+    ) {
+        $pull_request_factory   = $this->getPullRequestFactory();
+        $git_repository_factory = $this->getRepositoryFactory();
+        $timeline_event_creator = $this->getTimelineEventCreator();
+
+        $prs = $pull_request_factory->getOpenedByDestinationBranch($dest_repository, $dest_branch_name);
+
+        foreach ($prs as $pr) {
+            $repository = $git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
+            if ($git_exec->isAncestor($new_rev, $pr->getSha1Src())) {
+                $pull_request_factory->markAsMerged($pr);
+                $timeline_event_creator->storeMergeEvent($pr, $user);
+            }
+        }
+    }
+
+    private function abandonFromSourceBranch(User $user, GitRepository $repository, $branch_name)
+    {
+        $pull_request_factory   = $this->getPullRequestFactory();
+        $timeline_event_creator = $this->getTimelineEventCreator();
+        $closer                 = new PullRequestCloser($this->getPullRequestFactory());
+
+        $prs = $pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
+        foreach ($prs as $pr) {
+            $closer->abandon($pr);
+            $timeline_event_creator->storeAbandonEvent($pr, $user);
         }
     }
 
@@ -336,5 +374,10 @@ class pullrequestPlugin extends Plugin
     private function getTemplateRenderer()
     {
         return TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . '/templates');
+    }
+
+    private function getTimelineEventCreator()
+    {
+        return new TimelineEventCreator(new TimelineDao());
     }
 }

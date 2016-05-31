@@ -55,6 +55,8 @@ use Git_Command_Exception;
 use URLVerification;
 use Tuleap\REST\ProjectAuthorization;
 use BackendLogger;
+use \Tuleap\PullRequest\Timeline\Dao as TimelineDao;
+use \Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
 class PullRequestsResource extends AuthenticatedResource
 {
@@ -88,6 +90,9 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var Tuleap\PullRequest\PullRequestCreator */
     private $pull_request_creator;
 
+    /** @var Tuleap\PullRequest\Timeline\TimelineEventCreator */
+    private $timeline_event_creator;
+
     public function __construct()
     {
         $this->git_repository_factory = new GitRepositoryFactory(
@@ -102,7 +107,8 @@ class PullRequestsResource extends AuthenticatedResource
         $this->comment_factory = new CommentFactory($comment_dao);
 
         $inline_comment_dao     = new InlineCommentDao();
-        $this->timeline_factory = new TimelineFactory($comment_dao, $inline_comment_dao);
+        $timeline_dao           = new TimelineDao();
+        $this->timeline_factory = new TimelineFactory($comment_dao, $inline_comment_dao, $timeline_dao);
 
         $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
             $this->timeline_factory
@@ -119,6 +125,8 @@ class PullRequestsResource extends AuthenticatedResource
         );
         $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory);
         $this->logger               = new BackendLogger();
+
+        $this->timeline_event_creator = new TimelineEventCreator(new TimelineDao());
     }
 
     /**
@@ -503,7 +511,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $status = $body->status;
         if ($status !== null) {
-            $this->patchStatus($pull_request, $repository_src, $status);
+            $this->patchStatus($user, $pull_request, $repository_src, $status);
         } else {
             $this->patchInfo($pull_request, $body);
         }
@@ -515,12 +523,13 @@ class PullRequestsResource extends AuthenticatedResource
         return $pr_representation_factory->getPullRequestRepresentation($updated_pull_request, $repository_src, $repository_dest);
     }
 
-    private function patchStatus(PullRequest $pull_request, $git_repository, $status)
+    private function patchStatus(PFUser $user, PullRequest $pull_request, $git_repository, $status)
     {
         switch ($status) {
             case PullRequestRepresentation::STATUS_ABANDON:
                 try {
                     $this->abandon($pull_request);
+                    $this->timeline_event_creator->storeAbandonEvent($pull_request, $user);
                 } catch (PullRequestCannotBeAbandoned $exception) {
                     throw new RestException(400, $exception->getMessage());
                 }
@@ -534,6 +543,7 @@ class PullRequestsResource extends AuthenticatedResource
                         $git_repository_dest,
                         $pull_request
                     );
+                    $this->timeline_event_creator->storeMergeEvent($pull_request, $user);
                 } catch (PullRequestCannotBeMerged $exception) {
                     throw new RestException(400, $exception->getMessage());
                 } catch (Git_Command_Exception $exception) {

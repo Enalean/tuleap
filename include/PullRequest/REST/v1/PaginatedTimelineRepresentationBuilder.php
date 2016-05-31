@@ -65,7 +65,13 @@ class PaginatedTimelineRepresentationBuilder
         switch ($event_class) {
             case 'Comment':
                 $event_representation = new CommentRepresentation();
-                $event_representation->build($event->getId(), $project_id, $user_representation, $event->getPostDate(), $event->getContent());
+                $event_representation->build(
+                    $event->getId(),
+                    $project_id,
+                    $user_representation,
+                    $event->getPostDate(),
+                    $event->getContent()
+                );
                 return $event_representation;
             case 'InlineComment':
                 $event_representation = new TimelineInlineCommentRepresentation(
@@ -74,8 +80,17 @@ class PaginatedTimelineRepresentationBuilder
                     $user_representation,
                     $event->getPostDate(),
                     $event->getContent(),
-                    $event->isOutdated());
+                    $event->isOutdated()
+                );
+                return $event_representation;
+            case 'TimelineEvent':
+                $event_representation = new TimelineEventRepresentation(
+                    $user_representation,
+                    $event->getPostDate(),
+                    $event->getType()
+                );
                 return $event_representation;
         }
+
     }
 }

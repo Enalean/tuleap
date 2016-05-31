@@ -70,6 +70,11 @@
         }
     }
 
+    &.timeline-event p {
+        color: #888888;
+        font-style: italic;
+    }
+
     .pull-request-event-file-path {
         color: #AAA;
     }
