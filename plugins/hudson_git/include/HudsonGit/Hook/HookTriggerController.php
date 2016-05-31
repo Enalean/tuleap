@@ -22,7 +22,6 @@ namespace Tuleap\HudsonGit\Hook;
 
 use Logger;
 use GitRepository;
-use Jenkins_Client;
 use Exception;
 use Tuleap\HudsonGit\Job\CannotCreateJobException;
 use Tuleap\HudsonGit\Job\Job;
@@ -37,7 +36,7 @@ class HookTriggerController
     private $dao;
 
     /**
-     * @var Jenkins_Client
+     * @var JenkinsClient
      */
     private $jenkins_client;
     /**
@@ -50,7 +49,7 @@ class HookTriggerController
      */
     private $logger;
 
-    public function __construct(HookDao $dao, Jenkins_Client $jenkins_client, Logger $logger, JobManager $job_manager)
+    public function __construct(HookDao $dao, JenkinsClient $jenkins_client, Logger $logger, JobManager $job_manager)
     {
         $this->dao            = $dao;
         $this->jenkins_client = $jenkins_client;

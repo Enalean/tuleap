@@ -28,9 +28,10 @@ use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
+use Tuleap\HudsonGit\PollingResponseFactory;
 
-class hudson_gitPlugin extends Plugin {
-
+class hudson_gitPlugin extends Plugin
+{
     const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
 
     public function __construct($id)
@@ -105,8 +106,9 @@ class hudson_gitPlugin extends Plugin {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $controller = new Hook\HookTriggerController(
                 new Hook\HookDao(),
-                new Jenkins_Client(
-                    new Http_Client()
+                new Hook\JenkinsClient(
+                    new Http_Client(),
+                    new PollingResponseFactory()
                 ),
                 $this->getLogger(),
                 new JobManager(new JobDao())

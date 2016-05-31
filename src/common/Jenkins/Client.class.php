@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\HudsonGit\PollingResponseFactory;
-
 require_once 'common/Http/Client.class.php';
 require_once 'ClientUnableToLaunchBuildException.class.php';
 
@@ -123,34 +121,5 @@ class Jenkins_Client {
         }
 
         return 'json=' . json_encode($parameters);
-    }
-
-    private function getFactory()
-    {
-        return new PollingResponseFactory();
-    }
-
-    public function pushGitNotifications($server_url, $repository_url)
-    {
-        $push_url = $server_url.'/git/notifyCommit?url=' . urlencode($repository_url);
-        $options  = array(
-            CURLOPT_SSL_VERIFYPEER  => true,
-            CURLOPT_POST            => true,
-            CURLOPT_HEADER          => true,
-            CURLOPT_URL             => $push_url
-        );
-
-        $this->http_curl_client->addOptions($options);
-
-        try {
-            $this->http_curl_client->doRequest();
-
-            $response     = $this->http_curl_client->getLastResponse();
-            $header_size  = $this->http_curl_client->getInfo(CURLINFO_HEADER_SIZE);
-
-            return $this->getFactory()->buildResponseFormCurl($response, $header_size);
-        } catch (Http_ClientException $e) {
-            throw new Jenkins_ClientUnableToLaunchBuildException('pushGitNotifications: ' . $push_url . '; Message: ' . $e->getMessage());
-        }
     }
 }
