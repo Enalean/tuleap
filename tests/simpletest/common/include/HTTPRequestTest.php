@@ -497,44 +497,61 @@ class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
         parent::setUp();
 
         $this->request->setTrustedProxies(array('17.18.19.20'));
-        $_SERVER['HTTP_HOST'] = 'meow.bzh';
-        ForgeConfig::set('sys_default_domain', 'meow.bzh');
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
     public function itReturnsHttpsWhenHTTPSIsTerminatedBySelf() {
         $_SERVER['HTTPS'] = 'on';
 
-        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 
     public function itReturnsHttpWhenHTTPSIsNotEnabled() {
-        $this->assertEqual('http://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('http://example.com', $this->request->getServerUrl());
     }
 
     public function itReturnsHTTPSWhenReverseProxyTerminateSSLAndCommunicateInClearWithTuleap() {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
-        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 
     public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInClearWithTuleap() {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
-        $this->assertEqual('http://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('http://example.com', $this->request->getServerUrl());
     }
 
     public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInSSLWithTuleap() {
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
-        $this->assertEqual('http://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('http://example.com', $this->request->getServerUrl());
     }
 
     public function itReturnsHTTPSWhenEverythingIsSSL() {
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
-        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('https://example.com', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPSURLWhenForcedAndRequestDoesNotFromATrustedProxy()
+    {
+        ForgeConfig::set('sys_force_ssl', 1);
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
+
+        $this->assertEqual('https://example.com', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPSURLWhenForcedAndProxyIsMisconfigured()
+    {
+        ForgeConfig::set('sys_force_ssl', 1);
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+
+        $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 }
 
@@ -544,31 +561,38 @@ class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServer
         parent::setUp();
 
         $this->request->setTrustedProxies(array('17.18.19.20'));
-        ForgeConfig::set('sys_default_domain', 'example.clear');
-        ForgeConfig::set('sys_https_host', 'example.ssl');
+        ForgeConfig::set('sys_default_domain', 'example.clear.test');
+        ForgeConfig::set('sys_https_host', 'example.ssl.test');
     }
 
     public function itReturnsHostNameOfProxyWhenBehindAProxy() {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
-        $_SERVER['HTTP_HOST'] = 'meow.bzh';
+        $_SERVER['HTTP_HOST'] = 'meow.test';
 
-        $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
+        $this->assertEqual('https://meow.test', $this->request->getServerUrl());
     }
 
     public function itReturnsTheConfiguredHTTPNameWhenInHTTP() {
-        $this->assertEqual('http://example.clear', $this->request->getServerUrl());
+        $this->assertEqual('http://example.clear.test', $this->request->getServerUrl());
     }
 
     public function itReturnsTheConfiguredHTTPSNameWhenInHTTPS() {
         $_SERVER['HTTPS'] = 'on';
 
-        $this->assertEqual('https://example.ssl', $this->request->getServerUrl());
+        $this->assertEqual('https://example.ssl.test', $this->request->getServerUrl());
     }
 
     public function itReturnsTheDefaultDomainNameWhenInHTTPButNothingConfiguredAsHTTPSHost() {
         $_SERVER['HTTPS'] = 'on';
         ForgeConfig::set('sys_https_host', '');
 
-        $this->assertEqual('https://example.clear', $this->request->getServerUrl());
+        $this->assertEqual('https://example.clear.test', $this->request->getServerUrl());
+    }
+
+    public function itReturnsHTTPSURLWhenForced()
+    {
+        ForgeConfig::set('sys_force_ssl', 1);
+
+        $this->assertEqual('https://example.clear.test', $this->request->getServerUrl());
     }
 }
