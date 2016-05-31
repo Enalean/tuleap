@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2016. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -19,8 +20,9 @@ if (user_isloggedin()) {
     $root = $cvsroot;
   }
 
-  $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
-  $row_grp = db_fetch_array($res_grp);
+  $root     = db_es($root);
+  $res_grp  = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
+  $row_grp  = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
   
   if (!check_cvs_access(user_getname(), $root, viewvc_utils_getfile("/cvs/viewvc.php"))) {
