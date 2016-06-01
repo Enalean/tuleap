@@ -4,6 +4,7 @@ Version 8.16 (Not yet release)
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
+	* request #9202: php-launcher.sh try to use the PHP binary in the path
 
 	== Development ==
 	* request #9141: A preliminary check is done before importing an agile dashboard configuration
