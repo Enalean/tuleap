@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Hook\WebHookRequestSender;
+use Tuleap\Git\Webhook\WebhookRequestSender;
 
 /**
  * Central access point for things that needs to happen when post-receive is
@@ -58,7 +58,7 @@ class Git_Hook_PostReceive {
     private $event_manager;
 
     /**
-     * @var WebHookRequestSender
+     * @var WebhookRequestSender
      */
     private $webhook_request_sender;
 
@@ -71,7 +71,7 @@ class Git_Hook_PostReceive {
         Git_GitRepositoryUrlManager $repository_url_manager,
         Git_SystemEventManager $system_event_manager,
         EventManager $event_manager,
-        WebHookRequestSender $webhook_request_sender
+        WebhookRequestSender $webhook_request_sender
     ) {
         $this->log_analyzer           = $log_analyzer;
         $this->repository_factory     = $repository_factory;
@@ -103,7 +103,7 @@ class Git_Hook_PostReceive {
             }
             $this->sendMail($repository, $mail_builder, $oldrev, $newrev, $refname);
             $this->executeForRepositoryAndUser($repository, $user, $oldrev, $newrev, $refname);
-            $this->processGitWebHooks($repository, $user, $oldrev, $newrev, $refname);
+            $this->processGitWebhooks($repository, $user, $oldrev, $newrev, $refname);
             $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE_REF_UPDATE, array(
                 'repository' => $repository,
                 'oldrev'     => $oldrev,
@@ -171,7 +171,7 @@ class Git_Hook_PostReceive {
         return $body;
     }
 
-    private function processGitWebHooks(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    private function processGitWebhooks(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
         return $this->webhook_request_sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
     }

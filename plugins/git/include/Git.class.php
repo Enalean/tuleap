@@ -24,7 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
-use Tuleap\Git\Hook\WebHookDao;
+use Tuleap\Git\Webhook\WebhookDao;
 
 /**
  * Git
@@ -58,7 +58,7 @@ class Git extends PluginController {
     }
 
     /**
-     * @var WebHookDao
+     * @var WebhookDao
      */
     private $webhook_dao;
 
@@ -165,7 +165,7 @@ class Git extends PluginController {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        WebHookDao $webhook_dao
+        WebhookDao $webhook_dao
     ) {
         parent::__construct($user_manager, $request);
 

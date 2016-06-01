@@ -27,9 +27,9 @@ use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
 use Tuleap\Git\Webhook\CreateWebhookModalPresenter;
 use Tuleap\Git\Webhook\EditWebhookModalPresenter;
 use Tuleap\Git\Webhook\WebhookLogPresenter;
-use Tuleap\Git\Hook\WebHookFactory;
-use Tuleap\Git\Hook\WebHookDao;
-use Tuleap\Git\Hook\WebHook;
+use Tuleap\Git\Webhook\WebhookFactory;
+use Tuleap\Git\Webhook\WebhookDao;
+use Tuleap\Git\Webhook\Webhook;
 use GitRepository;
 use Codendi_Request;
 use CSRFSynchronizerToken;
@@ -55,20 +55,20 @@ class Hooks extends Pane
     const ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks';
 
     /**
-     * @var WebHookFactory
+     * @var WebhookFactory
      */
     private $webhook_factory;
 
     /**
-     * @var WebHookDao
+     * @var WebhookDao
      */
     private $webhook_dao;
 
     public function __construct(
         GitRepository $repository,
         Codendi_Request $request,
-        WebHookFactory $webhook_factory,
-        WebHookDao $webhook_dao
+        WebhookFactory $webhook_factory,
+        WebhookDao $webhook_dao
     ) {
         parent::__construct($repository, $request);
         $this->webhook_factory = $webhook_factory;
@@ -140,7 +140,7 @@ class Hooks extends Pane
         $label               = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_generic');
         $webhooks_presenters = array();
 
-        $webhooks = $this->webhook_factory->getWebHooksForRepository($this->repository);
+        $webhooks = $this->webhook_factory->getWebhooksForRepository($this->repository);
         if (count($webhooks) === 0) {
             return;
         }
@@ -160,7 +160,7 @@ class Hooks extends Pane
         $sections[] = new SectionOfWebhooksPresenter($label, $webhooks_presenters);
     }
 
-    private function getLogsForWebhook(WebHook $webhook)
+    private function getLogsForWebhook(Webhook $webhook)
     {
         $logs = array();
         foreach ($this->webhook_dao->getLogs($webhook->getId()) as $row) {

@@ -19,8 +19,8 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
-use Tuleap\Git\Hook\WebHookFactory;
-use Tuleap\Git\Hook\WebHookDao;
+use Tuleap\Git\Webhook\WebhookFactory;
+use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 /**
@@ -105,8 +105,8 @@ class GitViews_RepoManagement {
             $panes[]            = new Pane\Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
 
-        $webhook_dao     = new WebHookDao();
-        $webhook_factory = new WebHookFactory($webhook_dao);
+        $webhook_dao     = new WebhookDao();
+        $webhook_factory = new WebhookFactory($webhook_dao);
 
         $panes[] = new Pane\Notification($repository, $this->request);
         $panes[] = new Pane\Hooks($repository, $this->request, $webhook_factory, $webhook_dao);

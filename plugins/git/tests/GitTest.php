@@ -170,7 +170,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Git_Mirror_MirrorDataMapper'),
                 mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
                 $can_migrate_checker,
-                mock('Tuleap\Git\Hook\WebHookDao')
+                mock('Tuleap\Git\Webhook\WebhookDao')
             )
         );
         $git->setRequest($request);
