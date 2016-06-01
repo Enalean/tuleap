@@ -400,7 +400,7 @@ class Git extends PluginController {
                 'admin-git-admins',
                 'admin-gerrit-templates',
                 'admin-default-settings',
-                'admin-default-access_rights',
+                'admin-default-access-rights',
                 'fetch_git_config',
                 'fetch_git_template',
                 'fork_repositories_permissions',
@@ -733,21 +733,15 @@ class Git extends PluginController {
 
                 break;
             case 'admin-default-settings':
-                $this->addView(
-                    'adminDefaultSettings',
-                    array($this->areMirrorsEnabledForProject())
-                );
+                $this->addDefaultSettingsView();
 
                 break;
-            case 'admin-default-access_rights':
+            case 'admin-default-access-rights':
                 if ($this->request->get('save')) {
                     $this->permissions_manager->updateProjectDefaultPermissions($this->request);
                 }
 
-                $this->addView(
-                    'adminDefaultAccessRights',
-                    array($this->areMirrorsEnabledForProject())
-                );
+                $this->addDefaultSettingsView();
 
                 break;
             case 'fetch_git_config':
@@ -911,10 +905,7 @@ class Git extends PluginController {
                     $this->addError($this->getText('actions_mirror_ids_not_valid'));
                 }
 
-                $this->addView(
-                    'adminDefaultSettings',
-                    array($this->areMirrorsEnabledForProject())
-                );
+                $this->addDefaultSettingsView();
 
                 break;
             case 'restore':
@@ -941,6 +932,18 @@ class Git extends PluginController {
 
                 break;
         }
+    }
+
+    private function addDefaultSettingsView() {
+        $pane = '';
+        if ($this->request->exist('pane')) {
+            $pane = $this->request->get('pane');
+        }
+
+        $this->addView(
+            'adminDefaultSettings',
+            array($this->areMirrorsEnabledForProject(), $pane)
+        );
     }
 
     private function changeWebhook($repository, $action_method)

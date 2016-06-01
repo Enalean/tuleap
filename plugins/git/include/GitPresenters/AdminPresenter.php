@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -30,8 +30,6 @@ abstract class GitPresenters_AdminPresenter {
     public $manage_mass_update                     = false;
     public $manage_default_settings                = false;
     public $manage_default_access_rights           = false;
-    public $default_access_rights_enabled          = false;
-
 
     public function __construct($project_id, $are_mirrors_defined) {
         $this->project_id          = $project_id;
@@ -56,11 +54,6 @@ abstract class GitPresenters_AdminPresenter {
 
     public function tab_default_settings() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_settings');
-    }
-
-    public function tab_default_access_rights()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_default_access_rights');
     }
 
     public function manage_mass_update_active() {

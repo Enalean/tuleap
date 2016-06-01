@@ -12,15 +12,10 @@
         <li {{# manage_mass_update_active }}class="active"{{/ manage_mass_update_active }}>
             <a href="/plugins/git/?action=admin-mass-update&group_id={{ project_id }}">{{ tab_mass_update }}</a>
         </li>
+        {{/ are_mirrors_defined }}
         <li {{# manage_default_settings }}class="active"{{/ manage_default_settings }}>
             <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_default_settings }}</a>
         </li>
-        {{/ are_mirrors_defined }}
-        {{# default_access_rights_enabled }}
-        <li {{# manage_default_access_rights }}class="active"{{/ manage_default_access_rights }}>
-            <a href="/plugins/git/?action=admin-default-access_rights&group_id={{ project_id }}">{{ tab_default_access_rights }}</a>
-        </li>
-        {{/ default_access_rights_enabled }}
     </ul>
 
     <div class="tab-content git-admin-tab-content">
@@ -40,14 +35,10 @@
             {{# manage_mass_update }}
                 {{> admin-mass-update }}
             {{/ manage_mass_update }}
-
-            {{# manage_default_settings }}
-                {{> admin-default-settings }}
-            {{/ manage_default_settings }}
         {{/ are_mirrors_defined }}
 
-        {{# manage_default_access_rights }}
-            {{> admin-git-access-rights }}
-        {{/ manage_default_access_rights }}
+        {{# manage_default_settings }}
+            {{> admin-default-settings }}
+        {{/ manage_default_settings }}
     </div>
 </div>
