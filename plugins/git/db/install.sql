@@ -106,7 +106,17 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_ADMIN', 1, 0),
        ('PLUGIN_GIT_ADMIN', 2, 0),
        ('PLUGIN_GIT_ADMIN', 3, 0),
-       ('PLUGIN_GIT_ADMIN', 4, 1);
+       ('PLUGIN_GIT_ADMIN', 4, 1),
+       ('PLUGIN_GIT_DEFAULT_READ', 2, 1),
+       ('PLUGIN_GIT_DEFAULT_READ', 3, 0),
+       ('PLUGIN_GIT_DEFAULT_READ', 4, 0),
+       ('PLUGIN_GIT_DEFAULT_READ', 1, 0),
+       ('PLUGIN_GIT_DEFAULT_WRITE', 2, 0),
+       ('PLUGIN_GIT_DEFAULT_WRITE', 3, 1),
+       ('PLUGIN_GIT_DEFAULT_WRITE', 4, 0),
+       ('PLUGIN_GIT_DEFAULT_WPLUS', 2, 0),
+       ('PLUGIN_GIT_DEFAULT_WPLUS', 3, 0),
+       ('PLUGIN_GIT_DEFAULT_WPLUS', 4, 0);
 
 INSERT INTO permissions(permission_type, ugroup_id, object_id)
 VALUES ('PLUGIN_GIT_ADMIN', 4, 100);
