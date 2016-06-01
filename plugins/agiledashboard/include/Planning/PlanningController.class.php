@@ -352,7 +352,6 @@ class Planning_Controller extends MVC2_PluginController {
             new XML_RNGValidator(),
             new UGroupManager(),
             new XMLImportHelper(UserManager::instance()),
-            ServiceManager::instance(),
             new ProjectXMLImporterLogger()
         );
 

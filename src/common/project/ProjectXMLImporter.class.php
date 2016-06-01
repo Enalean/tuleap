@@ -49,12 +49,6 @@ class ProjectXMLImporter {
     /** @var Logger */
     private $logger;
 
-    /** @var ProjectCreator */
-    private $project_creator;
-
-    /** @var ServiceManager */
-    private $service_manager;
-
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
@@ -62,7 +56,6 @@ class ProjectXMLImporter {
         XML_RNGValidator $xml_validator,
         UGroupManager $ugroup_manager,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        ServiceManager $service_manager,
         Logger $logger
     ) {
         $this->event_manager   = $event_manager;
@@ -72,7 +65,6 @@ class ProjectXMLImporter {
         $this->ugroup_manager  = $ugroup_manager;
         $this->user_finder     = $user_finder;
         $this->logger          = $logger;
-        $this->service_manager = $service_manager;
 
         $send_notifications = false;
         $force_activation   = true;
@@ -126,32 +118,20 @@ class ProjectXMLImporter {
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $this->importFromXMLIntoExistingProject($project_id, $xml_element, $archive->getExtractionPath());
+        $project = $this->getProject($project_id);
+
+        $this->importContent($project, $xml_element, $archive->getExtractionPath());
     }
 
     public function import($project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
         $xml_element     = $this->getSimpleXMLElementFromFilePath($xml_file_path);
+        $extraction_path = '';
 
-        $this->importFromXMLIntoExistingProject($project_id, $xml_element, '');
-    }
-
-    private function importFromXMLIntoExistingProject($project_id, SimpleXMLElement $xml_element, $extraction_path) {
         $project = $this->getProject($project_id);
-        $this->activateServices($project, $xml_element);
 
         $this->importContent($project, $xml_element, $extraction_path);
-    }
-
-    private function activateServices(Project $project, SimpleXMLElement $xml_element) {
-        if ($xml_element->services) {
-            foreach ($xml_element->services->service as $service) {
-                $short_name = (string) $service['shortname'];
-                $enabled    = (string) $service['enabled'] == "true" ? true : false;
-                $this->service_manager->toggleServiceUsage($project, $short_name, $enabled);
-            }
-        }
     }
 
     /**
@@ -395,20 +375,10 @@ class ProjectXMLImporter {
      * @return Project
      */
     private function getProject($project_id) {
-        try {
-            $project = $this->project_manager->getProjectByUnixName($project_id);
-            $this->assertProjectIsValid($project_id, $project);
-            return $project;
-        } catch (RuntimeException $exception) {
-            $project = $this->project_manager->getProject($project_id);
-            $this->assertProjectIsValid($project_id, $project);
-            return $project;
-        }
-    }
-
-    private function assertProjectIsValid($project_id, $project) {
+        $project = $this->project_manager->getProject($project_id);
         if (! $project || ($project && ($project->isError() || $project->isDeleted()))) {
             throw new RuntimeException('Invalid project_id '.$project_id);
         }
+        return $project;
     }
 }

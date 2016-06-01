@@ -45,7 +45,7 @@ Usage: $argv[0] -p project_id -u user_name -i path_to_archive -m path_to_mapping
 
 Import a project structure
 
-  -p <project_id> The id or shortname of the project to import the archive
+  -p <project_id> The id of the project to import the archive
   -n <name>       Override project name (when -p is not specified)
   -u <user_name>  The user used to import
   -i <path>       The path of the archive of the exported XML + data
@@ -65,7 +65,7 @@ if (isset($arguments['h'])) {
 if (! isset($arguments['p'])) {
     $project_id = null;
 } else {
-    $project_id = $arguments['p'];
+    $project_id = (int)$arguments['p'];
 }
 
 if (! isset($arguments['n'])) {
@@ -140,7 +140,6 @@ try {
         $xml_validator,
         new UGroupManager(),
         $user_finder,
-        ServiceManager::instance(),
         $broker_log
     );
 

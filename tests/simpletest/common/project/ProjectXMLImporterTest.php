@@ -52,7 +52,6 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             new XML_RNGValidator(),
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager),
-            mock('ServiceManager'),
             $this->logger
         );
 
@@ -87,12 +86,6 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         expect($this->project_manager)->getProject(122)->once();
         $this->expectException();
         $this->xml_importer->import(122, $this->xml_file_path);
-    }
-
-    public function itAsksProjectManagerForProjectByUnixName() {
-        expect($this->project_manager)->getProjectByUnixName('1gpig')->once();
-        $this->expectException();
-        $this->xml_importer->import('1gpig', $this->xml_file_path);
     }
 
     public function itStopsIfNoProjectIsFound() {

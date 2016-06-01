@@ -54,7 +54,7 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
 
             $this->addHook('permission_get_name');
-            $this->addHook(Event::SERVICE_IS_USED);
+            $this->_addHook('service_is_used');
             $this->_addHook('register_project_creation');
 
             $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);

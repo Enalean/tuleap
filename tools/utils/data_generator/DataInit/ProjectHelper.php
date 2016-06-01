@@ -50,7 +50,6 @@ class ProjectHelper {
             new \XML_RNGValidator(),
             new \UGroupManager(),
             new \XMLImportHelper($user_manager),
-            \ServiceManager::instance(),
             new \ProjectXMLImporterLogger()
         );
     }
