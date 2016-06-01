@@ -48,11 +48,12 @@ function ExecutionRestService(
             });
     }
 
-    function putTestExecution(execution_id, new_status, results) {
+    function putTestExecution(execution_id, new_status, time, results) {
         return rest
             .one('trafficlights_executions', execution_id)
             .put({
                 status: new_status,
+                time: time,
                 results: results
             })
             .then(function (response) {

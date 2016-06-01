@@ -32,13 +32,13 @@ class TrafficlightsCampaignBuilder {
         array('label' => 'Tuleap 7.3', 'status' => 'Open', 'executions' => array(
             array('status' => 'passed', 'environment' => 'CentOS 5 - PHP 5.3', 'definition' => array(
                 'summary' => 'Create a repository', 'description' => 'This is a description', 'category' => 'Git'
-            )),
+            ), 'time' => 1),
             array('status' => 'passed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
                 'summary' => 'Delete a repository', 'description' => 'This is a description', 'category' => 'Git'
-            )),
+            ), 'time' => 1),
             array('status' => 'failed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
                 'summary' => 'Import default template', 'description' => 'This is a description', 'category' => 'AgileDashboard'
-            )),
+            ), 'time' => 1),
         )),
     );
 
@@ -88,7 +88,8 @@ class TrafficlightsCampaignBuilder {
             $execution = $this->createExecution(
                 $execution_data['status'],
                 $execution_data['environment'],
-                $definition['id']
+                $definition['id'],
+                $execution_data['time']
             );
 
             $executions_ids[] = $execution['id'];
@@ -108,15 +109,17 @@ class TrafficlightsCampaignBuilder {
         );
     }
 
-    private function createExecution($status, $environment, $definition_id) {
-        $tracker = $this->tracker_factory->getTrackerRest('test_exec');
-        return $tracker->createArtifact(
+    private function createExecution($status, $environment, $definition_id, $time) {
+        $tracker  = $this->tracker_factory->getTrackerRest('test_exec');
+        $artifact = $tracker->createArtifact(
             array(
                 $tracker->getSubmitListValue('Status', $status),
                 $tracker->getSubmitListValue('Environment', $environment),
-                $tracker->getSubmitArtifactLinkValue(array($definition_id))
+                $tracker->getSubmitArtifactLinkValue(array($definition_id)),
+                $tracker->getSubmitTextValue('Time', $time)
             )
         );
+        return $artifact;
     }
 
     private function createDefinition($definition_data) {

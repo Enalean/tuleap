@@ -34,7 +34,8 @@ class ExecutionsTest extends BaseTest {
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse($this->client->put('trafficlights_executions/'. $execution['id'], null, json_encode(array(
-            'status' => $new_value
+            'status' => $new_value,
+            'time'   => 0
         ))));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -43,7 +44,8 @@ class ExecutionsTest extends BaseTest {
         $this->assertEquals($new_value, $updated_execution['status']);
 
         $this->getResponse($this->client->put('trafficlights_executions/'. $execution['id'], null, json_encode(array(
-            'status' => $initial_value
+            'status' => $initial_value,
+            'time'   => 0
         ))));
     }
 

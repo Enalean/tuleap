@@ -456,6 +456,11 @@
                     </items>
                   </bind>
                 </formElement>
+                <formElement type="int" ID="F11055" rank="5">
+                  <name>time</name>
+                  <label><![CDATA[Time]]></label>
+                  <properties size="5"/>
+                </formElement>
               </formElements>
             </formElement>
           </formElements>
@@ -547,6 +552,9 @@
         <permission scope="field" REF="F11054" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F11054" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F11054" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F11055" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F11055" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F11055" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
   </trackers>

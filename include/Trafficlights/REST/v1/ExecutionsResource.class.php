@@ -50,6 +50,7 @@ use Tuleap\User\REST\UserRepresentation;
 class ExecutionsResource {
     const FIELD_RESULTS      = 'results';
     const FIELD_STATUS       = 'status';
+    const FIELD_TIME         = 'time';
     const HTTP_CLIENT_UUID   = 'HTTP_X_CLIENT_UUID';
 
     /** @var Tracker_ArtifactFactory */
@@ -130,20 +131,21 @@ class ExecutionsResource {
      *
      * @url PUT {id}
      *
-     * @param string $id     Id of the artifact
-     * @param string $status Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
+     * @param string $id      Id of the artifact
+     * @param string $status  Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
+     * @param int    $time     Time to pass the execution {@from body}
      * @param string $results Result of the execution {@from body}
      *
      * @throws 400
      * @throws 500
      */
-    protected function putId($id, $status, $results = '') {
+    protected function putId($id, $status, $time = 0, $results = '') {
         $previous_status = '';
         $preivous_user   = '';
         try {
             $user            = UserManager::instance()->getCurrentUser();
             $artifact        = $this->getArtifactById($user, $id);
-            $changes         = $this->getChanges($status, $results, $artifact, $user);
+            $changes         = $this->getChanges($status, $time, $results, $artifact, $user);
             $previous_status = $this->getPreviousStatus($artifact);
             $preivous_user   = $this->getPreviousSubmittedBy($artifact);
 
@@ -243,6 +245,7 @@ class ExecutionsResource {
     /** @return array */
     private function getChanges(
         $status,
+        $time,
         $results,
         Tracker_Artifact $artifact,
         PFUser $user
@@ -270,6 +273,18 @@ class ExecutionsResource {
         );
         if ($result_value) {
             $changes[] = $result_value;
+        }
+
+        if ($time !== 0) {
+            $time_value = $this->getFormattedChangesetValueForFieldInt(
+                self::FIELD_TIME,
+                $time,
+                $artifact,
+                $user
+            );
+            if ($time_value) {
+                $changes[] = $time_value;
+            }
         }
 
         return $changes;
@@ -310,12 +325,30 @@ class ExecutionsResource {
             return null;
         }
 
-        $value_representation                 = new ArtifactValuesRepresentation();
-        $value_representation->field_id       = (int) $field->getId();
-        $value_representation->value = array(
+        $value_representation           = new ArtifactValuesRepresentation();
+        $value_representation->field_id = (int) $field->getId();
+        $value_representation->value    = array(
             'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
             'content' => $value
         );
+
+        return $value_representation;
+    }
+
+    private function getFormattedChangesetValueForFieldInt(
+        $field_name,
+        $value,
+        $artifact,
+        $user
+    ) {
+        $field = $this->getFieldByName($field_name, $artifact, $user);
+        if (! $field) {
+            return null;
+        }
+
+        $value_representation           = new ArtifactValuesRepresentation();
+        $value_representation->field_id = (int) $field->getId();
+        $value_representation->value    = $value;
 
         return $value_representation;
     }

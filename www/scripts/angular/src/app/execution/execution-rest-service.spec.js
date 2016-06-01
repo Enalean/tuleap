@@ -56,10 +56,10 @@ describe ('ExecutionRestService - ', function () {
         };
 
         mockBackend
-            .expectPUT('/api/v1/trafficlights_executions/4?results=nothing&status=passed')
+            .expectPUT('/api/v1/trafficlights_executions/4?results=nothing&status=passed&time=1')
             .respond(execution);
 
-        var promise = ExecutionRestService.putTestExecution(4, 'passed', 'nothing');
+        var promise = ExecutionRestService.putTestExecution(4, 'passed', 1, 'nothing');
 
         mockBackend.flush();
 

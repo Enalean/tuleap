@@ -41,8 +41,11 @@
         </div>
 
         <div id="current-execution-result">
-            <form>
-                <textarea placeholder="{{ 'Comment...' | translate }}" ng-model="execution.results"></textarea>
+            <form name="execution_form">
+                <div>
+                    <textarea placeholder="{{ 'Comment...' | translate }}" ng-model="execution.results"></textarea>
+                    <timer id="execution-timer" ng-model="timer.execution_time"></timer>
+                </div>
                 <div id="result-choices">
                     <button class="btn btn-circle btn-xl btn-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)" ng-disabled="execution.saving">
                         <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="{{ 'Passed' | translate }}">

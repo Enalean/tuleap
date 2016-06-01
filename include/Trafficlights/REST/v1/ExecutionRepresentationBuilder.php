@@ -101,7 +101,8 @@ class ExecutionRepresentationBuilder {
             $execution->getLastUpdateDate(),
             $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
             $previous_result_representation,
-            $definition_representation
+            $definition_representation,
+            $this->getExecutionTime($user, $execution)
         );
 
         return $execution_representation;
@@ -122,7 +123,8 @@ class ExecutionRepresentationBuilder {
                 $execution->getLastUpdateDate(),
                 $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
                 $previous_result_representation,
-                $definition_representation
+                $definition_representation,
+                $this->getExecutionTime($user, $execution)
             );
 
             $executions_representations[] = $execution_representation;
@@ -188,6 +190,20 @@ class ExecutionRepresentationBuilder {
         }
 
         return $changeset_value->getText();
+    }
+
+    private function getExecutionTime(PFUser $user, Tracker_Artifact $execution) {
+        $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($execution->getTrackerId(), ExecutionRepresentation::FIELD_TIME, $user);
+        if (! $results_field) {
+            return '';
+        }
+
+        $changeset_value = $execution->getValue($results_field);
+        if (! $changeset_value) {
+            return '';
+        }
+
+        return $changeset_value->getValue();
     }
 
     private function getExecutionEnvironment(PFUser $user, Tracker_Artifact $execution) {

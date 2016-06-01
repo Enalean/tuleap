@@ -42,6 +42,7 @@ function ExecutionDetailCtrl(
     $scope.showEditArtifactModal       = showEditArtifactModal;
 
     initialization();
+    resetTimer();
 
     $scope.$on('controller-reload', function() {
         initialization();
@@ -70,6 +71,12 @@ function ExecutionDetailCtrl(
 
         $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
         $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
+    }
+
+    function resetTimer() {
+        $scope.timer = {
+            execution_time: 0
+        };
     }
 
     function showArtifactLinksGraphModal(execution) {
@@ -136,14 +143,17 @@ function ExecutionDetailCtrl(
     }
 
     function pass(execution) {
+        execution.time  += $scope.timer.execution_time;
         setNewStatus(execution, "passed");
     }
 
     function fail(execution) {
+        execution.time  += $scope.timer.execution_time;
         setNewStatus(execution, "failed");
     }
 
     function block(execution) {
+        execution.time  += $scope.timer.execution_time;
         setNewStatus(execution, "blocked");
     }
 
@@ -153,8 +163,9 @@ function ExecutionDetailCtrl(
 
     function setNewStatus(execution, new_status) {
         execution.saving = true;
-        ExecutionRestService.putTestExecution(execution.id, new_status, execution.results).then(function(data) {
+        ExecutionRestService.putTestExecution(execution.id, new_status, execution.time, execution.results).then(function(data) {
             ExecutionService.updateTestExecution(data);
+            resetTimer();
         }).catch(function(response) {
             ExecutionService.displayError(execution, response);
         });
