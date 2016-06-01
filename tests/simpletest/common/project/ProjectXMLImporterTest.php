@@ -52,6 +52,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             new XML_RNGValidator(),
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager),
+            mock('ServiceManager'),
             $this->logger
         );
 

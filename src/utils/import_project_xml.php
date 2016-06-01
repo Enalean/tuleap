@@ -140,6 +140,7 @@ try {
         $xml_validator,
         new UGroupManager(),
         $user_finder,
+        ServiceManager::instance(),
         $broker_log
     );
 
