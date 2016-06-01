@@ -30,6 +30,9 @@ use Tuleap\Git\GitPresenters\AdminGitAccessRightsPresenter;
  */
 class GitViews extends PluginViews {
 
+    const DEFAULT_SETTINGS_PANE_ACCESS_CONTROL = 'access_control';
+    const DEFAULT_SETTINGS_PANE_MIRRORING      = 'mirroring';
+
     /** @var Project */
     private $project;
 
@@ -394,31 +397,6 @@ class GitViews extends PluginViews {
         echo $renderer->renderToString('admin', $presenter);
     }
 
-    protected function adminDefaultAccessRights($are_mirrors_defined) {
-        $params     = $this->getData();
-        $builder    = $this->getAccessRightsPresenterOptionsBuilder();
-        $project_id = $this->project->getID();
-
-        $read_options   = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_READ);
-        $write_options  = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WRITE);
-        $rewind_options = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WPLUS);
-
-        $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access_rights");
-
-        $presenter = new AdminGitAccessRightsPresenter(
-            $this->project->getID(),
-            $are_mirrors_defined,
-            $csrf,
-            $read_options,
-            $write_options,
-            $rewind_options
-        );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-        echo $renderer->renderToString('admin', $presenter);
-    }
-
     protected function adminGerritTemplatesView($are_mirrors_defined) {
         $params = $this->getData();
 
@@ -649,13 +627,34 @@ class GitViews extends PluginViews {
         }
     }
 
-    protected function adminDefaultSettings($are_mirrors_defined) {
+    protected function adminDefaultSettings($are_mirrors_defined, $pane) {
         $mirror_presenters = $this->getMirrorPresentersForGitAdmin();
+        $project_id        = $this->project->getID();
+
+        $builder        = $this->getAccessRightsPresenterOptionsBuilder();
+        $read_options   = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_READ);
+        $write_options  = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WRITE);
+        $rewind_options = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WPLUS);
+        $csrf           = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access-rights");
+
+        $pane_access_control = true;
+        $pane_mirroring      = false;
+
+        if ($are_mirrors_defined && $pane === self::DEFAULT_SETTINGS_PANE_MIRRORING) {
+            $pane_access_control = false;
+            $pane_mirroring      = true;
+        }
 
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
-            $this->groupId,
+            $project_id,
             $are_mirrors_defined,
-            $mirror_presenters
+            $mirror_presenters,
+            $csrf,
+            $read_options,
+            $write_options,
+            $rewind_options,
+            $pane_access_control,
+            $pane_mirroring
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
