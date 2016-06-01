@@ -171,7 +171,7 @@ class GitPermissionsManager {
     {
         $ugroup_ids_for_permission = array();
 
-        if ($ugroup_ids[$permission] && is_array($ugroup_ids[$permission])) {
+        if (isset($ugroup_ids[$permission]) && is_array($ugroup_ids[$permission])) {
             $ugroup_ids_for_permission = $ugroup_ids[$permission];
         }
 
