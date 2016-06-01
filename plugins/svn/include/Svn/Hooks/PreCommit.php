@@ -162,14 +162,7 @@ class PreCommit {
     }
 
     private function getWellFormedRegexImmutablePath($immutable_path) {
-        if (strpos($immutable_path, '/') === 0) {
-            $immutable_path = substr($immutable_path, 1);
-        }
-
-        if (strrpos($immutable_path, '/') === strlen($immutable_path)) {
-            $immutable_path = substr($immutable_path, -1);
-        }
-
+        $immutable_path = trim($immutable_path, '/');
         $immutable_path = preg_quote($immutable_path);
         $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
 

@@ -171,7 +171,7 @@ class PreCommitBaseTest extends TuleapTestCase {
     }
 
     public function testCommitToTagIsDeniedInModule() {
-        $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns('/*/tags');
+        $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns('/*/tags/');
         stub("Tuleap\Svn\Admin\ImmutableTagDao")->searchByRepositoryId()->returns(array($this->repository));
         stub($this->immutable_tag_factory)->getByRepositoryId($this->repository)->returns($immutable_tag);
 
