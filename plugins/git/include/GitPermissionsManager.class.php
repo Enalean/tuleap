@@ -189,4 +189,26 @@ class GitPermissionsManager {
 
         $override_collection->emitFeedback($permission);
     }
+
+    /**
+     * @return array
+     */
+    public function getDefaultPermissions(Project $project)
+    {
+        return array(
+            Git::PERM_READ  => $this->getDefaultPermission($project, Git::DEFAULT_PERM_READ),
+            Git::PERM_WRITE => $this->getDefaultPermission($project, Git::DEFAULT_PERM_WRITE),
+            Git::PERM_WPLUS => $this->getDefaultPermission($project, Git::DEFAULT_PERM_WPLUS),
+        );
+    }
+
+    private function getDefaultPermission(Project $project, $permission_name)
+    {
+        return $this->permissions_manager->getAuthorizedUGroupIdsForProject(
+            $project,
+            $project->getID(),
+            $permission_name
+        );
+    }
+
 }

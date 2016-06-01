@@ -219,6 +219,11 @@ class GitActions extends PluginActions {
 
             $this->manager->create($repository, $this->backend_gitolite, $default_mirrors);
 
+            $this->backend_gitolite->savePermissions(
+                $repository,
+                $this->git_permissions_manager->getDefaultPermissions($project)
+            );
+
             $this->history_dao->groupAddHistory(
                 "git_repo_create",
                 $repository_name,
