@@ -18,7 +18,8 @@ function CampaignService(
         getCampaign    : getCampaign,
         getCampaigns   : getCampaigns,
         getEnvironments: getEnvironments,
-        createCampaign : createCampaign
+        createCampaign : createCampaign,
+        patchCampaign  : patchCampaign
     };
 
     function getCampaign(campaign_id) {
@@ -46,8 +47,8 @@ function CampaignService(
         return rest.one('trafficlights_campaigns', campaign_id)
             .all('trafficlights_environments')
             .getList({
-                limit: limit,
-                offset: offset
+                limit     : limit,
+                offset    : offset
             })
             .then(function(response) {
                 result = {
@@ -62,5 +63,15 @@ function CampaignService(
     function createCampaign(campaign) {
         return rest.all('trafficlights_campaigns')
             .post(campaign);
+    }
+
+    function patchCampaign(campaign_id, execution_ids) {
+        return rest.one('trafficlights_campaigns', campaign_id)
+            .patch({
+                execution_ids: execution_ids
+            })
+            .then(function(response) {
+                return response.data;
+            });
     }
 }

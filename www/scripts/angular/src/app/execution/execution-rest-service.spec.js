@@ -44,6 +44,26 @@ describe ('ExecutionRestService - ', function () {
         });
     });
 
+    it("postTestExecution() - ", function() {
+        var execution = {
+            id: 4,
+            environment: "CentOS 5 - PHP 5.1",
+            status: "notrun"
+        };
+
+        mockBackend
+            .expectPOST('/api/v1/trafficlights_executions/execution')
+            .respond(execution);
+
+        var promise = ExecutionRestService.postTestExecution("notrun", "CentOS 5 - PHP 5.1");
+
+        mockBackend.flush();
+
+        promise.then(function(execution_updated) {
+            expect(execution_updated.id).toBeDefined();
+        });
+    });
+
     it("putTestExecution() - ", function() {
         var execution = {
             id: 4,

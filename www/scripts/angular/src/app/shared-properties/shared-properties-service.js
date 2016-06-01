@@ -14,18 +14,24 @@ function SharedPropertiesService() {
     };
 
     return {
-        getProjectId        : getProjectId,
-        setProjectId        : setProjectId,
-        getCampaignId       : getCampaignId,
-        setCampaignId       : setCampaignId,
-        getCurrentUser      : getCurrentUser,
-        setCurrentUser      : setCurrentUser,
-        getNodeServerAddress: getNodeServerAddress,
-        setNodeServerAddress: setNodeServerAddress,
-        getUUID             : getUUID,
-        setUUID             : setUUID,
-        setNodeServerVersion: setNodeServerVersion,
-        getNodeServerVersion: getNodeServerVersion
+        getProjectId          : getProjectId,
+        setProjectId          : setProjectId,
+        getCampaignId         : getCampaignId,
+        setCampaignId         : setCampaignId,
+        getCurrentUser        : getCurrentUser,
+        setCurrentUser        : setCurrentUser,
+        getNodeServerAddress  : getNodeServerAddress,
+        setNodeServerAddress  : setNodeServerAddress,
+        getUUID               : getUUID,
+        setUUID               : setUUID,
+        setNodeServerVersion  : setNodeServerVersion,
+        getNodeServerVersion  : getNodeServerVersion,
+        setCampaignTrackerId  : setCampaignTrackerId,
+        getCampaignTrackerId  : getCampaignTrackerId,
+        setDefinitionTrackerId: setDefinitionTrackerId,
+        getDefinitionTrackerId: getDefinitionTrackerId,
+        setExecutionTrackerId : setExecutionTrackerId,
+        getExecutionTrackerId : getExecutionTrackerId
     };
 
     function getProjectId() {
@@ -74,5 +80,29 @@ function SharedPropertiesService() {
 
     function getNodeServerVersion() {
         return property.nodejs_server_version;
+    }
+
+    function setCampaignTrackerId(campaign_tracker_id) {
+        property.campaign_tracker_id = campaign_tracker_id;
+    }
+
+    function getCampaignTrackerId() {
+        return property.campaign_tracker_id;
+    }
+
+    function setDefinitionTrackerId(definition_tracker_id) {
+        property.definition_tracker_id = definition_tracker_id;
+    }
+
+    function getDefinitionTrackerId() {
+        return property.definition_tracker_id;
+    }
+
+    function setExecutionTrackerId(execution_tracker_id) {
+        property.execution_tracker_id = execution_tracker_id;
+    }
+
+    function getExecutionTrackerId() {
+        return property.execution_tracker_id;
     }
 }

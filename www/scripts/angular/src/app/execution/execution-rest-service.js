@@ -21,6 +21,7 @@ function ExecutionRestService(
 
     _.extend(self, {
         getRemoteExecutions          : getRemoteExecutions,
+        postTestExecution            : postTestExecution,
         putTestExecution             : putTestExecution,
         changePresenceOnTestExecution: changePresenceOnTestExecution,
         leaveTestExecution           : leaveTestExecution
@@ -45,6 +46,20 @@ function ExecutionRestService(
                 };
 
                 return result;
+            });
+    }
+
+    function postTestExecution(tracker_id, definition_id, environment, status) {
+        return rest
+            .one('trafficlights_executions')
+            .post('execution', {
+                tracker      : {id: tracker_id},
+                definition_id: definition_id,
+                environment  : environment,
+                status       : status
+            })
+            .then(function (response) {
+                return response.data;
             });
     }
 

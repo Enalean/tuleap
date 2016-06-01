@@ -1,20 +1,26 @@
 <div id="execution-utils">
-    <div id="execution-utils-title">
-        <h1>{{ campaign.label }}</h1>
-    </div>
-    <div id="execution-utils-progress-bar">
-        <table border="0" cellpadding="0" cellspacing="0" class="sense-of-progress">
-            <tbody>
-            <tr>
-                <td class="sense-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">{{ campaign.nb_of_passed }}</td>
-                <td class="sense-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">{{ campaign.nb_of_failed }}</td>
-                <td class="sense-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">{{ campaign.nb_of_blocked }}</td>
-                <td class="sense-of-progress-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">{{ campaign.nb_of_notrun }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="execution-utils-avatars">
+    <div id="execution-utils-information">
+        <div id="execution-utils-campaign">
+            <h1>{{ campaign.label }}</h1>
+            <div class="btn-group execution-utils-environment">
+                <button
+                        type="button"
+                        class="btn btn-small btn-inverse dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        onclick="this.blur();"
+                        translate
+                >
+                    Add a test <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="environment in environments"><a ng-click="selectEnvironmentCreation([environment])">{{environment}}</a></li>
+                    <li><a ng-click="selectEnvironmentCreation(environments)" translate>For all</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="execution-utils-avatars">
         <span class="execution-avatar" ng-repeat="presence in presences_on_campaign | orderBy:'-score' | limitTo:6">
             <img data-toggle="tooltip"
                  title="{{ presence.real_name }}"
@@ -24,7 +30,22 @@
             <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score >= 0">{{ presence.score }}</span>
             <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score < 0">0</span>
         </span>
-        <span id="more-avatars" ng-if="presences_on_campaign.length > 3" ng-click="showPresencesModal()"><i class="icon-ellipsis-horizontal"></i></span>
+            <span id="more-avatars" ng-if="presences_on_campaign.length > 3" ng-click="showPresencesModal()"><i class="icon-ellipsis-horizontal"></i></span>
+        </div>
+    </div>
+    <div id="execution-utils-progress-bar">
+        <div class="sense-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">
+            <span>{{ campaign.nb_of_passed }}</span>
+        </div>
+        <div class="sense-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">
+            <span>{{ campaign.nb_of_failed }}</span>
+        </div>
+        <div class="sense-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">
+            <span>{{ campaign.nb_of_blocked }}</span>
+        </div>
+        <div class="sense-of-progress-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">
+            <span>{{ campaign.nb_of_notrun }}</span>
+        </div>
     </div>
 </div>
 

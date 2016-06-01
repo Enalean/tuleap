@@ -29,6 +29,7 @@ function ExecutionService(
         getExecutionsByDefinitionId       : getExecutionsByDefinitionId,
         addPresenceCampaign               : addPresenceCampaign,
         updateCampaign                    : updateCampaign,
+        addTestExecutions                 : addTestExecutions,
         updateTestExecution               : updateTestExecution,
         updatePresenceOnCampaign          : updatePresenceOnCampaign,
         viewTestExecution                 : viewTestExecution,
@@ -132,6 +133,18 @@ function ExecutionService(
         return executions;
     }
 
+    function addTestExecutions(executions) {
+        if (! _.isArray(executions)) {
+            executions = [executions];
+        }
+        groupExecutionsByCategory(self.campaign_id, executions);
+
+        _.forEach(executions, function(execution) {
+            var status = execution.status;
+            self.campaign['nb_of_' + status]++;
+        });
+    }
+
     function updateTestExecution(execution_updated) {
         var execution       = self.executions[execution_updated.id];
         var previous_status = execution.previous_result.status;
@@ -146,8 +159,8 @@ function ExecutionService(
         execution.error        = '';
         execution.results      = '';
 
-        self.campaign[('nb_of_').concat(status)]++;
-        self.campaign[('nb_of_').concat(previous_status)]--;
+        self.campaign['nb_of_' + status]++;
+        self.campaign['nb_of_' + previous_status]--;
     }
 
     function updatePresenceOnCampaign(user) {

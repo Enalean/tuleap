@@ -20,8 +20,8 @@ function EnvironmentService(Restangular, $q) {
         rest.one('projects', project_id)
             .all('trafficlights_environments')
             .getList({
-                limit: limit,
-                offset: offset
+                limit     : limit,
+                offset    : offset
             })
             .then(function(response) {
                 result = {

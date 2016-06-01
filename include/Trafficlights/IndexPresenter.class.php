@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,6 +57,9 @@ class IndexPresenter {
     /** @var string */
     public $nodejs_server;
 
+    /** @var  array */
+    public $tracker_ids;
+
     public function __construct(
         $project_id,
         $campaign_tracker_id,
@@ -74,9 +77,15 @@ class IndexPresenter {
         $user_representation->build($current_user);
         $this->current_user = json_encode($user_representation);
 
-        $this->test_definition_tracker_id = $test_definition_tracker_id;
-        $this->test_execution_tracker_id  = $test_execution_tracker_id;
+        $this->test_definition_tracker_id = intval($test_definition_tracker_id);
+        $this->test_execution_tracker_id  = intval($test_execution_tracker_id);
+        $this->campaign_tracker_id        = intval($campaign_tracker_id);
         $this->nodejs_server              = TuleapConfig::get('nodejs_server');
+        $this->tracker_ids                = json_encode(array(
+            'definition_tracker_id' => $this->test_definition_tracker_id,
+            'execution_tracker_id'  => $this->test_execution_tracker_id,
+            'campaign_tracker_id'   => $this->campaign_tracker_id
+        ));
     }
 
     private function getLanguageAbbreviation($current_user) {

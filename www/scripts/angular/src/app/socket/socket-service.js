@@ -36,6 +36,7 @@ function SocketService(
         listenToUserScore       : listenToUserScore,
         listenToExecutionViewed : listenToExecutionViewed,
         listenToExecutionLeft   : listenToExecutionLeft,
+        listenToExecutionCreated: listenToExecutionCreated,
         listenToExecutionUpdated: listenToExecutionUpdated,
         refreshToken            : refreshToken
     });
@@ -143,6 +144,12 @@ function SocketService(
     function listenToExecutionLeft() {
         SocketFactory.on('user:leave', function(uuid) {
             ExecutionService.removeViewTestExecutionByUUID(uuid);
+        });
+    }
+
+    function listenToExecutionCreated() {
+        SocketFactory.on('trafficlights_execution:create', function(data) {
+            ExecutionService.addTestExecutions(data.artifact);
         });
     }
 

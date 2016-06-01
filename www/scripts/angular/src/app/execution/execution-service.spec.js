@@ -154,7 +154,62 @@ describe ('ExecutionService - ', function () {
             ];
 
             ExecutionService.categories = categories;
+
             expect(ExecutionService.getExecutionsByDefinitionId(3)).toEqual(executions_results);
+        });
+    });
+
+    describe("addTestExecution() -", function() {
+        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function () {
+            var campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 0,
+                nb_of_blocked: 0
+            };
+
+            var categories = {};
+
+            var executions = [
+                {
+                    id: 4,
+                    environment: "CentOS 5 - PHP 5.1",
+                    status: "notrun",
+                    definition: {
+                        category: "Svn"
+                    }
+                }
+            ];
+
+            var executions_by_categories_by_campaigns = {
+                6: categories
+            };
+
+            ExecutionService.campaign_id                           = 6;
+            ExecutionService.campaign                              = campaign;
+            ExecutionService.categories                            = categories;
+            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.addTestExecutions(executions);
+            expect(ExecutionService.executions[4]).toEqual({
+                id: 4,
+                environment: "CentOS 5 - PHP 5.1",
+                status: "notrun",
+                definition: {
+                    category: "Svn"
+                }
+            });
+            expect(ExecutionService.campaign).toEqual({
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 1,
+                nb_of_blocked: 0
+            });
         });
     });
 
@@ -199,6 +254,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.campaign   = campaign;
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save);
+
             expect(ExecutionService.executions[4].status).toEqual("failed");
             expect(ExecutionService.campaign).toEqual(campaign_results);
         });
@@ -235,6 +291,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.campaign   = campaign;
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save);
+
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
             expect(Object.keys(ExecutionService.campaign).length).toEqual(Object.keys(campaign_copy).length);
         });
@@ -258,6 +315,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.campaign = campaign;
             ExecutionService.updateCampaign(campaign_updated);
+
             expect(angular.equals(ExecutionService.campaign, campaign_updated)).toBe(true);
         });
     });
@@ -291,6 +349,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user);
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
@@ -332,6 +391,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_two);
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
@@ -371,6 +431,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_one_bis);
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
     });
@@ -408,6 +469,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.removeViewTestExecution(4, user_one);
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
     });
@@ -461,6 +523,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.executions = executions;
             ExecutionService.presences_on_campaign = [user_one, user_two];
             ExecutionService.removeViewTestExecutionByUUID('456');
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
             expect(ExecutionService.executions[5].viewed_by).toEqual(results);
             expect(ExecutionService.presences_on_campaign).toEqual(result_presences_on_campaign);
@@ -512,6 +575,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.removeAllViewTestExecution();
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
             expect(ExecutionService.executions[5].viewed_by).toEqual(results);
         });
@@ -539,6 +603,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.presences_on_campaign = presences_on_campaign;
             ExecutionService.addPresenceCampaign(user_two);
+
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
 
@@ -563,6 +628,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.presences_on_campaign = presences_on_campaign;
             ExecutionService.addPresenceCampaign(user_two);
+
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
     });
@@ -601,6 +667,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.executions            = executions;
             ExecutionService.presences_on_campaign = [user_one, user_two];
             ExecutionService.removePresenceCampaign(user_one);
+
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
 
@@ -637,6 +704,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.executions            = executions;
             ExecutionService.presences_on_campaign = [user_one, user_two];
             ExecutionService.removePresenceCampaign(user_one);
+
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
     });
@@ -682,6 +750,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.executions            = executions;
             ExecutionService.presences_on_campaign = [user_one];
             ExecutionService.updatePresenceOnCampaign(user_one_updated);
+
             expect(ExecutionService.presences_on_campaign[0]).toEqual(user_one_result);
         });
     });
@@ -778,6 +847,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.presences_loaded       = true;
             ExecutionService.presences_by_execution = presences;
             ExecutionService.displayPresencesForAllExecutions();
+
             expect(ExecutionService.executions).toEqual(results);
         });
     });
@@ -831,6 +901,7 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.executions = executions;
             ExecutionService.displayPresencesByExecution(4, presences);
+
             expect(ExecutionService.executions).toEqual(results);
         });
     });

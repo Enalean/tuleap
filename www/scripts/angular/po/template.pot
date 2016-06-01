@@ -10,6 +10,10 @@ msgid_plural "<span class='total-definitions'>{{ getFilteredDefinitions(environm
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/app/execution/execution-list.tpl.html
+msgid "Add a test <span class=\"caret\"></span>"
+msgstr ""
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid "All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
 msgstr ""
@@ -95,6 +99,10 @@ msgstr ""
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Focus graph"
+msgstr ""
+
+#: src/app/execution/execution-list.tpl.html
+msgid "For all"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

@@ -96,4 +96,28 @@ describe ('CampaignService - ', function () {
             expect(response.data.id).toEqual(17);
         });
     });
+
+    it("patchCampaign() - ", function() {
+        var executions = [
+            {
+                id: 4,
+                environment: "CentOS 5 - PHP 5.1",
+                previous_result: {
+                    status: "notrun"
+                }
+            }
+        ];
+
+        mockBackend
+            .expectPATCH('/api/v1/trafficlights_campaigns/17')
+            .respond(executions);
+
+        var promise = CampaignService.patchCampaign(17, [4]);
+
+        mockBackend.flush();
+
+        promise.then(function(executions) {
+            expect(executions.length).toEqual(1);
+        });
+    });
 });

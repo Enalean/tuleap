@@ -22,6 +22,10 @@ msgid_plural ""
 msgstr[0] "Sélectionnez un test"
 msgstr[1] ""
 
+#: src/app/execution/execution-list.tpl.html
+msgid "Add a test <span class=\"caret\"></span>"
+msgstr "Ajouter un test <span class=\"caret\"></span>"
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
 "All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
@@ -116,6 +120,10 @@ msgstr "Filtrer …"
 msgid "Focus graph"
 msgstr "Recentrer le graphe"
 
+#: src/app/execution/execution-list.tpl.html
+msgid "For all"
+msgstr "Pour tous"
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr "Nouvelle campagne"
@@ -193,7 +201,7 @@ msgstr "Les tests sont exécutés pour un environnement."
 msgid "Total"
 msgstr "Total"
 
-#: src/app/socket/socket.tpl.html
+#: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 

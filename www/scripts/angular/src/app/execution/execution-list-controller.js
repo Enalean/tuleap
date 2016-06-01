@@ -6,31 +6,43 @@ ExecutionListCtrl.$inject = [
     '$scope',
     '$state',
     '$filter',
+    '$q',
     'ExecutionService',
     'CampaignService',
     'SocketService',
     'SharedPropertiesService',
-    'ExecutionRestService'
+    'ExecutionRestService',
+    'NewTuleapArtifactModalService'
 ];
 
 function ExecutionListCtrl(
     $scope,
     $state,
     $filter,
+    $q,
     ExecutionService,
     CampaignService,
     SocketService,
     SharedPropertiesService,
-    ExecutionRestService
+    ExecutionRestService,
+    NewTuleapArtifactModalService
 ) {
     var campaign_id,
         execution_id;
 
-    $scope.checkActiveClassOnExecution = function(execution) {
-        return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
-    };
+    _.extend($scope, {
+        showAddTestModal           : showAddTestModal,
+        checkActiveClassOnExecution: checkActiveClassOnExecution,
+        viewTestExecution          : viewTestExecution,
+        showPresencesModal         : showPresencesModal,
+        selectEnvironmentCreation  : selectEnvironmentCreation
+    });
 
-    $scope.viewTestExecution = function(current_execution) {
+    function checkActiveClassOnExecution(execution) {
+        return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
+    }
+
+    function viewTestExecution(current_execution) {
         var old_execution,
             old_execution_id = '';
 
@@ -46,11 +58,34 @@ function ExecutionListCtrl(
         } else {
             updateViewTestExecution(current_execution.id, old_execution_id);
         }
-    };
+    }
 
-    $scope.showPresencesModal = function() {
+    function selectEnvironmentCreation(environments) {
+        showAddTestModal(environments);
+    }
+
+    function showPresencesModal() {
         ExecutionService.showPresencesModal();
-    };
+    }
+
+    function showAddTestModal(environments) {
+        var callback = function(artifact_id) {
+            var promises = [];
+            _.forEach(environments, function(environment) {
+                promises.push(ExecutionRestService.postTestExecution(SharedPropertiesService.getExecutionTrackerId(), artifact_id, environment, 'notrun'));
+            });
+            $q.all(promises).then(function(executions) {
+                var execution_ids = _.pluck(executions, 'id');
+                CampaignService.patchCampaign(campaign_id, execution_ids).then(function(executions) {
+                    _.forEach(executions, function(execution) {
+                        ExecutionService.addTestExecutions(execution);
+                    });
+                });
+            });
+        };
+
+        NewTuleapArtifactModalService.showCreation(SharedPropertiesService.getDefinitionTrackerId(), null, callback);
+    }
 
     $scope.$on('$destroy', function() {
         var toolbar = angular.element('.toolbar');
@@ -76,6 +111,7 @@ function ExecutionListCtrl(
         SocketService.listenToUserScore();
         SocketService.listenTokenExpired();
         SocketService.listenToExecutionViewed();
+        SocketService.listenToExecutionCreated();
         SocketService.listenToExecutionUpdated();
         SocketService.listenToExecutionLeft();
     });

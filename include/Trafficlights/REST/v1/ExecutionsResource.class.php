@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,14 @@
 
 namespace Tuleap\Trafficlights\REST\v1;
 
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_REST_Artifact_ArtifactCreator;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
+use Tuleap\Tracker\REST\TrackerReference;
 use UserManager;
 use PFUser;
 use Tracker_FormElementFactory;
@@ -113,17 +116,66 @@ class ExecutionsResource {
     }
 
     /**
-     * @url OPTIONS {id}
-     */
-    public function optionsId($id) {
-        Header::allowOptionsPut();
-    }
-
-    /**
      * @url OPTIONS {id}/presences
      */
     public function optionsPresences() {
         Header::allowOptionsPatch();
+    }
+
+    /**
+     * Create a test execution
+     *
+     * @url POST execution
+     *
+     * @param TrackerReference $tracker       Execution tracker of the execution {@from body}
+     * @param int              $definition_id Definition of the execution {@from body}
+     * @param string           $environment   Environment of the execution {@from body}
+     * @param string           $status        Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
+     * @param string           $results       Result of the execution {@from body}
+     * @return ExecutionRepresentation
+     *
+     * @throws 400
+     * @throws 404
+     * @throws 500
+     */
+    protected function post(
+        TrackerReference $tracker,
+        $definition_id,
+        $environment,
+        $status,
+        $time = 0,
+        $results = ''
+    ) {
+        try {
+            $user    = UserManager::instance()->getCurrentUser();
+            $creator = new Tracker_REST_Artifact_ArtifactCreator(
+                new Tracker_REST_Artifact_ArtifactValidator(
+                    $this->formelement_factory
+                ),
+                $this->artifact_factory,
+                $this->tracker_factory
+            );
+
+            $values = $this->getValuesByFieldsName($user, $tracker->id, $definition_id, $environment, $status, $time, $results);
+
+            if (! empty($values)) {
+                $artifact_reference = $creator->create($user, $tracker, $values);
+            } else {
+                throw new RestException(400, "No valid data are provided");
+            }
+        } catch (Tracker_FormElement_InvalidFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_Exception $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $artifact_reference->getArtifact());
+
+        $this->sendAllowHeadersForExecutionPost($artifact_reference->getArtifact());
+
+        return $execution_representation;
     }
 
     /**
@@ -135,6 +187,7 @@ class ExecutionsResource {
      * @param string $status  Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
      * @param int    $time    Time to pass the execution {@from body}
      * @param string $results Result of the execution {@from body}
+     * @return ExecutionRepresentation
      *
      * @throws 400
      * @throws 500
@@ -191,7 +244,7 @@ class ExecutionsResource {
             $this->node_js_client->sendMessage($message);
         }
 
-        $this->sendAllowHeadersForExecution($artifact);
+        $this->sendAllowHeadersForExecutionPut($artifact);
 
         return $execution_representation;
     }
@@ -239,7 +292,7 @@ class ExecutionsResource {
             $this->node_js_client->sendMessage($message);
         }
 
-        Header::allowOptionsPatch();
+        $this->optionsPresences();
     }
 
     /** @return array */
@@ -296,7 +349,7 @@ class ExecutionsResource {
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        $field = $this->getFieldByName($field_name, $artifact, $user);
+        $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
         if (! $field) {
             return null;
         }
@@ -320,7 +373,7 @@ class ExecutionsResource {
         $artifact,
         $user
     ) {
-        $field = $this->getFieldByName($field_name, $artifact, $user);
+        $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
         if (! $field) {
             return null;
         }
@@ -341,7 +394,7 @@ class ExecutionsResource {
         $artifact,
         $user
     ) {
-        $field = $this->getFieldByName($field_name, $artifact, $user);
+        $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
         if (! $field) {
             return null;
         }
@@ -353,9 +406,7 @@ class ExecutionsResource {
         return $value_representation;
     }
 
-    private function getFieldByName($field_name, $artifact, $user) {
-        $tracker_id = $artifact->getTrackerId();
-
+    private function getFieldByName($field_name, $tracker_id, $user) {
         return  $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_id,
             $field_name,
@@ -381,12 +432,6 @@ class ExecutionsResource {
         throw new RestException(404);
     }
 
-    private function sendAllowHeadersForExecution(Tracker_Artifact $artifact) {
-        $date = $artifact->getLastUpdateDate();
-        Header::allowOptionsPut();
-        Header::lastModified($date);
-    }
-
     /** @return string */
     private function getPreviousStatus(Tracker_Artifact $artifact) {
         $last_changeset = $artifact->getLastChangeset();
@@ -409,5 +454,96 @@ class ExecutionsResource {
         $user_representation->build($submitted_by);
 
         return $user_representation;
+    }
+
+    /** @return array */
+    private function getValuesByFieldsName(
+        PFUser $user,
+        $tracker_id,
+        $definition_id,
+        $environment,
+        $status,
+        $time,
+        $results
+    ) {
+        $environment_field    = $this->getFieldByName(ExecutionRepresentation::FIELD_ENVIRONMENT, $tracker_id, $user);
+        $status_field         = $this->getFieldByName(ExecutionRepresentation::FIELD_STATUS, $tracker_id, $user);
+        $time_field           = $this->getFieldByName(ExecutionRepresentation::FIELD_TIME, $tracker_id, $user);
+        $results_field        = $this->getFieldByName(ExecutionRepresentation::FIELD_RESULTS, $tracker_id, $user);
+        $artifact_links_field = $this->getFieldByName(ExecutionRepresentation::FIELD_ARTIFACT_LINKS, $tracker_id, $user);
+
+        $status_field_binds      = $status_field->getBind()->getValuesByKeyword($status);
+        $status_field_bind       = array_pop($status_field_binds);
+        $environment_field_binds = $environment_field->getBind()->getValuesByKeyword($environment);
+        $environment_field_bind  = array_pop($environment_field_binds);
+
+        $values = array();
+
+        $values[] = $this->createArtifactValuesRepresentation(
+            intval($status_field->getId()),
+            array(
+                (int) $status_field_bind->getId()
+            ),
+            'bind_value_ids'
+        );
+
+        $values[] = $this->createArtifactValuesRepresentation(
+            intval($environment_field->getId()),
+            array(
+                (int) $environment_field_bind->getId()
+            ),
+            'bind_value_ids'
+        );
+
+        $values[] = $this->createArtifactValuesRepresentation(
+            intval($time_field->getId()),
+            $time,
+            'value'
+        );
+
+        $values[] = $this->createArtifactValuesRepresentation(
+            intval($results_field->getId()),
+            $results,
+            'value'
+        );
+
+        $values[] = $this->createArtifactValuesRepresentation(
+            intval($artifact_links_field->getId()),
+            array(
+                array('id' => $definition_id)
+            ),
+            'links'
+        );
+
+        return $values;
+    }
+
+    private function createArtifactValuesRepresentation($field_id, $value, $key)
+    {
+        $artifact_values_representation           = new ArtifactValuesRepresentation();
+        $artifact_values_representation->field_id = $field_id;
+        if ($key == 'value') {
+            $artifact_values_representation->value = $value;
+        } else if ($key == 'bind_value_ids') {
+            $artifact_values_representation->bind_value_ids = $value;
+        } else if ($key == 'links') {
+            $artifact_values_representation->links = $value;
+        }
+
+        return $artifact_values_representation;
+    }
+
+    private function sendAllowHeadersForExecutionPut(Tracker_Artifact $artifact)
+    {
+        $date = $artifact->getLastUpdateDate();
+        Header::allowOptionsPut();
+        Header::lastModified($date);
+    }
+
+    private function sendAllowHeadersForExecutionPost(Tracker_Artifact $artifact)
+    {
+        $date = $artifact->getLastUpdateDate();
+        Header::allowOptionsPost();
+        Header::lastModified($date);
     }
 }
