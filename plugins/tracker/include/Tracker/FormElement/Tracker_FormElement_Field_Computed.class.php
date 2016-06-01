@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,10 +28,48 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             'size'  => 40,
         ),
         'fast_compute' => array(
-            'value' => 0,
+            'value' => null,
             'type'  => 'checkbox',
         ),
     );
+
+    public function __construct(
+        $id,
+        $tracker_id,
+        $parent_id,
+        $name,
+        $label,
+        $description,
+        $use_it,
+        $scope,
+        $required,
+        $notifications,
+        $rank,
+        Tracker_FormElement $original_field = null
+    ) {
+        parent::__construct(
+            $id,
+            $tracker_id,
+            $parent_id,
+            $name,
+            $label,
+            $description,
+            $use_it,
+            $scope,
+            $required,
+            $notifications,
+            $rank,
+            $original_field
+        );
+
+        if (
+            is_null($this->getProperty('fast_compute'))
+            || $this->useFastCompute()
+        ) {
+            unset($this->default_properties['fast_compute']);
+        }
+        $this->cache_specific_properties = null;
+    }
 
     private function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
@@ -59,6 +97,58 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp);
         }
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
+    }
+
+    protected function processUpdate(
+        Tracker_IDisplayTrackerLayout $layout,
+        $request,
+        $current_user,
+        $redirect = false
+    )
+    {
+        $formElement_data = $request->get('formElement_data');
+        if (
+            isset($formElement_data['specific_properties'])
+            && is_array($formElement_data['specific_properties'])
+        ) {
+            $formElement_data['specific_properties']['fast_compute'] = $this->getFastComputeMode($formElement_data['specific_properties']);
+            $request->set('formElement_data', $formElement_data);
+        }
+
+        parent::processUpdate(
+            $layout,
+            $request,
+            $current_user,
+            $redirect
+        );
+    }
+
+    public function afterCreate($formElement_data = array()) {
+        if (
+            isset($formElement_data['specific_properties'])
+            && is_array($formElement_data['specific_properties'])
+        ) {
+            $formElement_data['specific_properties']['fast_compute'] = "1";
+            $this->storeProperties($formElement_data['specific_properties']);
+        }
+
+        parent::afterCreate($formElement_data);
+    }
+
+    /**
+     * @param  array $data_specific_properties
+     * @return String
+     */
+    private function getFastComputeMode($data_specific_properties)
+    {
+        if (
+            ! isset($data_specific_properties['fast_compute'])
+            || $this->useFastCompute()
+        ) {
+            return "1";
+        }
+
+        return $data_specific_properties['fast_compute'];
     }
 
     private function getFastComputedValue($artifact_id, $timestamp = null) {
@@ -297,9 +387,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     }
 
     protected function getValueDao() {
-    }
-
-    public function afterCreate() {
     }
 
     public function fetchFollowUp($artifact, $from, $to) {
