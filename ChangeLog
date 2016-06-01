@@ -15,13 +15,14 @@ Version 8.16 (Not yet release)
 		- My personnal page
 		- Help
 		- Service
+	* story #9083: Refactoring: do not leak plugins into core
 
 	== Plugins ==
 	* git: 4.176
 	* agiledashboard: 1.382
 	* tracker: 5.899
 	* tracker_date_reminder: 1.2.10
-	* hudson_git: 0.19
+	* hudson_git: 0.20
 	* svn: 0.58
 
 Version 8.15 (Thursday, May 26th 2016)

@@ -1,3 +1,6 @@
+Version 0.20 - Tuleap 8.16
+    * story #9083: Refactoring: do not leak plugins into core
+
 Version 0.19 - Tuleap 8.16
     * story #9083: Refactoring: align filename with classname
 
