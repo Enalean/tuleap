@@ -122,6 +122,7 @@ class ProjectImportTest extends TuleapDbTestCase {
             new XML_RNGValidator(),
             new UGroupManager(),
             new XMLImportHelper($user_manager),
+            ServiceManager::instance(),
             new Log_ConsoleLogger()
         );
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

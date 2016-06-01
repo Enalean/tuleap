@@ -201,7 +201,7 @@ class ProjectCreationData {
             if($service->getName() !== "service") continue;
             $attrs   = $service->attributes();
             $name    = (string) $attrs['shortname'];
-            $enabled = $attrs['enabled'] == 'true' || $attrs['enabled'] == '1';
+            $enabled = \Tuleap\XML\PHPCast::toBoolean($attrs['enabled']);
             if(isset($services_by_name[$name])) {
                 $service_id = $services_by_name[$name]->getId();
                 $this->data_services[$service_id] = array(

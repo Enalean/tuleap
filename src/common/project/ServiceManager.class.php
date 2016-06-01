@@ -121,4 +121,31 @@ class ServiceManager {
     public function isServiceAvailableAtSiteLevelByShortName($name) {
         return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
     }
+
+    public function toggleServiceUsage(Project $project, $short_name, $is_used) {
+        if ($this->isServiceAvailableAtSiteLevelByShortName($short_name)) {
+            $previous_is_used = $project->getService($short_name);
+            if ($previous_is_used != $is_used) {
+                $this->updateServiceUsage($project, $short_name, $is_used);
+            }
+        }
+    }
+
+    private function updateServiceUsage(Project $project, $short_name, $is_used) {
+        $this->dao->updateServiceUsage($project->getID(), $short_name, $is_used);
+        ProjectManager::instance()->clearProjectFromCache($project->getID());
+
+        $reference_manager = ReferenceManager::instance();
+        $reference_manager->updateReferenceForService($project->getID(), $short_name, ($is_used ? "1" : "0"));
+
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent(
+            Event::SERVICE_IS_USED,
+            array(
+                'shortname' => $short_name,
+                'is_used'   => $is_used ? true:false,
+                'group_id'  => $project->getID(),
+            )
+        );
+    }
 }

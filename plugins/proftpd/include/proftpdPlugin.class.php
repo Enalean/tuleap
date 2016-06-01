@@ -26,7 +26,7 @@ class proftpdPlugin extends Plugin {
         parent::__construct($id);
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook('service_is_used');
+        $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('approve_pending_project');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);

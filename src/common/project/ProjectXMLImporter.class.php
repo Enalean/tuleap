@@ -49,6 +49,12 @@ class ProjectXMLImporter {
     /** @var Logger */
     private $logger;
 
+    /** @var ProjectCreator */
+    private $project_creator;
+
+    /** @var ServiceManager */
+    private $service_manager;
+
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
@@ -56,6 +62,7 @@ class ProjectXMLImporter {
         XML_RNGValidator $xml_validator,
         UGroupManager $ugroup_manager,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
+        ServiceManager $service_manager,
         Logger $logger
     ) {
         $this->event_manager   = $event_manager;
@@ -65,6 +72,7 @@ class ProjectXMLImporter {
         $this->ugroup_manager  = $ugroup_manager;
         $this->user_finder     = $user_finder;
         $this->logger          = $logger;
+        $this->service_manager = $service_manager;
 
         $send_notifications = false;
         $force_activation   = true;
@@ -118,20 +126,32 @@ class ProjectXMLImporter {
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
-
-        $this->importContent($project, $xml_element, $archive->getExtractionPath());
+        $this->importFromXMLIntoExistingProject($project_id, $xml_element, $archive->getExtractionPath());
     }
 
     public function import($project_id, $xml_file_path) {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
-        $xml_element     = $this->getSimpleXMLElementFromFilePath($xml_file_path);
-        $extraction_path = '';
+        $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
 
+        $this->importFromXMLIntoExistingProject($project_id, $xml_element, '');
+    }
+
+    private function importFromXMLIntoExistingProject($project_id, SimpleXMLElement $xml_element, $extraction_path) {
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
+        $this->activateServices($project, $xml_element);
 
         $this->importContent($project, $xml_element, $extraction_path);
+    }
+
+    private function activateServices(Project $project, SimpleXMLElement $xml_element) {
+        if ($xml_element->services) {
+            foreach ($xml_element->services->service as $service) {
+                $short_name = (string) $service['shortname'];
+                $enabled    = \Tuleap\XML\PHPCast::toBoolean($service['enabled']);
+                $this->service_manager->toggleServiceUsage($project, $short_name, $enabled);
+            }
+        }
     }
 
     /**
