@@ -1,6 +1,7 @@
 Version 8.16 (Not yet release)
 	== Bug fix ==
 	* request #8468: Unable to access svn immutable tags configuration with huge repository
+	* request #9208: When TLS is forced Tuleap must only create URL with HTTPS scheme
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
