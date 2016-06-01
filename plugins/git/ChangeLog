@@ -1,3 +1,6 @@
+Version 4.176 - Tuleap 8.16
+    * story #9083: Refactoring: Unify namespace for Webhooks
+
 Version 4.175 - Tuleap 8.16
     * story #9083: Refactoring: Remove double namespace Tuleap\Git\Git
 
