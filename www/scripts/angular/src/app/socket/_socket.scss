@@ -1,0 +1,24 @@
+.alert-disconnect {
+    display: flex;
+    max-width: 300px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    box-sizing: border-box;
+    transition: all;
+
+    > i {
+        margin: 10px;
+    }
+
+    > p {
+        margin-left: 5px;
+    }
+
+    &.ng-enter {
+        -webkit-animation: fadeIn 0.2s;
+        -moz-animation: fadeIn 0.2s;
+        -ms-animation: fadeIn 0.2s;
+        animation: fadeIn 0.2s;
+    }
+}

@@ -25,7 +25,12 @@ function SocketService(
     SharedPropertiesService,
     JWTService
 ) {
-    return {
+    var self = this;
+
+    _.extend(self, {
+        checkDisconnect         : {
+            disconnect: false
+        },
         listenTokenExpired      : listenTokenExpired,
         listenNodeJSServer      : listenNodeJSServer,
         listenToUserScore       : listenToUserScore,
@@ -33,7 +38,7 @@ function SocketService(
         listenToExecutionLeft   : listenToExecutionLeft,
         listenToExecutionUpdated: listenToExecutionUpdated,
         refreshToken            : refreshToken
-    };
+    });
 
     function listenTokenExpired() {
         var expired_date = moment(locker.get('token-expired-date')).subtract(5, 'm');
@@ -49,6 +54,7 @@ function SocketService(
 
     function listenNodeJSServer() {
         if (SharedPropertiesService.getNodeServerAddress()) {
+            listenToDisconnect();
             listenToError();
             listenPresences();
             listenToUsersScore();
@@ -74,6 +80,12 @@ function SocketService(
     function refreshToken() {
         SocketFactory.emit('token', {
             token: locker.get('token')
+        });
+    }
+
+    function listenToDisconnect() {
+        SocketFactory.on('disconnect', function() {
+            self.checkDisconnect.disconnect = true;
         });
     }
 

@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"X-Generator: Poedit 1.8.3\n"
 "Last-Translator: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language-Team: \n"
 "Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -34,8 +34,8 @@ msgid ""
 "All <strong>{{ environment.nb_selected_all }}</strong> tests on this page "
 "are selected."
 msgstr ""
-"Les <strong>{{ environment.nb_selected_all }}</strong> tests sur cette "
-"page sont sélectionnés."
+"Les <strong>{{ environment.nb_selected_all }}</strong> tests sur cette page "
+"sont sélectionnés."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "All environments"
@@ -155,8 +155,8 @@ msgid ""
 "Please configure the test execution tracker and\n"
 "                        add environments in order to be able to go further."
 msgstr ""
-"Merci de configurer l’outil de suivi d’exécution des tests et d’ajouter "
-"des environnements afin de pouvoir continuer."
+"Merci de configurer l’outil de suivi d’exécution des tests et d’ajouter des "
+"environnements afin de pouvoir continuer."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Please select a test"
@@ -192,6 +192,10 @@ msgstr "Les tests sont exécutés pour un environnement."
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Total"
 msgstr "Total"
+
+#: src/app/socket/socket.tpl.html
+msgid "You are disconnected from real time. Please reload your page."
+msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
