@@ -249,7 +249,7 @@ if ($group_id && !$atid) {
 			}
 		
 			// now insert all the field entries in the artifact_report_field table
-			$aff = new ArtifactFieldFactory(&$ath);
+			$aff = new ArtifactFieldFactory($ath);
 			$fields = $aff->getAllUsedFields();
 			while ( list($key, $field) = each($fields) ) {
 				$cb_search = 'CBSRCH_'.$field->getName();
