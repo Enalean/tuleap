@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,19 @@ class Tracker_Report_HeaderInReportPresenter {
     private $report_name;
     private $warnings;
 
-    public function __construct($browse_instructions, $title, $select_report_url, $reports_selector, Templating_Presenter_ButtonDropdowns $options_dropdown, $options_params, $save_button, $updated_by_username, $has_changed_classname, $report_name, $warnings) {
+    public function __construct(
+        $browse_instructions,
+        $title,
+        $select_report_url,
+        $reports_selector,
+        Templating_Presenter_ButtonDropdowns $options_dropdown,
+        $options_params,
+        $save_button,
+        $updated_by_username,
+        $has_changed_classname,
+        $report_name,
+        $warnings
+    ) {
         $this->browse_instructions   = $browse_instructions;
         $this->title                 = $title;
         $this->select_report_url     = $select_report_url;

@@ -1644,9 +1644,11 @@ plugin_tracker	changeset_not_stored_exception	Le changeset n'a pas pu être sauv
 
 plugin_tracker_deprecation_panel	title	Suivi des éléments en voie d'obsolescence.
 plugin_tracker_deprecation_panel	warning_deprecation	L'ancien mode de fonctionnement des champs calculés sera indisponible à partir du 31 décembre 2016.
+plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	Cet outil de suivi est basé sur l'ancien mode de fonctionnement des champs calculés (qui seront indisponible à partir du 31 décembre 2016).
 plugin_tracker_deprecation_panel	title_project	Nom du projet
 plugin_tracker_deprecation_panel	title_tracker	Nom de l'outil de suivi
 plugin_tracker_deprecation_panel	title_field	Champs incriminé
+plugin_tracker_deprecation_panel	adapt_message	Ce project utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (qui seront indisponible à partir du 31 décembre 2016). erci de mettre à jour la configuration des champs :
 
 plugin_tracker_config	title	Configuration générale des outils de suivi
 plugin_tracker_config	email_gateway	Passerelle Courriel
