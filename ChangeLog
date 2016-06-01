@@ -16,6 +16,7 @@ Version 8.16 (Not yet release)
 		- My personnal page
 		- Help
 		- Service
+		- Tracker v3 / Call by reference
 	* story #9083: Refactoring: do not leak plugins into core
 
 	== Plugins ==
