@@ -1,3 +1,6 @@
+Version 0.59 - Tuleap 8.16
+    * request #9216: SVN immutable tags does not prevent from adding a file in a immutable tag
+
 Version 0.58 - Tuleap 8.16
     * request #8468: Unable to access svn immutable tags configuration with huge repository
 
