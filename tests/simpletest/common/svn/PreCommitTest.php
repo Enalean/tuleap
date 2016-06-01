@@ -132,7 +132,7 @@ class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest {
 
     public function testCommitToTagIsDeniedInModule() {
         stub($this->handler)->doesProjectUsesImmutableTags()->returns(true);
-        stub($this->handler)->getImmutableTagsPathForProject()->returns('/*/tags');
+        stub($this->handler)->getImmutableTagsPathForProject()->returns('/*/tags/');
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -181,7 +181,7 @@ class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest {
 
     public function testCommitToTagIsDeniedAtRoot() {
         stub($this->handler)->doesProjectUsesImmutableTags()->returns(true);
-        stub($this->handler)->getImmutableTagsPathForProject()->returns('/tags');
+        stub($this->handler)->getImmutableTagsPathForProject()->returns('/tags/');
         stub($this->handler)->getAllowedTagsFromWhiteList()->returns(array(
             '/tags/moduleA'
         ));
