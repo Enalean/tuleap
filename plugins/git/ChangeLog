@@ -1,3 +1,6 @@
+Version 4.179 - Tuleap 8.16
+    * story #8418 setup a git permissions template for my project (Newly created repositories use default permission)
+
 Version 4.178 - Tuleap 8.16
     * story #8418 setup a git permissions template for my project (Move content into the right pane)
 
