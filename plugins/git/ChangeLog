@@ -1,3 +1,6 @@
+Version 4.177 - Tuleap 8.16
+    * story #8418: setup a git permissions template for my project (Add default values like Git repository)
+
 Version 4.176 - Tuleap 8.16
     * story #9083: Refactoring: Unify namespace for Webhooks
 
