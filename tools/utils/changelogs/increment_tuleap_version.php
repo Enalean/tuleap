@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 $version = trim(file_get_contents('VERSION'));
 
-file_put_contents('VERSION', preg_replace('/(\d+)$/e', '$1 + 1', $version));
-?>
+$matches = array();
+if (preg_match('/^(\d+\.\d+\.99)\.(\d+)$/', $version, $matches)) {
+    file_put_contents('VERSION', $matches[1].'.'.($matches[2]+1));
+} elseif (preg_match('/^(\d+\.\d+)$/', $version, $matches)) {
+    file_put_contents('VERSION', $matches[1].'.99.1');
+}
