@@ -19,5 +19,21 @@
  */
 
 class Tracker_Report_Criteria_Float_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao {
+
+    public function save($id, $value)
+    {
+        $value         = trim($value);
+        $id            = $this->da->escapeInt($id);
+        $espaced_value = $this->da->quoteSmart($value);
+
+        if ($value !== '') {
+            $sql = "REPLACE INTO $this->table_name(criteria_id, value) VALUES ($id, $espaced_value)";
+        } else {
+            $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
+        }
+
+        return $this->update($sql);
+    }
+
 }
 ?>

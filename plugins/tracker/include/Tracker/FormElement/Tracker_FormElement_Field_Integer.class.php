@@ -20,12 +20,15 @@
 
 
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric {
-    
-    public function getCriteriaFrom($criteria) {
+
+    public function getCriteriaFrom($criteria)
+    {
         //Only filter query if field is used
         if($this->isUsed()) {
             //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            $criteria_value = $this->getCriteriaValue($criteria);
+
+            if ($criteria_value !== '') {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
@@ -37,32 +40,46 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         }
         return '';
     }
-    
+
+    public function fetchCriteriaValue($criteria)
+    {
+        $html           = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
+        $criteria_value = $this->getCriteriaValue($criteria);
+
+        if ($criteria_value !== '') {
+            $html_purifier = Codendi_HTMLPurifier::instance();
+            $html         .= $html_purifier->purify($criteria_value, CODENDI_PURIFIER_CONVERT_HTML);
+        }
+
+        $html .= '" />';
+        return $html;
+    }
+
     public function getCriteriaWhere($criteria) {
         return '';
     }
-    
+
     public function getQueryFrom() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
-        
-        return "LEFT JOIN ( tracker_changeset_value AS $R1 
+
+        return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_int AS $R2 ON ($R2.changeset_value_id = $R1.id)
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
-    
+
     protected function buildMatchExpression($field_name, $criteria_value) {
         return parent::buildMatchExpression($field_name, $criteria_value);
     }
-    
+
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_Int_ValueDao();
     }
-    
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         return $value;
     }
-    
+
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_IntegerDao();
     }
@@ -76,31 +93,31 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-int.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-int--plus.png');
     }
-    
+
     /**
      * Fetch the html code to display the field value in tooltip
-     * 
+     *
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
@@ -112,14 +129,14 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         }
         return $html;
     }
-    
+
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
     protected function getValidatorErrorMessage() {
         return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_integer_value');
     }
-    
+
     /**
      * Get the value of this field
      *
