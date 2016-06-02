@@ -1,3 +1,6 @@
+Version 4.181 - Tuleap 8.16
+    * story #8418: Use default permissions while forking multiple repositories
+
 Version 4.180 - Tuleap 8.16
     * Take into account project and site visibility changes
 
