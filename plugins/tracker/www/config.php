@@ -32,6 +32,9 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Config\ConfigRouter;
+use Tuleap\Tracker\Deprecation\DeprecationController;
+use Tuleap\Tracker\Deprecation\Dao;
+use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 
 require_once('pre.php');
 
@@ -75,6 +78,14 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             ),
             new NaturePresenterFactory(
                 $nature_dao
+            )
+        ),
+        new DeprecationController(
+            new DeprecationRetriever(
+                new Dao(),
+                ProjectManager::instance(),
+                TrackerFactory::instance(),
+                Tracker_FormElementFactory::instance()
             )
         )
     );

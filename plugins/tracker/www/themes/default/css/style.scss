@@ -3218,3 +3218,23 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
 select[name='add_notempty_condition[]'] {
     vertical-align: top;
 }
+
+
+.tracker-deprecated-fields {
+    max-width: 960px;
+
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
+    }
+
+}
