@@ -355,18 +355,30 @@ class ProjectXMLImporter {
     private function getSimpleXMLElementFromString($file_contents) {
         $this->checkFileIsValidXML($file_contents);
 
-        return simplexml_load_string($file_contents);
+        return simplexml_load_string($file_contents, 'SimpleXMLElement', $this->getLibXMLOptions());
     }
 
     private function checkFileIsValidXML($file_contents) {
         libxml_use_internal_errors(true);
         libxml_clear_errors();
         $xml = new DOMDocument();
-        $xml->loadXML($file_contents);
+        $xml->loadXML($file_contents, $this->getLibXMLOptions());
         $errors = libxml_get_errors();
 
         if (! empty($errors)){
             throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_xml'));
         }
+    }
+
+    private function getLibXMLOptions() {
+        if ($this->isAllowedToLoadHugeFiles()) {
+            return LIBXML_PARSEHUGE;
+        }
+
+        return 0;
+    }
+
+    private function isAllowedToLoadHugeFiles() {
+        return defined('IS_SCRIPT') && IS_SCRIPT;
     }
 }
