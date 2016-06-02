@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
 /**
  * Can visit a FormElement and provides the corresponding administration element 
@@ -101,8 +102,10 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->visitField($field);
     }
 
-    public function visitComputed(Tracker_FormElement_Field_Computed $field) {
-        $this->visitField($field);
+    public function visitComputed(Tracker_FormElement_Field_Computed $element)
+    {
+        $this->element      = $element;
+        $this->adminElement = new Computed($element, $this->allUsedElements);
     }
 
     private function visitField(Tracker_FormElement_Field $element) {

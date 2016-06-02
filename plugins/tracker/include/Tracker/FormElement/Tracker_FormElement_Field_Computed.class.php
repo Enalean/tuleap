@@ -29,7 +29,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         ),
         'fast_compute' => array(
             'value' => null,
-            'type'  => 'checkbox',
+            'type'  => 'upgrade_button',
         ),
     );
 
