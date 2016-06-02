@@ -1353,7 +1353,7 @@ class GitPlugin extends Plugin {
         $this->getPermissionsManager()->duplicateWithStaticMapping(
                 $params['template_id'],
                 $params['group_id'],
-                array(Git::PERM_ADMIN),
+                array(Git::PERM_ADMIN, Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS),
                 $params['ugroupsMapping']
         );
 
