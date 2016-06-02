@@ -81,13 +81,12 @@ class GitForkPermissionsManager {
      *
      * @return String
      */
-    private function displayForkSourceRepositories($repos) {
+    private function displayForkSourceRepositories(array $repository_ids) {
         $dao             = new GitDao();
         $repoFactory     = new GitRepositoryFactory($dao, $this->getProjectManager());
         $sourceReposHTML = '';
-        $repositories    = explode(',', $repos);
 
-        foreach ($repositories as $repositoryId) {
+        foreach ($repository_ids as $repositoryId) {
             $repository       = $repoFactory->getRepositoryById($repositoryId);
             $sourceReposHTML .= '"'.$this->getPurifier()->purify($repository->getFullName()).'" ';
         }
@@ -104,7 +103,8 @@ class GitForkPermissionsManager {
      * @return String
      */
     public function displayRepositoriesPermissionsForm($params, $groupId, $userName) {
-        $sourceReposHTML = $this->displayForkSourceRepositories($params['repos']);
+        $repository_ids  = explode(',', $params['repos']);
+        $sourceReposHTML = $this->displayForkSourceRepositories($repository_ids);
         $form  = '<h2>'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'</h2>';
         $form .= $GLOBALS['Language']->getText('plugin_git', 'fork_repository_message', array($sourceReposHTML));
         $form .= $this->displayForkDestinationMessage($params);
@@ -119,10 +119,31 @@ class GitForkPermissionsManager {
         $form .= '<input id="to_project" type="hidden" name="to_project" value="'.$this->getPurifier()->purify($params['group_id']).'" />';
         $form .= '<input type="hidden" id="fork_repositories_path" name="path" value="'.$this->getPurifier()->purify($params['namespace']).'" />';
         $form .= '<input type="hidden" id="fork_repositories_prefix" value="u/'. $userName .'" />';
-        $form .= $this->displayAccessControl($groupId);
+        if (count($repository_ids) > 1) {
+            $form .= $this->displayDefaultAccessControl($groupId);
+        } else {
+            $form .= $this->displayAccessControl($groupId);
+        }
         $form .= '<input type="submit" class="btn btn-primary" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
         $form .= '</form>';
         return $form;
+    }
+
+    private function displayDefaultAccessControl($project_id) {
+        $project = ProjectManager::instance()->getProject($project_id);
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $presenter = new GitPresenters_AccessControlPresenter(
+            $this->isRWPlusBlocked(),
+            'repo_access['.Git::PERM_READ.']',
+            'repo_access['.Git::PERM_WRITE.']',
+            'repo_access['.Git::PERM_WPLUS.']',
+            $this->getDefaultOptions($project, Git::DEFAULT_PERM_READ),
+            $this->getDefaultOptions($project, Git::DEFAULT_PERM_WRITE),
+            $this->getDefaultOptions($project, Git::DEFAULT_PERM_WPLUS)
+        );
+
+        return $renderer->renderToString('access-control', $presenter);
     }
 
     /**
@@ -159,5 +180,10 @@ class GitForkPermissionsManager {
     private function getOptions(Project $project, $permission)
     {
         return $this->builder->getOptions($project, $this->repository, $permission);
+    }
+
+    private function getDefaultOptions(Project $project, $permission)
+    {
+        return $this->builder->getDefaultOptions($project, $permission);
     }
 }
