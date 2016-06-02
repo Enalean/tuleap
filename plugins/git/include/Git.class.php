@@ -58,6 +58,13 @@ class Git extends PluginController {
     }
 
     /**
+     * @return array
+     */
+    public static function allDefaultPermissionTypes() {
+        return array(Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS);
+    }
+
+    /**
      * @var WebhookDao
      */
     private $webhook_dao;
