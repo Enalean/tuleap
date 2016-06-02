@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS tracker_changeset_value_list;
 DROP TABLE IF EXISTS tracker_changeset_value_openlist;
 DROP TABLE IF EXISTS tracker_changeset_value_artifactlink;
 DROP TABLE IF EXISTS tracker_changeset_value_permissionsonartifact;
+DROP TABLE IF EXISTS tracker_changeset_value_computedfield_manual_value;
 DROP TABLE IF EXISTS tracker_fileinfo;
 DROP TABLE IF EXISTS tracker_hierarchy;
 DROP TABLE IF EXISTS tracker_report;
@@ -84,6 +85,7 @@ DROP TABLE IF EXISTS tracker_artifact_unsubscribe;
 DROP TABLE IF EXISTS plugin_tracker_config;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures_allowed_projects;
+
 
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 

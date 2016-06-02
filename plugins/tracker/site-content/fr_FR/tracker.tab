@@ -1201,7 +1201,7 @@ plugin_tracker_formelement_property	use_capacity	Utiliser le champ "capacity" po
 plugin_tracker_formelement_property	include_weekends	Inclure les week-ends
 plugin_tracker_formelement_property	display_time	Afficher l'heure
 plugin_tracker_formelement_property	use_cache	Utiliser la mémoire cache
-plugin_tracker_formelement_property	fast_compute	Calcul rapide
+plugin_tracker_formelement_property	fast_compute	Calcul automatique
 
 plugin_tracker_formelement_exception	wrong_field_id	Aucun champ avec l'ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
@@ -1650,7 +1650,12 @@ plugin_tracker_deprecation_panel	warning_deprecation_for_tracker	Cet outil de su
 plugin_tracker_deprecation_panel	title_project	Nom du projet
 plugin_tracker_deprecation_panel	title_tracker	Nom de l'outil de suivi
 plugin_tracker_deprecation_panel	title_field	Champs incriminé
-plugin_tracker_deprecation_panel	adapt_message	Ce project utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (qui seront indisponible à partir du 31 décembre 2016). erci de mettre à jour la configuration des champs :
+plugin_tracker_deprecation_panel	adapt_message	Ce projet utilise des outils de suivi qui sont basés sur l'ancien mode de fonctionnement des champs calculés (qui seront indisponible à partir du 31 décembre 2016). Merci de mettre à jour la configuration des champs :
+
+plugin_tracker_deprecation_field	title_autocompute	Calcul automatique
+plugin_tracker_deprecation_field	title_original_value	Valeur calculée :
+
+plugin_tracker	autocompute_field	calculé automatiquement
 
 plugin_tracker_config	title	Configuration générale des outils de suivi
 plugin_tracker_config	email_gateway	Passerelle Courriel

@@ -364,6 +364,13 @@ CREATE TABLE tracker_changeset_value_permissionsonartifact(
   ugroup_id int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
+DROP TABLE IF EXISTS tracker_changeset_value_computedfield_manual_value;
+CREATE TABLE tracker_changeset_value_computedfield_manual_value (
+    changeset_value_id INT(11) NOT NULL,
+    value FLOAT(10,4),
+    PRIMARY KEY(changeset_value_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_fileinfo;
 CREATE TABLE tracker_fileinfo(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,

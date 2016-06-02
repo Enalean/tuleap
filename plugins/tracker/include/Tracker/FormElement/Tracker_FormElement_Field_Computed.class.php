@@ -18,9 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\dao\ComputedDao;
+use Tuleap\Tracker\Artifact\ChangesetValueComputed;
+use Tuleap\Tracker\Deprecation\DeprecationRetriever;
+use Tuleap\Tracker\Deprecation\Dao;
 
-class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, Tracker_FormElement_IComputeValues {
-
+class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
+{
+    const AUTOCOMPUTE = 'autocompute';
     public $default_properties = array(
         'target_field_name' => array(
             'value' => '',
@@ -97,6 +102,19 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp);
         }
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
+    }
+
+    protected function getNoValueLabel()
+    {
+        return "<span class='empty_value auto-computed-label'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
+    }
+
+    private function getComputedValueWithNoLabel(Tracker_Artifact $artifact)
+    {
+        $current_user   = UserManager::instance()->getCurrentUser();
+        $computed_value = $this->getComputedValue($current_user, $artifact);
+
+        return ($computed_value) ? $computed_value : $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
     }
 
     protected function processUpdate(
@@ -228,17 +246,59 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         );
     }
 
-    /**
-     *
-     * @param Tracker_Artifact                $artifact
-     * @param Tracker_Artifact_ChangesetValue $value
-     * @param Array                           $submitted_values
-     *
-     * @return string
-     */
-    public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        return $this->getComputedValue($current_user, $artifact);
+    public function validateValue($value)
+    {
+        $is_valid = true;
+        if ($value) {
+            if (!($is_valid = preg_match('/^'. $this->pattern .'$/', $value))) {
+                $GLOBALS['Response']->addFeedback('error', $this->getValidatorErrorMessage());
+            }
+        }
+        return $is_valid;
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value).
+            $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
+    }
+
+    protected function getHiddenArtifactValueForEdition(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
+            return;
+        }
+
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $computed_value = $this->getComputedValueWithNoLabel($artifact);
+
+        $html = '<div class="tracker_hidden_edition_field" data-field-id="'. $this->getId() .'"><div class="input-append">';
+        $html .= $this->fetchArtifactValue($artifact, $value, $submitted_values);
+        $html .= '<a class="btn auto-compute"><i class="icon-repeat icon-flip-horizontal"></i>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute');
+        $html .= '</a>';
+        $html .= '<span class="original-value">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_original_value');
+        $html .= $purifier->purify($computed_value).'</span>';
+        $html .= '</div></div>';
+        $stored_value = "";
+        if ($value) {
+            $stored_value = $value->getValue();
+        }
+        $html .= '<input type="hidden" class="back-to-autocompute" name="stored-value[' . $this->getId() . ']" value="'.$purifier->purify($stored_value).'">';
+
+         return $html;
+    }
+
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
+    {
+        return $this->getValueDao()->create($changeset_value_id, $value);
     }
 
     /**
@@ -249,14 +309,34 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        if (! $this->getComputedValue($current_user, $artifact)) {
-            return $this->getNoValueLabel();
-        }
-        return $this->getComputedValue($current_user, $artifact);
-    }
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
+    {
+        $current_user   = UserManager::instance()->getCurrentUser();
+        $computed_value = $this->getComputedValue($current_user, $artifact);
 
+        if ($value) {
+            $value = $value->getValue();
+        }
+
+        if (! $computed_value) {
+            $computed_value = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
+        }
+
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .'(' .
+            $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
+
+        if ($value === null) {
+            $value = $html_computed_value;
+        }
+
+        if ($this->getDeprecationRetriever()->isALegacyField($this)) {
+            return '<div class="auto-computed-label computed-legacy">'. $value. '</div>';
+        }
+
+        return '<div class="auto-computed-label">'. $value. '</div>'.
+            '<div class="back-to-autocompute">'.$html_computed_value.'</div>';
+    }
 
     /**
      * Fetch data to display the field value in mail
@@ -387,6 +467,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     }
 
     protected function getValueDao() {
+        return new ComputedDao();
     }
 
     public function fetchFollowUp($artifact, $from, $to) {
@@ -395,13 +476,82 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     public function fetchRawValueFromChangeset($changeset) {
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-    }
-
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
+        return $this->getValueDao()->keep($previous_changesetvalue->getId(), $changeset_value_id);
     }
 
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
+        $changeset_value = null;
+        if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
+            $int_row_value = $row['value'];
+            if ($int_row_value !== null) {
+                $int_row_value = (int)$int_row_value;
+            }
+            $changeset_value = new ChangesetValueComputed($value_id, $this, $has_changed, $int_row_value);
+        }
+        return $changeset_value;
+    }
+
+    private function getDeprecationRetriever()
+    {
+        return new DeprecationRetriever(
+            new Dao(),
+            ProjectManager::instance(),
+            TrackerFactory::instance(),
+            Tracker_FormElementFactory::instance()
+        );
+    }
+
+    /**
+     * Save the value submitted by the user in the new changeset
+     *
+     * @param Tracker_Artifact           $artifact         The artifact
+     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
+     * @param int                        $new_changeset_id The id of the new changeset
+     * @param mixed                      $value  The value submitted by the user
+     * @param boolean $is_submission true if artifact submission, false if artifact update
+     *
+     * @return bool true if success
+     */
+    public function saveNewChangeset(
+        $artifact,
+        $old_changeset,
+        $new_changeset_id,
+        $value,
+        PFUser $submitter,
+        $is_submission = false,
+        $bypass_permissions = false
+    ) {
+        if ($this->getDeprecationRetriever()->isALegacyField($this) || ! $this->userCanUpdate($submitter)) {
+            return true;
+        }
+
+        if (! $value && $value != 0) {
+            $value = self::AUTOCOMPUTE;
+        }
+
+        return parent::saveNewChangeset(
+            $artifact,
+            $old_changeset,
+            $new_changeset_id,
+            $value,
+            $submitter,
+            $is_submission,
+            $bypass_permissions
+        );
+    }
+
+    /**
+     * @see Tracker_FormElement_Field::hasChanges()
+     */
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    {
+        if ($old_value->getNumeric() === 0 && $new_value === '') {
+            return true;
+        }
+
+        return $old_value->getNumeric() != $new_value;
     }
 
     public function getSoapAvailableValues() {
@@ -411,8 +561,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return true;
     }
 
-    protected function validate(Tracker_Artifact $artifact, $value) {
-        return true;
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
+        return $this->validateValue($value);
     }
 
     public function fetchSubmit() {

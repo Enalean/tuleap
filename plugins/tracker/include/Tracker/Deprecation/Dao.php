@@ -80,4 +80,22 @@ class Dao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function searchDeprecatedFieldsById($field_id)
+    {
+        $field_id = $this->da->escapeInt($field_id);
+        $sql = "SELECT project.group_id, tracker_field.tracker_id, tracker_field_computed.field_id
+            FROM groups project, tracker, tracker_field, tracker_field_computed
+            WHERE project.status = 'A'
+              AND project.group_id = tracker.group_id
+              AND tracker.id = tracker_field.tracker_id
+              AND tracker_field.id = tracker_field_computed.field_id
+              AND tracker_field.id  = $field_id
+              AND formElement_type = 'computed'
+              AND fast_compute = 0
+              AND use_it = 1
+            ORDER BY group_name";
+
+        return $this->retrieve($sql);
+    }
 }
