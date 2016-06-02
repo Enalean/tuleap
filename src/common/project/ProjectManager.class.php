@@ -111,8 +111,28 @@ class ProjectManager {
      * @throws Project_NotFoundException
      */
     public function getValidProject($group_id) {
-        $project = $this->getProject($group_id);
+        return $this->assertProjectIsValid(
+            $this->getProject($group_id)
+        );
+    }
 
+    /**
+     * @param string|int $project
+     * @return Project
+     *
+     * @throws Project_NotFoundException
+     */
+    public function getValidProjectByShortNameOrId($project) {
+        try {
+            return $this->assertProjectIsValid(
+                $this->getProjectByCaseInsensitiveUnixName($project)
+            );
+        } catch (Project_NotFoundException $exception) {
+            return $this->getValidProject($project);
+        }
+    }
+
+    private function assertProjectIsValid($project) {
         if ($project && ! $project->isError() && ! $project->isDeleted())  {
             return $project;
         }

@@ -76,8 +76,8 @@ class Group {
             if (is_array($param)) {
                 $this->group_id=$param['group_id'];
                 $this->data_array=$param;
-            } else {
-              $this->group_id=(int)$param; // TODO db_es()?
+            } elseif(intval($param) > 0) {
+                $this->group_id=(int)$param; // TODO db_es()?
 		$this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
 		if (db_numrows($this->db_result) < 1) {
 			//function in class we extended
@@ -87,6 +87,9 @@ class Group {
 			//set up an associative array for use by other functions
 			$this->data_array=db_fetch_array($this->db_result);
 		}
+            } else {
+                $this->setError('');
+                $this->data_array=array();
             }
 	}
 

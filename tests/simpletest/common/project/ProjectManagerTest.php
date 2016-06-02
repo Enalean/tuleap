@@ -239,3 +239,42 @@ class ProjectManagerTest extends TuleapTestCase {
         $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project));
     }
 }
+
+class ProjectManager_GetValidProjectTest extends TuleapTestCase {
+    private $dao;
+    /** @var ProjectManager */
+    private $project_manager;
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('ProjectDao');
+        $this->project_manager = ProjectManager::testInstance($this->dao);
+    }
+
+    public function itFindsTheProjectWithItsID() {
+        stub($this->dao)->searchById(112)->returnsDar(array('group_id' => 112, 'status' => 'A'));
+        $project = $this->project_manager->getValidProjectByShortNameOrId(112);
+        $this->assertEqual($project->getID(), 112);
+    }
+
+    public function itFindsTheProjectWithItsUnixName() {
+        stub($this->dao)->searchByCaseInsensitiveUnixGroupName('1gpig')->returnsDar(array('group_id' => 112, 'status' => 'A'));
+        $project = $this->project_manager->getValidProjectByShortNameOrId('1gpig');
+        $this->assertEqual($project->getID(), 112);
+    }
+
+    public function itThrowsAnExceptionWhenNoProjectMatches() {
+        stub($this->dao)->searchById()->returnsEmptyDar();
+        stub($this->dao)->searchByCaseInsensitiveUnixGroupName()->returnsEmptyDar();
+
+        $this->expectException('Project_NotFoundException');
+        $this->project_manager->getValidProjectByShortNameOrId('doesnt exist');
+    }
+
+    public function itThrowsAnExceptionWhenProjectIsDeleted() {
+        $this->expectException('Project_NotFoundException');
+        stub($this->dao)->searchById()->returnsEmptyDar();
+        stub($this->dao)->searchByCaseInsensitiveUnixGroupName('1gpig')->returnsDar(array('group_id' => 112, 'status' => 'D'));
+        $this->project_manager->getValidProjectByShortNameOrId('1gpig');
+    }
+}
