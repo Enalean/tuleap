@@ -1576,9 +1576,9 @@ class GitPlugin extends Plugin {
      * @param type $params
      */
     public function project_access_change($params) {
-        $project      = ProjectManager::instance()->getProject($params['project_id']);
+        $project = ProjectManager::instance()->getProject($params['project_id']);
 
-        $this->getGitPermissionsManager()->updateAccessForRepositories($project, $params['old_access'], $params['access']);
+        $this->getGitPermissionsManager()->updateProjectAccess($project, $params['old_access'], $params['access']);
     }
 
     /**
