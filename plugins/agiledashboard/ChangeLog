@@ -1,3 +1,6 @@
+Version 1.383 - Tuleap 8.16
+    * request #9218: Fix default scrum template
+
 Version 1.382 - Tuleap 8.16
     * request #9141: A preliminary check is done before importing an agile dashboard configuration
 
