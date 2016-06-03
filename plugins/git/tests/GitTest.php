@@ -171,7 +171,9 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
                 $can_migrate_checker,
                 mock('Tuleap\Git\Webhook\WebhookDao'),
-                mock('Tuleap\Git\Permissions\FineGrainedUpdater')
+                mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
+                mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
+                mock('Tuleap\Git\Permissions\FineGrainedRetriever')
             )
         );
         $git->setRequest($request);

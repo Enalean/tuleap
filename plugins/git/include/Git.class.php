@@ -26,6 +26,8 @@ use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
 /**
  * Git
@@ -157,6 +159,16 @@ class Git extends PluginController {
      */
     private $fine_grained_updater;
 
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_permission_factory;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -179,7 +191,9 @@ class Git extends PluginController {
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         WebhookDao $webhook_dao,
-        FineGrainedUpdater $fine_grained_updater
+        FineGrainedUpdater $fine_grained_updater,
+        FineGrainedPermissionFactory $fine_grained_permission_factory,
+        FineGrainedRetriever $fine_grained_retriever
     ) {
         parent::__construct($user_manager, $request);
 
@@ -239,12 +253,21 @@ class Git extends PluginController {
             $this->redirect('/projects/'.$this->projectName.'/');
         }
 
-        $this->permittedActions     = array();
-        $this->fine_grained_updater = $fine_grained_updater;
+        $this->permittedActions                = array();
+        $this->fine_grained_updater            = $fine_grained_updater;
+        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
+        $this->fine_grained_retriever          = $fine_grained_retriever;
     }
 
     protected function instantiateView() {
-        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()), $this->mirror_data_mapper, $this->permissions_manager);
+        return new GitViews(
+            $this,
+            new Git_GitRepositoryUrlManager($this->getPlugin()),
+            $this->mirror_data_mapper,
+            $this->permissions_manager,
+            $this->fine_grained_permission_factory,
+            $this->fine_grained_retriever
+        );
     }
 
     private function routeGitSmartHTTP(Git_URL $url) {

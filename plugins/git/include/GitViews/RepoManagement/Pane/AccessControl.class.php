@@ -25,13 +25,37 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use GitForkPermissionsManager;
 use PermissionsManager;
 use UserGroupDao;
+use Codendi_Request;
 use User_ForgeUserGroupFactory;
 use Git_Backend_Gitolite;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
 class AccessControl extends Pane
 {
+
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_permission_factory;
+
+    public function __construct(
+        GitRepository $repository,
+        Codendi_Request $request,
+        FineGrainedPermissionFactory $fine_grained_permission_factory,
+        FineGrainedRetriever $fine_grained_retriever
+    ){
+        parent::__construct($repository, $request);
+
+        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
+        $this->fine_grained_retriever          = $fine_grained_retriever;
+    }
+
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
@@ -108,7 +132,8 @@ class AccessControl extends Pane
         $forkPermissionsManager = new GitForkPermissionsManager(
             $this->repository,
             $this->getAccessRightsPresenterOptionsBuilder(),
-            $this->getFineGrainedRetriever()
+            $this->fine_grained_retriever,
+            $this->fine_grained_permission_factory
         );
 
         return $forkPermissionsManager->displayAccessControl();
@@ -120,12 +145,5 @@ class AccessControl extends Pane
         $user_group_factory = new User_ForgeUserGroupFactory($dao);
 
         return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
-    }
-
-    private function getFineGrainedRetriever()
-    {
-        $dao = new FineGrainedDao();
-
-        return new FineGrainedRetriever($dao);
     }
 }

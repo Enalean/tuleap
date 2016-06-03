@@ -21,6 +21,16 @@
 class GitPresenters_AccessControlPresenter
 {
 
+    /**
+     * @var array
+     */
+    public $tags_permissions;
+
+    /**
+     * @var array
+     */
+    public $branches_permissions;
+
     public $label_read;
 
     public $label_write;
@@ -55,7 +65,9 @@ class GitPresenters_AccessControlPresenter
         $write_options,
         $rewrite_options,
         $are_fine_grained_permissions_defined,
-        $can_use_fine_grained_permissions
+        $can_use_fine_grained_permissions,
+        array $branches_permissions,
+        array $tags_permissions
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -84,5 +96,38 @@ class GitPresenters_AccessControlPresenter
             'plugin_git',
             'fine_grained_permissions_warning'
         );
+
+        $this->branches_permissions = $branches_permissions;
+        $this->tags_permissions     = $tags_permissions;
+
+        $this->branches_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_branches_title'
+        );
+
+        $this->tags_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_tags_title'
+        );
+
+        $this->pattern_column = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_pattern_column'
+        );
+
+        $this->empty = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_empty'
+        );
+    }
+
+    public function has_branches_permissions()
+    {
+        return count($this->branches_permissions) > 0;
+    }
+
+    public function has_tags_permissions()
+    {
+        return count($this->tags_permissions) > 0;
     }
 }

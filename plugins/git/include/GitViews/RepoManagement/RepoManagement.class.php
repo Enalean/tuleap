@@ -22,11 +22,23 @@ use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Webhook\WebhookFactory;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 
 /**
  * Dedicated screen for repo management
  */
 class GitViews_RepoManagement {
+
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_permission_factory;
 
     /**
      * @var GitRepository
@@ -64,21 +76,25 @@ class GitViews_RepoManagement {
         array $gerrit_servers,
         array $gerrit_config_templates,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker
+        GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        FineGrainedPermissionFactory $fine_grained_permission_factory,
+        FineGrainedRetriever $fine_grained_retriever
     ) {
-        $this->repository                 = $repository;
-        $this->request                    = $request;
-        $this->driver_factory             = $driver_factory;
-        $this->gerrit_servers             = $gerrit_servers;
-        $this->gerrit_config_templates    = $gerrit_config_templates;
-        $this->mirror_data_mapper         = $mirror_data_mapper;
-        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
-        $this->panes                      = $this->buildPanes($repository);
-        $this->current_pane               = 'settings';
+        $this->repository                      = $repository;
+        $this->request                         = $request;
+        $this->driver_factory                  = $driver_factory;
+        $this->gerrit_servers                  = $gerrit_servers;
+        $this->gerrit_config_templates         = $gerrit_config_templates;
+        $this->mirror_data_mapper              = $mirror_data_mapper;
+        $this->gerrit_can_migrate_checker      = $gerrit_can_migrate_checker;
+        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
+        $this->fine_grained_retriever          = $fine_grained_retriever;
+        $this->panes                           = $this->buildPanes($repository);
+        $this->current_pane                    = 'settings';
+
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }
-
     }
 
     /**
@@ -97,7 +113,12 @@ class GitViews_RepoManagement {
                 $this->gerrit_config_templates);
         }
 
-        $panes[] = new Pane\AccessControl($repository, $this->request);
+        $panes[] = new Pane\AccessControl(
+            $repository,
+            $this->request,
+            $this->fine_grained_permission_factory,
+            $this->fine_grained_retriever
+        );
 
         $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {

@@ -21,10 +21,17 @@
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+
 /**
  * GitForkPermissionsManager
  */
 class GitForkPermissionsManager {
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_factory;
 
     /**
      * @var FineGrainedRetriever
@@ -42,11 +49,13 @@ class GitForkPermissionsManager {
     public function __construct(
         GitRepository $repository,
         AccessRightsPresenterOptionsBuilder $builder,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        FineGrainedPermissionFactory $fine_grained_factory
     ) {
         $this->repository             = $repository;
         $this->builder                = $builder;
         $this->fine_grained_retriever = $fine_grained_retriever;
+        $this->fine_grained_factory   = $fine_grained_factory;
     }
 
     /**
@@ -145,6 +154,9 @@ class GitForkPermissionsManager {
         $can_use_fine_grained_permissions     = false;
         $are_fine_grained_permissions_defined = false;
 
+        $branches_permissions = array();
+        $tags_permissions     = array();
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
             $this->isRWPlusBlocked(),
@@ -155,7 +167,9 @@ class GitForkPermissionsManager {
             $this->getDefaultOptions($project, Git::DEFAULT_PERM_WRITE),
             $this->getDefaultOptions($project, Git::DEFAULT_PERM_WPLUS),
             $are_fine_grained_permissions_defined,
-            $can_use_fine_grained_permissions
+            $can_use_fine_grained_permissions,
+            $branches_permissions,
+            $tags_permissions
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -177,6 +191,9 @@ class GitForkPermissionsManager {
             $this->repository
         );
 
+        $branches_permissions = $this->fine_grained_factory->getBranchesFineGrainedPermissionsForRepository($this->repository);
+        $tags_permissions     = $this->fine_grained_factory->getTagsFineGrainedPermissionsForRepository($this->repository);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
             $this->isRWPlusBlocked(),
@@ -187,7 +204,9 @@ class GitForkPermissionsManager {
             $this->getOptions($project, Git::PERM_WRITE),
             $this->getOptions($project, Git::PERM_WPLUS),
             $are_fine_grained_permissions_defined,
-            $can_use_fine_grained_permissions
+            $can_use_fine_grained_permissions,
+            $branches_permissions,
+            $tags_permissions
         );
 
         return $renderer->renderToString('access-control', $presenter);
