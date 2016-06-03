@@ -68,4 +68,16 @@ class ServiceDao extends DataAccessObject {
         $dar = $this->retrieve($sql);
         return $dar->rowCount() === 1;
     }
+
+    public function updateServiceUsage($project_id, $short_name, $is_used) {
+        $project_id = $this->da->escapeInt($project_id);
+        $short_name = $this->da->quoteSmart($short_name);
+        $is_used    = $this->da->escapeInt($is_used);
+
+        $sql = "UPDATE service
+                SET is_used = $is_used
+                WHERE short_name = $short_name
+                AND group_id = $project_id";
+        return $this->update($sql);
+    }
 }

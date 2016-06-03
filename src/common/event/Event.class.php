@@ -1190,6 +1190,16 @@ class Event {
     const SERVICE_IS_ACTIVABLE = 'service_is_activable';
 
     /**
+     * Toggle usage of a service
+     *
+     * Parameters
+     *   shortname => string
+     *   is_used   => boolean
+     *   group_id  => int
+     */
+    const SERVICE_IS_USED = 'service_is_used';
+
+    /**
      * Allow plugins to add user actions in the navbar
      *
      * Parameters:

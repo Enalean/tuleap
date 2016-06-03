@@ -65,7 +65,7 @@ class SystemEventManager {
             'project_admin_remove_user_from_project_ugroups',
             'mail_list_create',
             'mail_list_delete',
-            'service_is_used',
+            Event::SERVICE_IS_USED,
             'codendi_daily_start'
             );
         foreach($events_to_listen as $event) {
@@ -246,7 +246,7 @@ class SystemEventManager {
                                $params['group_list_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
-        case 'service_is_used':
+        case Event::SERVICE_IS_USED:
             $this->createEvent(SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
                                $this->concatParameters($params, array('group_id', 'shortname', 'is_used')),
                                SystemEvent::PRIORITY_MEDIUM);
