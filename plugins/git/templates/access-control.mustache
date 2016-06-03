@@ -38,3 +38,18 @@
         </tr>
     </tbody>
 </table>
+
+{{# can_use_fine_grained_permissions }}
+<div class="git-per-tags-branches-permissions">
+    <label class="checkbox">
+        <input type="checkbox"
+               name="use-fine-grained-permissions"
+               {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
+        /> {{ fine_grained_permissions_checkbox_label }}
+    </label>
+
+    {{# are_fine_grained_permissions_defined }}
+    <p class="alert"> {{ fine_grained_permissions_warning }} </p>
+    {{/ are_fine_grained_permissions_defined }}
+</div>
+{{/ can_use_fine_grained_permissions }}

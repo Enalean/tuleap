@@ -26,6 +26,7 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
 
 /**
  * GitActions
@@ -33,6 +34,11 @@ use Tuleap\Git\GitViews\RepoManagement\Pane;
  * @author Guillaume Storchi
  */
 class GitActions extends PluginActions {
+
+    /**
+     * @var FineGrainedUpdater
+     */
+    private $fine_grained_updater;
 
     /**
      * @var WebhookDao
@@ -129,7 +135,8 @@ class GitActions extends PluginActions {
         GitRepositoryMirrorUpdater $mirror_updater,
         MigrationHandler $migration_handler,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        WebhookDao $webhook_dao
+        WebhookDao $webhook_dao,
+        FineGrainedUpdater $fine_grained_updater
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager   = $system_event_manager;
@@ -151,6 +158,7 @@ class GitActions extends PluginActions {
         $this->migration_handler          = $migration_handler;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
         $this->webhook_dao                = $webhook_dao;
+        $this->fine_grained_updater       = $fine_grained_updater;
     }
 
     protected function getText($key, $params = array()) {
@@ -771,12 +779,9 @@ class GitActions extends PluginActions {
 
     /**
      * This method allows one to save any repository attribues changes from the web interface.
-     * @param <type> $repoId
-     * @param <type> $repoAccess
-     * @param <type> $repoDescription
-     * @return <type>
      */
-    public function save( $projectId, $repoId, $repoAccess, $repoDescription, $pane) {
+    public function save( $projectId, $repoId, $repoAccess, $repoDescription, $pane, $enable_fine_grained_permissions)
+    {
         $controller = $this->getController();
         if ( empty($repoId) ) {
             $this->addError('actions_params_error');
@@ -822,6 +827,13 @@ class GitActions extends PluginActions {
                     }
                 }
             }
+
+            if ($enable_fine_grained_permissions) {
+                $this->fine_grained_updater->enableRepository($repository);
+            } else {
+                $this->fine_grained_updater->disableRepository($repository);
+            }
+
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
         } catch (GitDaoException $e) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AccessControlPresenter {
+class GitPresenters_AccessControlPresenter
+{
 
     public $label_read;
 
@@ -42,6 +43,9 @@ class GitPresenters_AccessControlPresenter {
 
     public $rewrite_options;
 
+    public $are_fine_grained_permissions_defined;
+    public $can_use_fine_grained_permissions;
+
     public function __construct(
         $is_control_limited,
         $read_select_box_id,
@@ -49,7 +53,9 @@ class GitPresenters_AccessControlPresenter {
         $rewrite_select_box_id,
         $read_options,
         $write_options,
-        $rewrite_options
+        $rewrite_options,
+        $are_fine_grained_permissions_defined,
+        $can_use_fine_grained_permissions
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -65,6 +71,18 @@ class GitPresenters_AccessControlPresenter {
         $this->read_options    = $read_options;
         $this->write_options   = $write_options;
         $this->rewrite_options = $rewrite_options;
+
+        $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
+        $this->can_use_fine_grained_permissions = $can_use_fine_grained_permissions;
+
+        $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_checkbox_label'
+        );
+
+        $this->fine_grained_permissions_warning = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_warning'
+        );
     }
 }
-

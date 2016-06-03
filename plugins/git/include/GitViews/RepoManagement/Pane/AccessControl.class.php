@@ -27,6 +27,8 @@ use PermissionsManager;
 use UserGroupDao;
 use User_ForgeUserGroupFactory;
 use Git_Backend_Gitolite;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedDao;
 
 class AccessControl extends Pane
 {
@@ -105,7 +107,8 @@ class AccessControl extends Pane
     {
         $forkPermissionsManager = new GitForkPermissionsManager(
             $this->repository,
-            $this->getAccessRightsPresenterOptionsBuilder()
+            $this->getAccessRightsPresenterOptionsBuilder(),
+            $this->getFineGrainedRetriever()
         );
 
         return $forkPermissionsManager->displayAccessControl();
@@ -117,5 +120,12 @@ class AccessControl extends Pane
         $user_group_factory = new User_ForgeUserGroupFactory($dao);
 
         return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
+    }
+
+    private function getFineGrainedRetriever()
+    {
+        $dao = new FineGrainedDao();
+
+        return new FineGrainedRetriever($dao);
     }
 }

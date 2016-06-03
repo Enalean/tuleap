@@ -20,11 +20,16 @@
  */
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 /**
  * GitForkPermissionsManager
  */
 class GitForkPermissionsManager {
+
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
 
     /**
      * @var AccessRightsPresenterOptionsBuilder
@@ -34,9 +39,14 @@ class GitForkPermissionsManager {
     /** @var GitRepository */
     private $repository;
 
-    public function __construct(GitRepository $repository, AccessRightsPresenterOptionsBuilder $builder) {
-        $this->repository = $repository;
-        $this->builder    = $builder;
+    public function __construct(
+        GitRepository $repository,
+        AccessRightsPresenterOptionsBuilder $builder,
+        FineGrainedRetriever $fine_grained_retriever
+    ) {
+        $this->repository             = $repository;
+        $this->builder                = $builder;
+        $this->fine_grained_retriever = $fine_grained_retriever;
     }
 
     /**
@@ -155,6 +165,12 @@ class GitForkPermissionsManager {
      */
     public function displayAccessControl($project_id = null) {
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
+        $user    = UserManager::instance()->getCurrentUser();
+
+        $can_use_fine_grained_permissions     = $user->useLabFeatures();
+        $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions(
+            $this->repository
+        );
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
@@ -164,7 +180,9 @@ class GitForkPermissionsManager {
             'repo_access['.Git::PERM_WPLUS.']',
             $this->getOptions($project, Git::PERM_READ),
             $this->getOptions($project, Git::PERM_WRITE),
-            $this->getOptions($project, Git::PERM_WPLUS)
+            $this->getOptions($project, Git::PERM_WPLUS),
+            $are_fine_grained_permissions_defined,
+            $can_use_fine_grained_permissions
         );
 
         return $renderer->renderToString('access-control', $presenter);

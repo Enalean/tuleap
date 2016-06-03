@@ -75,7 +75,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('GitRepositoryMirrorUpdater'),
                 mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
                 mock('Tuleap\Git\GerritCanMigrateChecker'),
-                mock('Tuleap\Git\Webhook\WebhookDao')
+                mock('Tuleap\Git\Webhook\WebhookDao'),
+                mock('Tuleap\Git\Permissions\FineGrainedUpdater')
             )
         );
     }
@@ -488,7 +489,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('GitRepositoryMirrorUpdater'),
             mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
             mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Webhook\WebhookDao')
+            mock('Tuleap\Git\Webhook\WebhookDao'),
+            mock('Tuleap\Git\Permissions\FineGrainedUpdater')
         );
     }
 
@@ -549,7 +551,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('GitRepositoryMirrorUpdater'),
             mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
             mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Webhook\WebhookDao')
+            mock('Tuleap\Git\Webhook\WebhookDao'),
+            mock('Tuleap\Git\Permissions\FineGrainedUpdater')
         );
     }
 
@@ -699,7 +702,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('GitRepositoryMirrorUpdater'),
             mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
             mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Webhook\WebhookDao')
+            mock('Tuleap\Git\Webhook\WebhookDao'),
+            mock('Tuleap\Git\Permissions\FineGrainedUpdater')
         );
 
     }

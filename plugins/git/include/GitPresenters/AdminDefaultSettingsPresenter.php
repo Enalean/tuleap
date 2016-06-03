@@ -29,6 +29,8 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $write_options;
     public $rewrite_options;
     public $mirror_presenters;
+    public $are_fine_grained_permissions_defined;
+    public $can_use_fine_grained_permissions;
 
     public function __construct(
         $project_id,
@@ -39,18 +41,22 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         array $write_options,
         array $rewrite_options,
         $pane_access_control,
-        $pane_mirroring
+        $pane_mirroring,
+        $are_fine_grained_permissions_defined,
+        $can_use_fine_grained_permissions
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
-        $this->manage_default_settings = true;
-        $this->mirror_presenters       = $mirror_presenters;
-        $this->pane_access_control     = $pane_access_control;
-        $this->pane_mirroring          = $pane_mirroring;
-        $this->read_options            = $read_options;
-        $this->write_options           = $write_options;
-        $this->rewrite_options         = $rewrite_options;
-        $this->csrf                    = $csrf;
+        $this->manage_default_settings              = true;
+        $this->mirror_presenters                    = $mirror_presenters;
+        $this->pane_access_control                  = $pane_access_control;
+        $this->pane_mirroring                       = $pane_mirroring;
+        $this->read_options                         = $read_options;
+        $this->write_options                        = $write_options;
+        $this->rewrite_options                      = $rewrite_options;
+        $this->csrf                                 = $csrf;
+        $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
+        $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
     }
 
     public function is_control_limited()
@@ -166,5 +172,21 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public function access_control_href()
     {
         return "?action=admin-default-settings&group_id=$this->project_id&pane=".GitViews::DEFAULT_SETTINGS_PANE_ACCESS_CONTROL;
+    }
+
+    public function fine_grained_permissions_checkbox_label()
+    {
+        return $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_checkbox_label'
+        );
+    }
+
+    public function fine_grained_permissions_warning()
+    {
+        return $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_warning'
+        );
     }
 }
