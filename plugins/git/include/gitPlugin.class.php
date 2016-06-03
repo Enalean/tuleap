@@ -22,6 +22,8 @@
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Webhook\WebhookDao;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\FineGrainedDao;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1201,8 +1203,18 @@ class GitPlugin extends Plugin {
             $this->getMirrorDataMapper(),
             $this->getProjectCreatorStatus(),
             new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory),
-            new WebhookDao()
+            new WebhookDao(),
+            $this->getFineGrainedUpdater()
         );
+    }
+
+    /**
+     * @return FineGrainedUpdater
+     */
+    private function getFineGrainedUpdater()
+    {
+        $dao = new FineGrainedDao();
+        return new FineGrainedUpdater($dao);
     }
 
     public function getGitSystemEventManager() {

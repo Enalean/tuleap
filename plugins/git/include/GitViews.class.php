@@ -20,10 +20,11 @@
  */
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\GitPresenters\AdminGitAccessRightsPresenter;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedDao;
 
 require_once 'www/project/admin/permissions.php';
-
-use Tuleap\Git\GitPresenters\AdminGitAccessRightsPresenter;
 
 /**
  * GitViews
@@ -516,12 +517,20 @@ class GitViews extends PluginViews {
         if (!empty($repository)) {
             $forkPermissionsManager = new GitForkPermissionsManager(
                 $repository,
-                $this->getAccessRightsPresenterOptionsBuilder()
+                $this->getAccessRightsPresenterOptionsBuilder(),
+                $this->getFineGrainedRetriever()
             );
 
             $userName = $this->user->getName();
             echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
+    }
+
+    private function getFineGrainedRetriever()
+    {
+        $dao = new FineGrainedDao();
+
+        return new FineGrainedRetriever($dao);
     }
 
     private function getAccessRightsPresenterOptionsBuilder()
@@ -645,6 +654,9 @@ class GitViews extends PluginViews {
             $pane_mirroring      = true;
         }
 
+        $are_fine_grained_permissions_defined = false;
+        $can_use_fine_grained_permissions     = false;
+
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project_id,
             $are_mirrors_defined,
@@ -654,7 +666,9 @@ class GitViews extends PluginViews {
             $write_options,
             $rewind_options,
             $pane_access_control,
-            $pane_mirroring
+            $pane_mirroring,
+            $are_fine_grained_permissions_defined,
+            $can_use_fine_grained_permissions
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

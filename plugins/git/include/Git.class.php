@@ -25,6 +25,7 @@ require_once('common/valid/ValidFactory.class.php');
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Webhook\WebhookDao;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
 
 /**
  * Git
@@ -151,6 +152,11 @@ class Git extends PluginController {
      */
     private $gerrit_can_migrate_checker;
 
+    /**
+     * @var FineGrainedUpdater
+     */
+    private $fine_grained_updater;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -172,7 +178,8 @@ class Git extends PluginController {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        WebhookDao $webhook_dao
+        WebhookDao $webhook_dao,
+        FineGrainedUpdater $fine_grained_updater
     ) {
         parent::__construct($user_manager, $request);
 
@@ -232,7 +239,8 @@ class Git extends PluginController {
             $this->redirect('/projects/'.$this->projectName.'/');
         }
 
-        $this->permittedActions = array();
+        $this->permittedActions     = array();
+        $this->fine_grained_updater = $fine_grained_updater;
     }
 
     protected function instantiateView() {
@@ -560,7 +568,20 @@ class Git extends PluginController {
                     if($this->request->valid($valid_url) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $this->addAction('save', array($this->groupId, $repository->getId(), $repoAccess, $repoDesc, $pane) );
+
+                    $enable_fine_grained_permissions = $this->request->exist('use-fine-grained-permissions');
+
+                    $this->addAction(
+                        'save',
+                        array(
+                            $this->groupId,
+                            $repository->getId(),
+                            $repoAccess,
+                            $repoDesc,
+                            $pane,
+                            $enable_fine_grained_permissions
+                        )
+                    );
                     $this->addView('view');
                 } else {
                     $this->addError( $this->getText('controller_access_denied') );
@@ -1129,7 +1150,8 @@ class Git extends PluginController {
                 $this->project_creator_status
             ),
             $this->gerrit_can_migrate_checker,
-            $this->webhook_dao
+            $this->webhook_dao,
+            $this->fine_grained_updater
         );
     }
 
