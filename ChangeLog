@@ -25,7 +25,7 @@ Version 8.16 (Not yet release)
 	* Make increment version PHP 7 compatible
 
 	== Plugins ==
-	* git: 4.182
+	* git: 4.183
 	* agiledashboard: 1.384
 	* tracker: 5.903
 	* tracker_date_reminder: 1.2.10

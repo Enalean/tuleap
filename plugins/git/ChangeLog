@@ -1,3 +1,6 @@
+Version 4.183 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Enable fine-grained permission in a repository)
+
 Version 4.182 - Tuleap 8.16
     * story #8418: Inherit default permissions during project creation
 
