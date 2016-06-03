@@ -1,3 +1,6 @@
+Version 4.182 - Tuleap 8.16
+    * story #8418: Inherit default permissions during project creation
+
 Version 4.181 - Tuleap 8.16
     * story #8418: Use default permissions while forking multiple repositories
 
