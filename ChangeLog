@@ -22,6 +22,7 @@ Version 8.16 (Not yet release)
 		- Help
 		- Service
 	* story #9083: Refactoring: do not leak plugins into core
+	* Make increment version PHP 7 compatible
 
 	== Plugins ==
 	* git: 4.182
