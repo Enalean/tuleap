@@ -1,3 +1,6 @@
+Version 5.902 - Tuleap 8.16
+    * request #9188 Some field labels do not appear on the modal in the scrum cardwall
+
 Version 5.901 - Tuleap 8.16
     * story #9090 have computed fields compatible with artifact links v2 (Add a deprecation monitoring panel in tracker administration
 
