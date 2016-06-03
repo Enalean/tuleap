@@ -1,3 +1,6 @@
+Version 5.904 - Tuleap 8.16
+    * story #9090: Replace Fast compute option with an Upgrade button
+
 Version 5.903 - Tuleap 8.16
     * request #9217: can't make a search in tracker report on value zero in a int or float field
 
