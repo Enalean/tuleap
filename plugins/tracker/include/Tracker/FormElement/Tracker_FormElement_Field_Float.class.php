@@ -20,17 +20,20 @@
 
 
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric {
-    
+
     const FLOAT_DECIMALS = 4;
-    
-    public function getCriteriaFrom($criteria) {
+
+    public function getCriteriaFrom($criteria)
+    {
         //Only filter query if field is used
         if($this->isUsed()) {
             //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            $criteria_value = $this->getCriteriaValue($criteria);
+
+            if ($criteria_value !== '') {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
-                return " INNER JOIN tracker_changeset_value AS $a 
+                return " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_float AS $b
                          ON ($b.changeset_value_id = $a.id
@@ -40,20 +43,34 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
         }
         return '';
     }
-    
+
+    public function fetchCriteriaValue($criteria)
+    {
+        $html           = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
+        $criteria_value = $this->getCriteriaValue($criteria);
+
+        if ($criteria_value !== '') {
+            $html_purifier = Codendi_HTMLPurifier::instance();
+            $html         .= $html_purifier->purify($criteria_value, CODENDI_PURIFIER_CONVERT_HTML);
+        }
+
+        $html .= '" />';
+        return $html;
+    }
+
     public function getCriteriaWhere($criteria) {
         return '';
     }
-    
+
     public function getQueryFrom() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
-        
-        return "LEFT JOIN ( tracker_changeset_value AS $R1 
+
+        return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_float AS $R2 ON ($R2.changeset_value_id = $R1.id)
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
-    
+
     protected $pattern = '[+\-]?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?';
     protected function cast($value) {
         return (float)$value;
@@ -61,11 +78,11 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
     protected function buildMatchExpression($field_name, $criteria_value) {
         return parent::buildMatchExpression($field_name, $criteria_value);
     }
-    
+
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_Float_ValueDao();
     }
-    
+
     /**
      * Returns a string representing the float value of $value
      *
@@ -82,45 +99,45 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
             return number_format($value, self::FLOAT_DECIMALS, '.', '');
         }
     }
-    
+
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_FloatDao();
     }
     protected function getDao() {
         return new Tracker_FormElement_Field_FloatDao();
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','float');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','float_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-float.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-float--plus.png');
     }
-    
+
     /**
      * Fetch the html code to display the field value in tooltip
-     * 
+     *
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Float $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
@@ -132,14 +149,14 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
         }
         return $html;
     }
-    
+
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
     protected function getValidatorErrorMessage() {
         return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_float_value');
     }
-    
+
     /**
      * Get the value of this field
      *

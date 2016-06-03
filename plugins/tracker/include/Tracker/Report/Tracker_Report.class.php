@@ -101,6 +101,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return new Tracker_Report_CriteriaDao();
     }
 
+    private function getCriteriaValueForFormElement(Tracker_FormElement $form_element, $raw_value)
+    {
+        $form_element_factory = $this->getFormElementFactory();
+        $zero_float_pattern   = '/^0{1,}(\.0*)?$/';
+
+        if ($form_element_factory->getType($form_element) === 'int' && $raw_value === '0') {
+            return 0;
+        } elseif ($form_element_factory->getType($form_element) === 'float' && preg_match($zero_float_pattern, $raw_value)) {
+            return 0;
+        } else {
+            return !empty($raw_value) ? $raw_value : '';
+        }
+    }
+
     /** @return Tracker_Report_Criteria[] */
     public function getCriteria() {
         $session_criteria = null;
@@ -118,7 +132,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     $is_advanced = isset($value['is_advanced']) ? $value['is_advanced'] : 0 ;
                     if ($formElement = $ff->getUsedFormElementById($key)) {
                         if ($formElement->userCanRead()) {
-                            $formElement->setCriteriaValue( (!empty($value['value']) ? $value['value']: ''), $this->id ) ;
+                            $criteria_value = $this->getCriteriaValueForFormElement($formElement, $value['value']);
+
+                            $formElement->setCriteriaValue($criteria_value, $this->id);
                             $this->criteria[$key] = new Tracker_Report_Criteria(
                                     0,
                                     $this,

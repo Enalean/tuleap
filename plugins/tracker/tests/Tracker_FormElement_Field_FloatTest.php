@@ -20,7 +20,11 @@
  */
 require_once('bootstrap.php');
 
-Mock::generatePartial('Tracker_FormElement_Field_Float', 'Tracker_FormElement_Field_FloatTestVersion', array('getValueDao', 'isRequired', 'getProperty'));
+Mock::generatePartial(
+    'Tracker_FormElement_Field_Float',
+    'Tracker_FormElement_Field_FloatTestVersion',
+    array('getValueDao', 'isRequired', 'getProperty', 'isUsed', 'getCriteriaValue')
+);
 
 Mock::generate('Tracker_Artifact_ChangesetValue_Float');
 
@@ -32,44 +36,44 @@ Mock::generate('DataAccessResult');
 Mock::generate('Tracker_Artifact');
 
 class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
-    
+
     function testNoDefaultValue() {
         $float_field = new Tracker_FormElement_Field_FloatTestVersion();
         $this->assertFalse($float_field->hasDefaultValue());
     }
-    
+
     function testDefaultValue() {
         $float_field = new Tracker_FormElement_Field_FloatTestVersion();
         $float_field->setReturnValue('getProperty', '12.34', array('default_value'));
         $this->assertTrue($float_field->hasDefaultValue());
         $this->assertEqual($float_field->getDefaultValue(), 12.34);
     }
-    
+
     function testGetChangesetValue() {
         $value_dao = new MockTracker_FormElement_Field_Value_FloatDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValueAt(0, 'getRow', array('id' => 123, 'field_id' => 1, 'value' => '1.003'));
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
-        
+
         $float_field = new Tracker_FormElement_Field_FloatTestVersion();
         $float_field->setReturnReference('getValueDao', $value_dao);
-        
+
         $this->assertIsA($float_field->getChangesetValue(null, 123, false), 'Tracker_Artifact_ChangesetValue_Float');
     }
-    
+
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = new MockTracker_FormElement_Field_Value_FloatDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
-        
+
         $float_field = new Tracker_FormElement_Field_FloatTestVersion();
         $float_field->setReturnReference('getValueDao', $value_dao);
-        
+
         $this->assertNull($float_field->getChangesetValue(null, 123, false));
     }
-    
+
     function testIsValidRequiredField() {
         $f = new Tracker_FormElement_Field_FloatTestVersion();
         $f->setReturnValue('isRequired', true);
@@ -86,7 +90,7 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
-    
+
     function testIsValidNotRequiredField() {
         $f = new Tracker_FormElement_Field_FloatTestVersion();
         $f->setReturnValue('isRequired', false);
@@ -94,17 +98,17 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, ''));
         $this->assertTrue($f->isValid($a, null));
     }
-    
+
     function testSoapAvailableValues() {
         $f = new Tracker_FormElement_Field_FloatTestVersion();
         $this->assertNull($f->getSoapAvailableValues());
     }
-    
+
     function testGetFieldData() {
         $f = new Tracker_FormElement_Field_FloatTestVersion();
         $this->assertEqual('3.14159', $f->getFieldData('3.14159'));
     }
-    
+
     function testFetchChangesetValue() {
         $f = new Tracker_FormElement_Field_FloatTestVersion();
         $this->assertIdentical('3.1416', $f->fetchChangesetValue(123, 456, 3.14159));
@@ -112,7 +116,67 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $this->assertIdentical('2.0000', $f->fetchChangesetValue(123, 456, 2));
         $this->assertIdentical('', $f->fetchChangesetValue(123, 456, null));
     }
-    
+
+    public function testItSearchOnZeroValue()
+    {
+        $field    = new Tracker_FormElement_Field_FloatTestVersion();
+        $criteria = mock('Tracker_Report_Criteria');
+
+        $field->setReturnValue('isUsed', true);
+        $field->setReturnValue('getCriteriaValue', 0);
+
+        $this->assertNotEqual($field->getCriteriaFrom($criteria), '');
+    }
+
+    public function testItSearchOnCustomQuery()
+    {
+        $field    = new Tracker_FormElement_Field_FloatTestVersion();
+        $criteria = mock('Tracker_Report_Criteria');
+
+        $field->setReturnValue('isUsed', true);
+        $field->setReturnValue('getCriteriaValue', '>1');
+
+        $this->assertNotEqual($field->getCriteriaFrom($criteria), '');
+    }
+
+    public function testItDoesntSearchOnEmptyString()
+    {
+        $field    = new Tracker_FormElement_Field_FloatTestVersion();
+        $criteria = mock('Tracker_Report_Criteria');
+
+        $field->setReturnValue('isUsed', true);
+        $field->setReturnValue('getCriteriaValue', '');
+
+        $this->assertEqual($field->getCriteriaFrom($criteria), '');
+    }
+
+    public function testItFetchCriteriaAndSetValueZero()
+    {
+        $field    = new Tracker_FormElement_Field_FloatTestVersion();
+        $criteria = mock('Tracker_Report_Criteria');
+
+        $field->setId(1);
+        $field->setReturnValue('getCriteriaValue', 0);
+
+        $this->assertEqual(
+            $field->fetchCriteriaValue($criteria),
+            '<input type="text" name="criteria[1]" id="tracker_report_criteria_1" value="0" />'
+        );
+    }
+
+    public function testItFetchCriteriaAndLeaveItEmptyValue()
+    {
+        $field    = new Tracker_FormElement_Field_FloatTestVersion();
+        $criteria = mock('Tracker_Report_Criteria');
+
+        $field->setId(1);
+        $field->setReturnValue('getCriteriaValue', '');
+
+        $this->assertEqual(
+            $field->fetchCriteriaValue($criteria),
+            '<input type="text" name="criteria[1]" id="tracker_report_criteria_1" value="" />'
+        );
+    }
 }
 
 class Tracker_FormElement_Field_Float_RESTTests extends TuleapTestCase {
