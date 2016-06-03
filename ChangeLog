@@ -3,6 +3,7 @@ Version 8.16 (Not yet release)
 	* request #8468: Unable to access svn immutable tags configuration with huge repository
 	* request #9208: When TLS is forced Tuleap must only create URL with HTTPS scheme
 	* request #9216: SVN immutable tags does not prevent from adding a file in a immutable tag
+	* request #9220: Unable to import big xml project archive
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
