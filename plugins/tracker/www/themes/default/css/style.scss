@@ -1198,7 +1198,7 @@ div.tracker-admin-field-controls {
             background: url('/themes/common/images/ic/artifact_editable_field.png') no-repeat 4px center;
         }
 
-        &:not(.field-masschange):not(.in-edition) > label {
+        &:not(.field-masschange):not(.in-edition):not(.field-in-modal) > label {
             display: none;
         }
     }
