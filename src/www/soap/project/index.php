@@ -32,12 +32,15 @@ require_once 'common/project/Service/ServiceUsageFactory.class.php';
 require_once 'common/project/Service/ServiceUsageManager.class.php';
 
 // Check if we the server is in secure mode or not.
-if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+$request = HTTPRequest::instance();
+if ($request->isSecure() || ForgeConfig::get('sys_force_ssl') == 1) {
     $protocol = "https";
 } else {
     $protocol = "http";
 }
-$uri = $protocol.'://'.$GLOBALS['sys_default_domain'].'/soap/project';
+$default_domain = ForgeConfig::get('sys_default_domain');
+
+$uri = $protocol.'://'.$default_domain.'/soap/project';
 
 $serviceClass = 'Project_SOAPServer';
 

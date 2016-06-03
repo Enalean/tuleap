@@ -7,13 +7,16 @@ define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__).'/VERSION')
 define('LOG_SOAP_REQUESTS', false);
 
 // Check if we the server is in secure mode or not.
-if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+$request = HTTPRequest::instance();
+if ($request->isSecure() || ForgeConfig::get('sys_force_ssl') == 1) {
     $protocol = "https";
 } else {
     $protocol = "http";
 }
 
-$uri = $protocol.'://'.$sys_default_domain;
+$default_domain = ForgeConfig::get('sys_default_domain');
+
+$uri = $protocol.'://'.$default_domain;
 
 if ($request->exist('wsdl')) {
     header("Location: ".$uri."/soap/codendi.wsdl.php?wsdl");

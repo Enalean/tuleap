@@ -3083,8 +3083,9 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
         } elseif ($a->isError()) {
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactDependencies');
         }
-        
-        if (!$a->addDependencies($is_dependent_on_artifact_ids,&$changes,false, false)) {
+
+        $changes = array();
+        if (!$a->addDependencies($is_dependent_on_artifact_ids, $changes, false, false)) {
             if (!isset($changes) || !is_array($changes) || count($changes) == 0) {
                 return new SoapFault(add_dependency_fault, 'Dependencies addition for artifact #'.$a->getID().' failed', 'addArtifactDependencies');
             }
@@ -3502,7 +3503,8 @@ function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id,
         } elseif ($a->isError()) {
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactCC');
         }
-        if (! $ok = $a->addCC($cc_list,$cc_comment,&$changes,false)) {
+        $changes = array();
+        if (! $ok = $a->addCC($cc_list, $cc_comment, $changes, false)) {
             return new SoapFault(add_cc_fault, 'CC could not be added', 'addArtifactCC');
         } else {
         	return $ok;
@@ -3552,7 +3554,8 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
         } elseif ($a->isError()) {
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'deleteArtifactCC');
         }
-        if (! $ok = $a->deleteCC($artifact_cc_id,&$changes,false)) {
+        $changes = array();
+        if (! $ok = $a->deleteCC($artifact_cc_id, $changes, false)) {
             return new SoapFault(delete_cc_fault, 'CC could not be deleted', 'deleteArtifactCC');
         } else {
         	return $ok;
