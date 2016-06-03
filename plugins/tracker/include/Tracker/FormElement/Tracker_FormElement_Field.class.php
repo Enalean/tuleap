@@ -338,14 +338,18 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifact(
+        Tracker_Artifact $artifact,
+        $submitted_values = array(),
+        $additional_classes = array()
+    ) {
         if ($this->userCanUpdate()) {
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset) {
                 $value       = $last_changeset->getValue($this);
                 $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
                 $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-                return $this->fetchArtifactField($artifact, $html_value);
+                return $this->fetchArtifactField($artifact, $html_value, $additional_classes);
             }
             return '';
         }
@@ -353,7 +357,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchArtifact($artifact, $submitted_values);
+        return $this->fetchArtifact($artifact, $submitted_values, array('field-in-modal'));
     }
 
     public function fetchSubmitForOverlay($submitted_values) {
@@ -373,7 +377,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $value       = $last_changeset->getValue($this);
             $html_value  = $this->fetchArtifactValueForWebDisplay($artifact, $value, $submitted_values);
             $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-            return $this->fetchArtifactField($artifact, $html_value);
+            return $this->fetchArtifactField($artifact, $html_value, array());
         }
         return '';
     }
@@ -392,12 +396,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    private function fetchArtifactField(Tracker_Artifact $artifact, $html_value) {
+    private function fetchArtifactField(Tracker_Artifact $artifact, $html_value, array $additional_classes) {
         $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="'. $this->getClassNames() .'">';
+            $html .= '<div class="'. $this->getClassNames($additional_classes) .'">';
 
             if ($this->userCanUpdate()) {
                 $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
@@ -480,7 +484,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="field-masschange '. $this->getClassNames() .'">';
+            $html .= '<div class="field-masschange '. $this->getClassNames(array()) .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= $this->fetchSubmitValueMasschange();
@@ -490,7 +494,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $html;
     }
 
-    private function getClassNames() {
+    private function getClassNames(array $additional_classes) {
         $classnames = 'tracker_artifact_field';
         $classnames .= ' tracker_artifact_field-'. $this->getFormElementFactory()->getType($this);
         if ($this->has_errors) {
@@ -498,6 +502,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         if ($this->userCanUpdate()) {
             $classnames .= ' editable';
+        }
+
+        foreach ($additional_classes as $additional_class) {
+            $classnames .= " $additional_class";
         }
 
         return $classnames;
