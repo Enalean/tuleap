@@ -1,3 +1,6 @@
+Version 2.26.108 - Tuleap 8.16
+    * request #9206: Activate services at import
+
 Version 2.26.107 - Tuleap 8.15
     * request #9193: Fatal error when entering a deleted document ID in Docman widget
 
