@@ -193,3 +193,15 @@ CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions (
     pattern VARCHAR(255) NOT NULL,
     INDEX idx_repository_fine_grained_permissions(repository_id, pattern(15))
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions_writers (
+    permission_id int(11) UNSIGNED,
+    ugroup_id int(11) NOT NULL,
+    PRIMARY KEY (permission_id, ugroup_id)
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions_rewinders (
+    permission_id int(11) UNSIGNED,
+    ugroup_id int(11) NOT NULL,
+    PRIMARY KEY (permission_id, ugroup_id)
+);
