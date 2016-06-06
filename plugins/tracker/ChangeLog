@@ -1,3 +1,6 @@
+Version 5.905 - Tuleap 8.16
+    * story #9090 have computed fields compatible with artifact links v2 (Message for tracker administors)
+
 Version 5.904 - Tuleap 8.16
     * story #9090: Replace Fast compute option with an Upgrade button
 
