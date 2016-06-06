@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Report_HeaderRenderer {
+class Tracker_Report_HeaderRenderer
+{
 
     /**
      * @var TemplateRenderer
@@ -36,10 +37,14 @@ class Tracker_Report_HeaderRenderer {
      */
     private $report_factory;
 
-    public function __construct(Tracker_ReportFactory $report_factory, Codendi_HTMLPurifier $purifier, TemplateRenderer $renderer) {
-        $this->report_factory = $report_factory;
-        $this->purifier       = $purifier;
-        $this->renderer       = $renderer;
+    public function __construct(
+        Tracker_ReportFactory $report_factory,
+        Codendi_HTMLPurifier $purifier,
+        TemplateRenderer $renderer
+    ) {
+        $this->report_factory       = $report_factory;
+        $this->purifier             = $purifier;
+        $this->renderer             = $renderer;
     }
 
     public function displayHeader(Tracker_IFetchTrackerSwitcher $layout, Codendi_Request $request, PFUser $current_user, Tracker_Report $report, $report_can_be_modified) {
@@ -49,7 +54,7 @@ class Tracker_Report_HeaderRenderer {
             $breadcrumbs      = array();
             $params           = array('body_class' => array('in_tracker_report'));
             $toolbar          = null;
-            $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
+            $report->getTracker()->displayHeaderWithRemovableWarning($layout, $title, $breadcrumbs, $toolbar, $params);
         }
 
         if ($request->get('pv')) {
@@ -65,15 +70,20 @@ class Tracker_Report_HeaderRenderer {
         }
     }
 
-    private function displayHeaderInReport(Codendi_Request $request, PFUser $current_user, Tracker_Report $report, array $reports, $report_can_be_modified) {
+    private function displayHeaderInReport(
+        Codendi_Request $request,
+        PFUser $current_user,
+        Tracker_Report $report,
+        array $reports,
+        $report_can_be_modified
+    ) {
         $options_params = array(
             'tracker'       => $report->tracker_id,
             'select_report' => $report->id,
         );
 
-        $warnings = array();
         $is_admin = $report->getTracker()->userIsAdmin($current_user);
-        $this->getMissingPublicReportWarning($reports, $is_admin, &$warnings);
+        $warnings = $this->getMissingPublicReportWarning($reports, $is_admin);
 
         $this->renderer->renderToPage(
             'header_in_report',
@@ -263,13 +273,16 @@ class Tracker_Report_HeaderRenderer {
         return $options;
     }
 
-    private function getMissingPublicReportWarning(array $reports, $is_admin, array $warnings) {
+    private function getMissingPublicReportWarning(array $reports, $is_admin)
+    {
+        $warnings = array();
+
         if (! $is_admin) {
             return;
         }
 
         $public_reports_exist = false;
-        foreach($reports as $report) {
+        foreach ($reports as $report) {
             /*@var $report Tracker_Report */
             if ($report->isPublic()) {
                  $public_reports_exist = true;
@@ -279,5 +292,7 @@ class Tracker_Report_HeaderRenderer {
         if (! $public_reports_exist) {
             $warnings[] = $GLOBALS['Language']->getText('plugin_tracker_report', 'no_public_reports');
         }
+
+        return $warnings;
     }
 }

@@ -23,6 +23,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Deprecation\DeprecationRetriever;
+use Tuleap\Tracker\Deprecation\Dao;
 
 /**
  * Tracker_ report.
@@ -1007,7 +1009,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
         if ($this->isObsolete()) {
             header('X-Codendi-Tracker-Report-IsObsolete: '. $this->getLastUpdaterUserName());
         }
@@ -1031,13 +1034,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     $masschange_aids = array();
                     $renderer_table  =  $request->get('renderer_table');
 
-                    if ( !empty($renderer_table['masschange_checked']) ) {
+                    if (!empty($renderer_table['masschange_checked'])) {
                         $masschange_aids = $request->get('masschange_aids');
                     } else if (!empty($renderer_table['masschange_all'])) {
                         $masschange_aids = $request->get('masschange_aids_all');
                     }
 
-                    if( empty($masschange_aids) ) {
+                    if (empty($masschange_aids)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                     }
@@ -1047,11 +1050,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                 }
                 break;
-             case 'update-masschange-aids':
+            case 'update-masschange-aids':
                 $masschange_updater = new Tracker_MasschangeUpdater($tracker, $this);
                 $masschange_updater->updateArtifacts($current_user, $request);
                 break;
-           case 'remove-criteria':
+            case 'remove-criteria':
                 if ($request->get('field') && ! $current_user->isAnonymous()) {
                     $this->report_session->removeCriterion($request->get('field'));
                     $this->report_session->setHasChanged();
@@ -1099,7 +1102,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 break;
             case 'rename-renderer':
                 if ($request->get('new_name') == '') {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_report','renderer_name_mandatory'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_report', 'renderer_name_mandatory'));
                 } else if (! $current_user->isAnonymous() && (int)$request->get('renderer') && trim($request->get('new_name'))) {
                     $this->report_session->renameRenderer((int)$request->get('renderer'), trim($request->get('new_name')), trim($request->get('new_description')));
                     $this->report_session->setHasChanged();
@@ -1123,7 +1126,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                         $this->report_session->moveRenderer($request->get('tracker_report_renderers'));
                         $this->report_session->setHasChanged();
                     } else {
-                        if ( $request->get('move-renderer-direction')) {
+                        if ($request->get('move-renderer-direction')) {
                             $this->moveRenderer((int)$request->get('renderer'), $request->get('move-renderer-direction'));
                             $GLOBALS['Response']->redirect('?'. http_build_query(array(
                                                                     'report'   => $this->id

@@ -21,6 +21,9 @@
 require_once('common/reference/ReferenceManager.class.php');
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
+use Tuleap\Tracker\Deprecation\DeprecationRetriever;
+use Tuleap\Tracker\Deprecation\Dao;
+
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
     /**
@@ -576,6 +579,27 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $renderer->renderToPage('tracker-home-nav', $presenter);
     }
 
+    private function getDeprecatedRetriever()
+    {
+        return new DeprecationRetriever(
+            new Dao(),
+            ProjectManager::instance(),
+            TrackerFactory::instance(),
+            Tracker_FormElementFactory::instance()
+        );
+    }
+
+    private function getDeprecatedFieldsByProject(Project $project)
+    {
+        $fields = array();
+
+        foreach($this->getDeprecatedRetriever()->getDeprecatedTrackersFieldsByProject($this->getProject($project->getId())) as $field) {
+            $fields[$field->getTrackerName($project)][] = $field->getFieldName();
+        }
+
+        return $fields;
+    }
+
     /**
      * Display all trackers of project $project that $user is able to see
      *
@@ -584,12 +608,26 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return void
      */
-    public function displayAllTrackers($project, $user) {
+    public function displayAllTrackers($project, $user)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
         $toolbar = array();
         $html = '';
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
+
+        $deprecated_fields = $this->getDeprecatedFieldsByProject($project);
+        if (count($deprecated_fields) > 0) {
+            $html .= "<div class='alert alert-warning'>";
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'adapt_message');
+            $html .= "<ul>";
+            foreach ($deprecated_fields as $key => $deprecated_field) {
+                $html .= " <li> ".$hp->purify($key). " (" ;
+                $html .= $hp->purify(implode(", ", $deprecated_field)).")</li>";
+            }
+            $html .= "</ul>";
+            $html .= "</div>";
+        }
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';
@@ -616,9 +654,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                                           // the Cross Tracker Search feature completely
             $html .= '<p>';
             if (count($trackers)) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_index','choose_tracker');
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'choose_tracker');
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_index','no_accessible_trackers_msg');
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'no_accessible_trackers_msg');
             }
             if ($this->userCanCreateTracker($project->group_id, $user)) {
                 $html .= '<br /><a id="tracker_createnewlink" href="'.TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create">';
@@ -642,7 +680,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                             $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
                             $html .= '</a></div>';
                         } else {
-                            $cannot_delete_message = $GLOBALS['Language']->getText('plugin_tracker','cannot_delete_tracker', array($used_in_other_services_infos['message']));
+                            $cannot_delete_message = $GLOBALS['Language']->getText('plugin_tracker', 'cannot_delete_tracker', array($used_in_other_services_infos['message']));
                             $html .= '<div style="float:right;" class="tracker-cant-delete">';
                             $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('title' => $cannot_delete_message));
                             $html .= '</div>';
@@ -655,13 +693,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                     $html .= '</a>';
 
                     if ($tracker->userHasFullAccess()) {
-
                         $stats = $tracker->getStats();
                         $html .= ' <span style="font-size:0.75em">( <strong>';
                         if ($tracker->hasSemanticsStatus() && $stats['nb_total']) {
-                            $html .= (int)($stats['nb_open']) .' '.$GLOBALS['Language']->getText('plugin_tracker_index','open').' / ';
+                            $html .= (int)($stats['nb_open']) .' '.$GLOBALS['Language']->getText('plugin_tracker_index', 'open').' / ';
                         }
-                        $html .= (int)($stats['nb_total']) .' '.$GLOBALS['Language']->getText('plugin_tracker_index','total');
+                        $html .= (int)($stats['nb_total']) .' '.$GLOBALS['Language']->getText('plugin_tracker_index', 'total');
                         $html .= '</strong> )</span>';
 
                         $html .= '</dt>';

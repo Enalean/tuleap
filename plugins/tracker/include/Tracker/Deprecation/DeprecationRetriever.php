@@ -27,6 +27,7 @@ use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker;
 use Project;
+use PFUser;
 
 class DeprecationRetriever
 {
@@ -34,6 +35,7 @@ class DeprecationRetriever
     private $project_manager;
     private $tracker_factory;
     private $tracker_formelement_factory;
+    private $user_preferences_dao;
 
     public function __construct(
         Dao $dao,
@@ -47,10 +49,37 @@ class DeprecationRetriever
         $this->tracker_formelement_factory = $tracker_formelement_factory;
     }
 
+    public function isWarningDeprecatedFieldHidden(PFUser $user, TRacker $tracker)
+    {
+        $preference = $user->getPreference($tracker->getHideWarningPreferenceName());
+
+        return ($preference) ? $preference >= $_SERVER['REQUEST_TIME'] : false;
+    }
+
     public function getDeprecatedTrackersFields()
     {
         $deprecated_fields = array();
         foreach ($this->dao->searchDeprecatedTrackersFields() as $row) {
+            $deprecated_fields[] = $this->instantiateFromRow($row);
+        }
+
+        return $deprecated_fields;
+    }
+
+    public function getDeprecatedTrackersFieldsByProject(Project $project)
+    {
+        $deprecated_fields = array();
+        foreach ($this->dao->searchDeprecatedTrackersFieldsByProject($project->getID()) as $row) {
+            $deprecated_fields[] = $this->instantiateFromRow($row);
+        }
+
+        return $deprecated_fields;
+    }
+
+    public function getDeprecatedFieldsByTracker(Tracker $tracker)
+    {
+        $deprecated_fields = array();
+        foreach ($this->dao->searchDeprecatedFieldsByTracker($tracker->getId()) as $row) {
             $deprecated_fields[] = $this->instantiateFromRow($row);
         }
 
