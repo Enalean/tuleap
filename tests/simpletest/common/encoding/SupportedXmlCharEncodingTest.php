@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2012-2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -65,7 +65,7 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends Tule
 
      public function itDoesntRemoveGoodCharsInAnotherEncoding() {
          $str = 'REPLACEabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789¶²&é"\'(-è_çà)=~#{[|`\^@]}£$ù%*µ,;:!?./§\'<>œÇêÊàÀÉ`È¡';
-         $str = mb_convert_encoding($str, 'ISO-8859-1');
+         $str = mb_convert_encoding($str, 'ISO-8859-1', 'ISO-8859-1');
 
          $this->assertEqual($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
      }
