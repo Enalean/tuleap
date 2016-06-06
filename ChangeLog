@@ -1,3 +1,11 @@
+Vesrion 8.15-2 (Monday, June 6th 2016)
+	== Bug Fix ==
+	* request #9216: svn immutable tags does not prevent from adding a file in a immutable tag
+	* request #9208: When TLS is forced Tuleap must only create URL with HTTPS scheme
+	* request #8468: Unable to access svn immutable tags configuration with huge repository
+	* request #9188: Some field labels do not appear on the modal in the scrum cardwall
+	* request #9196: tv3->tv5 migration does not import the Gantt chart field properties
+
 Version 8.15 (Thursday, May 26th 2016)
 	== Bug fix ==
 	* request #9136: All URLs in the footer and homepage are in HTTPS
