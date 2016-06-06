@@ -24,6 +24,7 @@ Version 8.16 (Not yet release)
 		- Service
 	* story #9083: Refactoring: do not leak plugins into core
 	* Make increment version PHP 7 compatible
+	* Fix unit tests to run both on PHP 5.3 and PHP 5.6
 
 	== Plugins ==
 	* git: 4.183
