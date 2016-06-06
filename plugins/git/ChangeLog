@@ -1,3 +1,6 @@
+Version 4.184 - Tuleap 8.16
+    * story #8419: Fix fatal error while forking multiple repository at the same time
+
 Version 4.183 - Tuleap 8.16
     * story #8419 have permissions per tags/branches (Enable fine-grained permission in a repository)
 
