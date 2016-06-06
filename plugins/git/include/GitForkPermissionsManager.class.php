@@ -142,6 +142,9 @@ class GitForkPermissionsManager {
     private function displayDefaultAccessControl($project_id) {
         $project = ProjectManager::instance()->getProject($project_id);
 
+        $can_use_fine_grained_permissions     = false;
+        $are_fine_grained_permissions_defined = false;
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
             $this->isRWPlusBlocked(),
@@ -150,7 +153,9 @@ class GitForkPermissionsManager {
             'repo_access['.Git::PERM_WPLUS.']',
             $this->getDefaultOptions($project, Git::DEFAULT_PERM_READ),
             $this->getDefaultOptions($project, Git::DEFAULT_PERM_WRITE),
-            $this->getDefaultOptions($project, Git::DEFAULT_PERM_WPLUS)
+            $this->getDefaultOptions($project, Git::DEFAULT_PERM_WPLUS),
+            $are_fine_grained_permissions_defined,
+            $can_use_fine_grained_permissions
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -167,7 +172,7 @@ class GitForkPermissionsManager {
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
         $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions     = $user->useLabFeatures();
+        $can_use_fine_grained_permissions     = $user->useLabFeatures() && $this->repository->userCanAdmin($user);
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions(
             $this->repository
         );
