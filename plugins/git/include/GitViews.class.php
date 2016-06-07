@@ -20,9 +20,8 @@
  */
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-use Tuleap\Git\GitPresenters\AdminGitAccessRightsPresenter;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -49,21 +48,35 @@ class GitViews extends PluginViews {
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
 
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_permission_factory;
+
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitPermissionsManager $permissions_manager
+        GitPermissionsManager $permissions_manager,
+        FineGrainedPermissionFactory $fine_grained_permission_factory,
+        FineGrainedRetriever $fine_grained_retriever
     ) {
         parent::__construct($controller);
-        $this->groupId                 = (int)$this->request->get('group_id');
-        $this->project                 = ProjectManager::instance()->getProject($this->groupId);
-        $this->projectName             = $this->project->getUnixName();
-        $this->userName                = $this->user->getName();
-        $this->git_permissions_manager = $permissions_manager;
-        $this->ugroup_manager          = new UGroupManager();
-        $this->url_manager             = $url_manager;
-        $this->mirror_data_mapper      = $mirror_data_mapper;
+        $this->groupId                         = (int)$this->request->get('group_id');
+        $this->project                         = ProjectManager::instance()->getProject($this->groupId);
+        $this->projectName                     = $this->project->getUnixName();
+        $this->userName                        = $this->user->getName();
+        $this->git_permissions_manager         = $permissions_manager;
+        $this->ugroup_manager                  = new UGroupManager();
+        $this->url_manager                     = $url_manager;
+        $this->mirror_data_mapper              = $mirror_data_mapper;
+        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
+        $this->fine_grained_retriever          = $fine_grained_retriever;
     }
 
     public function header() {
@@ -202,7 +215,9 @@ class GitViews extends PluginViews {
             $params['gerrit_servers'],
             $params['gerrit_templates'],
             $this->mirror_data_mapper,
-            $params['gerrit_can_migrate_checker']
+            $params['gerrit_can_migrate_checker'],
+            $this->fine_grained_permission_factory,
+            $this->fine_grained_retriever
         );
         $repo_management_view->display();
     }
@@ -518,19 +533,13 @@ class GitViews extends PluginViews {
             $forkPermissionsManager = new GitForkPermissionsManager(
                 $repository,
                 $this->getAccessRightsPresenterOptionsBuilder(),
-                $this->getFineGrainedRetriever()
+                $this->fine_grained_retriever,
+                $this->fine_grained_permission_factory
             );
 
             $userName = $this->user->getName();
             echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
-    }
-
-    private function getFineGrainedRetriever()
-    {
-        $dao = new FineGrainedDao();
-
-        return new FineGrainedRetriever($dao);
     }
 
     private function getAccessRightsPresenterOptionsBuilder()

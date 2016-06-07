@@ -468,3 +468,7 @@ plugin_git	default_access_control_saved	Default access control successfully save
 
 plugin_git	fine_grained_permissions_checkbox_label	Enable fine-grained permissions.
 plugin_git	fine_grained_permissions_warning	Dear administrators, you will be soon allowed to define permissions per tags and/or branches.
+plugin_git	fine_grained_permissions_tags_title	Tags
+plugin_git	fine_grained_permissions_branches_title	Branches
+plugin_git	fine_grained_permissions_pattern_column	Pattern
+plugin_git	fine_grained_permissions_empty	No permission defined yet.

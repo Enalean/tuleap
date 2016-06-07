@@ -55,4 +55,28 @@ class FineGrainedDao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchBranchesFineGrainedPermissionsForRepository($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "SELECT *
+                FROM plugin_git_repository_fine_grained_permissions
+                WHERE repository_id = $repository_id
+                AND pattern LIKE 'refs/heads/%'";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchTagsFineGrainedPermissionsForRepository($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "SELECT *
+                FROM plugin_git_repository_fine_grained_permissions
+                WHERE repository_id = $repository_id
+                AND pattern LIKE 'refs/tags/%'";
+
+        return $this->retrieve($sql);
+    }
 }

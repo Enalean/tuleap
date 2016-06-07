@@ -49,7 +49,64 @@
     </label>
 
     {{# are_fine_grained_permissions_defined }}
-    <p class="alert"> {{ fine_grained_permissions_warning }} </p>
+        <p class="alert"> {{ fine_grained_permissions_warning }} </p>
+
+        <h3>{{ branches_title }}</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <td>{{ pattern_column }}</td>
+                    <td>{{ label_write }}</td>
+                    <td>{{ label_rw }}</td>
+                </tr>
+            </thead>
+            <tbody>
+                {{^ has_branches_permissions }}
+                    <tr class="empty-table">
+                        <td colspan="3">{{ empty }}</td>
+                    </tr>
+                {{/ has_branches_permissions }}
+
+                {{# has_branches_permissions }}
+                    {{# branches_permissions }}
+                    <tr>
+                        <td>{{ getDisplayablePattern }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {{/ branches_permissions }}
+                {{/ has_branches_permissions }}
+            </tbody>
+        </table>
+
+        <h3>{{ tags_title }}</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <td>{{ pattern_column }}</td>
+                    <td>{{ label_write }}</td>
+                    <td>{{ label_rw }}</td>
+                </tr>
+            </thead>
+            <tbody>
+                {{^ has_tags_permissions }}
+                    <tr class="empty-table">
+                        <td colspan="3">{{ empty }}</td>
+                    </tr>
+                {{/ has_tags_permissions }}
+
+                {{# has_tags_permissions }}
+                    {{# tags_permissions }}
+                    <tr>
+                        <td>{{ getDisplayablePattern }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {{/ tags_permissions }}
+                {{/ has_tags_permissions }}
+            </tbody>
+        </table>
+
     {{/ are_fine_grained_permissions_defined }}
 </div>
 {{/ can_use_fine_grained_permissions }}

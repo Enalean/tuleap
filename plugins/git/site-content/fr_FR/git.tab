@@ -464,3 +464,7 @@ plugin_git	default_access_control_saved	Permissions par défaut sauvegardées.
 
 plugin_git	fine_grained_permissions_checkbox_label	Activer les permissions fines.
 plugin_git	fine_grained_permissions_warning	Chers administrateurs, vous serez très bientôt en mesure de définir des permissions par étiquettes et/ou par branches.
+plugin_git	fine_grained_permissions_tags_title	Étiquettes
+plugin_git	fine_grained_permissions_branches_title	Branches
+plugin_git	fine_grained_permissions_pattern_column	Expression
+plugin_git	fine_grained_permissions_empty	Aucune permission n'a été configurée.
