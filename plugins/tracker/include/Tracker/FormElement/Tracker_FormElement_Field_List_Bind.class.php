@@ -80,6 +80,14 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      */
     public abstract function getAllValues();
 
+    /**
+     * @return bool
+     */
+    public function isExistingValue($value_id)
+    {
+        return array_key_exists($value_id, $this->getAllValues());
+    }
+
     public function fetchFormattedForJson() {
         $values = array();
         foreach($this->getAllValues() as $value) {

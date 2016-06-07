@@ -242,12 +242,9 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $submitted_value_1 = '123'; // $v1
         $submitted_value_2 = '456'; // $v2
         $submitted_value_3 = '789'; // $v3
-        stub($bind)->getAllValues()->returns(array(
-                $submitted_value_1 => null,
-                $submitted_value_2 => null,
-                $submitted_value_3 => null
-            )
-        );
+        stub($bind)->isExistingValue($submitted_value_1)->returns(true);
+        stub($bind)->isExistingValue($submitted_value_2)->returns(true);
+        stub($bind)->isExistingValue($submitted_value_3)->returns(true);
         
         $artifact->setReturnReference('getLastChangeset', $changeset);
         
@@ -301,10 +298,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $v1->setReturnValue('__toString', '# 123');
         $v1->setReturnValue('getLabel','label1');
         $submitted_value_1 = '123'; // $v1
-        stub($bind)->getAllValues()->returns(array(
-                $submitted_value_1 => null
-            )
-        );
+        stub($bind)->isExistingValue($submitted_value_1)->returns(true);
         
         $artifact->setReturnReference('getLastChangeset', $changeset);
         
@@ -641,12 +635,9 @@ class Tracker_FormElement_Field_List_Validate_Values extends TuleapTestCase {
         $this->list     = new Tracker_FormElement_Field_ListTestVersion();
         $this->artifact = new MockTracker_Artifact();
         stub($this->list)->getBind()->returns($this->bind);
-        stub($this->bind)->getAllValues()->returns(array(
-                101 => null,
-                102 => null,
-                103 => null
-            )
-        );
+        stub($this->bind)->isExistingValue(101)->returns(true);
+        stub($this->bind)->isExistingValue(102)->returns(true);
+        stub($this->bind)->isExistingValue(103)->returns(true);
     }
 
     public function itAcceptsValidValues() {
