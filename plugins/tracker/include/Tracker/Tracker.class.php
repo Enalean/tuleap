@@ -1245,7 +1245,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
     private function getWarningForDeprecatedFields(array $deprecated_fields, $removable_flag)
     {
-        $hp   = Codendi_HTMLPurifier::instance();
         $html = "";
 
         $display = true;
@@ -1266,7 +1265,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $html .= '<div id="warning-deprecated-field">';
             $html .= '<p class="alert alert-warning">';
             $html .=  $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'warning_deprecation_for_tracker');
-            $html .= '<a href="'.$hp->purify(util_make_base_url()).'/plugins/tracker/?group_id='.$hp->purify($this->getGroupId()).'&tracker='.$hp->purify($this->id).'&func=hide-deprecated-fields">';
+            $html .= '<a href="/plugins/tracker/?group_id='. urlencode($this->getGroupId()) .'&tracker='. urlencode($this->id) .'&func=hide-deprecated-fields">';
             if ($removable_flag) {
                 $html .= '<button type="button" class="close" aria-hidden="true">&times;</button>';
             }
