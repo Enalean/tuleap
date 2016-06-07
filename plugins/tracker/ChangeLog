@@ -1,3 +1,6 @@
+Version 5.909 - Tuleap 8.16
+    * request #9209: HTML tags displayed, instead of interpreted, in text field in HTML format
+
 Version 5.908 - Tuleap 8.16
     * request #9226: Fatal error when accessing a tracker using a deprecated computed field
 
