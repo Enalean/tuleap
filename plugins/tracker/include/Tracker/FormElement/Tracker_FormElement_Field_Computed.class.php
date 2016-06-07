@@ -23,7 +23,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
 
     public $default_properties = array(
         'target_field_name' => array(
-            'value' => '',
+            'value' => null,
             'type'  => 'string',
             'size'  => 40,
         ),
@@ -62,12 +62,34 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             $original_field
         );
 
-        if (
-            is_null($this->getProperty('fast_compute'))
+        $this->clearFastCompute();
+        $this->clearTargetFieldName();
+        $this->clearCache();
+    }
+
+    private function clearFastCompute()
+    {
+        if (is_null($this->getProperty('fast_compute'))
             || $this->useFastCompute()
         ) {
             unset($this->default_properties['fast_compute']);
         }
+    }
+
+    private function clearTargetFieldName()
+    {
+        if (is_null($this->getProperty('target_field_name'))
+            || (
+                $this->name === $this->getProperty('target_field_name')
+                && $this->useFastCompute()
+            )
+        ) {
+            unset($this->default_properties['target_field_name']);
+        }
+    }
+
+    private function clearCache()
+    {
         $this->cache_specific_properties = null;
     }
 
@@ -104,14 +126,22 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         $request,
         $current_user,
         $redirect = false
-    )
-    {
+    ) {
         $formElement_data = $request->get('formElement_data');
-        if (
-            isset($formElement_data['specific_properties'])
-            && is_array($formElement_data['specific_properties'])
-        ) {
-            $formElement_data['specific_properties']['fast_compute'] = $this->getFastComputeMode($formElement_data['specific_properties']);
+
+        if ($formElement_data !== false) {
+            $default_specific_properties = array(
+                'fast_compute'      => '1',
+                'target_field_name' => $formElement_data['name']
+            );
+            $submitted_specific_properties = isset($formElement_data['specific_properties']) ? $formElement_data['specific_properties'] : array();
+
+            $merged_specific_properties = array_merge(
+                $default_specific_properties,
+                $submitted_specific_properties
+            );
+
+            $formElement_data['specific_properties'] = $merged_specific_properties;
             $request->set('formElement_data', $formElement_data);
         }
 
@@ -123,32 +153,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         );
     }
 
-    public function afterCreate($formElement_data = array()) {
-        if (
-            isset($formElement_data['specific_properties'])
-            && is_array($formElement_data['specific_properties'])
-        ) {
-            $formElement_data['specific_properties']['fast_compute'] = "1";
-            $this->storeProperties($formElement_data['specific_properties']);
-        }
+    public function afterCreate($formElement_data = array())
+    {
+        $formElement_data['specific_properties']['fast_compute']      = '1';
+        $formElement_data['specific_properties']['target_field_name'] = $this->name;
+        $this->storeProperties($formElement_data['specific_properties']);
 
         parent::afterCreate($formElement_data);
-    }
-
-    /**
-     * @param  array $data_specific_properties
-     * @return String
-     */
-    private function getFastComputeMode($data_specific_properties)
-    {
-        if (
-            ! isset($data_specific_properties['fast_compute'])
-            || $this->useFastCompute()
-        ) {
-            return "1";
-        }
-
-        return $data_specific_properties['fast_compute'];
     }
 
     private function getFastComputedValue($artifact_id, $timestamp = null) {
