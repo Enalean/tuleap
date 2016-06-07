@@ -78,7 +78,7 @@ class AccessControl extends Pane
     public function getContent()
     {
         $html  = '';
-        $html .= '<h3>'. $this->getTitle() .'</h3>';
+        $html .= '<h2>'. $this->getTitle() .'</h2>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" id="action" name="action" value="edit" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
@@ -88,7 +88,7 @@ class AccessControl extends Pane
         } else {
             $html .= $this->accessControl();
         }
-        $html .= '<p><input type="submit" name="save" class="btn" value="'. $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit') .'" /></p>';
+        $html .= '<p><input type="submit" name="save" class="btn btn-primary" value="'. $GLOBALS['Language']->getText('plugin_git', 'save_access_control') .'" /></p>';
         $html .= '</form>';
         return $html;
     }

@@ -53,6 +53,10 @@ class GitPresenters_AccessControlPresenter
 
     public $rewrite_options;
 
+    public $default_permissions_title;
+
+    public $fine_grained_permissions_title;
+
     public $are_fine_grained_permissions_defined;
     public $can_use_fine_grained_permissions;
 
@@ -99,6 +103,16 @@ class GitPresenters_AccessControlPresenter
 
         $this->branches_permissions = $branches_permissions;
         $this->tags_permissions     = $tags_permissions;
+
+        $this->default_permissions_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'default_permissions_title'
+        );
+
+        $this->fine_grained_permissions_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_title'
+        );
 
         $this->branches_title = $GLOBALS['Language']->getText(
             'plugin_git',
