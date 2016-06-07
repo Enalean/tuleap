@@ -1,3 +1,6 @@
+Version 4.185 - Tuleap 8.16
+    * story #8419: Display repository tags and branches patterns
+
 Version 4.184 - Tuleap 8.16
     * story #8419: Fix fatal error while forking multiple repository at the same time
 
