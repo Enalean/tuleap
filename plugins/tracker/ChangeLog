@@ -1,3 +1,6 @@
+Version 5.908 - Tuleap 8.16
+    * request #9226: Fatal error when accessing a tracker using a deprecated computed field
+
 Version 5.907 - Tuleap 8.16
     * story #9090: have computed fields compatible with artifact links v2 (Hide target field name in Computed fields admin)
 
