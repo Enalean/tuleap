@@ -475,3 +475,6 @@ plugin_git	fine_grained_permissions_tags_title	Tags
 plugin_git	fine_grained_permissions_branches_title	Branches
 plugin_git	fine_grained_permissions_pattern_column	Pattern
 plugin_git	fine_grained_permissions_empty	No permission defined yet.
+plugin_git	add_branch_permission	Add permission on a new branch
+plugin_git	add_tag_permission	Add permission on a new tag
+plugin_git	add_permission_duplicate_pattern	Pattern $1 is already existing.

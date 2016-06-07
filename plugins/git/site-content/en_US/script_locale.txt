@@ -12,5 +12,7 @@ codendi.locales['git'] = {
     commit_message_value: 'Update of ',
     commit_description_value: 'Commit description',
     not_top_branch : 'You can\'t edit a file wich is not at the top of a branch',
-    remove_webhook_title: 'Wait a minute…'
+    remove_webhook_title: 'Wait a minute…',
+    add_branch_permission_placeholder: 'Branch name (master, my_feature…)',
+    add_tag_permission_placeholder: 'Tag name (v1, alpha…)'
 };

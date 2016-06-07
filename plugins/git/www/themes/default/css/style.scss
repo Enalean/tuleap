@@ -999,7 +999,6 @@ h1, h2, h3 {
 .git-permission-table {
     min-width: 800px;
     max-width: 1200px;
-    margin: 0 0 40px;
 
     > thead > tr {
         background: #e4e4e4;
@@ -1014,16 +1013,30 @@ h1, h2, h3 {
     > tbody > tr:first-child > td {
         border-top: 0;
     }
+
+    .git-permission-table-selector {
+        width: 250px;
+    }
+
+    select, input {
+        width: 100%;
+        margin: 0;
+    }
+
+    input {
+        height: 30px;
+        box-sizing: border-box;
+    }
 }
 
 .git-default-permission-table {
     width: auto;
 }
 
-.git-permission-table-selector {
-    width: 250px;
+.add-fine-grained-permission {
+    margin: 0 0 40px;
+}
 
-    select {
-        margin: 0;
-    }
+#add-fine-grained-permission-template {
+    display: none;
 }
