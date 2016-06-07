@@ -6,8 +6,9 @@
     .git-admin-mass-update-table,
     #git_repositories_list,
     .hooks-jobs-list,
-    .hooks-list {
-        & > thead > tr > th {
+    .hooks-list,
+    .git-permission-table {
+        > thead > tr > th {
             border-bottom-color: $main;
         }
     }

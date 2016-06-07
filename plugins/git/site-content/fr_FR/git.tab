@@ -460,9 +460,12 @@ plugin_git	admin_gitolite_config_title	Administration de la configuration Gitoli
 plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
 plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "plloing". Merci de consulter <a href="http://doc-en.tuleap.net/en/latest/user-guide/git.html?#continuous-integration-with-hudson-jenkins">Hudson Git</a>
 
+plugin_git	save_access_control	Sauvegarder les permissions
 plugin_git	default_access_control_saved	Permissions par défaut sauvegardées.
 
-plugin_git	fine_grained_permissions_checkbox_label	Activer les permissions fines.
+plugin_git	default_permissions_title	Permissions par défaut
+plugin_git	fine_grained_permissions_title	Permissions fines
+plugin_git	fine_grained_permissions_checkbox_label	Activer les permissions fines
 plugin_git	fine_grained_permissions_warning	Chers administrateurs, vous serez très bientôt en mesure de définir des permissions par étiquettes et/ou par branches.
 plugin_git	fine_grained_permissions_tags_title	Étiquettes
 plugin_git	fine_grained_permissions_branches_title	Branches

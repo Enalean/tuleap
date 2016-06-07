@@ -31,6 +31,8 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $mirror_presenters;
     public $are_fine_grained_permissions_defined;
     public $can_use_fine_grained_permissions;
+    public $default_permissions_title;
+    public $fine_grained_permissions_title;
 
     public function __construct(
         $project_id,
@@ -57,6 +59,16 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->csrf                                 = $csrf;
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
+
+        $this->default_permissions_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'default_permissions_title'
+        );
+
+        $this->fine_grained_permissions_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_title'
+        );
     }
 
     public function is_control_limited()

@@ -4,31 +4,32 @@
     </div>
 {{/ is_control_limited }}
 
-<table>
+<h3>{{ default_permissions_title }}</h3>
+<table class="table table-bordered git-permission-table git-default-permission-table">
     <thead>
         <tr>
-            <td>{{ label_read }}</td>
-            <td>{{ label_write }}</td>
-            <td>{{ label_rw }}</td>
+            <th>{{ label_read }}</th>
+            <th>{{ label_write }}</th>
+            <th>{{ label_rw }}</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>
+            <td class="git-permission-table-selector">
                 <select multiple="multiple" id="{{ read_select_box_id }}" name="{{ read_select_box_id }}[]" size="8" class="plugin_git_permissions_select">
                     {{# read_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ read_options }}
                 </select>
             </td>
-            <td>
+            <td class="git-permission-table-selector">
                 <select multiple="multiple" id="{{ write_select_box_id }}" name="{{ write_select_box_id }}[]" size="8" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
                     {{# write_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ write_options }}
                 </select>
             </td>
-            <td>
+            <td class="git-permission-table-selector">
                 <select multiple="multiple" id="{{ rewrite_select_box_id }}" name="{{ rewrite_select_box_id }}[]" size="8" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
                     {{# rewrite_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
@@ -41,6 +42,8 @@
 
 {{# can_use_fine_grained_permissions }}
 <div class="git-per-tags-branches-permissions">
+    <h3>{{ fine_grained_permissions_title }}</h3>
+
     <label class="checkbox">
         <input type="checkbox"
                name="use-fine-grained-permissions"
@@ -49,15 +52,15 @@
     </label>
 
     {{# are_fine_grained_permissions_defined }}
-        <p class="alert"> {{ fine_grained_permissions_warning }} </p>
+        <p class="alert">{{ fine_grained_permissions_warning }}</p>
 
-        <h3>{{ branches_title }}</h3>
-        <table class="table table-bordered table-striped">
+        <h4>{{ branches_title }}</h4>
+        <table class="table table-bordered git-permission-table">
             <thead>
                 <tr>
-                    <td>{{ pattern_column }}</td>
-                    <td>{{ label_write }}</td>
-                    <td>{{ label_rw }}</td>
+                    <th>{{ pattern_column }}</th>
+                    <th class="git-permission-table-selector">{{ label_write }}</th>
+                    <th class="git-permission-table-selector">{{ label_rw }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,13 +82,13 @@
             </tbody>
         </table>
 
-        <h3>{{ tags_title }}</h3>
-        <table class="table table-bordered table-striped">
+        <h4>{{ tags_title }}</h4>
+        <table class="table table-bordered git-permission-table">
             <thead>
                 <tr>
-                    <td>{{ pattern_column }}</td>
-                    <td>{{ label_write }}</td>
-                    <td>{{ label_rw }}</td>
+                    <th>{{ pattern_column }}</th>
+                    <th class="git-permission-table-selector">{{ label_write }}</th>
+                    <th class="git-permission-table-selector">{{ label_rw }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -106,7 +109,6 @@
                 {{/ has_tags_permissions }}
             </tbody>
         </table>
-
     {{/ are_fine_grained_permissions_defined }}
 </div>
 {{/ can_use_fine_grained_permissions }}

@@ -1,4 +1,4 @@
-<h3>{{ title }}</h3>
+<h2>{{ title }}</h2>
 
 <form id="mail_prefix_form" action="/plugins/git/" method="POST">
     <input type="hidden" id="action" name="action" value="mail" />
@@ -9,7 +9,7 @@
     <label for="mail_prefix">{{ mail_prefix_label }}</label>
     <input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="{{ mail_prefix }}" />
 
-    <h4>{{ notified_mails_title }}</h4>
+    <h3>{{ notified_mails_title }}</h3>
 
     {{# has_mails }}
         <table id="git-notification-mail-list">

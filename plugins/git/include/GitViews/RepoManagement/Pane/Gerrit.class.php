@@ -119,7 +119,7 @@ class Gerrit extends Pane
 
         $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
 
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
+        $html .= '<h2>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h2>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';

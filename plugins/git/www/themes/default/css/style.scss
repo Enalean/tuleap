@@ -981,5 +981,49 @@ h1, h2, h3 {
 }
 
 .git-per-tags-branches-permissions {
-    margin-bottom: 20px;
+    margin: 0 0 60px;
+
+    .alert {
+        display: inline-block;
+        margin: 20px 0;
+    }
+
+    h4 {
+        color: #888888;
+        font-size: 14px;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+    }
+}
+
+.git-permission-table {
+    min-width: 800px;
+    max-width: 1200px;
+    margin: 0 0 40px;
+
+    > thead > tr {
+        background: #e4e4e4;
+
+        > th {
+            border-bottom: 2px solid #b2b2b2;
+            border-left-color: #d2d2d2;
+            vertical-align: top;
+        }
+    }
+
+    > tbody > tr:first-child > td {
+        border-top: 0;
+    }
+}
+
+.git-default-permission-table {
+    width: auto;
+}
+
+.git-permission-table-selector {
+    width: 250px;
+
+    select {
+        margin: 0;
+    }
 }
