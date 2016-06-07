@@ -34,8 +34,7 @@ class Dao extends DataAccessObject
               AND tracker.id = tracker_field.tracker_id
               AND tracker_field.id = tracker_field_computed.field_id
               AND formElement_type = 'computed'
-              AND fast_compute = 0
-              AND parent_id = 0
+              AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
             ORDER BY group_name";
 
@@ -53,8 +52,7 @@ class Dao extends DataAccessObject
               AND tracker_field.id = tracker_field_computed.field_id
               AND project.group_id= $project_id
               AND formElement_type = 'computed'
-              AND fast_compute = 0
-              AND parent_id = 0
+              AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
             ORDER BY group_name";
 
@@ -73,8 +71,7 @@ class Dao extends DataAccessObject
               AND tracker_field.id = tracker_field_computed.field_id
               AND tracker.id = $tracker_id
               AND formElement_type = 'computed'
-              AND fast_compute = 0
-              AND parent_id = 0
+              AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
             ORDER BY group_name";
 
