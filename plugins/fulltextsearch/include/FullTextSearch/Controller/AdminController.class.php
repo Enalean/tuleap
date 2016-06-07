@@ -56,19 +56,29 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
         $GLOBALS['HTML']->footer(array());
     }
 
-    public function reindexDocman($group_id) {
-        $this->docman_system_event_manager->queueDocmanProjectReindexation($group_id);
+    public function reindexDocman($project_id)
+    {
+        if (! $this->docman_system_event_manager->isProjectReindexationAlreadyQueued($project_id)) {
+            $this->docman_system_event_manager->queueDocmanProjectReindexation($project_id);
+        }
     }
 
-    public function reindexWiki($group_id) {
-        $this->wiki_system_event_manager->queueWikiProjectReindexation($group_id);
+    public function reindexWiki($project_id)
+    {
+        if (! $this->wiki_system_event_manager->isProjectReindexationAlreadyQueued($project_id)) {
+            $this->wiki_system_event_manager->queueWikiProjectReindexation($project_id);
+        }
     }
 
-    public function reindexTrackers($group_id) {
-        $this->tracker_system_event_manager->queueTrackersProjectReindexation($group_id);
+    public function reindexTrackers($project_id)
+    {
+        if (! $this->tracker_system_event_manager->isProjectReindexationAlreadyQueued($project_id)) {
+            $this->tracker_system_event_manager->queueTrackersProjectReindexation($project_id);
+        }
     }
 
-    public function reindexTracker(Tracker $tracker) {
+    public function reindexTracker(Tracker $tracker)
+    {
         $this->tracker_system_event_manager->queueTrackerReindexation($tracker);
     }
 }
