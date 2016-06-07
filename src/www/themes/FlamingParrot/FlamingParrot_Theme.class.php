@@ -107,7 +107,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return false;
     }
 
-    public function header($params) {
+    public function header(array $params) {
         $title = $GLOBALS['sys_name'];
         if (!empty($params['title'])) {
            $title = $params['title'] .' - '. $title;
@@ -383,7 +383,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return '/projects/' . $project->getUnixName() . '/';
     }
 
-    public function footer($params) {
+    public function footer(array $params) {
         if ($this->canShowFooter($params)) {
             $this->render('footer', new FlamingParrot_FooterPresenter($this));
         }

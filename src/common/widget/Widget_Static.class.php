@@ -65,7 +65,7 @@ class Widget_Static extends Widget {
      * Output the widget
      */
     public function display() {
-        $GLOBALS['HTML']->widget($this, null, true, null, false, false, null, null);
+        $GLOBALS['HTML']->displayStaticWidget($this);
     }
 
     /**

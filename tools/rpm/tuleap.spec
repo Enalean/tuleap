@@ -515,6 +515,15 @@ Obsoletes: %{PKG_NAME}-theme-experimental %{PKG_NAME}-theme-steerforge  %{PKG_NA
 %description theme-flamingparrot
 FlamingParrot, default theme starting Tuleap 7
 
+%package theme-burningparrot
+Summary: BurningParrot, default theme starting Tuleap 10
+Group: Development/Tools
+Version: @@THEME_BURNINGPARROT_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: tuleap
+%description theme-burningparrot
+BurningParrot, default theme starting Tuleap 10
+
 #
 # Package setup
 %prep
@@ -1176,6 +1185,10 @@ fi
 %files theme-flamingparrot
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/FlamingParrot
+
+%files theme-burningparrot
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/BurningParrot
 
 #%doc
 #%config
