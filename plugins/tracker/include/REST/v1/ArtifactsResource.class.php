@@ -160,8 +160,6 @@ class ArtifactsResource extends AuthenticatedResource {
             $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
         }
 
-        $this->sendLocationHeader($representation->uri);
-
         return $representation;
     }
 
@@ -436,6 +434,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * @param TrackerReference $tracker   Id of the artifact {@from body}
      * @param array  $values              Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
      * @param array  $values_by_field     Artifact fields values indexed by field {@from body}
+     * @status 201
      * @return ArtifactReference
      */
     protected function post(TrackerReference $tracker, array $values = array(), array $values_by_field = array()) {

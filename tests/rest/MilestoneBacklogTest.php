@@ -151,7 +151,7 @@ class MilestonesBacklogTest extends RestBase {
                 json_encode($post)
             )
         );
-        $this->assertEquals($response_post->getStatusCode(), 200);
+        $this->assertEquals($response_post->getStatusCode(), 201);
 
         $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
         $backlog_items = $response_get->json();
