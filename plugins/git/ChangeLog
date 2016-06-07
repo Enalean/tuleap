@@ -1,3 +1,6 @@
+Version 4.186 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Display writers and rewinders per permission)
+
 Version 4.185 - Tuleap 8.16
     * story #8419: Display repository tags and branches patterns
 
