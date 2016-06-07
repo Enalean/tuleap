@@ -21,29 +21,31 @@
 
 namespace Tuleap\Git\Permissions;
 
+use User_ForgeUGroup;
+
 class FineGrainedPermissionRepresentation
 {
 
     /**
      * @var array
      */
-    private $rewinders_ugroup_ids;
+    private $rewinders_ugroups;
 
     /**
      * @var array
      */
-    private $writers_ugroup_ids;
+    private $writers_ugroups;
     private $pattern;
     private $repository_id;
     private $id;
 
-    public function __construct($id, $repository_id, $pattern, array $writers_ugroup_ids, array $rewinders_ugroup_ids)
+    public function __construct($id, $repository_id, $pattern, array $writers_ugroups, array $rewinders_ugroups)
     {
-        $this->id                   = $id;
-        $this->repository_id        = $repository_id;
-        $this->writers_ugroup_ids   = $writers_ugroup_ids;
-        $this->pattern              = $pattern;
-        $this->rewinders_ugroup_ids = $rewinders_ugroup_ids;
+        $this->id                = $id;
+        $this->repository_id     = $repository_id;
+        $this->pattern           = $pattern;
+        $this->writers_ugroups   = $writers_ugroups;
+        $this->rewinders_ugroups = $rewinders_ugroups;
     }
 
     public function getId()
@@ -61,14 +63,36 @@ class FineGrainedPermissionRepresentation
         return $this->pattern;
     }
 
-    public function getWritersUgroupIds()
+    public function getWritersUgroup()
     {
-        return $this->writers_ugroup_ids;
+        return $this->writers_ugroups;
     }
 
-    public function getRewindersUgroupIds()
+    public function getRewindersUgroup()
     {
-        return $this->rewinders_ugroup_ids;
+        return $this->rewinders_ugroups;
+    }
+
+    public function getWriterNames()
+    {
+        $ugroup_names = array();
+
+        foreach ($this->writers_ugroups as $ugroup) {
+            $ugroup_names[] = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        }
+
+        return implode(', ', $ugroup_names);
+    }
+
+    public function getRewinderNames()
+    {
+        $ugroup_names = array();
+
+        foreach ($this->rewinders_ugroups as $ugroup) {
+            $ugroup_names[] = User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        }
+
+        return implode(', ', $ugroup_names);
     }
 
     public function getDisplayablePattern()

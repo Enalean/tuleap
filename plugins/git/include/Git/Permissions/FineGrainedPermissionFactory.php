@@ -23,18 +23,25 @@
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
+use UGroupManager;
 
 class FineGrainedPermissionFactory
 {
+
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     /**
      * @var FineGrainedDao
      */
     private $dao;
 
-    public function __construct(FineGrainedDao $dao)
+    public function __construct(FineGrainedDao $dao, UGroupManager $ugroup_manager)
     {
-        $this->dao = $dao;
+        $this->dao            = $dao;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     public function getBranchesFineGrainedPermissionsForRepository(GitRepository $repository)
@@ -59,14 +66,44 @@ class FineGrainedPermissionFactory
         return $permissions;
     }
 
+    /**
+     * @return UGroups[]
+     */
+    private function getWritersForPermission($permission_id)
+    {
+        $ugroups = array();
+
+        foreach ($this->dao->searchWriterUgroupIdsForFineGrainedPermissions($permission_id) as $row) {
+            $ugroups[] = $this->ugroup_manager->getById($row['ugroup_id']);
+        }
+
+        return $ugroups;
+    }
+
+    /**
+     * @return UGroups[]
+     */
+    private function getRewindersForPermission($permission_id)
+    {
+        $ugroups = array();
+
+        foreach ($this->dao->searchRewinderUgroupIdsForFineGrainePermissions($permission_id) as $row) {
+            $ugroups[] = $this->ugroup_manager->getById($row['ugroup_id']);
+        }
+
+        return $ugroups;
+    }
+
     private function getInstanceFromRow(array $row)
     {
+        $permission_id = $row['id'];
+
         return new FineGrainedPermissionRepresentation(
-            $row['id'],
+            $permission_id,
             $row['repository_id'],
             $row['pattern'],
-            array(),
-            array()
+            $this->getWritersForPermission($permission_id),
+            $this->getRewindersForPermission($permission_id)
         );
     }
 }

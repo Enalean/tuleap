@@ -79,4 +79,26 @@ class FineGrainedDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function searchWriterUgroupIdsForFineGrainedPermissions($permission_id)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $sql = "SELECT ugroup_id
+                FROM plugin_git_repository_fine_grained_permissions_writers
+                WHERE permission_id = $permission_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchRewinderUgroupIdsForFineGrainePermissions($permission_id)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $sql = "SELECT ugroup_id
+                FROM plugin_git_repository_fine_grained_permissions_rewinders
+                WHERE permission_id = $permission_id";
+
+        return $this->retrieve($sql);
+    }
 }
