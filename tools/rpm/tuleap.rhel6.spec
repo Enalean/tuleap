@@ -956,7 +956,6 @@ fi
 %{APP_DIR}/src/www/file
 %{APP_DIR}/src/www/forum
 %{APP_DIR}/src/www/goto
-%{APP_DIR}/src/www/guidelines
 %{APP_DIR}/src/www/help
 %{APP_DIR}/src/www/include
 %{APP_DIR}/src/www/mail
