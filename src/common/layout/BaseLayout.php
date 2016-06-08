@@ -25,6 +25,23 @@ use Response;
 
 abstract class BaseLayout extends Response
 {
+    /**
+     * The root location for the current theme : '/themes/Tuleap/'
+     */
+    public $root;
+
+    /**
+     * The root location for images : '/themes/Tuleap/images/'
+     */
+    public $imgroot;
+
+    public function __construct($root)
+    {
+        parent::__construct();
+        $this->root     = $root;
+        $this->imgroot  = $root . '/images/';
+    }
+
     abstract public function header(array $params);
     abstract public function footer(array $params);
     abstract public function displayStaticWidget(Widget_Static $widget);

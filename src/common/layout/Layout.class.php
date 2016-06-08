@@ -33,16 +33,6 @@
 class Layout extends Tuleap\Layout\BaseLayout
 {
     /**
-     * The root location for the current theme : '/themes/Tuleap/'
-     */
-    public $root;
-
-    /**
-     * The root location for images : '/themes/Tuleap/images/'
-     */
-    public $imgroot;
-
-    /**
      * Html purifier
      */
     protected $purifier;
@@ -99,7 +89,7 @@ class Layout extends Tuleap\Layout\BaseLayout
      */
     public function __construct($root) {
         // Constructor for parent class...
-        parent::Response();
+        parent::__construct($root);
 
         $this->feeds       = array();
         $this->javascript  = array();
@@ -120,8 +110,6 @@ class Layout extends Tuleap\Layout\BaseLayout
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
 
-        $this->root     = $root;
-        $this->imgroot  = $root . '/images/';
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
