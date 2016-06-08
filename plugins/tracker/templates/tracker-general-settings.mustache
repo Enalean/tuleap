@@ -3,10 +3,10 @@
     <input type="hidden" name="instantiate_for_new_projects" value="0">
 
     <label for="tracker-name">{{ tracker_name_label }} <font color="red">*</font></label>
-    <input id="tracker-name" type="text" name="name" value="{{{ tracker_name }}}">
+    <input id="tracker-name" type="text" name="name" value="{{ tracker_name }}">
 
     <label for="tracker-description">{{ tracker_description_label }} <font color="red">*</font></label>
-    <textarea id="tracker-description" name="description" rows="3" cols="50">{{{ tracker_description }}}</textarea>
+    <textarea id="tracker-description" name="description" rows="3" cols="50">{{ tracker_description }}</textarea>
 
     <label for="tracker-shortname">{{ tracker_shortname_label }} <font color="red">*</font></label>
     <input id="tracker-shortname" type="text" name="item_name" value="{{ tracker_shortname }}" />
@@ -66,11 +66,11 @@
     {{/ enable_insecure_emailgateway }}
 
     <label for="tracker-submit-instructions">{{ submit_instructions_label }}</label>
-    <textarea id="tracker-submit-instructions" name="submit_instructions" rows="3" cols="50">{{{ submit_instructions }}}</textarea>
+    <textarea id="tracker-submit-instructions" name="submit_instructions" rows="3" cols="50">{{ submit_instructions }}</textarea>
     <div class="help">{{ html_tags }}</div>
 
     <label for="tracker-browse-instructions">{{ browse_instructions_label }}</label>
-    <textarea id="tracker-browse-instructions" name="browse_instructions" rows="3" cols="50">{{{ browse_instructions }}}</textarea>
+    <textarea id="tracker-browse-instructions" name="browse_instructions" rows="3" cols="50">{{ browse_instructions }}</textarea>
     <div class="help">{{ html_tags }}</div>
 
     <div class="submit-bar">
