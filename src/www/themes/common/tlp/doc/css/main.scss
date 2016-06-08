@@ -1,0 +1,73 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'src/scss/colors';
+
+@mixin themable($theme-color) {
+    section {
+        p a {
+            color: $theme-color;
+        }
+
+        pre {
+            border-left: 3px solid transparentize($theme-color, .8);
+            background: transparentize($theme-color, .95);
+            color: darken($theme-color, 20%);
+        }
+
+        .code-inline {
+            background: transparentize($theme-color, .95);
+            color: darken($theme-color, 20%);
+        }
+    }
+
+    h1 {
+        color: $theme-color;
+    }
+
+    .main-nav > ul > .nav-item.active > a,
+    .main-nav > ul > .nav-item:hover > a {
+        border-color: $theme-color;
+        color: $theme-color;
+    }
+
+    .sub-nav > ul > .nav-item.active > a,
+    .sub-nav > ul > .nav-item:hover > a {
+        color: $theme-color;
+    }
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+
+    &.orange { @include themable($tlp-theme-orange); }
+    &.blue   { @include themable($tlp-theme-blue);   }
+    &.green  { @include themable($tlp-theme-green);  }
+    &.grey   { @include themable($tlp-theme-grey);   }
+    &.purple { @include themable($tlp-theme-purple); }
+    &.red    { @include themable($tlp-theme-red);    }
+}
+
+.hljs {
+    background: none;
+}
+
+@import 'nav';
+@import 'sections';

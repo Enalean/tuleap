@@ -30,7 +30,7 @@ get_files_to_build() {
         -not -wholename "*/angular/*" \
         -not -wholename "*/js/kanban/*" \
         -not -wholename "*/js/planning-v2/*" \
-        -not -wholename "*/src/www/guidelines/*"
+        -not -wholename "*/src/www/themes/common/tlp/*"
 }
 
 get_css_file() {

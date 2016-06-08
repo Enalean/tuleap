@@ -114,6 +114,9 @@ node:
 	cd $(BASE_DIR)/plugins/frs/www/js/angular &&\
 		npm install &&\
 		bower install --allow-root --config.interactive=false &&\
+		npm run build &&\
+	cd $(BASE_DIR)/src/www/themes/common/tlp &&\
+		npm install &&\
 		npm run build
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep sass
@@ -124,10 +127,17 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep sass
 				-path '*/.svn' -o\
 				-name '*.less' -o\
 				-name '*.scss' -o\
+				-name '.scss-lint.yml' -o\
 				-name ".git" -o\
 				-name ".gitignore" -o\
 				-name ".gitmodules" -o\
 				-path "*/.DS_Store" -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/doc -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/gulpfile.js -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/node_modules -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/package.json -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/README.md -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/src -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
