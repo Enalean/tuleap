@@ -1,3 +1,6 @@
+Version 5.910 - Tuleap 8.16
+    * request #9231: Persistent XSS in the general settings of a tracker
+
 Version 5.909 - Tuleap 8.16
     * request #9209: HTML tags displayed, instead of interpreted, in text field in HTML format
 
