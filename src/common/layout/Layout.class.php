@@ -2520,43 +2520,6 @@ class Layout extends Tuleap\Layout\BaseLayout
         return $output;
     }
 
-    public function getImagePath($src) {
-        return $this->imgroot . $src;
-    }
-
-    /**
-     * Build an img tag
-     *
-     * @param string $src The src of the image "trash.png"
-     * @param array $args The optionnal arguments for the tag ['alt' => 'Beautiful image']
-     * @return string <img src="/themes/Tuleap/images/trash.png" alt="Beautiful image" />
-     */
-    function getImage($src, $args = array()) {
-        return $this->getAbsoluteImage($this->getImagePath($src), $args);
-    }
-
-    /**
-     * Same as getImage but with absolute path to the image.
-     * Usefull for plugin related image for example
-     *
-     * @see getImage
-     */
-    function getAbsoluteImage($src, $args = array()) {
-        $return = '<img src="'. $src .'"';
-        foreach($args as $k => $v) {
-            $return .= ' '.$k.'="'.$v.'"';
-        }
-
-        // insert a border tag if there isn't one
-        if (!isset($args['border']) || !$args['border']) $return .= ' border="0"';
-
-        // insert alt tag if there isn't one
-        if (!isset($args['alt']) || !$args['alt']) $return .= ' alt="'. $src .'"';
-
-        $return .= ' />';
-        return $return;
-    }
-
     /**
      * Return the background color (classname) for priority
      *
