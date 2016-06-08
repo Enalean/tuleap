@@ -35,6 +35,9 @@ abstract class BaseLayout extends Response
      */
     public $imgroot;
 
+    /** @var array */
+    protected $javascript_in_footer = array();
+
     public function __construct($root)
     {
         parent::__construct();
@@ -81,6 +84,31 @@ abstract class BaseLayout extends Response
     public function getImagePath($src)
     {
         return $this->imgroot . $src;
+    }
+
+    /**
+     * Add a Javascript file path that will be included at the end of the HTML page.
+     *
+     * The file will be included in the generated page just before the </body>
+     * markup.
+     *
+     * @param String $file Path (relative to URL root) to the javascript file
+     */
+    public function includeFooterJavascriptFile($file)
+    {
+        $this->javascript_in_footer[] = array('file' => $file);
+    }
+
+    /**
+     * Add a Javascript piece of code to execute in the footer of the page.
+     *
+     * The code will appear just before </body> markup.
+     *
+     * @param String $snippet Javascript code.
+     */
+    public function includeFooterJavascriptSnippet($snippet)
+    {
+        $this->javascript_in_footer[] = array('snippet' => $snippet);
     }
 
     /** @deprecated */

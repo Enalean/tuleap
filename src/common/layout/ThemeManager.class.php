@@ -64,7 +64,7 @@ class ThemeManager
     {
         return $current_user->isSuperUser() && preg_match(
             '`(
-                /admin/
+                ^/admin/
             )`x',
             $_SERVER['REQUEST_URI']
         );

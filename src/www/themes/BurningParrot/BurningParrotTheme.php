@@ -51,7 +51,8 @@ class BurningParrotTheme extends BaseLayout
 
     public function footer(array $params)
     {
-        $this->renderer->renderToPage('footer', array());
+        $footer = new FooterPresenter($this->javascript_in_footer);
+        $this->renderer->renderToPage('footer', $footer);
     }
 
     public function displayStaticWidget(Widget_Static $widget)

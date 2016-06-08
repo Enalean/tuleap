@@ -63,7 +63,6 @@ class Layout extends Tuleap\Layout\BaseLayout
     private $bgpri = array();
 
     var $feeds;
-    protected $javascriptFooter;
 
     protected $breadcrumbs;
     protected $force_breadcrumbs = false;
@@ -95,7 +94,6 @@ class Layout extends Tuleap\Layout\BaseLayout
         $this->javascript  = array();
         $this->breadcrumbs = array();
         $this->toolbar     = array();
-        $this->javascriptFooter = array();
 
         /*
             Set up the priority color array one time only
@@ -829,39 +827,6 @@ class Layout extends Tuleap\Layout\BaseLayout
     }
 
     /**
-     * Add a Javascript file path that will be included at the end of the HTML page.
-     *
-     * The file will be included in the generated page just before the </body>
-     * markup.
-     * Note: the order of call of include*Javascript method is very important.
-     * see includeJavascriptFile for more details
-     *
-     * @see Layout::includeJavascriptFile
-     * @param String $file Path (relative to URL root) the the javascript file
-     *
-     * @return void
-     */
-    function includeFooterJavascriptFile($file) {
-        $this->javascriptFooter[] = array('file' => $file);
-    }
-
-    /**
-     * Add a Javascript piece of code to execute in the footer of the page.
-     *
-     * Codendi will append and execute the code just before </body> markup.
-     * Note: the order of call of include*Javascript method is very important.
-     * see includeJavascriptFile for more details
-     *
-     * @see Layout::includeJavascriptFile
-     * @param String $snippet Javascript code.
-     *
-     * @return void
-     */
-    function includeFooterJavascriptSnippet($snippet) {
-        $this->javascriptFooter[] = array('snippet' => $snippet);
-    }
-
-    /**
      * @return PFUser
      */
     protected function getUser() {
@@ -1330,7 +1295,7 @@ class Layout extends Tuleap\Layout\BaseLayout
      * @see includeFooterJavascriptSnippet
      */
     function displayFooterJavascriptElements() {
-        foreach ($this->javascriptFooter as $js) {
+        foreach ($this->javascript_in_footer as $js) {
             if (isset($js['file'])) {
                 echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
             } else {
