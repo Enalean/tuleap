@@ -123,7 +123,7 @@ class GitExec extends Git_Exec
         $ref_base    = escapeshellarg($ref_base);
         $ref_compare = escapeshellarg($ref_compare);
         $file_path   = escapeshellarg($file_path);
-        $cmd         = "diff --numstat $ref_base $ref_compare -- $file_path";
+        $cmd         = "diff --numstat $ref_base...$ref_compare -- $file_path";
         $output      = array();
 
         $this->gitCmdWithOutput($cmd, $output);
@@ -167,7 +167,7 @@ class GitExec extends Git_Exec
         $file_path = escapeshellarg($file_path);
         $old_rev   = escapeshellarg($old_rev);
         $new_rev   = escapeshellarg($new_rev);
-        $cmd       = "diff -U9999999 $old_rev $new_rev -- $file_path";
+        $cmd       = "diff -U9999999 $old_rev...$new_rev -- $file_path";
 
         $this->gitCmdWithOutput($cmd, $output);
         return $output;
