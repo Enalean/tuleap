@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,32 +75,33 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var bindEditionSwitch = function (element) {
-        $(element).find('.tracker_formelement_edit').on('click', function(event) {
+        $(element).find('.tracker_formelement_edit').on('click', function (event) {
             event.preventDefault();
 
-            var field_id       = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
-            var field_computed = document.getElementsByName("artifact[" + field_id + "]");
-            var stored_value   = document.getElementsByName("stored-value[" + field_id + "]");
-            if (stored_value[0]) {
-                field_computed[0].value = stored_value[0].value;
+            var field_id                       = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
+            var field_computed_is_autocomputed = document.getElementsByName("artifact[" + field_id + "][is_autocomputed]");
+            if (field_computed_is_autocomputed[0] !== undefined && field_computed_is_autocomputed[0] !== undefined) {
+                field_computed_is_autocomputed[0].value = '0';
             }
             toggleField(element);
             focusField(element);
         });
 
-         $(element).find('.auto-compute').on('click', function(event) {
+        $(element).find('.auto-compute').on('click', function () {
             $(element).find('.auto-computed-label').hide();
             $(element).find('.back-to-autocompute').show();
             $(element).find('.tracker_hidden_edition_field').hide();
 
-            var field_id       = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
-            var field_computed = document.getElementsByName("artifact[" + field_id + "]");
-            if (field_computed[0]) {
-                field_computed[0].value = null;
+            var field_id                       = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
+            var field_computed_manual_value    = document.getElementsByName("artifact[" + field_id + "][manual_value]");
+            var field_computed_is_autocomputed = document.getElementsByName("artifact[" + field_id + "][is_autocomputed]");
+            if (field_computed_manual_value[0] !== undefined && field_computed_is_autocomputed[0] !== undefined) {
+                field_computed_manual_value[0].value    = null;
+                field_computed_is_autocomputed[0].value = '1';
             }
             $(element).on('click');
             $(element).removeClass('in-edition');
-         });
+        });
     };
 
     var toggleField = function (element) {

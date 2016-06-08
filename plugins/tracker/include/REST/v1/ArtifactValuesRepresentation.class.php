@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,6 +44,16 @@ class ArtifactValuesRepresentation {
     public $links;
 
     /**
+     * @var boolean {@type boolean} {@required false}
+     */
+    public $is_autocomputed;
+
+    /**
+     * @var mixed {@required false}
+     */
+    public $manual_value;
+
+    /**
      * @return array
      */
     public function toArray() {
@@ -61,6 +71,14 @@ class ArtifactValuesRepresentation {
 
         if ($this->links !== null) {
             $array_representation['links'] = $this->links;
+        }
+
+        if ($this->is_autocomputed !== null) {
+            $array_representation['is_autocomputed'] = $this->is_autocomputed;
+        }
+
+        if ($this->manual_value !== null) {
+            $array_representation['manual_value'] = $this->manual_value;
         }
 
         return $array_representation;

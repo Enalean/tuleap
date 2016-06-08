@@ -1110,10 +1110,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $save_new_value = true;
         }
 
-        if ($submitted_value === Tracker_FormElement_Field_Computed::AUTOCOMPUTE && $this->isAComputedField()) {
-            $submitted_value = "";
-        }
-
         if ($save_new_value) {
             //Save the new value
             if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 1)) {
@@ -1122,11 +1118,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         return $updated;
-    }
-
-    private function isAComputedField()
-    {
-        return $this instanceof Tracker_FormElement_Field_Computed;
     }
 
     protected function getChangesetValueDao()
