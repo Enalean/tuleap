@@ -22,6 +22,7 @@
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
+use Project;
 
 class FineGrainedRetriever
 {
@@ -40,5 +41,12 @@ class FineGrainedRetriever
         $row = $this->dao->searchRepositoryUseFineGrainedPermissions($repository->getId());
 
         return ($row && isset($row['repository_id']));
+    }
+
+    public function doesProjectUseFineGrainedPermissions(Project $project)
+    {
+        $row = $this->dao->searchProjectUseFineGrainedPermissions($project->getID());
+
+        return ($row && isset($row['project_id']));
     }
 }

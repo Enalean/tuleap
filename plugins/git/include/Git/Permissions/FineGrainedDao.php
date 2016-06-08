@@ -183,4 +183,35 @@ class FineGrainedDao extends DataAccessObject
 
         return $this->retrieveIds($sql);
     }
+
+    public function enableProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "REPLACE INTO plugin_git_default_fine_grained_permissions_enabled (project_id)
+                VALUES ($project_id)";
+
+        return $this->update($sql);
+    }
+
+    public function disableProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "DELETE FROM plugin_git_default_fine_grained_permissions_enabled
+                WHERE project_id = $project_id";
+
+        return $this->update($sql);
+    }
+
+    public function searchProjectUseFineGrainedPermissions($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT project_id
+                FROM plugin_git_default_fine_grained_permissions_enabled
+                WHERE project_id = $project_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

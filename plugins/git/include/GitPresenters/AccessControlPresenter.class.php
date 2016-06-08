@@ -151,6 +151,8 @@ class GitPresenters_AccessControlPresenter
         );
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
+
+        $this->can_add_fine_grained_permissions = true;
     }
 
     public function has_branches_permissions()

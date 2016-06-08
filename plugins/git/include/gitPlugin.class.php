@@ -1291,7 +1291,8 @@ class GitPlugin extends Plugin {
     private function getGitPermissionsManager() {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            $this->getFineGrainedUpdater()
         );
     }
 

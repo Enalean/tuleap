@@ -206,3 +206,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions_rewind
     ugroup_id int(11) NOT NULL,
     PRIMARY KEY (permission_id, ugroup_id)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_enabled (
+    project_id int(11) NOT NULL PRIMARY KEY
+);
