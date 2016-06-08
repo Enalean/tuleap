@@ -1,3 +1,6 @@
+Version 5.911 - Tuleap 8.16
+    * story #9090: Warn when target field is different from field name
+
 Version 5.910 - Tuleap 8.16
     * request #9231: Persistent XSS in the general settings of a tracker
 
