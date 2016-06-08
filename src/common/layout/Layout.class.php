@@ -30,9 +30,8 @@
  * Geoffrey Herteg, August 29, 2000
  *
  */
-class Layout extends Response {
-
-
+class Layout extends Tuleap\Layout\BaseLayout
+{
     /**
      * The root location for the current theme : '/themes/Tuleap/'
      */
@@ -696,7 +695,8 @@ class Layout extends Response {
         }
     }
 
-    public function isLabFeature() {
+    public function isLabFeature()
+    {
         return false;
     }
 
@@ -943,6 +943,28 @@ class Layout extends Response {
             $feedback = '<H3><span class="feedback">'.$GLOBALS['feedback'].'</span></H3>';
         }
         return $feedback;
+    }
+
+    public function displayStaticWidget(Widget_Static $widget)
+    {
+        $layout_id           = null;
+        $readonly            = true;
+        $column_id           = null;
+        $is_minimized        = false;
+        $display_preferences = false;
+        $owner_id            = null;
+        $owner_type          = null;
+
+        $this->widget(
+            $widget,
+            $layout_id,
+            $readonly,
+            $column_id,
+            $is_minimized,
+            $display_preferences,
+            $owner_id,
+            $owner_type
+        );
     }
 
     function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type) {
@@ -1883,7 +1905,7 @@ class Layout extends Response {
         echo $this->getNotificationPlaceholder();
     }
 
-    function header($params) {
+    function header(array $params) {
         global $Language;
         $this->generic_header($params);
 
@@ -2006,7 +2028,7 @@ class Layout extends Response {
              </html>';
     }
 
-    function footer($params) {
+    function footer(array $params) {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
         }
