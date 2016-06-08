@@ -121,8 +121,8 @@ if ($nb_proj > 0) {
 ?>
 
 <p>
-<br><input type="submit" name="Delete" class="btn btn-danger" value="<?php echo $Language->getText('global','btn_delete'); ?>">
-<input type="submit" name="Cancel" class="btn" value="<?php echo $Language->getText('global','btn_cancel'); ?>">
+<br><input type="submit" name="Delete" class="btn btn-danger tlp-button-danger" value="<?php echo $Language->getText('global','btn_delete'); ?>">
+<input type="submit" name="Cancel" class="btn tlp-button-secondary" value="<?php echo $Language->getText('global','btn_cancel'); ?>">
 </form>
 
 <?php

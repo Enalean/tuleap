@@ -121,13 +121,13 @@ echo '<form name="groupsrch" action="grouplist.php" method="get" class="form-hor
         </tr>
        </table>
        <div align="center">
-         <button type="submit" class="btn btn-primary">'.$search_purify.'
+         <button type="submit" class="btn btn-primary tlp-button-primary">'.$search_purify.'
            <i class="icon-search"></i>
          </button>
        </div>
       </form>';
 echo '<form action="grouplist.php?group_name_search='.$group_name_search_purify.'&export&status='.$grp_status.'" method="post">';
-    echo '<input type="submit" class="btn" name="exp-csv" value="'.$export.'">';
+    echo '<input type="submit" class="btn tlp-button-secondary" name="exp-csv" value="'.$export.'">';
 echo '</form>';
 ?>
 

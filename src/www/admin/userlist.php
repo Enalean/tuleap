@@ -138,7 +138,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
         $user_status = "ANY";
     }
     echo '<form action="/admin/userlist.php?user_name_search='.$hp->purify($user_name_search).'&export&current_sort_header='.$hp->purify($sort_params["sort_header"]).'&sort_order='.$hp->purify($sort_params["order"]).'&status_values='.$hp->purify($user_status).'" method="post">';
-        echo'<input type="submit" class="btn" name="exp-csv" value="Export CSV">';
+        echo'<input type="submit" class="btn tlp-button-secondary" name="exp-csv" value="Export CSV">';
     echo '</form>';
 
     $odd_even = array('boxitem', 'boxitemalt');
@@ -345,7 +345,7 @@ echo '<form name="usersrch" action="userlist.php" method="get" class="form-horiz
         </tr>
        </table>
        <div align="center">
-         <button type="submit" class="btn btn-primary">'.$search_purify.'
+         <button type="submit" class="btn btn-primary tlp-button-primary">'.$search_purify.'
            <i class="icon-search"></i>
          </button>
        </div>

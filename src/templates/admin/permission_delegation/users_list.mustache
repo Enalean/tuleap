@@ -28,12 +28,12 @@
             <div class="left-actions">
                 <div class="input-append">
                     <input type="text" name="user" id="add-user">
-                    <input type="submit" class="btn btn-primary" name="add-user" value="{{ users_action_add }}" />
+                    <input type="submit" class="btn btn-primary tlp-button-primary" name="add-user" value="{{ users_action_add }}" />
                 </div>
             </div>
             <div class="right-actions">
                 {{# has_users }}
-                    <input type="submit" id="delete-users" class="btn btn-danger" disabled="disabled" name="remove-users" value="{{ users_action_delete }}"/>
+                    <input type="submit" id="delete-users" class="btn btn-danger tlp-button-danger" disabled="disabled" name="remove-users" value="{{ users_action_delete }}"/>
                 {{/ has_users }}
             </div>
             <div style="clear: both"></div>

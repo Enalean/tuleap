@@ -12,7 +12,7 @@
                 {{/ groups }}
 
                 <li>
-                    <button id="add-group" class="btn"><i class="icon-plus"></i> {{ group_action_add }}</button>
+                    <button id="add-group" class="btn tlp-button-secondary"><i class="icon-plus"></i> {{ group_action_add }}</button>
                 </li>
             </ul>
 
@@ -22,8 +22,8 @@
                     <div class="span12">
                         <h2>
                             {{ title }}
-                            <button id="edit-group" class="btn btn-small" data-group-id="{{ id }}"><i class="icon-pencil"></i> {{ group_action_edit }}</button>
-                            <button id="delete-group" class="btn btn-small btn-danger" data-group-id="{{ id }}"><i class="icon-trash"></i> {{ group_action_delete }}</button>
+                            <button id="edit-group" class="btn btn-small tlp-button-secondary tlp-button-small" data-group-id="{{ id }}"><i class="icon-pencil"></i> {{ group_action_edit }}</button>
+                            <button id="delete-group" class="btn btn-small btn-danger tlp-button-danger tlp-button-small" data-group-id="{{ id }}"><i class="icon-trash"></i> {{ group_action_delete }}</button>
                         </h2>
                         {{# has_description }}
                             <p class="description">{{ description }}</p>
@@ -40,6 +40,6 @@
         </div>
     {{/ has_groups }}
     {{^ has_groups }}
-        <p class="no-group">{{ no_group }} <button id="add-group" class="btn btn-primary"><i class="icon-plus"></i> {{ group_action_add }}</button></p>
+        <p class="no-group">{{ no_group }} <button id="add-group" class="btn btn-primary tlp-button-primary"><i class="icon-plus"></i> {{ group_action_add }}</button></p>
     {{/ has_groups }}
 </div>

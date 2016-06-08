@@ -364,7 +364,7 @@ foreach($entry_label as $key => $label) {
 
 </table>
 
-<INPUT type="submit" name="Update_Unix" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_update'); ?>">
+<INPUT type="submit" name="Update_Unix" class="btn btn-primary tlp-button-primary" value="<?php echo $Language->getText('global','btn_update'); ?>">
 
 </FORM>
 

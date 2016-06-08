@@ -147,7 +147,7 @@ if (db_numrows($res_grp) < 1) {
         <?php echo $csrf_token->fetchHTMLInput() ?>
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
+        <INPUT type="submit" name="submit" class="btn tlp-button-secondary" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
         </FORM>
         </TD>
     
@@ -158,7 +158,7 @@ if (db_numrows($res_grp) < 1) {
         <?php echo $csrf_token->fetchHTMLInput() ?>
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
+        <INPUT type="submit" name="submit" class="btn tlp-button-secondary" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
         </FORM>
             </TD>
             </TR>
@@ -178,7 +178,7 @@ if (db_numrows($res_grp) < 1) {
         ' . $csrf_token->fetchHTMLInput() . '
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
-        <INPUT type="submit" name="submit" class="btn btn-primary" value="'.$Language->getText('admin_approve_pending','approve_all').'">
+        <INPUT type="submit" name="submit" class="btn btn-primary tlp-button-primary" value="'.$Language->getText('admin_approve_pending','approve_all').'">
         </FORM>
         </center>
         ';
