@@ -80,15 +80,14 @@ class ThemeManager
         return $theme;
     }
 
-    public function getStandardTheme($name)
+    private function getStandardTheme($name)
     {
         if ($this->themeExists($GLOBALS['sys_themeroot'], $name)) {
             $GLOBALS['sys_is_theme_custom'] = false;
             $GLOBALS['sys_user_theme'] = $name;
             $path = $this->getThemeClassPath($GLOBALS['sys_themeroot'], $name);
-            include_once $path;
-            $klass = $this->getThemeClassName($name, $path);
-            return new $klass('/themes/'.$name);
+
+            return $this->instantiateTheme($name, $path, '/themes/'.$name);
         }
         return false;
     }
@@ -99,11 +98,23 @@ class ThemeManager
             $GLOBALS['sys_is_theme_custom'] = true;
             $GLOBALS['sys_user_theme'] = $name;
             $path = $this->getThemeClassPath($GLOBALS['sys_custom_themeroot'], $name);
-            include_once $path;
-            $klass = $this->getThemeClassName($name, $path);
-            return new $klass('/custom/'.$name);
+
+            return $this->instantiateTheme($name, $path, '/custom/'.$name);
         }
         return false;
+    }
+
+    private function instantiateTheme($name, $path, $webroot)
+    {
+        if (preg_match('`'. preg_quote(self::$LEGACY_EXTENSION) .'$`', $path)) {
+            $klass = $name . '_Theme';
+            include_once $path;
+        } else {
+            $klass = "Tuleap\\Theme\\{$name}\\{$name}Theme";
+            include_once dirname($path) . '/autoload.php';
+        }
+
+        return new $klass($webroot);
     }
 
     private function themeExists($base_dir, $name)
@@ -114,15 +125,6 @@ class ThemeManager
     private function getThemeClassPath($base_dir, $name)
     {
         return $this->getThemeBasePath($base_dir, $name) . DIRECTORY_SEPARATOR . $this->getThemeFilename($base_dir, $name);
-    }
-
-    private function getThemeClassName($name, $path)
-    {
-        if (preg_match('`'. preg_quote(self::$LEGACY_EXTENSION) .'$`', $path)) {
-            return $name . '_Theme';
-        }
-
-        return "Tuleap\\Theme\\{$name}\\{$name}Theme";
     }
 
     private function getThemeBasePath($base_dir, $name)

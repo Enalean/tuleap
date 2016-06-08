@@ -42,7 +42,7 @@ class Response {
     /**
     * Constructor
     */
-    function Response() {
+    public function Response() {
         if (session_hash()) {
             $dao = $this->getFeedbackDao();
             $dar = $dao->search(session_hash());

@@ -27,8 +27,9 @@ class BurningParrotTheme extends BaseLayout
     /** @var \MustacheRenderer */
     private $renderer;
 
-    public function __construct()
+    public function __construct($root)
     {
+        parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
     }
 
@@ -39,10 +40,18 @@ class BurningParrotTheme extends BaseLayout
 
     public function header(array $params)
     {
+        $title = $GLOBALS['sys_name'];
+        if (! empty($params['title'])) {
+            $title = $params['title'] .' - '. $title;
+        }
+
+        $header = new HeaderPresenter($title, $this->imgroot);
+        $this->renderer->renderToPage('header', $header);
     }
 
     public function footer(array $params)
     {
+        $this->renderer->renderToPage('footer', array());
     }
 
     public function displayStaticWidget(Widget_Static $widget)

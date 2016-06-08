@@ -64,6 +64,10 @@ doc: ## Build CLI documentation
 autoload:
 	@echo "Generate core"
 	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
+	@for path in `ls src/www/themes | egrep -v "^Tuleap|^common|^FlamingParrot"`; do \
+	     echo "Generate theme $$path"; \
+	     (cd "src/www/themes/$$path/"; phpab -q --compat -o autoload.php .) \
+        done;
 	@echo "Generate tests"
 	@(cd tests/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
