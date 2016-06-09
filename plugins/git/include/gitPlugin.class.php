@@ -29,6 +29,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1413,7 +1414,8 @@ class GitPlugin extends Plugin {
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
     }
 
-    public function register_project_creation($params) {
+    public function register_project_creation($params)
+    {
         $this->getPermissionsManager()->duplicateWithStaticMapping(
                 $params['template_id'],
                 $params['group_id'],
@@ -1421,7 +1423,22 @@ class GitPlugin extends Plugin {
                 $params['ugroupsMapping']
         );
 
+        $this->getDefaultFineGrainedPermissionReplicator()->replicate(
+            $this->getProjectManager()->getProject($params['template_id']),
+            $params['group_id'],
+            $params['ugroupsMapping']
+        );
+
         $this->getMirrorDataMapper()->duplicate($params['template_id'], $params['group_id']);
+    }
+
+    private function getDefaultFineGrainedPermissionReplicator()
+    {
+        return new DefaultFineGrainedPermissionReplicator(
+            new FineGrainedDao(),
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getDefaultFineGrainedPermissionSaver()
+        );
     }
 
     /** @see Event::GET_PROJECTID_FROM_URL */

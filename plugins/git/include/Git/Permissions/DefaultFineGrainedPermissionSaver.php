@@ -40,14 +40,14 @@ class DefaultFineGrainedPermissionSaver
 
     public function saveTagPermission(DefaultFineGrainedPermissionRepresentation $permission)
     {
-        $pattern = self::TAG_PATTERN_PREFIX . $permission->getPattern();
+        $pattern = self::TAG_PATTERN_PREFIX . $permission->getPatternWithoutPrefix();
 
         return $this->save($permission, $pattern);
     }
 
     public function saveBranchPermission(DefaultFineGrainedPermissionRepresentation $permission)
     {
-        $pattern = self::BRANCH_PATTERN_PREFIX . $permission->getPattern();
+        $pattern = self::BRANCH_PATTERN_PREFIX . $permission->getPatternWithoutPrefix();
 
         return $this->save($permission, $pattern);
     }
