@@ -36,6 +36,7 @@ class Dao extends DataAccessObject
               AND formElement_type = 'computed'
               AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
+              AND deletion_date IS NULL
             ORDER BY group_name";
 
         return $this->retrieve($sql);
@@ -54,6 +55,7 @@ class Dao extends DataAccessObject
               AND formElement_type = 'computed'
               AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
+              AND deletion_date IS NULL
             ORDER BY group_name";
 
         return $this->retrieve($sql);
@@ -73,6 +75,7 @@ class Dao extends DataAccessObject
               AND formElement_type = 'computed'
               AND (fast_compute = 0 OR target_field_name <> tracker_field.name)
               AND use_it = 1
+              AND deletion_date IS NULL
             ORDER BY group_name";
 
         return $this->retrieve($sql);
