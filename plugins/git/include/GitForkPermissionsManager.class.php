@@ -154,8 +154,9 @@ class GitForkPermissionsManager {
         $can_use_fine_grained_permissions     = false;
         $are_fine_grained_permissions_defined = false;
 
-        $branches_permissions = array();
-        $tags_permissions     = array();
+        $branches_permissions     = array();
+        $tags_permissions         = array();
+        $new_fine_grained_ugroups = array();
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
@@ -169,7 +170,8 @@ class GitForkPermissionsManager {
             $are_fine_grained_permissions_defined,
             $can_use_fine_grained_permissions,
             $branches_permissions,
-            $tags_permissions
+            $tags_permissions,
+            $new_fine_grained_ugroups
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -206,7 +208,8 @@ class GitForkPermissionsManager {
             $are_fine_grained_permissions_defined,
             $can_use_fine_grained_permissions,
             $branches_permissions,
-            $tags_permissions
+            $tags_permissions,
+            $this->getAllOptions($project)
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -227,5 +230,10 @@ class GitForkPermissionsManager {
     private function getDefaultOptions(Project $project, $permission)
     {
         return $this->builder->getDefaultOptions($project, $permission);
+    }
+
+    private function getAllOptions(Project $project)
+    {
+        return $this->builder->getAllOptions($project);
     }
 }

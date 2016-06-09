@@ -21,10 +21,17 @@
 
 require_once 'www/project/admin/permissions.php';
 
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+
 /**
  * This class manages permissions for the Git service
  */
 class GitPermissionsManager {
+
+    /**
+     * @var FineGrainedUpdater
+     */
+    private $fine_grained_updater;
 
     const REQUEST_KEY = 'default_access_rights';
 
@@ -43,10 +50,15 @@ class GitPermissionsManager {
      */
     private $permissions_manager;
 
-    public function __construct(Git_PermissionsDao $git_permission_dao, Git_SystemEventManager $git_system_event_manager) {
+    public function __construct(
+        Git_PermissionsDao $git_permission_dao,
+        Git_SystemEventManager $git_system_event_manager,
+        FineGrainedUpdater $fine_grained_updater
+    ) {
         $this->permissions_manager      = PermissionsManager::instance();
         $this->git_permission_dao       = $git_permission_dao;
         $this->git_system_event_manager = $git_system_event_manager;
+        $this->fine_grained_updater     = $fine_grained_updater;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project) {
@@ -157,6 +169,12 @@ class GitPermissionsManager {
             $rewind_ugroup_ids,
             Git::DEFAULT_PERM_WPLUS
         );
+
+        if ($request->get('use-fine-grained-permissions')) {
+            $this->fine_grained_updater->enableProject($project);
+        } else {
+            $this->fine_grained_updater->disableProject($project);
+        }
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,

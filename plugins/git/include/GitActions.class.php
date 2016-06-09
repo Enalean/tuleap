@@ -27,6 +27,7 @@ use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 
 /**
  * GitActions
@@ -34,6 +35,11 @@ use Tuleap\Git\Permissions\FineGrainedUpdater;
  * @author Guillaume Storchi
  */
 class GitActions extends PluginActions {
+
+    /**
+     * @var FineGrainedPermissionSaver
+     */
+    private $fine_grained_permission_saver;
 
     /**
      * @var FineGrainedUpdater
@@ -136,29 +142,31 @@ class GitActions extends PluginActions {
         MigrationHandler $migration_handler,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         WebhookDao $webhook_dao,
-        FineGrainedUpdater $fine_grained_updater
+        FineGrainedUpdater $fine_grained_updater,
+        FineGrainedPermissionSaver $fine_grained_permission_saver
     ) {
         parent::__construct($controller);
-        $this->git_system_event_manager   = $system_event_manager;
-        $this->factory                    = $factory;
-        $this->manager                    = $manager;
-        $this->gerrit_server_factory      = $gerrit_server_factory;
-        $this->driver_factory             = $driver_factory;
-        $this->gerrit_usermanager         = $gerrit_usermanager;
-        $this->project_creator            = $project_creator;
-        $this->template_factory           = $template_factory;
-        $this->project_manager            = $project_manager;
-        $this->git_permissions_manager    = $git_permissions_manager;
-        $this->url_manager                = $url_manager;
-        $this->logger                     = $logger;
-        $this->backend_gitolite           = $backend_gitolite;
-        $this->mirror_data_mapper         = $mirror_data_mapper;
-        $this->history_dao                = $history_dao;
-        $this->mirror_updater             = $mirror_updater;
-        $this->migration_handler          = $migration_handler;
-        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
-        $this->webhook_dao                = $webhook_dao;
-        $this->fine_grained_updater       = $fine_grained_updater;
+        $this->git_system_event_manager      = $system_event_manager;
+        $this->factory                       = $factory;
+        $this->manager                       = $manager;
+        $this->gerrit_server_factory         = $gerrit_server_factory;
+        $this->driver_factory                = $driver_factory;
+        $this->gerrit_usermanager            = $gerrit_usermanager;
+        $this->project_creator               = $project_creator;
+        $this->template_factory              = $template_factory;
+        $this->project_manager               = $project_manager;
+        $this->git_permissions_manager       = $git_permissions_manager;
+        $this->url_manager                   = $url_manager;
+        $this->logger                        = $logger;
+        $this->backend_gitolite              = $backend_gitolite;
+        $this->mirror_data_mapper            = $mirror_data_mapper;
+        $this->history_dao                   = $history_dao;
+        $this->mirror_updater                = $mirror_updater;
+        $this->migration_handler             = $migration_handler;
+        $this->gerrit_can_migrate_checker    = $gerrit_can_migrate_checker;
+        $this->webhook_dao                   = $webhook_dao;
+        $this->fine_grained_updater          = $fine_grained_updater;
+        $this->fine_grained_permission_saver = $fine_grained_permission_saver;
     }
 
     protected function getText($key, $params = array()) {
@@ -780,8 +788,16 @@ class GitActions extends PluginActions {
     /**
      * This method allows one to save any repository attribues changes from the web interface.
      */
-    public function save( $projectId, $repoId, $repoAccess, $repoDescription, $pane, $enable_fine_grained_permissions)
-    {
+    public function save(
+        $projectId,
+        $repoId,
+        $repoAccess,
+        $repoDescription,
+        $pane,
+        $enable_fine_grained_permissions,
+        array $added_branches_permissions,
+        array $added_tags_permissions
+    ) {
         $controller = $this->getController();
         if ( empty($repoId) ) {
             $this->addError('actions_params_error');
@@ -832,6 +848,14 @@ class GitActions extends PluginActions {
                 $this->fine_grained_updater->enableRepository($repository);
             } else {
                 $this->fine_grained_updater->disableRepository($repository);
+            }
+
+            foreach ($added_branches_permissions as $added_branch_permission) {
+                $this->fine_grained_permission_saver->saveBranchPermission($added_branch_permission);
+            }
+
+            foreach ($added_tags_permissions as $added_tag_permission) {
+                $this->fine_grained_permission_saver->saveTagPermission($added_tag_permission);
             }
 
             $this->git_system_event_manager->queueRepositoryUpdate($repository);

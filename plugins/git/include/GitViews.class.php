@@ -663,8 +663,18 @@ class GitViews extends PluginViews {
             $pane_mirroring      = true;
         }
 
-        $are_fine_grained_permissions_defined = false;
-        $can_use_fine_grained_permissions     = false;
+        $user = UserManager::instance()->getCurrentUser();
+
+        $can_use_fine_grained_permissions = $user->useLabFeatures() &&
+            $this->git_permissions_manager->userIsGitAdmin($user, $this->project);
+
+        $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions(
+            $this->project
+        );
+
+        $branches_permissions     = array();
+        $tags_permissions         = array();
+        $new_fine_grained_ugroups = array();
 
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project_id,
@@ -677,7 +687,10 @@ class GitViews extends PluginViews {
             $pane_access_control,
             $pane_mirroring,
             $are_fine_grained_permissions_defined,
-            $can_use_fine_grained_permissions
+            $can_use_fine_grained_permissions,
+            $branches_permissions,
+            $tags_permissions,
+            $new_fine_grained_ugroups
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

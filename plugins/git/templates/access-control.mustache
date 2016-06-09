@@ -16,21 +16,21 @@
     <tbody>
         <tr>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ read_select_box_id }}" name="{{ read_select_box_id }}[]" size="8" class="plugin_git_permissions_select">
+                <select multiple="multiple" id="{{ read_select_box_id }}" name="{{ read_select_box_id }}[]" size="6" class="plugin_git_permissions_select">
                     {{# read_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ read_options }}
                 </select>
             </td>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ write_select_box_id }}" name="{{ write_select_box_id }}[]" size="8" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
+                <select multiple="multiple" id="{{ write_select_box_id }}" name="{{ write_select_box_id }}[]" size="6" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
                     {{# write_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ write_options }}
                 </select>
             </td>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ rewrite_select_box_id }}" name="{{ rewrite_select_box_id }}[]" size="8" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
+                <select multiple="multiple" id="{{ rewrite_select_box_id }}" name="{{ rewrite_select_box_id }}[]" size="6" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
                     {{# rewrite_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ rewrite_options }}
@@ -55,7 +55,7 @@
         <p class="alert">{{ fine_grained_permissions_warning }}</p>
 
         <h4>{{ branches_title }}</h4>
-        <table class="table table-bordered git-permission-table">
+        <table class="table table-bordered git-permission-table git-fine-grained-permissions-branch">
             <thead>
                 <tr>
                     <th>{{ pattern_column }}</th>
@@ -82,8 +82,12 @@
             </tbody>
         </table>
 
+        {{# can_add_fine_grained_permissions }}
+        <button class="btn add-fine-grained-permission" data-type="branch">{{ add_branch_permission }}</button>
+        {{/ can_add_fine_grained_permissions }}
+
         <h4>{{ tags_title }}</h4>
-        <table class="table table-bordered git-permission-table">
+        <table class="table table-bordered git-permission-table git-fine-grained-permissions-tag">
             <thead>
                 <tr>
                     <th>{{ pattern_column }}</th>
@@ -109,6 +113,17 @@
                 {{/ has_tags_permissions }}
             </tbody>
         </table>
+
+        {{# can_add_fine_grained_permissions }}
+        <button class="btn add-fine-grained-permission" data-type="tag">{{ add_tag_permission }}</button>
+        {{/ can_add_fine_grained_permissions }}
+
     {{/ are_fine_grained_permissions_defined }}
 </div>
+
+<select id="add-fine-grained-permission-template" class="plugin_git_permissions_select" multiple="multiple" size="6">
+    {{# new_fine_grained_ugroups }}
+    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+    {{/ new_fine_grained_ugroups }}
+</select>
 {{/ can_use_fine_grained_permissions }}
