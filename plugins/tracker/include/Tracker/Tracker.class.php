@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011, 2012, 2013, 2014, 2015, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -2714,7 +2714,6 @@ EOS;
                         $this->displayAdminCSVImportHeader($layout, $title, array());
 
                         echo '<h2>'. $title .'</h2>';
-
                         //body
                         if (count($lines) > 1) {
                             $html_table = '';
@@ -2905,8 +2904,8 @@ EOS;
         $artifact = null;
         $hp       = Codendi_HTMLPurifier::instance();
 
-        $unknown_fields = array();
-        $error_nature   = array();
+        $unknown_fields   = array();
+        $error_nature     = array();
         foreach ($lines as $cpt_line => $line) {
             $data = array();
             foreach ($header_line as $idx => $field_name) {
@@ -2918,6 +2917,10 @@ EOS;
                         $column_name = $field_name;
                         $field_name  = explode(" ", $field_name);
                         $field       = $fef->getUsedFieldByName($this->getId(), $field_name[0]);
+                    }
+
+                    if ($field && ! $field->isCSVImportable()) {
+                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field_name));
                     }
 
                     if (! $field) {
@@ -2945,7 +2948,6 @@ EOS;
                             )
                         );
                         if ($line[$idx]!='') {
-
                             $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
 
                             if ($data[$field->getId()] === null) {
@@ -3045,7 +3047,8 @@ EOS;
      *
      * @return boolean true if import succeed, false otherwise
      */
-    protected function importFromCSV(Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $header, $lines) {
+    protected function importFromCSV(Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $header, $lines)
+    {
         $is_error = false;
         if (count($lines) >= 1) {
             if ($request->exist('notify') && $request->get('notify') == 'ok') {
@@ -3064,8 +3067,12 @@ EOS;
                 foreach ($data_line as $idx => $data_cell) {
                     if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
                         $field = $fields[$idx];
-                        $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
-                    } else  {
+                        if ($field->isCSVImportable()) {
+                            $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
+                        } else {
+                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field->getName()));
+                        }
+                    } else {
                         // else: this cell is an 'aid' cell
                         if ($data_cell) {
                             $mode = 'update';
@@ -3105,7 +3112,7 @@ EOS;
                     }
                 }
             }
-            if ( ! $is_error) {
+            if (! $is_error) {
                 if ($nb_artifact_creation > 0) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'nb_created_import', array($nb_artifact_creation)));
                 }

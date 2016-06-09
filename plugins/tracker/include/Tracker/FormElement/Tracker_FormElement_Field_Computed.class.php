@@ -96,8 +96,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $this->cache_specific_properties = null;
     }
 
-    public function useFastCompute()
+    public function isCSVImportable()
     {
+        return false;
+    }
+
+    private function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
 
@@ -386,10 +390,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return ($value !== null) ? $value : "-";
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
         $artifact     = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
-        return $this->getComputedValue($current_user, $artifact);
+
+        $changeset = $this->getTrackerChangesetFactory()->getChangeset($artifact, $changeset_id);
+        return $this->getValueForChangeset($changeset, $current_user);
     }
 
     public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
@@ -407,7 +414,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->getFullRESTValue($user, $changeset);
     }
 
-    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
         $artifact_field_value_full_representation = new $classname_with_namespace;
         $artifact_field_value_full_representation->build(
@@ -532,6 +540,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             TrackerFactory::instance(),
             Tracker_FormElementFactory::instance()
         );
+    }
+
+    private function getTrackerChangesetFactory()
+    {
+        $factory_builder = new Tracker_Artifact_ChangesetFactoryBuilder();
+        return $factory_builder::build();
     }
 
     /**
