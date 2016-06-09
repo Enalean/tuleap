@@ -1,3 +1,6 @@
+Version 5.912 - Tuleap 8.16
+    * request #9237 computed field v2 too much warning
+
 Version 5.911 - Tuleap 8.16
     * story #9090: Warn when target field is different from field name
 
