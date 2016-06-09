@@ -122,8 +122,6 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         );
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
-
-        $this->can_add_fine_grained_permissions = false;
     }
 
     public function is_control_limited()

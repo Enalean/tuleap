@@ -27,6 +27,8 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1211,8 +1213,21 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedUpdater(),
             $this->getFineGrainedFactory(),
             $this->getFineGrainedRetriever(),
-            $this->getFineGrainedPermissionSaver()
+            $this->getFineGrainedPermissionSaver(),
+            $this->getDefaultFineGrainedPermissionFactory()
         );
+    }
+
+    private function getDefaultFineGrainedPermissionSaver()
+    {
+        $dao = new FineGrainedDao();
+        return new DefaultFineGrainedPermissionSaver($dao);
+    }
+
+    private function getDefaultFineGrainedPermissionFactory()
+    {
+        $dao = new FineGrainedDao();
+        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager());
     }
 
     /**
@@ -1292,7 +1307,9 @@ class GitPlugin extends Plugin {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->getGitSystemEventManager(),
-            $this->getFineGrainedUpdater()
+            $this->getFineGrainedUpdater(),
+            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getDefaultFineGrainedPermissionFactory()
         );
     }
 

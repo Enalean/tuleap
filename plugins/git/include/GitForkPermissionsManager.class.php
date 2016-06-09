@@ -156,7 +156,7 @@ class GitForkPermissionsManager {
 
         $branches_permissions     = array();
         $tags_permissions         = array();
-        $new_fine_grained_ugroups = array();
+        $new_fine_grained_ugroups = $this->getAllOptions($project);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(

@@ -81,10 +81,7 @@
                 {{/ has_branches_permissions }}
             </tbody>
         </table>
-
-        {{# can_add_fine_grained_permissions }}
         <button class="btn add-fine-grained-permission" data-type="branch">{{ add_branch_permission }}</button>
-        {{/ can_add_fine_grained_permissions }}
 
         <h4>{{ tags_title }}</h4>
         <table class="table table-bordered git-permission-table git-fine-grained-permissions-tag">
@@ -113,10 +110,7 @@
                 {{/ has_tags_permissions }}
             </tbody>
         </table>
-
-        {{# can_add_fine_grained_permissions }}
         <button class="btn add-fine-grained-permission" data-type="tag">{{ add_tag_permission }}</button>
-        {{/ can_add_fine_grained_permissions }}
 
     {{/ are_fine_grained_permissions_defined }}
 </div>
