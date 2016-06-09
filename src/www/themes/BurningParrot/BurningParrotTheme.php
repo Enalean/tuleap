@@ -21,15 +21,20 @@ namespace Tuleap\Theme\BurningParrot;
 use Tuleap\Layout\BaseLayout;
 use Widget_Static;
 use TemplateRendererFactory;
+use PFUser;
 
 class BurningParrotTheme extends BaseLayout
 {
     /** @var \MustacheRenderer */
     private $renderer;
 
-    public function __construct($root)
+    /** @var PFUser */
+    private $user;
+
+    public function __construct($root, PFUser $user)
     {
         parent::__construct($root);
+        $this->user     = $user;
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
     }
 
@@ -45,7 +50,7 @@ class BurningParrotTheme extends BaseLayout
             $title = $params['title'] .' - '. $title;
         }
 
-        $header = new HeaderPresenter($title, $this->imgroot);
+        $header = new HeaderPresenter($this->user, $title, $this->imgroot);
         $this->renderer->renderToPage('header', $header);
     }
 

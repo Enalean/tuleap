@@ -42,7 +42,7 @@ class ThemeManager
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)
     {
         foreach ($theme_names as $name) {
-            $theme = $this->getValidTheme($name);
+            $theme = $this->getValidTheme($current_user, $name);
             if ($theme !== false && $this->isAllowedTheme($current_user, $name)) {
                 return $theme;
             }
@@ -75,51 +75,51 @@ class ThemeManager
         );
     }
 
-    private function getValidTheme($name)
+    private function getValidTheme(PFUser $current_user, $name)
     {
-        $theme = $this->getStandardTheme($name);
+        $theme = $this->getStandardTheme($current_user, $name);
         if ($theme === false) {
-            $theme = $this->getCustomTheme($name);
+            $theme = $this->getCustomTheme($current_user, $name);
         }
 
         return $theme;
     }
 
-    private function getStandardTheme($name)
+    private function getStandardTheme(PFUser $current_user, $name)
     {
         if ($this->themeExists($GLOBALS['sys_themeroot'], $name)) {
             $GLOBALS['sys_is_theme_custom'] = false;
             $GLOBALS['sys_user_theme'] = $name;
             $path = $this->getThemeClassPath($GLOBALS['sys_themeroot'], $name);
 
-            return $this->instantiateTheme($name, $path, '/themes/'.$name);
+            return $this->instantiateTheme($current_user, $name, $path, '/themes/'.$name);
         }
         return false;
     }
 
-    private function getCustomTheme($name)
+    private function getCustomTheme(PFUser $current_user, $name)
     {
         if ($this->themeExists($GLOBALS['sys_custom_themeroot'], $name)) {
             $GLOBALS['sys_is_theme_custom'] = true;
             $GLOBALS['sys_user_theme'] = $name;
             $path = $this->getThemeClassPath($GLOBALS['sys_custom_themeroot'], $name);
 
-            return $this->instantiateTheme($name, $path, '/custom/'.$name);
+            return $this->instantiateTheme($current_user, $name, $path, '/custom/'.$name);
         }
         return false;
     }
 
-    private function instantiateTheme($name, $path, $webroot)
+    private function instantiateTheme(PFUser $current_user, $name, $path, $webroot)
     {
         if (preg_match('`'. preg_quote(self::$LEGACY_EXTENSION) .'$`', $path)) {
             $klass = $name . '_Theme';
             include_once $path;
-        } else {
-            $klass = "Tuleap\\Theme\\{$name}\\{$name}Theme";
-            include_once dirname($path) . '/autoload.php';
+            return new $klass($webroot);
         }
 
-        return new $klass($webroot);
+        $klass = "Tuleap\\Theme\\{$name}\\{$name}Theme";
+        include_once dirname($path) . '/autoload.php';
+        return new $klass($webroot, $current_user);
     }
 
     private function themeExists($base_dir, $name)

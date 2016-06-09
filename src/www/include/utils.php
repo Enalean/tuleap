@@ -57,7 +57,7 @@ function util_get_theme_list() {
             }
 
             require_once $path;
-            $theme = new $class(($GLOBALS['sys_is_theme_custom'] ? '/custom/' : '/themes/') . $file);
+            $theme = new $class(($GLOBALS['sys_is_theme_custom'] ? '/custom/' : '/themes/') . $file, $user);
             if (! $theme->isLabFeature() || $user->useLabFeatures()) {
                 $theme_list[] = $file;
             }
