@@ -1038,17 +1038,20 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_deletion($params) {
-        $ugroup = $params['ugroup'];
-        $users  = $ugroup->getMembers();
+        $ugroup     = $params['ugroup'];
+        $users      = $ugroup->getMembers();
+        $project_id = $params['group_id'];
 
         foreach ($users as $user) {
             $calling = array(
-                'group_id' => $params['group_id'],
+                'group_id' => $project_id,
                 'user_id'  => $user->getId(),
                 'ugroup'   => $ugroup
             );
             $this->project_admin_ugroup_remove_user($calling);
         }
+
+        $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
     }
 
     public function project_admin_add_user($params) {

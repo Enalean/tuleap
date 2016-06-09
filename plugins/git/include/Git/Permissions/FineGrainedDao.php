@@ -346,6 +346,51 @@ class FineGrainedDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function deleteUgroupPermissions($ugroup_id, $project_id)
+    {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $this->da->startTransaction();
+
+        $delete_01 = "DELETE dr
+                        FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
+                            INNER JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
+                        WHERE dr.ugroup_id = $ugroup_id
+                            AND perm.project_id = $project_id";
+
+        $delete_02 = "DELETE dw
+                        FROM plugin_git_default_fine_grained_permissions_writers AS dw
+                            INNER JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
+                        WHERE dw.ugroup_id = $ugroup_id
+                            AND perm.project_id = $project_id";
+
+        $delete_03 = "DELETE rr
+                        FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
+                            INNER JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
+                            INNER JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
+                        WHERE rr.ugroup_id = $ugroup_id
+                            AND plugin_git.project_id = $project_id";
+
+        $delete_04 = "DELETE rw
+                        FROM plugin_git_repository_fine_grained_permissions_writers AS rw
+                            INNER JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
+                            INNER JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
+                        WHERE rw.ugroup_id = $ugroup_id
+                            AND plugin_git.project_id = $project_id";
+
+        if (! $this->update($delete_01) ||
+            ! $this->update($delete_02) ||
+            ! $this->update($delete_03) ||
+            ! $this->update($delete_04)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
+    }
+
     public function updateAllAnonymousAccessToRegistered()
     {
         return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
