@@ -977,7 +977,12 @@ fi
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
-%{APP_DIR}/src/www/themes/common
+%dir %{APP_DIR}/src/www/themes/common
+%{APP_DIR}/src/www/themes/common/css
+%{APP_DIR}/src/www/themes/common/font
+%{APP_DIR}/src/www/themes/common/images
+%dir %{APP_DIR}/src/www/themes/common/tlp
+%{APP_DIR}/src/www/themes/common/tlp/dist
 %{APP_DIR}/src/www/top
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour

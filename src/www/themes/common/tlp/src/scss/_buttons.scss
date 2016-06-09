@@ -1,0 +1,210 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-button-radius: 4px;
+$tlp-button-color: #ffffff;
+$tlp-button-box-shadow: rgba(0, 0, 0, .12);
+$tlp-button-box-shadow-timing: 75ms;
+$tlp-button-background-timing: 75ms;
+$tlp-button-normal-font-size: 16px;
+$tlp-button-normal-padding: 11px 15px;
+$tlp-button-large-font-size: 20px;
+$tlp-button-large-padding: 14px 25px;
+$tlp-button-small-font-size: 12px;
+$tlp-button-small-padding: 8px 12px;
+$tlp-button-outline-hover-color: #fdfdfd;
+
+$tlp-button-secondary-background: #e9e9e9;
+$tlp-button-secondary-color: #444444;
+$tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
+$tlp-button-secondary-outline-border: #aaaaaa;
+$tlp-button-secondary-outline-color: #888888;
+
+
+%tlp-button {
+    display: inline-block;
+    padding: $tlp-button-normal-padding;
+    transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out;
+    border: 0;
+    border-radius: $tlp-button-radius;
+    color: $tlp-button-color;
+    font-size: $tlp-button-normal-font-size;
+    line-height: $tlp-button-normal-font-size;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 1px 1px $tlp-button-box-shadow;
+    cursor: pointer;
+    vertical-align: middle;
+
+    &:hover:not(:disabled):not(.disabled):not(:active),
+    &:active,
+    &:focus {
+        transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out;
+        box-shadow: none;
+    }
+
+    &:disabled,
+    &.disabled {
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: .6;
+    }
+}
+
+.tlp-button-primary {
+    @extend %tlp-button;
+
+    background: $tlp-theme-color;
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: darken($tlp-theme-color, 5%);
+    }
+
+    &:active {
+        background: darken($tlp-theme-color, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-theme-color;
+        background: transparent;
+        color: $tlp-theme-color;
+    }
+}
+
+.tlp-button-secondary {
+    @extend %tlp-button;
+
+    background: $tlp-button-secondary-background;
+    color: $tlp-button-secondary-color;
+    box-shadow: 0 1px 1px $tlp-button-secondary-box-shadow;
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: darken($tlp-button-secondary-background, 5%);
+    }
+
+    &:active {
+        background: darken($tlp-button-secondary-background, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-button-secondary-outline-border;
+        background: transparent;
+        color: $tlp-button-secondary-outline-color;
+    }
+}
+
+.tlp-button-info {
+    @extend %tlp-button;
+
+    background: $tlp-ui-info;
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: darken($tlp-ui-info, 5%);
+    }
+
+    &:active {
+        background: darken($tlp-ui-info, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-info;
+        background: transparent;
+        color: $tlp-ui-info;
+    }
+}
+
+.tlp-button-success {
+    @extend %tlp-button;
+
+    background: $tlp-ui-success;
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: darken($tlp-ui-success, 5%);
+    }
+
+    &:active {
+        background: darken($tlp-ui-success, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-success;
+        background: transparent;
+        color: $tlp-ui-success;
+    }
+}
+
+.tlp-button-warning {
+    @extend %tlp-button;
+
+    background: $tlp-ui-warning;
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: darken($tlp-ui-warning, 5%);
+    }
+
+    &:active {
+        background: darken($tlp-ui-warning, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-warning;
+        background: transparent;
+        color: $tlp-ui-warning;
+    }
+}
+
+.tlp-button-danger {
+    @extend %tlp-button;
+
+    background: $tlp-ui-danger;
+
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: darken($tlp-ui-danger, 5%);
+    }
+
+    &:active {
+        background: darken($tlp-ui-danger, 10%);
+    }
+
+    &.tlp-button-outline {
+        border: 1px solid $tlp-ui-danger;
+        background: transparent;
+        color: $tlp-ui-danger;
+    }
+}
+
+.tlp-button-large {
+    padding: $tlp-button-large-padding;
+    font-size: $tlp-button-large-font-size;
+}
+
+.tlp-button-small {
+    padding: $tlp-button-small-padding;
+    font-size: $tlp-button-small-font-size;
+}
+
+.tlp-button-outline {
+    &:hover:not(:disabled):not(.disabled):not(:active) {
+        background: $tlp-button-outline-hover-color;
+    }
+
+    &:active {
+        background: darken($tlp-button-outline-hover-color, 5%);
+    }
+}

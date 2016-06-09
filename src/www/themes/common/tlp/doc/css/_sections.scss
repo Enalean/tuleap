@@ -1,0 +1,95 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$section-padding: 40px 0;
+$sub-section-padding: 10px 0;
+$section-title-color: #666666;
+$section-sub-title-color: #a5a5a5;
+
+main {
+    min-height: 100%;
+    margin: 10px 30px 0 ($nav-width + $nav-margin * 2);
+}
+
+section {
+    margin: 0 0 60px;
+    padding: $section-padding;
+    border-radius: 3px;
+
+    section {
+        margin: 0 0 40px;
+        padding: $sub-section-padding;
+    }
+
+    p {
+        margin: 0 0 20px;
+        font-size: 13px;
+    }
+
+    .code {
+        margin: 0 0 20px;
+        padding: 10px;
+        font-family: Monaco, Courier, monospace;
+        font-size: 11px;
+        line-height: 22px;
+        white-space: pre-wrap;
+    }
+
+    .code-inline {
+        padding: 5px 5px 3px;
+        font-family: Monaco, Courier, monospace;
+        font-weight: 400;
+        text-transform: lowercase;
+    }
+
+    .demo {
+        display: flex;
+        align-items: center;
+
+        .example,
+        .code {
+            width: 50%;
+            margin: 0;
+        }
+    }
+
+    h2 {
+        margin: 0 0 40px;
+        color: $section-title-color;
+        font-size: 36px;
+        font-weight: 300;
+
+        .code-inline {
+            position: relative;
+            top: -2px;
+            font-size: 16px;
+        }
+    }
+
+    h3 {
+        margin: 0 0 20px;
+        color: $section-sub-title-color;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        .code-inline {
+            font-size: 13px;
+        }
+    }
+}
