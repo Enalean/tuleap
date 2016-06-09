@@ -4,6 +4,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/campaign/campaign-list.tpl.html
+msgid "<i class=\"icon-list\"></i> Tests list"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "<i class=\"icon-plus\"></i> New campaign"
+msgstr ""
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid "<span class=\"total-definitions\">{{ getFilteredDefinitions(environment.filter).length }}</span> test"
 msgid_plural "<span class='total-definitions'>{{ getFilteredDefinitions(environment.filter).length }}</span> tests"
@@ -26,7 +34,6 @@ msgstr ""
 msgid "All environments"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
@@ -34,10 +41,6 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "by"
-msgstr ""
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Campaign"
 msgstr ""
 
 #: src/app/campaign/campaign-new-controller.js
@@ -84,7 +87,6 @@ msgstr ""
 msgid "Edit this test"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"
@@ -106,14 +108,17 @@ msgid "For all"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "New campaign"
+msgid "Hide closed campaigns"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Load closed campaigns"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "No tests on this page are selected."
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
@@ -123,7 +128,6 @@ msgstr ""
 msgid "Oh no!"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
@@ -159,10 +163,6 @@ msgstr ""
 msgid "Show dependencies graph for this test"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Status"
-msgstr ""
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Test name"
 msgstr ""
@@ -172,7 +172,15 @@ msgid "Tests are run in an environment."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "Total"
+msgid "Tests Progression"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "There are no closed campaigns"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "There are no open campaigns"
 msgstr ""
 
 #: src/app/socket/socket-disconnect.tpl.html

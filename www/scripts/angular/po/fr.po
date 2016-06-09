@@ -12,6 +12,14 @@ msgstr ""
 "X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: src/app/campaign/campaign-list.tpl.html
+msgid "<i class=\"icon-list\"></i> Tests list"
+msgstr "<i class=\"icon-list\"></i> Liste des tests"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "<i class=\"icon-plus\"></i> New campaign"
+msgstr "<i class=\"icon-plus\"></i> Nouvelle campagne"
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
 "<span class=\"total-definitions\">{{ getFilteredDefinitions(environment."
@@ -45,7 +53,6 @@ msgstr ""
 msgid "All environments"
 msgstr "Tous les environnements"
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
@@ -54,10 +61,6 @@ msgstr "Bloqué"
 #: src/app/execution/execution-detail.tpl.html
 msgid "by"
 msgstr "par"
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Campaign"
-msgstr "Campagne"
 
 #: src/app/campaign/campaign-new-controller.js
 msgid "Campaign creation"
@@ -103,7 +106,6 @@ msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 msgid "Edit this test"
 msgstr "Éditer ce test"
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"
@@ -125,14 +127,17 @@ msgid "For all"
 msgstr "Pour tous"
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "New campaign"
-msgstr "Nouvelle campagne"
+msgid "Hide closed campaigns"
+msgstr "Cacher les campagnes fermées"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Load closed campaigns"
+msgstr "Charger les campagnes fermées"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "No tests on this page are selected."
 msgstr "Aucun test sur cette page n’est sélectionné."
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
@@ -142,7 +147,6 @@ msgstr "Non exécuté"
 msgid "Oh no!"
 msgstr "Oh non !"
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
@@ -185,10 +189,6 @@ msgstr ""
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Status"
-msgstr "Status"
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Test name"
 msgstr "Nom du test"
@@ -198,8 +198,16 @@ msgid "Tests are run in an environment."
 msgstr "Les tests sont exécutés pour un environnement."
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "Total"
-msgstr "Total"
+msgid "Tests Progression"
+msgstr "Progression des tests"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "There are no closed campaigns"
+msgstr "Il n’existe pas de campagnes fermées"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "There are no open campaigns"
+msgstr "Il n’existe pas de campagnes ouvertes"
 
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
@@ -218,3 +226,18 @@ msgstr "Zoom avant"
 #: src/app/graph/graph.tpl.html
 msgid "Zoom out"
 msgstr "Zoom arrière"
+
+#~ msgid "<i class=\"icon-list\"></i>  Tests list"
+#~ msgstr "<i class=\"icon-list\"></i>  Liste de tests"
+
+#~ msgid "Campaign"
+#~ msgstr "Campagne"
+
+#~ msgid "New campaign"
+#~ msgstr "Nouvelle campagne"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Total"
+#~ msgstr "Total"

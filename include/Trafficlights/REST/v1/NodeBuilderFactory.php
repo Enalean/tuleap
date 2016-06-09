@@ -20,13 +20,15 @@
 
 namespace Tuleap\Trafficlights\REST\v1;
 
+use Tracker_ArtifactFactory;
 use Tracker_ResourceDoesntExistException;
 use Tuleap\REST\ProjectAuthorization;
-use Tracker_ArtifactFactory;
 use Tracker_Artifact;
 use Tracker_URLVerification;
 use Tracker_ArtifactDao;
 use PFUser;
+use Tuleap\Trafficlights\ArtifactDao;
+use Tuleap\Trafficlights\ArtifactFactory;
 use Tuleap\Trafficlights\Dao as TrafficlightsDao;
 
 class NodeBuilderFactory {
@@ -34,20 +36,19 @@ class NodeBuilderFactory {
     /** @var TrafficlightsDao */
     private $dao;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
+    /** @var ArtifactFactory */
+    private $trafficlights_artifact_factory;
 
     /** @var ArtifactNodeBuilder */
     private $artifact_builder;
 
-    /** @var ExecutionNodeBuilder */
-    private $execution_builder;
-
     public function __construct() {
-        $this->artifact_factory = Tracker_ArtifactFactory::instance();
-        $this->dao              = new TrafficlightsDao();
-        $this->artifact_builder = new ArtifactNodeBuilder(
-            $this->artifact_factory,
+        $this->trafficlights_artifact_factory = new ArtifactFactory(
+            Tracker_ArtifactFactory::instance(),
+            new ArtifactDao()
+        );
+        $this->dao                            = new TrafficlightsDao();
+        $this->artifact_builder               = new ArtifactNodeBuilder(
             new Tracker_ArtifactDao(),
             new ArtifactNodeDao(),
             $this
@@ -65,7 +66,7 @@ class NodeBuilderFactory {
      * @return Tracker_Artifact
      */
     public function getArtifactById(PFUser $user, $id) {
-        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $artifact = $this->trafficlights_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
             ProjectAuthorization::userCanAccessProject(
                 $user,

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Trafficlights\REST\v1;
 
-use Luracast\Restler\RestException;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use Tracker_Exception;
@@ -29,17 +28,18 @@ use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
-use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_URLVerification;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
+use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use ProjectManager;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\Trafficlights\ArtifactDao;
+use Tuleap\Trafficlights\ArtifactFactory;
 use Tuleap\Trafficlights\TrafficlightsArtifactRightsPresenter;
-use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 use PFUser;
 use Tuleap\Trafficlights\ConfigConformanceValidator;
@@ -64,6 +64,9 @@ class CampaignsResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var ArtifactFactory */
+    private $trafficlights_artifact_factory;
+
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
@@ -76,6 +79,9 @@ class CampaignsResource {
     /** @var AssignedToRepresentationBuilder */
     private $assigned_to_representation_builder;
 
+    /** @var CampaignRepresentationBuilder */
+    private $campaign_representation_builder;
+
     /** @var ProjectManager */
     private $project_manager;
 
@@ -84,18 +90,21 @@ class CampaignsResource {
 
     /** @var NodeJSClient */
     private $node_js_client;
-
     /** @var Tracker_Permission_PermissionsSerializer */
     private $permissions_serializer;
 
     public function __construct() {
-        $this->project_manager       = ProjectManager::instance();
-        $this->user_manager          = UserManager::instance();
-        $this->tracker_factory       = TrackerFactory::instance();
-        $this->artifact_factory      = Tracker_ArtifactFactory::instance();
-        $this->formelement_factory   = Tracker_FormElementFactory::instance();
-        $this->config                = new Config(new Dao());
-        $this->conformance_validator = new ConfigConformanceValidator(
+        $this->project_manager                = ProjectManager::instance();
+        $this->user_manager                   = UserManager::instance();
+        $this->tracker_factory                = TrackerFactory::instance();
+        $this->artifact_factory               = Tracker_ArtifactFactory::instance();
+        $this->trafficlights_artifact_factory = new ArtifactFactory(
+            $this->artifact_factory,
+            new ArtifactDao()
+        );
+        $this->formelement_factory            = Tracker_FormElementFactory::instance();
+        $this->config                         = new Config(new Dao());
+        $this->conformance_validator          = new ConfigConformanceValidator(
             $this->config
         );
 
@@ -108,6 +117,11 @@ class CampaignsResource {
             $this->formelement_factory,
             $this->conformance_validator,
             $this->assigned_to_representation_builder
+        );
+        $this->campaign_representation_builder    = new CampaignRepresentationBuilder(
+            $this->user_manager,
+            $this->formelement_factory,
+            $this->trafficlights_artifact_factory
         );
 
         $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
@@ -165,14 +179,7 @@ class CampaignsResource {
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 
-        $campaign_representation = new CampaignRepresentation();
-        $campaign_representation->build(
-            $campaign,
-            $this->formelement_factory,
-            $user
-        );
-
-        return $campaign_representation;
+        return $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
     }
 
     /**
@@ -362,7 +369,7 @@ class CampaignsResource {
         try {
             foreach ($execution_ids as $execution_id) {
                 $campaign_artifact->linkArtifact($execution_id, $user);
-                $execution                    = $this->artifact_factory->getArtifactById($execution_id);
+                $execution                    = $this->trafficlights_artifact_factory->getArtifactById($execution_id);
                 $executions[]                 = $execution;
                 $executions_representations[] = $this->execution_representation_builder->getExecutionRepresentation($user, $execution);
             }
@@ -423,7 +430,7 @@ class CampaignsResource {
     }
 
     private function getCampaignFromId($id, PFUser $user) {
-        $campaign = $this->artifact_factory->getArtifactById($id);
+        $campaign = $this->trafficlights_artifact_factory->getArtifactById($id);
 
         if (! $this->isACampaign($campaign)) {
             throw new RestException(404, 'The campaign does not exist');
@@ -468,7 +475,7 @@ class CampaignsResource {
      */
     private function getArtifactById(PFUser $user, $id)
     {
-        $artifact = $this->artifact_factory->getArtifactById($id);
+        $artifact = $this->trafficlights_artifact_factory->getArtifactById($id);
         if ($artifact) {
             if (! $artifact->userCanView($user)) {
                 throw new RestException(403);

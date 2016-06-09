@@ -1,39 +1,64 @@
 <div id="campaign-list-container">
+    <div id="campaign-list-utils">
+        <div id="campaign-list-utils-information">
+            <h1 translate>Campaigns list</h1>
+            <button type="button" class="btn btn-primary" ui-sref="campaigns.new()" translate>
+                <i class="icon-plus"></i> New campaign
+            </button>
+        </div>
+        <input type="text" class="filter" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
+    </div>
 
-    <h1 translate>Campaigns list</h1>
-
-    <button type="button" ui-sref="campaigns.new()" id="new-campaign-btn" class="btn" translate>New campaign</button>
-
-    <input type="text" class="filter" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
-
-    <table class="table table-striped table-bordered campaign-list">
-        <thead>
-            <tr>
-                <th translate>Campaign</th>
-                <th translate>Status</th>
-                <th translate>Total</th>
-                <th translate>Passed</th>
-                <th translate>Blocked</th>
-                <th translate>Failed</th>
-                <th translate>Not run</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="campaign in campaigns
+    <div id="campaign-list-content">
+        <div ng-repeat="campaign in campaigns
                 | InPropertiesFilter:search:['label', 'status']
                 | orderBy:'id':true
                 track by $index"
-            >
-                <td><a ui-sref="campaigns.executions({ id: campaign.id })">{{ campaign.label }}</a></td>
-                <td>{{ campaign.status }}</td>
-                <td>{{ campaign.total }}</td>
-                <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>
-                <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
-                <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
-                <td><span class="badge">{{ campaign.nb_of_notrun }}</span></td>
-            </tr>
-        </tbody>
-    </table>
+        >
+            <div id="campaign-list-content-label">
+                {{ campaign.label }}
+            </div>
+            <div id="campaign-list-content-test-progression">
+                <div id="campaign-list-content-test-progression-label">
+                    <span translate>Tests Progression</span>
+                </div>
+                <div id="campaign-list-content-test-progression-bar">
+                    <div class="sense-of-progress-passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%" ng-if="campaign.nb_of_passed">
+                        <span>{{ campaign.nb_of_passed }}</span>
+                        <div></div>
+                    </div>
+                    <div class="sense-of-progress-failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%" ng-if="campaign.nb_of_failed">
+                        <span>{{ campaign.nb_of_failed }}</span>
+                        <div></div>
+                    </div>
+                    <div class="sense-of-progress-blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%" ng-if="campaign.nb_of_blocked">
+                        <span>{{ campaign.nb_of_blocked }}</span>
+                        <div></div>
+                    </div>
+                    <div class="sense-of-progress-notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%" ng-if="campaign.nb_of_notrun">
+                        <span>{{ campaign.nb_of_notrun }}</span>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div id="campaign-list-content-redirection">
+                <a ui-sref="campaigns.executions({ id: campaign.id })" translate><i class="icon-list"></i> Tests list</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="no-open-campaigns" class="no-campaigns" ng-if="! campaigns.length > 0 && open_campaigns_loaded">
+        <span translate>There are no open campaigns</span>
+    </div>
+
+    <div id="no-closed-campaigns" class="no-campaigns" ng-if="! campaigns_closed.length > 0 && closed_campaigns_loaded">
+        <span translate>There are no closed campaigns</span>
+    </div>
+
+    <div id="campaign-list-content-load">
+        <a ng-if="! closed_campaigns_loaded || closed_campaigns_hidden" ng-click="getClosedCampaigns()" translate>Load closed campaigns </a>
+        <a ng-if="! closed_campaigns_hidden && campaigns_closed.length > 0" ng-click="hideClosedCampaigns()" translate>Hide closed campaigns </a>
+    </div>
 
     <img src="scripts/angular/bin/assets/loader.gif" ng-if="loading" class="loader">
 </div>

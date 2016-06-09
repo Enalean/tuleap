@@ -21,7 +21,12 @@
 namespace Tuleap\Trafficlights\REST\v1;
 
 use Luracast\Restler\RestException;
+use Trafficlights_Tracker_ArtifactFactory;
 use Tuleap\REST\Header;
+use Tuleap\Trafficlights\ArtifactDao;
+use Tuleap\Trafficlights\ArtifactFactory;
+use Tuleap\Trafficlights\MalformedQueryParameterException;
+use Tuleap\Trafficlights\QueryToCriterionConverter;
 use UserManager;
 use TrackerFactory;
 use Tracker_ArtifactFactory;
@@ -31,7 +36,6 @@ use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\ConfigConformanceValidator;
 use ProjectManager;
 use Tuleap\Trafficlights\Dao;
-use Tracker_FormElement_Field_List_Bind;
 
 class ProjectResource {
 
@@ -49,8 +53,8 @@ class ProjectResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
+    /** @var ArtifactFactory */
+    private $trafficlights_artifact_factory;
 
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
@@ -58,11 +62,20 @@ class ProjectResource {
     /** @var DefinitionRepresentationBuilder */
     private $definition_representation_builder;
 
+    /** @var QueryToCriterionConverter */
+    private $query_to_criterion_converter;
+
+    /** @var CampaignRepresentationBuilder */
+    private $campaign_representation_builder;
+
     public function __construct() {
         $this->config                            = new Config(new Dao());
         $this->project_manager                   = ProjectManager::instance();
         $this->tracker_factory                   = TrackerFactory::instance();
-        $this->tracker_artifact_factory          = Tracker_ArtifactFactory::instance();
+        $this->trafficlights_artifact_factory    = new ArtifactFactory(
+            Tracker_ArtifactFactory::instance(),
+            new ArtifactDao()
+        );
         $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
         $this->user_manager                      = UserManager::instance();
         $this->user                              = UserManager::instance()->getCurrentUser();
@@ -73,6 +86,12 @@ class ProjectResource {
                 $this->config
             )
         );
+        $this->campaign_representation_builder   = new CampaignRepresentationBuilder(
+            $this->user_manager,
+            $this->tracker_form_element_factory,
+            $this->trafficlights_artifact_factory
+        );
+        $this->query_to_criterion_converter      = new QueryToCriterionConverter();
     }
 
     /**
@@ -90,13 +109,24 @@ class ProjectResource {
      * @url GET {id}/trafficlights_campaigns
      *
      * @param int $id Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param string $query JSON object of search criteria properties {@from path}
+     * @param int $limit Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
+     * @return array
      *
-     * @return array {@type Tuleap\Trafficlights\REST\v1\CampaignRepresentation}
+     * @throws 400
+     * @throws 403
+     * @throws 404
      */
-    protected function getCampaigns($id, $limit = 10, $offset = 0) {
+    protected function getCampaigns($id, $query = '', $limit = 10, $offset = 0)
+    {
         $this->optionsCampaigns($id);
+
+        try {
+            $criterion = $this->query_to_criterion_converter->convert($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
         $project = $this->getProject($id);
 
@@ -114,21 +144,13 @@ class ProjectResource {
             throw new RestException(403, 'Access denied to campaign tracker');
         }
 
-        $artifact_list = $this->tracker_artifact_factory->getArtifactsByTrackerIdUserCanView($this->user, $campaign_tracker_id);
+        $paginated_campaigns_representations = $this->campaign_representation_builder
+            ->getPaginatedCampaignsRepresentations($this->user, $campaign_tracker_id, $criterion, $limit, $offset);
 
-        $result = array();
+        $this->sendAllowHeaderForProjectCampaigns();
+        $this->sendPaginationHeaders($limit, $offset, $paginated_campaigns_representations->getTotalSize());
 
-        foreach ($artifact_list as $artifact) {
-            $campaign_representation = new CampaignRepresentation();
-            $campaign_representation->build($artifact, $this->tracker_form_element_factory, $this->user);
-            $result[$artifact->getId()] = $campaign_representation;
-        }
-
-        $this->sendPaginationHeaders($limit, $offset, count($result));
-
-        krsort($result);
-
-        return array_slice($result, $offset, $limit);
+        return $paginated_campaigns_representations->getCampaignsRepresentations();
     }
 
     /**
@@ -166,7 +188,7 @@ class ProjectResource {
             throw new RestException(403, 'Access denied to the test definition tracker');
         }
 
-        $paginated_artifacts = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, false);
+        $paginated_artifacts = $this->trafficlights_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, false);
         $result = array();
 
         foreach ($paginated_artifacts->getArtifacts() as $artifact) {
@@ -255,5 +277,10 @@ class ProjectResource {
 
     private function sendPaginationHeaders($limit, $offset, $size) {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
+    }
+
+    private function sendAllowHeaderForProjectCampaigns()
+    {
+        Header::allowOptionsGet();
     }
 }

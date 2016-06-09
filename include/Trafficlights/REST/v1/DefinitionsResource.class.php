@@ -21,9 +21,11 @@
 namespace Tuleap\Trafficlights\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\REST\Header;
-use UserManager;
 use Tracker_ArtifactFactory;
+use Tuleap\REST\Header;
+use Tuleap\Trafficlights\ArtifactDao;
+use Tuleap\Trafficlights\ArtifactFactory;
+use UserManager;
 use Tracker_FormElementFactory;
 use Tuleap\Trafficlights\ConfigConformanceValidator;
 use Tuleap\Trafficlights\Config;
@@ -34,8 +36,8 @@ class DefinitionsResource {
     /** @var UserManager */
     private $user_manager;
 
-    /** @var Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
+    /** @var ArtifactFactory */
+    private $trafficlights_artifact_factory;
 
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
@@ -45,7 +47,10 @@ class DefinitionsResource {
 
     public function __construct() {
         $this->user_manager                      = UserManager::instance();
-        $this->tracker_artifact_factory          = Tracker_ArtifactFactory::instance();
+        $this->trafficlights_artifact_factory    = new ArtifactFactory(
+            Tracker_ArtifactFactory::instance(),
+            new ArtifactDao()
+        );
         $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->user_manager,
@@ -79,7 +84,7 @@ class DefinitionsResource {
      */
     protected function getId($id) {
         $user       = $this->user_manager->getCurrentUser();
-        $definition = $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $definition = $this->trafficlights_artifact_factory->getArtifactByIdUserCanView($user, $id);
 
         if (! $definition) {
             throw new RestException(404, 'The test definition does not exist or is not visible');

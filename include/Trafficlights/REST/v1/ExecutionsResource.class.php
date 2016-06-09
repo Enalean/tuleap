@@ -28,6 +28,8 @@ use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
 use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Trafficlights\ArtifactDao;
+use Tuleap\Trafficlights\ArtifactFactory;
 use UserManager;
 use PFUser;
 use Tracker_FormElementFactory;
@@ -59,6 +61,9 @@ class ExecutionsResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var ArtifactFactory */
+    private $trafficlights_artifact_factory;
+
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
@@ -85,6 +90,10 @@ class ExecutionsResource {
         $this->tracker_factory       = TrackerFactory::instance();
         $this->formelement_factory   = Tracker_FormElementFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
+        $this->trafficlights_artifact_factory = new ArtifactFactory(
+            $this->artifact_factory,
+            new ArtifactDao()
+        );
         $config                      = new Config(new Dao());
         $this->conformance_validator = new ConfigConformanceValidator(
             $config
@@ -420,7 +429,7 @@ class ExecutionsResource {
      * @return Tracker_Artifact
      */
     private function getArtifactById(PFUser $user, $id) {
-        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $artifact = $this->trafficlights_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
             ProjectAuthorization::userCanAccessProject(
                 $user,

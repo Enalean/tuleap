@@ -20,7 +20,6 @@
 
 namespace Tuleap\Trafficlights\REST\v1;
 
-use Tracker_ArtifactFactory;
 use Tracker_Artifact;
 use PFUser;
 use Tracker_ArtifactDao;
@@ -44,14 +43,10 @@ class ArtifactNodeBuilder {
      */
     private $artifact_dao;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao, NodeBuilderFactory $node_builder_factory) {
-        $this->artifact_factory     = $artifact_factory;
-        $this->artifact_dao         = $artifact_dao;
-        $this->dao                  = $dao;
-        $this->node_builder_factory = $node_builder_factory;
+    public function __construct(Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao, NodeBuilderFactory $node_builder_factory) {
+        $this->artifact_dao                   = $artifact_dao;
+        $this->dao                            = $dao;
+        $this->node_builder_factory           = $node_builder_factory;
     }
 
     public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact) {
