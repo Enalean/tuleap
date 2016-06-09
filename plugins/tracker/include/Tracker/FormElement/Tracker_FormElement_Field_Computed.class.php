@@ -121,13 +121,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($this->useFastCompute()) {
             return $this->getFastComputedValue($artifact->getId(), $timestamp);
         }
-
         $computed_artifact_ids[$artifact->getId()] = true;
 
         if ($timestamp === null) {
             $dar = $this->getDao()->getFieldValues(array($artifact->getId()), $this->getProperty('target_field_name'));
         } else {
-            $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp);
+            $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp, $this->getId());
         }
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
     }
@@ -191,30 +190,45 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         parent::afterCreate($formElement_data);
     }
 
-    private function getFastComputedValue($artifact_id, $timestamp = null) {
+    protected function getFastComputedValue($artifact_id, $timestamp = null)
+    {
         $sum                   = null;
-        $target_field_name     = $this->getProperty('target_field_name');
+        $target_field_name     = $this->getName();
         $artifact_ids_to_fetch = array($artifact_id);
-        $already_seen          = array($artifact_id => true);
+        $already_seen          = array();
+
         do {
             if ($timestamp !== null) {
-                $dar = $this->getDao()->getFieldValuesAtTimestamp($artifact_ids_to_fetch, $target_field_name, $timestamp);
+                $dar = $this->getDao()->getFieldValuesAtTimestamp($artifact_ids_to_fetch, $target_field_name, $timestamp, $this->getId());
             } else {
-                $dar = $this->getDao()->getFieldValues($artifact_ids_to_fetch, $target_field_name);
+                $dar = $this->getDao()->getComputedFieldValues($artifact_ids_to_fetch, $target_field_name, $this->getId());
             }
-            $artifact_ids_to_fetch = array();
-            foreach ($dar as $row) {
-                if (! isset($already_seen[$row['id']])) {
-                    $already_seen[$row['id']] = true;
-                    if ($row['type'] == 'computed') {
-                        $artifact_ids_to_fetch[] = $row['id'];
-                    } elseif (isset($row[$row['type'].'_value'])) {
-                        $sum += $row[$row['type'].'_value'];
+
+            $current_fetch_artifact = $artifact_ids_to_fetch;
+            $artifact_ids_to_fetch  = array();
+            $last_id                = null;
+            if ($dar) {
+                foreach ($dar as $row) {
+                    if (! isset($already_seen[$row['id']]) && $last_id != $row['parent_id']) {
+                        if (isset($row['value']) && $row['value'] !== null) {
+                            $already_seen[$row['parent_id']] = true;
+                            $last_id                         = $row['parent_id'];
+                            $sum                            += $row['value'];
+                        } elseif ($row['type'] == 'computed') {
+                            $artifact_ids_to_fetch[]  = $row['id'];
+                        } elseif (isset($row[$row['type'].'_value'])) {
+                            $already_seen[$row['id']] = true;
+                            $sum                     += $row[$row['type'].'_value'];
+                        }
                     }
                 }
+                $dar->freeMemory();
             }
-            $dar->freeMemory();
-        } while(count($artifact_ids_to_fetch) > 0);
+
+            foreach ($current_fetch_artifact as $artifact_fetched) {
+                $already_seen[$artifact_fetched] = true;
+            }
+        } while (count($artifact_ids_to_fetch) > 0);
 
         return $sum;
     }
@@ -399,7 +413,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $current_user   = UserManager::instance()->getCurrentUser();
         $computed_value = $this->getComputedValue($current_user, $artifact);
 
-        if ($value) {
+        if ($value !== null) {
             $value = $value->getValue();
         }
 
@@ -408,7 +422,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
 
         $purifier = Codendi_HTMLPurifier::instance();
-        $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .'(' .
+        $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
 
         if ($value === null) {
