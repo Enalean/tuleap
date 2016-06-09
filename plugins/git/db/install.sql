@@ -210,3 +210,23 @@ CREATE TABLE IF NOT EXISTS plugin_git_repository_fine_grained_permissions_rewind
 CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_enabled (
     project_id int(11) NOT NULL PRIMARY KEY
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions (
+    id int(11) UNSIGNED PRIMARY KEY auto_increment,
+    project_id int(11) NOT NULL,
+    pattern VARCHAR(255) NOT NULL,
+    INDEX idx_default_fine_grained_permissions(project_id, pattern(15)),
+    UNIQUE default_unique_pattern (project_id, pattern)
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_writers (
+    permission_id int(11) UNSIGNED,
+    ugroup_id int(11) NOT NULL,
+    PRIMARY KEY (permission_id, ugroup_id)
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_default_fine_grained_permissions_rewinders (
+    permission_id int(11) UNSIGNED,
+    ugroup_id int(11) NOT NULL,
+    PRIMARY KEY (permission_id, ugroup_id)
+);

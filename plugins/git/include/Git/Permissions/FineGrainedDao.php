@@ -214,4 +214,134 @@ class FineGrainedDao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchDefaultBranchesFineGrainedPermissions($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT *
+                FROM plugin_git_default_fine_grained_permissions
+                WHERE project_id = $project_id
+                AND pattern LIKE 'refs/heads/%'";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchDefaultTagsFineGrainedPermissions($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT *
+                FROM plugin_git_default_fine_grained_permissions
+                WHERE project_id = $project_id
+                AND pattern LIKE 'refs/tags/%'";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchDefaultWriterUgroupIdsForFineGrainedPermissions($permission_id)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $sql = "SELECT ugroup_id
+                FROM plugin_git_default_fine_grained_permissions_writers
+                WHERE permission_id = $permission_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchDefaultRewinderUgroupIdsForFineGrainePermissions($permission_id)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $sql = "SELECT ugroup_id
+                FROM plugin_git_default_fine_grained_permissions_rewinders
+                WHERE permission_id = $permission_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getPermissionIdByPatternForProject($project_id, $pattern)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $pattern    = $this->da->quoteSmart($pattern);
+
+        $sql = "SELECT id
+                FROM plugin_git_default_fine_grained_permissions
+                WHERE pattern = $pattern
+                    AND project_id = $project_id";
+
+        return $this->retrieveIds($sql);
+    }
+
+    public function saveDefault($project_id, $pattern, array $writer_ids, array $rewinder_ids)
+    {
+        $this->da->startTransaction();
+
+        $permission_id = $this->createDefaultPermission($project_id, $pattern);
+        if (! $permission_id) {
+            $this->da->rollback();
+            return false;
+        }
+
+        if (! $this->saveDefaultWriters($permission_id, $writer_ids) ||
+            ! $this->saveDefaultRewinders($permission_id, $rewinder_ids)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
+    }
+
+    private function createDefaultPermission($project_id, $pattern)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $pattern    = $this->da->quoteSmart($pattern);
+
+        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions (project_id, pattern)
+                VALUES ($project_id, $pattern)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    private function saveDefaultWriters($permission_id, array $writer_ids)
+    {
+        if (count($writer_ids) === 0) {
+            return true;
+        }
+
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $values = array();
+        foreach ($writer_ids as $writer_id) {
+            $writer_id = $this->da->escapeInt($writer_id);
+            $values[]  = "($permission_id, $writer_id)";
+        }
+
+        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions_writers (permission_id, ugroup_id)
+                VALUES " . implode(',', $values);
+
+        return $this->update($sql);
+    }
+
+    private function saveDefaultRewinders($permission_id, array $rewinder_ids)
+    {
+        if (count($rewinder_ids) === 0) {
+            return true;
+        }
+
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $values = array();
+        foreach ($rewinder_ids as $rewinder_id) {
+            $rewinder_id = $this->da->escapeInt($rewinder_id);
+            $values[]    = "($permission_id, $rewinder_id)";
+        }
+
+        $sql = "INSERT INTO plugin_git_default_fine_grained_permissions_rewinders (permission_id, ugroup_id)
+                VALUES " . implode(',', $values);
+
+        return $this->update($sql);
+    }
 }
