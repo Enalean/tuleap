@@ -22,6 +22,7 @@
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
+use Project;
 
 class FineGrainedUpdater
 {
@@ -44,5 +45,15 @@ class FineGrainedUpdater
     public function disableRepository(GitRepository $repository)
     {
         return $this->dao->disableRepository($repository->getId());
+    }
+
+    public function enableProject(Project $project)
+    {
+        return $this->dao->enableProject($project->getID());
+    }
+
+    public function disableProject(Project $project)
+    {
+        return $this->dao->disableProject($project->getID());
     }
 }

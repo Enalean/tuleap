@@ -34,6 +34,21 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $default_permissions_title;
     public $fine_grained_permissions_title;
 
+    /**
+     * @var array
+     */
+    public $new_fine_grained_ugroups;
+
+    /**
+     * @var array
+     */
+    public $tags_permissions;
+
+    /**
+     * @var array
+     */
+    public $branches_permissions;
+
     public function __construct(
         $project_id,
         $are_mirrors_defined,
@@ -45,7 +60,10 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $pane_access_control,
         $pane_mirroring,
         $are_fine_grained_permissions_defined,
-        $can_use_fine_grained_permissions
+        $can_use_fine_grained_permissions,
+        array $branches_permissions,
+        array $tags_permissions,
+        array $new_fine_grained_ugroups
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
@@ -60,6 +78,9 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
 
+        $this->branches_permissions = $branches_permissions;
+        $this->tags_permissions     = $tags_permissions;
+
         $this->default_permissions_title = $GLOBALS['Language']->getText(
             'plugin_git',
             'default_permissions_title'
@@ -69,6 +90,38 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'plugin_git',
             'fine_grained_permissions_title'
         );
+
+        $this->branches_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_branches_title'
+        );
+
+        $this->tags_title = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_tags_title'
+        );
+
+        $this->add_branch_permission = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'add_branch_permission'
+        );
+
+        $this->add_tag_permission = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'add_tag_permission'
+        );
+
+        $this->pattern_column = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_pattern_column'
+        );
+
+        $this->empty = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_empty'
+        );
+
+        $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
     }
 
     public function is_control_limited()
@@ -200,5 +253,15 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'plugin_git',
             'fine_grained_permissions_warning'
         );
+    }
+
+    public function has_branches_permissions()
+    {
+        return count($this->branches_permissions) > 0;
+    }
+
+    public function has_tags_permissions()
+    {
+        return count($this->tags_permissions) > 0;
     }
 }

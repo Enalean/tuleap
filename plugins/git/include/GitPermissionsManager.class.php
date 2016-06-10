@@ -21,10 +21,29 @@
 
 require_once 'www/project/admin/permissions.php';
 
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+
 /**
  * This class manages permissions for the Git service
  */
 class GitPermissionsManager {
+
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_factory;
+
+    /**
+     * @var DefaultFineGrainedPermissionSaver
+     */
+    private $default_fine_grained_saver;
+
+    /**
+     * @var FineGrainedUpdater
+     */
+    private $fine_grained_updater;
 
     const REQUEST_KEY = 'default_access_rights';
 
@@ -43,10 +62,19 @@ class GitPermissionsManager {
      */
     private $permissions_manager;
 
-    public function __construct(Git_PermissionsDao $git_permission_dao, Git_SystemEventManager $git_system_event_manager) {
-        $this->permissions_manager      = PermissionsManager::instance();
-        $this->git_permission_dao       = $git_permission_dao;
-        $this->git_system_event_manager = $git_system_event_manager;
+    public function __construct(
+        Git_PermissionsDao $git_permission_dao,
+        Git_SystemEventManager $git_system_event_manager,
+        FineGrainedUpdater $fine_grained_updater,
+        DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
+    ) {
+        $this->permissions_manager          = PermissionsManager::instance();
+        $this->git_permission_dao           = $git_permission_dao;
+        $this->git_system_event_manager     = $git_system_event_manager;
+        $this->fine_grained_updater         = $fine_grained_updater;
+        $this->default_fine_grained_saver   = $default_fine_grained_saver;
+        $this->default_fine_grained_factory = $default_fine_grained_factory;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project) {
@@ -157,6 +185,30 @@ class GitPermissionsManager {
             $rewind_ugroup_ids,
             Git::DEFAULT_PERM_WPLUS
         );
+
+        if ($request->get('use-fine-grained-permissions')) {
+            $this->fine_grained_updater->enableProject($project);
+        } else {
+            $this->fine_grained_updater->disableProject($project);
+        }
+
+        $added_branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsFromRequest(
+            $request,
+            $project
+        );
+
+        $added_tags_permissions = $this->default_fine_grained_factory->getTagsFineGrainedPermissionsFromRequest(
+            $request,
+            $project
+        );
+
+        foreach ($added_branches_permissions as $added_branch_permission) {
+            $this->default_fine_grained_saver->saveBranchPermission($added_branch_permission);
+        }
+
+        foreach ($added_tags_permissions as $added_tag_permission) {
+            $this->default_fine_grained_saver->saveTagPermission($added_tag_permission);
+        }
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,

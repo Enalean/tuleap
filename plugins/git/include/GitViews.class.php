@@ -22,6 +22,7 @@
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -58,25 +59,32 @@ class GitViews extends PluginViews {
      */
     private $fine_grained_permission_factory;
 
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_permission_factory;
+
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitPermissionsManager $permissions_manager,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory
     ) {
         parent::__construct($controller);
-        $this->groupId                         = (int)$this->request->get('group_id');
-        $this->project                         = ProjectManager::instance()->getProject($this->groupId);
-        $this->projectName                     = $this->project->getUnixName();
-        $this->userName                        = $this->user->getName();
-        $this->git_permissions_manager         = $permissions_manager;
-        $this->ugroup_manager                  = new UGroupManager();
-        $this->url_manager                     = $url_manager;
-        $this->mirror_data_mapper              = $mirror_data_mapper;
-        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
-        $this->fine_grained_retriever          = $fine_grained_retriever;
+        $this->groupId                                 = (int)$this->request->get('group_id');
+        $this->project                                 = ProjectManager::instance()->getProject($this->groupId);
+        $this->projectName                             = $this->project->getUnixName();
+        $this->userName                                = $this->user->getName();
+        $this->git_permissions_manager                 = $permissions_manager;
+        $this->ugroup_manager                          = new UGroupManager();
+        $this->url_manager                             = $url_manager;
+        $this->mirror_data_mapper                      = $mirror_data_mapper;
+        $this->fine_grained_permission_factory         = $fine_grained_permission_factory;
+        $this->fine_grained_retriever                  = $fine_grained_retriever;
+        $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
     }
 
     public function header() {
@@ -663,8 +671,18 @@ class GitViews extends PluginViews {
             $pane_mirroring      = true;
         }
 
-        $are_fine_grained_permissions_defined = false;
-        $can_use_fine_grained_permissions     = false;
+        $user = UserManager::instance()->getCurrentUser();
+
+        $can_use_fine_grained_permissions = $user->useLabFeatures() &&
+            $this->git_permissions_manager->userIsGitAdmin($user, $this->project);
+
+        $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions(
+            $this->project
+        );
+
+        $branches_permissions     = $this->default_fine_grained_permission_factory->getBranchesFineGrainedPermissionsForProject($this->project);
+        $tags_permissions         = $this->default_fine_grained_permission_factory->getTagsFineGrainedPermissionsForProject($this->project);
+        $new_fine_grained_ugroups = $builder->getAllOptions($this->project);
 
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project_id,
@@ -677,7 +695,10 @@ class GitViews extends PluginViews {
             $pane_access_control,
             $pane_mirroring,
             $are_fine_grained_permissions_defined,
-            $can_use_fine_grained_permissions
+            $can_use_fine_grained_permissions,
+            $branches_permissions,
+            $tags_permissions,
+            $new_fine_grained_ugroups
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

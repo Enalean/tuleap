@@ -28,6 +28,8 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 
 /**
  * Git
@@ -169,6 +171,16 @@ class Git extends PluginController {
      */
     private $fine_grained_permission_factory;
 
+    /**
+     * @var FineGrainedPermissionSaver
+     */
+    private $fine_grained_permission_saver;
+
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_permission_factory;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -193,7 +205,9 @@ class Git extends PluginController {
         WebhookDao $webhook_dao,
         FineGrainedUpdater $fine_grained_updater,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        FineGrainedPermissionSaver $fine_grained_permission_saver,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory
     ) {
         parent::__construct($user_manager, $request);
 
@@ -257,6 +271,9 @@ class Git extends PluginController {
         $this->fine_grained_updater            = $fine_grained_updater;
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;
         $this->fine_grained_retriever          = $fine_grained_retriever;
+        $this->fine_grained_permission_saver   = $fine_grained_permission_saver;
+
+        $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
     }
 
     protected function instantiateView() {
@@ -266,7 +283,8 @@ class Git extends PluginController {
             $this->mirror_data_mapper,
             $this->permissions_manager,
             $this->fine_grained_permission_factory,
-            $this->fine_grained_retriever
+            $this->fine_grained_retriever,
+            $this->default_fine_grained_permission_factory
         );
     }
 
@@ -594,6 +612,16 @@ class Git extends PluginController {
 
                     $enable_fine_grained_permissions = $this->request->exist('use-fine-grained-permissions');
 
+                    $added_tags_permissions = $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsFromRequest(
+                        $this->request,
+                        $repository
+                    );
+
+                    $added_branches_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsFromRequest(
+                        $this->request,
+                        $repository
+                    );
+
                     $this->addAction(
                         'save',
                         array(
@@ -602,7 +630,9 @@ class Git extends PluginController {
                             $repoAccess,
                             $repoDesc,
                             $pane,
-                            $enable_fine_grained_permissions
+                            $enable_fine_grained_permissions,
+                            $added_branches_permissions,
+                            $added_tags_permissions
                         )
                     );
                     $this->addView('view');
@@ -1174,7 +1204,8 @@ class Git extends PluginController {
             ),
             $this->gerrit_can_migrate_checker,
             $this->webhook_dao,
-            $this->fine_grained_updater
+            $this->fine_grained_updater,
+            $this->fine_grained_permission_saver
         );
     }
 

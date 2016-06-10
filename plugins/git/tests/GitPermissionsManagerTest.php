@@ -32,7 +32,13 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
         PermissionsManager::setInstance($this->permissions_manager);
         $this->git_permissions_dao      = mock('Git_PermissionsDao');
         $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $this->git_permissions_manager  = new GitPermissionsManager($this->git_permissions_dao, $this->git_system_event_manager);
+        $this->git_permissions_manager  = new GitPermissionsManager(
+            $this->git_permissions_dao,
+            $this->git_system_event_manager,
+            mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
+            mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver'),
+            mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory')
+        );
     }
 
     public function tearDown() {

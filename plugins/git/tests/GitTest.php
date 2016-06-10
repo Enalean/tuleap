@@ -173,7 +173,9 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Tuleap\Git\Webhook\WebhookDao'),
                 mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
-                mock('Tuleap\Git\Permissions\FineGrainedRetriever')
+                mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+                mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
+                mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory'),
             )
         );
         $git->setRequest($request);

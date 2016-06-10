@@ -71,6 +71,13 @@ class AccessRightsPresenterOptionsBuilder
 
     }
 
+    public function getAllOptions(Project $project)
+    {
+        $selected_values = array();
+
+        return $this->buildOptions($project, $selected_values, '');
+    }
+
     private function buildOptions(Project $project, array $selected_values, $permission)
     {
         $user_groups = $this->user_group_factory->getAllForProject($project);

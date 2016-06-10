@@ -1,3 +1,9 @@
+Version 4.189 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Add Git default permissions for branches and tags)
+
+Version 4.188 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Add permissions for new branches and tags && Enable default Git fine grained permissions)
+
 Version 4.187 - Tuleap 8.16
     * story #8419: Glossify git access control tab content
 

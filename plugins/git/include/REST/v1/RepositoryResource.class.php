@@ -53,6 +53,11 @@ use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
+use UGroupManager;
 
 include_once('www/project/admin/permissions.php');
 
@@ -99,9 +104,22 @@ class RepositoryResource extends AuthenticatedResource {
             $project_manager
         );
 
+        $fine_grained_dao     = new FineGrainedDao();
+        $fine_grained_updater = new FineGrainedUpdater($fine_grained_dao);
+
+        $default_fine_grained_permission_factory = new DefaultFineGrainedPermissionFactory(
+            $fine_grained_dao,
+            new UGroupManager()
+        );
+
+        $default_fine_grained_permission_saver = new DefaultFineGrainedPermissionSaver($fine_grained_dao);
+
         $git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $this->git_system_event_manager
+            $this->git_system_event_manager,
+            $fine_grained_updater,
+            $default_fine_grained_permission_saver,
+            $default_fine_grained_permission_factory
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(

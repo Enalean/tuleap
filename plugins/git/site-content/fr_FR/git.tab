@@ -471,3 +471,6 @@ plugin_git	fine_grained_permissions_tags_title	Étiquettes
 plugin_git	fine_grained_permissions_branches_title	Branches
 plugin_git	fine_grained_permissions_pattern_column	Expression
 plugin_git	fine_grained_permissions_empty	Aucune permission n'a été configurée.
+plugin_git	add_branch_permission	Ajouter une permission sur une nouvelle branche
+plugin_git	add_tag_permission	Ajouter une permission sur une nouvelle étiquette
+plugin_git	add_permission_duplicate_pattern	L'expression $1 est déjà existante.

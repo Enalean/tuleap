@@ -22,11 +22,11 @@
 
 namespace Tuleap\Git\Permissions;
 
-use GitRepository;
+use Project;
 use UGroupManager;
 use Codendi_Request;
 
-class FineGrainedPermissionFactory
+class DefaultFineGrainedPermissionFactory
 {
 
     const ADD_BRANCH_PREFIX = 'add-branch';
@@ -48,17 +48,17 @@ class FineGrainedPermissionFactory
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function getBranchesFineGrainedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
+    public function getBranchesFineGrainedPermissionsFromRequest(Codendi_Request $request, Project $project)
     {
-        return $this->buildRepresentationFromRequest($request, $repository, self::ADD_BRANCH_PREFIX);
+        return $this->buildRepresentationFromRequest($request, $project, self::ADD_BRANCH_PREFIX);
     }
 
-    public function getTagsFineGrainedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
+    public function getTagsFineGrainedPermissionsFromRequest(Codendi_Request $request, Project $project)
     {
-        return $this->buildRepresentationFromRequest($request, $repository, self::ADD_TAG_PREFIX);
+        return $this->buildRepresentationFromRequest($request, $project, self::ADD_TAG_PREFIX);
     }
 
-    private function buildRepresentationFromRequest(Codendi_Request $request, GitRepository $repository, $prefix)
+    private function buildRepresentationFromRequest(Codendi_Request $request, Project $project, $prefix)
     {
         $permissions = array();
         $patterns    = $request->get("$prefix-name");
@@ -72,9 +72,9 @@ class FineGrainedPermissionFactory
                 $writers   = $this->getWritersFromRequest($request, $index, $prefix);
                 $rewinders = $this->getRewindersFromRequest($request, $index, $prefix);
 
-                $permissions[] = new FineGrainedPermissionRepresentation(
+                $permissions[] = new DefaultFineGrainedPermissionRepresentation(
                     0,
-                    $repository->getId(),
+                    $project->getID(),
                     $pattern,
                     $writers,
                     $rewinders
@@ -115,22 +115,22 @@ class FineGrainedPermissionFactory
         return $ugroups;
     }
 
-    public function getBranchesFineGrainedPermissionsForRepository(GitRepository $repository)
+    public function getBranchesFineGrainedPermissionsForProject(Project $project)
     {
         $permissions = array();
 
-        foreach ($this->dao->searchBranchesFineGrainedPermissionsForRepository($repository->getId()) as $row) {
+        foreach ($this->dao->searchDefaultBranchesFineGrainedPermissions($project->getID()) as $row) {
             $permissions[] = $this->getInstanceFromRow($row);
         }
 
         return $permissions;
     }
 
-    public function getTagsFineGrainedPermissionsForRepository(GitRepository $repository)
+    public function getTagsFineGrainedPermissionsForProject(Project $project)
     {
         $permissions = array();
 
-        foreach ($this->dao->searchTagsFineGrainedPermissionsForRepository($repository->getId()) as $row) {
+        foreach ($this->dao->searchDefaultTagsFineGrainedPermissions($project->getID()) as $row) {
             $permissions[] = $this->getInstanceFromRow($row);
         }
 
@@ -144,7 +144,7 @@ class FineGrainedPermissionFactory
     {
         $ugroups = array();
 
-        foreach ($this->dao->searchWriterUgroupIdsForFineGrainedPermissions($permission_id) as $row) {
+        foreach ($this->dao->searchDefaultWriterUgroupIdsForFineGrainedPermissions($permission_id) as $row) {
             $ugroups[] = $this->ugroup_manager->getById($row['ugroup_id']);
         }
 
@@ -158,7 +158,7 @@ class FineGrainedPermissionFactory
     {
         $ugroups = array();
 
-        foreach ($this->dao->searchRewinderUgroupIdsForFineGrainePermissions($permission_id) as $row) {
+        foreach ($this->dao->searchDefaultRewinderUgroupIdsForFineGrainePermissions($permission_id) as $row) {
             $ugroups[] = $this->ugroup_manager->getById($row['ugroup_id']);
         }
 
@@ -169,9 +169,9 @@ class FineGrainedPermissionFactory
     {
         $permission_id = $row['id'];
 
-        return new FineGrainedPermissionRepresentation(
+        return new DefaultFineGrainedPermissionRepresentation(
             $permission_id,
-            $row['repository_id'],
+            $row['project_id'],
             $row['pattern'],
             $this->getWritersForPermission($permission_id),
             $this->getRewindersForPermission($permission_id)

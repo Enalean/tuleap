@@ -26,6 +26,9 @@ use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -205,6 +208,7 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/permissions.js"></script>';
         }
     }
 
@@ -1208,8 +1212,31 @@ class GitPlugin extends Plugin {
             new WebhookDao(),
             $this->getFineGrainedUpdater(),
             $this->getFineGrainedFactory(),
-            $this->getFineGrainedRetriever()
+            $this->getFineGrainedRetriever(),
+            $this->getFineGrainedPermissionSaver(),
+            $this->getDefaultFineGrainedPermissionFactory()
         );
+    }
+
+    private function getDefaultFineGrainedPermissionSaver()
+    {
+        $dao = new FineGrainedDao();
+        return new DefaultFineGrainedPermissionSaver($dao);
+    }
+
+    private function getDefaultFineGrainedPermissionFactory()
+    {
+        $dao = new FineGrainedDao();
+        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager());
+    }
+
+    /**
+     * @return FineGrainedUpdater
+     */
+    private function getFineGrainedPermissionSaver()
+    {
+        $dao = new FineGrainedDao();
+        return new FineGrainedPermissionSaver($dao);
     }
 
     /**
@@ -1279,7 +1306,10 @@ class GitPlugin extends Plugin {
     private function getGitPermissionsManager() {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            $this->getFineGrainedUpdater(),
+            $this->getDefaultFineGrainedPermissionSaver(),
+            $this->getDefaultFineGrainedPermissionFactory()
         );
     }
 
