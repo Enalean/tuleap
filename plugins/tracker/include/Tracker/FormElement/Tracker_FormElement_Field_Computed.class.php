@@ -62,6 +62,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             $original_field
         );
 
+        $this->doNotDisplaySpecialPropertiesAtFieldCreation();
+    }
+
+    private function doNotDisplaySpecialPropertiesAtFieldCreation()
+    {
         $this->clearFastCompute();
         $this->clearTargetFieldName();
         $this->clearCache();
@@ -69,21 +74,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
 
     private function clearFastCompute()
     {
-        if (is_null($this->getProperty('fast_compute'))
-            || $this->useFastCompute()
-        ) {
+        if ($this->getProperty('fast_compute') === null) {
             unset($this->default_properties['fast_compute']);
         }
     }
 
     private function clearTargetFieldName()
     {
-        if (is_null($this->getProperty('target_field_name'))
-            || (
-                $this->name === $this->getProperty('target_field_name')
-                && $this->useFastCompute()
-            )
-        ) {
+        if ($this->getProperty('target_field_name') === null) {
             unset($this->default_properties['target_field_name']);
         }
     }
@@ -93,7 +91,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         $this->cache_specific_properties = null;
     }
 
-    private function useFastCompute() {
+    public function useFastCompute()
+    {
         return $this->getProperty('fast_compute') == 1;
     }
 

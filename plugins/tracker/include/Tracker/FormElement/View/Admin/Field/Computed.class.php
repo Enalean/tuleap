@@ -27,6 +27,10 @@ class Computed extends Tracker_FormElement_View_Admin_Field
         $html = '';
         switch ($property['type']) {
             case 'upgrade_button':
+                if ($this->isMigrated()) {
+                    break;
+                }
+
                 $disabled = '';
                 $title    = '';
                 if (! $this->canUpgrade()) {
@@ -52,6 +56,10 @@ class Computed extends Tracker_FormElement_View_Admin_Field
                 $html .= '</div>';
                 break;
             case 'string':
+                if ($this->isMigrated()) {
+                    break;
+                }
+
                 if (! $this->canUpgrade()) {
                     $html .= '<div class="alert alert-warning">';
                     $html .= '<h6>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') .'</h6>';
@@ -73,5 +81,10 @@ class Computed extends Tracker_FormElement_View_Admin_Field
     private function canUpgrade()
     {
         return $this->formElement->name === $this->formElement->getProperty('target_field_name');
+    }
+
+    private function isMigrated()
+    {
+        return $this->canUpgrade() && $this->formElement->useFastCompute();
     }
 }
