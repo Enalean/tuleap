@@ -160,7 +160,7 @@ $wUser->setContent('
   <li>'.$Language->getText('admin_main', 'search_user').'
     <form name="usersrch" action="userlist.php" method="get" class="form-inline">
       <input type="text" name="user_name_search" class="user_name_search" />
-      <input type="submit" class="btn" value="'.$Language->getText('admin_main', 'search').'">
+      <input type="submit" class="btn tlp-button-secondary" value="'.$Language->getText('admin_main', 'search').'">
     </form>
   </li>
   <li>'.$Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")).' '.$user_approval.'</li>
@@ -186,7 +186,7 @@ $wProject->setContent('
   <li>'.$Language->getText('admin_main', 'search_group').'
     <form name="gpsrch" action="grouplist.php" method="get" class="form-inline">
       <input type="text" name="group_name_search" class="group_name_search" />
-      <input type="submit" class="btn" value="'.$Language->getText('admin_main', 'search').'">
+      <input type="submit" class="btn tlp-button-secondary" value="'.$Language->getText('admin_main', 'search').'">
     </form>
   </li>
   <li>'.$Language->getText('admin_main', 'incomplete_group', array("grouplist.php?status=I")).'</li>
