@@ -119,7 +119,8 @@ class RepositoryResource extends AuthenticatedResource {
             $this->git_system_event_manager,
             $fine_grained_updater,
             $default_fine_grained_permission_saver,
-            $default_fine_grained_permission_factory
+            $default_fine_grained_permission_factory,
+            $fine_grained_dao
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
