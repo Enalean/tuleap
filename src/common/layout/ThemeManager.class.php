@@ -24,7 +24,7 @@
  */
 class ThemeManager
 {
-    private static $SITEADMIN_THEME  = 'BurningParrot';
+    private static $BURNING_PARROT   = 'BurningParrot';
     private static $LEGACY_EXTENSION = '_Theme.class.php';
     private static $PSR2_EXTENSION   = 'Theme.php';
 
@@ -53,18 +53,23 @@ class ThemeManager
 
     private function isAllowedTheme(PFUser $current_user, $name)
     {
-        if ($name === self::$SITEADMIN_THEME) {
-            return $this->isInSiteAdminArea($current_user);
+        if ($name === self::$BURNING_PARROT) {
+            return $this->isBurningParrotAllowed($current_user);
         }
 
         return true;
     }
 
-    private function isInSiteAdminArea(PFUser $current_user)
+    private function isBurningParrotAllowed(PFUser $current_user)
     {
         return $current_user->isSuperUser() && preg_match(
             '`(
                 ^/admin/
+            )`x',
+            $_SERVER['REQUEST_URI']
+        ) && ! preg_match(
+            '`(
+                ^/admin/register_admin.php
             )`x',
             $_SERVER['REQUEST_URI']
         );
