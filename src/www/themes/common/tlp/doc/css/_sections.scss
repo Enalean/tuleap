@@ -21,6 +21,7 @@ $section-padding: 40px 0;
 $sub-section-padding: 10px 0;
 $section-title-color: #666666;
 $section-sub-title-color: #a5a5a5;
+$editor-scrollbar-color: rgba(241, 241, 241, .3);
 
 main {
     min-height: 100%;
@@ -42,31 +43,11 @@ section {
         font-size: 13px;
     }
 
-    .code {
-        margin: 0 0 20px;
-        padding: 10px;
-        font-family: Monaco, Courier, monospace;
-        font-size: 11px;
-        line-height: 22px;
-        white-space: pre-wrap;
-    }
-
     .code-inline {
         padding: 5px 5px 3px;
         font-family: Monaco, Courier, monospace;
         font-weight: 400;
         text-transform: lowercase;
-    }
-
-    .demo {
-        display: flex;
-        align-items: center;
-
-        .example,
-        .code {
-            width: 50%;
-            margin: 0;
-        }
     }
 
     h2 {
@@ -92,4 +73,15 @@ section {
             font-size: 13px;
         }
     }
+
+    .code > .CodeMirror {
+        background-image: none;
+    }
+
+    .CodeMirror-overlayscroll-horizontal > div,
+    .CodeMirror-overlayscroll-vertical > div {
+        background: $editor-scrollbar-color;
+    }
 }
+
+@import 'demos';

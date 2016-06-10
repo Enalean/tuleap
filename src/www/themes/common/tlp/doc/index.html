@@ -8,6 +8,9 @@
     <link id="tlp-stylesheet" rel="stylesheet" href="../dist/tlp-blue.min.css">
 
     <link rel="stylesheet" href="css/main.min.css">
+    <link rel="stylesheet" href="codemirror/5.12.2/codemirror.css">
+    <link rel="stylesheet" href="codemirror/5.12.2/addon/scroll/simplescrollbars.css">
+    <link rel="stylesheet" href="codemirror/5.12.2/theme/mdn-like.css">
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
@@ -158,11 +161,19 @@
                 <section id="button-html-tags">
                     <h3>Button on different html tags</h3>
                     <div class="demo">
-                        <div class="example">
-                            <button type="button" class="tlp-button-primary">Button</button>
-                            <a href="javascript:;" class="tlp-button-primary" role="button">Link</a>
-                            <input type="button" class="tlp-button-primary" value="Input">
-                            <input type="submit" class="tlp-button-primary" value="Submit">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary">
+    Button
+</button>
+
+<a href="javascript:;" class="tlp-button-primary" role="button">Link</a>
+
+<input type="button" class="tlp-button-primary" value="Input">
+
+<input type="submit" class="tlp-button-primary" value="Submit">
+</textarea>
                         </div>
                     </div>
                 </section>
@@ -171,10 +182,24 @@
                     <h3>Button disabled <code class="code-inline">disabled attribute or a.disabled</code></h3>
                     <div class="demo">
                         <div class="example">
-                            <button type="button" class="tlp-button-primary" disabled>Disabled</button>
-                            <a href="javascript:;" class="tlp-button-primary disabled" role="button">Link</a>
-                            <input type="button" class="tlp-button-primary" value="Input" disabled>
-                            <input type="submit" class="tlp-button-primary" value="Submit" disabled>
+                        </div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary" disabled>
+    Disabled
+</button>
+
+<a href="javascript:;"
+    class="tlp-button-primary disabled"
+    role="button"
+>
+    Link
+</a>
+
+<input type="button" class="tlp-button-primary" value="Input" disabled>
+
+<input type="submit" class="tlp-button-primary" value="Submit" disabled>
+</textarea>
                         </div>
                     </div>
                 </section>
@@ -182,13 +207,28 @@
                 <section id="button-types">
                     <h3>Button types <code class="code-inline">.tlp-button-[type]</code></h3>
                     <div class="demo">
-                        <div class="example">
-                            <button type="button" class="tlp-button-primary">Button</button>
-                            <button type="button" class="tlp-button-secondary">Button</button>
-                            <button type="button" class="tlp-button-info">Button</button>
-                            <button type="button" class="tlp-button-success">Button</button>
-                            <button type="button" class="tlp-button-warning">Button</button>
-                            <button type="button" class="tlp-button-danger">Button</button>
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary">
+    Button
+</button>
+<button type="button" class="tlp-button-secondary">
+    Button
+</button>
+<button type="button" class="tlp-button-info">
+    Button
+</button>
+<button type="button" class="tlp-button-success">
+    Button
+</button>
+<button type="button" class="tlp-button-warning">
+    Button
+</button>
+<button type="button" class="tlp-button-danger">
+    Button
+</button>
+</textarea>
                         </div>
                     </div>
                 </section>
@@ -196,13 +236,28 @@
                 <section id="button-large">
                     <h3>Button large <code class="code-inline">.tlp-button-large</code></h3>
                     <div class="demo">
-                        <div class="example">
-                        <button type="button" class="tlp-button-primary tlp-button-large">Button</button>
-                        <button type="button" class="tlp-button-secondary tlp-button-large">Button</button>
-                        <button type="button" class="tlp-button-info tlp-button-large">Button</button>
-                        <button type="button" class="tlp-button-success tlp-button-large">Button</button>
-                        <button type="button" class="tlp-button-warning tlp-button-large">Button</button>
-                        <button type="button" class="tlp-button-danger tlp-button-large">Button</button>
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary tlp-button-large">
+    Button
+</button>
+<button type="button" class="tlp-button-secondary tlp-button-large">
+    Button
+</button>
+<button type="button" class="tlp-button-info tlp-button-large">
+    Button
+</button>
+<button type="button" class="tlp-button-success tlp-button-large">
+    Button
+</button>
+<button type="button" class="tlp-button-warning tlp-button-large">
+    Button
+</button>
+<button type="button" class="tlp-button-danger tlp-button-large">
+    Button
+</button>
+</textarea>
                     </div>
                 </div>
                 </section>
@@ -210,13 +265,28 @@
                 <section id="button-small">
                     <h3>Button small <code class="code-inline">.tlp-button-small</code></h3>
                     <div class="demo">
-                        <div class="example">
-                            <button type="button" class="tlp-button-primary tlp-button-small">Button</button>
-                            <button type="button" class="tlp-button-secondary tlp-button-small">Button</button>
-                            <button type="button" class="tlp-button-info tlp-button-small">Button</button>
-                            <button type="button" class="tlp-button-success tlp-button-small">Button</button>
-                            <button type="button" class="tlp-button-warning tlp-button-small">Button</button>
-                            <button type="button" class="tlp-button-danger tlp-button-small">Button</button>
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary tlp-button-small">
+    Button
+</button>
+<button type="button" class="tlp-button-secondary tlp-button-small">
+    Button
+</button>
+<button type="button" class="tlp-button-info tlp-button-small">
+    Button
+</button>
+<button type="button" class="tlp-button-success tlp-button-small">
+    Button
+</button>
+<button type="button" class="tlp-button-warning tlp-button-small">
+    Button
+</button>
+<button type="button" class="tlp-button-danger tlp-button-small">
+    Button
+</button>
+</textarea>
                         </div>
                     </div>
                 </section>
@@ -224,13 +294,28 @@
                 <section id="button-outline">
                     <h3>Button outline <code class="code-inline">.tlp-button-outline</code></h3>
                     <div class="demo">
-                        <div class="example">
-                            <button type="button" class="tlp-button-primary tlp-button-large tlp-button-outline">Button</button>
-                            <button type="button" class="tlp-button-secondary tlp-button-outline">Button</button>
-                            <button type="button" class="tlp-button-info tlp-button-small tlp-button-outline">Button</button>
-                            <button type="button" class="tlp-button-success tlp-button-small tlp-button-outline">Button</button>
-                            <button type="button" class="tlp-button-warning tlp-button-outline">Button</button>
-                            <button type="button" class="tlp-button-danger tlp-button-large tlp-button-outline">Button</button>
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<button type="button" class="tlp-button-primary tlp-button-large tlp-button-outline">
+    Button
+</button>
+<button type="button" class="tlp-button-secondary tlp-button-outline">
+    Button
+</button>
+<button type="button" class="tlp-button-info tlp-button-small tlp-button-outline">
+    Button
+</button>
+<button type="button" class="tlp-button-success tlp-button-small tlp-button-outline">
+    Button
+</button>
+<button type="button" class="tlp-button-warning tlp-button-outline">
+    Button
+</button>
+<button type="button" class="tlp-button-danger tlp-button-large tlp-button-outline">
+    Button
+</button>
+</textarea>
                         </div>
                 </section>
 
@@ -284,5 +369,7 @@
     </main>
 
     <script type="text/javascript" src="js/main.js"></script>
+    <script src="codemirror/5.12.2/codemirror-compressed.js"></script>
+    <script type="text/javascript" src="js/editors.js"></script>
 </body>
 </html>
