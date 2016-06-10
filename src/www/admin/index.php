@@ -273,9 +273,9 @@ $wUtils->setContent('
   </li>
   <li>'.$Language->getText('admin_main', 'tool_external').':
     <ul>
-      <li><a href="externaltools.php?tool=munin">munin</a></li>
-      <li><a href="externaltools.php?tool=info">PHP info</a></li>
-      <li><a href="externaltools.php?tool=APC">APC - PHP Cache</a></li>
+      <li><a href="/munin/">munin</a></li>
+      <li><a href="/info.php">PHP info</a></li>
+      <li><a href="/admin/apc.php">APC - PHP Cache</a></li>
       '.$pluginsContent.'
     </ul>
   </li>

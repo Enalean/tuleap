@@ -32,7 +32,6 @@ class IMPlugin extends Plugin {
         $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
-        $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
         $this->_addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
         $this->_addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
         $this->_addHook('get_user_display_name', 'im_process_display_presence', false);
@@ -539,20 +538,12 @@ class IMPlugin extends Plugin {
     }
  	
     function site_admin_external_tool_hook($params) {
-       global $Language;
-        echo '<li><A href="externaltools.php?tool=openfire">'.
+        echo '<li><A href="http://'.$GLOBALS['sys_default_domain'].':9090">'.
         $GLOBALS['Language']->getText('plugin_im','link_im_admin_tool').
         '</A></li>';
 
     }
         
-     function site_admin_external_tool_selection_hook($params) {
-      if ($params['tool']=='openfire') {
-                $params['title']="OpenFire Administration";
-                $params['src']='http://'.$GLOBALS['sys_default_domain'].':9090';
-            }
-    }
-
  	 function im_process_display_jabber_id($eParams) {
 	    global $Language;
 		$plugin= & IMPlugin::instance() ;
