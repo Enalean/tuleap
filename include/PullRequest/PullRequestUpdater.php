@@ -77,9 +77,9 @@ class PullRequestUpdater
         $this->timeline_event_creator = $timeline_event_creator;
     }
 
-    public function updatePullRequests(PFUser $user, GitExec $git_exec, GitRepository $repository, $src_branch_name, $new_rev)
+    public function updatePullRequests(PFUser $user, GitExec $git_exec, GitRepository $repository, $branch_name, $new_rev)
     {
-        $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $src_branch_name);
+        $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
@@ -95,6 +95,12 @@ class PullRequestUpdater
                 $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $new_rev);
                 $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
             }
+        }
+
+        $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
+        foreach ($prs as $pr) {
+            $merge_status = $this->pull_request_merger->detectMergeabilityStatus($git_exec, $pr);
+            $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
         }
     }
 
