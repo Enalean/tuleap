@@ -1,3 +1,6 @@
+Version 5.913 - Tuleap 8.16
+    * request #9239 Computed field v2 error on autocompute calculation
+
 Version 5.912 - Tuleap 8.16
     * request #9237 computed field v2 too much warning
 
