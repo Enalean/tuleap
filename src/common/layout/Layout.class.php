@@ -2537,4 +2537,3 @@ class Layout extends Tuleap\Layout\BaseLayout
         return false;
     }
 }
-?>

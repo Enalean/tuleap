@@ -1,0 +1,11 @@
+<nav class="tlp-pagination">
+{{# steps }}
+    <a href="{{ url }}"
+        class="tlp-pagination-step
+            {{# is_active }}tlp-pagination-step-active{{/ is_active }}
+            {{# is_disabled }}tlp-pagination-step-disabled{{/ is_disabled }}"
+    >
+        {{ label }}
+    </a>
+{{/ steps }}
+</nav>
