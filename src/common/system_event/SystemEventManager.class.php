@@ -575,33 +575,29 @@ class SystemEventManager {
             //Pagination
             $nb_of_pages = ceil($num_total_rows / $limit);
             $current_page = round($offset / $limit);
-            $html .= '<div class="pagination"><ul>';
             $width = 10;
+            $pagination = new Tuleap\Layout\PaginationPresenter();
             for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
                 if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                    $class = '';
+                    $label = $i + 1;
+                    $url = '?'. http_build_query(array(
+                        'offset'        => (int)($i * $limit),
+                        'filter_status' => $filter_status,
+                        'filter_type'   => $filter_type,
+                        'queue'         => $queue
+                    ));
                     if ($i == $current_page) {
-                        $class = 'class="active"';
+                        $pagination->addActiveStep($url, $label);
+                    } else {
+                        $pagination->addStep($url, $label);
                     }
-                    $html .= '<li '. $class .'>';
-                    $html .= '<a href="?'. http_build_query(array(
-                            'offset'        => (int)($i * $limit),
-                            'filter_status' => $filter_status,
-                            'filter_type'   => $filter_type,
-                            'queue'         => $queue
-                        )).
-                        '">';
-                    $html .= $i + 1;
-                    $html .= '</a>';
-                    $html .= '</li>';
                 } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
-                    $html .= '<li class="disabled">';
-                    $html .= '<a href="#">...</a>';
-                    $html .= '<li>';
+                    $pagination->addDisabledStep('javascript:;', '...');
                 }
             }
-            $html .= '</ul></div>';
-        
+            $renderer = TemplateRendererFactory::build()->getRenderer($GLOBALS['tuleap_dir'] .'/src/templates');
+            $html .= $renderer->renderToString('pagination', $pagination);
+
         }
         return $html;
     }
