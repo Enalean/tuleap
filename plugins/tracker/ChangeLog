@@ -1,3 +1,6 @@
+Version 5.914 - Tuleap 8.16
+    * Enable computed field edition
+
 Version 5.913 - Tuleap 8.16
     * request #9239 Computed field v2 error on autocompute calculation
 
