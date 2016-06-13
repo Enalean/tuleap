@@ -1,3 +1,12 @@
+Version 4.191 - Tuleap 8.16
+    * Deal with ugroup deletion
+
+
+This is part of story #8419 have permissions per tags/branches
+
+When a custom user group is deleted, the fine grained permissions for
+this ugroup are removed.
+
 Version 4.190 - Tuleap 8.16
     * Take into account site access changes
 
