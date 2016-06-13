@@ -25,15 +25,13 @@
             color: $theme-color;
         }
 
-        pre {
-            border-left: 3px solid transparentize($theme-color, .8);
+        .code-inline {
             background: transparentize($theme-color, .95);
             color: darken($theme-color, 20%);
         }
 
-        .code-inline {
-            background: transparentize($theme-color, .95);
-            color: darken($theme-color, 20%);
+        .CodeMirror-gutters {
+            border-left: 3px solid transparentize($theme-color, .8);
         }
     }
 
