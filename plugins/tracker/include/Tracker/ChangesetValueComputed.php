@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Tracker_Artifact_ChangesetValue_Integer;
+use PFUser;
 
 class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Integer
 {
@@ -33,5 +34,36 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Integer
     public function getValue()
     {
          return $this->getInteger();
+    }
+
+    public function getText()
+    {
+        return $this->getValue();
+    }
+
+    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    {
+        $previous_numeric = $changeset_value->getValue();
+        $next_numeric     = $this->getValue();
+
+        if ($previous_numeric !== $next_numeric) {
+            if ($previous_numeric === null) {
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from')." ".
+                $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field')." ".
+                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
+                $next_numeric;
+            } elseif (is_null($next_numeric)) {
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') ." ".
+                $previous_numeric. " ".
+                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
+                $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field');
+            } else {
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').
+                    ' ' . $previous_numeric . ' ' .
+                    $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ' . $next_numeric;
+            }
+        }
+
+        return false;
     }
 }
