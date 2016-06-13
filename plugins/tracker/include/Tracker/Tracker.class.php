@@ -1247,8 +1247,12 @@ class Tracker implements Tracker_Dispatchable_Interface {
     {
         $html = "";
 
-        $display = true;
         $user = UserManager::instance()->getCurrentUser();
+        if (! $user->isAdmin($this->getGroupId())) {
+            return $html;
+        }
+
+        $display = true;
         if ($this->getDeprecatedRetriever()->isWarningDeprecatedFieldHidden($user, $this)) {
             if (count($deprecated_fields) == 0) {
                 $display = false;
