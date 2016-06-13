@@ -1,3 +1,6 @@
+Version 5.915 - Tuleap 8.16
+    * Do not display warning messages about deprecation to other people than administrators
+
 Version 5.914 - Tuleap 8.16
     * Enable computed field edition
 
