@@ -95,11 +95,15 @@ class DefaultFineGrainedPermissionRepresentation
         return implode(', ', $ugroup_names);
     }
 
-    public function getDisplayablePattern()
+    public function getPatternWithoutPrefix()
     {
         $matches = array();
         preg_match("/^refs\/(?:heads|tags)\/(?P<pattern>.*)$/", $this->pattern, $matches);
 
-        return $matches['pattern'];
+        if (isset($matches['pattern'])) {
+            return $matches['pattern'];
+        }
+
+        return $this->pattern;
     }
 }

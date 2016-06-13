@@ -25,6 +25,7 @@ namespace Tuleap\Git\Permissions;
 use Project;
 use UGroupManager;
 use Codendi_Request;
+use ProjectUGroup;
 
 class DefaultFineGrainedPermissionFactory
 {
@@ -163,6 +164,77 @@ class DefaultFineGrainedPermissionFactory
         }
 
         return $ugroups;
+    }
+
+    public function mapBranchPermissionsForProject(
+        Project $template_project,
+        $new_project_id,
+        array $ugroups_mapping
+    ) {
+        $permissions = $this->getBranchesFineGrainedPermissionsForProject($template_project);
+
+        return $this->mapFineGrainedPermissions(
+            $new_project_id,
+            $permissions,
+            $ugroups_mapping
+        );
+    }
+
+    public function mapTagPermissionsForProject(
+        Project $template_project,
+        $new_project_id,
+        array $ugroups_mapping
+    ) {
+        $permissions = $this->getTagsFineGrainedPermissionsForProject($template_project);
+
+        return $this->mapFineGrainedPermissions(
+            $new_project_id,
+            $permissions,
+            $ugroups_mapping
+        );
+    }
+
+    private function mapFineGrainedPermissions(
+        $new_project_id,
+        array $permissions,
+        array $ugroups_mapping
+    ) {
+        $new_permissions = array();
+
+        foreach ($permissions as $permission) {
+            $writers   = $this->mapUgroup($permission->getWritersUgroup(), $ugroups_mapping);
+            $rewinders = $this->mapUgroup($permission->getRewindersUgroup(), $ugroups_mapping);
+
+            $new_permissions[] = new DefaultFineGrainedPermissionRepresentation(
+                0,
+                $new_project_id,
+                $permission->getPatternWithoutPrefix(),
+                $writers,
+                $rewinders
+            );
+        }
+
+        return $new_permissions;
+    }
+
+    private function mapUgroup(array $ugroups, array $ugroups_mapping)
+    {
+        $new_ugroups = array();
+        foreach ($ugroups as $ugroup) {
+            $new_ugroups[] = $this->getUgroupFromMapping($ugroup, $ugroups_mapping);
+        }
+
+        return $new_ugroups;
+    }
+
+    private function getUgroupFromMapping(ProjectUGroup $ugroup, array $ugroups_mapping)
+    {
+        if (! $ugroup->isStatic()) {
+            return $ugroup;
+        }
+
+        $new_ugroup_id = $ugroups_mapping[$ugroup->getId()];
+        return $this->ugroup_manager->getById($new_ugroup_id);
     }
 
     private function getInstanceFromRow(array $row)
