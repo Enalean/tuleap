@@ -273,7 +273,6 @@ $wUtils->setContent('
   </li>
   <li>'.$Language->getText('admin_main', 'tool_external').':
     <ul>
-      <li><a href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</a></li>
       <li><a href="externaltools.php?tool=munin">munin</a></li>
       <li><a href="externaltools.php?tool=info">PHP info</a></li>
       <li><a href="externaltools.php?tool=APC">APC - PHP Cache</a></li>

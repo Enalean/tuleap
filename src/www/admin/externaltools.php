@@ -20,10 +20,6 @@ switch($request->get('tool')) {
         $title = 'munin';
         $src   = '/munin/';
         break;
-    case 'phpMyAdmin':
-        $title = 'phpMyAdmin';
-        $src   = '/phpMyAdmin/';
-        break;
     case 'APC':
         $title = 'APC';
         $src   = '/admin/apc.php';
