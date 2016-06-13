@@ -1,3 +1,6 @@
+Version 4.193 - Tuleap 8.16
+    * story #9181: Add a new API for the CI build status
+
 Version 4.192 - Tuleap 8.16
     * Inherit fine grained permissions at project creation
 
