@@ -78,7 +78,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 <SPAN ID="preview_button"></SPAN>
 <DIV id="preview_result"></DIV>
 </P>
-<P><INPUT type="submit" name="Submit" class="btn btn-primary tlp-button-primary" value="'.$Language->getText('global','btn_submit').'">
+<P><INPUT type="submit" name="Submit" class="tlp-button-primary" value="'.$Language->getText('global','btn_submit').'">
 </TD></TR></TABLE>
 </FORM>
 ';
@@ -106,7 +106,7 @@ document.observe('dom:loaded', function() {
                                                 'name'    : 'Submit',
                                                 'type'    : 'button',
                                                 'value'   : 'Preview'});
-            button.addClassName('btn');
+            button.addClassName('tlp-button-secondary');
             $('preview_button').appendChild(button);
 
             //launching initialize function on MassMail instance will observe Events on the  input built above

@@ -91,7 +91,7 @@ $list_of_top_level_category_ids_purified = $purifier->purify(json_encode ($list_
 </label>
 <span class="help-block"><?php echo $Language->getText('admin_trove_cat_add','display_note'); ?></span>
 
-<p><input type="submit" name="Submit" class="btn btn-primary tlp-button-primary" value="<?php echo $Language->getText('global','btn_submit'); ?>">
+<p><input type="submit" name="Submit" class="tlp-button-primary" value="<?php echo $Language->getText('global','btn_submit'); ?>">
 </p></form>
 
 <?php

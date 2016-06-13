@@ -52,7 +52,7 @@ $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title'
              </tr>
              <tr VALIGN="MIDDLE">
                  <td ALIGN="RIGHT"><b>&nbsp;&nbsp  </b>
-            <input type="submit" name="continueShopping_0"  border="0" class="btn btn-primary tlp-button-primary" value="'.$Language->getText('admin_approve_license', 'continue').'">
+            <input type="submit" name="continueShopping_0"  border="0" class="tlp-button-primary" value="'.$Language->getText('admin_approve_license', 'continue').'">
                 </td>
              </tr>
        </table>';

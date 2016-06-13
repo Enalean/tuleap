@@ -387,7 +387,7 @@ admin_userlist	restrict	Restreindre
 admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre
 admin_userlist	status	Statut
-admin_userlist	active_sessions	Il y a actuellement $1 sessions active. Vous pouvez <input type="submit" class="btn" value="purger toutes les sessions en cours" name="reset_all_sessions" onclick="return confirm('Êtes-vous sûr de vouloir obliger tous vos utilisateurs à se reconnecter ?');" />. Ceci forcera la reconnexion de tous les utilisateurs.
+admin_userlist	active_sessions	Il y a actuellement $1 sessions active. Vous pouvez <input type="submit" class="tlp-button-secondary tlp-button-small" value="purger toutes les sessions en cours" name="reset_all_sessions" onclick="return confirm('Êtes-vous sûr de vouloir obliger tous vos utilisateurs à se reconnecter ?');" />. Ceci forcera la reconnexion de tous les utilisateurs.
 admin_userlist	nb_projects	Nb de projets
 admin_userlist	not_member_of	Membre d'aucun projet
 admin_userlist	member_of	Membre de $1 projet(s)
