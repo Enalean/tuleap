@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -172,7 +172,7 @@ class Git_Exec {
         return $branches;
     }
 
-    private function getAllBranches() {
+    public function getAllBranches() {
         $output = array();
         $this->gitCmdWithOutput("for-each-ref --format='%(refname)' refs/heads", $output);
         return $output;
@@ -233,6 +233,17 @@ class Git_Exec {
             return $output[0];
         }
         throw new Git_Command_UnknownObjectTypeException();
+    }
+
+    public function doesObjectExists($rev)
+    {
+        $output = array();
+        try {
+            $this->gitCmdWithOutput('cat-file -e '.escapeshellarg($rev), $output);
+        } catch (Git_Command_Exception $exception) {
+            return false;
+        }
+        return true;
     }
 
     /**

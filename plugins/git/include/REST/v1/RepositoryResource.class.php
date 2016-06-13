@@ -58,6 +58,9 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 use UGroupManager;
+use Git_Exec;
+use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\CIToken\Dao as CITokenDao;
 
 include_once('www/project/admin/permissions.php');
 
@@ -82,6 +85,11 @@ class RepositoryResource extends AuthenticatedResource {
 
     /** @var GerritMigrationHandler */
     private $migration_handler;
+
+    /**
+     * @var CITokenManager
+     */
+    private $ci_token_manager;
 
     public function __construct() {
         $git_dao         = new GitDao();
@@ -135,6 +143,8 @@ class RepositoryResource extends AuthenticatedResource {
             new ProjectHistoryDao(),
             new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao())
         );
+
+        $this->ci_token_manager = new CITokenManager(new CITokenDao());
     }
 
     /**
@@ -218,6 +228,74 @@ class RepositoryResource extends AuthenticatedResource {
         $this->sendPaginationHeaders($limit, $offset, $result->total_size);
 
         return $result;
+    }
+
+    /**
+     * Post a build status
+     *
+     * Format: { "status": "S|F|U", "branch": "master", "commit_reference": "0deadbeef", "token": "0000"}
+     *
+     * <pre>
+     * /!\ REST route under construction and subject to changes /!\
+     * </pre>
+     * @url POST {id}/build_status
+     *
+     * @access hybrid
+     *
+     * @param int                       $id            Git repository id
+     * @param BuildStatusPOSTRepresentation $build_data BuildStatus {@from body} {@type Tuleap\Git\REST\v1\BuildStatusPOSTRepresentation}
+     *
+     * @status 201
+     * @throws 403
+     * @throws 404
+     * @throws 400
+     */
+    protected function postBuildStatus($id, BuildStatusPOSTRepresentation $build_status_data)
+    {
+        if (! $build_status_data->isStatusValid()) {
+            throw new RestException(400, $build_status_data->status . ' is not a valid status.');
+        }
+
+        $repository = $this->repository_factory->getRepositoryById($id);
+
+        if (! $repository) {
+            throw new RestException(404, 'Repository not found.');
+        }
+
+        $repo_ci_token = $this->ci_token_manager->getToken($repository);
+
+        if ($repo_ci_token === null) {
+            $repo_ci_token = '';
+        }
+
+        if (! \hash_equals($build_status_data->token, $repo_ci_token)) {
+            throw new RestException(403, 'Invalid token');
+        }
+
+        $git_exec = new Git_Exec($repository->getFullPath(), $repository->getFullPath());
+
+        if (! $git_exec->doesObjectExists($build_status_data->commit_reference)) {
+            throw new RestException(404, $build_status_data->commit_reference . ' does not reference a commit.');
+        }
+
+        if ($git_exec->getObjectType($build_status_data->commit_reference) !== 'commit') {
+            throw new RestException(400, $build_status_data->commit_reference . ' does not reference a commit.');
+        }
+
+        $branch_ref = 'refs/heads/' . $build_status_data->branch;
+        if (! in_array($branch_ref, $git_exec->getAllBranches())) {
+            throw new RestException(400, $build_status_data->branch . ' is not a branch.');
+        }
+
+        EventManager::instance()->processEvent(
+            REST_GIT_BUILD_STATUS,
+            array(
+                'repository'       => $repository,
+                'branch'           => $build_status_data->branch,
+                'commit_reference' => $build_status_data->commit_reference,
+                'status'           => $build_status_data->status
+            )
+        );
     }
 
     /**
