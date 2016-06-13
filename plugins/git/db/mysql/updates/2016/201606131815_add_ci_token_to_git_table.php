@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20160608_add_ci_token_to_git_table extends ForgeUpgrade_Bucket
+class b201606131815_add_ci_token_to_git_table extends ForgeUpgrade_Bucket
 {
 
     public function description()
@@ -38,11 +38,14 @@ EOT;
      *
      * @return void
      */
-    public function up() {
-        $sql = 'ALTER TABLE plugin_git ADD ci_token TEXT NULL';
-        $res = $this->db->dbh->exec($sql);
-        if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column ci_token to the table plugin_git');
+    public function up()
+    {
+        if (! $this->db->columnNameExists('plugin_git', 'ci_token')) {
+            $sql = 'ALTER TABLE plugin_git ADD ci_token TEXT NULL';
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding the column ci_token to the table plugin_git');
+            }
         }
     }
 
@@ -51,8 +54,9 @@ EOT;
      *
      * @return void
      */
-    public function postUp() {
-        if (!$this->db->columnNameExists('plugin_git', 'ci_token')) {
+    public function postUp()
+    {
+        if (! $this->db->columnNameExists('plugin_git', 'ci_token')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column ci_token in table plugin_git is missing');
         }
     }
