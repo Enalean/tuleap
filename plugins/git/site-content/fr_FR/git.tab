@@ -474,3 +474,8 @@ plugin_git	fine_grained_permissions_empty	Aucune permission n'a été configuré
 plugin_git	add_branch_permission	Ajouter une permission sur une nouvelle branche
 plugin_git	add_tag_permission	Ajouter une permission sur une nouvelle étiquette
 plugin_git	add_permission_duplicate_pattern	L'expression $1 est déjà existante.
+
+plugin_git	view_repo_ci_token	Jeton pour les outils d'intégration continues
+plugin_git	regenerate_ci_token	Regénérer le jeton
+plugin_git	no_ci_token	Aucun jeton défini
+plugin_git	ci_token_description	Ce jeton est utilisé pour authentifier les outils d'intégration continues comme Jenkins lors de l'utilisation des API de mise à jour des statuts de construction des branches et commits Git

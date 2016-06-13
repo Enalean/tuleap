@@ -24,6 +24,7 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\GitViews\RepoManagement\Pane\GitViewsRepoManagementPaneCIToken;
 
 /**
  * Dedicated screen for repo management
@@ -119,6 +120,7 @@ class GitViews_RepoManagement {
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever
         );
+        $panes[] = new GitViewsRepoManagementPaneCIToken($repository, $this->request);
 
         $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {

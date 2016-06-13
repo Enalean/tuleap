@@ -1396,4 +1396,28 @@ function http_split_header_body($content) {
     return array($headers, $body);
 }
 
+if (! function_exists('hash_equals')) {
+    function hash_equals($knownString, $userInput)
+    {
+        if (! is_string($knownString)) {
+            trigger_error('Expected known_string to be a string, '.gettype($knownString).' given', E_USER_WARNING);
+            return false;
+        }
+        if (! is_string($userInput)) {
+            trigger_error('Expected user_input to be a string, '.gettype($userInput).' given', E_USER_WARNING);
+            return false;
+        }
+        $knownLen = strlen($knownString);
+        $userLen  = strlen($userInput);
+        if ($knownLen !== $userLen) {
+            return false;
+        }
+        $result = 0;
+        for ($i = 0; $i < $knownLen; ++$i) {
+            $result |= ord($knownString[$i]) ^ ord($userInput[$i]);
+        }
+        return 0 === $result;
+    }
+}
+
 ?>

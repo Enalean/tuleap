@@ -30,6 +30,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\CIToken\Manager as CITokenManager;
 
 /**
  * Git
@@ -181,6 +182,11 @@ class Git extends PluginController {
      */
     private $default_fine_grained_permission_factory;
 
+    /**
+     * @var CITokenManager
+     */
+    private $ci_token_manager;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -207,7 +213,8 @@ class Git extends PluginController {
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory
+        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
+        CITokenManager $ci_token_manager
     ) {
         parent::__construct($user_manager, $request);
 
@@ -231,6 +238,7 @@ class Git extends PluginController {
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
         $this->webhook_dao                = $webhook_dao;
+        $this->ci_token_manager           = $ci_token_manager;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -471,6 +479,7 @@ class Git extends PluginController {
                 'remove-webhook',
                 'add-webhook',
                 'edit-webhook',
+                'generate-ci-token',
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
@@ -993,6 +1002,13 @@ class Git extends PluginController {
                 $this->addAction('restoreRepository', array($repo_id, $this->groupId));
                 break;
 
+            case 'generate-ci-token':
+                $this->checkSynchronizerToken('plugins/git/?group_id='. $this->groupId .'&pane=citoken');
+                $this->ci_token_manager->generateNewTokenForRepository($repository);
+                $this->addAction('repoManagement', array($repository));
+                $this->addView('repoManagement');
+                break;
+
             #LIST
             default:
                 $handled = $this->handleAdditionalAction($repository, $action);
@@ -1205,7 +1221,8 @@ class Git extends PluginController {
             $this->gerrit_can_migrate_checker,
             $this->webhook_dao,
             $this->fine_grained_updater,
-            $this->fine_grained_permission_saver
+            $this->fine_grained_permission_saver,
+            $this->ci_token_manager
         );
     }
 

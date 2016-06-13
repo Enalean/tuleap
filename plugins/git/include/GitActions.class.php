@@ -28,6 +28,7 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\CIToken\Manager as CITokenManager;
 
 /**
  * GitActions
@@ -121,6 +122,11 @@ class GitActions extends PluginActions {
      */
     private $gerrit_can_migrate_checker;
 
+    /**
+     * @var CITokenManager
+     */
+    private $ci_token_manager;
+
     public function __construct(
         Git                $controller,
         Git_SystemEventManager $system_event_manager,
@@ -143,7 +149,8 @@ class GitActions extends PluginActions {
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         WebhookDao $webhook_dao,
         FineGrainedUpdater $fine_grained_updater,
-        FineGrainedPermissionSaver $fine_grained_permission_saver
+        FineGrainedPermissionSaver $fine_grained_permission_saver,
+        CITokenManager $ci_token_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -167,6 +174,7 @@ class GitActions extends PluginActions {
         $this->webhook_dao                   = $webhook_dao;
         $this->fine_grained_updater          = $fine_grained_updater;
         $this->fine_grained_permission_saver = $fine_grained_permission_saver;
+        $this->ci_token_manager              = $ci_token_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -245,6 +253,8 @@ class GitActions extends PluginActions {
                 $repository_name,
                 $project_id
             );
+
+            $this->ci_token_manager->generateNewTokenForRepository($repository);
 
             $this->redirectToRepo($repository);
         } catch (Exception $exception) {
