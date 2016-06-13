@@ -1,3 +1,12 @@
+Version 4.190 - Tuleap 8.16
+    * Take into account site access changes
+
+
+This is part of story #8419 have permissions per tags/branches
+
+When the site access changes, the permissions per tags/branches
+are updated with new access
+
 Version 4.189 - Tuleap 8.16
     * story #8419 have permissions per tags/branches (Add Git default permissions for branches and tags)
 
