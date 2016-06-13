@@ -1,0 +1,20 @@
+<div
+    id="remove-{{ getId }}-popover"
+    class="remove-fine-grained-permission-popover"
+>
+    <p>{{ remove_fine_grained_permission_desc }}</p>
+
+    <input type="hidden" name="permission_id" value="{{ getId }}" />
+    <input type="hidden" name="challenge" value="{{ delete_challenge }}" />
+
+    <div class="remove-fine-grained-permission-confirm-actions">
+        <button
+            type="button"
+            class="btn btn-small btn-default dismiss-popover"
+        >{{ btn_cancel }}</button>
+        <button
+            type="submit"
+            class="btn btn-small btn-danger"
+        >{{ remove_fine_grained_permission_confirm }}</button>
+    </div>
+</div>

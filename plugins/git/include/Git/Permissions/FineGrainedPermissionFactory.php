@@ -27,6 +27,7 @@ use UGroupManager;
 use Codendi_Request;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
+use Project;
 
 class FineGrainedPermissionFactory
 {

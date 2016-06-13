@@ -48,6 +48,7 @@
             new_row += '<td>' + input_tag + '</td>';
             new_row += '<td>' + write_permission_tag + '</td>';
             new_row += '<td>' + rewind_permission_tag + '</td>';
+            new_row += '<td/>';
             new_row += '</tr>';
 
             tbody.append($(new_row));
@@ -58,8 +59,56 @@
         return $('input[name^="add-'+type+'-name"]').length;
     }
 
+    function confirmDeletionPopover() {
+       $('.remove-fine-grained-permission').each(function() {
+           var id          = $(this).data('popover-id');
+           var form_action = $(this).data('form-action');
+
+           $(this).popover({
+               container: '.git-per-tags-branches-permissions',
+               title: codendi.getText('git', 'remove_webhook_title'),
+               content: '<form method="POST" action="' + form_action + '">'
+                  + $('#' + id).html()
+                  + '</form>'
+           });
+
+           $('#' + id).remove();
+       });
+    }
+
+    function dismissPopover() {
+       $('.remove-fine-grained-permission').popover('hide');
+    }
+
+    function bindShowPopover() {
+        $('.remove-fine-grained-permission').click(function(event) {
+            event.preventDefault();
+
+            dismissPopover();
+
+            $(this).popover('show');
+        });
+    }
+
     $(function() {
         bindAddPermission();
+
+        confirmDeletionPopover();
+
+        bindShowPopover();
+
+        $('body').on('click', function(event) {
+           if ($(event.target).hasClass('dismiss-popover')) {
+               dismissPopover();
+           }
+
+           if ($(event.target).data('toggle') !== 'popover' &&
+               $(event.target).parents('.popover.in').length === 0 &&
+               $(event.target).parents('[data-toggle="popover"]').length === 0
+           ) {
+               dismissPopover();
+           }
+        });
     });
 
 }(jQuery));

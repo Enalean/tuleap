@@ -470,6 +470,7 @@ plugin_git	fine_grained_permissions_warning	Chers administrateurs, vous serez tr
 plugin_git	fine_grained_permissions_tags_title	Étiquettes
 plugin_git	fine_grained_permissions_branches_title	Branches
 plugin_git	fine_grained_permissions_pattern_column	Expression
+plugin_git	fine_grained_permissions_actions_column	Actions
 plugin_git	fine_grained_permissions_empty	Aucune permission n'a été configurée.
 plugin_git	add_branch_permission	Ajouter une permission sur une nouvelle branche
 plugin_git	add_tag_permission	Ajouter une permission sur une nouvelle étiquette
@@ -479,3 +480,10 @@ plugin_git	view_repo_ci_token	Jeton pour les outils d'intégration continues
 plugin_git	regenerate_ci_token	Regénérer le jeton
 plugin_git	no_ci_token	Aucun jeton défini
 plugin_git	ci_token_description	Ce jeton est utilisé pour authentifier les outils d'intégration continues comme Jenkins lors de l'utilisation des API de mise à jour des statuts de construction des branches et commits Git
+
+plugin_git	fine_grained_remove_button	Supprimer
+plugin_git	fine_grained_remove_desc	Vous êtes sur le point de supprimer la permission. Veuillez confirmer la suppression.
+plugin_git	fine_grained_remove_confirm	Confirmer la suppression
+plugin_git	fine_grained_bad_request	La requête n'est pas valide.
+plugin_git	fine_grained_delete_ok	Permission suprimée avec succès.
+plugin_git	fine_grained_delete_error	Erreur lors de la suppression de la permission.

@@ -994,6 +994,34 @@ h1, h2, h3 {
         letter-spacing: .5px;
         text-transform: uppercase;
     }
+
+    .permission-pattern {
+        width: 50%;
+    }
+
+    .permission-delete {
+        min-width: 80px;
+    }
+
+    > .popover {
+        .popover-title {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+
+        form {
+            margin: 0;
+
+            .remove-fine-grained-permission-confirm-actions {
+                text-align: right;
+            }
+        }
+
+        p {
+            font-size: 13px;
+        }
+    }
 }
 
 .git-permission-table {
@@ -1038,5 +1066,10 @@ h1, h2, h3 {
 }
 
 #add-fine-grained-permission-template {
+    display: none;
+}
+
+
+.remove-fine-grained-permission-popover {
     display: none;
 }

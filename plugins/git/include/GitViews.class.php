@@ -684,6 +684,10 @@ class GitViews extends PluginViews {
         $tags_permissions         = $this->default_fine_grained_permission_factory->getTagsFineGrainedPermissionsForProject($this->project);
         $new_fine_grained_ugroups = $builder->getAllOptions($this->project);
 
+        $delete_url  = '?action=delete-default-permissions&pane=access_control&group_id='.$this->project->getID();
+        $url         = '?action=admin-default-settings&pane=access_control&group_id='.$this->project->getID();
+        $csrf_delete = new CSRFSynchronizerToken($url);
+
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project_id,
             $are_mirrors_defined,
@@ -698,7 +702,9 @@ class GitViews extends PluginViews {
             $can_use_fine_grained_permissions,
             $branches_permissions,
             $tags_permissions,
-            $new_fine_grained_ugroups
+            $new_fine_grained_ugroups,
+            $delete_url,
+            $csrf_delete
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

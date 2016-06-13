@@ -33,6 +33,11 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $can_use_fine_grained_permissions;
     public $default_permissions_title;
     public $fine_grained_permissions_title;
+    public $remove_fine_grained_permission_delete;
+    public $remove_fine_grained_permission_desc;
+    public $remove_fine_grained_permission_confirm;
+    public $btn_cancel;
+    public $remove_form_action;
 
     /**
      * @var array
@@ -63,7 +68,9 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $can_use_fine_grained_permissions,
         array $branches_permissions,
         array $tags_permissions,
-        array $new_fine_grained_ugroups
+        array $new_fine_grained_ugroups,
+        $delete_url,
+        CSRFSynchronizerToken $csrf_delete
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
@@ -116,12 +123,36 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'fine_grained_permissions_pattern_column'
         );
 
+        $this->actions_column = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_actions_column'
+        );
+
         $this->empty = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_permissions_empty'
         );
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
+        $this->remove_form_action       = $delete_url;
+        $this->delete_challenge         = $csrf_delete->getToken();
+
+        $this->remove_fine_grained_permission_delete = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_button'
+        );
+
+        $this->remove_fine_grained_permission_desc = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_desc'
+        );
+
+        $this->remove_fine_grained_permission_confirm = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_confirm'
+        );
+
+        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
     public function is_control_limited()

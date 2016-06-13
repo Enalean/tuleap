@@ -158,6 +158,10 @@ class GitForkPermissionsManager {
         $tags_permissions         = array();
         $new_fine_grained_ugroups = $this->getAllOptions($project);
 
+        $delete_url = '?action=delete-permissions&pane=perms&repo_id='.$this->repository->getId().'&group_id='.$project->getID();
+        $url        = '?action=repo_management&pane=perms&group_id='.$project->getID();
+        $csrf       = new CSRFSynchronizerToken($url);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
             $this->isRWPlusBlocked(),
@@ -171,7 +175,9 @@ class GitForkPermissionsManager {
             $can_use_fine_grained_permissions,
             $branches_permissions,
             $tags_permissions,
-            $new_fine_grained_ugroups
+            $new_fine_grained_ugroups,
+            $delete_url,
+            $csrf
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -196,6 +202,10 @@ class GitForkPermissionsManager {
         $branches_permissions = $this->fine_grained_factory->getBranchesFineGrainedPermissionsForRepository($this->repository);
         $tags_permissions     = $this->fine_grained_factory->getTagsFineGrainedPermissionsForRepository($this->repository);
 
+        $delete_url = '?action=delete-permissions&pane=perms&repo_id='.$this->repository->getId().'&group_id='.$project->getID();
+        $url        = '?action=repo_management&pane=perms&group_id='.$project->getID();
+        $csrf       = new CSRFSynchronizerToken($url);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
             $this->isRWPlusBlocked(),
@@ -209,7 +219,9 @@ class GitForkPermissionsManager {
             $can_use_fine_grained_permissions,
             $branches_permissions,
             $tags_permissions,
-            $this->getAllOptions($project)
+            $this->getAllOptions($project),
+            $delete_url,
+            $csrf
         );
 
         return $renderer->renderToString('access-control', $presenter);
