@@ -358,9 +358,17 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format = 'text') {
+    public function fetchMailArtifactValue(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $format = 'text'
+    ) {
         $current_user = UserManager::instance()->getCurrentUser();
-        return $this->getComputedValue($current_user, $artifact);
+        $changeset    = $artifact->getLastChangesetWithFieldValue($this);
+        $value        = $this->getValueForChangeset($changeset, $current_user);
+
+        return ($value) ? $value : "-";
     }
 
     /**
@@ -406,6 +414,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $this->getComputedValue($user, $changeset->getArtifact())
         );
         return $artifact_field_value_full_representation;
+    }
+
+    private function getValueForChangeset(Tracker_Artifact_Changeset $artifact_changeset, PFUser $user)
+    {
+        $changeset = $artifact_changeset->getValue($this);
+        if ($changeset && $changeset->getNumeric()) {
+            return $changeset->getNumeric();
+        } else {
+            return $this->getComputedValue($user, $artifact_changeset->getArtifact());
+        }
     }
 
     /**
