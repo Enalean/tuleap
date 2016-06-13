@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,6 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+namespace Tuleap\Theme\BurningParrot\Navbar;
+
+class GlobalMenuItemPresenter
+{
+    /** @var string */
+    public $label;
+
+    /** @var icon */
+    public $icon;
+
+    /** @var string */
+    public $additional_classes;
+
+    public function __construct($label, $icon, $additional_classes)
+    {
+        $this->label              = $label;
+        $this->icon               = $icon;
+        $this->additional_classes = $additional_classes;
+    }
+}

@@ -1,0 +1,165 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+header {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: space-between;
+    width: 100%;
+    height: $navbar-height;
+    background: $navbar-background;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+    z-index: 1000;
+}
+
+#logo {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: $sidebar-width;
+    height: $navbar-height;
+    background: $tlp-theme-color url('../images/organization_logo_small.png') no-repeat center center;
+}
+
+.header-container {
+    display: flex;
+}
+
+%navbar-link {
+    display: flex;
+    align-items: center;
+    padding: 0 $tlp-margin-default / 2;
+    text-decoration: none;
+}
+
+#global-nav {
+    display: flex;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    .global-nav-link {
+        @extend %navbar-link;
+
+        color: $tlp-ui-dimmed;
+
+        &:first-child {
+            padding: 0 $tlp-margin-default / 2 0 $tlp-margin-default;
+        }
+
+        &:last-child {
+            padding: 0 $tlp-margin-default 0 $tlp-margin-default / 2;
+        }
+
+        &.go-to-admin {
+            color: $tlp-ui-danger;
+        }
+
+        > .global-nav-link-icon {
+            display: none;
+            font-size: initial;
+
+            @media screen and (max-width: 900px) {
+                display: inline;
+            }
+        }
+
+        .global-nav-link-text {
+            @media screen and (max-width: 900px) {
+                display: none;
+            }
+        }
+
+        > .icon-caret-down {
+            margin: 0 0 0 5px;
+
+            @media screen and (max-width: 900px) {
+                display: none;
+            }
+        }
+    }
+}
+
+#global-search {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+}
+
+#global-search-input {
+    width: 100%;
+    min-width: 75px;
+}
+
+#user-nav {
+    display: flex;
+    margin: 0 0 0 $tlp-margin-default / 2;
+    border-left: 1px solid $tlp-ui-border-normal;
+    white-space: nowrap;
+
+    > .user-block {
+        display: flex;
+        align-items: center;
+
+        > .user-block-names {
+            display: flex;
+            flex-direction: column;
+            margin: 0 0 0 $tlp-margin-default / 2;
+
+            @media screen and (max-width: 1100px) {
+                display: none;
+            }
+
+            > .user-nav-display-name {
+                margin: 0 0 3px;
+                color: $tlp-theme-color;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            > .user-nav-username {
+                font-size: 11px;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .user-nav-link {
+        @extend %navbar-link;
+
+        color: $tlp-ui-dimmed;
+
+        &:last-child {
+            padding: 0 $tlp-margin-default 0 $tlp-margin-default / 2;
+        }
+    }
+}
+
+#global-nav .global-nav-link,
+#user-nav .user-nav-link {
+    transition: color 100ms linear;
+
+    &:hover {
+        transition: color 100ms linear;
+        color: $tlp-theme-color;
+    }
+}

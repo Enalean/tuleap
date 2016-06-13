@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,6 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+namespace Tuleap\Theme\BurningParrot\Navbar;
+
+use PFUser;
+
+class UserNavPresenter
+{
+    /** @var PFUser */
+    private $current_user;
+
+    public function __construct(
+        PFUser $current_user
+    ) {
+        $this->current_user = $current_user;
+    }
+}

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+@import '../../common/tlp/src/scss/tlp-red';
+
+$navbar-background: #ffffff;
+
+@import 'structure';

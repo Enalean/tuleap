@@ -20,10 +20,16 @@
 @import 'init';
 
 // UI colors
-$tlp-ui-info   : #7ed7f1;
-$tlp-ui-success: #58b359;
-$tlp-ui-warning: #f5b849;
-$tlp-ui-danger : #da5353;
+$tlp-ui-info         : #7ed7f1;
+$tlp-ui-success      : #58b359;
+$tlp-ui-warning      : #f5b849;
+$tlp-ui-danger       : #da5353;
+
+$tlp-ui-dimmed       : #888888;
+
+$tlp-ui-border-light : #f3f3f3;
+$tlp-ui-border-normal: #e3e5ed;
+$tlp-ui-border-dark  : #d4d7e1;
 
 $tlp-theme-color: $tlp-theme-blue;
 

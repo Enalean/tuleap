@@ -3,7 +3,11 @@
     <head>
         <meta charset="utf-8">
         <title>{{ title }}</title>
-        <link rel="SHORTCUT ICON" href="{{ imgroot }}favicon.ico">
-        <link rel="stylesheet" type="text/css" href="/themes/common/tlp/dist/tlp-{{ color }}.min.css" />
+        <link rel="shortcut icon" href="{{ imgroot }}favicon.ico">
+
+        {{# stylesheets }}
+            <link rel="stylesheet" type="text/css" href="{{ . }}">
+        {{/ stylesheets }}
     </head>
     <body>
+        {{> navbar }}

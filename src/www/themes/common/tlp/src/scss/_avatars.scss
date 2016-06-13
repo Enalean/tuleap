@@ -17,6 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+%tlp-avatar {
+    border-radius: 50%;
+}
+
+.tlp-avatar {
+    @extend %tlp-avatar;
+
+    width: 35px;
+    height: 35px;
+}
+
+.tlp-avatar-large {
+    @extend %tlp-avatar;
+
+    width: 50px;
+    height: 50px;
+}
+
+.tlp-avatar-small {
+    @extend %tlp-avatar;
+
+    width: 20px;
+    height: 20px;
+}

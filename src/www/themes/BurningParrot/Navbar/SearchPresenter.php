@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,6 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+namespace Tuleap\Theme\BurningParrot\Navbar;
+
+class SearchPresenter
+{
+    /** @var string */
+    public $placeholder;
+
+    public function __construct()
+    {
+        $this->placeholder = $GLOBALS['Language']->getText('include_menu', 'search');
+    }
+}

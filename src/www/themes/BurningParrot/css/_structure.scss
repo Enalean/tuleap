@@ -17,6 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+$navbar-height: 45px;
+$sidebar-width: 50px;
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: $navbar-height 0 0;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@import 'navbar';

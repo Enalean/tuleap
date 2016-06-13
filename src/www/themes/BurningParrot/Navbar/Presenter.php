@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,6 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'buttons';
-@import 'pagination';
+namespace Tuleap\Theme\BurningParrot\Navbar;
+
+class Presenter
+{
+    /** @var GlobalNavPresenter */
+    public $global_nav_presenter;
+
+    /** @var SearchPresenter */
+    public $search_presenter;
+
+    /** @var UserNavPresenter */
+    public $user_nav_presenter;
+
+    public function __construct(
+        GlobalNavPresenter $global_nav_presenter,
+        SearchPresenter $search_presenter,
+        UserNavPresenter $user_nav_presenter
+    ) {
+        $this->global_nav_presenter = $global_nav_presenter;
+        $this->search_presenter     = $search_presenter;
+        $this->user_nav_presenter   = $user_nav_presenter;
+    }
+}

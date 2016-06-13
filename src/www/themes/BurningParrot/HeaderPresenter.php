@@ -20,56 +20,32 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use ThemeVariant;
 use PFUser;
+use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 
 class HeaderPresenter
 {
-
     /** @var string */
     public $title;
 
     /** @var string */
     public $imgroot;
 
-    /** @var string */
-    public $color;
+    /** @var Tuleap\Theme\BurningParrot\Navbar\Presenter */
+    public $navbar_presenter;
+
+    /** @var array */
+    public $stylesheets;
 
     public function __construct(
-        PFUser $user,
         $title,
-        $imgroot
+        $imgroot,
+        NavbarPresenter $navbar_presenter,
+        array $stylesheets
     ) {
-        $this->title   = html_entity_decode($title);
-        $this->imgroot = $imgroot;
-
-        $theme_variant = new ThemeVariant();
-        $this->color = 'blue';
-        switch ($theme_variant->getVariantForUser($user)) {
-            case 'FlamingParrot_Orange':
-            case 'FlamingParrot_DarkOrange':
-                $this->color = 'orange';
-                break;
-            case 'FlamingParrot_Green':
-            case 'FlamingParrot_DarkGreen':
-                $this->color = 'green';
-                break;
-            case 'FlamingParrot_BlueGrey':
-            case 'FlamingParrot_DarkBlueGrey':
-                $this->color = 'grey';
-                break;
-            case 'FlamingParrot_Purple':
-            case 'FlamingParrot_DarkPurple':
-                $this->color = 'purple';
-                break;
-            case 'FlamingParrot_Red':
-            case 'FlamingParrot_DarkRed':
-                $this->color = 'red';
-                break;
-            case 'FlamingParrot_Blue':
-            case 'FlamingParrot_DarkBlue':
-            default:
-                $this->color = 'blue';
-        }
+        $this->title            = html_entity_decode($title);
+        $this->imgroot          = $imgroot;
+        $this->navbar_presenter = $navbar_presenter;
+        $this->stylesheets      = $stylesheets;
     }
 }

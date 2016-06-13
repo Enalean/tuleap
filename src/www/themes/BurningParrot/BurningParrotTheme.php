@@ -22,6 +22,7 @@ use Tuleap\Layout\BaseLayout;
 use Widget_Static;
 use TemplateRendererFactory;
 use PFUser;
+use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 
 class BurningParrotTheme extends BaseLayout
 {
@@ -45,13 +46,16 @@ class BurningParrotTheme extends BaseLayout
 
     public function header(array $params)
     {
-        $title = $GLOBALS['sys_name'];
-        if (! empty($params['title'])) {
-            $title = $params['title'] .' - '. $title;
-        }
+        $header_presenter_builder = new HeaderPresenterBuilder();
 
-        $header = new HeaderPresenter($this->user, $title, $this->imgroot);
-        $this->renderer->renderToPage('header', $header);
+        $header_presenter = $header_presenter_builder->build(
+            new NavbarPresenterBuilder(),
+            $this->user,
+            $this->imgroot,
+            $params['title']
+        );
+
+        $this->renderer->renderToPage('header', $header_presenter);
     }
 
     public function footer(array $params)
