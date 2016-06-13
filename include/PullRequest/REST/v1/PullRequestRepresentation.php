@@ -40,6 +40,10 @@ class PullRequestRepresentation
     const UNKNOWN_MERGE        = 'unknown-merge-status';
 
 
+    const BUILD_STATUS_UNKNOWN = 'unknown';
+    const BUILD_STATUS_SUCESS  = 'success';
+    const BUILD_STATUS_FAIL    = 'fail';
+
     /**
      * @var int {@type int}
      */
@@ -131,6 +135,17 @@ class PullRequestRepresentation
     public $short_stat;
 
 
+    /**
+     * @var string {@type string}
+     */
+    public $last_build_status;
+
+
+    /**
+     * @var string {@type string}
+     */
+    public $last_build_date;
+
     public function build(
         PullRequest $pull_request,
         GitRepository $repository,
@@ -163,6 +178,9 @@ class PullRequestRepresentation
         $this->branch_dest    = $pull_request->getBranchDest();
         $this->reference_dest = $pull_request->getSha1Dest();
         $this->status         = $this->expandStatusName($pull_request->getStatus());
+
+        $this->last_build_status = $this->expandBuildStatusName($pull_request->getLastBuildStatus());
+        $this->last_build_date   = JsonCast::toDate($pull_request->getLastBuildDate());
 
         $this->resources = array(
             'comments' => array(
@@ -198,5 +216,16 @@ class PullRequestRepresentation
         );
 
         return $status_name[$merge_status_acronym];
+    }
+
+    private function expandBuildStatusName($status_acronym)
+    {
+        $status_name = array(
+            PullRequest::BUILD_STATUS_UNKNOWN => self::BUILD_STATUS_UNKNOWN,
+            PullRequest::BUILD_STATUS_SUCCESS => self::BUILD_STATUS_SUCESS,
+            PullRequest::BUILD_STATUS_FAIL    => self::BUILD_STATUS_FAIL
+        );
+
+        return $status_name[$status_acronym];
     }
 }

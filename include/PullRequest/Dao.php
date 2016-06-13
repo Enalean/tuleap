@@ -221,4 +221,18 @@ class Dao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function updateLastBuildStatus($pull_request_id, $build_status, $build_date)
+    {
+        $pull_request_id = $this->da->escapeInt($pull_request_id);
+        $build_status    = $this->da->quoteSmart($build_status);
+        $build_date      = $this->da->quoteSmart($build_date);
+
+        $sql = "UPDATE plugin_pullrequest_review
+                SET last_build_status=$build_status, last_build_date=$build_date
+                WHERE id=$pull_request_id";
+
+        return $this->update($sql);
+    }
+
 }

@@ -52,7 +52,6 @@ class pullrequestPlugin extends Plugin
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -66,6 +65,8 @@ class pullrequestPlugin extends Plugin
             $this->addHook(GIT_HANDLE_ADDITIONAL_ACTION);
             $this->addHook(GIT_ADDITIONAL_HELP_TEXT);
             $this->addHook(GIT_VIEW);
+            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
+            $this->addHook(REST_GIT_BUILD_STATUS, 'gitRestBuildStatus');
         }
     }
 
@@ -350,6 +351,15 @@ class pullrequestPlugin extends Plugin
         foreach ($prs as $pr) {
             $closer->abandon($pr);
             $timeline_event_creator->storeAbandonEvent($pr, $user);
+        }
+    }
+
+    public function gitRestBuildStatus($params)
+    {
+        $factory = $this->getPullRequestFactory();
+        $pull_requests = $factory->getOpenedBySourceBranch($params['repository'], $params['branch']);
+        foreach($pull_requests as $pull_request) {
+            $factory->updateLastBuildStatus($pull_request, $params['status'], time());
         }
     }
 

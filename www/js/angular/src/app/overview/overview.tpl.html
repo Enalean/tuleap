@@ -50,8 +50,16 @@
     <div class="pull-request-changes">
         <span class="pull-request-label" translate>Changes</span>
         <div>
-            <span class="text-success">+{{ overview.pull_request.short_stat.lines_added}}</span>
-            <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed}}</span>
+            <span class="text-success">+{{ overview.pull_request.short_stat.lines_added }}</span>
+            <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed }}</span>
+        </div>
+    </div>
+    <div>
+        <span class="pull-request-label" translate>Last CI Status</span>
+        <div>
+            <span class="text-success" ng-if="overview.buildStatusIs('success')" translate>success on {{ overview.pull_request.last_build_date | date: 'short' }}</span>
+            <span class="text-error" ng-if="overview.buildStatusIs('fail')" translate>failure on {{ overview.pull_request.last_build_date | date: 'short' }}</span>
+            <span class="text-warning" ng-if="overview.buildStatusIs('unknown')" translate>unknown</span>
         </div>
     </div>
 </div>

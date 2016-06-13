@@ -32,6 +32,10 @@ class PullRequest
     const FASTFORWARD_MERGE    = 2;
     const CONFLICT_MERGE       = 3;
 
+    const BUILD_STATUS_UNKNOWN = 'U';
+    const BUILD_STATUS_SUCCESS = 'S';
+    const BUILD_STATUS_FAIL    = 'F';
+
     private $id;
     private $title;
     private $description;
@@ -45,6 +49,8 @@ class PullRequest
     private $sha1_dest;
     private $status;
     private $merge_status;
+    private $last_build_status;
+    private $last_build_date;
 
     public function __construct(
         $id,
@@ -58,22 +64,26 @@ class PullRequest
         $repo_dest_id,
         $branch_dest,
         $sha1_dest,
-        $status = 'R',
-        $merge_status = self::UNKNOWN_MERGE
+        $last_build_date   = null,
+        $last_build_status = self::BUILD_STATUS_UNKNOWN,
+        $status            = 'R',
+        $merge_status      = self::UNKNOWN_MERGE
     ) {
-        $this->id             = $id;
-        $this->title          = $title;
-        $this->description    = $description;
-        $this->repository_id  = $repository_id;
-        $this->user_id        = $user_id;
-        $this->creation_date  = $creation_date;
-        $this->branch_src     = $branch_src;
-        $this->sha1_src       = $sha1_src;
-        $this->repo_dest_id   = $repo_dest_id;
-        $this->branch_dest    = $branch_dest;
-        $this->sha1_dest      = $sha1_dest;
-        $this->status         = $status;
-        $this->merge_status   = $merge_status;
+        $this->id                = $id;
+        $this->title             = $title;
+        $this->description       = $description;
+        $this->repository_id     = $repository_id;
+        $this->user_id           = $user_id;
+        $this->creation_date     = $creation_date;
+        $this->branch_src        = $branch_src;
+        $this->sha1_src          = $sha1_src;
+        $this->repo_dest_id      = $repo_dest_id;
+        $this->branch_dest       = $branch_dest;
+        $this->sha1_dest         = $sha1_dest;
+        $this->last_build_date   = $last_build_date;
+        $this->last_build_status = $last_build_status;
+        $this->status            = $status;
+        $this->merge_status      = $merge_status;
     }
 
     public function getId()
@@ -136,6 +146,16 @@ class PullRequest
         return $this->merge_status = $merge_status;
     }
 
+    public function getLastBuildDate()
+    {
+        return $this->last_build_date;
+    }
+
+    public function getLastBuildStatus()
+    {
+        return $this->last_build_status;
+    }
+
     public function getUserId()
     {
         return $this->user_id;
@@ -149,5 +169,15 @@ class PullRequest
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function setLastBuildStatus($status)
+    {
+        $this->last_build_status = $status;
+    }
+
+    public function setLastBuildDate($date)
+    {
+        $this->last_build_date = $date;
     }
 }

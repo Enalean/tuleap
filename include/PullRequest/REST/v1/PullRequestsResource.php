@@ -25,6 +25,7 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\Exception\InvalidBuildStatusException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;

@@ -61,9 +61,17 @@ msgstr "La discussion n’a pas commencé"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+#: src/app/overview/overview.tpl.html
+msgid "failure on {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgstr "échec le {{ overview.pull_request.last_build_date | date: 'short' }}"
+
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Files"
 msgstr "Fichiers"
+
+#: src/app/overview/overview.tpl.html
+msgid "Last CI Status"
+msgstr "Statut intégration continue"
 
 #: src/app/overview/overview.tpl.html
 msgid "Merge"
@@ -126,6 +134,14 @@ msgstr ""
 msgid "Pull Request Details"
 msgstr "Détails Pull Request"
 
+#: src/app/overview/overview.tpl.html
+msgid ""
+"Pull request mergeability with destination is not determined. You can merge "
+"on the command line and push to destination."
+msgstr ""
+"Le statut d’intégration de cette pull request est indéterminé. Essayez de "
+"l’intégrer en ligne de commande et poussez vers la destination."
+
 #: src/app/pull-requests/pull-requests.tpl.html
 msgid "Pull requests"
 msgstr "Pull requests"
@@ -141,3 +157,11 @@ msgstr "Dites quelque chose…"
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Show details"
 msgstr "Voir les détails"
+
+#: src/app/overview/overview.tpl.html
+msgid "success on {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgstr "succès le {{ overview.pull_request.last_build_date | date: 'short' }}"
+
+#: src/app/overview/overview.tpl.html
+msgid "unknown"
+msgstr "inconnu"

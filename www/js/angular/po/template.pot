@@ -53,8 +53,16 @@ msgstr ""
 msgid "Error details"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "failure on {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgstr ""
+
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Files"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Last CI Status"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
@@ -119,4 +127,12 @@ msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
 msgid "Show details"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "success on {{ overview.pull_request.last_build_date | date: 'short' }}"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "unknown"
 msgstr ""

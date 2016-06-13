@@ -24,6 +24,7 @@ use \GitRepository;
 use \PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
+use Tuleap\PullRequest\Exception\InvalidBuildStatusException;
 
 class Factory
 {
@@ -90,6 +91,8 @@ class Factory
             $row['repo_dest_id'],
             $row['branch_dest'],
             $row['sha1_dest'],
+            $row['last_build_date'],
+            $row['last_build_status'],
             $row['status'],
             $row['merge_status']
         );
@@ -167,5 +170,16 @@ class Factory
     public function updateTitleAndDescription($pull_request, $new_title, $new_description)
     {
         return $this->dao->updateTitleAndDescription($pull_request->getId(), $new_title, $new_description);
+    }
+
+    public function updateLastBuildStatus(PullRequest $pull_request, $status, $date)
+    {
+        if (   $status != PullRequest::BUILD_STATUS_FAIL
+            && $status != PullRequest::BUILD_STATUS_SUCCESS
+            && $status != PullRequest::BUILD_STATUS_UNKNOWN) {
+            throw new InvalidBuildStatusException();
+        }
+
+        return $this->dao->updateLastBuildStatus($pull_request->getId(), $status, $date);
     }
 }

@@ -28,6 +28,7 @@ function OverviewController(
         editionForm          : {},
         showEditionForm      : false,
         saveEditionForm      : saveEditionForm,
+        buildStatusIs        : buildStatusIs,
         checkMerge           : checkMerge,
         abandon              : abandon,
         isConflictingMerge   : isConflictingMerge,
@@ -47,6 +48,10 @@ function OverviewController(
             self.author = user;
         });
     });
+
+    function buildStatusIs(status) {
+        return self.pull_request.last_build_status === status;
+    }
 
     function saveEditionForm() {
         PullRequestService.updateTitleAndDescription(
