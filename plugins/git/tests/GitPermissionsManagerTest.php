@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,8 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
             $this->git_system_event_manager,
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver'),
-            mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory')
+            mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory'),
+            mock('Tuleap\Git\Permissions\FineGrainedDao')
         );
     }
 

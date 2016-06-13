@@ -22,6 +22,7 @@
 namespace Tuleap\Git\Permissions;
 
 use DataAccessObject;
+use ProjectUGroup;
 
 class FineGrainedDao extends DataAccessObject
 {
@@ -343,5 +344,66 @@ class FineGrainedDao extends DataAccessObject
                 VALUES " . implode(',', $values);
 
         return $this->update($sql);
+    }
+
+    public function updateAllAnonymousAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+    }
+
+    private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
+    {
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+
+        $this->da->startTransaction();
+
+        $update_01 = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers
+                      SET ugroup_id = $new_ugroup_id
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $update_02 = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders
+                      SET ugroup_id = $new_ugroup_id
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $update_03 = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers
+                      SET ugroup_id = $new_ugroup_id
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $update_04 = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders
+                      SET ugroup_id = $new_ugroup_id
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $delete_01 = "DELETE FROM plugin_git_default_fine_grained_permissions_writers
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $delete_02 = "DELETE FROM plugin_git_default_fine_grained_permissions_rewinders
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $delete_03 = "DELETE FROM plugin_git_repository_fine_grained_permissions_writers
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        $delete_04 = "DELETE FROM plugin_git_repository_fine_grained_permissions_rewinders
+                      WHERE ugroup_id = $old_ugroup_id";
+
+        if (! $this->update($update_01) ||
+            ! $this->update($update_02) ||
+            ! $this->update($update_03) ||
+            ! $this->update($update_04) ||
+            ! $this->update($delete_01) ||
+            ! $this->update($delete_02) ||
+            ! $this->update($delete_03) ||
+            ! $this->update($delete_04)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
     }
 }

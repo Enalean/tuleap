@@ -1218,15 +1218,20 @@ class GitPlugin extends Plugin {
         );
     }
 
+    private function getFineGrainedDao()
+    {
+        return new FineGrainedDao();
+    }
+
     private function getDefaultFineGrainedPermissionSaver()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new DefaultFineGrainedPermissionSaver($dao);
     }
 
     private function getDefaultFineGrainedPermissionFactory()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager());
     }
 
@@ -1235,7 +1240,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedPermissionSaver()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionSaver($dao);
     }
 
@@ -1244,7 +1249,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedUpdater()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedUpdater($dao);
     }
 
@@ -1253,7 +1258,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedRetriever()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedRetriever($dao);
     }
 
@@ -1262,7 +1267,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedFactory()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionFactory($dao, $this->getUGroupManager());
     }
 
@@ -1309,7 +1314,8 @@ class GitPlugin extends Plugin {
             $this->getGitSystemEventManager(),
             $this->getFineGrainedUpdater(),
             $this->getDefaultFineGrainedPermissionSaver(),
-            $this->getDefaultFineGrainedPermissionFactory()
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getFineGrainedDao()
         );
     }
 
