@@ -1,3 +1,9 @@
+Version 4.194 - Tuleap 8.16
+    * Take into account project access changes
+
+
+This is part of story #8419 have permissions per tags/branches
+
 Version 4.193 - Tuleap 8.16
     * story #9181: Add a new API for the CI build status
 
