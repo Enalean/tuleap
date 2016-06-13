@@ -1652,6 +1652,11 @@ plugin_tracker_deprecation_panel	title_tracker	Tracker Name
 plugin_tracker_deprecation_panel	title_field	Incriminated field
 plugin_tracker_deprecation_panel	adapt_message	This project uses trackers that are based on deprecated computed fields (which will be gone by December 31st 2016). You should adapt now the configuration of:
 
+plugin_tracker_deprecation_field	title_autocompute	Auto-compute
+plugin_tracker_deprecation_field	title_original_value	Computed value:
+
+plugin_tracker	autocompute_field	auto-computed
+
 plugin_tracker_config	title	Trackers Configuration
 plugin_tracker_config	email_gateway	Email Gateway
 plugin_tracker_config	email_gateway_desc	Allow user to interact with trackers by email.

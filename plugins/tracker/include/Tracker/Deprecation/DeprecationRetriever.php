@@ -28,6 +28,7 @@ use Tracker_FormElementFactory;
 use Tracker;
 use Project;
 use PFUser;
+use Tracker_FormElement_Field_Computed;
 
 class DeprecationRetriever
 {
@@ -93,5 +94,10 @@ class DeprecationRetriever
         $field   = $this->tracker_formelement_factory->getFormElementFieldById($row['field_id']);
 
         return new DeprecatedField($project, $tracker, $field);
+    }
+
+    public function isALegacyField(Tracker_FormElement_Field_Computed $field)
+    {
+        return $this->dao->searchDeprecatedFieldsById($field->getId())->count() > 0;
     }
 }

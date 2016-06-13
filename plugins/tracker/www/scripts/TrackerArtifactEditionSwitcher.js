@@ -78,9 +78,29 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         $(element).find('.tracker_formelement_edit').on('click', function(event) {
             event.preventDefault();
 
+            var field_id       = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
+            var field_computed = document.getElementsByName("artifact[" + field_id + "]");
+            var stored_value   = document.getElementsByName("stored-value[" + field_id + "]");
+            if (stored_value[0]) {
+                field_computed[0].value = stored_value[0].value;
+            }
             toggleField(element);
             focusField(element);
         });
+
+         $(element).find('.auto-compute').on('click', function(event) {
+            $(element).find('.auto-computed-label').hide();
+            $(element).find('.back-to-autocompute').show();
+            $(element).find('.tracker_hidden_edition_field').hide();
+
+            var field_id       = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
+            var field_computed = document.getElementsByName("artifact[" + field_id + "]");
+            if (field_computed[0]) {
+                field_computed[0].value = null;
+            }
+            $(element).on('click');
+            $(element).removeClass('in-edition');
+         });
     };
 
     var toggleField = function (element) {
@@ -88,6 +108,8 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         removeUnwrappedText(element);
         $(element).addClass('in-edition');
         $(element).find('.tracker_hidden_edition_field').show();
+        $(element).find('.auto-computed-label').hide();
+        $(element).find('.back-to-autocompute').hide();
         $(element).off('click');
         toggleDependencyIfAny(element);
         toggleSubmissionBar();
@@ -127,7 +149,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var removeReadOnlyElements = function (element) {
-        $(element).children(":not(.tracker_formelement_label, .tracker_hidden_edition_field, .artifact-link-value-reverse)").remove();
+        $(element).children(":not(.tracker_formelement_label,.tracker_hidden_edition_field, .artifact-link-value-reverse, .tracker_formelement_edit, .auto-computed-label,.back-to-autocompute)").remove();
     };
 
     var removeUnwrappedText = function (element) {

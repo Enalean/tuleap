@@ -1059,7 +1059,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, PFUser $submitter, $is_submission = false, $bypass_permissions = false) {
+    public function saveNewChangeset(
+        Tracker_Artifact $artifact,
+        $old_changeset,
+        $new_changeset_id,
+        $submitted_value,
+        PFUser $submitter,
+        $is_submission = false,
+        $bypass_permissions = false
+    ) {
         $updated        = false;
         $save_new_value = false;
         $dao            = $this->getChangesetValueDao();
@@ -1079,6 +1087,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             }
         }
 
+
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {
             if ($submitted_value === null || !$hasPermission || !$this->hasChanges($artifact, $previous_changesetvalue, $submitted_value)) {
@@ -1095,6 +1104,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $save_new_value = true;
         }
 
+        if ($submitted_value === Tracker_FormElement_Field_Computed::AUTOCOMPUTE && $this->isAComputedField()) {
+            $submitted_value = "";
+        }
+
         if ($save_new_value) {
             //Save the new value
             if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 1)) {
@@ -1105,7 +1118,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $updated;
     }
 
-    protected function getChangesetValueDao() {
+    private function isAComputedField()
+    {
+        return $this instanceof Tracker_FormElement_Field_Computed;
+    }
+
+    protected function getChangesetValueDao()
+    {
         return new Tracker_Artifact_Changeset_ValueDao();
     }
 

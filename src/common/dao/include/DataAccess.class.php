@@ -281,7 +281,15 @@ class DataAccess {
         }
         return '0';
     }
-    
+
+    public function escapeFloat($value) {
+        if ($value === "") {
+            return "NULL";
+        }
+
+        return floatval($value);
+    }
+
     /**
      * Escape the ints, and implode them.
      * 
