@@ -74,9 +74,21 @@
                 {{# has_branches_permissions }}
                     {{# branches_permissions }}
                     <tr>
-                        <td class="permission-pattern">{{ getPatternWithoutPrefix }}</td>
-                        <td>{{ getWriterNames }}</td>
-                        <td>{{ getRewinderNames }}</td>
+                        <td class="permission-pattern">{{ pattern }}</td>
+                        <td class="permission-write">
+                            <select multiple="multiple" size="6" disabled>
+                                {{# writers }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ writers }}
+                            </select>
+                        </td>
+                        <td class="permission-rewind">
+                            <select multiple="multiple" size="6" disabled>
+                                {{# rewinders }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ rewinders }}
+                            </select>
+                        </td>
                         <td class="permission-delete">
                             <a href="javascript:;"
                                 class="remove-fine-grained-permission"
@@ -84,10 +96,11 @@
                                 data-trigger="click"
                                 data-placement="left"
                                 data-html="true"
-                                data-popover-id="remove-{{ getId }}-popover"
+                                data-popover-id="remove-{{ id }}-popover"
                                 data-form-action="{{ remove_form_action }}"
                             >
                                 <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}
+
                             </a>
                             {{> settings/popover-remove-fine-grained-permission }}
                         </td>
@@ -118,9 +131,21 @@
                 {{# has_tags_permissions }}
                     {{# tags_permissions }}
                     <tr>
-                        <td class="permission-pattern">{{ getPatternWithoutPrefix }}</td>
-                        <td>{{ getWriterNames }}</td>
-                        <td>{{ getRewinderNames }}</td>
+                        <td class="permission-pattern">{{ pattern }}</td>
+                        <td class="permission-write">
+                            <select multiple="multiple" size="6" disabled>
+                                {{# writers }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ writers }}
+                            </select>
+                        </td>
+                        <td class="permission-rewind">
+                            <select multiple="multiple" size="6" disabled>
+                                {{# rewinders }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ rewinders }}
+                            </select>
+                        </td>
                         <td class="permission-delete">
                             <a href="javascript:;"
                                 class="remove-fine-grained-permission"
@@ -128,7 +153,7 @@
                                 data-trigger="click"
                                 data-placement="left"
                                 data-html="true"
-                                data-popover-id="remove-{{ getId }}-popover"
+                                data-popover-id="remove-{{ id }}-popover"
                                 data-form-action="{{ remove_form_action }}"
                             >
                                 <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}

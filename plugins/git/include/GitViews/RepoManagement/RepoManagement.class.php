@@ -25,11 +25,17 @@ use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\GitViews\RepoManagement\Pane\GitViewsRepoManagementPaneCIToken;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 
 /**
  * Dedicated screen for repo management
  */
 class GitViews_RepoManagement {
+
+    /**
+     * @var FineGrainedRepresentationBuilder
+     */
+    private $fine_grained_builder;
 
     /**
      * @var FineGrainedRetriever
@@ -79,7 +85,8 @@ class GitViews_RepoManagement {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
-        FineGrainedRetriever $fine_grained_retriever
+        FineGrainedRetriever $fine_grained_retriever,
+        FineGrainedRepresentationBuilder $fine_grained_builder
     ) {
         $this->repository                      = $repository;
         $this->request                         = $request;
@@ -90,6 +97,7 @@ class GitViews_RepoManagement {
         $this->gerrit_can_migrate_checker      = $gerrit_can_migrate_checker;
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;
         $this->fine_grained_retriever          = $fine_grained_retriever;
+        $this->fine_grained_builder            = $fine_grained_builder;
         $this->panes                           = $this->buildPanes($repository);
         $this->current_pane                    = 'settings';
 
@@ -118,7 +126,8 @@ class GitViews_RepoManagement {
             $repository,
             $this->request,
             $this->fine_grained_permission_factory,
-            $this->fine_grained_retriever
+            $this->fine_grained_retriever,
+            $this->fine_grained_builder
         );
         $panes[] = new GitViewsRepoManagementPaneCIToken($repository, $this->request);
 

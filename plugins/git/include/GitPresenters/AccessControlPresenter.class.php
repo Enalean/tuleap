@@ -79,8 +79,8 @@ class GitPresenters_AccessControlPresenter {
         $rewrite_options,
         $are_fine_grained_permissions_defined,
         $can_use_fine_grained_permissions,
-        array $branches_permissions,
-        array $tags_permissions,
+        array $branches_permissions_representation,
+        array $tags_permissions_representation,
         array $new_fine_grained_ugroups,
         $delete_url,
         CSRFSynchronizerToken $csrf
@@ -113,8 +113,8 @@ class GitPresenters_AccessControlPresenter {
             'fine_grained_permissions_warning'
         );
 
-        $this->branches_permissions = $branches_permissions;
-        $this->tags_permissions     = $tags_permissions;
+        $this->branches_permissions = $branches_permissions_representation;
+        $this->tags_permissions     = $tags_permissions_representation;
 
         $this->default_permissions_title = $GLOBALS['Language']->getText(
             'plugin_git',

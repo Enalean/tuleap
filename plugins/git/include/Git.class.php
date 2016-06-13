@@ -32,6 +32,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 
 /**
  * Git
@@ -193,6 +194,11 @@ class Git extends PluginController {
      */
     private $fine_grained_permission_destructor;
 
+    /**
+     * @var FineGrainedRepresentationBuilder
+     */
+    private $fine_grained_builder;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -221,7 +227,8 @@ class Git extends PluginController {
         FineGrainedPermissionSaver $fine_grained_permission_saver,
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         CITokenManager $ci_token_manager,
-        FineGrainedPermissionDestructor $fine_grained_permission_destructor
+        FineGrainedPermissionDestructor $fine_grained_permission_destructor,
+        FineGrainedRepresentationBuilder $fine_grained_builder
     ) {
         parent::__construct($user_manager, $request);
 
@@ -290,6 +297,7 @@ class Git extends PluginController {
 
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
+        $this->fine_grained_builder                    = $fine_grained_builder;
     }
 
     protected function instantiateView() {
@@ -300,7 +308,8 @@ class Git extends PluginController {
             $this->permissions_manager,
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
-            $this->default_fine_grained_permission_factory
+            $this->default_fine_grained_permission_factory,
+            $this->fine_grained_builder
         );
     }
 
