@@ -31,7 +31,7 @@ class b201606021408_create_tracker_changeset_value_computed_table extends ForgeU
 
     public function up()
     {
-        $sql = "CREATE TABLE tracker_changeset_value_computedfield_manual_value (
+        $sql = "CREATE TABLE IF NOT EXISTS tracker_changeset_value_computedfield_manual_value (
                     changeset_value_id INT(11) NOT NULL,
                     value FLOAT(10,4),
                     PRIMARY KEY(changeset_value_id)
@@ -44,8 +44,8 @@ class b201606021408_create_tracker_changeset_value_computed_table extends ForgeU
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_changeset_value_computed')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Table tracker_changeset_value_computedfield_manual_value not created');
+        if (!$this->db->tableNameExists('tracker_changeset_value_computedfield_manual_value')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table tracker_changeset_value_computedfield_manual_value not created');
         }
     }
 }
