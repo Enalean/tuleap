@@ -35,6 +35,7 @@ use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use ForgeConfig;
 
 class XMLRepositoryImporter
 {
@@ -129,7 +130,11 @@ class XMLRepositoryImporter
     private function importCommits(Logger $logger, Repository $repo) {
         $rootpath_arg = escapeshellarg($repo->getSystemPath());
         $dumpfile_arg = escapeshellarg($this->dump_file_path);
-        $commandline  = "svnadmin load $rootpath_arg <$dumpfile_arg 2>&1";
+        $sudo         = '';
+        if (! $this->currentUserIsHTTPUser()) {
+            $sudo = "-u ".escapeshellarg(ForgeConfig::get('sys_http_user'));
+        }
+        $commandline = "/usr/share/tuleap/plugins/svn/bin/import_repository.sh $sudo $rootpath_arg $dumpfile_arg";
 
         $logger->info("[svn {$this->name}] Import revisions: $commandline");
 
@@ -149,6 +154,11 @@ class XMLRepositoryImporter
                 "failed to svnadmin load $dumpfile_arg in $rootpath_arg:".
                 " exited with status {$e->return_value}");
         }
+    }
+
+    private function currentUserIsHTTPUser() {
+        $http_user = posix_getpwnam(ForgeConfig::get('sys_http_user'));
+        return ($http_user['uid'] === posix_getuid());
     }
 
     private function importAccessFile(
