@@ -466,4 +466,126 @@ class FineGrainedDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function disableAnonymousRegisteredAuthenticated($project_id)
+    {
+        return $this->updatePermissions(
+            $project_id,
+            ProjectUGroup::PROJECT_MEMBERS,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED)
+        );
+    }
+
+    public function disableAuthenticated($project_id)
+    {
+        return $this->updatePermissions(
+            $project_id,
+            ProjectUGroup::REGISTERED,
+            array(ProjectUGroup::AUTHENTICATED)
+        );
+    }
+
+    private function updatePermissions($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
+    {
+        $this->da->startTransaction();
+
+        if (! $this->updateDefaultWritersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids) ||
+            ! $this->updateDefaultRewindersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids) ||
+            ! $this->updateRepositoryWritersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids) ||
+            ! $this->updateRepositoryRewindersPermission($project_id, $new_project_ugroup_id, $old_ugroup_ids)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
+    }
+
+    private function updateDefaultWritersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
+    {
+        $project_id            = $this->da->escapeInt($project_id);
+        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
+        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $update = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers AS dw
+                    JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
+                    SET dw.ugroup_id = $new_project_ugroup_id
+                    WHERE dw.ugroup_id IN ($old_ugroup_ids)
+                        AND perm.project_id = $project_id";
+
+        $delete = "DELETE dw
+                    FROM plugin_git_default_fine_grained_permissions_writers AS dw
+                      JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
+                    WHERE dw.ugroup_id IN ($old_ugroup_ids)
+                      AND perm.project_id = $project_id";
+
+        return $this->update($update) && $this->update($delete);
+    }
+
+    private function updateDefaultRewindersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
+    {
+        $project_id            = $this->da->escapeInt($project_id);
+        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
+        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $update = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders AS dr
+                    JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
+                    SET dr.ugroup_id = $new_project_ugroup_id
+                    WHERE dr.ugroup_id IN ($old_ugroup_ids)
+                        AND perm.project_id = $project_id";
+
+        $delete = "DELETE dr
+                    FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
+                      JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
+                    WHERE dr.ugroup_id IN ($old_ugroup_ids)
+                      AND perm.project_id = $project_id";
+
+        return $this->update($update) && $this->update($delete);
+    }
+
+    private function updateRepositoryWritersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
+    {
+        $project_id            = $this->da->escapeInt($project_id);
+        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
+        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $update = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers AS rw
+                    JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
+                    JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
+                    SET rw.ugroup_id = $new_project_ugroup_id
+                    WHERE rw.ugroup_id IN ($old_ugroup_ids)
+                        AND plugin_git.project_id = $project_id";
+
+        $delete = "DELETE rw
+                    FROM plugin_git_repository_fine_grained_permissions_writers AS rw
+                      JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
+                      JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
+                    WHERE rw.ugroup_id IN ($old_ugroup_ids)
+                      AND plugin_git.project_id = $project_id";
+
+        return $this->update($update) && $this->update($delete);
+    }
+
+    private function updateRepositoryRewindersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
+    {
+        $project_id            = $this->da->escapeInt($project_id);
+        $new_project_ugroup_id = $this->da->escapeInt($new_project_ugroup_id);
+        $old_ugroup_ids        = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $update = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders AS rr
+                    JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
+                    JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
+                    SET rr.ugroup_id = $new_project_ugroup_id
+                    WHERE rr.ugroup_id IN ($old_ugroup_ids)
+                        AND plugin_git.project_id = $project_id";
+
+        $delete = "DELETE rr
+                    FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
+                      JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
+                      JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
+                    WHERE rr.ugroup_id IN ($old_ugroup_ids)
+                      AND plugin_git.project_id = $project_id";
+
+        return $this->update($update) && $this->update($delete);
+    }
 }

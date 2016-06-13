@@ -119,10 +119,12 @@ class GitPermissionsManager {
     public function updateProjectAccess(Project $project, $old_access, $new_access) {
         if ($new_access == Project::ACCESS_PRIVATE) {
             $this->git_permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
+            $this->fine_grained_dao->disableAnonymousRegisteredAuthenticated($project->getID());
             $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
         }
         if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->git_permission_dao->disableAuthenticated($project->getID());
+            $this->fine_grained_dao->disableAuthenticated($project->getID());
             $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
         }
     }
