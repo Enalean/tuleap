@@ -1,3 +1,9 @@
+Version 4.192 - Tuleap 8.16
+    * Inherit fine grained permissions at project creation
+
+
+This is part of story #8419 have permissions per tags/branches
+
 Version 4.191 - Tuleap 8.16
     * Deal with ugroup deletion
 
