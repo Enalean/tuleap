@@ -30,7 +30,7 @@ Version 8.16 (Not yet release)
 	== Plugins ==
 	* git: 4.194
 	* agiledashboard: 1.384
-	* tracker: 5.916
+	* tracker: 5.917
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.20
 	* svn: 0.59
