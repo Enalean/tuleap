@@ -1,3 +1,6 @@
+Version 4.195 - Tuleap 8.16
+    * request #9247: CI token pane is unusable due to a missing column in the database
+
 Version 4.194 - Tuleap 8.16
     * Take into account project access changes
 
