@@ -1,3 +1,6 @@
+Version 4.196 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Deal with multiple selected ugroups)
+
 Version 4.195 - Tuleap 8.16
     * request #9247: CI token pane is unusable due to a missing column in the database
 
