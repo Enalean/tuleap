@@ -293,26 +293,29 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 // Start output
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
-echo site_admin_warnings();
+echo '<section id="siteadmin-homepage">';
 
-echo '<div class="container-fluid site_admin">';
+$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+echo '<h1>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).' ('.$version.')'.'</h1>';
+
+echo site_admin_warnings();
 
 echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
 
-echo '<div class="row-fluid">';
+echo '<div id="siteadmin-homepage-container">';
 
-echo '<div class="span4">';
+echo '<div class="siteadmin-homepage-column">';
 $wUser->display();
 $wProject->display();
 $em->processEvent('site_admin_disk_widget_hook', array());
 echo '</div>';
 
-echo '<div class="span4">';
+echo '<div class="siteadmin-homepage-column">';
 $wUtils->display();
 $wConf->display();
 echo '</div>';
 
-echo '<div class="span4">';
+echo '<div class="siteadmin-homepage-column">';
 $wDoc->display();
 $wStats->display();
 $wPlugins->display();
@@ -320,7 +323,6 @@ echo '</div>';
 
 echo '</div>';
 
-echo '</div>';
-
+echo '</section>';
 site_admin_footer(array());
 ?>

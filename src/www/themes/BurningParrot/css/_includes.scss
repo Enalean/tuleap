@@ -17,8 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../common/tlp/src/scss/tlp-purple';
-
-$navbar-background: #ffffff;
-
-@import 'includes';
+@import 'includes/structure';
+@import 'includes/siteadmin';

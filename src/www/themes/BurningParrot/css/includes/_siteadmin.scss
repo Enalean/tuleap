@@ -17,8 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../common/tlp/src/scss/tlp-purple';
+#siteadmin-homepage {
+    margin: $tlp-margin-default;
+}
 
-$navbar-background: #ffffff;
+#siteadmin-homepage-container {
+    display: flex;
+    justify-content: space-between;
+}
 
-@import 'includes';
+.siteadmin-homepage-column {
+    flex: 1;
+}
