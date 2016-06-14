@@ -3236,7 +3236,14 @@ select[name='add_notempty_condition[]'] {
     & > tbody > tr:first-child > td {
         border-top: none;
     }
+}
 
+.tracker_artifact_field {
+    .auto-computed {
+        margin: 0 0 0 3px;
+        color: #AAAAAA;
+        font-size: 11px;
+    }
 }
 
 .deprecated-close {
@@ -3245,4 +3252,31 @@ select[name='add_notempty_condition[]'] {
 
 #warning-deprecated-field {
     margin: 0 12px
+}
+
+.original-value {
+    display: block;
+    margin: 3px 0 0 0;
+    font-size: 12px;
+    color: #4DB3D0;
+}
+
+.back-to-autocompute {
+    display: none;
+}
+
+
+.tracker_hidden_edition_field {
+    display: none;
+
+    .input-append {
+        margin: 0;
+    }
+
+    .original-value {
+        display: block;
+        margin: 3px 0 0 0;
+        font-size: 12px;
+        color: #4DB3D0;
+    }
 }

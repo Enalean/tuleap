@@ -1,0 +1,9 @@
+<h3> {{ title }}</h3>
+</p>{{ description }}</p>
+<p>{{ token }} </p>
+<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id={{ project_id }}&pane=citoken">
+    {{{ csrf }}}
+    <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
+    <input type="hidden" id="action" name="action" value="generate-ci-token" />
+    <input type="submit" class="btn btn-danger" name="generate_token" value="{{ generate_button }}"/>
+</form>

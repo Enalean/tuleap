@@ -12,6 +12,7 @@ Version 8.16 (Not yet release)
 	* request #9206: Better import in place
 		- Load project with name in addition to id
 		- Activate services at import
+	* story #9181: Add a new API for the CI build status
 
 	== Development ==
 	* request #9141: A preliminary check is done before importing an agile dashboard configuration
@@ -27,9 +28,9 @@ Version 8.16 (Not yet release)
 	* Fix unit tests to run both on PHP 5.3 and PHP 5.6
 
 	== Plugins ==
-	* git: 4.189
+	* git: 4.194
 	* agiledashboard: 1.384
-	* tracker: 5.912
+	* tracker: 5.917
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.20
 	* svn: 0.59

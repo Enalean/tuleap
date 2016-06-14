@@ -617,7 +617,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
 
         $deprecated_fields = $this->getDeprecatedFieldsByProject($project);
-        if (count($deprecated_fields) > 0) {
+        if (count($deprecated_fields) > 0 && $this->userIsTrackerAdmin($project, $user)) {
             $html .= "<div class='alert alert-warning'>";
             $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'adapt_message');
             $html .= "<ul>";

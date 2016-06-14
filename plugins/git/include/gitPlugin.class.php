@@ -29,6 +29,9 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
+use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\CIToken\Dao as CITokenDao;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1038,17 +1041,20 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_deletion($params) {
-        $ugroup = $params['ugroup'];
-        $users  = $ugroup->getMembers();
+        $ugroup     = $params['ugroup'];
+        $users      = $ugroup->getMembers();
+        $project_id = $params['group_id'];
 
         foreach ($users as $user) {
             $calling = array(
-                'group_id' => $params['group_id'],
+                'group_id' => $project_id,
                 'user_id'  => $user->getId(),
                 'ugroup'   => $ugroup
             );
             $this->project_admin_ugroup_remove_user($calling);
         }
+
+        $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
     }
 
     public function project_admin_add_user($params) {
@@ -1214,19 +1220,25 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedFactory(),
             $this->getFineGrainedRetriever(),
             $this->getFineGrainedPermissionSaver(),
-            $this->getDefaultFineGrainedPermissionFactory()
+            $this->getDefaultFineGrainedPermissionFactory(),
+            new CITokenManager(new CITokenDao())
         );
+    }
+
+    private function getFineGrainedDao()
+    {
+        return new FineGrainedDao();
     }
 
     private function getDefaultFineGrainedPermissionSaver()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new DefaultFineGrainedPermissionSaver($dao);
     }
 
     private function getDefaultFineGrainedPermissionFactory()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager());
     }
 
@@ -1235,7 +1247,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedPermissionSaver()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionSaver($dao);
     }
 
@@ -1244,7 +1256,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedUpdater()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedUpdater($dao);
     }
 
@@ -1253,7 +1265,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedRetriever()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedRetriever($dao);
     }
 
@@ -1262,7 +1274,7 @@ class GitPlugin extends Plugin {
      */
     private function getFineGrainedFactory()
     {
-        $dao = new FineGrainedDao();
+        $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionFactory($dao, $this->getUGroupManager());
     }
 
@@ -1309,7 +1321,8 @@ class GitPlugin extends Plugin {
             $this->getGitSystemEventManager(),
             $this->getFineGrainedUpdater(),
             $this->getDefaultFineGrainedPermissionSaver(),
-            $this->getDefaultFineGrainedPermissionFactory()
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getFineGrainedDao()
         );
     }
 
@@ -1413,7 +1426,8 @@ class GitPlugin extends Plugin {
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
     }
 
-    public function register_project_creation($params) {
+    public function register_project_creation($params)
+    {
         $this->getPermissionsManager()->duplicateWithStaticMapping(
                 $params['template_id'],
                 $params['group_id'],
@@ -1421,7 +1435,22 @@ class GitPlugin extends Plugin {
                 $params['ugroupsMapping']
         );
 
+        $this->getDefaultFineGrainedPermissionReplicator()->replicate(
+            $this->getProjectManager()->getProject($params['template_id']),
+            $params['group_id'],
+            $params['ugroupsMapping']
+        );
+
         $this->getMirrorDataMapper()->duplicate($params['template_id'], $params['group_id']);
+    }
+
+    private function getDefaultFineGrainedPermissionReplicator()
+    {
+        return new DefaultFineGrainedPermissionReplicator(
+            new FineGrainedDao(),
+            $this->getDefaultFineGrainedPermissionFactory(),
+            $this->getDefaultFineGrainedPermissionSaver()
+        );
     }
 
     /** @see Event::GET_PROJECTID_FROM_URL */

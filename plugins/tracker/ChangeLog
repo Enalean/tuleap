@@ -1,3 +1,18 @@
+Version 5.917 - Tuleap 8.16
+    * When a computed field is updated, save history in changesets
+
+Version 5.916 - Tuleap 8.16
+    * story #9090 have computed fields compatible with artifact links v2 (Forgeupgrade correction)
+
+Version 5.915 - Tuleap 8.16
+    * Do not display warning messages about deprecation to other people than administrators
+
+Version 5.914 - Tuleap 8.16
+    * Enable computed field edition
+
+Version 5.913 - Tuleap 8.16
+    * request #9239 Computed field v2 error on autocompute calculation
+
 Version 5.912 - Tuleap 8.16
     * request #9237 computed field v2 too much warning
 

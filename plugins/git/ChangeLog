@@ -1,3 +1,36 @@
+Version 4.194 - Tuleap 8.16
+    * Take into account project access changes
+
+
+This is part of story #8419 have permissions per tags/branches
+
+Version 4.193 - Tuleap 8.16
+    * story #9181: Add a new API for the CI build status
+
+Version 4.192 - Tuleap 8.16
+    * Inherit fine grained permissions at project creation
+
+
+This is part of story #8419 have permissions per tags/branches
+
+Version 4.191 - Tuleap 8.16
+    * Deal with ugroup deletion
+
+
+This is part of story #8419 have permissions per tags/branches
+
+When a custom user group is deleted, the fine grained permissions for
+this ugroup are removed.
+
+Version 4.190 - Tuleap 8.16
+    * Take into account site access changes
+
+
+This is part of story #8419 have permissions per tags/branches
+
+When the site access changes, the permissions per tags/branches
+are updated with new access
+
 Version 4.189 - Tuleap 8.16
     * story #8419 have permissions per tags/branches (Add Git default permissions for branches and tags)
 

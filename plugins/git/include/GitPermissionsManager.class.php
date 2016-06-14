@@ -24,11 +24,17 @@ require_once 'www/project/admin/permissions.php';
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedDao;
 
 /**
  * This class manages permissions for the Git service
  */
 class GitPermissionsManager {
+
+    /**
+     * @var FineGrainedDao
+     */
+    private $fine_grained_dao;
 
     /**
      * @var DefaultFineGrainedPermissionFactory
@@ -67,7 +73,8 @@ class GitPermissionsManager {
         Git_SystemEventManager $git_system_event_manager,
         FineGrainedUpdater $fine_grained_updater,
         DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        FineGrainedDao $fine_grained_dao
     ) {
         $this->permissions_manager          = PermissionsManager::instance();
         $this->git_permission_dao           = $git_permission_dao;
@@ -75,6 +82,7 @@ class GitPermissionsManager {
         $this->fine_grained_updater         = $fine_grained_updater;
         $this->default_fine_grained_saver   = $default_fine_grained_saver;
         $this->default_fine_grained_factory = $default_fine_grained_factory;
+        $this->fine_grained_dao             = $fine_grained_dao;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project) {
@@ -111,10 +119,12 @@ class GitPermissionsManager {
     public function updateProjectAccess(Project $project, $old_access, $new_access) {
         if ($new_access == Project::ACCESS_PRIVATE) {
             $this->git_permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
+            $this->fine_grained_dao->disableAnonymousRegisteredAuthenticated($project->getID());
             $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
         }
         if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->git_permission_dao->disableAuthenticated($project->getID());
+            $this->fine_grained_dao->disableAuthenticated($project->getID());
             $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
         }
     }
@@ -124,12 +134,14 @@ class GitPermissionsManager {
             $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithAnonymousRepositories());
             if (count($project_ids)) {
                 $this->git_permission_dao->updateAllAnonymousAccessToRegistered();
+                $this->fine_grained_dao->updateAllAnonymousAccessToRegistered();
             }
         }
         if ($old_value == ForgeAccess::RESTRICTED) {
             $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithUnrestrictedRepositories());
             if (count($project_ids)) {
                 $this->git_permission_dao->updateAllAuthenticatedAccessToRegistered();
+                $this->fine_grained_dao->updateAllAuthenticatedAccessToRegistered();
             }
         }
     }

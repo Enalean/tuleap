@@ -73,7 +73,7 @@
                 {{# has_branches_permissions }}
                     {{# branches_permissions }}
                     <tr>
-                        <td>{{ getDisplayablePattern }}</td>
+                        <td>{{ getPatternWithoutPrefix }}</td>
                         <td>{{ getWriterNames }}</td>
                         <td>{{ getRewinderNames }}</td>
                     </tr>
@@ -102,7 +102,7 @@
                 {{# has_tags_permissions }}
                     {{# tags_permissions }}
                     <tr>
-                        <td>{{ getDisplayablePattern }}</td>
+                        <td>{{ getPatternWithoutPrefix }}</td>
                         <td>{{ getWriterNames }}</td>
                         <td>{{ getRewinderNames }}</td>
                     </tr>
