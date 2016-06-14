@@ -1,3 +1,6 @@
+Version 5.918 - Tuleap 8.16
+    * story #9090: Update computed values in mail notifications
+
 Version 5.917 - Tuleap 8.16
     * When a computed field is updated, save history in changesets
 
