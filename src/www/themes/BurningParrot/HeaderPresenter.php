@@ -21,6 +21,7 @@
 namespace Tuleap\Theme\BurningParrot;
 
 use PFUser;
+use ThemeVariantColor;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 
 class HeaderPresenter
@@ -37,15 +38,24 @@ class HeaderPresenter
     /** @var array */
     public $stylesheets;
 
+    /** @var string */
+    public $color_name;
+
+    /** @var string */
+    public $color_code;
+
     public function __construct(
         $title,
         $imgroot,
         NavbarPresenter $navbar_presenter,
+        ThemeVariantColor $color,
         array $stylesheets
     ) {
         $this->title            = html_entity_decode($title);
         $this->imgroot          = $imgroot;
         $this->navbar_presenter = $navbar_presenter;
         $this->stylesheets      = $stylesheets;
+        $this->color_name       = $color->getName();
+        $this->color_code       = $color->getHexaCode();
     }
 }

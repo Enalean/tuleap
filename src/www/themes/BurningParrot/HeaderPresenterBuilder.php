@@ -20,8 +20,9 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use ThemeVariant;
 use PFUser;
+use ThemeVariant;
+use ThemeVariantColor;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 
 class HeaderPresenterBuilder
@@ -49,11 +50,14 @@ class HeaderPresenterBuilder
         $this->imgroot                  = $imgroot;
         $this->title                    = $title;
 
+        $color = $this->getMainColor();
+
         return new HeaderPresenter(
             $this->getPageTitle(),
             $this->imgroot,
             $this->navbar_presenter_builder->build($this->current_user),
-            $this->getStylesheets()
+            $color,
+            $this->getStylesheets($color)
         );
     }
 
@@ -68,46 +72,45 @@ class HeaderPresenterBuilder
         return $page_title;
     }
 
-    private function getStylesheets()
+    private function getStylesheets(ThemeVariantColor $color)
     {
-        $color = $this->getMainColor();
-
         return array(
             '/themes/common/css/font-awesome.css',
-            '/themes/common/tlp/dist/tlp-'. $color .'.min.css',
-            '/themes/BurningParrot/css/burning-parrot-'. $color .'.css'
+            '/themes/common/tlp/dist/tlp-'. $color->getName() .'.min.css',
+            '/themes/BurningParrot/css/burning-parrot-'. $color->getName() .'.css'
         );
     }
 
     private function getMainColor()
     {
         $theme_variant = new ThemeVariant();
-        $color = 'blue';
+        $color         = new ThemeVariantColor('blue', '#1593c4');
+
         switch ($theme_variant->getVariantForUser($this->current_user)) {
             case 'FlamingParrot_Orange':
             case 'FlamingParrot_DarkOrange':
-                $color = 'orange';
+                $color = new ThemeVariantColor('orange', '#f79514');
                 break;
             case 'FlamingParrot_Green':
             case 'FlamingParrot_DarkGreen':
-                $color = 'green';
+                $color = new ThemeVariantColor('green', '#67af45');
                 break;
             case 'FlamingParrot_BlueGrey':
             case 'FlamingParrot_DarkBlueGrey':
-                $color = 'grey';
+                $color = new ThemeVariantColor('grey', '#5b6c79');
                 break;
             case 'FlamingParrot_Purple':
             case 'FlamingParrot_DarkPurple':
-                $color = 'purple';
+                $color = new ThemeVariantColor('purple', '#79558a');
                 break;
             case 'FlamingParrot_Red':
             case 'FlamingParrot_DarkRed':
-                $color = 'red';
+                $color = new ThemeVariantColor('red', '#bd2626');
                 break;
             case 'FlamingParrot_Blue':
             case 'FlamingParrot_DarkBlue':
             default:
-                $color = 'blue';
+                $color = new ThemeVariantColor('blue', '#1593c4');
         }
 
         return $color;
