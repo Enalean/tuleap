@@ -20,6 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use HTTPRequest;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
@@ -29,6 +30,9 @@ class HeaderPresenterBuilder
 {
     /** @var Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder */
     private $navbar_presenter_builder;
+
+    /** @var HTTPRequest */
+    private $request;
 
     /** @var PFUser */
     private $current_user;
@@ -41,11 +45,13 @@ class HeaderPresenterBuilder
 
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
+        HTTPRequest $request,
         PFUser $current_user,
         $imgroot,
         $title
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
+        $this->request                  = $request;
         $this->current_user             = $current_user;
         $this->imgroot                  = $imgroot;
         $this->title                    = $title;
@@ -55,7 +61,10 @@ class HeaderPresenterBuilder
         return new HeaderPresenter(
             $this->getPageTitle(),
             $this->imgroot,
-            $this->navbar_presenter_builder->build($this->current_user),
+            $this->navbar_presenter_builder->build(
+                $this->request,
+                $this->current_user
+            ),
             $color,
             $this->getStylesheets($color)
         );

@@ -21,6 +21,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Tuleap\Layout\BaseLayout;
 use Widget_Static;
 use TemplateRendererFactory;
+use HTTPRequest;
 use PFUser;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 
@@ -32,10 +33,14 @@ class BurningParrotTheme extends BaseLayout
     /** @var PFUser */
     private $user;
 
+    /** @var HTTPRequest */
+    private $request;
+
     public function __construct($root, PFUser $user)
     {
         parent::__construct($root);
         $this->user     = $user;
+        $this->request  = HTTPRequest::instance();
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
     }
 
@@ -50,6 +55,7 @@ class BurningParrotTheme extends BaseLayout
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
+            $this->request,
             $this->user,
             $this->imgroot,
             $params['title']
