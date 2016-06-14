@@ -28,12 +28,12 @@ main {
     margin: 10px 30px 0 ($nav-width + $nav-margin * 2);
 }
 
-section {
+.doc-section {
     margin: 0 0 60px;
     padding: $section-padding;
     border-radius: 3px;
 
-    section {
+    .doc-section {
         margin: 0 0 40px;
         padding: $sub-section-padding;
     }

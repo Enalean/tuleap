@@ -18,7 +18,7 @@
  */
 
 #siteadmin-homepage {
-    margin: $tlp-margin-default;
+    margin: $tlp-spacing;
 }
 
 #siteadmin-homepage-container {
@@ -27,5 +27,10 @@
 }
 
 .siteadmin-homepage-column {
+    margin: 0 $tlp-spacing 0 0;
     flex: 1;
+
+    &:last-child {
+        margin: 0;
+    }
 }

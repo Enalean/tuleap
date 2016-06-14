@@ -98,7 +98,7 @@ function compressForAGivenColor(color) {
     return gulp.src('./src/scss/tlp-' + color + '.scss')
         .pipe(
             sass({
-                //outputStyle: 'compressed'
+                outputStyle: 'compressed'
             })
         .on('error', sass.logError))
         .pipe(rename({

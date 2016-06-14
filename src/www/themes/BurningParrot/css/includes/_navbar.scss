@@ -33,7 +33,7 @@ header {
 .nav-link {
     display: flex;
     align-items: center;
-    padding: 0 $tlp-margin-default / 2;
+    padding: 0 $tlp-spacing / 2;
     transition: color 100ms linear;
     color: $tlp-ui-dimmed;
     font-size: 11px;
@@ -43,11 +43,11 @@ header {
     white-space: nowrap;
 
     &:first-child {
-        padding: 0 $tlp-margin-default / 2 0 $tlp-margin-default;
+        padding: 0 $tlp-spacing / 2 0 $tlp-spacing;
     }
 
     &:last-child {
-        padding: 0 $tlp-margin-default 0 $tlp-margin-default / 2;
+        padding: 0 $tlp-spacing 0 $tlp-spacing / 2;
     }
 
     &.go-to-admin {
@@ -115,12 +115,12 @@ header {
 
 #user-nav {
     display: flex;
-    margin: 0 0 0 $tlp-margin-default / 2;
+    margin: 0 0 0 $tlp-spacing / 2;
     border-left: 1px solid $tlp-ui-border-normal;
     white-space: nowrap;
 
     > .nav-link:first-child {
-        padding: 0 $tlp-margin-default / 2;
+        padding: 0 $tlp-spacing / 2;
     }
 
     > .user-block {
@@ -130,7 +130,7 @@ header {
         > .user-block-names {
             display: flex;
             flex-direction: column;
-            margin: 0 0 0 $tlp-margin-default / 2;
+            margin: 0 0 0 $tlp-spacing / 2;
             letter-spacing: normal;
             text-transform: none;
 

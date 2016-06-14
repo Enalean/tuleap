@@ -17,8 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../common/tlp/src/scss/variables-blue';
+@import 'variables';
 
-$navbar-background: #ffffff;
+// UI colors
+$tlp-ui-info         : #4db3d0;
+$tlp-ui-success      : #58b359;
+$tlp-ui-warning      : #f5b849;
+$tlp-ui-danger       : #da5353;
 
-@import 'includes';
+$tlp-ui-border-light : #f3f3f3;
+$tlp-ui-border-normal: #e3e5ed;
+$tlp-ui-border-dark  : #d4d7e1;
+
+$tlp-theme-color: $tlp-theme-grey;

@@ -300,8 +300,6 @@ echo '<h1>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'
 
 echo site_admin_warnings();
 
-echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
-
 echo '<div id="siteadmin-homepage-container">';
 
 echo '<div class="siteadmin-homepage-column">';

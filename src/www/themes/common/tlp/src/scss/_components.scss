@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'avatars';
-@import 'labels';
-@import 'badges';
-@import 'buttons';
-@import 'pagination';
-@import 'typography';
+@import 'components/typography';
+@import 'components/avatars';
+@import 'components/labels';
+@import 'components/badges';
+@import 'components/buttons';
+@import 'components/pagination';
+@import 'components/panes';

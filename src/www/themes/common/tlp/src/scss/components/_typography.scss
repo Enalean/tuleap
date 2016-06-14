@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'fonts';
+
 $tlp-typo-default-text-color: #333333;
 $tlp-typo-link-color: #1f8bca;
 
@@ -31,7 +33,7 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0 0 $tlp-margin-default;
+    margin: 0 0 $tlp-spacing;
     text-rendering: optimizelegibility;
 
     small {
@@ -98,10 +100,11 @@ h6 {
 }
 
 p {
-    margin: 0 0 $tlp-margin-default;
+    margin: 0 0 $tlp-spacing;
     font-size: 16px;
     line-height: 24px;
 
+    &:last-child,
     &[class^="text-"] {
         margin: 0;
     }
@@ -112,8 +115,8 @@ a {
 }
 
 blockquote {
-    margin: 0 0 $tlp-margin-default;
-    padding: 0 0 0 $tlp-margin-default / 2;
+    margin: 0 0 $tlp-spacing;
+    padding: 0 0 0 $tlp-spacing / 2;
     border-left: 5px solid #d7d7d7;
     font-size: 16px;
     line-height: 24px;

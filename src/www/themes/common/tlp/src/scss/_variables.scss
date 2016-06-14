@@ -17,7 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'reset';
-@import 'fonts';
-@import 'margins';
-@import 'colors';
+@import 'variables/colors';
+@import 'variables/margins';

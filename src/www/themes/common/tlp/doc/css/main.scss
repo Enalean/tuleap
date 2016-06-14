@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'src/scss/colors';
+@import 'src/scss/variables/colors';
 
 @mixin themable($theme-color) {
-    section {
+    .doc-section {
         p a {
             color: $theme-color;
         }

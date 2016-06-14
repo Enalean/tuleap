@@ -17,8 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../common/tlp/src/scss/variables-blue';
+.tlp-pane {
+    margin: 0 0 $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    background: $tlp-ui-white;
+    border-radius: 3px;
+}
 
-$navbar-background: #ffffff;
+.tlp-pane-header {
+    padding: $tlp-spacing;
+}
 
-@import 'includes';
+.tlp-pane-title {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: $tlp-ui-dimmed;
+}
+
+.tlp-pane-section {
+    padding: $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
