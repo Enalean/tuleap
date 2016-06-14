@@ -1239,7 +1239,7 @@ class GitPlugin extends Plugin {
     private function getDefaultFineGrainedPermissionFactory()
     {
         $dao = $this->getFineGrainedDao();
-        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager());
+        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager(), new PermissionsNormalizer());
     }
 
     /**
@@ -1275,7 +1275,7 @@ class GitPlugin extends Plugin {
     private function getFineGrainedFactory()
     {
         $dao = $this->getFineGrainedDao();
-        return new FineGrainedPermissionFactory($dao, $this->getUGroupManager());
+        return new FineGrainedPermissionFactory($dao, $this->getUGroupManager(), new PermissionsNormalizer());
     }
 
     public function getGitSystemEventManager() {

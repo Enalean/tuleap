@@ -61,6 +61,7 @@ use UGroupManager;
 use Git_Exec;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
+use PermissionsNormalizer;
 
 include_once('www/project/admin/permissions.php');
 
@@ -117,7 +118,8 @@ class RepositoryResource extends AuthenticatedResource {
 
         $default_fine_grained_permission_factory = new DefaultFineGrainedPermissionFactory(
             $fine_grained_dao,
-            new UGroupManager()
+            new UGroupManager(),
+            new PermissionsNormalizer()
         );
 
         $default_fine_grained_permission_saver = new DefaultFineGrainedPermissionSaver($fine_grained_dao);
