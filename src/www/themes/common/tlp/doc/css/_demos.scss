@@ -22,13 +22,25 @@
     justify-content: space-between;
 
     .example {
-        margin: 0 10px 0 0;
         width: 50%;
+        margin: 0 10px 0 0;
     }
 
     .code {
-        margin: 0 0 0 10px;
+        display: flex;
         width: 50%;
+        margin: 0 0 0 10px;
+
+        .CodeMirror {
+            flex: 1;
+            background-image: none;
+            line-height: 18px;
+        }
+
+        .CodeMirror-overlayscroll-horizontal > div,
+        .CodeMirror-overlayscroll-vertical > div {
+            background: $editor-scrollbar-color;
+        }
     }
 }
 
@@ -38,13 +50,13 @@
         justify-content: flex-start;
 
         .example {
-            margin: 10px 0 0;
             width: 100%;
+            margin: 10px 0 0;
         }
 
         .code {
-            margin: 0 0 10px 0;
             width: 100%;
+            margin: 0 0 10px;
         }
     }
 }

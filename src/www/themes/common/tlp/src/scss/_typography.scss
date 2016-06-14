@@ -1,0 +1,140 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-typo-default-text-color: #333333;
+$tlp-typo-link-color: #1f8bca;
+
+body {
+    color: $tlp-typo-default-text-color;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 $tlp-margin-default;
+    text-rendering: optimizelegibility;
+
+    small {
+        margin: 0 0 0 5px;
+        color: $tlp-ui-dimmed;
+    }
+}
+
+h1 {
+    font-size: 46px;
+    font-weight: 400;
+
+    small {
+        font-size: 28px;
+    }
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: 400;
+
+    small {
+        font-size: 20px;
+    }
+}
+
+h3 {
+    color: $tlp-ui-dimmed;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    small {
+        font-size: 14px;
+        text-transform: none;
+    }
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: 600;
+
+    small {
+        font-size: 13px;
+    }
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: 600;
+
+    small {
+        font-size: 13px;
+    }
+}
+
+h6 {
+    font-size: 17px;
+    font-weight: 600;
+
+    small {
+        font-size: 13px;
+    }
+}
+
+p {
+    margin: 0 0 $tlp-margin-default;
+    font-size: 16px;
+    line-height: 24px;
+
+    &[class^="text-"] {
+        margin: 0;
+    }
+}
+
+a {
+    color: $tlp-typo-link-color;
+}
+
+blockquote {
+    margin: 0 0 $tlp-margin-default;
+    padding: 0 0 0 $tlp-margin-default / 2;
+    border-left: 5px solid #d7d7d7;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.text-muted {
+    color: $tlp-ui-dimmed;
+}
+
+.text-info {
+    color: $tlp-ui-info;
+}
+
+.text-success {
+    color: $tlp-ui-success;
+}
+
+.text-warning {
+    color: $tlp-ui-warning;
+}
+
+.text-danger {
+    color: $tlp-ui-danger;
+}

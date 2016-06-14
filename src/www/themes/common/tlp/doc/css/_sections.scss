@@ -38,11 +38,6 @@ section {
         padding: $sub-section-padding;
     }
 
-    p {
-        margin: 0 0 20px;
-        font-size: 13px;
-    }
-
     .code-inline {
         padding: 5px 5px 3px;
         font-family: Monaco, Courier, monospace;
@@ -50,7 +45,7 @@ section {
         text-transform: lowercase;
     }
 
-    h2 {
+    .doc-section-title {
         margin: 0 0 40px;
         color: $section-title-color;
         font-size: 36px;
@@ -63,7 +58,7 @@ section {
         }
     }
 
-    h3 {
+    .doc-subsection-title {
         margin: 0 0 20px;
         color: $section-sub-title-color;
         font-weight: 600;
@@ -72,15 +67,6 @@ section {
         .code-inline {
             font-size: 13px;
         }
-    }
-
-    .code > .CodeMirror {
-        background-image: none;
-    }
-
-    .CodeMirror-overlayscroll-horizontal > div,
-    .CodeMirror-overlayscroll-vertical > div {
-        background: $editor-scrollbar-color;
     }
 }
 

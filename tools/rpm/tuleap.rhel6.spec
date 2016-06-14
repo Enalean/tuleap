@@ -983,6 +983,7 @@ fi
 %{APP_DIR}/src/www/themes/common/images
 %dir %{APP_DIR}/src/www/themes/common/tlp
 %{APP_DIR}/src/www/themes/common/tlp/dist
+%{APP_DIR}/src/www/themes/common/tlp/font
 %{APP_DIR}/src/www/top
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour
