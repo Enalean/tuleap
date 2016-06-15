@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+%tlp-alert {
+    margin: 0 0 $tlp-spacing;
+    padding: $tlp-spacing;
+    border-left: 5px solid transparent;
+    border-radius: 3px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-alert-info {
+    @extend %tlp-alert;
+
+    border-left-color: $tlp-ui-info;
+    background: transparentize($tlp-ui-info, .9);
+    color: darken($tlp-ui-info, 30%);
+}
+
+.tlp-alert-success {
+    @extend %tlp-alert;
+
+    border-left-color: $tlp-ui-success;
+    background: transparentize($tlp-ui-success, .9);
+    color: $tlp-ui-success;
+}
+
+.tlp-alert-warning {
+    @extend %tlp-alert;
+
+    border-left-color: $tlp-ui-warning;
+    background: transparentize($tlp-ui-warning, .9);
+    color: darken($tlp-ui-warning, 10%);
+}
+
+.tlp-alert-danger {
+    @extend %tlp-alert;
+
+    border-left-color: $tlp-ui-danger;
+    background: transparentize($tlp-ui-danger, .9);
+    color: $tlp-ui-danger;
+}
