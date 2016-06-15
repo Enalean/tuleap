@@ -362,7 +362,6 @@ admin_usergroup	user_public_profile	Profil public
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	legend	Légende pour le Statut<span class="site_admin_user_status_A">&nbsp;</span><B>Actif</B><span class="site_admin_user_status_R">&nbsp;</span><u>Restreint</u><span class="site_admin_user_status_V">&nbsp;</span>(v)Validé<span class="site_admin_user_status_W">&nbsp;</span>(vr)Validé et Restreint<span class="site_admin_user_status_D">&nbsp;</span><I>Détruit</I><span class="site_admin_user_status_S">&nbsp;</span>Suspendu<span class="site_admin_user_status_P">&nbsp;</span>(*)En attente
 admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
 admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
 admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE

@@ -131,8 +131,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
     $result = $res['users'];
     $hp = Codendi_HTMLPurifier::instance();
     global $Language;
-    echo '<P>'.$Language->getText('admin_userlist','legend').'</P>
-          <TABLE class="table table-bordered table-striped table-hover">';
+    echo '<TABLE class="table table-bordered table-striped table-hover">';
     $user_status = implode(',', $status_values);
     if ($user_status == "") {
         $user_status = "ANY";
@@ -165,42 +164,42 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
             }
             switch ($usr['status']) {
                 case PFUser::STATUS_ACTIVE:
-                    $status = $Language->getText('admin_userlist','active');
-                    $name   = '<strong>'.$usr['user_name'].'</strong>';
+                    $status      = $Language->getText('admin_userlist','active');
+                    $html_status = "<span class=\"tlp-label-success\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_RESTRICTED:
-                    $status = $Language->getText('admin_userlist','restricted');
-                    $name   = '<em>'.$usr['user_name'].'</em>';
+                    $status      = $Language->getText('admin_userlist','restricted');
+                    $html_status = "<span class=\"tlp-label-warning\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_DELETED:
-                    $status = $Language->getText('admin_userlist','deleted');
-                    $name   = '<i>'.$usr['user_name'].'</i>';
+                    $status      = $Language->getText('admin_userlist','deleted');
+                    $html_status = "<span class=\"tlp-label-danger\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_SUSPENDED:
-                    $status = $Language->getText('admin_userlist','suspended');
-                    $name   = $usr['user_name'];
+                    $status      = $Language->getText('admin_userlist','suspended');
+                    $html_status = "<span class=\"tlp-label-secondary\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_PENDING:
-                    $status = $Language->getText('admin_userlist','pending');
-                    $name   = '* '.$usr['user_name'];
+                    $status      = $Language->getText('admin_userlist','pending');
+                    $html_status = "<span class=\"tlp-label-info\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_VALIDATED:
-                    $status = $Language->getText('admin_userlist','validated');
-                    $name   = '(v) '.$usr['user_name'];
+                    $status      = $Language->getText('admin_userlist','validated');
+                    $html_status = "<span class=\"tlp-label-info\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
-                    $status = $Language->getText('admin_userlist','validated_restricted');
-                    $name   = '(vr) '.$usr['user_name'];
+                    $status      = $Language->getText('admin_userlist','validated_restricted');
+                    $html_status = "<span class=\"tlp-label-info\">" . $status . "</span>";
                     break;
             }
             echo "\n<TR>";
-            echo "\n<TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">".$name."</a></TD>";
+            echo "\n<TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">".$usr['user_name']."</a></TD>";
             echo "\n<TD>". $hp->purify($usr['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
             echo "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
             if(!$group_id) {
                 echo "<TD class='tooltip_selector' data-toggle='tooltip' data-placement='top' data-original-title='".$hp->purify($tooltip_values['tooltip'])."'>".$hp->purify($tooltip_values['content'])."</TD>";
             }
-            echo "\n<TD><span class=\"site_admin_user_status_".$usr['status']."\">&nbsp;</span>".$status."</TD>";
+            echo "\n<TD>" . $html_status . "</TD>";
             echo "\n</TR>";
         }
     }
