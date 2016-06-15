@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -37,8 +36,10 @@ class FineGrainedPermissionFactory
      */
     private $normalizer;
 
-    const ADD_BRANCH_PREFIX = 'add-branch';
-    const ADD_TAG_PREFIX    = 'add-tag';
+    const ADD_BRANCH_PREFIX  = 'add-branch';
+    const ADD_TAG_PREFIX     = 'add-tag';
+    const EDIT_BRANCH_PREFIX = 'edit-branch';
+    const EDIT_TAG_PREFIX    = 'edit-tag';
 
     /**
      * @var UGroupManager
@@ -55,6 +56,200 @@ class FineGrainedPermissionFactory
         $this->dao            = $dao;
         $this->ugroup_manager = $ugroup_manager;
         $this->normalizer     = $normalizer;
+    }
+
+    public function getUpdatedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
+    {
+        $updated_permissions = array();
+
+        $this->updateWriters($request, $repository, $updated_permissions);
+        $this->updateRewinders($request, $repository, $updated_permissions);
+
+        return $updated_permissions;
+    }
+
+    private function getAllWriters(Codendi_Request $request)
+    {
+        $branches = $request->get(self::EDIT_BRANCH_PREFIX . "-write");
+        if (! is_array($branches)) {
+            $branches = array();
+        }
+
+        $tags = $request->get(self::EDIT_TAG_PREFIX . "-write");
+        if (! is_array($tags)) {
+            $tags = array();
+        }
+
+        return $branches + $tags;
+    }
+
+    private function updateWriters(Codendi_Request $request, GitRepository $repository, array &$updated_permissions)
+    {
+        $all_writers     = $this->getAllWriters($request);
+        $all_permissions = $this->getBranchesFineGrainedPermissionsForRepository($repository) +
+            $this->getTagsFineGrainedPermissionsForRepository($repository);
+
+        $remaining_permissions = $this->setWritersForPermissionsInRequest(
+            $request,
+            $all_permissions,
+            $all_writers,
+            $updated_permissions
+        );
+
+        $this->setEmptyWritersForPermissionsNotInRequest(
+            $request,
+            $remaining_permissions,
+            $all_writers,
+            $updated_permissions
+        );
+    }
+
+    private function setWritersForPermissionsInRequest(
+        Codendi_Request $request,
+        array $all_permissions,
+        array $all_writers,
+        array &$updated_permissions
+    ) {
+        foreach ($all_writers as $permission_id => $writers) {
+            $permission = $all_permissions[$permission_id];
+            unset($all_permissions[$permission_id]);
+
+            if (! $permission || ! $this->hasChangesInWriters($permission, $writers)) {
+                continue;
+            }
+
+            if (! isset($updated_permissions[$permission_id])) {
+                $updated_permissions[$permission_id] = $permission;
+            }
+
+            $updated_permissions[$permission_id]->setWriters(
+                $this->buildUgroups($request->getProject(), $all_writers, $permission_id)
+            );
+        }
+
+        return $all_permissions;
+    }
+
+    private function setEmptyWritersForPermissionsNotInRequest(
+        Codendi_Request $request,
+        array $remaining_permissions,
+        array $all_writers,
+        array &$updated_permissions
+    ) {
+        foreach ($remaining_permissions as $permission_id => $permission) {
+            if (! isset($updated_permissions[$permission_id])) {
+                $updated_permissions[$permission_id] = $permission;
+            }
+
+            $updated_permissions[$permission_id]->setWriters(
+                $this->buildUgroups($request->getProject(), $all_writers, $permission_id)
+            );
+        }
+    }
+
+    private function getAllRewinders(Codendi_Request $request)
+    {
+        $branches = $request->get(self::EDIT_BRANCH_PREFIX . "-rewind");
+        if (! is_array($branches)) {
+            $branches = array();
+        }
+
+        $tags = $request->get(self::EDIT_TAG_PREFIX . "-rewind");
+        if (! is_array($tags)) {
+            $tags = array();
+        }
+
+        return $branches + $tags;
+    }
+
+    private function updateRewinders(Codendi_Request $request, GitRepository $repository, array &$updated_permissions)
+    {
+        $all_rewinders   = $this->getAllRewinders($request);
+        $all_permissions = $this->getBranchesFineGrainedPermissionsForRepository($repository) +
+            $this->getTagsFineGrainedPermissionsForRepository($repository);
+
+        $remaining_permissions = $this->setRewindersForPermissionsInRequest(
+            $request,
+            $all_permissions,
+            $all_rewinders,
+            $updated_permissions
+        );
+
+        $this->setEmptyRewindersForPermissionsNotInRequest(
+            $request,
+            $remaining_permissions,
+            $all_rewinders,
+            $updated_permissions
+        );
+    }
+
+    private function setRewindersForPermissionsInRequest(
+        Codendi_Request $request,
+        array $all_permissions,
+        array $all_rewinders,
+        array &$updated_permissions
+    ) {
+        foreach ($all_rewinders as $permission_id => $rewinders) {
+            $permission = $all_permissions[$permission_id];
+            unset($all_permissions[$permission_id]);
+
+            if (! $permission || ! $this->hasChangesInRewinders($permission, $rewinders)) {
+                continue;
+            }
+
+            if (! isset($updated_permissions[$permission_id])) {
+                $updated_permissions[$permission_id] = $permission;
+            }
+
+            $updated_permissions[$permission_id]->setRewinders(
+                $this->buildUgroups($request->getProject(), $all_rewinders, $permission_id)
+            );
+        }
+
+        return $all_permissions;
+    }
+
+    private function setEmptyRewindersForPermissionsNotInRequest(
+        Codendi_Request $request,
+        array $remaining_permissions,
+        array $all_rewinders,
+        array &$updated_permissions
+    ) {
+        foreach ($remaining_permissions as $permission_id => $permission) {
+            if (! isset($updated_permissions[$permission_id])) {
+                $updated_permissions[$permission_id] = $permission;
+            }
+
+            $updated_permissions[$permission_id]->setRewinders(
+                $this->buildUgroups($request->getProject(), $all_rewinders, $permission_id)
+            );
+        }
+    }
+
+    private function hasChangesInWriters(FineGrainedPermission $permission, array $ugroup_ids)
+    {
+        $current_ugroup_ids = array();
+        foreach ($permission->getWritersUgroup() as $writer) {
+            $current_ugroup_ids[] = $writer->getId();
+        }
+
+        return $this->hasChanges($current_ugroup_ids, $ugroup_ids);
+    }
+
+    private function hasChangesInRewinders(FineGrainedPermission $permission, array $ugroup_ids)
+    {
+        $current_ugroup_ids = array();
+        foreach ($permission->getRewindersUgroup() as $rewinder) {
+            $current_ugroup_ids[] = $rewinder->getId();
+        }
+
+        return $this->hasChanges($current_ugroup_ids, $ugroup_ids);
+    }
+
+    private function hasChanges(array $current_ugroup_ids, array $ugroup_ids)
+    {
+        return (bool) array_diff($current_ugroup_ids, $ugroup_ids) ||
+               array_diff($ugroup_ids, $current_ugroup_ids);
     }
 
     public function getBranchesFineGrainedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
@@ -137,7 +332,8 @@ class FineGrainedPermissionFactory
         $permissions = array();
 
         foreach ($this->dao->searchBranchesFineGrainedPermissionsForRepository($repository->getId()) as $row) {
-            $permissions[] = $this->getInstanceFromRow($row);
+            $permission                        = $this->getInstanceFromRow($row);
+            $permissions[$permission->getId()] = $permission;
         }
 
         return $permissions;
@@ -148,7 +344,8 @@ class FineGrainedPermissionFactory
         $permissions = array();
 
         foreach ($this->dao->searchTagsFineGrainedPermissionsForRepository($repository->getId()) as $row) {
-            $permissions[] = $this->getInstanceFromRow($row);
+            $permission                        = $this->getInstanceFromRow($row);
+            $permissions[$permission->getId()] = $permission;
         }
 
         return $permissions;

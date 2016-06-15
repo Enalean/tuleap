@@ -68,7 +68,7 @@ class GitPresenters_AccessControlPresenter {
     public $remove_fine_grained_permission_confirm;
     public $btn_cancel;
     public $remove_form_action;
-    public $cannot_define_per_repo_permissions;
+    public $disabled;
 
     public function __construct(
         $is_control_limited,
@@ -185,6 +185,10 @@ class GitPresenters_AccessControlPresenter {
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->is_fork    = $is_fork;
+        $this->disabled   = '';
+        if ($is_fork) {
+            $this->disabled = 'disabled="disabled"';
+        }
     }
 
     public function has_branches_permissions()

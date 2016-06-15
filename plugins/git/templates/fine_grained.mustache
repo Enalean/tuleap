@@ -38,14 +38,14 @@
                     <tr>
                         <td class="permission-pattern">{{ pattern }}</td>
                         <td class="permission-write">
-                            <select multiple="multiple" size="6" disabled>
+                            <select multiple="multiple" size="6" name="edit-branch-write[{{ id }}][]" {{ disabled }}>
                                 {{# writers }}
                                     <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                                 {{/ writers }}
                             </select>
                         </td>
                         <td class="permission-rewind">
-                            <select multiple="multiple" size="6" disabled>
+                            <select multiple="multiple" size="6" name="edit-branch-rewind[{{ id }}][]" {{ disabled }}>
                                 {{# rewinders }}
                                     <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                                 {{/ rewinders }}
@@ -103,14 +103,14 @@
                     <tr>
                         <td class="permission-pattern">{{ pattern }}</td>
                         <td class="permission-write">
-                            <select multiple="multiple" size="6" disabled>
+                            <select multiple="multiple" size="6" name="edit-tag-write[{{ id }}][]" {{ disabled }}>
                                 {{# writers }}
                                     <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                                 {{/ writers }}
                             </select>
                         </td>
                         <td class="permission-rewind">
-                            <select multiple="multiple" size="6" disabled>
+                            <select multiple="multiple" size="6" name="edit-tag-rewind[{{ id }}][]" {{ disabled }}>
                                 {{# rewinders }}
                                     <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                                 {{/ rewinders }}
