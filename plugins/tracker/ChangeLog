@@ -1,3 +1,6 @@
+Version 5.920 - Tuleap 8.16
+    * Enable computed fields to manage float values
+
 Version 5.919 - Tuleap 8.16
     * request #9238: HTML entities are displayed in the project name of the deprecation monitoring panel of computed fields
 
