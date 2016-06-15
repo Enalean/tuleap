@@ -27,18 +27,18 @@
         </tr>
     </thead>
     <tbody>
-    {{# projects }}
+    {{# getDeprecatedFields }}
         <tr>
             <td>
-                <a href="{{ getBaseUrl }}/project/?group_id={{ getProjectId }}">{{ getProjectName }}</a>
+                <a href="{{ getBaseUrl }}/project/?group_id={{ project_id }}">{{ project_name }}</a>
             </td>
             <td>
-                <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ getProjectId }}&tracker={{ getTrackerId }}">{{ getTrackerName }}</a>
+                <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ project_id }}&tracker={{ tracker_id }}">{{ tracker_name }}</a>
             </td>
             <td>
-                <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ getProjectId }}&tracker={{ getTrackerId }}&func=admin-formElements">{{ getFieldName }}</a>
+                <a href="{{ getBaseUrl }}/plugins/tracker/?group_id={{ project_id }}&tracker={{ tracker_id }}&func=admin-formElements">{{ field_name }}</a>
             </td>
         </tr>
-    {{/ projects }}
+    {{/ getDeprecatedFields }}
     </tbody>
 </table>
