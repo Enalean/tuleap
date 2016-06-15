@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\Artifact;
 
-use Tracker_Artifact_ChangesetValue_Integer;
+use Tracker_Artifact_ChangesetValue_Float;
 use PFUser;
 
-class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Integer
+class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
 {
 
     /**
@@ -33,7 +33,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Integer
      */
     public function getValue()
     {
-         return $this->getInteger();
+         return $this->getNumeric();
     }
 
     public function getText()
