@@ -371,7 +371,6 @@ admin_usergroup	user_public_profile	Public profile
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - User List
-admin_userlist	legend	Status Legend: <span class="site_admin_user_status_A">&nbsp;</span><B>Active</B><span class="site_admin_user_status_R">&nbsp;</span><u>Restricted</u><span class="site_admin_user_status_V">&nbsp;</span>(v)Validated<span class="site_admin_user_status_W">&nbsp;</span>(vr)Validated Restricted<span class="site_admin_user_status_D">&nbsp;</span><I>Deleted</I><span class="site_admin_user_status_S">&nbsp;</span>Suspended<span class="site_admin_user_status_P">&nbsp;</span>(*)Pending
 admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
 admin_userlist	user_active	User Updated to ACTIVE status
 admin_userlist	user_validated	User Updated to VALIDATED status
