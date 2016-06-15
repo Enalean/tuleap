@@ -33,7 +33,7 @@ Version 8.16 (Not yet release)
 	* tracker: 5.918
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.20
-	* svn: 0.59
+	* svn: 0.60
 	* docman: 2.26.108
 	* mediawiki: 0.116
 	* proftpd: 0.26
