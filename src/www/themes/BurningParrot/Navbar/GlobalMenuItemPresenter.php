@@ -25,15 +25,19 @@ class GlobalMenuItemPresenter
     /** @var string */
     public $label;
 
+    /** @var string */
+    public $link;
+
     /** @var icon */
     public $icon;
 
     /** @var string */
     public $additional_classes;
 
-    public function __construct($label, $icon, $additional_classes)
+    public function __construct($label, $link, $icon, $additional_classes)
     {
         $this->label              = $label;
+        $this->link               = $link;
         $this->icon               = $icon;
         $this->additional_classes = $additional_classes;
     }

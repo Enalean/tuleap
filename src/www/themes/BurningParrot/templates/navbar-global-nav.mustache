@@ -1,10 +1,7 @@
 {{# global_nav_presenter }}
 <nav id="global-nav">
     {{# menu_item_presenters }}
-    <a href="#" class="global-nav-link {{ additional_classes }}" title="{{ label }}">
-        <i class="{{ icon }} global-nav-link-icon"></i>
-        <span class="global-nav-link-text">{{ label }}</span>
-    </a>
+        {{> global-menu-item }}
     {{/ menu_item_presenters }}
 </nav>
 {{/ global_nav_presenter }}

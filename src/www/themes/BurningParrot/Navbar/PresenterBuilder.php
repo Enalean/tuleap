@@ -20,15 +20,23 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use HTTPRequest;
 use PFUser;
+use EventManager;
 
 class PresenterBuilder
 {
+    /** @var HTTPRequest */
+    private $request;
+
     /** @var PFUser */
     private $current_user;
 
-    public function build(PFUser $current_user)
-    {
+    public function build(
+        HTTPRequest $request,
+        PFUser $current_user
+    ) {
+        $this->request      = $request;
         $this->current_user = $current_user;
 
         return new Presenter(
@@ -37,7 +45,9 @@ class PresenterBuilder
             ),
             new SearchPresenter(),
             new UserNavPresenter(
-                $this->current_user
+                $this->request,
+                $this->current_user,
+                $this->displayNewAccountMenuItem()
             )
         );
     }
@@ -47,24 +57,39 @@ class PresenterBuilder
         return array(
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
+                '#',
                 'icon-archive',
                 ''
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'extras'),
+                '#',
                 'icon-ellipsis-horizontal',
                 ''
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'help'),
+                '/site/',
                 'icon-question-sign',
                 ''
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'site_admin'),
+                '/admin/',
                 'icon-cog',
                 'go-to-admin'
             )
         );
+    }
+
+    private function displayNewAccountMenuItem() {
+        $display_new_user_menu_item = true;
+
+        EventManager::instance()->processEvent(
+            'display_newaccount',
+            array('allow' => &$display_new_user_menu_item)
+        );
+
+        return $display_new_user_menu_item;
     }
 }
