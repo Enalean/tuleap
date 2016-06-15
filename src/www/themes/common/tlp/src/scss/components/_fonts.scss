@@ -42,3 +42,6 @@
     src: url('../font/source-sans-pro/SourceSansPro-Bold.ttf.woff') format('truetype');
     font-weight: 700;
 }
+
+$fa-font-path: '../font/font-awesome-4.6.3/fonts';
+@import '../../../font/font-awesome-4.6.3/scss/font-awesome';

@@ -58,31 +58,32 @@ class PresenterBuilder
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
                 '#',
-                'icon-archive',
+                'fa fa-archive',
                 ''
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'extras'),
                 '#',
-                'icon-ellipsis-horizontal',
+                'fa fa-ellipsis-h',
                 ''
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'help'),
                 '/site/',
-                'icon-question-sign',
+                'fa fa-question-circle',
                 ''
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'site_admin'),
                 '/admin/',
-                'icon-cog',
+                'fa fa-cog',
                 'go-to-admin'
             )
         );
     }
 
-    private function displayNewAccountMenuItem() {
+    private function displayNewAccountMenuItem()
+    {
         $display_new_user_menu_item = true;
 
         EventManager::instance()->processEvent(

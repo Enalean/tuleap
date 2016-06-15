@@ -84,7 +84,6 @@ class HeaderPresenterBuilder
     private function getStylesheets(ThemeVariantColor $color)
     {
         return array(
-            '/themes/common/css/font-awesome.css',
             '/themes/common/tlp/dist/tlp-'. $color->getName() .'.min.css',
             '/themes/BurningParrot/css/burning-parrot-'. $color->getName() .'.css'
         );

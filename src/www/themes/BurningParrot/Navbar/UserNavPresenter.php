@@ -71,7 +71,7 @@ class UserNavPresenter
 
     public function my_account_label()
     {
-        return $GLOBALS['Language']->getText('my_index','account_maintenance');
+        return $GLOBALS['Language']->getText('my_index', 'account_maintenance');
     }
 
     public function login_menu_item()
@@ -106,13 +106,13 @@ class UserNavPresenter
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('menu', 'my_personal_page'),
                 '/my/',
-                'icon-home',
+                'fa fa-home',
                 'only-icon'
             ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'logout'),
                 '/account/logout.php',
-                'icon-off',
+                'fa fa-power-off',
                 'only-icon'
             )
         );
