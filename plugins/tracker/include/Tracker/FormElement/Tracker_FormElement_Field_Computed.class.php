@@ -514,7 +514,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
             $int_row_value = $row['value'];
             if ($int_row_value !== null) {
-                $int_row_value = (int)$int_row_value;
+                $int_row_value = $int_row_value;
             }
             $changeset_value = new ChangesetValueComputed($value_id, $this, $has_changed, $int_row_value);
         }
