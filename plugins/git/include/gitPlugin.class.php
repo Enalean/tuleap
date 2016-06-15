@@ -32,6 +32,9 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1221,13 +1224,30 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedRetriever(),
             $this->getFineGrainedPermissionSaver(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            new CITokenManager(new CITokenDao())
+            new CITokenManager(new CITokenDao()),
+            $this->getFineGrainedPermissionDestructor(),
+            $this->getFineGrainedRepresentationBuilder()
         );
+    }
+
+    private function getFineGrainedRepresentationBuilder()
+    {
+        $user_group_factory  = new User_ForgeUserGroupFactory(new UserGroupDao());
+        $permissions_manager = $this->getPermissionsManager();
+        $option_builder      = new AccessRightsPresenterOptionsBuilder($user_group_factory, $permissions_manager);
+
+        return new FineGrainedRepresentationBuilder($option_builder);
     }
 
     private function getFineGrainedDao()
     {
         return new FineGrainedDao();
+    }
+
+    private function getFineGrainedPermissionDestructor()
+    {
+        $dao = $this->getFineGrainedDao();
+        return new FineGrainedPermissionDestructor($dao);
     }
 
     private function getDefaultFineGrainedPermissionSaver()
@@ -1239,7 +1259,7 @@ class GitPlugin extends Plugin {
     private function getDefaultFineGrainedPermissionFactory()
     {
         $dao = $this->getFineGrainedDao();
-        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager());
+        return new DefaultFineGrainedPermissionFactory($dao, $this->getUGroupManager(), new PermissionsNormalizer());
     }
 
     /**
@@ -1275,7 +1295,7 @@ class GitPlugin extends Plugin {
     private function getFineGrainedFactory()
     {
         $dao = $this->getFineGrainedDao();
-        return new FineGrainedPermissionFactory($dao, $this->getUGroupManager());
+        return new FineGrainedPermissionFactory($dao, $this->getUGroupManager(), new PermissionsNormalizer());
     }
 
     public function getGitSystemEventManager() {

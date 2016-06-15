@@ -95,10 +95,12 @@ class XMLImporterTest extends TuleapTestCase {
         parent::setUp();
 
         ForgeConfig::store();
-        ForgeConfig::set('sys_data_dir', parent::getTmpDir());
+        $this->arpath = parent::getTmpDir();
+        ForgeConfig::set('sys_data_dir', $this->arpath);
+        chmod($this->arpath, 0755); // codendiadm should be able to read the base dir to load data within
+        ForgeConfig::set('sys_http_user', 'codendiadm');
         ProjectManager::clearInstance();
 
-        $this->arpath = parent::getTmpDir();
         $this->logger = mock('Logger');
         $this->ufinder = safe_mock('User\XML\Import\IFindUserFromXMLReference');
         $this->pmdao = safe_mock('ProjectDao');
@@ -180,7 +182,15 @@ class XMLImporterTest extends TuleapTestCase {
         $svn = new XMLImporter($xml, $this->arpath, $this->ufinder);
         $this->callImport($svn, $project);
 
+        $this->assertFileIsOwnedBy('codendiadm', $this->arpath.'/svn_plugin/123/svn');
+
         $this->assertRevision(1, 123, "svn");
+    }
+
+    private function assertFileIsOwnedBy($user, $file) {
+        $stat = stat($file);
+        $user = posix_getpwnam($user);
+        $this->assertIdentical($stat['uid'], $user['uid']);
     }
 
     public function itShouldDoNothingIfNoSvnNode() {

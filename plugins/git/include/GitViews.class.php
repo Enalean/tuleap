@@ -23,6 +23,7 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -64,6 +65,11 @@ class GitViews extends PluginViews {
      */
     private $default_fine_grained_permission_factory;
 
+    /**
+     * @var FineGrainedRepresentationBuilder
+     */
+    private $fine_grained_builder;
+
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
@@ -71,7 +77,8 @@ class GitViews extends PluginViews {
         GitPermissionsManager $permissions_manager,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory
+        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
+        FineGrainedRepresentationBuilder $fine_grained_builder
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int)$this->request->get('group_id');
@@ -85,6 +92,7 @@ class GitViews extends PluginViews {
         $this->fine_grained_permission_factory         = $fine_grained_permission_factory;
         $this->fine_grained_retriever                  = $fine_grained_retriever;
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
+        $this->fine_grained_builder                    = $fine_grained_builder;
     }
 
     public function header() {
@@ -225,7 +233,8 @@ class GitViews extends PluginViews {
             $this->mirror_data_mapper,
             $params['gerrit_can_migrate_checker'],
             $this->fine_grained_permission_factory,
-            $this->fine_grained_retriever
+            $this->fine_grained_retriever,
+            $this->fine_grained_builder
         );
         $repo_management_view->display();
     }
@@ -542,7 +551,8 @@ class GitViews extends PluginViews {
                 $repository,
                 $this->getAccessRightsPresenterOptionsBuilder(),
                 $this->fine_grained_retriever,
-                $this->fine_grained_permission_factory
+                $this->fine_grained_permission_factory,
+                $this->fine_grained_builder
             );
 
             $userName = $this->user->getName();
@@ -684,6 +694,26 @@ class GitViews extends PluginViews {
         $tags_permissions         = $this->default_fine_grained_permission_factory->getTagsFineGrainedPermissionsForProject($this->project);
         $new_fine_grained_ugroups = $builder->getAllOptions($this->project);
 
+        $delete_url  = '?action=delete-default-permissions&pane=access_control&group_id='.$this->project->getID();
+        $url         = '?action=admin-default-settings&pane=access_control&group_id='.$this->project->getID();
+        $csrf_delete = new CSRFSynchronizerToken($url);
+
+        $branches_permissions_representation = array();
+        foreach ($branches_permissions as $permission) {
+            $branches_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
+                $permission,
+                $this->project
+            );
+        }
+
+        $tags_permissions_representation = array();
+        foreach ($tags_permissions as $permission) {
+            $tags_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
+                $permission,
+                $this->project
+            );
+        }
+
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project_id,
             $are_mirrors_defined,
@@ -696,9 +726,11 @@ class GitViews extends PluginViews {
             $pane_mirroring,
             $are_fine_grained_permissions_defined,
             $can_use_fine_grained_permissions,
-            $branches_permissions,
-            $tags_permissions,
-            $new_fine_grained_ugroups
+            $branches_permissions_representation,
+            $tags_permissions_representation,
+            $new_fine_grained_ugroups,
+            $delete_url,
+            $csrf_delete
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

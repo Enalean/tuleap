@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AccessControlPresenter
-{
+class GitPresenters_AccessControlPresenter {
 
     /**
      * @var array
@@ -64,6 +63,11 @@ class GitPresenters_AccessControlPresenter
 
     public $are_fine_grained_permissions_defined;
     public $can_use_fine_grained_permissions;
+    public $remove_fine_grained_permission_delete;
+    public $remove_fine_grained_permission_desc;
+    public $remove_fine_grained_permission_confirm;
+    public $btn_cancel;
+    public $remove_form_action;
 
     public function __construct(
         $is_control_limited,
@@ -75,9 +79,11 @@ class GitPresenters_AccessControlPresenter
         $rewrite_options,
         $are_fine_grained_permissions_defined,
         $can_use_fine_grained_permissions,
-        array $branches_permissions,
-        array $tags_permissions,
-        array $new_fine_grained_ugroups
+        array $branches_permissions_representation,
+        array $tags_permissions_representation,
+        array $new_fine_grained_ugroups,
+        $delete_url,
+        CSRFSynchronizerToken $csrf
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -107,8 +113,8 @@ class GitPresenters_AccessControlPresenter
             'fine_grained_permissions_warning'
         );
 
-        $this->branches_permissions = $branches_permissions;
-        $this->tags_permissions     = $tags_permissions;
+        $this->branches_permissions = $branches_permissions_representation;
+        $this->tags_permissions     = $tags_permissions_representation;
 
         $this->default_permissions_title = $GLOBALS['Language']->getText(
             'plugin_git',
@@ -145,12 +151,36 @@ class GitPresenters_AccessControlPresenter
             'fine_grained_permissions_pattern_column'
         );
 
+        $this->actions_column = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_actions_column'
+        );
+
         $this->empty = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_permissions_empty'
         );
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
+        $this->remove_form_action       = $delete_url;
+        $this->delete_challenge         = $csrf->getToken();
+
+        $this->remove_fine_grained_permission_delete = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_button'
+        );
+
+        $this->remove_fine_grained_permission_desc = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_desc'
+        );
+
+        $this->remove_fine_grained_permission_confirm = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_confirm'
+        );
+
+        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
     public function has_branches_permissions()

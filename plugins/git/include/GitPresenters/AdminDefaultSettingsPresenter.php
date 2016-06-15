@@ -33,6 +33,11 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $can_use_fine_grained_permissions;
     public $default_permissions_title;
     public $fine_grained_permissions_title;
+    public $remove_fine_grained_permission_delete;
+    public $remove_fine_grained_permission_desc;
+    public $remove_fine_grained_permission_confirm;
+    public $btn_cancel;
+    public $remove_form_action;
 
     /**
      * @var array
@@ -61,9 +66,11 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $pane_mirroring,
         $are_fine_grained_permissions_defined,
         $can_use_fine_grained_permissions,
-        array $branches_permissions,
-        array $tags_permissions,
-        array $new_fine_grained_ugroups
+        array $branches_permissions_representation,
+        array $tags_permissions_representation,
+        array $new_fine_grained_ugroups,
+        $delete_url,
+        CSRFSynchronizerToken $csrf_delete
     ) {
         parent::__construct($project_id, $are_mirrors_defined);
 
@@ -78,8 +85,8 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
 
-        $this->branches_permissions = $branches_permissions;
-        $this->tags_permissions     = $tags_permissions;
+        $this->branches_permissions = $branches_permissions_representation;
+        $this->tags_permissions     = $tags_permissions_representation;
 
         $this->default_permissions_title = $GLOBALS['Language']->getText(
             'plugin_git',
@@ -116,12 +123,36 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
             'fine_grained_permissions_pattern_column'
         );
 
+        $this->actions_column = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_permissions_actions_column'
+        );
+
         $this->empty = $GLOBALS['Language']->getText(
             'plugin_git',
             'fine_grained_permissions_empty'
         );
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
+        $this->remove_form_action       = $delete_url;
+        $this->delete_challenge         = $csrf_delete->getToken();
+
+        $this->remove_fine_grained_permission_delete = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_button'
+        );
+
+        $this->remove_fine_grained_permission_desc = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_desc'
+        );
+
+        $this->remove_fine_grained_permission_confirm = $GLOBALS['Language']->getText(
+            'plugin_git',
+            'fine_grained_remove_confirm'
+        );
+
+        $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
     public function is_control_limited()

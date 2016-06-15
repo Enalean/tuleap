@@ -25,9 +25,17 @@ namespace Tuleap\Git\Permissions;
 use GitRepository;
 use UGroupManager;
 use Codendi_Request;
+use PermissionsNormalizer;
+use PermissionsNormalizerOverrideCollection;
+use Project;
 
 class FineGrainedPermissionFactory
 {
+
+    /**
+     * @var PermissionsNormalizer
+     */
+    private $normalizer;
 
     const ADD_BRANCH_PREFIX = 'add-branch';
     const ADD_TAG_PREFIX    = 'add-tag';
@@ -42,10 +50,11 @@ class FineGrainedPermissionFactory
      */
     private $dao;
 
-    public function __construct(FineGrainedDao $dao, UGroupManager $ugroup_manager)
+    public function __construct(FineGrainedDao $dao, UGroupManager $ugroup_manager, PermissionsNormalizer $normalizer)
     {
         $this->dao            = $dao;
         $this->ugroup_manager = $ugroup_manager;
+        $this->normalizer     = $normalizer;
     }
 
     public function getBranchesFineGrainedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
@@ -72,7 +81,7 @@ class FineGrainedPermissionFactory
                 $writers   = $this->getWritersFromRequest($request, $index, $prefix);
                 $rewinders = $this->getRewindersFromRequest($request, $index, $prefix);
 
-                $permissions[] = new FineGrainedPermissionRepresentation(
+                $permissions[] = new FineGrainedPermission(
                     0,
                     $repository->getId(),
                     $pattern,
@@ -89,29 +98,37 @@ class FineGrainedPermissionFactory
     {
         $all_ugroup_ids = $request->get("$prefix-write") ? $request->get("$prefix-write") : array();
 
-        return $this->buildUgroups($all_ugroup_ids, $index);
+        return $this->buildUgroups($request->getProject(), $all_ugroup_ids, $index);
     }
 
     private function getRewindersFromRequest(Codendi_Request $request, $index, $prefix)
     {
         $all_ugroup_ids = $request->get("$prefix-rewind") ? $request->get("$prefix-rewind") : array();
 
-        return $this->buildUgroups($all_ugroup_ids, $index);
+        return $this->buildUgroups($request->getProject(), $all_ugroup_ids, $index);
     }
 
     /**
      * @return array
      */
-    private function buildUgroups(array $all_ugroup_ids, $index)
+    private function buildUgroups(Project $project, array $all_ugroup_ids, $index)
     {
-        $ugroups = array();
+        $ugroups    = array();
+        $collection = new PermissionsNormalizerOverrideCollection();
 
         if (isset($all_ugroup_ids[$index])) {
-            foreach ($all_ugroup_ids[$index] as $ugroup_id) {
+            $normalized_ugroup_ids = $this->normalizer->getNormalizedUGroupIds(
+                $project,
+                $all_ugroup_ids[$index],
+                $collection
+            );
+
+            foreach ($normalized_ugroup_ids as $ugroup_id) {
                 $ugroups[] = $this->ugroup_manager->getById($ugroup_id);
             }
         }
 
+        $collection->emitFeedback('');
         return $ugroups;
     }
 
@@ -169,7 +186,7 @@ class FineGrainedPermissionFactory
     {
         $permission_id = $row['id'];
 
-        return new FineGrainedPermissionRepresentation(
+        return new FineGrainedPermission(
             $permission_id,
             $row['repository_id'],
             $row['pattern'],

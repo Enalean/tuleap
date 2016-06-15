@@ -26,16 +26,19 @@ use ForgeConfig;
 
 class DeprecationPresenter
 {
+    /**
+     * @var DeprecatedField[]
+     */
+    private $deprecated_fields;
     public $title;
     public $sections;
-    public $projects;
     public $warning_deprecation;
 
-    public function __construct($title, array $projects)
+    public function __construct($title, array $deprecated_fields)
     {
         $this->sections                = new SectionsPresenter();
         $this->title                   = $title;
-        $this->projects                = $projects;
+        $this->deprecated_fields       = $deprecated_fields;
         $this->warning_deprecation     = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'warning_deprecation');
         $this->project_title           = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_project');
         $this->tracker_title           = $GLOBALS['Language']->getText('plugin_tracker_deprecation_panel', 'title_tracker');
@@ -51,5 +54,25 @@ class DeprecationPresenter
             $url = 'http://'. $host;
         }
         return $url;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeprecatedFields()
+    {
+        $deprecated_fields = array();
+
+        foreach ($this->deprecated_fields as $deprecated_field) {
+            $deprecated_fields[] = array(
+                'project_id'   => $deprecated_field->getProjectId(),
+                'project_name' => html_entity_decode($deprecated_field->getProjectName()),
+                'tracker_id'   => $deprecated_field->getTrackerId(),
+                'tracker_name' => $deprecated_field->getTrackerName(),
+                'field_name'   => $deprecated_field->getFieldName()
+            );
+        }
+
+        return $deprecated_fields;
     }
 }

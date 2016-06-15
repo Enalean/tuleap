@@ -474,6 +474,7 @@ plugin_git	fine_grained_permissions_warning	Dear administrators, you will be soo
 plugin_git	fine_grained_permissions_tags_title	Tags
 plugin_git	fine_grained_permissions_branches_title	Branches
 plugin_git	fine_grained_permissions_pattern_column	Pattern
+plugin_git	fine_grained_permissions_actions_column	Actions
 plugin_git	fine_grained_permissions_empty	No permission defined yet.
 plugin_git	add_branch_permission	Add permission on a new branch
 plugin_git	add_tag_permission	Add permission on a new tag
@@ -483,3 +484,10 @@ plugin_git	view_repo_ci_token	CI Token
 plugin_git	regenerate_ci_token	Reset token
 plugin_git	no_ci_token	No CI Token
 plugin_git	ci_token_description	This token is used to authenticate CIs like Jenkins when calling the build status update APIs
+
+plugin_git	fine_grained_remove_button	Delete
+plugin_git	fine_grained_remove_desc	You are about to remove this permission. Please confirm your action.
+plugin_git	fine_grained_remove_confirm	Confirm deletion
+plugin_git	fine_grained_bad_request	Bad request.
+plugin_git	fine_grained_delete_ok	Permission successfully deleted.
+plugin_git	fine_grained_delete_error	An error occured while deleting permission.

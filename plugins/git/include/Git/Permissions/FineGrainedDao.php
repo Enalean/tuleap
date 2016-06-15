@@ -501,6 +501,40 @@ class FineGrainedDao extends DataAccessObject
         return $this->da->commit();
     }
 
+    public function deleteDefaultPermissions($project_id, $permission_id_to_delete)
+    {
+        $permission_id_to_delete = $this->da->escapeInt($permission_id_to_delete);
+        $project_id              = $this->da->escapeInt($project_id);
+
+        $this->da->startTransaction();
+
+        $delete_01 = "DELETE dr
+                      FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
+                        JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
+                      WHERE dr.permission_id = $permission_id_to_delete
+                        AND perm.project_id = $project_id";
+
+        $delete_02 = "DELETE dw
+                      FROM plugin_git_default_fine_grained_permissions_writers AS dw
+                        JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
+                      WHERE dw.permission_id = $permission_id_to_delete
+                        AND perm.project_id = $project_id";
+
+        $delete_03 = "DELETE FROM plugin_git_default_fine_grained_permissions
+                      WHERE id = $permission_id_to_delete
+                        AND project_id = $project_id";
+
+        if (! $this->update($delete_01) ||
+            ! $this->update($delete_02) ||
+            ! $this->update($delete_03)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
+    }
+
     private function updateDefaultWritersPermission($project_id, $new_project_ugroup_id, array $old_ugroup_ids)
     {
         $project_id            = $this->da->escapeInt($project_id);
@@ -587,5 +621,39 @@ class FineGrainedDao extends DataAccessObject
                       AND plugin_git.project_id = $project_id";
 
         return $this->update($update) && $this->update($delete);
+    }
+
+    public function deleteRepositoryPermissions($repository_id, $permission_id_to_delete)
+    {
+        $permission_id_to_delete = $this->da->escapeInt($permission_id_to_delete);
+        $repository_id           = $this->da->escapeInt($repository_id);
+
+        $this->da->startTransaction();
+
+        $delete_01 = "DELETE rr
+                      FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
+                        JOIN plugin_git_repository_fine_grained_permissions AS perm ON (perm.id = rr.permission_id)
+                      WHERE rr.permission_id = $permission_id_to_delete
+                        AND perm.repository_id = $repository_id";
+
+        $delete_02 = "DELETE rw
+                      FROM plugin_git_repository_fine_grained_permissions_writers AS rw
+                        JOIN plugin_git_repository_fine_grained_permissions AS perm ON (perm.id = rw.permission_id)
+                      WHERE rw.permission_id = $permission_id_to_delete
+                        AND perm.repository_id = $repository_id";
+
+        $delete_03 = "DELETE FROM plugin_git_repository_fine_grained_permissions
+                      WHERE id = $permission_id_to_delete
+                        AND repository_id = $repository_id";
+
+        if (! $this->update($delete_01) ||
+            ! $this->update($delete_02) ||
+            ! $this->update($delete_03)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
     }
 }

@@ -18,8 +18,8 @@
  */
 
 (function ($) {
-   function confirmDeletionPopover() {
-       $('.remove-hook').each(function() {
+    function confirmDeletionPopover() {
+        $('.remove-hook').each(function() {
            var id = $(this).data('popover-id');
 
            $(this).popover({
@@ -27,29 +27,41 @@
                title: codendi.getText('git', 'remove_webhook_title'),
                content: $('#' + id).html()
            });
-       });
-   }
+        });
+    }
 
-   function dismissPopover() {
-       $('.remove-hook').popover('hide');
-   }
+    function dismissPopover() {
+        $('.remove-hook').popover('hide');
+    }
 
-   $(function () {
-       $('.only-one-webhook').tooltip();
+    function bindShowPopover() {
+        $('.remove-hook').click(function(event) {
+            event.preventDefault();
 
-       confirmDeletionPopover();
+            dismissPopover();
 
-       $('body').on('click', function(event) {
-           if ($(event.target).hasClass('dismiss-popover')) {
+            $(this).popover('show');
+        });
+    }
+
+    $(function () {
+        $('.only-one-webhook').tooltip();
+
+        confirmDeletionPopover();
+
+        bindShowPopover();
+
+        $('body').on('click', function(event) {
+            if ($(event.target).hasClass('dismiss-popover')) {
                dismissPopover();
-           }
+            }
 
-           if ($(event.target).data('toggle') !== 'popover' &&
+            if ($(event.target).data('toggle') !== 'popover' &&
                $(event.target).parents('.popover.in').length === 0 &&
                $(event.target).parents('[data-toggle="popover"]').length === 0
-           ) {
+            ) {
                dismissPopover();
-           }
-       });
-   });
+            }
+        });
+    });
 }(jQuery));

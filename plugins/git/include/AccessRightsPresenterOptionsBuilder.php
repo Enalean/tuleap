@@ -26,6 +26,8 @@ use Git;
 use User_ForgeUserGroupFactory;
 use PermissionsManager;
 use Project;
+use Tuleap\Git\Permissions\FineGrainedPermission;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermission;
 
 class AccessRightsPresenterOptionsBuilder
 {
@@ -74,6 +76,54 @@ class AccessRightsPresenterOptionsBuilder
     public function getAllOptions(Project $project)
     {
         $selected_values = array();
+
+        return $this->buildOptions($project, $selected_values, '');
+    }
+
+    public function getWriteOptionsForFineGrainedPermissions(
+        FineGrainedPermission $permission,
+        Project $project
+    ) {
+        $selected_values = array();
+        foreach ($permission->getWritersUgroup() as $writer) {
+            $selected_values[] = $writer->getId();
+        }
+
+        return $this->buildOptions($project, $selected_values, '');
+    }
+
+    public function getRewindOptionsForFineGrainedPermissions(
+        FineGrainedPermission $permission,
+        Project $project
+    ) {
+        $selected_values = array();
+        foreach ($permission->getRewindersUgroup() as $rewinder) {
+            $selected_values[] = $rewinder->getId();
+        }
+
+        return $this->buildOptions($project, $selected_values, '');
+    }
+
+    public function getWriteOptionsForDefaultFineGrainedPermissions(
+        DefaultFineGrainedPermission $permission,
+        Project $project
+    ) {
+        $selected_values = array();
+        foreach ($permission->getWritersUgroup() as $writer) {
+            $selected_values[] = $writer->getId();
+        }
+
+        return $this->buildOptions($project, $selected_values, '');
+    }
+
+    public function getRewindOptionsForDefaultFineGrainedPermissions(
+        DefaultFineGrainedPermission $permission,
+        Project $project
+    ) {
+        $selected_values = array();
+        foreach ($permission->getRewindersUgroup() as $rewinder) {
+            $selected_values[] = $rewinder->getId();
+        }
 
         return $this->buildOptions($project, $selected_values, '');
     }

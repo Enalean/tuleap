@@ -23,7 +23,7 @@ namespace Tuleap\Git\Permissions;
 
 use User_ForgeUGroup;
 
-class FineGrainedPermissionRepresentation
+class FineGrainedPermission
 {
 
     /**

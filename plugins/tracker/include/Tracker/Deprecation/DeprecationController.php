@@ -40,14 +40,14 @@ class DeprecationController
             'title' => $title
         );
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-        $presenter = new DeprecationPresenter($title, $this->getDeprecatedProjects());
+        $presenter = new DeprecationPresenter($title, $this->getDeprecatedFields());
 
         $response->header($params);
         $renderer->renderToPage('siteadmin-config/deprecation', $presenter);
         $response->footer($params);
     }
 
-    private function getDeprecatedProjects()
+    private function getDeprecatedFields()
     {
         $deprecated_projects = array();
         foreach ($this->retriever->getDeprecatedTrackersFields() as $deprecated_field) {
@@ -55,10 +55,5 @@ class DeprecationController
         }
 
         return $deprecated_projects;
-    }
-
-    private function getAllProjects()
-    {
-        return $this->retriever->getDeprecatedTrackersFields();
     }
 }

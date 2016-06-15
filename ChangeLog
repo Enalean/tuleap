@@ -28,16 +28,17 @@ Version 8.16 (Not yet release)
 	* Fix unit tests to run both on PHP 5.3 and PHP 5.6
 
 	== Plugins ==
-	* git: 4.194
+	* git: 4.197
 	* agiledashboard: 1.384
-	* tracker: 5.917
+	* tracker: 5.920
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.20
-	* svn: 0.59
+	* svn: 0.60
 	* docman: 2.26.108
 	* mediawiki: 0.116
 	* proftpd: 0.26
 	* fulltextsearch: 0.132
+	* graphontrackersv5: 5.22
 
 Version 8.15 (Thursday, May 26th 2016)
 	== Bug fix ==

@@ -1,3 +1,6 @@
+Version 0.60 - Tuleap 8.16
+    * request #9245: Imported SVN repositories are owned by root
+
 Version 0.59 - Tuleap 8.16
     * request #9216: SVN immutable tags does not prevent from adding a file in a immutable tag
 
