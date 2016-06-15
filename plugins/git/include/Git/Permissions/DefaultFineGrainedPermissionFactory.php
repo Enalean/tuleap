@@ -81,7 +81,7 @@ class DefaultFineGrainedPermissionFactory
                 $writers   = $this->getWritersFromRequest($request, $index, $prefix);
                 $rewinders = $this->getRewindersFromRequest($request, $index, $prefix);
 
-                $permissions[] = new DefaultFineGrainedPermissionRepresentation(
+                $permissions[] = new DefaultFineGrainedPermission(
                     0,
                     $project->getID(),
                     $pattern,
@@ -257,7 +257,7 @@ class DefaultFineGrainedPermissionFactory
     {
         $permission_id = $row['id'];
 
-        return new DefaultFineGrainedPermissionRepresentation(
+        return new DefaultFineGrainedPermission(
             $permission_id,
             $row['project_id'],
             $row['pattern'],

@@ -27,6 +27,7 @@ use UGroupManager;
 use Codendi_Request;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
+use Project;
 
 class FineGrainedPermissionFactory
 {
@@ -80,7 +81,7 @@ class FineGrainedPermissionFactory
                 $writers   = $this->getWritersFromRequest($request, $index, $prefix);
                 $rewinders = $this->getRewindersFromRequest($request, $index, $prefix);
 
-                $permissions[] = new FineGrainedPermissionRepresentation(
+                $permissions[] = new FineGrainedPermission(
                     0,
                     $repository->getId(),
                     $pattern,
@@ -185,7 +186,7 @@ class FineGrainedPermissionFactory
     {
         $permission_id = $row['id'];
 
-        return new FineGrainedPermissionRepresentation(
+        return new FineGrainedPermission(
             $permission_id,
             $row['repository_id'],
             $row['pattern'],

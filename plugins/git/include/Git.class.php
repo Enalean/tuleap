@@ -31,6 +31,8 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 
 /**
  * Git
@@ -187,6 +189,16 @@ class Git extends PluginController {
      */
     private $ci_token_manager;
 
+    /*
+     * @var FineGrainedPermissionDestructor
+     */
+    private $fine_grained_permission_destructor;
+
+    /**
+     * @var FineGrainedRepresentationBuilder
+     */
+    private $fine_grained_builder;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -214,7 +226,9 @@ class Git extends PluginController {
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
-        CITokenManager $ci_token_manager
+        CITokenManager $ci_token_manager,
+        FineGrainedPermissionDestructor $fine_grained_permission_destructor,
+        FineGrainedRepresentationBuilder $fine_grained_builder
     ) {
         parent::__construct($user_manager, $request);
 
@@ -282,6 +296,8 @@ class Git extends PluginController {
         $this->fine_grained_permission_saver   = $fine_grained_permission_saver;
 
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
+        $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
+        $this->fine_grained_builder                    = $fine_grained_builder;
     }
 
     protected function instantiateView() {
@@ -292,7 +308,8 @@ class Git extends PluginController {
             $this->permissions_manager,
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
-            $this->default_fine_grained_permission_factory
+            $this->default_fine_grained_permission_factory,
+            $this->fine_grained_builder
         );
     }
 
@@ -465,6 +482,8 @@ class Git extends PluginController {
                 'admin-gerrit-templates',
                 'admin-default-settings',
                 'admin-default-access-rights',
+                'delete-permissions',
+                'delete-default-permissions',
                 'fetch_git_config',
                 'fetch_git_template',
                 'fork_repositories_permissions',
@@ -1009,6 +1028,44 @@ class Git extends PluginController {
                 $this->addView('repoManagement');
                 break;
 
+            case 'delete-permissions':
+                $url  = '?action=repo_management&pane=perms&group_id='.$this->groupId;
+                $csrf = new CSRFSynchronizerToken($url);
+                $csrf->check();
+
+                $permission_id = $this->getPermissionId();
+                if (! $permission_id) {
+                    return;
+                }
+
+                $deleted = $this->fine_grained_permission_destructor->deleteRepositoryPermissions(
+                    $repository,
+                    $permission_id
+                );
+
+                $this->emitFeedbackForPermissionDeletion($deleted);
+
+                $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
+                break;
+            case 'delete-default-permissions':
+                $url  = '?action=admin-default-settings&pane=access_control&group_id='.$this->groupId;
+                $csrf = new CSRFSynchronizerToken($url);
+                $csrf->check();
+
+                $permission_id = $this->getPermissionId();
+                if (! $permission_id) {
+                    return;
+                }
+
+                $deleted = $this->fine_grained_permission_destructor->deleteDefaultPermissions(
+                    $this->request->getProject(),
+                    $permission_id
+                );
+
+                $this->emitFeedbackForPermissionDeletion($deleted);
+
+                $this->addDefaultSettingsView();
+                break;
             #LIST
             default:
                 $handled = $this->handleAdditionalAction($repository, $action);
@@ -1029,6 +1086,45 @@ class Git extends PluginController {
 
                 break;
         }
+    }
+
+    private function emitFeedbackForPermissionDeletion($deleted)
+    {
+        if ($deleted) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText(
+                    'plugin_git',
+                    'fine_grained_delete_ok'
+                )
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_git',
+                    'fine_grained_delete_error'
+                )
+            );
+        }
+    }
+
+    private function getPermissionId()
+    {
+        $permission_id = $this->request->get('permission_id');
+        if (! $permission_id) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_git',
+                    'fine_grained_bad_request'
+                )
+            );
+
+            return;
+        }
+
+        return $permission_id;
     }
 
     private function addDefaultSettingsView() {

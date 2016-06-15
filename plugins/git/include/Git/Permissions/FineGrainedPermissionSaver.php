@@ -38,21 +38,21 @@ class FineGrainedPermissionSaver
         $this->dao = $dao;
     }
 
-    public function saveTagPermission(FineGrainedPermissionRepresentation $permission)
+    public function saveTagPermission(FineGrainedPermission $permission)
     {
         $pattern = self::TAG_PATTERN_PREFIX . $permission->getPattern();
 
         return $this->save($permission, $pattern);
     }
 
-    public function saveBranchPermission(FineGrainedPermissionRepresentation $permission)
+    public function saveBranchPermission(FineGrainedPermission $permission)
     {
         $pattern = self::BRANCH_PATTERN_PREFIX . $permission->getPattern();
 
         return $this->save($permission, $pattern);
     }
 
-    private function save(FineGrainedPermissionRepresentation $permission, $pattern)
+    private function save(FineGrainedPermission $permission, $pattern)
     {
         if ($this->dao->getPermissionIdByPatternForRepository($permission->getRepositoryId(), $pattern)) {
             $GLOBALS['Response']->addFeedback(
@@ -74,7 +74,7 @@ class FineGrainedPermissionSaver
     /**
      * @return array
      */
-    private function getWriterIds(FineGrainedPermissionRepresentation $permission)
+    private function getWriterIds(FineGrainedPermission $permission)
     {
         $ids = array();
         foreach ($permission->getWritersUgroup() as $ugroup) {
@@ -87,7 +87,7 @@ class FineGrainedPermissionSaver
     /**
      * @return array
      */
-    private function getRewinderIds(FineGrainedPermissionRepresentation $permission)
+    private function getRewinderIds(FineGrainedPermission $permission)
     {
         $ids = array();
         foreach ($permission->getRewindersUgroup() as $ugroup) {
