@@ -41,7 +41,15 @@
             <li class="nav-item"><a href="#icons">Icons</a></li>
             <li class="nav-item"><a href="#avatars">Avatars</a></li>
             <li class="nav-item separator"></li>
-            <li class="nav-item"><a href="#typography">Typography</a></li>
+            <li class="nav-item"><a href="#typography">Typography</a>
+                <nav class="sub-nav">
+                    <ul>
+                        <li class="nav-item sub-nav-item"><a href="#titles">Titles</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#paragraphs">Paragraphs</a></li>
+                        <li class="nav-item sub-nav-item"><a href="#lists">Lists</a></li>
+                    </ul>
+                </nav>
+            </li>
             <li class="nav-item"><a href="#feedbacks">Feedbacks</a></li>
             <li class="nav-item">
                 <a href="#labels-badges">Labels, Badges</a>
@@ -136,7 +144,7 @@
             <h2 class="doc-section-title">Typography</h2>
 
             <div class="section-content">
-                <section id="button-html-tags">
+                <section class="doc-section" id="titles">
                     <h3 class="doc-subsection-title">Titles</h3>
                     <div class="demo">
                         <div class="example"></div>
@@ -153,7 +161,7 @@
                     </div>
                 </section>
 
-                <section id="button-html-tags">
+                <section class="doc-section">
                     <h3 class="doc-subsection-title">Titles with description</h3>
                     <div class="demo">
                         <div class="example"></div>
@@ -170,7 +178,7 @@
                     </div>
                 </section>
 
-                <section id="button-html-tags">
+                <section class="doc-section" id="paragraphs">
                     <h3 class="doc-subsection-title">Paragraphs, colored text…</h3>
                     <div class="demo">
                         <div class="example"></div>
@@ -205,6 +213,37 @@ Semantics, a large language ocean.
 <p class="text-warning">Warning, I currently have 4 windows open up… and I don’t know why.</p>
 <p class="text-danger">Danger, I currently have 4 windows open up… and I don’t know why.</p>
 </textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="lists">
+                    <h3 class="doc-subsection-title">Lists</h3>
+                    <div class="demo">
+                        <div class="example"></div>
+                        <div class="code">
+                            <textarea>
+<ul>
+    <li>A list</li>
+    <li>with many
+        <ul>
+            <li>and probably</li>
+            <li>nested</li>
+        </ul>
+    </li>
+    <li>bullets</li>
+</ul>
+
+<ol>
+    <li>A list</li>
+    <li>with many
+        <ol>
+            <li>and probably</li>
+            <li>nested</li>
+        </ol>
+    </li>
+    <li>bullets</li>
+</ol>
 </textarea>
                         </div>
                     </div>
@@ -222,7 +261,7 @@ Semantics, a large language ocean.
             <h2 class="doc-section-title">Labels, Badges</h2>
 
             <div class="section-content">
-                <section id="label-types">
+                <section class="doc-section" id="label-types">
                     <h3>Label types <code class="code-inline">.tlp-label-[type]</code></h3>
                     <div class="demo">
                         <div class="example"></div>
@@ -250,7 +289,7 @@ Semantics, a large language ocean.
                         </div>
                     </div>
                 </section>
-                <section id="label-outline">
+                <section class="doc-section" id="label-outline">
                     <h3>Label <code class="code-inline">.tlp-label-outline</code></h3>
                     <div class="demo">
                         <div class="example"></div>
@@ -278,7 +317,7 @@ Semantics, a large language ocean.
                         </div>
                     </div>
                 </section>
-                <section id="badge-types">
+                <section class="doc-section" id="badge-types">
                     <h3>Badge types <code class="code-inline">.tlp-badge-[type]</code></h3>
                     <div class="demo">
                         <div class="example"></div>
@@ -306,7 +345,7 @@ Semantics, a large language ocean.
                         </div>
                     </div>
                 </section>
-                <section id="badge-outline">
+                <section class="doc-section" id="badge-outline">
                     <h3>Badge types <code class="code-inline">.tlp-badge-outline</code></h3>
                     <div class="demo">
                         <div class="example"></div>

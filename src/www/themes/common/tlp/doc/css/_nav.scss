@@ -27,6 +27,12 @@ $nav-item-color: #888888;
     position: fixed;
     top: 40px;
     left: $nav-margin;
+
+    ul {
+        padding: 0;
+        list-style: none;
+        line-height: 1;
+    }
 }
 
 #doc-title {

@@ -110,6 +110,17 @@ p {
     }
 }
 
+ul,
+ol {
+    padding: 0 0 0 1.5 * $tlp-spacing;
+    margin: 0 0 $tlp-spacing;
+    line-height: 24px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
 a {
     color: $tlp-typo-link-color;
 }

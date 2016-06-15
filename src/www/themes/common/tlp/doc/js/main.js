@@ -38,16 +38,16 @@
     });
 })();
 
-(function scrollspy() {
-    var sections        = document.querySelectorAll('section'),
-        sections_offset = {},
-        i               = 0;
+window.onscroll = function scrollspy() {
+    var sections        = document.querySelectorAll('.doc-section'),
+        sections_offset = {};
 
-  [].forEach.call(sections, function(section) {
-    sections_offset[section.id] = section.offsetTop;
-  });
+    [].forEach.call(sections, function(section) {
+        if (section.id) {
+            sections_offset[section.id] = section.offsetTop;
+        }
+    });
 
-  window.onscroll = function() {
     var scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
 
     for (id in sections_offset) {
@@ -70,5 +70,4 @@
             }
         }
     }
-  };
-})();
+};
