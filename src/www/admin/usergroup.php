@@ -189,9 +189,9 @@ $HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
 $hp = Codendi_HTMLPurifier::instance();
 ?>
 
-<h2><?php echo $Language->getText('admin_usergroup','header').": ".$user->getUserName()." (ID ".$user->getId().")"; ?></h2>
+<h1><?php echo $Language->getText('admin_usergroup','header').": ".$user->getUserName()." (ID ".$user->getId().")"; ?></h1>
 
-<h3><?php echo $Language->getText('admin_usergroup','account_info'); ?></h3>
+<h2><?php echo $Language->getText('admin_usergroup','account_info'); ?></h2>
 
 <FORM method="post" name="update_user" action="?">
 <INPUT type="hidden" name="action" value="update_user">
@@ -370,14 +370,14 @@ foreach($entry_label as $key => $label) {
 
 
 <?php if($GLOBALS['sys_user_approval'] == 1){ ?>
-<HR>
-<H3><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</H3>
+<hr>
+<h2><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</h2>
 <?php echo  $hp->purify($user->getRegisterPurpose(), CODENDI_PURIFIER_CONVERT_HTML) ; 
 }?>
 
-<HR>
+<hr>
 
-<H3><?php echo $Language->getText('admin_usergroup','current_groups'); ?></H3>
+<h2><?php echo $Language->getText('admin_usergroup','current_groups'); ?></h2>
 
 <ul>
 <?php

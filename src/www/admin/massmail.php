@@ -31,7 +31,7 @@ $res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WH
 	."user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1");
 $count_sfadmin = db_result($res_count, 0, null);
 
-print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>
+print '<h1>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h1>
 
 <P>'.$Language->getText('admin_massmail','warning').'
 

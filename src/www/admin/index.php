@@ -46,19 +46,19 @@ $active_groups = $row['count'];
 db_query("SELECT count(*) AS count FROM user WHERE status='P'");
 $row = db_fetch_array();
 $realpending_users = $row['count'];
-    
+
 db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
-    
+
 db_query("SELECT count(*) AS count FROM user WHERE status='R'");
 $row = db_fetch_array();
 $restricted_users = $row['count'];
-    
+
 db_query("SELECT count(*) AS count FROM user WHERE status='A'");
 $row = db_fetch_array();
 $actif_users = $row['count'];
-    
+
 db_query("SELECT count(*) AS count FROM user WHERE status='S'");
 $row = db_fetch_array();
 $hold_users = $row['count'];
@@ -78,8 +78,8 @@ $row = db_fetch_array();
 $mode_lab = $row['count'];
 
 if($GLOBALS['sys_user_approval'] == 1){
-    $pending_users = $realpending_users; 
-    
+    $pending_users = $realpending_users;
+
 }else{
     $pending_users = $realpending_users + $validated_users ;
 }
@@ -105,7 +105,7 @@ $wStats->setContent('
   <li>'.$Language->getText('admin_main', 'stat_users').':
     <ul>
       <li>'.$Language->getText('admin_main', 'sstat_reg_u').': <strong>'.($actif_users+$restricted_users).'</strong></li>
-      <li>'.$Language->getText('admin_main', 'status_user').': 
+      <li>'.$Language->getText('admin_main', 'status_user').':
         <strong>'.$actif_users.'</strong> '.$Language->getText('admin_main', 'statusactif_user').',
         <strong>'.$restricted_users.'</strong> '.$Language->getText('admin_main', 'statusrestricted_user').',
         <strong>'.$hold_users.'</strong> '.$Language->getText('admin_main', 'statushold_user').',
@@ -197,7 +197,7 @@ $wProject->setContent('
 // Configuration
 
 if ($GLOBALS['sys_use_trove'] != 0) {
-    $trov_conf = '<li>'.$Language->getText('admin_main', 'trove_cat').': 
+    $trov_conf = '<li>'.$Language->getText('admin_main', 'trove_cat').':
                     <ul>
                       <li><a href="/admin/trove/trove_cat_list.php">'.$Language->getText('admin_main', 'trove_cat_list').'</a></li>
                       <li><a href="/admin/trove/trove_cat_add.php">'.$Language->getText('admin_main', 'trove_cat_add').'</a></li>
@@ -242,7 +242,7 @@ $wConf->setContent('
 <ul>
   <li><a href="/admin/forgeaccess.php">'. $Language->getText('admin_main', 'configure_access_controls') .'</a></li>
   <li><a href="/admin/homepage.php">'. $Language->getText('admin_main', 'configure_homepage') .'</a></li>
-  <li>'.$Language->getText('admin_main', 'conf_project').': 
+  <li>'.$Language->getText('admin_main', 'conf_project').':
     <ul>
       <li><a href="/admin/descfields/desc_fields_edit.php">'.$Language->getText('admin_main', 'desc_fields_edit').'</a></li>
       <li><a href="/project/admin/servicebar.php?group_id=100">'.$Language->getText('admin_main', 'configure_svc').'</a></li>

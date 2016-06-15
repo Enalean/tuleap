@@ -7,7 +7,7 @@ function site_admin_header($params) {
 	$HTML->header($params);
 	echo html_feedback_top($feedback);
 	$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
-	echo '<H2>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).' ('.$version.')'.'</H2>';
+	echo '<h1>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).' ('.$version.')'.'</h1>';
 }
 
 function site_admin_footer($vals=0) {
