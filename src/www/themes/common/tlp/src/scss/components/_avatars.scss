@@ -19,13 +19,21 @@
 
 %tlp-avatar {
     border-radius: 50%;
+    background-color: $tlp-ui-border-normal;
 }
 
-.tlp-avatar {
+.tlp-avatar-jumbo {
     @extend %tlp-avatar;
 
-    width: 35px;
-    height: 35px;
+    width: 100px;
+    height: 100px;
+}
+
+.tlp-avatar-extra-large {
+    @extend %tlp-avatar;
+
+    width: 75px;
+    height: 75px;
 }
 
 .tlp-avatar-large {
@@ -35,7 +43,21 @@
     height: 50px;
 }
 
+.tlp-avatar {
+    @extend %tlp-avatar;
+
+    width: 35px;
+    height: 35px;
+}
+
 .tlp-avatar-small {
+    @extend %tlp-avatar;
+
+    width: 25px;
+    height: 25px;
+}
+
+.tlp-avatar-mini {
     @extend %tlp-avatar;
 
     width: 20px;
