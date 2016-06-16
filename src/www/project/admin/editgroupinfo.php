@@ -27,13 +27,16 @@ require_once('pre.php');
 require_once('vars.php');
 require_once('www/project/admin/project_admin_utils.php');
 
+use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\DescriptionFieldsDao;
 
 $group_id=$request->get('group_id');
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-$descfieldsinfos = getProjectsDescFieldsInfos();
-$currentproject= new project($group_id);
-$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
+$fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
+$descfieldsinfos = $fields_factory->getAllDescriptionFields();
+$currentproject  = new project($group_id);
+$descfieldsvalue = $currentproject->getProjectsDescFieldsValue();
 
 // If this was a submission, make updates
 
@@ -64,7 +67,7 @@ if($Update){
         }
     }
 
-	$descfieldsinfos = getProjectsDescFieldsInfos();
+        $descfieldsinfos = $fields_factory->getAllDescriptionFields();
 	for($i=0;$i<sizeof($descfieldsinfos);$i++){
 	    	$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));
 			

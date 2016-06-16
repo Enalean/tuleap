@@ -11,6 +11,8 @@
 
 require_once('pre.php');
 
+use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\DescriptionFieldsDao;
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -183,7 +185,8 @@ if($update_fields_desc_id){
 	echo "</form>";
 }else{
 
-	$descfieldsinfos = getProjectsDescFieldsInfos();
+        $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
+        $descfieldsinfos = $fields_factory->getAllDescriptionFields();
 	
 	echo "<HR>";
 	$title_arr=array();
