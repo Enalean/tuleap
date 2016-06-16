@@ -84,7 +84,8 @@ class GitPresenters_AccessControlPresenter {
         array $tags_permissions_representation,
         array $new_fine_grained_ugroups,
         $delete_url,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
+        $is_fork
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -183,6 +184,7 @@ class GitPresenters_AccessControlPresenter {
         );
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->is_fork    = $is_fork;
     }
 
     public function has_branches_permissions()
