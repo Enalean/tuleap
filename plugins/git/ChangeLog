@@ -1,3 +1,6 @@
+Version 4.198 - Tuleap 8.16
+    * Use project default permissions when creating a new repo
+
 Version 4.197 - Tuleap 8.16
     * story #8419 have permissions per tags/branches(Display selected ugroup in a selectbox, Refactoring - Rename classes, Delete per tags/branches permission)
 
