@@ -138,6 +138,7 @@ plugin_git	actions_repo_access	Repository access permissions are going to be mod
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup of '$1' will be available in the backup directory
 plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
+plugin_git	actions_missing_permission	     Please define both Write and Rewind permissions.
 
 
 plugin_git	view_repo_description	Description
@@ -466,6 +467,7 @@ plugin_git	deprecated	Starting Tuleap 8.14, we recommend you to use polling jobs
 
 plugin_git	save_access_control	Save permissions
 plugin_git	default_access_control_saved	Default access control successfully saved.
+plugin_git	default_access_control_missing	Please define Write permissions.
 
 plugin_git	default_permissions_title	Default permissions
 plugin_git	fine_grained_permissions_title	Fine-grained permissions

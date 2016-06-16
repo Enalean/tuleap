@@ -16,21 +16,41 @@
     <tbody>
         <tr>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ read_select_box_id }}" name="{{ read_select_box_id }}[]" size="6" class="plugin_git_permissions_select">
+                <select
+                    multiple="multiple"
+                    id="{{ read_select_box_id }}"
+                    name="{{ read_select_box_id }}[]"
+                    size="6"
+                    class="plugin_git_permissions_select"
+                >
                     {{# read_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ read_options }}
                 </select>
             </td>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ write_select_box_id }}" name="{{ write_select_box_id }}[]" size="6" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
+                <select
+                    multiple="multiple"
+                    id="{{ write_select_box_id }}"
+                    name="{{ write_select_box_id }}[]"
+                    size="6"
+                    {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
+                    class="plugin_git_permissions_select plugin_git_write_permissions_select"
+                >
                     {{# write_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ write_options }}
                 </select>
             </td>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ rewrite_select_box_id }}" name="{{ rewrite_select_box_id }}[]" size="6" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
+                <select
+                    multiple="multiple"
+                    id="{{ rewrite_select_box_id }}"
+                    name="{{ rewrite_select_box_id }}[]"
+                    size="6"
+                    {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
+                    class="plugin_git_permissions_select plugin_git_rewind_permissions_select"
+                >
                     {{# rewrite_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ rewrite_options }}
@@ -47,6 +67,7 @@
     <label class="checkbox">
         <input type="checkbox"
                name="use-fine-grained-permissions"
+               class="toggle-fine-grained-permissions"
                {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
         /> {{ fine_grained_permissions_checkbox_label }}
     </label>

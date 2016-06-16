@@ -31,6 +31,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $mirror_presenters;
     public $are_fine_grained_permissions_defined;
     public $can_use_fine_grained_permissions;
+    public $cannot_define_per_repo_permissions;
     public $default_permissions_title;
     public $fine_grained_permissions_title;
     public $remove_fine_grained_permission_delete;
@@ -84,6 +85,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->csrf                                 = $csrf;
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
+        $this->cannot_define_per_repo_permissions   = $are_fine_grained_permissions_defined;
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;

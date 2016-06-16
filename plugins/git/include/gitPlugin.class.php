@@ -1356,7 +1356,8 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedUpdater(),
             $this->getDefaultFineGrainedPermissionSaver(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            $this->getFineGrainedDao()
+            $this->getFineGrainedDao(),
+            $this->getFineGrainedRetriever()
         );
     }
 

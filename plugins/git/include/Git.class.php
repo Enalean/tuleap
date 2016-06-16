@@ -1327,7 +1327,8 @@ class Git extends PluginController {
             $this->fine_grained_updater,
             $this->fine_grained_permission_saver,
             $this->ci_token_manager,
-            $this->fine_grained_replicator
+            $this->fine_grained_replicator,
+            $this->fine_grained_retriever
         );
     }
 

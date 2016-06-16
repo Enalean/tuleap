@@ -30,13 +30,20 @@ use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent
  * @author Guillaume Storchi
  */
-class GitActions extends PluginActions {
+class GitActions extends PluginActions
+{
+
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
 
     /**
      * @var FineGrainedPermissionSaver
@@ -157,7 +164,8 @@ class GitActions extends PluginActions {
         FineGrainedUpdater $fine_grained_updater,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
         CITokenManager $ci_token_manager,
-        FineGrainedPermissionReplicator $fine_grained_replicator
+        FineGrainedPermissionReplicator $fine_grained_replicator,
+        FineGrainedRetriever $fine_grained_retriever
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -183,6 +191,7 @@ class GitActions extends PluginActions {
         $this->fine_grained_permission_saver = $fine_grained_permission_saver;
         $this->ci_token_manager              = $ci_token_manager;
         $this->fine_grained_replicator       = $fine_grained_replicator;
+        $this->fine_grained_retriever        = $fine_grained_retriever;
     }
 
     protected function getText($key, $params = array()) {
@@ -808,6 +817,14 @@ class GitActions extends PluginActions {
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
+    private function isDisablingFineGrainedPermissions(GitRepository $repository, $enable_fine_grained_permissions)
+    {
+        return (
+            $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)
+            && ! $enable_fine_grained_permissions
+        );
+    }
+
     /**
      * This method allows one to save any repository attribues changes from the web interface.
      */
@@ -836,6 +853,14 @@ class GitActions extends PluginActions {
         if (empty($repoAccess) && empty($repoDescription)) {
             $this->addError('actions_params_error');
             $this->redirectToRepo($repository);
+            return false;
+        }
+
+        if ($this->isDisablingFineGrainedPermissions($repository, $enable_fine_grained_permissions)
+            && ! (isset($repoAccess[Git::PERM_WRITE]) && isset($repoAccess[Git::PERM_WPLUS]))
+        ) {
+            $this->addError('actions_missing_permission');
+            $this->redirectToRepoManagement($projectId, $repoId, $pane);
             return false;
         }
 
