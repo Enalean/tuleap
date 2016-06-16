@@ -55,6 +55,29 @@
         });
     }
 
+    function bindToggleFineGrainedPermissions() {
+        $('.toggle-fine-grained-permissions').change(function(event) {
+            $('.plugin_git_write_permissions_select, .plugin_git_rewind_permissions_select')
+                .prop('disabled', function(index, value) {
+                    return ! value;
+                })
+                .filter(function() {
+                    if (isViewingDefaultAccessControlAdmin()) {
+                        return $(this).hasClass('plugin_git_write_permissions_select')
+                    }
+
+                    return true;
+                })
+                .prop('required', function(index, value) {
+                    return ! value;
+                });
+        });
+    }
+
+    function isViewingDefaultAccessControlAdmin() {
+        return /action=admin-default-/.test(location.search);
+    }
+
     function getNewIndex(type) {
         return $('input[name^="add-'+type+'-name"]').length;
     }
@@ -92,6 +115,7 @@
 
     $(function() {
         bindAddPermission();
+        bindToggleFineGrainedPermissions();
 
         confirmDeletionPopover();
 

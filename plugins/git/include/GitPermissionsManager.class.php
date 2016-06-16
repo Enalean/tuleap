@@ -25,11 +25,18 @@ use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 
 /**
  * This class manages permissions for the Git service
  */
-class GitPermissionsManager {
+class GitPermissionsManager
+{
+
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
 
     /**
      * @var FineGrainedDao
@@ -74,7 +81,8 @@ class GitPermissionsManager {
         FineGrainedUpdater $fine_grained_updater,
         DefaultFineGrainedPermissionSaver $default_fine_grained_saver,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
-        FineGrainedDao $fine_grained_dao
+        FineGrainedDao $fine_grained_dao,
+        FineGrainedRetriever $fine_grained_retriever
     ) {
         $this->permissions_manager          = PermissionsManager::instance();
         $this->git_permission_dao           = $git_permission_dao;
@@ -83,6 +91,7 @@ class GitPermissionsManager {
         $this->default_fine_grained_saver   = $default_fine_grained_saver;
         $this->default_fine_grained_factory = $default_fine_grained_factory;
         $this->fine_grained_dao             = $fine_grained_dao;
+        $this->fine_grained_retriever       = $fine_grained_retriever;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project) {
@@ -157,6 +166,14 @@ class GitPermissionsManager {
         return $projects_ids;
     }
 
+    private function isDisablingFineGrainedPermissions(Project $project, $enable_fine_grained_permissions)
+    {
+        return (
+            $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)
+            && ! $enable_fine_grained_permissions
+        );
+    }
+
     public function updateProjectDefaultPermissions(Codendi_Request $request)
     {
         $project    = $request->getProject();
@@ -165,10 +182,11 @@ class GitPermissionsManager {
         $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access-rights");
         $csrf->check();
 
-        $read_ugroup_ids   = array();
-        $write_ugroup_ids  = array();
-        $rewind_ugroup_ids = array();
-        $ugroup_ids        = $request->get(self::REQUEST_KEY);
+        $read_ugroup_ids                 = array();
+        $write_ugroup_ids                = array();
+        $rewind_ugroup_ids               = array();
+        $ugroup_ids                      = $request->get(self::REQUEST_KEY);
+        $enable_fine_grained_permissions = $request->get('use-fine-grained-permissions');
 
         if ($ugroup_ids) {
             $read_ugroup_ids   = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_READ);
@@ -176,32 +194,44 @@ class GitPermissionsManager {
             $rewind_ugroup_ids = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_WPLUS);
         }
 
-        $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_READ, $project_id);
-        $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_WRITE, $project_id);
-        $this->permissions_manager->clearPermission(Git::DEFAULT_PERM_WPLUS, $project_id);
+        if ($this->isDisablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
+            && empty($write_ugroup_ids)
+        ) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_git', 'default_access_control_missing')
+            );
+            return false;
+        }
 
-        $this->saveDefaultPermission(
+        $this->saveDefaultPermissionIfNotEmpty(
             $project,
             $read_ugroup_ids,
             Git::DEFAULT_PERM_READ
         );
 
-        $this->saveDefaultPermission(
+        $this->saveDefaultPermissionIfNotEmpty(
             $project,
             $write_ugroup_ids,
             Git::DEFAULT_PERM_WRITE
         );
 
-        $this->saveDefaultPermission(
-            $project,
-            $rewind_ugroup_ids,
-            Git::DEFAULT_PERM_WPLUS
-        );
-
-        if ($request->get('use-fine-grained-permissions')) {
+        if ($enable_fine_grained_permissions) {
             $this->fine_grained_updater->enableProject($project);
+
+            $this->saveDefaultPermissionIfNotEmpty(
+                $project,
+                $rewind_ugroup_ids,
+                Git::DEFAULT_PERM_WPLUS
+            );
         } else {
             $this->fine_grained_updater->disableProject($project);
+
+            $this->saveDefaultPermission(
+                $project,
+                $rewind_ugroup_ids,
+                Git::DEFAULT_PERM_WPLUS
+            );
         }
 
         $added_branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsFromRequest(
@@ -242,8 +272,16 @@ class GitPermissionsManager {
         return $ugroup_ids_for_permission;
     }
 
+    private function saveDefaultPermissionIfNotEmpty(Project $project, array $ugroups_ids, $permission)
+    {
+        if (! empty($ugroup_ids)) {
+            $this->saveDefaultPermission($project, $ugroup_ids, $permission);
+        }
+    }
+
     private function saveDefaultPermission(Project $project, array $ugroup_ids, $permission)
     {
+        $this->permissions_manager->clearPermission($permission, $project->getId());
         $override_collection = $this->permissions_manager->savePermissions(
             $project,
             $project->getID(),

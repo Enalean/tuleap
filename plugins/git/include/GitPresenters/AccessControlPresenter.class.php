@@ -68,6 +68,7 @@ class GitPresenters_AccessControlPresenter {
     public $remove_fine_grained_permission_confirm;
     public $btn_cancel;
     public $remove_form_action;
+    public $cannot_define_per_repo_permissions;
 
     public function __construct(
         $is_control_limited,
@@ -101,7 +102,8 @@ class GitPresenters_AccessControlPresenter {
         $this->rewrite_options = $rewrite_options;
 
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
-        $this->can_use_fine_grained_permissions = $can_use_fine_grained_permissions;
+        $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
+        $this->cannot_define_per_repo_permissions   = ($is_control_limited || $are_fine_grained_permissions_defined);
 
         $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
             'plugin_git',
