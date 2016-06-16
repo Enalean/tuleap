@@ -234,7 +234,8 @@ class GitViews extends PluginViews {
             $params['gerrit_can_migrate_checker'],
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
-            $this->fine_grained_builder
+            $this->fine_grained_builder,
+            $this->default_fine_grained_permission_factory
         );
         $repo_management_view->display();
     }
@@ -552,7 +553,8 @@ class GitViews extends PluginViews {
                 $this->getAccessRightsPresenterOptionsBuilder(),
                 $this->fine_grained_retriever,
                 $this->fine_grained_permission_factory,
-                $this->fine_grained_builder
+                $this->fine_grained_builder,
+                $this->default_fine_grained_permission_factory
             );
 
             $userName = $this->user->getName();
