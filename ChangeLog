@@ -28,7 +28,7 @@ Version 8.16 (Not yet release)
 	* Fix unit tests to run both on PHP 5.3 and PHP 5.6
 
 	== Plugins ==
-	* git: 4.198
+	* git: 4.199
 	* agiledashboard: 1.384
 	* tracker: 5.922
 	* tracker_date_reminder: 1.2.10

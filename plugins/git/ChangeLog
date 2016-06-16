@@ -1,3 +1,6 @@
+Version 4.199 - Tuleap 8.16
+    * story #8419: Disable per repo permissions form when fine grained perms are used
+
 Version 4.198 - Tuleap 8.16
     * Use project default permissions when creating a new repo
 
