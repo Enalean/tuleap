@@ -197,6 +197,8 @@ include_menu	soap_api	API SOAP
 include_menu	extras	Plus
 include_menu	get_help	Rubriques d'aide
 include_menu	projects	Projets
+include_menu	projects_user_admin	J'administre
+include_menu	projects_user_belong	J'appartiens à
 include_menu	browse_projects	Afficher l'ensemble des projets
 #
 #-----------------------------------------------

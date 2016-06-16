@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -17,30 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$navbar-height: 45px;
-$sidebar-width: 50px;
-$main-background: #f2f4fa;
+namespace Tuleap\Theme\BurningParrot\Navbar\Dropdown;
 
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding: $navbar-height 0 0;
+abstract class DropdownPresenter
+{
+    /** @var string */
+    public $id;
+
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
 }
-
-#main-container {
-    flex: 1 1 auto;
-    background: $main-background;
-}
-
-.main-framed {
-    padding: $tlp-spacing;
-}
-
-#feedback {
-    margin: 0 0 $tlp-spacing;
-}
-
-@import 'navbar';
-@import 'navbar-dropdown';
-@import 'navbar-dropdown-projects';

@@ -23,6 +23,8 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 use HTTPRequest;
 use PFUser;
 use EventManager;
+use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenterBuilder;
+use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenterBuilder;
 
 class PresenterBuilder
 {
@@ -41,7 +43,8 @@ class PresenterBuilder
 
         return new Presenter(
             new GlobalNavPresenter(
-                $this->getGlobalMenuItems()
+                $this->getGlobalMenuItems(),
+                $this->getGlobalNavbarDropdownMenuItems()
             ),
             new SearchPresenter(),
             new UserNavPresenter(
@@ -52,15 +55,23 @@ class PresenterBuilder
         );
     }
 
+    private function getGlobalNavbarDropdownMenuItems()
+    {
+        $projects_builder                 = new ProjectPresenterBuilder();
+        $navbar_dropdown_projects_builder = new DropdownProjectsPresenterBuilder();
+
+        return array(
+            new GlobalNavbarDropdownMenuItemPresenter(
+                $GLOBALS['Language']->getText('include_menu', 'projects'),
+                'fa fa-archive',
+                $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user))
+            )
+        );
+    }
+
     private function getGlobalMenuItems()
     {
         return array(
-            new GlobalMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'projects'),
-                '#',
-                'fa fa-archive',
-                ''
-            ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'extras'),
                 '#',

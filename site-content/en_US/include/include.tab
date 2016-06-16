@@ -203,6 +203,8 @@ include_menu	soap_api	SOAP API
 include_menu	extras	More
 include_menu	get_help	Get Help
 include_menu	projects	Projects
+include_menu	projects_user_admin	I administer
+include_menu	projects_user_belong	I belong to
 include_menu	browse_projects	Browse all projects
 #
 #-----------------------------------------------

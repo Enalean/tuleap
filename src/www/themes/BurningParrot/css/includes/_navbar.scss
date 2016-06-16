@@ -17,6 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@mixin nav-link($max-width) {
+    > .nav-link-icon {
+        display: none;
+        font-size: initial;
+
+        @media screen and (max-width: $max-width) {
+            display: inline;
+        }
+    }
+
+    > .nav-link-text {
+        @media screen and (max-width: $max-width) {
+            display: none;
+        }
+    }
+
+    &.only-icon {
+        > .nav-link-icon {
+            display: inline;
+        }
+
+        > .nav-link-text {
+            display: none;
+        }
+    }
+}
+
 header {
     display: flex;
     position: fixed;
@@ -31,6 +58,8 @@ header {
 }
 
 .nav-link {
+    @include nav-link(900px);
+
     display: flex;
     align-items: center;
     padding: 0 $tlp-spacing / 2;
@@ -58,31 +87,34 @@ header {
         transition: color 100ms linear;
         color: $tlp-theme-color;
     }
+}
 
-    > .nav-link-icon {
-        display: none;
-        font-size: initial;
+.nav-dropdown {
+    display: flex;
+    position: relative;
+    padding: 0 $tlp-spacing / 2;
+    transition: color 100ms linear;
+    color: $tlp-ui-dimmed;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    align-items: center;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 
-        @media screen and (max-width: 900px) {
-            display: inline;
-        }
+    &:hover {
+        transition: color 100ms linear;
+        color: $tlp-theme-color;
     }
+}
 
-    > .nav-link-text {
-        @media screen and (max-width: 900px) {
-            display: none;
-        }
-    }
-
-    &.only-icon {
-        > .nav-link-icon {
-            display: inline;
-        }
-
-        > .nav-link-text {
-            display: none;
-        }
-    }
+.nav-dropdown-link {
+    @include nav-link(900px);
 }
 
 #logo {

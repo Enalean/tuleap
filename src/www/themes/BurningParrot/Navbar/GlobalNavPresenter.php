@@ -20,13 +20,19 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use Tuleap\Theme\BurningParrot\GlobalNavbarDropdownMenuItemPresenter;
+
 class GlobalNavPresenter
 {
     /** @var GlobalMenuItemPresenter[] */
     public $menu_item_presenters;
 
-    public function __construct(array $menu_item_presenters)
+    /** @var GlobalNavbarDropdownMenuItemPresenter[] */
+    public $navbar_dropdown_menu_item_presenters;
+
+    public function __construct(array $menu_item_presenters, $navbar_dropdown_menu_item_presenters)
     {
-        $this->menu_item_presenters = $menu_item_presenters;
+        $this->menu_item_presenters                 = $menu_item_presenters;
+        $this->navbar_dropdown_menu_item_presenters = $navbar_dropdown_menu_item_presenters;
     }
 }
