@@ -29,6 +29,7 @@ use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 
 /**
  * GitActions
@@ -127,6 +128,11 @@ class GitActions extends PluginActions {
      */
     private $ci_token_manager;
 
+    /**
+     * @var FineGrainedPermissionReplicator
+     */
+    private $fine_grained_replicator;
+
     public function __construct(
         Git                $controller,
         Git_SystemEventManager $system_event_manager,
@@ -150,7 +156,8 @@ class GitActions extends PluginActions {
         WebhookDao $webhook_dao,
         FineGrainedUpdater $fine_grained_updater,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
-        CITokenManager $ci_token_manager
+        CITokenManager $ci_token_manager,
+        FineGrainedPermissionReplicator $fine_grained_replicator
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager      = $system_event_manager;
@@ -175,6 +182,7 @@ class GitActions extends PluginActions {
         $this->fine_grained_updater          = $fine_grained_updater;
         $this->fine_grained_permission_saver = $fine_grained_permission_saver;
         $this->ci_token_manager              = $ci_token_manager;
+        $this->fine_grained_replicator       = $fine_grained_replicator;
     }
 
     protected function getText($key, $params = array()) {
@@ -248,6 +256,10 @@ class GitActions extends PluginActions {
                 $this->git_permissions_manager->getDefaultPermissions($project)
             );
 
+            $this->fine_grained_replicator->replicateDefaultPermissions(
+                $repository
+            );
+
             $this->history_dao->groupAddHistory(
                 "git_repo_create",
                 $repository_name,
@@ -255,6 +267,7 @@ class GitActions extends PluginActions {
             );
 
             $this->ci_token_manager->generateNewTokenForRepository($repository);
+
 
             $this->redirectToRepo($repository);
         } catch (Exception $exception) {

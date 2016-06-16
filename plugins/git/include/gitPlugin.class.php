@@ -35,6 +35,7 @@ use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1226,7 +1227,20 @@ class GitPlugin extends Plugin {
             $this->getDefaultFineGrainedPermissionFactory(),
             new CITokenManager(new CITokenDao()),
             $this->getFineGrainedPermissionDestructor(),
-            $this->getFineGrainedRepresentationBuilder()
+            $this->getFineGrainedRepresentationBuilder(),
+            $this->getFineGrainedPermissionReplicator()
+        );
+    }
+
+    private function getFineGrainedPermissionReplicator()
+    {
+        $dao     = $this->getFineGrainedDao();
+        $factory = $this->getDefaultFineGrainedPermissionFactory();
+        $saver   = $this->getFineGrainedPermissionSaver();
+        return new FineGrainedPermissionReplicator(
+            $dao,
+            $factory,
+            $saver
         );
     }
 

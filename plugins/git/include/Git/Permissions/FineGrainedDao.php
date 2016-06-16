@@ -46,6 +46,21 @@ class FineGrainedDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function replicateFineGrainedPermissionsEnabledFromDefault(
+        $project_id,
+        $repository_id
+    ) {
+        $project_id    = $this->da->escapeInt($project_id);
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "INSERT INTO plugin_git_repository_fine_grained_permissions_enabled (repository_id)
+                SELECT $repository_id
+                FROM plugin_git_default_fine_grained_permissions_enabled
+                WHERE project_id = $project_id";
+
+        return $this->update($sql);
+    }
+
     public function searchRepositoryUseFineGrainedPermissions($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
