@@ -24,6 +24,7 @@ use TuleapTestCase;
 use GitRepository;
 use ForgeConfig;
 use \Tuleap\PullRequest\FileUniDiff;
+use \Tuleap\PullRequest\FileNullDiff;
 use \Tuleap\PullRequest\UniDiffLine;
 
 require_once 'bootstrap.php';
@@ -47,10 +48,11 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff  = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
+        $dest_diff     = new FileNullDiff();
         $targeted_diff = new FileUniDiff();
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(true, $updated_comments[0]->isOutdated());
@@ -66,10 +68,11 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff  = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
+        $dest_diff     = new FileNullDiff();
         $targeted_diff = new FileUniDiff();
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(true, $updated_comments[0]->isOutdated());
@@ -86,11 +89,13 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1   , null, 'une ligne');
         $changes_diff->addLine(UniDiffLine::ADDED  , 2, null, 1   , 'une ligne avec changement');
 
+        $dest_diff     = new FileNullDiff();
+
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne avec changement');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(true, $updated_comments[0]->isOutdated());
@@ -108,13 +113,15 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
         $changes_diff->addLine(UniDiffLine::KEPT , 3, 1   , 3, 'une ligne');
 
+        $dest_diff     = new FileNullDiff();
+
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
         $targeted_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
         $targeted_diff->addLine(UniDiffLine::ADDED, 3, null, 3, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(false, $updated_comments[0]->isOutdated());
@@ -133,13 +140,15 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
         $changes_diff->addLine(UniDiffLine::KEPT , 3, 1   , 3, 'une ligne');
 
+        $dest_diff     = new FileNullDiff();
+
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
         $targeted_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
         $targeted_diff->addLine(UniDiffLine::ADDED, 3, null, 3, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(false, $updated_comments[0]->isOutdated());
@@ -156,11 +165,13 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff  = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
+        $dest_diff     = new FileNullDiff();
+
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(true, $updated_comments[0]->isOutdated());
@@ -176,66 +187,17 @@ class WhenSourceChangesTest extends InlineCommentUpdaterTest {
         $changes_diff  = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
 
+        $dest_diff     = new FileNullDiff();
+
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED,    1, null, 1,    'header 1');
         $targeted_diff->addLine(UniDiffLine::REMOVED,  2, 1   , null, 'une ligne');
 
         $updated_comments = $this->updater->updateWhenSourceChanges(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
+            $comments, $original_diff, $changes_diff, $dest_diff, $targeted_diff);
 
         $this->assertEqual(1, count($updated_comments));
         $this->assertEqual(false, $updated_comments[0]->isOutdated());
         $this->assertEqual(2, $updated_comments[0]->getUnidiffOffset());
-    }
-}
-
-class OnRebase extends InlineCommentUpdaterTest
-{
-
-    public function itShouldBeObsoleteIfLineWasKeptAndLineIsDeleted()
-    {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
-
-        $original_diff = new FileUniDiff();
-        $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
-
-        $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
-
-        $targeted_diff = new FileUniDiff();
-
-        $updated_comments = $this->updater->updateOnRebase(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
-
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(true, $updated_comments[0]->isOutdated());
-    }
-
-
-    public function itShouldBeMovedIfLineWasKeptAndLineIsMoved()
-    {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
-
-        $original_diff = new FileUniDiff();
-        $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
-        $original_diff->addLine(UniDiffLine::ADDED, 2, NULL, 2, 'chose');
-
-        $changes_diff  = new FileUniDiff();
-        $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
-        $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
-        $changes_diff->addLine(UniDiffLine::KEPT , 3, 1   , 3, 'une ligne');
-
-        $targeted_diff = new FileUniDiff();
-        $targeted_diff->addLine(UniDiffLine::KEPT  , 1, 1   , 1, 'header 1');
-        $targeted_diff->addLine(UniDiffLine::KEPT  , 2, 2   , 2, 'header 2');
-        $targeted_diff->addLine(UniDiffLine::KEPT  , 3, 3   , 3, 'une ligne');
-        $targeted_diff->addLine(UniDiffLine::ADDED , 4, NULL, 4, 'chose');
-
-        $updated_comments = $this->updater->updateOnRebase(
-            $comments, $original_diff, $changes_diff, $targeted_diff);
-
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(false, $updated_comments[0]->isOutdated());
-        $this->assertEqual(3, $updated_comments[0]->getUnidiffOffset());
     }
 }

@@ -89,12 +89,9 @@ class PullRequestUpdater
             $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
             if ($ancestor_rev != $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
-                $this->updateInlineCommentsOnRebase($git_exec, $pr, $ancestor_rev, $new_rev);
-                $this->timeline_event_creator->storeRebaseEvent($pr, $user, $new_rev);
-            } else {
-                $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $new_rev);
-                $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
             }
+            $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $ancestor_rev, $new_rev);
+            $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
         }
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
@@ -118,32 +115,30 @@ class PullRequestUpdater
         return $ancestor_rev;
     }
 
-    private function updateInlineCommentsWhenSourceChanges(GitExec $git_exec, PullRequest $pull_request, $new_rev)
+    private function updateInlineCommentsWhenSourceChanges(GitExec $git_exec, PullRequest $pull_request, $new_dest_rev, $new_src_rev)
     {
         $comments_by_file = $this->getInlineCommentsByFile($pull_request);
         foreach ($comments_by_file as $file_path => $comments) {
-            $original_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $pull_request->getSha1Src());
-            $changes_diff         = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Src(), $new_rev);
-            $targeted_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_rev);
+            $original_diff     = $this->diff_builder->buildFileUniDiffFromCommonAncestor($git_exec, $file_path, $pull_request->getSha1Dest(), $pull_request->getSha1Src());
+            $changes_diff      = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Src(), $new_src_rev);
+            $dest_changes_diff = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_dest_rev);
+            $target_diff       = $this->diff_builder->buildFileUniDiffFromCommonAncestor($git_exec, $file_path, $new_dest_rev, $new_src_rev);
 
-            if (count($changes_diff->getLines()) > 0) {
-                $comments_to_update = $this->inline_comment_updater->updateWhenSourceChanges($comments, $original_diff, $changes_diff, $targeted_diff);
+            $has_src_changes   = count($changes_diff->getLines()) > 0;
+            $has_dest_changes  = count($dest_changes_diff->getLines()) > 0;
+
+            if ($has_src_changes || $has_dest_changes) {
+                if (! $has_src_changes) {
+                    $changes_diff = $this->diff_builder->buildFileNullDiff();
+                }
+                if (! $has_dest_changes) {
+                    $dest_changes_diff = $this->diff_builder->buildFileNullDiff();
+                }
+
+                $comments_to_update = $this->inline_comment_updater->updateWhenSourceChanges(
+                    $comments, $original_diff, $changes_diff, $dest_changes_diff, $target_diff);
                 $this->saveInDb($comments_to_update);
             }
-        }
-
-    }
-
-    private function updateInlineCommentsOnRebase(GitExec $git_exec, PullRequest $pull_request, $new_ancestor_rev, $new_rev)
-    {
-        $comments_by_file = $this->getInlineCommentsByFile($pull_request);
-        foreach ($comments_by_file as $file_path => $comments) {
-            $original_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_rev);
-            $changes_diff         = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_ancestor_rev);
-            $targeted_diff        = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $new_ancestor_rev, $new_rev);
-
-            $comments_to_update = $this->inline_comment_updater->updateOnRebase($comments, $original_diff, $changes_diff, $targeted_diff);
-            $this->saveInDb($comments_to_update);
         }
     }
 

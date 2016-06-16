@@ -32,33 +32,21 @@ class InlineCommentUpdater
      * @param FileUniDiff $original_diff The unidiff that the inline comments were referring to
      * @param FileUniDiff $changes_diff  The unidiff between the old state and the new state
      *                                    of the file in the source branch
-     * @param FileUniDiff $targeted_diff The unidiff between the new state of the file in the source branch
+     * @param FileUniDiff $target_diff The unidiff between the new state of the file in the source branch
      *                                    and the state of the file in the destination branch
      *
      * @return the list of comments to update
      */
-    public function updateWhenSourceChanges(array $comments, FileUniDiff $original_diff, FileUniDiff $changes_diff, FileUniDiff $targeted_diff)
+    public function updateWhenSourceChanges(array $comments, FileUniDiff $original_diff, FileUniDiff $changes_diff, FileUniDiff $dest_changes_diff, FileUniDiff $target_diff)
     {
         $comments_to_update = array();
 
         foreach ($comments as $comment) {
             $original_line = $original_diff->getLine($comment->getUniDiffOffset());
             if ($original_line->getType() == UniDiffLine::ADDED || $original_line->getType() == UniDiffLine::KEPT) {
-                $changes_line = $changes_diff->getLineFromOldOffset($original_line->getNewOffset());
-                if ($changes_line->getType() == UniDiffLine::REMOVED) {
-                    $comment->markAsOutdated();
-                } else {
-                    $new_unidiff_offset = $targeted_diff->getLineFromNewOffset($changes_line->getNewOffset())->getUnidiffOffset();
-                    $comment->setUnidiffOffset($new_unidiff_offset);
-                }
+                $this->updateCommentOnAddedOrKeptLine($comment, $changes_diff, $target_diff, $original_line);
             } else if ($original_line->getType() == UnidiffLine::REMOVED) {
-                $targeted_line = $targeted_diff->getLineFromOldOffset($original_line->getOldOffset());
-                if ($targeted_line->getType() == UnidiffLine::REMOVED) {
-                    $new_unidiff_offset = $targeted_line->getUnidiffOffset();
-                    $comment->setUnidiffOffset($new_unidiff_offset);
-                } else {
-                    $comment->markAsOutdated();
-                }
+                $this->updateCommentOnDeletedLine($comment, $dest_changes_diff, $target_diff, $original_line);
             }
             $comments_to_update[] = $comment;
         }
@@ -66,37 +54,30 @@ class InlineCommentUpdater
         return $comments_to_update;
     }
 
-    /**
-     * @param array       $comments      The comments to update
-     * @param FileUniDiff $original_diff The unidiff that the inline comments were referring to
-     * @param FileUniDiff $changes_diff  The unidiff between the old state and the new state
-     *                                    of the file in the destination branch
-     * @param FileUniDiff $targeted_diff The unidiff between the new state of the file in the source branch
-     *                                    and the state of the file in the destination branch
-     *
-     * @return the list of comments to update
-     */
-    public function updateOnRebase(array $comments, FileUniDiff $original_diff, FileUniDiff $changes_diff, FileUniDiff $targeted_diff)
+    private function updateCommentOnAddedOrKeptLine(InlineComment $comment, FileUniDiff $changes_diff, FileUniDiff $target_diff, UniDiffLine $original_line)
     {
-        $comments_to_update = array();
+        $changes_line = $changes_diff->getLineFromOldOffset($original_line->getNewOffset());
+        if ($changes_line->getType() == UniDiffLine::REMOVED) {
+            $comment->markAsOutdated();
+        } else {
+            $new_unidiff_offset = $target_diff->getLineFromNewOffset($changes_line->getNewOffset())->getUnidiffOffset();
+            $comment->setUnidiffOffset($new_unidiff_offset);
+        }
+    }
 
-        foreach ($comments as $comment) {
-            $original_line = $original_diff->getLine($comment->getUniDiffOffset());
-            if ($original_line->getType() == UniDiffLine::KEPT) {
-                $changes_line = $changes_diff->getLineFromOldOffset($original_line->getOldOffset());
-                if ($changes_line->getType() == UniDiffLine::REMOVED) {
-                    $comment->markAsOutdated();
-                } else {
-                    $new_unidiff_offset = $targeted_diff->getLineFromOldOffset($changes_line->getNewOffset())->getUnidiffOffset();
-                    $comment->setUnidiffOffset($new_unidiff_offset);
-                }
+    private function updateCommentOnDeletedLine(InlineComment $comment, FileUniDiff $dest_changes_diff, FileUniDiff $target_diff, UniDiffLine $original_line)
+    {
+        $dest_changes_line = $dest_changes_diff->getLineFromOldOffset($original_line->getOldOffset());
+        if ($dest_changes_line->getType() == UniDiffLine::REMOVED) {
+            $comment->markAsOutdated();
+        } else {
+            $target_line = $target_diff->getLineFromOldOffset($dest_changes_line->getNewOffset());
+            if ($target_line->getType() == UnidiffLine::REMOVED) {
+                $new_unidiff_offset = $target_line->getUnidiffOffset();
+                $comment->setUnidiffOffset($new_unidiff_offset);
             } else {
                 $comment->markAsOutdated();
             }
-            $comments_to_update[] = $comment;
         }
-
-        return $comments_to_update;
     }
-
 }

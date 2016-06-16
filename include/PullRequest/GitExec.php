@@ -186,6 +186,17 @@ class GitExec extends Git_Exec
         $file_path = escapeshellarg($file_path);
         $old_rev   = escapeshellarg($old_rev);
         $new_rev   = escapeshellarg($new_rev);
+        $cmd       = "diff -U9999999 $old_rev..$new_rev -- $file_path";
+
+        $this->gitCmdWithOutput($cmd, $output);
+        return $output;
+    }
+
+    public function unidiffFromCommonAncestor($file_path, $old_rev, $new_rev)
+    {
+        $file_path = escapeshellarg($file_path);
+        $old_rev   = escapeshellarg($old_rev);
+        $new_rev   = escapeshellarg($new_rev);
         $cmd       = "diff -U9999999 $old_rev...$new_rev -- $file_path";
 
         $this->gitCmdWithOutput($cmd, $output);

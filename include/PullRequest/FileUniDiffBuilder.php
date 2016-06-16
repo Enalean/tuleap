@@ -26,10 +26,26 @@ class FileUniDiffBuilder
     private $KEPT    = ' ';
     private $ADDED   = '+';
 
+    public function buildFileNullDiff()
+    {
+        return new FileNullDiff();
+    }
+
     public function buildFileUniDiff(GitExec $git_exec, $file_path, $old_rev, $new_rev)
     {
         $raw_diff = $git_exec->unidiff($file_path, $old_rev, $new_rev);
-        $diff     = new FileUniDiff();
+        return $this->build($raw_diff);
+    }
+
+    public function buildFileUniDiffFromCommonAncestor(GitExec $git_exec, $file_path, $old_rev, $new_rev)
+    {
+        $raw_diff = $git_exec->unidiffFromCommonAncestor($file_path, $old_rev, $new_rev);
+        return $this->build($raw_diff);
+    }
+
+    private function build($raw_diff)
+    {
+        $diff = new FileUniDiff();
 
         $old_offset     = 0;
         $new_offset     = 0;
