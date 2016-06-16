@@ -160,6 +160,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
             $formElement_data['specific_properties'] = $merged_specific_properties;
             $request->set('formElement_data', $formElement_data);
+
+            $GLOBALS['Response']->addFeedback(
+                'warning',
+                $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'warning_permissions', $this->getName())
+            );
         }
 
         parent::processUpdate(

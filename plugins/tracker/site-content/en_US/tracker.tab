@@ -1654,6 +1654,7 @@ plugin_tracker_deprecation_panel	adapt_message	This project uses trackers that a
 
 plugin_tracker_deprecation_field	title_autocompute	Auto-compute
 plugin_tracker_deprecation_field	title_original_value	Computed value:
+plugin_tracker_deprecation_field	warning_permissions	You will not able to edit by hand the field "$1" since no update and submit permissions will be granted.
 
 plugin_tracker	autocompute_field	auto-computed
 

@@ -1655,6 +1655,7 @@ plugin_tracker_deprecation_panel	adapt_message	Ce projet utilise des outils de s
 
 plugin_tracker_deprecation_field	title_autocompute	Calcul automatique
 plugin_tracker_deprecation_field	title_original_value	Valeur calculée :
+plugin_tracker_deprecation_field	warning_permissions	Il ne vous sera pas possible de modifier manuellement la valeur du champs "$1" tant que les permissions de mise à jour et de soumission n'auront pas été actualisées.
 
 plugin_tracker	autocompute_field	calculé automatiquement
 
