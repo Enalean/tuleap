@@ -368,7 +368,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $changeset    = $artifact->getLastChangesetWithFieldValue($this);
         $value        = $this->getValueForChangeset($changeset, $current_user);
 
-        return ($value) ? $value : "-";
+        return ($value !== null) ? $value : "-";
     }
 
     /**
@@ -380,7 +380,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $current_user = UserManager::instance()->getCurrentUser();
-        return $this->getComputedValue($current_user, $artifact);
+        $changeset    = $artifact->getLastChangesetWithFieldValue($this);
+        $value        = $this->getValueForChangeset($changeset, $current_user);
+
+        return ($value !== null) ? $value : "-";
     }
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
@@ -419,7 +422,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function getValueForChangeset(Tracker_Artifact_Changeset $artifact_changeset, PFUser $user)
     {
         $changeset = $artifact_changeset->getValue($this);
-        if ($changeset && $changeset->getNumeric()) {
+        if ($changeset && $changeset->getNumeric() !== null) {
             return $changeset->getNumeric();
         } else {
             return $this->getComputedValue($user, $artifact_changeset->getArtifact());
