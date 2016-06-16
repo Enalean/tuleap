@@ -1,3 +1,6 @@
+Version 5.921 - Tuleap 8.16
+    * Add tests for changeset diff for computed values
+
 Version 5.920 - Tuleap 8.16
     * Enable computed fields to manage float values
 
