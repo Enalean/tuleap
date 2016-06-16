@@ -315,15 +315,37 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $purifier       = Codendi_HTMLPurifier::instance();
         $computed_value = $this->getComputedValueWithNoLabel($artifact);
 
-        $html  = '<div class="tracker_hidden_edition_field" data-field-id="' . $purifier->purify($this->getId()) . '"><div class="input-append">';
+        $html  = '<div class="tracker_hidden_edition_field" data-field-id="' . $purifier->purify($this->getId()) . '">
+                    <div class="input-append">';
         $html .= $this->fetchArtifactValue($artifact, $value, $submitted_values);
-        $html .= '<a class="btn auto-compute"><i class="icon-repeat icon-flip-horizontal"></i>';
+        $html .= $this->fetchBackToAutocomputedButton(false);
+        $html .= $this->fetchComputedValueWithLabel($computed_value);
+        $html .= '</div></div>';
+
+        return $html;
+    }
+
+    private function fetchBackToAutocomputedButton($is_disabled)
+    {
+        $disabled = '';
+        if ($is_disabled) {
+            $disabled = 'disabled="disabled"';
+        }
+        $html  = '<a class="btn auto-compute" ' . $disabled . '><i class="icon-repeat icon-flip-horizontal"></i>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute');
         $html .= '</a>';
-        $html .= '<span class="original-value">';
+
+        return $html;
+    }
+
+    private function fetchComputedValueWithLabel($computed_value)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $html  = '<span class="original-value">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_original_value');
         $html .= $purifier->purify($computed_value) . '</span>';
-        $html .= '</div></div>';
+
 
         return $html;
     }
@@ -343,13 +365,19 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $displayed_value = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
         }
 
+        return $this->fetchComputedInputs($displayed_value, $is_autocomputed);
+    }
+
+    private function fetchComputedInputs($displayed_value, $is_autocomputed)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '<input type="number" step="any"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_MANUAL . ']"
             value="' . $purifier->purify($displayed_value) . '" />';
         $html    .= '<input type="hidden"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_IS_AUTOCOMPUTED . ']"
-            value="' . $is_autocomputed . '" />';
+            value="' . $purifier->purify($is_autocomputed) . '" />';
+
         return $html;
     }
 
@@ -519,8 +547,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * Display the html field in the admin ui
      * @return string html
      */
-    public function fetchAdminFormElement() {
-        $html = '9001';
+    public function fetchAdminFormElement()
+    {
+        $html  = '<div class="input-append">';
+        $html .= $this->fetchComputedInputs('', true);
+        $html .= $this->fetchBackToAutocomputedButton(true);
+        $html .= $this->fetchComputedValueWithLabel(
+            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')
+        );
+        $html .= "</div>";
+
         return $html;
     }
 
