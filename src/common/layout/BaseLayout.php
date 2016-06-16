@@ -116,4 +116,31 @@ abstract class BaseLayout extends Response
     {
         return '';
     }
+
+    public function redirect($url)
+    {
+        $is_anon = session_hash() ? false : true;
+        $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
+        if (($is_anon && (headers_sent() || $has_feedback)) || (!$is_anon && headers_sent())) {
+            $this->header(array('title' => 'Redirection'));
+            echo '<p>' . $GLOBALS['Language']->getText('global', 'return_to', array($url)) . '</p>';
+            echo '<script type="text/javascript">';
+            if ($has_feedback) {
+                echo 'setTimeout(function() {';
+            }
+            echo " location.href = '" . $url . "';";
+            if ($has_feedback) {
+                echo '}, 5000);';
+            }
+            echo '</script>';
+            $this->footer(array());
+        } else {
+            if (!$is_anon && !headers_sent() && $has_feedback) {
+                $this->_serializeFeedback();
+            }
+
+            header('Location: ' . $url);
+        }
+        exit();
+    }
 }

@@ -10,7 +10,7 @@ admin_main	header		Fonctions d'administration
 admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
 admin_main	header_user	Administration des utilisateurs
 admin_main	display_user	Afficher les utilisateurs commençant par :
-admin_main	search_user	Chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
+admin_main	search_user	Chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
 admin_main	search	Chercher
 admin_main	export_csv	Export CSV
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
@@ -19,7 +19,7 @@ admin_main	need_approval	approbation requise
 admin_main	need_validation	validation requise
 admin_main	header_group	Administration des projets
 admin_main	display_group	Afficher les projets commençant par :
-admin_main	search_group	Chercher (Id projet, nom unix, nom complet) :
+admin_main	search_group	Chercher (Id projet, nom unix, nom complet) :
 admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
 admin_main	all_groups	Tous les <a href="$1">projets</a>
 admin_main	incomplete_group	Projets en statut <a href="$1"><B>I</B> (incomplet)</A>

@@ -686,38 +686,6 @@ class Layout extends Tuleap\Layout\BaseLayout
         return false;
     }
 
-    function redirect($url) {
-       $is_anon = session_hash() ? false : true;
-       $fb = $GLOBALS['feedback'] || count($this->_feedback->logs);
-       if (($is_anon && (headers_sent() || $fb)) || (!$is_anon && headers_sent())) {
-            $this->header(array('title' => 'Redirection'));
-            echo '<p>'. $GLOBALS['Language']->getText('global', 'return_to', array($url)) .'</p>';
-            echo '<script type="text/javascript">';
-            if ($fb) {
-                echo 'setTimeout(function() {';
-            }
-            echo " location.href = '". $url ."';";
-            if ($fb) {
-                echo '}, 5000);';
-            }
-            echo '</script>';
-            $this->footer(array());
-        } else {
-            if (!$is_anon && !headers_sent() && $fb) {
-                $this->_serializeFeedback();
-            }
-            // Protect against CRLF injections,
-            // This seems to be fixed in php 4.4.2 and 5.1.2 according to
-            // http://php.net/header
-            if(strpos($url, "\n")) {
-                trigger_error('HTTP header injection detected. Abort.', E_USER_ERROR);
-            } else {
-                header('Location: '. $url);
-            }
-        }
-        exit();
-    }
-
     function iframe($url, $html_options = array()) {
         $html = '';
         $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
