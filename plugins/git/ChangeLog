@@ -1,3 +1,6 @@
+Version 4.200 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Delete and add actions are not available while forking)
+
 Version 4.199 - Tuleap 8.16
     * story #8419: Disable per repo permissions form when fine grained perms are used
 
