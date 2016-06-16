@@ -48,7 +48,8 @@ class HeaderPresenterBuilder
         HTTPRequest $request,
         PFUser $current_user,
         $imgroot,
-        $title
+        $title,
+        $feedback_logs
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->request                  = $request;
@@ -66,7 +67,8 @@ class HeaderPresenterBuilder
                 $this->current_user
             ),
             $color,
-            $this->getStylesheets($color)
+            $this->getStylesheets($color),
+            $feedback_logs
         );
     }
 

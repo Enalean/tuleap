@@ -33,4 +33,8 @@ body {
     background: $main-background;
 }
 
+#feedback {
+    margin: 0 0 $tlp-spacing;
+}
+
 @import 'navbar';

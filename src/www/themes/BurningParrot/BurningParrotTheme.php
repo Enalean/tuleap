@@ -49,6 +49,10 @@ class BurningParrotTheme extends BaseLayout
         return true;
     }
 
+    public function includeCalendarScripts()
+    {
+    }
+
     public function header(array $params)
     {
         $header_presenter_builder = new HeaderPresenterBuilder();
@@ -58,7 +62,8 @@ class BurningParrotTheme extends BaseLayout
             $this->request,
             $this->user,
             $this->imgroot,
-            $params['title']
+            $params['title'],
+            $this->_feedback->logs
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

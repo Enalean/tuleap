@@ -20,9 +20,10 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use PFUser;
 use ThemeVariantColor;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
+use Codendi_HTMLPurifier;
+use Feedback;
 
 class HeaderPresenter
 {
@@ -44,12 +45,16 @@ class HeaderPresenter
     /** @var string */
     public $color_code;
 
+    /** @var array */
+    public $feedbacks;
+
     public function __construct(
         $title,
         $imgroot,
         NavbarPresenter $navbar_presenter,
         ThemeVariantColor $color,
-        array $stylesheets
+        array $stylesheets,
+        array $feedback_logs
     ) {
         $this->title            = html_entity_decode($title);
         $this->imgroot          = $imgroot;
@@ -57,5 +62,40 @@ class HeaderPresenter
         $this->stylesheets      = $stylesheets;
         $this->color_name       = $color->getName();
         $this->color_code       = $color->getHexaCode();
+
+        $this->buildFeedbacks($feedback_logs);
+    }
+
+    private function buildFeedbacks($feedback_logs)
+    {
+        $this->feedbacks = array();
+        $old_level = null;
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $index     = -1;
+        foreach ($feedback_logs as $feedback) {
+            if ($old_level !== $feedback['level']) {
+                ++$index;
+                $this->feedbacks[$index] = array(
+                    'level'             => $this->convertFeedbackLevel($feedback['level']),
+                    'purified_messages' => array()
+                );
+                $old_level = $feedback['level'];
+            }
+            $this->feedbacks[$index]['purified_messages'][] = $purifier->purify($feedback['msg'], $feedback['purify']);
+        }
+    }
+
+    private function convertFeedbackLevel($level)
+    {
+        switch ($level) {
+            case Feedback::ERROR:
+                return 'danger';
+                break;
+            case Feedback::DEBUG:
+                return 'warning';
+                break;
+            default:
+                return $level;
+        }
     }
 }
