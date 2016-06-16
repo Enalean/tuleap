@@ -147,16 +147,16 @@ class GitForkPermissionsManager {
         $form .= '<input type="hidden" id="fork_repositories_path" name="path" value="'.$this->getPurifier()->purify($params['namespace']).'" />';
         $form .= '<input type="hidden" id="fork_repositories_prefix" value="u/'. $userName .'" />';
         if (count($repository_ids) > 1) {
-            $form .= $this->displayDefaultAccessControl($groupId);
+            $form .= $this->displayDefaultAccessControl($groupId, true);
         } else {
-            $form .= $this->displayAccessControl($groupId);
+            $form .= $this->displayAccessControl($groupId, true);
         }
         $form .= '<input type="submit" class="btn btn-primary" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
         $form .= '</form>';
         return $form;
     }
 
-    private function displayDefaultAccessControl($project_id) {
+    private function displayDefaultAccessControl($project_id, $is_fork = false) {
         $project = ProjectManager::instance()->getProject($project_id);
 
         $can_use_fine_grained_permissions     = false;
@@ -185,7 +185,8 @@ class GitForkPermissionsManager {
             $tags_permissions,
             $new_fine_grained_ugroups,
             $delete_url,
-            $csrf
+            $csrf,
+            $is_fork
         );
 
         return $renderer->renderToString('access-control', $presenter);
@@ -198,7 +199,7 @@ class GitForkPermissionsManager {
      *
      * @return String
      */
-    public function displayAccessControl($project_id = null) {
+    public function displayAccessControl($project_id = null, $is_fork = false) {
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
         $user    = UserManager::instance()->getCurrentUser();
 
@@ -244,7 +245,8 @@ class GitForkPermissionsManager {
             $tags_permissions_representation,
             $this->getAllOptions($project),
             $delete_url,
-            $csrf
+            $csrf,
+            $is_fork
         );
 
         return $renderer->renderToString('access-control', $presenter);
