@@ -22,6 +22,11 @@ require_once 'common/autoload.php';
 require_once __DIR__.'/DatabaseInitialization.php';
 
 use Tuleap\Git\REST\DatabaseInitialization;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
@@ -222,13 +227,22 @@ class GitDataBuilder extends REST_TestDataBuilder {
             $default_mirror_dao
         );
 
+        $ugroup_manager   = new UGroupManager();
+        $normalizer       = new PermissionsNormalizer();
+        $fine_grained_dao = new FineGrainedDao();
+        $default_factory  = new DefaultFineGrainedPermissionFactory($fine_grained_dao, $ugroup_manager, $normalizer);
+        $saver            = new FineGrainedPermissionSaver($fine_grained_dao);
+        $factory          = new FineGrainedPermissionFactory($fine_grained_dao, $ugroup_manager, $normalizer);
+        $replicator       = new FineGrainedPermissionReplicator($fine_grained_dao, $default_factory, $saver, $factory);
+
         return new GitRepositoryManager(
             $repository_factory,
             $git_system_event_manager,
             new GitDao(),
             '/tmp',
             new GitRepositoryMirrorUpdater($mirror_data_mapper, new ProjectHistoryDao()),
-            $mirror_data_mapper
+            $mirror_data_mapper,
+            $replicator
         );
     }
 

@@ -25,6 +25,12 @@ use GitRepository;
 
 class FineGrainedPermissionReplicator
 {
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $factory;
+
     /**
      * @var FineGrainedDao
      */
@@ -38,24 +44,26 @@ class FineGrainedPermissionReplicator
     /**
      * @var DefaultFineGrainedPermissionFactory
      */
-    private $factory;
+    private $default_factory;
 
     public function __construct(
         FineGrainedDao $fine_grained_dao,
-        DefaultFineGrainedPermissionFactory $factory,
-        FineGrainedPermissionSaver $saver
+        DefaultFineGrainedPermissionFactory $default_factory,
+        FineGrainedPermissionSaver $saver,
+        FineGrainedPermissionFactory $factory
     ) {
         $this->fine_grained_dao = $fine_grained_dao;
-        $this->factory          = $factory;
+        $this->default_factory  = $default_factory;
         $this->saver            = $saver;
+        $this->factory          = $factory;
     }
 
     public function replicateDefaultPermissions(
         GitRepository $repository
     ) {
         $project            = $repository->getProject();
-        $branch_permissions = $this->factory->getBranchesFineGrainedPermissionsForProject($project);
-        $tags_permissions   = $this->factory->getTagsFineGrainedPermissionsForProject($project);
+        $branch_permissions = $this->default_factory->getBranchesFineGrainedPermissionsForProject($project);
+        $tags_permissions   = $this->default_factory->getTagsFineGrainedPermissionsForProject($project);
 
         $this->fine_grained_dao->replicateFineGrainedPermissionsEnabledFromDefault(
             $project->getID(),
@@ -80,6 +88,41 @@ class FineGrainedPermissionReplicator
                 $default_permission->getPatternWithoutPrefix(),
                 $default_permission->getWritersUgroup(),
                 $default_permission->getRewindersUgroup()
+            );
+            $this->saver->saveTagPermission($replicated_permission);
+        }
+    }
+
+    public function replicateRepositoryPermissions(
+        GitRepository $source_repository,
+        GitRepository $repository
+    ) {
+        $branch_permissions = $this->factory->getBranchesFineGrainedPermissionsForRepository($source_repository);
+        $tags_permissions   = $this->factory->getTagsFineGrainedPermissionsForRepository($source_repository);
+
+        $this->fine_grained_dao->replicateFineGrainedPermissionsEnabledFromRepository(
+            $source_repository->getId(),
+            $repository->getId()
+        );
+
+        foreach ($branch_permissions as $repository_permission) {
+            $replicated_permission = new FineGrainedPermission(
+                0,
+                $repository->getId(),
+                $repository_permission->getPatternWithoutPrefix(),
+                $repository_permission->getWritersUgroup(),
+                $repository_permission->getRewindersUgroup()
+            );
+            $this->saver->saveBranchPermission($replicated_permission);
+        }
+
+        foreach ($tags_permissions as $repository_permission) {
+            $replicated_permission = new FineGrainedPermission(
+                0,
+                $repository->getId(),
+                $repository_permission->getPatternWithoutPrefix(),
+                $repository_permission->getWritersUgroup(),
+                $repository_permission->getRewindersUgroup()
             );
             $this->saver->saveTagPermission($replicated_permission);
         }
