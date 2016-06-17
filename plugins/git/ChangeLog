@@ -1,3 +1,6 @@
+Version 4.203 - Tuleap 8.16
+    * story #8419: Edit default per tags/branches permission in git administration
+
 Version 4.202 - Tuleap 8.16
     * story #8419 have permissions per tags/branches (Display per tags/branches permissions on multiple fork)
 
