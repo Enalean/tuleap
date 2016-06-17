@@ -49,6 +49,7 @@ abstract class BaseLayout extends Response
     abstract public function footer(array $params);
     abstract public function displayStaticWidget(Widget_Static $widget);
     abstract public function isLabFeature();
+    abstract public function includeCalendarScripts();
 
     /**
      * Build an img tag
