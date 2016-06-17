@@ -1628,7 +1628,8 @@ class TrackerTest extends TuleapTestCase {
         $this->assertTrue($t_access_registered->userCanView($this->super_admin));
     }
 
-    public function testHasErrorNoError() {
+    public function testHasErrorNoError()
+    {
         $header = array('summary', 'details');
         $lines = array(
                     array('summary 1', 'details 1'),
@@ -1644,11 +1645,14 @@ class TrackerTest extends TuleapTestCase {
         $field1->setReturnValue('getId', 1);
         $field2->setReturnValue('getId', 2);
 
-        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 1',array('summary 1') );
-        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 2',array('summary 2') );
+        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 1', array('summary 1'));
+        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 2', array('summary 2'));
 
-        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 1',array('details 1') );
-        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 2',array('details 2') );
+        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 1', array('details 1'));
+        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 2', array('details 2'));
+
+        $field1->setReturnValue('isCSVImportable', true);
+        $field2->setReturnValue('isCSVImportable', true);
 
         $this->formelement_factory->setReturnReference('getUsedFieldByName', $field1, array(110, 'summary'));
         $this->formelement_factory->setReturnReference('getUsedFieldByName', $field2, array(110, 'details'));
