@@ -9,7 +9,7 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
-    "gulp-header": "^1.8.2",
+    "gulp-header": "1.8.2",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.1",
     "gulp-scss-lint": "^0.3.9",
