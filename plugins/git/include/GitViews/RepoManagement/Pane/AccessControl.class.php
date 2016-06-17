@@ -31,9 +31,15 @@ use Git_Backend_Gitolite;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 
 class AccessControl extends Pane
 {
+
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_factory;
 
     /**
      * @var FineGrainedRepresentationBuilder
@@ -55,13 +61,15 @@ class AccessControl extends Pane
         Codendi_Request $request,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
-        FineGrainedRepresentationBuilder $fine_grained_builder
+        FineGrainedRepresentationBuilder $fine_grained_builder,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
     ){
         parent::__construct($repository, $request);
 
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;
         $this->fine_grained_retriever          = $fine_grained_retriever;
         $this->fine_grained_builder            = $fine_grained_builder;
+        $this->default_fine_grained_factory    = $default_fine_grained_factory;
     }
 
     /**
@@ -142,7 +150,8 @@ class AccessControl extends Pane
             $this->getAccessRightsPresenterOptionsBuilder(),
             $this->fine_grained_retriever,
             $this->fine_grained_permission_factory,
-            $this->fine_grained_builder
+            $this->fine_grained_builder,
+            $this->default_fine_grained_factory
         );
 
         return $forkPermissionsManager->displayAccessControl();
