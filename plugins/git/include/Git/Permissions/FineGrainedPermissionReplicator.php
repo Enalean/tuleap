@@ -22,6 +22,7 @@
 namespace Tuleap\Git\Permissions;
 
 use GitRepository;
+use Project;
 
 class FineGrainedPermissionReplicator
 {
@@ -61,7 +62,14 @@ class FineGrainedPermissionReplicator
     public function replicateDefaultPermissions(
         GitRepository $repository
     ) {
-        $project            = $repository->getProject();
+        $project = $repository->getProject();
+        $this->replicateDefaultPermissionsFromProject($project, $repository);
+    }
+
+    public function replicateDefaultPermissionsFromProject(
+        Project $project,
+        GitRepository $repository
+    ) {
         $branch_permissions = $this->default_factory->getBranchesFineGrainedPermissionsForProject($project);
         $tags_permissions   = $this->default_factory->getTagsFineGrainedPermissionsForProject($project);
 
