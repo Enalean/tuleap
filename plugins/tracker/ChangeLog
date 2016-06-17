@@ -1,3 +1,6 @@
+Version 5.924 - Tuleap 8.16
+    * Add a warning to indicates that after migration fields kept their original permissions
+
 Version 5.923 - Tuleap 8.16
     * CSV import and report renderer
 
