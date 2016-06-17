@@ -1234,13 +1234,16 @@ class GitPlugin extends Plugin {
 
     private function getFineGrainedPermissionReplicator()
     {
-        $dao     = $this->getFineGrainedDao();
-        $factory = $this->getDefaultFineGrainedPermissionFactory();
-        $saver   = $this->getFineGrainedPermissionSaver();
+        $dao             = $this->getFineGrainedDao();
+        $default_factory = $this->getDefaultFineGrainedPermissionFactory();
+        $saver           = $this->getFineGrainedPermissionSaver();
+        $factory         = $this->getFineGrainedFactory();
+
         return new FineGrainedPermissionReplicator(
             $dao,
-            $factory,
-            $saver
+            $default_factory,
+            $saver,
+            $factory
         );
     }
 
@@ -1326,7 +1329,8 @@ class GitPlugin extends Plugin {
             $this->getGitDao(),
             $this->getConfigurationParameter('git_backup_dir'),
             new GitRepositoryMirrorUpdater($this->getMirrorDataMapper(), new ProjectHistoryDao()),
-            $this->getMirrorDataMapper()
+            $this->getMirrorDataMapper(),
+            $this->getFineGrainedPermissionReplicator()
         );
     }
 
