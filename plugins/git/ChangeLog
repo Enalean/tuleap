@@ -1,3 +1,6 @@
+Version 4.205 - Tuleap 8.16
+    * request #9259: Remove http authentication for postBuild API
+
 Version 4.204 - Tuleap 8.16
     * story #8419: Duplicate fine grained permission while forking a single repo in the same project
 
