@@ -147,10 +147,26 @@ class GitRepositoryManager {
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 
+    private function forkUniqueRepository(GitRepository $repository, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions) {
+        $this->doFork($repository, $to_project, $user, $namespace, $scope, $forkPermissions, false);
+    }
+
+    public function fork(GitRepository $repository, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions) {
+        $this->doFork($repository, $to_project, $user, $namespace, $scope, $forkPermissions, true);
+    }
+
     /**
      * Fork a repository
      */
-    public function fork(GitRepository $repository, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions) {
+    private function doFork(
+        GitRepository $repository,
+        Project $to_project,
+        PFUser $user,
+        $namespace,
+        $scope,
+        array $forkPermissions,
+        $multiple_fork
+    ) {
         $clone = clone $repository;
         $clone->setProject($to_project);
         $clone->setCreator($user);
@@ -165,7 +181,12 @@ class GitRepositoryManager {
         $this->doForkRepository($repository, $clone, $forkPermissions);
 
         if ($clone->getId()) {
-            $this->fine_grained_replicator->replicateRepositoryPermissions($repository, $clone);
+            if ($multiple_fork) {
+                $this->fine_grained_replicator->replicateDefaultPermissionsFromProject($to_project, $clone);
+            } else {
+                $this->fine_grained_replicator->replicateRepositoryPermissions($repository, $clone);
+            }
+
             $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
         } else {
             throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
@@ -247,7 +268,13 @@ class GitRepositoryManager {
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-                    $this->fork($repo, $project, $user, $namespace, $scope, $forkPermissions);
+
+                    if (count($repos) === 1) {
+                        $this->forkUniqueRepository($repo, $project, $user, $namespace, $scope, $forkPermissions);
+                    } else {
+                        $this->fork($repo, $project, $user, $namespace, $scope, $forkPermissions);
+                    }
+
                     $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {
