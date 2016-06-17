@@ -39,6 +39,7 @@ class BoomerangPlugin extends Plugin {
         }
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile');
+        $this->addHook(Event::IS_IN_SITEADMIN);
         return parent::getHooksAndCallbacks();
     }
 
@@ -68,7 +69,7 @@ class BoomerangPlugin extends Plugin {
                 $renderer = TemplateRendererFactory::build()->getRenderer(BOOMERANG_BASE_DIR.'/../templates');
                 $presenter = new PerfDataPresenter();
                 $renderer->renderToPage('perf-data', $presenter);
-                site_footer(null);
+                site_footer(array());
                 break;
         }
     }
@@ -167,6 +168,12 @@ class BoomerangPlugin extends Plugin {
        $link_title= $GLOBALS['Language']->getText('plugin_boomerang','link_boomerang_admin_title');
        echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
     }
-}
 
-?>
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
+    }
+}

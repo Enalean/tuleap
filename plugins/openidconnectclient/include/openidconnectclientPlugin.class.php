@@ -59,6 +59,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook('cssfile');
         $this->addHook(Event::MANAGE_THIRD_PARTY_APPS);
         $this->addHook('site_admin_option_hook');
+        $this->addHook(Event::IS_IN_SITEADMIN);
     }
 
     /**
@@ -230,6 +231,14 @@ class openidconnectclientPlugin extends Plugin {
         $url         = $this->getPluginPath().'/admin/';
         $plugin_name = $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name');
         echo '<li><a href="' . $url . '">' . $plugin_name . '</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function process(HTTPRequest $request) {

@@ -47,6 +47,7 @@ class AdminDelegationPlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('widget_instance',        'widget_instance',        false);
         $this->_addHook('widgets',                'widgets',                false);
+        $this->addHook(Event::IS_IN_SITEADMIN);
     }
 
     public function getPluginInfo() {
@@ -94,6 +95,14 @@ class AdminDelegationPlugin extends Plugin {
      */
     public function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Admin delegation</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     /**

@@ -9,13 +9,24 @@ require_once('common/plugin/Plugin.class.php');
  *
  * PluginsAdministrationPlugin
  */
-class PluginsAdministrationPlugin extends Plugin {
+class PluginsAdministrationPlugin extends Plugin
+{
     
-    function PluginsAdministrationPlugin($id) {
-        $this->Plugin($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
-        $this->_addHook('site_admin_menu_hook',   'siteAdminHooks', true);
-        $this->_addHook('cssfile', 'cssFile', false);
+    public function __construct($id)
+    {
+        parent::__construct($id);
+        $this->addHook('site_admin_option_hook', 'siteAdminHooks', true);
+        $this->addHook('site_admin_menu_hook',   'siteAdminHooks', true);
+        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook(Event::IS_IN_SITEADMIN);
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
     
     function &getPluginInfo() {

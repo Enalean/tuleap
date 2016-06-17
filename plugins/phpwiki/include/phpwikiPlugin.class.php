@@ -57,6 +57,7 @@ class phpwikiPlugin extends Plugin {
         $this->addHook(Event::REST_PROJECT_OPTIONS_PHPWIKI);
         $this->addHook(EVENT::REST_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
+        $this->addHook(Event::IS_IN_SITEADMIN);
 
     }
 
@@ -199,6 +200,14 @@ class phpwikiPlugin extends Plugin {
 
     public function site_admin_option_hook() {
         echo '<li><a href="' . $this->getPluginPath() . '/admin.php?action=index">' . $this->text . '</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() .'/admin.php') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function system_event_get_types_for_default_queue(array &$params) {

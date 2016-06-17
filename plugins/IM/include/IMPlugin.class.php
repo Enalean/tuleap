@@ -43,6 +43,7 @@ class IMPlugin extends Plugin {
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::IS_IN_SITEADMIN);
 
         $this->debug=$debug;
         
@@ -535,6 +536,14 @@ class IMPlugin extends Plugin {
        global $Language;
        $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
        echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
  	
     function site_admin_external_tool_hook($params) {

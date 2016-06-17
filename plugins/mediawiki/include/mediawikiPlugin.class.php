@@ -90,6 +90,7 @@ class MediaWikiPlugin extends Plugin {
 
             // Site admin link
             $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+            $this->addHook(Event::IS_IN_SITEADMIN);
 
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
@@ -897,6 +898,14 @@ class MediaWikiPlugin extends Plugin {
 
     public function site_admin_option_hook() {
         echo '<li><a href="'.$this->getPluginPath().'/forge_admin?action=site_index'.'">Mediawiki</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/forge_admin?action=site_index') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function system_event_get_types_for_default_queue(array &$params) {

@@ -134,6 +134,8 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('project_admin_remove_user', 'project_admin_remove_user');
         $this->_addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
 
+        $this->addHook(Event::IS_IN_SITEADMIN);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -567,6 +569,14 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     /**

@@ -26,13 +26,15 @@ require_once 'autoload.php';
 
 class userlogPlugin extends Plugin {
 
-	function userlogPlugin($id) {
-		$this->Plugin($id);
-        $this->_addHook('site_admin_menu_hook',  'siteAdminHooks', true);
-        $this->_addHook('site_admin_option_hook','siteAdminHooks', true);
-        $this->_addHook('cssfile',               'cssFile', false);
+    function __construct($id)
+    {
+        parent::__construct($id);
+        $this->_addHook('site_admin_menu_hook', 'siteAdminHooks', true);
+        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
+        $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('logger_after_log_hook', 'logUser', false);
-	}
+        $this->addHook(Event::IS_IN_SITEADMIN);
+    }
 
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'UserLogPluginInfo')) {
@@ -66,6 +68,14 @@ class userlogPlugin extends Plugin {
                 break;
             default:
                 break;
+        }
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
         }
     }
 

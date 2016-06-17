@@ -45,6 +45,8 @@ class StatisticsPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
+        $this->addHook(Event::IS_IN_SITEADMIN);
+
         $this->addHook('aggregate_statistics');
         $this->addHook('get_statistics_aggregation');
     }
@@ -88,6 +90,14 @@ class StatisticsPlugin extends Plugin {
 
     function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Statistics</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     function site_admin_disk_widget_hook() {

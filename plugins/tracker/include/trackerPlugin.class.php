@@ -98,6 +98,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook('site_admin_option_hook');
+        $this->addHook(Event::IS_IN_SITEADMIN);
     }
 
     public function getHooksAndCallbacks() {
@@ -171,6 +172,14 @@ class trackerPlugin extends Plugin {
         $name = $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name');
 
         echo '<li><a href="'.$this->getPluginPath().'/config.php">'.$name.'</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function cssFile($params) {

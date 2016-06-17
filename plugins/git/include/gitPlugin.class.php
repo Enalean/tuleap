@@ -161,6 +161,7 @@ class GitPlugin extends Plugin {
         }
 
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
+        $this->addHook(Event::IS_IN_SITEADMIN);
     }
 
     public function getServiceShortname() {
@@ -175,6 +176,14 @@ class GitPlugin extends Plugin {
         $url  = $this->getPluginPath().'/admin/';
         $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         echo '<li><a href="', $url, '">', $name, '</a></li>';
+    }
+
+    /** @see Event::IS_IN_SITEADMIN */
+    public function is_in_siteadmin($params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
     }
 
     public function getPluginInfo() {

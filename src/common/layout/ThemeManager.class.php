@@ -62,17 +62,28 @@ class ThemeManager
 
     private function isBurningParrotAllowed(PFUser $current_user)
     {
-        return $current_user->isSuperUser() && preg_match(
-            '`(
-                ^/admin/
-            )`x',
-            $_SERVER['REQUEST_URI']
-        ) && ! preg_match(
-            '`(
-                ^/admin/register_admin.php
-            )`x',
-            $_SERVER['REQUEST_URI']
+        $is_in_site_admin = false;
+        EventManager::instance()->processEvent(
+            Event::IS_IN_SITEADMIN,
+            array(
+                'is_in_siteadmin' => &$is_in_site_admin
+            )
         );
+
+        $is_in_site_admin = $is_in_site_admin ||
+            preg_match(
+                '`(
+                    ^/admin/
+                )`x',
+                $_SERVER['REQUEST_URI']
+            ) && ! preg_match(
+                '`(
+                    ^/admin/register_admin.php
+                )`x',
+                $_SERVER['REQUEST_URI']
+            );
+
+        return $current_user->isSuperUser() && $is_in_site_admin;
     }
 
     private function getValidTheme(PFUser $current_user, $name)
