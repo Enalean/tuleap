@@ -256,8 +256,10 @@ class RepositoryResource extends AuthenticatedResource {
      * @throws 404
      * @throws 400
      */
-    protected function postBuildStatus($id, BuildStatusPOSTRepresentation $build_status_data)
+    public function postBuildStatus($id, BuildStatusPOSTRepresentation $build_status_data)
     {
+        Header::allowOptionsPost();
+
         if (! $build_status_data->isStatusValid()) {
             throw new RestException(400, $build_status_data->status . ' is not a valid status.');
         }
