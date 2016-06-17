@@ -4,9 +4,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/event/EventManager.class.php');
@@ -131,7 +131,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
     $result = $res['users'];
     $hp = Codendi_HTMLPurifier::instance();
     global $Language;
-    echo '<TABLE class="table table-bordered table-striped table-hover">';
+    echo '<table class="tlp-table">';
     $user_status = implode(',', $status_values);
     if ($user_status == "") {
         $user_status = "ANY";
@@ -155,7 +155,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
     }
     echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=status&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."&status_values=".$hp->purify($user_status)."\">".$Language->getText('admin_userlist','status')." <span class=\"pull-right ".$sort_params["status_icon"]."\"></span></a></th>";
     echo '</thead>';
-    
+
     echo '<tbody>';
     if ($res['numrows'] > 0) {
         foreach ($result as $usr) {
@@ -203,7 +203,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
             echo "\n</TR>";
         }
     }
-    echo "</tbody></TABLE>";
+    echo "</tbody></table>";
     echo '<div style="text-align:center">';
     if ($offset > 0) {
         echo  '<a href="?offset='.($offset-$limit).$user_name_param.'&current_sort_header='.$sort_params["sort_header"].'&user_name_search='.$user_name_search.'&sort_order='.$sort_params["order"].'&status_values='.$hp->purify($user_status).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';

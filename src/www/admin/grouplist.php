@@ -4,9 +4,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 
 
@@ -131,7 +131,7 @@ echo '<form action="grouplist.php?group_name_search='.$group_name_search_purify.
 echo '</form>';
 ?>
 
-<TABLE class="table table-bordered table-striped table-hover">
+<TABLE class="tlp-table">
 <thead>
 <TR>
 <TH><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TH>
@@ -187,9 +187,9 @@ if ($res['numrows'] > 0) {
         echo  '<a href="?offset='.($offset-$limit).$group_name_param.$status_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
         echo '&nbsp;';
     }
-    
+
     echo ($offset+count($res['projects'])).'/'.$res['numrows'];
-    
+
     if (($offset + $limit) < $res['numrows']) {
         echo '&nbsp;';
         echo '<a href="?offset='.($offset+$limit).$group_name_param.$status_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';

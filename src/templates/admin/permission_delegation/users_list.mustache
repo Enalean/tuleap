@@ -3,7 +3,7 @@
         <h3>{{ users_title }}</h3>
 
         {{# has_users }}
-        <table class="table table-hover table-bordered table-striped">
+        <table class="tlp-table">
             <thead>
                 <tr>
                     <th></th>
@@ -14,7 +14,7 @@
                 {{# users }}
                 <tr>
                     <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" /></td>
-                    <td><img src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
+                    <td><img class="tlp-avatar-small" src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
                 </tr>
                 {{/ users }}
             </tbody>

@@ -1,0 +1,74 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-table-radius             : 3px;
+$tlp-table-cell-padding       : 10px;
+$tlp-table-header-background  : #ffffff;
+$tlp-table-row-background-even: #fcfcfc;
+$tlp-table-row-background-odd : #ffffff;
+
+.tlp-table {
+    width: 100%;
+    border-radius: $tlp-table-radius;
+    overflow: hidden;
+
+    > thead > tr > th {
+        padding: $tlp-table-cell-padding;
+        border-bottom: 2px solid $tlp-theme-color;
+        background: $tlp-table-header-background;
+        color: $tlp-theme-color;
+        font-weight: 600;
+
+        &.tlp-table-cell-numeric {
+            text-align: right;
+        }
+    }
+
+    > tbody {
+        > tr > td {
+            padding: $tlp-table-cell-padding;
+            border-bottom: 1px solid $tlp-ui-border-normal;
+
+            &.tlp-table-cell-numeric {
+                text-align: right;
+            }
+
+            &.tlp-table-cell-actions {
+                text-align: right;
+                white-space: nowrap;
+            }
+        }
+
+        > tr:nth-child(even) > td {
+            background: $tlp-table-row-background-even;
+        }
+
+        > tr:nth-child(odd) > td {
+            background: $tlp-table-row-background-odd;
+        }
+
+        > tr:hover > td {
+            background: transparentize($tlp-theme-color, .95);
+        }
+
+        > tr:last-child > td {
+            border: 0;
+        }
+    }
+}

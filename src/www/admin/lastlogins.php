@@ -4,9 +4,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -21,19 +21,18 @@ if (db_numrows($res_logins) < 1) exit_error("No records found","There must be an
 
 $HTML->header(array('title'=>$Language->getText('admin_lastlogins','title')));
 
-print '<P><B>'.$Language->getText('admin_lastlogins','recent').'</B>';
-print "\n<P>";
-print '<TABLE width=100% cellpadding=0 cellspacing=0 border=0>';
-
+print '<h1>'.$Language->getText('admin_lastlogins','recent').'</h1>';
+print '<table class="tlp-table">';
+print '<tbody>';
 while ($row_logins = db_fetch_array($res_logins)) {
-	print '<TR>';
-	print "<TD>$row_logins[user_name]</TD>";
-	print "<TD>$row_logins[ip_addr]</TD>";
-	print "<TD>" . date($Language->getText('system','datefmt'),$row_logins['time']) . "</TD>";
-	print '</TR>';
+	print '<tr>';
+	print "<td>$row_logins[user_name]</td>";
+	print "<td>$row_logins[ip_addr]</td>";
+	print "<td>" . date($Language->getText('system','datefmt'),$row_logins['time']) . "</td>";
+	print '</tr>';
 }
-
-print '</TABLE>';
+print '</tbody>';
+print '</table>';
 
 $HTML->footer(array());
 

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('trove.php');
@@ -22,7 +22,7 @@ function listallchilds($nodeid, &$list) {
 	$list[] = $row_child['trove_cat_id'];
 	listallchilds($row_child['trove_cat_id'], $list);
     }
-    
+
 }
 
 // ########################################################
@@ -66,7 +66,7 @@ if ($request->get("Delete") && $trove_cat_id) {
 	$feedback .= "Category (and childs) succesfully deleted";
     }
     session_redirect("/admin/trove/trove_cat_list.php");
-} 
+}
 
 if ($request->get("Cancel")) {
     session_redirect("/admin/trove/trove_cat_list.php");
@@ -90,10 +90,12 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title'
 <form action="trove_cat_delete.php" method="post">
 <input type="hidden" name="trove_cat_id" value="<?= $trove_cat_id; ?>">
 
-<table class="table table-bordered" style="width: auto;">
+<table class="tlp-table" style="width: auto;">
+<tbody>
 <tr><th><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?></th><td> <?php print $row_cat["shortname"]; ?></td></tr>
 <tr><th><?php echo $Language->getText('admin_trove_cat_add','full_name'); ?></th><td> <?php print $row_cat["fullname"]; ?></td></tr>
 <tr><th><?php echo $Language->getText('admin_trove_cat_add','description'); ?></th><td> <?php print $row_cat["description"]; ?></td></tr>
+</tbody>
 </table>
 
 <?php
