@@ -157,7 +157,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->is_fork    = false;
-        $this->disabled   = 'disabled="disabled"';
+        $this->disabled   = '';
     }
 
     public function is_control_limited()
