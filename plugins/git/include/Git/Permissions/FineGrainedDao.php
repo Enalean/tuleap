@@ -671,4 +671,50 @@ class FineGrainedDao extends DataAccessObject
 
         return $this->da->commit();
     }
+
+    public function updateRepositoryPermission($permission_id, array $writer_ids, array $rewinder_ids)
+    {
+        $this->da->startTransaction();
+
+        if (! $this->updatePermissionWriters($permission_id, $writer_ids) ||
+            ! $this->updatePermissionRewinders($permission_id, $rewinder_ids)
+        ) {
+            $this->da->rollback();
+            return false;
+        }
+
+        return $this->da->commit();
+    }
+
+    private function updatePermissionWriters($permission_id, array $writer_ids)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $delete = "DELETE FROM plugin_git_repository_fine_grained_permissions_writers
+                   WHERE permission_id = $permission_id";
+
+        $deleted = $this->update($delete);
+
+        if ($deleted && count($writer_ids) > 0) {
+            return $this->saveWriters($permission_id, $writer_ids);
+        }
+
+        return $deleted;
+    }
+
+    private function updatePermissionRewinders($permission_id, array $rewinders_ids)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $delete = "DELETE FROM plugin_git_repository_fine_grained_permissions_rewinders
+                   WHERE permission_id = $permission_id";
+
+        $deleted = $this->update($delete);
+
+        if ($deleted && count($rewinders_ids) > 0) {
+            return $this->saveRewinders($permission_id, $rewinders_ids);
+        }
+
+        return $deleted;
+    }
 }

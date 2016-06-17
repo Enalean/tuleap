@@ -39,6 +39,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
     public $remove_fine_grained_permission_confirm;
     public $btn_cancel;
     public $remove_form_action;
+    public $disabled;
 
     /**
      * @var array
@@ -156,6 +157,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->is_fork    = false;
+        $this->disabled   = 'disabled="disabled"';
     }
 
     public function is_control_limited()

@@ -836,7 +836,8 @@ class GitActions extends PluginActions
         $pane,
         $enable_fine_grained_permissions,
         array $added_branches_permissions,
-        array $added_tags_permissions
+        array $added_tags_permissions,
+        array $updated_permissions
     ) {
         $controller = $this->getController();
         if ( empty($repoId) ) {
@@ -904,6 +905,10 @@ class GitActions extends PluginActions
 
             foreach ($added_tags_permissions as $added_tag_permission) {
                 $this->fine_grained_permission_saver->saveTagPermission($added_tag_permission);
+            }
+
+            foreach ($updated_permissions as $permission) {
+                $this->fine_grained_permission_saver->updateRepositoryPermission($permission);
             }
 
             $this->git_system_event_manager->queueRepositoryUpdate($repository);

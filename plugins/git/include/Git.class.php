@@ -658,6 +658,17 @@ class Git extends PluginController {
                         $repository
                     );
 
+                    $fine_grained_permissions_reactivated = $enable_fine_grained_permissions &&
+                        ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository);
+
+                    $updated_permissions = array();
+                    if (! $fine_grained_permissions_reactivated) {
+                        $updated_permissions = $this->fine_grained_permission_factory->getUpdatedPermissionsFromRequest(
+                            $this->request,
+                            $repository
+                        );
+                    }
+
                     $this->addAction(
                         'save',
                         array(
@@ -668,7 +679,8 @@ class Git extends PluginController {
                             $pane,
                             $enable_fine_grained_permissions,
                             $added_branches_permissions,
-                            $added_tags_permissions
+                            $added_tags_permissions,
+                            $updated_permissions
                         )
                     );
                     $this->addView('view');

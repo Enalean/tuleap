@@ -102,4 +102,14 @@ class FineGrainedPermission
 
         return $matches['pattern'];
     }
+
+    public function setWriters(array $writers)
+    {
+        $this->writers_ugroups = $writers;
+    }
+
+    public function setRewinders(array $rewinders)
+    {
+        $this->rewinders_ugroups = $rewinders;
+    }
 }

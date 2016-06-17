@@ -96,4 +96,13 @@ class FineGrainedPermissionSaver
 
         return $ids;
     }
+
+    public function updateRepositoryPermission(FineGrainedPermission $permission)
+    {
+        return $this->dao->updateRepositoryPermission(
+            $permission->getId(),
+            $this->getWriterIds($permission),
+            $this->getRewinderIds($permission)
+        );
+    }
 }
