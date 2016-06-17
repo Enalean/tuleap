@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Git\Permissions\FineGrainedPermission;
+
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
 Mock::generate('Project');
@@ -53,7 +55,9 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TuleapTestCase {
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
             mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
-            'whatever'
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
         );
     }
 
@@ -145,14 +149,21 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
     public function setUp() {
         parent::setUp();
         $this->mirror_mapper = mock('Git_Mirror_MirrorDataMapper');
-        $this->serializer    = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), 'whatever');
-        $this->project       = stub('Project')->getUnixName()->returns('foo');
-        $this->repository    = aGitRepository()->withId(115)->withProject($this->project)->build();
+        $this->serializer    = new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_mapper,
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+        );
 
-        $user_mirror1        = aUser()->withUserName('git_mirror_1')->build();
-        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'hostname', 'EUR');
-        $user_mirror2        = aUser()->withUserName('git_mirror_2')->build();
-        $this->mirror_2      = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'hostname', 'IND');
+        $this->project    = stub('Project')->getUnixName()->returns('foo');
+        $this->repository = aGitRepository()->withId(115)->withProject($this->project)->build();
+
+        $user_mirror1     = aUser()->withUserName('git_mirror_1')->build();
+        $this->mirror_1   = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'hostname', 'EUR');
+        $user_mirror2     = aUser()->withUserName('git_mirror_2')->build();
+        $this->mirror_2   = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'hostname', 'IND');
 
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
@@ -217,7 +228,14 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
 
     public function itDumpsTheConf() {
         stub($this->mirror_mapper)->fetchAll()->returns(array());
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), 'whatever');
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_mapper,
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+        );
+
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/default_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
@@ -226,7 +244,14 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
 
     public function itAllowsOverrideBySiteAdmin() {
         stub($this->mirror_mapper)->fetchAll()->returns(array());
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), dirname(__FILE__).'/_fixtures/etc_templates');
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_mapper,
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
+            dirname(__FILE__).'/_fixtures/etc_templates',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+        );
+
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/override_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
@@ -235,7 +260,13 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
 
     public function __only__itGrantsReadAccessToGitoliteAdminForMirrorUsers() {
         stub($this->mirror_mapper)->fetchAll()->returns(array($this->mirror_1, $this->mirror_2));
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, mock('Git_Driver_Gerrit_ProjectCreatorStatus'), 'whatever');
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_mapper,
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
+        );
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/mirrors_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
@@ -272,7 +303,9 @@ class Git_Gitolite_ConfigPermissionsSerializer_GerritTest extends TuleapTestCase
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
             $this->gerrit_status,
-            'whatever'
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
         );
     }
 
@@ -367,12 +400,176 @@ class Git_Gitolite_ConfigPermissionsSerializer_GerritAndMirrorsTest extends Tule
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
             $this->gerrit_status,
-            'whatever'
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
         );
     }
 
     public function tearDown() {
         PermissionsManager::clearInstance();
         parent::tearDown();
+    }
+}
+
+class Git_Gitolite_ConfigPermissionsSerializer_FineGrainedPermissionsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->retriever = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
+        $this->factory   = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
+
+        $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
+            'whatever',
+            $this->retriever,
+            $this->factory
+        );
+
+        $this->project = mock('Project');
+        $this->repository = stub('GitRepository')->getId()->returns(1);
+        stub($this->repository)->getProject()->returns($this->project);
+
+        $this->permissions_manager = mock('PermissionsManager');
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
+
+        $this->ugroup_01     = stub('ProjectUGroup')->getId()->returns(101);
+        $this->ugroup_02     = stub('ProjectUGroup')->getId()->returns(102);
+        $this->ugroup_03     = stub('ProjectUGroup')->getId()->returns(103);
+        $this->ugroup_nobody = stub('ProjectUGroup')->getId()->returns(100);
+
+        $this->permission_01 = new FineGrainedPermission(
+            1,
+            1,
+            'refs/heads/master',
+            array(),
+            array()
+        );
+
+        $this->permission_02 = new FineGrainedPermission(
+            2,
+            1,
+            'refs/tags/v1',
+            array(),
+            array()
+        );
+
+        $this->permission_03 = new FineGrainedPermission(
+            3,
+            1,
+            'refs/heads/dev/*',
+            array(),
+            array()
+        );
+
+        PermissionsManager::setInstance($this->permissions_manager);
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itFetchesFineGrainedPermissions()
+    {
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(1 => $this->permission_01));
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository()->returns(array(2 => $this->permission_02));
+
+        $writers   = array($this->ugroup_01, $this->ugroup_02);
+        $rewinders = array($this->ugroup_03);
+
+        $this->permission_01->setWriters($writers);
+        $this->permission_01->setRewinders($rewinders);
+
+        $this->permission_02->setWriters($writers);
+        $this->permission_02->setRewinders($rewinders);
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+
+        $config = $this->serializer->getForRepository($this->repository);
+
+        $expected = <<<EOS
+ R   = @site_active @_project_members
+ RW refs/heads/master = @ug_101 @ug_102
+ - refs/heads/master = @all
+ RW+ refs/heads/master = @ug_103
+ - refs/heads/master = @all
+ RW refs/tags/v1 = @ug_101 @ug_102
+ - refs/tags/v1 = @all
+ RW+ refs/tags/v1 = @ug_103
+ - refs/tags/v1 = @all
+
+EOS;
+
+        $this->assertEqual($config, $expected);
+    }
+
+    public function itDealsWithNobody()
+    {
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(1 => $this->permission_01));
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository()->returns(array(2 => $this->permission_02));
+
+        $writers          = array($this->ugroup_01, $this->ugroup_02);
+        $rewinders        = array($this->ugroup_03);
+        $rewinders_nobody = array($this->ugroup_nobody);
+
+        $this->permission_01->setWriters($writers);
+        $this->permission_01->setRewinders($rewinders);
+
+        $this->permission_02->setWriters($writers);
+        $this->permission_02->setRewinders($rewinders_nobody);
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+
+        $config = $this->serializer->getForRepository($this->repository);
+
+        $expected = <<<EOS
+ R   = @site_active @_project_members
+ RW refs/heads/master = @ug_101 @ug_102
+ - refs/heads/master = @all
+ RW+ refs/heads/master = @ug_103
+ - refs/heads/master = @all
+ RW refs/tags/v1 = @ug_101 @ug_102
+ - refs/tags/v1 = @all
+
+EOS;
+
+        $this->assertEqual($config, $expected);
+    }
+
+    public function itDealsWithStarPath()
+    {
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(3 => $this->permission_03));
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository()->returns(array(2 => $this->permission_02));
+
+        $writers          = array($this->ugroup_01, $this->ugroup_02);
+        $rewinders        = array($this->ugroup_03);
+
+        $this->permission_03->setWriters($writers);
+        $this->permission_03->setRewinders($rewinders);
+
+        $this->permission_02->setWriters($writers);
+        $this->permission_02->setRewinders($rewinders);
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+
+        $config = $this->serializer->getForRepository($this->repository);
+
+        $expected = <<<EOS
+ R   = @site_active @_project_members
+ RW refs/heads/dev/.* = @ug_101 @ug_102
+ - refs/heads/dev/.* = @all
+ RW+ refs/heads/dev/.* = @ug_103
+ - refs/heads/dev/.* = @all
+ RW refs/tags/v1 = @ug_101 @ug_102
+ - refs/tags/v1 = @all
+ RW+ refs/tags/v1 = @ug_103
+ - refs/tags/v1 = @all
+
+EOS;
+
+        $this->assertEqual($config, $expected);
     }
 }

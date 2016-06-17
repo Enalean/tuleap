@@ -1307,7 +1307,7 @@ class GitPlugin extends Plugin {
     /**
      * @return FineGrainedUpdater
      */
-    private function getFineGrainedRetriever()
+    public function getFineGrainedRetriever()
     {
         $dao = $this->getFineGrainedDao();
         return new FineGrainedRetriever($dao);
@@ -1316,7 +1316,7 @@ class GitPlugin extends Plugin {
     /**
      * @return FineGrainedUpdater
      */
-    private function getFineGrainedFactory()
+    public function getFineGrainedFactory()
     {
         $dao = $this->getFineGrainedDao();
         return new FineGrainedPermissionFactory(

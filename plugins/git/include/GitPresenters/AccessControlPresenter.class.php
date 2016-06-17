@@ -112,17 +112,10 @@ class GitPresenters_AccessControlPresenter {
             'fine_grained_permissions_checkbox_label'
         );
 
-        $this->fine_grained_permissions_warning = $GLOBALS['Language']->getText(
+        $this->fine_grained_permissions_fork_warning .= $GLOBALS['Language']->getText(
             'plugin_git',
-            'fine_grained_permissions_warning'
+            'fine_grained_permissions_fork_warning'
         );
-
-        if ($this->is_fork) {
-            $this->fine_grained_permissions_warning .= ' '. $GLOBALS['Language']->getText(
-                'plugin_git',
-                'fine_grained_permissions_fork_warning'
-            );
-        }
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;

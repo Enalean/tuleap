@@ -149,7 +149,9 @@ class Git_GitoliteDriver {
                 new Git_Driver_Gerrit_ProjectCreatorStatus(
                     new Git_Driver_Gerrit_ProjectCreatorStatusDao()
                 ),
-                $git_plugin->getEtcTemplatesPath()
+                $git_plugin->getEtcTemplatesPath(),
+                $git_plugin->getFineGrainedRetriever(),
+                $git_plugin->getFineGrainedFactory()
             );
         } else {
             $this->permissions_serializer = $permissions_serializer;

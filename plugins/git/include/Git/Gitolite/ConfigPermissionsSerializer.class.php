@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermission;
+
 class Git_Gitolite_ConfigPermissionsSerializer {
 
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $fine_grained_factory;
 
-    const TEMPLATES_PATH = 'gitolite';
+    /**
+     * @var FineGrainedRetriever
+     */
+    private $fine_grained_retriever;
+
+    const TEMPLATES_PATH    = 'gitolite';
+    const REMOVE_PERMISSION = ' - ';
 
     /**
      * @var TemplateRenderer
@@ -39,12 +53,18 @@ class Git_Gitolite_ConfigPermissionsSerializer {
     private $gerrit_status;
 
     private static $permissions_types = array(
-        Git::PERM_READ  => ' R  ',
-        Git::PERM_WRITE => ' RW ',
-        Git::PERM_WPLUS => ' RW+'
+        Git::PERM_READ   => ' R  ',
+        Git::PERM_WRITE  => ' RW ',
+        Git::PERM_WPLUS  => ' RW+'
     );
 
-    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper, Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status, $etc_templates_path) {
+    public function __construct(
+        Git_Mirror_MirrorDataMapper $data_mapper,
+        Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status,
+        $etc_templates_path,
+        FineGrainedRetriever $fine_grained_retriever,
+        FineGrainedPermissionFactory $fine_grained_factory
+    ) {
         $this->data_mapper   = $data_mapper;
         $this->gerrit_status = $gerrit_status;
         $template_dirs = array();
@@ -53,6 +73,9 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         }
         $template_dirs[] = GIT_TEMPLATE_DIR . '/' . self::TEMPLATES_PATH;
         $this->template_renderer = TemplateRendererFactory::build()->getRenderer($template_dirs);
+
+        $this->fine_grained_retriever = $fine_grained_retriever;
+        $this->fine_grained_factory   = $fine_grained_factory;
     }
 
     public function getGitoliteDotConf(array $project_names) {
@@ -103,11 +126,100 @@ class Git_Gitolite_ConfigPermissionsSerializer {
             $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
             $key->setGerritHostId($repository->getRemoteServerId());
             $repo_config .= $this->formatPermission(Git::PERM_WPLUS, array($key->getUserName()));
-        } else {
+        } elseif (! $this->repositoryIsUsingFineGrainedPermissions($repository)) {
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        } else {
+            $repo_config .= $this->getFineGrainedFormattedPermissions($repository);
         }
         return $repo_config;
+    }
+
+    private function getFineGrainedFormattedPermissions(GitRepository $repository)
+    {
+        $config = '';
+
+        $all_permissions = $this->fine_grained_factory->getBranchesFineGrainedPermissionsForRepository($repository) +
+            $this->fine_grained_factory->getTagsFineGrainedPermissionsForRepository($repository);
+
+        foreach ($all_permissions as $permission) {
+            $config .= $this->formatFineGrainedPermission($repository, $permission);
+        }
+
+        return $config;
+    }
+
+    private function getPatternInGitoliteFormat(FineGrainedPermission $permission)
+    {
+        $formatted_pattern = str_replace('*', '.*', $permission->getPattern());
+
+        return $formatted_pattern;
+    }
+
+    private function formatFineGrainedPermission(GitRepository $repository, FineGrainedPermission $permission)
+    {
+        $pattern_config       = '';
+        $pattern_for_gitolite = $this->getPatternInGitoliteFormat($permission);
+
+        $pattern_config .= $this->getPatternConfiguration(
+            $repository,
+            $permission->getWritersUgroup(),
+            $pattern_for_gitolite,
+            Git::PERM_WRITE
+        );
+
+        $pattern_config .= $this->getPatternConfiguration(
+            $repository,
+            $permission->getRewindersUgroup(),
+            $pattern_for_gitolite,
+            Git::PERM_WPLUS
+        );
+
+        return $pattern_config;
+    }
+
+    private function getPatternConfiguration(GitRepository $repository, array $ugroups, $pattern_for_gitolite, $type)
+    {
+        if (count($ugroups) === 1 && $ugroups[0]->getId() === ProjectUGroup::NONE ) {
+            $pattern_config = '';
+        } else {
+            $pattern_config = $this->grantUgroupsForPattern(
+                $repository->getProject(),
+                $ugroups,
+                $pattern_for_gitolite,
+                $type
+            );
+        }
+
+        return $pattern_config;
+    }
+
+    private function grantUgroupsForPattern(Project $project, array $ugroups, $pattern_for_gitolite, $permission_type)
+    {
+        $config             = '';
+        $ugroup_literalizer = new UGroupLiteralizer();
+
+        $ugroup_ids = array();
+        foreach ($ugroups as $ugroup) {
+            $ugroup_ids[] = $ugroup->getId();
+        }
+
+        $ugroup_names = $ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
+
+        $config .= rtrim(self::$permissions_types[$permission_type]) ." $pattern_for_gitolite = " . implode(' ', $ugroup_names) . PHP_EOL;
+        $config .= $this->removeAllUgroupForPattern($pattern_for_gitolite);
+
+        return $config;
+    }
+
+    private function removeAllUgroupForPattern($pattern_for_gitolite)
+    {
+        return self::REMOVE_PERMISSION ."$pattern_for_gitolite = @all" . PHP_EOL;
+    }
+
+    private function repositoryIsUsingFineGrainedPermissions(GitRepository $repository)
+    {
+        return $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository);
     }
 
     private function isMigrationToGerritCompletedWithSuccess(GitRepository $repository) {
