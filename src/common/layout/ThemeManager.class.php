@@ -74,6 +74,10 @@ class ThemeManager
             preg_match(
                 '`(
                     ^/admin/
+                    |
+                    ^/stats/
+                    |
+                    ^/tracker/admin/restore.php
                 )`x',
                 $_SERVER['REQUEST_URI']
             ) && ! preg_match(
