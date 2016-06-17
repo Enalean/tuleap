@@ -31,6 +31,11 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 class GitForkPermissionsManager {
 
     /**
+     * @var GitPermissionsManager
+     */
+    private $git_permission_manager;
+
+    /**
      * @var DefaultFineGrainedPermissionFactory
      */
     private $default_fine_grained_factory;
@@ -64,7 +69,8 @@ class GitForkPermissionsManager {
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionFactory $fine_grained_factory,
         FineGrainedRepresentationBuilder $fine_grained_builder,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        GitPermissionsManager $git_permission_manager
     ) {
         $this->repository                   = $repository;
         $this->builder                      = $builder;
@@ -72,6 +78,7 @@ class GitForkPermissionsManager {
         $this->fine_grained_factory         = $fine_grained_factory;
         $this->fine_grained_builder         = $fine_grained_builder;
         $this->default_fine_grained_factory = $default_fine_grained_factory;
+        $this->git_permission_manager       = $git_permission_manager;
     }
 
     /**
@@ -168,7 +175,7 @@ class GitForkPermissionsManager {
         $project = ProjectManager::instance()->getProject($project_id);
         $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions     = $user->useLabFeatures() && $this->repository->userCanAdmin($user);
+        $can_use_fine_grained_permissions     = $this->git_permission_manager->userIsGitAdmin($user, $project);
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project);
 
         $branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project);
@@ -240,7 +247,8 @@ class GitForkPermissionsManager {
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
         $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions     = $user->useLabFeatures() && $this->repository->userCanAdmin($user);
+        $can_use_fine_grained_permissions = $this->git_permission_manager->userIsGitAdmin($user, $project);
+
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions(
             $this->repository
         );

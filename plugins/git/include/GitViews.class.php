@@ -235,7 +235,8 @@ class GitViews extends PluginViews {
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
             $this->fine_grained_builder,
-            $this->default_fine_grained_permission_factory
+            $this->default_fine_grained_permission_factory,
+            $this->git_permissions_manager
         );
         $repo_management_view->display();
     }
@@ -539,12 +540,12 @@ class GitViews extends PluginViews {
     protected function forkRepositoriesPermissions() {
         $params = $this->getData();
 
-
         if ($params['scope'] == 'project') {
             $groupId = $params['group_id'];
         } else {
             $groupId = (int)$this->groupId;
         }
+
         $repositories = explode(',', $params['repos']);
         $repository   = $this->getGitRepositoryFactory()->getRepositoryById($repositories[0]);
         if (!empty($repository)) {
@@ -554,7 +555,8 @@ class GitViews extends PluginViews {
                 $this->fine_grained_retriever,
                 $this->fine_grained_permission_factory,
                 $this->fine_grained_builder,
-                $this->default_fine_grained_permission_factory
+                $this->default_fine_grained_permission_factory,
+                $this->git_permissions_manager
             );
 
             $userName = $this->user->getName();
@@ -685,8 +687,7 @@ class GitViews extends PluginViews {
 
         $user = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions = $user->useLabFeatures() &&
-            $this->git_permissions_manager->userIsGitAdmin($user, $this->project);
+        $can_use_fine_grained_permissions = $this->git_permissions_manager->userIsGitAdmin($user, $this->project);
 
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions(
             $this->project
