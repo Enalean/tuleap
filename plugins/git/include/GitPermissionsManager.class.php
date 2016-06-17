@@ -174,6 +174,14 @@ class GitPermissionsManager
         );
     }
 
+    private function isEnablingFineGrainedPermissions(Project $project, $enable_fine_grained_permissions)
+    {
+        return (
+            ! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)
+            && $enable_fine_grained_permissions
+        );
+    }
+
     public function updateProjectDefaultPermissions(Codendi_Request $request)
     {
         $project    = $request->getProject();
@@ -216,6 +224,14 @@ class GitPermissionsManager
             Git::DEFAULT_PERM_WRITE
         );
 
+        $updated_permissions = array();
+        if (! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)) {
+            $updated_permissions = $this->default_fine_grained_factory->getUpdatedPermissionsFromRequest(
+                $request,
+                $project
+            );
+        }
+
         if ($enable_fine_grained_permissions) {
             $this->fine_grained_updater->enableProject($project);
 
@@ -250,6 +266,10 @@ class GitPermissionsManager
 
         foreach ($added_tags_permissions as $added_tag_permission) {
             $this->default_fine_grained_saver->saveTagPermission($added_tag_permission);
+        }
+
+        foreach ($updated_permissions as $permission) {
+            $this->default_fine_grained_saver->updateDefaultPermission($permission);
         }
 
         $GLOBALS['Response']->addFeedback(
