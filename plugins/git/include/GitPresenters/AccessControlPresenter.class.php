@@ -105,6 +105,7 @@ class GitPresenters_AccessControlPresenter {
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
         $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
         $this->cannot_define_per_repo_permissions   = ($is_control_limited || $are_fine_grained_permissions_defined);
+        $this->is_fork                              = $is_fork;
 
         $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
             'plugin_git',
@@ -115,6 +116,13 @@ class GitPresenters_AccessControlPresenter {
             'plugin_git',
             'fine_grained_permissions_warning'
         );
+
+        if ($this->is_fork) {
+            $this->fine_grained_permissions_warning .= ' '. $GLOBALS['Language']->getText(
+                'plugin_git',
+                'fine_grained_permissions_fork_warning'
+            );
+        }
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
@@ -184,7 +192,6 @@ class GitPresenters_AccessControlPresenter {
         );
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->is_fork    = $is_fork;
         $this->disabled   = '';
         if ($is_fork) {
             $this->disabled = 'disabled="disabled"';
