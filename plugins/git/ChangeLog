@@ -1,3 +1,6 @@
+Version 4.206 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Duplicate fine grained permission while forking multiple repositories in the same project)
+
 Version 4.205 - Tuleap 8.16
     * request #9259: Remove http authentication for postBuild API
 
