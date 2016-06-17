@@ -64,6 +64,11 @@ class UserNavPresenter
         return $this->current_user->getUserName();
     }
 
+    public function user_has_avatar()
+    {
+        return $this->current_user->hasAvatar();
+    }
+
     public function user_avatar_url()
     {
         return $this->current_user->getAvatarUrl();

@@ -2,7 +2,11 @@
 <nav id="user-nav">
     {{# is_user_logged_in }}
         <a href="/account/" class="nav-link user-block" title="{{ my_account_label }}">
-            <img class="tlp-avatar" src="{{ user_avatar_url }}">
+            <div class="tlp-avatar">
+                {{# user_has_avatar }}
+                <img src="{{ user_avatar_url }}">
+                {{/ user_has_avatar }}
+            </div>
             <div class="user-block-names">
                 <span class="user-nav-display-name">{{ user_real_name }}</span>
                 <span class="user-nav-username">@{{ user_user_name }}</span>

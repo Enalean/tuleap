@@ -14,7 +14,12 @@
                 {{# users }}
                 <tr>
                     <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" /></td>
-                    <td><img class="tlp-avatar-small" src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
+                    <td>
+                        <div class="tlp-avatar-small">
+                            {{# hasAvatar}}<img src="{{ getAvatarUrl }}">{{/ hasAvatar}}
+                        </div>
+                        {{ getRealName }} ({{ getUsername }})
+                    </td>
                 </tr>
                 {{/ users }}
             </tbody>

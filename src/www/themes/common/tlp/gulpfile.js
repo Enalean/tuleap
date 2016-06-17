@@ -53,7 +53,7 @@ var banner = [
    ''
 ].join('\n');
 
-gulp.task('default', ['js', 'sass', 'sass:doc']);
+gulp.task('default', ['assets', 'js', 'sass', 'sass:doc']);
 gulp.task('watch', ['sass:watch', 'js:watch']);
 
 /************************************************
@@ -107,6 +107,7 @@ function compressForAGivenColor(color) {
         .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest('./dist'));
 }
+
 /************************************************
  * Javascript
  ***********************************************/
@@ -125,4 +126,19 @@ gulp.task('js:compile', function() {
         }))
         .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest('./dist'));
+});
+
+/************************************************
+ * Assets
+ ***********************************************/
+gulp.task('assets', ['assets:fonts', 'assets:images']);
+
+gulp.task('assets:fonts', function() {
+    return gulp.src('./src/fonts/**/*')
+        .pipe(gulp.dest('./dist/fonts'));
+});
+
+gulp.task('assets:images', function() {
+    return gulp.src('./src/images/**/*')
+        .pipe(gulp.dest('./dist/images'));
 });
