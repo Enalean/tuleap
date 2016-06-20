@@ -42,6 +42,60 @@
             background: $editor-scrollbar-color;
         }
     }
+
+    .doc-table-color {
+        table-layout: fixed;
+
+        .doc-color-name {
+            width: 300px;
+        }
+
+        .doc-color-variable {
+            width: 400px;
+        }
+
+        .code-inline {
+            font-size: 13px;
+        }
+
+        .doc-color {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin: 0 10px 0 0;
+            border-radius: 50%;
+            vertical-align: middle;
+
+            &.doc-color-info             { background-color: #eeeeee; }
+            &.doc-color-success          { background-color: #eeeeee; }
+            &.doc-color-warning          { background-color: #eeeeee; }
+            &.doc-color-danger           { background-color: #eeeeee; }
+
+            &.doc-color-orange           { background-color: $tlp-theme-orange; }
+            &.doc-color-blue             { background-color: $tlp-theme-blue;   }
+            &.doc-color-green            { background-color: $tlp-theme-green;  }
+            &.doc-color-grey             { background-color: $tlp-theme-grey;   }
+            &.doc-color-purple           { background-color: $tlp-theme-purple; }
+            &.doc-color-red              { background-color: $tlp-theme-red;    }
+
+            &.doc-color-inca-silver      { border: 3px solid $tlp-swatch-inca-silver;      background-color: $tlp-swatch-inca-silver-secondary;      }
+            &.doc-color-chrome-silver    { border: 3px solid $tlp-swatch-chrome-silver;    background-color: $tlp-swatch-chrome-silver-secondary;    }
+            &.doc-color-fiesta-red       { border: 3px solid $tlp-swatch-fiesta-red;       background-color: $tlp-swatch-fiesta-red-secondary;       }
+            &.doc-color-teddy-brown      { border: 3px solid $tlp-swatch-teddy-brown;      background-color: $tlp-swatch-teddy-brown-secondary;      }
+            &.doc-color-clockwork-orange { border: 3px solid $tlp-swatch-clockwork-orange; background-color: $tlp-swatch-clockwork-orange-secondary; }
+            &.doc-color-red-wine         { border: 3px solid $tlp-swatch-red-wine;         background-color: $tlp-swatch-red-wine-secondary;         }
+            &.doc-color-acid-green       { border: 3px solid $tlp-swatch-acid-green;       background-color: $tlp-swatch-acid-green-secondary;       }
+            &.doc-color-army-green       { border: 3px solid $tlp-swatch-army-green;       background-color: $tlp-swatch-army-green-secondary;       }
+            &.doc-color-sherwood-green   { border: 3px solid $tlp-swatch-sherwood-green;   background-color: $tlp-swatch-sherwood-green-secondary;   }
+            &.doc-color-ocean-turquoise  { border: 3px solid $tlp-swatch-ocean-turquoise;  background-color: $tlp-swatch-ocean-turquoise-secondary;  }
+            &.doc-color-daphne-blue      { border: 3px solid $tlp-swatch-daphne-blue;      background-color: $tlp-swatch-daphne-blue-secondary;      }
+            &.doc-color-lake-placid-blue { border: 3px solid $tlp-swatch-lake-placid-blue; background-color: $tlp-swatch-lake-placid-blue-secondary; }
+            &.doc-color-deep-blue        { border: 3px solid $tlp-swatch-deep-blue;        background-color: $tlp-swatch-deep-blue-secondary;        }
+            &.doc-color-plum-crazy       { border: 3px solid $tlp-swatch-plum-crazy;       background-color: $tlp-swatch-plum-crazy-secondary;       }
+            &.doc-color-peggy-pink       { border: 3px solid $tlp-swatch-peggy-pink;       background-color: $tlp-swatch-peggy-pink-secondary;       }
+            &.doc-color-flamingo-pink    { border: 3px solid $tlp-swatch-flamingo-pink;    background-color: $tlp-swatch-flamingo-pink-secondary;    }
+        }
+    }
 }
 
 @media (max-width: 1200px) {
