@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -345,5 +345,120 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
                 'field_value' => array('value' => '9')
             )
         );
+    }
+}
+
+class Tracker_FormElement_Field_Computed_FieldValidationTest extends TuleapTestCase
+{
+    /**
+     * @var Tracker_FormElement_Field_Computed
+     */
+    private $field;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array());
+    }
+
+    public function itExpectsAnArray()
+    {
+        $this->assertFalse($this->field->validateValue('String'));
+        $this->assertFalse($this->field->validateValue(1));
+        $this->assertFalse($this->field->validateValue(1.1));
+        $this->assertFalse($this->field->validateValue(true));
+        $this->assertTrue($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true)));
+    }
+
+    public function itExpectsAtLeastAValueOrAnAutocomputedInformation()
+    {
+        $this->assertFalse($this->field->validateValue(array()));
+        $this->assertFalse($this->field->validateValue(array('v1' => 1)));
+        $this->assertFalse($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED)));
+        $this->assertFalse($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL)));
+        $this->assertFalse($this->field->validateValue(array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED
+        )));
+        $this->assertTrue($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1)));
+        $this->assertTrue($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true)));
+    }
+
+    public function itExpectsAFloatOrAIntAsManualValue()
+    {
+        $this->assertFalse($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 'String')));
+        $this->assertTrue($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1.1)));
+        $this->assertTrue($this->field->validateValue(array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 0)));
+    }
+
+    public function itCanNotAcceptAManualValueWhenAutocomputedIsEnabled()
+    {
+        $this->assertFalse($this->field->validateValue(array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
+        )));
+        $this->assertTrue($this->field->validateValue(array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false
+        )));
+        $this->assertFalse($this->field->validateValue(array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false
+        )));
+        $this->assertTrue($this->field->validateValue(array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
+        )));
+    }
+}
+
+
+class Tracker_FormElement_Field_Computed_RESTValueTest extends TuleapTestCase
+{
+    /**
+     * @var Tracker_FormElement_Field_Computed
+     */
+    private $field;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array());
+    }
+
+    public function itReturnsValueWhenCorrectlyFormatted()
+    {
+        $value = array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
+        );
+        $this->assertClone($value, $this->field->getFieldDataFromRESTValue($value));
+    }
+
+    public function itRejectsDataWhenAutocomputedIsDisabledAndNoManualValueIsProvided()
+    {
+        $this->expectException('Tracker_FormElement_InvalidFieldValueException');
+        $value = array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false
+        );
+        $this->field->getFieldDataFromRESTValue($value);
+    }
+
+    public function itRejectsDataWhenAutocomputedIsDisabledAndManualValueIsNull()
+    {
+        $this->expectException('Tracker_FormElement_InvalidFieldValueException');
+        $value = array(
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => null
+        );
+        $this->field->getFieldDataFromRESTValue($value);
+    }
+
+    public function itRejectsDataWhenValueIsSet()
+    {
+        $this->expectException('Tracker_FormElement_InvalidFieldValueException');
+        $value = array(
+            'value' => 1
+        );
+        $this->field->getFieldDataFromRESTValue($value);
     }
 }
