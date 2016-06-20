@@ -47,7 +47,13 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE extends SystemEvent {
         try {
             $artifact_id = (int)$this->getRequiredParameter(0);
 
-            if ($this->action($artifact_id)) {
+            $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+            if (! $artifact) {
+                $this->warning("Artifact #$artifact_id not found. Maybe it was deleted ?");
+                return true;
+            }
+
+            if ($this->action($artifact)) {
                 $this->done("Artifact #$artifact_id re-indexed");
                 return true;
             } else {
@@ -59,8 +65,8 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE extends SystemEvent {
         return false;
     }
 
-    private function action($artifact_id) {
-        $this->actions->indexArtifactUpdate($this->artifact_factory->getArtifactById($artifact_id));
+    private function action(Tracker_Artifact $artifact) {
+        $this->actions->indexArtifactUpdate($artifact);
         return true;
     }
 

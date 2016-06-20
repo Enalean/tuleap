@@ -1,7 +1,9 @@
 <?php
+use Tuleap\Tracker\Import\Spotter;
+
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,6 +46,19 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             $this->value_function = explode(',', $value_function);
         }
         $this->userManager = UserManager::instance();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExistingValue($value_id)
+    {
+        $import_spotter = Spotter::instance();
+        if ($import_spotter->isImportRunning()) {
+            $user = $this->userManager->getUserById($value_id);
+            return $user !== null;
+        }
+        return parent::isExistingValue($value_id);
     }
 
     /**

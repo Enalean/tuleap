@@ -222,15 +222,10 @@ class ProjectXMLImporter {
     {
         $this->logger->info("Add user {$user->getUserName()} to project.");
 
-        if ($user->isMember($project->getID())) {
-            $this->logger->info("User {$user->getUserName()} is already a project member.");
-            return;
-        }
-
         $check_user_status  = false;
         $send_notifications = false;
         if (! account_add_user_obj_to_group($project->getID(), $user, $check_user_status, $send_notifications)) {
-            throw new UserNotAddedAsProjectMemberException($GLOBALS['Response']->getRawFeedback());
+            $this->logger->info("User is already member");
         }
     }
 

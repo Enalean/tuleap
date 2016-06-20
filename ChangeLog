@@ -1,4 +1,16 @@
-Vesrion 8.15-2 (Monday, June 6th 2016)
+Version 8.15-3 (Monday, June 13th 2016)
+	== Bug Fix ==
+	* request #9231: Persistent XSS in the general settings of a tracker
+	* request #9229: Fatal error during SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE
+	* request #9228: Do not stack multiple FTS reindex event
+	* request #9222: Cannot add site admin as project member during import
+	* request #9218: Fix default scrum template
+	* request #9217: can't make a search in tracker report on value zero in a int or float field
+	* request #9209: HTML tags displayed, instead of interpreted, in text field in HTML format
+	* request #9203: Fix Kanban drag placeholder & header/footer z-index
+	* request #9034: FormElement binded to a user group should only verify at import time if the user exist in the platform
+
+Version 8.15-2 (Monday, June 6th 2016)
 	== Bug Fix ==
 	* request #9216: svn immutable tags does not prevent from adding a file in a immutable tag
 	* request #9208: When TLS is forced Tuleap must only create URL with HTTPS scheme

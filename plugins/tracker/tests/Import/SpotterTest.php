@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Sogilis, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UserNotAddedAsProjectMemberException extends Exception {
-}
+namespace Tuleap\Tracker\Import;
 
+use TuleapTestCase;
+
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
+class SpotterTest extends TuleapTestCase
+{
+    public function itDoesNotHaveImportRunningByDefault()
+    {
+        $spotter = Spotter::instance();
+        $this->assertFalse($spotter->isImportRunning());
+    }
+
+    public function itGivesCurrentStatus()
+    {
+        $spotter = Spotter::instance();
+        $spotter->startImport();
+        $this->assertTrue($spotter->isImportRunning());
+        $spotter->endImport();
+        $this->assertFalse($spotter->isImportRunning());
+    }
+}
