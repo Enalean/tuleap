@@ -1,16 +1,13 @@
-<h2>{{{ page_title }}}</h2>
-<div id="admin-system-events">
-    <ul class="nav nav-tabs" id="system-events-tabs">
-    {{# queue_links }}
-        <li {{# active }} class="active" {{/ active }}>
-            <a href="{{ href }}">
-                {{ label }}
-            </a>
-        </li>
-    {{/ queue_links }}
-    </ul>
+<h1 class="framed-horizontally">{{{ page_title }}}</h1>
 
-    <form action="" method="POST">
+<div id="admin-system-events">
+    <nav class="tlp-tabs" id="system-events-tabs">
+        {{# queue_links }}
+        <a href="{{ href }}" class="tlp-tab {{# active }}tlp-tab-active{{/ active }}">{{ label }}</a>
+        {{/ queue_links }}
+    </nav>
+
+    <form action="" method="POST" class="framed-horizontally">
         {{{ token_input }}}
         <fieldset>
             <legend id="system_events_filter" class="{{ system_events_filter_classname }}">Filter:</legend>

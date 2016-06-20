@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('trove.php');
@@ -45,7 +45,7 @@ function printnode($nodeid, $text, $depth = 0, $delete_ok = false) {
 
 // ########################################################
 
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title'), 'main_classes' => array('framed')));
 
 echo "<H2>".$Language->getText('admin_trove_cat_list','header')."</H2>";
 

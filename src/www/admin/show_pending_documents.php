@@ -84,13 +84,13 @@ $em->processEvent('show_pending_documents', $params);
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title')));
+site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title'), 'main_classes' => array('framed')));
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
-<?php 
+<?php
 $project = $pm->getProject($group_id,false,true);
-echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>'; 
+echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>';
 echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</p>';
 ?>
         <div class="systeme_onglets">
@@ -98,7 +98,7 @@ echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_i
             <?php
             if (isset($params['id']) && $params['id']) {
                 $i=0;
-            
+
                 foreach($params['id'] as $id){
                     $nom = $params['nom'][$i++];
                     echo '<span class="onglet_0 onglet" id="onglet_'.$purifier->purify($id).'">'.$purifier->purify($nom).'</span>';
@@ -107,7 +107,7 @@ echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_i
             ?>
             </div>
             <div class="contenu_onglets">
-            <?php 
+            <?php
             if (isset($params['html']) && $params['html']) {
                 foreach($params['html'] as $html) {
                     echo $html;

@@ -81,7 +81,7 @@ if (db_numrows($res_cat)<1) {
 }
 $row_cat = db_fetch_array($res_cat);
 
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title'), 'main_classes' => array('framed')));
 ?>
 
 <H2><?php echo $Language->getText('admin_trove_cat_delete','header').': '.$row_cat["fullname"]; ?>'</H2>

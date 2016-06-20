@@ -48,13 +48,20 @@ class HeaderPresenter
     /** @var array */
     public $feedbacks;
 
+    /** @var boolean */
+    public $has_feedbacks;
+
+    /** @var string */
+    public $main_classes;
+
     public function __construct(
         $title,
         $imgroot,
         NavbarPresenter $navbar_presenter,
         ThemeVariantColor $color,
         array $stylesheets,
-        array $feedback_logs
+        array $feedback_logs,
+        $main_classes
     ) {
         $this->title            = html_entity_decode($title);
         $this->imgroot          = $imgroot;
@@ -62,8 +69,11 @@ class HeaderPresenter
         $this->stylesheets      = $stylesheets;
         $this->color_name       = $color->getName();
         $this->color_code       = $color->getHexaCode();
+        $this->main_classes     = $main_classes;
 
         $this->buildFeedbacks($feedback_logs);
+
+        $this->has_feedbacks = count($this->feedbacks) > 0;
     }
 
     private function buildFeedbacks($feedback_logs)

@@ -70,7 +70,8 @@ class NatureConfigController {
     public function index(CSRFSynchronizerToken $csrf, Response $response) {
         $title  = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
         $params = array(
-            'title' => $title
+            'title'        => $title,
+            'main_classes' => array('framed-vertically')
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
 

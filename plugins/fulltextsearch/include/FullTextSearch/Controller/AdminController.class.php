@@ -51,7 +51,7 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
     }
 
     public function index() {
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title')));
+        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title'), 'main_classes' => array('framed')));
         $this->renderer->renderToPage('admin', new FullTextSearch_Presenter_AdminPresenter());
         $GLOBALS['HTML']->footer(array());
     }

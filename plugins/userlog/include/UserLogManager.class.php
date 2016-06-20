@@ -131,7 +131,7 @@ class UserLogManager {
         //
         // Start display
         $GLOBALS['Response']->includeCalendarScripts();
-        $GLOBALS['Response']->header(array('title' => 'userlog'));
+        $GLOBALS['Response']->header(array('title' => 'userlog', 'main_classes' => array('framed')));
 
         echo '<form name="userlog_form" method="get" action="?">';
         echo html_field_date('day',

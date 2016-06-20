@@ -63,7 +63,7 @@ class Git_AdminGerritController {
             $this->getListOfGerritServersPresenters()
         );
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('framed-vertically')));
         $renderer->renderToPage('admin-plugin', $admin_presenter);
         $GLOBALS['HTML']->footer(array());
     }
@@ -72,7 +72,7 @@ class Git_AdminGerritController {
         if (empty($this->servers)) {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
- 
+
         $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '', Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST);
     }
 

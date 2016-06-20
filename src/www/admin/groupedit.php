@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('vars.php');
@@ -100,7 +100,7 @@ if ($request->exist('export')) {
     exit;
 }
 
-site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')));
+site_admin_header(array('title'=>$Language->getText('admin_groupedit','title'), 'main_classes' => array('framed')));
 
 echo '<H2>'.$group->getPublicName().'</H2>' ;?>
 
@@ -171,7 +171,7 @@ print $Language->getText('admin_groupedit','unix_grp').": ".$group->getUnixName(
 <INPUT type="submit" name="Rename" class="tlp-button-secondary" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
-<?php 
+<?php
 $group->displayProjectsDescFieldsValue();
 
 $template_group = $pm->getProject($group->getTemplate());

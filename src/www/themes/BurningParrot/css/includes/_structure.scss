@@ -33,8 +33,16 @@ body {
     background: $main-background;
 }
 
-.main-framed {
+.framed {
     padding: $tlp-spacing;
+}
+
+.framed-horizontally {
+    padding: 0 $tlp-spacing;
+}
+
+.framed-vertically {
+    padding: $tlp-spacing 0;
 }
 
 #feedback {

@@ -81,7 +81,8 @@ class Controller {
 
         $GLOBALS['HTML']->header(
             array(
-                'title' => $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
+                'title'            => $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
+                'main_classes'     => array('framed'),
                 'selected_top_tab' => 'admin'
             )
         );

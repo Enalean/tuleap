@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('account.php');
@@ -185,7 +185,7 @@ if ($request->isPost()) {
     }
 }
 
-$HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
+$HTML->header(array('title'=>$Language->getText('admin_usergroup','title'), 'main_classes' => array('framed')));
 $hp = Codendi_HTMLPurifier::instance();
 ?>
 
@@ -230,7 +230,7 @@ $hp = Codendi_HTMLPurifier::instance();
 <tr><td>
 <?php echo $Language->getText('admin_usergroup','status'); ?>:
 </td><td>
-<?php 
+<?php
 $statusVals = $user->getAllWorkingStatus();
 if (in_array($user->getStatus(), $statusVals)) {
     // Assume getAllWorkingStatus() order never change
@@ -247,10 +247,10 @@ if (in_array($user->getStatus(), $statusVals)) {
 </td></tr>
 
 <tr><td>
-<?php echo $Language->getText('admin_usergroup','expiry_date'); 
+<?php echo $Language->getText('admin_usergroup','expiry_date');
 $exp_date='';
 if($user->getExpiryDate() != 0){
-   $exp_date = format_date('Y-m-d', $user->getExpiryDate()); 
+   $exp_date = format_date('Y-m-d', $user->getExpiryDate());
 }
 
 ?>:
@@ -258,7 +258,7 @@ if($user->getExpiryDate() != 0){
 <?php echo $GLOBALS['HTML']->getDatePicker("expiry_date", "expiry_date", $exp_date); ?>
 </td></tr>
 
-<?php 
+<?php
 
 if ($GLOBALS['sys_auth_type'] == 'ldap') {
     echo '<tr><td>';
@@ -274,7 +274,7 @@ if ($GLOBALS['sys_auth_type'] == 'ldap') {
 <tr><td>
 <?php echo $Language->getText('admin_usergroup','unix_status'); ?>:
 </td><td>
-<?php 
+<?php
 $unixStatusVals = $user->getAllUnixStatus();
 // Assume getAllUnixStatus() order never change
 $unixStatusTxts = array($Language->getText('admin_usergroup','no_account'),
@@ -297,7 +297,7 @@ echo html_build_select_box_from_arrays($unixStatusVals, $unixStatusTxts, 'form_u
 <tr><td colspan="2"><strong><?php echo $Language->getText('admin_usergroup','account_details'); ?></strong></td></tr>
 
 <tr><td>
-<?php 
+<?php
 $userInfo = $um->getUserAccessInfo($user);
 echo $Language->getText('admin_usergroup', 'last_access_date');
 ?>:
@@ -372,7 +372,7 @@ foreach($entry_label as $key => $label) {
 <?php if($GLOBALS['sys_user_approval'] == 1){ ?>
 <hr>
 <h2><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</h2>
-<?php echo  $hp->purify($user->getRegisterPurpose(), CODENDI_PURIFIER_CONVERT_HTML) ; 
+<?php echo  $hp->purify($user->getRegisterPurpose(), CODENDI_PURIFIER_CONVERT_HTML) ;
 }?>
 
 <hr>

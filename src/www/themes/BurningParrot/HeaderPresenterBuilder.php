@@ -43,19 +43,24 @@ class HeaderPresenterBuilder
     /** @var string */
     private $title;
 
+    /** @var array */
+    private $main_classes;
+
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
         HTTPRequest $request,
         PFUser $current_user,
         $imgroot,
         $title,
-        $feedback_logs
+        $feedback_logs,
+        $main_classes
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->request                  = $request;
         $this->current_user             = $current_user;
         $this->imgroot                  = $imgroot;
         $this->title                    = $title;
+        $this->main_classes             = $main_classes;
 
         $color = $this->getMainColor();
 
@@ -68,7 +73,8 @@ class HeaderPresenterBuilder
             ),
             $color,
             $this->getStylesheets($color),
-            $feedback_logs
+            $feedback_logs,
+            $this->getMainClassesAsString()
         );
     }
 
@@ -124,5 +130,10 @@ class HeaderPresenterBuilder
         }
 
         return $color;
+    }
+
+    private function getMainClassesAsString()
+    {
+        return implode(' ', $this->main_classes);
     }
 }

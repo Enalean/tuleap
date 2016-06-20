@@ -49,7 +49,7 @@ if ( ! $valid_username_format->validate($sample_generic_user->getUnixName())) {
     $name_css = 'highlight';
 }
 
-site_admin_header(array('title' => $Language->getText('admin_generic_user', 'title')));
+site_admin_header(array('title' => $Language->getText('admin_generic_user', 'title'), 'main_classes' => array('framed')));
 echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
       <p>' . $Language->getText('admin_generic_user', 'help') . '</p>
       <p>' . $Language->getText('admin_generic_user', 'help_update', array(GenericUserFactory::CONFIG_KEY_SUFFIX)) . '</p>

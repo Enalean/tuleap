@@ -21,7 +21,7 @@
 class Git_AdminGitoliteConfigPresenter  extends Git_AdminPresenter {
 
     public $manage_gitolite_config = true;
-    public $gitolite_config_active = 'active';
+    public $gitolite_config_active = 'tlp-tab-active';
 
     public function gitolite_config_title() {
         return $GLOBALS['Language']->getText('plugin_git', 'admin_gitolite_config_title');

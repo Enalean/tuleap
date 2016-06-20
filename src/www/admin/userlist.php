@@ -296,7 +296,7 @@ if (!$group_id) {
 /*
  * Show list of users
  */
-$HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
+$HTML->header(array('title'=>$Language->getText('admin_userlist','title'), 'main_classes' => array('framed')));
 echo "<p>";
 echo $Language->getText('admin_userlist','user_list').":  ";
 if (!$group_id) {

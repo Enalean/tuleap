@@ -4,14 +4,14 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
+$HTML->header(array('title'=>$Language->getText('admin_massmail','title'), 'main_classes' => array('framed')));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/MassMail.js');
 
 // get numbers of users for each mailing
@@ -101,7 +101,7 @@ document.observe('dom:loaded', function() {
 
             var editor = new tuleap.textarea.RTE(mail_message_container, options);
 
-            // Building input for the submission of preview adresses 
+            // Building input for the submission of preview adresses
             var button = Builder.node('input', {'id'      : 'preview_submit',
                                                 'name'    : 'Submit',
                                                 'type'    : 'button',

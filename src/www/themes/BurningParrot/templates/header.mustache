@@ -32,7 +32,8 @@
     <body>
         {{> navbar }}
         <div id="main-container">
-            <main role="main" class="main-framed">
+            <main role="main" class="{{ main_classes }}">
+                {{# has_feedbacks }}
                 <div id="feedback">
                 {{# feedbacks }}
                     <section class="tlp-alert-{{ level }}">
@@ -42,3 +43,4 @@
                     </section>
                 {{/ feedbacks }}
                 </div>
+                {{/ has_feedbacks }}

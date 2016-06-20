@@ -90,13 +90,13 @@ if ($request->isPost()) {
                 $GLOBALS['Response']->addFeedback('error', 'Bad user');
             }
             break;
-            
+
         case 'revoke_user_service':
             $vService = new Valid_WhiteList('plugin_admindelegation_service', AdminDelegation_Service::getAllServices());
             $vService->required();
             if ($request->valid($vService)){
                 $serviceId = $request->get('plugin_admindelegation_service');
-            } 
+            }
             $vUser = new Valid_UInt('users_to_revoke');
             $vUser->required();
             if ($request->validArray($vUser)) {
@@ -121,7 +121,7 @@ if ($request->isPost()) {
 }
 
 
-$GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title')));
+$GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title'), 'main_classes' => array('framed')));
 echo '<h1>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title').'</h1>';
 
 echo '<h2>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_grant_user_title').'</h2>';
@@ -180,7 +180,7 @@ foreach (AdminDelegation_Service::getAllServices() as $serviceId) {
 $GLOBALS['HTML']->footer(array());
 
 /*
- * 
+ *
  */
 function displayDeleteUserPerService($usm, $uh, $serviceId) {
 

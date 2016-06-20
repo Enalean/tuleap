@@ -4,9 +4,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('vars.php');
 require_once('account.php');
 require_once('proj_email.php');
@@ -68,23 +68,23 @@ if ($action=='activate') {
 $res_grp = db_query("SELECT * FROM groups WHERE status='P' ORDER BY register_time");
 
 if (db_numrows($res_grp) < 1) {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending')));
+    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending'), 'main_classes' => array('framed')));
     echo $Language->getText('admin_approve_pending','no_pending');
 } else {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','title')));
+    site_admin_header(array('title'=>$Language->getText('admin_approve_pending','title'), 'main_classes' => array('framed')));
     $pm = ProjectManager::instance();
     while ($row_grp = db_fetch_array($res_grp)) {
-    
+
         ?>
         <fieldset>
             <legend style="font-size:1.3em; font-weight: bold;"><?php echo $row_grp['group_name']; ?></legend>
-        
+
 <?php
         $group = $pm->getProject($row_grp['group_id']);
-        
+
         $currentproject= $pm->getProject($row_grp['group_id']);
-        
-        
+
+
         $members_id = $group->getMembersId();
         if (count($members_id) > 0) {
             $admin_id = $members_id[0]; // the first (and normally the only one) is the project creator)
@@ -96,21 +96,21 @@ if (db_numrows($res_grp) < 1) {
             }
         }
 ?>
-    
+
         <p>
-        <A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_edit'); ?></b></A> | 
-        <A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_admin'); ?></b></A> | 
+        <A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_edit'); ?></b></A> |
+        <A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_admin'); ?></b></A> |
         <A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_member'); ?></b></A>
-    
+
         <p>
 
-        <B><?php 
+        <B><?php
         // Get project type label
-        $template =& TemplateSingleton::instance(); 
+        $template =& TemplateSingleton::instance();
         echo $Language->getText('admin_groupedit','group_type'); ?>: <?php echo $template->getLabel($row_grp['type']); ?></B>
         <BR><B><?php echo $Language->getText('admin_groupedit','home_box'); ?>: <?php print $row_grp['unix_box']; ?></B>
         <BR><B><?php echo $Language->getText('admin_groupedit','http_domain'); ?>: <?php print $row_grp['http_domain']; ?></B>
-    
+
         <br>
         &nbsp;
         <?php
@@ -120,20 +120,20 @@ if (db_numrows($res_grp) < 1) {
             . "group_category.group_id=$row_grp[group_id]");
         while ($row_cat = db_fetch_array($res_cat)) {
             print "<br>$row_cat[category_name] "
-            . '<A href="groupedit.php?group_id='. $row_grp['group_id'] 
-            .'&amp;group_idrm='. $row_grp['group_id'] 
+            . '<A href="groupedit.php?group_id='. $row_grp['group_id']
+            .'&amp;group_idrm='. $row_grp['group_id']
             .'&amp;form_catrm='. $row_cat['category_id'] .'">'
             . "[".$Language->getText('admin_approve_pending','remove_category')."]</A>";
         }
-    
+
         // ########################## OTHER INFO
-    
+
         print "<P><B>".$Language->getText('admin_groupedit','other_info')."</B>";
         print "<br><u>".$Language->getText('admin_groupedit','public')."</u>: ". ($row_grp['access'] !== Project::ACCESS_PRIVATE ? $Language->getText('global', 'yes') :  $Language->getText('global', 'no'));
-        
+
         print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
-    
- 
+
+
     	$currentproject->displayProjectsDescFieldsValue();
 
         $template_group = ProjectManager::instance()->getProject($row_grp['built_from_template']);
@@ -150,10 +150,10 @@ if (db_numrows($res_grp) < 1) {
         <INPUT type="submit" name="submit" class="tlp-button-secondary" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
         </FORM>
         </TD>
-    
+
             <TD>&nbsp;</TD>
 
-            <TD> 
+            <TD>
         <FORM action="?" method="POST">
         <?php echo $csrf_token->fetchHTMLInput() ?>
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
@@ -165,13 +165,13 @@ if (db_numrows($res_grp) < 1) {
             </TABLE>
         </fieldset><br />
         <?php
-    
+
     }
-    
+
     //list of group_id's of pending projects
     $arr=result_column_to_array($res_grp,0);
     $group_list=implode($arr,',');
-    
+
     echo '
         <CENTER>
         <FORM action="?" method="POST">

@@ -22,7 +22,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $manage_gerrit = true;
 
-    public $gerrit_active = 'active';
+    public $gerrit_active = 'tlp-tab-active';
 
     public $list_of_servers;
 

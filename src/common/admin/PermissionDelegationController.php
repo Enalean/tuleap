@@ -299,7 +299,7 @@ class Admin_PermissionDelegationController {
     }
 
     private function header() {
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('admin_permission_delegation', 'page_title')));
+        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('admin_permission_delegation', 'page_title'), 'main_classes' => array('framed')));
         echo '<script type="text/javascript" src="/scripts/admin/permission_delegation.js"></script>';
     }
 

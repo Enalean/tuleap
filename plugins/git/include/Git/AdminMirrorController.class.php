@@ -102,7 +102,7 @@ class Git_AdminMirrorController {
             return;
         }
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('framed-vertically')));
         $renderer->renderToPage($presenter->getTemplate(), $presenter);
         $GLOBALS['HTML']->footer(array());
     }
@@ -278,7 +278,7 @@ class Git_AdminMirrorController {
             $this->csrf
         );
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('framed-vertically')));
         $renderer->renderToPage('admin-plugin', $admin_presenter);
         $GLOBALS['HTML']->footer(array());
     }
@@ -300,7 +300,7 @@ class Git_AdminMirrorController {
             $mirror
         );
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('framed-vertically')));
         $renderer->renderToPage('admin-plugin', $admin_presenter);
         $GLOBALS['HTML']->footer(array());
     }
