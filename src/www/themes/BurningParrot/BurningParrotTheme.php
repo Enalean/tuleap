@@ -42,7 +42,9 @@ class BurningParrotTheme extends BaseLayout
         $this->user     = $user;
         $this->request  = HTTPRequest::instance();
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->includeFooterJavascriptFile('/scripts/tuleap/listFilter.js');
         $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown.js');
+        $this->includeFooterJavascriptFile('/themes/BurningParrot/js/navbar-dropdown-projects.js');
     }
 
     public function isLabFeature()

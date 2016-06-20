@@ -25,18 +25,7 @@
 var tuleap  = tuleap || { };
 tuleap.core = tuleap.core || { };
 
-(function($) {
-    /**
-     * @see http://css-tricks.com/snippets/jquery/make-jquery-contains-case-insensitive/
-     */
-    (function addCaseInsensitiveContainsSelector(){
-        // NEW selector
-        $.expr[':'].caseInsensitiveContains = function(a, i, m) {
-          return $(a).text().toUpperCase()
-              .indexOf(m[3].toUpperCase()) >= 0;
-        };
-    })();
-
+(function() {
     tuleap.core.listFilter = function() {
 
         var esc_keycode = 27;
@@ -45,41 +34,71 @@ tuleap.core = tuleap.core || { };
         var excluded_element;
 
         var filterProjects = function (value) {
+            var elements_array = [];
+            document.querySelectorAll(list_element).forEach(function(element) {
+                elements_array.push(element);
+            });
+            var elements_to_show = elements_array.filter(function(element) {
+                return caseInsensitiveContains(getChildTagAWithText(element), value);
+            });
 
-            $(list_element + ':not(:caseInsensitiveContains(' + value + ')):not(' + excluded_element + ')').hide();
-            $(list_element +':caseInsensitiveContains(' + value + '):not(' + excluded_element +')').show();
+            for (var i = 0, n = elements_array.length; i < n; i++) {
+                if (elements_to_show.indexOf(elements_array[i]) >= 0) {
+                    elements_array[i].style.display = 'inherit';
+                } else {
+                    elements_array[i].style.display = 'none';
+                }
+            }
+        };
+
+        var getChildTagAWithText = function(parent) {
+            var elements_tag_a = parent.getElementsByTagName('a');
+            for (var i = 0, n = elements_tag_a.length; i < n; i++) {
+                if (elements_tag_a[i].textContent) {
+                    return elements_tag_a[i].textContent;
+                }
+            }
+        };
+
+        var caseInsensitiveContains = function(element, value) {
+            return element.toUpperCase()
+                    .indexOf(value.toUpperCase()) >= 0;
         };
 
         var clearFilterProjects = function () {
-            $(filter_element).val('');
+            filter_element.value = '';
             filterProjects('');
         };
 
-        var bindClickEventOnFilter = function ($filter_element) {
-            $filter_element.click(function(event) {
-                event.stopPropagation();
-            });
+        var bindClickEventOnFilter = function (filter_element_selected) {
+            if (filter_element_selected) {
+                filter_element_selected.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                });
+            }
         };
 
-        var bindKeyUpEventOnFilter = function($filter_element) {
-            $filter_element.keyup(function(event) {
-                if (event.keyCode === esc_keycode) {
-                    clearFilterProjects();
-                } else {
-                    filterProjects($(this).val());
-                }
-            });
+        var bindKeyUpEventOnFilter = function(filter_element_selected) {
+            if (filter_element_selected) {
+                filter_element_selected.addEventListener('keyup', function (event) {
+                    if (event.keyCode === esc_keycode) {
+                        clearFilterProjects();
+                    } else {
+                        filterProjects(filter_element_selected.value);
+                    }
+                });
+            }
         };
 
-        var init = function($filter_element, list_element_selector, excluded_element_selector) {
-            filter_element   = $filter_element;
+        var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
+            filter_element   = filter_element_selected;
             list_element     = list_element_selector;
             excluded_element = excluded_element_selector;
 
-            bindClickEventOnFilter($filter_element);
-            bindKeyUpEventOnFilter($filter_element);
+            bindClickEventOnFilter(filter_element_selected);
+            bindKeyUpEventOnFilter(filter_element_selected);
         };
 
         return {init: init};
     };
-})(window.jQuery);
+})();

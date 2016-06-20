@@ -62,4 +62,19 @@ class DropdownProjectsPresenter extends DropdownPresenter
     {
         return $GLOBALS['Language']->getText('include_menu', 'projects_user_belong');
     }
+
+    public function browse_all()
+    {
+        return $GLOBALS['Language']->getText('include_menu', 'browse_all');
+    }
+
+    public function add_project()
+    {
+        return $GLOBALS['Language']->getText('include_menu', 'add_project');
+    }
+
+    public function filter()
+    {
+        return $GLOBALS['Language']->getText('include_menu', 'filter_projects');
+    }
 }

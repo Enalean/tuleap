@@ -20,6 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use HTTPRequest;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownPresenter;
 
 class GlobalNavbarDropdownMenuItemPresenter
@@ -33,10 +34,19 @@ class GlobalNavbarDropdownMenuItemPresenter
     /** @var DropdownPresenter */
     public $navbar_dropdown;
 
+    /** @var boolean */
+    public $is_user_on_site_admin;
+
     public function __construct($label, $icon, $navbar_dropdown)
     {
         $this->label           = $label;
         $this->icon            = $icon;
         $this->navbar_dropdown = $navbar_dropdown;
+    }
+
+    public function is_user_on_site_admin()
+    {
+        $pattern = '/^\/admin\/*.*/';
+        return preg_match($pattern, $_SERVER['REQUEST_URI']) === 1;
     }
 }
