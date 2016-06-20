@@ -1,3 +1,6 @@
+Version 4.209 - Tuleap 8.16
+    * story #8419: Update configuration while deleting fine grained permission
+
 Version 4.208 - Tuleap 8.16
     * story #8419 have permissions per tags/branches (Remove Lab feature)
 
