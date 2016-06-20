@@ -248,7 +248,9 @@ class GitPermissionsManager
             $added_tags_permissions     = $this->default_fine_grained_factory->getDefaultTagsFineGrainedPermissionsForProject($project);
             $added_branches_permissions = $this->default_fine_grained_factory->getDefaultBranchesFineGrainedPermissionsForProject($project);
         } else {
-            if (! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)) {
+            if ($enable_fine_grained_permissions &&
+                ! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
+            ) {
                 $updated_permissions = $this->default_fine_grained_factory->getUpdatedPermissionsFromRequest(
                     $request,
                     $project
