@@ -232,8 +232,14 @@ class GitDataBuilder extends REST_TestDataBuilder {
         $fine_grained_dao = new FineGrainedDao();
         $default_factory  = new DefaultFineGrainedPermissionFactory($fine_grained_dao, $ugroup_manager, $normalizer);
         $saver            = new FineGrainedPermissionSaver($fine_grained_dao);
-        $factory          = new FineGrainedPermissionFactory($fine_grained_dao, $ugroup_manager, $normalizer);
-        $replicator       = new FineGrainedPermissionReplicator($fine_grained_dao, $default_factory, $saver, $factory);
+        $factory          = new FineGrainedPermissionFactory(
+            $fine_grained_dao,
+            $ugroup_manager,
+            $normalizer,
+            PermissionsManager::instance()
+        );
+
+        $replicator = new FineGrainedPermissionReplicator($fine_grained_dao, $default_factory, $saver, $factory);
 
         return new GitRepositoryManager(
             $repository_factory,

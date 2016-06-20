@@ -648,25 +648,36 @@ class Git extends PluginController {
 
                     $enable_fine_grained_permissions = $this->request->exist('use-fine-grained-permissions');
 
-                    $added_tags_permissions = $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsFromRequest(
-                        $this->request,
-                        $repository
-                    );
-
-                    $added_branches_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsFromRequest(
-                        $this->request,
-                        $repository
-                    );
-
-                    $fine_grained_permissions_reactivated = $enable_fine_grained_permissions &&
+                    $fine_grained_permissions_activated = $enable_fine_grained_permissions &&
                         ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository);
 
-                    $updated_permissions = array();
-                    if (! $fine_grained_permissions_reactivated) {
-                        $updated_permissions = $this->fine_grained_permission_factory->getUpdatedPermissionsFromRequest(
+                    $current_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsForRepository($repository)
+                        + $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsForRepository($repository);
+
+                    $updated_permissions        = array();
+                    $added_tags_permissions     = array();
+                    $added_branches_permissions = array();
+
+                    if ($fine_grained_permissions_activated && count($current_permissions) === 0) {
+                        $added_tags_permissions     = $this->fine_grained_permission_factory->getDefaultTagsFineGrainedPermissionsForRepository($repository);
+                        $added_branches_permissions = $this->fine_grained_permission_factory->getDefaultBranchesFineGrainedPermissionsForRepository($repository);
+                    } else {
+                        $added_tags_permissions = $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsFromRequest(
                             $this->request,
                             $repository
                         );
+
+                        $added_branches_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsFromRequest(
+                            $this->request,
+                            $repository
+                        );
+
+                        if (! $fine_grained_permissions_activated) {
+                            $updated_permissions = $this->fine_grained_permission_factory->getUpdatedPermissionsFromRequest(
+                                $this->request,
+                                $repository
+                            );
+                        }
                     }
 
                     $this->addAction(
