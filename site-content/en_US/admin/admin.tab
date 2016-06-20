@@ -266,7 +266,7 @@ admin_massmail_execute	no_user	No user corresponding to entry $1.
 #
 admin_massmail	title	Administrative Mass Mail Engine
 admin_massmail	header	Mail Engine for $1 Subscribers
-admin_massmail	warning	Be <span class="highlight"><B>VERY</B></span> careful with this form, because submitting it WILL send email to lots of users.
+admin_massmail	warning	Be <b>very</b> careful with this form, because submitting it <b>will</b> send email to lots of users.
 admin_massmail	to_preview	Send preview to
 admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
 admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"

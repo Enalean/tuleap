@@ -33,7 +33,7 @@ $count_sfadmin = db_result($res_count, 0, null);
 
 print '<h1>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h1>
 
-<P>'.$Language->getText('admin_massmail','warning').'
+<p class="tlp-text-warning">'.$Language->getText('admin_massmail', 'warning').'</p>
 
  <FORM ID="massmail_form" NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
 <label class="radio" name="'.$count_comm.'"><INPUT type="radio" name="destination" value="comm">
