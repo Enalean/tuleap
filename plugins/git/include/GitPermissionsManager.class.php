@@ -235,6 +235,37 @@ class GitPermissionsManager
         array $rewind_ugroup_ids,
         $enable_fine_grained_permissions
     ) {
+        $current_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project)
+            + $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
+
+        $updated_permissions        = array();
+        $added_tags_permissions     = array();
+        $added_branches_permissions = array();
+
+        if ($this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions) &&
+            count($current_permissions) === 0
+        ) {
+            $added_tags_permissions     = $this->default_fine_grained_factory->getDefaultTagsFineGrainedPermissionsForProject($project);
+            $added_branches_permissions = $this->default_fine_grained_factory->getDefaultBranchesFineGrainedPermissionsForProject($project);
+        } else {
+            if (! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)) {
+                $updated_permissions = $this->default_fine_grained_factory->getUpdatedPermissionsFromRequest(
+                    $request,
+                    $project
+                );
+            }
+
+            $added_branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsFromRequest(
+                $request,
+                $project
+            );
+
+            $added_tags_permissions = $this->default_fine_grained_factory->getTagsFineGrainedPermissionsFromRequest(
+                $request,
+                $project
+            );
+        }
+
         $this->saveDefaultPermissionIfNotEmpty(
             $project,
             $read_ugroup_ids,
@@ -246,14 +277,6 @@ class GitPermissionsManager
             $write_ugroup_ids,
             Git::DEFAULT_PERM_WRITE
         );
-
-        $updated_permissions = array();
-        if (! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)) {
-            $updated_permissions = $this->default_fine_grained_factory->getUpdatedPermissionsFromRequest(
-                $request,
-                $project
-            );
-        }
 
         if ($enable_fine_grained_permissions) {
             $this->fine_grained_updater->enableProject($project);
@@ -272,16 +295,6 @@ class GitPermissionsManager
                 Git::DEFAULT_PERM_WPLUS
             );
         }
-
-        $added_branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsFromRequest(
-            $request,
-            $project
-        );
-
-        $added_tags_permissions = $this->default_fine_grained_factory->getTagsFineGrainedPermissionsFromRequest(
-            $request,
-            $project
-        );
 
         foreach ($added_branches_permissions as $added_branch_permission) {
             $this->default_fine_grained_saver->saveBranchPermission($added_branch_permission);
