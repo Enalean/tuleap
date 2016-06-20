@@ -33,6 +33,10 @@ body {
     background: $main-background;
 }
 
+.main-framed {
+    padding: $tlp-spacing;
+}
+
 #feedback {
     margin: 0 0 $tlp-spacing;
 }

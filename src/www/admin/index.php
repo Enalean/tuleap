@@ -293,7 +293,6 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 // Start output
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
-echo '<section id="siteadmin-homepage">';
 
 $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
 echo '<h1>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).' ('.$version.')'.'</h1>';
@@ -321,6 +320,4 @@ echo '</div>';
 
 echo '</div>';
 
-echo '</section>';
 site_admin_footer(array());
-?>
