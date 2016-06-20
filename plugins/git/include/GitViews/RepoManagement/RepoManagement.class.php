@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,11 +26,22 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\GitViews\RepoManagement\Pane\GitViewsRepoManagementPaneCIToken;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 
 /**
  * Dedicated screen for repo management
  */
 class GitViews_RepoManagement {
+
+    /**
+     * @var GitPermissionsManager
+     */
+    private $git_permission_manager;
+
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_factory;
 
     /**
      * @var FineGrainedRepresentationBuilder
@@ -86,7 +97,9 @@ class GitViews_RepoManagement {
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
-        FineGrainedRepresentationBuilder $fine_grained_builder
+        FineGrainedRepresentationBuilder $fine_grained_builder,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        GitPermissionsManager $git_permission_manager
     ) {
         $this->repository                      = $repository;
         $this->request                         = $request;
@@ -98,6 +111,8 @@ class GitViews_RepoManagement {
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;
         $this->fine_grained_retriever          = $fine_grained_retriever;
         $this->fine_grained_builder            = $fine_grained_builder;
+        $this->default_fine_grained_factory    = $default_fine_grained_factory;
+        $this->git_permission_manager          = $git_permission_manager;
         $this->panes                           = $this->buildPanes($repository);
         $this->current_pane                    = 'settings';
 
@@ -127,7 +142,9 @@ class GitViews_RepoManagement {
             $this->request,
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
-            $this->fine_grained_builder
+            $this->fine_grained_builder,
+            $this->default_fine_grained_factory,
+            $this->git_permission_manager
         );
         $panes[] = new GitViewsRepoManagementPaneCIToken($repository, $this->request);
 

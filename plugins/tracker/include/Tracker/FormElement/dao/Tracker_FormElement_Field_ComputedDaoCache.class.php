@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,10 +42,11 @@ class Tracker_FormElement_Field_ComputedDaoCache {
         return self::$instance;
     }
 
-    public function getFieldValuesAtTimestamp($source_id, $target_name, $timestamp) {
+    public function getFieldValuesAtTimestamp($source_id, $target_name, $timestamp)
+    {
         $index = $source_id.'_'.$target_name.'_'.$timestamp;
         if (! isset($this->field_values_at_timestamp[$index])) {
-            $this->field_values_at_timestamp[$index] = $this->dao->getFieldValuesAtTimestamp(array($source_id), $target_name, $timestamp);
+            $this->field_values_at_timestamp[$index] = $this->dao->getFieldValuesAtTimestamp(array($source_id), $target_name, $timestamp, $source_id);
         }
         return $this->field_values_at_timestamp[$index];
     }

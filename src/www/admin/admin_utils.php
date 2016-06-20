@@ -15,6 +15,10 @@ function site_admin_footer($vals=0) {
 }
 
 function site_admin_warnings() {
+    if (ForgeConfig::get('disable_forge_upgrade_warnings')) {
+        return;
+    }
+
     $forgeupgrade_config = new ForgeUpgradeConfig(new System_Command());
     $forgeupgrade_config->loadDefaults();
     if (! $forgeupgrade_config->isSystemUpToDate()) {

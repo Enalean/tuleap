@@ -33,6 +33,7 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 
 /**
  * Git
@@ -199,6 +200,11 @@ class Git extends PluginController {
      */
     private $fine_grained_builder;
 
+    /**
+     * @var FineGrainedPermissionReplicator
+     */
+    private $fine_grained_replicator;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -228,7 +234,8 @@ class Git extends PluginController {
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         CITokenManager $ci_token_manager,
         FineGrainedPermissionDestructor $fine_grained_permission_destructor,
-        FineGrainedRepresentationBuilder $fine_grained_builder
+        FineGrainedRepresentationBuilder $fine_grained_builder,
+        FineGrainedPermissionReplicator $fine_grained_replicator
     ) {
         parent::__construct($user_manager, $request);
 
@@ -294,6 +301,7 @@ class Git extends PluginController {
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;
         $this->fine_grained_retriever          = $fine_grained_retriever;
         $this->fine_grained_permission_saver   = $fine_grained_permission_saver;
+        $this->fine_grained_replicator         = $fine_grained_replicator;
 
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
@@ -640,15 +648,37 @@ class Git extends PluginController {
 
                     $enable_fine_grained_permissions = $this->request->exist('use-fine-grained-permissions');
 
-                    $added_tags_permissions = $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsFromRequest(
-                        $this->request,
-                        $repository
-                    );
+                    $fine_grained_permissions_activated = $enable_fine_grained_permissions &&
+                        ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository);
 
-                    $added_branches_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsFromRequest(
-                        $this->request,
-                        $repository
-                    );
+                    $current_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsForRepository($repository)
+                        + $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsForRepository($repository);
+
+                    $updated_permissions        = array();
+                    $added_tags_permissions     = array();
+                    $added_branches_permissions = array();
+
+                    if ($fine_grained_permissions_activated && count($current_permissions) === 0) {
+                        $added_tags_permissions     = $this->fine_grained_permission_factory->getDefaultTagsFineGrainedPermissionsForRepository($repository);
+                        $added_branches_permissions = $this->fine_grained_permission_factory->getDefaultBranchesFineGrainedPermissionsForRepository($repository);
+                    } else {
+                        $added_tags_permissions = $this->fine_grained_permission_factory->getTagsFineGrainedPermissionsFromRequest(
+                            $this->request,
+                            $repository
+                        );
+
+                        $added_branches_permissions = $this->fine_grained_permission_factory->getBranchesFineGrainedPermissionsFromRequest(
+                            $this->request,
+                            $repository
+                        );
+
+                        if (! $fine_grained_permissions_activated) {
+                            $updated_permissions = $this->fine_grained_permission_factory->getUpdatedPermissionsFromRequest(
+                                $this->request,
+                                $repository
+                            );
+                        }
+                    }
 
                     $this->addAction(
                         'save',
@@ -660,7 +690,8 @@ class Git extends PluginController {
                             $pane,
                             $enable_fine_grained_permissions,
                             $added_branches_permissions,
-                            $added_tags_permissions
+                            $added_tags_permissions,
+                            $updated_permissions
                         )
                     );
                     $this->addView('view');
@@ -1044,6 +1075,7 @@ class Git extends PluginController {
                 );
 
                 $this->emitFeedbackForPermissionDeletion($deleted);
+                $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
                 break;
@@ -1318,7 +1350,9 @@ class Git extends PluginController {
             $this->webhook_dao,
             $this->fine_grained_updater,
             $this->fine_grained_permission_saver,
-            $this->ci_token_manager
+            $this->ci_token_manager,
+            $this->fine_grained_replicator,
+            $this->fine_grained_retriever
         );
     }
 

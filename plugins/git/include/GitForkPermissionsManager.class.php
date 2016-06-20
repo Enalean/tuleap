@@ -23,11 +23,22 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 
 /**
  * GitForkPermissionsManager
  */
 class GitForkPermissionsManager {
+
+    /**
+     * @var GitPermissionsManager
+     */
+    private $git_permission_manager;
+
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $default_fine_grained_factory;
 
     /**
      * @var FineGrainedRepresentationBuilder
@@ -57,13 +68,17 @@ class GitForkPermissionsManager {
         AccessRightsPresenterOptionsBuilder $builder,
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionFactory $fine_grained_factory,
-        FineGrainedRepresentationBuilder $fine_grained_builder
+        FineGrainedRepresentationBuilder $fine_grained_builder,
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        GitPermissionsManager $git_permission_manager
     ) {
-        $this->repository             = $repository;
-        $this->builder                = $builder;
-        $this->fine_grained_retriever = $fine_grained_retriever;
-        $this->fine_grained_factory   = $fine_grained_factory;
-        $this->fine_grained_builder   = $fine_grained_builder;
+        $this->repository                   = $repository;
+        $this->builder                      = $builder;
+        $this->fine_grained_retriever       = $fine_grained_retriever;
+        $this->fine_grained_factory         = $fine_grained_factory;
+        $this->fine_grained_builder         = $fine_grained_builder;
+        $this->default_fine_grained_factory = $default_fine_grained_factory;
+        $this->git_permission_manager       = $git_permission_manager;
     }
 
     /**
@@ -149,7 +164,7 @@ class GitForkPermissionsManager {
         if (count($repository_ids) > 1) {
             $form .= $this->displayDefaultAccessControl($groupId);
         } else {
-            $form .= $this->displayAccessControl($groupId);
+            $form .= $this->displayAccessControlWhileForkingASingleRepository($groupId);
         }
         $form .= '<input type="submit" class="btn btn-primary" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
         $form .= '</form>';
@@ -158,17 +173,36 @@ class GitForkPermissionsManager {
 
     private function displayDefaultAccessControl($project_id) {
         $project = ProjectManager::instance()->getProject($project_id);
+        $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions     = false;
-        $are_fine_grained_permissions_defined = false;
+        $can_use_fine_grained_permissions     = $this->git_permission_manager->userIsGitAdmin($user, $project);
+        $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project);
 
-        $branches_permissions     = array();
-        $tags_permissions         = array();
+        $branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project);
+        $tags_permissions     = $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
+
+        $branches_permissions_representation = array();
+        foreach ($branches_permissions as $permission) {
+            $branches_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
+                $permission,
+                $project
+            );
+        }
+
+        $tags_permissions_representation = array();
+        foreach ($tags_permissions as $permission) {
+            $tags_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
+                $permission,
+                $project
+            );
+        }
+
         $new_fine_grained_ugroups = $this->getAllOptions($project);
 
         $delete_url = '?action=delete-permissions&pane=perms&repo_id='.$this->repository->getId().'&group_id='.$project->getID();
         $url        = '?action=repo_management&pane=perms&group_id='.$project->getID();
         $csrf       = new CSRFSynchronizerToken($url);
+        $is_fork    = true;
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
         $presenter = new GitPresenters_AccessControlPresenter(
@@ -181,14 +215,25 @@ class GitForkPermissionsManager {
             $this->getDefaultOptions($project, Git::DEFAULT_PERM_WPLUS),
             $are_fine_grained_permissions_defined,
             $can_use_fine_grained_permissions,
-            $branches_permissions,
-            $tags_permissions,
+            $branches_permissions_representation,
+            $tags_permissions_representation,
             $new_fine_grained_ugroups,
             $delete_url,
-            $csrf
+            $csrf,
+            $is_fork
         );
 
         return $renderer->renderToString('access-control', $presenter);
+    }
+
+    private function displayAccessControlWhileForkingASingleRepository($project_id)
+    {
+        return $this->displayAccessControlForm($project_id, true);
+    }
+
+    public function displayAccessControl($project_id = null)
+    {
+        return $this->displayAccessControlForm($project_id, false);
     }
 
     /**
@@ -198,11 +243,12 @@ class GitForkPermissionsManager {
      *
      * @return String
      */
-    public function displayAccessControl($project_id = null) {
+    private function displayAccessControlForm($project_id = null, $is_fork = false) {
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
         $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions     = $user->useLabFeatures() && $this->repository->userCanAdmin($user);
+        $can_use_fine_grained_permissions = $this->git_permission_manager->userIsGitAdmin($user, $project);
+
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions(
             $this->repository
         );
@@ -244,7 +290,8 @@ class GitForkPermissionsManager {
             $tags_permissions_representation,
             $this->getAllOptions($project),
             $delete_url,
-            $csrf
+            $csrf,
+            $is_fork
         );
 
         return $renderer->renderToString('access-control', $presenter);

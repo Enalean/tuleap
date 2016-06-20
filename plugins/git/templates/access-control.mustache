@@ -16,21 +16,41 @@
     <tbody>
         <tr>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ read_select_box_id }}" name="{{ read_select_box_id }}[]" size="6" class="plugin_git_permissions_select">
+                <select
+                    multiple="multiple"
+                    id="{{ read_select_box_id }}"
+                    name="{{ read_select_box_id }}[]"
+                    size="6"
+                    class="plugin_git_permissions_select"
+                >
                     {{# read_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ read_options }}
                 </select>
             </td>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ write_select_box_id }}" name="{{ write_select_box_id }}[]" size="6" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
+                <select
+                    multiple="multiple"
+                    id="{{ write_select_box_id }}"
+                    name="{{ write_select_box_id }}[]"
+                    size="6"
+                    {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
+                    class="plugin_git_permissions_select plugin_git_write_permissions_select"
+                >
                     {{# write_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ write_options }}
                 </select>
             </td>
             <td class="git-permission-table-selector">
-                <select multiple="multiple" id="{{ rewrite_select_box_id }}" name="{{ rewrite_select_box_id }}[]" size="6" {{# is_control_limited }}disabled{{/ is_control_limited }} class="plugin_git_permissions_select">
+                <select
+                    multiple="multiple"
+                    id="{{ rewrite_select_box_id }}"
+                    name="{{ rewrite_select_box_id }}[]"
+                    size="6"
+                    {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
+                    class="plugin_git_permissions_select plugin_git_rewind_permissions_select"
+                >
                     {{# rewrite_options }}
                         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
                     {{/ rewrite_options }}
@@ -41,138 +61,5 @@
 </table>
 
 {{# can_use_fine_grained_permissions }}
-<div class="git-per-tags-branches-permissions">
-    <h3>{{ fine_grained_permissions_title }}</h3>
-
-    <label class="checkbox">
-        <input type="checkbox"
-               name="use-fine-grained-permissions"
-               {{# are_fine_grained_permissions_defined }} checked="checked" {{/ are_fine_grained_permissions_defined }}
-        /> {{ fine_grained_permissions_checkbox_label }}
-    </label>
-
-    {{# are_fine_grained_permissions_defined }}
-        <p class="alert">{{ fine_grained_permissions_warning }}</p>
-
-        <h4>{{ branches_title }}</h4>
-        <table class="table table-bordered git-permission-table git-fine-grained-permissions-branch">
-            <thead>
-                <tr>
-                    <th>{{ pattern_column }}</th>
-                    <th class="git-permission-table-selector">{{ label_write }}</th>
-                    <th class="git-permission-table-selector">{{ label_rw }}</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{^ has_branches_permissions }}
-                    <tr class="empty-table">
-                        <td colspan="4">{{ empty }}</td>
-                    </tr>
-                {{/ has_branches_permissions }}
-
-                {{# has_branches_permissions }}
-                    {{# branches_permissions }}
-                    <tr>
-                        <td class="permission-pattern">{{ pattern }}</td>
-                        <td class="permission-write">
-                            <select multiple="multiple" size="6" disabled>
-                                {{# writers }}
-                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
-                                {{/ writers }}
-                            </select>
-                        </td>
-                        <td class="permission-rewind">
-                            <select multiple="multiple" size="6" disabled>
-                                {{# rewinders }}
-                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
-                                {{/ rewinders }}
-                            </select>
-                        </td>
-                        <td class="permission-delete">
-                            <a href="javascript:;"
-                                class="remove-fine-grained-permission"
-                                data-toggle="popover"
-                                data-trigger="click"
-                                data-placement="left"
-                                data-html="true"
-                                data-popover-id="remove-{{ id }}-popover"
-                                data-form-action="{{ remove_form_action }}"
-                            >
-                                <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}
-
-                            </a>
-                            {{> settings/popover-remove-fine-grained-permission }}
-                        </td>
-                    </tr>
-                    {{/ branches_permissions }}
-                {{/ has_branches_permissions }}
-            </tbody>
-        </table>
-        <button class="btn add-fine-grained-permission" data-type="branch">{{ add_branch_permission }}</button>
-
-        <h4>{{ tags_title }}</h4>
-        <table class="table table-bordered git-permission-table git-fine-grained-permissions-tag">
-            <thead>
-                <tr>
-                    <th>{{ pattern_column }}</th>
-                    <th class="git-permission-table-selector">{{ label_write }}</th>
-                    <th class="git-permission-table-selector">{{ label_rw }}</th>
-                    <th>{{ actions_column }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{^ has_tags_permissions }}
-                    <tr class="empty-table">
-                        <td colspan="4">{{ empty }}</td>
-                    </tr>
-                {{/ has_tags_permissions }}
-
-                {{# has_tags_permissions }}
-                    {{# tags_permissions }}
-                    <tr>
-                        <td class="permission-pattern">{{ pattern }}</td>
-                        <td class="permission-write">
-                            <select multiple="multiple" size="6" disabled>
-                                {{# writers }}
-                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
-                                {{/ writers }}
-                            </select>
-                        </td>
-                        <td class="permission-rewind">
-                            <select multiple="multiple" size="6" disabled>
-                                {{# rewinders }}
-                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
-                                {{/ rewinders }}
-                            </select>
-                        </td>
-                        <td class="permission-delete">
-                            <a href="javascript:;"
-                                class="remove-fine-grained-permission"
-                                data-toggle="popover"
-                                data-trigger="click"
-                                data-placement="left"
-                                data-html="true"
-                                data-popover-id="remove-{{ id }}-popover"
-                                data-form-action="{{ remove_form_action }}"
-                            >
-                                <i class="icon-trash"></i> {{ remove_fine_grained_permission_delete }}
-                            </a>
-                            {{> settings/popover-remove-fine-grained-permission }}
-                        </td>
-                    </tr>
-                    {{/ tags_permissions }}
-                {{/ has_tags_permissions }}
-            </tbody>
-        </table>
-        <button class="btn add-fine-grained-permission" data-type="tag">{{ add_tag_permission }}</button>
-
-    {{/ are_fine_grained_permissions_defined }}
-</div>
-
-<select id="add-fine-grained-permission-template" class="plugin_git_permissions_select" multiple="multiple" size="6">
-    {{# new_fine_grained_ugroups }}
-    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
-    {{/ new_fine_grained_ugroups }}
-</select>
+    {{> fine_grained }}
 {{/ can_use_fine_grained_permissions }}

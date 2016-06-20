@@ -96,4 +96,13 @@ class DefaultFineGrainedPermissionSaver
 
         return $ids;
     }
+
+    public function updateDefaultPermission(DefaultFineGrainedPermission $permission)
+    {
+        return $this->dao->updateDefaultPermission(
+            $permission->getId(),
+            $this->getWriterIds($permission),
+            $this->getRewinderIds($permission)
+        );
+    }
 }

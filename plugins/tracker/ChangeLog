@@ -1,3 +1,27 @@
+Version 5.928 - Tuleap 8.16
+    * SOAP API is compatible with the new computed fields.
+
+Version 5.927 - Tuleap 8.16
+    * New computed fields calculation
+
+Version 5.926 - Tuleap 8.16
+    * story #9090: Change field display in admin panel
+
+Version 5.925 - Tuleap 8.16
+    * The REST API can manipulate a computed field
+
+Version 5.924 - Tuleap 8.16
+    * Add a warning to indicates that after migration fields kept their original permissions
+
+Version 5.923 - Tuleap 8.16
+    * CSV import and report renderer
+
+Version 5.922 - Tuleap 8.16
+    * story #9090: Update field popup
+
+Version 5.921 - Tuleap 8.16
+    * Add tests for changeset diff for computed values
+
 Version 5.920 - Tuleap 8.16
     * Enable computed fields to manage float values
 

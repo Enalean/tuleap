@@ -1,3 +1,45 @@
+Version 4.211 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Enable default tag and branch permission on activation)
+
+Version 4.210 - Tuleap 8.16
+    * story #8419: Fix save of global permission
+
+Version 4.209 - Tuleap 8.16
+    * story #8419: Update configuration while deleting fine grained permission
+
+Version 4.208 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Remove Lab feature)
+
+Version 4.207 - Tuleap 8.16
+    * story #8419: Warn the user about cross-project single fork behaviour
+
+Version 4.206 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Duplicate fine grained permission while forking multiple repositories in the same project)
+
+Version 4.205 - Tuleap 8.16
+    * request #9259: Remove http authentication for postBuild API
+
+Version 4.204 - Tuleap 8.16
+    * story #8419: Duplicate fine grained permission while forking a single repo in the same project
+
+Version 4.203 - Tuleap 8.16
+    * story #8419: Edit default per tags/branches permission in git administration
+
+Version 4.202 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Display per tags/branches permissions on multiple fork)
+
+Version 4.201 - Tuleap 8.16
+    * story #8419: Edit per tags/branches permission in a repository
+
+Version 4.200 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Delete and add actions are not available while forking)
+
+Version 4.199 - Tuleap 8.16
+    * story #8419: Disable per repo permissions form when fine grained perms are used
+
+Version 4.198 - Tuleap 8.16
+    * Use project default permissions when creating a new repo
+
 Version 4.197 - Tuleap 8.16
     * story #8419 have permissions per tags/branches(Display selected ugroup in a selectbox, Refactoring - Rename classes, Delete per tags/branches permission)
 

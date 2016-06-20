@@ -68,6 +68,7 @@ class GitPresenters_AccessControlPresenter {
     public $remove_fine_grained_permission_confirm;
     public $btn_cancel;
     public $remove_form_action;
+    public $disabled;
 
     public function __construct(
         $is_control_limited,
@@ -83,7 +84,8 @@ class GitPresenters_AccessControlPresenter {
         array $tags_permissions_representation,
         array $new_fine_grained_ugroups,
         $delete_url,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
+        $is_fork
     ) {
         $this->is_control_limited     = $is_control_limited;
         $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
@@ -101,7 +103,9 @@ class GitPresenters_AccessControlPresenter {
         $this->rewrite_options = $rewrite_options;
 
         $this->are_fine_grained_permissions_defined = $are_fine_grained_permissions_defined;
-        $this->can_use_fine_grained_permissions = $can_use_fine_grained_permissions;
+        $this->can_use_fine_grained_permissions     = $can_use_fine_grained_permissions;
+        $this->cannot_define_per_repo_permissions   = ($is_control_limited || $are_fine_grained_permissions_defined);
+        $this->is_fork                              = $is_fork;
 
         $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
             'plugin_git',
@@ -112,6 +116,13 @@ class GitPresenters_AccessControlPresenter {
             'plugin_git',
             'fine_grained_permissions_warning'
         );
+
+        if ($this->is_fork) {
+            $this->fine_grained_permissions_warning .= ' '. $GLOBALS['Language']->getText(
+                'plugin_git',
+                'fine_grained_permissions_fork_warning'
+            );
+        }
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
@@ -181,6 +192,10 @@ class GitPresenters_AccessControlPresenter {
         );
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->disabled   = '';
+        if ($is_fork) {
+            $this->disabled = 'disabled="disabled"';
+        }
     }
 
     public function has_branches_permissions()

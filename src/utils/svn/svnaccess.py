@@ -122,6 +122,33 @@ def get_name_for_svn_access(svnrepo, username):
     else:
        return username.lower() 
 
+def get_group_name_from_plugin_svnrepo_path(svnrepo):
+    path_elements   = string.split(svnrepo,'/')
+    repository_name = MySQLdb.escape_string(path_elements[len(path_elements)-1])
+    group_id        = MySQLdb.escape_string(path_elements[len(path_elements)-2])
+
+    cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    query  = 'SELECT g.unix_group_name FROM plugin_svn_repositories r JOIN groups g ON (g.group_id = r.project_id) WHERE project_id = "'+str(group_id)+'" AND name = "'+str(repository_name)+'"'
+    res    = cursor.execute(query)
+    row    = cursor.fetchone()
+    cursor.close()
+
+    if (cursor.rowcount == 1):
+        return row['unix_group_name']
+    return False
+
+def get_group_name_from_core_svnrepo_path(svnrepo):
+    path_elements = string.split(svnrepo,'/')
+    group_name    = path_elements[len(path_elements)-1]
+
+    return group_name
+
+def get_group_from_svnrepo_path(svnrepo):
+    group_name = get_group_name_from_plugin_svnrepo_path(svnrepo)
+    if (group_name == False):
+        return get_group_name_from_core_svnrepo_path(svnrepo)
+    return group_name
+
 def check_read_access(username, svnrepo, svnpath):
     
     global SVNACCESS, SVNGROUPS
@@ -136,8 +163,7 @@ def check_read_access(username, svnrepo, svnpath):
     if user.user_is_super_user():
         return True
     if user.user_is_restricted():
-        path_elements = string.split(svnrepo,'/')
-        group_name = path_elements[len(path_elements)-1]
+        group_name = get_group_from_svnrepo_path(svnrepo)
         group_id = group.set_group_info_from_name(group_name)
         if not user.user_is_member(group_id):
             return False

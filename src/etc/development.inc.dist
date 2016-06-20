@@ -25,6 +25,10 @@ $DEBUG_MODE = 0;
 //Display for all users (1) or only to siteadmin (0) ?
 $DEBUG_DISPLAY_FOR_ALL = 1;
 
+// Check forge upgrade on administration and administrator personal page
+// Set to 1 to disable checks
+$disable_forge_upgrade_warnings = 0;
+
 // Error reporting.
 // Uncomment on dev platforms
 //error_reporting(E_ALL);

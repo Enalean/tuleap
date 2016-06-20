@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,8 @@
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
-abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor  {
+abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor
+{
 
     protected $has_errors = false;
 
@@ -50,6 +51,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         return $this->fetchChangesetValue($artifact_id, $changeset_id, $value, $report);
+    }
+
+    public function isCSVImportable()
+    {
+        return true;
     }
 
     /**
@@ -1104,10 +1110,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $save_new_value = true;
         }
 
-        if ($submitted_value === Tracker_FormElement_Field_Computed::AUTOCOMPUTE && $this->isAComputedField()) {
-            $submitted_value = "";
-        }
-
         if ($save_new_value) {
             //Save the new value
             if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 1)) {
@@ -1116,11 +1118,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         return $updated;
-    }
-
-    private function isAComputedField()
-    {
-        return $this instanceof Tracker_FormElement_Field_Computed;
     }
 
     protected function getChangesetValueDao()

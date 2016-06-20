@@ -102,12 +102,6 @@ plugin_git	actions_long_description	Description trop longue
 plugin_git	actions_delete_process	Le dépôt '$1' va être supprimé dans quelques secondes
 plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères, pas de slash au début ou à la fin, le nom ne doit pas finir avec ".git" non plus.
 plugin_git	actions_create_repo_process	Le dépôt va être crée dans quelques secondes
-plugin_git	actions_repo_not_found	Le dépôt n'existe pas
-plugin_git	actions_mirror_ids_not_valid	Le requête contient des données non valides (identifiants de mirroir).
-plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
-plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
-plugin_git	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le repertoire
-plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin est en conflit avec un dépôt existant
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
@@ -115,6 +109,14 @@ plugin_git	gerrit_project_exists	Un projet Gerrit du même nom existe déjà sur
 plugin_git	gerrit_server_down	Impossible de se connecter au serveur Gerrit
 plugin_git	project_deletion_not_possible	Impossible de supprimer le project $1 sur Gerrit. $2.
 plugin_git	project_deletion_open_elements	Il y'a des revues ouvertes concernant ce projet.
+
+plugin_git	actions_repo_not_found	Le dépôt n'existe pas
+plugin_git	actions_mirror_ids_not_valid	La requête contient des données non valides (identifiants de mirroir).
+plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
+plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
+plugin_git	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le repertoire
+plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
+plugin_git	actions_missing_permission	Veuillez définir les permissions d'Écriture et de Rewind.
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -458,15 +460,17 @@ plugin_git	regenerate_config_waiting	La regénération de la configuration Gitol
 
 plugin_git	admin_gitolite_config_title	Administration de la configuration Gitolite
 plugin_git	admin_gitolite_config_description	Cette section vous premet de regénérer le fichier de configuration Gitolite pour un projet selectionné.
-plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "plloing". Merci de consulter <a href="http://doc-en.tuleap.net/en/latest/user-guide/git.html?#continuous-integration-with-hudson-jenkins">Hudson Git</a>
+plugin_git	deprecated	Depuis Tuleap 8.14 nous vous recommandons d'utiliser les opérations de "polling". Merci de consulter <a href="http://doc-en.tuleap.net/en/latest/user-guide/git.html?#continuous-integration-with-hudson-jenkins">Hudson Git</a>
 
 plugin_git	save_access_control	Sauvegarder les permissions
 plugin_git	default_access_control_saved	Permissions par défaut sauvegardées.
+plugin_git	default_access_control_missing	Veuillez définir les permissions d'Écriture.
 
 plugin_git	default_permissions_title	Permissions par défaut
 plugin_git	fine_grained_permissions_title	Permissions fines
 plugin_git	fine_grained_permissions_checkbox_label	Activer les permissions fines
-plugin_git	fine_grained_permissions_warning	Chers administrateurs, vous serez très bientôt en mesure de définir des permissions par étiquettes et/ou par branches.
+plugin_git	fine_grained_permissions_warning	Chers administrateurs, les permissions fines seront bientôt prises en compte.
+plugin_git	fine_grained_permissions_fork_warning	Veuillez noter que lorsque vous créez un fork d'un seul dépôt vers un autre projet, les groupes d'utilisateurs définis manuellement ne seront pas copiés.
 plugin_git	fine_grained_permissions_tags_title	Étiquettes
 plugin_git	fine_grained_permissions_branches_title	Branches
 plugin_git	fine_grained_permissions_pattern_column	Expression

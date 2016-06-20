@@ -35,6 +35,7 @@ use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1067,6 +1068,8 @@ class GitPlugin extends Plugin {
         }
 
         $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
+
+        $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate(array($project_id));
     }
 
     public function project_admin_add_user($params) {
@@ -1235,7 +1238,23 @@ class GitPlugin extends Plugin {
             $this->getDefaultFineGrainedPermissionFactory(),
             new CITokenManager(new CITokenDao()),
             $this->getFineGrainedPermissionDestructor(),
-            $this->getFineGrainedRepresentationBuilder()
+            $this->getFineGrainedRepresentationBuilder(),
+            $this->getFineGrainedPermissionReplicator()
+        );
+    }
+
+    private function getFineGrainedPermissionReplicator()
+    {
+        $dao             = $this->getFineGrainedDao();
+        $default_factory = $this->getDefaultFineGrainedPermissionFactory();
+        $saver           = $this->getFineGrainedPermissionSaver();
+        $factory         = $this->getFineGrainedFactory();
+
+        return new FineGrainedPermissionReplicator(
+            $dao,
+            $default_factory,
+            $saver,
+            $factory
         );
     }
 
@@ -1304,7 +1323,12 @@ class GitPlugin extends Plugin {
     private function getFineGrainedFactory()
     {
         $dao = $this->getFineGrainedDao();
-        return new FineGrainedPermissionFactory($dao, $this->getUGroupManager(), new PermissionsNormalizer());
+        return new FineGrainedPermissionFactory(
+            $dao,
+            $this->getUGroupManager(),
+            new PermissionsNormalizer(),
+            $this->getPermissionsManager()
+        );
     }
 
     public function getGitSystemEventManager() {
@@ -1321,7 +1345,8 @@ class GitPlugin extends Plugin {
             $this->getGitDao(),
             $this->getConfigurationParameter('git_backup_dir'),
             new GitRepositoryMirrorUpdater($this->getMirrorDataMapper(), new ProjectHistoryDao()),
-            $this->getMirrorDataMapper()
+            $this->getMirrorDataMapper(),
+            $this->getFineGrainedPermissionReplicator()
         );
     }
 
@@ -1351,7 +1376,8 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedUpdater(),
             $this->getDefaultFineGrainedPermissionSaver(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            $this->getFineGrainedDao()
+            $this->getFineGrainedDao(),
+            $this->getFineGrainedRetriever()
         );
     }
 

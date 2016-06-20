@@ -62,6 +62,7 @@ use Git_Exec;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use PermissionsNormalizer;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 
 include_once('www/project/admin/permissions.php');
 
@@ -123,6 +124,8 @@ class RepositoryResource extends AuthenticatedResource {
         );
 
         $default_fine_grained_permission_saver = new DefaultFineGrainedPermissionSaver($fine_grained_dao);
+        $fine_grained_updater                  = new FineGrainedUpdater($fine_grained_dao);
+        $fine_grained_retriever                = new FineGrainedRetriever($fine_grained_dao);
 
         $git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
@@ -130,7 +133,8 @@ class RepositoryResource extends AuthenticatedResource {
             $fine_grained_updater,
             $default_fine_grained_permission_saver,
             $default_fine_grained_permission_factory,
-            $fine_grained_dao
+            $fine_grained_dao,
+            $fine_grained_retriever
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
@@ -252,8 +256,10 @@ class RepositoryResource extends AuthenticatedResource {
      * @throws 404
      * @throws 400
      */
-    protected function postBuildStatus($id, BuildStatusPOSTRepresentation $build_status_data)
+    public function postBuildStatus($id, BuildStatusPOSTRepresentation $build_status_data)
     {
+        Header::allowOptionsPost();
+
         if (! $build_status_data->isStatusValid()) {
             throw new RestException(400, $build_status_data->status . ' is not a valid status.');
         }

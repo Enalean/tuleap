@@ -5,6 +5,7 @@ Version 8.16 (Not yet release)
 	* request #9216: SVN immutable tags does not prevent from adding a file in a immutable tag
 	* request #9220: Unable to import big xml project archive
 	* request #9222: Cannot add site admin as project member during import
+	* request #9254: Restricted users cannot access SVN plugin viewvc
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
@@ -26,11 +27,12 @@ Version 8.16 (Not yet release)
 	* story #9083: Refactoring: do not leak plugins into core
 	* Make increment version PHP 7 compatible
 	* Fix unit tests to run both on PHP 5.3 and PHP 5.6
+	* request #9262: Check forgeupgrade for administrator only if enabled in development.inc
 
 	== Plugins ==
-	* git: 4.197
+	* git: 4.211
 	* agiledashboard: 1.384
-	* tracker: 5.920
+	* tracker: 5.928
 	* tracker_date_reminder: 1.2.10
 	* hudson_git: 0.20
 	* svn: 0.60

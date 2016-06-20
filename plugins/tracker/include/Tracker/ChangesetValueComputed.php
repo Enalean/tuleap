@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact;
 
 use Tracker_Artifact_ChangesetValue_Float;
 use PFUser;
+use Codendi_HTMLPurifier;
 
 class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
 {
@@ -46,21 +47,24 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();
 
+
+        $purifier = Codendi_HTMLPurifier::instance();
         if ($previous_numeric !== $next_numeric) {
             if ($previous_numeric === null) {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from')." ".
                 $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field')." ".
                 $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
-                $next_numeric;
-            } elseif (is_null($next_numeric)) {
+                $purifier->purify($next_numeric);
+            } elseif ($next_numeric === null) {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') ." ".
-                $previous_numeric. " ".
+                $purifier->purify($previous_numeric). " ".
                 $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') ." ".
                 $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field');
             } else {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').
-                    ' ' . $previous_numeric . ' ' .
-                    $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ' . $next_numeric;
+                    ' ' . $purifier->purify($previous_numeric) . ' ' .
+                    $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ' .
+                    $purifier->purify($next_numeric);
             }
         }
 

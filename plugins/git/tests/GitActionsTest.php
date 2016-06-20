@@ -78,7 +78,9 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Tuleap\Git\Webhook\WebhookDao'),
                 mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-                mock('Tuleap\Git\CIToken\Manager')
+                mock('Tuleap\Git\CIToken\Manager'),
+                mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+                mock('Tuleap\Git\Permissions\FineGrainedRetriever')
             )
         );
     }
@@ -494,7 +496,9 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Tuleap\Git\Webhook\WebhookDao'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\CIToken\Manager')
+            mock('Tuleap\Git\CIToken\Manager'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever')
         );
     }
 
@@ -558,7 +562,9 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Tuleap\Git\Webhook\WebhookDao'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\CIToken\Manager')
+            mock('Tuleap\Git\CIToken\Manager'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever')
         );
     }
 
@@ -711,7 +717,9 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Tuleap\Git\Webhook\WebhookDao'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\CIToken\Manager')
+            mock('Tuleap\Git\CIToken\Manager'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever')
         );
 
     }
