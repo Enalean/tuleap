@@ -30,7 +30,7 @@ Version 8.16 (Not yet release)
 	* request #9262: Check forgeupgrade for administrator only if enabled in development.inc
 
 	== Plugins ==
-	* git: 4.212
+	* git: 4.213
 	* agiledashboard: 1.384
 	* tracker: 5.928
 	* tracker_date_reminder: 1.2.10
