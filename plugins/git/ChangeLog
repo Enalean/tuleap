@@ -1,3 +1,6 @@
+Version 4.208 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Remove Lab feature)
+
 Version 4.207 - Tuleap 8.16
     * story #8419: Warn the user about cross-project single fork behaviour
 
