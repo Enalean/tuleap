@@ -1064,6 +1064,7 @@ class Git extends PluginController {
                 );
 
                 $this->emitFeedbackForPermissionDeletion($deleted);
+                $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
                 break;

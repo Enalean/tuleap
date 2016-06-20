@@ -1059,6 +1059,8 @@ class GitPlugin extends Plugin {
         }
 
         $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
+
+        $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate(array($project_id));
     }
 
     public function project_admin_add_user($params) {
