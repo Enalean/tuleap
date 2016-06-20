@@ -212,6 +212,29 @@ class GitPermissionsManager
             return false;
         }
 
+        $this->updateDefaultFineGrainedPermissions(
+            $project,
+            $request,
+            $read_ugroup_ids,
+            $write_ugroup_ids,
+            $rewind_ugroup_ids,
+            $enable_fine_grained_permissions
+        );
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('plugin_git', 'default_access_control_saved')
+        );
+    }
+
+    private function updateDefaultFineGrainedPermissions(
+        Project $project,
+        Codendi_Request $request,
+        array $read_ugroup_ids,
+        array $write_ugroup_ids,
+        array $rewind_ugroup_ids,
+        $enable_fine_grained_permissions
+    ) {
         $this->saveDefaultPermissionIfNotEmpty(
             $project,
             $read_ugroup_ids,
@@ -271,11 +294,6 @@ class GitPermissionsManager
         foreach ($updated_permissions as $permission) {
             $this->default_fine_grained_saver->updateDefaultPermission($permission);
         }
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            $GLOBALS['Language']->getText('plugin_git', 'default_access_control_saved')
-        );
     }
 
     /**

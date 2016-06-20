@@ -34,6 +34,11 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 class GitViews_RepoManagement {
 
     /**
+     * @var GitPermissionsManager
+     */
+    private $git_permission_manager;
+
+    /**
      * @var DefaultFineGrainedPermissionFactory
      */
     private $default_fine_grained_factory;
@@ -93,7 +98,8 @@ class GitViews_RepoManagement {
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedRepresentationBuilder $fine_grained_builder,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_factory
+        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        GitPermissionsManager $git_permission_manager
     ) {
         $this->repository                      = $repository;
         $this->request                         = $request;
@@ -106,6 +112,7 @@ class GitViews_RepoManagement {
         $this->fine_grained_retriever          = $fine_grained_retriever;
         $this->fine_grained_builder            = $fine_grained_builder;
         $this->default_fine_grained_factory    = $default_fine_grained_factory;
+        $this->git_permission_manager          = $git_permission_manager;
         $this->panes                           = $this->buildPanes($repository);
         $this->current_pane                    = 'settings';
 
@@ -136,7 +143,8 @@ class GitViews_RepoManagement {
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
             $this->fine_grained_builder,
-            $this->default_fine_grained_factory
+            $this->default_fine_grained_factory,
+            $this->git_permission_manager
         );
         $panes[] = new GitViewsRepoManagementPaneCIToken($repository, $this->request);
 
