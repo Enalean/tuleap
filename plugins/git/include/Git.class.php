@@ -672,7 +672,7 @@ class Git extends PluginController {
                             $repository
                         );
 
-                        if (! $fine_grained_permissions_activated) {
+                        if ($enable_fine_grained_permissions && ! $fine_grained_permissions_activated) {
                             $updated_permissions = $this->fine_grained_permission_factory->getUpdatedPermissionsFromRequest(
                                 $this->request,
                                 $repository
