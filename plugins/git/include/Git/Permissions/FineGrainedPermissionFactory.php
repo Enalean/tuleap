@@ -27,19 +27,26 @@ use Codendi_Request;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
 use Project;
+use PermissionsManager;
+use Git;
 
 class FineGrainedPermissionFactory
 {
-
-    /**
-     * @var PermissionsNormalizer
-     */
-    private $normalizer;
 
     const ADD_BRANCH_PREFIX  = 'add-branch';
     const ADD_TAG_PREFIX     = 'add-tag';
     const EDIT_BRANCH_PREFIX = 'edit-branch';
     const EDIT_TAG_PREFIX    = 'edit-tag';
+
+    /**
+     * @var PermissionsManager
+     */
+    private $permissions_manager;
+
+    /**
+     * @var PermissionsNormalizer
+     */
+    private $normalizer;
 
     /**
      * @var UGroupManager
@@ -51,11 +58,16 @@ class FineGrainedPermissionFactory
      */
     private $dao;
 
-    public function __construct(FineGrainedDao $dao, UGroupManager $ugroup_manager, PermissionsNormalizer $normalizer)
-    {
-        $this->dao            = $dao;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->normalizer     = $normalizer;
+    public function __construct(
+        FineGrainedDao $dao,
+        UGroupManager $ugroup_manager,
+        PermissionsNormalizer $normalizer,
+        PermissionsManager $permissions_manager
+    ) {
+        $this->dao                 = $dao;
+        $this->ugroup_manager      = $ugroup_manager;
+        $this->normalizer          = $normalizer;
+        $this->permissions_manager = $permissions_manager;
     }
 
     public function getUpdatedPermissionsFromRequest(Codendi_Request $request, GitRepository $repository)
@@ -389,6 +401,41 @@ class FineGrainedPermissionFactory
             $row['pattern'],
             $this->getWritersForPermission($permission_id),
             $this->getRewindersForPermission($permission_id)
+        );
+    }
+
+    public function getDefaultBranchesFineGrainedPermissionsForRepository(GitRepository $repository)
+    {
+        return array(
+            $this->buildDefaultForRepository($repository)
+        );
+    }
+
+    public function getDefaultTagsFineGrainedPermissionsForRepository(GitRepository $repository)
+    {
+        return array(
+            $this->buildDefaultForRepository($repository)
+        );
+    }
+
+    private function buildDefaultForRepository(GitRepository $repository)
+    {
+        $writers = array();
+        foreach ($this->permissions_manager->getAuthorizedUgroupIds($repository->getId(), Git::PERM_WRITE) as $id) {
+            $writers[] = $this->ugroup_manager->getById($id);
+        }
+
+        $rewinders = array();
+        foreach ($this->permissions_manager->getAuthorizedUgroupIds($repository->getId(), Git::PERM_WPLUS) as $id) {
+            $rewinders[] = $this->ugroup_manager->getById($id);
+        }
+
+        return new FineGrainedPermission(
+            0,
+            $repository->getId(),
+            '*',
+            $writers,
+            $rewinders
         );
     }
 }
