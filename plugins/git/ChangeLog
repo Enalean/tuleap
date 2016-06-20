@@ -1,3 +1,6 @@
+Version 4.211 - Tuleap 8.16
+    * story #8419 have permissions per tags/branches (Enable default tag and branch permission on activation)
+
 Version 4.210 - Tuleap 8.16
     * story #8419: Fix save of global permission
 
