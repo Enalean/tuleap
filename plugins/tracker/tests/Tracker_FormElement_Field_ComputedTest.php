@@ -349,34 +349,54 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase {
-
+class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
+{
     private $field;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
-        $name = 'foo';
-        $label = 'Foo Bar';
-        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getComputedValue', 'userCanRead'), array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
+        $id          = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
+        $name        = 'foo';
+        $label       = 'Foo Bar';
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed',
+            array('getComputedValue', 'userCanRead', 'getDao'),
+            array(
+                $id,
+                $tracker_id,
+                $parent_id,
+                $name,
+                $label,
+                $description,
+                $use_it,
+                $scope,
+                $required,
+                $notifications,
+                $rank
+            )
+        );
+        stub($this->field)->getDao()->returns(mock('Tracker_FormElement_Field_ComputedDao'));
 
-        $this->artifact = anArtifact()->build();
-        $this->user = aUser()->build();
+        $this->artifact  = anArtifact()->build();
+        $this->user      = aUser()->build();
         $this->changeset = mock('Tracker_Artifact_Changeset');
         stub($this->changeset)->getArtifact()->returns($this->artifact);
     }
 
-    public function itReturnsNullIfUserCannotAccessField() {
+    public function itReturnsNullIfUserCannotAccessField()
+    {
         expect($this->field)->userCanRead($this->user)->once();
         stub($this->field)->userCanRead()->returns(false);
         $this->assertIdentical($this->field->getSoapValue($this->user, $this->changeset), null);
     }
 
-    public function itUsedTheComputedFieldValue() {
+    public function itUsedTheComputedFieldValue()
+    {
         stub($this->field)->userCanRead()->returns(true);
 
         expect($this->field)->getComputedValue($this->user, $this->artifact)->once();
         stub($this->field)->getComputedValue()->returns(9.0);
+        expect($GLOBALS['Language'])->getText()->never();
 
         $this->assertIdentical(
             $this->field->getSoapValue($this->user, $this->changeset),
@@ -384,6 +404,47 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
                 'field_name'  => 'foo',
                 'field_label' => 'Foo Bar',
                 'field_value' => array('value' => '9')
+            )
+        );
+    }
+
+    public function itAcceptsAnEmptyComputedFieldValue()
+    {
+        stub($this->field)->userCanRead()->returns(true);
+
+        expect($this->field)->getComputedValue($this->user, $this->artifact)->once();
+        stub($this->field)->getComputedValue()->returns(null);
+        expect($GLOBALS['Language'])->getText()->once();
+        $empty_computed_field = 'empty_computed_field';
+        stub($GLOBALS['Language'])->getText()->returns($empty_computed_field);
+
+        $this->assertIdentical(
+            $this->field->getSoapValue($this->user, $this->changeset),
+            array(
+                'field_name'  => 'foo',
+                'field_label' => 'Foo Bar',
+                'field_value' => array('value' => $empty_computed_field)
+            )
+        );
+    }
+
+    public function itReturnsManualValueIfExisting()
+    {
+        stub($this->field)->userCanRead()->returns(true);
+
+        expect($this->field)->getComputedValue($this->user, $this->artifact)->never();
+        expect($GLOBALS['Language'])->getText()->never();
+        $changeset_value = mock('Tuleap\Tracker\Artifact\ChangesetValueComputed');
+        $expected_value  = 20;
+        stub($changeset_value)->getNumeric()->returns($expected_value);
+        stub($this->changeset)->getValue()->returns($changeset_value);
+
+        $this->assertIdentical(
+            $this->field->getSoapValue($this->user, $this->changeset),
+            array(
+                'field_name'  => 'foo',
+                'field_label' => 'Foo Bar',
+                'field_value' => array('value' => (string) $expected_value)
             )
         );
     }
