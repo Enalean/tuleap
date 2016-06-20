@@ -1,3 +1,6 @@
+Version 5.926 - Tuleap 8.16
+    * story #9090: Change field display in admin panel
+
 Version 5.925 - Tuleap 8.16
     * The REST API can manipulate a computed field
 
