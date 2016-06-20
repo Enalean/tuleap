@@ -165,31 +165,31 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
             switch ($usr['status']) {
                 case PFUser::STATUS_ACTIVE:
                     $status      = $Language->getText('admin_userlist','active');
-                    $html_status = "<span class=\"tlp-label-success\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-success\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_RESTRICTED:
                     $status      = $Language->getText('admin_userlist','restricted');
-                    $html_status = "<span class=\"tlp-label-warning\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-warning\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_DELETED:
                     $status      = $Language->getText('admin_userlist','deleted');
-                    $html_status = "<span class=\"tlp-label-danger\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-danger\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_SUSPENDED:
                     $status      = $Language->getText('admin_userlist','suspended');
-                    $html_status = "<span class=\"tlp-label-secondary\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-secondary\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_PENDING:
                     $status      = $Language->getText('admin_userlist','pending');
-                    $html_status = "<span class=\"tlp-label-info\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-info\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_VALIDATED:
                     $status      = $Language->getText('admin_userlist','validated');
-                    $html_status = "<span class=\"tlp-label-info\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-info\">" . $status . "</span>";
                     break;
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
                     $status      = $Language->getText('admin_userlist','validated_restricted');
-                    $html_status = "<span class=\"tlp-label-info\">" . $status . "</span>";
+                    $html_status = "<span class=\"tlp-badge-info\">" . $status . "</span>";
                     break;
             }
             echo "\n<TR>";
