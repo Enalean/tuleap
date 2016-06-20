@@ -163,11 +163,26 @@ if (! empty ($status)) {
 
 if ($res['numrows'] > 0) {
     $daoUsers = new UserGroupDao(CodendiDataAccess::instance());
+
+    $status_classes = array(
+        Project::STATUS_ACTIVE     => 'tlp-badge-success tlp-badge-outline',
+        Project::STATUS_DELETED    => 'tlp-badge-danger tlp-badge-outline',
+        Project::STATUS_HOLDING    => 'tlp-badge-secondary',
+        Project::STATUS_INCOMPLETE => 'tlp-badge-warning',
+        Project::STATUS_PENDING    => 'tlp-badge-info',
+        Project::STATUS_SYSTEM     => 'tlp-badge-secondary tlp-badge-outline',
+    );
+
     foreach ($res['projects'] as $grp) {
+        $status_class = 'tlp-badge-secondary';
+        if (isset($status_classes[$grp['status']])) {
+            $status_class = $status_classes[$grp['status']];
+        }
+
         print "<tr>";
         print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
         print '<td>'.$grp['unix_group_name'].'</td>';
-        print '<td><span class="site_admin_project_status_'.$grp['status'].'">&nbsp;</span>'.$Language->getText('admin_groupedit', 'status_'.$grp['status']).'</td>';
+        print '<td><span class="'. $status_class .'">'.$Language->getText('admin_groupedit', 'status_'.$grp['status']).'</span></td>';
         // group type
         print "<td>".$template->getLabel($grp['type'])."</td>";
 
