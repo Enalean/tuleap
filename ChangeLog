@@ -27,6 +27,7 @@ Version 8.16 (Not yet release)
 	* story #9083: Refactoring: do not leak plugins into core
 	* Make increment version PHP 7 compatible
 	* Fix unit tests to run both on PHP 5.3 and PHP 5.6
+	* request #9262: Check forgeupgrade for administrator only if enabled in development.inc
 
 	== Plugins ==
 	* git: 4.209
