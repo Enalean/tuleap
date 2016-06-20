@@ -312,8 +312,8 @@ class GitPermissionsManager
 
     private function saveDefaultPermissionIfNotEmpty(Project $project, array $ugroups_ids, $permission)
     {
-        if (! empty($ugroup_ids)) {
-            $this->saveDefaultPermission($project, $ugroup_ids, $permission);
+        if (! empty($ugroups_ids)) {
+            $this->saveDefaultPermission($project, $ugroups_ids, $permission);
         }
     }
 
