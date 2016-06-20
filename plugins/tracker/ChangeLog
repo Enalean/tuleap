@@ -1,3 +1,6 @@
+Version 5.928 - Tuleap 8.16
+    * SOAP API is compatible with the new computed fields.
+
 Version 5.927 - Tuleap 8.16
     * New computed fields calculation
 
