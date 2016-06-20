@@ -37,8 +37,8 @@ if [ -z "$USEREMAIL" ] || [ -z "$PASSWORD" ]; then
 fi
 
 # Should be good by default
-GERRIT_SERVER="tuleap_gerrit_1.gerrit-tuleap.docker"
-TULEAP_SERVER="tuleap_web_1.tuleap-aio-dev.docker"
+GERRIT_SERVER="tuleap-gerrit.gerrit-tuleap.docker"
+TULEAP_SERVER="tuleap-web.tuleap-aio-dev.docker"
 GERRIT_PORT=8080
 
 # Hardly need to modify
