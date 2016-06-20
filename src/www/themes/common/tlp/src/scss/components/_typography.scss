@@ -20,7 +20,6 @@
 @import 'fonts';
 
 $tlp-typo-default-text-color: #333333;
-$tlp-typo-link-color: #1f8bca;
 
 body {
     color: $tlp-typo-default-text-color;
@@ -122,7 +121,7 @@ ol {
 }
 
 a {
-    color: $tlp-typo-link-color;
+    color: $tlp-theme-color;
 }
 
 blockquote {

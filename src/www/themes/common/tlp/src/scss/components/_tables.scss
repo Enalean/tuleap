@@ -71,4 +71,9 @@ $tlp-table-row-background-odd : #ffffff;
             border: 0;
         }
     }
+
+    > thead > tr > th a,
+    > tbody > tr > td a {
+        text-decoration: none;
+    }
 }
