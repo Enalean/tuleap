@@ -1,3 +1,9 @@
+Version 8.15-4 (Monday, June 20th 2016)
+	== Bug Fix ==
+	* request #9225 Bar chart are not displayed when same field is used in source data and group_by
+	* request #9245 Imported SVN repositories are owned by root
+	* request #9254 Restricted users cannot access SVN plugin viewvc
+
 Version 8.15-3 (Monday, June 13th 2016)
 	== Bug Fix ==
 	* request #9231: Persistent XSS in the general settings of a tracker
