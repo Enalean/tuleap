@@ -51,7 +51,7 @@ admin_main	sstat_pend_u	Utilisateurs en attente
 admin_main	site_news	Annonces site
 admin_main	site_news_approval	Approbation annonces site
 admin_main	trove_cat	Catégories
-admin_main	trove_cat_list	Liste des catégories
+admin_main	trove_cat_list	Gérer la liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	new_user	Nouvel utilisateur
 admin_main	permission_delegation	Délégation de permission
@@ -430,9 +430,10 @@ admin_trove_cat_edit	root	Racine
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
 admin_trove_cat_list	title	Arbre des projets - Liste des catégories
-admin_trove_cat_list	header	Lister les catégories
+admin_trove_cat_list	header	Catégories de classification de projets
 admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Détruire
+admin_trove_cat_list	add	Ajouter une catégorie
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #

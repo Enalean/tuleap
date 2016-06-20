@@ -200,7 +200,6 @@ if ($GLOBALS['sys_use_trove'] != 0) {
     $trov_conf = '<li>'.$Language->getText('admin_main', 'trove_cat').':
                     <ul>
                       <li><a href="/admin/trove/trove_cat_list.php">'.$Language->getText('admin_main', 'trove_cat_list').'</a></li>
-                      <li><a href="/admin/trove/trove_cat_add.php">'.$Language->getText('admin_main', 'trove_cat_add').'</a></li>
                     </ul>
                   </li>';
 } else {

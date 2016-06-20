@@ -59,7 +59,7 @@ admin_main	sstat_pend_u	Pending users
 admin_main	site_news	Site news
 admin_main	site_news_approval	Site news approval
 admin_main	trove_cat	Trove categories
-admin_main	trove_cat_list	List all
+admin_main	trove_cat_list	Manage list of trove categories
 admin_main	trove_cat_add	Add one
 admin_main	new_user	New user
 admin_main	permission_delegation	Permission delegation
@@ -441,9 +441,10 @@ admin_trove_cat_edit	root	Root
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
 admin_trove_cat_list	title	Trove - Category List
-admin_trove_cat_list	header	List of Trove Categories
+admin_trove_cat_list	header	Trove categories
 admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
+admin_trove_cat_list	add	Add a trove category
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #
