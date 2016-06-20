@@ -1,3 +1,6 @@
+Version 5.925 - Tuleap 8.16
+    * The REST API can manipulate a computed field
+
 Version 5.924 - Tuleap 8.16
     * Add a warning to indicates that after migration fields kept their original permissions
 
