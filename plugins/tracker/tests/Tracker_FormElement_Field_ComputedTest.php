@@ -287,7 +287,7 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
     public function itComputesDirectValues()
     {
         expect($this->dao)->getComputedFieldValues()->once();
-        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, true)->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5, 'parent_id' => 233),
             array('id' => 751, 'type' => 'int', 'int_value' => 15, 'parent_id' => 233)
         );
@@ -299,13 +299,13 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
     public function itMakesOneDbCallPerGraphDepth()
     {
         expect($this->dao)->getComputedFieldValues()->count(2);
-        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, true)->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5, 'parent_id' => 233),
             array('id' => 751, 'type' => 'int', 'int_value' => 15, 'parent_id' => 233),
             array('id' => 766, 'type' => 'computed', 'parent_id' => 233),
             array('id' => 777, 'type' => 'computed', 'parent_id' => 233)
         );
-        stub($this->dao)->getComputedFieldValues(array(766, 777), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(766, 777), 'effort', 23, true)->returnsDar(
             array('id' => 752, 'type' => 'int', 'int_value' => 10, 'parent_id' => 766),
             array('id' => 753, 'type' => 'int', 'int_value' => 10, 'parent_id' => 777)
         );
@@ -317,13 +317,13 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
     public function itDoesntMakeLoopInGraph()
     {
         expect($this->dao)->getComputedFieldValues()->count(3);
-        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, true)->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5, 'parent_id' => 233),
             array('id' => 751, 'type' => 'int', 'int_value' => 15, 'parent_id' => 233),
             array('id' => 766, 'type' => 'computed', 'parent_id' => 233),
             array('id' => 777, 'type' => 'computed', 'parent_id' => 233)
         );
-        stub($this->dao)->getComputedFieldValues(array(766, 777), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(766, 777), 'effort', 23, true)->returnsDar(
             array('id' => 752, 'type' => 'int', 'int_value' => 10, 'parent_id' => 766),
             array('id' => 753, 'type' => 'int', 'int_value' => 10, 'parent_id' => 777),
             array('id' => 766, 'type' => 'computed', 'parent_id' => 233),
@@ -341,13 +341,13 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
      */
     public function itDoesntCountTwiceTheFinalData()
     {
-        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, true)->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5, 'parent_id' => 233),
             array('id' => 751, 'type' => 'int', 'int_value' => 15, 'parent_id' => 233),
             array('id' => 766, 'type' => 'computed', 'parent_id' => 233),
             array('id' => 777, 'type' => 'computed', 'parent_id' => 233)
         );
-        stub($this->dao)->getComputedFieldValues(array(766, 777), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(766, 777), 'effort', 23, true)->returnsDar(
             array('id' => 750, 'type' => 'int', 'int_value' => 5, 'parent_id' => 766),
             array('id' => 751, 'type' => 'int', 'int_value' => 15, 'parent_id' => 766),
             array('id' => 766, 'type' => 'computed', 'parent_id' => 777)
@@ -359,10 +359,10 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
 
     public function itStopsWhenAManualValueIsSet()
     {
-        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, true)->returnsDar(
             array('id' => 766, 'type' => 'computed', 'parent_id' => 233)
         );
-        stub($this->dao)->getComputedFieldValues(array(766), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(766), 'effort', 23, true)->returnsDar(
             array('id' => 766, 'type' => 'computed', 'value' => 4, 'parent_id' => 766),
             array('id' => 750, 'type' => 'int', 'int_value' => 5, 'parent_id' => 766),
             array('id' => 751, 'type' => 'int', 'int_value' => 15, 'parent_id' => 766)
@@ -374,11 +374,11 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
 
     public function itCanAddManuallySetValuesAndComputedValues()
     {
-        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, true)->returnsDar(
             array('id' => 766, 'type' => 'computed', 'parent_id' => 233, 'value' => 4.7500),
             array('id' => 777, 'type' => 'computed', 'parent_id' => null)
         );
-        stub($this->dao)->getComputedFieldValues(array(777), 'effort', 23)->returnsDar(
+        stub($this->dao)->getComputedFieldValues(array(777), 'effort', 23, true)->returnsDar(
             array('id' => 750, 'type' => 'float', 'float_value' => 5.2500, 'parent_id' => 777),
             array('id' => 751, 'type' => 'float', 'float_value' => 15, 'parent_id' => 777)
         );
@@ -410,7 +410,7 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
         $name        = 'foo';
         $label       = 'Foo Bar';
         $this->field = partial_mock('Tracker_FormElement_Field_Computed',
-            array('getComputedValue', 'userCanRead', 'getDao'),
+            array('getComputedValue', 'userCanRead', 'getDao', 'getComputedValueWithNoLabel'),
             array(
                 $id,
                 $tracker_id,
@@ -444,8 +444,7 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
     {
         stub($this->field)->userCanRead()->returns(true);
 
-        expect($this->field)->getComputedValue($this->user, $this->artifact)->once();
-        stub($this->field)->getComputedValue()->returns(9.0);
+        stub($this->field)->getComputedValueWithNoLabel()->returns(9.0);
         expect($GLOBALS['Language'])->getText()->never();
 
         $this->assertIdentical(
@@ -462,11 +461,9 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
     {
         stub($this->field)->userCanRead()->returns(true);
 
-        expect($this->field)->getComputedValue($this->user, $this->artifact)->once();
-        stub($this->field)->getComputedValue()->returns(null);
-        expect($GLOBALS['Language'])->getText()->once();
         $empty_computed_field = 'empty_computed_field';
         stub($GLOBALS['Language'])->getText()->returns($empty_computed_field);
+        stub($this->field)->getComputedValueWithNoLabel()->returns($empty_computed_field);
 
         $this->assertIdentical(
             $this->field->getSoapValue($this->user, $this->changeset),
@@ -484,10 +481,8 @@ class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase
 
         expect($this->field)->getComputedValue($this->user, $this->artifact)->never();
         expect($GLOBALS['Language'])->getText()->never();
-        $changeset_value = mock('Tuleap\Tracker\Artifact\ChangesetValueComputed');
         $expected_value  = 20;
-        stub($changeset_value)->getNumeric()->returns($expected_value);
-        stub($this->changeset)->getValue()->returns($changeset_value);
+        stub($this->field)->getComputedValueWithNoLabel()->returns($expected_value);
 
         $this->assertIdentical(
             $this->field->getSoapValue($this->user, $this->changeset),
