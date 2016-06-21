@@ -48,7 +48,9 @@ class Git_SystemEventManager {
     }
 
     public function queueRepositoryUpdate(GitRepository $repository) {
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite &&
+            ! $this->isRepositoryUpdateAlreadyQueued($repository)
+        ) {
             $this->system_event_manager->createEvent(
                 SystemEvent_GIT_REPO_UPDATE::NAME,
                 $repository->getId(),
@@ -241,6 +243,13 @@ class Git_SystemEventManager {
             $project_id,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
+        );
+    }
+
+    public function isRepositoryUpdateAlreadyQueued(GitRepository $repository) {
+        return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
+            SystemEvent_GIT_REPO_UPDATE::NAME,
+            $repository->getId()
         );
     }
 
