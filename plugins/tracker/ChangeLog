@@ -1,3 +1,6 @@
+Version 5.929 - Tuleap 8.16
+    * request #9264: A computed field that need to be migrated can't be updated by an admin
+
 Version 5.928 - Tuleap 8.16
     * SOAP API is compatible with the new computed fields.
 
