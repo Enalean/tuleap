@@ -394,7 +394,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function fetchComputedInputs($displayed_value, $is_autocomputed)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '<input type="number" step="any"
+        $html     = '<input type="text"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_MANUAL . ']"
             value="' . $purifier->purify($displayed_value) . '" />';
         $html    .= '<input type="hidden"
@@ -643,7 +643,43 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function fetchSubmitValue() {
     }
 
-    protected function fetchSubmitValueMasschange() {
+    public function fetchSubmitMasschange()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        if ($this->userCanUpdate()) {
+            $required = $this->isRequired() ? ' <span class="highlight">*</span>' : '';
+            $html    .= '<div class="field-masschange tracker_artifact_field tracker_artifact_field-computed editable"
+                         data-field-id="'. $purifier->purify($this->getId()) . '">';
+
+            $html    .= '<div class="edition-mass-change">';
+            $html    .= '<label for="tracker_artifact_' . $purifier->purify($this->getId()) . '"
+                        title="' . $purifier->purify($this->description) . '"  class="tracker_formelement_label">' .
+                        $purifier->purify($this->getLabel()) . $required . '</label>';
+            $html    .= '<div class=" input-append">';
+            $html    .= $this->fetchSubmitValueMasschange();
+            $html    .= '</div>';
+            $html    .= '</div>';
+
+            $html    .= '<div class="display-mass-change display-mass-change-hidden">';
+            $html    .= '<button class="tracker_formelement_edit edit-mass-change-autocompute" type="button">' .
+                        $purifier->purify($this->getLabel()) . $required . '</button>';
+            $html    .= '<span class="auto-computed">';
+            $html    .= $purifier->purify(ucfirst($GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field')));
+            $html    .= '</span>';
+            $html    .= '</div>';
+
+            $html    .= '</div>';
+        }
+        return $html;
+    }
+
+    protected function fetchSubmitValueMasschange()
+    {
+        $unchanged = $GLOBALS['Language']->getText('global','unchanged');
+        $html      = $this->fetchComputedInputs($unchanged, false);
+        $html     .= $this->fetchBackToAutocomputedButton(false);
+        return $html;
     }
 
     protected function getValueDao() {
@@ -756,9 +792,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function fetchSubmit() {
         return '';
-    }
-
-    public function fetchSubmitMasschange() {
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
