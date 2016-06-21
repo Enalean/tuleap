@@ -105,17 +105,40 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * @param String $target_name
      * @return DataAccessResult
      */
-    public function getComputedFieldValues(array $source_ids, $target_name, $field_id)
+    public function getComputedFieldValues(array $source_ids, $target_name, $field_id, $stop_on_manual_value)
     {
         $source_ids  = $this->da->escapeIntImplode($source_ids);
         $target_name = $this->da->quoteSmart($target_name);
         $field_id    = $this->da->escapeInt($field_id);
 
+        $manual_selection = 'null';
+        $manual_condition = "";
+        if ($stop_on_manual_value) {
+            $manual_selection = "manual.value";
+
+            $manual_condition = "LEFT JOIN (
+                    tracker_changeset_value value
+                    INNER JOIN tracker_changeset_value_computedfield_manual_value manual
+                        ON (manual.changeset_value_id = value.id)
+                ) ON (
+                    value.changeset_id  = parent_art.last_changeset_id
+                    AND value.field_id  = parent_field.id
+                    AND parent_field.id = $field_id
+                )
+                LEFT JOIN tracker_field                        manual_field
+                ON (
+                    manual_field.tracker_id = parent_art.tracker_id
+                    AND manual_field.name   = $target_name
+                    AND manual_field.use_it = 1
+                    AND value.field_id      = $field_id
+                )";
+        }
+
         $sql = "SELECT linked_art.id                     AS id,
                     artifact_link_field.formElement_type AS type,
                     integer_value.value                  AS int_value,
                     float_value.value                    AS float_value,
-                    manual.value                         AS value,
+                    $manual_selection                    AS value,
                     linked_art.tracker_id                AS tracker_id,
                     parent_art.id                        AS parent_id,
                     parent_art.last_changeset_id
@@ -144,22 +167,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                     AND artifact_link_field.name   = $target_name
                     AND artifact_link_field.use_it = 1
                 )
-                LEFT JOIN (
-                    tracker_changeset_value value
-                    INNER JOIN tracker_changeset_value_computedfield_manual_value manual
-                        ON (manual.changeset_value_id = value.id)
-                ) ON (
-                    value.changeset_id  = parent_art.last_changeset_id
-                    AND value.field_id  = parent_field.id
-                    AND parent_field.id = $field_id
-                )
-                LEFT JOIN tracker_field                        manual_field
-                ON (
-                    manual_field.tracker_id = parent_art.tracker_id
-                    AND manual_field.name   = $target_name
-                    AND manual_field.use_it = 1
-                    AND value.field_id      = $field_id
-                )
+                $manual_condition
                 LEFT JOIN (
                     tracker_changeset_value integer_changeset
                     INNER JOIN tracker_changeset_value_int integer_value
