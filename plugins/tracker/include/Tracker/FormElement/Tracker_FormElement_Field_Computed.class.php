@@ -104,7 +104,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
-    private function useFastCompute() {
+    /**
+     * @return bool
+     */
+    public function useFastCompute()
+    {
         return $this->getProperty('fast_compute') == 1;
     }
 
