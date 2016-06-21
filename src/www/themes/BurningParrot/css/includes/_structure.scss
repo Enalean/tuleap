@@ -45,6 +45,11 @@ body {
     padding: $tlp-spacing 0;
 }
 
+.centered {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
 #feedback {
     margin: 0 0 $tlp-spacing;
 }

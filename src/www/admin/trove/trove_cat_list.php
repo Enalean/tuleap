@@ -47,15 +47,15 @@ function printnode($nodeid, $text, $depth = 0, $delete_ok = false) {
 
 // ########################################################
 
-$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title'), 'main_classes' => array('framed')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title'), 'main_classes' => array('framed', 'centered')));
 
-echo "<h2>".$Language->getText('admin_trove_cat_list','header')."</h2>";
+echo "<h1>".$Language->getText('admin_trove_cat_list','header')."</h1>";
 
 echo '<p><a href="/admin/trove/trove_cat_add.php" class="tlp-button-primary">';
 echo '<i class="fa fa-plus"></i> '. $GLOBALS['Language']->getText('admin_trove_cat_list', 'add') .'</a>';
 echo '</p>';
 
-echo '<table class="tlp-table" id="siteadmin-trovecat-list">';
+echo '<table class="tlp-table">';
 echo '<thead><tr><th>Category</th><th></th></thead>';
 echo '<tbody>';
 printnode(0, $Language->getText('admin_trove_cat_edit','root'));
