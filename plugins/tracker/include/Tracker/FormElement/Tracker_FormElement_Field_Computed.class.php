@@ -104,11 +104,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function useFastCompute()
-    {
+    public function useFastCompute() {
         return $this->getProperty('fast_compute') == 1;
     }
 
@@ -137,7 +133,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     private function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
     {
-        return $this->getFastComputedValue($artifact->getId(), null, false);
+        return $this->getFastComputedValue($artifact->getId(), null, true);
     }
 
     protected function getNoValueLabel()
@@ -373,6 +369,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_original_value');
         $html .= $purifier->purify($computed_value) . '</span>';
 
+
         return $html;
     }
 
@@ -409,8 +406,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
     {
-        $new_value = $this->getNewSubmittedValue($value);
-        return $this->getValueDao()->create($changeset_value_id, $new_value);
+        return $this->getValueDao()->create($changeset_value_id, $value);
     }
 
     /**
@@ -446,10 +442,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return '<div class="auto-computed-label computed-legacy">'. $value. '</div>';
         }
 
-        return $this->fetchFieldReadOnly($value, $html_computed_value);
-    }
-
-    private function fetchFieldReadOnly($value, $html_computed_value) {
         return '<div class="auto-computed-label">'. $value. '</div>'.
             '<div class="back-to-autocompute">'.$html_computed_value.'</div>';
     }
@@ -648,40 +640,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getCriteriaDao() {
     }
 
-    /**
-     * Fetch the element for the submit new artifact form
-     *
-     * @return string html
-     */
-    public function fetchSubmit($submitted_values = array())
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $required = $this->required ? ' <span class="highlight">*</span>' : '';
-
-        $html = '<div>';
-        $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
-
-        if ($this->userCanRead()) {
-            if ($this->userCanUpdate()) {
-                $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
-                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
-                $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .
-                    '" class="tracker_formelement_label">'. $purifier->purify($this->getLabel())  . $required .'</label>';
-            }
-        }
-        $html .= '<span class="auto-computed">'. $this->getNoValueLabel() .' (' .
-            $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
-
-        $html .= '<div class="input-append add-field" data-field-id="'. $this->getId() .'">';
-        $html .= $this->fetchComputedInputs('', true);
-        $html .= $this->fetchBackToAutocomputedButton(null);
-        $html .= $this->fetchComputedValueWithLabel(
-            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')
-        );
-
-        $html .= '</div></div></div>';
-
-        return $html;
+    protected function fetchSubmitValue() {
     }
 
     protected function fetchSubmitValueMasschange() {
@@ -754,11 +713,17 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return true;
         }
 
+        $new_value = '';
+
+        if (isset($value[self::FIELD_VALUE_MANUAL])) {
+            $new_value = $value[self::FIELD_VALUE_MANUAL];
+        }
+
         return parent::saveNewChangeset(
             $artifact,
             $old_changeset,
             $new_changeset_id,
-            $value,
+            $new_value,
             $submitter,
             $is_submission,
             $bypass_permissions
@@ -770,21 +735,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        return $old_value->getNumeric() !== $this->getNewSubmittedValue($new_value);
-    }
-
-    /**
-     * @return string
-     */
-    private function getNewSubmittedValue($submitted_value)
-    {
-        $new_value = '';
-
-        if (isset($submitted_value[self::FIELD_VALUE_MANUAL])) {
-            $new_value = $submitted_value[self::FIELD_VALUE_MANUAL];
+        if ($old_value->getNumeric() === 0 && $new_value === '') {
+            return true;
         }
 
-        return $new_value;
+        return $old_value->getNumeric() != $new_value;
     }
 
     public function getSoapAvailableValues() {
@@ -797,6 +752,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function validate(Tracker_Artifact $artifact, $value)
     {
         return $this->validateValue($value);
+    }
+
+    public function fetchSubmit() {
+        return '';
     }
 
     public function fetchSubmitMasschange() {
