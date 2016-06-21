@@ -1,3 +1,6 @@
+Version 5.933 - Tuleap 8.16
+    * story #9090 have computed fields compatible with artifact links v2 (Computation field calcul correction)
+
 Version 5.932 - Tuleap 8.16
     * request #9265: The autocomputed value displayed when a manual value is set is always wrong
 
