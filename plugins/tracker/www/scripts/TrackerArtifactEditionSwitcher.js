@@ -71,7 +71,6 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     var bindClickOnEditableFields = function() {
         $(".tracker_artifact_field").each(bindField);
     };
-
     var bindField = function (index, element) {
         if(fieldIsCreatable(element)) {
             bindCreationSwitch(element);
