@@ -397,7 +397,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
     {
-        return $this->getValueDao()->create($changeset_value_id, $value);
+        $new_value = $this->getNewSubmittedValue($value);
+        return $this->getValueDao()->create($changeset_value_id, $new_value);
     }
 
     /**
@@ -706,17 +707,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return true;
         }
 
-        $new_value = '';
-
-        if (isset($value[self::FIELD_VALUE_MANUAL])) {
-            $new_value = $value[self::FIELD_VALUE_MANUAL];
-        }
-
         return parent::saveNewChangeset(
             $artifact,
             $old_changeset,
             $new_changeset_id,
-            $new_value,
+            $value,
             $submitter,
             $is_submission,
             $bypass_permissions
@@ -728,11 +723,21 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        if ($old_value->getNumeric() === 0 && $new_value === '') {
-            return true;
+        return $old_value->getNumeric() !== $this->getNewSubmittedValue($new_value);
+    }
+
+    /**
+     * @return string
+     */
+    private function getNewSubmittedValue($submitted_value)
+    {
+        $new_value = '';
+
+        if (isset($submitted_value[self::FIELD_VALUE_MANUAL])) {
+            $new_value = $submitted_value[self::FIELD_VALUE_MANUAL];
         }
 
-        return $old_value->getNumeric() != $new_value;
+        return $new_value;
     }
 
     public function getSoapAvailableValues() {
