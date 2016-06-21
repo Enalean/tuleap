@@ -364,7 +364,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_original_value');
         $html .= $purifier->purify($computed_value) . '</span>';
 
-
         return $html;
     }
 
@@ -438,6 +437,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return '<div class="auto-computed-label computed-legacy">'. $value. '</div>';
         }
 
+        return $this->fetchFieldReadOnly($value, $html_computed_value);
+    }
+
+    private function fetchFieldReadOnly($value, $html_computed_value) {
         return '<div class="auto-computed-label">'. $value. '</div>'.
             '<div class="back-to-autocompute">'.$html_computed_value.'</div>';
     }
@@ -638,7 +641,40 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getCriteriaDao() {
     }
 
-    protected function fetchSubmitValue() {
+    /**
+     * Fetch the element for the submit new artifact form
+     *
+     * @return string html
+     */
+    public function fetchSubmit($submitted_values = array())
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $required = $this->required ? ' <span class="highlight">*</span>' : '';
+
+        $html = '<div>';
+        $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
+
+        if ($this->userCanRead()) {
+            if ($this->userCanUpdate()) {
+                $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+                $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .
+                    '" class="tracker_formelement_label">'. $purifier->purify($this->getLabel())  . $required .'</label>';
+            }
+        }
+        $html .= '<span class="auto-computed">'. $this->getNoValueLabel() .' (' .
+            $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
+
+        $html .= '<div class="input-append add-field" data-field-id="'. $this->getId() .'">';
+        $html .= $this->fetchComputedInputs('', true);
+        $html .= $this->fetchBackToAutocomputedButton(null);
+        $html .= $this->fetchComputedValueWithLabel(
+            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')
+        );
+
+        $html .= '</div></div></div>';
+
+        return $html;
     }
 
     protected function fetchSubmitValueMasschange() {
@@ -754,10 +790,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function validate(Tracker_Artifact $artifact, $value)
     {
         return $this->validateValue($value);
-    }
-
-    public function fetchSubmit() {
-        return '';
     }
 
     public function fetchSubmitMasschange() {
