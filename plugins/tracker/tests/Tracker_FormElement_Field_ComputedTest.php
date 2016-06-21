@@ -70,6 +70,45 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
     }
+
+    public function itDetectsChangeWhenBackToAutocompute()
+    {
+        $artifact        = mock('Tracker_Artifact');
+        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
+        stub($changeset_value)->getNumeric()->returns(1);
+        $submitted_value = array(
+            'manual_value'    => '',
+            'is_autocomputed' => true
+        );
+
+        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+    }
+
+    public function itDetectsChangeWhenBackToManualValue()
+    {
+        $artifact        = mock('Tracker_Artifact');
+        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
+        stub($changeset_value)->getNumeric()->returns('');
+        $submitted_value = array(
+            'manual_value'    => '123',
+            'is_autocomputed' => false
+        );
+
+        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+    }
+
+    public function itDetectsChangeWhenBackToAutocomputeWhenManualValueIs0()
+    {
+        $artifact        = mock('Tracker_Artifact');
+        $changeset_value = mock('Tracker_Artifact_ChangesetValue_Numeric');
+        stub($changeset_value)->getNumeric()->returns(0);
+        $submitted_value = array(
+            'manual_value'    => '',
+            'is_autocomputed' => true
+        );
+
+        $this->assertTrue($this->field->hasChanges($artifact, $changeset_value, $submitted_value));
+    }
 }
 
 class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCase {
