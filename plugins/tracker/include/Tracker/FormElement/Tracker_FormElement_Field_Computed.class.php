@@ -135,7 +135,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $use_fast_compute = true
     ) {
         if ($use_fast_compute) {
-            return $this->getFastComputedValue($artifact->getId(), $timestamp, true);
+            return $this->getFastComputedValue(array($artifact->getId()), $timestamp, true);
         }
         $computed_artifact_ids[$artifact->getId()] = true;
 
@@ -147,14 +147,78 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
     }
 
-    private function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
+    public function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
     {
-        return $this->getFastComputedValue($artifact->getId(), null, true);
+        $computed_children_to_fetch    = array();
+        $artifact_ids_to_fetch         = array();
+        $has_manual_value_in_children  = false;
+        $dar                           = $this->getDao()->getComputedFieldValues(
+            array($artifact->getId()),
+            $this->getName(),
+            $this->getId(),
+            false
+        );
+        $manual_value_for_current_node = $this->getValueDao()->getManuallySetValueForChangeset(
+            $artifact->getLastChangeset()->getId(),
+            $this->getId()
+        );
+
+        if ($dar) {
+            foreach ($dar as $row) {
+                if ($row['id'] !== null) {
+                    $artifact_ids_to_fetch[]  = $row['id'];
+                }
+                if ($row['type'] === 'computed') {
+                    $computed_children_to_fetch[] = $row['id'];
+                }
+                if (isset($row[$row['type'].'_value'])) {
+                    $has_manual_value_in_children = true;
+                }
+            }
+        }
+
+        if ($manual_value_for_current_node['value'] !== null && $has_manual_value_in_children) {
+            $computed_children = 0;
+            if (count($computed_children_to_fetch) > 0) {
+                $computed_children = $this->getStandardCalculationMode($computed_children_to_fetch);
+            }
+            $manually_set_children = $this->getStopAtManualSetFieldMode(array($artifact->getId()));
+            return $manually_set_children + $computed_children;
+        }
+
+        if (count($artifact_ids_to_fetch) === 0 && $has_manual_value_in_children) {
+            return $this->getStopAtManualSetFieldMode(array($artifact->getId()));
+        }
+
+        if ($has_manual_value_in_children && $manual_value_for_current_node['value'] === null) {
+            return $this->getStandardCalculationMode(array($artifact->getId()));
+        }
+
+        if (count($artifact_ids_to_fetch) === 0) {
+            return $this->getFieldEmptyMessage();
+        }
+
+        return $this->getStandardCalculationMode($artifact_ids_to_fetch, null, true);
+    }
+
+    public function getStopAtManualSetFieldMode(array $artifact_ids)
+    {
+        return $this->getFastComputedValue($artifact_ids, null, false);
+    }
+
+    public function getFieldEmptyMessage()
+    {
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
+    }
+
+    public function getStandardCalculationMode(array $artifact_ids)
+    {
+        return $this->getFastComputedValue($artifact_ids, null, true);
     }
 
     protected function getNoValueLabel()
     {
-        return "<span class='empty_value auto-computed-label'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
+        return "<span class='empty_value auto-computed-label'>" . $this->getFieldEmptyMessage() . "</span>";
     }
 
     protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
@@ -166,7 +230,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         }
 
-        return ($computed_value !== null) ? $computed_value : $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
+        return ($computed_value !== null) ? $computed_value : $this->getFieldEmptyMessage();
     }
 
     protected function processUpdate(
@@ -215,11 +279,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         parent::afterCreate($formElement_data);
     }
 
-    protected function getFastComputedValue($artifact_id, $timestamp = null, $stop_on_manual_value)
+    private function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
     {
         $sum                   = null;
         $target_field_name     = $this->getName();
-        $artifact_ids_to_fetch = array($artifact_id);
         $already_seen          = array();
 
         do {
@@ -453,7 +516,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
 
         if (! $computed_value) {
-            $computed_value = $empty_value;
+            $computed_value = $this->getFieldEmptyMessage();
         }
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocompute_field').')</span>';
@@ -611,9 +674,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html  = '<div class="input-append">';
         $html .= $this->fetchComputedInputs('', true);
         $html .= $this->fetchBackToAutocomputedButton(true);
-        $html .= $this->fetchComputedValueWithLabel(
-            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')
-        );
+        $html .= $this->fetchComputedValueWithLabel($this->getFieldEmptyMessage());
         $html .= "</div>";
 
         return $html;

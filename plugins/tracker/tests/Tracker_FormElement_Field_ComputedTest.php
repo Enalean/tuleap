@@ -73,7 +73,8 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
+        $empty_array = array();
+        $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact, null, $empty_array, false));
     }
 
 }
@@ -218,6 +219,187 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
     }
 }
 
+class Tracker_FormElement_Field_Computed_BackToAutoComputed extends TuleapTestCase
+{
+    private $user;
+    private $field;
+    private $formelement_factory;
+    private $dao;
+    private $artifact_factory;
+    private $artifact;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->user       = mock('PFUser');
+        $this->dao        = mock('Tracker_FormElement_Field_ComputedDao');
+        $this->manual_dao = mock('Tuleap\Tracker\DAO\ComputedDao');
+        $this->field      = $this->getComputedField();
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        Tracker_FormElementFactory::setInstance($this->formelement_factory);
+
+        $this->artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        stub($this->artifact)->userCanView()->returns(true);
+        stub($this->artifact)->getTracker()->returns(aMockTracker()->withId(12)->build());
+    }
+
+    private function getComputedField()
+    {
+        $field = partial_mock(
+            'Tracker_FormElement_Field_Computed',
+            array(
+                'getProperty',
+                'getDao',
+                'getName',
+                'getId',
+                'getValueDao',
+                'getStandardCalculationMode',
+                'getFieldEmptyMessage',
+                'getStopAtManualSetFieldMode'
+            )
+        );
+        stub($field)->getProperty('target_field_name')->returns('effort');
+        stub($field)->getProperty('fast_compute')->returns(0);
+        stub($field)->getDao()->returns($this->dao);
+        stub($field)->getValueDao()->returns($this->manual_dao);
+        stub($field)->getId()->returns(23);
+        stub($field)->getName()->returns('effort');
+        return $field;
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        Tracker_FormElementFactory::clearInstance();
+        Tracker_ArtifactFactory::clearInstance();
+    }
+
+    public function itCallsStandardCalculWhenFieldsAreIntAndNoValuesAreSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 750, 'type' => 'int'),
+            array('id' => 750, 'type' => 'int')
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
+        expect($this->field)->getStandardCalculationMode()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itCallsStandardCalculWhenFieldsAreComputedAndNoValuesAreSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 766, 'type' => 'computed'),
+            array('id' => 777, 'type' => 'computed')
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
+        expect($this->field)->getStandardCalculationMode()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itCallsStandardCalculWhenAComputedValueIsSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 766, 'type' => 'computed', 'value' => '6'),
+            array('id' => 777, 'type' => 'computed')
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
+        expect($this->field)->getStandardCalculationMode()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itCallsStandardCalculWhenIntFieldsAreSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 750, 'type' => 'int', 'int_value' => 10),
+            array('id' => 751, 'type' => 'int', 'int_value' => 5)
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
+        expect($this->field)->getStandardCalculationMode()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itReturnsEmptyWhenNaManualValueIsSetAndNoChildrenExists()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(null);
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
+        expect($this->field)->getFieldEmptyMessage()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itCalculatesAutoomputedAndintFieldsEvenIfAParentIsSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 750, 'type' => 'int', 'int_value' => 10),
+            array('id' => 751, 'type' => 'int', 'int_value' => 5),
+            array('id' => 766, 'type' => 'computed', 'value' => '6'),
+            array('id' => 777, 'type' => 'computed', 'value' => '6')
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => 12));
+        expect($this->field)->getStopAtManualSetFieldMode()->once();
+        expect($this->field)->getStandardCalculationMode()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itReturnsComputedValuesAndIntValuesWhenBothAreOneSameChildrenLevel()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 750, 'type' => 'int', 'int_value' => 10),
+            array('id' => 751, 'type' => 'int', 'int_value' => 5),
+            array('id' => 766, 'type' => 'computed', 'value' => '6'),
+            array('id' => 777, 'type' => 'computed', 'value' => '6')
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset()->returns(array('value' => null));
+        expect($this->field)->getStandardCalculationMode()->once();
+
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+}
+
 class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCase {
     private $user;
     private $field;
@@ -226,11 +408,12 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
     private $artifact_factory;
     private $artifact;
 
-    public function setUp() {
+    public function setUp(){
         parent::setUp();
-        $this->user  = mock('PFUser');
-        $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
-        $this->field = $this->getComputedField();
+        $this->user       = mock('PFUser');
+        $this->dao        = mock('Tracker_FormElement_Field_ComputedDao');
+        $this->manual_dao = mock('Tuleap\Tracker\DAO\ComputedDao');
+        $this->field      = $this->getComputedField();
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
@@ -244,7 +427,7 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
     }
 
     private function getComputedField() {
-        $field = partial_mock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
+        $field = partial_mock('Tracker_FormElement_Field_Computed',array('getProperty', 'getDao', 'getName', 'getId'));
         stub($field)->getProperty('target_field_name')->returns('effort');
         stub($field)->getProperty('fast_compute')->returns(0);
         stub($field)->getDao()->returns($this->dao);
@@ -373,15 +556,25 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user  = mock('PFUser');
-        $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
-        $this->field = TestHelper::getPartialMock(
+        $this->user       = mock('PFUser');
+        $this->dao        = mock('Tracker_FormElement_Field_ComputedDao');
+        $this->manual_dao = mock('Tuleap\Tracker\DAO\ComputedDao');
+        $this->field      = TestHelper::getPartialMock(
             'Tracker_FormElement_Field_Computed',
-            array('getProperty', 'getDao', 'getName', 'getId')
+            array(
+                'getProperty',
+                'getDao',
+                'getName',
+                'getId',
+                'getValueDao',
+                'getDeprecationRetriever',
+                'getStandardCalculationMode'
+            )
         );
         stub($this->field)->getName()->returns('effort');
         stub($this->field)->getProperty('fast_compute')->returns(1);
         stub($this->field)->getDao()->returns($this->dao);
+        stub($this->field)->getValueDao()->returns($this->manual_dao);
         stub($this->field)->getId()->returns(23);
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
@@ -406,8 +599,50 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
+
+    public function itDisplaysEmptyWhenFieldsAreAutocomputedAndNoValuesAreSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 766, 'type' => 'computed'),
+            array('id' => 777, 'type' => 'computed')
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset($changeset, 233)->returns(array('value' => null));
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
+        expect($this->field)->getStandardCalculationMode()->once();
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
+    public function itDisplaysComputedValuesWhenComputedChildrenAreSet()
+    {
+        stub($this->dao)->getComputedFieldValues(array(233), 'effort', 23, false)->returnsDar(
+            array('id' => 766, 'type' => 'computed', 'value' => 10),
+            array('id' => 777, 'type' => 'computed', 'value' => 5)
+        );
+
+        $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
+        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $changeset = stub($changeset)->getId()->returns(101);
+
+        stub($this->manual_dao)->getManuallySetValueForChangeset($changeset, 233)->returns(array('value' => null));
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
+        expect($this->field)->getStandardCalculationMode()->once();
+        $this->field->getComputedValueWithNoStopOnManualValue($artifact);
+    }
+
 
     public function itMakesOneDbCallPerGraphDepth()
     {
@@ -424,6 +659,9 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -444,6 +682,9 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -467,6 +708,9 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -482,6 +726,9 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(4, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -497,6 +744,9 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
+        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
+        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(25, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -671,7 +921,6 @@ class Tracker_FormElement_Field_Computed_FieldValidationTest extends TuleapTestC
         )));
     }
 }
-
 
 class Tracker_FormElement_Field_Computed_RESTValueTest extends TuleapTestCase
 {

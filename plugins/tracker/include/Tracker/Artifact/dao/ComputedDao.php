@@ -30,6 +30,21 @@ class ComputedDao extends Tracker_FormElement_Field_Value_FloatDao
         $this->table_name = 'tracker_changeset_value_computedfield_manual_value';
     }
 
+    public function getManuallySetValueForChangeset($changeset_id, $field_id)
+    {
+        $field_id     = $this->da->escapeInt($field_id);
+        $changeset_id = $this->da->escapeInt($changeset_id);
+
+        $sql = "SELECT value
+                FROM  tracker_changeset_value_computedfield_manual_value AS manual_value
+                INNER JOIN tracker_changeset_value AS changeset_value
+                    ON changeset_value.id = manual_value.changeset_value_id
+                WHERE changeset_value.changeset_id = $changeset_id
+                AND field_id = $field_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
     public function create($changeset_value_id, $value)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
