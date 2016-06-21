@@ -55,10 +55,12 @@ class ProjectSerializerTest extends TuleapTestCase {
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $mirror_data_mapper,
             $this->gerrit_project_status,
-            'whatever'
+            'whatever',
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory')
         );
 
-        $this->logger                   = mock('Logger');
+        $this->logger = mock('Logger');
 
         $this->project_serializer = new Git_Gitolite_ProjectSerializer(
             $this->logger,

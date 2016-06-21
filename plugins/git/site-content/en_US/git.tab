@@ -472,7 +472,6 @@ plugin_git	default_access_control_missing	Please define Write permissions.
 plugin_git	default_permissions_title	Default permissions
 plugin_git	fine_grained_permissions_title	Fine-grained permissions
 plugin_git	fine_grained_permissions_checkbox_label	Enable fine-grained permissions
-plugin_git	fine_grained_permissions_warning	Dear administrators, the fine-grained permissions will soon be taken into account.
 plugin_git	fine_grained_permissions_fork_warning	Please note that when forking a single repository to another project, user-defined static user groups will not be copied.
 plugin_git	fine_grained_permissions_tags_title	Tags
 plugin_git	fine_grained_permissions_branches_title	Branches
