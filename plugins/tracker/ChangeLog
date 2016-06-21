@@ -1,3 +1,6 @@
+Version 5.931 - Tuleap 8.16
+    * story #9090: Modal V1 add computed field on submit new artifact
+
 Version 5.930 - Tuleap 8.16
     * You can switch to autocompute even when the current manual value of the computed field is 0
 
