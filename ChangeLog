@@ -6,6 +6,7 @@ Version 8.16 (Not yet release)
 	* request #9220: Unable to import big xml project archive
 	* request #9222: Cannot add site admin as project member during import
 	* request #9254: Restricted users cannot access SVN plugin viewvc
+	* request #9266: Fatal error while importing scrum template
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
