@@ -341,11 +341,11 @@ class pullrequestPlugin extends Plugin
         }
     }
 
-    private function abandonFromSourceBranch(User $user, GitRepository $repository, $branch_name)
+    private function abandonFromSourceBranch(PFUser $user, GitRepository $repository, $branch_name)
     {
         $pull_request_factory   = $this->getPullRequestFactory();
         $timeline_event_creator = $this->getTimelineEventCreator();
-        $closer                 = new PullRequestCloser($this->getPullRequestFactory());
+        $closer                 = new PullRequestCloser($this->getPullRequestFactory(), new PullRequestMerger($this->getRepositoryFactory()));
 
         $prs = $pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {
