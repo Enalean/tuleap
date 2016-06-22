@@ -65,6 +65,7 @@ use PermissionsNormalizer;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use PermissionsManager;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
+use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 
 include_once('www/project/admin/permissions.php');
 
@@ -122,7 +123,8 @@ class RepositoryResource extends AuthenticatedResource {
             new UGroupManager(),
             new PermissionsNormalizer(),
             PermissionsManager::instance(),
-            new FineGrainedPatternValidator()
+            new FineGrainedPatternValidator(),
+            new FineGrainedPermissionSorter()
         );
 
         $default_fine_grained_permission_saver = new DefaultFineGrainedPermissionSaver($fine_grained_dao);

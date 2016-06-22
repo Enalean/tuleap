@@ -37,6 +37,7 @@ use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
+use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1284,8 +1285,14 @@ class GitPlugin extends Plugin {
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
-            $this->getFineGrainedPatternValidator()
+            $this->getFineGrainedPatternValidator(),
+            $this->getFineGrainedPermissionSorter()
         );
+    }
+
+    private function getFineGrainedPermissionSorter()
+    {
+        return new FineGrainedPermissionSorter();
     }
 
     /**
@@ -1326,7 +1333,8 @@ class GitPlugin extends Plugin {
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
             $this->getPermissionsManager(),
-            $this->getFineGrainedPatternValidator()
+            $this->getFineGrainedPatternValidator(),
+            $this->getFineGrainedPermissionSorter()
         );
     }
 
