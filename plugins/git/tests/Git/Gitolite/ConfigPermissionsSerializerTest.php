@@ -435,10 +435,10 @@ class Git_Gitolite_ConfigPermissionsSerializer_FineGrainedPermissionsTest extend
         $this->permissions_manager = mock('PermissionsManager');
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject('*', '*', Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
 
-        $this->ugroup_01     = stub('ProjectUGroup')->getId()->returns(101);
-        $this->ugroup_02     = stub('ProjectUGroup')->getId()->returns(102);
-        $this->ugroup_03     = stub('ProjectUGroup')->getId()->returns(103);
-        $this->ugroup_nobody = stub('ProjectUGroup')->getId()->returns(100);
+        $this->ugroup_01     = stub('ProjectUGroup')->getId()->returns('101');
+        $this->ugroup_02     = stub('ProjectUGroup')->getId()->returns('102');
+        $this->ugroup_03     = stub('ProjectUGroup')->getId()->returns('103');
+        $this->ugroup_nobody = stub('ProjectUGroup')->getId()->returns('100');
 
         $this->permission_01 = new FineGrainedPermission(
             1,
@@ -566,6 +566,36 @@ EOS;
  RW refs/tags/v1 = @ug_101 @ug_102
  - refs/tags/v1 = @all
  RW+ refs/tags/v1 = @ug_103
+ - refs/tags/v1 = @all
+
+EOS;
+
+        $this->assertEqual($config, $expected);
+    }
+
+    public function itDealsWithNoUgroupSelected()
+    {
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(1 => $this->permission_01));
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository()->returns(array(2 => $this->permission_02));
+
+        $writers          = array($this->ugroup_01, $this->ugroup_02);
+        $rewinders        = array();
+
+        $this->permission_01->setWriters($writers);
+        $this->permission_01->setRewinders($rewinders);
+
+        $this->permission_02->setWriters($writers);
+        $this->permission_02->setRewinders($rewinders);
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+
+        $config = $this->serializer->getForRepository($this->repository);
+
+        $expected = <<<EOS
+ R   = @site_active @_project_members
+ RW refs/heads/master = @ug_101 @ug_102
+ - refs/heads/master = @all
+ RW refs/tags/v1 = @ug_101 @ug_102
  - refs/tags/v1 = @all
 
 EOS;
