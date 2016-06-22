@@ -19,7 +19,7 @@
 
 @import 'src/scss/variables/colors';
 
-@mixin themable($theme-color) {
+@mixin themable($theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger) {
     .doc-section {
         p a {
             color: $theme-color;
@@ -49,17 +49,40 @@
     .sub-nav > ul > .nav-item:hover > a {
         color: $theme-color;
     }
+
+    .doc-color-info    { background-color: $tlp-ui-info; }
+    .doc-color-success { background-color: $tlp-ui-success; }
+    .doc-color-warning { background-color: $tlp-ui-warning; }
+    .doc-color-danger  { background-color: $tlp-ui-danger; }
 }
 
 body {
     min-height: 100vh;
 
-    &.orange { @include themable($tlp-theme-orange); }
-    &.blue   { @include themable($tlp-theme-blue);   }
-    &.green  { @include themable($tlp-theme-green);  }
-    &.grey   { @include themable($tlp-theme-grey);   }
-    &.purple { @include themable($tlp-theme-purple); }
-    &.red    { @include themable($tlp-theme-red);    }
+    &.orange {
+        @import 'src/scss/variables-orange';
+        @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
+    }
+    &.blue   {
+        @import 'src/scss/variables-blue';
+        @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
+    }
+    &.green  {
+        @import 'src/scss/variables-green';
+        @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
+    }
+    &.grey   {
+        @import 'src/scss/variables-grey';
+        @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
+    }
+    &.purple {
+        @import 'src/scss/variables-purple';
+        @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
+    }
+    &.red    {
+        @import 'src/scss/variables-red';
+        @include themable($tlp-theme-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger);
+    }
 }
 
 .hljs {
