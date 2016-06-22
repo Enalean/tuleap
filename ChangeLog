@@ -7,6 +7,7 @@ Version 8.16 (Not yet release)
 	* request #9222: Cannot add site admin as project member during import
 	* request #9254: Restricted users cannot access SVN plugin viewvc
 	* request #9266: Fatal error while importing scrum template
+        * request #9269: Fix the creation of new mailing list
 
 	== Enhancement ==
 	* request #9195: Clean up Trove Categorization
