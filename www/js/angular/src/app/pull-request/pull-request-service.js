@@ -25,13 +25,13 @@ function PullRequestService(
     });
 
     function merge(pull_request) {
-        PullRequestRestService.updateStatus(pull_request.id, self.valid_status_keys.merge).then(function() {
+        return PullRequestRestService.updateStatus(pull_request.id, self.valid_status_keys.merge).then(function() {
             pull_request.status = self.valid_status_keys.merge;
         });
     }
 
     function abandon(pull_request) {
-        PullRequestRestService.updateStatus(pull_request.id, self.valid_status_keys.abandon).then(function() {
+        return PullRequestRestService.updateStatus(pull_request.id, self.valid_status_keys.abandon).then(function() {
             pull_request.status = self.valid_status_keys.abandon;
         });
     }

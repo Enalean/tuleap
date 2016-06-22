@@ -31,6 +31,7 @@ function OverviewController(
         buildStatusIs        : buildStatusIs,
         checkMerge           : checkMerge,
         abandon              : abandon,
+        operationInProgress  : false,
         isConflictingMerge   : isConflictingMerge,
         isNonFastForwardMerge: isNonFastForwardMerge,
         isUnknownMerge       : isUnknownMerge,
@@ -93,10 +94,16 @@ function OverviewController(
     }
 
     function merge() {
-        PullRequestService.merge(self.pull_request);
+        self.operationInProgress = true;
+        PullRequestService.merge(self.pull_request).then(function() {
+            self.operationInProgress = false;
+        });
     }
 
     function abandon() {
-        PullRequestService.abandon(self.pull_request);
+        self.operationInProgress = true;
+        PullRequestService.abandon(self.pull_request).then(function() {
+            self.operationInProgress = false;
+        });
     }
 }

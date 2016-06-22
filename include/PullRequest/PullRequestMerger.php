@@ -54,8 +54,8 @@ class PullRequestMerger
         $executor         = new GitExec($temp_working_dir);
 
         try {
-            $this->tryMerge($pull_request, $executor, $user);
-            $executor->push(escapeshellarg('file://' . $repository_dest->getFullPath()) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
+            $this->tryMerge($pull_request, $pull_request->getSha1Src(), $executor, $user);
+            $executor->push(escapeshellarg('gitolite@gl-adm:' . $repository_dest->getPath()) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
         } catch (Git_Command_Exception $exception) {
             $this->cleanTemporaryRepository($temp_working_dir);
             $exception_message = $exception->getMessage();
@@ -67,13 +67,13 @@ class PullRequestMerger
     }
 
 
-    public function detectMergeabilityStatus(GitExec $git_exec, PullRequest $pull_request, GitRepository $repository)
+    public function detectMergeabilityStatus(GitExec $git_exec, PullRequest $pull_request, $merge_rev, GitRepository $repository)
     {
         try {
             if ($this->isFastForwardable($git_exec, $pull_request)) {
                 $merge_status = PullRequest::FASTFORWARD_MERGE;
             } else {
-                $merge_status = $this->detectMergeConflict($pull_request, $repository);
+                $merge_status = $this->detectMergeConflict($pull_request, $merge_rev, $repository);
             }
         } catch (Git_Command_Exception $e) {
             $merge_status = PullRequest::UNKNOWN_MERGE;
@@ -81,7 +81,7 @@ class PullRequestMerger
         return $merge_status;
     }
 
-    private function tryMerge($pull_request, $executor, $user)
+    private function tryMerge($pull_request, $merge_rev, $executor, $user)
     {
         $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
         $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
@@ -89,7 +89,7 @@ class PullRequestMerger
         $executor->init();
         $executor->fetchAndCheckout($repository_dest->getFullPath(), $pull_request->getBranchDest());
         $executor->fetch($repository_src->getFullPath(), $pull_request->getBranchSrc());
-        return $executor->merge($pull_request->getSha1Src(), $user);
+        return $executor->merge($merge_rev, $user);
     }
 
     private function isFastForwardable($git_exec, $pr)
@@ -105,7 +105,7 @@ class PullRequestMerger
         return $git_exec->isAncestor($src_ref, $dest_ref);
     }
 
-    private function detectMergeConflict(PullRequest $pull_request, GitRepository $repository)
+    private function detectMergeConflict(PullRequest $pull_request, $merge_rev, GitRepository $repository)
     {
         $temporary_name = $this->getUniqueRandomDirectory($repository);
         $executor       = new GitExec($temporary_name);
@@ -113,7 +113,7 @@ class PullRequestMerger
                                            'email'    => 'merger@tuleap.net'));
 
         try {
-            $merge_result = $this->tryMerge($pull_request, $executor, $user);
+            $merge_result = $this->tryMerge($pull_request, $merge_rev, $executor, $user);
             if ($merge_result) {
                 $merge_status = PullRequest::NO_FASTFORWARD_MERGE;
             } else {

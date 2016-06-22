@@ -81,7 +81,7 @@
     </div>
     <button ng-if="overview.hasMergeRight()"
             class="btn btn-large btn-primary"
-            ng-disabled="overview.isConflictingMerge() || overview.isUnknownMerge()"
+            ng-disabled="overview.isConflictingMerge() || overview.isUnknownMerge() || overview.operationInProgress"
             ng-click="overview.checkMerge()"
     >
         <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
@@ -102,6 +102,7 @@
     </button>
     <button ng-if="overview.hasAbandonRight()"
             class="btn btn-large btn-danger"
+            ng-disabled="overview.operationInProgress"
             ng-click="overview.abandon()"
     >
         <i class="icon-trash"></i> {{ 'Abandon' | translate }}
