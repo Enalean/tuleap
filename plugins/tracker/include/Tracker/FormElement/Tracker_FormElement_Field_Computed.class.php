@@ -24,7 +24,7 @@ use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 
-class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
+class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float implements Tracker_FormElement_Field_ReadOnly
 {
     const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
     const FIELD_VALUE_MANUAL          = 'manual_value';
@@ -36,8 +36,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             'size'  => 40,
         ),
         'fast_compute' => array(
-            'value' => null,
-            'type'  => 'upgrade_button',
+            'value' => 0,
+            'type'  => 'checkbox',
         ),
     );
 
@@ -174,11 +174,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
             $formElement_data['specific_properties'] = $merged_specific_properties;
             $request->set('formElement_data', $formElement_data);
-
-            $GLOBALS['Response']->addFeedback(
-                'warning',
-                $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'warning_permissions', $this->getName())
-            );
         }
 
         parent::processUpdate(
