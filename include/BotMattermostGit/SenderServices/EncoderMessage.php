@@ -32,7 +32,7 @@ class EncoderMessage
         $avatar = $bot->getAvatarUrl();
         $tab = array(
             "username" => $bot->getName(),
-            "channel" => strtolower($channel_name),
+            "channel"  => strtolower($channel_name),
             "icon_url" => $avatar
         );
         $tab["text"] = $text;

@@ -59,7 +59,6 @@ class BotGitDao extends DataAccessObject
             return false;
         }
 
-
         if (count($bots_ids) > 0) {
             $dar = $this->addBotsGit($repository_id, $bots_ids);
             if ($dar === false) {

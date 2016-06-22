@@ -46,9 +46,16 @@ class NotificationMaker
         return $user->getName()." ".$GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text')." : $link $refname";
     }
 
-    private function makeLinkReview(GitRepository $repository, $link_name, $review)
-    {
-        $url_review = $repository->getDiffLink($this->git_repository_url_manager, $review);
+    private function makeLinkReview(
+        GitRepository $repository,
+        $link_name,
+        $review
+    ) {
+        $url_review = $repository->getDiffLink(
+            $this->git_repository_url_manager,
+            $review
+        );
+
         return "[$link_name]($url_review)";
     }
 }

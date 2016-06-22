@@ -44,21 +44,22 @@ class Controller
     private $git_repository_factory;
     private $bot_git_factory;
     private $sender;
+    private $bot_factory;
 
     public function __construct(
-        HTTPRequest           $request,
+        HTTPRequest $request,
         CSRFSynchronizerToken $csrf,
-        GitRepositoryFactory  $git_repository_factory,
-        BotGitFactory         $bot_git_factory,
-        Sender                $sender,
-        BotFactory            $bot_factory
+        GitRepositoryFactory $git_repository_factory,
+        BotGitFactory $bot_git_factory,
+        Sender $sender,
+        BotFactory $bot_factory
     ) {
         $this->request                = $request;
         $this->csrf                   = $csrf;
         $this->git_repository_factory = $git_repository_factory;
         $this->bot_git_factory        = $bot_git_factory;
         $this->sender                 = $sender;
-        $this->bot_factory             = $bot_factory;
+        $this->bot_factory            = $bot_factory;
     }
 
     public function render(GitRepository $repository)
@@ -69,7 +70,10 @@ class Controller
             $presenter_bots[] = $bot->toArray($repository->getId());
         }
 
-        return $renderer->renderToString('index', new Presenter($this->csrf, $repository, $presenter_bots));
+        return $renderer->renderToString(
+            'index',
+            new Presenter($this->csrf, $repository, $presenter_bots)
+        );
     }
 
     public function save()
@@ -82,11 +86,16 @@ class Controller
                 $bots_ids = $this->request->get('bots_ids') ? $this->request->get('bots_ids') : array();
                 $this->saveInDao($repository_id, $bots_ids);
             } else {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_repository_invalid'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_hudson_git', 'error_repository_invalid'));
                 $GLOBALS['Response']->redirect(GIT_BASE_URL."/?group_id=".$repository->getProjectId());
             }
         } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost_git', 'alert_invalid_post'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_botmattermost_git', 'alert_invalid_post')
+            );
         }
         $GLOBALS['Response']->redirect(GIT_BASE_URL."/?action=repo_management&group_id=".$repository->getProjectId()."&repo_id=$repository_id&pane=".Notification::ID);
     }
@@ -115,7 +124,10 @@ class Controller
     {
         try {
             $this->bot_git_factory->saveBotsAssignements($repository_id, $bots_ids);
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost_git','alert_success_update'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_botmattermost_git','alert_success_update')
+            );
         } catch (CannotCreateBotException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
         }

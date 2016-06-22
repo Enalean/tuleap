@@ -30,8 +30,11 @@ class Presenter
     private $bots;
     public  $csrf_input;
 
-    public function __construct(CSRFSynchronizerToken $csrf, GitRepository $repository, array $bots)
-    {
+    public function __construct(
+        CSRFSynchronizerToken $csrf,
+        GitRepository $repository,
+        array $bots
+    ) {
         $this->csrf_input = $csrf->fetchHTMLInput();
         $this->repository = $repository;
         $this->bots       = $bots;

@@ -66,7 +66,6 @@ class BotGitFactory
         }
     }
 
-
     public function getBotsByRepositoryId($repository_id)
     {
         $dar = $this->dao->searchBotsByRepositoryId($repository_id);

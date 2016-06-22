@@ -35,8 +35,10 @@ class Sender
     private $encoder_message;
     private $notification_maker;
 
-    public function __construct(EncoderMessage $encoder_message, NotificationMaker $notification_maker)
-    {
+    public function __construct(
+        EncoderMessage $encoder_message,
+        NotificationMaker $notification_maker
+    ) {
         $this->encoder_message    = $encoder_message;
         $this->notification_maker = $notification_maker;
     }
@@ -79,7 +81,7 @@ class Sender
         );
 
         try {
-            $response = $request->send();
+            $request->send();
         } catch (\Exception $ex) {
             $ex->getMessage();
         }
@@ -90,7 +92,11 @@ class Sender
         $channels_names = $bot->getChannelsNames();
         if (count($channels_names) > 0) {
             foreach ($channels_names as $channel) {
-                $message = $this->encoder_message->generateMessage($bot, $text, $channel);
+                $message = $this->encoder_message->generateMessage(
+                    $bot,
+                    $text,
+                    $channel
+                );
                 $this->send($message, $bot->getWebhookUrl());
             }
         } else {
