@@ -36,6 +36,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\FineGrainedPatternValidator;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1282,7 +1283,8 @@ class GitPlugin extends Plugin {
             $dao,
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
-            $this->getPermissionsManager()
+            $this->getPermissionsManager(),
+            $this->getFineGrainedPatternValidator()
         );
     }
 
@@ -1323,8 +1325,14 @@ class GitPlugin extends Plugin {
             $dao,
             $this->getUGroupManager(),
             new PermissionsNormalizer(),
-            $this->getPermissionsManager()
+            $this->getPermissionsManager(),
+            $this->getFineGrainedPatternValidator()
         );
+    }
+
+    public function getFineGrainedPatternValidator()
+    {
+        return new FineGrainedPatternValidator();
     }
 
     public function getGitSystemEventManager() {

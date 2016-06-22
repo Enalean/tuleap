@@ -493,3 +493,4 @@ plugin_git	fine_grained_remove_confirm	Confirm deletion
 plugin_git	fine_grained_bad_request	Bad request.
 plugin_git	fine_grained_delete_ok	Permission successfully deleted.
 plugin_git	fine_grained_delete_error	An error occured while deleting permission.
+plugin_git	fine_grained_bad_pattern	The pattern $1 is not well formed. Skipping.
