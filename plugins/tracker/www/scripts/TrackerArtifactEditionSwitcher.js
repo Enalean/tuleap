@@ -29,6 +29,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
 
     var init = function() {
         bindClickOnEditableFields();
+        bindClickOnAutocomputeInMassChange();
         if ($("#artifact_informations").size() > 0) {
             bindSubmissionBarToFollowups();
             disableWarnBeforeUnloadOnSubmitForm();
@@ -78,6 +79,28 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         return;
     };
 
+    var bindClickOnAutocomputeInMassChange = function() {
+        $(".field-masschange.tracker_artifact_field-computed").each(bindEditionBackToAutocomputeMassChange);
+    };
+
+    var bindEditionBackToAutocomputeMassChange = function (index, element) {
+        $(element).find('.auto-compute').on('click', function () {
+            var field_id = $(element).attr('data-field-id');
+            switchValueToAutoComputedMode(element, field_id);
+            $(element).find('.edition-mass-change').hide();
+            $(element).find('.display-mass-change').show();
+            $(element).removeClass('in-edition');
+        });
+
+        $(element).find('.edit-mass-change-autocompute').on('click', function () {
+            var field_id = $(element).attr('data-field-id');
+            switchValueToManualMode(element, field_id);
+            $(element).find('.edition-mass-change').show();
+            $(element).find('.display-mass-change').hide();
+            $(element).addClass('in-edition');
+        });
+    };
+
     var bindCreationSwitch = function (element) {
         $(element).find('.tracker_formelement_edit').on('click', function (event) {
             event.preventDefault();
@@ -121,10 +144,10 @@ tuleap.tracker.artifact.editionSwitcher = function() {
 
     var switchValueToManualMode = function (element, field_id) {
         var field_computed_is_autocomputed = document.getElementsByName("artifact[" + field_id + "][is_autocomputed]");
-        if (field_computed_is_autocomputed[0] !== undefined && field_computed_is_autocomputed[0] !== undefined) {
+        if (field_computed_is_autocomputed[0] !== undefined) {
             field_computed_is_autocomputed[0].value = '0';
         }
-    }
+    };
 
     var switchValueToAutoComputedMode = function (element, field_id) {
         var field_computed_manual_value    = document.getElementsByName("artifact[" + field_id + "][manual_value]");
@@ -133,7 +156,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
             field_computed_manual_value[0].value    = null;
             field_computed_is_autocomputed[0].value = '1';
         }
-}
+    };
 
     var toggleAddiationField = function (element) {
         $(element).addClass('in-edition');

@@ -1266,6 +1266,10 @@ div.tracker-admin-field-controls {
     > .disabled_field {
         @extend .empty_value;
     }
+
+    .display-mass-change {
+        display: none;
+    }
 }
 
 .empty_value {
