@@ -1,3 +1,6 @@
+Version 5.934 - Tuleap 8.16
+    * story #9090: It is possible to edit a computed field while doing a mass change
+
 Version 5.933 - Tuleap 8.16
     * story #9090 have computed fields compatible with artifact links v2 (Computation field calcul correction)
 
