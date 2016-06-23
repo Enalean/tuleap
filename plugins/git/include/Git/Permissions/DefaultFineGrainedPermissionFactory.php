@@ -455,7 +455,7 @@ class DefaultFineGrainedPermissionFactory
             $writers   = $this->mapUgroup($permission->getWritersUgroup(), $ugroups_mapping);
             $rewinders = $this->mapUgroup($permission->getRewindersUgroup(), $ugroups_mapping);
 
-            $new_permissions[] = new DefaultFineGrainedPermissionRepresentation(
+            $new_permissions[] = new DefaultFineGrainedPermission(
                 0,
                 $new_project_id,
                 $permission->getPatternWithoutPrefix(),
