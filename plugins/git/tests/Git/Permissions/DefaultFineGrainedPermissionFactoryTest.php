@@ -39,7 +39,8 @@ class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
             $this->dao,
             $this->ugroup_manager,
             $this->normalizer,
-            mock('PermissionsManager')
+            mock('PermissionsManager'),
+            new FineGrainedPatternValidator()
         );
 
         $this->project         = stub('Project')->getID()->returns(101);
