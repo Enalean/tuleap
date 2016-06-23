@@ -1,3 +1,6 @@
+Version 4.217 - Tuleap 8.16
+    * request #9272 Order of tags/branches permissions matters
+
 Version 4.216 - Tuleap 8.16
     * request #9271 gitolite rule error when Nobody or nothing is selected
 
