@@ -163,17 +163,21 @@ class Git_Gitolite_ConfigPermissionsSerializer {
 
         $pattern_config .= $this->getPatternConfiguration(
             $repository,
+            $permission->getRewindersUgroup(),
+            $pattern_for_gitolite,
+            Git::PERM_WPLUS
+        );
+
+        $pattern_config .= $this->getPatternConfiguration(
+            $repository,
             $permission->getWritersUgroup(),
             $pattern_for_gitolite,
             Git::PERM_WRITE
         );
 
-        $pattern_config .= $this->getPatternConfiguration(
-            $repository,
-            $permission->getRewindersUgroup(),
-            $pattern_for_gitolite,
-            Git::PERM_WPLUS
-        );
+        if ($pattern_config) {
+            $pattern_config .= $this->removeAllUgroupForPattern($pattern_for_gitolite);
+        }
 
         return $pattern_config;
     }
@@ -209,7 +213,6 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         $ugroup_names = $ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
 
         $config .= rtrim(self::$permissions_types[$permission_type]) ." $pattern_for_gitolite = " . implode(' ', $ugroup_names) . PHP_EOL;
-        $config .= $this->removeAllUgroupForPattern($pattern_for_gitolite);
 
         return $config;
     }

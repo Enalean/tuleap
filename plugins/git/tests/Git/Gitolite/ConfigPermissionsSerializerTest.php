@@ -472,6 +472,32 @@ class Git_Gitolite_ConfigPermissionsSerializer_FineGrainedPermissionsTest extend
         parent::tearDown();
     }
 
+    public function itMustFollowTheExpectedOrderForPermission()
+    {
+        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(1 => $this->permission_01));
+        stub($this->factory)->getTagsFineGrainedPermissionsForRepository()->returns(array());
+
+        $writers   = array($this->ugroup_01, $this->ugroup_02);
+        $rewinders = array($this->ugroup_03);
+
+        $this->permission_01->setWriters($writers);
+        $this->permission_01->setRewinders($rewinders);
+
+        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+
+        $config = $this->serializer->getForRepository($this->repository);
+
+        $expected = <<<EOS
+ R   = @site_active @_project_members
+ RW+ refs/heads/master = @ug_103
+ RW refs/heads/master = @ug_101 @ug_102
+ - refs/heads/master = @all
+
+EOS;
+
+        $this->assertEqual($config, $expected);
+    }
+
     public function itFetchesFineGrainedPermissions()
     {
         stub($this->factory)->getBranchesFineGrainedPermissionsForRepository()->returns(array(1 => $this->permission_01));
@@ -492,13 +518,11 @@ class Git_Gitolite_ConfigPermissionsSerializer_FineGrainedPermissionsTest extend
 
         $expected = <<<EOS
  R   = @site_active @_project_members
+ RW+ refs/heads/master = @ug_103
  RW refs/heads/master = @ug_101 @ug_102
  - refs/heads/master = @all
- RW+ refs/heads/master = @ug_103
- - refs/heads/master = @all
- RW refs/tags/v1 = @ug_101 @ug_102
- - refs/tags/v1 = @all
  RW+ refs/tags/v1 = @ug_103
+ RW refs/tags/v1 = @ug_101 @ug_102
  - refs/tags/v1 = @all
 
 EOS;
@@ -527,9 +551,8 @@ EOS;
 
         $expected = <<<EOS
  R   = @site_active @_project_members
- RW refs/heads/master = @ug_101 @ug_102
- - refs/heads/master = @all
  RW+ refs/heads/master = @ug_103
+ RW refs/heads/master = @ug_101 @ug_102
  - refs/heads/master = @all
  RW refs/tags/v1 = @ug_101 @ug_102
  - refs/tags/v1 = @all
@@ -559,13 +582,11 @@ EOS;
 
         $expected = <<<EOS
  R   = @site_active @_project_members
+ RW+ refs/heads/dev/.* = @ug_103
  RW refs/heads/dev/.* = @ug_101 @ug_102
  - refs/heads/dev/.* = @all
- RW+ refs/heads/dev/.* = @ug_103
- - refs/heads/dev/.* = @all
- RW refs/tags/v1 = @ug_101 @ug_102
- - refs/tags/v1 = @all
  RW+ refs/tags/v1 = @ug_103
+ RW refs/tags/v1 = @ug_101 @ug_102
  - refs/tags/v1 = @all
 
 EOS;
